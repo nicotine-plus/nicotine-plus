@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -98,7 +98,7 @@ class SoulseekNetworkTest(TestCase):
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
-        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port_range=(1024, 65535)))
+        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
         sleep(SLSKPROTO_RUN_TIME)
 
         if hasattr(socket, "TCP_USER_TIMEOUT"):
@@ -122,7 +122,7 @@ class SoulseekNetworkTest(TestCase):
 
     def test_login(self):
 
-        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port_range=(1024, 65535)))
+        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 

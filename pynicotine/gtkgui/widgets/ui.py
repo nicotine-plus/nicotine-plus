@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -30,48 +30,48 @@ from pynicotine.utils import encode_path
 """ UI Builder """
 
 
-class UserInterface:
+ui_data = {}
 
-    ui_data = {}
 
-    def __init__(self, scope, path):
+def load(scope, path):
 
-        if path not in self.ui_data:
-            with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
-                ui_xml_tree = ElementTree.parse(file_handle)
+    if path not in ui_data:
+        with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
+            ui_xml_tree = ElementTree.parse(file_handle)
 
-                for node in ui_xml_tree.iterfind('.//*[@translatable="yes"]'):
-                    node.text = _(node.text)
-                    del node.attrib["translatable"]
+            for node in ui_xml_tree.iterfind('.//*[@translatable="yes"]'):
+                node.text = _(node.text)
+                del node.attrib["translatable"]
 
-                ui_xml_string = ElementTree.tostring(ui_xml_tree.getroot(), encoding="unicode")
+            ui_xml_string = ElementTree.tostring(ui_xml_tree.getroot(), encoding="unicode")
 
-                if GTK_API_VERSION >= 4:
-                    ui_xml_string = ui_xml_string.replace(
-                        "GtkRadioButton", "GtkCheckButton").replace('"can-focus"', '"focusable"')
+            if GTK_API_VERSION >= 4:
+                ui_xml_string = ui_xml_string.replace(
+                    "GtkRadioButton", "GtkCheckButton").replace('"can-focus"', '"focusable"')
 
-                self.ui_data[path] = ui_xml_string
+            ui_data[path] = ui_xml_string
 
-        if GTK_API_VERSION >= 4:
-            self.builder = Gtk.Builder(scope)
-            self.builder.add_from_string(self.ui_data[path])
-            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
-        else:
-            self.builder = Gtk.Builder()
-            self.builder.add_from_string(self.ui_data[path])
-            self.builder.connect_signals(scope)                      # pylint: disable=no-member
+    if GTK_API_VERSION >= 4:
+        builder = Gtk.Builder(scope)
+        builder.add_from_string(ui_data[path])
+        Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
+    else:
+        builder = Gtk.Builder()
+        builder.add_from_string(ui_data[path])
+        builder.connect_signals(scope)                      # pylint: disable=no-member
 
-        self.widgets = self.builder.get_objects()
+    widgets = builder.get_objects()
 
-        for obj in list(self.widgets):
-            try:
-                obj_name = Gtk.Buildable.get_name(obj)
-                if not obj_name.startswith("_"):
-                    continue
+    for obj in list(widgets):
+        try:
+            obj_name = Gtk.Buildable.get_name(obj)
+            if not obj_name.startswith("_"):
+                continue
 
-            except TypeError:
-                pass
+        except TypeError:
+            pass
 
-            self.widgets.remove(obj)
+        widgets.remove(obj)
 
-        self.widgets.sort(key=Gtk.Buildable.get_name)
+    widgets.sort(key=Gtk.Buildable.get_name)
+    return widgets

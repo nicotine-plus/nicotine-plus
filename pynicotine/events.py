@@ -131,8 +131,8 @@ EVENT_NAMES = {
     "send-private-message",
 
     # Search
+    "add-search",
     "add-wish",
-    "do-search",
     "file-search-request-distributed",
     "file-search-request-server",
     "file-search-response",

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
@@ -34,6 +34,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -43,7 +44,6 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
@@ -248,7 +248,6 @@ class PrivateChat:
 
     def __init__(self, chats, user):
 
-        ui_template = UserInterface(scope=self, path="privatechat.ui")
         (
             self.chat_entry,
             self.chat_view_container,
@@ -258,7 +257,7 @@ class PrivateChat:
             self.search_bar,
             self.search_entry,
             self.speech_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="privatechat.ui")
 
         self.user = user
         self.chats = chats
@@ -565,7 +564,7 @@ class PrivateChat:
 
     def set_completion_list(self, completion_list):
 
-        if not config.sections["words"]["tab"]:
+        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
             return
 
         # Tab-complete the recipient username

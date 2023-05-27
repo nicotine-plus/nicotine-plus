@@ -42,6 +42,7 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -53,7 +54,6 @@ from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.utils import human_speed
@@ -76,7 +76,6 @@ class MainWindow(Window):
 
         """ Load UI """
 
-        ui_template = UserInterface(scope=self, path="mainwindow.ui")
         (
             self.add_buddy_entry,
             self.buddy_list_container,
@@ -187,7 +186,7 @@ class MainWindow(Window):
             self.userlist_toolbar,
             self.userlist_toolbar_content,
             self.vertical_paned
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="mainwindow.ui")
 
         super().__init__(widget=Gtk.ApplicationWindow(child=self.container))
         self.header_bar.pack_end(self.header_end)
@@ -679,7 +678,7 @@ class MainWindow(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + label, "app.quit")
+            ("#" + label, "app.confirm-quit")
         )
 
     def create_file_menu(self):
@@ -1360,7 +1359,7 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        self.scan_progress_bar.show()
+        self.scan_progress_bar.set_visible(True)
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
@@ -1386,7 +1385,7 @@ class MainWindow(Window):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        self.scan_progress_bar.hide()
+        self.scan_progress_bar.set_visible(False)
 
     """ Exit """
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,13 +22,13 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
 
 
@@ -36,7 +36,6 @@ class RoomList(Popover):
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="popovers/roomlist.ui")
         (
             self.container,
             self.list_container,
@@ -44,7 +43,7 @@ class RoomList(Popover):
             self.public_feed_toggle,
             self.refresh_button,
             self.search_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="popovers/roomlist.ui")
 
         super().__init__(
             window=window,

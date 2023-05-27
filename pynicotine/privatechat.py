@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -280,6 +280,6 @@ class PrivateChat:
             self.completion_list += list(core.userlist.buddies)
 
         if config.sections["words"]["commands"]:
-            self.completion_list += list(core.pluginhandler.private_chat_commands)
+            self.completion_list += core.pluginhandler.get_command_list("private_chat")
 
         events.emit("private-chat-completion-list", self.completion_list)

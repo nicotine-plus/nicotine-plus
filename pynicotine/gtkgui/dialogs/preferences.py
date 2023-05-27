@@ -41,6 +41,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -55,7 +56,6 @@ from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
@@ -83,7 +83,6 @@ class NetworkPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/network.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.auto_away_spinner,
@@ -91,14 +90,13 @@ class NetworkPage:
             self.auto_reply_message_entry,
             self.check_port_status_label,
             self.current_port_label,
-            self.first_port_spinner,
-            self.last_port_spinner,
+            self.listen_port_spinner,
             self.network_interface_combobox,
             self.network_interface_label,
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = False
@@ -124,13 +122,13 @@ class NetworkPage:
         unknown_label = _("Unknown")
 
         # Listening port status
-        if core.protothread.listenport:
-            url = config.portchecker_url % str(core.protothread.listenport)
+        if core.protothread.listen_port:
+            url = config.portchecker_url % str(core.protothread.listen_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.user_ip_address or unknown_label,
-                "port": core.protothread.listenport or unknown_label
+                "port": core.protothread.listen_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -157,9 +155,8 @@ class NetworkPage:
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
-        first_port, last_port = config.sections["server"]["portrange"]
-        self.first_port_spinner.set_value(first_port)
-        self.last_port_spinner.set_value(last_port)
+        listen_port, _unused_port = config.sections["server"]["portrange"]
+        self.listen_port_spinner.set_value(listen_port)
 
         self.portmap_required = False
 
@@ -173,17 +170,13 @@ class NetworkPage:
         except Exception:
             server_addr = config.defaults["server"]["server"]
 
-        first_port = self.first_port_spinner.get_value_as_int()
-        last_port = self.last_port_spinner.get_value_as_int()
-
-        if first_port > last_port:
-            first_port, last_port = last_port, first_port
+        listen_port = self.listen_port_spinner.get_value_as_int()
 
         return {
             "server": {
                 "server": server_addr,
                 "login": self.username_entry.get_text(),
-                "portrange": (first_port, last_port),
+                "portrange": (listen_port, listen_port),
                 "autoaway": self.auto_away_spinner.get_value_as_int(),
                 "autoreply": self.auto_reply_message_entry.get_text(),
                 "interface": self.network_interface_combobox.get_active_text(),
@@ -246,7 +239,6 @@ class DownloadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/downloads.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.accept_sent_files_toggle,
@@ -254,8 +246,8 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.download_double_click_combobox,
             self.download_folder_button,
-            self.enable_username_subfolders_toggle,
             self.enable_filters_toggle,
+            self.enable_username_subfolders_toggle,
             self.file_finished_command_entry,
             self.filter_list_container,
             self.filter_status_label,
@@ -267,7 +259,7 @@ class DownloadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
@@ -281,6 +273,8 @@ class DownloadsPage:
             self.received_folder_button, parent=application.preferences, chooser_type="folder"
         )
 
+        self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
+                                           "can be used, otherwise only wildcard * matches are supported.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
@@ -292,11 +286,11 @@ class DownloadsPage:
                     "expand_column": True,
                     "default_sort_column": "ascending"
                 },
-                "escaped": {
+                "regex": {
                     "column_type": "toggle",
-                    "title": _("Escaped"),
+                    "title": _("Regex"),
                     "width": 0,
-                    "toggle_callback": self.on_toggle_escaped
+                    "toggle_callback": self.on_toggle_regex
                 }
             }
         )
@@ -309,7 +303,6 @@ class DownloadsPage:
                 "incompletedir": self.incomplete_folder_button,
                 "downloaddir": self.download_folder_button,
                 "uploaddir": self.received_folder_button,
-                "downloadfilters": self.filter_list_view,
                 "enablefilters": self.enable_filters_toggle,
                 "downloadlimit": self.speed_spinner,
                 "downloadlimitalt": self.alt_speed_spinner,
@@ -336,6 +329,15 @@ class DownloadsPage:
         else:
             self.use_unlimited_speed_radio.set_active(True)
 
+        for item in config.sections["transfers"]["downloadfilters"]:
+            if not isinstance(item, list) or len(item) < 2:
+                continue
+
+            dfilter, escaped = item
+            enable_regex = not escaped
+
+            self.filter_list_view.add_row([dfilter, enable_regex], select_row=False)
+
     def get_settings(self):
 
         if self.use_speed_limit_radio.get_active():
@@ -350,8 +352,8 @@ class DownloadsPage:
         download_filters = []
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
-            download_filters.append([dfilter, int(escaped)])
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
+            download_filters.append([dfilter, not enable_regex])
 
         return {
             "transfers": {
@@ -373,25 +375,25 @@ class DownloadsPage:
             }
         }
 
-    def on_toggle_escaped(self, list_view, iterator):
+    def on_toggle_regex(self, list_view, iterator):
 
-        value = list_view.get_row_value(iterator, "escaped")
-        list_view.set_row_value(iterator, "escaped", not value)
+        value = list_view.get_row_value(iterator, "regex")
+        list_view.set_row_value(iterator, "regex", not value)
 
         self.on_verify_filter()
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
             self.filter_list_view.set_row_value(iterator, "filter", dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
-            self.filter_list_view.add_row([dfilter, escaped])
+            self.filter_list_view.add_row([dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -400,24 +402,24 @@ class DownloadsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Download Filter"),
-            message=_("Enter a new download filter:"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            option_value=True,
-            option_label=_("Escape filter"),
+            option_value=False,
+            option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
         ).show()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
             self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
             self.filter_list_view.remove_row(iterator)
-            self.filter_list_view.add_row([new_dfilter, escaped])
+            self.filter_list_view.add_row([new_dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -425,17 +427,17 @@ class DownloadsPage:
 
         for iterator in self.filter_list_view.get_selected_rows():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
-                message=_("Modify the following download filter:"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
-                option_value=escaped,
-                option_label=_("Escape filter")
+                option_value=enable_regex,
+                option_label=_("Enable regular expressions")
             ).show()
             return
 
@@ -462,9 +464,9 @@ class DownloadsPage:
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
-            if escaped:
+            if not enable_regex:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
 
@@ -509,13 +511,12 @@ class SharesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/shares.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
             self.rescan_on_startup_toggle,
             self.shares_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
@@ -713,7 +714,6 @@ class UploadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/uploads.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.alt_speed_spinner,
@@ -732,7 +732,7 @@ class UploadsPage:
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
             self.use_upload_slots_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
@@ -804,12 +804,11 @@ class UserProfilePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.description_view_container,
             self.select_picture_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
         self.user_profile_required = False
@@ -856,12 +855,11 @@ class IgnoredUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ignore.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
@@ -982,7 +980,6 @@ class BannedUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ban.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.ban_message_entry,
@@ -993,7 +990,7 @@ class BannedUsersPage:
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -1136,7 +1133,6 @@ class ChatsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/chats.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.auto_replace_words_toggle,
@@ -1162,7 +1158,7 @@ class ChatsPage:
             self.tts_command_combobox,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
@@ -1383,7 +1379,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1434,8 +1430,6 @@ class UserInterfacePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
-
         # pylint: disable=invalid-name
         (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
          self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
@@ -1456,7 +1450,7 @@ class UserInterfacePage:
          self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
          self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
          self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = ui_template.widgets
+         self.UsernameStyle) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.theme_required = False
@@ -1772,7 +1766,6 @@ class LoggingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/log.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.chatroom_log_folder_button,
@@ -1784,7 +1777,7 @@ class LoggingPage:
             self.log_transfer_toggle,
             self.private_chat_log_folder_button,
             self.transfer_log_folder_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
@@ -1842,7 +1835,6 @@ class SearchesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/search.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.cleared_filter_history_icon,
@@ -1864,7 +1856,7 @@ class SearchesPage:
             self.remove_special_chars_toggle,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
@@ -1963,13 +1955,12 @@ class UrlHandlersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.file_manager_combobox,
             self.media_player_combobox,
             self.protocol_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
 
@@ -2136,11 +2127,10 @@ class NowPlayingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
-
         # pylint: disable=invalid-name
-        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
-         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
+        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat,
+         self.NP_lastfm, self.NP_listenbrainz, self.NP_mpris, self.NP_other,
+         self.player_input, self.test_now_playing) = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
@@ -2318,7 +2308,6 @@ class PluginsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/plugin.ui")
         (
             self.Main,  # pylint: disable=invalid-name
             self.enable_plugins_toggle,
@@ -2328,7 +2317,7 @@ class PluginsPage:
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
         self.selected_plugin = None
@@ -2462,7 +2451,6 @@ class Preferences(Dialog):
 
         self.application = application
 
-        ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2472,7 +2460,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,

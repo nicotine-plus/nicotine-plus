@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-
-from os.path import commonprefix
 
 from gi.repository import Gtk
 
@@ -91,23 +89,9 @@ class ChatEntry:
 
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
+        args = cmd_split[1] if len(cmd_split) == 2 else ""
 
-        if len(cmd_split) == 2:
-            args = arg_self = cmd_split[1]
-        else:
-            args = ""
-            arg_self = "" if self.is_chatroom else self.entity
-
-        if cmd == "/ctcpversion":
-            if arg_self:
-                core.privatechat.show_user(arg_self)
-                core.privatechat.send_message(arg_self, core.privatechat.CTCP_VERSION)
-
-        elif cmd == "/now":
-            core.now_playing.display_now_playing(
-                callback=lambda np_message: self.send_message(self.entity, np_message))
-
-        elif self.is_chatroom:
+        if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
                 return
 
@@ -126,11 +110,10 @@ class ChatCompletion:
 
     def __init__(self):
 
-        self.completion_list = []
-        self.completion_iters = {}
-
-        self.midwaycompletion = False  # True if the user just used tab completion
-        self.completions = {}  # Holds temp. information about tab completoin
+        self.completions = {}
+        self.current_completions = []
+        self.completion_index = 0
+        self.midway_completion = False  # True if the user just used tab completion
 
         self.entry = None
         self.entry_changed_handler = None
@@ -141,7 +124,7 @@ class ChatCompletion:
 
     def create_entry_completion(self):
 
-        self.entry_completion = Gtk.EntryCompletion(model=self.model)
+        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
         self.entry_completion.set_text_column(0)
         self.entry_completion.set_match_func(self.entry_completion_find_match)
         self.entry_completion.connect("match-selected", self.entry_completion_found_match)
@@ -161,52 +144,26 @@ class ChatCompletion:
 
     def add_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
+        if item in self.completions:
             return
-
-        if item in self.completion_list:
-            return
-
-        self.completion_list.append(item)
 
         if config.sections["words"]["dropdown"]:
-            self.completion_iters[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
+            iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
 
-    def get_completion(self, part, completion_list):
+        elif config.sections["words"]["tab"]:
+            iterator = None
 
-        matches = self.get_completions(part, completion_list)
+        else:
+            return
 
-        if not matches:
-            return None, 0
-
-        if len(matches) == 1:
-            return matches[0], 1
-
-        return commonprefix([x.lower() for x in matches]), 0
-
-    @staticmethod
-    def get_completions(part, completion_list):
-
-        lowerpart = part.lower()
-        matches = [x for x in completion_list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
-        return matches
+        self.completions[item] = iterator
 
     def remove_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
-            return
+        iterator = self.completions.pop(item)
 
-        if item not in self.completion_list:
-            return
-
-        self.completion_list.remove(item)
-
-        if not config.sections["words"]["dropdown"]:
-            return
-
-        iterator = self.completion_iters[item]
-        self.model.remove(iterator)
-        del self.completion_iters[item]
+        if iterator is not None:
+            self.model.remove(iterator)
 
     def set_completion_list(self, completion_list):
 
@@ -215,30 +172,28 @@ class ChatCompletion:
 
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_single_match(False)
+        self.entry_completion.set_popup_completion(config_words["dropdown"])
         self.entry_completion.set_minimum_key_length(config_words["characters"])
-        self.entry_completion.set_inline_completion(False)
 
         self.model.clear()
-        self.completion_iters.clear()
-
-        if not config_words["tab"]:
-            return
+        self.completions.clear()
 
         if completion_list is None:
             completion_list = []
 
-        self.completion_list = completion_list
-
-        if not config_words["dropdown"]:
-            self.entry_completion.set_popup_completion(False)
-            return
-
         for word in completion_list:
             word = str(word)
-            self.completion_iters[word] = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
 
-        self.entry_completion.set_popup_completion(True)
+            if config_words["dropdown"]:
+                iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
+
+            elif config_words["tab"]:
+                iterator = None
+
+            else:
+                return
+
+            self.completions[word] = iterator
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -292,7 +247,7 @@ class ChatCompletion:
 
     def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midwaycompletion = False
+        self.midway_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
@@ -311,37 +266,38 @@ class ChatCompletion:
         #    2  5  8  11 14      17 20 23 26 29 32
         #
         # i = 16
-        # text = Miss
+        # last_word = Miss
         # preix = 12
+
         i = self.entry.get_position()
-        text = text[:i].split(" ")[-1]
-        preix = i - len(text)
+        last_word = text[:i].split(" ")[-1]
+        last_word_len = len(last_word)
+        preix = i - last_word_len
 
-        if not self.midwaycompletion:
-            self.completions["completions"] = self.get_completions(text, self.completion_list)
+        if not self.midway_completion:
+            last_word_lower = last_word.lower()
+            self.current_completions = [
+                x for x in self.completions if x.lower().startswith(last_word_lower) and len(x) >= last_word_len
+            ]
 
-            if self.completions["completions"]:
-                self.midwaycompletion = True
-                self.completions["currentindex"] = -1
-                currentnick = text
+            if self.current_completions:
+                self.midway_completion = True
+                self.completion_index = -1
+                current_word = last_word
         else:
-            currentnick = self.completions["completions"][self.completions["currentindex"]]
+            current_word = self.current_completions[self.completion_index]
 
-        if self.midwaycompletion:
-            # We're still completing, block handler to avoid modifying midwaycompletion value
+        if self.midway_completion:
+            # We're still completing, block handler to avoid modifying midway_completion value
             with self.entry.handler_block(self.entry_changed_handler):
-                self.entry.delete_text(i - len(currentnick), i)
-                direction = 1  # Forward cycle
+                self.entry.delete_text(i - len(current_word), i)
 
-                if backwards:
-                    direction = -1  # Backward cycle
+                direction = -1 if backwards else 1
+                self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
 
-                self.completions["currentindex"] = ((self.completions["currentindex"] + direction) %
-                                                    len(self.completions["completions"]))
-
-                newnick = self.completions["completions"][self.completions["currentindex"]]
-                self.entry.insert_text(newnick, preix)
-                self.entry.set_position(preix + len(newnick))
+                new_word = self.current_completions[self.completion_index]
+                self.entry.insert_text(new_word, preix)
+                self.entry.set_position(preix + len(new_word))
 
         return True
 

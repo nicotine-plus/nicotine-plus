@@ -27,12 +27,12 @@ from gi.repository import GObject
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import encode_path
 
 
@@ -40,12 +40,11 @@ class ChatHistory(Popover):
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="popovers/chathistory.ui")
         (
             self.container,
             self.list_container,
             self.search_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="popovers/chathistory.ui")
 
         super().__init__(
             window=window,

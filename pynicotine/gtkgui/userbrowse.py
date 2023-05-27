@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2013 SeeSchloss <see@seos.fr>
 # COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
@@ -34,7 +34,8 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -85,7 +85,7 @@ class UserBrowses(IconNotebook):
         self.window.userbrowse_entry.set_text("")
         core.userbrowse.open_soulseek_path(entry_text)
 
-    def show_user(self, user, path=None, local_shares_type=None, switch_page=True):
+    def show_user(self, user, path=None, local_share_type=None, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
@@ -95,7 +95,7 @@ class UserBrowses(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.container))
 
         page = self.pages[user]
-        page.local_shares_type = local_shares_type
+        page.local_share_type = local_share_type
         page.queued_path = path
 
         page.browse_queued_path()
@@ -152,7 +152,6 @@ class UserBrowse:
 
     def __init__(self, userbrowses, user):
 
-        ui_template = UserInterface(scope=self, path="userbrowse.ui")
         (
             self.container,
             self.expand_button,
@@ -167,13 +166,13 @@ class UserBrowse:
             self.save_button,
             self.search_entry,
             self.share_size_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="userbrowse.ui")
 
         self.userbrowses = userbrowses
         self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = True
-        self.local_shares_type = None
+        self.local_share_type = None
         self.queued_path = None
         self.num_folders = 0
         self.share_size = 0
@@ -262,7 +261,8 @@ class UserBrowse:
                 "filename": {
                     "column_type": "text",
                     "title": _("File Name"),
-                    "width": 600,
+                    "width": 150,
+                    "expand_column": True,
                     "default_sort_column": "ascending",
                     "iterator_key": True
                 },
@@ -483,15 +483,17 @@ class UserBrowse:
         self.queued_path = None
 
         # Scroll to the requested folder
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
         iterator = self.file_list_view.iterators.get(filename)
 
         if not iterator:
+            self.folder_tree_view.grab_focus()
             return
 
         # Scroll to the requested file
         self.file_list_view.select_row(iterator)
+        self.file_list_view.grab_focus()
 
     def shared_file_list(self, msg):
 
@@ -517,8 +519,8 @@ class UserBrowse:
 
         self.retry_button.set_visible(True)
         self.info_bar.show_message(
-            _("Unable to request shared files from user. Either the user is offline, you both have "
-              "a closed listening port, or there's a temporary connectivity issue."),
+            _("Unable to request shared files from user. Either the user is offline, the listening ports "
+              "are closed on both sides, or there is a temporary connectivity issue."),
             message_type=Gtk.MessageType.ERROR
         )
 
@@ -612,6 +614,14 @@ class UserBrowse:
 
             self.selected_files[rawfilename] = filesize
 
+    def get_selected_folder_path(self):
+        return f'{self.selected_folder or ""}\\'
+
+    def get_selected_file_path(self):
+        selected_folder = self.get_selected_folder_path()
+        selected_file = next(iter(self.selected_files), "")
+        return f"{selected_folder}{selected_file}"
+
     """ Search """
 
     def rebuild_search_matches(self):
@@ -636,7 +646,7 @@ class UserBrowse:
         directory = self.search_list[self.search_position]
         iterator = self.folder_tree_view.iterators[directory]
 
-        self.folder_tree_view.select_row(iterator, should_expand=True)
+        self.folder_tree_view.select_row(iterator)
 
     def select_search_match_files(self):
 
@@ -651,7 +661,7 @@ class UserBrowse:
 
         for iterator in result_files:
             # Select each matching file in folder
-            self.file_list_view.select_row(iterator, should_focus=(not found_first_match))
+            self.file_list_view.select_row(iterator, should_scroll=(not found_first_match))
             found_first_match = True
 
     def find_search_matches(self, reverse=False):
@@ -766,20 +776,13 @@ class UserBrowse:
         self.on_upload_directory_to(recurse=True)
 
     def on_copy_folder_path(self, *_args):
-
-        if self.selected_folder is None:
-            return
-
-        copy_text(self.selected_folder)
+        folder_path = self.get_selected_folder_path()
+        clipboard.copy_text(folder_path)
 
     def on_copy_dir_url(self, *_args):
-
-        if self.selected_folder is None:
-            return
-
-        path = self.selected_folder + "\\"
-        url = core.userbrowse.get_soulseek_url(self.user, path)
-        copy_text(url)
+        folder_path = self.get_selected_folder_path()
+        folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
+        clipboard.copy_text(folder_url)
 
     """ Key Bindings (folder_tree_view) """
 
@@ -1040,25 +1043,17 @@ class UserBrowse:
             self.userbrowses.file_properties.show()
 
     def on_copy_file_path(self, *_args):
-
-        if self.selected_folder is None or not self.selected_files:
-            return
-
-        text = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        copy_text(text)
+        file_path = self.get_selected_file_path()
+        clipboard.copy_text(file_path)
 
     def on_copy_url(self, *_args):
-
-        if not self.selected_files:
-            return
-
-        path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        url = core.userbrowse.get_soulseek_url(self.user, path)
-        copy_text(url)
+        file_path = self.get_selected_file_path()
+        file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
+        clipboard.copy_text(file_url)
 
     """ Key Bindings (file_list_view) """
 
-    def on_file_row_activated(self, _tree_view, _path, _column):
+    def on_file_row_activated(self, _tree_view, _iterator, _column_id):
 
         self.select_files()
 
@@ -1197,12 +1192,15 @@ class UserBrowse:
             # Refresh is already in progress
             return
 
+        # Remember selection after refresh
+        self.select_files()
+        path = self.get_selected_file_path()
+
         self.clear_model()
-        self.folder_tree_view.grab_focus()
         self.info_bar.set_visible(False)
 
         self.set_in_progress()
-        core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
+        core.userbrowse.browse_user(self.user, path=path, local_share_type=self.local_share_type, new_request=True)
 
     def on_focus(self):
 

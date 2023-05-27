@@ -41,6 +41,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -53,7 +54,6 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
@@ -109,34 +109,26 @@ class ChatRooms(IconNotebook):
         ):
             events.connect(event_name, callback)
 
-    def on_reordered_page(self, notebook, _page, _page_num):
+    def on_reordered_page(self, *_args):
 
         room_tab_order = {}
+        previous_autojoin_rooms = config.sections["server"]["autojoin"][:]
 
-        # Find position of opened autojoined rooms
+        # Find position of opened auto-joined rooms
         for room, room_page in self.pages.items():
-
-            if room not in config.sections["server"]["autojoin"]:
+            if room not in previous_autojoin_rooms:
                 continue
 
-            room_tab_order[notebook.page_num(room_page.container)] = room
+            room_position = self.page_num(room_page.container)
+            room_tab_order[room_position] = room
 
-        pos = 1000
+            previous_autojoin_rooms.remove(room)
 
-        # Add closed autojoined rooms as well
-        for room in config.sections["server"]["autojoin"]:
-            if room not in self.pages:
-                room_tab_order[pos] = room
-                pos += 1
+        # Add opened rooms sorted by tab position first, then closed rooms
+        autojoin_rooms = [room for room_index, room in sorted(room_tab_order.items())]
+        autojoin_rooms.extend(previous_autojoin_rooms)
 
-        # Sort by "position"
-        rto = sorted(room_tab_order)
-        new_autojoin = []
-        for roomplace in rto:
-            new_autojoin.append(room_tab_order[roomplace])
-
-        # Save
-        config.sections["server"]["autojoin"] = new_autojoin
+        config.sections["server"]["autojoin"] = autojoin_rooms
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -406,7 +398,6 @@ class ChatRoom:
 
     def __init__(self, chatrooms, room, users):
 
-        ui_template = UserInterface(scope=self, path="chatrooms.ui")
         (
             self.activity_container,
             self.activity_search_bar,
@@ -430,7 +421,7 @@ class ChatRoom:
             self.users_label,
             self.users_list_container,
             self.users_paned
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="chatrooms.ui")
 
         self.chatrooms = chatrooms
         self.window = chatrooms.window
@@ -957,7 +948,8 @@ class ChatRoom:
             return
 
         # Add to completion list, and completion drop-down
-        self.chatrooms.completion.add_completion(username)
+        if self.chatrooms.completion.entry == self.chat_entry:
+            self.chatrooms.completion.add_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.append_line(
@@ -978,7 +970,7 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if username not in core.userlist.buddies:
+        if self.chatrooms.completion.entry == self.chat_entry and username not in core.userlist.buddies:
             self.chatrooms.completion.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \
@@ -1181,6 +1173,7 @@ class ChatRoom:
 
         elif active and self.room not in autojoin:
             autojoin.append(self.room)
+            self.chatrooms.on_reordered_page()  # Save room order
 
         config.write_configuration()
 
@@ -1226,7 +1219,7 @@ class ChatRoom:
 
     def set_completion_list(self, completion_list):
 
-        if not config.sections["words"]["tab"]:
+        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
             return
 
         # We want to include users for this room only

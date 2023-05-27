@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -29,9 +29,9 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.geoip import GeoIP
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
@@ -215,6 +215,7 @@ class TreeView:
 
             column_type = column_data["column_type"]
             width = column_data.get("width")
+            should_expand_column = column_data.get("expand_column")
 
             if self._widget_name:
                 try:
@@ -222,7 +223,9 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self._widget_name]
 
-                if column_type != "icon":
+                # Restore saved column width if the column size is fixed. For expandable
+                # columns, the width becomes the minimum width, so use the default value in those cases.
+                if not should_expand_column and column_type != "icon":
                     try:
                         width = column_config[column_id]["width"]
                     except Exception:
@@ -308,7 +311,7 @@ class TreeView:
             else:
                 has_visible_column_header = True
 
-            if column_data.get("expand_column"):
+            if should_expand_column:
                 column.set_expand(True)
 
             if self._widget_name:
@@ -449,7 +452,7 @@ class TreeView:
         del self.iterators[self._iterator_keys[iterator.user_data]]
         self.model.remove(iterator)
 
-    def select_row(self, iterator=None, should_focus=True, should_expand=False):
+    def select_row(self, iterator=None, should_scroll=True):
 
         if iterator is None:
             # Select first row if available
@@ -458,12 +461,10 @@ class TreeView:
             if iterator is None:
                 return
 
-        if should_focus:
+        if should_scroll:
             path = self.model.get_path(iterator)
 
-            if should_expand:
-                self.widget.expand_to_path(path)
-
+            self.widget.expand_to_path(path)
             self.widget.set_cursor(path)
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
@@ -542,7 +543,7 @@ class TreeView:
     def get_country_tooltip_text(icon_name):
 
         country_code = icon_name[-2:].upper()
-        country_name = GeoIP.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         return f"{country_name} ({country_code})"
 
     @staticmethod
@@ -680,7 +681,7 @@ class TreeView:
         iterator = self.model.get_iter(path)
         cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
-        copy_text(cell_value)
+        clipboard.copy_text(cell_value)
         return True
 
 
@@ -775,7 +776,7 @@ def initialise_columns(window, treeview_name, treeview, *args):
             except KeyError:
                 column_config = config.sections["columns"][treeview_name]
 
-            if column_type != "icon":
+            if column_type != "icon" and column_id not in ("folder", "filename", "path"):
                 try:
                     width = column_config[column_id]["width"]
                 except Exception:
@@ -910,7 +911,7 @@ def on_copy_cell_data_accelerator(treeview, *_args):
     iterator = model.get_iter(path)
     cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
 
-    copy_text(cell_value)
+    clipboard.copy_text(cell_value)
     return True
 
 
@@ -1087,7 +1088,7 @@ def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, t
 def get_country_tooltip_text(country_code):
 
     if country_code:
-        country_name = GeoIP.country_code_to_name(country_code)
+        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
         return f"{country_name} ({country_code})"
 
     return _("Earth")

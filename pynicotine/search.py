@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -36,6 +36,20 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class Search:
 
+    __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
+
+    def __init__(self, token=None, term=None, mode="global", room=None, users=None, is_ignored=False):
+
+        self.token = token
+        self.term = term
+        self.mode = mode
+        self.room = room
+        self.users = users
+        self.is_ignored = is_ignored
+
+
+class Searches:
+
     def __init__(self):
 
         self.searches = {}
@@ -46,7 +60,7 @@ class Search:
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
+            self.searches[self.token] = Search(token=self.token, term=term, mode="wishlist", is_ignored=True)
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -90,9 +104,12 @@ class Search:
         """ Disallow parsing search result messages for a search ID """
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, term, mode, ignore):
-        self.searches[self.token] = {"id": self.token, "term": term, "mode": mode, "ignore": ignore}
+    def add_search(self, term, mode, room=None, users=None, is_ignored=False):
+
+        self.searches[self.token] = search = Search(token=self.token, term=term, mode=mode, room=room,
+                                                    users=users, is_ignored=is_ignored)
         self.add_allowed_token(self.token)
+        return search
 
     def remove_search(self, token):
 
@@ -102,8 +119,8 @@ class Search:
         if search is None:
             return
 
-        if search["term"] in config.sections["server"]["autosearch"]:
-            search["ignore"] = True
+        if search.term in config.sections["server"]["autosearch"]:
+            search.is_ignored = True
         else:
             del self.searches[token]
 
@@ -215,9 +232,8 @@ class Search:
         elif mode == "user":
             self.do_peer_search(search_term, users)
 
-        self.add_search(search_term, mode, ignore=False)
-
-        events.emit("do-search", self.token, search_term, mode, room, users, switch_page)
+        search = self.add_search(search_term, mode, room, users)
+        events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
         core.queue.append(slskmessages.FileSearch(self.token, text))
@@ -268,9 +284,9 @@ class Search:
         searches.insert(0, term)
 
         for search in self.searches.values():
-            if search["term"] == term and search["mode"] == "wishlist":
-                search["ignore"] = False
-                self.do_wishlist_search(search["id"], term)
+            if search.term == term and search.mode == "wishlist":
+                search.is_ignored = False
+                self.do_wishlist_search(search.token, term)
                 break
 
     def add_wish(self, wish):
@@ -285,8 +301,7 @@ class Search:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish, "wishlist", ignore=True)
-
+        self.add_search(wish, "wishlist", is_ignored=True)
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
@@ -296,7 +311,7 @@ class Search:
             config.write_configuration()
 
             for search in self.searches.values():
-                if search["term"] == wish and search["mode"] == "wishlist":
+                if search.term == wish and search.mode == "wishlist":
                     del search
                     break
 
@@ -328,7 +343,7 @@ class Search:
 
         search = self.searches.get(msg.token)
 
-        if search is None or search["ignore"]:
+        if search is None or search.is_ignored:
             msg.token = None
             return
 

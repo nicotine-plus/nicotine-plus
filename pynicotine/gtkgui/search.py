@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -35,7 +35,8 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -55,7 +56,6 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.utils import factorize
@@ -102,8 +102,8 @@ class Searches(IconNotebook):
         self.file_properties = None
 
         for event_name, callback in (
+            ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
-            ("do-search", self.do_search),
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
@@ -122,7 +122,7 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            tab.update_filter_comboboxes()
+            tab.update_filter_widgets()
             break
 
     def on_search_mode(self, action, state):
@@ -191,20 +191,21 @@ class Searches(IconNotebook):
 
         return page
 
-    def do_search(self, token, search_term, mode, room=None, users=None, switch_page=True):
+    def add_search(self, token, search, switch_page=True):
 
+        mode = search.mode
         mode_label = None
 
         if mode == "rooms":
-            mode_label = room.strip()
+            mode_label = search.room.strip()
 
         elif mode == "user":
-            mode_label = ",".join(users)
+            mode_label = ",".join(search.users)
 
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search_term, mode, mode_label)
+        self.create_page(token, search.term, mode, mode_label)
 
         if switch_page:
             self.show_search(token)
@@ -252,7 +253,8 @@ class Searches(IconNotebook):
 
         # Update filters in search tabs
         for page in self.pages.values():
-            page.update_filter_comboboxes()
+            page.filters_undo = page.FILTERS_EMPTY
+            page.update_filter_widgets()
 
     def file_search_response(self, msg):
 
@@ -264,7 +266,7 @@ class Searches(IconNotebook):
             if search_item is None:
                 return
 
-            search_term = search_item["term"]
+            search_term = search_item.term
             mode = "wishlist"
             mode_label = _("Wish")
             page = self.create_page(msg.token, search_term, mode, mode_label, show_page=False)
@@ -303,14 +305,25 @@ class Search:
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
     FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
+    FILTERS_EMPTY = {
+        "filterin": (None, ""),
+        "filterout": (None, ""),
+        "filtersize": (None, ""),
+        "filterbr": (None, ""),
+        "filterslot": (False, False),
+        "filtercc": (None, ""),
+        "filtertype": (None, ""),
+        "filterlength": (None, "")
+    }
 
     def __init__(self, searches, text, token, mode, mode_label, show_page):
 
-        ui_template = UserInterface(scope=self, path="search.ui")
         (
             self.add_wish_button,
             self.add_wish_icon,
             self.add_wish_label,
+            self.clear_undo_filters_button,
+            self.clear_undo_filters_icon,
             self.container,
             self.expand_button,
             self.expand_icon,
@@ -329,7 +342,7 @@ class Search:
             self.results_button,
             self.results_label,
             self.tree_view
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="search.ui")
 
         self.searches = searches
         self.window = searches.window
@@ -359,8 +372,9 @@ class Search:
         self.users = set()
         self.all_data = []
         self.grouping_mode = None
-        self.filters = None
-        self.clearing_filters = False
+        self.filters = {}
+        self.filters_undo = self.FILTERS_EMPTY
+        self.populating_filters = False
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
@@ -385,9 +399,9 @@ class Search:
             ["country", _("Country"), 30, "icon", None],
             ["speed", _("Speed"), 120, "number", has_free_slots_col],
             ["in_queue", _("In Queue"), 110, "number", has_free_slots_col],
-            ["folder", _("Folder"), 400, "text", has_free_slots_col],
+            ["folder", _("Folder"), 200, "text", has_free_slots_col],
             ["file_type", _("File Type"), 40, "icon", has_free_slots_col],
-            ["filename", _("Filename"), 400, "text", has_free_slots_col],
+            ["filename", _("Filename"), 200, "text", has_free_slots_col],
             ["size", _("Size"), 100, "number", has_free_slots_col],
             ["bitrate", _("Bitrate"), 100, "number", has_free_slots_col],
             ["length", _("Duration"), 100, "number", has_free_slots_col]
@@ -407,6 +421,9 @@ class Search:
 
         cols["country"].get_widget().set_visible(False)
         cols["file_type"].get_widget().set_visible(False)
+
+        cols["folder"].set_expand(True)
+        cols["filename"].set_expand(True)
 
         for column in self.tree_view.get_columns():
             self.column_offsets[column.get_title()] = 0
@@ -467,7 +484,12 @@ class Search:
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 
-        # Filters
+        # Filter button widgets
+        self.filter_buttons = {
+            "filterslot": self.filter_free_slot_button
+        }
+
+        # Filter combobox widgets
         self.filter_comboboxes = {
             "filterin": self.filter_include_combobox,
             "filterout": self.filter_exclude_combobox,
@@ -478,8 +500,12 @@ class Search:
             "filterlength": self.filter_length_combobox
         }
 
+        # Filter text entry widgets
+        for filter_id, combobox in self.filter_comboboxes.items():
+            combobox.get_child().filter_id = filter_id
+
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
-        self.populate_filters()
+        self.populate_default_filters()
 
         # Wishlist
         self.update_wish_button()
@@ -542,14 +568,20 @@ class Search:
         return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 6)
 
     def on_combobox_popup_shown(self, combobox, _param):
+
+        # Refilter
         entry = combobox.get_child()
         entry.emit("activate")
+
+        # Highlight current list item
+        text = combobox.get_active_text()
+        combobox.set_active_id(text)
 
     def on_combobox_check_separator(self, model, iterator):
         # Render empty value as separator
         return not model.get_value(iterator, 0)
 
-    def update_filter_comboboxes(self):
+    def update_filter_widgets(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.set_row_separator_func(lambda *_args: 0)
@@ -569,37 +601,55 @@ class Search:
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
 
-    def populate_filters(self):
+        self.update_filter_counter(self.active_filter_count)
+
+        if self.filters_undo == self.FILTERS_EMPTY:
+            tooltip_text = _("Clear Filters")
+            icon_name = "edit-clear-symbolic"
+        else:
+            tooltip_text = _("Restore Filters")
+            icon_name = "edit-undo-symbolic"
+
+        if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
+            self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
+            self.clear_undo_filters_icon.set_property("icon-name", icon_name)
+
+    def populate_default_filters(self):
 
         if not config.sections["searches"]["enablefilters"]:
             return
 
         sfilter = config.sections["searches"]["defilter"]
         num_filters = len(sfilter)
+        stored_filters = self.FILTERS_EMPTY.copy()
 
-        if num_filters > 0:
-            self.filter_include_combobox.get_child().set_text(str(sfilter[0]))
+        # Convert from list to dict
+        for i, filter_id in enumerate(stored_filters):
+            if i >= num_filters:
+                break
 
-        if num_filters > 1:
-            self.filter_exclude_combobox.get_child().set_text(str(sfilter[1]))
+            if filter_id in self.filter_buttons:
+                stored_filters[filter_id] = (False, bool(sfilter[i]))
 
-        if num_filters > 2:
-            self.filter_file_size_combobox.get_child().set_text(str(sfilter[2]))
+            elif filter_id in self.filter_comboboxes:
+                stored_filters[filter_id] = (None, str(sfilter[i]))
 
-        if num_filters > 3:
-            self.filter_bitrate_combobox.get_child().set_text(str(sfilter[3]))
+        self.set_filters(stored_filters)
 
-        if num_filters > 4:
-            self.filter_free_slot_button.set_active(bool(sfilter[4]))
+    def set_filters(self, stored_filters):
+        """ Recall result filter values from a dict """
 
-        if num_filters > 5:
-            self.filter_country_combobox.get_child().set_text(str(sfilter[5]))
+        self.populating_filters = True
 
-        if num_filters > 6:
-            self.filter_file_type_combobox.get_child().set_text(str(sfilter[6]))
+        for filter_id, button in self.filter_buttons.items():
+            _value, h_value = stored_filters.get(filter_id, (False, False))
+            button.set_active(h_value)
 
-        if num_filters > 7:
-            self.filter_length_combobox.get_child().set_text(str(sfilter[7]))
+        for filter_id, combobox in self.filter_comboboxes.items():
+            _value, h_value = stored_filters.get(filter_id, (None, ""))
+            combobox.get_child().set_text(h_value)
+
+        self.populating_filters = False
 
         self.on_refilter()
 
@@ -700,7 +750,7 @@ class Search:
 
         self.users.add(user)
         ip_address = msg.init.addr[0]
-        country_code = core.geoip.get_country_code(ip_address)
+        country_code = core.network_filter.get_country_code(ip_address)
         has_free_slots = msg.freeulslots
 
         if has_free_slots:
@@ -988,7 +1038,7 @@ class Search:
         if self.active_filter_count == 0:
             return True
 
-        for filter_id, filter_value in self.filters.items():
+        for filter_id, (filter_value, _h_filter_value) in self.filters.items():
             if not filter_value:
                 continue
 
@@ -1057,7 +1107,6 @@ class Search:
 
         # Update number of results
         self.update_result_counter()
-        self.update_filter_counter(self.active_filter_count)
 
         if sort_column is not None and sort_type is not None:
             self.resultsmodel.set_sort_column_id(sort_column, sort_type)
@@ -1279,7 +1328,7 @@ class Search:
             selected_size += file_size
             selected_length += self.resultsmodel.get_value(iterator, 17)
             country_code = self.resultsmodel.get_value(iterator, 13)
-            country_name = core.geoip.country_code_to_name(country_code)
+            country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
             data.append({
@@ -1382,7 +1431,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             filepath = self.resultsmodel.get_value(iterator, 12)
-            copy_text(filepath)
+            clipboard.copy_text(filepath)
             return
 
     def on_copy_url(self, *_args):
@@ -1391,7 +1440,7 @@ class Search:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 12)
             url = core.userbrowse.get_soulseek_url(user, filepath)
-            copy_text(url)
+            clipboard.copy_text(url)
             return
 
     def on_copy_dir_url(self, *_args):
@@ -1400,13 +1449,13 @@ class Search:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 12)
             url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
-            copy_text(url)
+            clipboard.copy_text(url)
             return
 
     def on_counter_button(self, *_args):
 
         if self.num_results_found > self.num_results_visible:
-            self.on_clear_filters()
+            self.on_clear_undo_filters()
         else:
             self.window.application.lookup_action("configure-searches").activate()
 
@@ -1458,7 +1507,7 @@ class Search:
         self.tree_view.grab_focus()
 
     def on_copy_search_term(self, *_args):
-        copy_text(self.text)
+        clipboard.copy_text(self.text)
 
     @staticmethod
     def push_history(filter_id, value):
@@ -1469,6 +1518,11 @@ class Search:
         history = config.sections["searches"].get(filter_id)
 
         if history is None:
+            # Button filters do not store history
+            return
+
+        if history and history[0] == value:
+            # Most recent item selected, nothing to do
             return
 
         if value in history:
@@ -1482,110 +1536,109 @@ class Search:
 
     def on_refilter(self, *_args):
 
-        if self.clearing_filters:
+        if self.populating_filters:
             return
 
-        filter_in = self.filter_include_combobox.get_active_text().strip()
-        filter_out = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size = self.filter_file_size_combobox.get_active_text().strip()
-        filter_bitrate = self.filter_bitrate_combobox.get_active_text().strip()
-        filter_country = self.filter_country_combobox.get_active_text().strip()
-        filter_file_type = self.filter_file_type_combobox.get_active_text().strip()
-        filter_length = self.filter_length_combobox.get_active_text().strip()
+        filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
+        filter_in_str = self.filter_include_combobox.get_active_text().strip()
+        filter_out_str = self.filter_exclude_combobox.get_active_text().strip()
+        filter_size_str = self.filter_file_size_combobox.get_active_text().strip()
+        filter_bitrate_str = self.filter_bitrate_combobox.get_active_text().strip()
+        filter_country_str = self.filter_country_combobox.get_active_text().strip()
+        filter_file_type_str = self.filter_file_type_combobox.get_active_text().strip()
+        filter_length_str = self.filter_length_combobox.get_active_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
-        if filter_in:
-            try:
-                filter_in = re.compile(filter_in, flags=re.IGNORECASE)
-            except re.error:
-                filter_in = None
+        # Include/exclude text
+        error_entries = set()
+        filter_include_entry = self.filter_include_combobox.get_child()
+        filter_exclude_entry = self.filter_exclude_combobox.get_child()
 
-        if filter_out:
+        if filter_in_str:
             try:
-                filter_out = re.compile(filter_out, flags=re.IGNORECASE)
+                filter_in = re.compile(filter_in_str, flags=re.IGNORECASE)
             except re.error:
-                filter_out = None
+                error_entries.add(filter_include_entry)
+
+        if filter_out_str:
+            try:
+                filter_out = re.compile(filter_out_str, flags=re.IGNORECASE)
+            except re.error:
+                error_entries.add(filter_exclude_entry)
+
+        for entry in (filter_include_entry, filter_exclude_entry):
+            # Set red background if invalid regex pattern is detected
+            css_class_function = add_css_class if entry in error_entries else remove_css_class
+            css_class_function(entry, "error")
 
         # Split at | pipes ampersands & space(s) but don't split <>=! math operators spaced before digit condition
         seperator_pattern = self.FILTER_SPLIT_DIGIT_PATTERN
 
-        if filter_size:
-            filter_size = seperator_pattern.split(filter_size)
+        if filter_size_str:
+            filter_size = seperator_pattern.split(filter_size_str)
 
-        if filter_bitrate:
-            filter_bitrate = seperator_pattern.split(filter_bitrate)
+        if filter_bitrate_str:
+            filter_bitrate = seperator_pattern.split(filter_bitrate_str)
 
-        if filter_length:
-            filter_length = seperator_pattern.split(filter_length)
+        if filter_length_str:
+            filter_length = seperator_pattern.split(filter_length_str)
 
         # Split at commas, in addition to | pipes ampersands & space(s) but don't split ! not operator before condition
         seperator_pattern = self.FILTER_SPLIT_TEXT_PATTERN
 
-        if filter_country:
-            filter_country = seperator_pattern.split(filter_country.upper())
+        if filter_country_str:
+            filter_country = seperator_pattern.split(filter_country_str.upper())
 
-        if filter_file_type:
-            filter_file_type = seperator_pattern.split(filter_file_type.lower())
+        if filter_file_type_str:
+            filter_file_type = seperator_pattern.split(filter_file_type_str.lower())
+
+            # Replace generic file type filters with real file extensions
+            for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
+                excluded_filter_name = f"!{filter_name}"
+
+                if filter_name in filter_file_type:
+                    filter_file_type.remove(filter_name)
+                    filter_file_type += list(file_extensions)
+
+                elif excluded_filter_name in filter_file_type:
+                    filter_file_type.remove(excluded_filter_name)
+                    filter_file_type += ["!" + x for x in file_extensions]
 
         filters = {
-            "filterin": filter_in,
-            "filterout": filter_out,
-            "filtersize": filter_size,
-            "filterbr": filter_bitrate,
-            "filterslot": filter_free_slot,
-            "filtercc": filter_country,
-            "filtertype": filter_file_type,
-            "filterlength": filter_length,
+            "filterin": (filter_in, filter_in_str),
+            "filterout": (filter_out, filter_out_str),
+            "filtersize": (filter_size, filter_size_str),
+            "filterbr": (filter_bitrate, filter_bitrate_str),
+            "filterslot": (filter_free_slot, filter_free_slot),
+            "filtercc": (filter_country, filter_country_str),
+            "filtertype": (filter_file_type, filter_file_type_str),
+            "filterlength": (filter_length, filter_length_str),
         }
 
         if self.filters == filters:
             # Filters have not changed, no need to refilter
             return
 
+        if self.filters and filters == self.FILTERS_EMPTY:
+            # Filters cleared, enable Restore Filters
+            self.filters_undo = self.filters
+        else:
+            # Filters active, enable Clear Filters
+            self.filters_undo = self.FILTERS_EMPTY
+
         self.active_filter_count = 0
 
-        # Set red background if invalid regex pattern is detected
-        filter_include_entry = self.filter_include_combobox.get_child()
-        filter_exclude_entry = self.filter_exclude_combobox.get_child()
-
-        for filter_regex, entry in (
-            (filter_in, filter_include_entry),
-            (filter_out, filter_exclude_entry)
-        ):
-            css_class_function = add_css_class if filter_regex is None else remove_css_class
-            css_class_function(entry, "error")
-
         # Add filters to history
-        for filter_id, value in filters.items():
-            if not value:
+        for filter_id, (_value, h_value) in filters.items():
+            if not h_value:
                 continue
 
-            if filter_id in ("filterin", "filterout"):
-                value = value.pattern
-
-            elif filter_id in ("filtersize", "filterbr", "filtercc", "filtertype", "filterlength"):
-                value = " ".join(value)
-
-            self.push_history(filter_id, value)
+            self.push_history(filter_id, h_value)
             self.active_filter_count += 1
-
-        # Replace generic file type filters with real file extensions
-        file_type_filters = filters["filtertype"]
-
-        for filter_name, file_extensions in self.FILTER_GENERIC_FILE_TYPES:
-            excluded_filter_name = f"!{filter_name}"
-
-            if filter_name in file_type_filters:
-                file_type_filters.remove(filter_name)
-                file_type_filters += list(file_extensions)
-
-            elif excluded_filter_name in file_type_filters:
-                file_type_filters.remove(excluded_filter_name)
-                file_type_filters += ["!" + x for x in file_extensions]
 
         # Apply the new filters
         self.filters = filters
-        self.update_filter_comboboxes()
+        self.update_filter_widgets()
         self.clear_model()
         self.update_model()
 
@@ -1593,22 +1646,30 @@ class Search:
         if not widget.get_text():
             self.on_refilter()
 
-    def on_clear_filters(self, *_args):
+    def on_filter_entry_icon_press(self, entry, *_args):
 
-        self.clearing_filters = True
+        history = config.sections["searches"].get(entry.filter_id)
+        recall_text = history[0] if history else ""
+        text = entry.get_text()
 
-        for widget in self.filter_comboboxes.values():
-            widget.get_child().set_text("")
+        # Recall last filter entry if box empty
+        if not text:
+            entry.grab_focus_without_selecting()
+            entry.set_text(recall_text)
+            entry.set_position(-1)
 
-        self.filter_free_slot_button.set_active(False)
-
-        if self.filters_button.get_active():
-            self.filter_include_combobox.get_child().grab_focus()
+        # Activate new filter entry or Clear Filter
+        if text != recall_text:
+            self.on_refilter()
         else:
-            self.tree_view.grab_focus()
+            entry.set_text("")
 
-        self.clearing_filters = False
-        self.on_refilter()
+    def on_clear_undo_filters(self, *_args):
+
+        self.set_filters(self.filters_undo)
+
+        if not self.filters_button.get_active():
+            self.tree_view.grab_focus()
 
     def on_clear(self, *_args):
 

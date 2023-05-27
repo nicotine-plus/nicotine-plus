@@ -28,42 +28,45 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Euskara
- - Julen (2006-2007)
+ - Julen (2006–2007)
 
 ## Finnish
  - Kari Viittanen (Kalevi) (2006–2007)
 
 ## French
+ - subu_versus (2023)
+ - zniavre (2007–2023)
  - Lisapple (2021–2022)
  - melmorabity (2021–2022)
  - m-balthazar (2020)
  - Michael Labouebe (gfarmerfr) (2016–2017)
  - Monsieur Poisson (2009–2010)
  - ManWell (2007)
- - zniavre (2007–2023)
  - systr (2006)
  - Julien Wajsberg (flashfr) (2003–2004)
 
 ## German
  - Han Boetes (hboetes) (2021–2023)
+ - phelissimo_ (2023)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Hungarian
- - Szia Tomi (2022-2023)
+ - Szia Tomi (2022–2023)
  - Nils (2009)
  - David Balazs (djbaloo) (2006–2020)
 
 ## Italian
- - Gabboxl (2022)
+ - Gabboxl (2022–2023)
+ - ms-afk (2023)
  - Gianluca Boiano (2020–2022)
  - nicola (2007)
  - dbazza (2003–2004)
 
 ## Latvian
- - Pagal3 (2022-2023)
+ - Pagal3 (2022–2023)
 
 ## Lithuanian
  - mantas (2020)
@@ -73,12 +76,13 @@
  - Allan Nordhøy (comradekingu) (2021)
 
 ## Polish
- - mariachini (2017–2022)
+ - mariachini (2017–2023)
  - Amun-Ra (2007)
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
 
 ## Portuguese (Brazil)
+ - Havokdan (2022–2023)
  - Guilherme Santos (2022)
  - b1llso (2022)
  - Nicolas Abril (2021)
@@ -86,22 +90,23 @@
  - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
 
 ## Russian
+ - SnIPeRSnIPeR (2022–2023)
+ - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
- - SnIPeRSnIPeR (2022)
- - Mehavoid (2021–2022)
 
 ## Slovak
  - Jozef Říha (2006–2008)
 
 ## Spanish (Chile)
- - MELERIX (2021–2022)
+ - MELERIX (2021–2023)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)
  - Dreslo (2003–2004)
 
 ## Spanish (Spain)
- - MELERIX (2021)
+ - gallegonovato (2023)
+ - MELERIX (2021–2023)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)
@@ -112,7 +117,7 @@
  - Markus Magnuson (alimony) (2003–2004)
 
 ## Turkish
- - Oğuz Ersen (2021–2022)
+ - Oğuz Ersen (2021–2023)
 
 ## Ukrainian
  - uniss2209 (2022)

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -147,14 +147,14 @@ class CloseConnectionIP(InternalMessage):
 class ServerConnect(InternalMessage):
     """ Core sends this to make networking thread establish a server connection. """
 
-    __slots__ = ("addr", "login", "interface", "bound_ip", "listen_port_range")
+    __slots__ = ("addr", "login", "interface", "bound_ip", "listen_port")
 
-    def __init__(self, addr=None, login=None, interface=None, bound_ip=None, listen_port_range=None):
+    def __init__(self, addr=None, login=None, interface=None, bound_ip=None, listen_port=None):
         self.addr = addr
         self.login = login
         self.interface = interface
         self.bound_ip = bound_ip
-        self.listen_port_range = listen_port_range
+        self.listen_port = listen_port
 
 
 class ServerDisconnect(InternalMessage):
@@ -336,7 +336,7 @@ class Login(ServerMessage):
     established. Server responds with the greeting message. """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "checksum")
+                 "banner", "ip_address", "checksum", "is_supporter")
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
@@ -348,6 +348,7 @@ class Login(ServerMessage):
         self.banner = None
         self.ip_address = None
         self.checksum = None
+        self.is_supporter = None
 
     def make_network_message(self):
         from hashlib import md5
@@ -370,17 +371,15 @@ class Login(ServerMessage):
 
         if not self.success:
             pos, self.reason = self.unpack_string(message, pos)
-        else:
-            pos, self.banner = self.unpack_string(message, pos)
-
-        if not message[pos:]:
             return
 
+        pos, self.banner = self.unpack_string(message, pos)
         pos, self.ip_address = self.unpack_ip(message, pos)
+        pos, self.checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
 
-        # MD5 hexdigest of the password you sent
-        if len(message[pos:]) >= 4:
-            pos, self.checksum = self.unpack_string(message, pos)
+        # Soulfind support
+        if message[pos:]:
+            pos, self.is_supporter = self.unpack_bool(message, pos)
 
 
 class SetWaitPort(ServerMessage):
@@ -1488,7 +1487,7 @@ class MinParentsInCache(ServerMessage):
         _pos, self.num = self.unpack_uint32(message)
 
 
-class DistribAliveInterval(ServerMessage):
+class DistribPingInterval(ServerMessage):
     """ Server code: 90 """
     """ OBSOLETE, no longer sent by the server """
 
@@ -1549,7 +1548,7 @@ class EmbeddedMessage(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message)
-        self.distrib_message = message[pos:]
+        self.distrib_message = message[pos:].tobytes()
 
 
 class AcceptChildren(ServerMessage):
@@ -3237,8 +3236,10 @@ class DistribMessage(SlskMessage):
     msgtype = MessageType.DISTRIBUTED
 
 
-class DistribAlive(DistribMessage):
+class DistribPing(DistribMessage):
     """ Distrib code: 0 """
+    """ We ping distributed children every 60 seconds. """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("init",)
 
@@ -3258,7 +3259,7 @@ class DistribSearch(DistribMessage):
     """ Search request that arrives through the distributed network.
     We transmit the search request to our child peers. """
 
-    __slots__ = ("unknown", "init", "user", "token", "searchterm")
+    __slots__ = ("init", "unknown", "user", "token", "searchterm")
 
     def __init__(self, init=None, unknown=None, user=None, token=None, searchterm=None):
         self.init = init
@@ -3286,25 +3287,30 @@ class DistribSearch(DistribMessage):
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
     """ We tell our distributed children what our position is in our branch (xth
-    generation) on the distributed network. """
+    generation) on the distributed network.
 
-    __slots__ = ("init", "value")
+    If we receive a branch level of 0 from a parent, we should mark the parent as
+    our branch root, since they won't send a DistribBranchRoot message in this case. """
 
-    def __init__(self, init=None, value=None):
+    __slots__ = ("init", "level")
+
+    def __init__(self, init=None, level=None):
         self.init = init
-        self.value = value
+        self.level = level
 
     def make_network_message(self):
-        return self.pack_int32(self.value)
+        return self.pack_int32(self.level)
 
     def parse_network_message(self, message):
-        _pos, self.value = self.unpack_int32(message)
+        _pos, self.level = self.unpack_int32(message)
 
 
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
     """ We tell our distributed children the username of the root of the branch
-    we’re in on the distributed network. """
+    we’re in on the distributed network.
+
+    This message should not be sent when we're the branch root. """
 
     __slots__ = ("init", "user")
 
@@ -3360,7 +3366,7 @@ class DistribEmbeddedMessage(DistribMessage):
 
     def parse_network_message(self, message):
         pos, self.distrib_code = self.unpack_uint8(message, 3)
-        self.distrib_message = message[pos:]
+        self.distrib_message = message[pos:].tobytes()
 
 
 """
@@ -3486,7 +3492,7 @@ SERVER_MESSAGE_CODES = {
     ParentInactivityTimeout: 86,  # Obsolete
     SearchInactivityTimeout: 87,  # Obsolete
     MinParentsInCache: 88,        # Obsolete
-    DistribAliveInterval: 90,     # Obsolete
+    DistribPingInterval: 90,      # Obsolete
     AddToPrivileged: 91,          # Obsolete
     CheckPrivileges: 92,
     EmbeddedMessage: 93,
@@ -3565,7 +3571,7 @@ PEER_MESSAGE_CODES = {
 }
 
 DISTRIBUTED_MESSAGE_CODES = {
-    DistribAlive: 0,
+    DistribPing: 0,               # Deprecated
     DistribSearch: 3,
     DistribBranchLevel: 4,
     DistribBranchRoot: 5,

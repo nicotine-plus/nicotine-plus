@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
@@ -26,11 +26,11 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -39,7 +39,6 @@ class Interests:
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="interests.ui")
         (
             self.add_dislike_entry,
             self.add_like_entry,
@@ -52,7 +51,7 @@ class Interests:
             self.similar_users_button,
             self.similar_users_label,
             self.similar_users_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="interests.ui")
 
         if GTK_API_VERSION >= 4:
             window.interests_container.append(self.container)
