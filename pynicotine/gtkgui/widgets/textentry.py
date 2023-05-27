@@ -112,11 +112,10 @@ class ChatCompletion:
 
     def __init__(self):
 
-        self.completion_list = []
-        self.completion_iters = {}
+        self.completions = {}
 
         self.midwaycompletion = False  # True if the user just used tab completion
-        self.completions = {}  # Holds temp. information about tab completoin
+        self.completion_info = {}  # Holds temp. information about tab completoin
 
         self.entry = None
         self.entry_changed_handler = None
@@ -147,16 +146,19 @@ class ChatCompletion:
 
     def add_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
+        if item in self.completions:
             return
-
-        if item in self.completion_list:
-            return
-
-        self.completion_list.append(item)
 
         if config.sections["words"]["dropdown"]:
-            self.completion_iters[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
+            iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
+
+        elif config.sections["words"]["tab"]:
+            iterator = None
+
+        else:
+            return
+
+        self.completions[item] = iterator
 
     def get_completion(self, part, completion_list):
 
@@ -179,20 +181,10 @@ class ChatCompletion:
 
     def remove_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
-            return
+        iterator = self.completions.pop(item)
 
-        if item not in self.completion_list:
-            return
-
-        self.completion_list.remove(item)
-
-        if not config.sections["words"]["dropdown"]:
-            return
-
-        iterator = self.completion_iters[item]
-        self.model.remove(iterator)
-        del self.completion_iters[item]
+        if config.sections["words"]["dropdown"]:
+            self.model.remove(iterator)
 
     def set_completion_list(self, completion_list):
 
@@ -201,30 +193,30 @@ class ChatCompletion:
 
         config_words = config.sections["words"]
 
+        self.entry_completion.set_popup_completion(config_words["dropdown"])
         self.entry_completion.set_popup_single_match(False)
         self.entry_completion.set_minimum_key_length(config_words["characters"])
         self.entry_completion.set_inline_completion(False)
 
         self.model.clear()
-        self.completion_iters.clear()
-
-        if not config_words["tab"]:
-            return
+        self.completions.clear()
 
         if completion_list is None:
             completion_list = []
 
-        self.completion_list = completion_list
-
-        if not config_words["dropdown"]:
-            self.entry_completion.set_popup_completion(False)
-            return
-
         for word in completion_list:
             word = str(word)
-            self.completion_iters[word] = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
 
-        self.entry_completion.set_popup_completion(True)
+            if config_words["dropdown"]:
+                iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
+
+            elif config_words["tab"]:
+                iterator = None
+
+            else:
+                return
+
+            self.completions[word] = iterator
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -304,14 +296,14 @@ class ChatCompletion:
         preix = i - len(text)
 
         if not self.midwaycompletion:
-            self.completions["completions"] = self.get_completions(text, self.completion_list)
+            self.completion_info["completions"] = self.get_completions(text, self.completions)
 
-            if self.completions["completions"]:
+            if self.completion_info["completions"]:
                 self.midwaycompletion = True
-                self.completions["currentindex"] = -1
+                self.completion_info["currentindex"] = -1
                 currentnick = text
         else:
-            currentnick = self.completions["completions"][self.completions["currentindex"]]
+            currentnick = self.completion_info["completions"][self.completion_info["currentindex"]]
 
         if self.midwaycompletion:
             # We're still completing, block handler to avoid modifying midwaycompletion value
@@ -322,10 +314,10 @@ class ChatCompletion:
                 if backwards:
                     direction = -1  # Backward cycle
 
-                self.completions["currentindex"] = ((self.completions["currentindex"] + direction) %
-                                                    len(self.completions["completions"]))
+                self.completion_info["currentindex"] = ((self.completion_info["currentindex"] + direction) %
+                                                        len(self.completion_info["completions"]))
 
-                newnick = self.completions["completions"][self.completions["currentindex"]]
+                newnick = self.completion_info["completions"][self.completion_info["currentindex"]]
                 self.entry.insert_text(newnick, preix)
                 self.entry.set_position(preix + len(newnick))
 
