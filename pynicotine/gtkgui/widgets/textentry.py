@@ -162,7 +162,7 @@ class ChatCompletion:
 
         iterator = self.completions.pop(item)
 
-        if config.sections["words"]["dropdown"]:
+        if iterator is not None:
             self.model.remove(iterator)
 
     def set_completion_list(self, completion_list):
