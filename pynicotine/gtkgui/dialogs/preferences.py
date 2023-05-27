@@ -2127,16 +2127,25 @@ class NowPlayingPage:
 
     def __init__(self, application):
 
-        # pylint: disable=invalid-name
-        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat,
-         self.NP_lastfm, self.NP_listenbrainz, self.NP_mpris, self.NP_other,
-         self.player_input, self.test_now_playing) = ui.load(scope=self, path="settings/nowplaying.ui")
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.command_entry,
+            self.command_label,
+            self.format_help_label,
+            self.format_message_combobox,
+            self.lastfm_radio,
+            self.listenbrainz_radio,
+            self.mpris_radio,
+            self.other_radio,
+            self.output_label,
+            self.test_configuration_button
+        ) = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
         self.options = {
             "players": {
-                "npothercommand": self.NPCommand
+                "npothercommand": self.command_entry
             }
         }
 
@@ -2154,16 +2163,16 @@ class NowPlayingPage:
         self.custom_format_list = []
 
         # Supply the information needed for the Now Playing class to return a song
-        self.test_now_playing.connect(
+        self.test_configuration_button.connect(
             "clicked",
             core.now_playing.display_now_playing,
-            self.set_now_playing_example,  # Callback to update the song displayed
+            self.set_now_playing_output,   # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
             self.get_format                # Callback to retrieve format text
         )
 
-        self.NP_mpris.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in ("win32", "darwin"))
 
     def set_settings(self):
 
@@ -2177,33 +2186,36 @@ class NowPlayingPage:
         self.update_now_playing_info()
 
         # Add formats
-        self.NPFormat.remove_all()
+        self.format_message_combobox.remove_all()
 
         for item in self.default_format_list:
-            self.NPFormat.append_text(str(item))
+            self.format_message_combobox.append_text(str(item))
 
         if self.custom_format_list:
             for item in self.custom_format_list:
-                self.NPFormat.append_text(str(item))
+                self.format_message_combobox.append_text(str(item))
 
         if config.sections["players"]["npformat"] == "":
             # If there's no default format in the config: set the first of the list
-            self.NPFormat.set_active(0)
+            self.format_message_combobox.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
-            for i, value in enumerate(self.NPFormat.get_model()):
+            for i, value in enumerate(self.format_message_combobox.get_model()):
                 if value[0] == config.sections["players"]["npformat"]:
-                    self.NPFormat.set_active(i)
+                    self.format_message_combobox.set_active(i)
 
     def get_player(self):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             player = "lastfm"
-        elif self.NP_mpris.get_active():
+
+        elif self.mpris_radio.get_active():
             player = "mpris"
-        elif self.NP_listenbrainz.get_active():
+
+        elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
-        elif self.NP_other.get_active():
+
+        elif self.other_radio.get_active():
             player = "other"
 
         if sys.platform in ("win32", "darwin") and player == "mpris":
@@ -2212,10 +2224,10 @@ class NowPlayingPage:
         return player
 
     def get_command(self):
-        return self.NPCommand.get_text()
+        return self.command_entry.get_text()
 
     def get_format(self):
-        return self.NPFormat.get_active_text()
+        return self.format_message_combobox.get_active_text()
 
     def set_player(self, player):
 
@@ -2223,31 +2235,34 @@ class NowPlayingPage:
             player = "lastfm"
 
         if player == "lastfm":
-            self.NP_lastfm.set_active(True)
+            self.lastfm_radio.set_active(True)
+
         elif player == "listenbrainz":
-            self.NP_listenbrainz.set_active(True)
+            self.listenbrainz_radio.set_active(True)
+
         elif player == "other":
-            self.NP_other.set_active(True)
+            self.other_radio.set_active(True)
+
         else:
-            self.NP_mpris.set_active(True)
+            self.mpris_radio.set_active(True)
 
     def update_now_playing_info(self, *_args):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username;APIKEY:"))
+            self.command_label.set_text(_("Username;APIKEY:"))
 
-        elif self.NP_mpris.get_active():
+        elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
-            self.player_input.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
+            self.command_label.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
 
-        elif self.NP_listenbrainz.get_active():
+        elif self.listenbrainz_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username:"))
+            self.command_label.set_text(_("Username:"))
 
-        elif self.NP_other.get_active():
+        elif self.other_radio.get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command:"))
+            self.command_label.set_text(_("Command:"))
 
         legend = ""
 
@@ -2280,10 +2295,10 @@ class NowPlayingPage:
 
             legend += "\n"
 
-        self.Legend.set_text(legend[:-1])
+        self.format_help_label.set_text(legend[:-1])
 
-    def set_now_playing_example(self, title):
-        self.Example.set_text(title)
+    def set_now_playing_output(self, title):
+        self.output_label.set_text(title)
 
     def get_settings(self):
 

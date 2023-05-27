@@ -38,33 +38,33 @@
             <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkRadioButton" id="NP_lastfm">
+              <object class="GtkRadioButton" id="lastfm_radio">
                 <property name="label">Last.fm</property>
                 <property name="visible">True</property>
                 <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_listenbrainz">
+              <object class="GtkRadioButton" id="listenbrainz_radio">
                 <property name="label">ListenBrainz</property>
                 <property name="visible">True</property>
-                <property name="group">NP_lastfm</property>
+                <property name="group">lastfm_radio</property>
                 <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_mpris">
+              <object class="GtkRadioButton" id="mpris_radio">
                 <property name="label">MPRIS (v2)</property>
                 <property name="visible">True</property>
-                <property name="group">NP_lastfm</property>
+                <property name="group">lastfm_radio</property>
                 <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_other">
+              <object class="GtkRadioButton" id="other_radio">
                 <property name="label" translatable="yes">Other</property>
                 <property name="visible">True</property>
-                <property name="group">NP_lastfm</property>
+                <property name="group">lastfm_radio</property>
                 <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
@@ -76,16 +76,16 @@
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkLabel" id="player_input">
+              <object class="GtkLabel" id="command_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">NPCommand</property>
+                <property name="mnemonic-widget">command_entry</property>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="NPCommand">
+              <object class="GtkEntry" id="command_entry">
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <property name="width-chars">16</property>
@@ -114,7 +114,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="Legend">
+          <object class="GtkLabel" id="format_help_label">
             <property name="visible">True</property>
             <property name="selectable">True</property>
             <property name="xalign">0</property>
@@ -133,11 +133,11 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">NPFormat</property>
+                <property name="mnemonic-widget">format_message_combobox</property>
               </object>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="NPFormat">
+              <object class="GtkComboBoxText" id="format_message_combobox">
                 <property name="visible">True</property>
                 <property name="has-entry">True</property>
                 <property name="valign">center</property>
@@ -155,7 +155,7 @@
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="test_now_playing">
+              <object class="GtkButton" id="test_configuration_button">
                 <property name="visible">True</property>
                 <property name="halign">start</property>
                 <property name="valign">start</property>
@@ -173,7 +173,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Test Configuration</property>
-                        <property name="mnemonic-widget">test_now_playing</property>
+                        <property name="mnemonic-widget">test_configuration_button</property>
                       </object>
                     </child>
                   </object>
@@ -181,7 +181,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="Example">
+              <object class="GtkLabel" id="output_label">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="selectable">True</property>
