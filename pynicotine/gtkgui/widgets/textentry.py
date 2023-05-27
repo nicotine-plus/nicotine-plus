@@ -18,8 +18,6 @@
 
 import sys
 
-from os.path import commonprefix
-
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -113,9 +111,9 @@ class ChatCompletion:
     def __init__(self):
 
         self.completions = {}
-
-        self.midwaycompletion = False  # True if the user just used tab completion
-        self.completion_info = {}  # Holds temp. information about tab completoin
+        self.current_completions = []
+        self.completion_index = 0
+        self.midway_completion = False  # True if the user just used tab completion
 
         self.entry = None
         self.entry_changed_handler = None
@@ -159,25 +157,6 @@ class ChatCompletion:
             return
 
         self.completions[item] = iterator
-
-    def get_completion(self, part, completion_list):
-
-        matches = self.get_completions(part, completion_list)
-
-        if not matches:
-            return None, 0
-
-        if len(matches) == 1:
-            return matches[0], 1
-
-        return commonprefix([x.lower() for x in matches]), 0
-
-    @staticmethod
-    def get_completions(part, completion_list):
-
-        lowerpart = part.lower()
-        matches = [x for x in completion_list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
-        return matches
 
     def remove_completion(self, item):
 
@@ -270,7 +249,7 @@ class ChatCompletion:
 
     def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midwaycompletion = False
+        self.midway_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
@@ -289,37 +268,38 @@ class ChatCompletion:
         #    2  5  8  11 14      17 20 23 26 29 32
         #
         # i = 16
-        # text = Miss
+        # last_word = Miss
         # preix = 12
+
         i = self.entry.get_position()
-        text = text[:i].split(" ")[-1]
-        preix = i - len(text)
+        last_word = text[:i].split(" ")[-1]
+        last_word_len = len(last_word)
+        preix = i - last_word_len
 
-        if not self.midwaycompletion:
-            self.completion_info["completions"] = self.get_completions(text, self.completions)
+        if not self.midway_completion:
+            last_word_lower = last_word.lower()
+            self.current_completions = [
+                x for x in self.completions if x.lower().startswith(last_word_lower) and len(x) >= last_word_len
+            ]
 
-            if self.completion_info["completions"]:
-                self.midwaycompletion = True
-                self.completion_info["currentindex"] = -1
-                currentnick = text
+            if self.current_completions:
+                self.midway_completion = True
+                self.completion_index = -1
+                current_word = last_word
         else:
-            currentnick = self.completion_info["completions"][self.completion_info["currentindex"]]
+            current_word = self.current_completions[self.completion_index]
 
-        if self.midwaycompletion:
-            # We're still completing, block handler to avoid modifying midwaycompletion value
+        if self.midway_completion:
+            # We're still completing, block handler to avoid modifying midway_completion value
             with self.entry.handler_block(self.entry_changed_handler):
-                self.entry.delete_text(i - len(currentnick), i)
-                direction = 1  # Forward cycle
+                self.entry.delete_text(i - len(current_word), i)
 
-                if backwards:
-                    direction = -1  # Backward cycle
+                direction = -1 if backwards else 1
+                self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
 
-                self.completion_info["currentindex"] = ((self.completion_info["currentindex"] + direction) %
-                                                        len(self.completion_info["completions"]))
-
-                newnick = self.completion_info["completions"][self.completion_info["currentindex"]]
-                self.entry.insert_text(newnick, preix)
-                self.entry.set_position(preix + len(newnick))
+                new_word = self.current_completions[self.completion_index]
+                self.entry.insert_text(new_word, preix)
+                self.entry.set_position(preix + len(new_word))
 
         return True
 
