@@ -564,7 +564,7 @@ class PrivateChat:
 
     def set_completion_list(self, completion_list):
 
-        if not config.sections["words"]["tab"]:
+        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
             return
 
         # Tab-complete the recipient username
