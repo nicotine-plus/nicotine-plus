@@ -127,7 +127,7 @@ class ChatCompletion:
 
     def create_entry_completion(self):
 
-        self.entry_completion = Gtk.EntryCompletion(model=self.model)
+        self.entry_completion = Gtk.EntryCompletion(popup_single_match=False, model=self.model)
         self.entry_completion.set_text_column(0)
         self.entry_completion.set_match_func(self.entry_completion_find_match)
         self.entry_completion.connect("match-selected", self.entry_completion_found_match)
@@ -147,13 +147,8 @@ class ChatCompletion:
 
     def add_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
-            return
-
-        if item in self.completion_list:
-            return
-
-        self.completion_list.append(item)
+        if config.sections["words"]["tab"] and item not in self.completion_list:
+            self.completion_list.append(item)
 
         if config.sections["words"]["dropdown"]:
             self.completion_iters[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
@@ -179,18 +174,17 @@ class ChatCompletion:
 
     def remove_completion(self, item):
 
-        if not config.sections["words"]["tab"]:
-            return
-
-        if item not in self.completion_list:
-            return
-
-        self.completion_list.remove(item)
+        if config.sections["words"]["tab"] and item in self.completion_list:
+            self.completion_list.remove(item)
 
         if not config.sections["words"]["dropdown"]:
             return
 
-        iterator = self.completion_iters[item]
+        iterator = self.completion_iters.get(item)
+
+        if iterator is None:
+            return
+
         self.model.remove(iterator)
         del self.completion_iters[item]
 
@@ -201,20 +195,19 @@ class ChatCompletion:
 
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_single_match(False)
         self.entry_completion.set_minimum_key_length(config_words["characters"])
-        self.entry_completion.set_inline_completion(False)
 
         self.model.clear()
         self.completion_iters.clear()
 
-        if not config_words["tab"]:
-            return
-
         if completion_list is None:
             completion_list = []
 
-        self.completion_list = completion_list
+        if config_words["tab"]:
+            self.completion_list = completion_list
+            self.entry_completion.set_inline_completion(True)
+        else:
+            self.entry_completion.set_inline_completion(False)
 
         if not config_words["dropdown"]:
             self.entry_completion.set_popup_completion(False)
