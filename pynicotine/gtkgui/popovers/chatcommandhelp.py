@@ -60,10 +60,13 @@ class ChatCommandHelp(Popover):
 
         return section_container
 
-    def _create_command_row(self, parent, command, description):
+    def _create_command_row(self, parent, command, aliases, parameters, description):
 
         row = Gtk.Box(homogeneous=True, spacing=12, visible=True)
-        command_label = Gtk.Label(label=command, selectable=True, wrap=True, xalign=0, visible=True)
+        command_label = Gtk.Label(
+            label=f"/{', /'.join([command] + aliases)} {' '.join(parameters)}".strip(),
+            selectable=True, wrap=True, xalign=0, visible=True
+        )
         description_label = Gtk.Label(label=description, selectable=True, wrap=True, xalign=0, visible=True)
 
         add_css_class(command_label, "italic")
@@ -85,11 +88,11 @@ class ChatCommandHelp(Popover):
 
         self.container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
-        for group_name, commands in core.pluginhandler.get_command_descriptions(self.interface).items():
+        for group_name, command_data in core.pluginhandler.get_command_groups_data(self.interface).items():
             section_container = self._create_command_section(group_name)
 
-            for command_usage, description in commands:
-                self._create_command_row(section_container, command_usage, description)
+            for command, aliases, parameters, description in command_data:
+                self._create_command_row(section_container, command, aliases, parameters, description)
 
         self.scrollable.set_property("child", self.container)
         self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
