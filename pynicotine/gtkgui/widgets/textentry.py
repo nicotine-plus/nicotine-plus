@@ -124,7 +124,7 @@ class ChatCompletion:
 
     def create_entry_completion(self):
 
-        self.entry_completion = Gtk.EntryCompletion(model=self.model, inline_selection=True, popup_single_match=False)
+        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
         self.entry_completion.set_text_column(0)
         self.entry_completion.set_match_func(self.entry_completion_find_match)
         self.entry_completion.connect("match-selected", self.entry_completion_found_match)
