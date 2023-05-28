@@ -773,7 +773,7 @@ class ChatRoom:
             return
 
         mentioned = (tag == self.chat_view.tag_highlight)
-        self.chatrooms.request_tab_changed(self.container, is_important=mentioned)
+        self.chatrooms.request_tab_changed(self.container, is_important=mentioned, is_silent=is_global)
 
         if is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab

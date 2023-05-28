@@ -454,13 +454,14 @@ class IconNotebook:
 
     """ Tab Highlights """
 
-    def request_tab_changed(self, page, is_important=False):
+    def request_tab_changed(self, page, is_important=False, is_silent=False):
 
         if self.parent_page is not None:
             page_active = (self.get_current_page() == page)
 
-            if self.window.current_page_id != self.parent_page.id or not page_active:
-                # Highlight top-level tab
+            if ((self.window.current_page_id != self.parent_page.id or not page_active)
+                    and (not is_silent or is_important)):
+                # Highlight top-level tab (unless Public room feed then only for mentions)
                 self.window.notebook.request_tab_changed(self.parent_page, is_important)
 
             if page_active:
