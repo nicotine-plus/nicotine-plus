@@ -169,15 +169,14 @@ class TabLabel:
 
     def request_changed(self, is_important=False):
 
-        self.remove_changed()
-
-        # Chat mentions have priority over normal notifications
-        if not self.is_important:
-            self.is_important = is_important
-
-        if self.is_important:
+        if is_important or self.is_important:
+            # Chat mentions have priority until manually cleared
+            self.remove_changed()
+            self.is_important = True
             add_css_class(self.container, "notebook-tab-highlight")
         else:
+            # Normal notification
+            self.remove_changed()
             add_css_class(self.container, "notebook-tab-changed")
 
         add_css_class(self.container, "bold")
