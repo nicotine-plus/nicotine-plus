@@ -18,6 +18,8 @@
 
 import sys
 
+from locale import strxfrm
+
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -142,23 +144,28 @@ class ChatCompletion:
         self.entry = entry
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
 
+    def is_completion_enabled(self):
+        return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
+
     def add_completion(self, item):
+
+        if not self.is_completion_enabled():
+            return
 
         if item in self.completions:
             return
 
         if config.sections["words"]["dropdown"]:
             iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
-
-        elif config.sections["words"]["tab"]:
-            iterator = None
-
         else:
-            return
+            iterator = None
 
         self.completions[item] = iterator
 
     def remove_completion(self, item):
+
+        if not self.is_completion_enabled():
+            return
 
         iterator = self.completions.pop(item)
 
@@ -178,20 +185,20 @@ class ChatCompletion:
         self.model.clear()
         self.completions.clear()
 
-        if completion_list is None:
-            completion_list = []
+        if not self.is_completion_enabled():
+            return
+
+        # No duplicates
+        completion_list = list(set(completion_list))
+        completion_list.sort(key=strxfrm)
 
         for word in completion_list:
             word = str(word)
 
             if config_words["dropdown"]:
                 iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
-
-            elif config_words["tab"]:
-                iterator = None
-
             else:
-                return
+                iterator = None
 
             self.completions[word] = iterator
 

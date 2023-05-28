@@ -24,8 +24,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -1105,15 +1103,8 @@ class ChatRoom:
 
     def set_completion_list(self, completion_list):
 
-        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
-            return
-
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
             completion_list += self.users_list_view.iterators
-
-        # No duplicates
-        completion_list = list(set(completion_list))
-        completion_list.sort(key=strxfrm)
 
         self.chatrooms.completion.set_completion_list(completion_list)
