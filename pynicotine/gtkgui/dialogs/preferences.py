@@ -1430,57 +1430,144 @@ class UserInterfacePage:
 
     def __init__(self, application):
 
-        # pylint: disable=invalid-name
-        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
-         self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
-         self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
-         self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
-         self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
-         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
-         self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
-         self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.ExactFileSizes, self.IconView, self.Language, self.Main, self.MainPosition,
-         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
-         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
-         self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
-         self.PickBackground, self.PickChangedTab, self.PickCommand, self.PickHighlight, self.PickHighlightTab,
-         self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline,
-         self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition,
-         self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
-         self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
-         self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
-         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = ui.load(scope=self, path="settings/userinterface.ui")
+        (
+            self.Main,  # pylint: disable=invalid-name
+            self.chat_colored_usernames_combobox,
+            self.chat_username_appearance_combobox,
+            self.close_action_combobox,
+            self.color_chat_action_button,
+            self.color_chat_action_entry,
+            self.color_chat_command_button,
+            self.color_chat_command_entry,
+            self.color_chat_highlighted_button,
+            self.color_chat_highlighted_entry,
+            self.color_chat_local_button,
+            self.color_chat_local_entry,
+            self.color_chat_remote_button,
+            self.color_chat_remote_entry,
+            self.color_input_background_button,
+            self.color_input_background_entry,
+            self.color_input_text_button,
+            self.color_input_text_entry,
+            self.color_list_text_button,
+            self.color_list_text_entry,
+            self.color_queued_result_text_button,
+            self.color_queued_result_text_entry,
+            self.color_status_away_button,
+            self.color_status_away_entry,
+            self.color_status_offline_button,
+            self.color_status_offline_entry,
+            self.color_status_online_button,
+            self.color_status_online_entry,
+            self.color_tab_button,
+            self.color_tab_changed_button,
+            self.color_tab_changed_entry,
+            self.color_tab_entry,
+            self.color_tab_highlighted_button,
+            self.color_tab_highlighted_entry,
+            self.color_url_button,
+            self.color_url_entry,
+            self.dark_mode_toggle,
+            self.exact_file_sizes_toggle,
+            self.font_browse_button,
+            self.font_browse_clear_button,
+            self.font_chat_button,
+            self.font_chat_clear_button,
+            self.font_global_button,
+            self.font_global_clear_button,
+            self.font_list_button,
+            self.font_list_clear_button,
+            self.font_search_button,
+            self.font_search_clear_button,
+            self.font_text_view_button,
+            self.font_text_view_clear_button,
+            self.font_transfers_button,
+            self.font_transfers_clear_button,
+            self.icon_theme_button,
+            self.icon_theme_clear_button,
+            self.icon_view,
+            self.language_combobox,
+            self.minimize_tray_startup_toggle,
+            self.notification_chatroom_mention_toggle,
+            self.notification_chatroom_toggle,
+            self.notification_download_file_toggle,
+            self.notification_download_folder_toggle,
+            self.notification_private_message_toggle,
+            self.notification_sounds_toggle,
+            self.notification_window_title_toggle,
+            self.notification_wish_toggle,
+            self.reverse_file_paths_toggle,
+            self.tab_close_buttons_toggle,
+            self.tab_position_browse_combobox,
+            self.tab_position_chatrooms_combobox,
+            self.tab_position_main_combobox,
+            self.tab_position_private_chat_combobox,
+            self.tab_position_search_combobox,
+            self.tab_position_userinfo_combobox,
+            self.tab_restore_startup_toggle,
+            self.tab_visible_browse_toggle,
+            self.tab_visible_chatrooms_toggle,
+            self.tab_visible_downloads_toggle,
+            self.tab_visible_interests_toggle,
+            self.tab_visible_private_chat_toggle,
+            self.tab_visible_search_toggle,
+            self.tab_visible_uploads_toggle,
+            self.tab_visible_userinfo_toggle,
+            self.tab_visible_userlist_toggle,
+            self.tray_icon_toggle,
+            self.tray_options_container
+        ) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.theme_required = False
 
         for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
-            self.Language.append(language_code, language_name)
+            self.language_combobox.append(language_code, language_name)
 
-        self.theme_dir = FileChooserButton(self.ThemeDir, application.preferences, "folder")
-
-        self.tabs = {
-            "search": self.EnableSearchTab,
-            "downloads": self.EnableDownloadsTab,
-            "uploads": self.EnableUploadsTab,
-            "userbrowse": self.EnableUserBrowseTab,
-            "userinfo": self.EnableUserInfoTab,
-            "private": self.EnablePrivateTab,
-            "userlist": self.EnableUserListTab,
-            "chatrooms": self.EnableChatroomsTab,
-            "interests": self.EnableInterestsTab
+        self.color_buttons = {
+            "chatlocal": self.color_chat_local_button,
+            "chatremote": self.color_chat_remote_button,
+            "chatcommand": self.color_chat_command_button,
+            "chatme": self.color_chat_action_button,
+            "chathilite": self.color_chat_highlighted_button,
+            "textbg": self.color_input_background_button,
+            "inputcolor": self.color_input_text_button,
+            "search": self.color_list_text_button,
+            "searchq": self.color_queued_result_text_button,
+            "useraway": self.color_status_away_button,
+            "useronline": self.color_status_online_button,
+            "useroffline": self.color_status_offline_button,
+            "urlcolor": self.color_url_button,
+            "tab_default": self.color_tab_button,
+            "tab_hilite": self.color_tab_highlighted_button,
+            "tab_changed": self.color_tab_changed_button
         }
 
-        # Tab positions
-        for combobox in (self.MainPosition, self.ChatRoomsPosition, self.PrivateChatPosition,
-                         self.SearchPosition, self.UserInfoPosition, self.UserBrowsePosition):
+        self.tab_visible_toggles = {
+            "search": self.tab_visible_search_toggle,
+            "downloads": self.tab_visible_downloads_toggle,
+            "uploads": self.tab_visible_uploads_toggle,
+            "userbrowse": self.tab_visible_browse_toggle,
+            "userinfo": self.tab_visible_userinfo_toggle,
+            "private": self.tab_visible_private_chat_toggle,
+            "userlist": self.tab_visible_userlist_toggle,
+            "chatrooms": self.tab_visible_chatrooms_toggle,
+            "interests": self.tab_visible_interests_toggle
+        }
+
+        for combobox in (
+            self.tab_position_main_combobox,
+            self.tab_position_search_combobox,
+            self.tab_position_browse_combobox,
+            self.tab_position_private_chat_combobox,
+            self.tab_position_userinfo_combobox,
+            self.tab_position_chatrooms_combobox
+        ):
             combobox.append("Top", _("Top"))
             combobox.append("Bottom", _("Bottom"))
             combobox.append("Left", _("Left"))
             combobox.append("Right", _("Right"))
 
-        # Icon preview
         icon_list = [
             (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
             (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
@@ -1512,87 +1599,69 @@ class UserInterfacePage:
                 box.add(icon)   # pylint: disable=no-member
                 box.add(label)  # pylint: disable=no-member
 
-            self.IconView.insert(box, -1)
+            self.icon_view.insert(box, -1)
+
+        self.icon_theme_button = FileChooserButton(self.icon_theme_button, application.preferences, "folder")
 
         self.options = {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention,
-                "notification_popup_wish": self.NotificationPopupWish
+                "notification_window_title": self.notification_window_title_toggle,
+                "notification_popup_sound": self.notification_sounds_toggle,
+                "notification_popup_file": self.notification_download_file_toggle,
+                "notification_popup_folder": self.notification_download_folder_toggle,
+                "notification_popup_private_message": self.notification_private_message_toggle,
+                "notification_popup_chatroom": self.notification_chatroom_toggle,
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle,
+                "notification_popup_wish": self.notification_wish_toggle
             },
             "ui": {
-                "language": self.Language,
+                "dark_mode": self.dark_mode_toggle,
+                "exitdialog": self.close_action_combobox,
+                "trayicon": self.tray_icon_toggle,
+                "startup_hidden": self.minimize_tray_startup_toggle,
+                "language": self.language_combobox,
 
-                "globalfont": self.SelectGlobalFont,
-                "listfont": self.SelectListFont,
-                "textviewfont": self.SelectTextViewFont,
-                "chatfont": self.SelectChatFont,
-                "searchfont": self.SelectSearchFont,
-                "transfersfont": self.SelectTransfersFont,
-                "browserfont": self.SelectBrowserFont,
-                "usernamestyle": self.UsernameStyle,
+                "globalfont": self.font_global_button,
+                "listfont": self.font_list_button,
+                "textviewfont": self.font_text_view_button,
+                "chatfont": self.font_chat_button,
+                "searchfont": self.font_search_button,
+                "transfersfont": self.font_transfers_button,
+                "browserfont": self.font_browse_button,
 
-                "reverse_file_paths": self.ReverseFilePaths,
-                "exact_file_sizes": self.ExactFileSizes,
+                "reverse_file_paths": self.reverse_file_paths_toggle,
+                "exact_file_sizes": self.exact_file_sizes_toggle,
 
-                "tabmain": self.MainPosition,
-                "tabrooms": self.ChatRoomsPosition,
-                "tabprivate": self.PrivateChatPosition,
-                "tabsearch": self.SearchPosition,
-                "tabinfo": self.UserInfoPosition,
-                "tabbrowse": self.UserBrowsePosition,
-                "tab_select_previous": self.TabSelectPrevious,
-                "tabclosers": self.TabClosers,
+                "tabmain": self.tab_position_main_combobox,
+                "tabrooms": self.tab_position_chatrooms_combobox,
+                "tabprivate": self.tab_position_private_chat_combobox,
+                "tabsearch": self.tab_position_search_combobox,
+                "tabinfo": self.tab_position_userinfo_combobox,
+                "tabbrowse": self.tab_position_browse_combobox,
+                "tab_select_previous": self.tab_restore_startup_toggle,
+                "tabclosers": self.tab_close_buttons_toggle,
 
-                "icontheme": self.theme_dir,
+                "icontheme": self.icon_theme_button,
 
-                "chatlocal": self.EntryLocal,
-                "chatremote": self.EntryRemote,
-                "chatcommand": self.EntryCommand,
-                "chatme": self.EntryMe,
-                "chathilite": self.EntryHighlight,
-                "textbg": self.EntryBackground,
-                "inputcolor": self.EntryInput,
-                "search": self.EntryImmediate,
-                "searchq": self.EntryQueue,
-                "useraway": self.EntryAway,
-                "useronline": self.EntryOnline,
-                "useroffline": self.EntryOffline,
-                "usernamehotspots": self.UsernameHotspots,
-                "urlcolor": self.EntryURL,
-                "tab_default": self.EntryRegularTab,
-                "tab_hilite": self.EntryHighlightTab,
-                "tab_changed": self.EntryChangedTab,
-                "dark_mode": self.DarkMode,
-                "exitdialog": self.CloseAction,
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden
-            }
-        }
+                "chatlocal": self.color_chat_local_entry,
+                "chatremote": self.color_chat_remote_entry,
+                "chatcommand": self.color_chat_command_entry,
+                "chatme": self.color_chat_action_entry,
+                "chathilite": self.color_chat_highlighted_entry,
+                "textbg": self.color_input_background_entry,
+                "inputcolor": self.color_input_text_entry,
+                "search": self.color_list_text_entry,
+                "searchq": self.color_queued_result_text_entry,
+                "useraway": self.color_status_away_entry,
+                "useronline": self.color_status_online_entry,
+                "useroffline": self.color_status_offline_entry,
+                "urlcolor": self.color_url_entry,
+                "tab_default": self.color_tab_entry,
+                "tab_hilite": self.color_tab_highlighted_entry,
+                "tab_changed": self.color_tab_changed_entry,
 
-        self.colorsd = {
-            "ui": {
-                "chatlocal": self.PickLocal,
-                "chatremote": self.PickRemote,
-                "chatcommand": self.PickCommand,
-                "chatme": self.PickMe,
-                "chathilite": self.PickHighlight,
-                "textbg": self.PickBackground,
-                "inputcolor": self.PickInput,
-                "search": self.PickImmediate,
-                "searchq": self.PickQueue,
-                "useraway": self.PickAway,
-                "useronline": self.PickOnline,
-                "useroffline": self.PickOffline,
-                "urlcolor": self.PickURL,
-                "tab_default": self.PickRegularTab,
-                "tab_hilite": self.PickHighlightTab,
-                "tab_changed": self.PickChangedTab
+                "usernamestyle": self.chat_username_appearance_combobox,
+                "usernamehotspots": self.chat_colored_usernames_combobox
             }
         }
 
@@ -1601,10 +1670,10 @@ class UserInterfacePage:
         self.application.preferences.set_widgets_data(self.options)
         self.theme_required = False
 
-        self.TraySettings.set_visible(self.application.tray_icon.available)
+        self.tray_options_container.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
-            widget = self.tabs.get(page_id)
+            widget = self.tab_visible_toggles.get(page_id)
 
             if widget is not None:
                 widget.set_active(enabled)
@@ -1615,82 +1684,83 @@ class UserInterfacePage:
 
         enabled_tabs = {}
 
-        for page_id, widget in self.tabs.items():
+        for page_id, widget in self.tab_visible_toggles.items():
             enabled_tabs[page_id] = widget.get_active()
 
         return {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active(),
-                "notification_popup_wish": self.NotificationPopupWish.get_active()
+                "notification_window_title": self.notification_window_title_toggle.get_active(),
+                "notification_popup_sound": self.notification_sounds_toggle.get_active(),
+                "notification_popup_file": self.notification_download_file_toggle.get_active(),
+                "notification_popup_folder": self.notification_download_folder_toggle.get_active(),
+                "notification_popup_private_message": self.notification_private_message_toggle.get_active(),
+                "notification_popup_chatroom": self.notification_chatroom_toggle.get_active(),
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle.get_active(),
+                "notification_popup_wish": self.notification_wish_toggle.get_active()
             },
             "ui": {
-                "language": self.Language.get_active_id(),
+                "dark_mode": self.dark_mode_toggle.get_active(),
+                "exitdialog": self.close_action_combobox.get_active(),
+                "trayicon": self.tray_icon_toggle.get_active(),
+                "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
+                "language": self.language_combobox.get_active_id(),
 
-                "globalfont": self.SelectGlobalFont.get_font(),
-                "listfont": self.SelectListFont.get_font(),
-                "textviewfont": self.SelectTextViewFont.get_font(),
-                "chatfont": self.SelectChatFont.get_font(),
-                "searchfont": self.SelectSearchFont.get_font(),
-                "transfersfont": self.SelectTransfersFont.get_font(),
-                "browserfont": self.SelectBrowserFont.get_font(),
-                "usernamestyle": self.UsernameStyle.get_active_id(),
+                "globalfont": self.font_global_button.get_font(),
+                "listfont": self.font_list_button.get_font(),
+                "textviewfont": self.font_text_view_button.get_font(),
+                "chatfont": self.font_chat_button.get_font(),
+                "searchfont": self.font_search_button.get_font(),
+                "transfersfont": self.font_transfers_button.get_font(),
+                "browserfont": self.font_browse_button.get_font(),
 
-                "reverse_file_paths": self.ReverseFilePaths.get_active(),
-                "exact_file_sizes": self.ExactFileSizes.get_active(),
+                "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
+                "exact_file_sizes": self.exact_file_sizes_toggle.get_active(),
 
-                "tabmain": self.MainPosition.get_active_id(),
-                "tabrooms": self.ChatRoomsPosition.get_active_id(),
-                "tabprivate": self.PrivateChatPosition.get_active_id(),
-                "tabsearch": self.SearchPosition.get_active_id(),
-                "tabinfo": self.UserInfoPosition.get_active_id(),
-                "tabbrowse": self.UserBrowsePosition.get_active_id(),
+                "tabmain": self.tab_position_main_combobox.get_active_id(),
+                "tabrooms": self.tab_position_chatrooms_combobox.get_active_id(),
+                "tabprivate": self.tab_position_private_chat_combobox.get_active_id(),
+                "tabsearch": self.tab_position_search_combobox.get_active_id(),
+                "tabinfo": self.tab_position_userinfo_combobox.get_active_id(),
+                "tabbrowse": self.tab_position_browse_combobox.get_active_id(),
                 "modes_visible": enabled_tabs,
-                "tab_select_previous": self.TabSelectPrevious.get_active(),
-                "tabclosers": self.TabClosers.get_active(),
+                "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
+                "tabclosers": self.tab_close_buttons_toggle.get_active(),
 
-                "icontheme": self.theme_dir.get_path(),
+                "icontheme": self.icon_theme_button.get_path(),
 
-                "chatlocal": self.EntryLocal.get_text(),
-                "chatremote": self.EntryRemote.get_text(),
-                "chatcommand": self.EntryCommand.get_text(),
-                "chatme": self.EntryMe.get_text(),
-                "chathilite": self.EntryHighlight.get_text(),
-                "urlcolor": self.EntryURL.get_text(),
-                "textbg": self.EntryBackground.get_text(),
-                "inputcolor": self.EntryInput.get_text(),
-                "search": self.EntryImmediate.get_text(),
-                "searchq": self.EntryQueue.get_text(),
-                "useraway": self.EntryAway.get_text(),
-                "useronline": self.EntryOnline.get_text(),
-                "useroffline": self.EntryOffline.get_text(),
-                "usernamehotspots": self.UsernameHotspots.get_active(),
-                "tab_hilite": self.EntryHighlightTab.get_text(),
-                "tab_default": self.EntryRegularTab.get_text(),
-                "tab_changed": self.EntryChangedTab.get_text(),
-                "dark_mode": self.DarkMode.get_active(),
-                "exitdialog": self.CloseAction.get_active(),
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active()
+                "chatlocal": self.color_chat_local_entry.get_text(),
+                "chatremote": self.color_chat_remote_entry.get_text(),
+                "chatcommand": self.color_chat_command_entry.get_text(),
+                "chatme": self.color_chat_action_entry.get_text(),
+                "chathilite": self.color_chat_highlighted_entry.get_text(),
+                "urlcolor": self.color_url_entry.get_text(),
+                "textbg": self.color_input_background_entry.get_text(),
+                "inputcolor": self.color_input_text_entry.get_text(),
+                "search": self.color_list_text_entry.get_text(),
+                "searchq": self.color_queued_result_text_entry.get_text(),
+                "useraway": self.color_status_away_entry.get_text(),
+                "useronline": self.color_status_online_entry.get_text(),
+                "useroffline": self.color_status_offline_entry.get_text(),
+                "tab_hilite": self.color_tab_highlighted_entry.get_text(),
+                "tab_default": self.color_tab_entry.get_text(),
+                "tab_changed": self.color_tab_changed_entry.get_text(),
+
+                "usernamestyle": self.chat_username_appearance_combobox.get_active_id(),
+                "usernamehotspots": self.chat_colored_usernames_combobox.get_active()
             }
         }
 
     """ Icons """
 
-    def on_default_theme(self, *_args):
-        self.theme_dir.clear()
+    def on_clear_icon_theme(self, *_args):
+        self.icon_theme_button.clear()
         self.theme_required = True
 
     """ Fonts """
 
-    def on_default_font(self, widget):
+    def on_clear_font(self, widget):
 
-        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
+        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("clear_button", "button"))
         font_button.set_font("")
 
         self.theme_required = True
@@ -1702,29 +1772,22 @@ class UserInterfacePage:
 
     def update_color_button(self, input_config, color_id):
 
-        for section, value in self.colorsd.items():
-            if color_id in value:
-                color_button = value[color_id]
-                rgba = Gdk.RGBA()
+        color_button = self.color_buttons[color_id]
+        rgba = Gdk.RGBA()
 
-                rgba.parse(input_config[section][color_id])
-                color_button.set_rgba(rgba)
-                break
+        rgba.parse(input_config["ui"][color_id])
+        color_button.set_rgba(rgba)
 
     def update_color_buttons(self):
+        for color_id in self.color_buttons:
+            self.update_color_button(config.sections, color_id)
 
-        for color_ids in self.colorsd.values():
-            for color_id in color_ids:
-                self.update_color_button(config.sections, color_id)
-
-    def set_default_color(self, section, color_id):
+    def set_default_color(self, color_id):
 
         defaults = config.defaults
-        widget = self.options[section][color_id]
+        entry = self.options["ui"][color_id]
 
-        if isinstance(widget, Gtk.Entry):
-            widget.set_text(defaults[section][color_id])
-
+        entry.set_text(defaults["ui"][color_id])
         self.update_color_button(defaults, color_id)
 
     def on_color_set(self, widget):
@@ -1735,20 +1798,17 @@ class UserInterfacePage:
         blue_color = round(rgba.blue * 255)
         color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
+        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("button", "entry"))
         entry.set_text(color_hex)
 
     def on_default_color(self, widget, *_args):
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget))
+        for option, value in self.options["ui"].items():
+            if value is widget:
+                self.set_default_color(option)
+                return
 
-        for section, section_options in self.options.items():
-            for key, value in section_options.items():
-                if value is entry:
-                    self.set_default_color(section, key)
-                    return
-
-        entry.set_text("")
+        widget.set_text("")
 
     def on_colors_changed(self, widget):
 
@@ -1756,7 +1816,7 @@ class UserInterfacePage:
             rgba = Gdk.RGBA()
             rgba.parse(widget.get_text())
 
-            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
+            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("entry", "button"))
             color_button.set_rgba(rgba)
 
         self.theme_required = True

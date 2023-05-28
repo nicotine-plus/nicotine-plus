@@ -34,7 +34,7 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="DarkMode">
+                  <object class="GtkCheckButton" id="dark_mode_toggle">
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Note that the operating system's theme may take precedence.</property>
@@ -42,19 +42,19 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox" id="TraySettings">
+                  <object class="GtkBox" id="tray_options_container">
                     <property name="visible">True</property>
                     <property name="spacing">24</property>
                     <child>
-                      <object class="GtkCheckButton" id="TrayiconCheck">
+                      <object class="GtkCheckButton" id="tray_icon_toggle">
                         <property name="label" translatable="yes">Display tray icon</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="StartupHidden">
-                        <property name="sensitive" bind-source="TrayiconCheck" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                      <object class="GtkCheckButton" id="minimize_tray_startup_toggle">
+                        <property name="sensitive" bind-source="tray_icon_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                         <property name="label" translatable="yes">Minimize to tray on startup</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
@@ -74,11 +74,11 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">Language</property>
+                        <property name="mnemonic-widget">language_combobox</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="Language">
+                      <object class="GtkComboBoxText" id="language_combobox">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <items>
@@ -100,11 +100,11 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">CloseAction</property>
+                        <property name="mnemonic-widget">close_action_combobox</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="CloseAction">
+                      <object class="GtkComboBoxText" id="close_action_combobox">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <items>
@@ -151,13 +151,13 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="NotificationPopupSound">
+                  <object class="GtkCheckButton" id="notification_sounds_toggle">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Enable sound for notifications</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="NotificationWindowTitle">
+                  <object class="GtkCheckButton" id="notification_window_title_toggle">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Show notification for private chats and mentions in the window title</property>
                   </object>
@@ -185,7 +185,7 @@
                         <property name="opacity">0.6</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">NotificationPopupFile</property>
+                        <property name="mnemonic-widget">notification_file_download_toggle</property>
                         <style>
                           <class name="heading"/>
                         </style>
@@ -205,7 +205,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupFile">
+                              <object class="GtkCheckButton" id="notification_file_download_toggle">
                                 <property name="label" translatable="yes">Finished file downloads</property>
                                 <property name="visible">True</property>
                               </object>
@@ -217,7 +217,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupFolder">
+                              <object class="GtkCheckButton" id="notification_folder_download_toggle">
                                 <property name="label" translatable="yes">Finished folder downloads</property>
                                 <property name="visible">True</property>
                               </object>
@@ -229,7 +229,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
+                              <object class="GtkCheckButton" id="notification_private_message_toggle">
                                 <property name="label" translatable="yes">Private messages</property>
                                 <property name="visible">True</property>
                               </object>
@@ -241,7 +241,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupChatroom">
+                              <object class="GtkCheckButton" id="notification_chatroom_toggle">
                                 <property name="label" translatable="yes">Chat room messages</property>
                                 <property name="visible">True</property>
                               </object>
@@ -253,7 +253,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
+                              <object class="GtkCheckButton" id="notification_chatroom_mention_toggle">
                                 <property name="label" translatable="yes">Chat room mentions</property>
                                 <property name="visible">True</property>
                               </object>
@@ -265,7 +265,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="NotificationPopupWish">
+                              <object class="GtkCheckButton" id="notification_wish_toggle">
                                 <property name="label" translatable="yes">Wishlist results found</property>
                                 <property name="visible">True</property>
                               </object>
@@ -314,14 +314,14 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="TabSelectPrevious">
+                  <object class="GtkCheckButton" id="tab_restore_startup_toggle">
                     <property name="label" translatable="yes">Restore the previously active main tab at startup</property>
                     <property name="tooltip-text" translatable="yes">By default the leftmost tab is activated at startup</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="TabClosers">
+                  <object class="GtkCheckButton" id="tab_close_buttons_toggle">
                     <property name="label" translatable="yes">Close-buttons on secondary tabs</property>
                     <property name="visible">True</property>
                   </object>
@@ -338,7 +338,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickRegularTab</property>
+                        <property name="mnemonic-widget">color_tab_button</property>
                       </object>
                     </child>
                     <child>
@@ -347,14 +347,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickRegularTab">
+                          <object class="GtkColorButton" id="color_tab_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryRegularTab">
+                          <object class="GtkEntry" id="color_tab_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -380,7 +380,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickChangedTab</property>
+                        <property name="mnemonic-widget">color_tab_changed_button</property>
                       </object>
                     </child>
                     <child>
@@ -389,14 +389,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickChangedTab">
+                          <object class="GtkColorButton" id="color_tab_changed_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryChangedTab">
+                          <object class="GtkEntry" id="color_tab_changed_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -422,7 +422,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickHighlightTab</property>
+                        <property name="mnemonic-widget">color_tab_highlighted_button</property>
                       </object>
                     </child>
                     <child>
@@ -431,14 +431,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickHighlightTab">
+                          <object class="GtkColorButton" id="color_tab_highlighted_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryHighlightTab">
+                          <object class="GtkEntry" id="color_tab_highlighted_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -496,7 +496,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableSearchTab">
+                              <object class="GtkCheckButton" id="tab_visible_search_toggle">
                                 <property name="label" translatable="yes">Search Files</property>
                                 <property name="visible">True</property>
                               </object>
@@ -508,7 +508,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableDownloadsTab">
+                              <object class="GtkCheckButton" id="tab_visible_downloads_toggle">
                                 <property name="label" translatable="yes">Downloads</property>
                                 <property name="visible">True</property>
                               </object>
@@ -520,7 +520,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableUploadsTab">
+                              <object class="GtkCheckButton" id="tab_visible_uploads_toggle">
                                 <property name="label" translatable="yes">Uploads</property>
                                 <property name="visible">True</property>
                               </object>
@@ -532,7 +532,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableUserBrowseTab">
+                              <object class="GtkCheckButton" id="tab_visible_browse_toggle">
                                 <property name="label" translatable="yes">Browse Shares</property>
                                 <property name="visible">True</property>
                               </object>
@@ -544,7 +544,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableUserInfoTab">
+                              <object class="GtkCheckButton" id="tab_visible_userinfo_toggle">
                                 <property name="label" translatable="yes">User Profiles</property>
                                 <property name="visible">True</property>
                               </object>
@@ -556,7 +556,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnablePrivateTab">
+                              <object class="GtkCheckButton" id="tab_visible_private_chat_toggle">
                                 <property name="label" translatable="yes">Private Chat</property>
                                 <property name="visible">True</property>
                               </object>
@@ -568,7 +568,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableUserListTab">
+                              <object class="GtkCheckButton" id="tab_visible_userlist_toggle">
                                 <property name="label" translatable="yes">Buddies</property>
                                 <property name="visible">True</property>
                               </object>
@@ -580,7 +580,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableChatroomsTab">
+                              <object class="GtkCheckButton" id="tab_visible_chatrooms_toggle">
                                 <property name="label" translatable="yes">Chat Rooms</property>
                                 <property name="visible">True</property>
                               </object>
@@ -592,7 +592,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkCheckButton" id="EnableInterestsTab">
+                              <object class="GtkCheckButton" id="tab_visible_interests_toggle">
                                 <property name="label" translatable="yes">Interests</property>
                                 <property name="visible">True</property>
                               </object>
@@ -665,11 +665,11 @@
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                    <property name="mnemonic-widget">MainPosition</property>
+                                    <property name="mnemonic-widget">tab_position_main_combobox</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="MainPosition">
+                                  <object class="GtkComboBoxText" id="tab_position_main_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -692,14 +692,14 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Search Files</property>
-                                    <property name="mnemonic-widget">SearchPosition</property>
+                                    <property name="mnemonic-widget">tab_position_search_combobox</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="SearchPosition">
+                                  <object class="GtkComboBoxText" id="tab_position_search_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -722,14 +722,14 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Browse Shares</property>
-                                    <property name="mnemonic-widget">UserBrowsePosition</property>
+                                    <property name="mnemonic-widget">tab_position_browse_combobox</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="UserBrowsePosition">
+                                  <object class="GtkComboBoxText" id="tab_position_browse_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -752,14 +752,14 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">User Profiles</property>
-                                    <property name="mnemonic-widget">UserInfoPosition</property>
+                                    <property name="mnemonic-widget">tab_position_userinfo_combobox</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="UserInfoPosition">
+                                  <object class="GtkComboBoxText" id="tab_position_userinfo_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -782,14 +782,14 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Private Chat</property>
-                                    <property name="mnemonic-widget">PrivateChatPosition</property>
+                                    <property name="mnemonic-widget">tab_position_private_chat_combobox</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="PrivateChatPosition">
+                                  <object class="GtkComboBoxText" id="tab_position_private_chat_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -812,14 +812,14 @@
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Chat Rooms</property>
-                                    <property name="mnemonic-widget">ChatRoomsPosition</property>
+                                    <property name="mnemonic-widget">tab_position_chatrooms_combobox</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxText" id="ChatRoomsPosition">
+                                  <object class="GtkComboBoxText" id="tab_position_chatrooms_combobox">
                                     <property name="visible">True</property>
                                     <property name="valign">center</property>
                                   </object>
@@ -865,14 +865,14 @@
             <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkCheckButton" id="ReverseFilePaths">
+              <object class="GtkCheckButton" id="reverse_file_paths_toggle">
                 <property name="label" translatable="yes">Show reverse file paths (requires a restart)</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="ExactFileSizes">
+              <object class="GtkCheckButton" id="exact_file_sizes_toggle">
                 <property name="label" translatable="yes">Show exact file sizes (requires a restart)</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>
@@ -897,7 +897,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickImmediate</property>
+                    <property name="mnemonic-widget">color_list_text_button</property>
                   </object>
                 </child>
                 <child>
@@ -906,14 +906,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickImmediate">
+                      <object class="GtkColorButton" id="color_list_text_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryImmediate">
+                      <object class="GtkEntry" id="color_list_text_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -939,7 +939,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickQueue</property>
+                    <property name="mnemonic-widget">color_queued_result_text_button</property>
                   </object>
                 </child>
                 <child>
@@ -948,14 +948,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickQueue">
+                      <object class="GtkColorButton" id="color_queued_result_text_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryQueue">
+                      <object class="GtkEntry" id="color_queued_result_text_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1002,7 +1002,7 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="UsernameHotspots">
+                  <object class="GtkCheckButton" id="chat_colored_usernames_toggle">
                     <property name="label" translatable="yes">Enable colored usernames</property>
                     <property name="visible">True</property>
                     <signal name="toggled" handler="on_colors_changed"/>
@@ -1020,11 +1020,11 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">UsernameStyle</property>
+                        <property name="mnemonic-widget">chat_username_appearance_combobox</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="UsernameStyle">
+                      <object class="GtkComboBoxText" id="chat_username_appearance_combobox">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="changed" handler="on_colors_changed"/>
@@ -1057,7 +1057,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickRemote</property>
+                        <property name="mnemonic-widget">color_chat_remote_button</property>
                       </object>
                     </child>
                     <child>
@@ -1066,14 +1066,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickRemote">
+                          <object class="GtkColorButton" id="color_chat_remote_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryRemote">
+                          <object class="GtkEntry" id="color_chat_remote_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1099,7 +1099,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickLocal</property>
+                        <property name="mnemonic-widget">color_chat_local_button</property>
                       </object>
                     </child>
                     <child>
@@ -1108,14 +1108,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickLocal">
+                          <object class="GtkColorButton" id="color_chat_local_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryLocal">
+                          <object class="GtkEntry" id="color_chat_local_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1141,7 +1141,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickCommand</property>
+                        <property name="mnemonic-widget">color_chat_command_button</property>
                       </object>
                     </child>
                     <child>
@@ -1150,14 +1150,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickCommand">
+                          <object class="GtkColorButton" id="color_chat_command_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryCommand">
+                          <object class="GtkEntry" id="color_chat_command_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1183,7 +1183,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickMe</property>
+                        <property name="mnemonic-widget">color_chat_action_button</property>
                       </object>
                     </child>
                     <child>
@@ -1192,14 +1192,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickMe">
+                          <object class="GtkColorButton" id="color_chat_action_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryMe">
+                          <object class="GtkEntry" id="color_chat_action_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1225,7 +1225,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickHighlight</property>
+                        <property name="mnemonic-widget">color_chat_highlighted_button</property>
                       </object>
                     </child>
                     <child>
@@ -1234,14 +1234,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickHighlight">
+                          <object class="GtkColorButton" id="color_chat_highlighted_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryHighlight">
+                          <object class="GtkEntry" id="color_chat_highlighted_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1267,7 +1267,7 @@
                         <property name="xalign">0</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
-                        <property name="mnemonic-widget">PickURL</property>
+                        <property name="mnemonic-widget">color_url_button</property>
                       </object>
                     </child>
                     <child>
@@ -1276,14 +1276,14 @@
                         <property name="spacing">12</property>
                         <property name="valign">center</property>
                         <child>
-                          <object class="GtkColorButton" id="PickURL">
+                          <object class="GtkColorButton" id="color_url_button">
                             <property name="visible">True</property>
                             <property name="valign">center</property>
                             <signal name="color-set" handler="on_color_set"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="EntryURL">
+                          <object class="GtkEntry" id="color_url_entry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="width-chars">7</property>
@@ -1338,7 +1338,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickOnline</property>
+                    <property name="mnemonic-widget">color_status_online_button</property>
                   </object>
                 </child>
                 <child>
@@ -1347,14 +1347,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickOnline">
+                      <object class="GtkColorButton" id="color_status_online_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryOnline">
+                      <object class="GtkEntry" id="color_status_online_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1380,7 +1380,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickAway</property>
+                    <property name="mnemonic-widget">color_status_away_button</property>
                   </object>
                 </child>
                 <child>
@@ -1389,14 +1389,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickAway">
+                      <object class="GtkColorButton" id="color_status_away_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryAway">
+                      <object class="GtkEntry" id="color_status_away_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1422,7 +1422,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickOffline</property>
+                    <property name="mnemonic-widget">color_status_offline_button</property>
                   </object>
                 </child>
                 <child>
@@ -1431,14 +1431,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickOffline">
+                      <object class="GtkColorButton" id="color_status_offline_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryOffline">
+                      <object class="GtkEntry" id="color_status_offline_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1491,7 +1491,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickBackground</property>
+                    <property name="mnemonic-widget">color_input_background_button</property>
                   </object>
                 </child>
                 <child>
@@ -1500,14 +1500,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickBackground">
+                      <object class="GtkColorButton" id="color_input_background_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryBackground">
+                      <object class="GtkEntry" id="color_input_background_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1533,7 +1533,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">PickInput</property>
+                    <property name="mnemonic-widget">color_input_text_button</property>
                   </object>
                 </child>
                 <child>
@@ -1542,14 +1542,14 @@
                     <property name="spacing">12</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkColorButton" id="PickInput">
+                      <object class="GtkColorButton" id="color_input_text_button">
                         <property name="visible">True</property>
                         <property name="valign">center</property>
                         <signal name="color-set" handler="on_color_set"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="EntryInput">
+                      <object class="GtkEntry" id="color_input_text_entry">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <property name="width-chars">7</property>
@@ -1597,7 +1597,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectGlobalFont</property>
+                <property name="mnemonic-widget">font_global_button</property>
               </object>
             </child>
             <child>
@@ -1605,7 +1605,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectGlobalFont">
+                  <object class="GtkFontButton" id="font_global_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1613,10 +1613,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultGlobalFont">
+                  <object class="GtkButton" id="font_global_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1644,7 +1644,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectListFont</property>
+                <property name="mnemonic-widget">font_list_button</property>
               </object>
             </child>
             <child>
@@ -1652,7 +1652,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectListFont">
+                  <object class="GtkFontButton" id="font_list_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1660,10 +1660,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultListFont">
+                  <object class="GtkButton" id="font_list_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1691,7 +1691,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectTextViewFont</property>
+                <property name="mnemonic-widget">font_text_view_button</property>
               </object>
             </child>
             <child>
@@ -1699,7 +1699,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectTextViewFont">
+                  <object class="GtkFontButton" id="font_text_view_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1707,10 +1707,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultTextViewFont">
+                  <object class="GtkButton" id="font_text_view_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1738,7 +1738,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectChatFont</property>
+                <property name="mnemonic-widget">font_chat_button</property>
               </object>
             </child>
             <child>
@@ -1746,7 +1746,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectChatFont">
+                  <object class="GtkFontButton" id="font_chat_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1754,10 +1754,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultChatFont">
+                  <object class="GtkButton" id="font_chat_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1785,7 +1785,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectTransfersFont</property>
+                <property name="mnemonic-widget">font_transfers_button</property>
               </object>
             </child>
             <child>
@@ -1793,7 +1793,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectTransfersFont">
+                  <object class="GtkFontButton" id="font_transfers_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1801,10 +1801,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultTransfersFont">
+                  <object class="GtkButton" id="font_transfers_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1832,7 +1832,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectSearchFont</property>
+                <property name="mnemonic-widget">font_search_button</property>
               </object>
             </child>
             <child>
@@ -1840,7 +1840,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectSearchFont">
+                  <object class="GtkFontButton" id="font_search_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1848,10 +1848,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultSearchFont">
+                  <object class="GtkButton" id="font_search_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1879,7 +1879,7 @@
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">SelectBrowserFont</property>
+                <property name="mnemonic-widget">font_browse_button</property>
               </object>
             </child>
             <child>
@@ -1887,7 +1887,7 @@
                 <property name="visible">True</property>
                 <property name="valign">center</property>
                 <child>
-                  <object class="GtkFontButton" id="SelectBrowserFont">
+                  <object class="GtkFontButton" id="font_browse_button">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
@@ -1895,10 +1895,10 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="DefaultBrowserFont">
+                  <object class="GtkButton" id="font_browse_clear_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear</property>
-                    <signal name="clicked" handler="on_default_font"/>
+                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">True</property>
@@ -1953,7 +1953,7 @@
                     <property name="xalign">0</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="mnemonic-widget">ThemeDir</property>
+                    <property name="mnemonic-widget">icon_theme_button</property>
                   </object>
                 </child>
                 <child>
@@ -1961,17 +1961,17 @@
                     <property name="visible">True</property>
                     <property name="valign">center</property>
                     <child>
-                      <object class="GtkButton" id="ThemeDir">
+                      <object class="GtkButton" id="icon_theme_button">
                         <property name="visible">True</property>
                         <property name="hexpand">True</property>
                         <signal name="clicked" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="DefaultTheme">
+                      <object class="GtkButton" id="icon_theme_clear_button">
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Clear</property>
-                        <signal name="clicked" handler="on_default_theme"/>
+                        <signal name="clicked" handler="on_clear_icon_theme"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
@@ -1992,7 +1992,7 @@
                 <property name="visible">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkFlowBox" id="IconView">
+                  <object class="GtkFlowBox" id="icon_view">
                     <property name="visible">True</property>
                     <property name="vexpand">True</property>
                     <property name="column-spacing">24</property>
