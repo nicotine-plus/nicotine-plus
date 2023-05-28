@@ -1127,9 +1127,6 @@ class ChatRoom:
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
 
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
-
         for username in self.tag_users:
             self.update_user_tag(username)
 
@@ -1148,10 +1145,6 @@ class ChatRoom:
             self.add_user_row(userdata)
 
         self.users_list_view.enable_sorting()
-
-        # Spit this line into chat log
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
 
         # Update user count
         self.count_users()

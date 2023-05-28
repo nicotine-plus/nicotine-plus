@@ -73,7 +73,6 @@ class PrivateChats(IconNotebook):
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
             ("send-private-message", self.send_message),
-            ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("user-status", self.user_status)
         ):
@@ -229,14 +228,6 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
-    def server_login(self, msg):
-
-        if not msg.success:
-            return
-
-        for page in self.pages.values():
-            page.server_login()
-
     def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
@@ -351,14 +342,13 @@ class PrivateChat:
 
                 self.chat_view.append_line(line, tag=self.tag_highlight)
 
-    def server_login(self):
-        timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- reconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
+            if lines:
+                timestamp_format = config.sections["logging"]["private_timestamp"]
+                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+                                           timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
-        timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_view.append_line(_("--- disconnected ---"), tag=self.tag_highlight, timestamp_format=timestamp_format)
         self.offline_message = False
 
         self.update_remote_username_tag(status=slskmessages.UserStatus.OFFLINE)
