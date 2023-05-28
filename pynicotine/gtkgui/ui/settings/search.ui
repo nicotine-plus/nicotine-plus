@@ -18,7 +18,7 @@
     <property name="step-increment">25</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>

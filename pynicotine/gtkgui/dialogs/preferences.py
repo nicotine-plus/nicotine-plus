@@ -84,11 +84,11 @@ class NetworkPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.auto_away_spinner,
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
             self.check_port_status_label,
+            self.container,
             self.current_port_label,
             self.listen_port_spinner,
             self.network_interface_combobox,
@@ -240,10 +240,10 @@ class DownloadsPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.accept_sent_files_toggle,
             self.alt_speed_spinner,
             self.autoclear_downloads_toggle,
+            self.container,
             self.download_double_click_combobox,
             self.download_folder_button,
             self.enable_filters_toggle,
@@ -512,8 +512,8 @@ class SharesPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
+            self.container,
             self.rescan_on_startup_toggle,
             self.shares_list_container
         ) = ui.load(scope=self, path="settings/shares.ui")
@@ -715,9 +715,9 @@ class UploadsPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.alt_speed_spinner,
             self.autoclear_uploads_toggle,
+            self.container,
             self.limit_total_transfers_radio,
             self.max_queued_files_spinner,
             self.max_queued_size_spinner,
@@ -805,7 +805,7 @@ class UserProfilePage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.description_view_container,
             self.select_picture_button
         ) = ui.load(scope=self, path="settings/userinfo.ui")
@@ -856,7 +856,7 @@ class IgnoredUsersPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.ignored_ips_container,
             self.ignored_users_container
         ) = ui.load(scope=self, path="settings/ignore.ui")
@@ -981,11 +981,11 @@ class BannedUsersPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.ban_message_entry,
             self.ban_message_toggle,
             self.banned_ips_container,
             self.banned_users_container,
+            self.container,
             self.geo_block_country_entry,
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
@@ -1134,7 +1134,6 @@ class ChatsPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.auto_replace_words_toggle,
             self.censor_list_container,
             self.censor_replacement_combobox,
@@ -1143,6 +1142,7 @@ class ChatsPage:
             self.complete_commands_toggle,
             self.complete_room_names_toggle,
             self.complete_room_usernames_toggle,
+            self.container,
             self.enable_completion_dropdown_toggle,
             self.enable_ctcp_toggle,
             self.enable_spell_checker_toggle,
@@ -1431,7 +1431,6 @@ class UserInterfacePage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.chat_colored_usernames_combobox,
             self.chat_username_appearance_combobox,
             self.close_action_combobox,
@@ -1467,6 +1466,7 @@ class UserInterfacePage:
             self.color_tab_highlighted_entry,
             self.color_url_button,
             self.color_url_entry,
+            self.container,
             self.dark_mode_toggle,
             self.exact_file_sizes_toggle,
             self.font_browse_button,
@@ -1827,8 +1827,8 @@ class LoggingPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.chatroom_log_folder_button,
+            self.container,
             self.debug_log_folder_button,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
@@ -1896,9 +1896,9 @@ class SearchesPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.cleared_filter_history_icon,
             self.cleared_search_history_icon,
+            self.container,
             self.enable_default_filters_toggle,
             self.enable_search_history_toggle,
             self.filter_bitrate_entry,
@@ -2016,7 +2016,7 @@ class UrlHandlersPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.file_manager_combobox,
             self.media_player_combobox,
             self.protocol_list_container
@@ -2188,9 +2188,9 @@ class NowPlayingPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
             self.command_entry,
             self.command_label,
+            self.container,
             self.format_help_label,
             self.format_message_combobox,
             self.lastfm_radio,
@@ -2384,7 +2384,7 @@ class PluginsPage:
     def __init__(self, application):
 
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.enable_plugins_toggle,
             self.plugin_authors_label,
             self.plugin_description_view_container,
@@ -2982,12 +2982,12 @@ class Preferences(Dialog):
                     except AttributeError:
                         pass
 
-            page.Main.set_margin_start(18)
-            page.Main.set_margin_end(18)
-            page.Main.set_margin_top(14)
-            page.Main.set_margin_bottom(18)
+            page.container.set_margin_start(18)
+            page.container.set_margin_end(18)
+            page.container.set_margin_top(14)
+            page.container.set_margin_bottom(18)
 
-        self.viewport.set_property("child", self.pages[page_id].Main)
+        self.viewport.set_property("child", self.pages[page_id].container)
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)
