@@ -67,6 +67,8 @@ jobs:
             gtk: 4
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
+    env:
+      GSK_RENDERER: cairo
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
