@@ -20,8 +20,8 @@
 import socket
 import threading
 
+from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
-from pynicotine.slskmessages import GetPeerAddress
 
 
 class Plugin(BasePlugin):
@@ -48,8 +48,8 @@ class Plugin(BasePlugin):
             "port": {
                 "callback": self.port_checker_command,
                 "description": "Check firewall state of user",
-                "usage": ["<user>"],
-                "usage_private_chat": ["[user]"]
+                "parameters": ["<user>"],
+                "parameters_private_chat": ["[user]"]
             }
         }
         self.throttle = ResponseThrottle(self.core, self.human_name)
@@ -86,7 +86,7 @@ class Plugin(BasePlugin):
             threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
         else:
             self.pending_user = user, announce
-            self.core.queue.append(GetPeerAddress(user))
+            self.core.queue.append(slskmessages.GetPeerAddress(user))
 
     def check_port(self, user, ip_address, port, announce):
 

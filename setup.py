@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 hedonist <ak@sensi.org>

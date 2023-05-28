@@ -172,7 +172,7 @@
    https://github.com/devsnd/tinytag
 
  - Country database licensed under the CC-BY-SA-4.0 License.
-   Copyright (c) 2001-2022 Hexasoft Development Sdn. Bhd.
+   Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
    This program includes IP2Location LITE data available from:
    https://lite.ip2location.com
 

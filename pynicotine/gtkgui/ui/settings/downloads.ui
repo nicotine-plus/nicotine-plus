@@ -11,7 +11,7 @@
     <property name="step-increment">10</property>
     <property name="page-increment">50</property>
   </object>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>
@@ -38,12 +38,6 @@
             <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
             <property name="visible">True</property>
             <property name="use-underline">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="download_reverse_order_toggle">
-            <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
-            <property name="visible">True</property>
           </object>
         </child>
         <child>
@@ -380,16 +374,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are case-insensitive. All Python regular expressions are supported if escaping is disabled. For simple filters, keeping escaping enabled is recommended.</property>
-            <property name="selectable">True</property>
-            <property name="use-markup">True</property>
-            <property name="wrap">True</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="vexpand">True</property>
@@ -560,6 +544,7 @@
             <child>
               <object class="GtkButton" id="_verify_filters_button">
                 <property name="visible">True</property>
+                <property name="valign">center</property>
                 <signal name="clicked" handler="on_verify_filter"/>
                 <child>
                   <object class="GtkBox">

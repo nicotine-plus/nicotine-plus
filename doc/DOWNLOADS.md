@@ -20,7 +20,6 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
 | [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
 | [Parabola](https://www.parabola.nu/packages/community/x86_64/nicotine+/)                | `nicotine+`         |
-| [Solus](https://dev.getsol.us/source/nicotine-plus/)                                    | `nicotine-plus`     |
 | [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
 | [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`         |
 

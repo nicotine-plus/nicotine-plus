@@ -25,6 +25,7 @@
 import os
 
 from collections import deque
+from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -40,6 +41,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -52,9 +54,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
@@ -109,34 +109,26 @@ class ChatRooms(IconNotebook):
         ):
             events.connect(event_name, callback)
 
-    def on_reordered_page(self, notebook, _page, _page_num):
+    def on_reordered_page(self, *_args):
 
         room_tab_order = {}
+        previous_autojoin_rooms = config.sections["server"]["autojoin"][:]
 
-        # Find position of opened autojoined rooms
+        # Find position of opened auto-joined rooms
         for room, room_page in self.pages.items():
-
-            if room not in config.sections["server"]["autojoin"]:
+            if room not in previous_autojoin_rooms:
                 continue
 
-            room_tab_order[notebook.page_num(room_page.container)] = room
+            room_position = self.page_num(room_page.container)
+            room_tab_order[room_position] = room
 
-        pos = 1000
+            previous_autojoin_rooms.remove(room)
 
-        # Add closed autojoined rooms as well
-        for room in config.sections["server"]["autojoin"]:
-            if room not in self.pages:
-                room_tab_order[pos] = room
-                pos += 1
+        # Add opened rooms sorted by tab position first, then closed rooms
+        autojoin_rooms = [room for room_index, room in sorted(room_tab_order.items())]
+        autojoin_rooms.extend(previous_autojoin_rooms)
 
-        # Sort by "position"
-        rto = sorted(room_tab_order)
-        new_autojoin = []
-        for roomplace in rto:
-            new_autojoin.append(room_tab_order[roomplace])
-
-        # Save
-        config.sections["server"]["autojoin"] = new_autojoin
+        config.sections["server"]["autojoin"] = autojoin_rooms
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -384,15 +376,6 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
-    def save_columns(self):
-
-        for room in config.sections["columns"]["chat_room"].copy():
-            if room not in self.pages:
-                del config.sections["columns"]["chat_room"][room]
-
-        for page in self.pages.values():
-            page.save_columns()
-
     def server_login(self, msg):
 
         if not msg.success:
@@ -415,7 +398,6 @@ class ChatRoom:
 
     def __init__(self, chatrooms, room, users):
 
-        ui_template = UserInterface(scope=self, path="chatrooms.ui")
         (
             self.activity_container,
             self.activity_search_bar,
@@ -439,7 +421,7 @@ class ChatRoom:
             self.users_label,
             self.users_list_container,
             self.users_paned
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="chatrooms.ui")
 
         self.chatrooms = chatrooms
         self.window = chatrooms.window
@@ -488,12 +470,9 @@ class ChatRoom:
 
         self.toggle_chat_buttons()
 
-        if room not in config.sections["columns"]["chat_room"]:
-            config.sections["columns"]["chat_room"][room] = {}
-
         self.users_list_view = TreeView(
-            self.window, parent=self.users_list_container, name="chat_room",
-            activate_row_callback=self.on_row_activated, tooltip_callback=self.on_tooltip,
+            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
+            activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -689,8 +668,8 @@ class ChatRoom:
             h_speed,
             h_files,
             status,
-            GObject.Value(GObject.TYPE_UINT, avgspeed),
-            GObject.Value(GObject.TYPE_UINT, files),
+            avgspeed,
+            files,
             country_code,
             weight,
             underline
@@ -969,7 +948,8 @@ class ChatRoom:
             return
 
         # Add to completion list, and completion drop-down
-        self.chatrooms.completion.add_completion(username)
+        if self.chatrooms.completion.entry == self.chat_entry:
+            self.chatrooms.completion.add_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.append_line(
@@ -990,7 +970,7 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if username not in core.userlist.buddies:
+        if self.chatrooms.completion.entry == self.chat_entry and username not in core.userlist.buddies:
             self.chatrooms.completion.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \
@@ -1027,8 +1007,8 @@ class ChatRoom:
 
         self.users_list_view.set_row_value(iterator, "speed", h_speed)
         self.users_list_view.set_row_value(iterator, "files", humanize(num_files))
-        self.users_list_view.set_row_value(iterator, "speed_data", GObject.Value(GObject.TYPE_UINT, speed))
-        self.users_list_view.set_row_value(iterator, "files_data", GObject.Value(GObject.TYPE_UINT, num_files))
+        self.users_list_view.set_row_value(iterator, "speed_data", speed)
+        self.users_list_view.set_row_value(iterator, "files_data", num_files)
 
     def user_status(self, msg):
 
@@ -1047,10 +1027,10 @@ class ChatRoom:
         if status == self.users_list_view.get_row_value(iterator, "status_data"):
             return
 
-        if status == UserStatus.AWAY:
+        if status == slskmessages.UserStatus.AWAY:
             action = _("%s has gone away")
 
-        elif status == UserStatus.ONLINE:
+        elif status == slskmessages.UserStatus.ONLINE:
             action = _("%s has returned")
 
         else:
@@ -1138,9 +1118,6 @@ class ChatRoom:
 
         self.chat_view.update_tags()
 
-    def save_columns(self):
-        self.users_list_view.save_columns(subpage=self.room)
-
     def server_disconnect(self):
 
         self.users_list_view.clear()
@@ -1196,6 +1173,7 @@ class ChatRoom:
 
         elif active and self.room not in autojoin:
             autojoin.append(self.room)
+            self.chatrooms.on_reordered_page()  # Save room order
 
         config.write_configuration()
 
@@ -1209,16 +1187,6 @@ class ChatRoom:
             return
 
         core.chatrooms.remove_room(self.room)
-
-    @staticmethod
-    def on_tooltip(list_view, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        status_tooltip = list_view.show_user_status_tooltip(pos_x, pos_y, tooltip, "status_data")
-
-        if status_tooltip:
-            return status_tooltip
-
-        return list_view.show_country_tooltip(pos_x, pos_y, tooltip, "country_data")
 
     def on_log_toggled(self, *_args):
 
@@ -1251,7 +1219,7 @@ class ChatRoom:
 
     def set_completion_list(self, completion_list):
 
-        if not config.sections["words"]["tab"]:
+        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
             return
 
         # We want to include users for this room only
@@ -1260,6 +1228,6 @@ class ChatRoom:
 
         # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=str.lower)
+        completion_list.sort(key=strxfrm)
 
         self.chatrooms.completion.set_completion_list(completion_list)

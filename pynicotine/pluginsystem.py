@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -435,10 +435,11 @@ class PluginHandler:
         self.plugin_folders = []
         self.enabled_plugins = {}
         self.command_source = None
-
-        self.chatroom_commands = {}
-        self.private_chat_commands = {}
-        self.cli_commands = {}
+        self.commands = {
+            "chatroom": {},
+            "private_chat": {},
+            "cli": {}
+        }
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
@@ -577,37 +578,33 @@ class PluginHandler:
                 if not data:
                     continue
 
-                command = "/" + command
                 disabled_interfaces = data.get("disable", [])
 
                 if "group" not in data:
                     # Group commands under human-friendly plugin name by default
                     data["group"] = plugin.human_name
 
-                for command_interface, command_list in (
-                    ("chatroom", self.chatroom_commands),
-                    ("private_chat", self.private_chat_commands),
-                    ("cli", self.cli_commands)
-                ):
+                for command_interface, command_list in self.commands.items():
                     if command_interface in disabled_interfaces:
                         continue
 
                     if command in command_list:
                         log.add(_("Conflicting %(interface)s command in plugin %(name)s: %(command)s"),
-                                {"interface": command_interface, "name": plugin.human_name, "command": command})
+                                {"interface": command_interface, "name": plugin.human_name, "command": f"/{command}"})
                         continue
 
                     command_list[command] = data
 
-            for command, _func in plugin.__publiccommands__:
-                command = "/" + command
-                if command not in self.chatroom_commands:
-                    self.chatroom_commands[command] = None
+            # Legacy commands
+            for command_interface, plugin_commands in (
+                ("chatroom", plugin.__publiccommands__),
+                ("private_chat", plugin.__privatecommands__)
+            ):
+                interface_commands = self.commands.get(command_interface)
 
-            for command, _func in plugin.__privatecommands__:
-                command = "/" + command
-                if command not in self.private_chat_commands:
-                    self.private_chat_commands[command] = None
+                for command, _func in plugin_commands:
+                    if command not in interface_commands:
+                        interface_commands[command] = None
 
             self.update_completions(plugin)
 
@@ -667,22 +664,21 @@ class PluginHandler:
             plugin.disable()
 
             for command, data in plugin.commands.items():
-                command = "/" + command
-
-                for command_list in (self.chatroom_commands, self.private_chat_commands, self.cli_commands):
+                for command_list in self.commands.values():
                     # Remove only if data matches command as defined in this plugin
                     if data and data == command_list.get(command):
                         del command_list[command]
 
-            for command, _func in plugin.__publiccommands__:
-                command = "/" + command
-                if not self.chatroom_commands.get(command):
-                    self.chatroom_commands.pop(command, None)
+            # Legacy commands
+            for command_interface, plugin_commands in (
+                ("chatroom", plugin.__publiccommands__),
+                ("private_chat", plugin.__privatecommands__)
+            ):
+                interface_commands = self.commands.get(command_interface)
 
-            for command, _func in plugin.__privatecommands__:
-                command = "/" + command
-                if not self.private_chat_commands.get(command):
-                    self.private_chat_commands.pop(command, None)
+                for command, _func in plugin_commands:
+                    if command in interface_commands and interface_commands.get(command) is None:
+                        del interface_commands[command]
 
             self.update_completions(plugin)
             plugin.unloaded_notification()
@@ -810,42 +806,53 @@ class PluginHandler:
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
-    def get_command_descriptions(self, command_interface, search_query=None):
+    def get_command_list(self, command_interface):
+        """ Returns a list of every command and alias available. Currently used for
+        auto-completion in chats. """
+
+        commands = []
+
+        for command, data in self.commands.get(command_interface).items():
+            commands.append(f"/{command} ")
+
+            if not data:
+                continue
+
+            for alias in data.get("aliases", []):
+                commands.append(f"/{alias} ")
+
+        return commands
+
+    def get_command_groups_data(self, command_interface, search_query=None):
+        """ Returns the available command groups and data of commands in them. Currently used
+        for the /help command. """
 
         command_groups = {}
 
-        if command_interface == "chatroom":
-            command_list = self.chatroom_commands
-
-        elif command_interface == "private_chat":
-            command_list = self.private_chat_commands
-
-        else:
-            command_list = self.cli_commands
-
-        for command, data in command_list.items():
-            command_message = command
+        for command, data in self.commands.get(command_interface).items():
+            aliases = []
+            parameters = []
             description = _("No description")
             group = _("Miscellaneous")
 
             if data:
-                commands = ", /".join([command] + data.get("aliases", []))
-                parameters = " ".join(data.get(f"usage_{command_interface}", data.get("usage", [])))
-
-                command_message = f"{commands} {parameters}".strip()
+                aliases = data.get("aliases", [])
+                parameters = data.get(f"parameters_{command_interface}", data.get("parameters", []))
                 description = data.get("description", description)
                 group = data.get("group", group)
 
             if (search_query
                     and search_query not in group.lower()
-                    and search_query not in command_message.lower()
+                    and search_query not in command.lower()
+                    and not any(search_query in alias for alias in aliases)
+                    and not any(search_query in parameter for parameter in parameters)
                     and search_query not in description.lower()):
                 continue
 
             if group not in command_groups:
                 command_groups[group] = []
 
-            command_groups[group].append((command_message, description))
+            command_groups[group].append((command, aliases, parameters, description))
 
         return command_groups
 
@@ -895,31 +902,34 @@ class PluginHandler:
 
                     command_found = True
                     rejection_message = None
-                    usage = data.get(f"usage_{command_interface}", data.get("usage", []))
+                    parameters = data.get(f"parameters_{command_interface}", data.get("parameters", []))
                     args_split = plugin.split_args(args, 0)
                     num_args = len(args_split)
                     num_required_args = 0
 
-                    for i, arg in enumerate(usage):
-                        if arg.startswith("<"):
+                    for i, parameter in enumerate(parameters):
+                        if parameter.startswith("<"):
                             num_required_args += 1
 
                         if num_args < num_required_args:
-                            rejection_message = f"Missing {arg} argument"
+                            rejection_message = _("Missing %s argument") % parameter
                             break
 
-                        if "|" not in arg:
+                        if num_args <= i or "|" not in parameter:
                             continue
 
-                        choices = arg[1:-1].split("|")
+                        choices = parameter[1:-1].split("|")
 
                         if args_split[i] not in choices:
-                            rejection_message = f"Invalid argument, possible choices: {' | '.join(choices)}"
+                            rejection_message = _("Invalid argument, possible choices: %s") % " | ".join(choices)
                             break
 
                     if rejection_message:
                         plugin.output(rejection_message)
-                        plugin.output(f"Usage: {'/' + command} {' '.join(usage)}")
+                        plugin.output(_("Usage: %(command)s %(parameters)s") % {
+                            "command": f"/{command}",
+                            "parameters": " ".join(parameters)
+                        })
                         break
 
                     callback = data.get(f"callback_{command_interface}", data.get("callback"))
@@ -955,7 +965,10 @@ class PluginHandler:
                 break
 
         if plugin:
-            plugin.output(f"Unknown command: {'/' + command}. Type /help to list available commands.")
+            plugin.output(_("Unknown command: %(command)s. Type %(help_command)s to list available commands.") % {
+                "command": f"/{command}",
+                "help_command": "/help"
+            })
 
         self.command_source = None
         return is_successful
@@ -965,15 +978,9 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
-        function_name_camelcase = function_name.title().replace("_", "")
-
         for module, plugin in self.enabled_plugins.items():
             try:
-                if hasattr(plugin, function_name_camelcase):
-                    plugin.log(f"{function_name_camelcase} is deprecated, please use {function_name}")
-                    return_value = getattr(plugin, function_name_camelcase)(*args)
-                else:
-                    return_value = getattr(plugin, function_name)(*args)
+                return_value = getattr(plugin, function_name)(*args)
 
             except Exception:
                 self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])

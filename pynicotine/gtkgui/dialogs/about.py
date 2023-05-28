@@ -20,8 +20,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
@@ -222,36 +222,39 @@ class About(Dialog):
    - Kari Viittanen (Kalevi) (2006–2007)""",
 
         """>> <b>French</b>
+   - subu_versus (2023)
+   - zniavre (2007–2023)
    - Lisapple (2021–2022)
    - melmorabity (2021–2022)
    - m-balthazar (2020)
    - Michael Labouebe (gfarmerfr) (2016–2017)
    - Monsieur Poisson (2009–2010)
    - ManWell (2007)
-   - zniavre (2007–2023)
    - systr (2006)
    - Julien Wajsberg (flashfr) (2003–2004)""",
 
         """>> <b>German</b>
    - Han Boetes (hboetes) (2021–2023)
+   - phelissimo_ (2023)
    - Meokater (2007)
    - (._.) (2007)
    - lippel (2004)
    - Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """>> <b>Hungarian</b>
-   - Szia Tomi (2022-2023)
+   - Szia Tomi (2022–2023)
    - Nils (2009)
    - David Balazs (djbaloo) (2006–2020)""",
 
         """>> <b>Italian</b>
-   - Gabboxl (2022)
+   - Gabboxl (2022–2023)
+   - ms-afk (2023)
    - Gianluca Boiano (2020–2022)
    - nicola (2007)
    - dbazza (2003–2004)""",
 
         """>> <b>Latvian</b>
-   - Pagal3 (2022-2023)""",
+   - Pagal3 (2022–2023)""",
 
         """>> <b>Lithuanian</b>
    - mantas (2020)
@@ -261,12 +264,13 @@ class About(Dialog):
    - Allan Nordhøy (comradekingu) (2021)""",
 
         """>> <b>Polish</b>
-   - mariachini (2017–2022)
+   - mariachini (2017–2023)
    - Amun-Ra (2007)
    - thine (2007)
    - Wojciech Owczarek (owczi) (2003–2004)""",
 
         """>> <b>Portuguese (Brazil)</b>
+   - Havokdan (2022–2023)
    - Guilherme Santos (2022)
    - b1llso (2022)
    - Nicolas Abril (2021)
@@ -274,22 +278,23 @@ class About(Dialog):
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
         """>> <b>Russian</b>
-   - AHOHNMYC (2022)
-   - SnIPeRSnIPeR (2022)
-   - Mehavoid (2021–2022)""",
+   - SnIPeRSnIPeR (2022–2023)
+   - Mehavoid (2021–2023)
+   - AHOHNMYC (2022)""",
 
         """>> <b>Slovak</b>
-   - Jozef Říha (2006-2008)""",
+   - Jozef Říha (2006–2008)""",
 
         """>> <b>Spanish (Chile)</b>
-   - MELERIX (2021–2022)
+   - MELERIX (2021–2023)
    - tagomago (2021–2022)
    - Strange (2021)
    - Silvio Orta (2007)
    - Dreslo (2003–2004)""",
 
         """>> <b>Spanish (Spain)</b>
-   - MELERIX (2021)
+   - gallegonovato (2023)
+   - MELERIX (2021–2023)
    - tagomago (2021–2022)
    - Strange (2021)
    - Silvio Orta (2007)
@@ -300,7 +305,7 @@ class About(Dialog):
    - Markus Magnuson (alimony) (2003–2004)""",
 
         """>> <b>Turkish</b>
-   - Oğuz Ersen (2021–2022)""",
+   - Oğuz Ersen (2021–2023)""",
 
         """>> <b>Ukrainian</b>
    - uniss2209 (2022)"""]
@@ -319,7 +324,7 @@ Copyright (c) 2014–2022 Tom Wallroth
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
-Copyright (c) 2001-2022 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
 This program includes IP2Location LITE data available from:
 <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
 
@@ -329,7 +334,6 @@ Copyright (c) 2017 IP2Location.com
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/about.ui")
         (
             self.application_name_label,
             self.authors_container,
@@ -340,7 +344,7 @@ Copyright (c) 2017 IP2Location.com
             self.translators_container,
             self.version_label,
             self.website_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/about.ui")
 
         super().__init__(
             parent=application.window,

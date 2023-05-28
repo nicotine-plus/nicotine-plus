@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -84,8 +84,10 @@ from pynicotine.slskmessages import SharedFileListResponse
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
 from pynicotine.portmapper import PortMapper
+from pynicotine.utils import human_speed
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -122,8 +124,8 @@ else:
     MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
 
 SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
-UINT_UNPACK = struct.Struct("<I").unpack
-DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
+UINT32_UNPACK = struct.Struct("<I").unpack
+DOUBLE_UINT32_UNPACK = struct.Struct("<II").unpack
 
 
 class Connection:
@@ -191,7 +193,7 @@ class SoulseekNetworkThread(Thread):
 
         super().__init__(name="SoulseekNetworkThread")
 
-        self.listenport = None
+        self.listen_port = None
         self.portmapper = None
 
         self._queue = queue
@@ -204,7 +206,6 @@ class SoulseekNetworkThread(Thread):
 
         self._selector = None
         self._listen_socket = None
-        self._listen_port_range = None
         self._bound_ip = None
         self._interface = None
 
@@ -218,9 +219,14 @@ class SoulseekNetworkThread(Thread):
 
         self._parent_socket = None
         self._potential_parents = {}
+        self._child_peers = {}
+        self._branch_level = 0
+        self._branch_root = None
+        self._is_server_parent = False
         self._distrib_parent_min_speed = 0
         self._distrib_parent_speed_ratio = 1
-        self._max_distrib_children = 10
+        self._max_distrib_children = 0
+        self._upload_speed = 0
 
         self._numsockets = 1
         self._last_conn_stat_time = 0
@@ -285,7 +291,7 @@ class SoulseekNetworkThread(Thread):
         self._selector.unregister(self._listen_socket)
         self._close_socket(self._listen_socket, shutdown=False)
         self._listen_socket = None
-        self.listenport = None
+        self.listen_port = None
 
     def _bind_listen_port(self):
 
@@ -300,22 +306,20 @@ class SoulseekNetworkThread(Thread):
 
         ip_address = self._bound_ip or "0.0.0.0"
 
-        for listenport in range(int(self._listen_port_range[0]), int(self._listen_port_range[1]) + 1):
-            try:
-                self._listen_socket.bind((ip_address, listenport))
-                self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
-                self.listenport = listenport
-                log.add(_("Listening on port: %i"), listenport)
-                log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
-                return True
+        try:
+            self._listen_socket.bind((ip_address, self.listen_port))
+            self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
-            except OSError as error:
-                log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
-                continue
+        except OSError as error:
+            self.listen_port = None
+            log.add(_("Cannot listen on port %(port)s. Ensure no other application uses it, or choose a "
+                      "different port. Error: %(error)s"), {"port": self.listen_port, "error": error},
+                    title=_("Listening Port Unavailable"))
+            return False
 
-        log.add(_("No listening port is available in the specified port range %s–%s"), self._listen_port_range,
-                title=_("Listening Port Unavailable"))
-        return False
+        log.add(_("Listening on port: %i"), self.listen_port)
+        log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
+        return True
 
     @staticmethod
     def _get_interface_ip_address(if_name):
@@ -394,7 +398,7 @@ class SoulseekNetworkThread(Thread):
             self._interface = msg_obj.interface
 
         self._bound_ip = msg_obj.bound_ip
-        self._listen_port_range = msg_obj.listen_port_range
+        self.listen_port = msg_obj.listen_port
 
         if not self._create_listen_socket():
             self._should_process_queue = False
@@ -412,10 +416,20 @@ class SoulseekNetworkThread(Thread):
         """ We're disconnecting from the server, clean up """
 
         self._should_process_queue = False
-        self._bound_ip = self._interface = self._listen_port_range = self._server_socket = None
+        self._bound_ip = self._interface = self._server_socket = None
 
         self._close_listen_socket()
         self.portmapper.remove_port_mapping(blocking=True)
+
+        self._parent_socket = None
+        self._potential_parents.clear()
+        self._branch_level = 0
+        self._branch_root = None
+        self._is_server_parent = False
+        self._distrib_parent_min_speed = 0
+        self._distrib_parent_speed_ratio = 1
+        self._max_distrib_children = 0
+        self._upload_speed = 0
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
@@ -641,7 +655,7 @@ class SoulseekNetworkThread(Thread):
 
         distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg.distrib_code]
         distrib_msg = distrib_class()
-        distrib_msg.parse_network_message(msg.distrib_message)
+        distrib_msg.parse_network_message(memoryview(msg.distrib_message))
 
         return distrib_msg
 
@@ -659,10 +673,6 @@ class SoulseekNetworkThread(Thread):
     def _modify_connection_events(self, conn_obj, selector_events):
 
         if conn_obj.selector_events != selector_events:
-            log.add_conn("Modifying selector events for connection to %(addr)s: %(events)s", {
-                "addr": conn_obj.addr,
-                "events": selector_events
-            })
             self._selector.modify(conn_obj.sock, selector_events)
             conn_obj.selector_events = selector_events
 
@@ -867,6 +877,7 @@ class SoulseekNetworkThread(Thread):
                 "token": token
             })
             self._queue.append(PierceFireWall(sock, token))
+            self._accept_child_peer_connection(conn_obj)
 
         else:
             # Direct connection established
@@ -901,11 +912,11 @@ class SoulseekNetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = (self._find_local_ip_address(), self.listenport)
+        self._user_addresses[login] = (self._find_local_ip_address(), self.listen_port)
         conn_obj.login = True
 
         self._server_address = addr
-        self._server_username = login
+        self._server_username = self._branch_root = login
         self._server_timeout_value = -1
 
         self._queue.append(
@@ -920,11 +931,11 @@ class SoulseekNetworkThread(Thread):
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
                 # We use a custom minor version for Nicotine+
-                1
+                2
             )
         )
 
-        self._queue.append(SetWaitPort(self.listenport))
+        self._queue.append(SetWaitPort(self.listen_port))
 
     def _replace_existing_connection(self, init):
 
@@ -982,6 +993,9 @@ class SoulseekNetworkThread(Thread):
         self._close_socket(sock, shutdown=(connection_list != self._connsinprogress))
         self._numsockets -= 1
 
+        conn_obj.ibuf.clear()
+        conn_obj.obuf.clear()
+
         if conn_obj.__class__ is ServerConnection:
             # Disconnected from server, clean up connections and queue
             self._server_disconnect()
@@ -1031,6 +1045,13 @@ class SoulseekNetworkThread(Thread):
             "user": user,
             "addr": conn_obj.addr
         })
+
+        if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(user, None):
+            if len(self._child_peers) == self._max_distrib_children - 1:
+                log.add_conn("Available to accept a new distributed child peer")
+                self._queue.append(AcceptChildren(True))
+
+            log.add_conn("List of current child peers: %s", str(list(self._child_peers.keys())))
 
         init_key = user + conn_type
         user_init = self._username_init_msgs.get(init_key)
@@ -1182,7 +1203,7 @@ class SoulseekNetworkThread(Thread):
             self._close_socket(server_socket, shutdown=False)
             self._server_disconnect()
 
-    def _process_server_input(self, conn_obj, msg_buffer):
+    def _process_server_input(self, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
         of the msg_buffer. """
@@ -1193,7 +1214,7 @@ class SoulseekNetworkThread(Thread):
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1208,6 +1229,7 @@ class SoulseekNetworkThread(Thread):
 
                 if msg is not None:
                     if msg_class is EmbeddedMessage:
+                        self._distribute_embedded_message(msg)
                         msg = self._unpack_embedded_message(msg)
 
                     elif msg_class is Login:
@@ -1227,11 +1249,6 @@ class SoulseekNetworkThread(Thread):
 
                             # Ask for a list of parents to connect to (distributed network)
                             self._send_have_no_parent()
-
-                            # TODO: We can currently receive search requests from a parent connection, but
-                            # redirecting results to children is not implemented yet. Tell the server we don't accept
-                            # children for now.
-                            self._queue.append(AcceptChildren(False))
 
                             # Request a complete room list. A limited room list not including blacklisted rooms and
                             # rooms with few users is automatically sent when logging in, but subsequent room list
@@ -1265,10 +1282,6 @@ class SoulseekNetworkThread(Thread):
                             if msg.user in self._user_addresses:
                                 del self._user_addresses[msg.user]
 
-                    elif msg_class is GetUserStats:
-                        if msg.user == self._server_username:
-                            self._max_distrib_children = msg.avgspeed // self._distrib_parent_speed_ratio
-
                     elif msg_class is GetPeerAddress:
                         user = msg.user
                         pending_init_msgs = self._pending_init_msgs.pop(msg.user, [])
@@ -1297,6 +1310,12 @@ class SoulseekNetworkThread(Thread):
                         if user != self._server_username and not user_offline:
                             self._user_addresses[msg.user] = addr
 
+                    elif msg_class in (WatchUser, GetUserStats):
+                        if msg.user == self._server_username:
+                            self._upload_speed = msg.avgspeed
+                            log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
+                            self._update_maximum_distributed_children()
+
                     elif msg_class is Relogged:
                         self._manual_server_disconnect = True
                         self._server_relogged = True
@@ -1317,15 +1336,22 @@ class SoulseekNetworkThread(Thread):
 
                     elif msg_class is ParentMinSpeed:
                         self._distrib_parent_min_speed = msg.speed
+                        log.add_conn("Received minimum distributed parent speed %s from the server", msg.speed)
+                        self._update_maximum_distributed_children()
 
                     elif msg_class is ParentSpeedRatio:
                         self._distrib_parent_speed_ratio = msg.ratio
+                        log.add_conn("Received distributed parent speed ratio %s from the server", msg.ratio)
+                        self._update_maximum_distributed_children()
 
                     elif msg_class is ResetDistributed:
                         log.add_conn("Received a reset request for distributed network")
 
                         if self._parent_socket is not None:
                             self._close_connection(self._conns, self._parent_socket)
+
+                        for child_conn_obj in self._child_peers.values():
+                            self._close_connection(self._conns, child_conn_obj.sock)
 
                         self._send_have_no_parent()
 
@@ -1341,8 +1367,10 @@ class SoulseekNetworkThread(Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
+        msg_buffer_mem.release()
+
         if idx:
-            conn_obj.ibuf = msg_buffer[idx:]
+            del msg_buffer[:idx]
 
     def _process_server_output(self, msg_obj):
 
@@ -1375,10 +1403,11 @@ class SoulseekNetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msgsize = UINT_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1410,11 +1439,8 @@ class SoulseekNetworkThread(Thread):
                         if init is None:
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
-                            conn_obj.ibuf = bytearray()
-                            self._close_connection(self._conns, conn_obj.sock)
-                            return None
-
-                        self._add_init_message(init)
+                            should_close_connection = True
+                            break
 
                         init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(init, None)
@@ -1423,8 +1449,6 @@ class SoulseekNetworkThread(Thread):
                             "user": init.target_user,
                             "token": msg.token
                         })
-
-                        self._process_conn_messages(init)
 
                     elif msg_class is PeerInit:
                         user = msg.target_user
@@ -1439,17 +1463,12 @@ class SoulseekNetworkThread(Thread):
                         })
 
                         if not self._verify_peer_connection_type(conn_type):
-                            conn_obj.ibuf = bytearray()
-                            self._close_connection(self._conns, conn_obj.sock)
-                            return None
-
-                        self._replace_existing_connection(msg)
+                            should_close_connection = True
+                            break
 
                         init = msg
                         init.addr = addr
-
-                        self._add_init_message(msg)
-                        self._process_conn_messages(msg)
+                        self._replace_existing_connection(init)
 
                     self.emit_network_message_event(msg)
 
@@ -1459,16 +1478,27 @@ class SoulseekNetworkThread(Thread):
                     "size": msgsize - 1,
                     "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
-
-                conn_obj.ibuf = bytearray()
-                self._close_connection(self._conns, conn_obj.sock)
-                return None
+                should_close_connection = True
+                break
 
             idx += msgsize_total
             buffer_len -= msgsize_total
 
+        msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, conn_obj.sock)
+            return None
+
         if idx:
-            conn_obj.ibuf = msg_buffer[idx:]
+            del msg_buffer[:idx]
+
+        if init is not None:
+            conn_obj.init = init
+
+            self._add_init_message(init)
+            self._process_conn_messages(init)
+            self._accept_child_peer_connection(conn_obj)
 
         return init
 
@@ -1540,7 +1570,7 @@ class SoulseekNetworkThread(Thread):
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
             msgsize_total = msgsize + 4
 
             try:
@@ -1588,15 +1618,18 @@ class SoulseekNetworkThread(Thread):
             idx += msgsize_total
             buffer_len -= msgsize_total
 
-        if idx:
-            conn_obj.ibuf = msg_buffer[idx:]
-            conn_obj.has_post_init_activity = True
+        msg_buffer_mem.release()
 
         if search_result_received and not self._connection_still_active(conn_obj):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
             self._close_connection(self._conns, conn_obj.sock)
+            return
+
+        if idx:
+            del msg_buffer[:idx]
+            conn_obj.has_post_init_activity = True
 
     def _process_peer_output(self, msg_obj):
 
@@ -1633,6 +1666,7 @@ class SoulseekNetworkThread(Thread):
 
         msg_buffer_mem = memoryview(msg_buffer)
         idx = 0
+        should_close_connection = False
 
         if conn_obj.fileinit is None:
             # Note that this would technically be a FileUploadInit message if the remote user
@@ -1652,18 +1686,18 @@ class SoulseekNetworkThread(Thread):
 
         elif conn_obj.filedown is not None:
             idx = conn_obj.filedown.leftbytes
-            added_bytes = msg_buffer_mem[:idx]
+            added_bytes_mem = msg_buffer_mem[:idx]
 
-            if added_bytes:
+            if added_bytes_mem:
                 try:
-                    conn_obj.filedown.file.write(added_bytes)
+                    conn_obj.filedown.file.write(added_bytes_mem)
 
                 except (OSError, ValueError) as error:
                     events.emit_main_thread(
                         "download-file-error", conn_obj.filedown.token, conn_obj.filedown.file, error)
-                    self._close_connection(self._conns, conn_obj.sock)
+                    should_close_connection = True
 
-                added_bytes_len = len(added_bytes)
+                added_bytes_len = len(added_bytes_mem)
                 self._total_download_bandwidth += added_bytes_len
                 conn_obj.filedown.leftbytes -= added_bytes_len
 
@@ -1679,7 +1713,9 @@ class SoulseekNetworkThread(Thread):
                 conn_obj.lastcallback = current_time
 
             if finished:
-                self._close_connection(self._conns, conn_obj.sock)
+                should_close_connection = True
+
+            added_bytes_mem.release()
 
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
             msgsize = idx = 8
@@ -1695,10 +1731,16 @@ class SoulseekNetworkThread(Thread):
 
                 except (OSError, ValueError) as error:
                     events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
-                    self._close_connection(self._conns, conn_obj.sock)
+                    should_close_connection = True
+
+        msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, conn_obj.sock)
+            return
 
         if idx:
-            conn_obj.ibuf = msg_buffer[idx:]
+            del msg_buffer[:idx]
             conn_obj.has_post_init_activity = True
 
     def _process_file_output(self, msg_obj):
@@ -1739,14 +1781,90 @@ class SoulseekNetworkThread(Thread):
 
     """ Distributed Connection """
 
-    def _verify_parent_connection(self, conn_obj):
+    def _accept_child_peer_connection(self, conn_obj):
+
+        if conn_obj.init.conn_type != ConnectionType.DISTRIBUTED:
+            return
+
+        user = conn_obj.init.target_user
+
+        if user == self._server_username:
+            # We can't connect to ourselves
+            return
+
+        if user in self._potential_parents:
+            # This is not a child peer, ignore
+            return
+
+        if self._parent_socket is None and not self._is_server_parent:
+            # We have no parent user and the server hasn't sent search requests, no point
+            # in accepting child peers
+            log.add_conn("Rejecting distributed child peer connection from user %s, since we have no parent", user)
+            return
+
+        if len(self._child_peers) >= self._max_distrib_children:
+            log.add_conn(("Rejecting distributed child peer connection from user %(user)s, since child peer limit "
+                          "of %(limit)s was reached"), {"user": user, "limit": self._max_distrib_children})
+            self._close_connection(self._conns, conn_obj.sock)
+            return
+
+        self._child_peers[user] = conn_obj
+        self._queue.append(DistribBranchLevel(conn_obj.init, self._branch_level))
+
+        if self._parent_socket is not None:
+            # Only sent when we're not the branch root
+            self._queue.append(DistribBranchRoot(conn_obj.init, self._branch_root))
+
+        log.add_conn("Adopting user %(user)s as distributed child peer. List of current child peers: %(peers)s", {
+            "user": user,
+            "peers": list(self._child_peers.keys())
+        })
+
+        if len(self._child_peers) >= self._max_distrib_children:
+            log.add_conn(("Maximum number of distributed child peers reached (%s), "
+                          "no longer accepting new connections"), self._max_distrib_children)
+            self._queue.append(AcceptChildren(False))
+
+    def _send_child_peer_message(self, msg):
+
+        msg_class = msg.__class__
+        msg_attrs = [getattr(msg, s) for s in msg.__slots__]
+
+        for conn_obj in self._child_peers.values():
+            msg_child = msg_class(*msg_attrs)
+            msg_child.init = conn_obj.init
+
+            self._queue.append(msg_child)
+
+    def _distribute_embedded_message(self, msg):
+        """ Distributes an embedded message from the server to our child peers """
+
+        if self._parent_socket is not None:
+            # The server shouldn't send embedded messages while it's not our parent, but let's be safe
+            return
+
+        self._send_child_peer_message(
+            DistribEmbeddedMessage(distrib_code=msg.distrib_code, distrib_message=msg.distrib_message))
+
+        if self._is_server_parent:
+            return
+
+        self._is_server_parent = True
+
+        if len(self._child_peers) < self._max_distrib_children:
+            self._queue.append(AcceptChildren(True))
+
+        log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
+
+    def _verify_parent_connection(self, conn_obj, msg_class):
         """ Verify that a connection is our current parent connection """
 
-        if self._parent_socket is not None and conn_obj.sock != self._parent_socket:
-            log.add_conn("Received a distributed message from user %s, who is not our parent. Closing connection.",
-                         conn_obj.init.target_user)
-            conn_obj.ibuf = bytearray()
-            self._close_connection(self._conns, conn_obj.sock)
+        if conn_obj.sock != self._parent_socket:
+            log.add_conn(("Received a distributed message %(type)s from user %(user)s, who is not our parent. "
+                          "Closing connection."), {
+                "type": msg_class,
+                "user": conn_obj.init.target_user
+            })
             return False
 
         return True
@@ -1756,11 +1874,46 @@ class SoulseekNetworkThread(Thread):
         us a PossibleParents message, or start sending us search requests. """
 
         self._parent_socket = None
+        self._branch_level = 0
+        self._branch_root = self._server_username
+        self._potential_parents.clear()
         log.add_conn("We have no parent, requesting a new one")
 
         self._queue.append(HaveNoParent(True))
-        self._queue.append(BranchRoot(self._server_username))
-        self._queue.append(BranchLevel(0))
+        self._queue.append(BranchRoot(self._branch_root))
+        self._queue.append(BranchLevel(self._branch_level))
+        self._queue.append(AcceptChildren(False))
+
+    def _set_branch_root(self, username):
+        """ Inform the server and child peers of our branch root """
+
+        if username == self._branch_root:
+            return
+
+        self._branch_root = username
+        self._queue.append(BranchRoot(username))
+        self._send_child_peer_message(DistribBranchRoot(user=username))
+
+        log.add_conn("Our branch root is user %s", username)
+
+    def _update_maximum_distributed_children(self):
+
+        prev_max_distrib_children = int(self._max_distrib_children)
+        num_child_peers = len(self._child_peers)
+
+        if self._upload_speed >= self._distrib_parent_min_speed and self._distrib_parent_speed_ratio > 0:
+            # Limit maximum distributed child peers to 10 for now due to socket limit concerns
+            self._max_distrib_children = min(self._upload_speed // self._distrib_parent_speed_ratio // 100, 10)
+        else:
+            # Server does not allow us to accept distributed child peers
+            self._max_distrib_children = 0
+
+        log.add_conn("Distributed child peer limit updated, maximum connections: %s", str(self._max_distrib_children))
+
+        if self._max_distrib_children <= num_child_peers < prev_max_distrib_children:
+            log.add_conn(("Our current number of distributed child peers (%s) reached the new limit, no longer "
+                          "accepting new connections"), num_child_peers)
+            self._queue.append(AcceptChildren(False))
 
     def _process_distrib_input(self, conn_obj, msg_buffer):
         """ We have a distributed network connection, parent has sent us
@@ -1771,10 +1924,11 @@ class SoulseekNetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msgsize = UINT_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1791,55 +1945,72 @@ class SoulseekNetworkThread(Thread):
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
-                    if msg_class is DistribSearch and not self._verify_parent_connection(conn_obj):
-                        return
+                    if msg_class is DistribSearch:
+                        if not self._verify_parent_connection(conn_obj, msg_class):
+                            should_close_connection = True
+                            break
 
-                    if msg_class is DistribEmbeddedMessage:
-                        if not self._verify_parent_connection(conn_obj):
-                            return
+                        self._send_child_peer_message(msg)
+
+                    elif msg_class is DistribEmbeddedMessage:
+                        if not self._verify_parent_connection(conn_obj, msg_class):
+                            should_close_connection = True
+                            break
 
                         msg = self._unpack_embedded_message(msg)
+                        self._send_child_peer_message(msg)
 
                     elif msg_class is DistribBranchLevel:
-                        if msg.value < 0:
+                        if msg.level < 0:
                             # There are rare cases of parents sending a branch level value of -1,
                             # presumably buggy clients
                             log.add_conn(("Received an invalid branch level value %(level)s from user %(user)s. "
-                                          "Closing connection."), {"level": msg.value, "user": msg.init.target_user})
-                            conn_obj.ibuf = bytearray()
-                            self._close_connection(self._conns, conn_obj.sock)
-                            return
+                                          "Closing connection."), {"level": msg.level, "user": msg.init.target_user})
+                            should_close_connection = True
+                            break
 
                         if self._parent_socket is None and msg.init.target_user in self._potential_parents:
                             # We have a successful connection with a potential parent. Tell the server who
                             # our parent is, and stop requesting new potential parents.
                             self._parent_socket = conn_obj.sock
+                            self._branch_level = msg.level + 1
+                            self._is_server_parent = False
 
                             self._queue.append(HaveNoParent(False))
-                            self._queue.append(BranchLevel(msg.value + 1))
+                            self._queue.append(BranchLevel(self._branch_level))
+
+                            if len(self._child_peers) < self._max_distrib_children:
+                                self._queue.append(AcceptChildren(True))
+
+                            self._send_child_peer_message(DistribBranchLevel(level=self._branch_level))
+                            self._child_peers.pop(msg.init.target_user, None)
 
                             log.add_conn("Adopting user %s as parent", msg.init.target_user)
-                            log.add_conn("Our branch level is %s", msg.value + 1)
+                            log.add_conn("Our branch level is %s", self._branch_level)
 
-                        elif conn_obj.sock != self._parent_socket:
-                            # Unwanted connection, close it
-                            conn_obj.ibuf = bytearray()
-                            self._close_connection(self._conns, conn_obj.sock)
-                            return
+                            if self._branch_level == 1:
+                                # Our current branch level is 1, our parent is a branch root
+                                self._set_branch_root(msg.init.target_user)
+                            continue
 
-                        else:
-                            # Inform the server of our new branch level
-                            self._queue.append(BranchLevel(msg.value + 1))
-                            log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
-                                         msg.value + 1)
+                        if not self._verify_parent_connection(conn_obj, msg_class):
+                            should_close_connection = True
+                            break
+
+                        # Inform the server and child peers of our new branch level
+                        self._branch_level = msg.level + 1
+                        self._queue.append(BranchLevel(self._branch_level))
+                        self._send_child_peer_message(DistribBranchLevel(level=self._branch_level))
+
+                        log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
+                                     self._branch_level)
 
                     elif msg_class is DistribBranchRoot:
-                        if not self._verify_parent_connection(conn_obj):
-                            return
+                        if not self._verify_parent_connection(conn_obj, msg_class):
+                            should_close_connection = True
+                            break
 
-                        # Inform the server of our branch root
-                        self._queue.append(BranchRoot(msg.user))
-                        log.add_conn("Our branch root is user %s", msg.user)
+                        self._set_branch_root(msg.user)
 
                     self.emit_network_message_event(msg)
 
@@ -1849,16 +2020,20 @@ class SoulseekNetworkThread(Thread):
                     "size": msgsize - 1,
                     "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
                 })
-
-                conn_obj.ibuf = bytearray()
-                self._close_connection(self._conns, conn_obj.sock)
-                return
+                should_close_connection = True
+                break
 
             idx += msgsize_total
             buffer_len -= msgsize_total
 
+        msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, conn_obj.sock)
+            return
+
         if idx:
-            conn_obj.ibuf = msg_buffer[idx:]
+            del msg_buffer[:idx]
             conn_obj.has_post_init_activity = True
 
     def _process_distrib_output(self, msg_obj):
@@ -2052,7 +2227,7 @@ class SoulseekNetworkThread(Thread):
             try:
                 self._write_data(conn_obj_established, current_time)
 
-            except OSError as error:
+            except (OSError, ValueError) as error:
                 log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
                     "addr": conn_obj_established.addr,
                     "error": error
@@ -2080,7 +2255,7 @@ class SoulseekNetworkThread(Thread):
             return
 
         if conn_obj.sock is self._server_socket:
-            self._process_server_input(conn_obj, conn_obj.ibuf)
+            self._process_server_input(conn_obj.ibuf)
             return
 
         init = conn_obj.init
@@ -2164,9 +2339,9 @@ class SoulseekNetworkThread(Thread):
         if limit is None:
             bytes_send = sock.send(conn_obj.obuf)
         else:
-            bytes_send = sock.send(conn_obj.obuf[:limit])
+            bytes_send = sock.send(memoryview(conn_obj.obuf)[:limit])
 
-        conn_obj.obuf = conn_obj.obuf[bytes_send:]
+        del conn_obj.obuf[:bytes_send]
 
         if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send

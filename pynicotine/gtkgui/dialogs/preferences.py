@@ -36,10 +36,12 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -54,9 +56,7 @@ from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -83,22 +83,20 @@ class NetworkPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/network.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.auto_away_spinner,
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
             self.check_port_status_label,
+            self.container,
             self.current_port_label,
-            self.first_port_spinner,
-            self.last_port_spinner,
+            self.listen_port_spinner,
             self.network_interface_combobox,
             self.network_interface_label,
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = False
@@ -124,13 +122,13 @@ class NetworkPage:
         unknown_label = _("Unknown")
 
         # Listening port status
-        if core.protothread.listenport:
-            url = config.portchecker_url % str(core.protothread.listenport)
+        if core.protothread.listen_port:
+            url = config.portchecker_url % str(core.protothread.listen_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.user_ip_address or unknown_label,
-                "port": core.protothread.listenport or unknown_label
+                "port": core.protothread.listen_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -157,15 +155,12 @@ class NetworkPage:
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
-        first_port, last_port = config.sections["server"]["portrange"]
-        self.first_port_spinner.set_value(first_port)
-        self.last_port_spinner.set_value(last_port)
+        listen_port, _unused_port = config.sections["server"]["portrange"]
+        self.listen_port_spinner.set_value(listen_port)
 
         self.portmap_required = False
 
     def get_settings(self):
-
-        self.portmap_required = False
 
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
@@ -175,17 +170,13 @@ class NetworkPage:
         except Exception:
             server_addr = config.defaults["server"]["server"]
 
-        first_port = self.first_port_spinner.get_value_as_int()
-        last_port = self.last_port_spinner.get_value_as_int()
-
-        if first_port > last_port:
-            first_port, last_port = last_port, first_port
+        listen_port = self.listen_port_spinner.get_value_as_int()
 
         return {
             "server": {
                 "server": server_addr,
                 "login": self.username_entry.get_text(),
-                "portrange": (first_port, last_port),
+                "portrange": (listen_port, listen_port),
                 "autoaway": self.auto_away_spinner.get_value_as_int(),
                 "autoreply": self.auto_reply_message_entry.get_text(),
                 "interface": self.network_interface_combobox.get_active_text(),
@@ -210,7 +201,7 @@ class NetworkPage:
             self.on_change_password()
             return
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
@@ -219,7 +210,7 @@ class NetworkPage:
 
     def on_change_password(self, *_args):
 
-        if core.user_status != UserStatus.OFFLINE:
+        if core.user_status != slskmessages.UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -248,17 +239,15 @@ class DownloadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/downloads.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.accept_sent_files_toggle,
             self.alt_speed_spinner,
             self.autoclear_downloads_toggle,
+            self.container,
             self.download_double_click_combobox,
             self.download_folder_button,
-            self.download_reverse_order_toggle,
-            self.enable_username_subfolders_toggle,
             self.enable_filters_toggle,
+            self.enable_username_subfolders_toggle,
             self.file_finished_command_entry,
             self.filter_list_container,
             self.filter_status_label,
@@ -270,7 +259,7 @@ class DownloadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
@@ -284,6 +273,8 @@ class DownloadsPage:
             self.received_folder_button, parent=application.preferences, chooser_type="folder"
         )
 
+        self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
+                                           "can be used, otherwise only wildcard * matches are supported.")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
@@ -295,11 +286,11 @@ class DownloadsPage:
                     "expand_column": True,
                     "default_sort_column": "ascending"
                 },
-                "escaped": {
+                "regex": {
                     "column_type": "toggle",
-                    "title": _("Escaped"),
+                    "title": _("Regex"),
                     "width": 0,
-                    "toggle_callback": self.on_toggle_escaped
+                    "toggle_callback": self.on_toggle_regex
                 }
             }
         )
@@ -307,13 +298,11 @@ class DownloadsPage:
         self.options = {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle,
-                "reverseorder": self.download_reverse_order_toggle,
                 "remotedownloads": self.accept_sent_files_toggle,
                 "uploadallowed": self.sent_files_permission_combobox,
                 "incompletedir": self.incomplete_folder_button,
                 "downloaddir": self.download_folder_button,
                 "uploaddir": self.received_folder_button,
-                "downloadfilters": self.filter_list_view,
                 "enablefilters": self.enable_filters_toggle,
                 "downloadlimit": self.speed_spinner,
                 "downloadlimitalt": self.alt_speed_spinner,
@@ -340,6 +329,15 @@ class DownloadsPage:
         else:
             self.use_unlimited_speed_radio.set_active(True)
 
+        for item in config.sections["transfers"]["downloadfilters"]:
+            if not isinstance(item, list) or len(item) < 2:
+                continue
+
+            dfilter, escaped = item
+            enable_regex = not escaped
+
+            self.filter_list_view.add_row([dfilter, enable_regex], select_row=False)
+
     def get_settings(self):
 
         if self.use_speed_limit_radio.get_active():
@@ -354,15 +352,12 @@ class DownloadsPage:
         download_filters = []
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
-            download_filters.append([dfilter, int(escaped)])
-
-        download_filters.sort()
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
+            download_filters.append([dfilter, not enable_regex])
 
         return {
             "transfers": {
                 "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
-                "reverseorder": self.download_reverse_order_toggle.get_active(),
                 "remotedownloads": self.accept_sent_files_toggle.get_active(),
                 "uploadallowed": self.sent_files_permission_combobox.get_active(),
                 "incompletedir": self.incomplete_folder_button.get_path(),
@@ -380,25 +375,25 @@ class DownloadsPage:
             }
         }
 
-    def on_toggle_escaped(self, list_view, iterator):
+    def on_toggle_regex(self, list_view, iterator):
 
-        value = list_view.get_row_value(iterator, "escaped")
-        list_view.set_row_value(iterator, "escaped", not value)
+        value = list_view.get_row_value(iterator, "regex")
+        list_view.set_row_value(iterator, "regex", not value)
 
         self.on_verify_filter()
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
             self.filter_list_view.set_row_value(iterator, "filter", dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
-            self.filter_list_view.add_row([dfilter, escaped])
+            self.filter_list_view.add_row([dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -407,24 +402,24 @@ class DownloadsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Download Filter"),
-            message=_("Enter a new download filter:"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            option_value=True,
-            option_label=_("Escape filter"),
+            option_value=False,
+            option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
         ).show()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
             self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
-            self.filter_list_view.set_row_value(iterator, "escaped", escaped)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
             self.filter_list_view.remove_row(iterator)
-            self.filter_list_view.add_row([new_dfilter, escaped])
+            self.filter_list_view.add_row([new_dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -432,17 +427,17 @@ class DownloadsPage:
 
         for iterator in self.filter_list_view.get_selected_rows():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
-                message=_("Modify the following download filter:"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
-                option_value=escaped,
-                option_label=_("Escape filter")
+                option_value=enable_regex,
+                option_label=_("Enable regular expressions")
             ).show()
             return
 
@@ -469,9 +464,9 @@ class DownloadsPage:
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
             dfilter = self.filter_list_view.get_row_value(iterator, "filter")
-            escaped = self.filter_list_view.get_row_value(iterator, "escaped")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
-            if escaped:
+            if not enable_regex:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
 
@@ -516,13 +511,12 @@ class SharesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/shares.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.buddy_shares_trusted_only_toggle,
+            self.container,
             self.rescan_on_startup_toggle,
             self.shares_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
@@ -720,11 +714,10 @@ class UploadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/uploads.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.alt_speed_spinner,
             self.autoclear_uploads_toggle,
+            self.container,
             self.limit_total_transfers_radio,
             self.max_queued_files_spinner,
             self.max_queued_size_spinner,
@@ -739,7 +732,7 @@ class UploadsPage:
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
             self.use_upload_slots_radio
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
@@ -811,14 +804,15 @@ class UserProfilePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.description_view_container,
             self.select_picture_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
+        self.user_profile_required = False
+
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_button, parent=application.preferences, chooser_type="image")
@@ -831,15 +825,25 @@ class UserProfilePage:
         }
 
     def set_settings(self):
+
         self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
+        self.user_profile_required = False
+
     def get_settings(self):
+
+        description = repr(self.description_view.get_text())
+        picture_path = self.select_picture_button.get_path()
+
+        if (description != config.sections["userinfo"]["descr"]
+                or picture_path != config.sections["userinfo"]["pic"]):
+            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": repr(self.description_view.get_text()),
-                "pic": self.select_picture_button.get_path()
+                "descr": description,
+                "pic": picture_path
             }
         }
 
@@ -851,12 +855,11 @@ class IgnoredUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ignore.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
@@ -977,18 +980,17 @@ class BannedUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ban.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.ban_message_entry,
             self.ban_message_toggle,
             self.banned_ips_container,
             self.banned_users_container,
+            self.container,
             self.geo_block_country_entry,
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -1055,8 +1057,6 @@ class BannedUsersPage:
         self.ip_ban_required = False
 
     def get_settings(self):
-
-        self.ip_ban_required = False
 
         return {
             "server": {
@@ -1133,9 +1133,7 @@ class ChatsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/chats.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.auto_replace_words_toggle,
             self.censor_list_container,
             self.censor_replacement_combobox,
@@ -1144,13 +1142,12 @@ class ChatsPage:
             self.complete_commands_toggle,
             self.complete_room_names_toggle,
             self.complete_room_usernames_toggle,
-            self.cycle_tab_completion_toggle,
+            self.container,
             self.enable_completion_dropdown_toggle,
             self.enable_ctcp_toggle,
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.enable_tts_toggle,
-            self.hide_dropdown_single_match_toggle,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
@@ -1161,7 +1158,7 @@ class ChatsPage:
             self.tts_command_combobox,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
@@ -1214,14 +1211,12 @@ class ChatsPage:
             },
             "words": {
                 "tab": self.enable_tab_completion_toggle,
-                "cycle": self.cycle_tab_completion_toggle,
                 "dropdown": self.enable_completion_dropdown_toggle,
                 "characters": self.min_chars_dropdown_spinner,
                 "roomnames": self.complete_room_names_toggle,
                 "buddies": self.complete_buddy_names_toggle,
                 "roomusers": self.complete_room_usernames_toggle,
                 "commands": self.complete_commands_toggle,
-                "onematch": self.hide_dropdown_single_match_toggle,
                 "censored": self.censor_list_view,
                 "censorwords": self.censor_text_patterns_toggle,
                 "censorfill": self.censor_replacement_combobox,
@@ -1262,8 +1257,6 @@ class ChatsPage:
 
     def get_settings(self):
 
-        self.completion_required = False
-
         return {
             "server": {
                 "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
@@ -1279,14 +1272,12 @@ class ChatsPage:
             },
             "words": {
                 "tab": self.enable_tab_completion_toggle.get_active(),
-                "cycle": self.cycle_tab_completion_toggle.get_active(),
                 "dropdown": self.enable_completion_dropdown_toggle.get_active(),
                 "characters": self.min_chars_dropdown_spinner.get_value_as_int(),
                 "roomnames": self.complete_room_names_toggle.get_active(),
                 "buddies": self.complete_buddy_names_toggle.get_active(),
                 "roomusers": self.complete_room_usernames_toggle.get_active(),
                 "commands": self.complete_commands_toggle.get_active(),
-                "onematch": self.hide_dropdown_single_match_toggle.get_active(),
                 "censored": self.censored_patterns[:],
                 "censorwords": self.censor_text_patterns_toggle.get_active(),
                 "censorfill": self.censor_replacement_combobox.get_active_id(),
@@ -1388,7 +1379,7 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1439,63 +1430,149 @@ class UserInterfacePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
-
-        # pylint: disable=invalid-name
-        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
-         self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
-         self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
-         self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
-         self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
-         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
-         self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
-         self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.ExactFileSizes, self.IconView, self.Language, self.Main, self.MainPosition,
-         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
-         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
-         self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
-         self.PickBackground, self.PickChangedTab, self.PickCommand, self.PickHighlight, self.PickHighlightTab,
-         self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline,
-         self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition,
-         self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
-         self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
-         self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
-         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameHotspots,
-         self.UsernameStyle) = ui_template.widgets
+        (
+            self.chat_colored_usernames_combobox,
+            self.chat_username_appearance_combobox,
+            self.close_action_combobox,
+            self.color_chat_action_button,
+            self.color_chat_action_entry,
+            self.color_chat_command_button,
+            self.color_chat_command_entry,
+            self.color_chat_highlighted_button,
+            self.color_chat_highlighted_entry,
+            self.color_chat_local_button,
+            self.color_chat_local_entry,
+            self.color_chat_remote_button,
+            self.color_chat_remote_entry,
+            self.color_input_background_button,
+            self.color_input_background_entry,
+            self.color_input_text_button,
+            self.color_input_text_entry,
+            self.color_list_text_button,
+            self.color_list_text_entry,
+            self.color_queued_result_text_button,
+            self.color_queued_result_text_entry,
+            self.color_status_away_button,
+            self.color_status_away_entry,
+            self.color_status_offline_button,
+            self.color_status_offline_entry,
+            self.color_status_online_button,
+            self.color_status_online_entry,
+            self.color_tab_button,
+            self.color_tab_changed_button,
+            self.color_tab_changed_entry,
+            self.color_tab_entry,
+            self.color_tab_highlighted_button,
+            self.color_tab_highlighted_entry,
+            self.color_url_button,
+            self.color_url_entry,
+            self.container,
+            self.dark_mode_toggle,
+            self.exact_file_sizes_toggle,
+            self.font_browse_button,
+            self.font_browse_clear_button,
+            self.font_chat_button,
+            self.font_chat_clear_button,
+            self.font_global_button,
+            self.font_global_clear_button,
+            self.font_list_button,
+            self.font_list_clear_button,
+            self.font_search_button,
+            self.font_search_clear_button,
+            self.font_text_view_button,
+            self.font_text_view_clear_button,
+            self.font_transfers_button,
+            self.font_transfers_clear_button,
+            self.icon_theme_button,
+            self.icon_theme_clear_button,
+            self.icon_view,
+            self.language_combobox,
+            self.minimize_tray_startup_toggle,
+            self.notification_chatroom_mention_toggle,
+            self.notification_chatroom_toggle,
+            self.notification_download_file_toggle,
+            self.notification_download_folder_toggle,
+            self.notification_private_message_toggle,
+            self.notification_sounds_toggle,
+            self.notification_window_title_toggle,
+            self.notification_wish_toggle,
+            self.reverse_file_paths_toggle,
+            self.tab_close_buttons_toggle,
+            self.tab_position_browse_combobox,
+            self.tab_position_chatrooms_combobox,
+            self.tab_position_main_combobox,
+            self.tab_position_private_chat_combobox,
+            self.tab_position_search_combobox,
+            self.tab_position_userinfo_combobox,
+            self.tab_restore_startup_toggle,
+            self.tab_visible_browse_toggle,
+            self.tab_visible_chatrooms_toggle,
+            self.tab_visible_downloads_toggle,
+            self.tab_visible_interests_toggle,
+            self.tab_visible_private_chat_toggle,
+            self.tab_visible_search_toggle,
+            self.tab_visible_uploads_toggle,
+            self.tab_visible_userinfo_toggle,
+            self.tab_visible_userlist_toggle,
+            self.tray_icon_toggle,
+            self.tray_options_container
+        ) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.theme_required = False
 
         for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
-            self.Language.append(language_code, language_name)
+            self.language_combobox.append(language_code, language_name)
 
-        self.theme_dir = FileChooserButton(self.ThemeDir, application.preferences, "folder")
-
-        self.tabs = {
-            "search": self.EnableSearchTab,
-            "downloads": self.EnableDownloadsTab,
-            "uploads": self.EnableUploadsTab,
-            "userbrowse": self.EnableUserBrowseTab,
-            "userinfo": self.EnableUserInfoTab,
-            "private": self.EnablePrivateTab,
-            "userlist": self.EnableUserListTab,
-            "chatrooms": self.EnableChatroomsTab,
-            "interests": self.EnableInterestsTab
+        self.color_buttons = {
+            "chatlocal": self.color_chat_local_button,
+            "chatremote": self.color_chat_remote_button,
+            "chatcommand": self.color_chat_command_button,
+            "chatme": self.color_chat_action_button,
+            "chathilite": self.color_chat_highlighted_button,
+            "textbg": self.color_input_background_button,
+            "inputcolor": self.color_input_text_button,
+            "search": self.color_list_text_button,
+            "searchq": self.color_queued_result_text_button,
+            "useraway": self.color_status_away_button,
+            "useronline": self.color_status_online_button,
+            "useroffline": self.color_status_offline_button,
+            "urlcolor": self.color_url_button,
+            "tab_default": self.color_tab_button,
+            "tab_hilite": self.color_tab_highlighted_button,
+            "tab_changed": self.color_tab_changed_button
         }
 
-        # Tab positions
-        for combobox in (self.MainPosition, self.ChatRoomsPosition, self.PrivateChatPosition,
-                         self.SearchPosition, self.UserInfoPosition, self.UserBrowsePosition):
+        self.tab_visible_toggles = {
+            "search": self.tab_visible_search_toggle,
+            "downloads": self.tab_visible_downloads_toggle,
+            "uploads": self.tab_visible_uploads_toggle,
+            "userbrowse": self.tab_visible_browse_toggle,
+            "userinfo": self.tab_visible_userinfo_toggle,
+            "private": self.tab_visible_private_chat_toggle,
+            "userlist": self.tab_visible_userlist_toggle,
+            "chatrooms": self.tab_visible_chatrooms_toggle,
+            "interests": self.tab_visible_interests_toggle
+        }
+
+        for combobox in (
+            self.tab_position_main_combobox,
+            self.tab_position_search_combobox,
+            self.tab_position_browse_combobox,
+            self.tab_position_private_chat_combobox,
+            self.tab_position_userinfo_combobox,
+            self.tab_position_chatrooms_combobox
+        ):
             combobox.append("Top", _("Top"))
             combobox.append("Bottom", _("Bottom"))
             combobox.append("Left", _("Left"))
             combobox.append("Right", _("Right"))
 
-        # Icon preview
         icon_list = [
-            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE], _("Offline"), 16,
+             ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
             (config.application_id, _("Window"), 64, ())]
@@ -1522,87 +1599,69 @@ class UserInterfacePage:
                 box.add(icon)   # pylint: disable=no-member
                 box.add(label)  # pylint: disable=no-member
 
-            self.IconView.insert(box, -1)
+            self.icon_view.insert(box, -1)
+
+        self.icon_theme_button = FileChooserButton(self.icon_theme_button, application.preferences, "folder")
 
         self.options = {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention,
-                "notification_popup_wish": self.NotificationPopupWish
+                "notification_window_title": self.notification_window_title_toggle,
+                "notification_popup_sound": self.notification_sounds_toggle,
+                "notification_popup_file": self.notification_download_file_toggle,
+                "notification_popup_folder": self.notification_download_folder_toggle,
+                "notification_popup_private_message": self.notification_private_message_toggle,
+                "notification_popup_chatroom": self.notification_chatroom_toggle,
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle,
+                "notification_popup_wish": self.notification_wish_toggle
             },
             "ui": {
-                "language": self.Language,
+                "dark_mode": self.dark_mode_toggle,
+                "exitdialog": self.close_action_combobox,
+                "trayicon": self.tray_icon_toggle,
+                "startup_hidden": self.minimize_tray_startup_toggle,
+                "language": self.language_combobox,
 
-                "globalfont": self.SelectGlobalFont,
-                "listfont": self.SelectListFont,
-                "textviewfont": self.SelectTextViewFont,
-                "chatfont": self.SelectChatFont,
-                "searchfont": self.SelectSearchFont,
-                "transfersfont": self.SelectTransfersFont,
-                "browserfont": self.SelectBrowserFont,
-                "usernamestyle": self.UsernameStyle,
+                "globalfont": self.font_global_button,
+                "listfont": self.font_list_button,
+                "textviewfont": self.font_text_view_button,
+                "chatfont": self.font_chat_button,
+                "searchfont": self.font_search_button,
+                "transfersfont": self.font_transfers_button,
+                "browserfont": self.font_browse_button,
 
-                "reverse_file_paths": self.ReverseFilePaths,
-                "exact_file_sizes": self.ExactFileSizes,
+                "reverse_file_paths": self.reverse_file_paths_toggle,
+                "exact_file_sizes": self.exact_file_sizes_toggle,
 
-                "tabmain": self.MainPosition,
-                "tabrooms": self.ChatRoomsPosition,
-                "tabprivate": self.PrivateChatPosition,
-                "tabsearch": self.SearchPosition,
-                "tabinfo": self.UserInfoPosition,
-                "tabbrowse": self.UserBrowsePosition,
-                "tab_select_previous": self.TabSelectPrevious,
-                "tabclosers": self.TabClosers,
+                "tabmain": self.tab_position_main_combobox,
+                "tabrooms": self.tab_position_chatrooms_combobox,
+                "tabprivate": self.tab_position_private_chat_combobox,
+                "tabsearch": self.tab_position_search_combobox,
+                "tabinfo": self.tab_position_userinfo_combobox,
+                "tabbrowse": self.tab_position_browse_combobox,
+                "tab_select_previous": self.tab_restore_startup_toggle,
+                "tabclosers": self.tab_close_buttons_toggle,
 
-                "icontheme": self.theme_dir,
+                "icontheme": self.icon_theme_button,
 
-                "chatlocal": self.EntryLocal,
-                "chatremote": self.EntryRemote,
-                "chatcommand": self.EntryCommand,
-                "chatme": self.EntryMe,
-                "chathilite": self.EntryHighlight,
-                "textbg": self.EntryBackground,
-                "inputcolor": self.EntryInput,
-                "search": self.EntryImmediate,
-                "searchq": self.EntryQueue,
-                "useraway": self.EntryAway,
-                "useronline": self.EntryOnline,
-                "useroffline": self.EntryOffline,
-                "usernamehotspots": self.UsernameHotspots,
-                "urlcolor": self.EntryURL,
-                "tab_default": self.EntryRegularTab,
-                "tab_hilite": self.EntryHighlightTab,
-                "tab_changed": self.EntryChangedTab,
-                "dark_mode": self.DarkMode,
-                "exitdialog": self.CloseAction,
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden
-            }
-        }
+                "chatlocal": self.color_chat_local_entry,
+                "chatremote": self.color_chat_remote_entry,
+                "chatcommand": self.color_chat_command_entry,
+                "chatme": self.color_chat_action_entry,
+                "chathilite": self.color_chat_highlighted_entry,
+                "textbg": self.color_input_background_entry,
+                "inputcolor": self.color_input_text_entry,
+                "search": self.color_list_text_entry,
+                "searchq": self.color_queued_result_text_entry,
+                "useraway": self.color_status_away_entry,
+                "useronline": self.color_status_online_entry,
+                "useroffline": self.color_status_offline_entry,
+                "urlcolor": self.color_url_entry,
+                "tab_default": self.color_tab_entry,
+                "tab_hilite": self.color_tab_highlighted_entry,
+                "tab_changed": self.color_tab_changed_entry,
 
-        self.colorsd = {
-            "ui": {
-                "chatlocal": self.PickLocal,
-                "chatremote": self.PickRemote,
-                "chatcommand": self.PickCommand,
-                "chatme": self.PickMe,
-                "chathilite": self.PickHighlight,
-                "textbg": self.PickBackground,
-                "inputcolor": self.PickInput,
-                "search": self.PickImmediate,
-                "searchq": self.PickQueue,
-                "useraway": self.PickAway,
-                "useronline": self.PickOnline,
-                "useroffline": self.PickOffline,
-                "urlcolor": self.PickURL,
-                "tab_default": self.PickRegularTab,
-                "tab_hilite": self.PickHighlightTab,
-                "tab_changed": self.PickChangedTab
+                "usernamestyle": self.chat_username_appearance_combobox,
+                "usernamehotspots": self.chat_colored_usernames_combobox
             }
         }
 
@@ -1611,10 +1670,10 @@ class UserInterfacePage:
         self.application.preferences.set_widgets_data(self.options)
         self.theme_required = False
 
-        self.TraySettings.set_visible(self.application.tray_icon.available)
+        self.tray_options_container.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
-            widget = self.tabs.get(page_id)
+            widget = self.tab_visible_toggles.get(page_id)
 
             if widget is not None:
                 widget.set_active(enabled)
@@ -1623,85 +1682,85 @@ class UserInterfacePage:
 
     def get_settings(self):
 
-        self.theme_required = False
         enabled_tabs = {}
 
-        for page_id, widget in self.tabs.items():
+        for page_id, widget in self.tab_visible_toggles.items():
             enabled_tabs[page_id] = widget.get_active()
 
         return {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active(),
-                "notification_popup_wish": self.NotificationPopupWish.get_active()
+                "notification_window_title": self.notification_window_title_toggle.get_active(),
+                "notification_popup_sound": self.notification_sounds_toggle.get_active(),
+                "notification_popup_file": self.notification_download_file_toggle.get_active(),
+                "notification_popup_folder": self.notification_download_folder_toggle.get_active(),
+                "notification_popup_private_message": self.notification_private_message_toggle.get_active(),
+                "notification_popup_chatroom": self.notification_chatroom_toggle.get_active(),
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle.get_active(),
+                "notification_popup_wish": self.notification_wish_toggle.get_active()
             },
             "ui": {
-                "language": self.Language.get_active_id(),
+                "dark_mode": self.dark_mode_toggle.get_active(),
+                "exitdialog": self.close_action_combobox.get_active(),
+                "trayicon": self.tray_icon_toggle.get_active(),
+                "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
+                "language": self.language_combobox.get_active_id(),
 
-                "globalfont": self.SelectGlobalFont.get_font(),
-                "listfont": self.SelectListFont.get_font(),
-                "textviewfont": self.SelectTextViewFont.get_font(),
-                "chatfont": self.SelectChatFont.get_font(),
-                "searchfont": self.SelectSearchFont.get_font(),
-                "transfersfont": self.SelectTransfersFont.get_font(),
-                "browserfont": self.SelectBrowserFont.get_font(),
-                "usernamestyle": self.UsernameStyle.get_active_id(),
+                "globalfont": self.font_global_button.get_font(),
+                "listfont": self.font_list_button.get_font(),
+                "textviewfont": self.font_text_view_button.get_font(),
+                "chatfont": self.font_chat_button.get_font(),
+                "searchfont": self.font_search_button.get_font(),
+                "transfersfont": self.font_transfers_button.get_font(),
+                "browserfont": self.font_browse_button.get_font(),
 
-                "reverse_file_paths": self.ReverseFilePaths.get_active(),
-                "exact_file_sizes": self.ExactFileSizes.get_active(),
+                "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
+                "exact_file_sizes": self.exact_file_sizes_toggle.get_active(),
 
-                "tabmain": self.MainPosition.get_active_id(),
-                "tabrooms": self.ChatRoomsPosition.get_active_id(),
-                "tabprivate": self.PrivateChatPosition.get_active_id(),
-                "tabsearch": self.SearchPosition.get_active_id(),
-                "tabinfo": self.UserInfoPosition.get_active_id(),
-                "tabbrowse": self.UserBrowsePosition.get_active_id(),
+                "tabmain": self.tab_position_main_combobox.get_active_id(),
+                "tabrooms": self.tab_position_chatrooms_combobox.get_active_id(),
+                "tabprivate": self.tab_position_private_chat_combobox.get_active_id(),
+                "tabsearch": self.tab_position_search_combobox.get_active_id(),
+                "tabinfo": self.tab_position_userinfo_combobox.get_active_id(),
+                "tabbrowse": self.tab_position_browse_combobox.get_active_id(),
                 "modes_visible": enabled_tabs,
-                "tab_select_previous": self.TabSelectPrevious.get_active(),
-                "tabclosers": self.TabClosers.get_active(),
+                "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
+                "tabclosers": self.tab_close_buttons_toggle.get_active(),
 
-                "icontheme": self.theme_dir.get_path(),
+                "icontheme": self.icon_theme_button.get_path(),
 
-                "chatlocal": self.EntryLocal.get_text(),
-                "chatremote": self.EntryRemote.get_text(),
-                "chatcommand": self.EntryCommand.get_text(),
-                "chatme": self.EntryMe.get_text(),
-                "chathilite": self.EntryHighlight.get_text(),
-                "urlcolor": self.EntryURL.get_text(),
-                "textbg": self.EntryBackground.get_text(),
-                "inputcolor": self.EntryInput.get_text(),
-                "search": self.EntryImmediate.get_text(),
-                "searchq": self.EntryQueue.get_text(),
-                "useraway": self.EntryAway.get_text(),
-                "useronline": self.EntryOnline.get_text(),
-                "useroffline": self.EntryOffline.get_text(),
-                "usernamehotspots": self.UsernameHotspots.get_active(),
-                "tab_hilite": self.EntryHighlightTab.get_text(),
-                "tab_default": self.EntryRegularTab.get_text(),
-                "tab_changed": self.EntryChangedTab.get_text(),
-                "dark_mode": self.DarkMode.get_active(),
-                "exitdialog": self.CloseAction.get_active(),
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active()
+                "chatlocal": self.color_chat_local_entry.get_text(),
+                "chatremote": self.color_chat_remote_entry.get_text(),
+                "chatcommand": self.color_chat_command_entry.get_text(),
+                "chatme": self.color_chat_action_entry.get_text(),
+                "chathilite": self.color_chat_highlighted_entry.get_text(),
+                "urlcolor": self.color_url_entry.get_text(),
+                "textbg": self.color_input_background_entry.get_text(),
+                "inputcolor": self.color_input_text_entry.get_text(),
+                "search": self.color_list_text_entry.get_text(),
+                "searchq": self.color_queued_result_text_entry.get_text(),
+                "useraway": self.color_status_away_entry.get_text(),
+                "useronline": self.color_status_online_entry.get_text(),
+                "useroffline": self.color_status_offline_entry.get_text(),
+                "tab_hilite": self.color_tab_highlighted_entry.get_text(),
+                "tab_default": self.color_tab_entry.get_text(),
+                "tab_changed": self.color_tab_changed_entry.get_text(),
+
+                "usernamestyle": self.chat_username_appearance_combobox.get_active_id(),
+                "usernamehotspots": self.chat_colored_usernames_combobox.get_active()
             }
         }
 
     """ Icons """
 
-    def on_default_theme(self, *_args):
-        self.theme_dir.clear()
+    def on_clear_icon_theme(self, *_args):
+        self.icon_theme_button.clear()
         self.theme_required = True
 
     """ Fonts """
 
-    def on_default_font(self, widget):
+    def on_clear_font(self, widget):
 
-        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
+        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("clear_button", "button"))
         font_button.set_font("")
 
         self.theme_required = True
@@ -1713,29 +1772,22 @@ class UserInterfacePage:
 
     def update_color_button(self, input_config, color_id):
 
-        for section, value in self.colorsd.items():
-            if color_id in value:
-                color_button = value[color_id]
-                rgba = Gdk.RGBA()
+        color_button = self.color_buttons[color_id]
+        rgba = Gdk.RGBA()
 
-                rgba.parse(input_config[section][color_id])
-                color_button.set_rgba(rgba)
-                break
+        rgba.parse(input_config["ui"][color_id])
+        color_button.set_rgba(rgba)
 
     def update_color_buttons(self):
+        for color_id in self.color_buttons:
+            self.update_color_button(config.sections, color_id)
 
-        for color_ids in self.colorsd.values():
-            for color_id in color_ids:
-                self.update_color_button(config.sections, color_id)
-
-    def set_default_color(self, section, color_id):
+    def set_default_color(self, color_id):
 
         defaults = config.defaults
-        widget = self.options[section][color_id]
+        entry = self.options["ui"][color_id]
 
-        if isinstance(widget, Gtk.Entry):
-            widget.set_text(defaults[section][color_id])
-
+        entry.set_text(defaults["ui"][color_id])
         self.update_color_button(defaults, color_id)
 
     def on_color_set(self, widget):
@@ -1746,20 +1798,17 @@ class UserInterfacePage:
         blue_color = round(rgba.blue * 255)
         color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
+        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("button", "entry"))
         entry.set_text(color_hex)
 
     def on_default_color(self, widget, *_args):
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget))
+        for option, value in self.options["ui"].items():
+            if value is widget:
+                self.set_default_color(option)
+                return
 
-        for section, section_options in self.options.items():
-            for key, value in section_options.items():
-                if value is entry:
-                    self.set_default_color(section, key)
-                    return
-
-        entry.set_text("")
+        widget.set_text("")
 
     def on_colors_changed(self, widget):
 
@@ -1767,7 +1816,7 @@ class UserInterfacePage:
             rgba = Gdk.RGBA()
             rgba.parse(widget.get_text())
 
-            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
+            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("entry", "button"))
             color_button.set_rgba(rgba)
 
         self.theme_required = True
@@ -1777,10 +1826,9 @@ class LoggingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/log.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.chatroom_log_folder_button,
+            self.container,
             self.debug_log_folder_button,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
@@ -1789,7 +1837,7 @@ class LoggingPage:
             self.log_transfer_toggle,
             self.private_chat_log_folder_button,
             self.transfer_log_folder_button
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
@@ -1847,11 +1895,10 @@ class SearchesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/search.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.cleared_filter_history_icon,
             self.cleared_search_history_icon,
+            self.container,
             self.enable_default_filters_toggle,
             self.enable_search_history_toggle,
             self.filter_bitrate_entry,
@@ -1869,7 +1916,7 @@ class SearchesPage:
             self.remove_special_chars_toggle,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
@@ -1929,8 +1976,6 @@ class SearchesPage:
 
     def get_settings(self):
 
-        self.search_required = False
-
         return {
             "searches": {
                 "maxresults": self.max_sent_results_spinner.get_value_as_int(),
@@ -1970,13 +2015,12 @@ class UrlHandlersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.file_manager_combobox,
             self.media_player_combobox,
             self.protocol_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
 
@@ -2143,17 +2187,25 @@ class NowPlayingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
-
-        # pylint: disable=invalid-name
-        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
-         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
+        (
+            self.command_entry,
+            self.command_label,
+            self.container,
+            self.format_help_label,
+            self.format_message_combobox,
+            self.lastfm_radio,
+            self.listenbrainz_radio,
+            self.mpris_radio,
+            self.other_radio,
+            self.output_label,
+            self.test_configuration_button
+        ) = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
         self.options = {
             "players": {
-                "npothercommand": self.NPCommand
+                "npothercommand": self.command_entry
             }
         }
 
@@ -2171,16 +2223,16 @@ class NowPlayingPage:
         self.custom_format_list = []
 
         # Supply the information needed for the Now Playing class to return a song
-        self.test_now_playing.connect(
+        self.test_configuration_button.connect(
             "clicked",
             core.now_playing.display_now_playing,
-            self.set_now_playing_example,  # Callback to update the song displayed
+            self.set_now_playing_output,   # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
             self.get_format                # Callback to retrieve format text
         )
 
-        self.NP_mpris.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in ("win32", "darwin"))
 
     def set_settings(self):
 
@@ -2194,33 +2246,36 @@ class NowPlayingPage:
         self.update_now_playing_info()
 
         # Add formats
-        self.NPFormat.remove_all()
+        self.format_message_combobox.remove_all()
 
         for item in self.default_format_list:
-            self.NPFormat.append_text(str(item))
+            self.format_message_combobox.append_text(str(item))
 
         if self.custom_format_list:
             for item in self.custom_format_list:
-                self.NPFormat.append_text(str(item))
+                self.format_message_combobox.append_text(str(item))
 
         if config.sections["players"]["npformat"] == "":
             # If there's no default format in the config: set the first of the list
-            self.NPFormat.set_active(0)
+            self.format_message_combobox.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
-            for i, value in enumerate(self.NPFormat.get_model()):
+            for i, value in enumerate(self.format_message_combobox.get_model()):
                 if value[0] == config.sections["players"]["npformat"]:
-                    self.NPFormat.set_active(i)
+                    self.format_message_combobox.set_active(i)
 
     def get_player(self):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             player = "lastfm"
-        elif self.NP_mpris.get_active():
+
+        elif self.mpris_radio.get_active():
             player = "mpris"
-        elif self.NP_listenbrainz.get_active():
+
+        elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
-        elif self.NP_other.get_active():
+
+        elif self.other_radio.get_active():
             player = "other"
 
         if sys.platform in ("win32", "darwin") and player == "mpris":
@@ -2229,10 +2284,10 @@ class NowPlayingPage:
         return player
 
     def get_command(self):
-        return self.NPCommand.get_text()
+        return self.command_entry.get_text()
 
     def get_format(self):
-        return self.NPFormat.get_active_text()
+        return self.format_message_combobox.get_active_text()
 
     def set_player(self, player):
 
@@ -2240,31 +2295,34 @@ class NowPlayingPage:
             player = "lastfm"
 
         if player == "lastfm":
-            self.NP_lastfm.set_active(True)
+            self.lastfm_radio.set_active(True)
+
         elif player == "listenbrainz":
-            self.NP_listenbrainz.set_active(True)
+            self.listenbrainz_radio.set_active(True)
+
         elif player == "other":
-            self.NP_other.set_active(True)
+            self.other_radio.set_active(True)
+
         else:
-            self.NP_mpris.set_active(True)
+            self.mpris_radio.set_active(True)
 
     def update_now_playing_info(self, *_args):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username;APIKEY:"))
+            self.command_label.set_text(_("Username;APIKEY:"))
 
-        elif self.NP_mpris.get_active():
+        elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
-            self.player_input.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
+            self.command_label.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
 
-        elif self.NP_listenbrainz.get_active():
+        elif self.listenbrainz_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username:"))
+            self.command_label.set_text(_("Username:"))
 
-        elif self.NP_other.get_active():
+        elif self.other_radio.get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command:"))
+            self.command_label.set_text(_("Command:"))
 
         legend = ""
 
@@ -2297,10 +2355,10 @@ class NowPlayingPage:
 
             legend += "\n"
 
-        self.Legend.set_text(legend[:-1])
+        self.format_help_label.set_text(legend[:-1])
 
-    def set_now_playing_example(self, title):
-        self.Example.set_text(title)
+    def set_now_playing_output(self, title):
+        self.output_label.set_text(title)
 
     def get_settings(self):
 
@@ -2325,9 +2383,8 @@ class PluginsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/plugin.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.enable_plugins_toggle,
             self.plugin_authors_label,
             self.plugin_description_view_container,
@@ -2335,7 +2392,7 @@ class PluginsPage:
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
         self.selected_plugin = None
@@ -2377,7 +2434,7 @@ class PluginsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
+        for plugin_id in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
@@ -2469,7 +2526,6 @@ class Preferences(Dialog):
 
         self.application = application
 
-        ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2479,7 +2535,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,
@@ -2560,7 +2616,7 @@ class Preferences(Dialog):
             return widget.get_text()
 
         if isinstance(widget, TextView):
-            return repr(widget.get_text())
+            return widget.get_text()
 
         if isinstance(widget, Gtk.CheckButton):
             try:
@@ -2695,6 +2751,10 @@ class Preferences(Dialog):
             "plugins": {}
         }
 
+        for page in self.pages.values():
+            for key, data in page.get_settings().items():
+                options[key].update(data)
+
         try:
             portmap_required = self.pages["network"].portmap_required
 
@@ -2714,6 +2774,12 @@ class Preferences(Dialog):
             theme_required = False
 
         try:
+            user_profile_required = self.pages["user-profile"].user_profile_required
+
+        except KeyError:
+            user_profile_required = False
+
+        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
@@ -2731,16 +2797,12 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        for page in self.pages.values():
-            for key, data in page.get_settings().items():
-                options[key].update(data)
-
-        return (portmap_required, rescan_required, theme_required, completion_required,
+        return (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
+        (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
@@ -2766,6 +2828,9 @@ class Preferences(Dialog):
 
             self.application.window.chatrooms.update_tags()
             self.application.window.privatechat.update_tags()
+
+        if user_profile_required and core.login_username:
+            core.userinfo.show_user(core.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()
@@ -2917,12 +2982,12 @@ class Preferences(Dialog):
                     except AttributeError:
                         pass
 
-            page.Main.set_margin_start(18)
-            page.Main.set_margin_end(18)
-            page.Main.set_margin_top(14)
-            page.Main.set_margin_bottom(18)
+            page.container.set_margin_start(18)
+            page.container.set_margin_end(18)
+            page.container.set_margin_top(14)
+            page.container.set_margin_bottom(18)
 
-        self.viewport.set_property("child", self.pages[page_id].Main)
+        self.viewport.set_property("child", self.pages[page_id].container)
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)

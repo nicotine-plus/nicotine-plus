@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -36,6 +36,11 @@ import sys
 from ast import literal_eval
 from collections import defaultdict
 
+from pynicotine.i18n import apply_translations
+from pynicotine.utils import encode_path
+from pynicotine.utils import load_file
+from pynicotine.utils import write_file_and_backup
+
 
 class Config:
     """
@@ -55,7 +60,7 @@ class Config:
 
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
-        self.version = "3.3.0.dev4"
+        self.version = "3.3.0.dev5"
         self.python_version = platform.python_version()
         self.gtk_version = ""
 
@@ -122,7 +127,6 @@ class Config:
             # Only file name specified, use current folder
             return True
 
-        from pynicotine.utils import encode_path
         path_encoded = encode_path(path)
 
         try:
@@ -142,7 +146,6 @@ class Config:
         """ Create the folder for storing data in (shared files etc.),
         if the folder doesn't exist """
 
-        from pynicotine.utils import encode_path
         data_dir_encoded = encode_path(self.data_dir)
 
         try:
@@ -157,8 +160,6 @@ class Config:
 
     def load_config(self):
 
-        from pynicotine.utils import load_file
-
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
             "server": {
@@ -169,7 +170,7 @@ class Config:
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
-                "portrange": (2234, 2239),
+                "portrange": (2234, 2234),
                 "upnp": True,
                 "upnp_interval": 4,
                 "auto_connect_startup": True,
@@ -204,7 +205,7 @@ class Config:
                 "afterfinish": "",
                 "afterfolder": "",
                 "lock": True,
-                "reverseorder": False,
+                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -260,7 +261,7 @@ class Config:
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
-                "cycle": False,
+                "cycle": False,  # TODO: remove in 3.3.0
                 "dropdown": False,
                 "characters": 3,
                 "roomnames": False,
@@ -268,7 +269,7 @@ class Config:
                 "roomusers": True,
                 "commands": True,
                 "aliases": True,
-                "onematch": False
+                "onematch": False  # TODO: remove in 3.3.0
             },
             "logging": {
                 "debug": False,
@@ -570,7 +571,6 @@ class Config:
         language = self.sections["ui"]["language"]
 
         if language:
-            from pynicotine.i18n import apply_translations
             apply_translations(language)
 
         from pynicotine.logfacility import log
@@ -579,8 +579,6 @@ class Config:
 
     def parse_config(self, filename):
         """ Parses the config file """
-
-        from pynicotine.utils import encode_path
 
         try:
             with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
@@ -605,7 +603,6 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        from pynicotine.utils import encode_path
         conv_filename = encode_path(f"{self.filename}.conv")
         os.replace(self.filename, conv_filename)
 
@@ -757,9 +754,6 @@ class Config:
 
         if (len(port_range) != 2 or not all(isinstance(i, int) for i in port_range)):
             self.sections["server"]["portrange"] = self.defaults["server"]["portrange"]
-        else:
-            # Setting the port range in numerical order
-            self.sections["server"]["portrange"] = (min(port_range), max(port_range))
 
         self.config_loaded = True
 
@@ -794,7 +788,6 @@ class Config:
             return
 
         from pynicotine.logfacility import log
-        from pynicotine.utils import write_file_and_backup
 
         write_file_and_backup(self.filename, self.write_config_callback, protect=True)
         log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
@@ -802,7 +795,6 @@ class Config:
     def write_config_backup(self, filename):
 
         from pynicotine.logfacility import log
-        from pynicotine.utils import encode_path
 
         if not filename.endswith(".tar.bz2"):
             filename += ".tar.bz2"

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -30,7 +30,7 @@ from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
@@ -132,7 +132,7 @@ class Uploads(TransferList):
         if transfer:
             user = config.sections["server"]["login"]
             url = core.userbrowse.get_soulseek_url(user, transfer.filename)
-            copy_text(url)
+            clipboard.copy_text(url)
 
     def on_copy_dir_url(self, *_args):
 
@@ -141,7 +141,7 @@ class Uploads(TransferList):
         if transfer:
             user = config.sections["server"]["login"]
             url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit("\\", 1)[0] + "\\")
-            copy_text(url)
+            clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
