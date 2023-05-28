@@ -85,7 +85,7 @@ class PrivateChats(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(core.privatechat.completion_list[:])
+            tab.update_room_user_completions()
 
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
@@ -226,8 +226,6 @@ class PrivateChats(IconNotebook):
             page.update_tags()
 
     def server_disconnect(self, *_args):
-
-        core.privatechat.update_completions()
 
         for user, page in self.pages.items():
             page.server_disconnect()
@@ -495,6 +493,9 @@ class PrivateChat:
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()
+
+    def update_room_user_completions(self):
+        self.set_completion_list(core.privatechat.completion_list[:])
 
     def set_completion_list(self, completion_list):
 

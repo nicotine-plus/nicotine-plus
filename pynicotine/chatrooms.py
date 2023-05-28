@@ -82,6 +82,7 @@ class ChatRooms:
 
     def _server_disconnect(self, _msg):
         self.server_rooms.clear()
+        self.update_completions()
 
     def show_room(self, room, private=False):
 
@@ -340,6 +341,10 @@ class ChatRooms:
 
             if room_data["owner"] == login_username:
                 room_data["owner"] = None
+
+        if config.sections["words"]["roomnames"]:
+            self.update_completions()
+            core.privatechat.update_completions()
 
     def _say_chat_room(self, msg):
         """ Server code: 13 """

@@ -74,8 +74,10 @@ class PrivateChat:
             core.watch_user(user)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
+
         self.private_message_queue.clear()
         self.away_message_users.clear()
+        self.update_completions()
 
     def _set_away_mode(self, is_away):
 

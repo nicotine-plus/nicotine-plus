@@ -137,7 +137,7 @@ class ChatRooms(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(core.chatrooms.completion_list[:])
+            tab.update_room_user_completions()
 
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
@@ -204,12 +204,7 @@ class ChatRooms(IconNotebook):
                 break
 
     def room_list(self, msg):
-
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
-
-        if config.sections["words"]["roomnames"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
 
     def show_room(self, room):
 
@@ -386,7 +381,6 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
-        core.chatrooms.update_completions()
 
         for page in self.pages.values():
             page.server_disconnect()
@@ -1017,6 +1011,9 @@ class ChatRoom:
         self.users_list_view.clear()
         self.count_users()
 
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
+
         if (self.room not in config.sections["server"]["autojoin"]
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
@@ -1042,11 +1039,12 @@ class ChatRoom:
         # Update user count
         self.count_users()
 
-        # Build completion list
-        self.set_completion_list(core.chatrooms.completion_list[:])
-
         # Update all username tags in chat log
         self.chat_view.update_user_tags()
+
+        # Add room users to completion list
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
 
     def on_autojoin(self, *_args):
 
@@ -1101,6 +1099,9 @@ class ChatRoom:
             message=_("Do you really want to permanently delete all logged messages for this room?"),
             callback=self.on_delete_room_log_response
         ).show()
+
+    def update_room_user_completions(self):
+        self.set_completion_list(core.chatrooms.completion_list[:])
 
     def set_completion_list(self, completion_list):
 
