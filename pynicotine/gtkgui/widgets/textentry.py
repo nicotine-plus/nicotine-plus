@@ -160,7 +160,7 @@ class ChatCompletion:
 
     def remove_completion(self, item):
 
-        iterator = self.completions.pop(item)
+        iterator = self.completions.pop(item, None)
 
         if iterator is not None:
             self.model.remove(iterator)
