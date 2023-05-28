@@ -18,6 +18,8 @@
 
 import sys
 
+from locale import strxfrm
+
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -144,7 +146,7 @@ class ChatCompletion:
 
     def add_completion(self, item):
 
-        if item in self.completions:
+        if self.entry_completion is None or item in self.completions:
             return
 
         if config.sections["words"]["dropdown"]:
@@ -160,7 +162,7 @@ class ChatCompletion:
 
     def remove_completion(self, item):
 
-        iterator = self.completions.pop(item)
+        iterator = self.completions.pop(item, None)
 
         if iterator is not None:
             self.model.remove(iterator)
@@ -178,8 +180,9 @@ class ChatCompletion:
         self.model.clear()
         self.completions.clear()
 
-        if completion_list is None:
-            completion_list = []
+        # No duplicates
+        completion_list = list(set(completion_list))
+        completion_list.sort(key=strxfrm)
 
         for word in completion_list:
             word = str(word)
@@ -191,6 +194,7 @@ class ChatCompletion:
                 iterator = None
 
             else:
+                self.entry_completion = None
                 return
 
             self.completions[word] = iterator

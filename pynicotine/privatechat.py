@@ -271,15 +271,18 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = [config.sections["server"]["login"]]
+        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
+            self.completion_list = []
+        else:
+            self.completion_list = [config.sections["server"]["login"]]
 
-        if config.sections["words"]["roomnames"]:
-            self.completion_list += core.chatrooms.server_rooms
+            if config.sections["words"]["roomnames"]:
+                self.completion_list += core.chatrooms.server_rooms
 
-        if config.sections["words"]["buddies"]:
-            self.completion_list += list(core.userlist.buddies)
+            if config.sections["words"]["buddies"]:
+                self.completion_list += list(core.userlist.buddies)
 
-        if config.sections["words"]["commands"]:
-            self.completion_list += core.pluginhandler.get_command_list("private_chat")
+            if config.sections["words"]["commands"]:
+                self.completion_list += core.pluginhandler.get_command_list("private_chat")
 
         events.emit("private-chat-completion-list", self.completion_list)
