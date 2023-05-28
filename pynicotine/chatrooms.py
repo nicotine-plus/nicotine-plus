@@ -75,7 +75,7 @@ class ChatRooms:
 
         for room in join_list:
             if room == self.GLOBAL_ROOM_NAME:
-                core.queue.append(slskmessages.JoinGlobalRoom())
+                self.show_global_room()
 
             elif isinstance(room, str):
                 core.queue.append(slskmessages.JoinRoom(room))
@@ -83,12 +83,15 @@ class ChatRooms:
     def _server_disconnect(self, _msg):
         self.server_rooms.clear()
 
+    def show_global_room(self):
+        # Fake a JoinRoom protocol message
+        events.emit("join-room", slskmessages.JoinRoom(self.GLOBAL_ROOM_NAME))
+        core.queue.append(slskmessages.JoinGlobalRoom())
+
     def show_room(self, room, private=False):
 
         if room == self.GLOBAL_ROOM_NAME:
-            # Fake a JoinRoom protocol message
-            events.emit("join-room", slskmessages.JoinRoom(room))
-            core.queue.append(slskmessages.JoinGlobalRoom())
+            self.show_global_room()
 
         elif room not in self.joined_rooms:
             core.queue.append(slskmessages.JoinRoom(room, private))
