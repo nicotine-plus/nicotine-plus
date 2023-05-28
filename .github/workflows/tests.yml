@@ -37,11 +37,12 @@ jobs:
       - name: Integration and unit tests
         run: xvfb-run python -m unittest -v
 
-  ubuntu:
+  ubuntu-debian:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
-    runs-on: ${{ matrix.os }}
+        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal']
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -50,11 +51,11 @@ jobs:
 
       - name: Install autopkgtest dependencies
         run: |
-          sudo apt update
-          sudo apt -y install autopkgtest
+          apt update
+          apt -y install autopkgtest
 
       - name: Run autopkgtest
-        run: sudo autopkgtest . -- null
+        run: autopkgtest . -- null
 
   fedora-rocky:
     strategy:
