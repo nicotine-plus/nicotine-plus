@@ -1630,7 +1630,7 @@ class UserInterfacePage:
                 "browserfont": self.font_browse_button,
 
                 "reverse_file_paths": self.reverse_file_paths_toggle,
-                "exact_file_sizes": self.exact_file_sizes_toggle,
+                "file_size_unit": self.exact_file_sizes_toggle,
 
                 "tabmain": self.tab_position_main_combobox,
                 "tabrooms": self.tab_position_chatrooms_combobox,
@@ -1714,7 +1714,7 @@ class UserInterfacePage:
                 "browserfont": self.font_browse_button.get_font(),
 
                 "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
-                "exact_file_sizes": self.exact_file_sizes_toggle.get_active(),
+                "file_size_unit": "B" if self.exact_file_sizes_toggle.get_active() else "",
 
                 "tabmain": self.tab_position_main_combobox.get_active_id(),
                 "tabrooms": self.tab_position_chatrooms_combobox.get_active_id(),
