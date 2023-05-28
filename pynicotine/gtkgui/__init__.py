@@ -27,7 +27,7 @@ def check_gtk_version(gtk_api_version):
 
     # Require minor version of GTK
     if gtk_api_version == "4":
-        pygobject_version = (3, 42, 1)
+        pygobject_version = (3, 42, 2)
     else:
         gtk_api_version = "3"
         pygobject_version = (3, 26, 1)
