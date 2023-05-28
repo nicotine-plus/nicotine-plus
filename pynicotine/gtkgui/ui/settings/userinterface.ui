@@ -872,10 +872,40 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="exact_file_sizes_toggle">
-                <property name="label" translatable="yes">Show exact file sizes (requires a restart)</property>
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="use-underline">True</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">File size units:</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="mnemonic-widget">file_size_units_combobox</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <object class="GtkComboBoxText" id="file_size_units_combobox">
+                            <property name="visible">True</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

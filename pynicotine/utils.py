@@ -101,30 +101,33 @@ def human_length(seconds):
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(unit):
+def _human_speed_or_size(number, unit):
+
+    if unit == "B":  # TODO: == "KiB", MiB", etc
+        return f"{humanize(number)} B"
 
     try:
         for suffix in FILE_SIZE_SUFFIXES:
-            if unit < 1024:
-                if unit > 999:
-                    return f"{unit:.4g} {suffix}"
+            if number < 1024:  # TODO: or suffix == unit:
+                if number > 999:
+                    return f"{number:.4g} {suffix}"
 
-                return f"{unit:.3g} {suffix}"
+                return f"{number:.3g} {suffix}"
 
-            unit /= 1024
+            number /= 1024
 
     except TypeError:
         pass
 
-    return str(unit)
+    return str(number)
 
 
-def human_speed(speed):
-    return _human_speed_or_size(speed) + "/s"
+def human_speed(speed, unit=""):
+    return _human_speed_or_size(speed, unit) + "/s"
 
 
-def human_size(filesize):
-    return _human_speed_or_size(filesize)
+def human_size(filesize, unit=""):
+    return _human_speed_or_size(filesize, unit)
 
 
 def humanize(number):

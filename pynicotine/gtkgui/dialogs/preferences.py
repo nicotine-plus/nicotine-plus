@@ -1468,7 +1468,7 @@ class UserInterfacePage:
             self.color_url_entry,
             self.container,
             self.dark_mode_toggle,
-            self.exact_file_sizes_toggle,
+            self.file_size_units_combobox,
             self.font_browse_button,
             self.font_browse_clear_button,
             self.font_chat_button,
@@ -1568,6 +1568,9 @@ class UserInterfacePage:
             combobox.append("Left", _("Left"))
             combobox.append("Right", _("Right"))
 
+        self.file_size_units_combobox.append("", _("Automatic"))
+        self.file_size_units_combobox.append("B", _("B (Bytes)"))
+
         icon_list = [
             (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
             (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
@@ -1630,7 +1633,7 @@ class UserInterfacePage:
                 "browserfont": self.font_browse_button,
 
                 "reverse_file_paths": self.reverse_file_paths_toggle,
-                "exact_file_sizes": self.exact_file_sizes_toggle,
+                "file_size_units": self.file_size_units_combobox,
 
                 "tabmain": self.tab_position_main_combobox,
                 "tabrooms": self.tab_position_chatrooms_combobox,
@@ -1714,7 +1717,7 @@ class UserInterfacePage:
                 "browserfont": self.font_browse_button.get_font(),
 
                 "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
-                "exact_file_sizes": self.exact_file_sizes_toggle.get_active(),
+                "file_size_units": self.file_size_units_combobox.get_active_id(),
 
                 "tabmain": self.tab_position_main_combobox.get_active_id(),
                 "tabrooms": self.tab_position_chatrooms_combobox.get_active_id(),

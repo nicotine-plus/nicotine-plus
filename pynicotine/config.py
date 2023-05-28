@@ -404,7 +404,7 @@ class Config:
                 "urgencyhint": True,
                 "file_path_tooltips": True,
                 "reverse_file_paths": True,
-                "exact_file_sizes": False
+                "file_size_units": ""
             },
             "private_rooms": {
                 "rooms": {}
@@ -500,7 +500,8 @@ class Config:
                 "notexists",
                 "roomlistcollapsed",
                 "showaway",
-                "decimalsep"
+                "decimalsep",
+                "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
             ),
             "columns": (
                 "downloads",
@@ -729,6 +730,16 @@ class Config:
                         use_speed_limit = "unlimited"
 
                     self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Migrate file size units (TODO: remove as only in 3.3.0.dev)
+                if option == "file_size_units" and section == "ui":
+                    if self.sections[section].get("exact_file_sizes", False):
+                        file_size_units = "B"
+                    else:
+                        file_size_units = ""
+
+                    self.sections[section][option] = file_size_units
                     continue
 
                 # Set default value

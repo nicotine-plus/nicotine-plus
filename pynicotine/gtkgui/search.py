@@ -705,7 +705,7 @@ class Search:
             directory = "\\".join(fullpath_split)
 
             size = result[2]
-            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
+            h_size = human_size(size, config.sections["ui"]["file_size_units"])
             h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
                 size, result[4])
 
