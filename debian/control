@@ -2,12 +2,12 @@ Source: nicotine
 Section: net
 Priority: optional
 Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2
 Build-Depends: debhelper-compat (= 10),
                devscripts,
                dh-python,
                gettext,
-               gir1.2-gtk-4.0 | gir1.2-gtk-3.0,
+               gir1.2-gtk-4.0 (>= 4.8) | gir1.2-gtk-3.0 (>= 3.22.30),
                python3-all,
                python3-gdbm,
                python3-gi,
