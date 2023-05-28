@@ -386,6 +386,7 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
+        core.chatrooms.update_completions()
 
         for page in self.pages.values():
             page.server_disconnect()

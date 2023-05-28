@@ -227,6 +227,8 @@ class PrivateChats(IconNotebook):
 
     def server_disconnect(self, *_args):
 
+        core.privatechat.update_completions()
+
         for user, page in self.pages.items():
             page.server_disconnect()
             self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
