@@ -172,7 +172,7 @@ class ChatCompletion:
         if iterator is not None:
             self.model.remove(iterator)
 
-    def set_completion_list(self, completion_list):
+    def set_completions(self, completions):
 
         if self.entry_completion is None:
             return
@@ -188,11 +188,7 @@ class ChatCompletion:
         if not self.is_completion_enabled():
             return
 
-        # No duplicates
-        completion_list = list(set(completion_list))
-        completion_list.sort(key=strxfrm)
-
-        for word in completion_list:
+        for word in sorted(completions, key=strxfrm):
             word = str(word)
 
             if config_words["dropdown"]:

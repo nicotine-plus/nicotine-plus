@@ -29,7 +29,7 @@ class PrivateChat:
 
     def __init__(self):
 
-        self.completion_list = []
+        self.completions = set()
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
@@ -62,7 +62,7 @@ class PrivateChat:
         self.update_completions()
 
     def _quit(self):
-        self.completion_list.clear()
+        self.completions.clear()
         self.users.clear()
 
     def _server_login(self, msg):
@@ -273,15 +273,16 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = [config.sections["server"]["login"]]
+        self.completions.clear()
+        self.completions.add(config.sections["server"]["login"])
 
         if config.sections["words"]["roomnames"]:
-            self.completion_list += core.chatrooms.server_rooms
+            self.completions.update(core.chatrooms.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completion_list += list(core.userlist.buddies)
+            self.completions.update(core.userlist.buddies)
 
         if config.sections["words"]["commands"]:
-            self.completion_list += core.pluginhandler.get_command_list("private_chat")
+            self.completions.update(core.pluginhandler.get_command_list("private_chat"))
 
-        events.emit("private-chat-completion-list", self.completion_list)
+        events.emit("private-chat-completions", self.completions.copy())

@@ -87,7 +87,7 @@ class ChatRooms(IconNotebook):
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
             ("remove-room", self.remove_room),
-            ("room-completion-list", self.set_completion_list),
+            ("room-completions", self.update_completions),
             ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-login", self.server_login),
@@ -353,13 +353,13 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.toggle_chat_buttons()
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(completion_list[:])
+                tab.update_completions(completions)
                 break
 
     def update_tags(self):
@@ -1099,12 +1099,12 @@ class ChatRoom:
         ).show()
 
     def update_room_user_completions(self):
-        self.set_completion_list(core.chatrooms.completion_list[:])
+        self.update_completions(core.chatrooms.completions.copy())
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            completion_list += self.users_list_view.iterators
+            completions.update(self.users_list_view.iterators)
 
-        self.chatrooms.completion.set_completion_list(completion_list)
+        self.chatrooms.completion.set_completions(completions)

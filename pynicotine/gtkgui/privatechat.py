@@ -64,7 +64,7 @@ class PrivateChats(IconNotebook):
             ("clear-private-messages", self.clear_messages),
             ("echo-private-message", self.echo_private_message),
             ("message-user", self.message_user),
-            ("private-chat-completion-list", self.set_completion_list),
+            ("private-chat-completions", self.update_completions),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
             ("send-private-message", self.send_message),
@@ -210,13 +210,13 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.toggle_chat_buttons()
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(completion_list[:])
+                tab.update_completions(completions)
                 break
 
     def update_tags(self):
@@ -493,11 +493,11 @@ class PrivateChat:
         self.chats.remove_all_pages()
 
     def update_room_user_completions(self):
-        self.set_completion_list(core.privatechat.completion_list[:])
+        self.update_completions(core.privatechat.completions.copy())
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         # Tab-complete the recipient username
-        completion_list.append(self.user)
+        completions.add(self.user)
 
-        self.chats.completion.set_completion_list(completion_list)
+        self.chats.completion.set_completions(completions)
