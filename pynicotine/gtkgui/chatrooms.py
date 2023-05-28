@@ -24,7 +24,6 @@
 
 import os
 
-from collections import deque
 from locale import strxfrm
 
 from gi.repository import GLib
@@ -49,17 +48,15 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
+from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
-from pynicotine.utils import encode_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
-from pynicotine.utils import PUNCTUATION
 
 
 class ChatRooms(IconNotebook):
@@ -440,14 +437,16 @@ class ChatRoom:
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
+        self.user_statuses = {}
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
         self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
                                       vertical_margin=5, pixels_below_lines=2)
-        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2)
+        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2, user_statuses=self.user_statuses,
+                                  username_event=self.username_event)
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
@@ -586,7 +585,6 @@ class ChatRoom:
         self.chat_entry.grab_focus()
 
         self.count_users()
-        self.create_tags()
         self.read_room_logs()
 
     def load(self):
@@ -661,6 +659,7 @@ class ChatRoom:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 
+        self.user_statuses[username] = status
         self.users_list_view.add_row([
             status_icon_name,
             flag_icon_name,
@@ -693,56 +692,11 @@ class ChatRoom:
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
         try:
-            self.append_log_lines(path, numlines)
+            self.chat_view.append_log_lines(
+                path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+            )
         except OSError:
             pass
-
-    def append_log_lines(self, path, numlines):
-
-        with open(encode_path(path), "rb") as lines:
-            # Only show as many log lines as specified in config
-            lines = deque(lines, numlines)
-            login = config.sections["server"]["login"]
-
-            for line in lines:
-                try:
-                    line = line.decode("utf-8")
-
-                except UnicodeDecodeError:
-                    line = line.decode("latin-1")
-
-                user = tag = usertag = None
-
-                if " [" in line and "] " in line:
-                    start = line.find(" [") + 2
-                    end = line.find("] ", start)
-
-                    if end > start:
-                        user = line[start:end]
-                        usertag = self.get_user_tag(user)
-
-                        if user == login:
-                            tag = self.tag_local
-
-                        elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
-                            tag = self.tag_highlight
-
-                        else:
-                            tag = self.tag_remote
-
-                elif "* " in line:
-                    tag = self.tag_action
-
-                if user != login:
-                    self.chat_view.append_line(core.privatechat.censor_chat(line), tag=tag, username=user,
-                                               usertag=usertag)
-                else:
-                    self.chat_view.append_line(line, tag=tag, username=user, usertag=usertag)
-
-            if lines:
-                timestamp_format = config.sections["logging"]["rooms_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
-                                           timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
@@ -817,7 +771,7 @@ class ChatRoom:
         if user == login:
             return
 
-        mentioned = (tag == self.tag_highlight)
+        mentioned = (tag == self.chat_view.tag_highlight)
         self.chatrooms.request_tab_changed(self.container, is_important=mentioned)
 
         if is_global and room in core.chatrooms.joined_rooms:
@@ -851,26 +805,6 @@ class ChatRoom:
                 title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
             )
 
-    @staticmethod
-    def find_whole_word(word, text, after=0):
-        """ Returns start position of a whole word that is not in a subword """
-
-        if word not in text:
-            return -1
-
-        word_boundaries = [" "] + PUNCTUATION
-        whole = False
-        start = 0
-
-        while not whole and start > -1:
-            start = text.find(word, after)
-            after = start + len(word)
-
-            whole = ((text[after] if after < len(text) else " ") in word_boundaries
-                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
-
-        return start if whole else -1
-
     def say_chat_room(self, msg, is_global=False):
 
         user = msg.user
@@ -879,14 +813,14 @@ class ChatRoom:
         room = msg.room
 
         if user == login_username:
-            tag = self.tag_local
-        elif self.find_whole_word(login_username.lower(), text.lower()) > -1:
-            tag = self.tag_highlight
+            tag = self.chat_view.tag_local
+        elif self.chat_view.find_whole_word(login_username.lower(), text.lower()) > -1:
+            tag = self.chat_view.tag_highlight
         else:
-            tag = self.tag_remote
+            tag = self.chat_view.tag_remote
 
         if text.startswith("/me "):
-            tag = self.tag_action
+            tag = self.chat_view.tag_action
             line = f"* {user} {text[4:]}"
             speech = line[2:]
         else:
@@ -897,7 +831,7 @@ class ChatRoom:
             line = f"{room} | {line}"
 
         line = "\n-- ".join(line.split("\n"))
-        usertag = self.get_user_tag(user)
+        usertag = self.chat_view.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
         if user != login_username:
@@ -928,9 +862,9 @@ class ChatRoom:
     def echo_room_message(self, text, message_type):
 
         if hasattr(self, f"tag_{message_type}"):
-            tag = getattr(self, f"tag_{message_type}")
+            tag = getattr(self.chat_view, f"tag_{message_type}")
         else:
-            tag = self.tag_local
+            tag = self.chat_view.tag_local
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
@@ -953,13 +887,12 @@ class ChatRoom:
 
         if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.append_line(
-                _("%s joined the room") % username, tag=self.tag_log,
-                timestamp_format=config.sections["logging"]["rooms_timestamp"]
+                _("%s joined the room") % username, timestamp_format=config.sections["logging"]["rooms_timestamp"]
             )
 
         self.add_user_row(userdata)
 
-        self.update_user_tag(username)
+        self.chat_view.update_user_tag(username)
         self.count_users()
 
     def user_left_room(self, msg):
@@ -976,13 +909,13 @@ class ChatRoom:
         if not core.network_filter.is_user_ignored(username) and \
                 not core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s left the room") % username, tag=self.tag_log,
-                                           timestamp_format=timestamp_format)
+            self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
         iterator = self.users_list_view.iterators.get(username)
         self.users_list_view.remove_row(iterator)
 
-        self.update_user_tag(username)
+        self.user_statuses.pop(username, None)
+        self.chat_view.update_user_tag(username)
         self.count_users()
 
     def count_users(self):
@@ -1040,12 +973,13 @@ class ChatRoom:
 
         if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
             self.activity_view.append_line(
-                action % user, tag=self.tag_log, timestamp_format=config.sections["logging"]["rooms_timestamp"])
+                action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
         self.users_list_view.set_row_value(iterator, "status_data", status)
 
-        self.update_user_tag(user)
+        self.user_statuses[user] = status
+        self.chat_view.update_user_tag(user)
 
     def user_country(self, user, country_code):
 
@@ -1066,60 +1000,19 @@ class ChatRoom:
         self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
         self.users_list_view.set_row_value(iterator, "country_data", country_code)
 
-    def user_name_event(self, pos_x, pos_y, user):
+    def username_event(self, pos_x, pos_y, user):
 
         menu = self.popup_menu_user_chat
         menu.update_model()
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
         menu.popup(pos_x, pos_y)
 
-    def create_tags(self):
-
-        self.tag_log = self.activity_view.create_tag("chatremote")
-
-        self.tag_remote = self.chat_view.create_tag("chatremote")
-        self.tag_local = self.chat_view.create_tag("chatlocal")
-        self.tag_command = self.chat_view.create_tag("chatcommand")
-        self.tag_action = self.chat_view.create_tag("chatme")
-        self.tag_highlight = self.chat_view.create_tag("chathilite")
-
-        self.tag_users = {}
-
-    def get_user_tag(self, username):
-
-        if username not in self.tag_users:
-            self.tag_users[username] = self.chat_view.create_tag(callback=self.user_name_event, username=username)
-            self.update_user_tag(username)
-
-        return self.tag_users[username]
-
-    def update_user_tag(self, username):
-
-        if username not in self.tag_users:
-            return
-
-        if username not in self.users_list_view.iterators:
-            color = "useroffline"
-        else:
-            iterator = self.users_list_view.iterators.get(username)
-            status = self.users_list_view.get_row_value(iterator, "status_data")
-            color = USER_STATUS_COLORS.get(status)
-
-        self.chat_view.update_tag(self.tag_users[username], color)
-
     def update_tags(self):
-
-        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action,
-                    self.tag_highlight, self.tag_log):
-            self.chat_view.update_tag(tag)
-
-        for tag in self.tag_users.values():
-            self.chat_view.update_tag(tag)
-
         self.chat_view.update_tags()
 
     def server_disconnect(self):
 
+        self.user_statuses.clear()
         self.users_list_view.clear()
         self.count_users()
 
@@ -1127,8 +1020,7 @@ class ChatRoom:
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
 
-        for username in self.tag_users:
-            self.update_user_tag(username)
+        self.chat_view.update_user_tags()
 
     def join_room(self, msg):
 
@@ -1153,8 +1045,7 @@ class ChatRoom:
         self.set_completion_list(core.chatrooms.completion_list[:])
 
         # Update all username tags in chat log
-        for username in self.tag_users:
-            self.update_user_tag(username)
+        self.chat_view.update_user_tags()
 
     def on_autojoin(self, *_args):
 

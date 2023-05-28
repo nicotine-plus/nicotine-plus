@@ -23,7 +23,6 @@
 
 import os
 
-from collections import deque
 from locale import strxfrm
 
 from gi.repository import GLib
@@ -42,11 +41,9 @@ from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
-from pynicotine.gtkgui.widgets.textview import TextView
-from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
-from pynicotine.utils import encode_path
 
 
 class PrivateChats(IconNotebook):
@@ -139,12 +136,12 @@ class PrivateChats(IconNotebook):
 
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
-            page.update_remote_username_tag(msg.status)
+            page.chat_view.update_user_tag(msg.user)
 
         if msg.user == core.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
-                page.update_local_username_tag(msg.status)
+                page.chat_view.update_user_tag(msg.user)
 
     def show_user(self, user, switch_page=True):
 
@@ -258,8 +255,9 @@ class PrivateChat:
         self.offline_message = False
         self.status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
 
-        self.chat_view = TextView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2)
+        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2, user_statuses=core.user_statuses,
+                                  username_event=self.username_event)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
@@ -301,7 +299,6 @@ class PrivateChat:
             (">" + _("User"), self.popup_menu_user_tab),
         )
 
-        self.create_tags()
         self.read_private_log()
 
     def load(self):
@@ -323,36 +320,15 @@ class PrivateChat:
         path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
 
         try:
-            self.append_log_lines(path, numlines)
+            self.chat_view.append_log_lines(
+                path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
+            )
         except OSError:
             pass
 
-    def append_log_lines(self, path, numlines):
-
-        with open(encode_path(path), "rb") as lines:
-            # Only show as many log lines as specified in config
-            lines = deque(lines, numlines)
-
-            for line in lines:
-                try:
-                    line = line.decode("utf-8")
-
-                except UnicodeDecodeError:
-                    line = line.decode("latin-1")
-
-                self.chat_view.append_line(line, tag=self.tag_highlight)
-
-            if lines:
-                timestamp_format = config.sections["logging"]["private_timestamp"]
-                self.chat_view.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
-                                           timestamp_format=timestamp_format)
-
     def server_disconnect(self):
-
         self.offline_message = False
-
-        self.update_remote_username_tag(status=slskmessages.UserStatus.OFFLINE)
-        self.update_local_username_tag(status=slskmessages.UserStatus.OFFLINE)
+        self.chat_view.update_user_tags()
 
     def clear(self):
 
@@ -423,23 +399,23 @@ class PrivateChat:
         text = msg.msg
         newmessage = msg.newmessage
         timestamp = msg.timestamp if not newmessage else None
-        usertag = self.tag_username
+        usertag = self.chat_view.get_user_tag(self.user)
 
         self.show_notification(text)
 
         if text.startswith("/me "):
             line = f"* {self.user} {text[4:]}"
-            tag = self.tag_action
+            tag = self.chat_view.tag_action
             speech = line[2:]
         else:
             line = f"[{self.user}] {text}"
-            tag = self.tag_remote
+            tag = self.chat_view.tag_remote
             speech = text
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
         if not newmessage:
-            tag = usertag = self.tag_highlight
+            tag = usertag = self.chat_view.tag_highlight
 
             if not self.offline_message:
                 self.chat_view.append_line(_("* Messages sent while you were offline"), tag=tag,
@@ -469,7 +445,7 @@ class PrivateChat:
         if hasattr(self, f"tag_{message_type}"):
             tag = getattr(self, f"tag_{message_type}")
         else:
-            tag = self.tag_local
+            tag = self.chat_view.tag_local
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["private_timestamp"]
@@ -484,13 +460,13 @@ class PrivateChat:
 
         if text.startswith("/me "):
             line = f"* {my_username} {text[4:]}"
-            tag = self.tag_action
+            tag = self.chat_view.tag_action
         else:
             line = f"[{my_username}] {text}"
-            tag = self.tag_local
+            tag = self.chat_view.tag_local
 
         self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
-                                   username=my_username, usertag=self.tag_my_username)
+                                   username=my_username, usertag=self.chat_view.get_user_tag(my_username))
 
         if self.log_toggle.get_active():
             log.write_log_file(
@@ -499,48 +475,14 @@ class PrivateChat:
             )
             self.chats.history.update_user(self.user, line)
 
-    def user_name_event(self, pos_x, pos_y, user):
+    def username_event(self, pos_x, pos_y, user):
 
         self.popup_menu_user_chat.update_model()
         self.popup_menu_user_chat.set_user(user)
         self.popup_menu_user_chat.toggle_user_items()
         self.popup_menu_user_chat.popup(pos_x, pos_y)
 
-    def create_tags(self):
-
-        self.tag_remote = self.chat_view.create_tag("chatremote")
-        self.tag_local = self.chat_view.create_tag("chatlocal")
-        self.tag_command = self.chat_view.create_tag("chatcommand")
-        self.tag_action = self.chat_view.create_tag("chatme")
-        self.tag_highlight = self.chat_view.create_tag("chathilite")
-
-        color = USER_STATUS_COLORS.get(self.status)
-        self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
-
-        color = USER_STATUS_COLORS.get(core.user_status)
-        my_username = config.sections["server"]["login"]
-        self.tag_my_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=my_username)
-
-    def update_remote_username_tag(self, status):
-
-        if status == self.status:
-            return
-
-        self.status = status
-
-        color = USER_STATUS_COLORS.get(status)
-        self.chat_view.update_tag(self.tag_username, color)
-
-    def update_local_username_tag(self, status):
-        color = USER_STATUS_COLORS.get(status)
-        self.chat_view.update_tag(self.tag_my_username, color)
-
     def update_tags(self):
-
-        for tag in (self.tag_remote, self.tag_local, self.tag_command, self.tag_action, self.tag_highlight,
-                    self.tag_username, self.tag_my_username):
-            self.chat_view.update_tag(tag)
-
         self.chat_view.update_tags()
 
     def on_focus(self, *_args):

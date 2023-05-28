@@ -19,13 +19,20 @@
 import re
 import time
 
+from collections import deque
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_uri
+from pynicotine.utils import PUNCTUATION
 
 
 """ Textview """
@@ -331,3 +338,119 @@ class TextView:
             return
 
         self.adjustment_value = new_value
+
+
+class ChatView(TextView):
+
+    def __init__(self, *args, user_statuses=None, username_event=None, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.user_statuses = user_statuses
+        self.username_event = username_event
+
+        self.tag_remote = self.create_tag("chatremote")
+        self.tag_local = self.create_tag("chatlocal")
+        self.tag_command = self.create_tag("chatcommand")
+        self.tag_action = self.create_tag("chatme")
+        self.tag_highlight = self.create_tag("chathilite")
+
+        self.tag_users = {}
+
+    @staticmethod
+    def find_whole_word(word, text, after=0):
+        """ Returns start position of a whole word that is not in a subword """
+
+        if word not in text:
+            return -1
+
+        word_boundaries = [" "] + PUNCTUATION
+        whole = False
+        start = 0
+
+        while not whole and start > -1:
+            start = text.find(word, after)
+            after = start + len(word)
+
+            whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+        return start if whole else -1
+
+    def append_log_lines(self, path, num_lines, timestamp_format):
+
+        with open(encode_path(path), "rb") as lines:
+            # Only show as many log lines as specified in config
+            lines = deque(lines, num_lines)
+            login = config.sections["server"]["login"]
+
+            for line in lines:
+                try:
+                    line = line.decode("utf-8")
+
+                except UnicodeDecodeError:
+                    line = line.decode("latin-1")
+
+                user = tag = usertag = None
+
+                if " [" in line and "] " in line:
+                    start = line.find(" [") + 2
+                    end = line.find("] ", start)
+
+                    if end > start:
+                        user = line[start:end]
+                        usertag = self.get_user_tag(user)
+
+                        if user == login:
+                            tag = self.tag_local
+
+                        elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
+                            tag = self.tag_highlight
+
+                        else:
+                            tag = self.tag_remote
+
+                elif "* " in line:
+                    tag = self.tag_action
+
+                if user != login:
+                    self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
+                else:
+                    self.append_line(line, tag=tag, username=user, usertag=usertag)
+
+            if lines:
+                self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+                                 timestamp_format=timestamp_format)
+
+    def get_user_tag(self, username):
+
+        if username not in self.tag_users:
+            self.update_user_tag(username)
+
+        return self.tag_users[username]
+
+    def update_tags(self):
+
+        super().update_tags()
+        self.update_user_tags()
+
+        for tag in (
+            self.tag_remote,
+            self.tag_local,
+            self.tag_command,
+            self.tag_action,
+            self.tag_highlight
+        ):
+            self.update_tag(tag)
+
+    def update_user_tag(self, username):
+
+        if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+
+        color = USER_STATUS_COLORS.get(self.user_statuses.get(username, 0))
+        self.update_tag(self.tag_users[username], color)
+
+    def update_user_tags(self):
+        for username in self.tag_users:
+            self.update_user_tag(username)
