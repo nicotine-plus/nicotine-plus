@@ -30,7 +30,6 @@ To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/st
 ```sh
 sudo apt install python3-launchpadlib software-properties-common
 sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
-sudo apt update
 sudo apt install nicotine
 ```
 

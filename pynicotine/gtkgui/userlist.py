@@ -275,10 +275,6 @@ class UserList:
 
         self.update_visible()
 
-        if config.sections["words"]["buddies"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
-
     def remove_buddy(self, user):
 
         iterator = self.list_view.iterators.get(user)
@@ -288,10 +284,6 @@ class UserList:
 
         self.list_view.remove_row(iterator)
         self.update_visible()
-
-        if config.sections["words"]["buddies"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
 
     def buddy_note(self, user, note):
 

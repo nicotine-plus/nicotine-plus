@@ -153,8 +153,8 @@ class Core:
         self.userbrowse = UserBrowse()
         self.userinfo = UserInfo()
         self.userlist = UserList()
-        self.privatechat = PrivateChat()
         self.chatrooms = ChatRooms()
+        self.privatechat = PrivateChat()
         self.pluginhandler = PluginHandler()
 
     def _init_thread_exception_hook(self):

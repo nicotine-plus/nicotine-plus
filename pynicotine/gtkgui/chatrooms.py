@@ -24,8 +24,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -89,7 +87,7 @@ class ChatRooms(IconNotebook):
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
             ("remove-room", self.remove_room),
-            ("room-completion-list", self.set_completion_list),
+            ("room-completions", self.update_completions),
             ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-login", self.server_login),
@@ -137,7 +135,7 @@ class ChatRooms(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(core.chatrooms.completion_list[:])
+            tab.update_room_user_completions()
 
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
@@ -204,12 +202,7 @@ class ChatRooms(IconNotebook):
                 break
 
     def room_list(self, msg):
-
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
-
-        if config.sections["words"]["roomnames"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
 
     def show_room(self, room):
 
@@ -360,13 +353,13 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.toggle_chat_buttons()
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(completion_list[:])
+                tab.update_completions(completions)
                 break
 
     def update_tags(self):
@@ -386,7 +379,6 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
-        core.chatrooms.update_completions()
 
         for page in self.pages.values():
             page.server_disconnect()
@@ -1017,6 +1009,9 @@ class ChatRoom:
         self.users_list_view.clear()
         self.count_users()
 
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
+
         if (self.room not in config.sections["server"]["autojoin"]
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
@@ -1042,11 +1037,12 @@ class ChatRoom:
         # Update user count
         self.count_users()
 
-        # Build completion list
-        self.set_completion_list(core.chatrooms.completion_list[:])
-
         # Update all username tags in chat log
         self.chat_view.update_user_tags()
+
+        # Add room users to completion list
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
 
     def on_autojoin(self, *_args):
 
@@ -1102,17 +1098,13 @@ class ChatRoom:
             callback=self.on_delete_room_log_response
         ).show()
 
-    def set_completion_list(self, completion_list):
+    def update_room_user_completions(self):
+        self.update_completions(core.chatrooms.completions.copy())
 
-        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
-            return
+    def update_completions(self, completions):
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            completion_list += self.users_list_view.iterators
+            completions.update(self.users_list_view.iterators)
 
-        # No duplicates
-        completion_list = list(set(completion_list))
-        completion_list.sort(key=strxfrm)
-
-        self.chatrooms.completion.set_completion_list(completion_list)
+        self.chatrooms.completion.set_completions(completions)
