@@ -481,7 +481,7 @@ class IconNotebook:
 
     def append_unread_page(self, page, is_important):
 
-        if page in self.unread_pages:
+        if page in self.unread_pages and not is_important:
             return
 
         self.unread_pages[page] = is_important
