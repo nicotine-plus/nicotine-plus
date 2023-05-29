@@ -142,7 +142,7 @@ class Searches:
 
         elif mode == "rooms":
             if not room:
-                room = _("Joined Rooms ")
+                room = core.chatrooms.JOINED_ROOMS_NAME
 
             if core:
                 feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
@@ -245,7 +245,7 @@ class Searches:
 
     def do_rooms_search(self, text, room=None):
 
-        if room != _("Joined Rooms "):
+        if room != core.chatrooms.JOINED_ROOMS_NAME:
             core.queue.append(slskmessages.RoomSearch(room, self.token, text))
             return
 

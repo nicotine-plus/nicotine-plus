@@ -100,10 +100,6 @@
                             <signal name="activate" handler="on_search"/>
                           </object>
                         </child>
-                        <items>
-                          <item id="joined">Joined Rooms </item>
-                        </items>
-                        <property name="active-id">joined</property>
                         <style>
                           <class name="dropdown-scrollbar"/>
                         </style>
