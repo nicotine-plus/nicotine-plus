@@ -492,21 +492,20 @@ class IconNotebook:
         if page not in self.unread_pages:
             return
 
+        important_page_removed = self.unread_pages.pop(page)
         self.update_pages_menu_button()
 
         if self.parent_page is None:
             return
 
-        important_page_removed = self.unread_pages.pop(page)
-
-        if important_page_removed and not any(is_important for is_important in self.unread_pages.values()):
-            # No important unread pages left, reset top-level tab highlight
-            self.window.notebook.remove_tab_changed(self.parent_page)
-            self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
-            return
-
         if not self.unread_pages:
             self.window.notebook.remove_tab_changed(self.parent_page)
+            return
+
+        # No important unread pages left, reset top-level tab highlight
+        if important_page_removed and not any(is_important for is_important in self.unread_pages.values()):
+            self.window.notebook.remove_tab_changed(self.parent_page)
+            self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
 
     """ Tab User Status """
 
