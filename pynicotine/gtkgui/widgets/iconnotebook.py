@@ -489,9 +489,7 @@ class IconNotebook:
 
     def remove_unread_page(self, page):
 
-        is_important = self.unread_pages.pop(page, None)
-
-        if is_important is None:
+        if page not in self.unread_pages:
             return
 
         self.update_pages_menu_button()
@@ -499,10 +497,12 @@ class IconNotebook:
         if self.parent_page is None:
             return
 
-        if is_important and not any(i_is_important for i_is_important in self.unread_pages.values()):
+        important_page_removed = self.unread_pages.pop(page)
+
+        if important_page_removed and not any(is_important for is_important in self.unread_pages.values()):
             # No important unread pages left, reset top-level tab highlight
             self.window.notebook.remove_tab_changed(self.parent_page)
-            self.window.notebook.request_tab_changed(self.parent_page)
+            self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
             return
 
         if not self.unread_pages:
