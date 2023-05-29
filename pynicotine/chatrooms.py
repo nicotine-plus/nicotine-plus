@@ -114,6 +114,9 @@ class ChatRooms:
         if room in config.sections["columns"]["chat_room"]:
             del config.sections["columns"]["chat_room"][room]
 
+        if room in config.sections["server"]["autojoin"]:
+            config.sections["server"]["autojoin"].remove(room)
+
         events.emit("remove-room", room)
 
     def clear_room_messages(self, room):
@@ -199,6 +202,9 @@ class ChatRooms:
         """ Server code: 14 """
 
         self.joined_rooms.add(msg.room)
+
+        if msg.room not in config.sections["server"]["autojoin"]:
+            config.sections["server"]["autojoin"].append(msg.room)
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)

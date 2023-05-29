@@ -110,23 +110,13 @@ class ChatRooms(IconNotebook):
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}
-        previous_autojoin_rooms = config.sections["server"]["autojoin"][:]
 
         # Find position of opened auto-joined rooms
         for room, room_page in self.pages.items():
-            if room not in previous_autojoin_rooms:
-                continue
-
             room_position = self.page_num(room_page.container)
             room_tab_order[room_position] = room
 
-            previous_autojoin_rooms.remove(room)
-
-        # Add opened rooms sorted by tab position first, then closed rooms
-        autojoin_rooms = [room for room_index, room in sorted(room_tab_order.items())]
-        autojoin_rooms.extend(previous_autojoin_rooms)
-
-        config.sections["server"]["autojoin"] = autojoin_rooms
+        config.sections["server"]["autojoin"] = [room for room_index, room in sorted(room_tab_order.items())]
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -398,7 +388,6 @@ class ChatRoom:
             self.activity_search_bar,
             self.activity_search_entry,
             self.activity_view_container,
-            self.auto_join_toggle,
             self.chat_container,
             self.chat_entry,
             self.chat_entry_row,
@@ -411,7 +400,6 @@ class ChatRoom:
             self.log_toggle,
             self.room_wall_button,
             self.speech_toggle,
-            self.users_action_row,
             self.users_container,
             self.users_label,
             self.users_list_container,
@@ -428,6 +416,8 @@ class ChatRoom:
             self.users_paned.set_resize_end_child(False)
             self.users_paned.set_shrink_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
+
+            self.room_wall_button.set_has_frame(False)
         else:
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)
@@ -461,9 +451,6 @@ class ChatRoom:
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():
             self.log_toggle.set_active(self.room in config.sections["logging"]["rooms"])
-
-        self.auto_join_toggle.set_active(room in config.sections["server"]["autojoin"])
-        self.auto_join_toggle.connect("toggled", self.on_autojoin)
 
         self.toggle_chat_buttons()
 
@@ -614,16 +601,8 @@ class ChatRoom:
         if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
             return
 
-        for widget in (self.activity_container, self.users_container, self.chat_entry,
-                       self.room_wall_button, self.help_button):
+        for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
             widget.set_visible(False)
-
-        self.users_action_row.remove(self.auto_join_toggle)
-
-        if GTK_API_VERSION >= 4:
-            self.chat_entry_row.append(self.auto_join_toggle)  # pylint: disable=no-member
-        else:
-            self.chat_entry_row.add(self.auto_join_toggle)     # pylint: disable=no-member
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
@@ -1017,10 +996,6 @@ class ChatRoom:
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
 
-        if (self.room not in config.sections["server"]["autojoin"]
-                and self.room in config.sections["columns"]["chat_room"]):
-            del config.sections["columns"]["chat_room"][self.room]
-
         self.chat_view.update_user_tags()
 
     def join_room(self, msg):
@@ -1048,20 +1023,6 @@ class ChatRoom:
         # Add room users to completion list
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
-
-    def on_autojoin(self, *_args):
-
-        autojoin = config.sections["server"]["autojoin"]
-        active = self.auto_join_toggle.get_active()
-
-        if not active and self.room in autojoin:
-            autojoin.remove(self.room)
-
-        elif active and self.room not in autojoin:
-            autojoin.append(self.room)
-            self.chatrooms.on_reordered_page()  # Save room order
-
-        config.write_configuration()
 
     def on_focus(self, *_args):
         self.chat_entry.grab_focus()
