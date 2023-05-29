@@ -2,22 +2,22 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="retry_button">
-    <property name="visible">True</property>
     <property name="label" translatable="yes">_Retry</property>
     <property name="use-underline">True</property>
+    <property name="visible">True</property>
     <signal name="clicked" handler="on_refresh"/>
   </object>
   <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkRevealer">
-            <property name="visible">True</property>
             <property name="transition-type">slide-down</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkInfoBar" id="info_bar">
                 <property name="visible">True</property>
@@ -27,48 +27,48 @@
         </child>
         <child>
           <object class="GtkFlowBox">
-            <property name="visible">True</property>
-            <property name="vexpand">True</property>
             <property name="column-spacing">1</property>
-            <property name="row-spacing">1</property>
             <property name="max-children-per-line">2</property>
+            <property name="row-spacing">1</property>
             <property name="selection-mode">none</property>
+            <property name="vexpand">True</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkFlowBox">
-                        <property name="visible">True</property>
                         <property name="column-spacing">12</property>
-                        <property name="row-spacing">6</property>
-                        <property name="margin-top">6</property>
                         <property name="margin-bottom">6</property>
-                        <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
+                        <property name="margin-start">6</property>
+                        <property name="margin-top">6</property>
                         <property name="max-children-per-line">2</property>
+                        <property name="row-spacing">6</property>
                         <property name="selection-mode">none</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkFlowBoxChild">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="visible">True</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <property name="margin-start">6</property>
                                     <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="spacing">6</property>
+                                    <property name="visible">True</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">True</property>
                                         <property name="label" bind-source="_num_folders_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                                        <property name="visible">True</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -76,13 +76,13 @@
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="_num_folders_button">
-                                        <property name="visible">True</property>
                                         <property name="tooltip-text" translatable="yes">Folders</property>
+                                        <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="num_folders_label">
-                                            <property name="visible">True</property>
                                             <property name="label">0</property>
                                             <property name="mnemonic-widget">_num_folders_button</property>
+                                            <property name="visible">True</property>
                                             <style>
                                               <class name="bold"/>
                                               <class name="dim-label"/>
@@ -99,14 +99,14 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <property name="margin-start">6</property>
                                     <property name="margin-end">6</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="spacing">6</property>
+                                    <property name="visible">True</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">True</property>
                                         <property name="label" bind-source="_share_size_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                                        <property name="visible">True</property>
                                         <style>
                                           <class name="heading"/>
                                         </style>
@@ -114,13 +114,13 @@
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="_share_size_button">
-                                        <property name="visible">True</property>
                                         <property name="tooltip-text" translatable="yes">Shared</property>
+                                        <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="share_size_label">
-                                            <property name="visible">True</property>
                                             <property name="label">0.0 B</property>
                                             <property name="mnemonic-widget">_share_size_button</property>
+                                            <property name="visible">True</property>
                                             <style>
                                               <class name="bold"/>
                                               <class name="dim-label"/>
@@ -141,18 +141,18 @@
                         </child>
                         <child>
                           <object class="GtkFlowBoxChild">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="visible">True</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="spacing">6</property>
+                                <property name="visible">True</property>
                                 <child>
                                   <object class="GtkSearchEntry" id="search_entry">
-                                    <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="sensitive" bind-source="refresh_button" bind-property="sensitive" bind-flags="bidirectional|sync-create"/>
                                     <property name="tooltip-text" translatable="yes">Search Files and Folders</property>
+                                    <property name="visible">True</property>
                                     <property name="width-chars">18</property>
                                     <signal name="activate" handler="on_search"/>
                                     <signal name="next-match" handler="on_search_next_accelerator"/>
@@ -162,13 +162,13 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="save_button">
-                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Save Shares List to Disk</property>
+                                    <property name="visible">True</property>
                                     <signal name="clicked" handler="on_save"/>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">True</property>
                                         <property name="icon-name">media-floppy-symbolic</property>
+                                        <property name="visible">True</property>
                                       </object>
                                     </child>
                                     <style>
@@ -178,13 +178,13 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="refresh_button">
-                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Refresh Files</property>
+                                    <property name="visible">True</property>
                                     <signal name="clicked" handler="on_refresh"/>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">True</property>
                                         <property name="icon-name">view-refresh-symbolic</property>
+                                        <property name="visible">True</property>
                                       </object>
                                     </child>
                                     <style>
@@ -194,13 +194,13 @@
                                 </child>
                                 <child>
                                   <object class="GtkToggleButton" id="expand_button">
-                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Expand / Collapse All</property>
+                                    <property name="visible">True</property>
                                     <signal name="toggled" handler="on_expand"/>
                                     <child>
                                       <object class="GtkImage" id="expand_icon">
-                                        <property name="visible">True</property>
                                         <property name="icon-name">go-down-symbolic</property>
+                                        <property name="visible">True</property>
                                       </object>
                                     </child>
                                     <style>
@@ -216,12 +216,12 @@
                     </child>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="vexpand">True</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow" id="folder_tree_container">
-                            <property name="visible">True</property>
                             <property name="hexpand">True</property>
+                            <property name="visible">True</property>
                             <style>
                               <class name="userbrowse-view"/>
                             </style>
@@ -231,13 +231,13 @@
                     </child>
                     <child>
                       <object class="GtkProgressBar" id="progress_bar">
+                        <property name="margin-bottom">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="margin-start">6</property>
+                        <property name="margin-top">6</property>
+                        <property name="pulse-step">0.72</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <property name="margin-start">6</property>
-                        <property name="margin-end">6</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="pulse-step">0.72</property>
                       </object>
                     </child>
                     <style>
@@ -249,21 +249,21 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="vexpand">True</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow" id="file_list_container">
-                            <property name="width-request">450</property>
-                            <property name="visible">True</property>
                             <property name="hexpand">True</property>
+                            <property name="visible">True</property>
+                            <property name="width-request">450</property>
                             <style>
                               <class name="userbrowse-view"/>
                             </style>
