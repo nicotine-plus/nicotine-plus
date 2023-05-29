@@ -42,7 +42,7 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 
 class TabLabel:
 
-    def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
+    def __init__(self, label, full_text=None, close_button_visible=False, close_callback=None):
 
         self.container = Gtk.Box(hexpand=False, visible=True)
         add_css_class(self.container, "notebook-tab")
@@ -215,10 +215,10 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text)
+        self.container.set_tooltip_text(text.strip() if text else None)
 
     def set_text(self, text):
-        self.label.set_text(text)
+        self.label.set_text(text.strip())
 
     def get_text(self):
         return self.label.get_text()
