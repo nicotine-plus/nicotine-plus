@@ -127,25 +127,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="format_message_label">
                 <property name="label" translatable="yes">Now Playing message format:</property>
-                <property name="mnemonic-widget">format_message_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="format_message_combobox">
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>

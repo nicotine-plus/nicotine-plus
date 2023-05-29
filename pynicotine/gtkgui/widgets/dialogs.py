@@ -25,6 +25,7 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
@@ -374,17 +375,12 @@ class EntryDialog(MessageDialog):
 
     def _add_combobox(self, items, visibility=True):
 
-        dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
-        entry = dropdown.get_child()
+        combobox = ComboBox(container=self.container, has_entry=True)
+        entry = combobox.entry
         entry.set_visibility(visibility)
 
         for item in items:
-            dropdown.append_text(item)
-
-        if GTK_API_VERSION >= 4:
-            self.container.append(dropdown)
-        else:
-            self.container.add(dropdown)
+            combobox.append(item)
 
         return entry
 
@@ -502,7 +498,7 @@ class PluginSettingsDialog(Dialog):
     def _generate_label(text):
         return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
-    def _generate_widget_container(self, description, child_widget, homogeneous=False,
+    def _generate_widget_container(self, description, child_widget=None, homogeneous=False,
                                    orientation=Gtk.Orientation.HORIZONTAL):
 
         container = Gtk.Box(homogeneous=homogeneous, orientation=orientation, spacing=12, visible=True)
@@ -510,12 +506,16 @@ class PluginSettingsDialog(Dialog):
 
         if GTK_API_VERSION >= 4:
             container.append(label)                   # pylint: disable=no-member
-            container.append(child_widget)            # pylint: disable=no-member
             self.primary_container.append(container)  # pylint: disable=no-member
+
+            if child_widget:
+                container.append(child_widget)        # pylint: disable=no-member
         else:
-            container.add(label)                   # pylint: disable=no-member
-            container.add(child_widget)            # pylint: disable=no-member
-            self.primary_container.add(container)  # pylint: disable=no-member
+            container.add(label)                      # pylint: disable=no-member
+            self.primary_container.add(container)     # pylint: disable=no-member
+
+            if child_widget:
+                container.add(child_widget)           # pylint: disable=no-member
 
         return label
 
@@ -574,12 +574,12 @@ class PluginSettingsDialog(Dialog):
 
     def _add_dropdown_option(self, option_name, option_value, description, items):
 
-        self.option_widgets[option_name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, combobox, homogeneous=True)
-        label.set_mnemonic_widget(combobox)
+        label = self._generate_widget_container(description, homogeneous=True)
+        self.option_widgets[option_name] = combobox = ComboBox(
+            container=label.get_parent(), label=label)
 
-        for text_label in items:
-            combobox.append(id=text_label, text=text_label)
+        for item in items:
+            combobox.append(item)
 
         self.application.preferences.set_widget(combobox, option_value)
 
@@ -740,8 +740,8 @@ class PluginSettingsDialog(Dialog):
                 # Regular check button
                 return widget.get_active()
 
-        if isinstance(widget, Gtk.ComboBoxText):
-            return widget.get_active_text()
+        if isinstance(widget, ComboBox):
+            return widget.get_selected_id()
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
