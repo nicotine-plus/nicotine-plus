@@ -42,7 +42,7 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 
 class TabLabel:
 
-    def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
+    def __init__(self, label, full_text=None, close_button_visible=False, close_callback=None):
 
         self.container = Gtk.Box(hexpand=False, visible=True)
         add_css_class(self.container, "notebook-tab")
@@ -215,10 +215,10 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text)
+        self.container.set_tooltip_text(text.strip() if text else None)
 
     def set_text(self, text):
-        self.label.set_text(text)
+        self.label.set_text(text.strip())
 
     def get_text(self):
         return self.label.get_text()
@@ -482,7 +482,7 @@ class IconNotebook:
 
     def append_unread_page(self, page, is_important):
 
-        if page in self.unread_pages:
+        if page in self.unread_pages and not is_important:
             return
 
         self.unread_pages[page] = is_important
@@ -490,24 +490,23 @@ class IconNotebook:
 
     def remove_unread_page(self, page):
 
-        is_important = self.unread_pages.pop(page, None)
-
-        if is_important is None:
+        if page not in self.unread_pages:
             return
 
+        important_page_removed = self.unread_pages.pop(page)
         self.update_pages_menu_button()
 
         if self.parent_page is None:
             return
 
-        if is_important and not any(i_is_important for i_is_important in self.unread_pages.values()):
-            # No important unread pages left, reset top-level tab highlight
-            self.window.notebook.remove_tab_changed(self.parent_page)
-            self.window.notebook.request_tab_changed(self.parent_page)
-            return
-
         if not self.unread_pages:
             self.window.notebook.remove_tab_changed(self.parent_page)
+            return
+
+        # No important unread pages left, reset top-level tab highlight
+        if important_page_removed and not any(is_important for is_important in self.unread_pages.values()):
+            self.window.notebook.remove_tab_changed(self.parent_page)
+            self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
 
     """ Tab User Status """
 

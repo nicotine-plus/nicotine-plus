@@ -80,6 +80,9 @@ class ChatRooms(IconNotebook):
         else:
             self.window.chatrooms_paned.child_set_property(self.window.chatrooms_container, "resize", True)
 
+        self.window.room_search_combobox.append_text(core.chatrooms.JOINED_ROOMS_NAME)
+        self.window.room_search_combobox.set_active(0)
+
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
@@ -225,12 +228,13 @@ class ChatRooms(IconNotebook):
 
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(False)
-        else:
-            self.window.room_search_combobox.remove_all()
-            self.window.room_search_combobox.append_text("Joined Rooms ")
+            return
 
-            for joined_room in self.pages:
-                self.window.room_search_combobox.append_text(joined_room)
+        self.window.room_search_combobox.remove_all()
+        self.window.room_search_combobox.append_text(core.chatrooms.JOINED_ROOMS_NAME)
+
+        for joined_room in self.pages:
+            self.window.room_search_combobox.append_text(joined_room)
 
     def highlight_room(self, room, user):
 
@@ -274,8 +278,9 @@ class ChatRooms(IconNotebook):
 
         if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(True)
-        else:
-            self.window.room_search_combobox.append_text(msg.room)
+            return
+
+        self.window.room_search_combobox.append_text(msg.room)
 
     def private_room_added(self, msg):
         user_count = 0

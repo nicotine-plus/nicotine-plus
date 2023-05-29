@@ -2,34 +2,34 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
-    <property name="visible">True</property>
-    <property name="orientation">vertical</property>
-    <property name="margin-start">18</property>
-    <property name="margin-end">18</property>
-    <property name="margin-top">18</property>
     <property name="margin-bottom">18</property>
+    <property name="margin-end">18</property>
+    <property name="margin-start">18</property>
+    <property name="margin-top">18</property>
+    <property name="orientation">vertical</property>
     <property name="spacing">12</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="spacing">12</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkSearchEntry" id="search_entry">
-            <property name="visible">True</property>
             <property name="hexpand">True</property>
+            <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_row_activated"/>
           </object>
         </child>
         <child>
           <object class="GtkButton" id="refresh_button">
-            <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Refresh Rooms</property>
+            <property name="visible">True</property>
             <signal name="clicked" handler="on_refresh"/>
             <child>
               <object class="GtkImage">
-                <property name="visible">True</property>
                 <property name="icon-name">view-refresh-symbolic</property>
+                <property name="visible">True</property>
               </object>
             </child>
             <style>
@@ -42,15 +42,15 @@
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="visible">True</property>
         <property name="vexpand">True</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="list_container">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -59,18 +59,18 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkCheckButton" id="public_feed_toggle">
                 <property name="label" translatable="yes">_Show feed of public chat room messages</property>
-                <property name="visible">True</property>
                 <property name="use-underline">True</property>
+                <property name="visible">True</property>
                 <signal name="toggled" handler="on_toggle_public_feed"/>
               </object>
             </child>
@@ -78,13 +78,13 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkCheckButton" id="private_room_toggle">
                 <property name="label" translatable="yes">_Accept private room invitations</property>
-                <property name="visible">True</property>
                 <property name="use-underline">True</property>
+                <property name="visible">True</property>
               </object>
             </child>
           </object>

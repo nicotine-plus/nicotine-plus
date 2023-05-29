@@ -24,7 +24,9 @@ from pynicotine.logfacility import log
 
 
 class ChatRooms:
-    GLOBAL_ROOM_NAME = "Public "  # Trailing space to avoid conflict with regular rooms
+    # Trailing spaces to avoid conflict with regular rooms
+    GLOBAL_ROOM_NAME = "Public "
+    JOINED_ROOMS_NAME = "Joined Rooms "
 
     def __init__(self):
 
