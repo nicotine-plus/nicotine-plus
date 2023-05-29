@@ -409,16 +409,15 @@ class PrivateChat:
         newmessage = msg.newmessage
         timestamp = msg.timestamp if not newmessage else None
         usertag = self.chat_view.get_user_tag(self.user)
+        tag = self.chat_view.get_line_tag(self.user, text, core.login_username)
 
         self.show_notification(text)
 
-        if text.startswith("/me "):
+        if tag == self.chat_view.tag_action:
             line = f"* {self.user} {text[4:]}"
-            tag = self.chat_view.tag_action
             speech = line[2:]
         else:
             line = f"[{self.user}] {text}"
-            tag = self.chat_view.tag_remote
             speech = text
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
@@ -466,13 +465,12 @@ class PrivateChat:
     def send_message(self, text):
 
         my_username = core.login_username
+        tag = self.chat_view.get_line_tag(my_username, text)
 
-        if text.startswith("/me "):
+        if tag == self.chat_view.tag_action:
             line = f"* {my_username} {text[4:]}"
-            tag = self.chat_view.tag_action
         else:
             line = f"[{my_username}] {text}"
-            tag = self.chat_view.tag_local
 
         self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
                                    username=my_username, usertag=self.chat_view.get_user_tag(my_username))
