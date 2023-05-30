@@ -188,7 +188,7 @@ class RoomList(Popover):
             return
 
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
+            core.chatrooms.show_global_room()
             self.close(use_transition=False)
             return
 
