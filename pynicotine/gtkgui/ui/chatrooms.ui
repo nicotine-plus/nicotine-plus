@@ -150,74 +150,47 @@
                 <child>
                   <object class="GtkBox">
                     <property name="margin-bottom">6</property>
-                    <property name="margin-end">12</property>
+                    <property name="margin-end">6</property>
                     <property name="margin-start">12</property>
                     <property name="margin-top">6</property>
                     <property name="spacing">6</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                        <property name="visible">True</property>
-                        <style>
-                          <class name="heading"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="_users_button">
-                        <property name="action-name">app.configure-ignored-users</property>
-                        <property name="tooltip-text" translatable="yes">Users</property>
+                      <object class="GtkBox">
+                        <property name="hexpand">True</property>
+                        <property name="spacing">6</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkLabel" id="users_label">
-                            <property name="label">0</property>
-                            <property name="mnemonic-widget">_users_button</property>
+                          <object class="GtkLabel">
+                            <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                             <property name="visible">True</property>
                             <style>
-                              <class name="bold"/>
-                              <class name="dim-label"/>
+                              <class name="heading"/>
                             </style>
                           </object>
                         </child>
-                        <style>
-                          <class name="circular"/>
-                          <class name="count"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="vexpand">True</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="users_list_container">
-                        <property name="hexpand">True</property>
-                        <property name="visible">True</property>
-                        <style>
-                          <class name="colored-icon"/>
-                          <class name="user-status"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox" id="users_action_row">
-                    <property name="margin-bottom">8</property>
-                    <property name="margin-end">8</property>
-                    <property name="margin-start">8</property>
-                    <property name="margin-top">8</property>
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkCheckButton" id="auto_join_toggle">
-                        <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">_Auto-join Room</property>
-                        <property name="use-underline">True</property>
-                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkButton" id="_users_button">
+                            <property name="action-name">app.configure-ignored-users</property>
+                            <property name="tooltip-text" translatable="yes">Users</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkLabel" id="users_label">
+                                <property name="label">0</property>
+                                <property name="mnemonic-widget">_users_button</property>
+                                <property name="visible">True</property>
+                                <style>
+                                  <class name="bold"/>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="circular"/>
+                              <class name="count"/>
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
@@ -246,7 +219,23 @@
                           </object>
                         </child>
                         <style>
-                          <class name="image-text-button"/>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="vexpand">True</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="users_list_container">
+                        <property name="hexpand">True</property>
+                        <property name="visible">True</property>
+                        <style>
+                          <class name="colored-icon"/>
+                          <class name="user-status"/>
                         </style>
                       </object>
                     </child>
