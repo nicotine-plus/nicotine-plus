@@ -157,6 +157,7 @@
                 </child>
                 <child>
                   <object class="GtkBox">
+                    <property name="sensitive" bind-source="enable_completion_dropdown_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
