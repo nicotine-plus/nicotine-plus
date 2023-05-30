@@ -40,6 +40,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -1519,9 +1520,7 @@ class UserInterfacePage:
         ) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
-
-        for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
-            self.language_combobox.append(language_code, language_name)
+        self.editing_color = False
 
         self.color_buttons = {
             "chatlocal": self.color_chat_local_button,
@@ -1542,6 +1541,25 @@ class UserInterfacePage:
             "tab_changed": self.color_tab_changed_button
         }
 
+        self.font_buttons = {
+            "globalfont": self.font_global_button,
+            "listfont": self.font_list_button,
+            "textviewfont": self.font_text_view_button,
+            "chatfont": self.font_chat_button,
+            "searchfont": self.font_search_button,
+            "transfersfont": self.font_transfers_button,
+            "browserfont": self.font_browse_button
+        }
+
+        self.tab_position_comboboxes = {
+            "tabmain": self.tab_position_main_combobox,
+            "tabrooms": self.tab_position_chatrooms_combobox,
+            "tabprivate": self.tab_position_private_chat_combobox,
+            "tabsearch": self.tab_position_search_combobox,
+            "tabinfo": self.tab_position_userinfo_combobox,
+            "tabbrowse": self.tab_position_browse_combobox
+        }
+
         self.tab_visible_toggles = {
             "search": self.tab_visible_search_toggle,
             "downloads": self.tab_visible_downloads_toggle,
@@ -1554,14 +1572,21 @@ class UserInterfacePage:
             "interests": self.tab_visible_interests_toggle
         }
 
-        for combobox in (
-            self.tab_position_main_combobox,
-            self.tab_position_search_combobox,
-            self.tab_position_browse_combobox,
-            self.tab_position_private_chat_combobox,
-            self.tab_position_userinfo_combobox,
-            self.tab_position_chatrooms_combobox
-        ):
+        for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
+            self.language_combobox.append(language_code, language_name)
+
+        if GTK_API_VERSION >= 4 and GTK_MINOR_VERSION >= 10:
+            color_dialog = Gtk.ColorDialog()
+            font_dialog = Gtk.FontDialog()
+
+            for button in self.color_buttons.values():
+                button.set_dialog(color_dialog)
+
+            for button in self.font_buttons.values():
+                button.set_dialog(font_dialog)
+                button.set_level(Gtk.FontLevel.FONT)
+
+        for combobox in self.tab_position_comboboxes.values():
             combobox.append("Top", _("Top"))
             combobox.append("Bottom", _("Bottom"))
             combobox.append("Left", _("Left"))
@@ -1620,23 +1645,9 @@ class UserInterfacePage:
                 "startup_hidden": self.minimize_tray_startup_toggle,
                 "language": self.language_combobox,
 
-                "globalfont": self.font_global_button,
-                "listfont": self.font_list_button,
-                "textviewfont": self.font_text_view_button,
-                "chatfont": self.font_chat_button,
-                "searchfont": self.font_search_button,
-                "transfersfont": self.font_transfers_button,
-                "browserfont": self.font_browse_button,
-
                 "reverse_file_paths": self.reverse_file_paths_toggle,
                 "file_size_unit": self.exact_file_sizes_toggle,
 
-                "tabmain": self.tab_position_main_combobox,
-                "tabrooms": self.tab_position_chatrooms_combobox,
-                "tabprivate": self.tab_position_private_chat_combobox,
-                "tabsearch": self.tab_position_search_combobox,
-                "tabinfo": self.tab_position_userinfo_combobox,
-                "tabbrowse": self.tab_position_browse_combobox,
                 "tab_select_previous": self.tab_restore_startup_toggle,
                 "tabclosers": self.tab_close_buttons_toggle,
 
@@ -1664,6 +1675,12 @@ class UserInterfacePage:
             }
         }
 
+        for dictionary in (
+            self.font_buttons,
+            self.tab_position_comboboxes
+        ):
+            self.options["ui"].update(dictionary)
+
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
@@ -1675,8 +1692,6 @@ class UserInterfacePage:
 
             if widget is not None:
                 widget.set_active(enabled)
-
-        self.update_color_buttons()
 
     def get_settings(self):
 
@@ -1703,13 +1718,13 @@ class UserInterfacePage:
                 "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
                 "language": self.language_combobox.get_active_id(),
 
-                "globalfont": self.font_global_button.get_font(),
-                "listfont": self.font_list_button.get_font(),
-                "textviewfont": self.font_text_view_button.get_font(),
-                "chatfont": self.font_chat_button.get_font(),
-                "searchfont": self.font_search_button.get_font(),
-                "transfersfont": self.font_transfers_button.get_font(),
-                "browserfont": self.font_browse_button.get_font(),
+                "globalfont": self.get_font(self.font_global_button),
+                "listfont": self.get_font(self.font_list_button),
+                "textviewfont": self.get_font(self.font_text_view_button),
+                "chatfont": self.get_font(self.font_chat_button),
+                "searchfont": self.get_font(self.font_search_button),
+                "transfersfont": self.get_font(self.font_transfers_button),
+                "browserfont": self.get_font(self.font_browse_button),
 
                 "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
                 "file_size_unit": "B" if self.exact_file_sizes_toggle.get_active() else "",
@@ -1755,59 +1770,65 @@ class UserInterfacePage:
 
     """ Fonts """
 
-    def on_clear_font(self, widget):
-        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("clear_button", "button"))
-        font_button.set_font("")
+    def get_font(self, button):
+
+        if GTK_API_VERSION >= 4:
+            font_desc = button.get_font_desc()
+            return font_desc.to_string() if font_desc.get_family() else ""
+
+        return button.get_font()
+
+    def on_clear_font(self, button):
+
+        font_button = getattr(self, Gtk.Buildable.get_name(button).replace("clear_button", "button"))
+
+        if GTK_API_VERSION >= 4:
+            font_button.set_font_desc(Pango.FontDescription())
+        else:
+            font_button.set_font("")
 
     """ Colors """
 
-    def update_color_button(self, input_config, color_id):
+    def on_color_entry_changed(self, entry):
 
-        color_button = self.color_buttons[color_id]
+        self.editing_color = True
+
         rgba = Gdk.RGBA()
+        rgba.parse(entry.get_text())
 
-        rgba.parse(input_config["ui"][color_id])
+        color_button = getattr(self, Gtk.Buildable.get_name(entry).replace("entry", "button"))
         color_button.set_rgba(rgba)
 
-    def update_color_buttons(self):
-        for color_id in self.color_buttons:
-            self.update_color_button(config.sections, color_id)
+        self.editing_color = False
 
-    def set_default_color(self, color_id):
+    def on_color_button_changed(self, button, *_args):
 
-        defaults = config.defaults
-        entry = self.options["ui"][color_id]
+        if self.editing_color:
+            return
 
-        entry.set_text(defaults["ui"][color_id])
-        self.update_color_button(defaults, color_id)
+        rgba = button.get_rgba()
 
-    def on_color_set(self, widget):
+        if GTK_API_VERSION >= 4 and rgba.is_clear():
+            color_hex = ""
+        else:
+            red_color = round(rgba.red * 255)
+            green_color = round(rgba.green * 255)
+            blue_color = round(rgba.blue * 255)
+            color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
 
-        rgba = widget.get_rgba()
-        red_color = round(rgba.red * 255)
-        green_color = round(rgba.green * 255)
-        blue_color = round(rgba.blue * 255)
-        color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
+        entry = getattr(self, Gtk.Buildable.get_name(button).replace("button", "entry"))
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("button", "entry"))
-        entry.set_text(color_hex)
+        if entry.get_text() != color_hex:
+            entry.set_text(color_hex)
 
-    def on_default_color(self, widget, *_args):
+    def on_default_color(self, entry, *_args):
 
-        for option, value in self.options["ui"].items():
-            if value is widget:
-                self.set_default_color(option)
+        for color_id, widget in self.options["ui"].items():
+            if widget is entry:
+                entry.set_text(config.defaults["ui"][color_id])
                 return
 
-        widget.set_text("")
-
-    def on_colors_changed(self, widget):
-
-        rgba = Gdk.RGBA()
-        rgba.parse(widget.get_text())
-
-        color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("entry", "button"))
-        color_button.set_rgba(rgba)
+        entry.set_text("")
 
 
 class LoggingPage:
@@ -2622,9 +2643,6 @@ class Preferences(Dialog):
         if isinstance(widget, Gtk.ComboBoxText):
             return widget.get_active_text()
 
-        if isinstance(widget, Gtk.FontButton):
-            return widget.get_font()
-
         if isinstance(widget, TreeView):
             return list(widget.iterators)
 
@@ -2653,6 +2671,9 @@ class Preferences(Dialog):
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
+
+        elif isinstance(widget, Gtk.FontDialogButton):
+            widget.set_font_desc(Pango.FontDescription())
 
     @staticmethod
     def set_widget(widget, value):
@@ -2716,6 +2737,9 @@ class Preferences(Dialog):
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)
+
+        elif isinstance(widget, Gtk.FontDialogButton):
+            widget.set_font_desc(Pango.FontDescription.from_string(value))
 
     def set_settings(self):
 
@@ -2952,7 +2976,7 @@ class Preferences(Dialog):
                         for cell in obj.get_cells():
                             cell.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-                elif isinstance(obj, Gtk.FontButton):
+                elif isinstance(obj, Gtk.FontButton) or GTK_API_VERSION >= 4 and isinstance(obj, Gtk.FontDialogButton):
                     if GTK_API_VERSION >= 4:
                         font_button_label = obj.get_first_child().get_first_child().get_first_child()
                     else:
