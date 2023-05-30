@@ -24,8 +24,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -82,6 +80,9 @@ class ChatRooms(IconNotebook):
         else:
             self.window.chatrooms_paned.child_set_property(self.window.chatrooms_container, "resize", True)
 
+        self.window.room_search_combobox.append_text(core.chatrooms.JOINED_ROOMS_NAME)
+        self.window.room_search_combobox.set_active(0)
+
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
@@ -89,7 +90,7 @@ class ChatRooms(IconNotebook):
             ("join-room", self.join_room),
             ("private-room-added", self.private_room_added),
             ("remove-room", self.remove_room),
-            ("room-completion-list", self.set_completion_list),
+            ("room-completions", self.update_completions),
             ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-login", self.server_login),
@@ -109,23 +110,13 @@ class ChatRooms(IconNotebook):
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}
-        previous_autojoin_rooms = config.sections["server"]["autojoin"][:]
 
         # Find position of opened auto-joined rooms
         for room, room_page in self.pages.items():
-            if room not in previous_autojoin_rooms:
-                continue
-
             room_position = self.page_num(room_page.container)
             room_tab_order[room_position] = room
 
-            previous_autojoin_rooms.remove(room)
-
-        # Add opened rooms sorted by tab position first, then closed rooms
-        autojoin_rooms = [room for room_index, room in sorted(room_tab_order.items())]
-        autojoin_rooms.extend(previous_autojoin_rooms)
-
-        config.sections["server"]["autojoin"] = autojoin_rooms
+        config.sections["server"]["autojoin"] = [room for room_index, room in sorted(room_tab_order.items())]
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -137,7 +128,7 @@ class ChatRooms(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(core.chatrooms.completion_list[:])
+            tab.update_room_user_completions()
 
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
@@ -204,12 +195,7 @@ class ChatRooms(IconNotebook):
                 break
 
     def room_list(self, msg):
-
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
-
-        if config.sections["words"]["roomnames"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
 
     def show_room(self, room):
 
@@ -232,12 +218,13 @@ class ChatRooms(IconNotebook):
 
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(False)
-        else:
-            self.window.room_search_combobox.remove_all()
-            self.window.room_search_combobox.append_text("Joined Rooms ")
+            return
 
-            for joined_room in self.pages:
-                self.window.room_search_combobox.append_text(joined_room)
+        self.window.room_search_combobox.remove_all()
+        self.window.room_search_combobox.append_text(core.chatrooms.JOINED_ROOMS_NAME)
+
+        for joined_room in self.pages:
+            self.window.room_search_combobox.append_text(joined_room)
 
     def highlight_room(self, room, user):
 
@@ -281,8 +268,9 @@ class ChatRooms(IconNotebook):
 
         if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
             self.roomlist.toggle_public_feed(True)
-        else:
-            self.window.room_search_combobox.append_text(msg.room)
+            return
+
+        self.window.room_search_combobox.append_text(msg.room)
 
     def private_room_added(self, msg):
         user_count = 0
@@ -360,13 +348,13 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.toggle_chat_buttons()
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(completion_list[:])
+                tab.update_completions(completions)
                 break
 
     def update_tags(self):
@@ -386,7 +374,6 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.clear()
         self.autojoin_rooms.clear()
-        core.chatrooms.update_completions()
 
         for page in self.pages.values():
             page.server_disconnect()
@@ -401,7 +388,6 @@ class ChatRoom:
             self.activity_search_bar,
             self.activity_search_entry,
             self.activity_view_container,
-            self.auto_join_toggle,
             self.chat_container,
             self.chat_entry,
             self.chat_entry_row,
@@ -414,7 +400,6 @@ class ChatRoom:
             self.log_toggle,
             self.room_wall_button,
             self.speech_toggle,
-            self.users_action_row,
             self.users_container,
             self.users_label,
             self.users_list_container,
@@ -431,6 +416,8 @@ class ChatRoom:
             self.users_paned.set_resize_end_child(False)
             self.users_paned.set_shrink_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
+
+            self.room_wall_button.set_has_frame(False)
         else:
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)
@@ -464,9 +451,6 @@ class ChatRoom:
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():
             self.log_toggle.set_active(self.room in config.sections["logging"]["rooms"])
-
-        self.auto_join_toggle.set_active(room in config.sections["server"]["autojoin"])
-        self.auto_join_toggle.connect("toggled", self.on_autojoin)
 
         self.toggle_chat_buttons()
 
@@ -617,16 +601,8 @@ class ChatRoom:
         if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
             return
 
-        for widget in (self.activity_container, self.users_container, self.chat_entry,
-                       self.room_wall_button, self.help_button):
+        for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
             widget.set_visible(False)
-
-        self.users_action_row.remove(self.auto_join_toggle)
-
-        if GTK_API_VERSION >= 4:
-            self.chat_entry_row.append(self.auto_join_toggle)  # pylint: disable=no-member
-        else:
-            self.chat_entry_row.add(self.auto_join_toggle)     # pylint: disable=no-member
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
@@ -1017,9 +993,8 @@ class ChatRoom:
         self.users_list_view.clear()
         self.count_users()
 
-        if (self.room not in config.sections["server"]["autojoin"]
-                and self.room in config.sections["columns"]["chat_room"]):
-            del config.sections["columns"]["chat_room"][self.room]
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
 
         self.chat_view.update_user_tags()
 
@@ -1042,25 +1017,12 @@ class ChatRoom:
         # Update user count
         self.count_users()
 
-        # Build completion list
-        self.set_completion_list(core.chatrooms.completion_list[:])
-
         # Update all username tags in chat log
         self.chat_view.update_user_tags()
 
-    def on_autojoin(self, *_args):
-
-        autojoin = config.sections["server"]["autojoin"]
-        active = self.auto_join_toggle.get_active()
-
-        if not active and self.room in autojoin:
-            autojoin.remove(self.room)
-
-        elif active and self.room not in autojoin:
-            autojoin.append(self.room)
-            self.chatrooms.on_reordered_page()  # Save room order
-
-        config.write_configuration()
+        # Add room users to completion list
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
 
     def on_focus(self, *_args):
         self.chat_entry.grab_focus()
@@ -1102,17 +1064,13 @@ class ChatRoom:
             callback=self.on_delete_room_log_response
         ).show()
 
-    def set_completion_list(self, completion_list):
+    def update_room_user_completions(self):
+        self.update_completions(core.chatrooms.completions.copy())
 
-        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
-            return
+    def update_completions(self, completions):
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            completion_list += self.users_list_view.iterators
+            completions.update(self.users_list_view.iterators)
 
-        # No duplicates
-        completion_list = list(set(completion_list))
-        completion_list.sort(key=strxfrm)
-
-        self.chatrooms.completion.set_completion_list(completion_list)
+        self.chatrooms.completion.set_completions(completions)

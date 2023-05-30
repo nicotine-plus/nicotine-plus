@@ -154,8 +154,12 @@ class UserList:
             country=country,
             status=slskmessages.UserStatus.OFFLINE
         )
-        self.save_buddy_list()
 
+        if config.sections["words"]["buddies"]:
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
+
+        self.save_buddy_list()
         events.emit("add-buddy", user, user_data)
 
         if core.user_status == slskmessages.UserStatus.OFFLINE:
@@ -171,6 +175,10 @@ class UserList:
 
         if user in self.buddies:
             del self.buddies[user]
+
+        if config.sections["words"]["buddies"]:
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
         self.save_buddy_list()
         events.emit("remove-buddy", user)

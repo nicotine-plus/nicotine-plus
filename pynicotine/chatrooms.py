@@ -24,14 +24,16 @@ from pynicotine.logfacility import log
 
 
 class ChatRooms:
-    GLOBAL_ROOM_NAME = "Public "  # Trailing space to avoid conflict with regular rooms
+    # Trailing spaces to avoid conflict with regular rooms
+    GLOBAL_ROOM_NAME = "Public "
+    JOINED_ROOMS_NAME = "Joined Rooms "
 
     def __init__(self):
 
+        self.completions = set()
         self.server_rooms = set()
         self.joined_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
-        self.completion_list = []
 
         for event_name, callback in (
             ("global-room-message", self._global_room_message),
@@ -60,8 +62,8 @@ class ChatRooms:
             events.connect(event_name, callback)
 
     def _quit(self):
+        self.completions.clear()
         self.joined_rooms.clear()
-        self.completion_list.clear()
 
     def _server_login(self, msg):
 
@@ -82,6 +84,7 @@ class ChatRooms:
 
     def _server_disconnect(self, _msg):
         self.server_rooms.clear()
+        self.update_completions()
 
     def show_global_room(self):
         # Fake a JoinRoom protocol message
@@ -113,6 +116,9 @@ class ChatRooms:
 
         if room in config.sections["columns"]["chat_room"]:
             del config.sections["columns"]["chat_room"][room]
+
+        if room in config.sections["server"]["autojoin"]:
+            config.sections["server"]["autojoin"].remove(room)
 
         events.emit("remove-room", room)
 
@@ -199,6 +205,9 @@ class ChatRooms:
         """ Server code: 14 """
 
         self.joined_rooms.add(msg.room)
+
+        if msg.room not in config.sections["server"]["autojoin"]:
+            config.sections["server"]["autojoin"].append(msg.room)
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
@@ -344,6 +353,10 @@ class ChatRooms:
             if room_data["owner"] == login_username:
                 room_data["owner"] = None
 
+        if config.sections["words"]["roomnames"]:
+            self.update_completions()
+            core.privatechat.update_completions()
+
     def _say_chat_room(self, msg):
         """ Server code: 13 """
 
@@ -388,18 +401,19 @@ class ChatRooms:
 
     def update_completions(self):
 
-        self.completion_list = [config.sections["server"]["login"]]
+        self.completions.clear()
+        self.completions.add(config.sections["server"]["login"])
 
         if config.sections["words"]["roomnames"]:
-            self.completion_list += self.server_rooms
+            self.completions.update(self.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completion_list += list(core.userlist.buddies)
+            self.completions.update(core.userlist.buddies)
 
         if config.sections["words"]["commands"]:
-            self.completion_list += core.pluginhandler.get_command_list("chatroom")
+            self.completions.update(core.pluginhandler.get_command_list("chatroom"))
 
-        events.emit("room-completion-list", self.completion_list)
+        events.emit("room-completions", self.completions.copy())
 
 
 class Tickers:

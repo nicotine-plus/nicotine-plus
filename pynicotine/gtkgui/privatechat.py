@@ -23,8 +23,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 
 from pynicotine import slskmessages
@@ -54,7 +52,8 @@ class PrivateChats(IconNotebook):
             window,
             parent=window.private_content,
             parent_page=window.private_page,
-            switch_page_callback=self.on_switch_chat
+            switch_page_callback=self.on_switch_chat,
+            reorder_page_callback=self.on_reordered_page
         )
 
         self.highlighted_users = []
@@ -66,7 +65,7 @@ class PrivateChats(IconNotebook):
             ("clear-private-messages", self.clear_messages),
             ("echo-private-message", self.echo_private_message),
             ("message-user", self.message_user),
-            ("private-chat-completion-list", self.set_completion_list),
+            ("private-chat-completions", self.update_completions),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
             ("send-private-message", self.send_message),
@@ -74,6 +73,16 @@ class PrivateChats(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def on_reordered_page(self, *_args):
+
+        tab_order = {}
+
+        for user, tab in self.pages.items():
+            tab_position = self.page_num(tab.container)
+            tab_order[tab_position] = user
+
+        config.sections["privatechat"]["users"] = [user for tab_index, user in sorted(tab_order.items())]
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -85,7 +94,7 @@ class PrivateChats(IconNotebook):
                 continue
 
             self.completion.set_entry(tab.chat_entry)
-            tab.set_completion_list(core.privatechat.completion_list[:])
+            tab.update_room_user_completions()
 
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
@@ -212,13 +221,13 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.toggle_chat_buttons()
 
-    def set_completion_list(self, completion_list):
+    def update_completions(self, completions):
 
         page = self.get_current_page()
 
         for tab in self.pages.values():
             if tab.container == page:
-                tab.set_completion_list(completion_list[:])
+                tab.update_completions(completions)
                 break
 
     def update_tags(self):
@@ -226,8 +235,6 @@ class PrivateChats(IconNotebook):
             page.update_tags()
 
     def server_disconnect(self, *_args):
-
-        core.privatechat.update_completions()
 
         for user, page in self.pages.items():
             page.server_disconnect()
@@ -496,16 +503,12 @@ class PrivateChat:
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()
 
-    def set_completion_list(self, completion_list):
+    def update_room_user_completions(self):
+        self.update_completions(core.privatechat.completions.copy())
 
-        if not config.sections["words"]["tab"] and not config.sections["words"]["dropdown"]:
-            return
+    def update_completions(self, completions):
 
         # Tab-complete the recipient username
-        completion_list.append(self.user)
+        completions.add(self.user)
 
-        # No duplicates
-        completion_list = list(set(completion_list))
-        completion_list.sort(key=strxfrm)
-
-        self.chats.completion.set_completion_list(completion_list)
+        self.chats.completion.set_completions(completions)
