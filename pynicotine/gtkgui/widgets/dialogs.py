@@ -27,7 +27,6 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.window import Window
 
 """ Dialogs """
@@ -619,6 +618,7 @@ class PluginSettingsDialog(Dialog):
         frame_container = Gtk.Frame(child=scrolled_window, visible=True)
         container = Gtk.Box(spacing=6, visible=True)
 
+        from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
             self.application.window, parent=scrolled_window,
             columns={
@@ -743,6 +743,7 @@ class PluginSettingsDialog(Dialog):
         if isinstance(widget, Gtk.ComboBoxText):
             return widget.get_active_text()
 
+        from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
             return list(widget.iterators)
 
