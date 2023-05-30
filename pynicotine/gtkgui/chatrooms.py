@@ -256,8 +256,13 @@ class ChatRooms(IconNotebook):
             return
 
         self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users)
+        is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
 
-        self.append_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
+        if is_global:
+            self.prepend_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
+        else:
+            self.append_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
+
         tab.set_label(self.get_tab_label_inner(tab.container))
 
         if msg.room in self.autojoin_rooms:
@@ -266,7 +271,7 @@ class ChatRooms(IconNotebook):
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
 
-        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
+        if is_global:
             self.roomlist.toggle_public_feed(True)
             return
 
@@ -367,7 +372,7 @@ class ChatRooms(IconNotebook):
             return
 
         for room in config.sections["server"]["autojoin"]:
-            if isinstance(room, str):
+            if isinstance(room, str) and room not in core.chatrooms.GLOBAL_ROOM_NAME:
                 self.autojoin_rooms.add(room)
 
     def server_disconnect(self, *_args):

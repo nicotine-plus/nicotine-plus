@@ -329,6 +329,10 @@ class IconNotebook:
             tab_label.set_text(tab_label.get_text())
 
     def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
+
+    def insert_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None,
+                    position=None):
 
         if full_text is None:
             full_text = text
@@ -347,13 +351,20 @@ class IconNotebook:
 
         page.focus_callback = focus_callback
 
-        self.widget.append_page(page, tab_label.container)
+        if position is None:
+            # Open new tab adjacent to current tab
+            position = self.widget.get_current_page() + 1
+
+        self.widget.insert_page(page, tab_label.container, position)
         self.set_tab_reorderable(page, True)
         self.parent.set_visible(True)
 
         if user is not None:
             status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
+
+    def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=0)
 
     def remove_page(self, page):
 
