@@ -27,6 +27,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.window import Window
 
 """ Dialogs """
@@ -618,7 +619,6 @@ class PluginSettingsDialog(Dialog):
         frame_container = Gtk.Frame(child=scrolled_window, visible=True)
         container = Gtk.Box(spacing=6, visible=True)
 
-        from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
             self.application.window, parent=scrolled_window,
             columns={
@@ -712,6 +712,45 @@ class PluginSettingsDialog(Dialog):
                 self._add_file_option(
                     option_name, option_value, description, file_chooser_type=data.get("chooser"))
 
+    @staticmethod
+    def _get_widget_data(widget):
+
+        if isinstance(widget, Gtk.SpinButton):
+            if widget.get_digits() > 0:
+                return widget.get_value()
+
+            return widget.get_value_as_int()
+
+        if isinstance(widget, Gtk.Entry):
+            return widget.get_text()
+
+        if isinstance(widget, TextView):
+            return widget.get_text()
+
+        if isinstance(widget, Gtk.CheckButton):
+            try:
+                # Radio button
+                for radio in widget.group_radios:
+                    if radio.get_active():
+                        return widget.group_radios.index(radio)
+
+                return 0
+
+            except (AttributeError, TypeError):
+                # Regular check button
+                return widget.get_active()
+
+        if isinstance(widget, Gtk.ComboBoxText):
+            return widget.get_active_text()
+
+        if isinstance(widget, TreeView):
+            return list(widget.iterators)
+
+        if isinstance(widget, FileChooserButton):
+            return widget.get_path()
+
+        return None
+
     def on_add_response(self, window, _response_id, treeview):
 
         value = window.get_entry_value()
@@ -764,7 +803,7 @@ class PluginSettingsDialog(Dialog):
     def on_ok(self, *_args):
 
         for name in self.plugin_settings:
-            value = self.application.preferences.get_widget_data(self.option_widgets[name])
+            value = self._get_widget_data(self.option_widgets[name])
 
             if value is not None:
                 config.sections["plugins"][self.plugin_id.lower()][name] = value

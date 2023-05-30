@@ -2613,45 +2613,6 @@ class Preferences(Dialog):
                     self.set_widget(widget, config.sections[section][key])
 
     @staticmethod
-    def get_widget_data(widget):
-
-        if isinstance(widget, Gtk.SpinButton):
-            if widget.get_digits() > 0:
-                return widget.get_value()
-
-            return widget.get_value_as_int()
-
-        if isinstance(widget, Gtk.Entry):
-            return widget.get_text()
-
-        if isinstance(widget, TextView):
-            return widget.get_text()
-
-        if isinstance(widget, Gtk.CheckButton):
-            try:
-                # Radio button
-                for radio in widget.group_radios:
-                    if radio.get_active():
-                        return widget.group_radios.index(radio)
-
-                return 0
-
-            except (AttributeError, TypeError):
-                # Regular check button
-                return widget.get_active()
-
-        if isinstance(widget, Gtk.ComboBoxText):
-            return widget.get_active_text()
-
-        if isinstance(widget, TreeView):
-            return list(widget.iterators)
-
-        if isinstance(widget, FileChooserButton):
-            return widget.get_path()
-
-        return None
-
-    @staticmethod
     def clear_widget(widget):
 
         if isinstance(widget, Gtk.SpinButton):
