@@ -278,6 +278,9 @@ class ChatCompletion:
         preix = i - last_word_len
 
         if not self.midway_completion:
+            if last_word_len < 1:
+                return False
+
             last_word_lower = last_word.lower()
             self.current_completions = [
                 x for x in self.completions if x.lower().startswith(last_word_lower) and len(x) >= last_word_len
