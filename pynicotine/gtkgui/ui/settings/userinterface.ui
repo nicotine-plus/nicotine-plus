@@ -38,7 +38,6 @@
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="tooltip-text" translatable="yes">Note that the operating system's theme may take precedence.</property>
                     <property name="visible">True</property>
-                    <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -999,7 +998,6 @@
                   <object class="GtkCheckButton" id="chat_colored_usernames_toggle">
                     <property name="label" translatable="yes">Enable colored usernames</property>
                     <property name="visible">True</property>
-                    <signal name="toggled" handler="on_colors_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1021,7 +1019,6 @@
                       <object class="GtkComboBoxText" id="chat_username_appearance_combobox">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="changed" handler="on_colors_changed"/>
                         <items>
                           <item id="bold">bold</item>
                           <item id="italic">italic</item>
@@ -1603,7 +1600,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1650,7 +1646,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1697,7 +1692,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1744,7 +1738,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1791,7 +1784,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1838,7 +1830,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1885,7 +1876,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1958,7 +1948,6 @@
                       <object class="GtkButton" id="icon_theme_button">
                         <property name="hexpand">True</property>
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>

@@ -1519,7 +1519,6 @@ class UserInterfacePage:
         ) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
-        self.theme_required = False
 
         for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
             self.language_combobox.append(language_code, language_name)
@@ -1668,7 +1667,6 @@ class UserInterfacePage:
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
-        self.theme_required = False
 
         self.tray_options_container.set_visible(self.application.tray_icon.available)
 
@@ -1754,21 +1752,14 @@ class UserInterfacePage:
 
     def on_clear_icon_theme(self, *_args):
         self.icon_theme_button.clear()
-        self.theme_required = True
 
     """ Fonts """
 
     def on_clear_font(self, widget):
-
         font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("clear_button", "button"))
         font_button.set_font("")
 
-        self.theme_required = True
-
     """ Colors """
-
-    def on_theme_changed(self, *_args):
-        self.theme_required = True
 
     def update_color_button(self, input_config, color_id):
 
@@ -1812,14 +1803,11 @@ class UserInterfacePage:
 
     def on_colors_changed(self, widget):
 
-        if isinstance(widget, Gtk.Entry):
-            rgba = Gdk.RGBA()
-            rgba.parse(widget.get_text())
+        rgba = Gdk.RGBA()
+        rgba.parse(widget.get_text())
 
-            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("entry", "button"))
-            color_button.set_rgba(rgba)
-
-        self.theme_required = True
+        color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("entry", "button"))
+        color_button.set_rgba(rgba)
 
 
 class LoggingPage:
@@ -2768,12 +2756,6 @@ class Preferences(Dialog):
             rescan_required = False
 
         try:
-            theme_required = self.pages["user-interface"].theme_required
-
-        except KeyError:
-            theme_required = False
-
-        try:
             user_profile_required = self.pages["user-profile"].user_profile_required
 
         except KeyError:
@@ -2797,12 +2779,12 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        return (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
+        return (portmap_required, rescan_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, user_profile_required, completion_required,
+        (portmap_required, rescan_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
@@ -2812,22 +2794,6 @@ class Preferences(Dialog):
             core.protothread.portmapper.add_port_mapping()
         else:
             core.protothread.portmapper.remove_port_mapping()
-
-        if theme_required:
-            # Dark mode
-            dark_mode_state = config.sections["ui"]["dark_mode"]
-            set_dark_mode(dark_mode_state)
-            self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
-
-            # Icons
-            load_custom_icons(update=True)
-            self.application.tray_icon.update_icon_theme()
-
-            # Fonts and colors
-            update_custom_css()
-
-            self.application.window.chatrooms.update_tags()
-            self.application.window.privatechat.update_tags()
 
         if user_profile_required and core.login_username:
             core.userinfo.show_user(core.login_username, refresh=True)
@@ -2841,6 +2807,21 @@ class Preferences(Dialog):
 
         if search_required:
             self.application.window.search.populate_search_history()
+
+        # Dark mode
+        dark_mode_state = config.sections["ui"]["dark_mode"]
+        set_dark_mode(dark_mode_state)
+        self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
+
+        # Icons
+        load_custom_icons(update=True)
+        self.application.tray_icon.update_icon_theme()
+
+        # Fonts and colors
+        update_custom_css()
+
+        self.application.window.chatrooms.update_tags()
+        self.application.window.privatechat.update_tags()
 
         # Chatrooms
         self.application.window.chatrooms.toggle_chat_buttons()
