@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-23 00:08+0000\n"
+"PO-Revision-Date: 2023-05-30 22:51+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -974,7 +974,7 @@ msgstr "Ausente (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1497
 msgid "Offline (Tray)"
-msgstr "Desconectado (Baneja)"
+msgstr "Offline (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1498
 msgid "Message (Tray)"
