@@ -77,7 +77,6 @@
             <child>
               <object class="GtkSpinButton" id="recent_private_messages_spinner">
                 <property name="adjustment">_recent_private_messages_adjustment</property>
-                <property name="max-width-chars">9</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -103,7 +102,6 @@
             <child>
               <object class="GtkSpinButton" id="recent_room_messages_spinner">
                 <property name="adjustment">_recent_room_messages_adjustment</property>
-                <property name="max-width-chars">9</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -174,7 +172,6 @@
                     <child>
                       <object class="GtkSpinButton" id="min_chars_dropdown_spinner">
                         <property name="adjustment">_min_chars_dropdown_adjustment</property>
-                        <property name="max-width-chars">9</property>
                         <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
@@ -327,7 +324,7 @@
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">14</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_timestamp_private_chat"/>
               </object>
             </child>
@@ -355,7 +352,7 @@
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">14</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_timestamp_room"/>
               </object>
             </child>
@@ -408,7 +405,7 @@
                 <child internal-child="entry">
                   <object class="GtkEntry">
                     <property name="visible">True</property>
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
                 <items>
@@ -440,7 +437,7 @@
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">14</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_tts_private_message"/>
               </object>
             </child>
@@ -467,7 +464,7 @@
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">14</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_tts_room_message"/>
               </object>
             </child>

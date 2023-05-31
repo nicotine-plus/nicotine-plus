@@ -55,7 +55,7 @@
                     <property name="tooltip-text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">15</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -77,7 +77,7 @@
                     <property name="sensitive" bind-source="geo_block_message_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">15</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -99,7 +99,7 @@
                     <property name="sensitive" bind-source="ban_message_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">15</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>

@@ -82,7 +82,7 @@
                               <object class="GtkEntry" id="username_entry">
                                 <property name="hexpand">True</property>
                                 <property name="visible">True</property>
-                                <property name="width-chars">12</property>
+                                <property name="width-chars">10</property>
                               </object>
                             </child>
                             <child>
@@ -178,8 +178,6 @@
                         <child>
                           <object class="GtkSpinButton" id="listen_port_spinner">
                             <property name="adjustment">_listen_port_adjustment</property>
-                            <property name="halign">end</property>
-                            <property name="max-width-chars">6</property>
                             <property name="numeric">True</property>
                             <property name="valign">center</property>
                             <property name="visible">True</property>
@@ -232,7 +230,6 @@
             <child>
               <object class="GtkSpinButton" id="auto_away_spinner">
                 <property name="adjustment">_auto_away_adjustment</property>
-                <property name="max-width-chars">6</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -259,7 +256,7 @@
               <object class="GtkEntry" id="auto_reply_message_entry">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">16</property>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -320,7 +317,7 @@
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">16</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_server"/>
               </object>
             </child>
@@ -349,7 +346,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <object class="GtkEntry">
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>

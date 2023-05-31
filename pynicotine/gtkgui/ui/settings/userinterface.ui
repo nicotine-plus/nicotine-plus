@@ -358,7 +358,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -400,7 +400,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -442,7 +442,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -911,7 +911,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -953,7 +953,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -1069,7 +1069,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1111,7 +1111,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1153,7 +1153,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1195,7 +1195,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1237,7 +1237,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1279,7 +1279,7 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
                             <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
@@ -1350,7 +1350,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -1392,7 +1392,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -1434,7 +1434,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -1503,7 +1503,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
@@ -1545,7 +1545,7 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
                         <signal name="changed" handler="on_color_entry_changed"/>
                       </object>

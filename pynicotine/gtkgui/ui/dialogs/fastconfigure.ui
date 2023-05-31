@@ -287,7 +287,6 @@
           <object class="GtkSpinButton" id="listen_port_entry">
             <property name="adjustment">_listen_port_adjustment</property>
             <property name="halign">center</property>
-            <property name="max-width-chars">6</property>
             <property name="numeric">True</property>
             <property name="valign">center</property>
             <property name="visible">True</property>

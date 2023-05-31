@@ -81,7 +81,6 @@
             <child>
               <object class="GtkSpinButton" id="max_displayed_results_spinner">
                 <property name="adjustment">_max_displayed_results_adjustment</property>
-                <property name="max-width-chars">9</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -174,7 +173,7 @@
                 <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">16</property>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -199,7 +198,7 @@
                 <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">16</property>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -228,7 +227,7 @@
                     <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">16</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -259,7 +258,7 @@
                     <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">16</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -290,7 +289,7 @@
                     <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">16</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -321,7 +320,7 @@
                     <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">16</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -352,7 +351,7 @@
                     <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">16</property>
+                    <property name="width-chars">8</property>
                   </object>
                 </child>
               </object>
@@ -493,7 +492,6 @@
                 <child>
                   <object class="GtkSpinButton" id="min_search_term_length_spinner">
                     <property name="adjustment">_min_search_term_length_adjustment</property>
-                    <property name="max-width-chars">9</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -519,7 +517,6 @@
                 <child>
                   <object class="GtkSpinButton" id="max_sent_results_spinner">
                     <property name="adjustment">_max_sent_results_adjustment</property>
-                    <property name="max-width-chars">9</property>
                     <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>

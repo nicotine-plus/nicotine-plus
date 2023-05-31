@@ -64,7 +64,7 @@
                   <object class="GtkEntry">
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">6</property>
                     <signal name="icon-press" handler="on_default_media_player"/>
                   </object>
                 </child>
@@ -104,7 +104,7 @@
                   <object class="GtkEntry">
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="width-chars">12</property>
+                    <property name="width-chars">6</property>
                     <signal name="icon-press" handler="on_default_file_manager"/>
                   </object>
                 </child>
