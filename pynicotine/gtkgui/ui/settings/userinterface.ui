@@ -38,7 +38,6 @@
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="tooltip-text" translatable="yes">Note that the operating system's theme may take precedence.</property>
                     <property name="visible">True</property>
-                    <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -350,7 +349,7 @@
                           <object class="GtkColorButton" id="color_tab_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -359,9 +358,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -392,7 +391,7 @@
                           <object class="GtkColorButton" id="color_tab_changed_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -401,9 +400,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -434,7 +433,7 @@
                           <object class="GtkColorButton" id="color_tab_highlighted_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -443,9 +442,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -903,7 +902,7 @@
                       <object class="GtkColorButton" id="color_list_text_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -912,9 +911,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -945,7 +944,7 @@
                       <object class="GtkColorButton" id="color_queued_result_text_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -954,9 +953,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -999,7 +998,6 @@
                   <object class="GtkCheckButton" id="chat_colored_usernames_toggle">
                     <property name="label" translatable="yes">Enable colored usernames</property>
                     <property name="visible">True</property>
-                    <signal name="toggled" handler="on_colors_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1021,7 +1019,6 @@
                       <object class="GtkComboBoxText" id="chat_username_appearance_combobox">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="changed" handler="on_colors_changed"/>
                         <items>
                           <item id="bold">bold</item>
                           <item id="italic">italic</item>
@@ -1063,7 +1060,7 @@
                           <object class="GtkColorButton" id="color_chat_remote_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1072,9 +1069,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1105,7 +1102,7 @@
                           <object class="GtkColorButton" id="color_chat_local_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1114,9 +1111,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1147,7 +1144,7 @@
                           <object class="GtkColorButton" id="color_chat_command_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1156,9 +1153,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1189,7 +1186,7 @@
                           <object class="GtkColorButton" id="color_chat_action_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1198,9 +1195,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1231,7 +1228,7 @@
                           <object class="GtkColorButton" id="color_chat_highlighted_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1240,9 +1237,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1273,7 +1270,7 @@
                           <object class="GtkColorButton" id="color_url_button">
                             <property name="valign">center</property>
                             <property name="visible">True</property>
-                            <signal name="color-set" handler="on_color_set"/>
+                            <signal name="notify::rgba" handler="on_color_button_changed"/>
                           </object>
                         </child>
                         <child>
@@ -1282,9 +1279,9 @@
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">4</property>
                             <signal name="icon-press" handler="on_default_color"/>
-                            <signal name="changed" handler="on_colors_changed"/>
+                            <signal name="changed" handler="on_color_entry_changed"/>
                           </object>
                         </child>
                       </object>
@@ -1344,7 +1341,7 @@
                       <object class="GtkColorButton" id="color_status_online_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -1353,9 +1350,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -1386,7 +1383,7 @@
                       <object class="GtkColorButton" id="color_status_away_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -1395,9 +1392,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -1428,7 +1425,7 @@
                       <object class="GtkColorButton" id="color_status_offline_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -1437,9 +1434,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -1497,7 +1494,7 @@
                       <object class="GtkColorButton" id="color_input_background_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -1506,9 +1503,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -1539,7 +1536,7 @@
                       <object class="GtkColorButton" id="color_input_text_button">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="color-set" handler="on_color_set"/>
+                        <signal name="notify::rgba" handler="on_color_button_changed"/>
                       </object>
                     </child>
                     <child>
@@ -1548,9 +1545,9 @@
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">7</property>
+                        <property name="width-chars">4</property>
                         <signal name="icon-press" handler="on_default_color"/>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <signal name="changed" handler="on_color_entry_changed"/>
                       </object>
                     </child>
                   </object>
@@ -1603,7 +1600,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1650,7 +1646,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1697,7 +1692,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1744,7 +1738,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1791,7 +1784,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1838,7 +1830,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1885,7 +1876,6 @@
                     <property name="hexpand">True</property>
                     <property name="use-font">True</property>
                     <property name="visible">True</property>
-                    <signal name="font-set" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -1958,7 +1948,6 @@
                       <object class="GtkButton" id="icon_theme_button">
                         <property name="hexpand">True</property>
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
