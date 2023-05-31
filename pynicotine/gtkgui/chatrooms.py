@@ -372,7 +372,7 @@ class ChatRooms(IconNotebook):
             return
 
         for room in config.sections["server"]["autojoin"]:
-            if isinstance(room, str) and room not in core.chatrooms.GLOBAL_ROOM_NAME:
+            if isinstance(room, str) and room != core.chatrooms.GLOBAL_ROOM_NAME:
                 self.autojoin_rooms.add(room)
 
     def server_disconnect(self, *_args):
