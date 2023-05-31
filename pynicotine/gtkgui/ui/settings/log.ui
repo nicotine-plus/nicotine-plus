@@ -73,7 +73,7 @@
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <property name="width-chars">14</property>
+                <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_timestamp"/>
               </object>
             </child>

@@ -69,7 +69,6 @@ class ChatRooms(IconNotebook):
             reorder_page_callback=self.on_reordered_page
         )
 
-        self.autojoin_rooms = set()
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
@@ -93,7 +92,6 @@ class ChatRooms(IconNotebook):
             ("room-completions", self.update_completions),
             ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
-            ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
             ("ticker-add", self.ticker_add),
@@ -250,6 +248,10 @@ class ChatRooms(IconNotebook):
     def join_room(self, msg):
 
         page = self.pages.get(msg.room)
+        is_auto_joined = (msg.room in core.chatrooms.pending_autojoin_rooms)
+
+        if is_auto_joined:
+            core.chatrooms.pending_autojoin_rooms.remove(msg.room)
 
         if page is not None:
             page.join_room(msg)
@@ -265,9 +267,7 @@ class ChatRooms(IconNotebook):
 
         tab.set_label(self.get_tab_label_inner(tab.container))
 
-        if msg.room in self.autojoin_rooms:
-            self.autojoin_rooms.remove(msg.room)
-        else:
+        if not is_auto_joined:
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
 
@@ -366,19 +366,9 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
-    def server_login(self, msg):
-
-        if not msg.success:
-            return
-
-        for room in config.sections["server"]["autojoin"]:
-            if isinstance(room, str) and room != core.chatrooms.GLOBAL_ROOM_NAME:
-                self.autojoin_rooms.add(room)
-
     def server_disconnect(self, *_args):
 
         self.roomlist.clear()
-        self.autojoin_rooms.clear()
 
         for page in self.pages.values():
             page.server_disconnect()

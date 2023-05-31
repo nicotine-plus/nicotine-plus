@@ -33,6 +33,7 @@ class ChatRooms:
         self.completions = set()
         self.server_rooms = set()
         self.joined_rooms = set()
+        self.pending_autojoin_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
 
         for event_name, callback in (
@@ -76,14 +77,19 @@ class ChatRooms:
             join_list = config.sections["server"]["autojoin"]
 
         for room in join_list:
+            if not isinstance(room, str):
+                continue
+
+            self.pending_autojoin_rooms.add(room)
+
             if room == self.GLOBAL_ROOM_NAME:
                 self.show_global_room()
-
-            elif isinstance(room, str):
+            else:
                 core.queue.append(slskmessages.JoinRoom(room))
 
     def _server_disconnect(self, _msg):
         self.server_rooms.clear()
+        self.pending_autojoin_rooms.clear()
         self.update_completions()
 
     def show_global_room(self):

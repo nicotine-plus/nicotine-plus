@@ -173,7 +173,7 @@
             <child>
               <object class="GtkSpinButton" id="speed_spinner">
                 <property name="adjustment">_speed_adjustment</property>
-                <property name="max-width-chars">8</property>
+                <property name="max-width-chars">6</property>
                 <property name="numeric">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
@@ -197,7 +197,6 @@
             <child>
               <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="adjustment">_alt_speed_adjustment</property>
-                <property name="max-width-chars">8</property>
                 <property name="numeric">True</property>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
@@ -254,7 +253,6 @@
                 <child>
                   <object class="GtkSpinButton" id="max_queued_size_spinner">
                     <property name="adjustment">_max_queued_size_adjustment</property>
-                    <property name="max-width-chars">10</property>
                     <property name="numeric">True</property>
                     <property name="tooltip-text" translatable="yes">Mebibytes (2^20 bytes).</property>
                     <property name="valign">center</property>
@@ -280,7 +278,6 @@
             <child>
               <object class="GtkSpinButton" id="max_queued_files_spinner">
                 <property name="adjustment">_max_queued_files_adjustment</property>
-                <property name="max-width-chars">10</property>
                 <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -356,7 +353,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkRadioButton" id="_use_upload_bandwidth_radio">
+              <object class="GtkRadioButton" id="use_upload_bandwidth_radio">
                 <property name="active">True</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Queue uploads if total transfer speed reaches (KiB/s):</property>
@@ -366,7 +363,6 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <child>
               <object class="GtkSpinButton" id="upload_bandwidth_spinner">
                 <property name="adjustment">_upload_bandwidth_adjustment</property>
-                <property name="max-width-chars">8</property>
                 <property name="numeric">True</property>
                 <property name="sensitive" bind-source="use_upload_slots_radio" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
                 <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
@@ -382,7 +378,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <property name="visible">True</property>
             <child>
               <object class="GtkRadioButton" id="use_upload_slots_radio">
-                <property name="group">_use_upload_bandwidth_radio</property>
+                <property name="group">use_upload_bandwidth_radio</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Limit number of upload slots to:</property>
                 <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
@@ -392,7 +388,6 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <child>
               <object class="GtkSpinButton" id="upload_slots_spinner">
                 <property name="adjustment">_upload_slots_adjustment</property>
-                <property name="max-width-chars">8</property>
                 <property name="numeric">True</property>
                 <property name="sensitive" bind-source="use_upload_slots_radio" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="valign">center</property>

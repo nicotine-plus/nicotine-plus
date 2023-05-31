@@ -732,6 +732,7 @@ class UploadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
+            self.use_upload_bandwidth_radio,
             self.use_upload_slots_radio
         ) = ui.load(scope=self, path="settings/uploads.ui")
 

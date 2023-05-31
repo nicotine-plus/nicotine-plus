@@ -157,6 +157,8 @@ class Application:
             ("configure-chats", self.on_configure_chats, None, True),
             ("configure-searches", self.on_configure_searches, None, True),
             ("configure-ignored-users", self.on_configure_ignored_users, None, True),
+            ("configure-account", self.on_configure_account, None, True),
+            ("configure-user-profile", self.on_configure_user_profile, None, True),
             ("personal-profile", self.on_personal_profile, None, False),
 
             # Notifications
@@ -555,6 +557,12 @@ class Application:
 
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")
+
+    def on_configure_account(self, *_args):
+        self.on_preferences(page_id="network")
+
+    def on_configure_user_profile(self, *_args):
+        self.on_preferences(page_id="user-profile")
 
     def on_personal_profile(self, *_args):
         core.userinfo.show_user(core.login_username)

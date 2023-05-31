@@ -277,13 +277,7 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css = css + css_gtk4
-
-        try:
-            global_css_provider.load_from_data(css)
-
-        except TypeError:
-            # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
-            global_css_provider.load_from_data(css.decode("utf-8"), length=-1)
+        load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
             Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -291,7 +285,7 @@ def set_global_css():
 
     else:
         css = css + css_gtk3
-        global_css_provider.load_from_data(css)
+        load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
             Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -546,6 +540,19 @@ def remove_css_class(widget, css_class):
     widget.get_style_context().remove_class(css_class)  # pylint: disable=no-member
 
 
+def load_css(css_provider, data):
+
+    try:
+        css_provider.load_from_string(data.decode("utf-8"))
+
+    except AttributeError:
+        try:
+            css_provider.load_from_data(data.decode("utf-8"), length=-1)
+
+        except TypeError:
+            css_provider.load_from_data(data)
+
+
 def _get_custom_font_css():
 
     css = bytearray()
@@ -652,12 +659,7 @@ def update_custom_css():
     css.extend(_get_custom_font_css())
     css.extend(_get_custom_color_css())
 
-    try:
-        CUSTOM_CSS_PROVIDER.load_from_data(css)
-
-    except TypeError:
-        # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
-        CUSTOM_CSS_PROVIDER.load_from_data(css.decode("utf-8"), length=-1)
+    load_css(CUSTOM_CSS_PROVIDER, css)
 
     if GTK_API_VERSION >= 4:
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
