@@ -467,7 +467,7 @@ class IconNotebook:
                 # Highlight top-level tab
                 self.window.notebook.request_tab_changed(self.parent_page, is_important)
 
-            if is_current_page:
+            elif is_current_page:
                 return
 
             self.append_unread_page(page, is_important)
