@@ -69,7 +69,7 @@ class ChatRooms(IconNotebook):
             reorder_page_callback=self.on_reordered_page
         )
 
-        self.autojoin_rooms = set()
+        self._pending_autojoin_rooms = set()
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
@@ -260,8 +260,8 @@ class ChatRooms(IconNotebook):
         self.append_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
         tab.set_label(self.get_tab_label_inner(tab.container))
 
-        if msg.room in self.autojoin_rooms:
-            self.autojoin_rooms.remove(msg.room)
+        if msg.room in self._pending_autojoin_rooms:
+            self._pending_autojoin_rooms.remove(msg.room)
         else:
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
@@ -368,12 +368,12 @@ class ChatRooms(IconNotebook):
 
         for room in config.sections["server"]["autojoin"]:
             if isinstance(room, str):
-                self.autojoin_rooms.add(room)
+                self._pending_autojoin_rooms.add(room)
 
     def server_disconnect(self, *_args):
 
         self.roomlist.clear()
-        self.autojoin_rooms.clear()
+        self._pending_autojoin_rooms.clear()
 
         for page in self.pages.values():
             page.server_disconnect()
