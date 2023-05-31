@@ -22,8 +22,10 @@ venv/*
 .env/
 
 # Ignore packaging directories and files
+*.json~
 install.txt
 MANIFEST
+.flatpak-builder/
 build/
 dist/
 debian/files

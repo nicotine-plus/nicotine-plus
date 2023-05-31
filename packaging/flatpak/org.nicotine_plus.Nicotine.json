@@ -1,11 +1,11 @@
 {
-    "app-id": "org.nicotine_plus.Nicotine",
-    "runtime": "org.gnome.Platform",
-    "runtime-version": "44",
-    "sdk": "org.gnome.Sdk",
-    "command": "nicotine",
-    "separate-locales": false,
-    "finish-args": [
+    "app-id" : "org.nicotine_plus.Nicotine",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "43",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "nicotine",
+    "separate-locales" : false,
+    "finish-args" : [
         "--socket=wayland",
         "--socket=fallback-x11",
         "--share=ipc",
@@ -17,19 +17,22 @@
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
-    "modules": [
+    "modules" : [
         {
-            "name": "nicotine-plus",
-            "buildsystem": "simple",
-            "build-commands": [
+            "name" : "nicotine-plus",
+            "buildsystem" : "simple",
+            "build-commands" : [
                 "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} . --no-build-isolation"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "path": "../../",
-                    "type": "dir"
+                    "path" : "../../",
+                    "type" : "dir"
                 }
             ]
         }
-    ]
+    ],
+    "build-options" : {
+        "env" : {        }
+    }
 }
