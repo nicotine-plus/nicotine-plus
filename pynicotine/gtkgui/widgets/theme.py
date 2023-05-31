@@ -543,7 +543,7 @@ def remove_css_class(widget, css_class):
 def load_css(css_provider, data):
 
     try:
-        css_provider.load_from_bytes(data)
+        css_provider.load_from_string(data.decode("utf-8"))
 
     except AttributeError:
         try:
