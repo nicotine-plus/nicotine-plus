@@ -86,6 +86,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="command_entry">
+                <property name="activates-default">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>

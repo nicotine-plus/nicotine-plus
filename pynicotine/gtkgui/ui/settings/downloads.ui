@@ -312,6 +312,7 @@
                 </child>
                 <child>
                   <object class="GtkEntry" id="file_finished_command_entry">
+                    <property name="activates-default">True</property>
                     <property name="visible">True</property>
                     <property name="width-chars">16</property>
                   </object>
@@ -335,6 +336,7 @@
                 </child>
                 <child>
                   <object class="GtkEntry" id="folder_finished_command_entry">
+                    <property name="activates-default">True</property>
                     <property name="visible">True</property>
                     <property name="width-chars">16</property>
                   </object>

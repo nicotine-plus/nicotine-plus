@@ -62,6 +62,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <object class="GtkEntry">
+                    <property name="activates-default">True</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="width-chars">6</property>
@@ -102,6 +103,7 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <object class="GtkEntry">
+                    <property name="activates-default">True</property>
                     <property name="secondary-icon-name">edit-undo-symbolic</property>
                     <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                     <property name="width-chars">6</property>

@@ -68,6 +68,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="log_timestamp_format_entry">
+                <property name="activates-default">True</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
