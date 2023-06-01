@@ -344,7 +344,7 @@ class ChatRooms:
             room_data["joined"] = user_count
             room_data["owner"] = login_username
 
-        for room in msg.otherprivaterooms:
+        for room, user_count in msg.otherprivaterooms:
             room_data = self.private_rooms.get(room)
 
             if room_data is None:
