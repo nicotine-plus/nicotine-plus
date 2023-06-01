@@ -780,17 +780,19 @@ class Search:
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
+            is_wish = (self.mode == "wishlist")
+
             if not self.show_page:
                 self.searches.create_page(self.token, self.text)
                 self.show_page = True
 
-                if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
+                if is_wish and config.sections["notifications"]["notification_popup_wish"]:
                     core.notifications.show_search_notification(
                         str(self.token), self.text,
                         title=_("Wishlist Results Found")
                     )
 
-            self.searches.request_tab_changed(self.container)
+            self.searches.request_tab_changed(self.container, is_important=is_wish)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
