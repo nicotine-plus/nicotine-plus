@@ -3402,7 +3402,6 @@ NETWORK_MESSAGE_EVENTS = {
     PrivateRoomAddOperator: "private-room-add-operator",
     PrivateRoomAddUser: "private-room-add-user",
     PrivateRoomAdded: "private-room-added",
-    PrivateRoomDisown: "private-room-disown",
     PrivateRoomOperatorAdded: "private-room-operator-added",
     PrivateRoomOperatorRemoved: "private-room-operator-removed",
     PrivateRoomOwned: "private-room-owned",

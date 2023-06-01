@@ -84,7 +84,6 @@ EVENT_NAMES = {
     "private-room-add-operator",
     "private-room-add-user",
     "private-room-added",
-    "private-room-disown",
     "private-room-operator-added",
     "private-room-operator-removed",
     "private-room-owned",
