@@ -739,7 +739,7 @@ class ChatRoom:
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, room, user, text, tag, is_global=False):
+    def _show_notification(self, login, room, user, text, tag, is_global):
 
         if user == login:
             return
@@ -817,7 +817,7 @@ class ChatRoom:
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, room, user, speech, tag, is_global)
+        self._show_notification(login_username, room, user, speech, tag, is_global)
 
         if self.log_toggle.get_active():
             log.write_log_file(
