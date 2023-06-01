@@ -43,7 +43,6 @@ class ChatRooms:
             ("private-room-add-operator", self._private_room_add_operator),
             ("private-room-add-user", self._private_room_add_user),
             ("private-room-added", self._private_room_added),
-            ("private-room-disown", self._private_room_disown),
             ("private-room-operator-added", self._private_room_operator_added),
             ("private-room-operator-removed", self._private_room_operator_removed),
             ("private-room-owned", self._private_room_owned),
@@ -256,14 +255,6 @@ class ChatRooms:
 
         if private_room is not None and msg.user in private_room["users"]:
             private_room["users"].remove(msg.user)
-
-    def _private_room_disown(self, msg):
-        """ Server code: 137 """
-
-        private_room = self.private_rooms.get(msg.room)
-
-        if private_room is not None and private_room["owner"] == core.login_username:
-            private_room["owner"] = None
 
     def _private_room_added(self, msg):
         """ Server code: 139 """
