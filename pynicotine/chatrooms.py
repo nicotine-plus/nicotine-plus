@@ -326,27 +326,37 @@ class ChatRooms:
 
         login_username = core.login_username
 
-        for room in msg.rooms:
-            self.server_rooms.add(room[0])
+        for room, user_count in msg.rooms:
+            self.server_rooms.add(room)
 
-        for room in msg.ownedprivaterooms:
-            room_data = self.private_rooms.get(room[0])
+        for room, user_count in msg.ownedprivaterooms:
+            room_data = self.private_rooms.get(room)
 
             if room_data is None:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": login_username}
+                self.private_rooms[room] = {
+                    "users": [],
+                    "joined": user_count,
+                    "operators": [],
+                    "owner": login_username
+                }
                 continue
 
-            room_data["joined"] = room[1]
+            room_data["joined"] = user_count
             room_data["owner"] = login_username
 
         for room in msg.otherprivaterooms:
-            room_data = self.private_rooms.get(room[0])
+            room_data = self.private_rooms.get(room)
 
             if room_data is None:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
+                self.private_rooms[room] = {
+                    "users": [],
+                    "joined": user_count,
+                    "operators": [],
+                    "owner": None
+                }
                 continue
 
-            room_data["joined"] = room[1]
+            room_data["joined"] = user_count
 
             if room_data["owner"] == login_username:
                 room_data["owner"] = None
