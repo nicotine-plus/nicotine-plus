@@ -394,6 +394,9 @@ class PrivateChat:
             # Don't show notifications if the chat is open and the window is in use
             return
 
+        if text.startswith("/me "):
+            text = f"* {self.user} {text[4:]}"
+
         # Update tray icon and show urgency hint
         self.chats.highlight_user(self.user)
 
@@ -408,10 +411,26 @@ class PrivateChat:
         text = msg.msg
         newmessage = msg.newmessage
         timestamp = msg.timestamp if not newmessage else None
-        usertag = self.chat_view.get_user_tag(self.user)
-        tag = self.chat_view.get_line_tag(self.user, text, core.login_username)
+        is_buddy = (self.user in core.userlist.buddies)
+        tag = self.chat_view.get_text_tag(text, self.user, core.login_username)
 
         self.show_notification(text)
+
+        if not newmessage:
+            tag = self.chat_view.tag_highlight
+
+            if not self.offline_message:
+                self.chat_view.insert_new_line(_("* Messages sent while you were offline"), text_tag=tag)
+                self.offline_message = True
+
+        else:
+            self.offline_message = False
+
+        self.chat_view.insert_new_line(text, text_tag=tag, user=self.user, timestamp=timestamp)
+
+        if not self.log_toggle.get_active() and not self.speech_toggle.get_active():
+            # TODO: move below into core
+            return
 
         if tag == self.chat_view.tag_action:
             line = f"* {self.user} {text[4:]}"
@@ -420,67 +439,49 @@ class PrivateChat:
             line = f"[{self.user}] {text}"
             speech = text
 
-        timestamp_format = config.sections["logging"]["private_timestamp"]
-
-        if not newmessage:
-            tag = usertag = self.chat_view.tag_highlight
-
-            if not self.offline_message:
-                self.chat_view.append_line(_("* Messages sent while you were offline"), tag=tag,
-                                           timestamp_format=timestamp_format)
-                self.offline_message = True
-
-        else:
-            self.offline_message = False
-
-        self.chat_view.append_line(line, tag=tag, timestamp=timestamp, timestamp_format=timestamp_format,
-                                   username=self.user, usertag=usertag)
-
         if self.speech_toggle.get_active():
             core.notifications.new_tts(
                 config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
             )
 
-        if self.log_toggle.get_active():
-            log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
-                text=line, timestamp=timestamp
-            )
-            self.chats.history.update_user(self.user, line)
+        if not self.log_toggle.get_active():
+            return
+
+        log.write_log_file(
+            folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
+            text=line, timestamp=timestamp
+        )
+        self.chats.history.update_user(self.user, line)
 
     def echo_private_message(self, text, message_type):
 
         if hasattr(self, f"tag_{message_type}"):
             tag = getattr(self, f"tag_{message_type}")
         else:
-            tag = self.chat_view.tag_local
+            tag = self.chat_view.get_text_tag(text)
 
-        if message_type != "command":
-            timestamp_format = config.sections["logging"]["private_timestamp"]
-        else:
-            timestamp_format = None
-
-        self.chat_view.append_line(text, tag=tag, timestamp_format=timestamp_format)
+        self.chat_view.insert_new_line(text, text_tag=tag)  # , user=core.login_username)
 
     def send_message(self, text):
 
-        my_username = core.login_username
-        tag = self.chat_view.get_line_tag(my_username, text)
+        login_username = core.login_username
+        tag = self.chat_view.get_text_tag(text)
+
+        self.chat_view.insert_new_line(text, text_tag=tag, user=login_username)
+
+        if not self.log_toggle.get_active():
+            return
 
         if tag == self.chat_view.tag_action:
-            line = f"* {my_username} {text[4:]}"
+            line = f"* {login_username} {text[4:]}"
         else:
-            line = f"[{my_username}] {text}"
+            line = f"[{login_username}] {text}"
 
-        self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
-                                   username=my_username, usertag=self.chat_view.get_user_tag(my_username))
-
-        if self.log_toggle.get_active():
-            log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"],
-                base_name=f"{clean_file(self.user)}.log", text=line
-            )
-            self.chats.history.update_user(self.user, line)
+        log.write_log_file(
+            folder_path=config.sections["logging"]["privatelogsdir"],
+            base_name=f"{clean_file(self.user)}.log", text=line
+        )
+        self.chats.history.update_user(self.user, line)
 
     def username_event(self, pos_x, pos_y, user):
 

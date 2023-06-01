@@ -218,6 +218,8 @@ class ChatRooms(IconNotebook):
             self.roomlist.toggle_public_feed(False)
             return
 
+        self.global_room_update_room_tag(room)
+
         self.window.room_search_combobox.remove_all()
         self.window.room_search_combobox.append_text(core.chatrooms.JOINED_ROOMS_NAME)
 
@@ -274,6 +276,8 @@ class ChatRooms(IconNotebook):
         if is_global:
             self.roomlist.toggle_public_feed(True)
             return
+
+        self.global_room_update_room_tag(msg.room)
 
         self.window.room_search_combobox.append_text(msg.room)
 
@@ -347,7 +351,21 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.say_chat_room(msg, is_global=True)
+            page.say_chat_room(msg)  # , is_global=True)
+
+    def global_room_update_room_tag(self, roomname):
+
+        page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
+
+        if page is not None:
+            page.chat_view.update_room_tag(roomname)
+
+    def global_room_update_user_tag(self, username, status):
+
+        page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
+
+        if page is not None:
+            page.chat_view.update_user_tag(username, status)
 
     def toggle_chat_buttons(self):
         for page in self.pages.values():
@@ -404,6 +422,7 @@ class ChatRoom:
         self.chatrooms = chatrooms
         self.window = chatrooms.window
         self.room = room
+        self.is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
         self.is_private = is_private
 
         if GTK_API_VERSION >= 4:
@@ -426,11 +445,17 @@ class ChatRoom:
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
-        self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
-                                      vertical_margin=5, pixels_below_lines=2)
-        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, user_statuses=self.user_statuses,
-                                  username_event=self.username_event)
+        self.activity_view = TextView(
+            self.activity_view_container, editable=False, horizontal_margin=10, vertical_margin=5, pixels_below_lines=2
+        )
+        self.chat_view = ChatView(
+            self.chat_view_container, editable=False, horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
+            user_statuses=self.user_statuses,
+            username_event=self.username_event,
+            joined_rooms=core.chatrooms.joined_rooms if self.is_global else None,
+            roomname_event=self.roomname_event if self.is_global else None,
+            is_chatroom=True
+        )
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
@@ -507,6 +532,7 @@ class ChatRoom:
 
         for userdata in users:
             self.add_user_row(userdata)
+            self.chatrooms.global_room_update_user_tag(userdata.username, userdata.status)
 
         self.users_list_view.enable_sorting()
 
@@ -748,17 +774,20 @@ class ChatRoom:
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def _show_notification(self, login, room, user, text, tag, is_global):
+    def _show_notification(self, login, room, user, text, tag):
 
         if user == login:
             return
 
         mentioned = (tag == self.chat_view.tag_highlight)
-        self.chatrooms.request_tab_changed(self.container, is_important=mentioned, is_quiet=is_global)
+        self.chatrooms.request_tab_changed(self.container, is_important=mentioned, is_quiet=self.is_global)
 
-        if is_global and room in core.chatrooms.joined_rooms:
+        if self.is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
+
+        if text.startswith("/me "):
+            text = f"* {user} {text[4:]}"
 
         if mentioned:
             log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
@@ -780,39 +809,38 @@ class ChatRoom:
             self.chatrooms.highlight_room(room, user)
             return
 
-        if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:
+        if not self.is_global and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
                 room, text,
                 title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
             )
 
-    def say_chat_room(self, msg, is_global=False):
+    def say_chat_room(self, msg):
 
         user = msg.user
         login_username = core.login_username
-        text = msg.msg
+        is_buddy = (user in core.userlist.buddies)
         room = msg.room
-        tag = self.chat_view.get_line_tag(user, text, login_username)
+        text = msg.msg
+        text = "\n-- ".join(text.split("\n"))
+        tag = self.chat_view.get_text_tag(text, user, login_username)
 
-        if tag == self.chat_view.tag_action:
-            line = f"* {user} {text[4:]}"
-            speech = line[2:]
-        else:
-            line = f"[{user}] {text}"
-            speech = text
+        if self.log_toggle.get_active() or self.speech_toggle.get_active():
+            # Compile a plain-text string chat line
+            if tag == self.chat_view.tag_action:
+                line = f"* {user} {text[4:]}"
+                speech = line[2:]
+            else:
+                line = f"[{user}] {text}"
+                speech = text
 
-        if is_global:
-            line = f"{room} | {line}"
-
-        line = "\n-- ".join(line.split("\n"))
-        usertag = self.chat_view.get_user_tag(user)
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            if self.is_global:
+                line = f"{room} | {line}"
 
         if user != login_username:
-            self.chat_view.append_line(
-                core.privatechat.censor_chat(line), tag=tag,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
+            self.chat_view.insert_new_line(
+                core.privatechat.censor_chat(text), text_tag=tag, room=room if self.is_global else None, user=user
             )
 
             if self.speech_toggle.get_active():
@@ -821,12 +849,9 @@ class ChatRoom:
                 )
 
         else:
-            self.chat_view.append_line(
-                line, tag=tag,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
-            )
+            self.chat_view.insert_new_line(text, text_tag=tag, room=room if self.is_global else None, user=user)
 
-        self._show_notification(login_username, room, user, speech, tag, is_global)
+        self._show_notification(login_username, room, user, text, tag)
 
         if self.log_toggle.get_active():
             log.write_log_file(
@@ -839,14 +864,9 @@ class ChatRoom:
         if hasattr(self, f"tag_{message_type}"):
             tag = getattr(self.chat_view, f"tag_{message_type}")
         else:
-            tag = self.chat_view.tag_local
+            tag = self.chat_view.get_text_tag(text)
 
-        if message_type != "command":
-            timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        else:
-            timestamp_format = None
-
-        self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
+        self.chat_view.insert_new_line(text, text_tag=tag)
 
     def user_joined_room(self, msg):
 
@@ -869,6 +889,8 @@ class ChatRoom:
 
         self.chat_view.update_user_tag(username)
         self.update_user_count()
+
+        self.chatrooms.global_room_update_user_tag(username, userdata.status)
 
     def user_left_room(self, msg):
 
@@ -956,6 +978,8 @@ class ChatRoom:
         self.user_statuses[user] = status
         self.chat_view.update_user_tag(user)
 
+        self.chatrooms.global_room_update_user_tag(user, status)
+
     def user_country(self, user, country_code):
 
         iterator = self.users_list_view.iterators.get(user)
@@ -974,6 +998,9 @@ class ChatRoom:
 
         self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
         self.users_list_view.set_row_value(iterator, "country_data", country_code)
+
+    def roomname_event(self, _pos_x, _pos_y, room):
+        core.chatrooms.show_room(room)
 
     def username_event(self, pos_x, pos_y, user):
 
@@ -994,6 +1021,7 @@ class ChatRoom:
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
 
+        self.chat_view.update_room_tags()
         self.chat_view.update_user_tags()
 
     def join_room(self, msg):
@@ -1015,7 +1043,7 @@ class ChatRoom:
         # Update user count
         self.update_user_count()
 
-        # Update all username tags in chat log
+        # Update all username tags in chat room view
         self.chat_view.update_user_tags()
 
         # Add room users to completion list
