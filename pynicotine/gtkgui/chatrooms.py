@@ -257,7 +257,7 @@ class ChatRooms(IconNotebook):
             page.join_room(msg)
             return
 
-        self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users)
+        self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users, is_private=msg.private)
         is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
 
         if is_global:
@@ -376,7 +376,7 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
-    def __init__(self, chatrooms, room, users):
+    def __init__(self, chatrooms, room, users, is_private):
 
         (
             self.activity_container,
@@ -404,6 +404,7 @@ class ChatRoom:
         self.chatrooms = chatrooms
         self.window = chatrooms.window
         self.room = room
+        self.is_private = is_private
 
         if GTK_API_VERSION >= 4:
             self.users_paned.set_resize_start_child(True)
@@ -887,7 +888,7 @@ class ChatRoom:
 
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
-        self.chatrooms.roomlist.update_room(self.room, user_count)
+        self.chatrooms.roomlist.update_room(self.room, user_count, private=self.is_private)
 
     def user_stats(self, msg):
 
