@@ -565,7 +565,7 @@ class ChatRoom:
         self.setup_public_feed()
         self.chat_entry.grab_focus()
 
-        self.count_users()
+        self.update_user_count()
         self.read_room_logs()
 
     def load(self):
@@ -581,8 +581,17 @@ class ChatRoom:
 
     def clear(self):
 
+        iterator = self.users_list_view.iterators.get(core.login_username)
+
+        if iterator is not None:
+            # Update user count in room list when leaving room
+            self.users_list_view.remove_row(iterator)
+            self.update_user_count()
+
         self.activity_view.clear()
         self.chat_view.clear()
+        self.user_statuses.clear()
+        self.users_list_view.clear()
 
         for menu in (self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
                      self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
@@ -859,7 +868,7 @@ class ChatRoom:
         self.add_user_row(userdata)
 
         self.chat_view.update_user_tag(username)
-        self.count_users()
+        self.update_user_count()
 
     def user_left_room(self, msg):
 
@@ -882,9 +891,9 @@ class ChatRoom:
 
         self.user_statuses.pop(username, None)
         self.chat_view.update_user_tag(username)
-        self.count_users()
+        self.update_user_count()
 
-    def count_users(self):
+    def update_user_count(self):
 
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
@@ -980,7 +989,7 @@ class ChatRoom:
 
         self.user_statuses.clear()
         self.users_list_view.clear()
-        self.count_users()
+        self.update_user_count()
 
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
@@ -1004,7 +1013,7 @@ class ChatRoom:
         self.users_list_view.enable_sorting()
 
         # Update user count
-        self.count_users()
+        self.update_user_count()
 
         # Update all username tags in chat log
         self.chat_view.update_user_tags()
