@@ -354,7 +354,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_tab_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -397,7 +396,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_tab_changed_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -440,7 +438,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_tab_highlighted_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -910,7 +907,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_list_text_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -953,7 +949,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_queued_result_text_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1070,7 +1065,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_chat_remote_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1113,7 +1107,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_chat_local_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1156,7 +1149,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_chat_command_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1199,7 +1191,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_chat_action_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1242,7 +1233,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_chat_highlighted_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1285,7 +1275,6 @@
                         </child>
                         <child>
                           <object class="GtkEntry" id="color_url_entry">
-                            <property name="activates-default">True</property>
                             <property name="hexpand">True</property>
                             <property name="secondary-icon-name">edit-undo-symbolic</property>
                             <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1357,7 +1346,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_status_online_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1400,7 +1388,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_status_away_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1443,7 +1430,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_status_offline_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1513,7 +1499,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_input_background_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
@@ -1556,7 +1541,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="color_input_text_entry">
-                        <property name="activates-default">True</property>
                         <property name="hexpand">True</property>
                         <property name="secondary-icon-name">edit-undo-symbolic</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>

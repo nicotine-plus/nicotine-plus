@@ -170,7 +170,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="filter_include_entry">
-                <property name="activates-default">True</property>
                 <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -196,7 +195,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="filter_exclude_entry">
-                <property name="activates-default">True</property>
                 <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
@@ -225,7 +223,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkEntry" id="filter_file_type_entry">
-                    <property name="activates-default">True</property>
                     <property name="max-width-chars">26</property>
                     <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
                     <property name="valign">center</property>
@@ -257,7 +254,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkEntry" id="filter_file_size_entry">
-                    <property name="activates-default">True</property>
                     <property name="max-width-chars">26</property>
                     <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
                     <property name="valign">center</property>
@@ -289,7 +285,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkEntry" id="filter_bitrate_entry">
-                    <property name="activates-default">True</property>
                     <property name="max-width-chars">26</property>
                     <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
                     <property name="valign">center</property>
@@ -321,7 +316,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkEntry" id="filter_length_entry">
-                    <property name="activates-default">True</property>
                     <property name="max-width-chars">26</property>
                     <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
                     <property name="valign">center</property>
@@ -353,7 +347,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkEntry" id="filter_country_entry">
-                    <property name="activates-default">True</property>
                     <property name="max-width-chars">26</property>
                     <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
                     <property name="valign">center</property>

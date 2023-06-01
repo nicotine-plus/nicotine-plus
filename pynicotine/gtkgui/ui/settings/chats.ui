@@ -319,7 +319,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="timestamp_private_chat_entry">
-                <property name="activates-default">True</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
@@ -348,7 +347,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="timestamp_room_entry">
-                <property name="activates-default">True</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
@@ -406,7 +404,6 @@
                 <property name="visible">True</property>
                 <child internal-child="entry">
                   <object class="GtkEntry">
-                    <property name="activates-default">True</property>
                     <property name="visible">True</property>
                     <property name="width-chars">8</property>
                   </object>
@@ -436,7 +433,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="tts_private_message_entry">
-                <property name="activates-default">True</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
@@ -464,7 +460,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="tts_room_message_entry">
-                <property name="activates-default">True</property>
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
                 <property name="valign">center</property>
