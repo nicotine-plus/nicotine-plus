@@ -468,20 +468,16 @@ class IconNotebook:
     def request_tab_changed(self, page, is_important=False, is_quiet=False):
 
         if self.parent_page is not None:
+            is_current_parent = (self.window.current_page_id == self.parent_page.id)
             is_current_page = (self.get_current_page() == page)
 
-            if is_quiet and not is_important:
-                # Don't highlight top-level tab on global feed message unless mentioned
-                pass
-
-            elif self.window.current_page_id != self.parent_page.id or not is_current_page:
-                # Highlight top-level tab
-                self.window.notebook.request_tab_changed(self.parent_page, is_important)
-
-            elif is_current_page:
+            if is_current_parent and is_current_page:
                 return
 
-            self.append_unread_page(page, is_important)
+            if not is_quiet or is_important:
+                # Highlight top-level tab, but don't for global feed unless mentioned
+                self.window.notebook.request_tab_changed(self.parent_page, is_important)
+                self.append_unread_page(page, is_important)
 
         tab_label = self.get_tab_label(page)
         tab_label.request_changed(is_important)
