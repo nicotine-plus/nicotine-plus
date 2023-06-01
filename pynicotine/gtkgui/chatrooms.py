@@ -783,16 +783,9 @@ class ChatRoom:
         login_username = core.login_username
         text = msg.msg
         room = msg.room
+        tag = self.chat_view.get_line_tag(user, text, login_username)
 
-        if user == login_username:
-            tag = self.chat_view.tag_local
-        elif self.chat_view.find_whole_word(login_username.lower(), text.lower()) > -1:
-            tag = self.chat_view.tag_highlight
-        else:
-            tag = self.chat_view.tag_remote
-
-        if text.startswith("/me "):
-            tag = self.chat_view.tag_action
+        if tag == self.chat_view.tag_action:
             line = f"* {user} {text[4:]}"
             speech = line[2:]
         else:

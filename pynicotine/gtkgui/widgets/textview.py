@@ -358,7 +358,7 @@ class ChatView(TextView):
         self.tag_users = {}
 
     @staticmethod
-    def find_whole_word(word, text, after=0):
+    def find_whole_word(word, text):
         """ Returns start position of a whole word that is not in a subword """
 
         if word not in text:
@@ -366,7 +366,7 @@ class ChatView(TextView):
 
         word_boundaries = [" "] + PUNCTUATION
         whole = False
-        start = 0
+        start = after = 0
 
         while not whole and start > -1:
             start = text.find(word, after)
@@ -401,14 +401,8 @@ class ChatView(TextView):
                         user = line[start:end]
                         usertag = self.get_user_tag(user)
 
-                        if user == login:
-                            tag = self.tag_local
-
-                        elif self.find_whole_word(login.lower(), line.lower(), after=end) > -1:
-                            tag = self.tag_highlight
-
-                        else:
-                            tag = self.tag_remote
+                        text = line[end + 2:-1]
+                        tag = self.get_line_tag(user, text, login)
 
                 elif "* " in line:
                     tag = self.tag_action
@@ -421,6 +415,19 @@ class ChatView(TextView):
             if lines:
                 self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
                                  timestamp_format=timestamp_format)
+
+    def get_line_tag(self, user, text, login=None):
+
+        if text.startswith("/me "):
+            return self.tag_action
+
+        if user == login:
+            return self.tag_local
+
+        if login and self.find_whole_word(login.lower(), text.lower()) > -1:
+            return self.tag_highlight
+
+        return self.tag_remote
 
     def get_user_tag(self, username):
 
