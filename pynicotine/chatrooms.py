@@ -228,6 +228,7 @@ class ChatRooms:
         """ Server code: 15 """
 
         core.pluginhandler.leave_chatroom_notification(msg.room)
+        self.remove_room(msg.room)
 
     def _private_room_users(self, msg):
         """ Server code: 133 """
