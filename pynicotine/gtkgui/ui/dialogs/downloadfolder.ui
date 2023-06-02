@@ -24,7 +24,7 @@
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="xalign">0</property>
-        <property name="label" translatable="yes">Download Location</property>
+        <property name="label" translatable="yes">Download Files to Folder</property>
         <property name="max-width-chars">55</property>
         <property name="wrap">True</property>
       </object>
@@ -94,7 +94,7 @@
                 <child>
                   <object class="GtkButton" id="_unselect_all_button">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Unselect All</property>
+                    <property name="tooltip-text" translatable="yes">Clear</property>
                     <signal name="clicked" handler="on_unselect_all"/>
                     <child>
                       <object class="GtkBox">
@@ -109,7 +109,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Unselect All</property>
+                            <property name="label" translatable="yes">Clear</property>
                             <property name="ellipsize">end</property>
                             <property name="mnemonic-widget">_unselect_all_button</property>
                           </object>
