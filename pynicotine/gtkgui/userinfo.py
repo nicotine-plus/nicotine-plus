@@ -40,6 +40,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -56,6 +57,11 @@ class UserInfos(IconNotebook):
             window,
             parent=window.userinfo_content,
             parent_page=window.userinfo_page
+        )
+
+        self.userinfo_combobox = ComboBox(
+            container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.userinfo_entry
         )
 
         # Events

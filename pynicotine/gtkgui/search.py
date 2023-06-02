@@ -43,7 +43,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
@@ -96,8 +96,24 @@ class Searches(IconNotebook):
         if GTK_API_VERSION >= 4:
             add_css_class(window.search_mode_button.get_first_child(), "arrow-button")
 
-        CompletionEntry(window.room_search_entry, window.room_search_combobox.get_model())
-        CompletionEntry(window.search_entry, window.search_combobox.get_model())
+        self.room_search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.room_search_entry, visible=False,
+            items=(
+                (core.chatrooms.JOINED_ROOMS_NAME, None),
+            )
+        )
+        self.room_search_combobox.set_text(core.chatrooms.JOINED_ROOMS_NAME)
+
+        self.user_search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.user_search_entry, visible=False
+        )
+
+        self.search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.search_entry
+        )
 
         self.file_properties = None
 
@@ -132,8 +148,8 @@ class Searches(IconNotebook):
 
         self.window.search_mode_label.set_label(self.modes[search_mode])
 
-        self.window.user_search_combobox.set_visible(search_mode == "user")
-        self.window.room_search_combobox.set_visible(search_mode == "rooms")
+        self.user_search_combobox.set_visible(search_mode == "user")
+        self.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
         self.window.search_mode_button.get_popover().set_visible(False)
@@ -146,8 +162,8 @@ class Searches(IconNotebook):
             return
 
         mode = self.window.lookup_action("search-mode").get_state().get_string()
-        room = self.window.room_search_entry.get_text()
-        user = self.window.user_search_entry.get_text()
+        room = self.room_search_combobox.get_text()
+        user = self.user_search_combobox.get_text()
 
         self.window.search_entry.set_text("")
         core.search.do_search(text, mode, room=room, user=user)
@@ -155,15 +171,13 @@ class Searches(IconNotebook):
     def populate_search_history(self):
 
         should_enable_history = config.sections["searches"]["enable_history"]
-
-        self.window.search_combobox.remove_all()
-        self.window.search_combobox_button.set_visible(should_enable_history)
+        self.search_combobox.clear()
 
         if not should_enable_history:
             return
 
         for term in config.sections["searches"]["history"]:
-            self.window.search_combobox.append_text(str(term))
+            self.search_combobox.append(str(term))
 
     def create_page(self, token, text, mode=None, mode_label=None, show_page=True):
 
@@ -241,7 +255,7 @@ class Searches(IconNotebook):
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
-        self.window.search_combobox.remove_all()
+        self.search_combobox.clear()
 
     def clear_filter_history(self):
 
@@ -327,14 +341,21 @@ class Search:
             self.container,
             self.expand_button,
             self.expand_icon,
-            self.filter_bitrate_combobox,
-            self.filter_country_combobox,
-            self.filter_exclude_combobox,
-            self.filter_file_size_combobox,
-            self.filter_file_type_combobox,
+            self.filter_bitrate_container,
+            self.filter_bitrate_entry,
+            self.filter_country_container,
+            self.filter_country_entry,
+            self.filter_exclude_container,
+            self.filter_exclude_entry,
+            self.filter_file_size_container,
+            self.filter_file_size_entry,
+            self.filter_file_type_container,
+            self.filter_file_type_entry,
             self.filter_free_slot_button,
-            self.filter_include_combobox,
-            self.filter_length_combobox,
+            self.filter_include_container,
+            self.filter_include_entry,
+            self.filter_length_container,
+            self.filter_length_entry,
             self.filters_button,
             self.filters_container,
             self.filters_label,
@@ -384,6 +405,35 @@ class Search:
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
         self.selected_results = {}
+
+        # Combo boxes
+        self.filter_include_combobox = ComboBox(
+            container=self.filter_include_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_include_entry)
+
+        self.filter_exclude_combobox = ComboBox(
+            container=self.filter_exclude_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_exclude_entry)
+
+        self.filter_file_type_combobox = ComboBox(
+            container=self.filter_file_type_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_file_type_entry)
+
+        self.filter_file_size_combobox = ComboBox(
+            container=self.filter_file_size_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_file_size_entry)
+
+        self.filter_bitrate_combobox = ComboBox(
+            container=self.filter_bitrate_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_bitrate_entry)
+
+        self.filter_length_combobox = ComboBox(
+            container=self.filter_length_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_length_entry)
+
+        self.filter_country_combobox = ComboBox(
+            container=self.filter_country_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_country_entry)
 
         # Columns
         self.treeview_name = "file_search"
@@ -502,7 +552,10 @@ class Search:
 
         # Filter text entry widgets
         for filter_id, combobox in self.filter_comboboxes.items():
-            combobox.get_child().filter_id = filter_id
+            combobox.entry.filter_id = filter_id
+
+            buffer = combobox.entry.get_buffer()
+            buffer.connect("inserted-text", self.on_filter_entry_inserted_text, combobox)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_default_filters()
@@ -567,16 +620,6 @@ class Search:
 
         return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 6)
 
-    def on_combobox_popup_shown(self, combobox, _param):
-
-        # Refilter
-        entry = combobox.get_child()
-        entry.emit("activate")
-
-        # Highlight current list item
-        text = combobox.get_active_text()
-        combobox.set_active_id(text)
-
     def on_combobox_check_separator(self, model, iterator):
         # Render empty value as separator
         return not model.get_value(iterator, 0)
@@ -585,18 +628,18 @@ class Search:
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.set_row_separator_func(lambda *_args: 0)
-            widget.remove_all()
+            widget.clear()
 
             presets = self.FILTER_PRESETS.get(filter_id)
 
             if presets:
                 for value in presets:
-                    widget.append_text(value)
+                    widget.append(value)
 
-                widget.append_text("")  # Separator
+                widget.append("")  # Separator
 
             for value in config.sections["searches"][filter_id]:
-                widget.append_text(value)
+                widget.append(value)
 
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
@@ -647,7 +690,7 @@ class Search:
 
         for filter_id, combobox in self.filter_comboboxes.items():
             _value, h_value = stored_filters.get(filter_id, (None, ""))
-            combobox.get_child().set_text(h_value)
+            combobox.set_text(h_value)
 
         self.populating_filters = False
 
@@ -1542,33 +1585,31 @@ class Search:
             return
 
         filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
-        filter_in_str = self.filter_include_combobox.get_active_text().strip()
-        filter_out_str = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size_str = self.filter_file_size_combobox.get_active_text().strip()
-        filter_bitrate_str = self.filter_bitrate_combobox.get_active_text().strip()
-        filter_country_str = self.filter_country_combobox.get_active_text().strip()
-        filter_file_type_str = self.filter_file_type_combobox.get_active_text().strip()
-        filter_length_str = self.filter_length_combobox.get_active_text().strip()
+        filter_in_str = self.filter_include_combobox.get_text().strip()
+        filter_out_str = self.filter_exclude_combobox.get_text().strip()
+        filter_size_str = self.filter_file_size_combobox.get_text().strip()
+        filter_bitrate_str = self.filter_bitrate_combobox.get_text().strip()
+        filter_country_str = self.filter_country_combobox.get_text().strip()
+        filter_file_type_str = self.filter_file_type_combobox.get_text().strip()
+        filter_length_str = self.filter_length_combobox.get_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
         # Include/exclude text
         error_entries = set()
-        filter_include_entry = self.filter_include_combobox.get_child()
-        filter_exclude_entry = self.filter_exclude_combobox.get_child()
 
         if filter_in_str:
             try:
                 filter_in = re.compile(filter_in_str, flags=re.IGNORECASE)
             except re.error:
-                error_entries.add(filter_include_entry)
+                error_entries.add(self.filter_include_entry)
 
         if filter_out_str:
             try:
                 filter_out = re.compile(filter_out_str, flags=re.IGNORECASE)
             except re.error:
-                error_entries.add(filter_exclude_entry)
+                error_entries.add(self.filter_exclude_entry)
 
-        for entry in (filter_include_entry, filter_exclude_entry):
+        for entry in (self.filter_include_entry, self.filter_exclude_entry):
             # Set red background if invalid regex pattern is detected
             css_class_function = add_css_class if entry in error_entries else remove_css_class
             css_class_function(entry, "error")
@@ -1644,8 +1685,16 @@ class Search:
         self.clear_model()
         self.update_model()
 
-    def on_filter_entry_changed(self, widget):
-        if not widget.get_text():
+    def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+
+        if n_chars > 1 and chars == combobox.get_selected_id():
+            self.on_refilter()
+
+            # Highlight current list item
+            combobox.set_selected_id(chars)
+
+    def on_filter_entry_changed(self, entry):
+        if not entry.get_text():
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):

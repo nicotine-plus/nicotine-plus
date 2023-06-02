@@ -46,36 +46,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="media_player_label">
                 <property name="label" translatable="yes">Media player command:</property>
-                <property name="mnemonic-widget">media_player_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="media_player_combobox">
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="width-chars">6</property>
-                    <signal name="icon-press" handler="on_default_media_player"/>
-                  </object>
-                </child>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>amarok -a $</item>
-                  <item>audacious -e $</item>
-                  <item>exaile $</item>
-                  <item>rhythmbox $</item>
-                  <item>xmms2 add -f $</item>
-                </items>
               </object>
             </child>
           </object>
@@ -86,40 +62,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="file_manager_label">
                 <property name="label" translatable="yes">File manager command:</property>
-                <property name="mnemonic-widget">file_manager_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="file_manager_combobox">
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="width-chars">6</property>
-                    <signal name="icon-press" handler="on_default_file_manager"/>
-                  </object>
-                </child>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>explorer $</item>
-                  <item>nautilus $</item>
-                  <item>nemo $</item>
-                  <item>caja $</item>
-                  <item>thunar $</item>
-                  <item>dolphin $</item>
-                  <item>konqueror $</item>
-                  <item>krusader --left $</item>
-                  <item>xterm -e mc $</item>
-                </items>
               </object>
             </child>
           </object>

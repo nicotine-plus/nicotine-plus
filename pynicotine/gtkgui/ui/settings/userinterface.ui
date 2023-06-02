@@ -67,22 +67,12 @@
                     <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="language_label">
                         <property name="label" translatable="yes">Language (requires a restart):</property>
-                        <property name="mnemonic-widget">language_combobox</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
                         <property name="xalign">0</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="language_combobox">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <items>
-                          <item id="">System Default</item>
-                        </items>
                       </object>
                     </child>
                   </object>
@@ -93,24 +83,12 @@
                     <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="close_action_label">
                         <property name="label" translatable="yes">When closing Nicotine+:</property>
-                        <property name="mnemonic-widget">close_action_combobox</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
                         <property name="xalign">0</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="close_action_combobox">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <items>
-                          <item>Quit program</item>
-                          <item>Show confirmation dialog</item>
-                          <item>Run in the background</item>
-                        </items>
                       </object>
                     </child>
                   </object>
@@ -657,19 +635,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_main_label">
                                     <property name="label" translatable="yes">Main tabs</property>
-                                    <property name="mnemonic-widget">tab_position_main_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_main_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -686,19 +657,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_search_label">
                                     <property name="label" translatable="yes">Search Files</property>
-                                    <property name="mnemonic-widget">tab_position_search_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_search_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -715,19 +679,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_browse_label">
                                     <property name="label" translatable="yes">Browse Shares</property>
-                                    <property name="mnemonic-widget">tab_position_browse_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_browse_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -744,19 +701,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_userinfo_label">
                                     <property name="label" translatable="yes">User Profiles</property>
-                                    <property name="mnemonic-widget">tab_position_userinfo_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_userinfo_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -773,19 +723,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_private_chat_label">
                                     <property name="label" translatable="yes">Private Chat</property>
-                                    <property name="mnemonic-widget">tab_position_private_chat_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_private_chat_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -802,19 +745,12 @@
                                 <property name="spacing">18</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="tab_position_chatrooms_label">
                                     <property name="label" translatable="yes">Chat Rooms</property>
-                                    <property name="mnemonic-widget">tab_position_chatrooms_combobox</property>
                                     <property name="visible">True</property>
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
                                     <property name="xalign">1</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBoxText" id="tab_position_chatrooms_combobox">
-                                    <property name="valign">center</property>
-                                    <property name="visible">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -1006,25 +942,12 @@
                     <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="chat_username_appearance_label">
                         <property name="label" translatable="yes">Chat username appearance:</property>
-                        <property name="mnemonic-widget">chat_username_appearance_combobox</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
                         <property name="xalign">0</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="chat_username_appearance_combobox">
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <items>
-                          <item id="bold">bold</item>
-                          <item id="italic">italic</item>
-                          <item id="underline">underline</item>
-                          <item id="normal">normal</item>
-                        </items>
                       </object>
                     </child>
                   </object>

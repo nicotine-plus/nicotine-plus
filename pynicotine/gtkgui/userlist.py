@@ -32,7 +32,6 @@ from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -130,14 +129,6 @@ class UserList:
                 "country_data": {"data_type": str}
             }
         )
-
-        # Lists
-        for combo_box in (self.window.user_search_combobox, self.window.userinfo_combobox,
-                          self.window.userbrowse_combobox):
-            combo_box.set_model(self.list_view.model)
-            combo_box.set_entry_text_column(2)
-
-            CompletionEntry(combo_box.get_child(), self.list_view.model, column=2)
 
         # Popup menus
         self.popup_menu_private_rooms = UserPopupMenu(window.application)
@@ -273,6 +264,13 @@ class UserList:
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
+        for combobox in (
+            self.window.search.user_search_combobox,
+            self.window.userbrowse.userbrowse_combobox,
+            self.window.userinfo.userinfo_combobox
+        ):
+            combobox.append(str(user))
+
         self.update_visible()
 
     def remove_buddy(self, user):
@@ -284,6 +282,13 @@ class UserList:
 
         self.list_view.remove_row(iterator)
         self.update_visible()
+
+        for combobox in (
+            self.window.search.user_search_combobox,
+            self.window.userbrowse.userbrowse_combobox,
+            self.window.userinfo.userinfo_combobox
+        ):
+            combobox.remove(user)
 
     def buddy_note(self, user, note):
 

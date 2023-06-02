@@ -388,30 +388,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="tts_command_label">
                 <property name="label" translatable="yes">Text-to-Speech command:</property>
-                <property name="mnemonic-widget">tts_command_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="tts_command_combobox">
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
-                <items>
-                  <item>flite -t $</item>
-                  <item>echo $ | festival --tts</item>
-                </items>
               </object>
             </child>
           </object>
@@ -519,29 +501,13 @@
                         <property name="spacing">12</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="censor_replacement_label">
                             <property name="hexpand">True</property>
                             <property name="label" translatable="yes">Replace censored letters with:</property>
-                            <property name="mnemonic-widget">censor_replacement_combobox</property>
                             <property name="visible">True</property>
                             <property name="wrap">True</property>
                             <property name="wrap-mode">word-char</property>
                             <property name="xalign">0</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkComboBoxText" id="censor_replacement_combobox">
-                            <property name="id-column">0</property>
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                            <items>
-                              <item>#</item>
-                              <item>$</item>
-                              <item>!</item>
-                              <item/>
-                              <item>x</item>
-                              <item>*</item>
-                            </items>
                           </object>
                         </child>
                       </object>
