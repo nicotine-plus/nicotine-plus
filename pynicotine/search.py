@@ -81,16 +81,7 @@ class Searches:
 
     def request_folder_download(self, user, folder, visible_files):
 
-        # First queue the visible search results
-        for file in visible_files:
-            user, fullpath, destination, size, bitrate, length = file
-
-            core.transfers.get_file(
-                user, fullpath, destination,
-                size=size, bitrate=bitrate, length=length)
-
-        # Ask for the rest of the files in the folder
-        core.transfers.get_folder(user, folder)
+        core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
     """ Outgoing search requests """
 

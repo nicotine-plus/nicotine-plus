@@ -23,8 +23,11 @@
 
 import operator
 import re
+import os
+import os.path
 
 from collections import defaultdict
+from locale import strxfrm
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -35,6 +38,7 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
+from pynicotine.gtkgui.dialogs.downloadfolder import DownloadFolder
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -100,11 +104,13 @@ class Searches(IconNotebook):
         CompletionEntry(window.search_entry, window.search_combobox.get_model())
 
         self.file_properties = None
+        self.download_folder = None
 
         for event_name, callback in (
             ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
             ("file-search-response", self.file_search_response),
+            ("folder-contents-response", self._folder_contents_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
             ("show-search", self.show_search)
@@ -280,6 +286,77 @@ class Searches(IconNotebook):
 
         page.file_search_response(msg)
 
+    # Download Folder
+    def _folder_contents_response(self, msg, check_num_files=True):
+        """ Peer code: 37 """
+        """ When we got a contents of a folder, get all the files in it, but
+        skip the files in subfolders """
+
+        username = msg.init.target_user
+        file_list = msg.list
+ 
+        log.add_transfer("Received response for folder content request from user %s", username)
+
+        folderFiles = {
+            "user": username,
+            "virtualpath": None,
+            "destination": None,
+            "filenames" : []             
+        }
+
+        for i in file_list:
+            for directory in file_list[i]:
+                if os.path.commonprefix([i, directory]) != directory:
+                    continue
+
+                files = file_list[i][directory][:]
+                num_files = len(files)
+
+                if check_num_files and num_files > 100:
+                    events.emit("download-large-folder", username, directory, num_files, msg)
+                    return
+
+                destination = core.transfers.get_folder_destination(username, directory)
+                folderFiles["destination"] = destination
+
+                virtualpath = directory.rstrip("\\") + "\\"
+                folderFiles["virtualpath"] = virtualpath
+
+                if num_files > 1:
+                    files.sort(key=lambda x: strxfrm(x[1]))
+
+                log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
+                                  "Destination path: %(destination)s"), {
+                    "folder": directory,
+                    "user": username,
+                    "destination": destination
+                })
+
+                for file in files:
+                    size = file[2]
+                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
+                        size, file[4])
+
+                    folderFiles["filenames"].append({
+                        "filename": file[1],
+                        "size": file[2],
+                        "h_bitrate": h_bitrate,
+                        "h_length": h_length
+                    })
+                    # Put Dialog To Select the Files    
+
+
+                    # Then Call this so get the File (it does checks here etc)
+                    # Will need to move this somewhere else
+                    # core.transfers.get_file(username, virtualpath, path=destination, size=size, bitrate=h_bitrate, length=h_length)
+                    
+        if self.download_folder is None:
+            self.download_folder = DownloadFolder(self.window.application)
+
+        self.download_folder.set_folder_list(folderFiles)
+        self.download_folder.show()                
+
+
     def update_wish_button(self, wish):
 
         for page in self.pages.values():
@@ -453,7 +530,6 @@ class Search:
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
-            ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
@@ -1387,6 +1463,7 @@ class Search:
         else:
             requested_folders = defaultdict(dict)
 
+        # Build Structure for Folder to Download        
         for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 12).rsplit("\\", 1)[0]
@@ -1416,18 +1493,6 @@ class Search:
                     (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
 
             core.search.request_folder_download(user, folder, visible_files)
-
-    def on_download_folders_to_selected(self, selected, _data):
-        self.on_download_folders(download_location=selected)
-
-    def on_download_folders_to(self, *_args):
-
-        FolderChooser(
-            parent=self.window,
-            title=_("Select Destination Folder"),
-            callback=self.on_download_folders_to_selected,
-            initial_folder=config.sections["transfers"]["downloaddir"]
-        ).show()
 
     def on_copy_file_path(self, *_args):
 

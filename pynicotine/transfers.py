@@ -123,7 +123,7 @@ class Transfers:
             ("file-download-progress", self._file_download_progress),
             ("file-upload-init", self._file_upload_init),
             ("file-upload-progress", self._file_upload_progress),
-            ("folder-contents-response", self._folder_contents_response),
+            #("folder-contents-response", self._folder_contents_response), Avoid Event as use Download Folder Instead.
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("place-in-queue-response", self._place_in_queue_response),
@@ -755,6 +755,7 @@ class Transfers:
             self.check_upload_queue()
             return
 
+    # Download Folder content Backend Response
     def _folder_contents_response(self, msg, check_num_files=True):
         """ Peer code: 37 """
         """ When we got a contents of a folder, get all the files in it, but
