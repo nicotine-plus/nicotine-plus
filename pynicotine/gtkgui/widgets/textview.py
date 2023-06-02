@@ -151,7 +151,7 @@ class TextView:
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
         if username and username in line:
-            start = line.find(f"[{username}]") + 1
+            start = line.find(username)
 
             self._insert_text(line[:start], tag)
             self._insert_text(username, usertag)
