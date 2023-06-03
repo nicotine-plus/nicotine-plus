@@ -375,11 +375,18 @@ class Login(ServerMessage):
 
         pos, self.banner = self.unpack_string(message, pos)
         pos, self.ip_address = self.unpack_ip(message, pos)
+
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
         pos, self.checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
 
-        # Soulfind support
-        if message[pos:]:
-            pos, self.is_supporter = self.unpack_bool(message, pos)
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
+        pos, self.is_supporter = self.unpack_bool(message, pos)
 
 
 class SetWaitPort(ServerMessage):
@@ -492,7 +499,7 @@ class GetUserStatus(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.status = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.privileged = self.unpack_bool(message, pos)
 
@@ -647,7 +654,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.dirs = self.unpack_uint32(message, pos)
         pos, self.userdata.slotsfull = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.userdata.country = self.unpack_string(message, pos)
 
@@ -700,7 +707,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.privileged = self.unpack_bool(message, pos)
 
@@ -978,7 +985,7 @@ class UserSearch(ServerMessage):
 
         return msg
 
-    # Soulfind support, the official server sends a FileSearch message (code 26) instead
+    # Soulfind server support, the official server sends a FileSearch message (code 26) instead
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)
@@ -1798,7 +1805,7 @@ class RoomSearch(ServerMessage):
 
         return msg
 
-    # Soulfind support, the official server sends a FileSearch message (code 26) instead
+    # Soulfind server support, the official server sends a FileSearch message (code 26) instead
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)

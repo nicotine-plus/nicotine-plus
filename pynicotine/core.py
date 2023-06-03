@@ -400,7 +400,8 @@ class Core:
         """ Server code: 5 """
 
         if msg.userexists:
-            events.emit("user-stats", msg)
+            if msg.status is not None:  # Soulfind server support, sends userexists but no additional data
+                events.emit("user-stats", msg)
             return
 
         # User does not exist, server will not keep us informed if the user is created later
