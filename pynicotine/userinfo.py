@@ -80,9 +80,6 @@ class UserInfo:
         # Request user interests
         core.queue.append(slskmessages.UserInterests(user))
 
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
-
     def remove_user(self, user):
         self.users.remove(user)
         events.emit("user-info-remove-user", user)

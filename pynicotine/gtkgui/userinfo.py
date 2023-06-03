@@ -260,6 +260,11 @@ class UserInfo:
         self.picture_surface = None
         self.indeterminate_progress = True
 
+        country_code = core.user_countries.get(user)
+
+        if country_code:
+            self.user_country(country_code)
+
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
@@ -535,7 +540,7 @@ class UserInfo:
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user)
+        core.request_ip_address(self.user, notify=True)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)

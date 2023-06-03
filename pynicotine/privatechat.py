@@ -234,7 +234,7 @@ class PrivateChat:
             elif not queued_message:
                 # Ask for user's IP address and queue the private message until we receive the address
                 if user not in self.private_message_queue:
-                    core.queue.append(slskmessages.GetPeerAddress(user))
+                    core.request_ip_address(user)
 
                 self.private_message_queue_add(msg)
                 msg.user = None

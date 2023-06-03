@@ -148,7 +148,7 @@ class NetworkPage:
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-                "ip": core.user_ip_address or unknown_label,
+                "ip": core.public_ip_address or unknown_label,
                 "port": core.protothread.listen_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")

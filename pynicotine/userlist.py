@@ -140,7 +140,9 @@ class UserList:
         if user in self.buddies:
             return
 
-        note = country = ""
+        note = ""
+        country_code = core.user_countries.get(user)
+        country = f"flag_{country_code}" if country_code else ""
         is_trusted = notify_status = is_prioritized = False
         last_seen = "Never seen"
 
@@ -168,8 +170,9 @@ class UserList:
         # Request user status, speed and number of shared files
         core.watch_user(user, force_update=True)
 
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
+        # Request user country
+        if country_code is None:
+            core.request_ip_address(user)
 
     def remove_buddy(self, user):
 

@@ -308,7 +308,7 @@ class NetworkFilter:
         if user not in request_list:
             request_list[user] = action
 
-        core.queue.append(slskmessages.GetPeerAddress(user))
+        core.request_ip_address(user)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """ Add the current IP address and username of a user to a list """
