@@ -288,7 +288,7 @@ class UserList:
             self.window.userbrowse.userbrowse_combobox,
             self.window.userinfo.userinfo_combobox
         ):
-            combobox.remove(user)
+            combobox.remove_id(user)
 
     def buddy_note(self, user, note):
 

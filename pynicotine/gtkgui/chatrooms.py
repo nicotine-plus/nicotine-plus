@@ -215,7 +215,7 @@ class ChatRooms(IconNotebook):
             self.roomlist.toggle_public_feed(False)
             return
 
-        self.window.search.room_search_combobox.remove(room)
+        self.window.search.room_search_combobox.remove_id(room)
 
     def highlight_room(self, room, user):
 
