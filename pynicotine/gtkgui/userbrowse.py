@@ -44,6 +44,7 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import human_size
@@ -61,6 +62,11 @@ class UserBrowses(IconNotebook):
             parent_page=window.userbrowse_page
         )
         self.file_properties = None
+
+        self.userbrowse_combobox = ComboBox(
+            container=self.window.userbrowse_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.userbrowse_entry
+        )
 
         # Events
         for event_name, callback in (

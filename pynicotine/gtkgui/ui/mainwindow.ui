@@ -37,6 +37,32 @@
       </object>
     </child>
   </object>
+  <object class="GtkEntry" id="room_search_entry">
+    <property name="hexpand">False</property>
+    <property name="max-width-chars">20</property>
+    <property name="placeholder-text" translatable="yes">Room…</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_search"/>
+  </object>
+  <object class="GtkEntry" id="user_search_entry">
+    <property name="hexpand">False</property>
+    <property name="max-width-chars">20</property>
+    <property name="placeholder-text" translatable="yes">Username…</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_search"/>
+  </object>
+  <object class="GtkEntry" id="search_entry">
+    <property name="max-width-chars">75</property>
+    <property name="placeholder-text" translatable="yes">Search term…</property>
+    <property name="primary-icon-name">system-search-symbolic</property>
+    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_search"/>
+    <signal name="icon-press" handler="on_search"/>
+  </object>
   <object class="GtkBox" id="search_page">
     <property name="visible">False</property>
     <child>
@@ -59,6 +85,7 @@
                 <child>
                   <object class="GtkBox" id="search_title">
                     <property name="hexpand">True</property>
+                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="spacing">4</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -85,67 +112,6 @@
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="room_search_combobox">
-                        <property name="has-entry">True</property>
-                        <property name="visible">False</property>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="room_search_entry">
-                            <property name="hexpand">False</property>
-                            <property name="max-width-chars">20</property>
-                            <property name="placeholder-text" translatable="yes">Room…</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_search"/>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="dropdown-scrollbar"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="user_search_combobox">
-                        <property name="has-entry">True</property>
-                        <property name="visible">False</property>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="user_search_entry">
-                            <property name="hexpand">False</property>
-                            <property name="max-width-chars">20</property>
-                            <property name="placeholder-text" translatable="yes">Username…</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_search"/>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="dropdown-scrollbar"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="search_combobox">
-                        <property name="has-entry">True</property>
-                        <property name="hexpand">True</property>
-                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
-                        <property name="visible">True</property>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="search_entry">
-                            <property name="max-width-chars">75</property>
-                            <property name="placeholder-text" translatable="yes">Search term…</property>
-                            <property name="primary-icon-name">system-search-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_search"/>
-                            <signal name="icon-press" handler="on_search"/>
-                          </object>
-                        </child>
-                        <child internal-child="button">
-                          <object class="GtkButton" id="search_combobox_button"/>
-                        </child>
-                        <style>
-                          <class name="dropdown-scrollbar"/>
-                        </style>
                       </object>
                     </child>
                   </object>
@@ -746,6 +712,16 @@
       </object>
     </child>
   </object>
+  <object class="GtkEntry" id="userbrowse_entry">
+    <property name="max-width-chars">45</property>
+    <property name="placeholder-text" translatable="yes">Username…</property>
+    <property name="primary-icon-name">avatar-default-symbolic</property>
+    <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_get_shares"/>
+    <signal name="icon-press" handler="on_get_shares"/>
+  </object>
   <object class="GtkBox" id="userbrowse_page">
     <property name="visible">False</property>
     <child>
@@ -772,26 +748,6 @@
                     <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="userbrowse_combobox">
-                        <property name="has-entry">True</property>
-                        <property name="visible">True</property>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="userbrowse_entry">
-                            <property name="max-width-chars">45</property>
-                            <property name="placeholder-text" translatable="yes">Username…</property>
-                            <property name="primary-icon-name">avatar-default-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_get_shares"/>
-                            <signal name="icon-press" handler="on_get_shares"/>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="dropdown-scrollbar"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>
@@ -919,6 +875,16 @@
       </object>
     </child>
   </object>
+  <object class="GtkEntry" id="userinfo_entry">
+    <property name="max-width-chars">45</property>
+    <property name="placeholder-text" translatable="yes">Username…</property>
+    <property name="primary-icon-name">avatar-default-symbolic</property>
+    <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_show_user_profile"/>
+    <signal name="icon-press" handler="on_show_user_profile"/>
+  </object>
   <object class="GtkBox" id="userinfo_page">
     <property name="visible">False</property>
     <child>
@@ -945,26 +911,6 @@
                     <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="userinfo_combobox">
-                        <property name="has-entry">True</property>
-                        <property name="visible">True</property>
-                        <child internal-child="entry">
-                          <object class="GtkEntry" id="userinfo_entry">
-                            <property name="max-width-chars">45</property>
-                            <property name="placeholder-text" translatable="yes">Username…</property>
-                            <property name="primary-icon-name">avatar-default-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_show_user_profile"/>
-                            <signal name="icon-press" handler="on_show_user_profile"/>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="dropdown-scrollbar"/>
-                        </style>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>

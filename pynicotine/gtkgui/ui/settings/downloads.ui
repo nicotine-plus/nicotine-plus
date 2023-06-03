@@ -48,7 +48,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="sent_files_permission_container">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
@@ -59,19 +59,6 @@
                 <property name="visible">True</property>
               </object>
             </child>
-            <child>
-              <object class="GtkComboBoxText" id="sent_files_permission_combobox">
-                <property name="sensitive" bind-source="accept_sent_files_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <items>
-                  <item>No one</item>
-                  <item>Everyone</item>
-                  <item>Buddies</item>
-                  <item>Trusted Buddies</item>
-                </items>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -80,29 +67,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="download_double_click_label">
                 <property name="label" translatable="yes">Double-click action for downloads:</property>
-                <property name="mnemonic-widget">download_double_click_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="download_double_click_combobox">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <items>
-                  <item>Nothing</item>
-                  <item>Send to Player</item>
-                  <item>Open in File Manager</item>
-                  <item>Search</item>
-                  <item>Pause</item>
-                  <item>Clear</item>
-                  <item>Resume</item>
-                  <item>Browse Folder</item>
-                </items>
               </object>
             </child>
           </object>

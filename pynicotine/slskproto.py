@@ -1311,7 +1311,7 @@ class SoulseekNetworkThread(Thread):
                             self._user_addresses[msg.user] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
-                        if msg.user == self._server_username:
+                        if msg.user == self._server_username and msg.avgspeed is not None:
                             self._upload_speed = msg.avgspeed
                             log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
                             self._update_maximum_distributed_children()

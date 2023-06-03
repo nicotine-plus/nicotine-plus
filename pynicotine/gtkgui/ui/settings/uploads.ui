@@ -66,29 +66,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="upload_double_click_label">
                 <property name="label" translatable="yes">Double-click action for uploads:</property>
-                <property name="mnemonic-widget">upload_double_click_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="upload_double_click_combobox">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <items>
-                  <item>Nothing</item>
-                  <item>Send to Player</item>
-                  <item>Open in File Manager</item>
-                  <item>Search</item>
-                  <item>Abort</item>
-                  <item>Clear</item>
-                  <item>Retry</item>
-                  <item>Browse Folder</item>
-                </items>
               </object>
             </child>
           </object>
@@ -323,27 +306,16 @@
           <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
+            <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
+First In, First Out: Files will be uploaded in the order they were queued.</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="upload_queue_type_label">
                 <property name="label" translatable="yes">Upload queue type:</property>
-                <property name="mnemonic-widget">upload_queue_type_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="upload_queue_type_combobox">
-                <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
-First In, First Out: Files will be uploaded in the order they were queued.</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <items>
-                  <item>Round Robin</item>
-                  <item>First In, First Out</item>
-                </items>
               </object>
             </child>
           </object>

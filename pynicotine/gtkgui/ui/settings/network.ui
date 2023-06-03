@@ -327,28 +327,15 @@
           <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
+            <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="network_interface_label">
                 <property name="label" translatable="yes">Network interface:</property>
-                <property name="mnemonic-widget">network_interface_combobox</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="network_interface_combobox">
-                <property name="has-entry">True</property>
-                <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>

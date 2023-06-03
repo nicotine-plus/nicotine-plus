@@ -99,25 +99,6 @@ class Window:
 
         focus_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
-    @staticmethod
-    def on_combobox_popup_shown(combobox, param):
-
-        visible = combobox.get_property(param.name)
-
-        if visible:
-            return
-
-        # Always focus the text entry after the popup is closed
-        if combobox.get_has_entry():
-            entry = combobox.get_child()
-            entry.grab_focus_without_selecting()
-            entry.set_position(-1)
-            return
-
-        # Workaround for GTK 4 issue where wrong widget receives focus after closing popup
-        if GTK_API_VERSION >= 4:
-            combobox.grab_focus()
-
     def on_focus_widget_changed(self, *_args):
 
         focus_widget = self.widget.get_focus()
@@ -132,8 +113,3 @@ class Window:
             if popover is not None:
                 self.connect_signal(popover, "closed", self.on_popover_closed)
                 return
-
-        combobox = focus_widget.get_ancestor(Gtk.ComboBoxText)
-
-        if combobox is not None:
-            self.connect_signal(combobox, "notify::popup-shown", self.on_combobox_popup_shown)
