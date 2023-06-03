@@ -56,6 +56,10 @@ class Notifications:
 
     """ TTS """
 
+    def format_chat_text_to_speech(self, user, text, is_action=False):
+        speech = f"{user} {text[4:]}!" if is_action else text
+        return speech
+
     def new_tts(self, message, args=None):
 
         if not config.sections["ui"]["speechenabled"]:

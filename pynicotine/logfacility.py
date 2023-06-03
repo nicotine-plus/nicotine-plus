@@ -222,6 +222,18 @@ class Logger:
 
     """ Log Messages """
 
+    def format_chat_line(self, text, user, room=None, is_global=False, is_action=False):
+
+        if is_action:
+            line = f"* {user} {text[4:]}"
+        else:
+            line = f"[{user}] {text}"
+
+        if room and is_global:
+            line = f"{room} | {line}"
+
+        return line
+
     def _format_log_message(self, level, msg, msg_args):
 
         prefix = self.PREFIXES.get(level)

@@ -342,7 +342,7 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.say_chat_room(msg)  # , is_global=True)
+            page.say_chat_room(msg)
 
     def global_room_update_room_tag(self, roomname):
 
@@ -373,7 +373,7 @@ class ChatRooms(IconNotebook):
 
     def update_tags(self):
         for page in self.pages.values():
-            page.update_tags()
+            page.chat_view.update_tags()
 
     def server_disconnect(self, *_args):
 
@@ -436,17 +436,12 @@ class ChatRoom:
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
-        self.activity_view = TextView(
-            self.activity_view_container, editable=False, horizontal_margin=10, vertical_margin=5, pixels_below_lines=2
-        )
-        self.chat_view = ChatView(
-            self.chat_view_container, editable=False, horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-            user_statuses=self.user_statuses,
-            username_event=self.username_event,
-            joined_rooms=core.chatrooms.joined_rooms if self.is_global else None,
-            roomname_event=self.roomname_event if self.is_global else None,
-            is_chatroom=True
-        )
+        self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
+                                      vertical_margin=5, pixels_below_lines=2)
+        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2, user_statuses=self.user_statuses,
+                                  username_event=self.username_event,
+                                  roomname_event=self.roomname_event if self.is_global else None, is_chatroom=True)
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
@@ -690,12 +685,7 @@ class ChatRoom:
         filename = f"{clean_file(self.room)}.log"
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
-        try:
-            self.chat_view.append_log_lines(
-                path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
-            )
-        except OSError:
-            pass
+        self.chat_view.append_log_lines(path, numlines, is_global=self.is_global)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
@@ -777,7 +767,7 @@ class ChatRoom:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
-        if text.startswith("/me "):
+        if tag == self.chat_view.tag_action:
             text = f"* {user} {text[4:]}"
 
         if mentioned:
@@ -811,43 +801,31 @@ class ChatRoom:
 
         user = msg.user
         login_username = core.login_username
-        is_buddy = (user in core.userlist.buddies)
-        room = msg.room
         text = msg.msg
+        room = msg.room
         text = "\n-- ".join(text.split("\n"))
         tag = self.chat_view.get_text_tag(text, user, login_username)
 
-        if self.log_toggle.get_active() or self.speech_toggle.get_active():
-            # Compile a plain-text string chat line
-            if tag == self.chat_view.tag_action:
-                line = f"* {user} {text[4:]}"
-                speech = line[2:]
-            else:
-                line = f"[{user}] {text}"
-                speech = text
-
-            if self.is_global:
-                line = f"{room} | {line}"
-
         if user != login_username:
             self.chat_view.insert_new_line(
-                core.privatechat.censor_chat(text), text_tag=tag, room=room if self.is_global else None, user=user
+                core.privatechat.censor_chat(text), tag=tag, username=user, roomname=room, is_global=self.is_global
             )
 
             if self.speech_toggle.get_active():
+                speech = core.notifications.format_chat_text_to_speech(user, text, (tag == self.chat_view.tag_action))
                 core.notifications.new_tts(
                     config.sections["ui"]["speechrooms"], {"room": room, "user": user, "message": speech}
                 )
 
         else:
-            self.chat_view.insert_new_line(text, text_tag=tag, room=room if self.is_global else None, user=user)
+            self.chat_view.insert_new_line(text, tag=tag, username=user, roomname=room, is_global=self.is_global)
 
         self._show_notification(login_username, room, user, text, tag)
 
         if self.log_toggle.get_active():
             log.write_log_file(
-                folder_path=config.sections["logging"]["roomlogsdir"],
-                base_name=f"{clean_file(self.room)}.log", text=line
+                folder_path=config.sections["logging"]["roomlogsdir"], base_name=f"{clean_file(self.room)}.log",
+                text=log.format_chat_line(text, user, room, self.is_global, (tag == self.chat_view.tag_action))
             )
 
     def echo_room_message(self, text, message_type):
@@ -857,7 +835,7 @@ class ChatRoom:
         else:
             tag = self.chat_view.get_text_tag(text)
 
-        self.chat_view.insert_new_line(text, text_tag=tag)
+        self.chat_view.insert_new_line(text, tag=tag)
 
     def user_joined_room(self, msg):
 
@@ -878,10 +856,9 @@ class ChatRoom:
 
         self.add_user_row(userdata)
 
+        self.chatrooms.global_room_update_user_tag(username, userdata.status)
         self.chat_view.update_user_tag(username)
         self.update_user_count()
-
-        self.chatrooms.global_room_update_user_tag(username, userdata.status)
 
     def user_left_room(self, msg):
 
@@ -968,7 +945,6 @@ class ChatRoom:
 
         self.user_statuses[user] = status
         self.chat_view.update_user_tag(user)
-
         self.chatrooms.global_room_update_user_tag(user, status)
 
     def user_country(self, user, country_code):
@@ -1000,9 +976,6 @@ class ChatRoom:
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
         menu.popup(pos_x, pos_y)
 
-    def update_tags(self):
-        self.chat_view.update_tags()
-
     def server_disconnect(self):
 
         self.user_statuses.clear()
@@ -1028,13 +1001,14 @@ class ChatRoom:
                 self.users_list_view.remove_row(iterator)
 
             self.add_user_row(userdata)
+            self.chatrooms.global_room_update_user_tag(username, userdata.status)
 
         self.users_list_view.enable_sorting()
 
         # Update user count
         self.update_user_count()
 
-        # Update all username tags in chat room view
+        self.chat_view.update_room_tags()
         self.chat_view.update_user_tags()
 
         # Add room users to completion list
