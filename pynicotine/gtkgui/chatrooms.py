@@ -610,7 +610,7 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country_code = userdata.country or ""  # country can be None, ensure string is used
+        country_code = core.user_countries.get(username) or userdata.country or ""
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""

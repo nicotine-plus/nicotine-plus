@@ -78,16 +78,17 @@ class Core:
         self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
-        self.user_ip_address = None
+        self.public_ip_address = None
         self.privileges_left = None
         self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
         self.queue = deque()
         self.message_events = {}
         self.user_addresses = {}
+        self.user_countries = {}
         self.user_statuses = {}
         self.watched_users = set()
-        self._ip_requested = set()
+        self._ip_requested = {}
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -272,31 +273,16 @@ class Core:
     def request_give_privileges(self, user, days):
         self.queue.append(slskmessages.GivePrivileges(user, days))
 
-    def request_ip_address(self, username):
-        self._ip_requested.add(username)
+    def request_ip_address(self, username, notify=False):
+
+        if username in self._ip_requested:
+            return
+
+        self._ip_requested[username] = notify
         self.queue.append(slskmessages.GetPeerAddress(username))
 
     def request_set_status(self, status):
         self.queue.append(slskmessages.SetStatus(status))
-
-    def get_user_country(self, user):
-        """ Retrieve a user's country code if previously cached, otherwise request
-        user's IP address to determine country """
-
-        if self.user_status == slskmessages.UserStatus.OFFLINE:
-            return None
-
-        user_address = self.user_addresses.get(user)
-
-        if user_address and user != self.login_username:
-            ip_address, _port = user_address
-            country_code = self.network_filter.get_country_code(ip_address)
-            return country_code
-
-        if user not in self._ip_requested:
-            self.queue.append(slskmessages.GetPeerAddress(user))
-
-        return None
 
     def watch_user(self, user, force_update=False):
         """ Tell the server we want to be notified of status/stat updates
@@ -331,6 +317,7 @@ class Core:
 
         # Clean up connections
         self.user_addresses.clear()
+        self.user_countries.clear()
         self.user_statuses.clear()
         self.watched_users.clear()
 
@@ -350,7 +337,8 @@ class Core:
             self.watch_user(msg.username)
 
             if msg.ip_address is not None:
-                self.user_ip_address = msg.ip_address
+                self.public_ip_address = msg.ip_address
+                self.user_countries[msg.username] = self.network_filter.get_country_code(msg.ip_address)
 
             if msg.banner:
                 log.add(msg.banner)
@@ -369,14 +357,15 @@ class Core:
         """ Server code: 3 """
 
         user = msg.user
-        country_code = self.network_filter.get_country_code(msg.ip_address)
+        notify = self._ip_requested.pop(user, None)
+
+        self.user_countries[user] = country_code = self.network_filter.get_country_code(msg.ip_address)
         events.emit("user-country", user, country_code)
 
-        if user not in self._ip_requested:
+        if not notify:
             self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
             return
 
-        self._ip_requested.remove(user)
         self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
 
         if country_code:
@@ -422,6 +411,10 @@ class Core:
 
         if user in self.watched_users:
             self.user_statuses[user] = status
+
+        if status == slskmessages.UserStatus.OFFLINE:
+            # IP address is removed in slskproto.py
+            self.user_countries.pop(user, None)
 
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
 

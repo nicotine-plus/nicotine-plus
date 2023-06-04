@@ -32,7 +32,7 @@ class ChatRooms:
 
         self.completions = set()
         self.server_rooms = set()
-        self.joined_rooms = set()
+        self.joined_rooms = {}
         self.pending_autojoin_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
 
@@ -117,7 +117,13 @@ class ChatRooms:
         else:
             core.queue.append(slskmessages.LeaveRoom(room))
 
-        self.joined_rooms.discard(room)
+        room_users = self.joined_rooms.pop(room)
+        non_watched_users = set(room_users) - core.watched_users
+
+        for username in non_watched_users:
+            # We haven't explicitly watched the user, server will no longer send status updates
+            core.user_addresses.pop(username, None)
+            core.user_countries.pop(username, None)
 
         if room in config.sections["columns"]["chat_room"]:
             del config.sections["columns"]["chat_room"][room]
@@ -209,7 +215,7 @@ class ChatRooms:
     def _join_room(self, msg):
         """ Server code: 14 """
 
-        self.joined_rooms.add(msg.room)
+        self.joined_rooms[msg.room] = room_users = {}
 
         if msg.room not in config.sections["server"]["autojoin"]:
             config.sections["server"]["autojoin"].append(msg.room)
@@ -218,8 +224,12 @@ class ChatRooms:
             self.create_private_room(msg.room, msg.owner, msg.operators)
 
         for userdata in msg.users:
+            username = userdata.username
+            room_users[username] = userdata
+
             # Request user's IP address, so we can get the country and ignore messages by IP
-            core.queue.append(slskmessages.GetPeerAddress(userdata.username))
+            if username not in core.user_addresses:
+                core.request_ip_address(username)
 
         core.pluginhandler.join_chatroom_notification(msg.room)
 
@@ -395,17 +405,25 @@ class ChatRooms:
     def _user_joined_room(self, msg):
         """ Server code: 16 """
 
-        user = msg.userdata.username
+        username = msg.userdata.username
 
         # Request user's IP address, so we can get the country and ignore messages by IP
-        core.queue.append(slskmessages.GetPeerAddress(user))
+        if username not in core.user_addresses:
+            core.request_ip_address(username)
 
-        core.pluginhandler.user_join_chatroom_notification(msg.room, user)
+        core.pluginhandler.user_join_chatroom_notification(msg.room, username)
 
     def _user_left_room(self, msg):
         """ Server code: 17 """
 
-        core.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
+        username = msg.username
+
+        if username not in core.watched_users:
+            # We haven't explicitly watched the user, server will no longer send status updates
+            core.user_addresses.pop(username, None)
+            core.user_countries.pop(username, None)
+
+        core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
 
     def update_completions(self):
 
