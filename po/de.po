@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-22 17:12+0000\n"
+"PO-Revision-Date: 2023-06-04 09:22+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -2343,12 +2343,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/widgets/trayicon.py:241
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr "Name des Benutzers, dessen Profil Sie sehen möchten:"
+msgstr "Name des Benutzers, dessen Profil du sehen möchtest:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:261
 msgid "Enter the name of the user whose shares you want to see:"
-msgstr ""
-"Geben Sie den Namen des Benutzers ein, dessen Freigaben Sie sehen möchten:"
+msgstr "Geben den Namen des Benutzers ein, dessen Freigaben du sehen möchtest:"
 
 #: pynicotine/gtkgui/widgets/treeview.py:591
 #: pynicotine/gtkgui/widgets/treeview.py:1022
@@ -3396,8 +3395,8 @@ msgstr "Text-zu-Sprache für Nachricht fehlgeschlagen: %s"
 #: pynicotine/nowplaying.py:127
 msgid "Last.fm: Please provide both your Last.fm username and API key"
 msgstr ""
-"Last.fm: Bitte geben Sie sowohl Ihren Last.fm-Benutzernamen als auch Ihren "
-"API-Schlüssel an"
+"Last.fm: Bitte gebe sowohl deine Last.fm-Benutzernamen als auch deiner API-"
+"Schlüssel an"
 
 #: pynicotine/nowplaying.py:127 pynicotine/nowplaying.py:138
 #: pynicotine/nowplaying.py:160 pynicotine/nowplaying.py:191
@@ -3443,7 +3442,7 @@ msgstr ""
 
 #: pynicotine/nowplaying.py:260
 msgid "ListenBrainz: Please provide your ListenBrainz username"
-msgstr "ListenBrainz: Bitte geben Sie Ihren ListenBrainz-Benutzernamen an"
+msgstr "ListenBrainz: Bitte gebe deiner ListenBrainz-Benutzernamen an"
 
 #: pynicotine/nowplaying.py:269
 #, python-format
@@ -3769,8 +3768,8 @@ msgstr ""
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr ""
-"Kann weder %(option1)s noch %(option2)s finden, bitte installieren Sie einen "
-"der beiden."
+"Kann weder %(option1)s noch %(option2)s finden, bitte installiere einen der "
+"beiden."
 
 #: pynicotine/shares.py:143
 #, python-format
@@ -3798,9 +3797,9 @@ msgid ""
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Beim erneuten Scannen von Freigaben ist ein schwerwiegender Fehler "
-"aufgetreten. Wenn dieses Problem weiterhin besteht, löschen Sie %(dir)s/*.db "
-"und versuchen Sie es erneut. Wenn das nicht hilft, reichen Sie bitte einen "
-"Fehlerbericht ein, der diesen Stack-Trace enthält: %(trace)s"
+"aufgetreten. Wenn dieses Problem weiterhin besteht, lösche %(dir)s/*.db und "
+"versuche es erneut. Wenn das nicht hilft, reiche bitte einen Fehlerbericht "
+"mit diesem Stack-Trace ein: %(trace)s"
 
 #: pynicotine/shares.py:259
 #, python-format
@@ -3853,8 +3852,8 @@ msgstr "Fehler beim Abrufen des freigegebenen Ordners %(folder)s: %(error)s"
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"Die Freigabedatenbank kann nicht gelesen werden. Bitte scannen Sie Ihre "
-"Freigaben erneut. Fehler: %s"
+"Die Freigabedatenbank kann nicht gelesen werden. Bitte scanne die Freigaben "
+"erneut. Fehler: %s"
 
 #: pynicotine/slskproto.py:303
 #, python-format
@@ -4135,8 +4134,8 @@ msgstr "Freund hinzufügen…"
 #: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1273
 msgid "Enter the username of the person you want to add to your buddy list"
 msgstr ""
-"Geben Sie den Benutzernamen der Person ein, die Sie Ihrer Kontaktliste "
-"hinzufügen möchten"
+"Gebe den Benutzernamen der Person ein, die du deiner Kontaktliste hinzufügen "
+"möchtest"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4196,15 +4195,15 @@ msgid ""
 "password. If you already have an account, fill in your existing login "
 "details."
 msgstr ""
-"Um ein neues Soulseek-Konto zu erstellen, geben Sie Ihren gewünschten "
-"Benutzernamen und Passwort ein. Wenn Sie bereits ein Konto haben, geben Sie "
-"Ihre bestehenden Anmeldedaten ein."
+"Um ein neues Soulseek-Konto zu erstellen, geben deine gewünschten "
+"Benutzernamen und Passwort ein. Wenn du bereits ein Konto hast, gebe die "
+"bestehenden Anmeldedaten ein."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:142
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
 msgstr ""
-"Wenn Ihr gewünschter Benutzername bereits vergeben ist, werden Sie "
+"Wenn der gewünschte Benutzername bereits vergeben ist, werdest du "
 "aufgefordert, ihn zu ändern."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:205
