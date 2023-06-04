@@ -755,51 +755,6 @@ class Transfers:
             self.check_upload_queue()
             return
 
-    # Download Folder content Backend Response
-    def _folder_contents_response(self, msg, check_num_files=True):
-        """ Peer code: 37 """
-        """ When we got a contents of a folder, get all the files in it, but
-        skip the files in subfolders """
-
-        username = msg.init.target_user
-        file_list = msg.list
-
-        log.add_transfer("Received response for folder content request from user %s", username)
-
-        for i in file_list:
-            for directory in file_list[i]:
-                if os.path.commonprefix([i, directory]) != directory:
-                    continue
-
-                files = file_list[i][directory][:]
-                num_files = len(files)
-
-                if check_num_files and num_files > 100:
-                    events.emit("download-large-folder", username, directory, num_files, msg)
-                    return
-
-                destination = self.get_folder_destination(username, directory)
-
-                if num_files > 1:
-                    files.sort(key=lambda x: strxfrm(x[1]))
-
-                log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
-                                  "Destination path: %(destination)s"), {
-                    "folder": directory,
-                    "user": username,
-                    "destination": destination
-                })
-
-                for file in files:
-                    virtualpath = directory.rstrip("\\") + "\\" + file[1]
-                    size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                        size, file[4])
-
-                    self.get_file(
-                        username, virtualpath, path=destination,
-                        size=size, bitrate=h_bitrate, length=h_length)
-
     def _queue_upload(self, msg):
         """ Peer code: 43 """
         """ Peer remotely queued a download (upload here). This is the modern replacement to

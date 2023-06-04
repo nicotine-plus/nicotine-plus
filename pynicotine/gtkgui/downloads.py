@@ -78,7 +78,6 @@ class Downloads(TransferList):
             ("abort-downloads", self.abort_transfers),
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
-            ("download-large-folder", self.download_large_folder),
             ("download-notification", self.new_transfer_notification),
             ("start", self.start),
             ("update-download", self.update_model),
@@ -124,21 +123,6 @@ class Downloads(TransferList):
             title=_("Clear All Downloads"),
             message=_("Do you really want to clear all downloads?"),
             callback=self.on_clear_all_response
-        ).show()
-
-    def folder_download_response(self, _dialog, response_id, msg):
-        if response_id == 2:
-            events.emit("folder-contents-response", msg, check_num_files=False)
-
-    def download_large_folder(self, username, folder, numfiles, msg):
-
-        OptionDialog(
-            parent=self.window,
-            title=_("Download %(num)i files?") % {"num": numfiles},
-            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                "num": numfiles, "user": username, "folder": folder},
-            callback=self.folder_download_response,
-            callback_data=msg
         ).show()
 
     def on_copy_url(self, *_args):
