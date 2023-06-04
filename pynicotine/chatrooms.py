@@ -118,7 +118,7 @@ class ChatRooms:
             core.queue.append(slskmessages.LeaveRoom(room))
 
         room_users = self.joined_rooms.pop(room)
-        non_watched_users = set(room_users) - core.watched_users
+        non_watched_users = room_users.difference(core.watched_users)
 
         for username in non_watched_users:
             # We haven't explicitly watched the user, server will no longer send status updates
