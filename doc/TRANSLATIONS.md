@@ -81,4 +81,4 @@ Nicotine+ will try to automatically detect your language based on the system loc
 
 ## Adding Yourself to Translators
 
-If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/master/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/master/pynicotine/gtkgui/dialogs/about.py). Add yourself to the top of matching section and then create a PR (pull request).
+If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/gtkgui/dialogs/about.py). Add yourself to the top of matching section and then create a PR (pull request).

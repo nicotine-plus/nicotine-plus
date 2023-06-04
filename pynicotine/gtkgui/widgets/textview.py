@@ -24,6 +24,7 @@ from collections import deque
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -365,13 +366,11 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, user_statuses=None, username_event=None,
-                 roomname_event=None, is_chatroom=False, **kwargs):
+    def __init__(self, *args, username_event=None, roomname_event=None, is_chatroom=False, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.is_chatroom = is_chatroom
-        self.user_statuses = user_statuses
         self.username_event = username_event
         self.roomname_event = roomname_event
 
@@ -452,7 +451,7 @@ class ChatView(TextView):
             return
 
         if is_global:
-            timestamp_length = len(time.strftime(config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S"))
+            timestamp_length = len(time.strftime(config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")))
 
         with open(encode_path(path), "rb") as lines:
             # Only show as many log lines as specified in config
@@ -613,7 +612,7 @@ class ChatView(TextView):
         if user in core.userlist.buddies:
             return self.tag_highlight
 
-        return None
+        return self.tag_local
 
     def get_user_tag(self, username):
 
@@ -669,7 +668,8 @@ class ChatView(TextView):
         if username not in self.tag_users:
             self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
 
-        color = USER_STATUS_COLORS.get(self.user_statuses.get(username, status))  # global room feed uses default
+        status = core.user_statuses.get(username, slskmessages.UserStatus.OFFLINE)
+        color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.tag_users[username], color)
 
     def update_user_tags(self):

@@ -140,9 +140,12 @@ class UserList:
         if user in self.buddies:
             return
 
-        note = country = ""
+        note = ""
+        country_code = core.user_countries.get(user)
+        country = f"flag_{country_code}" if country_code else ""
         is_trusted = notify_status = is_prioritized = False
         last_seen = "Never seen"
+        status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
 
         self.buddies[user] = user_data = Buddy(
             username=user,
@@ -152,7 +155,7 @@ class UserList:
             is_trusted=is_trusted,
             last_seen=last_seen,
             country=country,
-            status=slskmessages.UserStatus.OFFLINE
+            status=status
         )
 
         if config.sections["words"]["buddies"]:
@@ -166,10 +169,11 @@ class UserList:
             return
 
         # Request user status, speed and number of shared files
-        core.watch_user(user, force_update=True)
+        core.watch_user(user)
 
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
+        # Request user country
+        if country_code is None:
+            core.request_ip_address(user)
 
     def remove_buddy(self, user):
 

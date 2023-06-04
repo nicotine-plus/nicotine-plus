@@ -431,7 +431,6 @@ class ChatRoom:
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
-        self.user_statuses = {}
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
@@ -439,8 +438,7 @@ class ChatRoom:
         self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
                                       vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, user_statuses=self.user_statuses,
-                                  username_event=self.username_event,
+                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event,
                                   roomname_event=self.roomname_event if self.is_global else None, is_chatroom=True)
 
         # Event Text Search
@@ -602,7 +600,6 @@ class ChatRoom:
 
         self.activity_view.clear()
         self.chat_view.clear()
-        self.user_statuses.clear()
         self.users_list_view.clear()
 
         for menu in (self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
@@ -629,7 +626,7 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country_code = userdata.country or ""  # country can be None, ensure string is used
+        country_code = core.user_countries.get(username) or userdata.country or ""
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
@@ -653,7 +650,6 @@ class ChatRoom:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 
-        self.user_statuses[username] = status
         self.users_list_view.add_row([
             status_icon_name,
             flag_icon_name,
@@ -879,7 +875,6 @@ class ChatRoom:
         iterator = self.users_list_view.iterators.get(username)
         self.users_list_view.remove_row(iterator)
 
-        self.user_statuses.pop(username, None)
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
@@ -943,7 +938,6 @@ class ChatRoom:
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
         self.users_list_view.set_row_value(iterator, "status_data", status)
 
-        self.user_statuses[user] = status
         self.chat_view.update_user_tag(user)
         self.chatrooms.global_room_update_user_tag(user, status)
 
@@ -978,7 +972,6 @@ class ChatRoom:
 
     def server_disconnect(self):
 
-        self.user_statuses.clear()
         self.users_list_view.clear()
         self.update_user_count()
 

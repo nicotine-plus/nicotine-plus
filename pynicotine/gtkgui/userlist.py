@@ -222,23 +222,28 @@ class UserList:
         if iterator is None:
             return
 
-        h_speed = ""
-        avgspeed = msg.avgspeed
-
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
-
+        speed = msg.avgspeed
         files = msg.files
+
+        h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files)
 
         self.list_view.set_row_value(iterator, "speed", h_speed)
         self.list_view.set_row_value(iterator, "files", h_files)
-        self.list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.list_view.set_row_value(iterator, "speed_data", speed)
         self.list_view.set_row_value(iterator, "files_data", files)
 
     def add_buddy(self, user, user_data):
 
+        user_stats = core.watched_users.get(user, {})
+
+        status = user_data.status
         country_code = user_data.country.replace("flag_", "")
+        speed = user_stats.get("upload_speed", 0)
+        files = user_stats.get("files", 0)
+
+        h_speed = human_speed(speed) if speed > 0 else ""
+        h_files = humanize(files)
 
         try:
             last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
@@ -250,16 +255,19 @@ class UserList:
             h_last_seen = _("Never seen")
 
         self.list_view.add_row([
-            USER_STATUS_ICON_NAMES.get(user_data.status, ""),
+            USER_STATUS_ICON_NAMES.get(status, ""),
             get_flag_icon_name(country_code),
             str(user),
-            "", "",
+            h_speed,
+            h_files,
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
             str(h_last_seen),
             str(user_data.note),
-            0, 0, 0,
+            status,
+            speed,
+            files,
             last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)

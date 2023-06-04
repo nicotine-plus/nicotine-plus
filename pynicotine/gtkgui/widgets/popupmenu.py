@@ -451,7 +451,7 @@ class UserPopupMenu(PopupMenu):
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user)
+        core.request_ip_address(self.user, notify=True)
 
     def on_user_profile(self, *_args):
         core.userinfo.show_user(self.user)
