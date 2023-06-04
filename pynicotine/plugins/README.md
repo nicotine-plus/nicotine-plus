@@ -1,6 +1,6 @@
 # Nicotine+ Plugins
 
-This folder contains the Nicotine+ core plugins that are available for all users, as well as example plugins developers might find helpful.
+This folder contains the Nicotine+ core plugins that are available for all users, as well as example plugins developers may find helpful.
 
 
 ## Installing Plugins
@@ -8,7 +8,7 @@ This folder contains the Nicotine+ core plugins that are available for all users
 In order to load your own custom plugins, you need to:
 
 1. Copy your plugin folder containing a PLUGININFO file into `%AppData%/Roaming/nicotine/plugins/` (Windows), `~/.local/share/nicotine/plugins/` (other OSes).
-2. Close and reopen the Preferences dialog in case it's open.
+2. Close and reopen the Preferences dialog in case it is open.
 3. Enable the plugin in Preferences -> Plugins (there is no need to restart Nicotine+).
 
 
@@ -24,7 +24,7 @@ There are three types of commands available:
 
 By default, commands are grouped under the same name as your plugin.
 
-Until this section is fully documented, see the `core_commands` plugin for examples on how to add commands to your plugins.
+Until this section is fully documented, see the [core_commands](./core_commands/) plugin for examples on how to add commands to your plugins.
 
 ### Events and Notifications
 
