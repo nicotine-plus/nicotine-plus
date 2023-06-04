@@ -75,7 +75,7 @@ class UserInfo:
         core.send_message_to_peer(user, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
-        core.watch_user(user, force_update=True)
+        core.watch_user(user)
 
         # Request user interests
         core.queue.append(slskmessages.UserInterests(user))

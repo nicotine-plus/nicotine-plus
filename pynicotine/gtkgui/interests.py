@@ -395,10 +395,23 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user, rating in users.items():
+            user_stats = core.watched_users.get(user, {})
+
+            status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
+            speed = user_stats.get("upload_speed", 0)
+            files = user_stats.get("files", 0)
+
+            h_files = humanize(files)
+            h_speed = human_speed(speed) if speed > 0 else ""
+
             self.similar_users_list_view.add_row([
-                USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE],
+                USER_STATUS_ICON_NAMES[status],
                 user,
-                "", "0", 0, 0, 0,
+                h_speed,
+                h_files,
+                status,
+                speed,
+                files,
                 rating
             ], select_row=False)
 
@@ -432,18 +445,15 @@ class Interests:
         if iterator is None:
             return
 
-        h_speed = ""
-        avgspeed = msg.avgspeed
-
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
-
+        speed = msg.avgspeed
         files = msg.files
+
+        h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(msg.files)
 
         self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
         self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
         self.similar_users_list_view.set_row_value(iterator, "files_data", files)
 
     @staticmethod
