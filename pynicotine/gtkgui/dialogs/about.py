@@ -277,6 +277,9 @@ class About(Dialog):
    - yyyyyyyan (2020)
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
+        """>> <b>Romanian</b>
+   - xslendix (2023)""",
+
         """>> <b>Russian</b>
    - SnIPeRSnIPeR (2022–2023)
    - Mehavoid (2021–2023)
