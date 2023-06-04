@@ -262,11 +262,9 @@ class PrivateChat:
 
         self.loaded = False
         self.offline_message = False
-        self.status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
 
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, user_statuses=core.user_statuses,
-                                  username_event=self.username_event)
+                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,

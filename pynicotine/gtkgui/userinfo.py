@@ -260,11 +260,6 @@ class UserInfo:
         self.picture_surface = None
         self.indeterminate_progress = True
 
-        country_code = core.user_countries.get(user)
-
-        if country_code:
-            self.user_country(country_code)
-
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
@@ -318,6 +313,8 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.populate_stats()
+
     def clear(self):
 
         self.description_view.clear()
@@ -337,6 +334,26 @@ class UserInfo:
         pass
 
     """ General """
+
+    def populate_stats(self):
+
+        user_stats = core.watched_users.get(self.user, {})
+        speed = user_stats.get("upload_speed", 0)
+        files = user_stats.get("files")
+        folders = user_stats.get("folders")
+        country_code = core.user_countries.get(self.user)
+
+        if speed > 0:
+            self.upload_speed_label.set_text(human_speed(speed))
+
+        if files is not None:
+            self.shared_files_label.set_text(humanize(files))
+
+        if folders is not None:
+            self.shared_folders_label.set_text(humanize(folders))
+
+        if country_code:
+            self.user_country(country_code)
 
     def load_picture(self, data):
 

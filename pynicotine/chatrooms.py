@@ -122,8 +122,8 @@ class ChatRooms:
 
         for username in non_watched_users:
             # We haven't explicitly watched the user, server will no longer send status updates
-            core.user_addresses.pop(username, None)
-            core.user_countries.pop(username, None)
+            for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
+                dictionary.pop(username, None)
 
         if room in config.sections["columns"]["chat_room"]:
             del config.sections["columns"]["chat_room"][room]
@@ -215,7 +215,7 @@ class ChatRooms:
     def _join_room(self, msg):
         """ Server code: 14 """
 
-        self.joined_rooms[msg.room] = room_users = {}
+        self.joined_rooms[msg.room] = room_users = set()
 
         if msg.room not in config.sections["server"]["autojoin"]:
             config.sections["server"]["autojoin"].append(msg.room)
@@ -225,7 +225,8 @@ class ChatRooms:
 
         for userdata in msg.users:
             username = userdata.username
-            room_users[username] = userdata
+            core.user_statuses[username] = userdata.status
+            room_users.add(username)
 
             # Request user's IP address, so we can get the country and ignore messages by IP
             if username not in core.user_addresses:
@@ -420,8 +421,8 @@ class ChatRooms:
 
         if username not in core.watched_users:
             # We haven't explicitly watched the user, server will no longer send status updates
-            core.user_addresses.pop(username, None)
-            core.user_countries.pop(username, None)
+            for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
+                dictionary.pop(username, None)
 
         core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
 

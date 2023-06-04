@@ -115,7 +115,7 @@ class UserBrowse:
             events.emit("peer-connection-error", username)
             return
 
-        core.watch_user(username, force_update=True)
+        core.watch_user(username)
 
         if not user_share or new_request:
             core.send_message_to_peer(username, slskmessages.SharedFileListRequest())

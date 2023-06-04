@@ -87,7 +87,7 @@ class Core:
         self.user_addresses = {}
         self.user_countries = {}
         self.user_statuses = {}
-        self.watched_users = set()
+        self.watched_users = {}
         self._ip_requested = {}
 
         for event_name, callback in (
@@ -284,23 +284,20 @@ class Core:
     def request_set_status(self, status):
         self.queue.append(slskmessages.SetStatus(status))
 
-    def watch_user(self, user, force_update=False):
+    def watch_user(self, user):
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
-        if not force_update and user in self.watched_users:
-            # Already being watched, and we don't need to re-fetch the status/stats
+        if user in self.watched_users:
             return
 
         self.queue.append(slskmessages.WatchUser(user))
+        self.queue.append(slskmessages.GetUserStatus(user))  # Get privilege status
 
-        # Get privilege status
-        self.queue.append(slskmessages.GetUserStatus(user))
-
-        self.watched_users.add(user)
+        self.watched_users[user] = {}
 
     """ Message Callbacks """
 
@@ -394,7 +391,7 @@ class Core:
             return
 
         # User does not exist, server will not keep us informed if the user is created later
-        self.watched_users.discard(msg.user)
+        self.watched_users.pop(msg.user, None)
 
     def _user_status(self, msg):
         """ Server code: 7 """
@@ -409,7 +406,8 @@ class Core:
                 "user": user
             })
 
-        if user in self.watched_users:
+        # Store statuses for watched users, update statuses of room members
+        if user in self.watched_users or user in self.user_statuses:
             self.user_statuses[user] = status
 
         if status == slskmessages.UserStatus.OFFLINE:
@@ -421,14 +419,24 @@ class Core:
     def _user_stats(self, msg):
         """ Server code: 36 """
 
-        stats = {
-            "avgspeed": msg.avgspeed,
-            "uploadnum": msg.uploadnum,
-            "files": msg.files,
-            "dirs": msg.dirs,
-        }
+        username = msg.user
+        upload_speed = msg.avgspeed
+        files = msg.files
+        folders = msg.dirs
 
-        self.pluginhandler.user_stats_notification(msg.user, stats)
+        if username in self.watched_users:
+            self.watched_users[username].update({
+                "upload_speed": upload_speed,
+                "files": files,
+                "folders": folders
+            })
+
+        self.pluginhandler.user_stats_notification(msg.user, stats={
+            "avgspeed": msg.avgspeed,
+            "uploadnum": upload_speed,
+            "files": files,
+            "dirs": folders,
+        })
 
     @staticmethod
     def _admin_message(msg):

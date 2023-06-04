@@ -24,6 +24,7 @@ from collections import deque
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -342,11 +343,10 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, user_statuses=None, username_event=None, **kwargs):
+    def __init__(self, *args, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
-        self.user_statuses = user_statuses
         self.username_event = username_event
 
         self.tag_remote = self.create_tag("chatremote")
@@ -455,7 +455,8 @@ class ChatView(TextView):
         if username not in self.tag_users:
             self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
 
-        color = USER_STATUS_COLORS.get(self.user_statuses.get(username, 0))
+        status = core.user_statuses.get(username, slskmessages.UserStatus.OFFLINE)
+        color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.tag_users[username], color)
 
     def update_user_tags(self):
