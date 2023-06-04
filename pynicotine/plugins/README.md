@@ -7,7 +7,7 @@ This folder contains the Nicotine+ core plugins that are available for all users
 
 In order to load your own custom plugins, you need to:
 
-1. Copy your plugin folder containing a PLUGININFO file into `%AppData%/Roaming/nicotine/plugins/` (Windows), `~/.local/share/nicotine/plugins/` (other OSes).
+1. Copy your plugin folder containing a PLUGININFO file into `%AppData%\Roaming\nicotine\plugins\` (Windows), `~/.local/share/nicotine/plugins/` (other OSes).
 2. Close and reopen the Preferences dialog in case it is open.
 3. Enable the plugin in Preferences -> Plugins (there is no need to restart Nicotine+).
 
@@ -24,7 +24,7 @@ There are three types of commands available:
 
 By default, commands are grouped under the same name as your plugin.
 
-Until this section is fully documented, see the [core_commands](./core_commands/) plugin for examples on how to add commands to your plugins.
+Until this section is fully documented, see the [core_commands](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/core_commands/) plugin for examples on how to add commands to your plugins.
 
 ### Events and Notifications
 
@@ -36,4 +36,4 @@ There are two kinds of actions you can hook into:
 
 ### Other
 
-For more help, examine [pluginsystem.py](../pluginsystem.py) and the [example plugins](./examplars/). There is no additional documentation except for existing plugins.
+For more help, examine [pluginsystem.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/pluginsystem.py) and the [example plugins](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars/). There is no additional documentation except for existing plugins.
