@@ -467,9 +467,13 @@ class Searches:
         if maxresults == 0:
             return
 
+        # Do all processing in lowercase
+        original_searchterm = searchterm
+        searchterm = searchterm.lower()
+
         # Remember excluded/partial words for later
-        excluded_words = []
-        partial_words = []
+        excluded_words = set()
+        partial_words = set()
 
         if "-" in searchterm or "*" in searchterm:
             for word in searchterm.split():
@@ -478,15 +482,14 @@ class Searches:
 
                 if word.startswith("-"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        excluded_words.append(subword)
+                        excluded_words.add(subword)
 
                 elif word.startswith("*"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        partial_words.append(subword)
+                        partial_words.add(subword)
 
         # Strip punctuation
-        searchterm_old = searchterm
-        searchterm = searchterm.lower().translate(TRANSLATE_PUNCTUATION).strip()
+        searchterm = searchterm.translate(TRANSLATE_PUNCTUATION).strip()
 
         if len(searchterm) < config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
@@ -531,7 +534,7 @@ class Searches:
         if numresults != len(fileinfos):
             log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
                            "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
-                "query": searchterm_old,
+                "query": original_searchterm,
                 "expected_num": numresults,
                 "total_num": len(fileinfos)
             })
@@ -555,6 +558,6 @@ class Searches:
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
             "user": user,
-            "query": searchterm_old,
+            "query": original_searchterm,
             "num": numresults
         })
