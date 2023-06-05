@@ -23,7 +23,6 @@
 
 import operator
 import re
-import os.path
 
 from collections import defaultdict
 
@@ -100,6 +99,8 @@ class Searches(IconNotebook):
 
         CompletionEntry(window.room_search_entry, window.room_search_combobox.get_model())
         CompletionEntry(window.search_entry, window.search_combobox.get_model())
+
+        self.file_properties = None
 
         for event_name, callback in (
             ("add-search", self.add_search),
@@ -286,6 +287,7 @@ class Searches(IconNotebook):
             if page.text == wish:
                 page.update_wish_button()
 
+
 class Search:
 
     FILTER_GENERIC_FILE_TYPES = (
@@ -452,7 +454,7 @@ class Search:
             ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
-            ("#" + _("Download _Folder(s)"), self.on_download_folders),
+            ("#" + _("Download _Folder"), self.on_download_folders),
             ("", None),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
@@ -1386,7 +1388,7 @@ class Search:
         else:
             requested_folders = defaultdict(dict)
 
-        # Build Structure for Folder to Download        
+        # Build Structure for Folder to Download
         for iterator in self.selected_results.values():
             user = self.resultsmodel.get_value(iterator, 1)
             folder = self.resultsmodel.get_value(iterator, 12).rsplit("\\", 1)[0]
@@ -1397,29 +1399,13 @@ class Search:
                 continue
 
             requested_folders[user][folder] = download_location
+            # It is possible to open multiple Download Folder Dialogs but Error handling is hard.
 
-            visible_files = []
-            for row in self.all_data:
+        if self.download_folder is None:
+            self.download_folder = DownloadFolder(self.window.application)
 
-                # Find the wanted directory
-                if folder != row[12].rsplit("\\", 1)[0]:
-                    continue
-
-                # remove_destination is False because we need the destination for the full folder
-                # contents response later
-                destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
-
-                (_counter, user, _flag, _h_speed, _h_queue, _directory, _file_type, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
-                    _queue, _length, _has_free_slots) = row
-                visible_files.append(
-                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
-
-            if (self.download_folder is None):
-                self.download_folder = DownloadFolder(self.window.application)
-
-            self.download_folder.show()
-            core.search.request_folder_download(user, folder, visible_files)
+        self.download_folder.show()
+        core.search.request_folder_download(user, folder)
 
     def on_copy_file_path(self, *_args):
 

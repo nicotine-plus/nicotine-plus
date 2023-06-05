@@ -19,20 +19,20 @@
 import os
 import os.path
 
-from gi.repository import Gtk
 from locale import strxfrm
+from gi.repository import Gtk
 from pynicotine.logfacility import log
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine import slskmessages
 from pynicotine.utils import human_size
+
 
 class DownloadFolder(Dialog):
 
@@ -50,7 +50,7 @@ class DownloadFolder(Dialog):
             parent=application.window,
             modal=False,
             content_box=self.container,
-            title=_("Folder File Download"),
+            title="Folder File Download",
             width=800,
             height=600,
             close_callback=self.on_close,
@@ -59,6 +59,7 @@ class DownloadFolder(Dialog):
 
         self.info_bar = InfoBar(self.info_bar)
         self.application = application
+        self.folder_files = None
 
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=None,
@@ -84,7 +85,7 @@ class DownloadFolder(Dialog):
             }
         )
 
-        self.info_bar.show_message(_("Loading"), message_type=Gtk.MessageType.INFO)
+        self.info_bar.show_message("Loading", message_type=Gtk.MessageType.INFO)
 
         for event_name, callback in (
             ("folder-contents-response", self._folder_contents_response),
@@ -99,29 +100,28 @@ class DownloadFolder(Dialog):
 
         for i in msgs:
             if i.__class__ is slskmessages.FolderContentsRequest:
-                self.toggle_enabled_view(False, user)
-                self.info_bar.show_message(user + " " + _("offline"), message_type=Gtk.MessageType.ERROR)
+                self.toggle_enabled_view(False)
+                self.info_bar.show_message(user + " " + "User logged off" if is_offline else "Connection timeout",
+                                           message_type=Gtk.MessageType.ERROR)
 
-    def toggle_enabled_view(self, validFiles, user = ""):
+    def toggle_enabled_view(self, valid_files):
 
-        self.container.set_sensitive(validFiles)
-        if (validFiles):
+        self.container.set_sensitive(valid_files)
+        if (valid_files):
             self.info_bar.set_visible(False)
 
     # Pass the Download Folder Data
-    def set_folder_Files(self, folder_Files = None):
+    def set_folder_files(self, folder_files):
 
         self.toggle_enabled_view(True)
-
-        if folder_Files is not None:
-            self.folder_Files = folder_Files
+        self.folder_files = folder_files
 
         self.list_view.clear()
 
-        self.virtual_path.set_text(self.folder_Files["user"] + " : " + self.folder_Files["virtualpath"])
-        self.destination_entry.set_text(self.folder_Files["destination"])
+        self.virtual_path.set_text(self.folder_files["user"] + " : " + self.folder_files["virtualpath"])
+        self.destination_entry.set_text(self.folder_files["destination"])
 
-        for file in self.folder_Files["filenames"]:
+        for file in self.folder_files["filenames"]:
             size = file["size"]
             self.list_view.add_row([file["filename"], (human_size(size)), True])
 
@@ -147,23 +147,24 @@ class DownloadFolder(Dialog):
     def on_download(self, *_args):
 
         destination = self.destination_entry.get_text()
-        username = self.folder_Files["user"]
+        username = self.folder_files["user"]
 
         for iterator in self.list_view.get_all_rows():
             toggle = self.list_view.get_row_value(iterator, "download")
 
             if (toggle):
                 filename = self.list_view.get_row_value(iterator, "filename")
-                virtualpath = self.folder_Files["virtualpath"] + filename
+                virtualpath = self.folder_files["virtualpath"] + filename
 
-                for file in self.folder_Files["filenames"]:
+                for file in self.folder_files["filenames"]:
                     if file["filename"] == filename:
                         size = file["size"]
                         h_bitrate = file["h_bitrate"]
                         h_length = file["h_length"]
                         break
-                
-                core.transfers.get_file(username, virtualpath, path=destination, size=size, bitrate=h_bitrate, length=h_length)
+
+                core.transfers.get_file(username, virtualpath, path=destination,
+                                        size=size, bitrate=h_bitrate, length=h_length)
 
         self.close()
 
@@ -174,7 +175,7 @@ class DownloadFolder(Dialog):
         self.list_view.clear()
         self.virtual_path.set_text("")
         self.destination_entry.set_text("")
-        self.info_bar.show_message(_("Loading"), message_type=Gtk.MessageType.INFO)
+        self.info_bar.show_message("Loading", message_type=Gtk.MessageType.INFO)
 
     # Choose Download Location through Folder Chooser
     def on_select_destination(self, *_args):
@@ -186,7 +187,7 @@ class DownloadFolder(Dialog):
 
         FolderChooser(
             parent=self.application.window,
-            title=_("Select Destination Folder"),
+            title="Select Destination Folder",
             callback=self.on_download_folders_to_selected,
             initial_folder=destination
         ).show()
@@ -197,7 +198,7 @@ class DownloadFolder(Dialog):
         self.destination_entry.set_text(selected)
 
     # Download Folder Search Response
-    def _folder_contents_response(self, msg, check_num_files=True):
+    def _folder_contents_response(self, msg):
         """ Peer code: 37 """
         """ When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders """
@@ -208,7 +209,7 @@ class DownloadFolder(Dialog):
         log.add_transfer("Received response for folder content request from user %s", username)
 
         # Create a structure of the Files available to download.
-        folderFiles = {
+        folder_files = {
             "user": username,
             "virtualpath": None,
             "destination": None,
@@ -225,55 +226,28 @@ class DownloadFolder(Dialog):
                 num_files = len(files)
 
                 destination = core.transfers.get_folder_destination(username, directory)
-                folderFiles["destination"] = destination
+                folder_files["destination"] = destination
 
                 virtualpath = directory.rstrip("\\") + "\\"
-                folderFiles["virtualpath"] = virtualpath
+                folder_files["virtualpath"] = virtualpath
 
                 if num_files > 1:
                     files.sort(key=lambda x: strxfrm(x[1]))
 
                 log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
-                                  "Destination path: %(destination)s"), {
-                                    "folder": directory,
-                                    "user": username,
-                                    "destination": destination
-                                })
+                                  "Destination path: %(destination)s"), {"folder": directory, "user": username,
+                                                                         "destination": destination})
 
                 for file in files:
                     size = file[2]
                     h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
                         size, file[4])
 
-                    folderFiles["filenames"].append({
+                    folder_files["filenames"].append({
                         "filename": file[1],
                         "size": file[2],
                         "h_bitrate": h_bitrate,
                         "h_length": h_length
                     })
 
-        self.folder_Files = folderFiles
-        file_count = len(folderFiles["filenames"])
-        
-        if check_num_files and file_count > 100:
-            # Present Confirmation you would like to download all the files
-            OptionDialog(
-                parent=self.application.window,
-                title=_("Download %(num)i files?") % {"num": file_count},
-                message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
-                    "num": file_count, "user": username, "folder": folderFiles["virtualpath"]},
-                    callback=self.folder_download_response,
-                    callback_data=msg).show()
-            
-            return        
-        
-        self.set_folder_Files()
-
-    # Check Confirmation for large file count
-    def folder_download_response(self, _dialog, response_id, msg):
-        if response_id == 2:
-            self.set_folder_Files()
-            return
-        
-        self.toggle_enabled_view(False)
-        self.info_bar.show_message(_("Too many files"), message_type=Gtk.MessageType.ERROR)
+        self.set_folder_files(folder_files)

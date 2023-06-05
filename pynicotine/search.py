@@ -79,7 +79,7 @@ class Searches:
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
-    def request_folder_download(self, user, folder, visible_files):
+    def request_folder_download(self, user, folder):
 
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 

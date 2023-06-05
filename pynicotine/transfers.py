@@ -36,7 +36,6 @@ import time
 
 from collections import defaultdict
 from collections import deque
-from locale import strxfrm
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -123,7 +122,6 @@ class Transfers:
             ("file-download-progress", self._file_download_progress),
             ("file-upload-init", self._file_upload_init),
             ("file-upload-progress", self._file_upload_progress),
-            #("folder-contents-response", self._folder_contents_response), Avoid Event as use Download Folder Instead.
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("place-in-queue-response", self._place_in_queue_response),
