@@ -20,6 +20,8 @@ import os
 import sys
 import time
 
+from collections import deque
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
@@ -220,7 +222,7 @@ class Logger:
         self.write_log_file(
             folder_path=config.sections["logging"]["transferslogsdir"], base_name=self.transfers_file_name, text=msg)
 
-    """ Log Messages """
+    """ Log Message Writing """
 
     def format_chat_line(self, text, user, room=None, is_global=False, is_action=False):
 
@@ -303,6 +305,122 @@ class Logger:
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level=LogLevel.MISCELLANEOUS)
+
+    """ Log Message Reading """
+
+    def read_chat_lines(self, path, num_lines, is_global=False):  # , reverse=False):
+
+        def get_logged_line(open_line):
+            try:
+                return open_line.decode("utf-8")
+            except UnicodeDecodeError:
+                return open_line.decode("latin-1")
+
+        def get_logged_timestamp_length(path):
+            """ Do a quick test to check file exists and the timestamp format it's using """
+            try:
+                with open(encode_path(path), "rb") as test_lines:
+                    # Scan the most recent 10 lines
+                    test_lines = deque(test_lines, 10)
+                    last_timestamp_length = 0
+
+                    for test_line in test_lines:
+                        test_line = get_logged_line(test_line)
+                        timestamp, _room, _user, _text, _tag = self._read_chat_line(test_line)
+
+                        if timestamp is None:
+                            continue
+
+                        this_timestamp_length = len(timestamp)
+
+                        if this_timestamp_length == last_timestamp_length:
+                            # At least two recent timestamps in the file are the same
+                            return this_timestamp_length
+
+                        last_timestamp_length = this_timestamp_length
+
+                return last_timestamp_length
+
+            except OSError:
+                # No log file exists
+                return None
+
+        chat_lines = []
+        logged_timestamp_length = get_logged_timestamp_length(path)
+
+        if logged_timestamp_length is None:
+            # No log file exists
+            return chat_lines
+
+        with open(encode_path(path), "rb") as lines:
+            # Only show as many log lines as specified in config
+            lines = deque(lines, num_lines)
+
+            for line in lines:  # .reverse()  #  reversed(lines)
+                line = get_logged_line(line)
+
+                timestamp, room, user, text, tag = self._read_chat_line(line, logged_timestamp_length, is_global)
+
+                chat_lines.append((timestamp, room, user, text, tag))
+
+        return chat_lines
+
+    @staticmethod
+    def _read_chat_line(line, timestamp_length=None, is_global=False):
+        """ Retrieve a previously timestamped chat line that was stored as a plain-text string """
+
+        room = user = text = ""
+        timestamp = tag = is_action = None
+
+        def get_timestamp_and_roomname(line_start, is_action):
+
+            if is_global and (line_start.endswith(" | [" if not is_action else " | * ")):
+                # Public global room feed line, we cannot guess the length of timestamp/roomname
+                timestamp_length = len(time.strftime(config.sections["logging"]["log_timestamp"]))
+                pos_after_room = -4 if not is_action else -5
+
+                timestamp = line_start[:timestamp_length]
+                roomname = line_start[timestamp_length + 1:pos_after_room]
+            else:
+                # Normal Chat Room or Private Chat line
+                timestamp = line_start[0:-3] if is_action else line_start[0:-2]
+                roomname = None
+
+            return timestamp, roomname
+
+        action_star, action_room = " * ", " | * "
+        user_start, user_after = " [", "] "
+
+        if user_start in line and user_after in line:
+            pos_start_user = timestamp_length if (timestamp_length and not is_global) else line.find(user_start)
+            pos_after_user = line.find(user_after, pos_start_user)
+
+            if pos_after_user > pos_start_user:
+                line_start = line[:pos_start_user + 2]
+                is_action = (action_room in line_start)
+
+                if not is_action:
+                    user = line[pos_start_user + 2:pos_after_user]
+                    text = line[pos_after_user + 2:-1]
+
+        if is_action or action_star in line:
+            pos_start_user = timestamp_length if (timestamp_length and not is_global) else line.find(action_star)
+
+            if pos_start_user > -1:
+                line_start = line[:pos_start_user + 3]
+                is_action = line_start.endswith(" | * " if is_global else " * ")
+
+                if is_action:
+                    user = None  # no end delimiter, we cannot know the username
+                    text = line[pos_start_user + 3:-1]
+                    tag = "chatme"
+
+        if text:
+            timestamp, room = get_timestamp_and_roomname(line_start, is_action)
+        else:
+            text = line[:-1]
+
+        return timestamp, room, user, text, tag
 
 
 log = Logger()

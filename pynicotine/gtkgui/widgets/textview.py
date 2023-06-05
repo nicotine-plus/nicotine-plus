@@ -19,8 +19,6 @@
 import re
 import time
 
-from collections import deque
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -31,7 +29,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.utils import encode_path
+from pynicotine.logfacility import log
 from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
 
@@ -126,8 +124,7 @@ class TextView:
             self.textbuffer.apply_tag(tag, start_iter, iterator)
 
     def _insert_text(self, text, tag=None):
-        # TODO: make a function that can insert a line on a specified line number
-        self._append_text(text, tag)
+        self._append_text(text, tag)  # TODO: make a function that can insert a line on a specified line number
 
     def _remove_old_lines(self):
 
@@ -371,8 +368,8 @@ class ChatView(TextView):
         super().__init__(*args, **kwargs)
 
         self.is_chatroom = is_chatroom
-        self.username_event = username_event
         self.roomname_event = roomname_event
+        self.username_event = username_event
 
         self.tag_remote = self.create_tag("chatremote")
         self.tag_local = self.create_tag("chatlocal")
@@ -386,7 +383,7 @@ class ChatView(TextView):
             # This is Public global room feed
             self.tag_rooms = {}
 
-        self.update_tags()
+        self.update_time_tags()
 
     @staticmethod
     def find_whole_word(word, text):
@@ -410,115 +407,25 @@ class ChatView(TextView):
 
     def append_log_lines(self, path, num_lines, is_global=False):
 
-        def decode_line(line):
-            try:
-                return line.decode("utf-8")
-            except UnicodeDecodeError:
-                return line.decode("latin-1")
-
-        def get_source_timestamp_length(path):
-            """ Do a quick test to check file exists and the timestamp format it's using """
-            try:
-                with open(encode_path(path), "rb") as test_lines:
-                    # Scan the most recent 10 lines
-                    test_lines = deque(test_lines, 10)
-                    last_timestamp_length = -1
-
-                    for i, test_line in enumerate(test_lines):
-                        test_line = decode_line(test_line)
-                        timestamp, _room, _user, text, _tag = self.read_log_line(test_line)
-
-                        if timestamp is not None:
-                            this_timestamp_length = len(timestamp)
-
-                            if this_timestamp_length == last_timestamp_length:
-                                # At least two recent timestamps in the file are the same
-                                return this_timestamp_length
-
-                            last_timestamp_length = this_timestamp_length
-
-                return last_timestamp_length
-
-            except OSError:
-                # No log file exists
-                return None
-
+        chat_lines = log.read_chat_lines(path, num_lines, is_global)
         login = config.sections["server"]["login"]
-        timestamp_length = get_source_timestamp_length(path)
+        num_lines_inserted = 0
 
-        if not timestamp_length:
-            # No log file exists
-            return
+        for line in chat_lines:
+            timestamp, room, user, text, tag = line
 
-        if is_global:
-            timestamp_length = len(time.strftime(config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")))
-
-        with open(encode_path(path), "rb") as lines:
-            # Only show as many log lines as specified in config
-            lines = deque(lines, num_lines)
-
-            for line in lines:  # .reverse()  #  reversed(lines)
-                line = decode_line(line)
-
-                timestamp, room, user, text, tag = self.read_log_line(line, login, timestamp_length, is_global)
-                num_lines_inserted = self.insert_new_line(text, tag, user, room, timestamp, is_global)  # position=0)
+            num_lines_inserted = self.insert_new_line(text, tag, user, room, timestamp, is_global, login)  # position=0)
 
         if num_lines_inserted > 1:
             self.insert_new_line(_("--- old messages above ---"), tag=self.tag_highlight)
 
-    def read_log_line(self, line, login=None, timestamp_length=None, is_global=False):
-        """ Retrieve a previously timestamped chat line that was stored as a plain-text string """
+        return num_lines_inserted
 
-        room = user = text = ""
-        timestamp = tag = None
+    def prepend_log_lines(self, path, num_lines, is_global=False):
+        pass  # TODO: chat_lines = log.read_chat_lines(path, num_lines, is_global, reverse=True)
 
-        def get_timestamp_and_roomname(line_start, pos_start_user, is_action=False):
-
-            if is_global and line_start.endswith(" | [") or line_start.endswith(" | *"):
-                # Public global room feed line
-                timestamp_length = len(time.strftime(config.sections["logging"]["log_timestamp"]))
-
-                timestamp = line_start[:timestamp_length]
-                roomname = line_start[timestamp_length + 1:-4]
-            else:
-                # Normal Chat Room or Private Chat line
-                timestamp = line_start[0:-3] if is_action else line_start[0:-2]  # [0:-2].rstrip()
-                roomname = None
-
-            return timestamp, roomname
-
-        action_star = " * "
-        user_start, user_after = " [", "] "
-
-        if user_start in line and user_after in line:
-            pos_start_user = timestamp_length if timestamp_length and not is_global else line.find(user_start)
-            pos_after_user = line.find(user_after, pos_start_user)
-
-            if pos_after_user > pos_start_user:
-                line_start = line[:pos_start_user + 2]
-
-                timestamp, room = get_timestamp_and_roomname(line_start, pos_start_user)
-                user = line[pos_start_user + 2:pos_after_user]
-                text = line[pos_after_user + 2:-1]
-                tag = self.get_text_tag(text, user, login)
-
-        elif action_star in line:
-            pos_start_user = timestamp_length if timestamp_length and not is_global else line.find(action_star)
-
-            if pos_start_user > -1:
-                line_start = line[:pos_start_user + 3]
-
-                timestamp, room = get_timestamp_and_roomname(line_start, pos_start_user, is_action=True)
-                user = None  # no end delimiter
-                text = line[pos_start_user + 3:-1]  # .rstrip()  # [ or 2]
-                tag = self.tag_action if timestamp else self.get_text_tag(text)
-
-        if not text:
-            text = line[:-1]
-
-        return timestamp, room, user, text, tag
-
-    def insert_new_line(self, text, tag=None, username=None, roomname=None, timestamp=None, is_global=False):
+    def insert_new_line(self, text, tag=None, username=None, roomname=None, timestamp=None,
+                        is_global=False, login_username=None):
         """ Add a rich-text chat line using raw data by taggging it straight into textbuffer """
 
         num_lines = self._remove_old_lines()
@@ -528,6 +435,12 @@ class ChatView(TextView):
         space_tag = None  # TODO: full-row select hotzone
 
         self._insert_text(eol)
+
+        if not tag:
+            # Old line is being retrieved from log file
+            tag = self.get_text_tag(text, username, login_username)
+        elif tag == "chatme":
+            tag = self.tag_action
 
         if not tag == self.tag_command:
             if not isinstance(timestamp, str):
@@ -596,7 +509,7 @@ class ChatView(TextView):
 
     def get_text_tag(self, text, user=None, login_username=None):
 
-        if text.startswith("/me ") or text.startswith("* "):
+        if text.startswith("/me "):
             return self.tag_action
 
         if not user or user == login_username:
@@ -625,11 +538,7 @@ class ChatView(TextView):
 
         super().update_tags()
 
-        if self.is_chatroom:
-            self.timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        else:
-            self.timestamp_format = config.sections["logging"]["private_timestamp"]
-
+        self.update_time_tags()
         self.update_room_tags()
         self.update_user_tags()
 
@@ -641,6 +550,13 @@ class ChatView(TextView):
             self.tag_highlight
         ):
             self.update_tag(tag)
+
+    def update_time_tags(self):
+
+        if self.is_chatroom:
+            self.timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        else:
+            self.timestamp_format = config.sections["logging"]["private_timestamp"]
 
     def update_room_tag(self, roomname):
 
