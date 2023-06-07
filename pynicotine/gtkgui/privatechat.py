@@ -232,7 +232,7 @@ class PrivateChats(IconNotebook):
 
     def update_tags(self):
         for page in self.pages.values():
-            page.chat_view.update_tags()
+            page.update_tags()
 
     def server_disconnect(self, *_args):
 
@@ -264,7 +264,8 @@ class PrivateChat:
         self.offline_message = False
 
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
+                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event,
+                                  timestamp_format=config.sections["logging"]["private_timestamp"])
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
@@ -326,7 +327,7 @@ class PrivateChat:
         filename = f"{clean_file(self.user)}.log"
         path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
 
-        self.chat_view.append_log_lines(path, numlines)
+        self.chat_view.prepend_log_lines(path, numlines)
 
     def server_disconnect(self):
         self.offline_message = False
@@ -347,7 +348,7 @@ class PrivateChat:
 
         self.popup_menu_user_tab.toggle_user_items()
 
-        menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
+        menu.actions[_("Copy")].set_enabled(self.chat_view.textbuffer.get_has_selection())
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
@@ -464,6 +465,10 @@ class PrivateChat:
         self.popup_menu_user_chat.set_user(user)
         self.popup_menu_user_chat.toggle_user_items()
         self.popup_menu_user_chat.popup(pos_x, pos_y)
+
+    def update_tags(self):
+        self.chat_view.timestamp_format = config.sections["logging"]["private_timestamp"]
+        self.chat_view.update_tags()
 
     def on_focus(self, *_args):
         self.chat_entry.grab_focus()

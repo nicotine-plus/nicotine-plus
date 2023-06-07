@@ -1287,7 +1287,7 @@ class MainWindow(Window):
         self.log_view.append_line(msg, timestamp_format=timestamp_format)
 
     def on_popup_menu_log(self, menu, _textview):
-        menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
+        menu.actions[_("_Copy")].set_enabled(self.log_view.textbuffer.get_has_selection())
 
     def on_find_log_window(self, *_args):
         self.log_search_bar.set_visible(True)

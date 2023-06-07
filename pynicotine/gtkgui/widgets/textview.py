@@ -107,12 +107,13 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _append_text(self, text, tag=None):
+    def _insert_text(self, text, tag=None, iterator=None):
 
         if not text:
             return
 
-        iterator = self.textbuffer.get_end_iter()  # TODO: cannot find end of line iter unless end of buffer
+        if iterator is None:
+            iterator = self.textbuffer.get_end_iter()
 
         if tag is not None:
             start_offset = iterator.get_offset()
@@ -123,19 +124,24 @@ class TextView:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
             self.textbuffer.apply_tag(tag, start_iter, iterator)
 
-    def _insert_text(self, text, tag=None):
-        self._append_text(text, tag)  # TODO: make a function that can insert a line on a specified line number
+    def _append_new_line(self, line_data):
+        for [text, tag] in line_data:
+            self._insert_text(text, tag)
+
+    def _prepend_old_line(self, line_data):
+        for [text, tag] in reversed(line_data):
+            iterator = self.textbuffer.get_iter_at_line(0)
+            self._insert_text(text, tag, iterator)
 
     def _remove_old_lines(self):
 
-        old_num_lines = self.textbuffer.get_line_count()
+        num_lines = self.textbuffer.get_line_count()
 
-        if old_num_lines < self.max_num_lines:
-            return old_num_lines
+        if num_lines < self.max_num_lines:
+            return
 
-        new_num_lines = (old_num_lines - self.max_num_lines)
         start_iter = self.textbuffer.get_start_iter()
-        end_iter = self.textbuffer.get_iter_at_line(new_num_lines)
+        end_iter = self.textbuffer.get_iter_at_line(num_lines - self.max_num_lines)
 
         if GTK_API_VERSION >= 4:
             _position_found, end_iter = end_iter
@@ -143,12 +149,7 @@ class TextView:
         self.tag_urls.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-        return new_num_lines
-
-    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None):
-
-        num_lines = self._remove_old_lines()
-        line = str(line).strip("\n")
+    def append_line(self, line, text_tag=None, timestamp=None, timestamp_format=None):
 
         if timestamp_format:
             line = time.strftime(timestamp_format, time.localtime(timestamp)) + " " + line
@@ -157,41 +158,40 @@ class TextView:
             line = "\n" + line
 
         # Highlight urls, if found and tag them
-        line = self._append_url_tags(line, tag)
+        for text, tag in self.get_hyperlink_tags(line, text_tag):
+            self._insert_text(text, tag)
 
-        # Add remaining text
-        self._insert_text(line, tag)
+        self._remove_old_lines()
 
-        return num_lines
+    def get_hyperlink_tags(self, text, text_tag):
+        """ Highlight urls, if found in text and tag them """
 
-    def _append_url_tags(self, text, text_tag):
-        """ Highlight urls, if found and tag them """
+        tagged_text_data = []
 
         if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
             match = self.url_regex.search(text)
 
             while match:
-                self._insert_text(text[:match.start()], text_tag)
+                tagged_text_data.append([text[:match.start()], text_tag])
 
                 url = match.group()
                 url_tag = self.create_tag("urlcolor", url=url)
                 self.tag_urls[self.textbuffer.get_end_iter()] = url_tag
-                self._insert_text(url, url_tag)
+                tagged_text_data.append([url, url_tag])
 
                 # Match remaining url
                 text = text[match.end():]
                 match = self.url_regex.search(text)
 
         # Add remaining text
-        return text
+        tagged_text_data.append([text, text_tag])
 
-    def get_has_selection(self):
-        return self.textbuffer.get_has_selection()
+        return tagged_text_data
 
     def get_text(self):
         start_iter, end_iter = self.textbuffer.get_bounds()
-        return self.textbuffer.get_text(start_iter, end_iter - 1, include_hidden_chars=True)
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -363,11 +363,10 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, username_event=None, roomname_event=None, is_chatroom=False, **kwargs):
+    def __init__(self, *args, username_event=None, roomname_event=None, timestamp_format=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
-        self.is_chatroom = is_chatroom
         self.roomname_event = roomname_event
         self.username_event = username_event
 
@@ -383,7 +382,7 @@ class ChatView(TextView):
             # This is Public global room feed
             self.tag_rooms = {}
 
-        self.update_time_tags()
+        self.timestamp_format = timestamp_format
 
     @staticmethod
     def find_whole_word(word, text):
@@ -405,36 +404,28 @@ class ChatView(TextView):
 
         return start if whole else -1
 
-    def append_log_lines(self, path, num_lines, is_global=False):
-
-        chat_lines = log.read_chat_lines(path, num_lines, is_global)
-        login = config.sections["server"]["login"]
-        num_lines_inserted = 0
-
-        for line in chat_lines:
-            timestamp, room, user, text, tag = line
-
-            num_lines_inserted = self.insert_new_line(text, tag, user, room, timestamp, is_global, login)  # position=0)
-
-        if num_lines_inserted > 1:
-            self.insert_new_line(_("--- old messages above ---"), tag=self.tag_highlight)
-
-        return num_lines_inserted
-
     def prepend_log_lines(self, path, num_lines, is_global=False):
-        pass  # TODO: chat_lines = log.read_chat_lines(path, num_lines, is_global, reverse=True)
+
+        chat_lines_data = log.read_chat_lines(path, num_lines, is_global)
+        login_username = config.sections["server"]["login"]
+
+        if chat_lines_data:
+            self.insert_new_line(_("--- old messages above ---"), tag=self.tag_highlight, prepend=True)
+
+        for [timestamp, room, user, text, tag] in reversed(chat_lines_data):
+            self.insert_new_line(text, tag, user, room, timestamp, is_global, login_username, prepend=True)
 
     def insert_new_line(self, text, tag=None, username=None, roomname=None, timestamp=None,
-                        is_global=False, login_username=None):
-        """ Add a rich-text chat line using raw data by taggging it straight into textbuffer """
+                        is_global=False, login_username=None, prepend=False):
+        """ Add a rich-text chat line using raw data to tag it before textbuffer insertion """
 
-        num_lines = self._remove_old_lines()
+        line_data = []
 
         eol = "\n"
         space = " "
         space_tag = None  # TODO: full-row select hotzone
 
-        self._insert_text(eol)
+        line_data.append([eol, None])
 
         if not tag:
             # Old line is being retrieved from log file
@@ -452,16 +443,16 @@ class ChatView(TextView):
                 time_tag = self.tag_local
                 text = text.rstrip(eol)
 
-            self._insert_text(timestamp, time_tag)
+            line_data.append([timestamp, time_tag])
 
         if is_global and roomname:
             # This is Public global room feed
             room_start, room_after = " ", " |"
             room_tag = self.get_room_tag(roomname)
 
-            self._insert_text(room_start, space_tag)
-            self._insert_text(roomname, room_tag)
-            self._insert_text(room_after, space_tag)
+            line_data.append([room_start, space_tag])
+            line_data.append([roomname, room_tag])
+            line_data.append([room_after, space_tag])
 
         star_action = " * "
         type_tag = self.get_type_tag(username)
@@ -470,13 +461,13 @@ class ChatView(TextView):
 
         if is_action_tagged and not username:
             # username is "" in log readback, can't be certain of username containing spaces
-            self._insert_text(star_action if not text.startswith(star_action) else space, self.tag_action)
+            line_data.append([star_action if not text.startswith(star_action) else space, self.tag_action])
 
         elif is_action_tagged:
             # Tag usernames with popup menu creating tag, and away/online/offline colors
-            self._insert_text(star_action, self.tag_action)
-            self._insert_text(username, user_tag)
-            self._insert_text(space, space_tag)
+            line_data.append([star_action, self.tag_action])
+            line_data.append([username, user_tag])
+            line_data.append([space, space_tag])
 
             text = text[4:]  # "/me "
 
@@ -485,20 +476,22 @@ class ChatView(TextView):
             user_start, user_after = " [", "] "
 
             # Tag usernames with popup menu creating tag, and away/online/offline colors
-            self._insert_text(user_start, type_tag)  # [ buddy user type highlight
-            self._insert_text(username, user_tag)
-            self._insert_text(user_after, type_tag)  # ] buddy user type highlight
+            line_data.append([user_start, type_tag])  # [ buddy user type highlight
+            line_data.append([username, user_tag])
+            line_data.append([user_after, type_tag])  # ] buddy user type highlight
 
         elif timestamp:
-            self._insert_text(space, space_tag)
+            line_data.append([space, space_tag])
 
-        # Highlight urls, if found and tag them
-        text = self._append_url_tags(text, tag)
+        # Highlight urls, if found and tag them, add remaining text
+        line_data += self.get_hyperlink_tags(text, tag)
 
-        # Remaining text
-        self._insert_text(text, tag)
+        self._remove_old_lines()
 
-        return num_lines
+        if prepend:
+            self._prepend_old_line(line_data)
+        else:
+            self._append_new_line(line_data)
 
     def get_room_tag(self, roomname):
 
@@ -537,8 +530,6 @@ class ChatView(TextView):
     def update_tags(self):
 
         super().update_tags()
-
-        self.update_time_tags()
         self.update_room_tags()
         self.update_user_tags()
 
@@ -551,13 +542,6 @@ class ChatView(TextView):
         ):
             self.update_tag(tag)
 
-    def update_time_tags(self):
-
-        if self.is_chatroom:
-            self.timestamp_format = config.sections["logging"]["rooms_timestamp"]
-        else:
-            self.timestamp_format = config.sections["logging"]["private_timestamp"]
-
     def update_room_tag(self, roomname):
 
         if not self.roomname_event:
@@ -567,7 +551,7 @@ class ChatView(TextView):
         if roomname not in self.tag_rooms:
             self.tag_rooms[roomname] = self.create_tag(callback=self.roomname_event, roomname=roomname)
 
-        color = "tab_changed" if roomname in core.chatrooms.joined_rooms else "useroffline"
+        color = "tab_changed" if roomname in core.chatrooms.joined_rooms else "searchq"
         self.update_tag(self.tag_rooms[roomname], color)
 
     def update_room_tags(self):
@@ -579,7 +563,7 @@ class ChatView(TextView):
         for roomname in self.tag_rooms:
             self.update_room_tag(roomname)
 
-    def update_user_tag(self, username, status=0):
+    def update_user_tag(self, username):
 
         if username not in self.tag_users:
             self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
@@ -590,4 +574,4 @@ class ChatView(TextView):
 
     def update_user_tags(self):
         for username in self.tag_users:
-            self.update_user_tag(username, self.tag_users.get(username, 0))
+            self.update_user_tag(username)

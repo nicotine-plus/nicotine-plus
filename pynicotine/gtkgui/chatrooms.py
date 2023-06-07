@@ -351,12 +351,12 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.chat_view.update_room_tag(roomname)
 
-    def global_room_update_user_tag(self, username, status):
+    def global_room_update_user_tag(self, username):
 
         page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.chat_view.update_user_tag(username, status)
+            page.chat_view.update_user_tag(username)
 
     def toggle_chat_buttons(self):
         for page in self.pages.values():
@@ -373,7 +373,7 @@ class ChatRooms(IconNotebook):
 
     def update_tags(self):
         for page in self.pages.values():
-            page.chat_view.update_tags()
+            page.update_tags()
 
     def server_disconnect(self, *_args):
 
@@ -439,7 +439,8 @@ class ChatRoom:
                                       vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event,
-                                  roomname_event=self.roomname_event if self.is_global else None, is_chatroom=True)
+                                  roomname_event=self.roomname_event if self.is_global else None,
+                                  timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
@@ -516,7 +517,7 @@ class ChatRoom:
 
         for userdata in users:
             self.add_user_row(userdata)
-            self.chatrooms.global_room_update_user_tag(userdata.username, userdata.status)
+            self.chatrooms.global_room_update_user_tag(userdata.username)
 
         self.users_list_view.enable_sorting()
 
@@ -681,7 +682,7 @@ class ChatRoom:
         filename = f"{clean_file(self.room)}.log"
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
-        self.chat_view.append_log_lines(path, numlines, is_global=self.is_global)
+        self.chat_view.prepend_log_lines(path, numlines, is_global=self.is_global)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
@@ -717,10 +718,10 @@ class ChatRoom:
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_list)
 
     def on_popup_menu_log(self, menu, _textview):
-        menu.actions[_("Copy")].set_enabled(self.activity_view.get_has_selection())
+        menu.actions[_("Copy")].set_enabled(self.activity_view.textbuffer.get_has_selection())
 
     def on_popup_menu_chat(self, menu, _textview):
-        menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
+        menu.actions[_("Copy")].set_enabled(self.chat_view.textbuffer.get_has_selection())
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def toggle_chat_buttons(self):
@@ -852,7 +853,7 @@ class ChatRoom:
 
         self.add_user_row(userdata)
 
-        self.chatrooms.global_room_update_user_tag(username, userdata.status)
+        self.chatrooms.global_room_update_user_tag(username)
         self.chat_view.update_user_tag(username)
         self.update_user_count()
 
@@ -939,7 +940,7 @@ class ChatRoom:
         self.users_list_view.set_row_value(iterator, "status_data", status)
 
         self.chat_view.update_user_tag(user)
-        self.chatrooms.global_room_update_user_tag(user, status)
+        self.chatrooms.global_room_update_user_tag(user)
 
     def user_country(self, user, country_code):
 
@@ -970,6 +971,10 @@ class ChatRoom:
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
         menu.popup(pos_x, pos_y)
 
+    def update_tags(self):
+        self.chat_view.timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        self.chat_view.update_tags()
+
     def server_disconnect(self):
 
         self.users_list_view.clear()
@@ -994,7 +999,7 @@ class ChatRoom:
                 self.users_list_view.remove_row(iterator)
 
             self.add_user_row(userdata)
-            self.chatrooms.global_room_update_user_tag(username, userdata.status)
+            self.chatrooms.global_room_update_user_tag(username)
 
         self.users_list_view.enable_sorting()
 
