@@ -2784,7 +2784,7 @@ class Preferences(Dialog):
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
 
-        elif isinstance(widget, Gtk.FontDialogButton):
+        elif GTK_API_VERSION >= 4 and GTK_MINOR_VERSION >= 10 and isinstance(widget, Gtk.FontDialogButton):
             widget.set_font_desc(Pango.FontDescription())
 
     @staticmethod
@@ -2846,7 +2846,7 @@ class Preferences(Dialog):
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)
 
-        elif isinstance(widget, Gtk.FontDialogButton):
+        elif GTK_API_VERSION >= 4 and GTK_MINOR_VERSION >= 10 and isinstance(widget, Gtk.FontDialogButton):
             widget.set_font_desc(Pango.FontDescription.from_string(value))
 
     def set_settings(self):
