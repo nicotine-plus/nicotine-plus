@@ -383,9 +383,10 @@ class PrivateChat:
             callback=self.on_delete_chat_log_response
         ).show()
 
-    def show_notification(self, text):
+    def _show_notification(self, text, tag, is_buddy):
 
-        self.chats.request_tab_changed(self.container)
+        mentioned = (tag == self.chat_view.tag_highlight)
+        self.chats.request_tab_changed(self.container, is_important=is_buddy or mentioned)
 
         if (self.chats.get_current_page() == self.container
                 and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
@@ -406,10 +407,11 @@ class PrivateChat:
         text = msg.msg
         newmessage = msg.newmessage
         timestamp = msg.timestamp if not newmessage else None
+        is_buddy = (self.user in core.userlist.buddies)
         usertag = self.chat_view.get_user_tag(self.user)
         tag = self.chat_view.get_line_tag(self.user, text, core.login_username)
 
-        self.show_notification(text)
+        self._show_notification(text, tag, is_buddy)
 
         if tag == self.chat_view.tag_action:
             line = f"* {self.user} {text[4:]}"
