@@ -2758,34 +2758,7 @@ class Preferences(Dialog):
                 if widget is None:
                     continue
 
-                if config.sections[section][key] is None:
-                    self.clear_widget(widget)
-                else:
-                    self.set_widget(widget, config.sections[section][key])
-
-    @staticmethod
-    def clear_widget(widget):
-
-        if isinstance(widget, Gtk.SpinButton):
-            widget.set_value(0)
-
-        elif isinstance(widget, Gtk.Entry):
-            widget.set_text("")
-
-        elif isinstance(widget, TextView):
-            widget.clear()
-
-        elif isinstance(widget, Gtk.CheckButton):
-            widget.set_active(0)
-
-        elif isinstance(widget, ComboBox):
-            widget.set_text("")
-
-        elif isinstance(widget, Gtk.FontButton):
-            widget.set_font("")
-
-        elif isinstance(widget, Gtk.FontDialogButton):
-            widget.set_font_desc(Pango.FontDescription())
+                self.set_widget(widget, config.sections[section][key])
 
     @staticmethod
     def set_widget(widget, value):
