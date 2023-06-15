@@ -407,6 +407,7 @@ class ChatRooms:
         """ Server code: 16 """
 
         username = msg.userdata.username
+        core.user_statuses[username] = msg.userdata.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         if username not in core.user_addresses:

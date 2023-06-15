@@ -219,7 +219,7 @@ class FileChooserButton:
         self.button = button
         self.chooser_type = chooser_type
         self.selected_function = selected_function
-        self.path = None
+        self.path = ""
 
         if chooser_type == "folder":
             icon_name = "folder-symbolic"
@@ -297,6 +297,6 @@ class FileChooserButton:
 
     def clear(self):
 
-        self.path = None
+        self.path = ""
         self.button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))
