@@ -352,7 +352,7 @@ class Logger:
         """ Retrieve a previously timestamped chat line that was stored
         as plain-text, and return: timestamp, room, user, text, tag """
 
-        room = user = text = timestamp = tag = is_action = None
+        room = user = text = timestamp = tag = is_action = line_prefix = None
         user_start, user_after, action_star = " [", "] ", " * "
 
         if user_start in line and user_after in line:
@@ -379,7 +379,10 @@ class Logger:
                     text = line[pos_start_user + 3:-1]
                     tag = "chatme"
 
-        if is_global and text and (line_prefix.endswith(" | [" if not is_action else " | * ")):
+        if not text or not line_prefix:
+            text = line[:-1]
+
+        elif is_global and (line_prefix.endswith(" | [" if not is_action else " | * ")):
             # Public global room feed line, we cannot guess the length of timestamp/roomname
             timestamp_length = len(time.strftime(config.sections["logging"]["log_timestamp"]))
             pos_after_room = -4 if not is_action else -5
@@ -387,13 +390,10 @@ class Logger:
             timestamp = line_prefix[:timestamp_length]
             room = line_prefix[timestamp_length + 1:pos_after_room]
 
-        elif text:
+        else:
             # Normal Chat Room or Private Chat line
             timestamp = line_prefix[0:-3] if is_action else line_prefix[0:-2]
             room = None
-
-        else:
-            text = line[:-1]
 
         return timestamp, room, user, text, tag
 

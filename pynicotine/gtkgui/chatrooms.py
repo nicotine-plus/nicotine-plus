@@ -243,6 +243,7 @@ class ChatRooms(IconNotebook):
 
         page = self.pages.get(msg.room)
         is_auto_joined = (msg.room in core.chatrooms.pending_autojoin_rooms)
+        is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
 
         if is_auto_joined:
             core.chatrooms.pending_autojoin_rooms.remove(msg.room)
@@ -251,8 +252,7 @@ class ChatRooms(IconNotebook):
             page.join_room(msg)
             return
 
-        self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users, is_private=msg.private)
-        is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
+        self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users, is_private=msg.private, is_global=is_global)
 
         if is_global:
             self.prepend_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
@@ -385,7 +385,7 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
-    def __init__(self, chatrooms, room, users, is_private):
+    def __init__(self, chatrooms, room, users, is_private, is_global):
 
         (
             self.activity_container,
@@ -413,7 +413,7 @@ class ChatRoom:
         self.chatrooms = chatrooms
         self.window = chatrooms.window
         self.room = room
-        self.is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
+        self.is_global = is_global
         self.is_private = is_private
 
         if GTK_API_VERSION >= 4:
