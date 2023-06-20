@@ -328,18 +328,18 @@ class Logger:
 
         chat_lines_data = deque()
         last_timestamp_length = None
-        log_lines = file_read_tail(path, num_lines)
+        raw_log_lines = file_read_tail(path, num_lines)
 
-        if not log_lines:
+        if not raw_log_lines:
             # No log file exists
             return chat_lines_data
 
-        for line in log_lines:
+        for line in raw_log_lines:
             line = decode_line(line)
 
-            timestamp, room, user, text, tag = self.read_chat_line(line, last_timestamp_length, is_global)
+            timestamp, room, user, text, is_action = self.read_chat_line(line, last_timestamp_length, is_global)
 
-            chat_lines_data.append([timestamp, room, user, text, tag])
+            chat_lines_data.append([timestamp, room, user, text, is_action])
 
             if timestamp and not last_timestamp_length:
                 # Asssume same timestamp format used on every line
@@ -350,9 +350,9 @@ class Logger:
     @staticmethod
     def read_chat_line(line, timestamp_length=None, is_global=False):
         """ Retrieve a previously timestamped chat line that was stored
-        as plain-text, and return: timestamp, room, user, text, tag """
+        as plain-text, and return: timestamp, room, user, text, is_action """
 
-        room = user = text = timestamp = tag = is_action = line_prefix = None
+        room = user = text = timestamp = is_action = line_prefix = None
         user_start, user_after, action_star = " [", "] ", " * "
 
         if user_start in line and user_after in line:
@@ -377,7 +377,6 @@ class Logger:
                 if is_action:
                     user = None  # no end delimiter, we cannot know the username
                     text = line[pos_start_user + 3:-1]
-                    tag = "chatme"
 
         if not text or not line_prefix:
             text = line[:-1]
@@ -395,7 +394,7 @@ class Logger:
             timestamp = line_prefix[0:-3] if is_action else line_prefix[0:-2]
             room = None
 
-        return timestamp, room, user, text, tag
+        return timestamp, room, user, text, is_action
 
 
 log = Logger()
