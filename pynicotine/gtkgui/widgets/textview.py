@@ -29,7 +29,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.logfacility import log
 from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
 
@@ -149,7 +148,7 @@ class TextView:
         self.tag_urls.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-        self._prepend_old_line([("\n--- text buffer full ---", None)])
+        self._prepend_old_line([("--- text buffer full ---\n", None)])
         return True
 
     def append_line(self, line, text_tag=None, timestamp=None, timestamp_format=None):
@@ -407,9 +406,7 @@ class ChatView(TextView):
 
         return start if whole else -1
 
-    def prepend_log_lines(self, path, num_lines, is_global=False):
-
-        logged_chat_lines = log.read_chat_lines(path, num_lines, is_global)
+    def prepend_log_lines(self, logged_chat_lines, is_global=False):
 
         if not logged_chat_lines:
             return

@@ -309,33 +309,29 @@ class Logger:
     """ Log Message Reading """
 
     def read_chat_lines(self, path, num_lines, is_global=False):  # , reverse=False):
+        """ Get recent log lines as specified by num_lines """
 
-        def decode_line(line):
-            try:
-                return line.decode("utf-8")
-            except UnicodeDecodeError:
-                return line.decode("latin-1")
+        if not num_lines:
+            # Log file readback not required
+            return None
 
-        def file_read_tail(path, num_lines=None):
-            """ Get recent log lines as specified by num_lines """
-            try:
-                with open(encode_path(path), "rb") as log_file:
-                    return deque(log_file, num_lines)
+        try:
+            with open(encode_path(path), "rb") as log_file:
+                # Only show as many log lines as specified
+                raw_log_lines = deque(log_file, num_lines)
 
-            except OSError:
-                # No log file exists
-                return None
+        except OSError:
+            # No log file exists
+            return None
 
         chat_lines_data = deque()
         last_timestamp_length = None
-        raw_log_lines = file_read_tail(path, num_lines)
-
-        if not raw_log_lines:
-            # No log file exists
-            return chat_lines_data
 
         for line in raw_log_lines:
-            line = decode_line(line)
+            try:
+                line = line.decode("utf-8")
+            except UnicodeDecodeError:
+                line = line.decode("latin-1")
 
             timestamp, room, user, text, is_action = self.read_chat_line(line, last_timestamp_length, is_global)
 

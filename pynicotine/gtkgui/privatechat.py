@@ -307,7 +307,7 @@ class PrivateChat:
             (">" + _("User"), self.popup_menu_user_tab),
         )
 
-        self.read_private_log()
+        self.chat_view.prepend_log_lines(self.read_private_log())
 
     def load(self):
         GLib.idle_add(self.read_private_log_finished)
@@ -319,15 +319,10 @@ class PrivateChat:
 
     def read_private_log(self):
 
-        numlines = config.sections["logging"]["readprivatelines"]
+        num_lines = config.sections["logging"]["readprivatelines"]
+        path = os.path.join(config.sections["logging"]["privatelogsdir"], f"{clean_file(self.user)}.log")
 
-        if not numlines:
-            return
-
-        filename = f"{clean_file(self.user)}.log"
-        path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
-
-        self.chat_view.prepend_log_lines(path, numlines)
+        return log.read_chat_lines(path, num_lines)
 
     def server_disconnect(self):
         self.offline_message = False

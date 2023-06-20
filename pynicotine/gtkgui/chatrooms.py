@@ -577,7 +577,7 @@ class ChatRoom:
         self.chat_entry.grab_focus()
 
         self.update_user_count()
-        self.read_room_logs()
+        self.chat_view.prepend_log_lines(self.read_room_logs())
 
     def load(self):
 
@@ -674,15 +674,10 @@ class ChatRoom:
 
     def read_room_logs(self):
 
-        numlines = config.sections["logging"]["readroomlines"]
+        num_lines = config.sections["logging"]["readroomlines"]
+        path = os.path.join(config.sections["logging"]["roomlogsdir"], f"{clean_file(self.room)}.log")
 
-        if not numlines:
-            return
-
-        filename = f"{clean_file(self.room)}.log"
-        path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
-
-        self.chat_view.prepend_log_lines(path, numlines, is_global=self.is_global)
+        return log.read_chat_lines(path, num_lines, is_global=self.is_global)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
