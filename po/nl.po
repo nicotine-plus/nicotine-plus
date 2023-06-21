@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-22 17:12+0000\n"
+"PO-Revision-Date: 2023-06-19 15:51+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1432,7 +1432,7 @@ msgstr "Interesses"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:100
 #: pynicotine/gtkgui/ui/settings/uploads.ui:86
 msgid "Search"
-msgstr "Zoeken"
+msgstr "Zoek"
 
 #: pynicotine/gtkgui/mainwindow.py:1259
 #: pynicotine/plugins/core_commands/__init__.py:24
@@ -1539,7 +1539,7 @@ msgstr "Alle tabbladen sluiten…"
 #: pynicotine/gtkgui/privatechat.py:294 pynicotine/gtkgui/search.py:471
 #: pynicotine/gtkgui/userbrowse.py:219 pynicotine/gtkgui/userinfo.py:287
 msgid "_Close Tab"
-msgstr "Sluit Tab"
+msgstr "_Sluit Tab"
 
 #: pynicotine/gtkgui/privatechat.py:305
 msgid "View Chat Log"
@@ -4369,16 +4369,16 @@ msgstr "Selecteer alles"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:198
 msgid "Find"
-msgstr "Zoeken"
+msgstr "Vind"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:205
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:266
 msgid "Find Next Match"
-msgstr "Zoek de volgende overeenkomst"
+msgstr "Vind de volgende overeenkomst"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:212
 msgid "Find Previous Match"
-msgstr "Zoek vorige overeenkomst"
+msgstr "Vind vorige overeenkomst"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:220
 msgid "File Transfers"
