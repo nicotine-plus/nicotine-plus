@@ -2812,16 +2812,40 @@ class SharedFileListResponse(FileListMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type")
+    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type", "share_type")
 
-    def __init__(self, init=None, user=None, shares=None):
+    def __init__(self, init=None, user=None, shares=None, buddy_shares=None, share_type=None):
         self.init = init
         self.user = user
         self.list = shares
+        self.privatelist = buddy_shares
+        self.share_type = share_type
         self.unknown = 0
-        self.privatelist = []
         self.built = None
         self.type = None
+
+    def _make_shares_list(self, share_lists):
+
+        try:
+            msg_list = bytearray()
+            num_folders = 0
+
+            for shares in share_lists:
+                num_folders += len(shares)
+
+            msg_list.extend(self.pack_uint32(num_folders))
+
+            for shares in share_lists:
+                for key in shares:
+                    msg_list.extend(self.pack_string(key))
+                    msg_list.extend(shares[key])
+
+        except Exception as error:
+            from pynicotine.logfacility import log
+            msg_list = self.pack_uint32(0)
+            log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
+
+        return msg_list
 
     def make_network_message(self):
         # Elaborate hack to save CPU
@@ -2830,29 +2854,18 @@ class SharedFileListResponse(FileListMessage):
             return self.built
 
         msg = bytearray()
-        msg_list = bytearray()
+        share_lists = [self.list]
 
-        if self.list is None:
-            # DB is closed
-            msg_list = self.pack_uint32(0)
+        if self.share_type != "public" and self.privatelist:
+            share_lists.append(self.privatelist)
 
-        else:
-            try:
-                msg_list.extend(self.pack_uint32(len(self.list)))
-
-                for key in self.list:
-                    msg_list.extend(self.pack_string(key))
-                    msg_list.extend(self.list[key])
-
-            except Exception as error:
-                from pynicotine.logfacility import log
-                msg_list = self.pack_uint32(0)
-                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
-
-        msg.extend(msg_list)
+        msg.extend(self._make_shares_list(share_lists))
 
         # Unknown purpose, but official clients always send a value of 0
         msg.extend(self.pack_uint32(self.unknown))
+
+        if self.share_type == "public" and self.privatelist:
+            msg.extend(self._make_shares_list(share_lists=[self.privatelist]))
 
         self.built = zlib.compress(msg)
         return self.built
@@ -2941,15 +2954,15 @@ class FileSearchResponse(FileListMessage):
     """
 
     __slots__ = ("init", "user", "token", "list", "privatelist", "freeulslots",
-                 "ulspeed", "inqueue", "fifoqueue", "unknown")
+                 "ulspeed", "inqueue", "fifoqueue", "unknown", "private_list")
 
     def __init__(self, init=None, user=None, token=None, shares=None, freeulslots=None,
-                 ulspeed=None, inqueue=None, fifoqueue=None):
+                 ulspeed=None, inqueue=None, fifoqueue=None, private_shares=None):
         self.init = init
         self.user = user
         self.token = token
         self.list = shares
-        self.privatelist = []
+        self.privatelist = private_shares
         self.freeulslots = freeulslots
         self.ulspeed = ulspeed
         self.inqueue = inqueue
@@ -2969,6 +2982,12 @@ class FileSearchResponse(FileListMessage):
         msg.extend(self.pack_uint32(self.ulspeed))
         msg.extend(self.pack_uint32(self.inqueue))
         msg.extend(self.pack_uint32(self.unknown))
+
+        if self.privatelist:
+            msg.extend(self.pack_uint32(len(self.privatelist)))
+
+            for fileinfo in self.privatelist:
+                msg.extend(self.pack_file_info(fileinfo))
 
         return zlib.compress(msg)
 

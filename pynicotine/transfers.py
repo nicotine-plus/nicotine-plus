@@ -144,7 +144,7 @@ class Transfers:
             return None
 
         with open(transfers_file, "rb") as handle:
-            from pynicotine.utils import RestrictedUnpickler
+            from pynicotine.shares import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 
     def load_transfers(self):

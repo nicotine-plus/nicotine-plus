@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pickle
 import sys
 
 UINT32_LIMIT = 4294967295
@@ -508,14 +507,6 @@ def write_file_and_backup(path, callback, protect=False):
 
     if protect:
         os.umask(oldumask)
-
-
-class RestrictedUnpickler(pickle.Unpickler):
-    """Don't allow code execution from pickles."""
-
-    def find_class(self, module, name):
-        # Forbid all globals
-        raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
 # Debugging #

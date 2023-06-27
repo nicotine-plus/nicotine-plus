@@ -406,12 +406,12 @@ class Search:
 
         return results
 
-    def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
+    def create_search_result_list(self, search_term, word_index_db, excluded_words, partial_words):
         """Returns a list of common file indices for each word in a search
         term."""
 
         try:
-            words = searchterm.split()
+            words = search_term.split()
             num_words = len(words)
             results = None
 
@@ -433,15 +433,16 @@ class Search:
 
                     partial_results = set()
 
-                    for complete_word, indices in wordindex.items():
+                    for complete_word in word_index_db:
                         if complete_word.endswith(word):
+                            indices = word_index_db[complete_word]
                             partial_results.update(indices)
 
                     if partial_results:
                         results = self.update_search_results(results, partial_results)
                         continue
 
-                results = self.update_search_results(results, wordindex.get(word), exclude_word)
+                results = self.update_search_results(results, word_index_db.get(word), exclude_word)
 
                 if results is None:
                     # No matches found
@@ -453,14 +454,49 @@ class Search:
             log.add_debug("Error: DB closed during search, perhaps due to rescanning shares or closing the application")
             return None
 
-    def process_search_request(self, searchterm, username, token, direct=False):
+    def create_file_info_list(self, results, files_db, buddy_files_db, max_results, is_buddy=False):
+        """ Given a list of file indices, retrieve the file information for each index """
+
+        is_buddy_share_visible = config.sections["transfers"]["buddy_shares_visible_everyone"]
+        fileinfos = []
+        private_fileinfos = []
+
+        for index in islice(results, min(len(results), max_results)):
+            file_path = core.shares.file_path_index[index]
+            fileinfo = files_db.get(file_path)
+
+            if fileinfo is not None:
+                fileinfos.append(fileinfo)
+                continue
+
+            if not is_buddy and not is_buddy_share_visible:
+                continue
+
+            fileinfo = buddy_files_db.get(file_path)
+
+            if fileinfo is not None:
+                if is_buddy:
+                    fileinfos.append(fileinfo)
+                else:
+                    private_fileinfos.append(fileinfo)
+
+        if fileinfos:
+            fileinfos.sort(key=itemgetter(1))
+
+        if private_fileinfos:
+            private_fileinfos.sort(key=itemgetter(1))
+
+        num_fileinfos = len(fileinfos) + len(private_fileinfos)
+        return num_fileinfos, fileinfos, private_fileinfos
+
+    def process_search_request(self, search_term, username, token, direct=False):
         """This section is accessed every time a search request arrives,
         several times per second.
 
         Please keep it as optimized and memory sparse as possible!
         """
 
-        if not searchterm:
+        if not search_term:
             return
 
         if not config.sections["searches"]["search_results"]:
@@ -476,21 +512,21 @@ class Search:
             # unless we're specifically searching our own username
             return
 
-        maxresults = config.sections["searches"]["maxresults"]
+        max_results = config.sections["searches"]["maxresults"]
 
-        if maxresults <= 0:
+        if max_results <= 0:
             return
 
         # Do all processing in lowercase
-        original_searchterm = searchterm
-        searchterm = searchterm.lower()
+        original_search_term = search_term
+        search_term = search_term.lower()
 
         # Remember excluded/partial words for later
         excluded_words = set()
         partial_words = set()
 
-        if "-" in searchterm or "*" in searchterm:
-            for word in searchterm.split():
+        if "-" in search_term or "*" in search_term:
+            for word in search_term.split():
                 if len(word) < 1:
                     continue
 
@@ -503,9 +539,9 @@ class Search:
                         partial_words.add(subword)
 
         # Strip punctuation
-        searchterm = searchterm.translate(TRANSLATE_PUNCTUATION).strip()
+        search_term = search_term.translate(TRANSLATE_PUNCTUATION).strip()
 
-        if len(searchterm) < config.sections["searches"]["min_search_chars"]:
+        if len(search_term) < config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
             return
 
@@ -514,50 +550,29 @@ class Search:
         if not checkuser:
             return
 
-        if checkuser == 2:
-            wordindex = core.shares.share_dbs.get("buddywordindex")
-        else:
-            wordindex = core.shares.share_dbs.get("wordindex")
+        word_index_db = core.shares.share_dbs.get("wordindex")
 
-        if wordindex is None:
+        if word_index_db is None:
             return
 
         # Find common file matches for each word in search term
-        resultlist = self.create_search_result_list(searchterm, wordindex, excluded_words, partial_words)
+        results = self.create_search_result_list(search_term, word_index_db, excluded_words, partial_words)
 
-        if not resultlist:
+        if not results:
             return
 
-        if checkuser == 2:
-            fileindex = core.shares.share_dbs.get("buddyfileindex")
-        else:
-            fileindex = core.shares.share_dbs.get("fileindex")
+        files_db = core.shares.share_dbs.get("files")
+        buddy_files_db = core.shares.share_dbs.get("buddyfiles")
 
-        if fileindex is None:
+        if files_db is None or buddy_files_db is None:
             return
 
-        fileinfos = []
-        numresults = min(len(resultlist), maxresults)
+        # Get file information for each file index in result list
+        num_results, fileinfos, private_fileinfos = self.create_file_info_list(
+            results, files_db, buddy_files_db, max_results, is_buddy=(checkuser == 2))
 
-        for index in islice(resultlist, numresults):
-            fileinfo = fileindex.get(repr(index))
-
-            if fileinfo is not None:
-                fileinfos.append(fileinfo)
-
-        if numresults != len(fileinfos):
-            log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
-                           "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
-                "query": original_searchterm,
-                "expected_num": numresults,
-                "total_num": len(fileinfos)
-            })
-            numresults = len(fileinfos)
-
-        if not numresults:
+        if not num_results:
             return
-
-        fileinfos.sort(key=itemgetter(1))
 
         uploadspeed = core.uploads.upload_speed
         queuesize = core.uploads.get_upload_queue_size()
@@ -566,12 +581,13 @@ class Search:
 
         message = slskmessages.FileSearchResponse(
             None, core.login_username,
-            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
-
+            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue,
+            private_fileinfos
+        )
         core.send_message_to_peer(username, message)
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
             "user": username,
-            "query": original_searchterm,
-            "num": numresults
+            "query": original_search_term,
+            "num": num_results
         })

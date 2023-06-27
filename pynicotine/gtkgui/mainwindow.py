@@ -271,8 +271,6 @@ class MainWindow(Window):
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("set-connection-stats", self.set_connection_stats),
-            ("set-scan-indeterminate", self.set_scan_indeterminate),
-            ("set-scan-progress", self.set_scan_progress),
             ("show-scan-progress", self.show_scan_progress),
             ("update-download-limits", self.update_download_limits),
             ("update-upload-limits", self.update_upload_limits),
@@ -1316,20 +1314,15 @@ class MainWindow(Window):
         remove_css_class(label, "underline")
 
     def show_scan_progress(self):
-        self.scan_progress_bar.set_visible(True)
-
-    def set_scan_progress(self, value):
-        self.scan_progress_indeterminate = False
-        self.scan_progress_bar.set_fraction(value)
-
-    def set_scan_indeterminate(self):
 
         if self.scan_progress_indeterminate:
             return
 
         self.scan_progress_indeterminate = True
 
+        self.scan_progress_bar.set_visible(True)
         self.scan_progress_bar.pulse()
+
         GLib.timeout_add(500, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
@@ -1341,7 +1334,10 @@ class MainWindow(Window):
         return True
 
     def hide_scan_progress(self):
-        self.set_scan_progress(0.0)  # Ensure we stop pulse mode
+
+        self.scan_progress_indeterminate = False
+
+        self.scan_progress_bar.set_fraction(0.0)  # Ensure we stop pulse mode
         self.scan_progress_bar.set_visible(False)
 
     def on_toggle_status(self, *_args):

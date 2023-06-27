@@ -19,7 +19,6 @@
 
 import os
 import subprocess
-import sys
 
 
 def install_pacman():
@@ -46,13 +45,5 @@ def install_pacman():
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
 
-def install_pypi():
-    """Install dependencies from PyPi."""
-
-    packages = ["semidbm"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
 if __name__ == "__main__":
     install_pacman()
-    install_pypi()

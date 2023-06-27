@@ -49,8 +49,6 @@ EVENT_NAMES = {
     "server-disconnect",
     "server-timeout",
     "set-connection-stats",
-    "set-scan-indeterminate",
-    "set-scan-progress",
     "setup",
     "show-scan-progress",
     "shares-unavailable",
