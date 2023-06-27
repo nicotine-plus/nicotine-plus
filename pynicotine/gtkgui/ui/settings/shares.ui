@@ -41,6 +41,15 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="buddy_shares_visible_everyone_toggle">
+            <property name="label" translatable="yes">Show buddy-only shares to everyone</property>
+            <property name="tooltip-text" translatable="yes">Buddy-only shares are visible to everyone, but only buddies can download.</property>
+            <property name="use-underline">True</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="on_buddy_share_visible_changed"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkCheckButton" id="buddy_shares_trusted_only_toggle">
             <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
             <property name="use-underline">True</property>

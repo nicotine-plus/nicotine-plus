@@ -210,6 +210,7 @@ class Config:
                 "queuelimit": 10000,
                 "filelimit": 100,
                 "buddysharestrustedonly": False,
+                "buddy_shares_visible_everyone": False,
                 "friendsnolimits": False,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",

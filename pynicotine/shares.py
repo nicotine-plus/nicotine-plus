@@ -31,6 +31,7 @@ import sys
 import time
 
 from collections import deque
+from collections import defaultdict
 from threading import Thread
 
 from pynicotine import rename_process
@@ -119,7 +120,8 @@ class Scanner:
     databases and writing them to disk.
     """
 
-    def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
+    def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True,
+                 rebuild=False, is_buddy_visible=False):
 
         self.config = config_obj
         self.queue = queue
@@ -129,16 +131,24 @@ class Scanner:
         self.init = init
         self.rescan = rescan
         self.rebuild = rebuild
+        self.is_buddy_visible = is_buddy_visible
         self.tinytag = None
-        self.version = 2
+        self.version = 3
 
     def run(self):
 
         try:
             rename_process(b"nicotine-scan")
 
-            if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
-                # Failed to load shares, rebuild
+            shares_loaded = Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True)
+            old_mtimes = self.share_dbs.get("mtimes")
+            share_version = None
+
+            if old_mtimes is not None:
+                share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
+
+            if not shares_loaded or share_version != self.version:
+                # Failed to load shares or version is invalid, rebuild
                 self.rescan = self.rebuild = True
 
             if self.init:
@@ -151,11 +161,13 @@ class Scanner:
                 self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
                                None, LogLevel.DEFAULT))
 
-                new_mtimes, new_files, new_streams = self.rescan_dirs("public", rebuild=self.rebuild)
-                _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
-                                                                        new_streams, self.rebuild)
+                num_public_folders, wordindex = self.rescan_dirs("public", rebuild=self.rebuild)
+                num_buddy_folders, _wordindex = self.rescan_dirs("buddy", old_wordindex=wordindex, rebuild=self.rebuild)
 
-                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, LogLevel.DEFAULT))
+                self.queue.put(
+                    (_("Rescan complete: %(num)s folders found"), {"num": num_public_folders + num_buddy_folders},
+                     LogLevel.DEFAULT)
+                )
 
                 self.create_compressed_shares()
 
@@ -179,14 +191,17 @@ class Scanner:
         """Create a message that will later contain a compressed list of our
         shares."""
 
-        if share_type == "public":
-            streams = self.share_dbs.get("streams")
-        else:
-            streams = self.share_dbs.get(f"{share_type}streams")
+        streams = self.share_dbs.get("streams")
+        buddy_streams = self.share_dbs.get("buddystreams")
 
-        compressed_shares = slskmessages.SharedFileListResponse(shares=streams)
+        if share_type == "public" and not self.is_buddy_visible:
+            buddy_streams = None
+
+        compressed_shares = slskmessages.SharedFileListResponse(
+            shares=streams, buddy_shares=buddy_streams, share_type=share_type
+        )
         compressed_shares.make_network_message()
-        compressed_shares.list = None
+        compressed_shares.list = compressed_shares.privatelist = []
         compressed_shares.type = share_type
 
         self.queue.put(compressed_shares)
@@ -241,7 +256,7 @@ class Scanner:
 
         return "__INTERNAL_ERROR__" + path
 
-    def set_shares(self, share_type, files=None, streams=None, mtimes=None, wordindex=None):
+    def set_shares(self, share_type=None, files=None, streams=None, mtimes=None, wordindex=None):
 
         self.config.create_data_folder()
 
@@ -256,7 +271,7 @@ class Scanner:
             if source is None:
                 continue
 
-            if share_type != "public":
+            if share_type and share_type != "public":
                 destination = f"{share_type}{destination}"
 
             try:
@@ -268,7 +283,7 @@ class Scanner:
                                 {"filename": destination + ".db", "error": error}, LogLevel.DEFAULT))
                 return
 
-    def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
+    def rescan_dirs(self, share_type, old_wordindex=None, rebuild=False):
         """Check for modified or new files via OS's last mtime on a folder,
         or, if rebuild is True, all folders."""
 
@@ -286,24 +301,7 @@ class Scanner:
         new_streams = {}
         new_mtimes = {}
 
-        if files is not None:
-            new_files = {**files, **new_files}
-
-        if streams is not None:
-            new_streams = {**streams, **new_streams}
-
-        if mtimes is not None:
-            new_mtimes = {**mtimes, **new_mtimes}
-
         old_mtimes = self.share_dbs.get(prefix + "mtimes")
-        share_version = None
-
-        if old_mtimes is not None:
-            share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
-
-        # Rebuild shares if share version is outdated
-        if share_version is None or share_version < self.version:
-            rebuild = True
 
         for folder in shared_folders:
             # Get mtimes for top-level shared folders, then every subfolder
@@ -324,20 +322,27 @@ class Scanner:
 
         # Save data to databases
         new_mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
+        num_folders = len(new_files)
         self.set_shares(share_type, files=new_files, streams=new_streams, mtimes=new_mtimes)
 
         # Update Search Index
         # wordindex is a dict in format { word: [num, num, ..], ... } with num matching keys in fileindex
         # fileindex is a dict in format { num: (path, size, quality (bitrate, vbr, samplerate, bitdepth), length), ... }
-        wordindex = self.get_files_index(new_files, prefix + "fileindex")
+        start_file_index = len(dict(self.share_dbs.get("fileindex"))) if share_type != "public" else 0
+        wordindex = self.get_files_index(new_files, prefix + "fileindex", start_file_index=start_file_index)
 
         # Save data to databases
-        self.set_shares(share_type, wordindex=wordindex)
+        if old_wordindex is not None:
+            for key, values in wordindex.items():
+                old_wordindex[key].extend(values)
 
-        del wordindex
+            self.set_shares(wordindex=old_wordindex)
+
+        for dictionary in (new_files, new_streams, new_mtimes):
+            dictionary.clear()
+
         gc.collect()
-
-        return new_mtimes, new_files, new_streams
+        return num_folders, wordindex
 
     @staticmethod
     def is_hidden(folder, filename=None, entry=None):
@@ -527,7 +532,7 @@ class Scanner:
 
         return stream
 
-    def get_files_index(self, shared_files, fileindex_dest):
+    def get_files_index(self, shared_files, fileindex_dest, start_file_index=0):
         """Update search index with new files.
 
         We dump data directly into the file index database to save
@@ -537,9 +542,9 @@ class Scanner:
         """
 
         self.share_dbs[fileindex_dest] = fileindex_db = self.create_db_file(fileindex_dest)
+        wordindex = defaultdict(list)
+        file_index = start_file_index - 1
 
-        wordindex = {}
-        file_index = -1
         num_shared_files = len(shared_files)
         last_percent = 0.0
 
@@ -562,10 +567,7 @@ class Scanner:
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
                 for k in set((f"{folder} {filename}").lower().translate(TRANSLATE_PUNCTUATION).split()):
-                    try:
-                        wordindex[k].append(file_index)
-                    except KeyError:
-                        wordindex[k] = [file_index]
+                    wordindex[k].append(file_index)
 
         return wordindex
 
@@ -578,11 +580,10 @@ class Shares:
         self.requested_share_times = {}
         self.pending_network_msgs = []
         self.rescanning = False
-        self.should_compress_shares = False
-        self.compressed_shares = {}
-
-        for share_type in ("public", "buddy"):
-            self.compressed_shares[share_type] = slskmessages.SharedFileListResponse()
+        self.compressed_shares = {
+            "public": slskmessages.SharedFileListResponse(),
+            "buddy": slskmessages.SharedFileListResponse()
+        }
 
         self.convert_shares()
         self.share_db_paths = [
@@ -593,7 +594,6 @@ class Shares:
             ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
             ("buddyfiles", os.path.join(config.data_folder_path, "buddyfiles.db")),
             ("buddystreams", os.path.join(config.data_folder_path, "buddystreams.db")),
-            ("buddywordindex", os.path.join(config.data_folder_path, "buddywordindex.db")),
             ("buddyfileindex", os.path.join(config.data_folder_path, "buddyfileindex.db")),
             ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db"))
         ]
@@ -737,18 +737,6 @@ class Shares:
 
         return True
 
-    def get_compressed_shares_message(self, share_type):
-        """Returns the compressed shares message.
-
-        Creates a new one if necessary, e.g. if an individual file was
-        added to our shares.
-        """
-
-        if self.should_compress_shares:
-            self.rescan_shares(init=True, rescan=False)
-
-        return self.compressed_shares.get(share_type)
-
     def get_shared_folders(self):
 
         shared_folders = config.sections["transfers"]["shared"]
@@ -860,7 +848,8 @@ class Shares:
             self.share_db_paths,
             init,
             rescan,
-            rebuild
+            rebuild,
+            is_buddy_visible=config.sections["transfers"]["buddy_shares_visible_everyone"]
         )
         scanner = context.Process(target=scanner_obj.run, daemon=True)
         return scanner, scanner_queue
@@ -893,7 +882,6 @@ class Shares:
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
                     self.compressed_shares[item.type] = item
-                    self.should_compress_shares = False
 
         return False
 
@@ -994,11 +982,11 @@ class Shares:
 
         if checkuser == 1:
             # Send public shares
-            shares_list = self.get_compressed_shares_message("public")
+            shares_list = self.compressed_shares.get("public")
 
         elif checkuser == 2:
             # Send buddy shares
-            shares_list = self.get_compressed_shares_message("buddy")
+            shares_list = self.compressed_shares.get("buddy")
 
         if not shares_list:
             # Nyah, nyah
@@ -1016,33 +1004,23 @@ class Shares:
         if not checkuser:
             message = core.ban_message % reason
             core.privatechat.send_automatic_message(username, message)
+            return
 
+        is_buddy_share_visible = config.sections["transfers"]["buddy_shares_visible_everyone"]
         public_shares = self.share_dbs.get("streams")
         buddy_shares = self.share_dbs.get("buddystreams")
+        folder_data = None
 
-        if checkuser == 1 and public_shares is not None:
-            shares = public_shares
+        try:
+            if (checkuser == 2 or is_buddy_share_visible) and msg.dir in buddy_shares:
+                folder_data = buddy_shares[msg.dir]
 
-        elif checkuser == 2 and buddy_shares is not None:
-            shares = buddy_shares
+            elif msg.dir in public_shares:
+                folder_data = public_shares[msg.dir]
 
-        else:
-            shares = {}
+        except Exception as error:
+            log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
+                    {"folder": msg.dir, "error": error})
 
-        if checkuser:
-            try:
-                if msg.dir in shares:
-                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
-                        directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
-                    return
-
-                if msg.dir.rstrip("\\") in shares:
-                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
-                        directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
-                    return
-
-            except Exception as error:
-                log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
-                        {"folder": msg.dir, "error": error})
-
-            core.send_message_to_peer(username, slskmessages.FolderContentsResponse(directory=msg.dir, token=msg.token))
+        core.send_message_to_peer(
+            username, slskmessages.FolderContentsResponse(directory=msg.dir, token=msg.token, shares=folder_data))

@@ -93,7 +93,7 @@ class UserBrowse:
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message(share_type)
+            msg = core.shares.compressed_shares.get(share_type)
             Thread(
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
@@ -314,4 +314,4 @@ class UserBrowse:
         username = msg.init.target_user
 
         if username in self.user_shares:
-            self.user_shares[username] = dict(msg.list + msg.privatelist)
+            self.user_shares[username] = dict(msg.list + msg.privatelist) if msg.privatelist else dict(msg.list)
