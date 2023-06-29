@@ -326,11 +326,13 @@ class MessageDialog(Window):
 
         Window.active_dialogs.remove(self)
 
-        if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
-                                            Gtk.ResponseType.DELETE_EVENT):
+        if response_id in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE, Gtk.ResponseType.DELETE_EVENT):
+            return
+
+        if callback:
             callback(self, response_id, callback_data)
 
-        self.widget.close()
+        self.widget.destroy()
 
     def _finish_show(self):
         self.widget.set_modal(self.parent and self.parent.is_visible())
