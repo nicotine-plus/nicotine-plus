@@ -29,6 +29,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.utils import encode_path
@@ -37,21 +38,9 @@ from pynicotine.utils import encode_path
 """ Global Style """
 
 
-LIBADWAITA = None
-try:
-    if os.getenv("NICOTINE_LIBADWAITA") == "1":
-        import gi
-        gi.require_version("Adw", "1")
-
-        from gi.repository import Adw
-        LIBADWAITA = Adw
-
-except (ImportError, ValueError):
-    pass
-
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA_API_VERSION)
 
 if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
@@ -105,9 +94,11 @@ if USE_COLOR_SCHEME_PORTAL:
 
 def set_dark_mode(enabled):
 
-    if LIBADWAITA:
-        color_scheme = LIBADWAITA.ColorScheme.FORCE_DARK if enabled else LIBADWAITA.ColorScheme.DEFAULT
-        LIBADWAITA.StyleManager.get_default().set_color_scheme(color_scheme)
+    if LIBADWAITA_API_VERSION:
+        from gi.repository import Adw  # pylint: disable=no-name-in-module
+
+        color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
+        Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
     if USE_COLOR_SCHEME_PORTAL and not enabled:

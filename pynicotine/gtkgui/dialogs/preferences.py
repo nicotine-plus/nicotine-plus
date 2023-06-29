@@ -229,6 +229,7 @@ class NetworkPage:
             title=_("Change Password"),
             message=message,
             visibility=False,
+            action_button_label=_("_Change"),
             callback=self.on_change_password_response,
             callback_data=core.user_status
         ).show()
@@ -433,6 +434,7 @@ class DownloadsPage:
             parent=self.application.preferences,
             title=_("Add Download Filter"),
             message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_filter_response,
             option_value=False,
             option_label=_("Enable regular expressions"),
@@ -463,6 +465,7 @@ class DownloadsPage:
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
                 message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
@@ -712,6 +715,7 @@ class SharesPage:
                 default=virtual_name,
                 option_value=is_buddy_only,
                 option_label=_("Share with buddies only"),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
@@ -988,6 +992,7 @@ class IgnoredUsersPage:
             parent=self.application.preferences,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_ignored_user_response
         ).show()
 
@@ -1017,6 +1022,7 @@ class IgnoredUsersPage:
             parent=self.application.preferences,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
+            action_button_label=_("_Add"),
             callback=self.on_add_ignored_ip_response
         ).show()
 
@@ -1140,6 +1146,7 @@ class BannedUsersPage:
             parent=self.application.preferences,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_banned_user_response
         ).show()
 
@@ -1170,6 +1177,7 @@ class BannedUsersPage:
             parent=self.application.preferences,
             title=_("Ban IP Address"),
             message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
+            action_button_label=_("_Add"),
             callback=self.on_add_banned_ip_response
         ).show()
 
@@ -1396,6 +1404,7 @@ class ChatsPage:
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
+            action_button_label=_("_Add"),
             callback=self.on_add_censored_response
         ).show()
 
@@ -1422,6 +1431,7 @@ class ChatsPage:
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_censored_response,
                 callback_data=iterator,
                 default=pattern
@@ -1453,6 +1463,7 @@ class ChatsPage:
             parent=self.application.preferences,
             title=_("Add Replacement"),
             message=_("Enter a text pattern and what to replace it with:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1482,6 +1493,7 @@ class ChatsPage:
                 parent=self.application.preferences,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_replacement_response,
                 callback_data=iterator,
                 use_second_entry=True,
@@ -2294,6 +2306,7 @@ class UrlHandlersPage:
             parent=self.application.preferences,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_handler_response,
             use_second_entry=True,
             droplist=self.default_protocols,
@@ -2322,6 +2335,7 @@ class UrlHandlersPage:
                 parent=self.application.preferences,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_handler_response,
                 callback_data=iterator,
                 droplist=self.default_commands,
