@@ -27,7 +27,6 @@ from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -39,7 +38,6 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
@@ -169,6 +167,7 @@ class UserBrowse:
             self.file_list_container,
             self.folder_tree_container,
             self.info_bar,
+            self.info_bar_label,
             self.num_folders_label,
             self.progress_bar,
             self.refresh_button,
@@ -194,8 +193,6 @@ class UserBrowse:
         self.search_list = []
         self.query = None
         self.search_position = 0
-
-        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
 
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
@@ -506,18 +503,20 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
+        is_empty = (not msg.list and not msg.privatelist)
         self.make_new_model(msg.list, msg.privatelist)
-        self.info_bar.set_visible(False)
 
-        if msg.list or msg.privatelist:
-            self.browse_queued_path()
-
-        else:
-            self.retry_button.set_visible(False)
-            self.info_bar.show_message(
+        if is_empty:
+            self.info_bar_label.set_label(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
             )
+            self.retry_button.set_visible(False)
+        else:
+            self.browse_queued_path()
+
+        self.info_bar.set_visible(is_empty)
+        self.info_bar.set_reveal_child(is_empty)
 
         self.set_finished()
 
@@ -526,12 +525,13 @@ class UserBrowse:
         if self.refresh_button.get_sensitive():
             return
 
-        self.retry_button.set_visible(True)
-        self.info_bar.show_message(
+        self.info_bar_label.set_label(
             _("Unable to request shared files from user. Either the user is offline, the listening ports "
-              "are closed on both sides, or there is a temporary connectivity issue."),
-            message_type=Gtk.MessageType.ERROR
+              "are closed on both sides, or there is a temporary connectivity issue.")
         )
+        self.retry_button.set_visible(True)
+        self.info_bar.set_visible(True)
+        self.info_bar.set_reveal_child(True)
 
         self.set_finished()
 
@@ -1207,6 +1207,7 @@ class UserBrowse:
 
         self.clear_model()
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
 
         self.set_in_progress()
         core.userbrowse.browse_user(self.user, path=path, local_share_type=self.local_share_type, new_request=True)

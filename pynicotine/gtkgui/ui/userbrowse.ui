@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkButton" id="retry_button">
-    <property name="label" translatable="yes">_Retry</property>
-    <property name="use-underline">True</property>
-    <property name="visible">True</property>
-    <signal name="clicked" handler="on_refresh"/>
-  </object>
   <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
@@ -15,12 +9,46 @@
         <property name="orientation">vertical</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkRevealer">
+          <object class="GtkRevealer" id="info_bar">
             <property name="transition-type">slide-down</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkInfoBar" id="info_bar">
+              <object class="GtkBox">
+                <property name="hexpand">True</property>
+                <property name="spacing">6</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel" id="info_bar_label">
+                    <property name="height-request">24</property>
+                    <property name="hexpand">True</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">12</property>
+                    <property name="margin-start">12</property>
+                    <property name="margin-top">6</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="retry_button">
+                    <property name="label" translatable="yes">Retry</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_refresh"/>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <style>
+                  <class name="background"/>
+                  <class name="border-bottom"/>
+                </style>
               </object>
             </child>
           </object>
