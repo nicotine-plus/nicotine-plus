@@ -29,6 +29,7 @@ import stat
 import sys
 import time
 
+from collections import deque
 from multiprocessing import Process
 from multiprocessing import Queue
 from threading import Thread
@@ -367,75 +368,73 @@ class Scanner(Process):
 
         return False
 
-    def get_files_list(self, folder, oldmtimes, oldfiles, oldstreams, rebuild=False, folder_stat=None):
+    def get_files_list(self, shared_folder, oldmtimes, oldfiles, oldstreams, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
-        if folder_stat is None:
-            folder_stat = os.stat(encode_path(folder))
-
-        folder_unchanged = False
-        virtual_folder = self.real2virtual(folder)
-        mtime = folder_stat.st_mtime
-
-        file_list = []
         files = {}
         streams = {}
-        mtimes = {folder: mtime}
+        mtimes = {}
+        folders = deque([(shared_folder, None)])
 
-        if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
+        while folders:
+            folder, folder_stat = folders.pop()
+
+            if folder_stat is None:
+                folder_stat = os.stat(encode_path(folder))
+
+            folder_unchanged = False
+            virtual_folder = self.real2virtual(folder)
+            mtime = mtimes[folder] = folder_stat.st_mtime
+            file_list = []
+
+            if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
+                try:
+                    files[virtual_folder] = oldfiles[virtual_folder]
+                    streams[virtual_folder] = oldstreams[virtual_folder]
+                    folder_unchanged = True
+
+                except KeyError:
+                    self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
+                        "vdir": virtual_folder,
+                        "dir": folder
+                    }, LogLevel.MISCELLANEOUS))
+
             try:
-                files[virtual_folder] = oldfiles[virtual_folder]
-                streams[virtual_folder] = oldstreams[virtual_folder]
-                folder_unchanged = True
+                with os.scandir(encode_path(folder, prefix=False)) as entries:
+                    for entry in entries:
+                        if entry.is_file():
+                            try:
+                                if not folder_unchanged:
+                                    filename = entry.name.decode("utf-8", "replace")
 
-            except KeyError:
-                self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
-                    "vdir": virtual_folder,
-                    "dir": folder
-                }, LogLevel.MISCELLANEOUS))
+                                    if self.is_hidden(folder, filename, entry):
+                                        continue
 
-        try:
-            with os.scandir(encode_path(folder, prefix=False)) as entries:
-                for entry in entries:
-                    if entry.is_file():
-                        try:
-                            if not folder_unchanged:
-                                filename = entry.name.decode("utf-8", "replace")
+                                    # Get the metadata of the file
+                                    path = entry.path.decode("utf-8", "replace")
+                                    data = self.get_file_info(filename, path, entry)
+                                    file_list.append(data)
 
-                                if self.is_hidden(folder, filename, entry):
-                                    continue
+                            except Exception as error:
+                                self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
+                                               {"path": entry.path, "error": error}, LogLevel.DEFAULT))
 
-                                # Get the metadata of the file
-                                path = entry.path.decode("utf-8", "replace")
-                                data = self.get_file_info(filename, path, entry)
-                                file_list.append(data)
+                            continue
 
-                        except Exception as error:
-                            self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {"path": entry.path, "error": error}, LogLevel.DEFAULT))
+                        path = entry.path.decode("utf-8", "replace").replace("\\", os.sep)
 
-                        continue
+                        if self.is_hidden(path, entry=entry):
+                            continue
 
-                    path = entry.path.decode("utf-8", "replace").replace("\\", os.sep)
+                        folders.append((path, entry.stat()))
 
-                    if self.is_hidden(path, entry=entry):
-                        continue
+            except OSError as error:
+                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
+                               {"path": folder, "error": error}, LogLevel.DEFAULT))
 
-                    dir_files, dir_streams, dir_mtimes = self.get_files_list(
-                        path, oldmtimes, oldfiles, oldstreams, rebuild, entry.stat()
-                    )
-
-                    files = {**files, **dir_files}
-                    streams = {**streams, **dir_streams}
-                    mtimes = {**mtimes, **dir_mtimes}
-
-        except OSError as error:
-            self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                           {"path": folder, "error": error}, LogLevel.DEFAULT))
-
-        if not folder_unchanged:
-            files[virtual_folder] = file_list
-            streams[virtual_folder] = self.get_dir_stream(file_list)
+            if not folder_unchanged:
+                files[virtual_folder] = file_list
+                streams[virtual_folder] = self.get_dir_stream(file_list)
 
         return files, streams, mtimes
 
