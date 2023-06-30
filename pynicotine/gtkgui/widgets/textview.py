@@ -106,13 +106,20 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _insert_text(self, text, tag=None, iterator=None):
+    def _insert_line(self, tagged_items, line_number=None):
+
+        if line_number is not None:
+            iterator = self.textbuffer.get_iter_at_line(line_number)
+        else:
+            iterator = self.textbuffer.get_end_iter()
+
+        for (text, tag) in tagged_items:
+            self._insert_text(iterator, text, tag)
+
+    def _insert_text(self, iterator, text, tag=None):
 
         if not text:
             return
-
-        if iterator is None:
-            iterator = self.textbuffer.get_end_iter()
 
         if tag is not None:
             start_offset = iterator.get_offset()
@@ -122,15 +129,6 @@ class TextView:
         if tag is not None:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
             self.textbuffer.apply_tag(tag, start_iter, iterator)
-
-    def _append_new_line(self, line_data):
-        for (text, tag) in line_data:
-            self._insert_text(text, tag)
-
-    def _prepend_old_line(self, line_data):
-        for (text, tag) in reversed(line_data):
-            iterator = self.textbuffer.get_iter_at_line(0)
-            self._insert_text(text, tag, iterator)
 
     def _remove_old_lines(self):
 
@@ -148,7 +146,7 @@ class TextView:
         self.tag_urls.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-        self._prepend_old_line([("--- text buffer full ---\n", None)])
+        self._insert_line([("--- text buffer full ---\n", None)], line_number=0)
         return True
 
     def append_line(self, line, text_tag=None, timestamp=None, timestamp_format=None):
@@ -160,36 +158,36 @@ class TextView:
             line = "\n" + line
 
         # Highlight urls, if found and tag them
-        for text, tag in self.get_hyperlink_tags(line, text_tag):
-            self._insert_text(text, tag)
+        tagged_items = self.get_hyperlink_tags(line, text_tag)
 
+        self._insert_line(tagged_items)
         self._remove_old_lines()
 
     def get_hyperlink_tags(self, text, text_tag):
         """ Highlight urls, if found in text and tag them """
 
-        tagged_text_data = []
+        tagged_items = []
 
         if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
             match = self.url_regex.search(text)
 
             while match:
-                tagged_text_data.append((text[:match.start()], text_tag))
+                tagged_items.append((text[:match.start()], text_tag))
 
                 url = match.group()
                 url_tag = self.create_tag("urlcolor", url=url)
                 self.tag_urls[self.textbuffer.get_end_iter()] = url_tag
-                tagged_text_data.append((url, url_tag))
+                tagged_items.append((url, url_tag))
 
                 # Match remaining url
                 text = text[match.end():]
                 match = self.url_regex.search(text)
 
         # Add remaining text
-        tagged_text_data.append((text, text_tag))
+        tagged_items.append((text, text_tag))
 
-        return tagged_text_data
+        return tagged_items
 
     def get_text(self):
         start_iter, end_iter = self.textbuffer.get_bounds()
@@ -429,8 +427,8 @@ class ChatView(TextView):
         space = " "
         space_tag = None  # TODO: full-row select hotzone
 
-        tagged_line = []
-        tagged_line.append((eol, None))
+        tagged_items = []
+        tagged_items.append((eol, None))
 
         if tag != self.tag_command:
             if not isinstance(timestamp, str):
@@ -442,44 +440,41 @@ class ChatView(TextView):
                 time_tag = self.tag_local
                 text = text.rstrip(eol)
 
-            tagged_line.append((timestamp, time_tag))
+            tagged_items.append((timestamp, time_tag))
 
         if is_global and roomname:
             # This is Public global room feed
             room_tag = self.get_room_tag(roomname)
 
-            tagged_line.append((" ", space_tag))
-            tagged_line.append((roomname, room_tag))
-            tagged_line.append((" |", space_tag))
+            tagged_items.append((" ", space_tag))
+            tagged_items.append((roomname, room_tag))
+            tagged_items.append((" |", space_tag))
 
         type_tag = self.get_type_tag(username)
         user_tag = self.get_user_tag(username)
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
         if tag == self.tag_action:
-            tagged_line.append((" * ", self.tag_action))
+            tagged_items.append((" * ", self.tag_action))
 
             if username:
-                tagged_line.append((username, user_tag))
-                tagged_line.append((space, space_tag))
+                tagged_items.append((username, user_tag))
+                tagged_items.append((space, space_tag))
 
                 text = text[4:]  # "/me "
 
         elif username:
-            tagged_line.append((" [", type_tag))  # [ buddy user type highlight
-            tagged_line.append((username, user_tag))
-            tagged_line.append(("] ", type_tag))  # ] buddy user type highlight
+            tagged_items.append((" [", type_tag))  # [ buddy user type highlight
+            tagged_items.append((username, user_tag))
+            tagged_items.append(("] ", type_tag))  # ] buddy user type highlight
 
         elif timestamp:
-            tagged_line.append((space, space_tag))
+            tagged_items.append((space, space_tag))
 
         # Highlight urls, if found and tag them, add remaining text
-        tagged_line += self.get_hyperlink_tags(text, tag)
+        tagged_items += self.get_hyperlink_tags(text, tag)
 
-        if prepend:
-            self._prepend_old_line(tagged_line)
-        else:
-            self._append_new_line(tagged_line)
+        self._insert_line(tagged_items, line_number=(0 if prepend else None))
 
     def get_room_tag(self, roomname):
 

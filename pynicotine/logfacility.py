@@ -379,7 +379,7 @@ class Logger:
 
         elif is_global and (line_prefix.endswith(" | [" if not is_action else " | * ")):
             # Public global room feed line, we cannot guess the length of timestamp/roomname
-            timestamp_length = len(time.strftime(config.sections["logging"]["log_timestamp"]))
+            timestamp_length = timestamp_length or len(time.strftime(config.sections["logging"]["log_timestamp"]))
             pos_after_room = -4 if not is_action else -5
 
             timestamp = line_prefix[:timestamp_length]

@@ -577,7 +577,7 @@ class ChatRoom:
         self.chat_entry.grab_focus()
 
         self.update_user_count()
-        self.chat_view.prepend_log_lines(self.read_room_logs())
+        self.chat_view.prepend_log_lines(self.read_room_logs(), is_global=is_global)
 
     def load(self):
 
@@ -613,7 +613,7 @@ class ChatRoom:
 
     def setup_public_feed(self):
 
-        if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
+        if not self.is_global:
             return
 
         for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
