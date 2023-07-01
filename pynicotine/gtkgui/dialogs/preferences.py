@@ -1717,7 +1717,7 @@ class UserInterfacePage:
             "interests": self.tab_visible_interests_toggle
         }
 
-        if GTK_API_VERSION >= 4 and GTK_MINOR_VERSION >= 10:
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
 
@@ -3073,7 +3073,8 @@ class Preferences(Dialog):
                     else:
                         obj.connect("scroll-event", self.on_widget_scroll_event)
 
-                elif isinstance(obj, Gtk.FontButton) or GTK_API_VERSION >= 4 and isinstance(obj, Gtk.FontDialogButton):
+                elif (isinstance(obj, Gtk.FontButton)
+                      or ((GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10) and isinstance(obj, Gtk.FontDialogButton))):
                     if GTK_API_VERSION >= 4:
                         font_button_label = obj.get_first_child().get_first_child().get_first_child()
                     else:
