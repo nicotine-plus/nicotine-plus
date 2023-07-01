@@ -886,8 +886,7 @@ class TransferList:
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
                 "size": file_size,
-                "bitrate": transfer.bitrate,
-                "length": transfer.length
+                "file_attributes": transfer.file_attributes
             })
 
         if data:
