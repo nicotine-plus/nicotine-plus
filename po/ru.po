@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-22 16:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-06-29 14:49+0000\n"
+"Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -774,9 +774,8 @@ msgid "Filter"
 msgstr "Фильтр"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
-#, fuzzy
 msgid "Regex"
-msgstr "регулярное выражение"
+msgstr "Регулярное выражение"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:404
 msgid "Add Download Filter"
@@ -788,7 +787,6 @@ msgstr "Введите новый фильтр загрузки:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
-#, fuzzy
 msgid "Enable regular expressions"
 msgstr "Включить регулярные выражения"
 
@@ -815,7 +813,7 @@ msgstr "Только для друзей"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:684
 msgid "Share with buddies only"
-msgstr "Только для друзей"
+msgstr "Обмен только для друзей"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:872
 #: pynicotine/gtkgui/dialogs/preferences.py:1004
@@ -5071,7 +5069,6 @@ msgid "Use alternative upload speed limit (KiB/s):"
 msgstr "Особое ограничение скорости отдачи (КиБ/сек):"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:74
-#, fuzzy
 msgid "Private Chat Command Help"
 msgstr "Справка по командам чата"
 
@@ -5115,9 +5112,8 @@ msgstr "Тип файла…"
 
 #: pynicotine/gtkgui/ui/search.ui:245
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Тип файла, например flac|wav|ape или !mp3|!m4a"
+msgstr "Тип файла, например flac wav или !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:273
 msgid "File size…"
@@ -5125,9 +5121,8 @@ msgstr "Размер файла…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
-#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr "Размер файла, например. >10,5м <1г"
+msgstr "Размер файла, например >10.5МиБ <1ГиБ"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5135,9 +5130,8 @@ msgstr "Битрейт…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
-#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr "Битрейт, например. 256 <1412"
+msgstr "Битрейт, например 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:331
 msgid "Duration…"
@@ -5348,9 +5342,8 @@ msgid "Store completed downloads in username subfolders"
 msgstr "Сохранять завершённые загрузки в подкаталогах с именами пользователей"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:57
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Кто может отправлять вам файлы:"
+msgstr "Разрешить пользователям отправлять вам любые файлы:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:68
 msgid "No one"
@@ -5394,14 +5387,12 @@ msgid "Folders"
 msgstr "Каталоги"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:213
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Загрузка файла завершена"
+msgstr "Завершенные загрузки:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:236
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Завершённые загрузки"
+msgstr "Незавершенные загрузки:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
 msgid "Received files:"
@@ -5506,9 +5497,8 @@ msgid "Public IP address:"
 msgstr "Публичный IP-адрес:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:172
-#, fuzzy
 msgid "Listening port:"
-msgstr "Диапазон прослушиваемых портов:"
+msgstr "Прослушивающий порт:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:206
 msgid "Away Status"
@@ -5885,9 +5875,8 @@ msgid "Language (requires a restart):"
 msgstr "Язык (требуется перезапуск программы):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:85
-#, fuzzy
 msgid "System Default"
-msgstr "По умолчанию"
+msgstr "Как в системе"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:99
 msgid "When closing Nicotine+:"
@@ -5982,11 +5971,8 @@ msgid "Main tabs"
 msgstr "Основные вкладки"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:869
-#, fuzzy
 msgid "Show reverse file paths (requires a restart)"
-msgstr ""
-"Показывать обратные пути к файлам в представлениях поиска и передачи "
-"(требуется перезапуск)"
+msgstr "Показывать обратные пути файлов (требуется перезапуск)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:876
 msgid "Show exact file sizes (requires a restart)"
