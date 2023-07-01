@@ -32,11 +32,6 @@ def check_gtk_version(gtk_api_version):
         gtk_api_version = "3"
         pygobject_version = (3, 26, 1)
 
-    if os.getenv("NICOTINE_LIBADWAITA") is None:
-        os.environ["NICOTINE_LIBADWAITA"] = str(int(
-            sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
-        ))
-
     try:
         import gi
         gi.check_version(pygobject_version)

@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.textentry import ComboBox
@@ -251,7 +252,7 @@ class Dialog(Window):
 class MessageDialog(Window):
 
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
-                 message_type=Gtk.MessageType.OTHER, buttons=None, width=-1):
+                 buttons=None, destructive_response_id=None, width=-1):
 
         # Prioritize modal non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
@@ -259,24 +260,90 @@ class MessageDialog(Window):
                 parent = active_dialog
                 break
 
-        widget = Gtk.MessageDialog(
-            transient_for=parent.widget if parent else None, destroy_with_parent=True, message_type=message_type,
-            default_width=width, text=title, secondary_text=message, secondary_use_markup=True
-        )
-        super().__init__(widget=widget)
-        widget.connect("response", self.on_response, callback, callback_data)
+        self.parent = parent
+        self.callback = callback
+        self.callback_data = callback_data
+        self.destructive_response_id = destructive_response_id
+        self.default_width = width
+        self.container = None
+        self.response_ids = {}
 
         if not buttons:
-            buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
+            buttons = [("cancel", _("Close"))]
 
-        for button_label, response_type in buttons:
-            widget.add_button(button_label, response_type)
+        widget = self._create_dialog(title, message, buttons)
+        super().__init__(widget=widget)
 
-        self.parent = parent
-        self.container = self.widget.get_message_area()
-
-        self._make_message_selectable()
         self._add_long_message(long_message)
+
+    def _create_dialog_adw(self, title, message, buttons):
+
+        from gi.repository import Adw  # pylint: disable=no-name-in-module
+
+        self.container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=6, visible=False)
+        widget = Adw.MessageDialog(
+            transient_for=self.parent.widget if self.parent else None, close_response="cancel",
+            default_width=self.default_width, heading=title, body=message, body_use_markup=True,
+            extra_child=self.container
+        )
+        self.response_ids["cancel"] = "cancel"
+
+        for response_type, button_label in buttons:
+            widget.add_response(response_type, button_label)
+            self.response_ids[response_type] = response_type
+
+            if response_type == self.destructive_response_id:
+                widget.set_response_appearance(response_type, Adw.ResponseAppearance.DESTRUCTIVE)
+                continue
+
+            if response_type in ("cancel", "ok"):
+                widget.set_default_response(response_type)
+
+                if response_type == "ok":
+                    widget.set_response_appearance(response_type, Adw.ResponseAppearance.SUGGESTED)
+
+        return widget
+
+    def _create_dialog_gtk(self, title, message, buttons):
+
+        widget = Gtk.MessageDialog(
+            transient_for=self.parent.widget if self.parent else None, destroy_with_parent=True,
+            message_type=Gtk.MessageType.OTHER, default_width=self.default_width,
+            text=title, secondary_text=message, secondary_use_markup=True
+        )
+        current_response_id = 0
+        self.response_ids[Gtk.ResponseType.DELETE_EVENT] = "cancel"
+
+        for response_type, button_label in buttons:
+            response_id = current_response_id
+            self.response_ids[response_id] = response_type
+            current_response_id += 1
+
+            if response_type == self.destructive_response_id:
+                button = Gtk.Button(label=button_label, use_underline=True, visible=True)
+                add_css_class(button, "destructive-action")
+                widget.add_action_widget(button, response_id)
+                continue
+
+            widget.add_button(button_label, response_id)
+
+            if response_type in ("cancel", "ok"):
+                widget.set_default_response(response_id)
+
+        self.container = widget.get_message_area()
+        self._make_message_selectable()
+
+        return widget
+
+    def _create_dialog(self, title, message, buttons):
+
+        if LIBADWAITA_API_VERSION:
+            widget = self._create_dialog_adw(title, message, buttons)
+        else:
+            widget = self._create_dialog_gtk(title, message, buttons)
+
+        widget.connect("response", self.on_response)
+        return widget
 
     def _make_message_selectable(self):
 
@@ -307,9 +374,11 @@ class MessageDialog(Window):
         textview = TextView(scrolled_window, editable=False)
         textview.append_line(text)
 
+        self.container.set_visible(True)
+
     def _add_option_toggle(self, option_label, option_value):
 
-        toggle = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+        toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
 
         if option_label:
             if GTK_API_VERSION >= 4:
@@ -317,18 +386,19 @@ class MessageDialog(Window):
             else:
                 self.container.add(toggle)
 
+        self.container.set_visible(True)
         return toggle
 
-    def on_response(self, _widget, response_id, callback, callback_data):
+    def on_response(self, _widget, response_id):
 
         if self not in Window.active_dialogs:
             return
 
         Window.active_dialogs.remove(self)
+        response_id = self.response_ids[response_id]
 
-        if callback and response_id not in (Gtk.ResponseType.CANCEL, Gtk.ResponseType.CLOSE,
-                                            Gtk.ResponseType.DELETE_EVENT):
-            callback(self, response_id, callback_data)
+        if self.callback and response_id != "cancel":
+            self.callback(self, response_id, self.callback_data)
 
         self.widget.destroy()
 
@@ -359,19 +429,22 @@ class EntryDialog(MessageDialog):
                  second_default="", option_label="", option_value=False, action_button_label=_("_OK"), visibility=True,
                  droplist=None, second_droplist=None):
 
-        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
-                         callback=callback, callback_data=callback_data, width=500,
+        super().__init__(parent=parent, title=title, message=message, callback=callback,
+                         callback_data=callback_data, width=500,
                          buttons=[
-                             (_("_Cancel"), Gtk.ResponseType.CANCEL),
-                             (action_button_label, Gtk.ResponseType.OK)])
+                             ("cancel", _("_Cancel")),
+                             ("ok", action_button_label)])
 
-        self.entry = self._add_entry_combobox(default, visibility, droplist)
+        self.entry = self._add_entry_combobox(default, visibility, droplist, activates_default=not use_second_entry)
         self.second_entry = None
+        self.toggle = None
 
         if use_second_entry:
-            self.second_entry = self._add_entry_combobox(second_default, visibility, second_droplist)
+            self.second_entry = self._add_entry_combobox(
+                second_default, visibility, second_droplist, activates_default=False)
 
-        self.toggle = self._add_option_toggle(option_label, option_value)
+        if option_label:
+            self.toggle = self._add_option_toggle(option_label, option_value)
 
     def _add_combobox(self, items, visibility=True):
 
@@ -382,6 +455,7 @@ class EntryDialog(MessageDialog):
         for item in items:
             combobox.append(item)
 
+        self.container.set_visible(True)
         return entry
 
     def _add_entry(self, visibility=True):
@@ -396,22 +470,20 @@ class EntryDialog(MessageDialog):
         else:
             self.container.add(entry)
 
+        self.container.set_visible(True)
         return entry
 
-    def _add_entry_combobox(self, default, visibility, droplist=None):
+    def _add_entry_combobox(self, default, visibility, droplist=None, activates_default=True):
 
         if droplist:
             entry = self._add_combobox(droplist, visibility)
         else:
             entry = self._add_entry(visibility)
 
-        entry.connect("activate", self.on_activate_entry)
+        entry.set_activates_default(activates_default)
         entry.set_text(default)
 
         return entry
-
-    def on_activate_entry(self, *_args):
-        self.widget.response(Gtk.ResponseType.OK)
 
     def get_entry_value(self):
         return self.entry.get_text()
@@ -426,24 +498,22 @@ class EntryDialog(MessageDialog):
 class OptionDialog(MessageDialog):
 
     def __init__(self, parent, title, message, callback, callback_data=None, long_message=None, option_label="",
-                 option_value=False, first_button=_("_No"), second_button=_("_Yes"), third_button=""):
+                 option_value=False, buttons=None, destructive_response_id=None):
 
-        buttons = []
-
-        if first_button:
-            buttons.append((first_button, 1))
-
-        if second_button:
-            buttons.append((second_button, 2))
-
-        if third_button:
-            buttons.append((third_button, 3))
+        if not buttons:
+            buttons = [
+                ("cancel", _("_No")),
+                ("ok", _("_Yes"))
+            ]
 
         super().__init__(parent=parent, title=title, message=message, long_message=long_message,
-                         message_type=Gtk.MessageType.OTHER, callback=callback, callback_data=callback_data,
-                         buttons=buttons)
+                         callback=callback, callback_data=callback_data, buttons=buttons,
+                         destructive_response_id=destructive_response_id)
 
-        self.toggle = self._add_option_toggle(option_label, option_value)
+        self.toggle = None
+
+        if option_label:
+            self.toggle = self._add_option_toggle(option_label, option_value)
 
     def get_option_value(self):
         return self.toggle.get_active()

@@ -138,13 +138,9 @@ class ChatRooms(IconNotebook):
             self.unhighlight_room(room)
             break
 
-    def on_create_room_response(self, dialog, response_id, room):
-
+    def on_create_room_response(self, dialog, _response_id, room):
         private = dialog.get_option_value()
-
-        if response_id == 2:
-            # Create a new room
-            core.chatrooms.show_room(room, private)
+        core.chatrooms.show_room(room, private)
 
     def on_create_room(self, *_args):
 
@@ -1032,12 +1028,11 @@ class ChatRoom:
     def on_view_room_log(self, *_args):
         log.open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
-    def on_delete_room_log_response(self, _dialog, response_id, _data):
+    def on_delete_room_log_response(self, *_args):
 
-        if response_id == 2:
-            log.delete_log(config.sections["logging"]["roomlogsdir"], self.room)
-            self.activity_view.clear()
-            self.chat_view.clear()
+        log.delete_log(config.sections["logging"]["roomlogsdir"], self.room)
+        self.activity_view.clear()
+        self.chat_view.clear()
 
     def on_delete_room_log(self, *_args):
 
@@ -1045,6 +1040,7 @@ class ChatRoom:
             parent=self.window,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this room?"),
+            destructive_response_id="ok",
             callback=self.on_delete_room_log_response
         ).show()
 

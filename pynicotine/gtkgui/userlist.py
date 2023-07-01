@@ -421,6 +421,7 @@ class UserList:
             parent=self.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
+            action_button_label=_("_Add"),
             callback=self.on_add_note_response,
             callback_data=user,
             default=note

@@ -99,9 +99,8 @@ class Uploads(TransferList):
     def clear_selected_transfers(self):
         core.transfers.clear_uploads(uploads=self.selected_transfers)
 
-    def on_clear_queued_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_uploads(statuses=["Queued"])
+    def on_clear_queued_response(self, *_args):
+        core.transfers.clear_uploads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -109,12 +108,12 @@ class Uploads(TransferList):
             parent=self.window,
             title=_("Clear Queued Uploads"),
             message=_("Do you really want to clear all queued uploads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_queued_response
         ).show()
 
-    def on_clear_all_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_uploads()
+    def on_clear_all_response(self, *_args):
+        core.transfers.clear_uploads()
 
     def on_try_clear_all(self, *_args):
 
@@ -122,6 +121,7 @@ class Uploads(TransferList):
             parent=self.window,
             title=_("Clear All Uploads"),
             message=_("Do you really want to clear all uploads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_all_response
         ).show()
 

@@ -776,6 +776,7 @@ class UserBrowse:
             parent=self.window,
             title=str_title,
             message=_("Enter the name of the user you want to upload to:"),
+            action_button_label=_("_Upload"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
@@ -981,6 +982,7 @@ class UserBrowse:
             parent=self.window,
             title=_("Upload File(s) To User"),
             message=_("Enter the name of the user you want to upload to:"),
+            action_button_label=_("_Upload"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()

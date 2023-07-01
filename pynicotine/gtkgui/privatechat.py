@@ -367,12 +367,11 @@ class PrivateChat:
     def on_view_chat_log(self, *_args):
         log.open_log(config.sections["logging"]["privatelogsdir"], self.user)
 
-    def on_delete_chat_log_response(self, _dialog, response_id, _data):
+    def on_delete_chat_log_response(self, *_args):
 
-        if response_id == 2:
-            log.delete_log(config.sections["logging"]["privatelogsdir"], self.user)
-            self.chats.history.remove_user(self.user)
-            self.chat_view.clear()
+        log.delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+        self.chats.history.remove_user(self.user)
+        self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
 
@@ -380,6 +379,7 @@ class PrivateChat:
             parent=self.window,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this user?"),
+            destructive_response_id="ok",
             callback=self.on_delete_chat_log_response
         ).show()
 
