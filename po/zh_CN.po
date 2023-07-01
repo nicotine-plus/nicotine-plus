@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-22 18:50+0300\n"
-"PO-Revision-Date: 2023-05-22 16:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-07-01 13:23+0000\n"
+"Last-Translator: ian andrew remsen <ia.remsen@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -758,7 +758,6 @@ msgid "Filter"
 msgstr "筛选"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
-#, fuzzy
 msgid "Regex"
 msgstr "正则表达式"
 
@@ -772,7 +771,6 @@ msgstr "输入新的下载过滤器："
 
 #: pynicotine/gtkgui/dialogs/preferences.py:408
 #: pynicotine/gtkgui/dialogs/preferences.py:440
-#, fuzzy
 msgid "Enable regular expressions"
 msgstr "启用正则表达式"
 
@@ -1381,7 +1379,6 @@ msgstr "浏览共享库"
 #: pynicotine/gtkgui/mainwindow.py:935 pynicotine/gtkgui/ui/mainwindow.ui:1051
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:548
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:754
-#, fuzzy
 msgid "User Profiles"
 msgstr "用户资料"
 
