@@ -418,8 +418,8 @@ class ChatRoom:
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
-        self.activity_view = TextView(self.activity_view_container, editable=False, horizontal_margin=10,
-                                      vertical_margin=5, pixels_below_lines=2)
+        self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
+                                      horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
