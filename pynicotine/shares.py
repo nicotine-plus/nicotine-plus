@@ -216,21 +216,22 @@ class Scanner(Process):
 
         path = path.replace("/", "\\")
 
-        for virtual, real, *_unused in Shares.virtual_mapping(self.config):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace("/", "_").replace("\\", "_")
+        for shares in (self.config.sections["transfers"]["shared"], self.config.sections["transfers"]["buddyshared"]):
+            for virtual, real, *_unused in shares:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace("/", "_").replace("\\", "_")
 
-            real = real.replace("/", "\\")
-            if path == real:
-                return virtual
+                real = real.replace("/", "\\")
+                if path == real:
+                    return virtual
 
-            # Use rstrip to remove trailing separator from root directories
-            real = real.rstrip("\\") + "\\"
+                # Use rstrip to remove trailing separator from root directories
+                real = real.rstrip("\\") + "\\"
 
-            if path.startswith(real):
-                path_no_prefix = path[len(real):]
-                virtualpath = f"{virtual}\\{path_no_prefix}"
-                return virtualpath
+                if path.startswith(real):
+                    path_no_prefix = path[len(real):]
+                    virtualpath = f"{virtual}\\{path_no_prefix}"
+                    return virtualpath
 
         return "__INTERNAL_ERROR__" + path
 
@@ -271,10 +272,10 @@ class Scanner(Process):
         self.queue.put("indeterminate")
 
         if share_type == "buddy":
-            shared_folders = (x[1] for x in self.shared_buddy_folders)
+            shared_folders = (os.path.normpath(x[1]) for x in self.shared_buddy_folders)
             prefix = "buddy"
         else:
-            shared_folders = (x[1] for x in self.shared_folders)
+            shared_folders = (os.path.normpath(x[1]) for x in self.shared_folders)
             prefix = ""
 
         new_files = {}
@@ -341,7 +342,7 @@ class Scanner(Process):
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute folder, we exclude it
         if filename is None:
-            last_folder = os.path.basename(os.path.normpath(folder))
+            last_folder = os.path.basename(folder)
 
             if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
@@ -352,13 +353,13 @@ class Scanner(Process):
 
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
-            if len(folder) == 3 and folder[1] == ":" and folder[2] in ("\\", "/"):
+            if len(folder) == 3 and folder[1] == ":" and folder[2] == os.sep:
                 # Root directories are marked as hidden, but we allow scanning them
                 return False
 
             if entry is None:
                 if filename is not None:
-                    entry_stat = os.stat(encode_path(f"{folder}\\{filename}"))
+                    entry_stat = os.stat(encode_path(os.path.join(folder, filename)))
                 else:
                     entry_stat = os.stat(encode_path(folder))
             else:
@@ -411,7 +412,7 @@ class Scanner(Process):
                                         continue
 
                                     # Get the metadata of the file
-                                    path = entry.path.decode("utf-8", "replace")
+                                    path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
                                     data = self.get_file_info(filename, path, entry)
                                     file_list.append(data)
 
@@ -609,26 +610,20 @@ class Shares:
 
         path = path.replace("/", os.sep).replace("\\", os.sep)
 
-        for virtual, real, *_unused in self.virtual_mapping(config):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace("/", "_").replace("\\", "_")
+        for shares in (config.sections["transfers"]["shared"], config.sections["transfers"]["buddyshared"]):
+            for virtual, real, *_unused in shares:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace("/", "_").replace("\\", "_")
+                real = os.path.normpath(real)
 
-            if path == virtual:
-                return real
+                if path == virtual:
+                    return real
 
-            if path.startswith(virtual + os.sep):
-                realpath = real.rstrip("/\\") + path[len(virtual):]
-                return realpath
+                if path.startswith(virtual + os.sep):
+                    realpath = real.rstrip(os.sep) + path[len(virtual):]
+                    return realpath
 
         return "__INTERNAL_ERROR__" + path
-
-    @staticmethod
-    def virtual_mapping(config_obj):
-
-        mapping = config_obj.sections["transfers"]["shared"][:]
-        mapping += config_obj.sections["transfers"]["buddyshared"]
-
-        return mapping
 
     @staticmethod
     def get_normalized_virtual_name(virtual_name, shared_folders):
@@ -847,6 +842,8 @@ class Shares:
 
         for share in share_groups:
             for virtual_name, folder_path, *_unused in share:
+                folder_path = os.path.normpath(folder_path)
+
                 if not os.access(encode_path(folder_path), os.R_OK):
                     unavailable_shares.append((virtual_name, folder_path))
 

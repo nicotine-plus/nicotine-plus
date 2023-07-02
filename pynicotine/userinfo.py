@@ -126,9 +126,7 @@ class UserInfo:
 
         else:
             try:
-                userpic = config.sections["userinfo"]["pic"]
-
-                with open(encode_path(userpic), "rb") as file_handle:
+                with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
                     pic = file_handle.read()
 
             except Exception:

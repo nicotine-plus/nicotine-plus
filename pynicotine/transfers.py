@@ -334,6 +334,9 @@ class Transfers:
             if not isinstance(path, str):
                 continue
 
+            if path:
+                path = os.path.normpath(path)
+
             # Status
             loaded_status = None
 
@@ -657,7 +660,7 @@ class Transfers:
                     update = True
 
                 elif download.status == "User logged off":
-                    self.get_file(username, download.filename, path=download.path, transfer=download, ui_callback=False)
+                    self.get_file(username, download.filename, transfer=download, ui_callback=False)
                     update = True
 
         if update:
@@ -937,7 +940,7 @@ class Transfers:
             path = ""
             if config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = filename.replace("/", "\\").split("\\")[-2]
-                path = os.path.join(config.sections["transfers"]["uploaddir"], user, parentdir)
+                path = os.path.join(os.path.normpath(config.sections["transfers"]["uploaddir"]), user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
                                 size=size, token=token)
@@ -1139,7 +1142,7 @@ class Transfers:
                 core.queue.append(slskmessages.CloseConnection(msg.init.sock))
                 return
 
-            incomplete_folder_path = config.sections["transfers"]["incompletedir"]
+            incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
             need_update = True
             download.sock = msg.init.sock
 
@@ -1334,7 +1337,7 @@ class Transfers:
 
                 self.abort_download(download, abort_reason=None)
                 download.legacy_attempt = True
-                self.get_file(user, filename, path=download.path, transfer=download)
+                self.get_file(user, filename, transfer=download)
                 break
 
             if download.status == "Transferring":
@@ -1372,7 +1375,7 @@ class Transfers:
 
                 self.abort_download(download, abort_reason=None)
                 download.legacy_attempt = True
-                self.get_file(user, filename, path=download.path, transfer=download)
+                self.get_file(user, filename, transfer=download)
                 break
 
             # Already failed once previously, give up
@@ -1588,9 +1591,9 @@ class Transfers:
     def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None,
                  bypass_filter=False, ui_callback=True):
 
-        path = clean_path(path, absolute=True)
-
-        if not path:
+        if path:
+            path = clean_path(path)
+        else:
             path = self.get_default_download_folder(user)
 
         if transfer is None:
@@ -1638,7 +1641,7 @@ class Transfers:
             transfer.status = "User logged off"
 
         elif transfer.status != "Filtered":
-            download_path = self.get_complete_download_file_path(user, filename, path, size)
+            download_path = self.get_complete_download_file_path(user, filename, transfer.path, size)
 
             if download_path:
                 transfer.status = "Finished"
@@ -1661,6 +1664,9 @@ class Transfers:
 
         real_path = core.shares.virtual2real(filename)
         size_attempt = self.get_file_size(real_path)
+
+        if path:
+            path = os.path.normpath(path)
 
         if size_attempt > 0:
             size = size_attempt
@@ -1842,7 +1848,7 @@ class Transfers:
 
     def get_default_download_folder(self, user):
 
-        downloaddir = config.sections["transfers"]["downloaddir"]
+        downloaddir = os.path.normpath(config.sections["transfers"]["downloaddir"])
 
         # Check if username subfolders should be created for downloads
         if config.sections["transfers"]["usernamesubfolders"]:
@@ -1926,7 +1932,7 @@ class Transfers:
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
-        incomplete_folder_path = config.sections["transfers"]["incompletedir"]
+        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
         basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
@@ -1951,7 +1957,7 @@ class Transfers:
             core.notifications.show_download_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     "user": user,
-                    "file": filepath.rsplit(os.sep, 1)[1]
+                    "file": os.path.basename(filepath)
                 },
                 title=_("File Downloaded")
             )
@@ -2184,7 +2190,7 @@ class Transfers:
                 # Retry failed downloads every 3 minutes
 
                 self.abort_download(download, abort_reason=None)
-                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+                self.get_file(download.user, download.filename, transfer=download)
 
             if download.status == "Queued":
                 # Request queue position every 3 minutes
@@ -2341,7 +2347,7 @@ class Transfers:
         user = transfer.user
 
         self.abort_download(transfer, abort_reason=None)
-        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer, bypass_filter=bypass_filter)
+        self.get_file(user, transfer.filename, transfer=transfer, bypass_filter=bypass_filter)
 
     def retry_downloads(self, downloads):
 
@@ -2369,7 +2375,7 @@ class Transfers:
                 })
 
                 self.abort_download(download, abort_reason=None)
-                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+                self.get_file(download.user, download.filename, transfer=download)
 
     def retry_upload(self, transfer):
 
@@ -2392,7 +2398,7 @@ class Transfers:
                     self.update_upload(transfer)
                 return
 
-        self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
+        self.push_file(user, transfer.filename, transfer.size, transfer=transfer)
 
     def retry_uploads(self, uploads):
         for upload in uploads:
