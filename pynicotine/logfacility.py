@@ -140,6 +140,7 @@ class Logger:
 
     def write_log_file(self, folder_path, base_name, text, timestamp=None):
 
+        folder_path = os.path.normpath(folder_path)
         log_file = self._get_log_file(folder_path, base_name)
         timestamp_format = config.sections["logging"]["log_timestamp"]
         timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
@@ -151,7 +152,7 @@ class Logger:
 
         except Exception as error:
             # Avoid infinite recursion
-            should_log_file = (folder_path != config.sections["logging"]["debuglogsdir"])
+            should_log_file = (folder_path != os.path.normpath(config.sections["logging"]["debuglogsdir"]))
 
             self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
                 "filename": os.path.join(folder_path, base_name),

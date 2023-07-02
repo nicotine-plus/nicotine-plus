@@ -344,6 +344,7 @@ def load_custom_icons(update=False):
     if not user_icon_theme_path:
         return
 
+    user_icon_theme_path = os.path.normpath(user_icon_theme_path)
     log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
 
     theme_file_path = os.path.join(icon_theme_path, "index.theme")

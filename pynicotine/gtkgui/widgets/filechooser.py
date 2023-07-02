@@ -39,6 +39,8 @@ class FileChooser:
 
         if not initial_folder:
             initial_folder = os.path.expanduser("~")
+        else:
+            initial_folder = os.path.normpath(initial_folder)
 
         self.parent = parent
         self.callback = callback
@@ -91,9 +93,9 @@ class FileChooser:
             return
 
         if self.select_multiple:
-            selected = [i.get_path() for i in selected_result]
+            selected = [os.path.normpath(i.get_path()) for i in selected_result]
         else:
-            selected = selected_result.get_path()
+            selected = os.path.normpath(selected_result.get_path())
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -107,10 +109,10 @@ class FileChooser:
             return
 
         if self.select_multiple:
-            selected = [i.get_path() for i in self.file_chooser.get_files()]
+            selected = [os.path.normpath(i.get_path()) for i in self.file_chooser.get_files()]
         else:
             selected_file = self.file_chooser.get_file()
-            selected = selected_file.get_path() if selected_file else None
+            selected = os.path.normpath(selected_file.get_path()) if selected_file else None
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -291,7 +293,7 @@ class FileChooserButton:
         if not path:
             return
 
-        self.path = path
+        self.path = path = os.path.normpath(path)
         self.button.set_tooltip_text(path)
         self.label.set_label(os.path.basename(path))
 

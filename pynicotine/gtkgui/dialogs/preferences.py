@@ -601,11 +601,13 @@ class SharesPage:
 
         for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
             is_buddy_only = True
-            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
             is_buddy_only = False
-            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
 
         self.rescan_required = False
 
@@ -653,8 +655,7 @@ class SharesPage:
             self.rescan_required = True
 
             virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(os.path.normpath(folder_path)),
-                shared_folders=(self.shared_folders + self.buddy_shared_folders)
+                os.path.basename(folder_path), shared_folders=(self.shared_folders + self.buddy_shared_folders)
             )
             mapping = (virtual_name, folder_path)
             is_buddy_only = False

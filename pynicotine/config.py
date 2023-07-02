@@ -91,7 +91,7 @@ class Config:
 
         if sys.platform == "win32":
             try:
-                data_dir = os.path.join(os.environ["APPDATA"], "nicotine")
+                data_dir = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
                 data_dir, _filename = os.path.split(sys.argv[0])
 
@@ -99,7 +99,6 @@ class Config:
             return config_dir, data_dir
 
         home = os.path.expanduser("~")
-
         legacy_dir = os.path.join(home, ".nicotine")
 
         if os.path.isdir(legacy_dir.encode("utf-8")):
@@ -107,7 +106,6 @@ class Config:
 
         def xdg_path(xdg, default):
             path = os.environ.get(xdg)
-
             path = path.split(":")[0] if path else default
 
             return os.path.join(path, "nicotine")

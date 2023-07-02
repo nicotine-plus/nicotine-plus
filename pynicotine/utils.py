@@ -50,13 +50,16 @@ def clean_file(filename):
     return filename
 
 
-def clean_path(path, absolute=False):
+def clean_path(path):
+
+    path = os.path.normpath(path)
 
     # Without hacks it is (up to Vista) not possible to have more
     # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
     # for drives - we shouldn't escape that
     drive = ""
-    if absolute and path[1:3] == ":\\" and path[0:1] and path[0].isalpha():
+
+    if len(path) >= 3 and path[1] == ":" and path[2] == os.sep:
         drive = path[:3]
         path = path[3:]
 
