@@ -341,7 +341,7 @@ class Scanner(Process):
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute folder, we exclude it
         if filename is None:
-            last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
+            last_folder = os.path.basename(os.path.normpath(folder))
 
             if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
@@ -421,7 +421,7 @@ class Scanner(Process):
 
                             continue
 
-                        path = entry.path.decode("utf-8", "replace").replace("\\", os.sep)
+                        path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
 
                         if self.is_hidden(path, entry=entry):
                             continue
