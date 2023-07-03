@@ -274,6 +274,9 @@ class Searches:
 
     def do_wishlist_search_interval(self):
 
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
+            return
+
         searches = config.sections["server"]["autosearch"]
 
         if not searches:
