@@ -830,14 +830,16 @@ class Search:
                 self.searches.create_page(self.token, self.text)
                 self.show_page = True
 
-                if is_wish and config.sections["notifications"]["notification_popup_wish"]:
+            tab_changed = self.searches.request_tab_changed(self.container, is_important=is_wish)
+
+            if tab_changed and is_wish:
+                self.window.application.notifications.update_title()
+
+                if config.sections["notifications"]["notification_popup_wish"]:
                     core.notifications.show_search_notification(
                         str(self.token), self.text,
                         title=_("Wishlist Results Found")
                     )
-
-            self.searches.request_tab_changed(self.container, is_important=is_wish)
-            self.window.application.notifications.update_title()
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
