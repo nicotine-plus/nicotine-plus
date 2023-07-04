@@ -2396,6 +2396,14 @@ class PeerMessage(SlskMessage):
 class FileListMessage(PeerMessage):
     __slots__ = ()
 
+    VALID_FILE_ATTRIBUTES = {
+        FileAttribute.BITRATE,
+        FileAttribute.DURATION,
+        FileAttribute.VBR,
+        FileAttribute.SAMPLE_RATE,
+        FileAttribute.BIT_DEPTH
+    }
+
     @classmethod
     def pack_file_info(cls, fileinfo):
 
@@ -2444,6 +2452,25 @@ class FileListMessage(PeerMessage):
                 msg.extend(cls.pack_uint32(audio_info[1] or 0))
 
         return msg
+
+    @classmethod
+    def unpack_file_attributes(cls, message, pos):
+
+        attrs = {}
+        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
+
+        pos, numattr = cls.unpack_uint32(message, pos)
+
+        for _ in range(numattr):
+            pos, attrnum = cls.unpack_uint32(message, pos)
+
+            if attrnum not in valid_file_attributes:
+                continue
+
+            pos, attr = cls.unpack_uint32(message, pos)
+            attrs[attrnum] = attr
+
+        return pos, attrs
 
     @staticmethod
     def parse_file_attributes(attributes):
@@ -2625,14 +2652,7 @@ class SharedFileListResponse(FileListMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.parse_file_size(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2735,15 +2755,7 @@ class FileSearchResponse(FileListMessage):
             pos, name = self.unpack_string(message, pos)
             pos, size = self.parse_file_size(message, pos)
             pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-            pos, numattr = self.unpack_uint32(message, pos)
-
-            attrs = {}
-
-            if numattr:
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+            pos, attrs = self.unpack_file_attributes(message, pos)
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -2896,7 +2908,7 @@ class FolderContentsRequest(PeerMessage):
         pos, self.dir = self.unpack_string(message, pos)
 
 
-class FolderContentsResponse(PeerMessage):
+class FolderContentsResponse(FileListMessage):
     """ Peer code: 37 """
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
@@ -2935,14 +2947,7 @@ class FolderContentsResponse(PeerMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
