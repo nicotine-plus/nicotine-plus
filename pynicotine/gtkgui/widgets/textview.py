@@ -379,42 +379,50 @@ class ChatView(TextView):
 
     def append_log_lines(self, path, num_lines, timestamp_format):
 
-        with open(encode_path(path), "rb") as lines:
-            # Only show as many log lines as specified in config
-            lines = deque(lines, num_lines)
-            login = config.sections["server"]["login"]
+        if not num_lines:
+            return
 
-            for line in lines:
-                try:
-                    line = line.decode("utf-8")
+        try:
+            with open(encode_path(path), "rb") as lines:
+                # Only show as many log lines as specified in config
+                lines = deque(lines, num_lines)
 
-                except UnicodeDecodeError:
-                    line = line.decode("latin-1")
+        except OSError:
+            return
 
-                user = tag = usertag = None
+        login = config.sections["server"]["login"]
 
-                if " [" in line and "] " in line:
-                    start = line.find(" [") + 2
-                    end = line.find("] ", start)
+        for line in lines:
+            try:
+                line = line.decode("utf-8")
 
-                    if end > start:
-                        user = line[start:end]
-                        usertag = self.get_user_tag(user)
+            except UnicodeDecodeError:
+                line = line.decode("latin-1")
 
-                        text = line[end + 2:-1]
-                        tag = self.get_line_tag(user, text, login)
+            user = tag = usertag = None
 
-                elif "* " in line:
-                    tag = self.tag_action
+            if " [" in line and "] " in line:
+                start = line.find(" [") + 2
+                end = line.find("] ", start)
 
-                if user != login:
-                    self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
-                else:
-                    self.append_line(line, tag=tag, username=user, usertag=usertag)
+                if end > start:
+                    user = line[start:end]
+                    usertag = self.get_user_tag(user)
 
-            if lines:
-                self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
-                                 timestamp_format=timestamp_format)
+                    text = line[end + 2:-1]
+                    tag = self.get_line_tag(user, text, login)
+
+            elif "* " in line:
+                tag = self.tag_action
+
+            if user != login:
+                self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
+            else:
+                self.append_line(line, tag=tag, username=user, usertag=usertag)
+
+        if lines:
+            self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+                             timestamp_format=timestamp_format)
 
     def get_line_tag(self, user, text, login=None):
 

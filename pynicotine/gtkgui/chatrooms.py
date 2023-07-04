@@ -651,19 +651,12 @@ class ChatRoom:
     def read_room_logs(self):
 
         numlines = config.sections["logging"]["readroomlines"]
-
-        if not numlines:
-            return
-
         filename = f"{clean_file(self.room)}.log"
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
-        try:
-            self.chat_view.append_log_lines(
-                path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
-            )
-        except OSError:
-            pass
+        self.chat_view.append_log_lines(
+            path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+        )
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 

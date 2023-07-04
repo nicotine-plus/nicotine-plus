@@ -319,19 +319,12 @@ class PrivateChat:
     def read_private_log(self):
 
         numlines = config.sections["logging"]["readprivatelines"]
-
-        if not numlines:
-            return
-
         filename = f"{clean_file(self.user)}.log"
         path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
 
-        try:
-            self.chat_view.append_log_lines(
-                path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
-            )
-        except OSError:
-            pass
+        self.chat_view.append_log_lines(
+            path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
+        )
 
     def server_disconnect(self):
         self.offline_message = False
