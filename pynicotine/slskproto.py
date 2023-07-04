@@ -475,7 +475,8 @@ class SoulseekNetworkThread(Thread):
         events.emit_main_thread("server-disconnect", self._manual_server_disconnect)
 
     def _server_timeout(self):
-        events.emit_main_thread("server-timeout")
+        if self._server_timeout_value > 0:
+            events.emit_main_thread("server-timeout")
 
     def _set_server_timer(self):
 

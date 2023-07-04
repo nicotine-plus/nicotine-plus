@@ -375,13 +375,12 @@ class IconNotebook:
         if self.get_n_pages() == 0:
             self.parent.set_visible(False)
 
-    def remove_all_pages_response(self, dialog, response_id, _data):
+    def remove_all_pages_response(self, dialog, _response_id, _data):
 
-        if response_id == 2:
-            for i in reversed(range(self.get_n_pages())):
-                page = self.get_nth_page(i)
-                tab_label = self.get_tab_label(page)
-                tab_label.close_callback(dialog)
+        for i in reversed(range(self.get_n_pages())):
+            page = self.get_nth_page(i)
+            tab_label = self.get_tab_label(page)
+            tab_label.close_callback(dialog)
 
     def remove_all_pages(self):
 
@@ -389,6 +388,7 @@ class IconNotebook:
             parent=self.window,
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
+            destructive_response_id="ok",
             callback=self.remove_all_pages_response
         ).show()
 

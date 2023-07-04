@@ -37,7 +37,6 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ComboBox
@@ -220,6 +219,7 @@ class UserInfo:
             self.horizontal_paned,
             self.ignore_unignore_user_label,
             self.info_bar,
+            self.info_bar_label,
             self.likes_list_container,
             self.picture_container,
             self.picture_view,
@@ -238,7 +238,6 @@ class UserInfo:
         self.userinfos = userinfos
         self.window = userinfos.window
 
-        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
         self.user_label.set_text(user)
 
@@ -387,11 +386,12 @@ class UserInfo:
         if self.refresh_button.get_sensitive():
             return
 
-        self.info_bar.show_message(
+        self.info_bar_label.set_label(
             _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue."),
-            message_type=Gtk.MessageType.ERROR
+              "port, the user is offline, or there's a temporary connectivity issue.")
         )
+        self.info_bar.set_visible(True)
+        self.info_bar.set_reveal_child(True)
 
         self.set_finished()
 
@@ -421,6 +421,7 @@ class UserInfo:
         GLib.timeout_add(1000, self.pulse_progress)
 
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
         self.refresh_button.set_sensitive(False)
 
     def user_info_progress(self, position, total):
@@ -483,6 +484,7 @@ class UserInfo:
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
         self.set_finished()
 
     def user_stats(self, msg):

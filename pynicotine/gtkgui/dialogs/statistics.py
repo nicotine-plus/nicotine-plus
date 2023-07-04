@@ -91,9 +91,8 @@ class Statistics(Dialog):
         if total_value is not None:
             getattr(self, f"{stat_id}_total_label").set_text(total_value)
 
-    def on_reset_statistics_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.statistics.reset_stats()
+    def on_reset_statistics_response(self, *_args):
+        core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 
@@ -101,6 +100,7 @@ class Statistics(Dialog):
             parent=self,
             title=_("Reset Transfer Statistics?"),
             message=_("Do you really want to reset transfer statistics?"),
+            destructive_response_id="ok",
             callback=self.on_reset_statistics_response
         ).show()
 

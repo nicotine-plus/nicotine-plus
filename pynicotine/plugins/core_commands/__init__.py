@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin
 
@@ -529,7 +531,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {folder_path}')
+                self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
 
             num_listed += num_shares
 

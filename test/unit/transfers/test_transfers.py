@@ -117,20 +117,20 @@ class TransfersTest(TestCase):
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
 
-        core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
-        core.transfers.push_file("newuser99", "Home\\None.mp3", 100, "/home/more")
+        core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
+        core.transfers.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
         transfer = core.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")
         self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
-        self.assertEqual(transfer.path, "/home/test")
+        self.assertEqual(transfer.path, os.path.join(os.sep, "home", "test"))
 
     def test_long_basename(self):
         """ Verify that the basename in download paths doesn't exceed 255 bytes.
         The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
 
         user = "abc"
-        finished_folder_path = "/path/to/somewhere/downloads"
+        finished_folder_path = os.path.join(os.sep, "path", "to", "somewhere", "downloads")
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"

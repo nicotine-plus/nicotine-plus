@@ -100,9 +100,8 @@ class Downloads(TransferList):
     def clear_selected_transfers(self):
         core.transfers.clear_downloads(downloads=self.selected_transfers)
 
-    def on_clear_queued_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_downloads(statuses=["Queued"])
+    def on_clear_queued_response(self, *_args):
+        core.transfers.clear_downloads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -110,12 +109,12 @@ class Downloads(TransferList):
             parent=self.window,
             title=_("Clear Queued Downloads"),
             message=_("Do you really want to clear all queued downloads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_queued_response
         ).show()
 
-    def on_clear_all_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_downloads()
+    def on_clear_all_response(self, *_args):
+        core.transfers.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -123,12 +122,12 @@ class Downloads(TransferList):
             parent=self.window,
             title=_("Clear All Downloads"),
             message=_("Do you really want to clear all downloads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_all_response
         ).show()
 
-    def folder_download_response(self, _dialog, response_id, msg):
-        if response_id == 2:
-            events.emit("folder-contents-response", msg, check_num_files=False)
+    def folder_download_response(self, _dialog, _response_id, msg):
+        events.emit("folder-contents-response", msg, check_num_files=False)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 

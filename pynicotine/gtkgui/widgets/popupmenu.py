@@ -571,5 +571,6 @@ class UserPopupMenu(PopupMenu):
             parent=self.application.window,
             title=_("Gift Privileges"),
             message=message,
+            action_button_label=_("_Give Privileges"),
             callback=self.on_give_privileges_response
         ).show()

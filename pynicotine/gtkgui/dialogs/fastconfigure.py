@@ -153,8 +153,7 @@ class FastConfigure(Dialog):
             self.rescan_required = True
 
             virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(os.path.normpath(folder_path)),
-                shared_folders=(shared_folders + buddy_shared_folders)
+                os.path.basename(folder_path), shared_folders=(shared_folders + buddy_shared_folders)
             )
             mapping = (virtual_name, folder_path)
 
@@ -207,6 +206,7 @@ class FastConfigure(Dialog):
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
@@ -306,6 +306,5 @@ class FastConfigure(Dialog):
 
         self.shares_list_view.clear()
 
-        for entry in config.sections["transfers"]["shared"]:
-            virtual_name, path = entry
-            self.shares_list_view.add_row([str(virtual_name), str(path)], select_row=False)
+        for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
+            self.shares_list_view.add_row([str(virtual_name), os.path.normpath(folder_path)], select_row=False)

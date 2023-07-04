@@ -167,7 +167,7 @@ class UserBrowse:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": msg})
             return
 
-        username = filename.replace("\\", os.sep).split(os.sep)[-1]
+        username = os.path.basename(filename)
         user_share = self.user_shares.get(username)
 
         if user_share:
