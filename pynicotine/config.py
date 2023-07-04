@@ -399,7 +399,6 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "urgencyhint": True,
                 "file_path_tooltips": True,
                 "reverse_file_paths": True,
                 "file_size_unit": ""
@@ -499,6 +498,7 @@ class Config:
                 "roomlistcollapsed",
                 "showaway",
                 "decimalsep",
+                "urgencyhint",
                 "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
             ),
             "columns": (

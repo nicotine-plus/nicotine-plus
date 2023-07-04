@@ -139,6 +139,7 @@ class Searches(IconNotebook):
                 continue
 
             tab.update_filter_widgets()
+            self.window.application.notifications.update_title()
             break
 
     def on_search_mode(self, action, state):
@@ -836,6 +837,7 @@ class Search:
                     )
 
             self.searches.request_tab_changed(self.container, is_important=is_wish)
+            self.window.application.notifications.update_title()
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()

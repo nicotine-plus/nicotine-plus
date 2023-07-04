@@ -184,9 +184,6 @@ class PrivateChats(IconNotebook):
         self.window.application.notifications.update_title()
         self.window.application.tray_icon.update_icon()
 
-        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
-            self.window.application.notifications.set_urgency_hint(True)
-
     def unhighlight_user(self, user):
 
         if user not in self.highlighted_users:
