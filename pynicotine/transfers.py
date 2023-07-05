@@ -1868,7 +1868,7 @@ class Transfers:
     def get_basename_byte_limit(self, folder_path):
 
         try:
-            max_bytes = os.statvfs(folder_path).f_namemax
+            max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
 
         except (AttributeError, OSError):
             max_bytes = 255
