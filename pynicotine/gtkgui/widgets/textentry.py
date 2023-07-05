@@ -39,7 +39,6 @@ class ChatEntry:
 
     def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
 
-        self.application = application
         self.widget = widget
         self.completion = completion
         self.entity = entity
@@ -57,13 +56,13 @@ class ChatEntry:
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
-            if not self.application.spell_checker:
-                self.application.init_spell_checker()
+            if application.spell_checker is None:
+                application.init_spell_checker()
 
-            if self.application.spell_checker:
+            if application.spell_checker:
                 from gi.repository import Gspell  # pylint:disable=no-name-in-module
                 spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
-                spell_buffer.set_spell_checker(self.application.spell_checker)
+                spell_buffer.set_spell_checker(application.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(widget)
                 spell_view.set_inline_spell_checking(True)
 
