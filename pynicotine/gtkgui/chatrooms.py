@@ -413,7 +413,7 @@ class ChatRoom:
 
         self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
-        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
+        self.chat_view = ChatView(self.chat_view_container, self, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
         # Event Text Search
@@ -425,7 +425,7 @@ class ChatRoom:
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
+        ChatEntry(self.window.application, self, chatrooms.completion, room, slskmessages.SayChatroom,
                   core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
@@ -547,8 +547,6 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.chat_entry.grab_focus()
-
         self.update_user_count()
         self.read_room_logs()
 
@@ -995,7 +993,8 @@ class ChatRoom:
             self.update_room_user_completions()
 
     def on_focus(self, *_args):
-        self.chat_entry.grab_focus()
+        widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view.widget
+        widget.grab_focus()
 
     def on_leave_room(self, *_args):
 

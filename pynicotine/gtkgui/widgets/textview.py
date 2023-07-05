@@ -29,6 +29,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.utils import encode_path
@@ -331,8 +332,10 @@ class TextView:
         self.adjustment_bottom = new_adjustment_bottom
 
     def on_adjustment_value_changed(self, *_args):
-
         new_value = self.adjustment.get_value()
+        self.update_adjustment_value(new_value)
+
+    def update_adjustment_value(self, new_value):
 
         if new_value.is_integer() and (0 < new_value < self.adjustment_bottom):
             # The textview scrolls up on its own sometimes. Ignore these garbage values.
@@ -343,11 +346,15 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, username_event=None, **kwargs):
+    def __init__(self, parent, chat, username_event=None, **kwargs):
 
-        super().__init__(*args, **kwargs)
+        super().__init__(parent, **kwargs)
 
+        self.chat_entry = chat.chat_entry
         self.username_event = username_event
+
+        Accelerator("Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
         self.tag_remote = self.create_tag("chatremote")
         self.tag_local = self.create_tag("chatlocal")
@@ -470,3 +477,18 @@ class ChatView(TextView):
     def update_user_tags(self):
         for username in self.tag_users:
             self.update_user_tag(username)
+
+    def on_adjustment_value_changed(self, *_args):
+
+        new_value = self.adjustment.get_value()
+
+        if (self.widget.is_focus() and new_value >= self.adjustment_bottom
+                and not self.textbuffer.get_has_selection()):
+            # Give focus to text entry upon scrolling down to the bottom
+            self.chat_entry.grab_focus_without_selecting()
+
+        self.update_adjustment_value(new_value)
+
+    def on_page_down_accelerator(self, *_args):
+        """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
+        self.on_adjustment_value_changed()
