@@ -132,15 +132,25 @@ class Application:
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
 
-    def init_spell_checker(self):
+    def init_spell_checker(self, load=True):
+
+        if self.spell_checker:
+            return True
 
         try:
             gi.require_version("Gspell", "1")
             from gi.repository import Gspell
+
+            if not load:
+                # We only want to know if the package is available
+                return True
+
             self.spell_checker = Gspell.Checker()
 
         except (ImportError, ValueError):
             self.spell_checker = False
+
+        return bool(self.spell_checker)
 
     def set_up_actions(self):
 

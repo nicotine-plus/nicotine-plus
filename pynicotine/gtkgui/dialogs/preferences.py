@@ -30,7 +30,6 @@ import time
 
 from operator import itemgetter
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -1323,12 +1322,8 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.enable_spell_checker_toggle.set_visible(False)
+        is_spell_checker_available = self.application.init_spell_checker(load=False)
+        self.enable_spell_checker_toggle.set_visible(is_spell_checker_available)
 
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
