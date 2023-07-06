@@ -23,12 +23,12 @@ from locale import strxfrm
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.slskmessages import UserStatus
 
 
 """ Text Entry-related """
@@ -68,7 +68,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()
