@@ -268,8 +268,7 @@ class PrivateChat:
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
-                  core.privatechat.send_message)
+        ChatEntry(self.window.application, self.chat_entry, chats.completion, user, core.privatechat.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 

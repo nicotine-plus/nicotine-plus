@@ -37,13 +37,12 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, widget, completion, entity, send_message, is_chatroom=False):
 
         self.application = application
         self.widget = widget
         self.completion = completion
         self.entity = entity
-        self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
