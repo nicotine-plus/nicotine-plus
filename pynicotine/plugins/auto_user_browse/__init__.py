@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.slskmessages import UserStatus
 
 
 class Plugin(BasePlugin):
@@ -42,13 +42,13 @@ class Plugin(BasePlugin):
         if user not in self.settings["users"]:
             return
 
-        if status == slskmessages.UserStatus.OFFLINE:
+        if status == UserStatus.OFFLINE:
             self.user_statuses[user] = status
             return
 
-        previous_status = self.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
+        previous_status = self.user_statuses.get(user, UserStatus.OFFLINE)
 
-        if previous_status == slskmessages.UserStatus.OFFLINE:
+        if previous_status == UserStatus.OFFLINE:
             # User was previously offline
             self.user_statuses[user] = status
             self.core.userbrowse.browse_user(user, switch_page=False)

@@ -29,7 +29,6 @@ from collections import defaultdict
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -58,6 +57,7 @@ from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -750,8 +750,7 @@ class Search:
 
             size = result[2]
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                size, result[4])
+            h_bitrate, bitrate, h_length, length = FileListMessage.parse_result_bitrate_length(size, result[4])
 
             if private:
                 name = _("[PRIVATE]  %s") % name

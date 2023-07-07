@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -56,6 +55,7 @@ from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 
@@ -423,8 +423,8 @@ class MainWindow(Window):
     def update_user_status(self):
 
         status = core.user_status
-        is_online = (status != slskmessages.UserStatus.OFFLINE)
-        is_away = (status == slskmessages.UserStatus.AWAY)
+        is_online = (status != UserStatus.OFFLINE)
+        is_away = (status == UserStatus.AWAY)
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
@@ -444,10 +444,10 @@ class MainWindow(Window):
         # Status bar
         username = core.login_username
 
-        if status == slskmessages.UserStatus.AWAY:
+        if status == UserStatus.AWAY:
             status_text = _("Away")
 
-        elif status == slskmessages.UserStatus.ONLINE:
+        elif status == UserStatus.ONLINE:
             status_text = _("Online")
 
         else:
@@ -1200,7 +1200,7 @@ class MainWindow(Window):
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != slskmessages.UserStatus.AWAY:
+            if core.user_status != UserStatus.AWAY:
                 core.set_away_mode(True)
 
             return
@@ -1208,7 +1208,7 @@ class MainWindow(Window):
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == slskmessages.UserStatus.AWAY:
+            if core.user_status == UserStatus.AWAY:
                 core.set_away_mode(False)
 
         # Reset away timer
@@ -1217,7 +1217,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != slskmessages.UserStatus.ONLINE:
+        if core.user_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
