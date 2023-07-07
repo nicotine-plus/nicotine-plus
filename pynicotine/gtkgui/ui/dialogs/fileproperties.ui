@@ -9,7 +9,7 @@
       <widget name="_path_label"/>
       <widget name="_filesize_label"/>
       <widget name="_length_label"/>
-      <widget name="_bitrate_label"/>
+      <widget name="_quality_label"/>
       <widget name="_username_label"/>
       <widget name="_queue_label"/>
       <widget name="_speed_label"/>
@@ -200,13 +200,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="bitrate_row">
+          <object class="GtkBox" id="quality_row">
             <property name="spacing">12</property>
             <property name="visible">False</property>
             <child>
-              <object class="GtkLabel" id="_bitrate_label">
-                <property name="label" translatable="yes">Bitrate</property>
-                <property name="mnemonic-widget">bitrate_value_label</property>
+              <object class="GtkLabel" id="_quality_label">
+                <property name="label" translatable="yes">Quality</property>
+                <property name="mnemonic-widget">quality_value_label</property>
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <style>
@@ -215,7 +215,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="bitrate_value_label">
+              <object class="GtkLabel" id="quality_value_label">
                 <property name="ellipsize">end</property>
                 <property name="selectable">True</property>
                 <property name="single-line-mode">True</property>

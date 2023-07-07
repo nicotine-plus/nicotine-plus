@@ -2517,7 +2517,7 @@ class FileListMessage(PeerMessage):
         return bitrate, length, vbr, sample_rate, bit_depth
 
     @classmethod
-    def parse_result_bitrate_length(cls, filesize, attributes):
+    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
 
         bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
 
@@ -2526,7 +2526,6 @@ class FileListMessage(PeerMessage):
                 # Bitrate = sample rate (Hz) * word length (bits) * channel count
                 # Bitrate = 44100 * 16 * 2
                 bitrate = (sample_rate * bit_depth * 2) // 1000
-
             else:
                 bitrate = -1
 
@@ -2534,29 +2533,32 @@ class FileListMessage(PeerMessage):
             if bitrate > 0:
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
                 length = filesize // (bitrate * 125)
-
             else:
                 length = -1
 
         # Ignore invalid values
         if bitrate <= 0 or bitrate > UINT32_LIMIT:
             bitrate = 0
-            h_bitrate = ""
+            h_quality = ""
 
+        elif sample_rate and bit_depth:
+            h_quality = f"{sample_rate / 1000:.3g} kHz / {bit_depth} bit"
+
+            if always_show_bitrate:
+                h_quality += f" / {bitrate} kbps"
         else:
-            h_bitrate = f"{bitrate}"
+            h_quality = f"{bitrate} kbps"
 
             if vbr == 1:
-                h_bitrate += " (vbr)"
+                h_quality += " (vbr)"
 
         if length < 0 or length > UINT32_LIMIT:
             length = 0
             h_length = ""
-
         else:
             h_length = human_length(length)
 
-        return h_bitrate, bitrate, h_length, length
+        return h_quality, bitrate, h_length, length
 
 
 class SharedFileListRequest(PeerMessage):
