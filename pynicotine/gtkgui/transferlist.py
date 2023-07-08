@@ -250,13 +250,14 @@ class TransferList:
 
     def select_child_transfers(self, transfer):
 
-        if transfer.filename:
+        if transfer.filename is not None:
             return
 
+        # Dummy Transfer object for user/folder rows
         user = transfer.user
 
         if transfer.path is not None:
-            user_path = user + self.get_transfer_path(transfer)
+            user_path = user + transfer.path
             row_data = self.paths[user_path]
         else:
             row_data = self.users[user]
@@ -341,7 +342,7 @@ class TransferList:
             username = transfer.user
 
             if self.paths:
-                user_path = username + self.get_transfer_path(transfer)
+                user_path = username + self.get_transfer_folder_path(transfer)
                 user_path_iter, user_path_child_transfers = self.paths[user_path]
                 self.update_parent_row(user_path_iter, user_path_child_transfers, user_path=user_path)
 
@@ -512,7 +513,7 @@ class TransferList:
 
         user = transfer.user
         shortfn = transfer.filename.split("\\")[-1]
-        original_path = path = self.get_transfer_path(transfer)
+        original_path = path = self.get_transfer_folder_path(transfer)
 
         if config.sections["ui"]["reverse_file_paths"]:
             path = self.path_separator.join(reversed(path.split(self.path_separator)))
@@ -544,7 +545,7 @@ class TransferList:
                         empty_int,
                         empty_int,
                         empty_int,
-                        Transfer(user=user),
+                        Transfer(user=user),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -566,7 +567,7 @@ class TransferList:
                 user_path = user + original_path
 
                 if user_path not in self.paths:
-                    path_transfer = Transfer(user=user, path=original_path)
+                    path_transfer = Transfer(user=user, path=original_path)  # Dummy Transfer object
                     iterator = self.tree_view.add_row(
                         [
                             user,
@@ -657,7 +658,7 @@ class TransferList:
         for transfer in self.transfer_list:
             transfer.iterator = None
 
-    def get_transfer_path(self, _transfer):
+    def get_transfer_folder_path(self, _transfer):
         # Implemented in subclasses
         raise NotImplementedError
 
@@ -688,7 +689,7 @@ class TransferList:
         user = transfer.user
 
         if self.grouping_mode == "folder_grouping":
-            user_path = user + self.get_transfer_path(transfer)
+            user_path = user + self.get_transfer_folder_path(transfer)
             _user_path_iter, user_path_child_transfers = self.paths[user_path]
             user_path_child_transfers.remove(transfer)
         else:
@@ -848,7 +849,8 @@ class TransferList:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
-            user_path = transfer.user + self.get_transfer_path(transfer)
+            # Dummy Transfer object for folder rows
+            user_path = transfer.user + transfer.path
             user_path_data = self.paths.get(user_path)
 
             if not user_path_data:

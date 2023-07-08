@@ -90,7 +90,7 @@ class Uploads(TransferList):
     def start(self):
         self.init_transfers(core.transfers.uploads)
 
-    def get_transfer_path(self, transfer):
+    def get_transfer_folder_path(self, transfer):
         return transfer.filename.rsplit("\\", 1)[0]
 
     def retry_selected_transfers(self):
