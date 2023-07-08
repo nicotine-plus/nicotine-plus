@@ -22,6 +22,7 @@
 
 import random
 import string
+import time
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -35,7 +36,9 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.slskmessages import UserStatus
 
 
 """ Treeview """
@@ -51,10 +54,11 @@ class TreeView:
         self.widget = Gtk.TreeView(enable_tree_lines=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
+        self.has_tree = has_tree
         self._widget_name = name
         self._secondary_name = secondary_name
-        self._has_tree = has_tree
         self._columns = columns
+        self._data_types = []
         self._iterator_keys = {}
         self._iterator_key_column = 0
         self._column_ids = {}
@@ -66,8 +70,10 @@ class TreeView:
         self._sort_column = None
         self._sort_type = None
         self._reset_sort_column = None
+        self._last_redraw_time = 0
 
         parent.set_property("child", self.widget)
+        self._h_adjustment = self.widget.get_parent().get_hadjustment()
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
@@ -96,6 +102,29 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
+
+    def create_model(self):
+
+        model_class = Gtk.TreeStore if self.has_tree else Gtk.ListStore
+        self.model = model_class(*self._data_types)
+
+        self.widget.set_model(self.model)
+        return self.model
+
+    def redraw(self):
+        """ Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed values
+        if horizontal scrolling is present while fixed-height mode is enabled """
+
+        if GTK_API_VERSION != 3 or self._h_adjustment.get_value() <= 0:
+            return
+
+        current_time = time.time()
+
+        if (current_time - self._last_redraw_time) < 1:
+            return
+
+        self._last_redraw_time = current_time
+        self.widget.queue_draw()
 
     def _append_columns(self, cols, column_config):
 
@@ -157,7 +186,7 @@ class TreeView:
 
     def initialise_columns(self, columns):
 
-        data_types = []
+        self._data_types = data_types = []
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             data_type = column_data.get("data_type")
@@ -181,8 +210,7 @@ class TreeView:
             self._column_gvalues.append(gvalue)
             self._column_ids[column_id] = column_index
 
-        model_class = Gtk.TreeStore if self._has_tree else Gtk.ListStore
-        self.model = model_class(*data_types)
+        self.model = self.create_model()
         self._column_numbers = list(self._column_ids.values())
 
         progress_padding = 1
@@ -317,6 +345,8 @@ class TreeView:
             if self._widget_name:
                 column.connect("notify::x-offset", self.on_column_position_changed)
 
+            column.tooltip_callback = column_data.get("tooltip_callback")
+
             column.set_sort_column_id(self._column_ids[sort_column])
             column_widgets[column_id] = column
 
@@ -327,8 +357,6 @@ class TreeView:
 
         self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
-
-        self.widget.set_model(self.model)
 
     def save_columns(self):
         """ Save a treeview's column widths and visibilities for the next session """
@@ -378,7 +406,13 @@ class TreeView:
     def enable_sorting(self):
         self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
+    def set_show_expanders(self, show):
+        self.widget.set_show_expanders(show)
+
     def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
+
+        position = 0 if prepend else -1
+        key = values[self._iterator_key_column]
 
         for i, value in enumerate(values):
             gvalue = self._column_gvalues[i]
@@ -387,10 +421,7 @@ class TreeView:
                 gvalue.set_value(value)
                 values[i] = gvalue
 
-        position = 0 if prepend else -1
-        key = values[self._iterator_key_column]
-
-        if self._has_tree:
+        if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(  # pylint: disable=no-member
                 parent_iterator, position, self._column_numbers, values
             )
@@ -529,15 +560,18 @@ class TreeView:
         self.widget.set_model(self.model)
 
     @staticmethod
-    def get_user_status_tooltip_text(icon_name):
+    def get_status_tooltip_text(icon_name):
 
-        if "away" in icon_name:
+        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.AWAY]:
             return _("Away")
 
-        if "online" in icon_name:
+        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.ONLINE]:
             return _("Online")
 
-        return _("Offline")
+        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]:
+            return _("Offline")
+
+        return icon_name
 
     @staticmethod
     def get_country_tooltip_text(icon_name):
@@ -647,7 +681,11 @@ class TreeView:
 
         column_id = column.get_title()
         iterator = self.model.get_iter(path)
-        value = self.get_row_value(iterator, column_id)
+
+        if column.tooltip_callback:
+            value = column.tooltip_callback(self, iterator)
+        else:
+            value = self.get_row_value(iterator, column_id)
 
         if not value:
             return False
@@ -659,7 +697,7 @@ class TreeView:
             value = self.get_country_tooltip_text(value)
 
         elif column_id == "status":
-            value = self.get_user_status_tooltip_text(value)
+            value = self.get_status_tooltip_text(value)
 
         elif column_id == "file_type":
             value = self.get_file_type_tooltip_text(value)
