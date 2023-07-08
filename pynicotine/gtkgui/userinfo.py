@@ -328,10 +328,6 @@ class UserInfo:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    def save_columns(self):
-        # Unused
-        pass
-
     """ General """
 
     def populate_stats(self):

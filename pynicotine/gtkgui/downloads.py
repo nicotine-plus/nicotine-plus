@@ -91,6 +91,9 @@ class Downloads(TransferList):
     def start(self):
         self.init_transfers(core.transfers.downloads)
 
+    def get_transfer_folder_path(self, transfer):
+        return transfer.path
+
     def retry_selected_transfers(self):
         core.transfers.retry_downloads(self.selected_transfers)
 

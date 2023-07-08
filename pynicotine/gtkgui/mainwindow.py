@@ -360,10 +360,6 @@ class MainWindow(Window):
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
 
-    def save_columns(self, *_args):
-        for page in (self.downloads, self.uploads):
-            page.save_columns()
-
     def save_window_state(self):
 
         config.sections["ui"]["maximized"] = self.is_maximized()
@@ -1393,18 +1389,12 @@ class MainWindow(Window):
         return True
 
     def on_shutdown(self, *_args):
-
-        # Save visible columns
-        self.save_columns()
         config.write_configuration()
 
     def hide(self):
 
         if not self.is_visible():
             return
-
-        # Save visible columns, in case application is killed later
-        self.save_columns()
 
         # Close any visible dialogs
         for dialog in reversed(Window.active_dialogs):
