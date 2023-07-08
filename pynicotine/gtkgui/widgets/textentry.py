@@ -23,12 +23,12 @@ from locale import strxfrm
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.slskmessages import UserStatus
 
 
 """ Text Entry-related """
@@ -37,7 +37,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, parent, completion, entity, message_class, send_message, is_chatroom=False,
+    def __init__(self, parent, completion, entity, send_message, is_chatroom=False,
                  placeholder_text="Send message…", width_chars=8):
 
         self.widget = Gtk.Entry(placeholder_text=placeholder_text, width_chars=width_chars, hexpand=True, visible=True)
@@ -45,7 +45,6 @@ class ChatEntry:
 
         self.completion = completion
         self.entity = entity
-        self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
@@ -62,7 +61,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()

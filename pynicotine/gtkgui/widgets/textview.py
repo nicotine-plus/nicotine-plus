@@ -24,13 +24,13 @@ from collections import deque
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
@@ -463,7 +463,7 @@ class ChatView(TextView):
         if username not in self.tag_users:
             self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
 
-        status = core.user_statuses.get(username, slskmessages.UserStatus.OFFLINE)
+        status = core.user_statuses.get(username, UserStatus.OFFLINE)
         color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.tag_users[username], color)
 

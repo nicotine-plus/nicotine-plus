@@ -34,6 +34,7 @@ import os.path
 import re
 import time
 
+from ast import literal_eval
 from collections import defaultdict
 from collections import deque
 from locale import strxfrm
@@ -59,11 +60,11 @@ class Transfer:
     __slots__ = ("sock", "user", "filename",
                  "path", "token", "size", "file", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
-                 "time_left", "modifier", "queue_position", "bitrate", "length",
+                 "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "size_changed")
 
     def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
-                 current_byte_offset=None, bitrate=None, length=None):
+                 current_byte_offset=None, file_attributes=None):
         self.user = user
         self.filename = filename
         self.path = path
@@ -71,8 +72,7 @@ class Transfer:
         self.status = status
         self.token = token
         self.current_byte_offset = current_byte_offset
-        self.bitrate = bitrate
-        self.length = length
+        self.file_attributes = file_attributes or {}
 
         self.sock = None
         self.file = None
@@ -265,13 +265,21 @@ class Transfers:
     def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            try:
+                return {int(k): v for k, v in dictionary}
+
+            except ValueError:
+                return dictionary
+
         transfers_file = encode_path(transfers_file)
 
         if not os.path.isfile(transfers_file):
             return None
 
         with open(transfers_file, encoding="utf-8") as handle:
-            return json.load(handle)
+            return json.load(handle, object_pairs_hook=json_keys_to_integer)
 
     @staticmethod
     def load_legacy_transfers_file(transfers_file):
@@ -299,6 +307,60 @@ class Transfers:
             load_func = self.load_legacy_transfers_file
 
         return load_file(transfers_file, load_func)
+
+    def _load_file_attributes(self, num_attributes, transfer_row):
+
+        if num_attributes < 7:
+            return None
+
+        loaded_file_attributes = transfer_row[6]
+
+        if not loaded_file_attributes:
+            return None
+
+        if isinstance(loaded_file_attributes, dict):
+            # Found dictionary with file attributes (Nicotine+ >=3.3.0), nothing more to do
+            return loaded_file_attributes
+
+        try:
+            # Check if a dictionary is represented in string format
+            return {int(k): v for k, v in literal_eval(loaded_file_attributes).items()}
+
+        except (AttributeError, ValueError):
+            pass
+
+        # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
+        file_attributes = {}
+        bitrate = str(loaded_file_attributes)
+        is_vbr = (" (vbr)" in bitrate)
+
+        try:
+            file_attributes[slskmessages.FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
+
+            if is_vbr:
+                file_attributes[slskmessages.FileAttribute.VBR] = int(is_vbr)
+
+        except ValueError:
+            # No valid bitrate value found
+            pass
+
+        if num_attributes < 8:
+            return file_attributes
+
+        loaded_length = str(transfer_row[7])
+
+        if ":" not in loaded_length:
+            return file_attributes
+
+        # Convert HH:mm:ss to seconds
+        seconds = 0
+
+        for part in loaded_length.split(":"):
+            seconds = seconds * 60 + int(part, 10)
+
+        file_attributes[slskmessages.FileAttribute.DURATION] = seconds
+
+        return file_attributes
 
     def add_stored_transfers(self, transfer_type):
 
@@ -372,25 +434,13 @@ class Transfers:
                 if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
                     current_byte_offset = int(loaded_byte_offset)
 
-            # Bitrate / length
-            bitrate = length = None
-
-            if num_attributes >= 7:
-                loaded_bitrate = transfer_row[6]
-
-                if loaded_bitrate is not None:
-                    bitrate = str(loaded_bitrate)
-
-            if num_attributes >= 8:
-                loaded_length = transfer_row[7]
-
-                if loaded_length is not None:
-                    length = str(loaded_length)
+            # File attributes
+            file_attributes = self._load_file_attributes(num_attributes, transfer_row)
 
             transfer_list.appendleft(
                 Transfer(
                     user=user, filename=filename, path=path, status=status, size=size,
-                    current_byte_offset=current_byte_offset, bitrate=bitrate, length=length
+                    current_byte_offset=current_byte_offset, file_attributes=file_attributes
                 )
             )
 
@@ -792,15 +842,11 @@ class Transfers:
                     "destination": destination
                 })
 
-                for file in files:
-                    virtualpath = directory.rstrip("\\") + "\\" + file[1]
-                    size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                        size, file[4])
+                for _code, filename, file_size, _ext, file_attributes, *_unused in files:
+                    virtualpath = directory.rstrip("\\") + "\\" + filename
 
                     self.get_file(
-                        username, virtualpath, path=destination,
-                        size=size, bitrate=h_bitrate, length=h_length)
+                        username, virtualpath, path=destination, size=file_size, file_attributes=file_attributes)
 
     def _queue_upload(self, msg):
         """ Peer code: 43 """
@@ -1588,7 +1634,7 @@ class Transfers:
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
-    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None,
+    def get_file(self, user, filename, path="", transfer=None, size=0, file_attributes=None,
                  bypass_filter=False, ui_callback=True):
 
         if path:
@@ -1610,8 +1656,7 @@ class Transfers:
             else:
                 transfer = Transfer(
                     user=user, filename=filename, path=path,
-                    status="Queued", size=size, bitrate=bitrate,
-                    length=length
+                    status="Queued", size=size, file_attributes=file_attributes
                 )
                 self.downloads.appendleft(transfer)
         else:
@@ -1660,7 +1705,7 @@ class Transfers:
         if ui_callback:
             self.update_download(transfer)
 
-    def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
+    def push_file(self, user, filename, size, path="", transfer=None, locally_queued=False):
 
         real_path = core.shares.virtual2real(filename)
         size_attempt = self.get_file_size(real_path)
@@ -1675,11 +1720,7 @@ class Transfers:
             if not path:
                 path = os.path.dirname(real_path)
 
-            transfer = Transfer(
-                user=user, filename=filename, path=path,
-                status="Queued", size=size, bitrate=bitrate,
-                length=length
-            )
+            transfer = Transfer(user=user, filename=filename, path=path, status="Queued", size=size)
             self.append_upload(user, filename, transfer)
         else:
             transfer.filename = filename
@@ -1868,7 +1909,7 @@ class Transfers:
     def get_basename_byte_limit(self, folder_path):
 
         try:
-            max_bytes = os.statvfs(folder_path).f_namemax
+            max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
 
         except (AttributeError, OSError):
             max_bytes = 255
@@ -2610,7 +2651,7 @@ class Transfers:
         """ Get a list of downloads """
         return [
             [download.user, download.filename, download.path, download.status, download.size,
-             download.current_byte_offset, download.bitrate, download.length]
+             download.current_byte_offset, download.file_attributes]
             for download in reversed(self.downloads)
         ]
 
@@ -2618,7 +2659,7 @@ class Transfers:
         """ Get a list of finished uploads """
         return [
             [upload.user, upload.filename, upload.path, upload.status, upload.size, upload.current_byte_offset,
-             upload.bitrate, upload.length]
+             upload.file_attributes]
             for upload in reversed(self.uploads) if upload.status == "Finished"
         ]
 

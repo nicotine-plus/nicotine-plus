@@ -29,7 +29,6 @@ from collections import defaultdict
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -58,6 +57,7 @@ from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -454,7 +454,7 @@ class Search:
             ["file_type", _("File Type"), 40, "icon", has_free_slots_col],
             ["filename", _("Filename"), 200, "text", has_free_slots_col],
             ["size", _("Size"), 100, "number", has_free_slots_col],
-            ["bitrate", _("Bitrate"), 100, "number", has_free_slots_col],
+            ["quality", _("Quality"), 150, "number", has_free_slots_col],
             ["length", _("Duration"), 100, "number", has_free_slots_col]
         )
 
@@ -467,7 +467,7 @@ class Search:
         cols["file_type"].set_sort_column_id(6)
         cols["filename"].set_sort_column_id(7)
         cols["size"].set_sort_column_id(14)
-        cols["bitrate"].set_sort_column_id(11)
+        cols["quality"].set_sort_column_id(11)
         cols["length"].set_sort_column_id(17)
 
         cols["country"].get_widget().set_visible(False)
@@ -571,25 +571,26 @@ class Search:
 
         tree_model_class = Gtk.ListStore if self.grouping_mode == "ungrouped" else Gtk.TreeStore
         self.resultsmodel = tree_model_class(
-            int,                  # (0)  num
-            str,                  # (1)  user
-            str,                  # (2)  flag
-            str,                  # (3)  h_speed
-            str,                  # (4)  h_queue
-            str,                  # (5)  directory
-            str,                  # (6)  file type icon
-            str,                  # (7)  filename
-            str,                  # (8)  h_size
-            str,                  # (9)  h_bitrate
-            str,                  # (10) h_length
-            GObject.TYPE_UINT,    # (11) bitrate
-            str,                  # (12) fullpath
-            str,                  # (13) country
-            GObject.TYPE_UINT64,  # (14) size
-            GObject.TYPE_UINT,    # (15) speed
-            GObject.TYPE_UINT,    # (16) queue
-            GObject.TYPE_UINT,    # (17) length
-            bool                  # (18) free slots
+            int,                   # (0)  num
+            str,                   # (1)  user
+            str,                   # (2)  flag
+            str,                   # (3)  h_speed
+            str,                   # (4)  h_queue
+            str,                   # (5)  directory
+            str,                   # (6)  file type icon
+            str,                   # (7)  filename
+            str,                   # (8)  h_size
+            str,                   # (9)  h_quality
+            str,                   # (10) h_length
+            GObject.TYPE_UINT,     # (11) bitrate
+            str,                   # (12) fullpath
+            str,                   # (13) country
+            GObject.TYPE_UINT64,   # (14) size
+            GObject.TYPE_UINT,     # (15) speed
+            GObject.TYPE_UINT,     # (16) queue
+            GObject.TYPE_UINT,     # (17) length
+            bool,                  # (18) free slots
+            GObject.TYPE_PYOBJECT  # (19) file attributes
         )
 
         if self.grouping_mode is not None:
@@ -704,12 +705,11 @@ class Search:
 
         update_ui = False
 
-        for result in result_list:
+        for _code, fullpath, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
                 self.max_limited = True
                 break
 
-            fullpath = result[1]
             fullpath_lower = fullpath.lower()
 
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
@@ -748,10 +748,8 @@ class Search:
             # Join the resulting items into a folder path
             directory = "\\".join(fullpath_split)
 
-            size = result[2]
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                size, result[4])
+            h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
             if private:
                 name = _("[PRIVATE]  %s") % name
@@ -767,7 +765,7 @@ class Search:
                     get_file_type_icon_name(name),
                     name,
                     h_size,
-                    h_bitrate,
+                    h_quality,
                     h_length,
                     GObject.Value(GObject.TYPE_UINT, bitrate),
                     fullpath,
@@ -776,7 +774,8 @@ class Search:
                     GObject.Value(GObject.TYPE_UINT, ulspeed),
                     GObject.Value(GObject.TYPE_UINT, inqueue),
                     GObject.Value(GObject.TYPE_UINT, length),
-                    has_free_slots
+                    has_free_slots,
+                    file_attributes
                 ]
             )
 
@@ -855,8 +854,9 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        (_counter, user, flag, h_speed, h_queue, directory, _file_type, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, has_free_slots) = row
+        (_counter, user, flag, h_speed, h_queue, directory, _file_type, _filename, _h_size, _h_quality,
+            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, has_free_slots,
+            _file_attributes) = row
 
         expand_user = False
         expand_folder = False
@@ -866,6 +866,7 @@ class Search:
 
             empty_int = 0
             empty_str = ""
+            empty_dict = {}
 
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.insert_with_values(
@@ -889,7 +890,8 @@ class Search:
                         speed,
                         queue,
                         empty_int,
-                        has_free_slots
+                        has_free_slots,
+                        empty_dict
                     ]
                 )
 
@@ -927,7 +929,8 @@ class Search:
                             speed,
                             queue,
                             empty_int,
-                            has_free_slots
+                            has_free_slots,
+                            empty_dict
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
@@ -1388,8 +1391,7 @@ class Search:
                 "size": file_size,
                 "speed": self.resultsmodel.get_value(iterator, 15),
                 "queue_position": self.resultsmodel.get_value(iterator, 16),
-                "bitrate": self.resultsmodel.get_value(iterator, 9),
-                "length": self.resultsmodel.get_value(iterator, 10),
+                "file_attributes": self.resultsmodel.get_value(iterator, 19),
                 "country": country
             })
 
@@ -1406,11 +1408,9 @@ class Search:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 12)
             size = self.resultsmodel.get_value(iterator, 14)
-            bitrate = self.resultsmodel.get_value(iterator, 9)
-            length = self.resultsmodel.get_value(iterator, 10)
+            file_attributes = self.resultsmodel.get_value(iterator, 19)
 
-            core.transfers.get_file(
-                user, filepath, prefix, size=size, bitrate=bitrate, length=length)
+            core.transfers.get_file(user, filepath, prefix, size=size, file_attributes=file_attributes)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
@@ -1457,10 +1457,10 @@ class Search:
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _file_type, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
-                    _queue, _length, _has_free_slots) = row
+                    _h_size, _h_quality, _h_length, _bitrate, fullpath, _country_code, size, _speed,
+                    _queue, _length, _has_free_slots, file_attributes) = row
                 visible_files.append(
-                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
+                    (user, fullpath, destination, size.get_value(), file_attributes))
 
             core.search.request_folder_download(user, folder, visible_files)
 

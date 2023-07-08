@@ -29,7 +29,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.core import core
@@ -52,6 +51,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -422,8 +422,8 @@ class ChatRoom:
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
-        self.chat_entry = ChatEntry(self.chat_entry_container, chatrooms.completion, room, slskmessages.SayChatroom,
-                                    core.chatrooms.send_message, is_chatroom=True)
+        self.chat_entry = ChatEntry(self.chat_entry_container, chatrooms.completion, room, core.chatrooms.send_message,
+                                    is_chatroom=True)
 
         self.chat_search_bar = TextSearchBar(self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
@@ -909,10 +909,10 @@ class ChatRoom:
         if status == self.users_list_view.get_row_value(iterator, "status_data"):
             return
 
-        if status == slskmessages.UserStatus.AWAY:
+        if status == UserStatus.AWAY:
             action = _("%s has gone away")
 
-        elif status == slskmessages.UserStatus.ONLINE:
+        elif status == UserStatus.ONLINE:
             action = _("%s has returned")
 
         else:

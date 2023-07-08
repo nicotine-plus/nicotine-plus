@@ -25,7 +25,6 @@ import os
 
 from gi.repository import GLib
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -41,6 +40,7 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 
 
@@ -237,7 +237,7 @@ class PrivateChats(IconNotebook):
 
         for user, page in self.pages.items():
             page.server_disconnect()
-            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class PrivateChat:
@@ -265,8 +265,7 @@ class PrivateChat:
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
-        self.chat_entry = ChatEntry(self.chat_entry_container, chats.completion, user, slskmessages.MessageUser,
-                                    core.privatechat.send_message)
+        self.chat_entry = ChatEntry(self.chat_entry_container, chats.completion, user, core.privatechat.send_message)
 
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)

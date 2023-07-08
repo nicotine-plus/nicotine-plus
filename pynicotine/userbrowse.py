@@ -202,12 +202,10 @@ class UserBrowse:
 
     def download_file(self, user, folder, file_data, prefix=""):
 
-        virtualpath = "\\".join([folder, file_data[1]])
-        size = file_data[2]
-        h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
-            size, file_data[4])
+        _code, filename, file_size, _ext, file_attributes, *_unused = file_data
+        virtualpath = "\\".join([folder, filename])
 
-        core.transfers.get_file(user, virtualpath, prefix, size=size, bitrate=h_bitrate, length=h_length)
+        core.transfers.get_file(user, virtualpath, prefix, size=file_size, file_attributes=file_attributes)
 
     def download_folder(self, user, requested_folder, prefix="", recurse=False):
 
@@ -232,14 +230,11 @@ class UserBrowse:
             destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
 
             if files:
-                for file_data in files:
-                    virtualpath = "\\".join([folder, file_data[1]])
-                    size = file_data[2]
-                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                        size, file_data[4])
+                for _code, filename, file_size, _ext, file_attributes, *_unused in files:
+                    virtualpath = "\\".join([folder, filename])
 
-                    core.transfers.get_file(user, virtualpath, destination,
-                                            size=size, bitrate=h_bitrate, length=h_length)
+                    core.transfers.get_file(
+                        user, virtualpath, destination, size=file_size, file_attributes=file_attributes)
 
             if not recurse:
                 # Downloading a single folder, no need to continue
@@ -247,10 +242,10 @@ class UserBrowse:
 
     def upload_file(self, user, folder, file_data, locally_queued=False):
 
-        virtualpath = "\\".join([folder, file_data[1]])
-        size = file_data[2]
+        _code, filename, file_size, *_unused = file_data
+        virtualpath = "\\".join([folder, filename])
 
-        core.transfers.push_file(user, virtualpath, size, locally_queued=locally_queued)
+        core.transfers.push_file(user, virtualpath, size=file_size, locally_queued=locally_queued)
 
     def upload_folder(self, user, requested_folder, recurse=False):
 
@@ -268,11 +263,10 @@ class UserBrowse:
             if files:
                 locally_queued = False
 
-                for file_data in files:
-                    filename = "\\".join([folder, file_data[1]])
-                    size = file_data[2]
+                for _code, filename, file_size, *_unused in files:
+                    virtualpath = "\\".join([folder, filename])
 
-                    core.transfers.push_file(user, filename, size, locally_queued=locally_queued)
+                    core.transfers.push_file(user, virtualpath, size=file_size, locally_queued=locally_queued)
                     locally_queued = True
 
             if not recurse:
