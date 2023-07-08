@@ -91,11 +91,9 @@
                         <property name="spacing">6</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkEntry" id="chat_entry">
+                          <object class="GtkBox" id="chat_entry_container">
                             <property name="hexpand">True</property>
-                            <property name="placeholder-text" translatable="yes">Send message…</property>
                             <property name="visible">True</property>
-                            <property name="width-chars">8</property>
                           </object>
                         </child>
                         <child>

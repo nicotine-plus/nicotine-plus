@@ -37,34 +37,28 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, parent, completion, entity, message_class, send_message, is_chatroom=False,
+                 placeholder_text="Send message…", width_chars=8):
 
-        self.widget = widget
+        self.widget = Gtk.Entry(placeholder_text=placeholder_text, width_chars=width_chars, hexpand=True, visible=True)
+        parent.set_property("child", self.widget)
+
         self.completion = completion
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
-        widget.connect("activate", self.on_enter)
-        Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
-        Accelerator("Tab", widget, self.on_tab_complete_accelerator)
+        self.widget.connect("activate", self.on_enter)
+        Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
             self.widget.set_property("show-emoji-icon", True)
 
-        # Spell Check
-        if config.sections["ui"]["spellcheck"]:
-            if application.spell_checker is None:
-                application.init_spell_checker()
-
-            if application.spell_checker:
-                from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
-                spell_buffer.set_spell_checker(application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
-                spell_view.set_inline_spell_checking(True)
+    def grab_focus(self):
+        self.widget.grab_focus()
 
     def on_enter(self, *_args):
 

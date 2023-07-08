@@ -41,8 +41,9 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="enable_spell_checker_toggle">
-            <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
+            <property name="label" translatable="yes">Enable spell checker</property>
             <property name="visible">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
         <child>

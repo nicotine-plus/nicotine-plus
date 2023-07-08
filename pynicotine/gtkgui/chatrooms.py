@@ -122,7 +122,9 @@ class ChatRooms(IconNotebook):
             if tab.container != page:
                 continue
 
-            self.completion.set_entry(tab.chat_entry)
+            self.window.application.set_spell_widget(tab.chat_entry.widget)
+
+            self.completion.set_entry(tab.chat_entry.widget)
             tab.update_room_user_completions()
 
             if self.command_help is None:
@@ -370,7 +372,7 @@ class ChatRoom:
             self.activity_search_entry,
             self.activity_view_container,
             self.chat_container,
-            self.chat_entry,
+            self.chat_entry_container,
             self.chat_entry_row,
             self.chat_paned,
             self.chat_search_bar,
@@ -413,20 +415,18 @@ class ChatRoom:
 
         self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
-        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
-        # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
                                                  self.activity_search_entry)
 
-        # Chat Text Search
+        self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
+                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
+
+        self.chat_entry = ChatEntry(self.chat_entry_container, chatrooms.completion, room, slskmessages.SayChatroom,
+                                    core.chatrooms.send_message, is_chatroom=True)
+
         self.chat_search_bar = TextSearchBar(self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
-
-        # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
-                  core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():
@@ -589,11 +589,11 @@ class ChatRoom:
         if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
             return
 
-        for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
+        for widget in (self.activity_container, self.users_container, self.chat_entry_container, self.help_button):
             widget.set_visible(False)
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
-        self.chat_entry.set_sensitive(False)
+        self.chat_entry.widget.set_sensitive(False)
         self.chat_entry_row.set_halign(Gtk.Align.END)
 
     def add_user_row(self, userdata):

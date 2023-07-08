@@ -93,7 +93,9 @@ class PrivateChats(IconNotebook):
             if tab.container != page:
                 continue
 
-            self.completion.set_entry(tab.chat_entry)
+            self.window.application.set_spell_widget(tab.chat_entry.widget)
+
+            self.completion.set_entry(tab.chat_entry.widget)
             tab.update_room_user_completions()
 
             if self.command_help is None:
@@ -243,7 +245,7 @@ class PrivateChat:
     def __init__(self, chats, user):
 
         (
-            self.chat_entry,
+            self.chat_entry_container,
             self.chat_view_container,
             self.container,
             self.help_button,
@@ -263,13 +265,11 @@ class PrivateChat:
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
-        # Text Search
+        self.chat_entry = ChatEntry(self.chat_entry_container, chats.completion, user, slskmessages.MessageUser,
+                                    core.privatechat.send_message)
+
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)
-
-        # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, chats.completion, user, slskmessages.MessageUser,
-                  core.privatechat.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 

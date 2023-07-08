@@ -79,7 +79,10 @@ class Application:
         self.wishlist = None
         self.tray_icon = None
         self.notifications = None
+        self.spell = None
         self.spell_checker = None
+        self._spell_buffer = None
+        self._spell_widget = None
 
         # Show errors in the GUI from here on
         sys.excepthook = self.on_critical_error
@@ -134,23 +137,48 @@ class Application:
 
     def init_spell_checker(self, load=True):
 
-        if self.spell_checker:
-            return True
+        if load and self.spell_checker is not None:
+            return bool(self.spell_checker)
 
         try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell
+            if self.spell is None:
+                gi.require_version("Gspell", "1")
+                from gi.repository import Gspell
+                self.spell = Gspell
 
             if not load:
                 # We only want to know if the package is available
                 return True
 
-            self.spell_checker = Gspell.Checker()
+            self.spell_checker = self.spell.Checker()
 
         except (ImportError, ValueError):
             self.spell_checker = False
 
         return bool(self.spell_checker)
+
+    def set_spell_widget(self, entry_widget):
+
+        enabled = config.sections["ui"]["spellcheck"]
+
+        if not enabled:
+            self.spell_buffer = None
+
+        elif self.init_spell_checker():
+            if self._spell_buffer:
+                # Disable spell checking on previous entry widget
+                self._spell_buffer.set_spell_checker(None)
+
+            # Enable spell checking on this current entry widget as required
+            self._spell_buffer = self.spell.EntryBuffer.get_from_gtk_entry_buffer(entry_widget.get_buffer())
+            self._spell_buffer.set_spell_checker(self.spell_checker)
+
+        if self.spell:
+            if self._spell_widget:
+                self._spell_widget.set_inline_spell_checking(False)
+
+            self._spell_widget = self.spell.Entry.get_from_gtk_entry(entry_widget)
+            self._spell_widget.set_inline_spell_checking(enabled)
 
     def set_up_actions(self):
 

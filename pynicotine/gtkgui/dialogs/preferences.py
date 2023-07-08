@@ -2942,6 +2942,10 @@ class Preferences(Dialog):
         self.application.window.chatrooms.toggle_chat_buttons()
         self.application.window.privatechat.toggle_chat_buttons()
 
+        if self.application.spell_checker is False:
+            # Allow package installation retry without restarting
+            self.application.spell_checker = None
+
         # Transfers
         core.transfers.update_download_limits()
         core.transfers.update_download_filters()
