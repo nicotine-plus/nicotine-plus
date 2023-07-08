@@ -331,26 +331,30 @@ class TransferList:
 
     def update_parent_rows(self, transfer=None):
 
-        if self.grouping_mode != "ungrouped":
-            if transfer is not None:
-                username = transfer.user
+        # Show tab description if necessary
+        self.container.get_parent().set_visible(bool(self.transfer_list))
+
+        if self.grouping_mode == "ungrouped":
+            return
+
+        if transfer is not None:
+            username = transfer.user
+
+            if self.paths:
                 user_path = username + self.get_transfer_path(transfer)
-
                 user_path_iter, user_path_child_transfers = self.paths[user_path]
-                user_iter, user_child_transfers = self.users[username]
-
                 self.update_parent_row(user_path_iter, user_path_child_transfers, user_path=user_path)
-                self.update_parent_row(user_iter, user_child_transfers, username=username)
 
-            else:
+            user_iter, user_child_transfers = self.users[username]
+            self.update_parent_row(user_iter, user_child_transfers, username=username)
+
+        else:
+            if self.paths:
                 for user_path, (user_path_iter, child_transfers) in self.paths.copy().items():
                     self.update_parent_row(user_path_iter, child_transfers, user_path=user_path)
 
-                for username, (user_iter, child_transfers) in self.users.copy().items():
-                    self.update_parent_row(user_iter, child_transfers, username=username)
-
-        # Show tab description if necessary
-        self.container.get_parent().set_visible(self.transfer_list)
+            for username, (user_iter, child_transfers) in self.users.copy().items():
+                self.update_parent_row(user_iter, child_transfers, username=username)
 
     @staticmethod
     def get_hqueue_position(queue_position):
@@ -376,7 +380,7 @@ class TransferList:
     def get_percent(current_byte_offset, size):
         return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
 
-    def update_parent_row(self, initer, child_transfers, username=None, user_path=None):
+    def update_parent_row(self, iterator, child_transfers, username=None, user_path=None):
 
         speed = 0.0
         total_size = current_byte_offset = 0
@@ -386,14 +390,14 @@ class TransferList:
         if not child_transfers:
             # Remove parent row if no children are present anymore
             if user_path:
-                transfer = self.tree_view.get_row_value(initer, "transfer_data")
+                transfer = self.tree_view.get_row_value(iterator, "transfer_data")
                 _user_iter, user_child_transfers = self.users[transfer.user]
                 user_child_transfers.remove(transfer)
                 del self.paths[user_path]
             else:
                 del self.users[username]
 
-            self.tree_view.remove_row(initer)
+            self.tree_view.remove_row(iterator)
             return
 
         for transfer in child_transfers:
@@ -416,37 +420,37 @@ class TransferList:
             total_size += transfer.size or 0
             current_byte_offset += transfer.current_byte_offset or 0
 
-        transfer = self.tree_view.get_row_value(initer, "transfer_data")
+        transfer = self.tree_view.get_row_value(iterator, "transfer_data")
         total_size = min(total_size, UINT64_LIMIT)
         current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
 
         if transfer.status != parent_status:
-            self.tree_view.set_row_value(initer, "status", self.translate_status(parent_status))
+            self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
             transfer.status = parent_status
 
         if transfer.speed != speed:
-            self.tree_view.set_row_value(initer, "speed", self.get_hspeed(speed))
-            self.tree_view.set_row_value(initer, "speed_data", speed)
+            self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
+            self.tree_view.set_row_value(iterator, "speed_data", speed)
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
             left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
-            self.tree_view.set_row_value(initer, "time_elapsed", self.get_helapsed(elapsed))
-            self.tree_view.set_row_value(initer, "time_left", self.get_hleft(left))
-            self.tree_view.set_row_value(initer, "time_elapsed_data", elapsed)
-            self.tree_view.set_row_value(initer, "time_left_data", left)
+            self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
+            self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
+            self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
+            self.tree_view.set_row_value(iterator, "time_left_data", left)
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_byte_offset:
-            self.tree_view.set_row_value(initer, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(initer, "size", self.get_hsize(current_byte_offset, total_size))
-            self.tree_view.set_row_value(initer, "current_bytes_data", current_byte_offset)
+            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
+            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
+            self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
             transfer.current_byte_offset = current_byte_offset
 
         if transfer.size != total_size:
-            self.tree_view.set_row_value(initer, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(initer, "size", self.get_hsize(current_byte_offset, total_size))
-            self.tree_view.set_row_value(initer, "size_data", total_size)
+            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
+            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
+            self.tree_view.set_row_value(iterator, "size_data", total_size)
             transfer.size = total_size
 
     def update_specific(self, transfer):
@@ -465,38 +469,38 @@ class TransferList:
         elapsed = transfer.time_elapsed or 0
         helapsed = self.get_helapsed(elapsed)
         left = transfer.time_left or 0
-        initer = transfer.iterator
+        iterator = transfer.iterator
 
         # Modify old transfer
-        if initer is not None:
+        if iterator is not None:
             translated_status = self.translate_status(status)
 
-            if self.tree_view.get_row_value(initer, "status") != translated_status:
-                self.tree_view.set_row_value(initer, "status", translated_status)
+            if self.tree_view.get_row_value(iterator, "status") != translated_status:
+                self.tree_view.set_row_value(iterator, "status", translated_status)
 
-            if self.tree_view.get_row_value(initer, "speed") != hspeed:
-                self.tree_view.set_row_value(initer, "speed", hspeed)
-                self.tree_view.set_row_value(initer, "speed_data", speed)
+            if self.tree_view.get_row_value(iterator, "speed") != hspeed:
+                self.tree_view.set_row_value(iterator, "speed", hspeed)
+                self.tree_view.set_row_value(iterator, "speed_data", speed)
 
-            if self.tree_view.get_row_value(initer, "time_elapsed") != helapsed:
-                self.tree_view.set_row_value(initer, "time_elapsed", helapsed)
-                self.tree_view.set_row_value(initer, "time_left", self.get_hleft(left))
-                self.tree_view.set_row_value(initer, "time_elapsed_data", elapsed)
-                self.tree_view.set_row_value(initer, "time_left_data", left)
+            if self.tree_view.get_row_value(iterator, "time_elapsed") != helapsed:
+                self.tree_view.set_row_value(iterator, "time_elapsed", helapsed)
+                self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
+                self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
+                self.tree_view.set_row_value(iterator, "time_left_data", left)
 
-            if self.tree_view.get_row_value(initer, "current_bytes_data") != current_byte_offset:
-                self.tree_view.set_row_value(initer, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(initer, "size", self.get_hsize(current_byte_offset, size))
-                self.tree_view.set_row_value(initer, "current_bytes_data", current_byte_offset)
+            if self.tree_view.get_row_value(iterator, "current_bytes_data") != current_byte_offset:
+                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
+                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
+                self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
 
-            elif self.tree_view.get_row_value(initer, "size_data") != size:
-                self.tree_view.set_row_value(initer, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(initer, "size", self.get_hsize(current_byte_offset, size))
-                self.tree_view.set_row_value(initer, "size_data", size)
+            elif self.tree_view.get_row_value(iterator, "size_data") != size:
+                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
+                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
+                self.tree_view.set_row_value(iterator, "size_data", size)
 
-            if self.tree_view.get_row_value(initer, "queue_position_data") != queue_position:
-                self.tree_view.set_row_value(initer, "queue_position", self.get_hqueue_position(queue_position))
-                self.tree_view.set_row_value(initer, "queue_position_data", queue_position)
+            if self.tree_view.get_row_value(iterator, "queue_position_data") != queue_position:
+                self.tree_view.set_row_value(iterator, "queue_position", self.get_hqueue_position(queue_position))
+                self.tree_view.set_row_value(iterator, "queue_position_data", queue_position)
 
             return False
 
@@ -678,6 +682,9 @@ class TransferList:
 
     def clear_transfer(self, transfer, update_parent=True):
 
+        if transfer.iterator is None:
+            return
+
         user = transfer.user
 
         if self.grouping_mode == "folder_grouping":
@@ -690,9 +697,6 @@ class TransferList:
 
             if self.grouping_mode == "ungrouped" and not user_child_transfers:
                 del self.users[user]
-
-        if transfer.iterator is None:
-            return
 
         self.tree_view.remove_row(transfer.iterator)
         transfer.iterator = None

@@ -218,7 +218,7 @@ class Transfers:
         for upload in self.uploads.copy():
             if upload.status != "Finished":
                 need_update = True
-                self.clear_upload(upload)
+                self.clear_upload(upload, update_parent=False)
 
         if need_update:
             events.emit("update-uploads")
