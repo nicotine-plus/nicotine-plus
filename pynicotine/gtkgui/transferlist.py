@@ -257,12 +257,9 @@ class TransferList:
 
         if transfer.path is not None:
             user_path = user + self.get_transfer_path(transfer)
-            row_data = self.paths.get(user_path)
+            row_data = self.paths[user_path]
         else:
-            row_data = self.users.get(user)
-
-        if not row_data:
-            return
+            row_data = self.users[user]
 
         _row_iter, child_transfers = row_data
 
@@ -339,23 +336,18 @@ class TransferList:
                 username = transfer.user
                 user_path = username + self.get_transfer_path(transfer)
 
-                user_path_data = self.paths.get(user_path)
-                user_data = self.users.get(username)
+                user_path_iter, user_path_child_transfers = self.paths[user_path]
+                user_iter, user_child_transfers = self.users[username]
 
-                if user_path_data:
-                    user_path_iter, child_transfers = user_path_data
-                    self.update_parent_row(user_path_iter, user_path, child_transfers, folder=True)
-
-                if user_data:
-                    user_iter, child_transfers = user_data
-                    self.update_parent_row(user_iter, username, child_transfers)
+                self.update_parent_row(user_path_iter, user_path_child_transfers, user_path=user_path)
+                self.update_parent_row(user_iter, user_child_transfers, username=username)
 
             else:
                 for user_path, (user_path_iter, child_transfers) in self.paths.copy().items():
-                    self.update_parent_row(user_path_iter, user_path, child_transfers, folder=True)
+                    self.update_parent_row(user_path_iter, child_transfers, user_path=user_path)
 
                 for username, (user_iter, child_transfers) in self.users.copy().items():
-                    self.update_parent_row(user_iter, username, child_transfers)
+                    self.update_parent_row(user_iter, child_transfers, username=username)
 
         # Show tab description if necessary
         self.container.get_parent().set_visible(self.transfer_list)
@@ -384,7 +376,7 @@ class TransferList:
     def get_percent(current_byte_offset, size):
         return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
 
-    def update_parent_row(self, initer, key, child_transfers, folder=False):
+    def update_parent_row(self, initer, child_transfers, username=None, user_path=None):
 
         speed = 0.0
         total_size = current_byte_offset = 0
@@ -393,9 +385,15 @@ class TransferList:
 
         if not child_transfers:
             # Remove parent row if no children are present anymore
-            dictionary = self.paths if folder else self.users
+            if user_path:
+                transfer = self.tree_view.get_row_value(initer, "transfer_data")
+                _user_iter, user_child_transfers = self.users[transfer.user]
+                user_child_transfers.remove(transfer)
+                del self.paths[user_path]
+            else:
+                del self.users[username]
+
             self.tree_view.remove_row(initer)
-            del dictionary[key]
             return
 
         for transfer in child_transfers:
@@ -693,8 +691,11 @@ class TransferList:
             if self.grouping_mode == "ungrouped" and not user_child_transfers:
                 del self.users[user]
 
-        if transfer.iterator is not None:
-            self.tree_view.remove_row(transfer.iterator)
+        if transfer.iterator is None:
+            return
+
+        self.tree_view.remove_row(transfer.iterator)
+        transfer.iterator = None
 
         if update_parent:
             self.update_parent_rows(transfer)
