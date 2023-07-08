@@ -429,7 +429,7 @@ class UserList:
 
     def server_disconnect(self, *_args):
 
-        for iterator in self.list_view.get_all_rows():
+        for iterator in self.list_view.iterators.values():
             self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")

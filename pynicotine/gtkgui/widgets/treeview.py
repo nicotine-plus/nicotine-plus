@@ -71,6 +71,7 @@ class TreeView:
         self._sort_type = None
         self._reset_sort_column = None
         self._last_redraw_time = 0
+        self._selection = self.widget.get_selection()
 
         parent.set_property("child", self.widget)
         self._h_adjustment = self.widget.get_parent().get_hadjustment()
@@ -82,16 +83,16 @@ class TreeView:
 
         if multi_select:
             self.widget.set_rubber_banding(True)
-            self.widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+            self._selection.set_mode(Gtk.SelectionMode.MULTIPLE)
 
         elif always_select:
-            self.widget.get_selection().set_mode(Gtk.SelectionMode.BROWSE)
+            self._selection.set_mode(Gtk.SelectionMode.BROWSE)
 
         if activate_row_callback:
             self.widget.connect("row-activated", self.on_activate_row, activate_row_callback)
 
         if select_row_callback:
-            self.widget.get_selection().connect("changed", self.on_select_row, select_row_callback)
+            self._selection.connect("changed", self.on_select_row, select_row_callback)
 
         if search_entry:
             self.widget.set_search_entry(search_entry)
@@ -435,24 +436,10 @@ class TreeView:
 
         return iterator
 
-    def get_all_rows(self):
-
-        iterators = []
-        iterator = self.model.get_iter_first()
-
-        while iterator is not None:
-            iterators.append(iterator)
-            iterator = self.model.iter_next(iterator)
-
-        return iterators
-
     def get_selected_rows(self):
 
-        iterators = []
-        _model, paths = self.widget.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterators.append(self.model.get_iter(path))
+        _model, paths = self._selection.get_selected_rows()
+        iterators = [self.model.get_iter(path) for path in paths]
 
         return iterators
 
@@ -460,10 +447,10 @@ class TreeView:
 
         path, _column = self.widget.get_cursor()
 
-        if path is not None:
-            return self.model.get_iter(path)
+        if path is None:
+            return None
 
-        return None
+        return self.model.get_iter(path)
 
     def get_row_value(self, iterator, column_id):
         return self.model.get_value(iterator, self._column_ids[column_id])
@@ -500,10 +487,10 @@ class TreeView:
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
 
-        self.widget.get_selection().select_iter(iterator)
+        self._selection.select_iter(iterator)
 
     def unselect_all_rows(self):
-        self.widget.get_selection().unselect_all()
+        self._selection.unselect_all()
 
     def expand_row(self, iterator):
         path = self.model.get_path(iterator)
@@ -526,7 +513,7 @@ class TreeView:
 
         while iterator:
             path = model.get_path(iterator)
-            self.widget.expand_to_path(path)
+            self.widget.expand_row(path, open_all=False)
             iterator = model.iter_next(iterator)
 
     def get_focused_column(self):
@@ -540,7 +527,7 @@ class TreeView:
         return not self.iterators
 
     def is_selection_empty(self):
-        return self.widget.get_selection().count_selected_rows() == 0
+        return self._selection.count_selected_rows() == 0
 
     def is_row_expanded(self, iterator):
         path = self.model.get_path(iterator)
@@ -793,7 +780,7 @@ def collapse_treeview(treeview, grouping_mode):
 
         while iterator is not None:
             path = model.get_path(iterator)
-            treeview.expand_to_path(path)
+            treeview.expand_row(path, open_all=False)
             iterator = model.iter_next(iterator)
 
 
