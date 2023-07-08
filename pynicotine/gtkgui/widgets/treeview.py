@@ -268,7 +268,7 @@ class TreeView:
 
             if column_type == "text":
                 renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
+                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 text_underline_column = column_data.get("text_underline_column")
                 text_weight_column = column_data.get("text_weight_column")
 
@@ -281,19 +281,19 @@ class TreeView:
             elif column_type == "number":
                 xalign = 1
                 renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, text=column_index)
+                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 column.set_alignment(xalign)
 
             elif column_type == "progress":
                 renderer = Gtk.CellRendererProgress(ypad=progress_padding)
-                column = Gtk.TreeViewColumn(column_id, renderer, value=column_index)
+                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, value=column_index)
 
             elif column_type == "toggle":
                 xalign = 0.5
                 renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
-                column = Gtk.TreeViewColumn(column_id, renderer, active=column_index)
+                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
 
             elif column_type == "icon":
                 renderer = Gtk.CellRendererPixbuf(xalign=1.0)
@@ -306,7 +306,7 @@ class TreeView:
                         # Use the same size as the original icon
                         renderer.set_property("stock-size", 0)
 
-                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=column_index)
+                column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, icon_name=column_index)
 
             column_header = column.get_button()
             column_header.connect("clicked", self.on_column_header_pressed, column)
@@ -336,7 +336,7 @@ class TreeView:
                 label.get_parent().set_halign(Gtk.Align.END)
 
             if column_data.get("hide_header"):
-                column.get_widget().set_visible(False)
+                label.set_visible(False)
             else:
                 has_visible_column_header = True
 
@@ -346,6 +346,8 @@ class TreeView:
             if self._widget_name:
                 column.connect("notify::x-offset", self.on_column_position_changed)
 
+            column.id = column_id
+            column.type = column_type
             column.tooltip_callback = column_data.get("tooltip_callback")
 
             column.set_sort_column_id(self._column_ids[sort_column])
@@ -366,7 +368,7 @@ class TreeView:
         column_config = config.sections["columns"]
 
         for column in self.widget.get_columns():
-            title = column.get_title()
+            title = column.id
             width = column.get_width()
             visible = column.get_visible()
 
@@ -518,10 +520,10 @@ class TreeView:
 
     def get_focused_column(self):
         _path, column = self.widget.get_cursor()
-        return column.get_title()
+        return column.id
 
     def get_visible_columns(self):
-        return [column.get_title() for column in self.widget.get_columns() if column.get_visible()]
+        return [column.id for column in self.widget.get_columns() if column.get_visible()]
 
     def is_empty(self):
         return not self.iterators
@@ -547,7 +549,7 @@ class TreeView:
         self.widget.set_model(self.model)
 
     @staticmethod
-    def get_status_tooltip_text(icon_name):
+    def get_user_status_tooltip_text(icon_name):
 
         if icon_name == USER_STATUS_ICON_NAMES[UserStatus.AWAY]:
             return _("Away")
@@ -555,10 +557,7 @@ class TreeView:
         if icon_name == USER_STATUS_ICON_NAMES[UserStatus.ONLINE]:
             return _("Online")
 
-        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]:
-            return _("Offline")
-
-        return icon_name
+        return _("Offline")
 
     @staticmethod
     def get_country_tooltip_text(icon_name):
@@ -575,7 +574,7 @@ class TreeView:
         callback(self, self.model.get_iter(path))
 
     def on_activate_row(self, _widget, path, column, callback):
-        callback(self, self.model.get_iter(path), column.get_title())
+        callback(self, self.model.get_iter(path), column.id)
 
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
@@ -606,9 +605,9 @@ class TreeView:
         menu.clear()
 
         for column_num, column in enumerate(columns, start=1):
-            title = column.get_widget().get_text()
+            title = column.get_title()
 
-            if title == "":
+            if not title:
                 title = _("Column #%i") % column_num
 
             menu.add_items(
@@ -625,7 +624,7 @@ class TreeView:
     def on_column_position_changed(self, column, _param):
         """ Save column position and width to config """
 
-        column_id = column.get_title()
+        column_id = column.id
         offset = column.get_x_offset()
 
         if self._column_offsets.get(column_id) == offset:
@@ -666,7 +665,7 @@ class TreeView:
         if is_blank:
             return False
 
-        column_id = column.get_title()
+        column_id = column.id
         iterator = self.model.get_iter(path)
 
         if column.tooltip_callback:
@@ -680,14 +679,15 @@ class TreeView:
         if not isinstance(value, str):
             return False
 
-        if column_id == "country":
-            value = self.get_country_tooltip_text(value)
+        if column.type == "icon":
+            if column_id == "country":
+                value = self.get_country_tooltip_text(value)
 
-        elif column_id == "status":
-            value = self.get_status_tooltip_text(value)
+            elif column_id == "status":
+                value = self.get_user_status_tooltip_text(value)
 
-        elif column_id == "file_type":
-            value = self.get_file_type_tooltip_text(value)
+            elif column_id == "file_type":
+                value = self.get_file_type_tooltip_text(value)
 
         # Update tooltip position
         self.widget.set_tooltip_cell(tooltip, path, column)
