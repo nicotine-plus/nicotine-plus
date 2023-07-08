@@ -416,14 +416,14 @@ class ChatRoom:
         self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
 
-        self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
-                                                 self.activity_search_entry)
-
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
 
         self.chat_entry = ChatEntry(self.chat_entry_container, chatrooms.completion, room, core.chatrooms.send_message,
                                     is_chatroom=True)
+
+        self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
+                                                 self.activity_search_entry)
 
         self.chat_search_bar = TextSearchBar(self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)

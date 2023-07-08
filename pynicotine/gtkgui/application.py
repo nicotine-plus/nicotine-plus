@@ -141,15 +141,14 @@ class Application:
             return bool(self.spell_checker)
 
         try:
-            if self.spell is None:
-                gi.require_version("Gspell", "1")
-                from gi.repository import Gspell
-                self.spell = Gspell
+            gi.require_version("Gspell", "1")
+            from gi.repository import Gspell
 
             if not load:
                 # We only want to know if the package is available
                 return True
 
+            self.spell = Gspell
             self.spell_checker = self.spell.Checker()
 
         except (ImportError, ValueError):
@@ -162,7 +161,7 @@ class Application:
         enabled = config.sections["ui"]["spellcheck"]
 
         if not enabled:
-            self.spell_buffer = None
+            self._spell_buffer = None
 
         elif self.init_spell_checker():
             if self._spell_buffer:
