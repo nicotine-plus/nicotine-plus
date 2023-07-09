@@ -304,9 +304,9 @@ class TransferList:
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
-    def update_model(self, transfer=None, update_parent=True, forceupdate=False):
+    def update_model(self, transfer=None, update_parent=True):
 
-        if not forceupdate and self.window.current_page_id != self.transfer_page.id:
+        if self.window.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
             return
 
