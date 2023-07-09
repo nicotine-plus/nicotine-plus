@@ -466,9 +466,7 @@ class TransferList:
 
         size = transfer.size or 0
         speed = transfer.speed or 0
-        hspeed = self.get_hspeed(speed)
         elapsed = transfer.time_elapsed or 0
-        helapsed = self.get_helapsed(elapsed)
         left = transfer.time_left or 0
         iterator = transfer.iterator
 
@@ -479,12 +477,12 @@ class TransferList:
             if self.tree_view.get_row_value(iterator, "status") != translated_status:
                 self.tree_view.set_row_value(iterator, "status", translated_status)
 
-            if self.tree_view.get_row_value(iterator, "speed") != hspeed:
-                self.tree_view.set_row_value(iterator, "speed", hspeed)
+            if self.tree_view.get_row_value(iterator, "speed_data") != speed:
+                self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
                 self.tree_view.set_row_value(iterator, "speed_data", speed)
 
-            if self.tree_view.get_row_value(iterator, "time_elapsed") != helapsed:
-                self.tree_view.set_row_value(iterator, "time_elapsed", helapsed)
+            if self.tree_view.get_row_value(iterator, "time_elapsed_data") != elapsed:
+                self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
                 self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
                 self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
                 self.tree_view.set_row_value(iterator, "time_left_data", left)
@@ -623,8 +621,8 @@ class TransferList:
             self.get_hqueue_position(queue_position),
             self.get_percent(current_byte_offset, size),
             self.get_hsize(current_byte_offset, size),
-            hspeed,
-            helapsed,
+            self.get_hspeed(speed),
+            self.get_helapsed(elapsed),
             self.get_hleft(left),
             size,
             current_byte_offset,
