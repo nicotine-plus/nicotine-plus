@@ -381,25 +381,9 @@
             <property name="vexpand">True</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="tree_container">
                 <property name="hexpand">True</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkTreeView" id="tree_view">
-                    <property name="enable-search">False</property>
-                    <property name="enable-tree-lines">True</property>
-                    <property name="has-tooltip">True</property>
-                    <property name="rubber-banding">True</property>
-                    <property name="visible">True</property>
-                    <signal name="query-tooltip" handler="on_tooltip"/>
-                    <signal name="row-activated" handler="on_row_activated"/>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection">
-                        <property name="mode">multiple</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
                 <style>
                   <class name="search-view"/>
                 </style>
