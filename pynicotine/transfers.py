@@ -1728,11 +1728,6 @@ class Transfers:
             transfer.status = "Queued"
             transfer.token = None
 
-        log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
-            "file": filename,
-            "user": user
-        })
-
         core.watch_user(user)
 
         if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(user)):
@@ -1741,9 +1736,20 @@ class Transfers:
 
             if not self.auto_clear_upload(transfer):
                 self.update_upload(transfer)
+
+            log.add_transfer("Cannot initialize upload request to upload file %(file)s to offline user %(user)s", {
+                "file": filename,
+                "user": user
+            })
             return
 
-        if not locally_queued:
+        if locally_queued:
+            log.add_transfer("Locally queued request to upload file %(file)s to user %(user)s", {
+                "file": filename,
+                "user": user
+            })
+
+        else:
             self.token = slskmessages.increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
@@ -2418,32 +2424,42 @@ class Transfers:
                 self.abort_download(download, abort_reason=None)
                 self.get_file(download.user, download.filename, transfer=download)
 
-    def retry_upload(self, transfer):
+    def retry_uploads(self, selected_transfers):
 
         active_statuses = ["Getting status", "Transferring"]
+        queued_users = set()
 
-        if transfer.status in active_statuses + ["Finished"]:
-            # Don't retry active or finished uploads
-            return
-
-        user = transfer.user
-
-        for upload in self.uploads:
-            if upload.user != user:
+        for selected_transfer in selected_transfers:
+            if selected_transfer.status in active_statuses + ["Finished"]:
+                # Don't retry active or finished uploads
                 continue
 
-            if upload.status in active_statuses:
-                # User already has an active upload, queue the retry attempt
-                if transfer.status != "Queued":
-                    transfer.status = "Queued"
-                    self.update_upload(transfer)
-                return
+            selected_user = selected_transfer.user
 
-        self.push_file(user, transfer.filename, transfer.size, transfer=transfer)
+            if selected_user not in queued_users:
+                # Determine once and for all transfers if this user has any active uploads
+                for upload in self.uploads:
+                    if upload.user != selected_user:
+                        continue
 
-    def retry_uploads(self, uploads):
-        for upload in uploads:
-            self.retry_upload(upload)
+                    if upload.status in active_statuses + ["Queued"]:
+                        # Remember this user already has another active or queued upload
+                        queued_users.add(selected_user)
+                        break
+
+            # Queue the retry attempt if user already has another active or queued upload
+            locally_queued = (selected_user in queued_users)
+
+            self.push_file(
+                selected_user,
+                selected_transfer.filename,
+                selected_transfer.size,
+                transfer=selected_transfer,
+                locally_queued=locally_queued
+            )
+
+            # Remember this user now has an active upload
+            queued_users.add(selected_user)
 
     def retry_failed_uploads(self):
 
