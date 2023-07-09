@@ -2158,13 +2158,13 @@ class Transfers:
 
         events.emit("update-upload", transfer, update_parent)
 
+        if status == "Transferring":
+            # Avoid unnecessary user counter updates while transferring
+            return
+
         if status == "Queued" and user in self.user_update_counters:
             # Don't update existing user counter for queued uploads
             # We don't want to push the user back in the queue if they enqueued new files
-            return
-
-        if status == "Transferring":
-            # Avoid unnecessary updates while transferring
             return
 
         self.update_user_counter(user)
