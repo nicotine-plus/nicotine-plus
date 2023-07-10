@@ -29,7 +29,6 @@ import time
 
 from operator import itemgetter
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -51,6 +50,7 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
@@ -1299,13 +1299,7 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.enable_spell_checker_toggle.set_visible(False)
-
+        self.enable_spell_checker_toggle.set_visible(bool(SpellChecker.check_available()))
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
@@ -2909,12 +2903,9 @@ class Preferences(Dialog):
         # Fonts and colors
         update_custom_css()
 
-        self.application.window.chatrooms.update_tags()
-        self.application.window.privatechat.update_tags()
-
-        # Chatrooms
-        self.application.window.chatrooms.toggle_chat_buttons()
-        self.application.window.privatechat.toggle_chat_buttons()
+        # Chats
+        self.application.window.chatrooms.update_widgets()
+        self.application.window.privatechat.update_widgets()
 
         # Transfers
         core.transfers.update_download_limits()

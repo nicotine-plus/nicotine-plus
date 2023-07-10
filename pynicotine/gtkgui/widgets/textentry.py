@@ -20,6 +20,7 @@ import sys
 
 from locale import strxfrm
 
+import gi
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -54,18 +55,6 @@ class ChatEntry:
         # Emoji Picker (disable on macOS for now until we render emoji properly there)
         if sys.platform != "darwin":
             self.widget.set_property("show-emoji-icon", True)
-
-        # Spell Check
-        if config.sections["ui"]["spellcheck"]:
-            if not self.application.spell_checker:
-                self.application.init_spell_checker()
-
-            if self.application.spell_checker:
-                from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
-                spell_buffer.set_spell_checker(self.application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
-                spell_view.set_inline_spell_checking(True)
 
     def on_enter(self, *_args):
 
@@ -709,6 +698,61 @@ class ComboBox:
 
         if selected_id is not None:
             self.item_selected_callback(self, selected_id)
+
+
+class SpellChecker:
+
+    checker = None
+
+    def __init__(self):
+
+        self.buffer = None
+        self.entry = None
+
+    @classmethod
+    def check_available(cls):
+
+        try:
+            gi.require_version("Gspell", "1")
+            from gi.repository import Gspell
+            return Gspell
+
+        except (ImportError, ValueError):
+            return None
+
+    def reset(self):
+
+        if self.buffer:
+            self.buffer.set_spell_checker(None)
+            self.buffer = None
+
+        if self.entry:
+            self.entry.set_inline_spell_checking(False)
+            self.entry = None
+
+        if not config.sections["ui"]["spellcheck"]:
+            SpellChecker.checker = None
+
+    def set_entry(self, entry):
+
+        self.reset()
+
+        if not config.sections["ui"]["spellcheck"]:
+            return
+
+        gspell = self.check_available()
+
+        if gspell is None:
+            return
+
+        if SpellChecker.checker is None:
+            SpellChecker.checker = gspell.Checker()
+
+        self.buffer = gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+        self.buffer.set_spell_checker(SpellChecker.checker)
+
+        self.entry = gspell.Entry.get_from_gtk_entry(entry)
+        self.entry.set_inline_spell_checking(True)
 
 
 class TextSearchBar:
