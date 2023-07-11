@@ -126,8 +126,7 @@ class NetworkPage:
 
         # Network interfaces
         if sys.platform == "win32":
-            for widget in (self.network_interface_combobox, self.network_interface_label):
-                widget.get_parent().set_visible(False)
+            self.network_interface_label.get_parent().set_visible(False)
         else:
             self.network_interface_combobox.clear()
             self.network_interface_combobox.append("")
