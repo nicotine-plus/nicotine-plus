@@ -369,7 +369,7 @@ class IconNotebook:
     def remove_page(self, page):
 
         self.widget.remove_page(self.page_num(page))
-        self.remove_unread_page(page)
+        self._remove_unread_page(page)
         del self.tab_labels[page]
 
         if self.get_n_pages() == 0:
@@ -468,19 +468,24 @@ class IconNotebook:
     def request_tab_changed(self, page, is_important=False, is_quiet=False):
 
         if self.parent_page is not None:
+            has_tab_changed = False
             is_current_parent = (self.window.current_page_id == self.parent_page.id)
             is_current_page = (self.get_current_page() == page)
 
             if is_current_parent and is_current_page:
-                return
+                return has_tab_changed
 
             if not is_quiet or is_important:
                 # Highlight top-level tab, but don't for global feed unless mentioned
                 self.window.notebook.request_tab_changed(self.parent_page, is_important)
-                self.append_unread_page(page, is_important)
+                has_tab_changed = self._append_unread_page(page, is_important)
+        else:
+            has_tab_changed = True
 
         tab_label = self.get_tab_label(page)
         tab_label.request_changed(is_important)
+
+        return has_tab_changed
 
     def remove_tab_changed(self, page):
 
@@ -488,17 +493,24 @@ class IconNotebook:
         tab_label.remove_changed()
 
         if self.parent_page is not None:
-            self.remove_unread_page(page)
+            self._remove_unread_page(page)
 
-    def append_unread_page(self, page, is_important):
+    def _append_unread_page(self, page, is_important=False):
 
-        if page in self.unread_pages and not is_important:
-            return
+        is_currently_important = self.unread_pages.get(page)
+
+        if is_currently_important and not is_important:
+            # Important pages are persistent
+            return False
+
+        if is_currently_important == is_important:
+            return False
 
         self.unread_pages[page] = is_important
         self.update_pages_menu_button()
+        return True
 
-    def remove_unread_page(self, page):
+    def _remove_unread_page(self, page):
 
         if page not in self.unread_pages:
             return
@@ -557,7 +569,7 @@ class IconNotebook:
             self.emit_switch_page_signal()
 
     def on_remove_page(self, _notebook, new_page, _page_num):
-        self.remove_unread_page(new_page)
+        self._remove_unread_page(new_page)
 
     def on_remove_all_pages(self, *_args):
         self.remove_all_pages()

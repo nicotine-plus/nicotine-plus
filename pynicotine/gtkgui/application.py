@@ -26,11 +26,11 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
@@ -614,7 +614,7 @@ class Application:
     def on_away(self, *_args):
         """ Away/Online status button """
 
-        core.set_away_mode(core.user_status != slskmessages.UserStatus.AWAY, save_state=True)
+        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
     """ Running """
 

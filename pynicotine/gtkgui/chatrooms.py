@@ -29,7 +29,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.core import core
@@ -52,6 +51,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import clean_file
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -222,9 +222,6 @@ class ChatRooms(IconNotebook):
         self.highlighted_rooms[room] = user
         self.window.application.notifications.update_title()
         self.window.application.tray_icon.update_icon()
-
-        if config.sections["ui"]["urgencyhint"] and not self.window.is_active():
-            self.window.application.notifications.set_urgency_hint(True)
 
     def unhighlight_room(self, room):
 
@@ -447,8 +444,8 @@ class ChatRoom:
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, chatrooms.completion, room, slskmessages.SayChatroom,
-                  core.chatrooms.send_message, is_chatroom=True)
+        ChatEntry(self.window.application, self.chat_entry, chatrooms.completion, room, core.chatrooms.send_message,
+                  is_chatroom=True)
 
         self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
         if not self.log_toggle.get_active():
@@ -912,10 +909,10 @@ class ChatRoom:
         if status == self.users_list_view.get_row_value(iterator, "status_data"):
             return
 
-        if status == slskmessages.UserStatus.AWAY:
+        if status == UserStatus.AWAY:
             action = _("%s has gone away")
 
-        elif status == slskmessages.UserStatus.ONLINE:
+        elif status == UserStatus.ONLINE:
             action = _("%s has returned")
 
         else:

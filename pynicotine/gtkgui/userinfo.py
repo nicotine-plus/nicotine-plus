@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -44,6 +43,7 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -198,7 +198,7 @@ class UserInfos(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class UserInfo:
@@ -327,10 +327,6 @@ class UserInfo:
 
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
-
-    def save_columns(self):
-        # Unused
-        pass
 
     """ General """
 

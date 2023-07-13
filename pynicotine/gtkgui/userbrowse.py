@@ -28,7 +28,6 @@ from locale import strxfrm
 from gi.repository import GLib
 from gi.repository import GObject
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -45,6 +44,8 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -153,7 +154,7 @@ class UserBrowses(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class UserBrowse:
@@ -279,10 +280,10 @@ class UserBrowse:
                     "width": 100,
                     "sort_column": "size_data"
                 },
-                "bitrate": {
+                "quality": {
                     "column_type": "number",
-                    "title": _("Bitrate"),
-                    "width": 100,
+                    "title": _("Quality"),
+                    "width": 150,
                     "sort_column": "bitrate_data"
                 },
                 "length": {
@@ -295,7 +296,8 @@ class UserBrowse:
                 # Hidden data columns
                 "size_data": {"data_type": GObject.TYPE_UINT64},
                 "bitrate_data": {"data_type": GObject.TYPE_UINT},
-                "length_data": {"data_type": GObject.TYPE_UINT}
+                "length_data": {"data_type": GObject.TYPE_UINT},
+                "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT}
             }
         )
 
@@ -594,20 +596,21 @@ class UserBrowse:
 
         selected_folder_size = 0
 
-        for _code, filename, size, _ext, attrs, *_unused in files:
+        for _code, filename, size, _ext, file_attributes, *_unused in files:
             selected_folder_size += size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(size, attrs)
+            h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
             self.file_list_view.add_row([
                 get_file_type_icon_name(filename),
                 filename,
                 h_size,
-                h_bitrate,
+                h_quality,
                 h_length,
                 size,
                 bitrate,
-                length
+                length,
+                file_attributes
             ], select_row=False)
 
         self.selected_folder_size = selected_folder_size
@@ -645,7 +648,9 @@ class UserBrowse:
                 continue
 
             for file_data in files:
-                if self.query in file_data[1].lower():
+                filename = file_data[1]
+
+                if self.query in filename.lower():
                     temp_list.add(directory)
 
         self.search_list = sorted(temp_list, key=strxfrm)
@@ -935,7 +940,9 @@ class UserBrowse:
 
         for file_data in files:
             # Find the wanted file
-            if file_data[1] not in self.selected_files:
+            filename = file_data[1]
+
+            if filename not in self.selected_files:
                 continue
 
             core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
@@ -1016,17 +1023,14 @@ class UserBrowse:
             if not files:
                 return
 
-            for file_data in files:
-                filename = file_data[1]
-                file_size = file_data[2]
+            for _code, filename, file_size, _ext, file_attributes, *_unused in files:
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                    file_size, file_data[4])
+                _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                 selected_size += file_size
                 selected_length += length
 
                 data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
+                             "directory": folder, "size": file_size, "file_attributes": file_attributes})
 
         else:
             for iterator in self.file_list_view.get_selected_rows():
@@ -1042,8 +1046,7 @@ class UserBrowse:
                     "filename": filename,
                     "directory": folder,
                     "size": file_size,
-                    "bitrate": self.file_list_view.get_row_value(iterator, "bitrate"),
-                    "length": self.file_list_view.get_row_value(iterator, "length")
+                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
 
         if data:

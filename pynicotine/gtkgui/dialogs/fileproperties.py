@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
@@ -35,8 +36,6 @@ class FileProperties(Dialog):
         self.current_index = 0
 
         (
-            self.bitrate_row,
-            self.bitrate_value_label,
             self.container,
             self.country_row,
             self.country_value_label,
@@ -50,6 +49,8 @@ class FileProperties(Dialog):
             self.path_row,
             self.path_value_label,
             self.previous_button,
+            self.quality_row,
+            self.quality_value_label,
             self.queue_row,
             self.queue_value_label,
             self.speed_row,
@@ -93,6 +94,7 @@ class FileProperties(Dialog):
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
+        size = properties["size"]
         h_size = human_size(properties["size"])
         bytes_size = humanize(properties["size"])
 
@@ -102,8 +104,8 @@ class FileProperties(Dialog):
         self.username_value_label.set_text(properties["user"])
 
         path = properties.get("path") or ""
-        bitrate = properties.get("bitrate") or ""
-        length = properties.get("length") or ""
+        h_quality, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_audio_quality_length(
+            size, properties.get("file_attributes"), always_show_bitrate=True)
         queue_position = properties.get("queue_position") or 0
         speed = properties.get("speed") or 0
         country = properties.get("country") or ""
@@ -111,11 +113,11 @@ class FileProperties(Dialog):
         self.path_value_label.set_text(path)
         self.path_row.set_visible(bool(path))
 
-        self.bitrate_value_label.set_text(bitrate)
-        self.bitrate_row.set_visible(bool(bitrate))
+        self.quality_value_label.set_text(h_quality)
+        self.quality_row.set_visible(bool(h_quality))
 
-        self.length_value_label.set_text(length)
-        self.length_row.set_visible(bool(length))
+        self.length_value_label.set_text(h_length)
+        self.length_row.set_visible(bool(h_length))
 
         self.queue_value_label.set_text(humanize(queue_position))
         self.queue_row.set_visible(bool(queue_position))
@@ -161,5 +163,5 @@ class FileProperties(Dialog):
 
         core.transfers.get_file(
             properties["user"], properties["fn"], size=properties["size"],
-            bitrate=properties.get("bitrate"), length=properties.get("length")
+            file_attributes=properties.get("file_attributes")
         )

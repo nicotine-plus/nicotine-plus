@@ -53,37 +53,40 @@ class Notifications:
 
     def update_title(self):
 
-        app_name = config.application_name
-
-        if (not self.application.window.chatrooms.highlighted_rooms
-                and not self.application.window.privatechat.highlighted_users):
-            # Reset Title
-            self.application.window.set_title(app_name)
-            return
+        notification_text = ""
 
         if not config.sections["notifications"]["notification_window_title"]:
-            return
+            # Reset Title
+            pass
 
-        if self.application.window.privatechat.highlighted_users:
+        elif self.application.window.privatechat.highlighted_users:
             # Private Chats have a higher priority
             user = self.application.window.privatechat.highlighted_users[-1]
             notification_text = _("Private Message from %(user)s") % {"user": user}
-
-            self.application.window.set_title(f"{app_name} - {notification_text}")
 
         elif self.application.window.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
             room, user = list(self.application.window.chatrooms.highlighted_rooms.items())[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
 
-            self.application.window.set_title(f"{app_name} - {notification_text}")
+        elif any(is_important for is_important in self.application.window.search.unread_pages.values()):
+            notification_text = _("Wishlist Results Found")
+
+        self.set_urgency_hint(bool(notification_text))
+
+        if not notification_text:
+            self.application.window.set_title(config.application_name)
+            return
+
+        self.application.window.set_title(f"{config.application_name} - {notification_text}")
 
     def set_urgency_hint(self, enabled):
 
         surface = self.application.window.get_surface()
+        is_active = self.application.window.is_active()
 
         try:
-            surface.set_urgency_hint(enabled)
+            surface.set_urgency_hint(enabled and not is_active)
 
         except AttributeError:
             # No support for urgency hints

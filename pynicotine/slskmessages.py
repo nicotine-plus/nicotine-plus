@@ -2396,6 +2396,14 @@ class PeerMessage(SlskMessage):
 class FileListMessage(PeerMessage):
     __slots__ = ()
 
+    VALID_FILE_ATTRIBUTES = {
+        FileAttribute.BITRATE,
+        FileAttribute.DURATION,
+        FileAttribute.VBR,
+        FileAttribute.SAMPLE_RATE,
+        FileAttribute.BIT_DEPTH
+    }
+
     @classmethod
     def pack_file_info(cls, fileinfo):
 
@@ -2445,6 +2453,25 @@ class FileListMessage(PeerMessage):
 
         return msg
 
+    @classmethod
+    def unpack_file_attributes(cls, message, pos):
+
+        attrs = {}
+        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
+
+        pos, numattr = cls.unpack_uint32(message, pos)
+
+        for _ in range(numattr):
+            pos, attrnum = cls.unpack_uint32(message, pos)
+
+            if attrnum not in valid_file_attributes:
+                continue
+
+            pos, attr = cls.unpack_uint32(message, pos)
+            attrs[attrnum] = attr
+
+        return pos, attrs
+
     @staticmethod
     def parse_file_attributes(attributes):
 
@@ -2490,7 +2517,7 @@ class FileListMessage(PeerMessage):
         return bitrate, length, vbr, sample_rate, bit_depth
 
     @classmethod
-    def parse_result_bitrate_length(cls, filesize, attributes):
+    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
 
         bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
 
@@ -2499,7 +2526,6 @@ class FileListMessage(PeerMessage):
                 # Bitrate = sample rate (Hz) * word length (bits) * channel count
                 # Bitrate = 44100 * 16 * 2
                 bitrate = (sample_rate * bit_depth * 2) // 1000
-
             else:
                 bitrate = -1
 
@@ -2507,29 +2533,32 @@ class FileListMessage(PeerMessage):
             if bitrate > 0:
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
                 length = filesize // (bitrate * 125)
-
             else:
                 length = -1
 
         # Ignore invalid values
         if bitrate <= 0 or bitrate > UINT32_LIMIT:
             bitrate = 0
-            h_bitrate = ""
+            h_quality = ""
 
+        elif sample_rate and bit_depth:
+            h_quality = f"{sample_rate / 1000:.3g} kHz / {bit_depth} bit"
+
+            if always_show_bitrate:
+                h_quality += f" / {bitrate} kbps"
         else:
-            h_bitrate = f"{bitrate}"
+            h_quality = f"{bitrate} kbps"
 
             if vbr == 1:
-                h_bitrate += " (vbr)"
+                h_quality += " (vbr)"
 
         if length < 0 or length > UINT32_LIMIT:
             length = 0
             h_length = ""
-
         else:
             h_length = human_length(length)
 
-        return h_bitrate, bitrate, h_length, length
+        return h_quality, bitrate, h_length, length
 
 
 class SharedFileListRequest(PeerMessage):
@@ -2625,14 +2654,7 @@ class SharedFileListResponse(FileListMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.parse_file_size(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2735,15 +2757,7 @@ class FileSearchResponse(FileListMessage):
             pos, name = self.unpack_string(message, pos)
             pos, size = self.parse_file_size(message, pos)
             pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-            pos, numattr = self.unpack_uint32(message, pos)
-
-            attrs = {}
-
-            if numattr:
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+            pos, attrs = self.unpack_file_attributes(message, pos)
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -2896,7 +2910,7 @@ class FolderContentsRequest(PeerMessage):
         pos, self.dir = self.unpack_string(message, pos)
 
 
-class FolderContentsResponse(PeerMessage):
+class FolderContentsResponse(FileListMessage):
     """ Peer code: 37 """
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
@@ -2935,14 +2949,7 @@ class FolderContentsResponse(PeerMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
