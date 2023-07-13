@@ -37,11 +37,11 @@ from pynicotine.slskmessages import UserStatus
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, chat, completion, entity, send_message, is_chatroom=False):
+    def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
 
         self.application = application
-        self.chat_view = chat.chat_view
-        self.widget = widget = chat.chat_entry
+        self.widget = widget
+        self.chat_view = chat_view
         self.completion = completion
         self.entity = entity
         self.send_message = send_message

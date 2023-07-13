@@ -332,10 +332,8 @@ class TextView:
         self.adjustment_bottom = new_adjustment_bottom
 
     def on_adjustment_value_changed(self, *_args):
-        new_value = self.adjustment.get_value()
-        self.update_adjustment_value(new_value)
 
-    def update_adjustment_value(self, new_value):
+        new_value = self.adjustment.get_value()
 
         if new_value.is_integer() and (0 < new_value < self.adjustment_bottom):
             # The textview scrolls up on its own sometimes. Ignore these garbage values.
@@ -346,11 +344,11 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, parent, chat, username_event=None, **kwargs):
+    def __init__(self, *args, chat_entry=None, username_event=None, **kwargs):
 
-        super().__init__(parent, **kwargs)
+        super().__init__(*args, **kwargs)
 
-        self.chat_entry = chat.chat_entry
+        self.chat_entry = chat_entry
         self.username_event = username_event
 
         Accelerator("Down", self.widget, self.on_page_down_accelerator)

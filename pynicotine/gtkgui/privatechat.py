@@ -260,15 +260,17 @@ class PrivateChat:
         self.loaded = False
         self.offline_message = False
 
-        self.chat_view = ChatView(self.chat_view_container, self, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
+        self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
+                                  horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
+                                  username_event=self.username_event)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self, chats.completion, user, core.privatechat.send_message)
+        ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion, user,
+                  core.privatechat.send_message)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
 
