@@ -478,17 +478,9 @@ class ChatView(TextView):
         for username in self.tag_users:
             self.update_user_tag(username)
 
-    def on_adjustment_value_changed(self, *_args):
-
-        new_value = self.adjustment.get_value()
-
-        if (self.widget.is_focus() and new_value >= self.adjustment_bottom
-                and not self.textbuffer.get_has_selection()):
-            # Give focus to text entry upon scrolling down to the bottom
-            self.chat_entry.grab_focus_without_selecting()
-
-        self.update_adjustment_value(new_value)
-
     def on_page_down_accelerator(self, *_args):
         """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
-        self.on_adjustment_value_changed()
+
+        if self.adjustment_value >= self.adjustment_bottom:
+            # Give focus to text entry upon scrolling down to the bottom
+            self.chat_entry.grab_focus_without_selecting()
