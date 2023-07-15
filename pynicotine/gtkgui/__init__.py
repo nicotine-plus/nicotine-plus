@@ -53,6 +53,12 @@ def check_gtk_version(gtk_api_version):
 
     from gi.repository import Gtk
     config.gtk_version = f"{gtk_api_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+
+    if sys.platform == "win32":
+        # Ensure all Windows-specific APIs are available
+        gi.require_version("GdkWin32", f"{gtk_api_version}.0")
+        from gi.repository import GdkWin32  # noqa: F401  # pylint:disable=unused-import
+
     return None
 
 
