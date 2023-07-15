@@ -25,6 +25,7 @@ import importlib.util
 import os
 import pickle
 import shelve
+import shutil
 import stat
 import sys
 import time
@@ -209,7 +210,6 @@ class Scanner(Process):
             os.remove(db_path_encoded)
 
         elif os.path.isdir(db_path_encoded):
-            import shutil
             shutil.rmtree(db_path_encoded)
 
     def real2virtual(self, path):

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 import sys
 
 from gi.repository import Gdk
@@ -331,7 +332,6 @@ def load_custom_icons(update=False):
     try:
         # Create internal icon theme folder
         if os.path.exists(icon_theme_path_encoded):
-            import shutil
             shutil.rmtree(icon_theme_path_encoded)
 
     except Exception as error:
@@ -407,7 +407,7 @@ def load_custom_icons(update=False):
                 path_encoded = encode_path(path)
 
                 if os.path.isfile(path_encoded):
-                    os.symlink(
+                    shutil.copyfile(
                         path_encoded,
                         encode_path(os.path.join(icon_theme_path, replacement_name + extension))
                     )

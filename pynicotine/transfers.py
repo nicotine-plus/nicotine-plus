@@ -32,6 +32,7 @@ import json
 import os
 import os.path
 import re
+import shutil
 import time
 
 from ast import literal_eval
@@ -2056,7 +2057,6 @@ class Transfers:
             if not os.path.isdir(download_folder_path_encoded):
                 os.makedirs(download_folder_path_encoded)
 
-            import shutil
             shutil.move(file_handle.name, encode_path(download_file_path))
 
         except OSError as error:
