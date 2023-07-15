@@ -2953,10 +2953,9 @@ class Preferences(Dialog):
         core.transfers.check_upload_queue()
 
         # Tray icon
-        if not config.sections["ui"]["trayicon"] and self.application.tray_icon.is_visible():
-            self.application.tray_icon.set_visible(False)
-
-        elif config.sections["ui"]["trayicon"] and not self.application.tray_icon.is_visible():
+        if not config.sections["ui"]["trayicon"]:
+            self.application.tray_icon.unload()
+        else:
             self.application.tray_icon.load()
 
         # Main notebook

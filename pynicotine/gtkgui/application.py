@@ -717,7 +717,10 @@ class Application:
 
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.notifications import Notifications
+        from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        load_icons()
 
         self.set_up_actions()
         self.set_up_action_accels()
@@ -744,8 +747,7 @@ class Application:
         GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_shutdown(self, *_args):
-        # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.set_visible(False)
+        self.tray_icon.unload(is_shutdown=True)
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()

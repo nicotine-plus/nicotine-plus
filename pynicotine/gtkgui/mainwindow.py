@@ -49,7 +49,6 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
@@ -218,10 +217,6 @@ class MainWindow(Window):
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
-
-        """ Icons """
-
-        load_icons()
 
         """ Notebook Tabs """
 
