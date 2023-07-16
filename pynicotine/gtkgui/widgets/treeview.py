@@ -51,7 +51,7 @@ class TreeView:
                  select_row_callback=None, search_entry=None):
 
         self.window = window
-        self.widget = Gtk.TreeView(enable_tree_lines=True, has_tooltip=True, visible=True)
+        self.widget = Gtk.TreeView(enable_tree_lines=True, fixed_height_mode=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
         self.has_tree = has_tree
@@ -106,8 +106,6 @@ class TreeView:
             self.widget.set_search_entry(search_entry)
 
         self.widget.connect("query-tooltip", self.on_tooltip)
-
-        self.widget.set_fixed_height_mode(True)
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
@@ -227,7 +225,6 @@ class TreeView:
 
         column_widgets = {}
         column_config = None
-        num_columns = len(columns)
         has_visible_column_header = False
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
@@ -271,11 +268,6 @@ class TreeView:
 
             if not isinstance(width, int):
                 width = None
-
-            if column_data.get("hide_header"):
-                title = ""
-            else:
-                has_visible_column_header = True
 
             xalign = 0.0
 
@@ -324,6 +316,18 @@ class TreeView:
             column_header = column.get_button()
             column_header.connect("clicked", self.on_column_header_pressed, column)
 
+            if GTK_API_VERSION >= 4:
+                title_container = column_header.get_first_child()
+                title_widget = title_container.get_first_child() if xalign < 1 else title_container.get_last_child()
+            else:
+                title_container = column_header.get_children()[0]
+                title_widget = title_container.get_children()[0] if xalign < 1 else title_container.get_children()[-1]
+
+            if column_data.get("hide_header"):
+                title_widget.set_visible(False)
+            else:
+                has_visible_column_header = True
+
             # Required for fixed height mode
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
@@ -334,7 +338,7 @@ class TreeView:
                     column.set_fixed_width(width)
 
             # Allow individual cells to receive visual focus
-            if num_columns > 1:
+            if len(columns) > 1:
                 renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
@@ -343,7 +347,7 @@ class TreeView:
             if xalign == 1 and GTK_API_VERSION >= 4:
                 # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
                 # Actually align the label to the right here instead
-                column.get_button().get_last_child().get_last_child().set_halign(Gtk.Align.END)
+                title_widget.set_halign(Gtk.Align.END)
 
             if sensitive_column:
                 column.add_attribute(renderer, "sensitive", self._column_ids[sensitive_column])
