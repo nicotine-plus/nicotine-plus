@@ -240,10 +240,10 @@ class UserList:
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
         speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files", 0)
+        files = user_stats.get("files")
 
         h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(files)
+        h_files = humanize(files) if files is not None else ""
 
         try:
             last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
@@ -267,7 +267,7 @@ class UserList:
             str(user_data.note),
             status,
             speed,
-            files,
+            files or 0,
             last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
