@@ -272,6 +272,11 @@ class TreeView:
             if not isinstance(width, int):
                 width = None
 
+            if column_data.get("hide_header"):
+                title = ""
+            else:
+                has_visible_column_header = True
+
             xalign = 0.0
 
             if column_type == "text":
@@ -335,18 +340,10 @@ class TreeView:
             column.set_reorderable(True)
             column.set_min_width(24)
 
-            label = Gtk.Label(label=title, margin_start=5, margin_end=5, mnemonic_widget=column_header, visible=True)
-            column.set_widget(label)
-
             if xalign == 1 and GTK_API_VERSION >= 4:
                 # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
                 # Actually align the label to the right here instead
-                label.get_parent().set_halign(Gtk.Align.END)
-
-            if column_data.get("hide_header"):
-                label.set_visible(False)
-            else:
-                has_visible_column_header = True
+                column.get_button().get_last_child().get_last_child().set_halign(Gtk.Align.END)
 
             if sensitive_column:
                 column.add_attribute(renderer, "sensitive", self._column_ids[sensitive_column])

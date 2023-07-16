@@ -147,6 +147,17 @@ def set_global_css():
         color: unset;
     }
 
+    treeview button > box {
+        /* Column header padding to match rows */
+        padding-right: 11px;
+    }
+
+    treeview button {
+        /* Column header padding to match rows */
+        padding-left: 11px;
+        padding-right: 1px;
+    }
+
     /* Borders */
 
     .border-top,
@@ -265,10 +276,28 @@ def set_global_css():
     }
     """
 
+    css_libadwaita = b"""
+    /* Tweaks (libadwaita) */
+
+    treeview button {
+        border-bottom: 0;
+    }
+
+    treeview button:not(:last-child):dir(ltr) > box,
+    treeview button:not(:first-child):dir(rtl) > box {
+        /* Restore column header separators */
+        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
+    }
+    """
+
     global_css_provider = Gtk.CssProvider()
 
     if GTK_API_VERSION >= 4:
-        css = css + css_gtk4
+        css += css_gtk4
+
+        if LIBADWAITA_API_VERSION:
+            css += css_libadwaita
+
         load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
@@ -276,7 +305,7 @@ def set_global_css():
         )
 
     else:
-        css = css + css_gtk3
+        css += css_gtk3
         load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
