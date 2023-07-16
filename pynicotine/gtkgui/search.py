@@ -844,7 +844,7 @@ class Search:
     def add_row_to_model(self, row):
         (user, flag, h_speed, h_queue, folder, _unused, _unused, _unused, _unused,
             _unused, country_code, speed, queue, _unused, _unused, _unused, fullpath, has_free_slots,
-            _unused, _unused) = row
+            _unused, row_id) = row
 
         expand_user = False
         expand_folder = False
@@ -879,7 +879,7 @@ class Search:
                         empty_str,
                         has_free_slots,
                         empty_dict,
-                        empty_int
+                        row_id
                     ], select_row=False
                 )
 
@@ -919,7 +919,7 @@ class Search:
                             fullpath.rsplit("\\", 1)[0] + "\\",
                             has_free_slots,
                             empty_dict,
-                            empty_int
+                            row_id
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_iterators.append(iterator)
