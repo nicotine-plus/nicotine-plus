@@ -271,7 +271,7 @@ class UserBrowse:
                     "title": _("File Name"),
                     "width": 150,
                     "expand_column": True,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 },
                 "size": {

@@ -69,7 +69,7 @@ class TreeView:
         self._default_sort_type = Gtk.SortType.ASCENDING
         self._sort_column = None
         self._sort_type = None
-        self._reset_sort_column = None
+        self._clicked_column_reset_sort = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
 
@@ -229,18 +229,20 @@ class TreeView:
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             title = column_data.get("title")
-            sort_column = column_data.get("sort_column", column_id)
-            sort_type = column_data.get("default_sort_column")
             iterator_key = column_data.get("iterator_key")
-
-            if sort_type:
-                self._default_sort_column = self._column_ids[sort_column]
-                self._default_sort_type = (Gtk.SortType.DESCENDING if sort_type == "descending"
-                                           else Gtk.SortType.ASCENDING)
-                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+            sort_data_column = column_data.get("sort_column", column_id)
+            default_sort_type = column_data.get("default_sort_type")
 
             if iterator_key:
+                # Use values from this column as keys for iterator mapping
                 self._iterator_key_column = column_index
+
+            if default_sort_type:
+                # Sort treeview by values in this column by default
+                self._default_sort_column = self._column_ids[sort_data_column]
+                self._default_sort_type = (Gtk.SortType.DESCENDING if default_sort_type == "descending"
+                                           else Gtk.SortType.ASCENDING)
+                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
             if title is None:
                 # Hidden data column
@@ -362,7 +364,7 @@ class TreeView:
             column.type = column_type
             column.tooltip_callback = column_data.get("tooltip_callback")
 
-            column.set_sort_column_id(self._column_ids[sort_column])
+            column.set_sort_column_id(self._column_ids[sort_data_column])
             column_widgets[column_id] = column
 
         self.widget.set_headers_visible(has_visible_column_header)
@@ -601,14 +603,20 @@ class TreeView:
     def on_column_header_pressed(self, _treeview, column):
         """ Reset sorting when column header has been pressed three times """
 
-        if not self._reset_sort_column and column.get_sort_order() == Gtk.SortType.DESCENDING:
-            self._reset_sort_column = column
+        if self._default_sort_column is None:
+            # No default sort column for treeview, keep standard GTK behavior
             return
 
-        if self._reset_sort_column == column and self._default_sort_column is not None:
+        if column.get_sort_order() == Gtk.SortType.DESCENDING:
+            # If this column is clicked again, we reset to the default sorted state of treeview
+            self._clicked_column_reset_sort = column
+            return
+
+        if column == self._clicked_column_reset_sort:
+            # Reset treeview to default state
             self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
-        self._reset_sort_column = None
+        self._clicked_column_reset_sort = None
 
     def on_column_header_toggled(self, _action, _state, columns, index):
 

@@ -56,7 +56,7 @@ class WishList(Dialog):
                 "wish": {
                     "column_type": "text",
                     "title": _("Wish"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )

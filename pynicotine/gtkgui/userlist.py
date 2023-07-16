@@ -76,7 +76,7 @@ class UserList:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 250,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 },
                 "speed": {

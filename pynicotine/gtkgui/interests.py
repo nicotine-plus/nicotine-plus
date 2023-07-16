@@ -68,7 +68,7 @@ class Interests:
                 "likes": {
                     "column_type": "text",
                     "title": _("Likes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -79,7 +79,7 @@ class Interests:
                 "dislikes": {
                     "column_type": "text",
                     "title": _("Dislikes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -94,7 +94,7 @@ class Interests:
                     "title": _("Rating"),
                     "width": 0,
                     "sort_column": "rating_data",
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 },
                 "item": {
                     "column_type": "text",
@@ -145,7 +145,7 @@ class Interests:
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "rating_data": {
                     "data_type": GObject.TYPE_UINT,
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 }
             }
         )

@@ -459,7 +459,7 @@ class ChatRoom:
                     "width": 155,
                     "expand_column": True,
                     "iterator_key": True,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "text_underline_column": "username_underline_data",
                     "text_weight_column": "username_weight_data"
                 },

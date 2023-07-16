@@ -266,7 +266,7 @@ class UserInfo:
                 "likes": {
                     "column_type": "text",
                     "title": _("Likes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -278,7 +278,7 @@ class UserInfo:
                 "dislikes": {
                     "column_type": "text",
                     "title": _("Dislikes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
