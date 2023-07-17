@@ -243,7 +243,7 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, keep_aspect_ratio=True, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
