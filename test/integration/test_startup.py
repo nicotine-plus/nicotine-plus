@@ -40,12 +40,14 @@ class StartupTest(TestCase):
             # Assume failure by default
             is_success = False
 
-            try:
-                subprocess.check_call(command, timeout=5)
+            with subprocess.Popen(command) as process:
+                try:
+                    process.wait(timeout=5)
 
-            except subprocess.TimeoutExpired:
-                # Program was still running, success!
-                is_success = True
+                except subprocess.TimeoutExpired:
+                    # Program was still running, success!
+                    is_success = True
+                    process.terminate()
 
             self.assertTrue(is_success)
 
