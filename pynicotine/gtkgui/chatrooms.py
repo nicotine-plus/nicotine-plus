@@ -414,7 +414,9 @@ class ChatRoom:
         self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
+                                  vertical_margin=5, pixels_below_lines=2,
+                                  users=core.chatrooms.joined_rooms[self.room],
+                                  username_event=self.username_event)
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(self.activity_view.widget, self.activity_search_bar,
@@ -848,8 +850,9 @@ class ChatRoom:
     def user_left_room(self, msg):
 
         username = msg.username
+        iterator = self.users_list_view.iterators.get(username)
 
-        if username not in self.users_list_view.iterators:
+        if iterator is None:
             return
 
         # Remove from completion list, and completion drop-down
@@ -861,7 +864,6 @@ class ChatRoom:
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
             self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
-        iterator = self.users_list_view.iterators.get(username)
         self.users_list_view.remove_row(iterator)
 
         self.chat_view.update_user_tag(username)
@@ -1041,6 +1043,7 @@ class ChatRoom:
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            completions.update(self.users_list_view.iterators)
+            room_users = core.chatrooms.joined_rooms[self.room]
+            completions.update(room_users)
 
         self.chatrooms.completion.set_completions(completions)

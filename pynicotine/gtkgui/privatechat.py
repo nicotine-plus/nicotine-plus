@@ -70,6 +70,7 @@ class PrivateChats(IconNotebook):
             ("private-chat-remove-user", self.remove_user),
             ("send-private-message", self.send_message),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
@@ -231,6 +232,10 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.update_tags()
 
+    def server_login(self, *_args):
+        for page in self.pages.values():
+            page.server_login()
+
     def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
@@ -261,7 +266,8 @@ class PrivateChat:
         self.offline_message = False
 
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
-                                  vertical_margin=5, pixels_below_lines=2, username_event=self.username_event)
+                                  vertical_margin=5, pixels_below_lines=2, users={self.user},
+                                  username_event=self.username_event)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
@@ -322,9 +328,14 @@ class PrivateChat:
             path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
         )
 
+    def server_login(self):
+        self.chat_view.users.add(core.login_username)
+
     def server_disconnect(self):
+
         self.offline_message = False
         self.chat_view.update_user_tags()
+        self.chat_view.users.discard(core.login_username)
 
     def clear(self):
 
