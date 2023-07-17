@@ -30,7 +30,6 @@ This module contains configuration classes for Nicotine.
 
 import configparser
 import os
-import platform
 import sys
 
 from ast import literal_eval
@@ -61,7 +60,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.version = "3.3.0.dev5"
-        self.python_version = platform.python_version()
+        self.python_version = sys.version.split()[0]
         self.gtk_version = ""
 
         self.application_name = "Nicotine+"

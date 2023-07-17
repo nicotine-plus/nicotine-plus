@@ -19,7 +19,6 @@
 import re
 import socket
 import struct
-import subprocess
 import sys
 
 from threading import Thread
@@ -110,6 +109,8 @@ class NATPMP(BaseImplementation):
 
     @staticmethod
     def _get_gateway_address():
+
+        import subprocess
 
         if sys.platform == "linux":
             output = subprocess.check_output(["ip", "route", "list"])

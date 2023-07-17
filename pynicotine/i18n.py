@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gettext
-import glob
 import locale
 import os
 import sys
@@ -89,6 +88,7 @@ def apply_translations(language=None):
 def build_translations():
     """ Builds .mo translation files in the 'mo' folder of the project repository """
 
+    import glob
     import subprocess
 
     for language_code, _language_name in LANGUAGES:
