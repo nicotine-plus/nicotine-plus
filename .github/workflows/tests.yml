@@ -81,6 +81,7 @@ jobs:
           python3 -m pip install -e ".[test]"
 
       - name: Flake8 linter
+        if: matrix.container != 'fedora:rawhide'
         run: python3 -m flake8
 
       - name: Pylint linter
