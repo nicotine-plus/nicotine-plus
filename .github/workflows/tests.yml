@@ -76,16 +76,22 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
+        run: dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-gobject util-linux xorg-x11-server-Xvfb
+
+      - name: Install dependencies (Fedora)
+        if: matrix.container == 'fedora:rawhide'
+        run: dnf -y install pylint python3-flake8
+
+      - name: Install dependencies (Rocky Linux)
+        if: matrix.container == 'rockylinux:8'
         run: |
-          dnf -y install gcc gettext gtk${{ matrix.gtk }} python3 python3-devel python3-gobject python3-pip util-linux xorg-x11-server-Xvfb
+          dnf -y install gcc python3-devel python3-pip
           python3 -m pip install -e ".[test]"
 
       - name: Flake8 linter
-        if: matrix.container != 'fedora:rawhide'
         run: python3 -m flake8
 
       - name: Pylint linter
-        if: matrix.container != 'fedora:rawhide'
         run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
