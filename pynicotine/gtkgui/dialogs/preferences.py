@@ -126,8 +126,7 @@ class NetworkPage:
 
         # Network interfaces
         if sys.platform == "win32":
-            for widget in (self.network_interface_combobox, self.network_interface_label):
-                widget.get_parent().set_visible(False)
+            self.network_interface_label.get_parent().set_visible(False)
         else:
             self.network_interface_combobox.clear()
             self.network_interface_combobox.append("")
@@ -315,7 +314,7 @@ class DownloadsPage:
                     "title": _("Filter"),
                     "width": 150,
                     "expand_column": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 },
                 "regex": {
                     "column_type": "toggle",
@@ -566,7 +565,7 @@ class SharesPage:
                     "title": _("Virtual Folder"),
                     "width": 65,
                     "expand_column": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 },
                 "folder": {
                     "column_type": "text",
@@ -928,7 +927,7 @@ class IgnoredUsersPage:
                 "username": {
                     "column_type": "text",
                     "title": _("Username"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -947,7 +946,7 @@ class IgnoredUsersPage:
                     "column_type": "text",
                     "title": _("User"),
                     "expand_column": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -1062,7 +1061,7 @@ class BannedUsersPage:
                 "username": {
                     "column_type": "text",
                     "title": _("Username"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -1081,7 +1080,7 @@ class BannedUsersPage:
                     "column_type": "text",
                     "title": _("User"),
                     "expand_column": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -1253,7 +1252,7 @@ class ChatsPage:
                 "pattern": {
                     "column_type": "text",
                     "title": _("Pattern"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -1268,7 +1267,7 @@ class ChatsPage:
                     "title": _("Pattern"),
                     "width": 100,
                     "expand_column": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 },
                 "replacement": {
                     "column_type": "text",
@@ -2245,7 +2244,7 @@ class UrlHandlersPage:
                     "width": 120,
                     "expand_column": True,
                     "iterator_key": True,
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 },
                 "command": {
                     "column_type": "text",
@@ -2595,7 +2594,7 @@ class PluginsPage:
                 "plugin": {
                     "column_type": "text",
                     "title": _("Plugin"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 },
 
                 # Hidden data columns

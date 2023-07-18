@@ -143,9 +143,10 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 def add_typelibs():
 
     required_typelibs = [
-        "Gtk-%s" % GTK_VERSION,
+        f"Gtk-{GTK_VERSION}",
         "Gio-",
-        "Gdk-%s" % GTK_VERSION,
+        f"Gdk-{GTK_VERSION}",
+        f"GdkWin32-{GTK_VERSION}",
         "GLib-",
         "HarfBuzz-",
         "Pango-",
@@ -153,7 +154,8 @@ def add_typelibs():
         "GdkPixbuf-",
         "cairo-",
         "GModule-",
-        "freetype2-"
+        "freetype2-",
+        "win32-"
     ]
 
     if GTK_VERSION == "4":

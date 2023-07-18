@@ -379,11 +379,17 @@ class ChatRooms:
     def _say_chat_room(self, msg):
         """ Server code: 13 """
 
+        room = msg.room
+
+        if room not in self.joined_rooms:
+            msg.room = None
+            return
+
         user = msg.user
 
         log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
             "user": user,
-            "room": msg.room,
+            "room": room,
             "message": msg.msg
         })
 
@@ -395,37 +401,51 @@ class ChatRooms:
             msg.room = None
             return
 
-        event = core.pluginhandler.incoming_public_chat_event(msg.room, user, msg.msg)
+        event = core.pluginhandler.incoming_public_chat_event(room, user, msg.msg)
         if event is None:
             msg.room = None
             return
 
         _room, _user, msg.msg = event
-        core.pluginhandler.incoming_public_chat_notification(msg.room, user, msg.msg)
+        core.pluginhandler.incoming_public_chat_notification(room, user, msg.msg)
 
     def _user_joined_room(self, msg):
         """ Server code: 16 """
 
+        room = msg.room
+
+        if room not in self.joined_rooms:
+            msg.room = None
+            return
+
         username = msg.userdata.username
+        self.joined_rooms[room].add(username)
         core.user_statuses[username] = msg.userdata.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         if username not in core.user_addresses:
             core.request_ip_address(username)
 
-        core.pluginhandler.user_join_chatroom_notification(msg.room, username)
+        core.pluginhandler.user_join_chatroom_notification(room, username)
 
     def _user_left_room(self, msg):
         """ Server code: 17 """
 
+        room = msg.room
+
+        if room not in self.joined_rooms:
+            msg.room = None
+            return
+
         username = msg.username
+        self.joined_rooms[room].discard(username)
 
         if username not in core.watched_users:
             # We haven't explicitly watched the user, server will no longer send status updates
             for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
                 dictionary.pop(username, None)
 
-        core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
+        core.pluginhandler.user_leave_chatroom_notification(room, username)
 
     def update_completions(self):
 

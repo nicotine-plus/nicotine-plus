@@ -137,9 +137,7 @@
                           <object class="GtkLabel" id="recommendations_label">
                             <property name="label" translatable="yes">Recommendations</property>
                             <property name="margin-start">6</property>
-                            <property name="single-line-mode">True</property>
                             <property name="visible">True</property>
-                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="heading"/>
@@ -207,9 +205,7 @@
                           <object class="GtkLabel" id="similar_users_label">
                             <property name="label" translatable="yes">Similar Users</property>
                             <property name="margin-start">6</property>
-                            <property name="single-line-mode">True</property>
                             <property name="visible">True</property>
-                            <property name="wrap">True</property>
                             <property name="xalign">0</property>
                             <style>
                               <class name="heading"/>

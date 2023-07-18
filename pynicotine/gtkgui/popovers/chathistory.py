@@ -70,7 +70,7 @@ class ChatHistory(Popover):
                 # Hidden data columns
                 "timestamp_data": {
                     "data_type": GObject.TYPE_UINT64,
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 }
             }
         )

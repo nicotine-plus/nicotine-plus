@@ -344,11 +344,12 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, chat_entry=None, username_event=None, **kwargs):
+    def __init__(self, *args, chat_entry=None, users=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.chat_entry = chat_entry
+        self.users = users
         self.username_event = username_event
 
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
@@ -465,10 +466,14 @@ class ChatView(TextView):
 
     def update_user_tag(self, username):
 
+        status = UserStatus.OFFLINE
+
         if username not in self.tag_users:
             self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
 
-        status = core.user_statuses.get(username, UserStatus.OFFLINE)
+        if username in self.users:
+            status = core.user_statuses.get(username, UserStatus.OFFLINE)
+
         color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.tag_users[username], color)
 

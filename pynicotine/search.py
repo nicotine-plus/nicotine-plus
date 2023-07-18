@@ -83,11 +83,10 @@ class Searches:
 
         # First queue the visible search results
         for file in visible_files:
-            user, fullpath, destination, size, bitrate, length = file
+            user, fullpath, destination, size, file_attributes = file
 
             core.transfers.get_file(
-                user, fullpath, destination,
-                size=size, bitrate=bitrate, length=length)
+                user, fullpath, destination, size=size, file_attributes=file_attributes)
 
         # Ask for the rest of the files in the folder
         core.transfers.get_folder(user, folder)

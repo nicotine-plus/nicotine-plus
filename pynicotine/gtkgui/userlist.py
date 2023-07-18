@@ -76,7 +76,7 @@ class UserList:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 250,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 },
                 "speed": {
@@ -240,10 +240,10 @@ class UserList:
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
         speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files", 0)
+        files = user_stats.get("files")
 
         h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(files)
+        h_files = humanize(files) if files is not None else ""
 
         try:
             last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
@@ -267,7 +267,7 @@ class UserList:
             str(user_data.note),
             status,
             speed,
-            files,
+            files or 0,
             last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
@@ -429,7 +429,7 @@ class UserList:
 
     def server_disconnect(self, *_args):
 
-        for iterator in self.list_view.get_all_rows():
+        for iterator in self.list_view.iterators.values():
             self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")

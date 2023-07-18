@@ -71,7 +71,7 @@ class RoomList(Popover):
                     "column_type": "number",
                     "title": _("Users"),
                     "sort_column": "users_data",
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 },
 
                 # Hidden data columns

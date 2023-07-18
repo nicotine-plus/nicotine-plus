@@ -480,7 +480,7 @@ class EntryDialog(MessageDialog):
         else:
             entry = self._add_entry(visibility)
 
-        entry.set_activates_default(activates_default)
+        entry.set_property("activates-default", activates_default)
         entry.set_text(default)
 
         return entry

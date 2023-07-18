@@ -25,6 +25,7 @@ import importlib.util
 import os
 import pickle
 import shelve
+import shutil
 import stat
 import sys
 import time
@@ -209,7 +210,6 @@ class Scanner(Process):
             os.remove(db_path_encoded)
 
         elif os.path.isdir(db_path_encoded):
-            import shutil
             shutil.rmtree(db_path_encoded)
 
     def real2virtual(self, path):
@@ -323,8 +323,8 @@ class Scanner(Process):
         self.set_shares(share_type, files=new_files, streams=new_streams, mtimes=new_mtimes)
 
         # Update Search Index
-        # wordindex is a dict in format {word: [num, num, ..], ... } with num matching keys in newfileindex
-        # fileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
+        # wordindex is a dict in format { word: [num, num, ..], ... } with num matching keys in fileindex
+        # fileindex is a dict in format { num: (path, size, quality (bitrate, vbr, samplerate, bitdepth), length), ... }
         wordindex = self.get_files_index(new_files, prefix + "fileindex")
 
         # Save data to databases
@@ -443,7 +443,7 @@ class Scanner(Process):
         """ Get file metadata """
 
         audio = None
-        audio_info = None
+        quality = None
         duration = None
 
         if entry is None:
@@ -492,9 +492,9 @@ class Scanner(Process):
                 if not UINT32_LIMIT > bitdepth >= 0:
                     bitdepth = None
 
-            audio_info = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
+            quality = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
 
-        return [name, size, audio_info, duration]
+        return [name, size, quality, duration]
 
     @staticmethod
     def get_dir_stream(folder):

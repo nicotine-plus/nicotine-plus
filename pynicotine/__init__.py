@@ -127,13 +127,7 @@ def set_up_python():
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
 
-    # Frozen binaries only support fork (if not on Windows)
-    if sys.platform != "win32" and is_frozen:
-        start_method = "fork"
-    else:
-        start_method = "spawn"
-
-    multiprocessing.set_start_method(start_method)
+    multiprocessing.set_start_method("spawn")
 
 
 def rename_process(new_name, debug_info=False):

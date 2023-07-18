@@ -28,7 +28,6 @@ This module contains utility functions.
 import os
 import pickle
 import sys
-import webbrowser
 
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
@@ -327,6 +326,8 @@ def _try_open_uri(uri):
         except Exception:
             # Fall back to webbrowser module
             pass
+
+    import webbrowser
 
     if not webbrowser.open(uri):
         raise webbrowser.Error("No known URI provider available")
