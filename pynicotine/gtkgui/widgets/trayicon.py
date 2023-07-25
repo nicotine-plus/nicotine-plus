@@ -20,17 +20,23 @@ import os
 import sys
 
 from locale import strxfrm
+from threading import Thread
 
+from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
+from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
+from pynicotine.utils import truncate_string_byte
 
 
 """ Tray Icon """
@@ -47,16 +53,13 @@ class BaseImplementation:
         self.application = application
         self.menu_items = {}
         self.menu_item_id = 1
+        self.activate_callback = self.on_window_hide_unhide
 
         self.create_menu()
 
-    def unload(self):
-        # Implemented in subclasses
-        pass
-
     def create_item(self, text=None, callback=None, check=False):
 
-        item = {"id": self.menu_item_id, "sensitive": True, "visible": True}
+        item = {"id": self.menu_item_id, "sensitive": True}
 
         if text is not None:
             item["text"] = text
@@ -81,17 +84,12 @@ class BaseImplementation:
         item["sensitive"] = sensitive
 
     @staticmethod
-    def set_item_visible(item, visible):
-        item["visible"] = visible
-
-    @staticmethod
     def set_item_toggled(item, toggled):
         item["toggled"] = toggled
 
     def create_menu(self):
 
-        self.show_item = self.create_item(_("Show Nicotine+"), self.on_window_hide_unhide)
-        self.hide_item = self.create_item(_("Hide Nicotine+"), self.on_window_hide_unhide)
+        self.show_hide_item = self.create_item("default", self.on_window_hide_unhide)
 
         self.create_item()
 
@@ -100,8 +98,7 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.connect_item = self.create_item(_("Connect"), self.application.on_connect)
-        self.disconnect_item = self.create_item(_("Disconnect"), self.application.on_disconnect)
+        self.connect_disconnect_item = self.create_item("default", self.on_connect_disconnect)
         self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
 
         self.create_item()
@@ -120,16 +117,18 @@ class BaseImplementation:
         if self.application.window is None:
             return
 
-        visible = self.application.window.is_visible()
+        if self.application.window.is_visible():
+            label = _("Hide Nicotine+")
+        else:
+            label = _("Show Nicotine+")
 
-        self.set_item_visible(self.show_item, not visible)
-        self.set_item_visible(self.hide_item, visible)
-
+        self.set_item_text(self.show_hide_item, label)
         self.update_menu()
 
     def update_user_status(self):
 
         sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
+        label = _("Disconnect") if sensitive else _("Connect")
 
         for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
@@ -137,17 +136,13 @@ class BaseImplementation:
             # Disable menu items when disconnected from server
             self.set_item_sensitive(item, sensitive)
 
-        self.set_item_visible(self.connect_item, not sensitive)
-        self.set_item_visible(self.disconnect_item, sensitive)
+        self.set_item_text(self.connect_disconnect_item, label)
         self.set_item_toggled(self.away_item, core.user_status == slskmessages.UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
 
-    def update_icon(self, force_update=False):
-
-        if not force_update and not self.is_visible():
-            return
+    def update_icon(self):
 
         # Check for highlights, and display highlight icon if there is a highlighted room or private chat
         if (self.application.window
@@ -187,6 +182,14 @@ class BaseImplementation:
         self.set_item_text(self.uploads_item, status)
         self.update_menu()
 
+    def show_notification(self, title, message):
+        # Implemented in subclasses
+        pass
+
+    def unload(self, is_shutdown=False):
+        # Implemented in subclasses
+        pass
+
     def on_window_hide_unhide(self, *_args):
 
         if self.application.window.is_visible():
@@ -194,6 +197,14 @@ class BaseImplementation:
             return
 
         self.application.window.show()
+
+    def on_connect_disconnect(self, *_args):
+
+        if core.user_status != slskmessages.UserStatus.OFFLINE:
+            self.application.on_disconnect()
+            return
+
+        self.application.on_connect()
 
     def on_downloads(self, *_args):
         self.application.window.change_main_page(self.application.window.downloads_page)
@@ -265,14 +276,6 @@ class BaseImplementation:
             callback=self.on_get_a_users_shares_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
-
-    def is_visible(self):  # pylint:disable=no-self-use
-        # Implemented in subclasses
-        return False
-
-    def set_visible(self, _visible):
-        # Implemented in subclasses
-        pass
 
 
 class StatusNotifierImplementation(BaseImplementation):
@@ -435,8 +438,7 @@ class StatusNotifierImplementation(BaseImplementation):
             if "text" in item:
                 props = {
                     "label": GLib.Variant("s", item["text"]),
-                    "enabled": GLib.Variant("b", item["sensitive"]),
-                    "visible": GLib.Variant("b", item["visible"])
+                    "enabled": GLib.Variant("b", item["sensitive"])
                 }
 
                 if item.get("toggled") is not None:
@@ -528,7 +530,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         try:
             self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
-            self.tray_icon = self.StatusNotifierItemService(activate_callback=self.on_window_hide_unhide)
+            self.tray_icon = self.StatusNotifierItemService(activate_callback=self.activate_callback)
             self.tray_icon.register()
 
             self.bus.call_sync(
@@ -548,10 +550,6 @@ class StatusNotifierImplementation(BaseImplementation):
 
         self.update_menu()
         self.update_icon_theme()
-
-    def unload(self):
-        if self.tray_icon is not None:
-            self.tray_icon.unregister()
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
@@ -625,15 +623,451 @@ class StatusNotifierImplementation(BaseImplementation):
     def update_menu(self):
         self.tray_icon.menu.set_items(self.menu_items)
 
-    def is_visible(self):
-        return self.tray_icon.properties["Status"].value == "Active"
+    def unload(self, is_shutdown=False):
+        if self.tray_icon is not None:
+            self.tray_icon.unregister()
 
-    def set_visible(self, visible):
 
-        status = "Active" if visible else "Passive"
+class Win32Implementation(BaseImplementation):
+    """ Windows NotifyIcon implementation
+    https://learn.microsoft.com/en-us/windows/win32/shell/notification-area
+    https://learn.microsoft.com/en-us/windows/win32/shell/taskbar """
 
-        self.tray_icon.properties["Status"].value = status
-        self.tray_icon.emit_signal("NewStatus", status)
+    WINDOW_CLASS_NAME = "NicotineTrayIcon"
+
+    NIM_ADD = 0
+    NIM_MODIFY = 1
+    NIM_DELETE = 2
+
+    NIF_MESSAGE = 1
+    NIF_ICON = 2
+    NIF_TIP = 4
+    NIF_INFO = 16
+    NIIF_NOSOUND = 16
+
+    MIIM_STATE = 1
+    MIIM_ID = 2
+    MIIM_STRING = 64
+
+    MFS_ENABLED = 0
+    MFS_UNCHECKED = 0
+    MFS_DISABLED = 3
+    MFS_CHECKED = 8
+
+    MFT_SEPARATOR = 2048
+
+    WM_NULL = 0
+    WM_DESTROY = 2
+    WM_CLOSE = 16
+    WM_COMMAND = 273
+    WM_LBUTTONUP = 514
+    WM_RBUTTONUP = 517
+    WM_USER = 1024
+    WM_TRAYICON = (WM_USER + 1)
+    NIN_BALLOONHIDE = (WM_USER + 3)
+    NIN_BALLOONTIMEOUT = (WM_USER + 4)
+    NIN_BALLOONUSERCLICK = (WM_USER + 5)
+
+    CS_VREDRAW = 1
+    CS_HREDRAW = 2
+    COLOR_WINDOW = 5
+    IDC_ARROW = 32512
+
+    WS_OVERLAPPED = 0
+    WS_SYSMENU = 524288
+    CW_USEDEFAULT = -2147483648
+
+    IMAGE_ICON = 1
+    LR_LOADFROMFILE = 16
+    SM_CXSMICON = 49
+
+    if sys.platform == "win32":
+        from ctypes import Structure
+
+        class WNDCLASSW(Structure):
+            from ctypes import CFUNCTYPE, wintypes
+
+            LPFN_WND_PROC = CFUNCTYPE(
+                wintypes.INT,
+                wintypes.HWND,
+                wintypes.UINT,
+                wintypes.WPARAM,
+                wintypes.LPARAM
+            )
+            _fields_ = [
+                ("style", wintypes.UINT),
+                ("lpfn_wnd_proc", LPFN_WND_PROC),
+                ("cb_cls_extra", wintypes.INT),
+                ("cb_wnd_extra", wintypes.INT),
+                ("h_instance", wintypes.HINSTANCE),
+                ("h_icon", wintypes.HICON),
+                ("h_cursor", wintypes.HANDLE),
+                ("hbr_background", wintypes.HBRUSH),
+                ("lpsz_menu_name", wintypes.LPCWSTR),
+                ("lpsz_class_name", wintypes.LPCWSTR)
+            ]
+
+        class MENUITEMINFOW(Structure):
+            from ctypes import wintypes
+
+            _fields_ = [
+                ("cb_size", wintypes.UINT),
+                ("f_mask", wintypes.UINT),
+                ("f_type", wintypes.UINT),
+                ("f_state", wintypes.UINT),
+                ("w_id", wintypes.UINT),
+                ("h_sub_menu", wintypes.HMENU),
+                ("hbmp_checked", wintypes.HBITMAP),
+                ("hbmp_unchecked", wintypes.HBITMAP),
+                ("dw_item_data", wintypes.LPVOID),
+                ("dw_type_data", wintypes.LPWSTR),
+                ("cch", wintypes.UINT),
+                ("hbmp_item", wintypes.HBITMAP)
+            ]
+
+        class NOTIFYICONDATAW(Structure):
+            from ctypes import wintypes
+
+            _fields_ = [
+                ("cb_size", wintypes.DWORD),
+                ("h_wnd", wintypes.HWND),
+                ("u_id", wintypes.UINT),
+                ("u_flags", wintypes.UINT),
+                ("u_callback_message", wintypes.UINT),
+                ("h_icon", wintypes.HICON),
+                ("sz_tip", wintypes.WCHAR * 128),
+                ("dw_state", wintypes.DWORD),
+                ("dw_state_mask", wintypes.DWORD),
+                ("sz_info", wintypes.WCHAR * 256),
+                ("u_version", wintypes.UINT),
+                ("sz_info_title", wintypes.WCHAR * 64),
+                ("dw_info_flags", wintypes.DWORD),
+                ("guid_item", wintypes.CHAR * 16),
+                ("h_balloon_icon", wintypes.HICON)
+            ]
+
+    def __init__(self, application):
+
+        from ctypes import windll
+
+        super().__init__(application)
+
+        self._window_class = None
+        self._h_wnd = None
+        self._notify_id = None
+        self._h_icon = None
+        self._menu = None
+        self._wm_taskbarcreated = windll.user32.RegisterWindowMessageW("TaskbarCreated")
+        self._window_messages_thread = Thread(target=self._process_window_messages, name="WinTrayIcon", daemon=True)
+
+        self._register_class()
+        self._create_window()
+        self._update_icon()
+
+        self._window_messages_thread.start()
+
+    def _register_class(self):
+
+        from ctypes import byref, windll
+
+        self._window_class = self.WNDCLASSW(
+            style=(self.CS_VREDRAW | self.CS_HREDRAW),
+            lpfn_wnd_proc=self.WNDCLASSW.LPFN_WND_PROC(self.on_process_window_message),
+            h_cursor=windll.user32.LoadCursorW(0, self.IDC_ARROW),
+            hbr_background=self.COLOR_WINDOW,
+            lpsz_class_name=self.WINDOW_CLASS_NAME
+        )
+
+        windll.user32.RegisterClassW(byref(self._window_class))
+
+    def _unregister_class(self):
+
+        if self._window_class is None:
+            return
+
+        from ctypes import windll
+
+        windll.user32.UnregisterClassW(self.WINDOW_CLASS_NAME, self._window_class.h_instance)
+        self._window_class = None
+
+    def _create_window(self):
+
+        from ctypes import windll
+
+        style = self.WS_OVERLAPPED | self.WS_SYSMENU
+        self._h_wnd = windll.user32.CreateWindowExW(
+            0,
+            self.WINDOW_CLASS_NAME,
+            self.WINDOW_CLASS_NAME,
+            style,
+            0,
+            0,
+            self.CW_USEDEFAULT,
+            self.CW_USEDEFAULT,
+            0,
+            0,
+            0,
+            None
+        )
+
+        windll.user32.UpdateWindow(self._h_wnd)
+
+    def _destroy_window(self):
+
+        if self._h_wnd is None:
+            return
+
+        from ctypes import windll
+
+        windll.user32.DestroyWindow(self._h_wnd)
+        self._h_wnd = None
+
+    def _load_ico_buffer(self, icon_name, icon_size):
+
+        ico_buffer = b""
+
+        if GTK_API_VERSION >= 4:
+            icon = ICON_THEME.lookup_icon(icon_name, fallbacks=None, size=icon_size, scale=1, direction=0, flags=0)
+            icon_path = icon.get_file().get_path()
+
+            if not icon_path:
+                return ico_buffer
+
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(icon_path, icon_size, icon_size)
+        else:
+            icon = ICON_THEME.lookup_icon(icon_name, size=icon_size, flags=0)
+
+            if not icon:
+                return ico_buffer
+
+            pixbuf = icon.load_icon()
+
+        _success, ico_buffer = pixbuf.save_to_bufferv("ico")
+        return ico_buffer
+
+    def _load_h_icon(self, icon_name):
+
+        from ctypes import windll
+
+        # Attempt to load custom icons first
+        icon_size = windll.user32.GetSystemMetrics(self.SM_CXSMICON)
+        ico_buffer = self._load_ico_buffer(icon_name.replace(f"{config.application_id}-", "nplus-tray-"), icon_size)
+
+        if not ico_buffer:
+            # No custom icons present, fall back to default icons
+            ico_buffer = self._load_ico_buffer(icon_name, icon_size)
+
+        try:
+            import tempfile
+            file_handle = tempfile.NamedTemporaryFile(delete=False)
+
+            with file_handle:
+                file_handle.write(ico_buffer)
+
+            return windll.user32.LoadImageA(
+                0,
+                encode_path(file_handle.name),
+                self.IMAGE_ICON,
+                icon_size,
+                icon_size,
+                self.LR_LOADFROMFILE
+            )
+
+        finally:
+            os.remove(file_handle.name)
+
+    def _destroy_h_icon(self):
+
+        from ctypes import windll
+
+        if self._h_icon:
+            windll.user32.DestroyIcon(self._h_icon)
+            self._h_icon = None
+
+    def _update_icon(self, title="", message="", icon_name=None):
+        # pylint: disable=attribute-defined-outside-init,no-member
+
+        if self._h_wnd is None:
+            return
+
+        if icon_name:
+            self._destroy_h_icon()
+            self._h_icon = self._load_h_icon(icon_name)
+
+        if not config.sections["ui"]["trayicon"] and not (title or message):
+            # When disabled by user, temporarily show tray icon when displaying a notification
+            return
+
+        from ctypes import byref, sizeof, windll
+
+        action = self.NIM_MODIFY
+
+        if self._notify_id is None:
+            self._notify_id = self.NOTIFYICONDATAW(
+                cb_size=sizeof(self.NOTIFYICONDATAW),
+                h_wnd=self._h_wnd,
+                u_id=0,
+                u_flags=(self.NIF_ICON | self.NIF_MESSAGE | self.NIF_TIP | self.NIF_INFO),
+                u_callback_message=self.WM_TRAYICON,
+                sz_tip=truncate_string_byte(config.application_name, byte_limit=127)
+            )
+            action = self.NIM_ADD
+
+        if config.sections["notifications"]["notification_popup_sound"]:
+            self._notify_id.dw_info_flags &= ~self.NIIF_NOSOUND
+        else:
+            self._notify_id.dw_info_flags |= self.NIIF_NOSOUND
+
+        self._notify_id.h_icon = self._h_icon
+        self._notify_id.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
+        self._notify_id.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
+
+        windll.shell32.Shell_NotifyIconW(action, byref(self._notify_id))
+
+    def _remove_icon(self):
+
+        from ctypes import byref, windll
+
+        if self._notify_id:
+            windll.shell32.Shell_NotifyIconW(self.NIM_DELETE, byref(self._notify_id))
+            self._notify_id = None
+
+        if self._menu:
+            windll.user32.DestroyMenu(self._menu)
+            self._menu = None
+
+    def _serialize_menu_item(self, item):
+        # pylint: disable=attribute-defined-outside-init,no-member
+
+        from ctypes import sizeof
+
+        item_info = self.MENUITEMINFOW(cb_size=sizeof(self.MENUITEMINFOW))
+        w_id = item["id"]
+        text = item.get("text")
+        is_checked = item.get("toggled")
+        is_sensitive = item.get("sensitive")
+
+        item_info.f_mask |= self.MIIM_ID
+        item_info.w_id = w_id
+
+        if text is not None:
+            item_info.f_mask |= self.MIIM_STRING
+            item_info.dw_type_data = text
+        else:
+            item_info.f_type |= self.MFT_SEPARATOR
+
+        if is_checked is not None:
+            item_info.f_mask |= self.MIIM_STATE
+            item_info.f_state = self.MFS_CHECKED if is_checked else self.MFS_UNCHECKED
+
+        if is_sensitive is not None:
+            item_info.f_mask |= self.MIIM_STATE
+            item_info.f_state = self.MFS_ENABLED if is_sensitive else self.MFS_DISABLED
+
+        return item_info
+
+    def _show_menu(self):
+
+        from ctypes import byref, windll, wintypes
+
+        if self._menu is None:
+            self.update_menu()
+
+        pos = wintypes.POINT()
+        windll.user32.GetCursorPos(byref(pos))
+
+        # PRB: Menus for Notification Icons Do Not Work Correctly
+        # https://web.archive.org/web/20121015064650/http://support.microsoft.com/kb/135788
+
+        windll.user32.SetForegroundWindow(self._h_wnd)
+        windll.user32.TrackPopupMenu(
+            self._menu,
+            0,
+            pos.x,
+            pos.y,
+            0,
+            self._h_wnd,
+            None
+        )
+        windll.user32.PostMessageW(self._h_wnd, self.WM_NULL, 0, 0)
+
+    def _process_window_messages(self):
+
+        from ctypes import byref, windll, wintypes
+
+        msg = wintypes.MSG()
+
+        while windll.user32.GetMessageW(byref(msg), None, 0, 0):
+            windll.user32.TranslateMessage(byref(msg))
+            windll.user32.DispatchMessageW(byref(msg))
+
+    def update_menu(self):
+
+        from ctypes import byref, windll
+
+        if self._menu is None:
+            self._menu = windll.user32.CreatePopupMenu()
+
+        for item in self.menu_items.values():
+            item_id = item["id"]
+            item_info = self._serialize_menu_item(item)
+
+            if not windll.user32.SetMenuItemInfoW(self._menu, item_id, False, byref(item_info)):
+                windll.user32.InsertMenuItemW(self._menu, item_id, False, byref(item_info))
+
+    def set_icon_name(self, icon_name):
+        self._update_icon(icon_name=icon_name)
+
+    def show_notification(self, title, message):
+        self._update_icon(title=title, message=message)
+
+    def on_process_window_message(self, h_wnd, msg, w_param, l_param):
+
+        from ctypes import windll, wintypes
+
+        if msg == self.WM_TRAYICON:
+            if l_param == self.WM_RBUTTONUP:
+                # Icon pressed
+                self._show_menu()
+
+            elif l_param == self.WM_LBUTTONUP:
+                # Icon pressed
+                self.activate_callback()
+
+            elif l_param in (self.NIN_BALLOONHIDE, self.NIN_BALLOONTIMEOUT, self.NIN_BALLOONUSERCLICK):
+                if not config.sections["ui"]["trayicon"]:
+                    # Notification dismissed, but user has disabled tray icon
+                    self._remove_icon()
+
+        elif msg == self.WM_COMMAND:
+            # Menu item pressed
+            menu_item_id = w_param & 0xFFFF
+            menu_item_callback = self.menu_items[menu_item_id]["callback"]
+            events.invoke_main_thread(menu_item_callback)
+
+        elif msg == self._wm_taskbarcreated:
+            # Taskbar process restarted, create new icon
+            self._remove_icon()
+            self._update_icon()
+
+        return windll.user32.DefWindowProcW(
+            wintypes.HWND(h_wnd),
+            msg,
+            wintypes.WPARAM(w_param),
+            wintypes.LPARAM(l_param)
+        )
+
+    def unload(self, is_shutdown=False):
+
+        self._remove_icon()
+
+        if not is_shutdown:
+            # Keep notification support as long as we're running
+            return
+
+        self._destroy_h_icon()
+        self._destroy_window()
+        self._unregister_class()
 
 
 class TrayIcon:
@@ -673,24 +1107,17 @@ class TrayIcon:
             return
 
         if self.implementation is None:
-            try:
-                self.implementation = StatusNotifierImplementation(self.application)
+            if sys.platform == "win32":
+                self.implementation = Win32Implementation(self.application)
+            else:
+                try:
+                    self.implementation = StatusNotifierImplementation(self.application)
 
-            except ImplementationUnavailable:
-                self.available = False
-                return
+                except ImplementationUnavailable:
+                    self.available = False
+                    return
 
-            self.refresh_state()
-
-        self.set_visible(config.sections["ui"]["trayicon"])
-
-    def unload(self, *_args):
-
-        self.available = False
-
-        if self.implementation:
-            self.implementation.unload()
-            self.implementation = None
+        self.refresh_state()
 
     def update_window_visibility(self):
         if self.implementation:
@@ -700,9 +1127,9 @@ class TrayIcon:
         if self.implementation:
             self.implementation.update_user_status()
 
-    def update_icon(self, force_update=False):
+    def update_icon(self):
         if self.implementation:
-            self.implementation.update_icon(force_update)
+            self.implementation.update_icon()
 
     def update_icon_theme(self):
         if self.implementation:
@@ -716,19 +1143,23 @@ class TrayIcon:
         if self.implementation:
             self.implementation.set_upload_status(status)
 
+    def show_notification(self, title, message):
+        if self.implementation:
+            self.implementation.show_notification(title=title, message=message)
+
     def refresh_state(self):
 
-        self.update_icon(force_update=True)
+        self.update_icon()
         self.update_window_visibility()
         self.update_user_status()
 
-    def is_visible(self):
+    def unload(self, *_args, is_shutdown=False):
 
         if self.implementation:
-            return self.implementation.is_visible()
+            self.implementation.unload(is_shutdown=is_shutdown)
 
-        return False
+        if sys.platform == "win32":
+            # Keep tray icon instance around for notification support
+            return
 
-    def set_visible(self, visible):
-        if self.implementation:
-            self.implementation.set_visible(visible)
+        self.implementation = None
