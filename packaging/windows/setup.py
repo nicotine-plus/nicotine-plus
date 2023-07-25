@@ -194,28 +194,23 @@ def add_gtk():
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
         add_file(file_path=os.path.join(LIB_FOLDER, "gdbus.exe"), output_path="lib/gdbus.exe")
-        lib_output_path = "lib"
-
-    elif sys.platform == "darwin":
-        # .dylib files are in the same folder as the executable
-        lib_output_path = ""
 
     # This also includes all dlls required by GTK
     add_files(
-        folder_path=LIB_FOLDER, output_path=lib_output_path,
+        folder_path=LIB_FOLDER, output_path="lib",
         starts_with="libgtk-%s" % GTK_VERSION, ends_with=LIB_EXTENSION
     )
 
     if GTK_VERSION == "4":
         # ANGLE (OpenGL ES)
         add_files(
-            folder_path=LIB_FOLDER, output_path=lib_output_path,
+            folder_path=LIB_FOLDER, output_path="lib",
             starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
         )
 
     if USE_LIBADWAITA:
         add_files(
-            folder_path=LIB_FOLDER, output_path=lib_output_path,
+            folder_path=LIB_FOLDER, output_path="lib",
             starts_with="libadwaita-", ends_with=LIB_EXTENSION
         )
 
