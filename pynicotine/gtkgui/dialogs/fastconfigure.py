@@ -157,7 +157,7 @@ class FastConfigure(Dialog):
             )
             mapping = (virtual_name, folder_path)
 
-            self.shares_list_view.add_row(mapping)
+            self.shares_list_view.add_row([virtual_name, folder_path])
             config.sections["transfers"]["shared"].append(mapping)
 
     def on_add_shared_folder(self, *_args):
