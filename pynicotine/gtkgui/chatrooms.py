@@ -415,7 +415,7 @@ class ChatRoom:
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, editable=False, horizontal_margin=10,
                                   vertical_margin=5, pixels_below_lines=2,
-                                  users=core.chatrooms.joined_rooms[self.room],
+                                  status_users=core.chatrooms.joined_rooms[self.room],
                                   username_event=self.username_event)
 
         # Event Text Search
