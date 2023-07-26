@@ -24,7 +24,6 @@
 
 import os
 import re
-import socket
 import sys
 import time
 
@@ -59,6 +58,7 @@ from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
+from pynicotine.slskproto import NetworkInterfaces
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -125,18 +125,11 @@ class NetworkPage:
     def set_settings(self):
 
         # Network interfaces
-        if sys.platform == "win32":
-            self.network_interface_label.get_parent().set_visible(False)
-        else:
-            self.network_interface_combobox.clear()
-            self.network_interface_combobox.append("")
+        self.network_interface_combobox.clear()
+        self.network_interface_combobox.append("")
 
-            try:
-                for _i, interface in socket.if_nameindex():
-                    self.network_interface_combobox.append(interface)
-
-            except (AttributeError, OSError):
-                pass
+        for interface in NetworkInterfaces.get_interface_addresses():
+            self.network_interface_combobox.append(interface)
 
         self.application.preferences.set_widgets_data(self.options)
         unknown_label = _("Unknown")
