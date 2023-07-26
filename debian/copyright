@@ -61,8 +61,7 @@ Copyright: 2001-2023 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
-Copyright: 2016-2017 Bowtie AB
-           2018-2020 Jack Marsh
+Copyright: 2016-2021 Bowtie AB
 License: Expat
 
 Files: pynicotine/external/tinytag.py

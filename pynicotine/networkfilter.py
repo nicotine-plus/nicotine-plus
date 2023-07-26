@@ -274,7 +274,6 @@ class NetworkFilter:
         "VU": _("Vanuatu"),
         "WF": _("Wallis & Futuna"),
         "WS": _("Samoa"),
-        "XK": _("Kosovo"),
         "YE": _("Yemen"),
         "YT": _("Mayotte"),
         "ZA": _("South Africa"),
