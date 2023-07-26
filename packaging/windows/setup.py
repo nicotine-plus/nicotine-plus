@@ -32,6 +32,9 @@ if sys.platform == "win32":
     SYS_BASE = sys.prefix
     LIB_FOLDER = os.path.join(SYS_BASE, "bin")
     LIB_EXTENSION = ".dll"
+    UNAVAILABLE_MODULES = [
+        "fcntl", "grp", "nis", "ossaudiodev", "posix", "pwd", "readline", "resource", "spwd", "syslog", "termios"
+    ]
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
@@ -39,6 +42,7 @@ elif sys.platform == "darwin":
     SYS_BASE = "/usr/local"
     LIB_FOLDER = os.path.join(SYS_BASE, "lib")
     LIB_EXTENSION = (".dylib", ".so")
+    UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -62,6 +66,14 @@ SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
 GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or "3"
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
+
+# Include (almost) all standard library modules for plugins
+EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
+    "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
+]
+INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
+    {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
+)
 
 include_files = []
 include_resources = []
@@ -298,8 +310,8 @@ setup(
         ),
         "build_exe": dict(
             build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME),
-            packages=[MODULE_NAME, "gi"],
-            excludes=["tkinter"],
+            packages=INCLUDED_MODULES,
+            excludes=EXCLUDED_MODULES,
             include_files=include_files,
             zip_include_packages=["*"],
             zip_exclude_packages=[MODULE_NAME]
