@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-05-22 16:51+0000\n"
+"PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eo/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2017,8 +2017,9 @@ msgstr "Grandeco"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
+#, fuzzy
 msgid "Quality"
-msgstr ""
+msgstr "Kvalito"
 
 #: pynicotine/gtkgui/search.py:531 pynicotine/gtkgui/transferlist.py:213
 #: pynicotine/gtkgui/userbrowse.py:319 pynicotine/gtkgui/userbrowse.py:336
@@ -3209,8 +3210,9 @@ msgid "Cyprus"
 msgstr "Kipro"
 
 #: pynicotine/networkfilter.py:87
+#, fuzzy
 msgid "Czechia"
-msgstr ""
+msgstr "Ĉeĥio"
 
 #: pynicotine/networkfilter.py:88
 #, fuzzy
@@ -4058,8 +4060,9 @@ msgid "Tonga"
 msgstr "Tongo"
 
 #: pynicotine/networkfilter.py:257
+#, fuzzy
 msgid "Türkiye"
-msgstr ""
+msgstr "Turkio"
 
 #: pynicotine/networkfilter.py:258
 #, fuzzy

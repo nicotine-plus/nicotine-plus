@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-05-22 16:51+0000\n"
+"PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1734,8 +1734,9 @@ msgstr "Rozmiar"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
+#, fuzzy
 msgid "Quality"
-msgstr ""
+msgstr "Jakość"
 
 #: pynicotine/gtkgui/search.py:531 pynicotine/gtkgui/transferlist.py:213
 #: pynicotine/gtkgui/userbrowse.py:319 pynicotine/gtkgui/userbrowse.py:336
@@ -2750,8 +2751,9 @@ msgid "Cyprus"
 msgstr "Cypr"
 
 #: pynicotine/networkfilter.py:87
+#, fuzzy
 msgid "Czechia"
-msgstr ""
+msgstr "Czechy"
 
 #: pynicotine/networkfilter.py:88
 msgid "Germany"
@@ -3430,8 +3432,9 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
+#, fuzzy
 msgid "Türkiye"
-msgstr ""
+msgstr "Turcja"
 
 #: pynicotine/networkfilter.py:258
 msgid "Trinidad & Tobago"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-06-14 03:48+0000\n"
+"PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ro/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -902,8 +902,9 @@ msgstr "Introduceți un nou filtru de descărcare:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1466
 #: pynicotine/gtkgui/dialogs/preferences.py:2309
 #: pynicotine/gtkgui/userlist.py:424
+#, fuzzy
 msgid "_Add"
-msgstr ""
+msgstr "_Adăuga"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:439
 #: pynicotine/gtkgui/dialogs/preferences.py:472
@@ -1937,8 +1938,9 @@ msgstr "mărimea"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
+#, fuzzy
 msgid "Quality"
-msgstr ""
+msgstr "Calitate"
 
 #: pynicotine/gtkgui/search.py:531 pynicotine/gtkgui/transferlist.py:213
 #: pynicotine/gtkgui/userbrowse.py:319 pynicotine/gtkgui/userbrowse.py:336
@@ -3149,8 +3151,9 @@ msgid "Cyprus"
 msgstr "Cipru"
 
 #: pynicotine/networkfilter.py:87
+#, fuzzy
 msgid "Czechia"
-msgstr ""
+msgstr "Cehia"
 
 #: pynicotine/networkfilter.py:88
 #, fuzzy
@@ -3998,8 +4001,9 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
+#, fuzzy
 msgid "Türkiye"
-msgstr ""
+msgstr "Turcia"
 
 #: pynicotine/networkfilter.py:258
 #, fuzzy
