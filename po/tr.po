@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-07-26 15:10+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -624,9 +624,8 @@ msgstr "'%(dir)s' için yeni sanal ad girin:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1496
 #: pynicotine/gtkgui/dialogs/preferences.py:2338
 #: pynicotine/gtkgui/dialogs/wishlist.py:121
-#, fuzzy
 msgid "_Edit"
-msgstr "Düzenle"
+msgstr "_Düzenle"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:68
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:251
@@ -762,9 +761,8 @@ msgid "Change Password"
 msgstr "Parola Değiştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
-#, fuzzy
 msgid "_Change"
-msgstr "Sekme Değiştirildi"
+msgstr "_Değiştir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:275
 msgid "No one"
@@ -869,9 +867,8 @@ msgstr "Yeni bir indirme filtresi girin:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1466
 #: pynicotine/gtkgui/dialogs/preferences.py:2309
 #: pynicotine/gtkgui/userlist.py:424
-#, fuzzy
 msgid "_Add"
-msgstr "_Ekle…"
+msgstr "_Ekle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:439
 #: pynicotine/gtkgui/dialogs/preferences.py:472
@@ -1015,9 +1012,8 @@ msgid "Edit Replacement"
 msgstr "Değişimi Düzenle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1612
-#, fuzzy
 msgid "System default"
-msgstr "Sistem Öntanımlı Değeri"
+msgstr "Sistem öntanımlı değeri"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
 msgid "Quit program"
@@ -1733,7 +1729,6 @@ msgstr "Boyut"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
-#, fuzzy
 msgid "Quality"
 msgstr "Kalite"
 
@@ -2079,9 +2074,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Yüklemek istediğiniz kullanıcının adını girin:"
 
 #: pynicotine/gtkgui/userbrowse.py:784 pynicotine/gtkgui/userbrowse.py:992
-#, fuzzy
 msgid "_Upload"
-msgstr "Yükle"
+msgstr "_Yükle"
 
 #: pynicotine/gtkgui/userbrowse.py:968
 msgid "Select Destination Folder for Files"
@@ -2394,9 +2388,8 @@ msgid "Gift Privileges"
 msgstr "Ayrıcalık Hediye Et"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:574
-#, fuzzy
 msgid "_Give Privileges"
-msgstr "Ayrıcalık Hediye Et"
+msgstr "Ayrıcalık _Ver"
 
 #: pynicotine/gtkgui/widgets/textview.py:425
 msgid "--- old messages above ---"
@@ -2477,27 +2470,24 @@ msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Mesaj göndermek istediğiniz kullanıcının adını girin:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:233
-#, fuzzy
 msgid "_Message"
-msgstr "Tümüne _Mesaj Gönder"
+msgstr "_Mesaj Gönder"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:253
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr "Profilini görmek istediğiniz kullanıcının adını girin:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:254
-#, fuzzy
 msgid "_View Profile"
-msgstr "Kullanıcı Profilini Görüntüle"
+msgstr "Profili _Görüntüle"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:274
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Paylaşımlarını görmek istediğiniz kullanıcının adını girin:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:275
-#, fuzzy
 msgid "_Browse"
-msgstr "Dosyalara _Göz At"
+msgstr "_Göz At"
 
 #: pynicotine/gtkgui/widgets/treeview.py:637
 #, python-format
@@ -2747,7 +2737,6 @@ msgid "Cyprus"
 msgstr "Kıbrıs"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "Czechia"
 msgstr "Çekya"
 
@@ -3428,9 +3417,8 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
-msgstr "türkiye"
+msgstr "Türkiye"
 
 #: pynicotine/networkfilter.py:258
 msgid "Trinidad & Tobago"
@@ -3836,9 +3824,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Geçersiz argüman, olası seçenekler: %s"
 
 #: pynicotine/pluginsystem.py:858
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Kullanım: %(command)s %(args)s"
+msgstr "Kullanım: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:897
 #, python-format
@@ -4767,9 +4755,8 @@ msgid "_Personal Profile"
 msgstr "Kişisel _Profil"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:953
-#, fuzzy
 msgid "Configure Account"
-msgstr "Günlüğe kaydetmeyi yapılandır"
+msgstr "Hesabı Yapılandır"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1020
 msgid ""
@@ -4804,9 +4791,8 @@ msgid "_Message All"
 msgstr "Tümüne _Mesaj Gönder"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1276
-#, fuzzy
 msgid "Configure Ignored Users"
-msgstr "Yok Sayılan Kullanıcılar"
+msgstr "Yok Sayılan Kullanıcıları Yapılandır"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1343
 msgid ""
@@ -4835,9 +4821,8 @@ msgstr ""
 "odasına katılın veya yeni bir oda oluşturun"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1567
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Kullanıcı Profilini Görüntüle"
+msgstr "Kullanıcı Profilini Yapılandır"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Scanning Shares"
