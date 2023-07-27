@@ -533,6 +533,7 @@ class ComboBox:
 
     def set_text(self, text):
         self.entry.set_text(text)
+        self.set_selected_id(text)
 
     def remove_pos(self, position):
 
