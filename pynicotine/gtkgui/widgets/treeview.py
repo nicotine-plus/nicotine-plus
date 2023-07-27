@@ -48,7 +48,7 @@ class TreeView:
 
     def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
                  name=None, secondary_name=None, activate_row_callback=None, focus_in_callback=None,
-                 select_row_callback=None, search_entry=None):
+                 select_row_callback=None, delete_accelerator_callback=None, search_entry=None):
 
         self.window = window
         self.widget = Gtk.TreeView(enable_tree_lines=True, fixed_height_mode=True, has_tooltip=True, visible=True)
@@ -101,6 +101,9 @@ class TreeView:
 
         if select_row_callback:
             self._selection.connect("changed", self.on_select_row, select_row_callback)
+
+        if delete_accelerator_callback:
+            Accelerator("Delete", self.widget, self.on_delete_accelerator, delete_accelerator_callback)
 
         if search_entry:
             self.widget.set_search_entry(search_entry)
@@ -599,6 +602,9 @@ class TreeView:
     def on_select_row(self, selection, callback):
         _model, iterator = selection.get_selected()
         callback(self, iterator)
+
+    def on_delete_accelerator(self, _treeview, _state, callback):
+        callback(self)
 
     def on_column_header_pressed(self, _treeview, column):
         """ Reset sorting when column header has been pressed three times """

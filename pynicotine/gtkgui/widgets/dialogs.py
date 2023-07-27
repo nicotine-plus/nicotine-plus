@@ -703,6 +703,7 @@ class PluginSettingsDialog(Dialog):
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
             self.application.window, parent=scrolled_window, activate_row_callback=self.on_row_activated,
+            delete_accelerator_callback=self.on_delete_accelerator,
             columns={
                 "description": {
                     "column_type": "text",
@@ -888,12 +889,15 @@ class PluginSettingsDialog(Dialog):
             ).show()
             return
 
-    def on_remove(self, _button, treeview):
+    def on_remove(self, _button=None, treeview=None):
         for iterator in reversed(treeview.get_selected_rows()):
             treeview.remove_row(iterator)
 
     def on_row_activated(self, treeview, *_args):
         self.on_edit(treeview=treeview)
+
+    def on_delete_accelerator(self, treeview):
+        self.on_remove(treeview=treeview)
 
     def on_cancel(self, *_args):
         self.close()

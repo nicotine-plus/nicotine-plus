@@ -105,6 +105,7 @@ class TransferList:
         self.tree_view = TreeView(
             window, parent=self.tree_container, name=transfer_type,
             multi_select=True, activate_row_callback=self.on_row_activated,
+            delete_accelerator_callback=self.on_clear_transfers_accelerator,
             columns={
                 # Visible columns
                 "user": {
@@ -191,7 +192,6 @@ class TransferList:
 
         Accelerator("t", self.tree_view.widget, self.on_abort_transfers_accelerator)
         Accelerator("r", self.tree_view.widget, self.on_retry_transfers_accelerator)
-        Accelerator("Delete", self.tree_view.widget, self.on_clear_transfers_accelerator)
         Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         menu = create_grouping_menu(

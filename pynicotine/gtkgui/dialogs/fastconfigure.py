@@ -82,6 +82,7 @@ class FastConfigure(Dialog):
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
+            delete_accelerator_callback=self.on_remove_shared_folder,
             columns={
                 "virtual_folder": {
                     "column_type": "text",

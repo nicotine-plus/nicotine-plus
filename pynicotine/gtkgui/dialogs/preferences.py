@@ -301,6 +301,7 @@ class DownloadsPage:
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
+            delete_accelerator_callback=self.on_remove_filter,
             columns={
                 "filter": {
                     "column_type": "text",
@@ -552,6 +553,7 @@ class SharesPage:
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
+            delete_accelerator_callback=self.on_remove_shared_folder,
             columns={
                 "virtual_name": {
                     "column_type": "text",
@@ -916,6 +918,7 @@ class IgnoredUsersPage:
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
             application.window, parent=self.ignored_users_container, multi_select=True,
+            delete_accelerator_callback=self.on_remove_ignored_user,
             columns={
                 "username": {
                     "column_type": "text",
@@ -928,6 +931,7 @@ class IgnoredUsersPage:
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
             application.window, parent=self.ignored_ips_container, multi_select=True,
+            delete_accelerator_callback=self.on_remove_ignored_ip,
             columns={
                 "ip_address": {
                     "column_type": "text",
@@ -1050,6 +1054,7 @@ class BannedUsersPage:
         self.banned_users = []
         self.banned_users_list_view = TreeView(
             application.window, parent=self.banned_users_container, multi_select=True,
+            delete_accelerator_callback=self.on_remove_banned_user,
             columns={
                 "username": {
                     "column_type": "text",
@@ -1062,6 +1067,7 @@ class BannedUsersPage:
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
             application.window, parent=self.banned_ips_container, multi_select=True,
+            delete_accelerator_callback=self.on_remove_banned_ip,
             columns={
                 "ip_address": {
                     "column_type": "text",
@@ -1241,6 +1247,7 @@ class ChatsPage:
         self.censor_list_view = TreeView(
             application.window, parent=self.censor_list_container, multi_select=True,
             activate_row_callback=self.on_edit_censored,
+            delete_accelerator_callback=self.on_remove_censored,
             columns={
                 "pattern": {
                     "column_type": "text",
@@ -1254,6 +1261,7 @@ class ChatsPage:
         self.replacement_list_view = TreeView(
             application.window, parent=self.replacement_list_container, multi_select=True,
             activate_row_callback=self.on_edit_replacement,
+            delete_accelerator_callback=self.on_remove_replacement,
             columns={
                 "pattern": {
                     "column_type": "text",
@@ -2230,6 +2238,7 @@ class UrlHandlersPage:
         self.protocol_list_view = TreeView(
             application.window, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
+            delete_accelerator_callback=self.on_remove_handler,
             columns={
                 "protocol": {
                     "column_type": "text",
