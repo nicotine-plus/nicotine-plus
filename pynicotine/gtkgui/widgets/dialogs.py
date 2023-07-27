@@ -696,8 +696,9 @@ class PluginSettingsDialog(Dialog):
             hexpand=True, vexpand=True, min_content_height=125,
             hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
-        frame_container = Gtk.Frame(child=scrolled_window, visible=True)
-        container = Gtk.Box(spacing=6, visible=True)
+        container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
+        frame_container = Gtk.Frame(child=container, visible=True)
+        add_css_class(scrolled_window, "border-bottom")
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
@@ -711,35 +712,42 @@ class PluginSettingsDialog(Dialog):
         )
         self.application.preferences.set_widget(treeview, option_value)
 
-        box = Gtk.Box(spacing=6, visible=True)
+        button_container = Gtk.Box(margin_end=6, margin_bottom=6, margin_start=6, margin_top=6,
+                                   spacing=6, visible=True)
 
-        add_button = Gtk.Button(label=_("Add…"), visible=True)
-        add_button.connect("clicked", self.on_add, treeview, description)
+        for icon_name, label_text, callback in (
+            ("list-add-symbolic", _("Add…"), self.on_add),
+            ("document-edit-symbolic", _("Edit…"), self.on_edit),
+            ("list-remove-symbolic", _("Remove"), self.on_remove)
+        ):
+            button = Gtk.Button(visible=True)
+            label_container = Gtk.Box(spacing=6, visible=True)
+            icon = Gtk.Image(icon_name=icon_name, visible=True)
+            label = Gtk.Label(label=label_text, mnemonic_widget=button, visible=True)
 
-        edit_button = Gtk.Button(label=_("Edit…"), visible=True)
-        edit_button.connect("clicked", self.on_edit, treeview, description)
+            button.set_property("child", label_container)
+            button.connect("clicked", callback, treeview, description)
+            add_css_class(button, "flat")
 
-        remove_button = Gtk.Button(label=_("Remove"), visible=True)
-        remove_button.connect("clicked", self.on_remove, treeview)
+            if GTK_API_VERSION >= 4:
+                label_container.append(icon)                # pylint: disable=no-member
+                label_container.append(label)               # pylint: disable=no-member
+                button_container.append(button)             # pylint: disable=no-member
+            else:
+                label_container.add(icon)                   # pylint: disable=no-member
+                label_container.add(label)                  # pylint: disable=no-member
+                button_container.add(button)                # pylint: disable=no-member
 
         if GTK_API_VERSION >= 4:
-            box.append(add_button)                    # pylint: disable=no-member
-            box.append(edit_button)                   # pylint: disable=no-member
-            box.append(remove_button)                 # pylint: disable=no-member
+            self.primary_container.append(frame_container)  # pylint: disable=no-member
 
-            self.primary_container.append(container)  # pylint: disable=no-member
-            self.primary_container.append(box)        # pylint: disable=no-member
-
-            container.append(frame_container)         # pylint: disable=no-member
+            container.append(scrolled_window)               # pylint: disable=no-member
+            container.append(button_container)              # pylint: disable=no-member
         else:
-            box.add(add_button)                    # pylint: disable=no-member
-            box.add(edit_button)                   # pylint: disable=no-member
-            box.add(remove_button)                 # pylint: disable=no-member
+            self.primary_container.add(frame_container)     # pylint: disable=no-member
 
-            self.primary_container.add(container)  # pylint: disable=no-member
-            self.primary_container.add(box)        # pylint: disable=no-member
-
-            container.add(frame_container)         # pylint: disable=no-member
+            container.add(scrolled_window)                  # pylint: disable=no-member
+            container.add(button_container)                 # pylint: disable=no-member
 
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
@@ -844,11 +852,12 @@ class PluginSettingsDialog(Dialog):
 
         treeview.add_row([value])
 
-    def on_add(self, _widget, treeview, description):
+    def on_add(self, _button, treeview, description):
 
         EntryDialog(
             parent=self,
-            title=description,
+            title=_("Add Item"),
+            message=description,
             callback=self.on_add_response,
             callback_data=treeview
         ).show()
@@ -863,21 +872,22 @@ class PluginSettingsDialog(Dialog):
         treeview, iterator = data
         treeview.set_row_value(iterator, "description", value)
 
-    def on_edit(self, _widget, treeview, description):
+    def on_edit(self, _button, treeview, description):
 
         for iterator in treeview.get_selected_rows():
             value = treeview.get_row_value(iterator, "description")
 
             EntryDialog(
                 parent=self,
-                title=description,
+                title=_("Edit Item"),
+                message=description,
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
             ).show()
             return
 
-    def on_remove(self, _widget, treeview):
+    def on_remove(self, _button, treeview, _description):
         for iterator in reversed(treeview.get_selected_rows()):
             treeview.remove_row(iterator)
 
