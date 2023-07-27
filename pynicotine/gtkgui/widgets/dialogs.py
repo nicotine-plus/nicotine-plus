@@ -826,7 +826,9 @@ class PluginSettingsDialog(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
-            return list(widget.iterators)
+            return [
+                widget.get_row_value(iterator, "description") for iterator in widget.iterators.values()
+            ]
 
         if isinstance(widget, FileChooserButton):
             return widget.get_path()
@@ -858,19 +860,19 @@ class PluginSettingsDialog(Dialog):
         if not value:
             return
 
-        treeview, iterator, column_id = data
-        treeview.set_row_value(iterator, column_id, value)
+        treeview, iterator = data
+        treeview.set_row_value(iterator, "description", value)
 
     def on_edit(self, _widget, treeview, description):
 
         for iterator in treeview.get_selected_rows():
-            value = treeview.get_row_value(iterator, description)
+            value = treeview.get_row_value(iterator, "description")
 
             EntryDialog(
                 parent=self,
                 title=description,
                 callback=self.on_edit_response,
-                callback_data=(treeview, iterator, description),
+                callback_data=(treeview, iterator),
                 default=value
             ).show()
             return
