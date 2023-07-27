@@ -180,6 +180,17 @@ class SendNetworkMessage(InternalMessage):
         self.message = message
 
 
+class EmitNetworkMessageEvents(InternalMessage):
+    """ Sent to the networking thread to tell it to emit events for list of
+    network messages. Currently used after shares have rescanned to process
+    any QueueUpload messages that arrived while scanning. """
+
+    __slots__ = ("msgs",)
+
+    def __init__(self, msgs=None):
+        self.msgs = msgs
+
+
 class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """

@@ -63,7 +63,7 @@ class Core:
         self.chatrooms = None
         self.pluginhandler = None
         self.now_playing = None
-        self.protothread = None
+        self.portmapper = None
         self.notifications = None
         self.update_checker = None
 
@@ -71,14 +71,15 @@ class Core:
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
 
-        self.bindip = None
-        self.port = None
+        self.cli_interface_address = None
+        self.cli_listen_port = None
 
         self.shutdown = False
         self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
+        self.public_port = None
         self.privileges_left = None
         self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
@@ -114,6 +115,7 @@ class Core:
         from pynicotine.notifications import Notifications
         from pynicotine.nowplaying import NowPlaying
         from pynicotine.pluginsystem import PluginHandler
+        from pynicotine.portmapper import PortMapper
         from pynicotine.privatechat import PrivateChat
         from pynicotine.search import Searches
         from pynicotine.shares import Shares
@@ -139,7 +141,8 @@ class Core:
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         self.queue.clear()
-        self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses)
+        self.portmapper = PortMapper()
+        SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses, portmapper=self.portmapper)
 
         self.notifications = Notifications()
         self.network_filter = NetworkFilter()
@@ -240,8 +243,8 @@ class Core:
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface_name=config.sections["server"]["interface"],
-            interface_address=self.bindip,
-            listen_port=self.port if self.port else config.sections["server"]["portrange"][0]
+            interface_address=self.cli_interface_address,
+            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0]
         ))
 
     def disconnect(self):
@@ -322,6 +325,8 @@ class Core:
             self.pluginhandler.server_disconnect_notification(manual_disconnect)
 
         self.login_username = None
+        self.public_ip_address = None
+        self.public_port = None
 
     def _server_login(self, msg):
         """ Server code: 1 """
@@ -329,6 +334,7 @@ class Core:
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
             self.login_username = msg.username
+            self.public_port = self.cli_listen_port or config.sections["server"]["portrange"][0]
 
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(msg.username)

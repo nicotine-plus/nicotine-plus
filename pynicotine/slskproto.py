@@ -55,6 +55,7 @@ from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
+from pynicotine.slskmessages import EmitNetworkMessageEvents
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileDownloadInit
 from pynicotine.slskmessages import FileUploadInit
@@ -86,7 +87,6 @@ from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
-from pynicotine.portmapper import PortMapper
 from pynicotine.utils import human_speed
 
 
@@ -362,16 +362,15 @@ class SoulseekNetworkThread(Thread):
     SOCKET_WRITE_BUFFER_SIZE = 1048576
     SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
-    def __init__(self, queue, user_addresses):
+    def __init__(self, queue, user_addresses, portmapper):
         """ queue is deque object that holds network messages from Core. """
 
         super().__init__(name="SoulseekNetworkThread")
 
-        self.listen_port = None
-        self.portmapper = None
-
         self._queue = queue
         self._user_addresses = user_addresses
+        self._portmapper = portmapper
+
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
@@ -380,6 +379,7 @@ class SoulseekNetworkThread(Thread):
 
         self._selector = None
         self._listen_socket = None
+        self._listen_port = None
         self._interface_name = None
         self._interface_address = None
 
@@ -472,7 +472,7 @@ class SoulseekNetworkThread(Thread):
 
         self._close_socket(self._listen_socket, shutdown=False)
         self._listen_socket = None
-        self.listen_port = None
+        self._listen_port = None
 
     def _bind_listen_port(self):
 
@@ -484,17 +484,17 @@ class SoulseekNetworkThread(Thread):
         ip_address = self._interface_address or "0.0.0.0"
 
         try:
-            self._listen_socket.bind((ip_address, self.listen_port))
+            self._listen_socket.bind((ip_address, self._listen_port))
             self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
         except OSError as error:
             self._set_server_timer()
             log.add(_("Cannot listen on port %(port)s. Ensure no other application uses it, or choose a "
-                      "different port. Error: %(error)s"), {"port": self.listen_port, "error": error})
-            self.listen_port = None
+                      "different port. Error: %(error)s"), {"port": self._listen_port, "error": error})
+            self._listen_port = None
             return False
 
-        log.add(_("Listening on port: %i"), self.listen_port)
+        log.add(_("Listening on port: %i"), self._listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
         return True
 
@@ -552,7 +552,7 @@ class SoulseekNetworkThread(Thread):
 
         self._interface_name = msg_obj.interface_name
         self._interface_address = msg_obj.interface_address
-        self.listen_port = msg_obj.listen_port
+        self._listen_port = msg_obj.listen_port
 
         if not self._create_listen_socket():
             self._should_process_queue = False
@@ -573,7 +573,7 @@ class SoulseekNetworkThread(Thread):
         self._interface_name = self._interface_address = self._server_socket = None
 
         self._close_listen_socket()
-        self.portmapper.remove_port_mapping(blocking=True)
+        self._portmapper.remove_port_mapping(blocking=True)
 
         self._parent_socket = None
         self._potential_parents.clear()
@@ -812,7 +812,7 @@ class SoulseekNetworkThread(Thread):
 
         return distrib_msg
 
-    def emit_network_message_event(self, msg):
+    def _emit_network_message_event(self, msg):
 
         if msg is None:
             return
@@ -1065,7 +1065,7 @@ class SoulseekNetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = (self._find_local_ip_address(), self.listen_port)
+        self._user_addresses[login] = (self._find_local_ip_address(), self._listen_port)
         conn_obj.login = True
 
         self._server_address = addr
@@ -1088,7 +1088,7 @@ class SoulseekNetworkThread(Thread):
             )
         )
 
-        self._queue.append(SetWaitPort(self.listen_port))
+        self._queue.append(SetWaitPort(self._listen_port))
 
     def _replace_existing_connection(self, init):
 
@@ -1384,8 +1384,8 @@ class SoulseekNetworkThread(Thread):
                         if msg.success:
                             # Ensure listening port is open
                             local_ip_address, port = self._user_addresses[self._server_username]
-                            self.portmapper.set_port(port, local_ip_address)
-                            self.portmapper.add_port_mapping(blocking=True)
+                            self._portmapper.set_port(port, local_ip_address)
+                            self._portmapper.add_port_mapping(blocking=True)
 
                             # Check for indirect connection timeouts
                             self._conn_timeouts_timer_id = events.schedule(
@@ -1503,7 +1503,7 @@ class SoulseekNetworkThread(Thread):
 
                         self._send_have_no_parent()
 
-                    self.emit_network_message_event(msg)
+                    self._emit_network_message_event(msg)
 
             else:
                 log.add_debug("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -1618,7 +1618,7 @@ class SoulseekNetworkThread(Thread):
                         init.addr = addr
                         self._replace_existing_connection(init)
 
-                    self.emit_network_message_event(msg)
+                    self._emit_network_message_event(msg)
 
             else:
                 log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -1744,7 +1744,7 @@ class SoulseekNetworkThread(Thread):
                 if msg_class is FileSearchResponse:
                     search_result_received = True
 
-                self.emit_network_message_event(msg)
+                self._emit_network_message_event(msg)
 
             else:
                 host, port = conn_obj.addr
@@ -1824,7 +1824,7 @@ class SoulseekNetworkThread(Thread):
                 FileDownloadInit, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.token is not None:
-                self.emit_network_message_event(msg)
+                self._emit_network_message_event(msg)
                 conn_obj.fileinit = msg
 
         elif conn_obj.filedown is not None:
@@ -1865,7 +1865,7 @@ class SoulseekNetworkThread(Thread):
             msg = self._unpack_network_message(FileOffset, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
 
             if msg is not None and msg.offset is not None:
-                self.emit_network_message_event(msg)
+                self._emit_network_message_event(msg)
                 conn_obj.fileupl.offset = msg.offset
 
                 try:
@@ -1908,7 +1908,7 @@ class SoulseekNetworkThread(Thread):
             conn_obj.fileinit = msg_obj
             conn_obj.obuf.extend(msg)
 
-            self.emit_network_message_event(msg_obj)
+            self._emit_network_message_event(msg_obj)
 
         elif msg_class is FileOffset:
             msg = self._pack_network_message(msg_obj)
@@ -2155,7 +2155,7 @@ class SoulseekNetworkThread(Thread):
 
                         self._set_branch_root(msg.user)
 
-                    self.emit_network_message_event(msg)
+                    self._emit_network_message_event(msg)
 
             else:
                 log.add_debug("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
@@ -2269,6 +2269,10 @@ class SoulseekNetworkThread(Thread):
 
         elif msg_class is SendNetworkMessage:
             self._send_message_to_peer(msg_obj.user, msg_obj.message)
+
+        elif msg_class is EmitNetworkMessageEvents:
+            for msg in msg_obj.msgs:
+                self._emit_network_message_event(msg)
 
     """ Input/Output """
 
@@ -2530,7 +2534,6 @@ class SoulseekNetworkThread(Thread):
     def run(self):
 
         events.emit_main_thread("set-connection-stats")
-        self.portmapper = PortMapper()
 
         # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
         # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)

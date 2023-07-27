@@ -90,8 +90,8 @@ def check_arguments():
     if args.user_data:
         config.data_dir = args.user_data
 
-    core.bindip = args.bindip
-    core.port = args.port
+    core.cli_interface_address = args.bindip
+    core.cli_listen_port = args.port
 
     return args.headless, args.hidden, args.ci_mode, args.rescan, multi_instance
 

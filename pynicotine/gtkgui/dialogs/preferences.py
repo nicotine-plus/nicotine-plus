@@ -135,13 +135,13 @@ class NetworkPage:
         unknown_label = _("Unknown")
 
         # Listening port status
-        if core.protothread.listen_port:
-            url = config.portchecker_url % str(core.protothread.listen_port)
+        if core.public_port:
+            url = config.portchecker_url % str(core.public_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
                 "ip": core.public_ip_address or unknown_label,
-                "port": core.protothread.listen_port or unknown_label
+                "port": core.public_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -2912,9 +2912,9 @@ class Preferences(Dialog):
             config.sections[key].update(data)
 
         if portmap_required:
-            core.protothread.portmapper.add_port_mapping()
+            core.portmapper.add_port_mapping()
         else:
-            core.protothread.portmapper.remove_port_mapping()
+            core.portmapper.remove_port_mapping()
 
         if user_profile_required and core.login_username:
             core.userinfo.show_user(core.login_username, refresh=True)

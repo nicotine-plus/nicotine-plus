@@ -898,10 +898,10 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        for msg in self.pending_network_msgs:
-            core.protothread.emit_network_message_event(msg)
+        if self.pending_network_msgs:
+            core.queue.append(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
+            self.pending_network_msgs.clear()
 
-        self.pending_network_msgs.clear()
         return error
 
     """ Network Messages """
