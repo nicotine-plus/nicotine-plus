@@ -43,6 +43,7 @@ from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -2749,6 +2750,9 @@ class Preferences(Dialog):
 
             self.preferences_list.insert(box, -1)
 
+        Accelerator("Tab", self.preferences_list, self.on_sidebar_tab_accelerator)
+        Accelerator("<Shift>Tab", self.preferences_list, self.on_sidebar_shift_tab_accelerator)
+
     def set_active_page(self, page_id):
 
         if page_id is None:
@@ -3095,6 +3099,18 @@ class Preferences(Dialog):
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)
+
+    def on_sidebar_tab_accelerator(self, *_args):
+        """ Tab: navigate to widget after preferences sidebar """
+
+        self.content.child_focus(Gtk.DirectionType.TAB_FORWARD)
+        return True
+
+    def on_sidebar_shift_tab_accelerator(self, *_args):
+        """ Shift+Tab: navigate to widget before preferences sidebar """
+
+        self.ok_button.grab_focus()
+        return True
 
     def on_cancel(self, *_args):
         self.close()
