@@ -775,7 +775,7 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            core.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            core.send_message_to_server(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
@@ -899,7 +899,7 @@ class Shares:
 
         # Process any file transfer queue requests that arrived while scanning
         if self.pending_network_msgs:
-            core.queue.append(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
+            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
             self.pending_network_msgs.clear()
 
         return error
@@ -940,15 +940,13 @@ class Shares:
 
         if not shares_list:
             # Nyah, nyah
-            shares_list = slskmessages.SharedFileListResponse(init=msg.init)
+            shares_list = slskmessages.SharedFileListResponse()
 
-        shares_list.init = msg.init
-        core.queue.append(shares_list)
+        core.send_message_to_peer(user, shares_list)
 
     def _folder_contents_request(self, msg):
         """ Peer code: 36 """
 
-        init = msg.init
         ip_address, _port = msg.init.addr
         username = msg.init.target_user
         checkuser, reason = core.network_filter.check_user(username, ip_address)
@@ -972,17 +970,17 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
+                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
+                        directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip("\\") in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
+                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
+                        directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
                     return
 
             except Exception as error:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
+            core.send_message_to_peer(username, slskmessages.FolderContentsResponse(directory=msg.dir, token=msg.token))

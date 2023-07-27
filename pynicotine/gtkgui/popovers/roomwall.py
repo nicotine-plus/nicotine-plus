@@ -18,7 +18,6 @@
 
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
@@ -63,7 +62,7 @@ class RoomWall(Popover):
         self.message_view.clear()
 
         if update_list:
-            core.queue.append(slskmessages.RoomTickerSet(self.room.room, ""))
+            self.room.tickers.set_ticker("")
             self.update_message_list()
 
         return entry_text
@@ -71,7 +70,7 @@ class RoomWall(Popover):
     def on_set_room_wall_message(self, *_args):
 
         entry_text = self.clear_room_wall_message(update_list=False)
-        core.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
+        self.room.tickers.set_ticker(entry_text)
 
         if entry_text:
             user = core.login_username

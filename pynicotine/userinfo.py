@@ -78,7 +78,7 @@ class UserInfo:
         core.watch_user(user)
 
         # Request user interests
-        core.queue.append(slskmessages.UserInterests(user))
+        core.send_message_to_server(slskmessages.UserInterests(user))
 
     def remove_user(self, user):
         self.users.remove(user)
@@ -143,5 +143,5 @@ class UserInfo:
         else:
             uploadallowed = 0
 
-        core.queue.append(
+        core.send_message_to_server(
             slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))

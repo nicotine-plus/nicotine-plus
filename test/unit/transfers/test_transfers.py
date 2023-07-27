@@ -43,7 +43,6 @@ class TransfersTest(TestCase):
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
 
-        self.assertEqual(len(core.queue), 0)
         self.assertEqual(len(core.transfers.downloads), 17)
 
         transfer = core.transfers.downloads[0]
@@ -106,7 +105,6 @@ class TransfersTest(TestCase):
 
         # Only finished uploads are loaded, other types should never be stored
         self.assertEqual(len(core.transfers.uploads), 3)
-        self.assertEqual(len(core.queue), 0)
 
         transfer = core.transfers.uploads[0]
 

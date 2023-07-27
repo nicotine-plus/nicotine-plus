@@ -35,8 +35,6 @@ import signal
 import sys
 import threading
 
-from collections import deque
-
 from pynicotine import slskmessages
 from pynicotine.cli import cli
 from pynicotine.config import config
@@ -83,7 +81,6 @@ class Core:
         self.privileges_left = None
         self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
-        self.queue = deque()
         self.message_events = {}
         self.user_addresses = {}
         self.user_countries = {}
@@ -140,9 +137,8 @@ class Core:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
-        self.queue.clear()
         self.portmapper = PortMapper()
-        SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses, portmapper=self.portmapper)
+        SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
 
         self.notifications = Notifications()
         self.network_filter = NetworkFilter()
@@ -239,7 +235,7 @@ class Core:
 
         events.emit("enable-message-queue")
 
-        self.queue.append(slskmessages.ServerConnect(
+        self.send_message_to_network_thread(slskmessages.ServerConnect(
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface_name=config.sections["server"]["interface"],
@@ -248,13 +244,19 @@ class Core:
         ))
 
     def disconnect(self):
-        self.queue.append(slskmessages.ServerDisconnect())
+        self.send_message_to_network_thread(slskmessages.ServerDisconnect())
 
-    def send_message_to_peer(self, user, message):
-        """ Sends message to a peer. Used when we know the username of a peer,
-        but don't have/know an active connection. """
+    def send_message_to_network_thread(self, message):
+        """ Sends message to the networking thread to inform about something """
+        events.emit("queue-network-message", message)
 
-        self.queue.append(slskmessages.SendNetworkMessage(user, message))
+    def send_message_to_server(self, message):
+        """ Sends message to the server """
+        events.emit("queue-network-message", message)
+
+    def send_message_to_peer(self, username, message):
+        """ Sends message to a peer """
+        events.emit("queue-network-message", slskmessages.SendNetworkMessage(username, message))
 
     def set_away_mode(self, is_away, save_state=False):
 
@@ -268,13 +270,13 @@ class Core:
         events.emit("set-away-mode", is_away)
 
     def request_change_password(self, password):
-        self.queue.append(slskmessages.ChangePassword(password))
+        self.send_message_to_server(slskmessages.ChangePassword(password))
 
     def request_check_privileges(self):
-        self.queue.append(slskmessages.CheckPrivileges())
+        self.send_message_to_server(slskmessages.CheckPrivileges())
 
-    def request_give_privileges(self, user, days):
-        self.queue.append(slskmessages.GivePrivileges(user, days))
+    def request_give_privileges(self, username, days):
+        self.send_message_to_server(slskmessages.GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
 
@@ -282,10 +284,13 @@ class Core:
             return
 
         self._ip_requested[username] = notify
-        self.queue.append(slskmessages.GetPeerAddress(username))
+        self.send_message_to_server(slskmessages.GetPeerAddress(username))
 
     def request_set_status(self, status):
-        self.queue.append(slskmessages.SetStatus(status))
+        self.send_message_to_server(slskmessages.SetStatus(status))
+
+    def request_user_stats(self, username):
+        self.send_message_to_server(slskmessages.GetUserStats(username))
 
     def watch_user(self, user):
         """ Tell the server we want to be notified of status/stat updates
@@ -297,8 +302,8 @@ class Core:
         if user in self.watched_users:
             return
 
-        self.queue.append(slskmessages.WatchUser(user))
-        self.queue.append(slskmessages.GetUserStatus(user))  # Get privilege status
+        self.send_message_to_server(slskmessages.WatchUser(user))
+        self.send_message_to_server(slskmessages.GetUserStatus(user))  # Get privilege status
 
         self.watched_users[user] = {}
 
@@ -346,7 +351,7 @@ class Core:
             if msg.banner:
                 log.add(msg.banner)
 
-            self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
+            self.send_message_to_server(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
 
         else:

@@ -163,7 +163,7 @@ class PrivateChat:
         else:
             message = ui_message = self.auto_replace(message)
 
-        core.queue.append(slskmessages.MessageUser(user, message))
+        core.send_message_to_server(slskmessages.MessageUser(user, message))
         core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         events.emit("send-private-message", user, ui_message)
@@ -182,7 +182,7 @@ class PrivateChat:
             users = core.transfers.get_downloading_users()
 
         if users:
-            core.queue.append(slskmessages.MessageUsers(users, message))
+            core.send_message_to_server(slskmessages.MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
         """ Server code: 3 """
@@ -216,7 +216,7 @@ class PrivateChat:
                 "message": msg.msg
             })
 
-            core.queue.append(slskmessages.MessageAcked(msg.msgid))
+            core.send_message_to_server(slskmessages.MessageAcked(msg.msgid))
 
         if user != "server":
             # Check ignore status for all other users except "server"

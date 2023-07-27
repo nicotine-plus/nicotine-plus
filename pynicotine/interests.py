@@ -45,7 +45,7 @@ class Interests:
             item = item.strip().lower()
 
             if item:
-                core.queue.append(slskmessages.AddThingILike(item))
+                core.send_message_to_server(slskmessages.AddThingILike(item))
 
         for item in config.sections["interests"]["dislikes"]:
             if not isinstance(item, str):
@@ -54,7 +54,7 @@ class Interests:
             item = item.strip().lower()
 
             if item:
-                core.queue.append(slskmessages.AddThingIHate(item))
+                core.send_message_to_server(slskmessages.AddThingIHate(item))
 
     def add_thing_i_like(self, item):
 
@@ -68,7 +68,7 @@ class Interests:
 
         config.sections["interests"]["likes"].append(item)
         config.write_configuration()
-        core.queue.append(slskmessages.AddThingILike(item))
+        core.send_message_to_server(slskmessages.AddThingILike(item))
 
         events.emit("add-interest", item)
 
@@ -84,7 +84,7 @@ class Interests:
 
         config.sections["interests"]["dislikes"].append(item)
         config.write_configuration()
-        core.queue.append(slskmessages.AddThingIHate(item))
+        core.send_message_to_server(slskmessages.AddThingIHate(item))
 
         events.emit("add-dislike", item)
 
@@ -98,7 +98,7 @@ class Interests:
 
         config.sections["interests"]["likes"].remove(item)
         config.write_configuration()
-        core.queue.append(slskmessages.RemoveThingILike(item))
+        core.send_message_to_server(slskmessages.RemoveThingILike(item))
 
         events.emit("remove-interest", item)
 
@@ -112,24 +112,24 @@ class Interests:
 
         config.sections["interests"]["dislikes"].remove(item)
         config.write_configuration()
-        core.queue.append(slskmessages.RemoveThingIHate(item))
+        core.send_message_to_server(slskmessages.RemoveThingIHate(item))
 
         events.emit("remove-dislike", item)
 
     def request_global_recommendations(self):
-        core.queue.append(slskmessages.GlobalRecommendations())
+        core.send_message_to_server(slskmessages.GlobalRecommendations())
 
     def request_item_recommendations(self, item):
-        core.queue.append(slskmessages.ItemRecommendations(item))
+        core.send_message_to_server(slskmessages.ItemRecommendations(item))
 
     def request_item_similar_users(self, item):
-        core.queue.append(slskmessages.ItemSimilarUsers(item))
+        core.send_message_to_server(slskmessages.ItemSimilarUsers(item))
 
     def request_recommendations(self):
-        core.queue.append(slskmessages.Recommendations())
+        core.send_message_to_server(slskmessages.Recommendations())
 
     def request_similar_users(self):
-        core.queue.append(slskmessages.SimilarUsers())
+        core.send_message_to_server(slskmessages.SimilarUsers())
 
     def _similar_users(self, msg):
         """ Server code: 110 """

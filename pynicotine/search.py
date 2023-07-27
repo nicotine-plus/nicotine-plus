@@ -235,29 +235,29 @@ class Searches:
         events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
-        core.queue.append(slskmessages.FileSearch(self.token, text))
+        core.send_message_to_server(slskmessages.FileSearch(self.token, text))
 
-        """ Request a list of related searches from the server.
-        Seemingly non-functional since 2018 (always receiving empty lists). """
+        # Request a list of related searches from the server.
+        # Seemingly non-functional since 2018 (always receiving empty lists).
 
-        # core.queue.append(slskmessages.RelatedSearch(text))
+        # core.send_message_to_server(slskmessages.RelatedSearch(text))
 
     def do_rooms_search(self, text, room=None):
 
         if room != core.chatrooms.JOINED_ROOMS_NAME:
-            core.queue.append(slskmessages.RoomSearch(room, self.token, text))
+            core.send_message_to_server(slskmessages.RoomSearch(room, self.token, text))
             return
 
         for joined_room in core.chatrooms.joined_rooms:
-            core.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
+            core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
         for user in core.userlist.buddies:
-            core.queue.append(slskmessages.UserSearch(user, self.token, text))
+            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
 
     def do_peer_search(self, text, users):
         for user in users:
-            core.queue.append(slskmessages.UserSearch(user, self.token, text))
+            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -269,7 +269,7 @@ class Searches:
         log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
-        core.queue.append(slskmessages.WishlistSearch(token, text))
+        core.send_message_to_server(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
 

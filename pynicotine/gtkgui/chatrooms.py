@@ -407,7 +407,7 @@ class ChatRoom:
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
-        self.tickers = Tickers()
+        self.tickers = Tickers(room)
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 

@@ -25,7 +25,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
@@ -461,19 +460,19 @@ class UserPopupMenu(PopupMenu):
 
     def on_private_room_add_user(self, *args):
         room = args[-1]
-        core.queue.append(slskmessages.PrivateRoomAddUser(room, self.user))
+        core.chatrooms.add_user_to_private_room(room, self.user)
 
     def on_private_room_remove_user(self, *args):
         room = args[-1]
-        core.queue.append(slskmessages.PrivateRoomRemoveUser(room, self.user))
+        core.chatrooms.remove_user_from_private_room(room, self.user)
 
     def on_private_room_add_operator(self, *args):
         room = args[-1]
-        core.queue.append(slskmessages.PrivateRoomAddOperator(room, self.user))
+        core.chatrooms.add_operator_to_private_room(room, self.user)
 
     def on_private_room_remove_operator(self, *args):
         room = args[-1]
-        core.queue.append(slskmessages.PrivateRoomRemoveOperator(room, self.user))
+        core.chatrooms.remove_operator_from_private_room(room, self.user)
 
     def on_add_to_list(self, action, state):
 

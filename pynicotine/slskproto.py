@@ -28,6 +28,7 @@ import struct
 import sys
 import time
 
+from collections import deque
 from threading import Thread
 
 from pynicotine.events import events
@@ -362,15 +363,14 @@ class SoulseekNetworkThread(Thread):
     SOCKET_WRITE_BUFFER_SIZE = 1048576
     SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
-    def __init__(self, queue, user_addresses, portmapper):
-        """ queue is deque object that holds network messages from Core. """
+    def __init__(self, user_addresses, portmapper):
 
         super().__init__(name="SoulseekNetworkThread")
 
-        self._queue = queue
         self._user_addresses = user_addresses
         self._portmapper = portmapper
 
+        self._queue = deque()
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
@@ -429,14 +429,18 @@ class SoulseekNetworkThread(Thread):
 
         for event_name, callback in (
             ("enable-message-queue", self._enable_message_queue),
+            ("queue-network-message", self._queue_network_message),
             ("quit", self._quit),
             ("start", self.start)
         ):
             events.connect(event_name, callback)
 
     def _enable_message_queue(self):
-        self._queue.clear()
         self._should_process_queue = True
+
+    def _queue_network_message(self, msg):
+        if self._should_process_queue:
+            self._queue.append(msg)
 
     def _quit(self):
         self._want_abort = True

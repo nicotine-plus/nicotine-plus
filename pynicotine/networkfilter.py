@@ -538,7 +538,7 @@ class NetworkFilter:
         for ip_address in config.sections["server"]["ipblocklist"]:
             # We can't close wildcard patterns nor dummy (zero) addresses
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
-                core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+                core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
     """ Callbacks """
 
@@ -607,7 +607,7 @@ class NetworkFilter:
 
         if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
             # We can't close wildcard patterns nor dummy (zero) address entries
-            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
         return ip_address
 
