@@ -81,7 +81,6 @@ class Core:
         self.privileges_left = None
         self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
-        self.message_events = {}
         self.user_addresses = {}
         self.user_countries = {}
         self.user_statuses = {}
@@ -325,6 +324,7 @@ class Core:
         self.user_countries.clear()
         self.user_statuses.clear()
         self.watched_users.clear()
+        self._ip_requested.clear()
 
         if self.pluginhandler:
             self.pluginhandler.server_disconnect_notification(manual_disconnect)
