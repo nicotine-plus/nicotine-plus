@@ -702,7 +702,7 @@ class PluginSettingsDialog(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
-            self.application.window, parent=scrolled_window,
+            self.application.window, parent=scrolled_window, activate_row_callback=self.on_row_activated,
             columns={
                 "description": {
                     "column_type": "text",
@@ -710,6 +710,7 @@ class PluginSettingsDialog(Dialog):
                 }
             }
         )
+        treeview.description = description
         self.application.preferences.set_widget(treeview, option_value)
 
         button_container = Gtk.Box(margin_end=6, margin_bottom=6, margin_start=6, margin_top=6,
@@ -726,7 +727,7 @@ class PluginSettingsDialog(Dialog):
             label = Gtk.Label(label=label_text, mnemonic_widget=button, visible=True)
 
             button.set_property("child", label_container)
-            button.connect("clicked", callback, treeview, description)
+            button.connect("clicked", callback, treeview)
             add_css_class(button, "flat")
 
             if GTK_API_VERSION >= 4:
@@ -852,12 +853,12 @@ class PluginSettingsDialog(Dialog):
 
         treeview.add_row([value])
 
-    def on_add(self, _button, treeview, description):
+    def on_add(self, _button, treeview):
 
         EntryDialog(
             parent=self,
             title=_("Add Item"),
-            message=description,
+            message=treeview.description,
             callback=self.on_add_response,
             callback_data=treeview
         ).show()
@@ -872,7 +873,7 @@ class PluginSettingsDialog(Dialog):
         treeview, iterator = data
         treeview.set_row_value(iterator, "description", value)
 
-    def on_edit(self, _button, treeview, description):
+    def on_edit(self, _button=None, treeview=None):
 
         for iterator in treeview.get_selected_rows():
             value = treeview.get_row_value(iterator, "description")
@@ -880,16 +881,19 @@ class PluginSettingsDialog(Dialog):
             EntryDialog(
                 parent=self,
                 title=_("Edit Item"),
-                message=description,
+                message=treeview.description,
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
             ).show()
             return
 
-    def on_remove(self, _button, treeview, _description):
+    def on_remove(self, _button, treeview):
         for iterator in reversed(treeview.get_selected_rows()):
             treeview.remove_row(iterator)
+
+    def on_row_activated(self, treeview, *_args):
+        self.on_edit(treeview=treeview)
 
     def on_cancel(self, *_args):
         self.close()
