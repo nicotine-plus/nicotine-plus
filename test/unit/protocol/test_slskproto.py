@@ -22,7 +22,6 @@ import pickle
 import selectors
 import socket
 
-from collections import deque
 from time import sleep
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -98,8 +97,9 @@ class SoulseekNetworkTest(TestCase):
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
-        events.emit("queue-network-message",
-            ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
+        events.emit(
+            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525)
+        )
         sleep(SLSKPROTO_RUN_TIME)
 
         if hasattr(socket, "TCP_USER_TIMEOUT"):
@@ -123,8 +123,8 @@ class SoulseekNetworkTest(TestCase):
 
     def test_login(self):
 
-        events.emit("queue-network-message",
-            ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
+        events.emit(
+            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 
