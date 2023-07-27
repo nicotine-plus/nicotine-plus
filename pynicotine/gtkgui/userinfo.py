@@ -85,6 +85,9 @@ class UserInfos(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def on_remove_all_pages(self, *_args):
+        core.userinfo.remove_all_users()
+
     def on_show_user_profile(self, *_args):
 
         username = self.window.userinfo_entry.get_text().strip()

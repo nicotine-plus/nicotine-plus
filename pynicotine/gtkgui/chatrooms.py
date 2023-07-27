@@ -102,6 +102,9 @@ class ChatRooms(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def on_remove_all_pages(self, *_args):
+        core.chatrooms.remove_all_rooms()
+
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}

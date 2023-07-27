@@ -135,6 +135,9 @@ class Searches(IconNotebook):
             self.window.application.notifications.update_title()
             break
 
+    def on_remove_all_pages(self, *_args):
+        core.search.remove_all_searches()
+
     def on_search_mode(self, action, state):
 
         action.set_state(state)

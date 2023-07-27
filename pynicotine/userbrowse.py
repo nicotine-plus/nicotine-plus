@@ -45,7 +45,7 @@ class UserBrowse:
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.user_shares.clear()
+        self.remove_all_users()
 
     def _server_login(self, msg):
 
@@ -71,6 +71,10 @@ class UserBrowse:
     def remove_user(self, user):
         del self.user_shares[user]
         events.emit("user-browse-remove-user", user)
+
+    def remove_all_users(self):
+        for user in self.user_shares.copy():
+            self.remove_user(user)
 
     def _parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """

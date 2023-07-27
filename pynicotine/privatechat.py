@@ -62,8 +62,8 @@ class PrivateChat:
         self.update_completions()
 
     def _quit(self):
+        self.remove_all_users(is_permanent=False)
         self.completions.clear()
-        self.users.clear()
 
     def _server_login(self, msg):
 
@@ -95,13 +95,17 @@ class PrivateChat:
         if user not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].append(user)
 
-    def remove_user(self, user):
+    def remove_user(self, user, is_permanent=True):
 
-        if user in config.sections["privatechat"]["users"]:
+        if is_permanent and user in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].remove(user)
 
         self.users.remove(user)
         events.emit("private-chat-remove-user", user)
+
+    def remove_all_users(self, is_permanent=True):
+        for user in self.users.copy():
+            self.remove_user(user, is_permanent)
 
     def show_user(self, user, switch_page=True):
 

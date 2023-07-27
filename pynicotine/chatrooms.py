@@ -62,8 +62,8 @@ class ChatRooms:
             events.connect(event_name, callback)
 
     def _quit(self):
+        self.remove_all_rooms(is_permanent=False)
         self.completions.clear()
-        self.joined_rooms.clear()
 
     def _server_login(self, msg):
 
@@ -107,7 +107,7 @@ class ChatRooms:
 
         events.emit("show-room", room)
 
-    def remove_room(self, room):
+    def remove_room(self, room, is_permanent=True):
 
         if room not in self.joined_rooms:
             return
@@ -125,13 +125,18 @@ class ChatRooms:
             for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
                 dictionary.pop(username, None)
 
-        if room in config.sections["columns"]["chat_room"]:
-            del config.sections["columns"]["chat_room"][room]
+        if is_permanent:
+            if room in config.sections["columns"]["chat_room"]:
+                del config.sections["columns"]["chat_room"][room]
 
-        if room in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].remove(room)
+            if room in config.sections["server"]["autojoin"]:
+                config.sections["server"]["autojoin"].remove(room)
 
         events.emit("remove-room", room)
+
+    def remove_all_rooms(self, is_permanent=True):
+        for room in self.joined_rooms.copy():
+            self.remove_room(room, is_permanent)
 
     def clear_room_messages(self, room):
         events.emit("clear-room-messages", room)

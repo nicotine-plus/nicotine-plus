@@ -74,6 +74,9 @@ class PrivateChats(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def on_remove_all_pages(self, *_args):
+        core.privatechat.remove_all_users()
+
     def on_reordered_page(self, *_args):
 
         tab_order = {}

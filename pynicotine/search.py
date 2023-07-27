@@ -73,7 +73,7 @@ class Searches:
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.searches.clear()
+        self.remove_all_searches()
 
     def _server_disconnect(self, _msg):
         events.cancel_scheduled(self._wishlist_timer_id)
@@ -124,6 +124,10 @@ class Searches:
             del self.searches[token]
 
         events.emit("remove-search", token)
+
+    def remove_all_searches(self):
+        for token in self.searches.copy():
+            self.remove_search(token)
 
     def show_search(self, token):
         events.emit("show-search", token)
