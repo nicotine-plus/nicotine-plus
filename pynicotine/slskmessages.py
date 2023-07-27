@@ -147,13 +147,13 @@ class CloseConnectionIP(InternalMessage):
 class ServerConnect(InternalMessage):
     """ Core sends this to make networking thread establish a server connection. """
 
-    __slots__ = ("addr", "login", "interface", "bound_ip", "listen_port")
+    __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port")
 
-    def __init__(self, addr=None, login=None, interface=None, bound_ip=None, listen_port=None):
+    def __init__(self, addr=None, login=None, interface_name=None, interface_address=None, listen_port=None):
         self.addr = addr
         self.login = login
-        self.interface = interface
-        self.bound_ip = bound_ip
+        self.interface_name = interface_name
+        self.interface_address = interface_address
         self.listen_port = listen_port
 
 

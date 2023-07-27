@@ -123,7 +123,6 @@ else:
 
     MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
 
-SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
 UINT32_UNPACK = struct.Struct("<I").unpack
 DOUBLE_UINT32_UNPACK = struct.Struct("<II").unpack
 
@@ -173,6 +172,181 @@ class PeerConnection(Connection):
         self.lastcallback = time.time()
 
 
+class NetworkInterfaces:
+
+    if sys.platform == "win32":
+        from ctypes import POINTER, Structure, wintypes
+
+        AF_INET = 2
+
+        GAA_FLAG_SKIP_ANYCAST = 2
+        GAA_FLAG_SKIP_MULTICAST = 4
+        GAA_FLAG_SKIP_DNS_SERVER = 8
+
+        ERROR_BUFFER_OVERFLOW = 111
+
+        class SockaddrIn(Structure):
+            pass
+
+        class SocketAddress(Structure):
+            pass
+
+        class IpAdapterUnicastAddress(Structure):
+            pass
+
+        class IpAdapterAddresses(Structure):
+            pass
+
+        SockaddrIn._fields_ = [  # pylint: disable=protected-access
+            ("sin_family", wintypes.USHORT),
+            ("sin_port", wintypes.USHORT),
+            ("sin_addr", wintypes.BYTE * 4),
+            ("sin_zero", wintypes.CHAR * 8)
+        ]
+
+        SocketAddress._fields_ = [  # pylint: disable=protected-access
+            ("lp_sockaddr", POINTER(SockaddrIn)),
+            ("i_sockaddr_length", wintypes.INT)
+        ]
+
+        IpAdapterUnicastAddress._fields_ = [  # pylint: disable=protected-access
+            ("length", wintypes.ULONG),
+            ("flags", wintypes.DWORD),
+            ("next", POINTER(IpAdapterUnicastAddress)),
+            ("address", SocketAddress)
+        ]
+
+        IpAdapterAddresses._fields_ = [  # pylint: disable=protected-access
+            ("length", wintypes.ULONG),
+            ("if_index", wintypes.DWORD),
+            ("next", POINTER(IpAdapterAddresses)),
+            ("adapter_name", wintypes.LPSTR),
+            ("first_unicast_address", POINTER(IpAdapterUnicastAddress)),
+            ("first_anycast_address", wintypes.LPVOID),
+            ("first_multicast_address", wintypes.LPVOID),
+            ("first_dns_server_address", wintypes.LPVOID),
+            ("dns_suffix", wintypes.LPWSTR),
+            ("description", wintypes.LPWSTR),
+            ("friendly_name", wintypes.LPWSTR)
+        ]
+    else:
+        SO_BINDTODEVICE = 25
+        SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
+
+    @classmethod
+    def _get_interface_addresses_win32(cls):
+        """ Returns a dictionary of network interface names and IP addresses (Win32)
+        https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses """
+
+        # pylint: disable=invalid-name
+
+        from ctypes import byref, create_string_buffer, windll, wintypes
+
+        interface_addresses = {}
+        address_buffer_size = wintypes.ULONG(1024 * 15)
+        return_value = cls.ERROR_BUFFER_OVERFLOW
+
+        while return_value == cls.ERROR_BUFFER_OVERFLOW:
+            address_buffer = create_string_buffer(address_buffer_size.value)
+            return_value = windll.Iphlpapi.GetAdaptersAddresses(
+                cls.AF_INET,
+                (cls.GAA_FLAG_SKIP_ANYCAST | cls.GAA_FLAG_SKIP_MULTICAST | cls.GAA_FLAG_SKIP_DNS_SERVER),
+                None,
+                byref(address_buffer),
+                byref(address_buffer_size),
+            )
+
+        if return_value:
+            log.add_debug("Failed to get list of network interfaces. Error code: %s", return_value)
+            return interface_addresses
+
+        adapter_addresses = cls.IpAdapterAddresses.from_buffer(address_buffer)
+
+        while True:
+            if adapter_addresses.first_unicast_address:
+                interface_name = adapter_addresses.friendly_name
+                socket_address = adapter_addresses.first_unicast_address[0].address
+                interface_addresses[interface_name] = socket.inet_ntoa(socket_address.lp_sockaddr[0].sin_addr)
+
+            if not adapter_addresses.next:
+                break
+
+            adapter_addresses = adapter_addresses.next[0]
+
+        return interface_addresses
+
+    @classmethod
+    def _get_interface_addresses_posix(cls):
+        """ Returns a dictionary of network interface names and IP addresses (POSIX) """
+
+        interface_addresses = {}
+
+        try:
+            interface_name_index = socket.if_nameindex()
+
+        except (AttributeError, OSError) as error:
+            log.add_debug("Failed to get list of network interfaces. Error: %s", error)
+            return interface_addresses
+
+        for _i, interface_name in interface_name_index:
+            try:
+                import fcntl  # pylint: disable=import-error
+
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                    ip_interface = fcntl.ioctl(sock.fileno(),
+                                               cls.SIOCGIFADDR,
+                                               struct.pack("256s", interface_name.encode()[:15]))
+
+                    ip_address = socket.inet_ntoa(ip_interface[20:24])
+                    interface_addresses[interface_name] = ip_address
+
+            except OSError as error:
+                log.add_debug("Failed to get IP address for network interface %s: %s", (interface_name, error))
+                continue
+
+        return interface_addresses
+
+    @classmethod
+    def get_interface_addresses(cls):
+        """ Returns a dictionary of network interface names and IP addresses """
+
+        if sys.platform == "win32":
+            return cls._get_interface_addresses_win32()
+
+        return cls._get_interface_addresses_posix()
+
+    @classmethod
+    def bind_to_interface(cls, sock, interface_name):
+        """ Bind socket directly to interface on Linux and macOS. Other platforms can use
+        bind_to_interface_address() with an IP address retrieved from get_interface_addresses()
+        instead. """
+
+        if not interface_name:
+            return True
+
+        try:
+            if sys.platform == "linux":
+                sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
+                return True
+
+            if sys.platform == "darwin":
+                sock.setsockopt(socket.IPPROTO_IP, cls.SO_BINDTODEVICE, socket.if_nametoindex(interface_name))
+                return True
+
+        except OSError:
+            pass
+
+        return False
+
+    @classmethod
+    def bind_to_interface_address(cls, sock, address):
+        """ Bind socket to the IP address of a network interface, retrieved from
+        get_interface_addresses(). Alternative to bind_to_interface() for platforms that
+        do not support it. """
+
+        sock.bind((address, 0))
+
+
 class SoulseekNetworkThread(Thread):
     """ This is a networking thread that actually does all the communication.
     It sends data to the core via a callback function and receives data via a deque object. """
@@ -206,8 +380,8 @@ class SoulseekNetworkThread(Thread):
 
         self._selector = None
         self._listen_socket = None
-        self._bound_ip = None
-        self._interface = None
+        self._interface_name = None
+        self._interface_address = None
 
         self._server_socket = None
         self._server_address = None
@@ -278,6 +452,7 @@ class SoulseekNetworkThread(Thread):
         self._listen_socket.setblocking(False)
 
         if not self._bind_listen_port():
+            self._close_listen_socket()
             return False
 
         self._selector.register(self._listen_socket, selectors.EVENT_READ)
@@ -288,76 +463,64 @@ class SoulseekNetworkThread(Thread):
         if self._listen_socket is None:
             return
 
-        self._selector.unregister(self._listen_socket)
+        try:
+            self._selector.unregister(self._listen_socket)
+
+        except KeyError:
+            # Socket was not registered
+            pass
+
         self._close_socket(self._listen_socket, shutdown=False)
         self._listen_socket = None
         self.listen_port = None
 
     def _bind_listen_port(self):
 
-        if self._interface and not self._bound_ip:
-            try:
-                self._bind_to_network_interface(self._listen_socket, self._interface)
+        if not self._bind_socket_interface(self._listen_socket):
+            self._set_server_timer()
+            log.add(_("Specified network interface '%s' is not available"), self._interface_name)
+            return False
 
-            except OSError:
-                log.add(_("Specified network interface '%s' is not available"), self._interface,
-                        title=_("Unknown Network Interface"))
-                return False
-
-        ip_address = self._bound_ip or "0.0.0.0"
+        ip_address = self._interface_address or "0.0.0.0"
 
         try:
             self._listen_socket.bind((ip_address, self.listen_port))
             self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
         except OSError as error:
-            self.listen_port = None
+            self._set_server_timer()
             log.add(_("Cannot listen on port %(port)s. Ensure no other application uses it, or choose a "
-                      "different port. Error: %(error)s"), {"port": self.listen_port, "error": error},
-                    title=_("Listening Port Unavailable"))
+                      "different port. Error: %(error)s"), {"port": self.listen_port, "error": error})
+            self.listen_port = None
             return False
 
         log.add(_("Listening on port: %i"), self.listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
         return True
 
-    @staticmethod
-    def _get_interface_ip_address(if_name):
+    def _bind_socket_interface(self, sock):
 
-        try:
-            import fcntl
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Attempt to bind socket to an IP address, if provided with the --bindip CLI argument
+        # or the platform doesn't support binding directly to an interface name
+        if self._interface_address and sock is not self._listen_socket:
+            NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
+            return True
 
-            ip_if = fcntl.ioctl(sock.fileno(),
-                                SIOCGIFADDR,
-                                struct.pack("256s", if_name.encode()[:15]))
+        # If no IP address is stored, attempt to bind directly to network interface name
+        if NetworkInterfaces.bind_to_interface(sock, self._interface_name):
+            return True
 
-            ip_address = socket.inet_ntoa(ip_if[20:24])
+        # System does not support binding directly to a network interface name
+        # Retrieve the IP address of the interface, cache it for later, and bind to it instead
+        self._interface_address = NetworkInterfaces.get_interface_addresses().get(self._interface_name)
 
-        except ImportError:
-            ip_address = None
+        if self._interface_address:
+            if sock is not self._listen_socket:
+                NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
 
-        return ip_address
+            return True
 
-    def _bind_to_network_interface(self, sock, if_name):
-
-        try:
-            if sys.platform == "linux":
-                sock.setsockopt(socket.SOL_SOCKET, 25, if_name.encode())
-                self._bound_ip = None
-                return
-
-            if sys.platform == "darwin":
-                sock.setsockopt(socket.IPPROTO_IP, 25, socket.if_nametoindex(if_name))
-                self._bound_ip = None
-                return
-
-        except PermissionError:
-            pass
-
-        # System does not support changing the network interface
-        # Retrieve the IP address of the interface, and bind to it instead
-        self._bound_ip = self._get_interface_ip_address(if_name)
+        return False
 
     def _find_local_ip_address(self):
 
@@ -365,11 +528,7 @@ class SoulseekNetworkThread(Thread):
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
 
             # Use the interface we have selected
-            if self._bound_ip:
-                local_socket.bind((self._bound_ip, 0))
-
-            elif self._interface:
-                self._bind_to_network_interface(local_socket, self._interface)
+            self._bind_socket_interface(local_socket)
 
             try:
                 # Send a broadcast packet on a local address (doesn't need to be reachable,
@@ -391,13 +550,8 @@ class SoulseekNetworkThread(Thread):
         if self._server_socket:
             return
 
-        if sys.platform == "win32":
-            # TODO: support custom network interface on Windows
-            self._interface = None
-        else:
-            self._interface = msg_obj.interface
-
-        self._bound_ip = msg_obj.bound_ip
+        self._interface_name = msg_obj.interface_name
+        self._interface_address = msg_obj.interface_address
         self.listen_port = msg_obj.listen_port
 
         if not self._create_listen_socket():
@@ -416,7 +570,7 @@ class SoulseekNetworkThread(Thread):
         """ We're disconnecting from the server, clean up """
 
         self._should_process_queue = False
-        self._bound_ip = self._interface = self._server_socket = None
+        self._interface_name = self._interface_address = self._server_socket = None
 
         self._close_listen_socket()
         self.portmapper.remove_port_mapping(blocking=True)
@@ -487,9 +641,7 @@ class SoulseekNetworkThread(Thread):
             self._server_timeout_value = self._server_timeout_value * 2
 
         self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
-
-        log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
-                self._server_timeout_value)
+        log.add(_("Reconnecting to server in %i seconds"), self._server_timeout_value)
 
     """ File Transfers """
 
@@ -1186,12 +1338,7 @@ class SoulseekNetworkThread(Thread):
 
             # Detect if our connection to the server is still alive
             self._set_server_socket_keepalive(server_socket)
-
-            if self._bound_ip:
-                server_socket.bind((self._bound_ip, 0))
-
-            elif self._interface:
-                self._bind_to_network_interface(server_socket, self._interface)
+            self._bind_socket_interface(server_socket)
 
             server_socket.connect_ex(msg_obj.addr)
 
@@ -1541,12 +1688,7 @@ class SoulseekNetworkThread(Thread):
             sock.setblocking(False)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-
-            if self._bound_ip:
-                sock.bind((self._bound_ip, 0))
-
-            elif self._interface:
-                self._bind_to_network_interface(sock, self._interface)
+            self._bind_socket_interface(sock)
 
             sock.connect_ex(msg_obj.addr)
 

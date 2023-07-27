@@ -239,8 +239,8 @@ class Core:
         self.queue.append(slskmessages.ServerConnect(
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
-            interface=config.sections["server"]["interface"],
-            bound_ip=self.bindip,
+            interface_name=config.sections["server"]["interface"],
+            interface_address=self.bindip,
             listen_port=self.port if self.port else config.sections["server"]["portrange"][0]
         ))
 
