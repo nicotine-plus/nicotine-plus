@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-07-28 13:01+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -627,9 +627,8 @@ msgstr "Introduzca el nuevo nombre virtual de «%(dir)s»:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1496
 #: pynicotine/gtkgui/dialogs/preferences.py:2338
 #: pynicotine/gtkgui/dialogs/wishlist.py:121
-#, fuzzy
 msgid "_Edit"
-msgstr "Editar"
+msgstr "_Editar"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:68
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:251
@@ -766,9 +765,8 @@ msgid "Change Password"
 msgstr "Cambiar la contraseña"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
-#, fuzzy
 msgid "_Change"
-msgstr "Pestaña cambiada"
+msgstr "_Cambiar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:275
 msgid "No one"
@@ -873,9 +871,8 @@ msgstr "Introducir un nuevo filtro de descarga:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1466
 #: pynicotine/gtkgui/dialogs/preferences.py:2309
 #: pynicotine/gtkgui/userlist.py:424
-#, fuzzy
 msgid "_Add"
-msgstr "_Añadir…"
+msgstr "_Añadir"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:439
 #: pynicotine/gtkgui/dialogs/preferences.py:472
@@ -1020,9 +1017,8 @@ msgid "Edit Replacement"
 msgstr "Modificar reemplazo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1612
-#, fuzzy
 msgid "System default"
-msgstr "Sistema predeterminado"
+msgstr "Predeterminado del sistema"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
 msgid "Quit program"
@@ -1739,7 +1735,6 @@ msgstr "Tamaño"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
-#, fuzzy
 msgid "Quality"
 msgstr "Calidad"
 
@@ -2086,9 +2081,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Introduce el nombre del usuario al que deseas subir archivos:"
 
 #: pynicotine/gtkgui/userbrowse.py:784 pynicotine/gtkgui/userbrowse.py:992
-#, fuzzy
 msgid "_Upload"
-msgstr "S_ubidas"
+msgstr "_Subir"
 
 #: pynicotine/gtkgui/userbrowse.py:968
 msgid "Select Destination Folder for Files"
@@ -2402,9 +2396,8 @@ msgid "Gift Privileges"
 msgstr "Regalar privilegios"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:574
-#, fuzzy
 msgid "_Give Privileges"
-msgstr "Regalar privilegios"
+msgstr "_Otorgar privilegios"
 
 #: pynicotine/gtkgui/widgets/textview.py:425
 msgid "--- old messages above ---"
@@ -2485,27 +2478,24 @@ msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Introduce el nombre del usuario al que deseas enviar un mensaje:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:233
-#, fuzzy
 msgid "_Message"
-msgstr "_Todos los mensajes"
+msgstr "_Mensaje"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:253
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr "Introduce el nombre del usuario cuyo perfil quieres ver:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:254
-#, fuzzy
 msgid "_View Profile"
-msgstr "Ver el perfil del usuario"
+msgstr "_Ver el perfil"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:274
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Introduce el nombre del usuario cuya lista de compartidos deseas ver:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:275
-#, fuzzy
 msgid "_Browse"
-msgstr "_Explorar archivos"
+msgstr "_Explorar"
 
 #: pynicotine/gtkgui/widgets/treeview.py:637
 #, python-format
@@ -2756,9 +2746,8 @@ msgid "Cyprus"
 msgstr "Chipre"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "Czechia"
-msgstr "Chequia"
+msgstr "República Checa"
 
 #: pynicotine/networkfilter.py:88
 msgid "Germany"
@@ -3437,7 +3426,6 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
 msgstr "Turquía"
 
@@ -3849,9 +3837,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Argumento no válido, opciones posibles: %s"
 
 #: pynicotine/pluginsystem.py:858
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Utilización: %(command)s %(args)s"
+msgstr "Uso: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:897
 #, python-format
@@ -4798,9 +4786,8 @@ msgid "_Personal Profile"
 msgstr "_Perfil personal"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:953
-#, fuzzy
 msgid "Configure Account"
-msgstr "Configurar el registro"
+msgstr "Configurar la cuenta"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1020
 msgid ""
@@ -4837,9 +4824,8 @@ msgid "_Message All"
 msgstr "_Todos los mensajes"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1276
-#, fuzzy
 msgid "Configure Ignored Users"
-msgstr "Usuarios ignorados"
+msgstr "Configurar los usuarios ignorados"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1343
 msgid ""
@@ -4870,9 +4856,8 @@ msgstr ""
 "otros usuarios de la red Soulseek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1567
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Ver el perfil del usuario"
+msgstr "Configurar el perfil de usuario"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Scanning Shares"
