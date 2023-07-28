@@ -229,14 +229,21 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     * mplayer $
     * echo $ | flite -t """
 
-    from subprocess import PIPE
-    from subprocess import Popen
+    # pylint: disable=consider-using-with
+
+    from subprocess import PIPE, Popen, STARTF_USESHOWWINDOW, STARTUPINFO
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
         background = False
 
     command = command.strip()
+    startupinfo = None
+
+    if sys.platform == "win32":
+        # Hide console window on Windows
+        startupinfo = STARTUPINFO()
+        startupinfo.dwFlags |= STARTF_USESHOWWINDOW
 
     if command.endswith("&"):
         command = command[:-1]
@@ -289,15 +296,15 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
-            procs.append(Popen(subcommands[0], stdout=finalstdout))      # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[0], startupinfo=startupinfo, stdout=finalstdout))
         else:
-            procs.append(Popen(subcommands[0], stdout=PIPE))             # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[0], startupinfo=startupinfo, stdout=PIPE))
 
             for subcommand in subcommands[1:-1]:
-                procs.append(Popen(subcommand, stdin=procs[-1].stdout,   # pylint: disable=consider-using-with
+                procs.append(Popen(subcommand, startupinfo=startupinfo, stdin=procs[-1].stdout,
                                    stdout=PIPE))
 
-            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout,  # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[-1], startupinfo=startupinfo, stdin=procs[-1].stdout,
                                stdout=finalstdout))
 
         if not background and not returnoutput:
@@ -307,7 +314,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         command = subcommands[len(procs)]
         command_no = len(procs) + 1
         num_commands = len(subcommands)
-        raise RuntimeError(f"Problem while executing command {command} ({command_no} of {num_commands}") from error
+        raise RuntimeError(
+            f"Problem while executing command {command} ({command_no} of "
+            f"{num_commands}): {error}") from error
 
     if not returnoutput:
         return True
