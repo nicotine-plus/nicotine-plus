@@ -553,9 +553,7 @@ class Plugin(BasePlugin):
 
         args_split = args.split(maxsplit=1)
         group_name, folder_path = args_split[0], args_split[1].strip(' "')
-
-        self.core.shares.remove_share(folder_path)
-        virtual_name = self.core.shares.add_share(group_name, folder_path)
+        virtual_name = self.core.shares.add_share(folder_path, group_name=group_name)
 
         if not virtual_name:
             self.output(_("Cannot share inaccessible folder \"%s\"") % folder_path)

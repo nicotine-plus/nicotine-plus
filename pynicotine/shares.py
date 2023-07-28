@@ -756,23 +756,22 @@ class Shares:
 
     def add_share(self, folder_path, group_name="public", virtual_name=None, share_groups=None, validate_path=True):
 
-        if share_groups is None:
-            share_groups = self.get_shared_folders()
-
-        public_shares, buddy_shares = share_groups
-
-        if folder_path in (x[1] for x in public_shares + buddy_shares):
-            return None
-
         if validate_path and not os.access(encode_path(folder_path), os.R_OK):
             return None
 
+        if share_groups is None:
+            share_groups = self.get_shared_folders()
+
+        # Remove previous share with same path if present
+        core.shares.remove_share(folder_path, share_groups=share_groups)
+
+        public_shares, buddy_shares = share_groups
         virtual_name = core.shares.get_normalized_virtual_name(
             virtual_name or os.path.basename(folder_path), shared_folders=(public_shares + buddy_shares)
         )
         shares = buddy_shares if group_name == "buddy" else public_shares
 
-        shares.append((virtual_name, folder_path))
+        shares.append((virtual_name, os.path.normpath(folder_path)))
         return virtual_name
 
     def remove_share(self, virtual_name_or_folder_path, share_groups=None):
@@ -780,9 +779,12 @@ class Shares:
         if share_groups is None:
             share_groups = self.get_shared_folders()
 
+        normalized_folder_path = os.path.normpath(virtual_name_or_folder_path)
+
         for shares in share_groups:
             for virtual_name, folder_path in shares:
-                if virtual_name_or_folder_path in (virtual_name, folder_path):
+                if (virtual_name_or_folder_path in (virtual_name, folder_path)
+                        or folder_path == normalized_folder_path):
                     shares.remove((virtual_name, folder_path))
                     return True
 

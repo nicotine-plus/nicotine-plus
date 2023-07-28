@@ -633,7 +633,7 @@ class SharesPage:
         core.shares.remove_share(
             virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
         )
-        core.shares.add_share(
+        new_virtual_name = core.shares.add_share(
             folder_path, group_name=group_name, virtual_name=new_virtual_name,
             share_groups=(self.shared_folders, self.buddy_shared_folders), validate_path=False
         )
@@ -648,9 +648,13 @@ class SharesPage:
                 folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders)
             )
 
-            if virtual_name:
-                is_buddy_only = False
-                self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
+            if not virtual_name:
+                continue
+
+            self.rescan_required = True
+            is_buddy_only = False
+
+            self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
 
     def on_add_shared_folder(self, *_args):
 
@@ -666,8 +670,7 @@ class SharesPage:
         new_virtual_name = dialog.get_entry_value()
         new_is_buddy_only = dialog.get_option_value()
 
-        if new_virtual_name:
-            self._edit_shared_folder(iterator, new_virtual_name, new_is_buddy_only)
+        self._edit_shared_folder(iterator, new_virtual_name, new_is_buddy_only)
 
     def on_edit_shared_folder(self, *_args):
 

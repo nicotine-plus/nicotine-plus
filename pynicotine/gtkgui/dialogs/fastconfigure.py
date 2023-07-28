@@ -160,17 +160,18 @@ class FastConfigure(Dialog):
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
         new_virtual_name = dialog.get_entry_value()
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
-        if not new_virtual_name:
+        if new_virtual_name == old_virtual_name:
             return
 
         self.rescan_required = True
-
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
         core.shares.remove_share(old_virtual_name)
-        core.shares.add_share(folder_path, virtual_name=new_virtual_name, validate_path=False)
+        new_virtual_name = core.shares.add_share(
+            folder_path, virtual_name=new_virtual_name, validate_path=False
+        )
 
         self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
 
