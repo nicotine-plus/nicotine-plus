@@ -37,10 +37,11 @@ from pynicotine.slskmessages import UserStatus
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, widget, completion, entity, send_message, is_chatroom=False):
+    def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
 
         self.application = application
         self.widget = widget
+        self.chat_view = chat_view
         self.completion = completion
         self.entity = entity
         self.send_message = send_message
@@ -49,6 +50,9 @@ class ChatEntry:
         widget.connect("activate", self.on_enter)
         Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", widget, self.on_tab_complete_accelerator)
+        Accelerator("Down", widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", widget, self.on_page_down_accelerator)
+        Accelerator("Page_Up", widget, self.on_page_up_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
@@ -109,6 +113,24 @@ class ChatEntry:
         """ Tab and Shift+Tab: tab complete chat """
         return self.completion.on_tab_complete_accelerator(widget, state, backwards)
 
+    def on_page_down_accelerator(self, *_args):
+        """ Page_Down, Down: Scroll chat view to bottom, and keep input focus in entry widget """
+
+        if self.completion and self.completion.selecting_completion:
+            return False
+
+        self.chat_view.scroll_bottom()
+        return True
+
+    def on_page_up_accelerator(self, *_args):
+        """ Page_Up: Move up into view to begin scrolling message history """
+
+        if self.completion and self.completion.selecting_completion:
+            return False
+
+        self.chat_view.widget.grab_focus()
+        return True
+
 
 class ChatCompletion:
 
@@ -118,6 +140,7 @@ class ChatCompletion:
         self.current_completions = []
         self.completion_index = 0
         self.midway_completion = False  # True if the user just used tab completion
+        self.selecting_completion = False  # True if the list box is open with suggestions
 
         self.entry = None
         self.entry_changed_handler = None
@@ -219,6 +242,7 @@ class ChatCompletion:
         item_text = self.model.get_value(iterator, 0).lower()
 
         if item_text.startswith(split_key) and item_text != split_key:
+            self.selecting_completion = True
             return True
 
         return False
@@ -252,7 +276,7 @@ class ChatCompletion:
 
     def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midway_completion = False
+        self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
