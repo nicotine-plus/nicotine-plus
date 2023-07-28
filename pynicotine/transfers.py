@@ -1251,7 +1251,7 @@ class Transfers:
                     core.send_message_to_network_thread(slskmessages.DownloadFile(
                         init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
                     ))
-                    core.send_message_to_peer(username, slskmessages.FileOffset(offset=offset))
+                    core.send_message_to_network_thread(slskmessages.FileOffset(init=msg.init, offset=offset))
 
                 else:
                     self.download_finished(download, file_handle=file_handle)
