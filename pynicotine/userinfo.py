@@ -43,7 +43,7 @@ class UserInfo:
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.users.clear()
+        self.remove_all_users()
 
     def _server_login(self, msg):
 
@@ -78,11 +78,15 @@ class UserInfo:
         core.watch_user(user)
 
         # Request user interests
-        core.queue.append(slskmessages.UserInterests(user))
+        core.send_message_to_server(slskmessages.UserInterests(user))
 
     def remove_user(self, user):
         self.users.remove(user)
         events.emit("user-info-remove-user", user)
+
+    def remove_all_users(self):
+        for user in self.users.copy():
+            self.remove_user(user)
 
     @staticmethod
     def save_user_picture(file_path, picture_bytes):
@@ -143,5 +147,5 @@ class UserInfo:
         else:
             uploadallowed = 0
 
-        core.queue.append(
+        core.send_message_to_server(
             slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))

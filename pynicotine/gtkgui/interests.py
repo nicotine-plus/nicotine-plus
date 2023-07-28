@@ -64,6 +64,7 @@ class Interests:
         # Columns
         self.likes_list_view = TreeView(
             window, parent=self.likes_list_container,
+            delete_accelerator_callback=self.on_remove_thing_i_like,
             columns={
                 "likes": {
                     "column_type": "text",
@@ -75,6 +76,7 @@ class Interests:
 
         self.dislikes_list_view = TreeView(
             window, parent=self.dislikes_list_container,
+            delete_accelerator_callback=self.on_remove_thing_i_dislike,
             columns={
                 "dislikes": {
                     "column_type": "text",

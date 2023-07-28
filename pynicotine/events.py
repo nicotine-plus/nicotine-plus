@@ -40,6 +40,7 @@ EVENT_NAMES = {
     "peer-connection-closed",
     "peer-connection-error",
     "privileged-users",
+    "queue-network-message",
     "quit",
     "remove-privileged-user",
     "server-login",

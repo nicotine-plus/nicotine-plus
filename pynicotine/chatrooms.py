@@ -62,8 +62,8 @@ class ChatRooms:
             events.connect(event_name, callback)
 
     def _quit(self):
+        self.remove_all_rooms(is_permanent=False)
         self.completions.clear()
-        self.joined_rooms.clear()
 
     def _server_login(self, msg):
 
@@ -84,7 +84,7 @@ class ChatRooms:
             if room == self.GLOBAL_ROOM_NAME:
                 self.show_global_room()
             else:
-                core.queue.append(slskmessages.JoinRoom(room))
+                core.send_message_to_server(slskmessages.JoinRoom(room))
 
     def _server_disconnect(self, _msg):
         self.server_rooms.clear()
@@ -94,7 +94,7 @@ class ChatRooms:
     def show_global_room(self):
         # Fake a JoinRoom protocol message
         events.emit("join-room", slskmessages.JoinRoom(self.GLOBAL_ROOM_NAME))
-        core.queue.append(slskmessages.JoinGlobalRoom())
+        core.send_message_to_server(slskmessages.JoinGlobalRoom())
 
     def show_room(self, room, private=False):
 
@@ -102,20 +102,20 @@ class ChatRooms:
             self.show_global_room()
 
         elif room not in self.joined_rooms:
-            core.queue.append(slskmessages.JoinRoom(room, private))
+            core.send_message_to_server(slskmessages.JoinRoom(room, private))
             return
 
         events.emit("show-room", room)
 
-    def remove_room(self, room):
+    def remove_room(self, room, is_permanent=True):
 
         if room not in self.joined_rooms:
             return
 
         if room == self.GLOBAL_ROOM_NAME:
-            core.queue.append(slskmessages.LeaveGlobalRoom())
+            core.send_message_to_server(slskmessages.LeaveGlobalRoom())
         else:
-            core.queue.append(slskmessages.LeaveRoom(room))
+            core.send_message_to_server(slskmessages.LeaveRoom(room))
 
         room_users = self.joined_rooms.pop(room)
         non_watched_users = room_users.difference(core.watched_users)
@@ -125,13 +125,18 @@ class ChatRooms:
             for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
                 dictionary.pop(username, None)
 
-        if room in config.sections["columns"]["chat_room"]:
-            del config.sections["columns"]["chat_room"][room]
+        if is_permanent:
+            if room in config.sections["columns"]["chat_room"]:
+                del config.sections["columns"]["chat_room"][room]
 
-        if room in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].remove(room)
+            if room in config.sections["server"]["autojoin"]:
+                config.sections["server"]["autojoin"].remove(room)
 
         events.emit("remove-room", room)
+
+    def remove_all_rooms(self, is_permanent=True):
+        for room in self.joined_rooms.copy():
+            self.remove_room(room, is_permanent)
 
     def clear_room_messages(self, room):
         events.emit("clear-room-messages", room)
@@ -151,7 +156,7 @@ class ChatRooms:
         room, message = event
         message = core.privatechat.auto_replace(message)
 
-        core.queue.append(slskmessages.SayChatroom(room, message))
+        core.send_message_to_server(slskmessages.SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
 
     def create_private_room(self, room, owner=None, operators=None):
@@ -179,6 +184,18 @@ class ChatRooms:
 
         return private_room
 
+    def add_user_to_private_room(self, room, username):
+        core.send_message_to_server(slskmessages.PrivateRoomAddUser(room, username))
+
+    def add_operator_to_private_room(self, room, username):
+        core.send_message_to_server(slskmessages.PrivateRoomAddOperator(room, username))
+
+    def remove_user_from_private_room(self, room, username):
+        core.send_message_to_server(slskmessages.PrivateRoomRemoveUser(room, username))
+
+    def remove_operator_from_private_room(self, room, username):
+        core.send_message_to_server(slskmessages.PrivateRoomRemoveOperator(room, username))
+
     def is_private_room_owned(self, room):
         private_room = self.private_rooms.get(room)
         return private_room is not None and private_room["owner"] == core.login_username
@@ -191,14 +208,14 @@ class ChatRooms:
         return private_room is not None and core.login_username in private_room["operators"]
 
     def request_room_list(self):
-        core.queue.append(slskmessages.RoomList())
+        core.send_message_to_server(slskmessages.RoomList())
 
     def request_private_room_disown(self, room):
 
         if not self.is_private_room_owned(room):
             return
 
-        core.queue.append(slskmessages.PrivateRoomDisown(room))
+        core.send_message_to_server(slskmessages.PrivateRoomDisown(room))
         del self.private_rooms[room]
 
     def request_private_room_dismember(self, room):
@@ -206,11 +223,11 @@ class ChatRooms:
         if not self.is_private_room_member(room):
             return
 
-        core.queue.append(slskmessages.PrivateRoomDismember(room))
+        core.send_message_to_server(slskmessages.PrivateRoomDismember(room))
         del self.private_rooms[room]
 
     def request_private_room_toggle(self, enabled):
-        core.queue.append(slskmessages.PrivateRoomToggle(enabled))
+        core.send_message_to_server(slskmessages.PrivateRoomToggle(enabled))
 
     def _join_room(self, msg):
         """ Server code: 14 """
@@ -466,12 +483,11 @@ class ChatRooms:
 
 class Tickers:
 
-    def __init__(self):
-
+    def __init__(self, room):
+        self.room = room
         self.messages = []
 
     def add_ticker(self, user, message):
-
         message = message.replace("\n", " ")
         self.messages.insert(0, (user, message))
 
@@ -481,6 +497,9 @@ class Tickers:
             if message[0] == user:
                 del self.messages[i]
                 return
+
+    def set_ticker(self, message):
+        core.send_message_to_server(slskmessages.RoomTickerSet(self.room, message))
 
     def get_tickers(self):
         return self.messages

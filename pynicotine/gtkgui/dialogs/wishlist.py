@@ -52,6 +52,7 @@ class WishList(Dialog):
         self.application = application
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
+            delete_accelerator_callback=self.on_remove_wish,
             columns={
                 "wish": {
                     "column_type": "text",
@@ -66,8 +67,6 @@ class WishList(Dialog):
             self.list_view.add_row([wish], select_row=False)
 
         CompletionEntry(self.wish_entry, self.list_view.model)
-
-        Accelerator("Delete", self.list_view.widget, self.on_remove_wish)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
         for event_name, callback in (

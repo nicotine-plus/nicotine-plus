@@ -32,6 +32,9 @@ if sys.platform == "win32":
     SYS_BASE = sys.prefix
     LIB_FOLDER = os.path.join(SYS_BASE, "bin")
     LIB_EXTENSION = ".dll"
+    UNAVAILABLE_MODULES = [
+        "fcntl", "grp", "nis", "ossaudiodev", "posix", "pwd", "readline", "resource", "spwd", "syslog", "termios"
+    ]
     ICON_NAME = "icon.ico"
 
 elif sys.platform == "darwin":
@@ -39,6 +42,7 @@ elif sys.platform == "darwin":
     SYS_BASE = "/usr/local"
     LIB_FOLDER = os.path.join(SYS_BASE, "lib")
     LIB_EXTENSION = (".dylib", ".so")
+    UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -62,6 +66,14 @@ SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
 GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or "3"
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
+
+# Include (almost) all standard library modules for plugins
+EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
+    "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
+]
+INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
+    {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
+)
 
 include_files = []
 include_resources = []
@@ -194,28 +206,23 @@ def add_gtk():
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
         add_file(file_path=os.path.join(LIB_FOLDER, "gdbus.exe"), output_path="lib/gdbus.exe")
-        lib_output_path = "lib"
-
-    elif sys.platform == "darwin":
-        # .dylib files are in the same folder as the executable
-        lib_output_path = ""
 
     # This also includes all dlls required by GTK
     add_files(
-        folder_path=LIB_FOLDER, output_path=lib_output_path,
+        folder_path=LIB_FOLDER, output_path="lib",
         starts_with="libgtk-%s" % GTK_VERSION, ends_with=LIB_EXTENSION
     )
 
     if GTK_VERSION == "4":
         # ANGLE (OpenGL ES)
         add_files(
-            folder_path=LIB_FOLDER, output_path=lib_output_path,
+            folder_path=LIB_FOLDER, output_path="lib",
             starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
         )
 
     if USE_LIBADWAITA:
         add_files(
-            folder_path=LIB_FOLDER, output_path=lib_output_path,
+            folder_path=LIB_FOLDER, output_path="lib",
             starts_with="libadwaita-", ends_with=LIB_EXTENSION
         )
 
@@ -303,8 +310,8 @@ setup(
         ),
         "build_exe": dict(
             build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME),
-            packages=[MODULE_NAME, "gi"],
-            excludes=["tkinter"],
+            packages=INCLUDED_MODULES,
+            excludes=EXCLUDED_MODULES,
             include_files=include_files,
             zip_include_packages=["*"],
             zip_exclude_packages=[MODULE_NAME]

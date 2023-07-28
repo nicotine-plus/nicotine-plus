@@ -375,21 +375,14 @@ class IconNotebook:
         if self.get_n_pages() == 0:
             self.parent.set_visible(False)
 
-    def remove_all_pages_response(self, dialog, _response_id, _data):
-
-        for i in reversed(range(self.get_n_pages())):
-            page = self.get_nth_page(i)
-            tab_label = self.get_tab_label(page)
-            tab_label.close_callback(dialog)
-
-    def remove_all_pages(self):
+    def remove_all_pages(self, *_args):
 
         OptionDialog(
             parent=self.window,
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
             destructive_response_id="ok",
-            callback=self.remove_all_pages_response
+            callback=self.on_remove_all_pages
         ).show()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
@@ -572,7 +565,7 @@ class IconNotebook:
         self._remove_unread_page(new_page)
 
     def on_remove_all_pages(self, *_args):
-        self.remove_all_pages()
+        raise NotImplementedError
 
     def on_switch_page(self, _notebook, new_page, page_num):
 
@@ -641,7 +634,7 @@ class IconNotebook:
 
         self.popup_menu_pages.add_items(
             ("", None),
-            ("#" + _("Close All Tabs…"), self.on_remove_all_pages)
+            ("#" + _("Close All Tabs…"), self.remove_all_pages)
         )
 
         self.popup_menu_pages.update_model()
@@ -679,10 +672,6 @@ class IconNotebook:
             self.prev_page()
 
         return True
-
-    def on_tab_popup(self, widget, page):
-        # Dummy implementation
-        pass
 
     """ Signals (GTK 4) """
 

@@ -102,6 +102,9 @@ class ChatRooms(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def on_remove_all_pages(self, *_args):
+        core.chatrooms.remove_all_rooms()
+
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}
@@ -407,7 +410,7 @@ class ChatRoom:
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
-        self.tickers = Tickers()
+        self.tickers = Tickers(room)
         self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
@@ -415,7 +418,7 @@ class ChatRoom:
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-                                  users=core.chatrooms.joined_rooms[self.room],
+                                  status_users=core.chatrooms.joined_rooms[self.room],
                                   username_event=self.username_event)
 
         # Event Text Search

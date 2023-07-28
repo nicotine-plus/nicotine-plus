@@ -446,7 +446,7 @@ class ComboBox:
         add_css_class(self.widget, "linked")
         container.append(self.widget)
 
-    def _create_combobox_gtk3(self, container, has_entry):
+    def _create_combobox_gtk3(self, container, has_entry, has_entry_completion):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
@@ -460,7 +460,8 @@ class ComboBox:
             container.add(self.widget)
             return
 
-        add_css_class(self.dropdown, "dropdown-scrollbar")
+        if has_entry_completion:
+            add_css_class(self.dropdown, "dropdown-scrollbar")
 
         self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
         self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
@@ -480,7 +481,7 @@ class ComboBox:
         if GTK_API_VERSION >= 4:
             self._create_combobox_gtk4(container, has_entry)
         else:
-            self._create_combobox_gtk3(container, has_entry)
+            self._create_combobox_gtk3(container, has_entry, has_entry_completion)
 
         if has_entry:
             Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
@@ -556,6 +557,7 @@ class ComboBox:
 
     def set_text(self, text):
         self.entry.set_text(text)
+        self.set_selected_id(text)
 
     def remove_pos(self, position):
 

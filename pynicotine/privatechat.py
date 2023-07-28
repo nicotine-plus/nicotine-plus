@@ -62,8 +62,8 @@ class PrivateChat:
         self.update_completions()
 
     def _quit(self):
+        self.remove_all_users(is_permanent=False)
         self.completions.clear()
-        self.users.clear()
 
     def _server_login(self, msg):
 
@@ -95,13 +95,17 @@ class PrivateChat:
         if user not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].append(user)
 
-    def remove_user(self, user):
+    def remove_user(self, user, is_permanent=True):
 
-        if user in config.sections["privatechat"]["users"]:
+        if is_permanent and user in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].remove(user)
 
         self.users.remove(user)
         events.emit("private-chat-remove-user", user)
+
+    def remove_all_users(self, is_permanent=True):
+        for user in self.users.copy():
+            self.remove_user(user, is_permanent)
 
     def show_user(self, user, switch_page=True):
 
@@ -163,7 +167,7 @@ class PrivateChat:
         else:
             message = ui_message = self.auto_replace(message)
 
-        core.queue.append(slskmessages.MessageUser(user, message))
+        core.send_message_to_server(slskmessages.MessageUser(user, message))
         core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         events.emit("send-private-message", user, ui_message)
@@ -182,7 +186,7 @@ class PrivateChat:
             users = core.transfers.get_downloading_users()
 
         if users:
-            core.queue.append(slskmessages.MessageUsers(users, message))
+            core.send_message_to_server(slskmessages.MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
         """ Server code: 3 """
@@ -216,7 +220,7 @@ class PrivateChat:
                 "message": msg.msg
             })
 
-            core.queue.append(slskmessages.MessageAcked(msg.msgid))
+            core.send_message_to_server(slskmessages.MessageAcked(msg.msgid))
 
         if user != "server":
             # Check ignore status for all other users except "server"

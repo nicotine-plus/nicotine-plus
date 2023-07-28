@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
 from pynicotine.pluginsystem import BasePlugin
 
 
@@ -89,7 +88,7 @@ class Plugin(BasePlugin):
             return
 
         self.probed[user] = "requesting"
-        self.core.queue.append(slskmessages.GetUserStats(user))
+        self.core.request_user_stats(user)
         self.log("Getting statistics from the server for new user %s…", user)
 
     def user_stats_notification(self, user, stats):

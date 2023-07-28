@@ -545,7 +545,7 @@ class Transfers:
         else:
             speed_limit = 0
 
-        core.queue.append(slskmessages.SetDownloadLimit(speed_limit))
+        core.send_message_to_network_thread(slskmessages.SetDownloadLimit(speed_limit))
 
     def update_upload_limits(self):
 
@@ -566,7 +566,7 @@ class Transfers:
         else:
             speed_limit = 0
 
-        core.queue.append(slskmessages.SetUploadLimit(speed_limit, limit_by))
+        core.send_message_to_network_thread(slskmessages.SetUploadLimit(speed_limit, limit_by))
 
     def queue_limit_reached(self, user):
 
@@ -1186,7 +1186,7 @@ class Transfers:
 
             if download.sock is not None:
                 log.add_transfer("Download already has an existing file connection, ignoring init message")
-                core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+                core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
                 return
 
             incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
@@ -1248,10 +1248,10 @@ class Transfers:
 
                 if download.size > offset:
                     download.status = "Transferring"
-                    core.queue.append(slskmessages.DownloadFile(
+                    core.send_message_to_network_thread(slskmessages.DownloadFile(
                         init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
                     ))
-                    core.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
+                    core.send_message_to_peer(username, slskmessages.FileOffset(offset=offset))
 
                 else:
                     self.download_finished(download, file_handle=file_handle)
@@ -1293,7 +1293,7 @@ class Transfers:
 
             if upload.sock is not None:
                 log.add_transfer("Upload already has an existing file connection, ignoring init message")
-                core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+                core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
                 return
 
             need_update = True
@@ -1334,7 +1334,7 @@ class Transfers:
 
                 if upload.size > 0:
                     upload.status = "Transferring"
-                    core.queue.append(slskmessages.UploadFile(
+                    core.send_message_to_network_thread(slskmessages.UploadFile(
                         init=msg.init, token=token, file=file_handle, size=upload.size
                     ))
 
@@ -1350,7 +1350,7 @@ class Transfers:
             return
 
         log.add_transfer("Unknown file upload init message with token %s", token)
-        core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+        core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
 
     def _upload_denied(self, msg):
         """ Peer code: 50 """
@@ -1541,7 +1541,7 @@ class Transfers:
                 if upload.speed is not None:
                     # Inform the server about the last upload speed for this transfer
                     log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
-                    core.queue.append(slskmessages.SendUploadSpeed(upload.speed))
+                    core.send_message_to_server(slskmessages.SendUploadSpeed(upload.speed))
 
                 self.upload_finished(upload, file_handle=upload.file)
                 return
@@ -1608,7 +1608,7 @@ class Transfers:
                     break
 
         if queue_position > 0:
-            core.queue.append(slskmessages.PlaceInQueueResponse(init=msg.init, filename=filename, place=queue_position))
+            core.send_message_to_peer(user, slskmessages.PlaceInQueueResponse(filename=filename, place=queue_position))
 
         if transfer is None:
             return
@@ -2471,7 +2471,7 @@ class Transfers:
             del self.transfer_request_times[download]
 
         if download.sock is not None:
-            core.queue.append(slskmessages.CloseConnection(download.sock))
+            core.send_message_to_network_thread(slskmessages.CloseConnection(download.sock))
             download.sock = None
 
         if download.file is not None:
@@ -2514,7 +2514,7 @@ class Transfers:
             del self.transfer_request_times[upload]
 
         if upload.sock is not None:
-            core.queue.append(slskmessages.CloseConnection(upload.sock))
+            core.send_message_to_network_thread(slskmessages.CloseConnection(upload.sock))
             upload.sock = None
 
         if upload.file is not None:

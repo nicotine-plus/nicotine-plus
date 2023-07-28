@@ -314,14 +314,13 @@ class About(Dialog):
         """Nicotine+ is licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">
 GNU General Public License v3.0 or later</a>, with the following exceptions:""",
 
-        """<b>Country flags licensed under the MIT License.</b>
-Copyright (c) 2016–2017 Bowtie AB
-Copyright (c) 2018–2020 Jack Marsh
-<a href="https://github.com/jackiboy/flagpack">https://github.com/jackiboy/flagpack</a>""",
-
         """<b>tinytag licensed under the MIT License.</b>
 Copyright (c) 2014–2022 Tom Wallroth
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
+
+        """<b>Country flags licensed under the MIT License.</b>
+Copyright (c) 2016–2021 Bowtie AB
+<a href="https://github.com/madebybowtie/FlagKit">https://github.com/madebybowtie/FlagKit</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
 Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.

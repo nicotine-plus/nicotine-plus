@@ -18,7 +18,7 @@ This document contains important information about Nicotine+ design decisions an
 
 ### Python
 
-Nicotine+ is Python application, built on backend code from the PySoulSeek project started in 2001. We only allow Python code in the main client, as this makes it easy to distribute and run Nicotine+ on virtually any system. In turn, we are able to devote more time towards implementing bug fixes and additional functionality.
+Nicotine+ is Python application, originally based on backend code from the PySoulSeek project started in 2001. We only use Python in our codebase, as this allows for running Nicotine+ on almost any system without compiling anything. Developing in a single language is also easier for everyone involved in the project.
 
 We aim to support the oldest minor Python 3 version still used by supported releases of distributions and operating systems. The minimum version Nicotine+ currently supports is 3.6.
 
@@ -30,27 +30,27 @@ GTK fits our needs, and we have no plans of switching to another toolkit.
 
 ## Dependencies
 
-Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software dependency can cause issues for both packagers and users.
+Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software dependency can be an inconvenience for both packagers and users.
 
-Dependencies preinstalled on most systems, as well as modules included in the Python Standard Library, should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
+Modules included in the Python Standard Library should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
 
- * Prefer pure-Python dependencies, as these are more likely to work well on less common systems and architectures.
- * Attempt to find small, maintainable dependencies that can be bundled with the Nicotine+ source code (and give proper attribution). External dependencies can behave surprisingly different on some systems, and be quite outdated on older systems. Use common sense though; do not bundle security-critical dependencies, rapidly changing APIs etc.
+ * Prefer pure-Python dependencies, as these are easier to install and more likely to work on less common systems and architectures.
+ * Attempt to find small, self-contained dependencies that can be bundled with the Nicotine+ source code (and give proper attribution). Use common sense though; do not bundle security-critical dependencies, rapidly changing APIs etc.
 
 The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 
 ## Profiling
 
-Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses few resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as servers, which can be quite constrained.
+Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses fewer system resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as small servers.
 
 Due to Python's interpreted nature, addressing performance issues can be a challenge. There is no straightforward way of solving every performance issue, but these points generally help:
 
- * Use different data structures and algorithms.
- * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
- * Look for alternative ways of accomplishing a task, and compare the performance. Search engines help a lot here.
+ * Use different data structures and algorithms, e.g. dictionaries and sets for faster membership checks (O(1)) compared to lists (O(n)).
+ * Use existing functionality in the Python Standard Library when available. Parts of the standard library are written in C, and perform better than pure-Python counterparts, especially in hot code paths.
+ * Look for alternative ways of accomplishing a task, and measure the performance. Search engines help a lot here.
 
-[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
+[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time.
 
 
 ## Debug Logging

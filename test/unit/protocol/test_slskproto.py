@@ -22,7 +22,6 @@ import pickle
 import selectors
 import socket
 
-from collections import deque
 from time import sleep
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -30,6 +29,7 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 from pynicotine.config import config
+from pynicotine.events import events
 from pynicotine.slskproto import SoulseekNetworkThread
 from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
@@ -79,18 +79,17 @@ class SoulseekNetworkTest(TestCase):
         # Windows doesn't accept mock_socket in select() calls
         selectors.DefaultSelector = MagicMock()
 
-        self.queue = deque()
         config.sections["server"]["upnp"] = False
-        self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses={})
+        self.protothread = SoulseekNetworkThread(user_addresses={}, portmapper=Mock())
         self.protothread.start()
-        self.protothread._enable_message_queue()  # pylint: disable=protected-access
+        events.emit("enable-message-queue")
 
         # Slight delay to allow the network thread to fully start
         sleep(SLSKPROTO_RUN_TIME / 2)
 
     def tearDown(self):
 
-        self.protothread._quit()  # pylint: disable=protected-access
+        events.emit("quit")
 
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
@@ -98,7 +97,9 @@ class SoulseekNetworkTest(TestCase):
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
-        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
+        events.emit(
+            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525)
+        )
         sleep(SLSKPROTO_RUN_TIME)
 
         if hasattr(socket, "TCP_USER_TIMEOUT"):
@@ -122,10 +123,11 @@ class SoulseekNetworkTest(TestCase):
 
     def test_login(self):
 
-        self.queue.append(ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
+        events.emit(
+            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 
-        self.queue.append(SetWaitPort(1))
+        events.emit("queue-network-message", SetWaitPort(1))
 
         sleep(SLSKPROTO_RUN_TIME)
