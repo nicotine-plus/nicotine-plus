@@ -456,7 +456,7 @@ class Scanner(Process):
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                audio = self.tinytag.get(encode_path(pathname), size, tags=False)
+                audio = self.tinytag.get(encode_path(pathname), tags=False, size=size)
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
