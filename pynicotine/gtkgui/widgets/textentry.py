@@ -18,12 +18,17 @@
 
 import sys
 
-from gi.repository import Gtk
+from locale import strxfrm
 
-from pynicotine import slskmessages
+from gi.repository import Gtk
+from gi.repository import Pango
+
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.slskmessages import UserStatus
 
 
 """ Text Entry-related """
@@ -32,19 +37,22 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, application, widget, completion, entity, message_class, send_message, is_chatroom=False):
+    def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
 
         self.application = application
         self.widget = widget
+        self.chat_view = chat_view
         self.completion = completion
         self.entity = entity
-        self.message_class = message_class
         self.send_message = send_message
         self.is_chatroom = is_chatroom
 
         widget.connect("activate", self.on_enter)
         Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", widget, self.on_tab_complete_accelerator)
+        Accelerator("Down", widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", widget, self.on_page_down_accelerator)
+        Accelerator("Page_Up", widget, self.on_page_up_accelerator)
 
         # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
         if sys.platform not in ("win32", "darwin"):
@@ -64,7 +72,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()
@@ -105,6 +113,24 @@ class ChatEntry:
         """ Tab and Shift+Tab: tab complete chat """
         return self.completion.on_tab_complete_accelerator(widget, state, backwards)
 
+    def on_page_down_accelerator(self, *_args):
+        """ Page_Down, Down: Scroll chat view to bottom, and keep input focus in entry widget """
+
+        if self.completion and self.completion.selecting_completion:
+            return False
+
+        self.chat_view.scroll_bottom()
+        return True
+
+    def on_page_up_accelerator(self, *_args):
+        """ Page_Up: Move up into view to begin scrolling message history """
+
+        if self.completion and self.completion.selecting_completion:
+            return False
+
+        self.chat_view.widget.grab_focus()
+        return True
+
 
 class ChatCompletion:
 
@@ -114,6 +140,7 @@ class ChatCompletion:
         self.current_completions = []
         self.completion_index = 0
         self.midway_completion = False  # True if the user just used tab completion
+        self.selecting_completion = False  # True if the list box is open with suggestions
 
         self.entry = None
         self.entry_changed_handler = None
@@ -142,30 +169,35 @@ class ChatCompletion:
         self.entry = entry
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
 
+    def is_completion_enabled(self):
+        return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
+
     def add_completion(self, item):
+
+        if not self.is_completion_enabled():
+            return
 
         if item in self.completions:
             return
 
         if config.sections["words"]["dropdown"]:
             iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
-
-        elif config.sections["words"]["tab"]:
-            iterator = None
-
         else:
-            return
+            iterator = None
 
         self.completions[item] = iterator
 
     def remove_completion(self, item):
+
+        if not self.is_completion_enabled():
+            return
 
         iterator = self.completions.pop(item)
 
         if iterator is not None:
             self.model.remove(iterator)
 
-    def set_completion_list(self, completion_list):
+    def set_completions(self, completions):
 
         if self.entry_completion is None:
             return
@@ -178,20 +210,16 @@ class ChatCompletion:
         self.model.clear()
         self.completions.clear()
 
-        if completion_list is None:
-            completion_list = []
+        if not self.is_completion_enabled():
+            return
 
-        for word in completion_list:
+        for word in sorted(completions, key=strxfrm):
             word = str(word)
 
             if config_words["dropdown"]:
                 iterator = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
-
-            elif config_words["tab"]:
-                iterator = None
-
             else:
-                return
+                iterator = None
 
             self.completions[word] = iterator
 
@@ -214,6 +242,7 @@ class ChatCompletion:
         item_text = self.model.get_value(iterator, 0).lower()
 
         if item_text.startswith(split_key) and item_text != split_key:
+            self.selecting_completion = True
             return True
 
         return False
@@ -247,7 +276,7 @@ class ChatCompletion:
 
     def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midway_completion = False
+        self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
@@ -275,6 +304,9 @@ class ChatCompletion:
         preix = i - last_word_len
 
         if not self.midway_completion:
+            if last_word_len < 1:
+                return False
+
             last_word_lower = last_word.lower()
             self.current_completions = [
                 x for x in self.completions if x.lower().startswith(last_word_lower) and len(x) >= last_word_len
@@ -304,16 +336,32 @@ class ChatCompletion:
 
 class CompletionEntry:
 
-    def __init__(self, widget, model, column=0):
+    def __init__(self, widget, model=None, column=0):
 
         self.model = model
         self.column = column
+        self.completions = {}
+
+        if model is None:
+            self.model = model = Gtk.ListStore(str)
+            self.column_numbers = list(range(self.model.get_n_columns()))
 
         completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
                                          popup_single_match=False, model=model)
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
         widget.set_completion(completion)
+
+    def add_completion(self, item):
+        if item not in self.completions:
+            self.completions[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
+
+    def remove_completion(self, item):
+        iterator = self.completions.pop(item)
+        self.model.remove(iterator)
+
+    def clear(self):
+        self.model.clear()
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -329,6 +377,319 @@ class CompletionEntry:
             return True
 
         return False
+
+
+class ComboBox:
+
+    def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
+                 enable_arrow_keys=True, entry=None, visible=True, items=None):
+
+        self.widget = None
+        self.dropdown = None
+        self.entry = entry
+        self.enable_arrow_keys = enable_arrow_keys
+
+        self._ids = {}
+        self._positions = {}
+        self._model = None
+        self._button = None
+        self._entry_completion = None
+        self._item_selected_handler = None
+
+        self._create_combobox(container, has_entry, has_entry_completion)
+
+        if label:
+            label.set_mnemonic_widget(self.widget)
+
+        if items:
+            for item, item_id in items:
+                self.append(item, item_id)
+
+        self.set_visible(visible)
+
+    def _create_combobox_gtk4(self, container, has_entry):
+
+        factory = self._create_factory(should_bind=not has_entry)
+        list_factory = self._create_factory(ellipsize=False)
+        self._model = Gtk.StringList()
+
+        self.dropdown = self._button = Gtk.DropDown(
+            factory=factory, list_factory=list_factory, model=self._model,
+            valign=Gtk.Align.CENTER, visible=True
+        )
+        self._item_selected_handler = self.dropdown.connect("notify::selected", self._on_item_selected)
+
+        if not has_entry:
+            self.widget = self.dropdown
+            container.append(self.widget)
+            return
+
+        self.widget = Gtk.Box(visible=True)
+
+        if self.entry is None:
+            self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
+
+        popover = self.dropdown.get_last_child()
+        popover.connect("notify::visible", self._on_dropdown_visible)
+
+        try:
+            # Hide Gtk.DropDown label
+            self.dropdown.get_first_child().get_first_child().get_first_child().set_visible(False)
+        except AttributeError:
+            pass
+
+        self._button.set_sensitive(False)
+
+        self.widget.append(self.entry)
+        self.widget.append(self.dropdown)
+
+        add_css_class(self.widget, "linked")
+        container.append(self.widget)
+
+    def _create_combobox_gtk3(self, container, has_entry, has_entry_completion):
+
+        self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
+        self._model = self.dropdown.get_model()
+
+        self.dropdown.connect("scroll-event", self.on_button_scroll_event)
+
+        if not has_entry:
+            for cell in self.dropdown.get_cells():
+                cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+            container.add(self.widget)
+            return
+
+        if has_entry_completion:
+            add_css_class(self.dropdown, "dropdown-scrollbar")
+
+        self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
+        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
+
+        if self.entry is None:
+            self.entry = self.dropdown.get_child()
+            self.entry.set_width_chars(8)
+        else:
+            self.dropdown.get_child().destroy()
+            self.dropdown.set_property("child", self.entry)
+
+        self._button = self.entry.get_parent().get_children()[-1]
+        container.add(self.widget)
+
+    def _create_combobox(self, container, has_entry, has_entry_completion):
+
+        if GTK_API_VERSION >= 4:
+            self._create_combobox_gtk4(container, has_entry)
+        else:
+            self._create_combobox_gtk3(container, has_entry, has_entry_completion)
+
+        if has_entry:
+            Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
+            Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
+
+        if has_entry_completion:
+            self._entry_completion = CompletionEntry(self.entry)
+
+    def _create_factory(self, ellipsize=True, should_bind=True):
+
+        factory = Gtk.SignalListItemFactory()
+        factory.connect("setup", self._on_factory_setup, ellipsize)
+
+        if should_bind:
+            factory.connect("bind", self._on_factory_bind)
+
+        return factory
+
+    """ General """
+
+    def append(self, item, item_id=None):
+
+        if item_id is None:
+            item_id = item
+
+        if GTK_API_VERSION >= 4:
+            position = self._model.get_n_items()
+
+            with self.dropdown.handler_block(self._item_selected_handler):
+                self._model.append(item)
+                self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+        else:
+            position = self._model.iter_n_children()
+            self.dropdown.append_text(item)
+
+        if self.entry:
+            self._button.set_sensitive(True)
+
+        if self._entry_completion:
+            self._entry_completion.add_completion(item)
+
+        self._ids[position] = item_id
+        self._positions[item_id] = position
+
+    def get_selected_pos(self):
+
+        if GTK_API_VERSION >= 4:
+            return self.dropdown.get_selected()
+
+        return self.dropdown.get_active()
+
+    def get_selected_id(self):
+        return self._ids.get(self.get_selected_pos())
+
+    def get_text(self):
+        return self.entry.get_text()
+
+    def set_selected_pos(self, position):
+
+        if GTK_API_VERSION >= 4:
+            self.dropdown.set_selected(position)
+        else:
+            self.dropdown.set_active(position)
+
+    def set_selected_id(self, item_id):
+
+        position = self._positions.get(item_id)
+
+        if position is None:
+            position = 0
+
+        self.set_selected_pos(position)
+
+    def set_text(self, text):
+        self.entry.set_text(text)
+        self.set_selected_id(text)
+
+    def remove_pos(self, position):
+
+        if GTK_API_VERSION >= 4:
+            with self.dropdown.handler_block(self._item_selected_handler):
+                self._model.remove(position)
+        else:
+            self.dropdown.remove(position)
+
+        if self.entry and not self._ids:
+            self._button.set_sensitive(False)
+
+        if self._entry_completion:
+            self._entry_completion.remove_completion(self._ids[position])
+
+    def remove_id(self, item_id):
+        position = self._positions[item_id]
+        self.remove_pos(position)
+
+    def clear(self):
+
+        self._ids.clear()
+        self._positions.clear()
+
+        if GTK_API_VERSION >= 4:
+            with self.dropdown.handler_block(self._item_selected_handler):
+                self._model.splice(position=0, n_removals=self._model.get_n_items())
+        else:
+            self.dropdown.remove_all()
+
+        if self.entry:
+            self._button.set_sensitive(False)
+
+        if self._entry_completion:
+            self._entry_completion.clear()
+
+    def grab_focus(self):
+        self.entry.grab_focus()
+
+    def set_row_separator_func(self, func):
+        if GTK_API_VERSION == 3:
+            self.dropdown.set_row_separator_func(func)
+
+    def set_visible(self, visible):
+        self.widget.set_visible(visible)
+
+    """ Callbacks """
+
+    def _on_factory_bind(self, _factory, list_item):
+
+        label = list_item.get_child()
+        string_obj = list_item.get_item()
+
+        label.set_text(string_obj.get_string())
+
+    def _on_factory_setup(self, _factory, list_item, ellipsize):
+
+        label = Gtk.Label(xalign=0)
+
+        if ellipsize:
+            label.set_ellipsize(Pango.EllipsizeMode.END)
+
+        list_item.set_child(label)
+
+    def _on_arrow_key_accelerator(self, _widget, _unused, direction):
+
+        if not self.enable_arrow_keys:
+            return True
+
+        if GTK_API_VERSION == 3:
+            # Gtk.ComboBox already supports this functionality
+            return False
+
+        current_position = self.get_selected_pos()
+
+        if current_position == Gtk.INVALID_LIST_POSITION:
+            current_position = -1
+
+        if direction == "up":
+            new_position = max(0, current_position - 1)
+        else:
+            new_position = min(current_position + 1, len(self._positions) - 1)
+
+        self.set_selected_pos(new_position)
+        return True
+
+    def on_button_scroll_event(self, *_args):
+        # Prevent scrolling when up/down arrow keys are disabled
+        return not self.enable_arrow_keys
+
+    def _on_dropdown_visible(self, popover, param):
+
+        visible = popover.get_property(param.name)
+
+        if not visible:
+            self.entry.grab_focus_without_selecting()
+            return
+
+        if GTK_API_VERSION == 3:
+            return
+
+        # Align dropdown with entry and button
+        popover = self.dropdown.get_last_child()
+        scrolled_window = popover.get_child()
+        container_width = self.entry.get_parent().get_width()
+        button_width = self._button.get_width()
+
+        popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
+        scrolled_window.set_size_request(container_width, height=-1)
+
+    def _on_item_selected(self, *_args):
+
+        if self.entry is None:
+            return
+
+        if GTK_API_VERSION >= 4:
+            item = self.dropdown.get_selected_item()
+
+            if item is None:
+                return
+
+            # Set text entry text to the same value as selected item
+            item_text = item.get_string()
+
+            if self.get_text() != item_text:
+                self.set_text(item_text)
+
+        elif self.get_selected_pos() == -1:
+            return
+
+        # Cursor is normally placed at the beginning, move to the end
+        self.entry.set_position(-1)
 
 
 class TextSearchBar:

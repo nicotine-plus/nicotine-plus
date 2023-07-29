@@ -52,11 +52,12 @@ class WishList(Dialog):
         self.application = application
         self.list_view = TreeView(
             application.window, parent=self.list_container, multi_select=True, activate_row_callback=self.on_edit_wish,
+            delete_accelerator_callback=self.on_remove_wish,
             columns={
                 "wish": {
                     "column_type": "text",
                     "title": _("Wish"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -66,8 +67,6 @@ class WishList(Dialog):
             self.list_view.add_row([wish], select_row=False)
 
         CompletionEntry(self.wish_entry, self.list_view.model)
-
-        Accelerator("Delete", self.list_view.widget, self.on_remove_wish)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
         for event_name, callback in (
@@ -118,6 +117,7 @@ class WishList(Dialog):
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
             ).show()
@@ -132,11 +132,10 @@ class WishList(Dialog):
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, _dialog, response_id, _data):
+    def clear_wishlist_response(self, *_args):
 
-        if response_id == 2:
-            for wish in self.list_view.iterators.copy():
-                core.search.remove_wish(wish)
+        for wish in self.list_view.iterators.copy():
+            core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
@@ -146,6 +145,7 @@ class WishList(Dialog):
             parent=self,
             title=_("Clear Wishlist?"),
             message=_("Do you really want to clear your wishlist?"),
+            destructive_response_id="ok",
             callback=self.clear_wishlist_response
         ).show()
 

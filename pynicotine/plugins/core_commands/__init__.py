@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
+import os
+
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.slskmessages import UserStatus
 
 
 class _CommandGroup:
@@ -304,12 +306,12 @@ class Plugin(BasePlugin):
 
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == slskmessages.UserStatus.OFFLINE:
+        if self.core.user_status == UserStatus.OFFLINE:
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.user_status != slskmessages.UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == slskmessages.UserStatus.ONLINE else _("Away"))
+        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 
@@ -533,7 +535,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {group_name} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {folder_path}')
+                self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
 
             num_listed += num_shares
 

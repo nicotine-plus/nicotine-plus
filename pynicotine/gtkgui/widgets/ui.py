@@ -24,6 +24,7 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.utils import encode_path
 
 
@@ -46,8 +47,16 @@ def load(scope, path):
             ui_xml_string = ElementTree.tostring(ui_xml_tree.getroot(), encoding="unicode")
 
             if GTK_API_VERSION >= 4:
-                ui_xml_string = ui_xml_string.replace(
-                    "GtkRadioButton", "GtkCheckButton").replace('"can-focus"', '"focusable"')
+                ui_xml_string = (
+                    ui_xml_string
+                    .replace("GtkRadioButton", "GtkCheckButton")
+                    .replace('"can-focus"', '"focusable"'))
+
+                if GTK_MINOR_VERSION >= 10:
+                    ui_xml_string = (
+                        ui_xml_string
+                        .replace("GtkColorButton", "GtkColorDialogButton")
+                        .replace("GtkFontButton", "GtkFontDialogButton"))
 
             ui_data[path] = ui_xml_string
 

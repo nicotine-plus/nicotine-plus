@@ -27,15 +27,10 @@ def check_gtk_version(gtk_api_version):
 
     # Require minor version of GTK
     if gtk_api_version == "4":
-        pygobject_version = (3, 42, 1)
+        pygobject_version = (3, 42, 2)
     else:
         gtk_api_version = "3"
         pygobject_version = (3, 26, 1)
-
-    if os.getenv("NICOTINE_LIBADWAITA") is None:
-        os.environ["NICOTINE_LIBADWAITA"] = str(int(
-            sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
-        ))
 
     try:
         import gi
@@ -58,6 +53,12 @@ def check_gtk_version(gtk_api_version):
 
     from gi.repository import Gtk
     config.gtk_version = f"{gtk_api_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+
+    if sys.platform == "win32":
+        # Ensure all Windows-specific APIs are available
+        gi.require_version("GdkWin32", f"{gtk_api_version}.0")
+        from gi.repository import GdkWin32  # noqa: F401  # pylint:disable=no-name-in-module,unused-import
+
     return None
 
 

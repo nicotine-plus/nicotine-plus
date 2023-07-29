@@ -84,7 +84,7 @@ class NetworkFilter:
         "CW": _("Curaçao"),
         "CX": _("Christmas Island"),
         "CY": _("Cyprus"),
-        "CZ": _("Czech Republic"),
+        "CZ": _("Czechia"),
         "DE": _("Germany"),
         "DJ": _("Djibouti"),
         "DK": _("Denmark"),
@@ -254,7 +254,7 @@ class NetworkFilter:
         "TM": _("Turkmenistan"),
         "TN": _("Tunisia"),
         "TO": _("Tonga"),
-        "TR": _("Turkey"),
+        "TR": _("Türkiye"),
         "TT": _("Trinidad & Tobago"),
         "TV": _("Tuvalu"),
         "TW": _("Taiwan"),
@@ -274,7 +274,6 @@ class NetworkFilter:
         "VU": _("Vanuatu"),
         "WF": _("Wallis & Futuna"),
         "WS": _("Samoa"),
-        "XK": _("Kosovo"),
         "YE": _("Yemen"),
         "YT": _("Mayotte"),
         "ZA": _("South Africa"),
@@ -308,7 +307,7 @@ class NetworkFilter:
         if user not in request_list:
             request_list[user] = action
 
-        core.queue.append(slskmessages.GetPeerAddress(user))
+        core.request_ip_address(user)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """ Add the current IP address and username of a user to a list """
@@ -539,7 +538,7 @@ class NetworkFilter:
         for ip_address in config.sections["server"]["ipblocklist"]:
             # We can't close wildcard patterns nor dummy (zero) addresses
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
-                core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+                core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
     """ Callbacks """
 
@@ -608,7 +607,7 @@ class NetworkFilter:
 
         if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
             # We can't close wildcard patterns nor dummy (zero) address entries
-            core.queue.append(slskmessages.CloseConnectionIP(ip_address))
+            core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
         return ip_address
 

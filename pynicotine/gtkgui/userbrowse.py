@@ -27,9 +27,7 @@ from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -39,13 +37,15 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -62,6 +62,11 @@ class UserBrowses(IconNotebook):
         )
         self.file_properties = None
 
+        self.userbrowse_combobox = ComboBox(
+            container=self.window.userbrowse_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.userbrowse_entry
+        )
+
         # Events
         for event_name, callback in (
             ("peer-connection-closed", self.peer_connection_error),
@@ -74,6 +79,9 @@ class UserBrowses(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def on_remove_all_pages(self, *_args):
+        core.userbrowse.remove_all_users()
 
     def on_get_shares(self, *_args):
 
@@ -149,7 +157,7 @@ class UserBrowses(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class UserBrowse:
@@ -163,6 +171,7 @@ class UserBrowse:
             self.file_list_container,
             self.folder_tree_container,
             self.info_bar,
+            self.info_bar_label,
             self.num_folders_label,
             self.progress_bar,
             self.refresh_button,
@@ -188,8 +197,6 @@ class UserBrowse:
         self.search_list = []
         self.query = None
         self.search_position = 0
-
-        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
 
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
@@ -267,7 +274,7 @@ class UserBrowse:
                     "title": _("File Name"),
                     "width": 150,
                     "expand_column": True,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 },
                 "size": {
@@ -276,10 +283,10 @@ class UserBrowse:
                     "width": 100,
                     "sort_column": "size_data"
                 },
-                "bitrate": {
+                "quality": {
                     "column_type": "number",
-                    "title": _("Bitrate"),
-                    "width": 100,
+                    "title": _("Quality"),
+                    "width": 150,
                     "sort_column": "bitrate_data"
                 },
                 "length": {
@@ -292,7 +299,8 @@ class UserBrowse:
                 # Hidden data columns
                 "size_data": {"data_type": GObject.TYPE_UINT64},
                 "bitrate_data": {"data_type": GObject.TYPE_UINT},
-                "length_data": {"data_type": GObject.TYPE_UINT}
+                "length_data": {"data_type": GObject.TYPE_UINT},
+                "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT}
             }
         )
 
@@ -500,18 +508,20 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
+        is_empty = (not msg.list and not msg.privatelist)
         self.make_new_model(msg.list, msg.privatelist)
-        self.info_bar.set_visible(False)
 
-        if msg.list or msg.privatelist:
-            self.browse_queued_path()
-
-        else:
-            self.retry_button.set_visible(False)
-            self.info_bar.show_message(
+        if is_empty:
+            self.info_bar_label.set_label(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
             )
+            self.retry_button.set_visible(False)
+        else:
+            self.browse_queued_path()
+
+        self.info_bar.set_visible(is_empty)
+        self.info_bar.set_reveal_child(is_empty)
 
         self.set_finished()
 
@@ -520,12 +530,13 @@ class UserBrowse:
         if self.refresh_button.get_sensitive():
             return
 
-        self.retry_button.set_visible(True)
-        self.info_bar.show_message(
+        self.info_bar_label.set_label(
             _("Unable to request shared files from user. Either the user is offline, the listening ports "
-              "are closed on both sides, or there is a temporary connectivity issue."),
-            message_type=Gtk.MessageType.ERROR
+              "are closed on both sides, or there is a temporary connectivity issue.")
         )
+        self.retry_button.set_visible(True)
+        self.info_bar.set_visible(True)
+        self.info_bar.set_reveal_child(True)
 
         self.set_finished()
 
@@ -588,20 +599,21 @@ class UserBrowse:
 
         selected_folder_size = 0
 
-        for _code, filename, size, _ext, attrs, *_unused in files:
+        for _code, filename, size, _ext, file_attributes, *_unused in files:
             selected_folder_size += size
-            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(size, attrs)
+            h_size = human_size(size, config.sections["ui"]["file_size_unit"])
+            h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
             self.file_list_view.add_row([
                 get_file_type_icon_name(filename),
                 filename,
                 h_size,
-                h_bitrate,
+                h_quality,
                 h_length,
                 size,
                 bitrate,
-                length
+                length,
+                file_attributes
             ], select_row=False)
 
         self.selected_folder_size = selected_folder_size
@@ -639,7 +651,9 @@ class UserBrowse:
                 continue
 
             for file_data in files:
-                if self.query in file_data[1].lower():
+                filename = file_data[1]
+
+                if self.query in filename.lower():
                     temp_list.add(directory)
 
         self.search_list = sorted(temp_list, key=strxfrm)
@@ -770,6 +784,7 @@ class UserBrowse:
             parent=self.window,
             title=str_title,
             message=_("Enter the name of the user you want to upload to:"),
+            action_button_label=_("_Upload"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
@@ -928,7 +943,9 @@ class UserBrowse:
 
         for file_data in files:
             # Find the wanted file
-            if file_data[1] not in self.selected_files:
+            filename = file_data[1]
+
+            if filename not in self.selected_files:
                 continue
 
             core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
@@ -975,6 +992,7 @@ class UserBrowse:
             parent=self.window,
             title=_("Upload File(s) To User"),
             message=_("Enter the name of the user you want to upload to:"),
+            action_button_label=_("_Upload"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
@@ -1008,17 +1026,14 @@ class UserBrowse:
             if not files:
                 return
 
-            for file_data in files:
-                filename = file_data[1]
-                file_size = file_data[2]
+            for _code, filename, file_size, _ext, file_attributes, *_unused in files:
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                    file_size, file_data[4])
+                _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                 selected_size += file_size
                 selected_length += length
 
                 data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
+                             "directory": folder, "size": file_size, "file_attributes": file_attributes})
 
         else:
             for iterator in self.file_list_view.get_selected_rows():
@@ -1034,8 +1049,7 @@ class UserBrowse:
                     "filename": filename,
                     "directory": folder,
                     "size": file_size,
-                    "bitrate": self.file_list_view.get_row_value(iterator, "bitrate"),
-                    "length": self.file_list_view.get_row_value(iterator, "length")
+                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
 
         if data:
@@ -1201,6 +1215,7 @@ class UserBrowse:
 
         self.clear_model()
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
 
         self.set_in_progress()
         core.userbrowse.browse_user(self.user, path=path, local_share_type=self.local_share_type, new_request=True)

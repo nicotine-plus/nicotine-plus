@@ -43,7 +43,7 @@ class UserInfo:
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.users.clear()
+        self.remove_all_users()
 
     def _server_login(self, msg):
 
@@ -75,17 +75,18 @@ class UserInfo:
         core.send_message_to_peer(user, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
-        core.watch_user(user, force_update=True)
+        core.watch_user(user)
 
         # Request user interests
-        core.queue.append(slskmessages.UserInterests(user))
-
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
+        core.send_message_to_server(slskmessages.UserInterests(user))
 
     def remove_user(self, user):
         self.users.remove(user)
         events.emit("user-info-remove-user", user)
+
+    def remove_all_users(self):
+        for user in self.users.copy():
+            self.remove_user(user)
 
     @staticmethod
     def save_user_picture(file_path, picture_bytes):
@@ -129,9 +130,7 @@ class UserInfo:
 
         else:
             try:
-                userpic = config.sections["userinfo"]["pic"]
-
-                with open(encode_path(userpic), "rb") as file_handle:
+                with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
                     pic = file_handle.read()
 
             except Exception:
@@ -148,5 +147,5 @@ class UserInfo:
         else:
             uploadallowed = 0
 
-        core.queue.append(
+        core.send_message_to_server(
             slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))

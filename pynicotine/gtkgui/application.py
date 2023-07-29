@@ -26,15 +26,33 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
+GTK_MINOR_VERSION = Gtk.get_minor_version()
 GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
+LIBADWAITA_API_VERSION = 0
+
+if GTK_API_VERSION >= 4:
+    try:
+        if os.getenv("NICOTINE_LIBADWAITA") is None:
+            os.environ["NICOTINE_LIBADWAITA"] = str(int(
+                sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
+            ))
+
+        if os.getenv("NICOTINE_LIBADWAITA") == "1":
+            gi.require_version("Adw", "1")
+
+            from gi.repository import Adw  # pylint: disable=ungrouped-imports
+            LIBADWAITA_API_VERSION = Adw.MAJOR_VERSION
+
+    except (ImportError, ValueError):
+        pass
 
 
 class Application:
@@ -67,7 +85,6 @@ class Application:
         sys.excepthook = self.on_critical_error
 
         self.connect("activate", self.on_activate)
-        self.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
@@ -156,6 +173,8 @@ class Application:
             ("configure-chats", self.on_configure_chats, None, True),
             ("configure-searches", self.on_configure_searches, None, True),
             ("configure-ignored-users", self.on_configure_ignored_users, None, True),
+            ("configure-account", self.on_configure_account, None, True),
+            ("configure-user-profile", self.on_configure_user_profile, None, True),
             ("personal-profile", self.on_personal_profile, None, False),
 
             # Notifications
@@ -265,13 +284,13 @@ class Application:
 
         remember = dialog.get_option_value()
 
-        if response_id == 2:  # 'Quit'
+        if response_id == "quit":
             if remember:
                 config.sections["ui"]["exitdialog"] = 0
 
             core.quit()
 
-        elif response_id == 3:  # 'Run in Background'
+        elif response_id == "run_background":
             if remember:
                 config.sections["ui"]["exitdialog"] = 2
 
@@ -282,12 +301,19 @@ class Application:
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
+        buttons = [
+            ("cancel", _("_No")),
+            ("quit", _("_Quit"))
+        ]
+
+        if self.window.is_visible():
+            buttons.append(("run_background", _("_Run in Background")))
+
         OptionDialog(
             parent=self.window,
             title=_("Quit Nicotine+"),
             message=_("Do you really want to exit?"),
-            second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.window.is_visible() else None,
+            buttons=buttons,
             option_label=_("Remember choice") if remember else None,
             callback=self.on_confirm_quit_response
         ).show()
@@ -296,12 +322,7 @@ class Application:
         self._instance.quit()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
-
-        if response_id == 2:  # 'Retry'
-            core.shares.rescan_shares()
-
-        elif response_id == 3:  # 'Force Rescan'
-            core.shares.rescan_shares(force=True)
+        core.shares.rescan_shares(force=(response_id == "force_rescan"))
 
     def on_shares_unavailable(self, shares):
 
@@ -317,15 +338,17 @@ class Application:
             title=_("Shares Not Available"),
             message=_("Verify that external disks are mounted and folder permissions are correct."),
             long_message=shares_list_message,
-            first_button=_("_Cancel"),
-            second_button=_("_Retry"),
-            third_button=_("_Force Rescan"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("_Retry")),
+                ("force_rescan", _("_Force Rescan"))
+            ],
+            destructive_response_id="force_rescan",
             callback=self.on_shares_unavailable_response
         ).show()
 
-    def on_invalid_password_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            self.on_preferences(page_id="network")
+    def on_invalid_password_response(self, *_args):
+        self.on_preferences(page_id="network")
 
     def on_invalid_password(self):
 
@@ -339,8 +362,10 @@ class Application:
             parent=self.window,
             title=title,
             message=msg,
-            first_button=_("_Cancel"),
-            second_button=_("Change _Login Details"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Change _Login Details"))
+            ],
             callback=self.on_invalid_password_response
         ).show()
 
@@ -555,6 +580,12 @@ class Application:
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")
 
+    def on_configure_account(self, *_args):
+        self.on_preferences(page_id="network")
+
+    def on_configure_user_profile(self, *_args):
+        self.on_preferences(page_id="user-profile")
+
     def on_personal_profile(self, *_args):
         core.userinfo.show_user(core.login_username)
 
@@ -582,7 +613,7 @@ class Application:
     def on_away(self, *_args):
         """ Away/Online status button """
 
-        core.set_away_mode(core.user_status != slskmessages.UserStatus.AWAY, save_state=True)
+        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
     """ Running """
 
@@ -593,7 +624,7 @@ class Application:
 
         loop, error = data
 
-        if response_id == 2:
+        if response_id == "copy_report_bug":
             from pynicotine.gtkgui.widgets import clipboard
 
             clipboard.copy_text(error)
@@ -615,8 +646,10 @@ class Application:
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:"),
             long_message=error,
-            first_button=_("_Quit Nicotine+"),
-            second_button=_("_Copy & Report Bug"),
+            buttons=[
+                ("quit", _("_Quit Nicotine+")),
+                ("copy_report_bug", _("_Copy & Report Bug"))
+            ],
             callback=self.on_critical_error_response,
             callback_data=(loop, error)
         ).show()
@@ -683,7 +716,10 @@ class Application:
 
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.notifications import Notifications
+        from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        load_icons()
 
         self.set_up_actions()
         self.set_up_action_accels()
@@ -708,10 +744,6 @@ class Application:
         # Process thread events 20 times per second
         # High priority to ensure there are no delays
         GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
-
-    def on_shutdown(self, *_args):
-        # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.set_visible(False)
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()

@@ -13,7 +13,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 
 | Operating System                                                                        | Package Name        |
 |-----------------------------------------------------------------------------------------|---------------------|
-| [Arch Linux](https://archlinux.org/packages/community/any/nicotine+/)                   | `nicotine+`         |
+| [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`         |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
 | [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |
@@ -28,10 +28,8 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
 
 ```sh
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:nicotine-team/stable
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
-sudo apt update
+sudo apt install python3-launchpadlib software-properties-common
+sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
 sudo apt install nicotine
 ```
 

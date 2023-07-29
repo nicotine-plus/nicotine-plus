@@ -35,8 +35,6 @@ import signal
 import sys
 import threading
 
-from collections import deque
-
 from pynicotine import slskmessages
 from pynicotine.cli import cli
 from pynicotine.config import config
@@ -63,7 +61,7 @@ class Core:
         self.chatrooms = None
         self.pluginhandler = None
         self.now_playing = None
-        self.protothread = None
+        self.portmapper = None
         self.notifications = None
         self.update_checker = None
 
@@ -71,23 +69,23 @@ class Core:
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
 
-        self.bindip = None
-        self.port = None
+        self.cli_interface_address = None
+        self.cli_listen_port = None
 
         self.shutdown = False
         self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
-        self.user_ip_address = None
+        self.public_ip_address = None
+        self.public_port = None
         self.privileges_left = None
         self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
-        self.queue = deque()
-        self.message_events = {}
         self.user_addresses = {}
+        self.user_countries = {}
         self.user_statuses = {}
-        self.watched_users = set()
-        self._ip_requested = set()
+        self.watched_users = {}
+        self._ip_requested = {}
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -113,6 +111,7 @@ class Core:
         from pynicotine.notifications import Notifications
         from pynicotine.nowplaying import NowPlaying
         from pynicotine.pluginsystem import PluginHandler
+        from pynicotine.portmapper import PortMapper
         from pynicotine.privatechat import PrivateChat
         from pynicotine.search import Searches
         from pynicotine.shares import Shares
@@ -137,8 +136,8 @@ class Core:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
-        self.queue.clear()
-        self.protothread = SoulseekNetworkThread(queue=self.queue, user_addresses=self.user_addresses)
+        self.portmapper = PortMapper()
+        SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
 
         self.notifications = Notifications()
         self.network_filter = NetworkFilter()
@@ -153,8 +152,8 @@ class Core:
         self.userbrowse = UserBrowse()
         self.userinfo = UserInfo()
         self.userlist = UserList()
-        self.privatechat = PrivateChat()
         self.chatrooms = ChatRooms()
+        self.privatechat = PrivateChat()
         self.pluginhandler = PluginHandler()
 
     def _init_thread_exception_hook(self):
@@ -235,22 +234,28 @@ class Core:
 
         events.emit("enable-message-queue")
 
-        self.queue.append(slskmessages.ServerConnect(
+        self.send_message_to_network_thread(slskmessages.ServerConnect(
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
-            interface=config.sections["server"]["interface"],
-            bound_ip=self.bindip,
-            listen_port=self.port if self.port else config.sections["server"]["portrange"][0]
+            interface_name=config.sections["server"]["interface"],
+            interface_address=self.cli_interface_address,
+            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0]
         ))
 
     def disconnect(self):
-        self.queue.append(slskmessages.ServerDisconnect())
+        self.send_message_to_network_thread(slskmessages.ServerDisconnect())
 
-    def send_message_to_peer(self, user, message):
-        """ Sends message to a peer. Used when we know the username of a peer,
-        but don't have/know an active connection. """
+    def send_message_to_network_thread(self, message):
+        """ Sends message to the networking thread to inform about something """
+        events.emit("queue-network-message", message)
 
-        self.queue.append(slskmessages.SendNetworkMessage(user, message))
+    def send_message_to_server(self, message):
+        """ Sends message to the server """
+        events.emit("queue-network-message", message)
+
+    def send_message_to_peer(self, username, message):
+        """ Sends message to a peer """
+        events.emit("queue-network-message", slskmessages.SendNetworkMessage(username, message))
 
     def set_away_mode(self, is_away, save_state=False):
 
@@ -264,57 +269,42 @@ class Core:
         events.emit("set-away-mode", is_away)
 
     def request_change_password(self, password):
-        self.queue.append(slskmessages.ChangePassword(password))
+        self.send_message_to_server(slskmessages.ChangePassword(password))
 
     def request_check_privileges(self):
-        self.queue.append(slskmessages.CheckPrivileges())
+        self.send_message_to_server(slskmessages.CheckPrivileges())
 
-    def request_give_privileges(self, user, days):
-        self.queue.append(slskmessages.GivePrivileges(user, days))
+    def request_give_privileges(self, username, days):
+        self.send_message_to_server(slskmessages.GivePrivileges(username, days))
 
-    def request_ip_address(self, username):
-        self._ip_requested.add(username)
-        self.queue.append(slskmessages.GetPeerAddress(username))
+    def request_ip_address(self, username, notify=False):
+
+        if username in self._ip_requested:
+            return
+
+        self._ip_requested[username] = notify
+        self.send_message_to_server(slskmessages.GetPeerAddress(username))
 
     def request_set_status(self, status):
-        self.queue.append(slskmessages.SetStatus(status))
+        self.send_message_to_server(slskmessages.SetStatus(status))
 
-    def get_user_country(self, user):
-        """ Retrieve a user's country code if previously cached, otherwise request
-        user's IP address to determine country """
+    def request_user_stats(self, username):
+        self.send_message_to_server(slskmessages.GetUserStats(username))
 
-        if self.user_status == slskmessages.UserStatus.OFFLINE:
-            return None
-
-        user_address = self.user_addresses.get(user)
-
-        if user_address and user != self.login_username:
-            ip_address, _port = user_address
-            country_code = self.network_filter.get_country_code(ip_address)
-            return country_code
-
-        if user not in self._ip_requested:
-            self.queue.append(slskmessages.GetPeerAddress(user))
-
-        return None
-
-    def watch_user(self, user, force_update=False):
+    def watch_user(self, user):
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
-        if not force_update and user in self.watched_users:
-            # Already being watched, and we don't need to re-fetch the status/stats
+        if user in self.watched_users:
             return
 
-        self.queue.append(slskmessages.WatchUser(user))
+        self.send_message_to_server(slskmessages.WatchUser(user))
+        self.send_message_to_server(slskmessages.GetUserStatus(user))  # Get privilege status
 
-        # Get privilege status
-        self.queue.append(slskmessages.GetUserStatus(user))
-
-        self.watched_users.add(user)
+        self.watched_users[user] = {}
 
     """ Message Callbacks """
 
@@ -331,13 +321,17 @@ class Core:
 
         # Clean up connections
         self.user_addresses.clear()
+        self.user_countries.clear()
         self.user_statuses.clear()
         self.watched_users.clear()
+        self._ip_requested.clear()
 
         if self.pluginhandler:
             self.pluginhandler.server_disconnect_notification(manual_disconnect)
 
         self.login_username = None
+        self.public_ip_address = None
+        self.public_port = None
 
     def _server_login(self, msg):
         """ Server code: 1 """
@@ -345,17 +339,19 @@ class Core:
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
             self.login_username = msg.username
+            self.public_port = self.cli_listen_port or config.sections["server"]["portrange"][0]
 
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(msg.username)
 
             if msg.ip_address is not None:
-                self.user_ip_address = msg.ip_address
+                self.public_ip_address = msg.ip_address
+                self.user_countries[msg.username] = self.network_filter.get_country_code(msg.ip_address)
 
             if msg.banner:
                 log.add(msg.banner)
 
-            self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
+            self.send_message_to_server(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
 
         else:
@@ -369,14 +365,15 @@ class Core:
         """ Server code: 3 """
 
         user = msg.user
-        country_code = self.network_filter.get_country_code(msg.ip_address)
+        notify = self._ip_requested.pop(user, None)
+
+        self.user_countries[user] = country_code = self.network_filter.get_country_code(msg.ip_address)
         events.emit("user-country", user, country_code)
 
-        if user not in self._ip_requested:
+        if not notify:
             self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
             return
 
-        self._ip_requested.remove(user)
         self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
 
         if country_code:
@@ -400,11 +397,12 @@ class Core:
         """ Server code: 5 """
 
         if msg.userexists:
-            events.emit("user-stats", msg)
+            if msg.status is not None:  # Soulfind server support, sends userexists but no additional data
+                events.emit("user-stats", msg)
             return
 
         # User does not exist, server will not keep us informed if the user is created later
-        self.watched_users.discard(msg.user)
+        self.watched_users.pop(msg.user, None)
 
     def _user_status(self, msg):
         """ Server code: 7 """
@@ -419,22 +417,37 @@ class Core:
                 "user": user
             })
 
-        if user in self.watched_users:
+        # Store statuses for watched users, update statuses of room members
+        if user in self.watched_users or user in self.user_statuses:
             self.user_statuses[user] = status
+
+        if status == slskmessages.UserStatus.OFFLINE:
+            # IP address is removed in slskproto.py
+            self.user_countries.pop(user, None)
 
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
 
     def _user_stats(self, msg):
         """ Server code: 36 """
 
-        stats = {
-            "avgspeed": msg.avgspeed,
-            "uploadnum": msg.uploadnum,
-            "files": msg.files,
-            "dirs": msg.dirs,
-        }
+        username = msg.user
+        upload_speed = msg.avgspeed
+        files = msg.files
+        folders = msg.dirs
 
-        self.pluginhandler.user_stats_notification(msg.user, stats)
+        if username in self.watched_users:
+            self.watched_users[username].update({
+                "upload_speed": upload_speed,
+                "files": files,
+                "folders": folders
+            })
+
+        self.pluginhandler.user_stats_notification(msg.user, stats={
+            "avgspeed": msg.avgspeed,
+            "uploadnum": upload_speed,
+            "files": files,
+            "dirs": folders,
+        })
 
     @staticmethod
     def _admin_message(msg):

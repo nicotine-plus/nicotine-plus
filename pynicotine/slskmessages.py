@@ -147,13 +147,13 @@ class CloseConnectionIP(InternalMessage):
 class ServerConnect(InternalMessage):
     """ Core sends this to make networking thread establish a server connection. """
 
-    __slots__ = ("addr", "login", "interface", "bound_ip", "listen_port")
+    __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port")
 
-    def __init__(self, addr=None, login=None, interface=None, bound_ip=None, listen_port=None):
+    def __init__(self, addr=None, login=None, interface_name=None, interface_address=None, listen_port=None):
         self.addr = addr
         self.login = login
-        self.interface = interface
-        self.bound_ip = bound_ip
+        self.interface_name = interface_name
+        self.interface_address = interface_address
         self.listen_port = listen_port
 
 
@@ -178,6 +178,17 @@ class SendNetworkMessage(InternalMessage):
     def __init__(self, user=None, message=None):
         self.user = user
         self.message = message
+
+
+class EmitNetworkMessageEvents(InternalMessage):
+    """ Sent to the networking thread to tell it to emit events for list of
+    network messages. Currently used after shares have rescanned to process
+    any QueueUpload messages that arrived while scanning. """
+
+    __slots__ = ("msgs",)
+
+    def __init__(self, msgs=None):
+        self.msgs = msgs
 
 
 class DownloadFile(InternalMessage):
@@ -375,11 +386,18 @@ class Login(ServerMessage):
 
         pos, self.banner = self.unpack_string(message, pos)
         pos, self.ip_address = self.unpack_ip(message, pos)
+
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
         pos, self.checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
 
-        # Soulfind support
-        if message[pos:]:
-            pos, self.is_supporter = self.unpack_bool(message, pos)
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
+        pos, self.is_supporter = self.unpack_bool(message, pos)
 
 
 class SetWaitPort(ServerMessage):
@@ -492,7 +510,7 @@ class GetUserStatus(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.status = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.privileged = self.unpack_bool(message, pos)
 
@@ -647,7 +665,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.dirs = self.unpack_uint32(message, pos)
         pos, self.userdata.slotsfull = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.userdata.country = self.unpack_string(message, pos)
 
@@ -700,7 +718,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
 
-        # Soulfind support
+        # Soulfind server support
         if message[pos:]:
             pos, self.privileged = self.unpack_bool(message, pos)
 
@@ -978,7 +996,7 @@ class UserSearch(ServerMessage):
 
         return msg
 
-    # Soulfind support, the official server sends a FileSearch message (code 26) instead
+    # Soulfind server support, the official server sends a FileSearch message (code 26) instead
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)
@@ -1798,7 +1816,7 @@ class RoomSearch(ServerMessage):
 
         return msg
 
-    # Soulfind support, the official server sends a FileSearch message (code 26) instead
+    # Soulfind server support, the official server sends a FileSearch message (code 26) instead
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)
@@ -2389,6 +2407,14 @@ class PeerMessage(SlskMessage):
 class FileListMessage(PeerMessage):
     __slots__ = ()
 
+    VALID_FILE_ATTRIBUTES = {
+        FileAttribute.BITRATE,
+        FileAttribute.DURATION,
+        FileAttribute.VBR,
+        FileAttribute.SAMPLE_RATE,
+        FileAttribute.BIT_DEPTH
+    }
+
     @classmethod
     def pack_file_info(cls, fileinfo):
 
@@ -2438,6 +2464,25 @@ class FileListMessage(PeerMessage):
 
         return msg
 
+    @classmethod
+    def unpack_file_attributes(cls, message, pos):
+
+        attrs = {}
+        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
+
+        pos, numattr = cls.unpack_uint32(message, pos)
+
+        for _ in range(numattr):
+            pos, attrnum = cls.unpack_uint32(message, pos)
+
+            if attrnum not in valid_file_attributes:
+                continue
+
+            pos, attr = cls.unpack_uint32(message, pos)
+            attrs[attrnum] = attr
+
+        return pos, attrs
+
     @staticmethod
     def parse_file_attributes(attributes):
 
@@ -2483,7 +2528,7 @@ class FileListMessage(PeerMessage):
         return bitrate, length, vbr, sample_rate, bit_depth
 
     @classmethod
-    def parse_result_bitrate_length(cls, filesize, attributes):
+    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
 
         bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
 
@@ -2492,7 +2537,6 @@ class FileListMessage(PeerMessage):
                 # Bitrate = sample rate (Hz) * word length (bits) * channel count
                 # Bitrate = 44100 * 16 * 2
                 bitrate = (sample_rate * bit_depth * 2) // 1000
-
             else:
                 bitrate = -1
 
@@ -2500,29 +2544,32 @@ class FileListMessage(PeerMessage):
             if bitrate > 0:
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
                 length = filesize // (bitrate * 125)
-
             else:
                 length = -1
 
         # Ignore invalid values
         if bitrate <= 0 or bitrate > UINT32_LIMIT:
             bitrate = 0
-            h_bitrate = ""
+            h_quality = ""
 
+        elif sample_rate and bit_depth:
+            h_quality = f"{sample_rate / 1000:.3g} kHz / {bit_depth} bit"
+
+            if always_show_bitrate:
+                h_quality += f" / {bitrate} kbps"
         else:
-            h_bitrate = f"{bitrate}"
+            h_quality = f"{bitrate} kbps"
 
             if vbr == 1:
-                h_bitrate += " (vbr)"
+                h_quality += " (vbr)"
 
         if length < 0 or length > UINT32_LIMIT:
             length = 0
             h_length = ""
-
         else:
             h_length = human_length(length)
 
-        return h_bitrate, bitrate, h_length, length
+        return h_quality, bitrate, h_length, length
 
 
 class SharedFileListRequest(PeerMessage):
@@ -2618,14 +2665,7 @@ class SharedFileListResponse(FileListMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.parse_file_size(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2728,15 +2768,7 @@ class FileSearchResponse(FileListMessage):
             pos, name = self.unpack_string(message, pos)
             pos, size = self.parse_file_size(message, pos)
             pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-            pos, numattr = self.unpack_uint32(message, pos)
-
-            attrs = {}
-
-            if numattr:
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+            pos, attrs = self.unpack_file_attributes(message, pos)
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -2889,7 +2921,7 @@ class FolderContentsRequest(PeerMessage):
         pos, self.dir = self.unpack_string(message, pos)
 
 
-class FolderContentsResponse(PeerMessage):
+class FolderContentsResponse(FileListMessage):
     """ Peer code: 37 """
     """ A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
@@ -2928,14 +2960,7 @@ class FolderContentsResponse(PeerMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, numattr = self.unpack_uint32(message, pos)
-
-                attrs = {}
-
-                for _ in range(numattr):
-                    pos, attrnum = self.unpack_uint32(message, pos)
-                    pos, attr = self.unpack_uint32(message, pos)
-                    attrs[attrnum] = attr
+                pos, attrs = self.unpack_file_attributes(message, pos)
 
                 shares[folder][directory].append((code, name, size, ext, attrs))
 
@@ -3402,7 +3427,6 @@ NETWORK_MESSAGE_EVENTS = {
     PrivateRoomAddOperator: "private-room-add-operator",
     PrivateRoomAddUser: "private-room-add-user",
     PrivateRoomAdded: "private-room-added",
-    PrivateRoomDisown: "private-room-disown",
     PrivateRoomOperatorAdded: "private-room-operator-added",
     PrivateRoomOperatorRemoved: "private-room-operator-removed",
     PrivateRoomOwned: "private-room-owned",

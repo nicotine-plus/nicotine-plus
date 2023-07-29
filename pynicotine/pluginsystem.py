@@ -65,7 +65,7 @@ class BasePlugin:
         pass
 
     def loaded_notification(self):
-        # The plugin has finished loaded (settings are loaded at this stage)
+        # The plugin has finished loaded, commands are registered
         pass
 
     def disable(self):
@@ -200,7 +200,7 @@ class BasePlugin:
     # you shouldn't override them.
 
     def log(self, msg, msg_args=None):
-        log.add(self.human_name + ": " + msg, msg_args)
+        log.add(f"{self.human_name}: {msg}", msg_args)
 
     def send_public(self, room, text):
         """ Send chat message to a room, must already be joined. """
@@ -462,12 +462,11 @@ class PluginHandler:
         BasePlugin.config = config
         BasePlugin.core = core
 
+        log.add(_("Loading plugin system"))
         self.enable_plugin("core_commands")
 
         if not config.sections["plugins"]["enable"]:
             return
-
-        log.add(_("Loading plugin system"))
 
         to_enable = config.sections["plugins"]["enabled"]
         log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
@@ -517,7 +516,7 @@ class PluginHandler:
         try:
             # Import builtin plugin
             from importlib import import_module
-            plugin = import_module("pynicotine.plugins." + plugin_name)
+            plugin = import_module(f"pynicotine.plugins.{plugin_name}")
 
         except Exception:
             # Import user plugin
@@ -535,9 +534,16 @@ class PluginHandler:
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
+        # Set class attributes to make name available while initializing plugin
+        BasePlugin.internal_name = plugin_name
+        BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+
         instance = plugin.Plugin()
-        instance.internal_name = plugin_name
-        instance.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+        instance.internal_name = BasePlugin.internal_name
+        instance.human_name = BasePlugin.human_name
+
+        # Reset class attributes
+        BasePlugin.internal_name = BasePlugin.human_name = None
 
         self.plugin_settings(plugin_name, instance)
 

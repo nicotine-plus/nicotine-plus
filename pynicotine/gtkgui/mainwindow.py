@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -50,12 +49,12 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 
@@ -130,11 +129,8 @@ class MainWindow(Window):
             self.private_toolbar,
             self.private_toolbar_content,
             self.room_list_button,
-            self.room_search_combobox,
             self.room_search_entry,
             self.scan_progress_bar,
-            self.search_combobox,
-            self.search_combobox_button,
             self.search_content,
             self.search_end,
             self.search_entry,
@@ -158,12 +154,10 @@ class MainWindow(Window):
             self.uploads_title,
             self.uploads_toolbar,
             self.uploads_toolbar_content,
-            self.user_search_combobox,
             self.user_search_entry,
             self.user_status_button,
             self.user_status_icon,
             self.user_status_label,
-            self.userbrowse_combobox,
             self.userbrowse_content,
             self.userbrowse_end,
             self.userbrowse_entry,
@@ -171,7 +165,6 @@ class MainWindow(Window):
             self.userbrowse_title,
             self.userbrowse_toolbar,
             self.userbrowse_toolbar_content,
-            self.userinfo_combobox,
             self.userinfo_content,
             self.userinfo_end,
             self.userinfo_entry,
@@ -224,10 +217,6 @@ class MainWindow(Window):
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
-
-        """ Icons """
-
-        load_icons()
 
         """ Notebook Tabs """
 
@@ -366,10 +355,6 @@ class MainWindow(Window):
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
 
-    def save_columns(self, *_args):
-        for page in (self.downloads, self.uploads):
-            page.save_columns()
-
     def save_window_state(self):
 
         config.sections["ui"]["maximized"] = self.is_maximized()
@@ -429,8 +414,8 @@ class MainWindow(Window):
     def update_user_status(self):
 
         status = core.user_status
-        is_online = (status != slskmessages.UserStatus.OFFLINE)
-        is_away = (status == slskmessages.UserStatus.AWAY)
+        is_online = (status != UserStatus.OFFLINE)
+        is_away = (status == UserStatus.AWAY)
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
@@ -450,10 +435,10 @@ class MainWindow(Window):
         # Status bar
         username = core.login_username
 
-        if status == slskmessages.UserStatus.AWAY:
+        if status == UserStatus.AWAY:
             status_text = _("Away")
 
-        elif status == slskmessages.UserStatus.ONLINE:
+        elif status == UserStatus.ONLINE:
             status_text = _("Online")
 
         else:
@@ -971,14 +956,14 @@ class MainWindow(Window):
                 focus_widget = self.private_entry
 
         elif page == self.uploads_page:
-            self.uploads.update_model(forceupdate=True)
+            self.uploads.update_model()
             self.notebook.remove_tab_changed(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 focus_widget = self.uploads.tree_view
 
         elif page == self.downloads_page:
-            self.downloads.update_model(forceupdate=True)
+            self.downloads.update_model()
             self.notebook.remove_tab_changed(self.downloads_page)
 
             if self.downloads.container.get_visible():
@@ -1206,7 +1191,7 @@ class MainWindow(Window):
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != slskmessages.UserStatus.AWAY:
+            if core.user_status != UserStatus.AWAY:
                 core.set_away_mode(True)
 
             return
@@ -1214,7 +1199,7 @@ class MainWindow(Window):
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == slskmessages.UserStatus.AWAY:
+            if core.user_status == UserStatus.AWAY:
                 core.set_away_mode(False)
 
         # Reset away timer
@@ -1223,7 +1208,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != slskmessages.UserStatus.ONLINE:
+        if core.user_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
@@ -1399,18 +1384,12 @@ class MainWindow(Window):
         return True
 
     def on_shutdown(self, *_args):
-
-        # Save visible columns
-        self.save_columns()
         config.write_configuration()
 
     def hide(self):
 
         if not self.is_visible():
             return
-
-        # Save visible columns, in case application is killed later
-        self.save_columns()
 
         # Close any visible dialogs
         for dialog in reversed(Window.active_dialogs):

@@ -25,17 +25,16 @@ import time
 
 from gi.repository import GObject
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -57,6 +56,7 @@ class UserList:
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
             activate_row_callback=self.on_row_activated,
+            delete_accelerator_callback=self.on_remove_buddy,
             columns={
                 # Visible columns
                 "status": {
@@ -77,7 +77,7 @@ class UserList:
                     "column_type": "text",
                     "title": _("User"),
                     "width": 250,
-                    "default_sort_column": "ascending",
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 },
                 "speed": {
@@ -130,14 +130,6 @@ class UserList:
                 "country_data": {"data_type": str}
             }
         )
-
-        # Lists
-        for combo_box in (self.window.user_search_combobox, self.window.userinfo_combobox,
-                          self.window.userbrowse_combobox):
-            combo_box.set_model(self.list_view.model)
-            combo_box.set_entry_text_column(2)
-
-            CompletionEntry(combo_box.get_child(), self.list_view.model, column=2)
 
         # Popup menus
         self.popup_menu_private_rooms = UserPopupMenu(window.application)
@@ -231,23 +223,28 @@ class UserList:
         if iterator is None:
             return
 
-        h_speed = ""
-        avgspeed = msg.avgspeed
-
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
-
+        speed = msg.avgspeed
         files = msg.files
+
+        h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files)
 
         self.list_view.set_row_value(iterator, "speed", h_speed)
         self.list_view.set_row_value(iterator, "files", h_files)
-        self.list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.list_view.set_row_value(iterator, "speed_data", speed)
         self.list_view.set_row_value(iterator, "files_data", files)
 
     def add_buddy(self, user, user_data):
 
+        user_stats = core.watched_users.get(user, {})
+
+        status = user_data.status
         country_code = user_data.country.replace("flag_", "")
+        speed = user_stats.get("upload_speed", 0)
+        files = user_stats.get("files")
+
+        h_speed = human_speed(speed) if speed > 0 else ""
+        h_files = humanize(files) if files is not None else ""
 
         try:
             last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
@@ -259,25 +256,31 @@ class UserList:
             h_last_seen = _("Never seen")
 
         self.list_view.add_row([
-            USER_STATUS_ICON_NAMES.get(user_data.status, ""),
+            USER_STATUS_ICON_NAMES.get(status, ""),
             get_flag_icon_name(country_code),
             str(user),
-            "", "",
+            h_speed,
+            h_files,
             bool(user_data.is_trusted),
             bool(user_data.notify_status),
             bool(user_data.is_prioritized),
             str(h_last_seen),
             str(user_data.note),
-            0, 0, 0,
+            status,
+            speed,
+            files or 0,
             last_seen,
             str(country_code)
         ], select_row=core.userlist.allow_saving_buddies)
 
-        self.update_visible()
+        for combobox in (
+            self.window.search.user_search_combobox,
+            self.window.userbrowse.userbrowse_combobox,
+            self.window.userinfo.userinfo_combobox
+        ):
+            combobox.append(str(user))
 
-        if config.sections["words"]["buddies"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
+        self.update_visible()
 
     def remove_buddy(self, user):
 
@@ -289,9 +292,12 @@ class UserList:
         self.list_view.remove_row(iterator)
         self.update_visible()
 
-        if config.sections["words"]["buddies"]:
-            core.chatrooms.update_completions()
-            core.privatechat.update_completions()
+        for combobox in (
+            self.window.search.user_search_combobox,
+            self.window.userbrowse.userbrowse_combobox,
+            self.window.userinfo.userinfo_combobox
+        ):
+            combobox.remove_id(user)
 
     def buddy_note(self, user, note):
 
@@ -416,6 +422,7 @@ class UserList:
             parent=self.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
+            action_button_label=_("_Add"),
             callback=self.on_add_note_response,
             callback_data=user,
             default=note
@@ -423,8 +430,8 @@ class UserList:
 
     def server_disconnect(self, *_args):
 
-        for iterator in self.list_view.get_all_rows():
-            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE])
+        for iterator in self.list_view.iterators.values():
+            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")
             self.list_view.set_row_value(iterator, "status_data", 0)

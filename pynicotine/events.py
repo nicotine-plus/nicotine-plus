@@ -40,6 +40,7 @@ EVENT_NAMES = {
     "peer-connection-closed",
     "peer-connection-error",
     "privileged-users",
+    "queue-network-message",
     "quit",
     "remove-privileged-user",
     "server-login",
@@ -84,7 +85,6 @@ EVENT_NAMES = {
     "private-room-add-operator",
     "private-room-add-user",
     "private-room-added",
-    "private-room-disown",
     "private-room-operator-added",
     "private-room-operator-removed",
     "private-room-owned",
@@ -94,7 +94,7 @@ EVENT_NAMES = {
     "private-room-toggle",
     "private-room-users",
     "remove-room",
-    "room-completion-list",
+    "room-completions",
     "room-list",
     "say-chat-room",
     "show-room",
@@ -125,7 +125,7 @@ EVENT_NAMES = {
     "clear-private-messages",
     "echo-private-message",
     "message-user",
-    "private-chat-completion-list",
+    "private-chat-completions",
     "private-chat-remove-user",
     "private-chat-show-user",
     "send-private-message",
@@ -203,6 +203,7 @@ class Events:
 
         self._callbacks = {}
         self._thread_events = deque()
+        self._pending_scheduler_events = deque()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
 
@@ -234,12 +235,15 @@ class Events:
     def schedule(self, delay, callback, repeat=False):
 
         self._scheduler_event_id += 1
-        self._scheduler_events[self._scheduler_event_id] = ((time.time() + delay), delay, repeat, callback)
+        next_time = (time.time() + delay)
+
+        self._pending_scheduler_events.append(
+            (self._scheduler_event_id, (next_time, delay, repeat, callback)))
 
         return self._scheduler_event_id
 
     def cancel_scheduled(self, event_id):
-        self._scheduler_events.pop(event_id, None)
+        self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
         """ Called by the main loop 20 times per second to emit thread events in the main thread """
@@ -258,10 +262,21 @@ class Events:
     def _run_scheduler(self):
 
         while True:
+            # Scheduled events additions/removals from other threads
+            while self._pending_scheduler_events:
+                event_id, event = self._pending_scheduler_events.popleft()
+
+                if event is not None:
+                    self._scheduler_events[event_id] = event
+                else:
+                    self._scheduler_events.pop(event_id, None)
+
+            # No scheduled events
             if not self._scheduler_events:
                 time.sleep(1)
                 continue
 
+            # Retrieve upcoming event
             event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
             event_time, delay, repeat, callback = event_data
             current_time = time.time()

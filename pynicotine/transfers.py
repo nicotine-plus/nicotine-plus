@@ -32,8 +32,10 @@ import json
 import os
 import os.path
 import re
+import shutil
 import time
 
+from ast import literal_eval
 from collections import defaultdict
 from collections import deque
 from locale import strxfrm
@@ -59,11 +61,11 @@ class Transfer:
     __slots__ = ("sock", "user", "filename",
                  "path", "token", "size", "file", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
-                 "time_left", "modifier", "queue_position", "bitrate", "length",
+                 "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "size_changed")
 
     def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
-                 current_byte_offset=None, bitrate=None, length=None):
+                 current_byte_offset=None, file_attributes=None):
         self.user = user
         self.filename = filename
         self.path = path
@@ -71,8 +73,7 @@ class Transfer:
         self.status = status
         self.token = token
         self.current_byte_offset = current_byte_offset
-        self.bitrate = bitrate
-        self.length = length
+        self.file_attributes = file_attributes or {}
 
         self.sock = None
         self.file = None
@@ -218,7 +219,7 @@ class Transfers:
         for upload in self.uploads.copy():
             if upload.status != "Finished":
                 need_update = True
-                self.clear_upload(upload)
+                self.clear_upload(upload, update_parent=False)
 
         if need_update:
             events.emit("update-uploads")
@@ -265,13 +266,21 @@ class Transfers:
     def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
 
+        def json_keys_to_integer(dictionary):
+            # JSON stores file attribute types as strings, convert them back to integers
+            try:
+                return {int(k): v for k, v in dictionary}
+
+            except ValueError:
+                return dictionary
+
         transfers_file = encode_path(transfers_file)
 
         if not os.path.isfile(transfers_file):
             return None
 
         with open(transfers_file, encoding="utf-8") as handle:
-            return json.load(handle)
+            return json.load(handle, object_pairs_hook=json_keys_to_integer)
 
     @staticmethod
     def load_legacy_transfers_file(transfers_file):
@@ -299,6 +308,60 @@ class Transfers:
             load_func = self.load_legacy_transfers_file
 
         return load_file(transfers_file, load_func)
+
+    def _load_file_attributes(self, num_attributes, transfer_row):
+
+        if num_attributes < 7:
+            return None
+
+        loaded_file_attributes = transfer_row[6]
+
+        if not loaded_file_attributes:
+            return None
+
+        if isinstance(loaded_file_attributes, dict):
+            # Found dictionary with file attributes (Nicotine+ >=3.3.0), nothing more to do
+            return loaded_file_attributes
+
+        try:
+            # Check if a dictionary is represented in string format
+            return {int(k): v for k, v in literal_eval(loaded_file_attributes).items()}
+
+        except (AttributeError, ValueError):
+            pass
+
+        # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
+        file_attributes = {}
+        bitrate = str(loaded_file_attributes)
+        is_vbr = (" (vbr)" in bitrate)
+
+        try:
+            file_attributes[slskmessages.FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
+
+            if is_vbr:
+                file_attributes[slskmessages.FileAttribute.VBR] = int(is_vbr)
+
+        except ValueError:
+            # No valid bitrate value found
+            pass
+
+        if num_attributes < 8:
+            return file_attributes
+
+        loaded_length = str(transfer_row[7])
+
+        if ":" not in loaded_length:
+            return file_attributes
+
+        # Convert HH:mm:ss to seconds
+        seconds = 0
+
+        for part in loaded_length.split(":"):
+            seconds = seconds * 60 + int(part, 10)
+
+        file_attributes[slskmessages.FileAttribute.DURATION] = seconds
+
+        return file_attributes
 
     def add_stored_transfers(self, transfer_type):
 
@@ -333,6 +396,9 @@ class Transfers:
 
             if not isinstance(path, str):
                 continue
+
+            if path:
+                path = os.path.normpath(path)
 
             # Status
             loaded_status = None
@@ -369,25 +435,13 @@ class Transfers:
                 if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
                     current_byte_offset = int(loaded_byte_offset)
 
-            # Bitrate / length
-            bitrate = length = None
-
-            if num_attributes >= 7:
-                loaded_bitrate = transfer_row[6]
-
-                if loaded_bitrate is not None:
-                    bitrate = str(loaded_bitrate)
-
-            if num_attributes >= 8:
-                loaded_length = transfer_row[7]
-
-                if loaded_length is not None:
-                    length = str(loaded_length)
+            # File attributes
+            file_attributes = self._load_file_attributes(num_attributes, transfer_row)
 
             transfer_list.appendleft(
                 Transfer(
                     user=user, filename=filename, path=path, status=status, size=size,
-                    current_byte_offset=current_byte_offset, bitrate=bitrate, length=length
+                    current_byte_offset=current_byte_offset, file_attributes=file_attributes
                 )
             )
 
@@ -491,7 +545,7 @@ class Transfers:
         else:
             speed_limit = 0
 
-        core.queue.append(slskmessages.SetDownloadLimit(speed_limit))
+        core.send_message_to_network_thread(slskmessages.SetDownloadLimit(speed_limit))
 
     def update_upload_limits(self):
 
@@ -512,7 +566,7 @@ class Transfers:
         else:
             speed_limit = 0
 
-        core.queue.append(slskmessages.SetUploadLimit(speed_limit, limit_by))
+        core.send_message_to_network_thread(slskmessages.SetUploadLimit(speed_limit, limit_by))
 
     def queue_limit_reached(self, user):
 
@@ -657,7 +711,7 @@ class Transfers:
                     update = True
 
                 elif download.status == "User logged off":
-                    self.get_file(username, download.filename, path=download.path, transfer=download, ui_callback=False)
+                    self.get_file(username, download.filename, transfer=download, ui_callback=False)
                     update = True
 
         if update:
@@ -789,15 +843,11 @@ class Transfers:
                     "destination": destination
                 })
 
-                for file in files:
-                    virtualpath = directory.rstrip("\\") + "\\" + file[1]
-                    size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                        size, file[4])
+                for _code, filename, file_size, _ext, file_attributes, *_unused in files:
+                    virtualpath = directory.rstrip("\\") + "\\" + filename
 
                     self.get_file(
-                        username, virtualpath, path=destination,
-                        size=size, bitrate=h_bitrate, length=h_length)
+                        username, virtualpath, path=destination, size=file_size, file_attributes=file_attributes)
 
     def _queue_upload(self, msg):
         """ Peer code: 43 """
@@ -937,7 +987,7 @@ class Transfers:
             path = ""
             if config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = filename.replace("/", "\\").split("\\")[-2]
-                path = os.path.join(config.sections["transfers"]["uploaddir"], user, parentdir)
+                path = os.path.join(os.path.normpath(config.sections["transfers"]["uploaddir"]), user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
                                 size=size, token=token)
@@ -1136,10 +1186,10 @@ class Transfers:
 
             if download.sock is not None:
                 log.add_transfer("Download already has an existing file connection, ignoring init message")
-                core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+                core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
                 return
 
-            incomplete_folder_path = config.sections["transfers"]["incompletedir"]
+            incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
             need_update = True
             download.sock = msg.init.sock
 
@@ -1198,10 +1248,10 @@ class Transfers:
 
                 if download.size > offset:
                     download.status = "Transferring"
-                    core.queue.append(slskmessages.DownloadFile(
+                    core.send_message_to_network_thread(slskmessages.DownloadFile(
                         init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
                     ))
-                    core.queue.append(slskmessages.FileOffset(init=msg.init, offset=offset))
+                    core.send_message_to_network_thread(slskmessages.FileOffset(init=msg.init, offset=offset))
 
                 else:
                     self.download_finished(download, file_handle=file_handle)
@@ -1243,7 +1293,7 @@ class Transfers:
 
             if upload.sock is not None:
                 log.add_transfer("Upload already has an existing file connection, ignoring init message")
-                core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+                core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
                 return
 
             need_update = True
@@ -1284,7 +1334,7 @@ class Transfers:
 
                 if upload.size > 0:
                     upload.status = "Transferring"
-                    core.queue.append(slskmessages.UploadFile(
+                    core.send_message_to_network_thread(slskmessages.UploadFile(
                         init=msg.init, token=token, file=file_handle, size=upload.size
                     ))
 
@@ -1300,7 +1350,7 @@ class Transfers:
             return
 
         log.add_transfer("Unknown file upload init message with token %s", token)
-        core.queue.append(slskmessages.CloseConnection(msg.init.sock))
+        core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
 
     def _upload_denied(self, msg):
         """ Peer code: 50 """
@@ -1334,7 +1384,7 @@ class Transfers:
 
                 self.abort_download(download, abort_reason=None)
                 download.legacy_attempt = True
-                self.get_file(user, filename, path=download.path, transfer=download)
+                self.get_file(user, filename, transfer=download)
                 break
 
             if download.status == "Transferring":
@@ -1372,7 +1422,7 @@ class Transfers:
 
                 self.abort_download(download, abort_reason=None)
                 download.legacy_attempt = True
-                self.get_file(user, filename, path=download.path, transfer=download)
+                self.get_file(user, filename, transfer=download)
                 break
 
             # Already failed once previously, give up
@@ -1491,7 +1541,7 @@ class Transfers:
                 if upload.speed is not None:
                     # Inform the server about the last upload speed for this transfer
                     log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
-                    core.queue.append(slskmessages.SendUploadSpeed(upload.speed))
+                    core.send_message_to_server(slskmessages.SendUploadSpeed(upload.speed))
 
                 self.upload_finished(upload, file_handle=upload.file)
                 return
@@ -1558,7 +1608,7 @@ class Transfers:
                     break
 
         if queue_position > 0:
-            core.queue.append(slskmessages.PlaceInQueueResponse(init=msg.init, filename=filename, place=queue_position))
+            core.send_message_to_peer(user, slskmessages.PlaceInQueueResponse(filename=filename, place=queue_position))
 
         if transfer is None:
             return
@@ -1585,12 +1635,12 @@ class Transfers:
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
 
-    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None,
+    def get_file(self, user, filename, path="", transfer=None, size=0, file_attributes=None,
                  bypass_filter=False, ui_callback=True):
 
-        path = clean_path(path, absolute=True)
-
-        if not path:
+        if path:
+            path = clean_path(path)
+        else:
             path = self.get_default_download_folder(user)
 
         if transfer is None:
@@ -1607,8 +1657,7 @@ class Transfers:
             else:
                 transfer = Transfer(
                     user=user, filename=filename, path=path,
-                    status="Queued", size=size, bitrate=bitrate,
-                    length=length
+                    status="Queued", size=size, file_attributes=file_attributes
                 )
                 self.downloads.appendleft(transfer)
         else:
@@ -1638,7 +1687,7 @@ class Transfers:
             transfer.status = "User logged off"
 
         elif transfer.status != "Filtered":
-            download_path = self.get_complete_download_file_path(user, filename, path, size)
+            download_path = self.get_complete_download_file_path(user, filename, transfer.path, size)
 
             if download_path:
                 transfer.status = "Finished"
@@ -1657,10 +1706,13 @@ class Transfers:
         if ui_callback:
             self.update_download(transfer)
 
-    def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
+    def push_file(self, user, filename, size, path="", transfer=None, locally_queued=False):
 
         real_path = core.shares.virtual2real(filename)
         size_attempt = self.get_file_size(real_path)
+
+        if path:
+            path = os.path.normpath(path)
 
         if size_attempt > 0:
             size = size_attempt
@@ -1669,11 +1721,7 @@ class Transfers:
             if not path:
                 path = os.path.dirname(real_path)
 
-            transfer = Transfer(
-                user=user, filename=filename, path=path,
-                status="Queued", size=size, bitrate=bitrate,
-                length=length
-            )
+            transfer = Transfer(user=user, filename=filename, path=path, status="Queued", size=size)
             self.append_upload(user, filename, transfer)
         else:
             transfer.filename = filename
@@ -1842,7 +1890,7 @@ class Transfers:
 
     def get_default_download_folder(self, user):
 
-        downloaddir = config.sections["transfers"]["downloaddir"]
+        downloaddir = os.path.normpath(config.sections["transfers"]["downloaddir"])
 
         # Check if username subfolders should be created for downloads
         if config.sections["transfers"]["usernamesubfolders"]:
@@ -1862,7 +1910,7 @@ class Transfers:
     def get_basename_byte_limit(self, folder_path):
 
         try:
-            max_bytes = os.statvfs(folder_path).f_namemax
+            max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
 
         except (AttributeError, OSError):
             max_bytes = 255
@@ -1926,7 +1974,7 @@ class Transfers:
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
-        incomplete_folder_path = config.sections["transfers"]["incompletedir"]
+        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
         basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
@@ -1951,7 +1999,7 @@ class Transfers:
             core.notifications.show_download_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     "user": user,
-                    "file": filepath.rsplit(os.sep, 1)[1]
+                    "file": os.path.basename(filepath)
                 },
                 title=_("File Downloaded")
             )
@@ -2009,7 +2057,6 @@ class Transfers:
             if not os.path.isdir(download_folder_path_encoded):
                 os.makedirs(download_folder_path_encoded)
 
-            import shutil
             shutil.move(file_handle.name, encode_path(download_file_path))
 
         except OSError as error:
@@ -2184,7 +2231,7 @@ class Transfers:
                 # Retry failed downloads every 3 minutes
 
                 self.abort_download(download, abort_reason=None)
-                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+                self.get_file(download.user, download.filename, transfer=download)
 
             if download.status == "Queued":
                 # Request queue position every 3 minutes
@@ -2341,7 +2388,7 @@ class Transfers:
         user = transfer.user
 
         self.abort_download(transfer, abort_reason=None)
-        self.get_file(user, transfer.filename, path=transfer.path, transfer=transfer, bypass_filter=bypass_filter)
+        self.get_file(user, transfer.filename, transfer=transfer, bypass_filter=bypass_filter)
 
     def retry_downloads(self, downloads):
 
@@ -2369,7 +2416,7 @@ class Transfers:
                 })
 
                 self.abort_download(download, abort_reason=None)
-                self.get_file(download.user, download.filename, path=download.path, transfer=download)
+                self.get_file(download.user, download.filename, transfer=download)
 
     def retry_upload(self, transfer):
 
@@ -2392,7 +2439,7 @@ class Transfers:
                     self.update_upload(transfer)
                 return
 
-        self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
+        self.push_file(user, transfer.filename, transfer.size, transfer=transfer)
 
     def retry_uploads(self, uploads):
         for upload in uploads:
@@ -2424,7 +2471,7 @@ class Transfers:
             del self.transfer_request_times[download]
 
         if download.sock is not None:
-            core.queue.append(slskmessages.CloseConnection(download.sock))
+            core.send_message_to_network_thread(slskmessages.CloseConnection(download.sock))
             download.sock = None
 
         if download.file is not None:
@@ -2467,7 +2514,7 @@ class Transfers:
             del self.transfer_request_times[upload]
 
         if upload.sock is not None:
-            core.queue.append(slskmessages.CloseConnection(upload.sock))
+            core.send_message_to_network_thread(slskmessages.CloseConnection(upload.sock))
             upload.sock = None
 
         if upload.file is not None:
@@ -2604,7 +2651,7 @@ class Transfers:
         """ Get a list of downloads """
         return [
             [download.user, download.filename, download.path, download.status, download.size,
-             download.current_byte_offset, download.bitrate, download.length]
+             download.current_byte_offset, download.file_attributes]
             for download in reversed(self.downloads)
         ]
 
@@ -2612,7 +2659,7 @@ class Transfers:
         """ Get a list of finished uploads """
         return [
             [upload.user, upload.filename, upload.path, upload.status, upload.size, upload.current_byte_offset,
-             upload.bitrate, upload.length]
+             upload.file_attributes]
             for upload in reversed(self.uploads) if upload.status == "Finished"
         ]
 

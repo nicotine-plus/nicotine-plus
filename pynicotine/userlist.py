@@ -18,11 +18,11 @@
 
 import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 
 
 class Buddy:
@@ -109,7 +109,7 @@ class UserList:
                 is_trusted=is_trusted,
                 last_seen=last_seen,
                 country=country,
-                status=slskmessages.UserStatus.OFFLINE
+                status=UserStatus.OFFLINE
             )
             events.emit("add-buddy", user, user_data)
 
@@ -130,7 +130,7 @@ class UserList:
     def _server_disconnect(self, _msg):
 
         for user, user_data in self.buddies.items():
-            user_data.status = slskmessages.UserStatus.OFFLINE
+            user_data.status = UserStatus.OFFLINE
             self.set_buddy_last_seen(user, is_online=False)
 
         self.save_buddy_list()
@@ -140,9 +140,12 @@ class UserList:
         if user in self.buddies:
             return
 
-        note = country = ""
+        note = ""
+        country_code = core.user_countries.get(user)
+        country = f"flag_{country_code}" if country_code else ""
         is_trusted = notify_status = is_prioritized = False
         last_seen = "Never seen"
+        status = core.user_statuses.get(user, UserStatus.OFFLINE)
 
         self.buddies[user] = user_data = Buddy(
             username=user,
@@ -152,25 +155,34 @@ class UserList:
             is_trusted=is_trusted,
             last_seen=last_seen,
             country=country,
-            status=slskmessages.UserStatus.OFFLINE
+            status=status
         )
-        self.save_buddy_list()
 
+        if config.sections["words"]["buddies"]:
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
+
+        self.save_buddy_list()
         events.emit("add-buddy", user, user_data)
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.user_status == UserStatus.OFFLINE:
             return
 
         # Request user status, speed and number of shared files
-        core.watch_user(user, force_update=True)
+        core.watch_user(user)
 
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
+        # Request user country
+        if country_code is None:
+            core.request_ip_address(user)
 
     def remove_buddy(self, user):
 
         if user in self.buddies:
             del self.buddies[user]
+
+        if config.sections["words"]["buddies"]:
+            core.chatrooms.update_completions()
+            core.privatechat.update_completions()
 
         self.save_buddy_list()
         events.emit("remove-buddy", user)
@@ -284,10 +296,10 @@ class UserList:
         if not notify:
             return
 
-        if msg.status == slskmessages.UserStatus.AWAY:
+        if msg.status == UserStatus.AWAY:
             status_text = _("%(user)s is away")
 
-        elif msg.status == slskmessages.UserStatus.ONLINE:
+        elif msg.status == UserStatus.ONLINE:
             status_text = _("%(user)s is online")
 
         else:

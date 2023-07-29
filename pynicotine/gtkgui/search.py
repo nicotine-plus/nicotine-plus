@@ -27,9 +27,7 @@ import re
 from collections import defaultdict
 
 from gi.repository import GObject
-from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -43,21 +41,16 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
-from pynicotine.gtkgui.widgets.treeview import collapse_treeview
+from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
-from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import save_columns
-from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
-from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
-from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.treeview import show_file_type_tooltip
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -96,8 +89,24 @@ class Searches(IconNotebook):
         if GTK_API_VERSION >= 4:
             add_css_class(window.search_mode_button.get_first_child(), "arrow-button")
 
-        CompletionEntry(window.room_search_entry, window.room_search_combobox.get_model())
-        CompletionEntry(window.search_entry, window.search_combobox.get_model())
+        self.room_search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.room_search_entry, visible=False,
+            items=(
+                (core.chatrooms.JOINED_ROOMS_NAME, None),
+            )
+        )
+        self.room_search_combobox.set_text(core.chatrooms.JOINED_ROOMS_NAME)
+
+        self.user_search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.user_search_entry, visible=False
+        )
+
+        self.search_combobox = ComboBox(
+            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.search_entry
+        )
 
         self.file_properties = None
 
@@ -123,7 +132,11 @@ class Searches(IconNotebook):
                 continue
 
             tab.update_filter_widgets()
+            self.window.application.notifications.update_title()
             break
+
+    def on_remove_all_pages(self, *_args):
+        core.search.remove_all_searches()
 
     def on_search_mode(self, action, state):
 
@@ -132,8 +145,8 @@ class Searches(IconNotebook):
 
         self.window.search_mode_label.set_label(self.modes[search_mode])
 
-        self.window.user_search_combobox.set_visible(search_mode == "user")
-        self.window.room_search_combobox.set_visible(search_mode == "rooms")
+        self.user_search_combobox.set_visible(search_mode == "user")
+        self.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
         self.window.search_mode_button.get_popover().set_visible(False)
@@ -146,8 +159,8 @@ class Searches(IconNotebook):
             return
 
         mode = self.window.lookup_action("search-mode").get_state().get_string()
-        room = self.window.room_search_entry.get_text()
-        user = self.window.user_search_entry.get_text()
+        room = self.room_search_combobox.get_text()
+        user = self.user_search_combobox.get_text()
 
         self.window.search_entry.set_text("")
         core.search.do_search(text, mode, room=room, user=user)
@@ -155,15 +168,13 @@ class Searches(IconNotebook):
     def populate_search_history(self):
 
         should_enable_history = config.sections["searches"]["enable_history"]
-
-        self.window.search_combobox.remove_all()
-        self.window.search_combobox_button.set_visible(should_enable_history)
+        self.search_combobox.clear()
 
         if not should_enable_history:
             return
 
         for term in config.sections["searches"]["history"]:
-            self.window.search_combobox.append_text(str(term))
+            self.search_combobox.append(str(term))
 
     def create_page(self, token, text, mode=None, mode_label=None, show_page=True):
 
@@ -241,7 +252,7 @@ class Searches(IconNotebook):
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
-        self.window.search_combobox.remove_all()
+        self.search_combobox.clear()
 
     def clear_filter_history(self):
 
@@ -327,21 +338,28 @@ class Search:
             self.container,
             self.expand_button,
             self.expand_icon,
-            self.filter_bitrate_combobox,
-            self.filter_country_combobox,
-            self.filter_exclude_combobox,
-            self.filter_file_size_combobox,
-            self.filter_file_type_combobox,
+            self.filter_bitrate_container,
+            self.filter_bitrate_entry,
+            self.filter_country_container,
+            self.filter_country_entry,
+            self.filter_exclude_container,
+            self.filter_exclude_entry,
+            self.filter_file_size_container,
+            self.filter_file_size_entry,
+            self.filter_file_type_container,
+            self.filter_file_type_entry,
             self.filter_free_slot_button,
-            self.filter_include_combobox,
-            self.filter_length_combobox,
+            self.filter_include_container,
+            self.filter_include_entry,
+            self.filter_length_container,
+            self.filter_length_entry,
             self.filters_button,
             self.filters_container,
             self.filters_label,
             self.grouping_button,
             self.results_button,
             self.results_label,
-            self.tree_view
+            self.tree_container
         ) = ui.load(scope=self, path="search.ui")
 
         self.searches = searches
@@ -367,9 +385,8 @@ class Search:
         self.mode = mode
         self.mode_label = mode_label
         self.show_page = show_page
-        self.usersiters = {}
-        self.directoryiters = {}
-        self.users = set()
+        self.users = {}
+        self.folders = {}
         self.all_data = []
         self.grouping_mode = None
         self.filters = {}
@@ -385,56 +402,129 @@ class Search:
         self.selected_users = {}
         self.selected_results = {}
 
-        # Columns
-        self.treeview_name = "file_search"
-        self.create_model()
+        # Combo boxes
+        self.filter_include_combobox = ComboBox(
+            container=self.filter_include_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_include_entry)
 
-        self.column_offsets = {}
-        self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
-        has_free_slots_col = 18
-        self.cols = cols = initialise_columns(
-            self.window, "file_search", self.tree_view,
-            ["id", _("ID"), 50, "number", has_free_slots_col],
-            ["user", _("User"), 200, "text", has_free_slots_col],
-            ["country", _("Country"), 30, "icon", None],
-            ["speed", _("Speed"), 120, "number", has_free_slots_col],
-            ["in_queue", _("In Queue"), 110, "number", has_free_slots_col],
-            ["folder", _("Folder"), 200, "text", has_free_slots_col],
-            ["file_type", _("File Type"), 40, "icon", has_free_slots_col],
-            ["filename", _("Filename"), 200, "text", has_free_slots_col],
-            ["size", _("Size"), 100, "number", has_free_slots_col],
-            ["bitrate", _("Bitrate"), 100, "number", has_free_slots_col],
-            ["length", _("Duration"), 100, "number", has_free_slots_col]
+        self.filter_exclude_combobox = ComboBox(
+            container=self.filter_exclude_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_exclude_entry)
+
+        self.filter_file_type_combobox = ComboBox(
+            container=self.filter_file_type_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_file_type_entry)
+
+        self.filter_file_size_combobox = ComboBox(
+            container=self.filter_file_size_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_file_size_entry)
+
+        self.filter_bitrate_combobox = ComboBox(
+            container=self.filter_bitrate_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_bitrate_entry)
+
+        self.filter_length_combobox = ComboBox(
+            container=self.filter_length_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_length_entry)
+
+        self.filter_country_combobox = ComboBox(
+            container=self.filter_country_container, has_entry=True, enable_arrow_keys=False,
+            entry=self.filter_country_entry)
+
+        self.tree_view = TreeView(
+            self.window, parent=self.tree_container, name="file_search",
+            multi_select=True, activate_row_callback=self.on_row_activated, focus_in_callback=self.on_refilter,
+            columns={
+                # Visible columns
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "width": 200,
+                    "sensitive_column": "free_slot_data"
+                },
+                "country": {
+                    "column_type": "icon",
+                    "title": _("Country"),
+                    "width": 30,
+                    "hide_header": True,
+                    "sort_column": "country_data"
+                },
+                "speed": {
+                    "column_type": "number",
+                    "title": _("Speed"),
+                    "width": 120,
+                    "sort_column": "speed_data",
+                    "sensitive_column": "free_slot_data"
+                },
+                "in_queue": {
+                    "column_type": "number",
+                    "title": _("In Queue"),
+                    "width": 110,
+                    "sort_column": "in_queue_data",
+                    "sensitive_column": "free_slot_data"
+                },
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "width": 200,
+                    "expand_column": True,
+                    "sensitive_column": "free_slot_data",
+                    "tooltip_callback": self.on_file_path_tooltip
+                },
+                "file_type": {
+                    "column_type": "icon",
+                    "title": _("File Type"),
+                    "width": 40,
+                    "hide_header": True,
+                    "sensitive_column": "free_slot_data"
+                },
+                "filename": {
+                    "column_type": "text",
+                    "title": _("Filename"),
+                    "width": 200,
+                    "expand_column": True,
+                    "sensitive_column": "free_slot_data",
+                    "tooltip_callback": self.on_file_path_tooltip
+                },
+                "size": {
+                    "column_type": "number",
+                    "title": _("Size"),
+                    "width": 180,
+                    "sort_column": "size_data",
+                    "sensitive_column": "free_slot_data"
+                },
+                "quality": {
+                    "column_type": "number",
+                    "title": _("Quality"),
+                    "width": 150,
+                    "sort_column": "bitrate_data",
+                    "sensitive_column": "free_slot_data"
+                },
+                "length": {
+                    "column_type": "number",
+                    "title": _("Duration"),
+                    "width": 100,
+                    "sort_column": "length_data",
+                    "sensitive_column": "free_slot_data"
+                },
+
+                # Hidden data columns
+                "country_data": {"data_type": str},
+                "speed_data": {"data_type": GObject.TYPE_UINT},
+                "in_queue_data": {"data_type": GObject.TYPE_UINT},
+                "size_data": {"data_type": GObject.TYPE_UINT64},
+                "bitrate_data": {"data_type": GObject.TYPE_UINT},
+                "length_data": {"data_type": GObject.TYPE_UINT},
+                "file_path_data": {"data_type": str},
+                "free_slot_data": {"data_type": bool},
+                "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT},
+                "id_data": {
+                    "data_type": GObject.TYPE_UINT64,
+                    "default_sort_type": "ascending",
+                    "iterator_key": True
+                }
+            }
         )
-
-        cols["id"].set_sort_column_id(0)
-        cols["user"].set_sort_column_id(1)
-        cols["country"].set_sort_column_id(13)
-        cols["speed"].set_sort_column_id(15)
-        cols["in_queue"].set_sort_column_id(16)
-        cols["folder"].set_sort_column_id(5)
-        cols["file_type"].set_sort_column_id(6)
-        cols["filename"].set_sort_column_id(7)
-        cols["size"].set_sort_column_id(14)
-        cols["bitrate"].set_sort_column_id(11)
-        cols["length"].set_sort_column_id(17)
-
-        cols["country"].get_widget().set_visible(False)
-        cols["file_type"].get_widget().set_visible(False)
-
-        cols["folder"].set_expand(True)
-        cols["filename"].set_expand(True)
-
-        for column in self.tree_view.get_columns():
-            self.column_offsets[column.get_title()] = 0
-            column.connect("notify::x-offset", self.on_column_position_changed)
-
-        if GTK_API_VERSION >= 4:
-            focus_controller = Gtk.EventControllerFocus()
-            focus_controller.connect("enter", self.on_refilter)
-            self.tree_view.add_controller(focus_controller)
-        else:
-            self.tree_view.connect("focus-in-event", self.on_refilter)
 
         # Popup menus
         self.popup_menu_users = UserPopupMenu(self.window.application)
@@ -446,7 +536,7 @@ class Search:
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(self.window.application, self.tree_view, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(self.window.application, self.tree_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -472,11 +562,11 @@ class Search:
         )
 
         # Key bindings
-        for widget in (self.container, self.tree_view):
+        for widget in (self.container, self.tree_view.widget):
             Accelerator("<Primary>f", widget, self.on_show_filter_bar_accelerator)
 
         Accelerator("Escape", self.filters_container, self.on_close_filter_bar_accelerator)
-        Accelerator("<Alt>Return", self.tree_view, self.on_file_properties_accelerator)
+        Accelerator("<Alt>Return", self.tree_view.widget, self.on_file_properties_accelerator)
 
         # Grouping
         menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
@@ -502,44 +592,16 @@ class Search:
 
         # Filter text entry widgets
         for filter_id, combobox in self.filter_comboboxes.items():
-            combobox.get_child().filter_id = filter_id
+            combobox.entry.filter_id = filter_id
+
+            buffer = combobox.entry.get_buffer()
+            buffer.connect("inserted-text", self.on_filter_entry_inserted_text, combobox)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_default_filters()
 
         # Wishlist
         self.update_wish_button()
-
-    def create_model(self):
-        """ Create a tree model based on the grouping mode. Scrolling performance of Gtk.TreeStore
-        is bad with large plain lists, so use Gtk.ListStore in ungrouped mode where no tree structure
-        is necessary. """
-
-        tree_model_class = Gtk.ListStore if self.grouping_mode == "ungrouped" else Gtk.TreeStore
-        self.resultsmodel = tree_model_class(
-            int,                  # (0)  num
-            str,                  # (1)  user
-            str,                  # (2)  flag
-            str,                  # (3)  h_speed
-            str,                  # (4)  h_queue
-            str,                  # (5)  directory
-            str,                  # (6)  file type icon
-            str,                  # (7)  filename
-            str,                  # (8)  h_size
-            str,                  # (9)  h_bitrate
-            str,                  # (10) h_length
-            GObject.TYPE_UINT,    # (11) bitrate
-            str,                  # (12) fullpath
-            str,                  # (13) country
-            GObject.TYPE_UINT64,  # (14) size
-            GObject.TYPE_UINT,    # (15) speed
-            GObject.TYPE_UINT,    # (16) queue
-            GObject.TYPE_UINT,    # (17) length
-            bool                  # (18) free slots
-        )
-
-        if self.grouping_mode is not None:
-            self.tree_view.set_model(self.resultsmodel)
 
     def clear(self):
 
@@ -552,31 +614,6 @@ class Search:
     def set_label(self, label):
         self.tab_menu.set_parent(label)
 
-    @staticmethod
-    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
-
-        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 13)
-
-        if country_tooltip:
-            return country_tooltip
-
-        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 12)
-
-        if file_path_tooltip:
-            return file_path_tooltip
-
-        return show_file_type_tooltip(widget, pos_x, pos_y, tooltip, 6)
-
-    def on_combobox_popup_shown(self, combobox, _param):
-
-        # Refilter
-        entry = combobox.get_child()
-        entry.emit("activate")
-
-        # Highlight current list item
-        text = combobox.get_active_text()
-        combobox.set_active_id(text)
-
     def on_combobox_check_separator(self, model, iterator):
         # Render empty value as separator
         return not model.get_value(iterator, 0)
@@ -585,18 +622,18 @@ class Search:
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.set_row_separator_func(lambda *_args: 0)
-            widget.remove_all()
+            widget.clear()
 
             presets = self.FILTER_PRESETS.get(filter_id)
 
             if presets:
                 for value in presets:
-                    widget.append_text(value)
+                    widget.append(value)
 
-                widget.append_text("")  # Separator
+                widget.append("")  # Separator
 
             for value in config.sections["searches"][filter_id]:
-                widget.append_text(value)
+                widget.append(value)
 
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
@@ -647,7 +684,7 @@ class Search:
 
         for filter_id, combobox in self.filter_comboboxes.items():
             _value, h_value = stored_filters.get(filter_id, (None, ""))
-            combobox.get_child().set_text(h_value)
+            combobox.set_text(h_value)
 
         self.populating_filters = False
 
@@ -660,12 +697,11 @@ class Search:
 
         update_ui = False
 
-        for result in result_list:
+        for _code, fullpath, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
                 self.max_limited = True
                 break
 
-            fullpath = result[1]
             fullpath_lower = fullpath.lower()
 
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
@@ -702,37 +738,36 @@ class Search:
                 name = fullpath_split.pop()
 
             # Join the resulting items into a folder path
-            directory = "\\".join(fullpath_split)
+            folder = "\\".join(fullpath_split)
 
-            size = result[2]
-            h_size = humanize(size) if config.sections["ui"]["exact_file_sizes"] else human_size(size)
-            h_bitrate, bitrate, h_length, length = slskmessages.FileListMessage.parse_result_bitrate_length(
-                size, result[4])
+            h_size = human_size(size, config.sections["ui"]["file_size_unit"])
+            h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
             if private:
                 name = _("[PRIVATE]  %s") % name
 
             is_result_visible = self.append(
                 [
-                    self.num_results_found,
                     user,
                     get_flag_icon_name(country_code),
                     h_speed,
                     h_queue,
-                    directory,
+                    folder,
                     get_file_type_icon_name(name),
                     name,
                     h_size,
-                    h_bitrate,
+                    h_quality,
                     h_length,
-                    GObject.Value(GObject.TYPE_UINT, bitrate),
-                    fullpath,
                     country_code,
-                    GObject.Value(GObject.TYPE_UINT64, size),
-                    GObject.Value(GObject.TYPE_UINT, ulspeed),
-                    GObject.Value(GObject.TYPE_UINT, inqueue),
-                    GObject.Value(GObject.TYPE_UINT, length),
-                    has_free_slots
+                    ulspeed,
+                    inqueue,
+                    size,
+                    bitrate,
+                    length,
+                    fullpath,
+                    has_free_slots,
+                    file_attributes,
+                    self.num_results_found
                 ]
             )
 
@@ -748,7 +783,6 @@ class Search:
         if user in self.users:
             return
 
-        self.users.add(user)
         ip_address = msg.init.addr[0]
         country_code = core.network_filter.get_country_code(ip_address)
         has_free_slots = msg.freeulslots
@@ -780,17 +814,22 @@ class Search:
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
+            is_wish = (self.mode == "wishlist")
+
             if not self.show_page:
                 self.searches.create_page(self.token, self.text)
                 self.show_page = True
 
-                if self.mode == "wishlist" and config.sections["notifications"]["notification_popup_wish"]:
+            tab_changed = self.searches.request_tab_changed(self.container, is_important=is_wish)
+
+            if tab_changed and is_wish:
+                self.window.application.notifications.update_title()
+
+                if config.sections["notifications"]["notification_popup_wish"]:
                     core.notifications.show_search_notification(
                         str(self.token), self.text,
                         title=_("Wishlist Results Found")
                     )
-
-            self.searches.request_tab_changed(self.container)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
@@ -806,23 +845,24 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        (_counter, user, flag, h_speed, h_queue, directory, _file_type, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country_code, _size, speed, queue, _length, has_free_slots) = row
+        (user, flag, h_speed, h_queue, folder, _unused, _unused, _unused, _unused,
+            _unused, country_code, speed, queue, _unused, _unused, _unused, fullpath, has_free_slots,
+            _unused, row_id) = row
 
         expand_user = False
         expand_folder = False
+        parent_iterator = None
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
             empty_int = 0
             empty_str = ""
+            empty_dict = {}
 
-            if user not in self.usersiters:
-                self.usersiters[user] = self.resultsmodel.insert_with_values(
-                    None, -1, self.column_numbers,
+            if user not in self.users:
+                iterator = self.tree_view.add_row(
                     [
-                        empty_int,
                         user,
                         flag,
                         h_speed,
@@ -833,15 +873,17 @@ class Search:
                         empty_str,
                         empty_str,
                         empty_str,
-                        empty_int,
-                        empty_str,
                         country_code,
-                        empty_int,
                         speed,
                         queue,
                         empty_int,
-                        has_free_slots
-                    ]
+                        empty_int,
+                        empty_int,
+                        empty_str,
+                        has_free_slots,
+                        empty_dict,
+                        row_id
+                    ], select_row=False
                 )
 
                 if self.grouping_mode == "folder_grouping":
@@ -849,60 +891,71 @@ class Search:
                 else:
                     expand_user = self.expand_button.get_active()
 
-            parent = self.usersiters[user]
+                self.users[user] = (iterator, [])
+
+            user_iterator, user_child_iterators = self.users[user]
 
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
-                user_directory = user + directory
+                user_folder = user + folder
 
-                if user_directory not in self.directoryiters:
-                    self.directoryiters[user_directory] = self.resultsmodel.insert_with_values(
-                        self.usersiters[user], -1, self.column_numbers,
+                if user_folder not in self.folders:
+                    iterator = self.tree_view.add_row(
                         [
-                            empty_int,
                             user,
                             flag,
                             h_speed,
                             h_queue,
-                            directory,
+                            folder,
                             empty_str,
                             empty_str,
                             empty_str,
                             empty_str,
                             empty_str,
-                            empty_int,
-                            fullpath.rsplit("\\", 1)[0] + "\\",
                             country_code,
-                            empty_int,
                             speed,
                             queue,
                             empty_int,
-                            has_free_slots
-                        ]
+                            empty_int,
+                            empty_int,
+                            fullpath.rsplit("\\", 1)[0] + "\\",
+                            has_free_slots,
+                            empty_dict,
+                            row_id
+                        ], select_row=False, parent_iterator=user_iterator
                     )
+                    user_child_iterators.append(iterator)
                     expand_folder = self.expand_button.get_active()
+                    self.folders[user_folder] = (iterator, [])
 
                 row = row[:]
-                row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
+                row[4] = ""  # Folder not visible for file row if "group by folder" is enabled
 
-                parent = self.directoryiters[user_directory]
+                user_folder_iterator, user_folder_child_iterators = self.folders[user_folder]
+                parent_iterator = user_folder_iterator
+
+            else:
+                parent_iterator = user_iterator
+
         else:
-            parent = None
+            if user not in self.users:
+                self.users[user] = (None, [])
 
-        # Note that we use insert_with_values instead of append, as this reduces
-        # overhead by bypassing useless row conversion to GObject.Value in PyGObject.
+            user_iterator, user_child_iterators = self.users[user]
 
-        if parent is None:
-            iterator = self.resultsmodel.insert_with_valuesv(-1, self.column_numbers, row)
+        iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
+
+        if self.grouping_mode == "folder_grouping":
+            user_folder_child_iterators.append(iterator)
         else:
-            iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
+            user_child_iterators.append(iterator)
 
         if expand_user:
-            self.tree_view.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
+            self.tree_view.expand_row(user_iterator)
 
         if expand_folder:
-            self.tree_view.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
+            self.tree_view.expand_row(user_folder_iterator)
 
         self.num_results_visible += 1
         return iterator
@@ -1042,28 +1095,28 @@ class Search:
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[12].lower()):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[16].lower()):
                 return False
 
-            if filter_id == "filtercc" and not self.check_country(filter_value, row[13].upper()):
+            if filter_id == "filtercc" and not self.check_country(filter_value, row[10].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[12]) and not filter_value.fullmatch(row[1]):
+            if filter_id == "filterin" and not filter_value.search(row[16]) and not filter_value.fullmatch(row[0]):
                 return False
 
-            if filter_id == "filterout" and (filter_value.search(row[12]) or filter_value.fullmatch(row[1])):
+            if filter_id == "filterout" and (filter_value.search(row[16]) or filter_value.fullmatch(row[0])):
                 return False
 
-            if filter_id == "filterslot" and row[16].get_value() > 0:
+            if filter_id == "filterslot" and row[12] > 0:
                 return False
 
-            if filter_id == "filtersize" and not self.check_digit(filter_value, row[14].get_value(), file_size=True):
+            if filter_id == "filtersize" and not self.check_digit(filter_value, row[13], file_size=True):
                 return False
 
-            if filter_id == "filterbr" and not self.check_digit(filter_value, row[11].get_value()):
+            if filter_id == "filterbr" and not self.check_digit(filter_value, row[14]):
                 return False
 
-            if filter_id == "filterlength" and not self.check_digit(filter_value, row[17].get_value()):
+            if filter_id == "filterlength" and not self.check_digit(filter_value, row[15]):
                 return False
 
         return True
@@ -1085,21 +1138,14 @@ class Search:
             self.max_limited = False
             self.max_limit = config.sections["searches"]["max_displayed_results"]
 
-        self.tree_view.set_model(None)
-
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
+        self.users.clear()
+        self.folders.clear()
+        self.tree_view.clear()
         self.num_results_visible = 0
-
-        self.tree_view.set_model(self.resultsmodel)
 
     def update_model(self):
 
-        # Temporarily disable sorting for increased performance
-        sort_column, sort_type = self.resultsmodel.get_sort_column_id()
-        self.resultsmodel.set_default_sort_func(lambda *_args: 0)
-        self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+        self.tree_view.disable_sorting()
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -1108,16 +1154,18 @@ class Search:
         # Update number of results
         self.update_result_counter()
 
-        if sort_column is not None and sort_type is not None:
-            self.resultsmodel.set_sort_column_id(sort_column, sort_type)
+        self.tree_view.enable_sorting()
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
             if self.expand_button.get_active():
-                self.tree_view.expand_all()
+                self.tree_view.expand_all_rows()
             else:
-                collapse_treeview(self.tree_view, self.grouping_mode)
+                self.tree_view.collapse_all_rows()
+
+                if self.grouping_mode == "folder_grouping":
+                    self.tree_view.expand_root_rows()
 
     def update_wish_button(self):
 
@@ -1195,53 +1243,61 @@ class Search:
             return
 
         selected_user = args[-1]
+        _user_iterator, user_child_iterators = self.users[selected_user]
 
-        sel = self.tree_view.get_selection()
-        fmodel = self.tree_view.get_model()
-        sel.unselect_all()
+        self.tree_view.unselect_all_rows()
 
-        iterator = fmodel.get_iter_first()
+        for iterator in user_child_iterators:
+            if self.tree_view.get_row_value(iterator, "filename"):
+                self.tree_view.select_row(iterator, should_scroll=False)
+                continue
 
-        select_user_row_iter(fmodel, sel, 1, selected_user, iterator)
+            user_folder = selected_user + self.tree_view.get_row_value(iterator, "folder")
+            user_folder_data = self.folders.get(user_folder)
 
-        self.select_results()
+            if not user_folder_data:
+                continue
 
-    def select_result(self, model, iterator):
+            _user_folder_iter, user_folder_child_iterators = user_folder_data
 
-        user = model.get_value(iterator, 1)
+            for i_iterator in user_folder_child_iterators:
+                self.tree_view.select_row(i_iterator, should_scroll=False)
+
+    def select_result(self, iterator):
+
+        user = self.tree_view.get_row_value(iterator, "user")
 
         if user not in self.selected_users:
             self.selected_users[user] = None
 
-        filename = model.get_value(iterator, 7)
-
-        if not filename:
+        if self.tree_view.get_row_value(iterator, "filename"):
+            self.selected_results[iterator] = None
             return
 
-        iter_key = iterator.user_data
+        self.select_child_results(iterator, user)
 
-        if iter_key not in self.selected_results:
-            self.selected_results[iter_key] = iterator
+    def select_child_results(self, iterator, user):
 
-    def select_child_results(self, model, iterator):
+        folder = self.tree_view.get_row_value(iterator, "folder")
 
-        while iterator is not None:
-            self.select_result(model, iterator)
-            self.select_child_results(model, model.iter_children(iterator))
+        if folder:
+            user_folder = user + folder
+            row_data = self.folders[user_folder]
+        else:
+            row_data = self.users[user]
 
-            iterator = model.iter_next(iterator)
+        _row_iter, child_transfers = row_data
+
+        for i_iterator in child_transfers:
+            self.select_result(i_iterator)
 
     def select_results(self):
 
         self.selected_results.clear()
         self.selected_users.clear()
 
-        model, paths = self.tree_view.get_selection().get_selected_rows()
-
-        for path in paths:
-            iterator = model.get_iter(path)
-            self.select_result(model, iterator)
-            self.select_child_results(model, model.iter_children(iterator))
+        for iterator in self.tree_view.get_selected_rows():
+            self.select_result(iterator)
 
     def update_result_counter(self):
 
@@ -1263,25 +1319,15 @@ class Search:
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
-    def on_column_position_changed(self, column, _param):
-        """ Save column position and width to config """
+    def on_file_path_tooltip(self, treeview, iterator):
+        return treeview.get_row_value(iterator, "file_path_data")
 
-        col_title = column.get_title()
-        offset = column.get_x_offset()
-
-        if self.column_offsets[col_title] == offset:
-            return
-
-        self.column_offsets[col_title] = offset
-        save_columns(self.treeview_name, self.tree_view.get_columns())
-
-    def on_row_activated(self, treeview, path, _column):
+    def on_row_activated(self, treeview, iterator, _column):
 
         self.select_results()
 
-        iterator = self.resultsmodel.get_iter(path)
-        folder = self.resultsmodel.get_value(iterator, 5)
-        filename = self.resultsmodel.get_value(iterator, 7)
+        folder = treeview.get_row_value(iterator, "folder")
+        filename = treeview.get_row_value(iterator, "filename")
 
         if not folder and not filename:
             # Don't activate user rows
@@ -1292,7 +1338,7 @@ class Search:
         else:
             self.on_download_files()
 
-        treeview.get_selection().unselect_all()
+        treeview.unselect_all_rows()
 
     def on_popup_menu(self, menu, _widget):
 
@@ -1305,9 +1351,9 @@ class Search:
         requested_users = set()
         requested_folders = set()
 
-        for iterator in self.selected_results.values():
-            user = self.resultsmodel.get_value(iterator, 1)
-            folder = self.resultsmodel.get_value(iterator, 12).rsplit("\\", 1)[0] + "\\"
+        for iterator in self.selected_results:
+            user = self.tree_view.get_row_value(iterator, "user")
+            folder = self.tree_view.get_row_value(iterator, "folder").rsplit("\\", 1)[0] + "\\"
 
             if user not in requested_users and folder not in requested_folders:
                 core.userbrowse.browse_user(user, path=folder)
@@ -1321,26 +1367,25 @@ class Search:
         selected_size = 0
         selected_length = 0
 
-        for iterator in self.selected_results.values():
-            virtual_path = self.resultsmodel.get_value(iterator, 12)
+        for iterator in self.selected_results:
+            virtual_path = self.tree_view.get_row_value(iterator, "file_path_data")
             directory, filename = virtual_path.rsplit("\\", 1)
-            file_size = self.resultsmodel.get_value(iterator, 14)
+            file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
-            selected_length += self.resultsmodel.get_value(iterator, 17)
-            country_code = self.resultsmodel.get_value(iterator, 13)
+            selected_length += self.tree_view.get_row_value(iterator, "length_data")
+            country_code = self.tree_view.get_row_value(iterator, "country_data")
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
             data.append({
-                "user": self.resultsmodel.get_value(iterator, 1),
+                "user": self.tree_view.get_row_value(iterator, "user"),
                 "fn": virtual_path,
                 "filename": filename,
                 "directory": directory,
                 "size": file_size,
-                "speed": self.resultsmodel.get_value(iterator, 15),
-                "queue_position": self.resultsmodel.get_value(iterator, 16),
-                "bitrate": self.resultsmodel.get_value(iterator, 9),
-                "length": self.resultsmodel.get_value(iterator, 10),
+                "speed": self.tree_view.get_row_value(iterator, "speed_data"),
+                "queue_position": self.tree_view.get_row_value(iterator, "in_queue_data"),
+                "file_attributes": self.tree_view.get_row_value(iterator, "file_attributes_data"),
                 "country": country
             })
 
@@ -1353,15 +1398,13 @@ class Search:
 
     def on_download_files(self, *_args, prefix=""):
 
-        for iterator in self.selected_results.values():
-            user = self.resultsmodel.get_value(iterator, 1)
-            filepath = self.resultsmodel.get_value(iterator, 12)
-            size = self.resultsmodel.get_value(iterator, 14)
-            bitrate = self.resultsmodel.get_value(iterator, 9)
-            length = self.resultsmodel.get_value(iterator, 10)
+        for iterator in self.selected_results:
+            user = self.tree_view.get_row_value(iterator, "user")
+            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
+            size = self.tree_view.get_row_value(iterator, "size_data")
+            file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.transfers.get_file(
-                user, filepath, prefix, size=size, bitrate=bitrate, length=length)
+            core.transfers.get_file(user, filepath, prefix, size=size, file_attributes=file_attributes)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
@@ -1385,9 +1428,9 @@ class Search:
         else:
             requested_folders = defaultdict(dict)
 
-        for iterator in self.selected_results.values():
-            user = self.resultsmodel.get_value(iterator, 1)
-            folder = self.resultsmodel.get_value(iterator, 12).rsplit("\\", 1)[0]
+        for iterator in self.selected_results:
+            user = self.tree_view.get_row_value(iterator, "user")
+            folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
             if folder in requested_folders[user]:
                 """ Ensure we don't send folder content requests for a folder more than once,
@@ -1398,20 +1441,20 @@ class Search:
 
             visible_files = []
             for row in self.all_data:
-
-                # Find the wanted directory
-                if folder != row[12].rsplit("\\", 1)[0]:
+                # Find the wanted folder
+                if folder != row[16].rsplit("\\", 1)[0]:
                     continue
 
                 # remove_destination is False because we need the destination for the full folder
                 # contents response later
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
-                (_counter, user, _flag, _h_speed, _h_queue, _directory, _file_type, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country_code, size, _speed,
-                    _queue, _length, _has_free_slots) = row
+                (user, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
+                    _unused, _unused, _unused, _unused, size, _unused, _unused, fullpath, _unused,
+                    file_attributes, _unused) = row
+
                 visible_files.append(
-                    (user, fullpath, destination, size.get_value(), h_bitrate, h_length))
+                    (user, fullpath, destination, size, file_attributes))
 
             core.search.request_folder_download(user, folder, visible_files)
 
@@ -1429,25 +1472,25 @@ class Search:
 
     def on_copy_file_path(self, *_args):
 
-        for iterator in self.selected_results.values():
-            filepath = self.resultsmodel.get_value(iterator, 12)
+        for iterator in self.selected_results:
+            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
             clipboard.copy_text(filepath)
             return
 
     def on_copy_url(self, *_args):
 
-        for iterator in self.selected_results.values():
-            user = self.resultsmodel.get_value(iterator, 1)
-            filepath = self.resultsmodel.get_value(iterator, 12)
+        for iterator in self.selected_results:
+            user = self.tree_view.get_row_value(iterator, "user")
+            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
             url = core.userbrowse.get_soulseek_url(user, filepath)
             clipboard.copy_text(url)
             return
 
     def on_copy_dir_url(self, *_args):
 
-        for iterator in self.selected_results.values():
-            user = self.resultsmodel.get_value(iterator, 1)
-            filepath = self.resultsmodel.get_value(iterator, 12)
+        for iterator in self.selected_results:
+            user = self.tree_view.get_row_value(iterator, "user")
+            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
             url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
             return
@@ -1469,14 +1512,14 @@ class Search:
             popover.set_visible(False)
 
         config.sections["searches"]["group_searches"] = mode
-        self.cols["id"].set_visible(not active)
         self.tree_view.set_show_expanders(active)
         self.expand_button.set_visible(active)
 
         self.grouping_mode = mode
 
         self.clear_model()
-        self.create_model()
+        self.tree_view.has_tree = active
+        self.tree_view.create_model()
         self.update_model()
 
         action.set_state(state)
@@ -1486,10 +1529,14 @@ class Search:
         active = self.expand_button.get_active()
 
         if active:
-            self.tree_view.expand_all()
+            self.tree_view.expand_all_rows()
             self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
-            collapse_treeview(self.tree_view, self.grouping_mode)
+            self.tree_view.collapse_all_rows()
+
+            if self.grouping_mode == "folder_grouping":
+                self.tree_view.expand_root_rows()
+
             self.expand_icon.set_property("icon-name", "go-down-symbolic")
 
         config.sections["searches"]["expand_searches"] = active
@@ -1540,33 +1587,31 @@ class Search:
             return
 
         filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
-        filter_in_str = self.filter_include_combobox.get_active_text().strip()
-        filter_out_str = self.filter_exclude_combobox.get_active_text().strip()
-        filter_size_str = self.filter_file_size_combobox.get_active_text().strip()
-        filter_bitrate_str = self.filter_bitrate_combobox.get_active_text().strip()
-        filter_country_str = self.filter_country_combobox.get_active_text().strip()
-        filter_file_type_str = self.filter_file_type_combobox.get_active_text().strip()
-        filter_length_str = self.filter_length_combobox.get_active_text().strip()
+        filter_in_str = self.filter_include_combobox.get_text().strip()
+        filter_out_str = self.filter_exclude_combobox.get_text().strip()
+        filter_size_str = self.filter_file_size_combobox.get_text().strip()
+        filter_bitrate_str = self.filter_bitrate_combobox.get_text().strip()
+        filter_country_str = self.filter_country_combobox.get_text().strip()
+        filter_file_type_str = self.filter_file_type_combobox.get_text().strip()
+        filter_length_str = self.filter_length_combobox.get_text().strip()
         filter_free_slot = self.filter_free_slot_button.get_active()
 
         # Include/exclude text
         error_entries = set()
-        filter_include_entry = self.filter_include_combobox.get_child()
-        filter_exclude_entry = self.filter_exclude_combobox.get_child()
 
         if filter_in_str:
             try:
                 filter_in = re.compile(filter_in_str, flags=re.IGNORECASE)
             except re.error:
-                error_entries.add(filter_include_entry)
+                error_entries.add(self.filter_include_entry)
 
         if filter_out_str:
             try:
                 filter_out = re.compile(filter_out_str, flags=re.IGNORECASE)
             except re.error:
-                error_entries.add(filter_exclude_entry)
+                error_entries.add(self.filter_exclude_entry)
 
-        for entry in (filter_include_entry, filter_exclude_entry):
+        for entry in (self.filter_include_entry, self.filter_exclude_entry):
             # Set red background if invalid regex pattern is detected
             css_class_function = add_css_class if entry in error_entries else remove_css_class
             css_class_function(entry, "error")
@@ -1642,8 +1687,16 @@ class Search:
         self.clear_model()
         self.update_model()
 
-    def on_filter_entry_changed(self, widget):
-        if not widget.get_text():
+    def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+
+        if n_chars > 1 and chars == combobox.get_selected_id():
+            self.on_refilter()
+
+            # Highlight current list item
+            combobox.set_selected_id(chars)
+
+    def on_filter_entry_changed(self, entry):
+        if not entry.get_text():
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):

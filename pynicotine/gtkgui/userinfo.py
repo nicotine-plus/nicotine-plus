@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -37,13 +36,14 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
+from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -56,6 +56,11 @@ class UserInfos(IconNotebook):
             window,
             parent=window.userinfo_content,
             parent_page=window.userinfo_page
+        )
+
+        self.userinfo_combobox = ComboBox(
+            container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
+            entry=self.window.userinfo_entry
         )
 
         # Events
@@ -79,6 +84,9 @@ class UserInfos(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def on_remove_all_pages(self, *_args):
+        core.userinfo.remove_all_users()
 
     def on_show_user_profile(self, *_args):
 
@@ -193,7 +201,7 @@ class UserInfos(IconNotebook):
 
     def server_disconnect(self, *_args):
         for user, page in self.pages.items():
-            self.set_user_status(page.container, user, slskmessages.UserStatus.OFFLINE)
+            self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
 class UserInfo:
@@ -214,6 +222,7 @@ class UserInfo:
             self.horizontal_paned,
             self.ignore_unignore_user_label,
             self.info_bar,
+            self.info_bar_label,
             self.likes_list_container,
             self.picture_container,
             self.picture_view,
@@ -232,13 +241,12 @@ class UserInfo:
         self.userinfos = userinfos
         self.window = userinfos.window
 
-        self.info_bar = InfoBar(self.info_bar, button=self.retry_button)
         self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
         self.user_label.set_text(user)
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, keep_aspect_ratio=True, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
@@ -261,7 +269,7 @@ class UserInfo:
                 "likes": {
                     "column_type": "text",
                     "title": _("Likes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -273,7 +281,7 @@ class UserInfo:
                 "dislikes": {
                     "column_type": "text",
                     "title": _("Dislikes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -307,6 +315,8 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.populate_stats()
+
     def clear(self):
 
         self.description_view.clear()
@@ -321,11 +331,27 @@ class UserInfo:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    def save_columns(self):
-        # Unused
-        pass
-
     """ General """
+
+    def populate_stats(self):
+
+        user_stats = core.watched_users.get(self.user, {})
+        speed = user_stats.get("upload_speed", 0)
+        files = user_stats.get("files")
+        folders = user_stats.get("folders")
+        country_code = core.user_countries.get(self.user)
+
+        if speed > 0:
+            self.upload_speed_label.set_text(human_speed(speed))
+
+        if files is not None:
+            self.shared_files_label.set_text(humanize(files))
+
+        if folders is not None:
+            self.shared_folders_label.set_text(humanize(folders))
+
+        if country_code:
+            self.user_country(country_code)
 
     def load_picture(self, data):
 
@@ -359,11 +385,12 @@ class UserInfo:
         if self.refresh_button.get_sensitive():
             return
 
-        self.info_bar.show_message(
+        self.info_bar_label.set_label(
             _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue."),
-            message_type=Gtk.MessageType.ERROR
+              "port, the user is offline, or there's a temporary connectivity issue.")
         )
+        self.info_bar.set_visible(True)
+        self.info_bar.set_reveal_child(True)
 
         self.set_finished()
 
@@ -393,6 +420,7 @@ class UserInfo:
         GLib.timeout_add(1000, self.pulse_progress)
 
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
         self.refresh_button.set_sensitive(False)
 
     def user_info_progress(self, position, total):
@@ -455,6 +483,7 @@ class UserInfo:
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
         self.set_finished()
 
     def user_stats(self, msg):
@@ -529,7 +558,7 @@ class UserInfo:
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user)
+        core.request_ip_address(self.user, notify=True)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)

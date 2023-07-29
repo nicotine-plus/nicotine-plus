@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 import sys
 
 from gi.repository import Gdk
@@ -25,33 +26,22 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
 """ Global Style """
 
 
-LIBADWAITA = None
-try:
-    if os.getenv("NICOTINE_LIBADWAITA") == "1":
-        import gi
-        gi.require_version("Adw", "1")
-
-        from gi.repository import Adw
-        LIBADWAITA = Adw
-
-except (ImportError, ValueError):
-    pass
-
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA_API_VERSION)
 
 if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
@@ -105,9 +95,11 @@ if USE_COLOR_SCHEME_PORTAL:
 
 def set_dark_mode(enabled):
 
-    if LIBADWAITA:
-        color_scheme = LIBADWAITA.ColorScheme.FORCE_DARK if enabled else LIBADWAITA.ColorScheme.DEFAULT
-        LIBADWAITA.StyleManager.get_default().set_color_scheme(color_scheme)
+    if LIBADWAITA_API_VERSION:
+        from gi.repository import Adw  # pylint: disable=no-name-in-module
+
+        color_scheme = Adw.ColorScheme.FORCE_DARK if enabled else Adw.ColorScheme.DEFAULT
+        Adw.StyleManager.get_default().set_color_scheme(color_scheme)
         return
 
     if USE_COLOR_SCHEME_PORTAL and not enabled:
@@ -153,6 +145,17 @@ def set_global_css():
     .search-view treeview:disabled {
         /* Search results with no free slots have no style by default */
         color: unset;
+    }
+
+    treeview button > box {
+        /* Column header padding to match rows */
+        padding-right: 11px;
+    }
+
+    treeview button {
+        /* Column header padding to match rows */
+        padding-left: 11px;
+        padding-right: 1px;
     }
 
     /* Borders */
@@ -273,25 +276,37 @@ def set_global_css():
     }
     """
 
+    css_libadwaita = b"""
+    /* Tweaks (libadwaita) */
+
+    treeview button {
+        border-bottom: 0;
+    }
+
+    treeview button:not(:last-child):dir(ltr) > box,
+    treeview button:not(:first-child):dir(rtl) > box {
+        /* Restore column header separators */
+        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
+    }
+    """
+
     global_css_provider = Gtk.CssProvider()
 
     if GTK_API_VERSION >= 4:
-        css = css + css_gtk4
+        css += css_gtk4
 
-        try:
-            global_css_provider.load_from_data(css)
+        if LIBADWAITA_API_VERSION:
+            css += css_libadwaita
 
-        except TypeError:
-            # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
-            global_css_provider.load_from_data(css.decode("utf-8"), length=-1)
+        load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
             Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
     else:
-        css = css + css_gtk3
-        global_css_provider.load_from_data(css)
+        css += css_gtk3
+        load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
             Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -323,9 +338,9 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document/Text")
 }
 USER_STATUS_ICON_NAMES = {
-    slskmessages.UserStatus.ONLINE: "nplus-status-online",
-    slskmessages.UserStatus.AWAY: "nplus-status-away",
-    slskmessages.UserStatus.OFFLINE: "nplus-status-offline"
+    UserStatus.ONLINE: "nplus-status-online",
+    UserStatus.AWAY: "nplus-status-away",
+    UserStatus.OFFLINE: "nplus-status-offline"
 }
 
 
@@ -346,7 +361,6 @@ def load_custom_icons(update=False):
     try:
         # Create internal icon theme folder
         if os.path.exists(icon_theme_path_encoded):
-            import shutil
             shutil.rmtree(icon_theme_path_encoded)
 
     except Exception as error:
@@ -359,6 +373,7 @@ def load_custom_icons(update=False):
     if not user_icon_theme_path:
         return
 
+    user_icon_theme_path = os.path.normpath(user_icon_theme_path)
     log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
 
     theme_file_path = os.path.join(icon_theme_path, "index.theme")
@@ -389,9 +404,9 @@ def load_custom_icons(update=False):
         return
 
     icon_names = (
-        ("away", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY]),
-        ("online", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE]),
-        ("offline", USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE]),
+        ("away", USER_STATUS_ICON_NAMES[UserStatus.AWAY]),
+        ("online", USER_STATUS_ICON_NAMES[UserStatus.ONLINE]),
+        ("offline", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]),
         ("hilite", "nplus-tab-highlight"),
         ("hilite3", "nplus-tab-changed"),
         ("trayicon_away", "nplus-tray-away"),
@@ -421,7 +436,7 @@ def load_custom_icons(update=False):
                 path_encoded = encode_path(path)
 
                 if os.path.isfile(path_encoded):
-                    os.symlink(
+                    shutil.copyfile(
                         path_encoded,
                         encode_path(os.path.join(icon_theme_path, replacement_name + extension))
                     )
@@ -522,9 +537,9 @@ PANGO_WEIGHTS = {
     Pango.Weight.ULTRAHEAVY: 1000
 }
 USER_STATUS_COLORS = {
-    slskmessages.UserStatus.ONLINE: "useronline",
-    slskmessages.UserStatus.AWAY: "useraway",
-    slskmessages.UserStatus.OFFLINE: "useroffline"
+    UserStatus.ONLINE: "useronline",
+    UserStatus.AWAY: "useraway",
+    UserStatus.OFFLINE: "useroffline"
 }
 
 
@@ -544,6 +559,19 @@ def remove_css_class(widget, css_class):
         return
 
     widget.get_style_context().remove_class(css_class)  # pylint: disable=no-member
+
+
+def load_css(css_provider, data):
+
+    try:
+        css_provider.load_from_string(data.decode("utf-8"))
+
+    except AttributeError:
+        try:
+            css_provider.load_from_data(data.decode("utf-8"), length=-1)
+
+        except TypeError:
+            css_provider.load_from_data(data)
 
 
 def _get_custom_font_css():
@@ -652,12 +680,7 @@ def update_custom_css():
     css.extend(_get_custom_font_css())
     css.extend(_get_custom_color_css())
 
-    try:
-        CUSTOM_CSS_PROVIDER.load_from_data(css)
-
-    except TypeError:
-        # https://gitlab.gnome.org/GNOME/pygobject/-/merge_requests/231
-        CUSTOM_CSS_PROVIDER.load_from_data(css.decode("utf-8"), length=-1)
+    load_css(CUSTOM_CSS_PROVIDER, css)
 
     if GTK_API_VERSION >= 4:
         Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member

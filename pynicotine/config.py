@@ -30,7 +30,6 @@ This module contains configuration classes for Nicotine.
 
 import configparser
 import os
-import platform
 import sys
 
 from ast import literal_eval
@@ -61,7 +60,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.version = "3.3.0.dev5"
-        self.python_version = platform.python_version()
+        self.python_version = sys.version.split()[0]
         self.gtk_version = ""
 
         self.application_name = "Nicotine+"
@@ -91,7 +90,7 @@ class Config:
 
         if sys.platform == "win32":
             try:
-                data_dir = os.path.join(os.environ["APPDATA"], "nicotine")
+                data_dir = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
                 data_dir, _filename = os.path.split(sys.argv[0])
 
@@ -99,7 +98,6 @@ class Config:
             return config_dir, data_dir
 
         home = os.path.expanduser("~")
-
         legacy_dir = os.path.join(home, ".nicotine")
 
         if os.path.isdir(legacy_dir.encode("utf-8")):
@@ -107,7 +105,6 @@ class Config:
 
         def xdg_path(xdg, default):
             path = os.environ.get(xdg)
-
             path = path.split(":")[0] if path else default
 
             return os.path.join(path, "nicotine")
@@ -220,8 +217,8 @@ class Config:
                 "groupuploads": "folder_grouping",
                 "geoblock": False,
                 "geoblockcc": [""],
-                "remotedownloads": True,
-                "uploadallowed": 2,
+                "remotedownloads": False,
+                "uploadallowed": 3,
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
                 "uploadsinsubdirs": True,
@@ -401,10 +398,9 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "urgencyhint": True,
                 "file_path_tooltips": True,
                 "reverse_file_paths": True,
-                "exact_file_sizes": False
+                "file_size_unit": ""
             },
             "private_rooms": {
                 "rooms": {}
@@ -500,7 +496,9 @@ class Config:
                 "notexists",
                 "roomlistcollapsed",
                 "showaway",
-                "decimalsep"
+                "decimalsep",
+                "urgencyhint",
+                "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
             ),
             "columns": (
                 "downloads",
@@ -729,6 +727,12 @@ class Config:
                         use_speed_limit = "unlimited"
 
                     self.sections[section][option] = use_speed_limit
+                    continue
+
+                # Migrate file size units (TODO: remove as only in 3.3.0.dev)
+                if option == "file_size_unit" and section == "ui":
+                    file_size_unit = "B" if self.sections[section].get("exact_file_sizes", False) else ""
+                    self.sections[section][option] = file_size_unit
                     continue
 
                 # Set default value

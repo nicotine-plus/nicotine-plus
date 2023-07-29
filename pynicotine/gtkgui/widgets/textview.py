@@ -19,13 +19,22 @@
 import re
 import time
 
+from collections import deque
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_uri
+from pynicotine.utils import PUNCTUATION
 
 
 """ Textview """
@@ -331,3 +340,153 @@ class TextView:
             return
 
         self.adjustment_value = new_value
+
+
+class ChatView(TextView):
+
+    def __init__(self, *args, chat_entry=None, status_users=None, username_event=None, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.tag_users = self.status_users = {}
+        self.chat_entry = chat_entry
+        self.username_event = username_event
+
+        if status_users:
+            # In chatrooms, we only want to set the online status for users that are
+            # currently in the room, even though we might know their global status
+            self.status_users = status_users
+
+        self.tag_remote = self.create_tag("chatremote")
+        self.tag_local = self.create_tag("chatlocal")
+        self.tag_command = self.create_tag("chatcommand")
+        self.tag_action = self.create_tag("chatme")
+        self.tag_highlight = self.create_tag("chathilite")
+
+        Accelerator("Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
+
+    @staticmethod
+    def find_whole_word(word, text):
+        """ Returns start position of a whole word that is not in a subword """
+
+        if word not in text:
+            return -1
+
+        word_boundaries = [" "] + PUNCTUATION
+        whole = False
+        start = after = 0
+
+        while not whole and start > -1:
+            start = text.find(word, after)
+            after = start + len(word)
+
+            whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+        return start if whole else -1
+
+    def append_log_lines(self, path, num_lines, timestamp_format):
+
+        if not num_lines:
+            return
+
+        try:
+            with open(encode_path(path), "rb") as lines:
+                # Only show as many log lines as specified in config
+                lines = deque(lines, num_lines)
+
+        except OSError:
+            return
+
+        login = config.sections["server"]["login"]
+
+        for line in lines:
+            try:
+                line = line.decode("utf-8")
+
+            except UnicodeDecodeError:
+                line = line.decode("latin-1")
+
+            user = tag = usertag = None
+
+            if " [" in line and "] " in line:
+                start = line.find(" [") + 2
+                end = line.find("] ", start)
+
+                if end > start:
+                    user = line[start:end]
+                    usertag = self.get_user_tag(user)
+
+                    text = line[end + 2:-1]
+                    tag = self.get_line_tag(user, text, login)
+
+            elif "* " in line:
+                tag = self.tag_action
+
+            if user != login:
+                self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
+            else:
+                self.append_line(line, tag=tag, username=user, usertag=usertag)
+
+        if lines:
+            self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+                             timestamp_format=timestamp_format)
+
+    def get_line_tag(self, user, text, login=None):
+
+        if text.startswith("/me "):
+            return self.tag_action
+
+        if user == login:
+            return self.tag_local
+
+        if login and self.find_whole_word(login.lower(), text.lower()) > -1:
+            return self.tag_highlight
+
+        return self.tag_remote
+
+    def get_user_tag(self, username):
+
+        if username not in self.tag_users:
+            self.update_user_tag(username)
+
+        return self.tag_users[username]
+
+    def update_tags(self):
+
+        super().update_tags()
+        self.update_user_tags()
+
+        for tag in (
+            self.tag_remote,
+            self.tag_local,
+            self.tag_command,
+            self.tag_action,
+            self.tag_highlight
+        ):
+            self.update_tag(tag)
+
+    def update_user_tag(self, username):
+
+        status = UserStatus.OFFLINE
+
+        if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+
+        if username in self.status_users:
+            status = core.user_statuses.get(username, UserStatus.OFFLINE)
+
+        color = USER_STATUS_COLORS.get(status)
+        self.update_tag(self.tag_users[username], color)
+
+    def update_user_tags(self):
+        for username in self.tag_users:
+            self.update_user_tag(username)
+
+    def on_page_down_accelerator(self, *_args):
+        """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
+
+        if self.adjustment_value >= self.adjustment_bottom:
+            # Give focus to text entry upon scrolling down to the bottom
+            self.chat_entry.grab_focus_without_selecting()

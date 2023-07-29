@@ -21,6 +21,7 @@ import os
 from unittest import TestCase
 from unittest.mock import Mock
 
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 
@@ -42,32 +43,54 @@ class TransfersTest(TestCase):
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
 
-        self.assertEqual(len(core.queue), 0)
-        self.assertEqual(len(core.transfers.downloads), 13)
+        self.assertEqual(len(core.transfers.downloads), 17)
 
         transfer = core.transfers.downloads[0]
 
-        self.assertEqual(transfer.user, "user13")
-        self.assertEqual(transfer.filename, "Downloaded\\Song13.mp3")
+        self.assertEqual(transfer.user, "user17")
+        self.assertEqual(transfer.filename, "Downloaded\\Song17.mp3")
         self.assertEqual(transfer.status, "User logged off")
         self.assertEqual(transfer.size, 0)
         self.assertIsNone(transfer.current_byte_offset)
-        self.assertIsNone(transfer.bitrate)
-        self.assertIsNone(transfer.length)
+        self.assertFalse(transfer.file_attributes)
 
-        transfer = core.transfers.downloads[12]
+        transfer = core.transfers.downloads[16]
 
         self.assertEqual(transfer.user, "user1")
         self.assertEqual(transfer.filename, "Downloaded\\Song1.mp3")
         self.assertEqual(transfer.status, "Paused")
         self.assertEqual(transfer.size, 10093741)
         self.assertEqual(transfer.current_byte_offset, 5000)
-        self.assertEqual(transfer.bitrate, "320")
-        self.assertEqual(transfer.length, "4:12")
+        self.assertEqual(transfer.file_attributes, {
+            slskmessages.FileAttribute.BITRATE: 320,
+            slskmessages.FileAttribute.DURATION: 252
+        })
+
+        # File attribute dictionary represented as string (downgrade from >=3.3.0 to earlier and upgrade again)
+        self.assertEqual(core.transfers.downloads[1].file_attributes, {
+            slskmessages.FileAttribute.BITRATE: 256,
+            slskmessages.FileAttribute.DURATION: 476
+        })
+
+        # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
+        self.assertEqual(core.transfers.downloads[2].file_attributes, {
+            slskmessages.FileAttribute.BITRATE: 128,
+            slskmessages.FileAttribute.DURATION: 290
+        })
+
+        # Legacy bitrate/duration strings (vbr) (Nicotine+ <3.3.0)
+        self.assertEqual(core.transfers.downloads[3].file_attributes, {
+            slskmessages.FileAttribute.BITRATE: 238,
+            slskmessages.FileAttribute.VBR: 1,
+            slskmessages.FileAttribute.DURATION: 173
+        })
+
+        # Empty legacy bitrate/duration strings (Nicotine+ <3.3.0)
+        self.assertFalse(core.transfers.downloads[4].file_attributes)
 
     def test_save_downloads(self):
         """ Verify that the order of the download list at the end of the session
-        is identical to the one we loaded. Ignore transfer 13, since its missing
+        is identical to the one we loaded. Ignore the last four transfers, since their missing
         properties will be added at the end of the session. """
 
         core.transfers._server_disconnect(Mock())  # pylint: disable=protected-access
@@ -82,7 +105,6 @@ class TransfersTest(TestCase):
 
         # Only finished uploads are loaded, other types should never be stored
         self.assertEqual(len(core.transfers.uploads), 3)
-        self.assertEqual(len(core.queue), 0)
 
         transfer = core.transfers.uploads[0]
 
@@ -91,8 +113,7 @@ class TransfersTest(TestCase):
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 11733776)
         self.assertEqual(transfer.current_byte_offset, 11733776)
-        self.assertIsNone(transfer.bitrate)
-        self.assertIsNone(transfer.length)
+        self.assertFalse(transfer.file_attributes)
 
         transfer = core.transfers.uploads[2]
 
@@ -101,8 +122,10 @@ class TransfersTest(TestCase):
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 27231044)
         self.assertEqual(transfer.current_byte_offset, 27231044)
-        self.assertEqual(transfer.bitrate, "792")
-        self.assertEqual(transfer.length, "4:28")
+        self.assertEqual(transfer.file_attributes, {
+            slskmessages.FileAttribute.BITRATE: 792,
+            slskmessages.FileAttribute.DURATION: 268
+        })
 
     def test_queue_download(self):
         """ Verify that new downloads are prepended to the list """
@@ -117,20 +140,20 @@ class TransfersTest(TestCase):
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
 
-        core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
-        core.transfers.push_file("newuser99", "Home\\None.mp3", 100, "/home/more")
+        core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
+        core.transfers.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
         transfer = core.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")
         self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
-        self.assertEqual(transfer.path, "/home/test")
+        self.assertEqual(transfer.path, os.path.join(os.sep, "home", "test"))
 
     def test_long_basename(self):
         """ Verify that the basename in download paths doesn't exceed 255 bytes.
         The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
 
         user = "abc"
-        finished_folder_path = "/path/to/somewhere/downloads"
+        finished_folder_path = os.path.join(os.sep, "path", "to", "somewhere", "downloads")
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"

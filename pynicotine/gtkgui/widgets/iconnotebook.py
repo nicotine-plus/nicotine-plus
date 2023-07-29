@@ -42,7 +42,7 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 
 class TabLabel:
 
-    def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
+    def __init__(self, label, full_text=None, close_button_visible=False, close_callback=None):
 
         self.container = Gtk.Box(hexpand=False, visible=True)
         add_css_class(self.container, "notebook-tab")
@@ -169,15 +169,15 @@ class TabLabel:
 
     def request_changed(self, is_important=False):
 
-        self.remove_changed()
-
         # Chat mentions have priority over normal notifications
         if not self.is_important:
             self.is_important = is_important
 
         if self.is_important:
+            remove_css_class(self.container, "notebook-tab-changed")
             add_css_class(self.container, "notebook-tab-highlight")
         else:
+            remove_css_class(self.container, "notebook-tab-highlight")
             add_css_class(self.container, "notebook-tab-changed")
 
         add_css_class(self.container, "bold")
@@ -215,10 +215,10 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text)
+        self.container.set_tooltip_text(text.strip() if text else None)
 
     def set_text(self, text):
-        self.label.set_text(text)
+        self.label.set_text(text.strip())
 
     def get_text(self):
         return self.label.get_text()
@@ -241,7 +241,7 @@ class IconNotebook:
 
         self.pages = {}
         self.tab_labels = {}
-        self.unread_pages = []
+        self.unread_pages = {}
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
@@ -329,6 +329,10 @@ class IconNotebook:
             tab_label.set_text(tab_label.get_text())
 
     def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
+
+    def insert_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None,
+                    position=None):
 
         if full_text is None:
             full_text = text
@@ -347,7 +351,11 @@ class IconNotebook:
 
         page.focus_callback = focus_callback
 
-        self.widget.append_page(page, tab_label.container)
+        if position is None:
+            # Open new tab adjacent to current tab
+            position = self.widget.get_current_page() + 1
+
+        self.widget.insert_page(page, tab_label.container, position)
         self.set_tab_reorderable(page, True)
         self.parent.set_visible(True)
 
@@ -355,30 +363,26 @@ class IconNotebook:
             status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
+    def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=0)
+
     def remove_page(self, page):
 
         self.widget.remove_page(self.page_num(page))
-        self.remove_unread_page(page)
+        self._remove_unread_page(page)
         del self.tab_labels[page]
 
         if self.get_n_pages() == 0:
             self.parent.set_visible(False)
 
-    def remove_all_pages_response(self, dialog, response_id, _data):
-
-        if response_id == 2:
-            for i in reversed(range(self.get_n_pages())):
-                page = self.get_nth_page(i)
-                tab_label = self.get_tab_label(page)
-                tab_label.close_callback(dialog)
-
-    def remove_all_pages(self):
+    def remove_all_pages(self, *_args):
 
         OptionDialog(
             parent=self.window,
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
-            callback=self.remove_all_pages_response
+            destructive_response_id="ok",
+            callback=self.on_remove_all_pages
         ).show()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
@@ -454,22 +458,27 @@ class IconNotebook:
 
     """ Tab Highlights """
 
-    def request_tab_changed(self, page, is_important=False):
+    def request_tab_changed(self, page, is_important=False, is_quiet=False):
 
         if self.parent_page is not None:
-            page_active = (self.get_current_page() == page)
+            has_tab_changed = False
+            is_current_parent = (self.window.current_page_id == self.parent_page.id)
+            is_current_page = (self.get_current_page() == page)
 
-            if self.window.current_page_id != self.parent_page.id or not page_active:
-                # Highlight top-level tab
+            if is_current_parent and is_current_page:
+                return has_tab_changed
+
+            if not is_quiet or is_important:
+                # Highlight top-level tab, but don't for global feed unless mentioned
                 self.window.notebook.request_tab_changed(self.parent_page, is_important)
-
-            if page_active:
-                return
-
-            self.append_unread_page(page)
+                has_tab_changed = self._append_unread_page(page, is_important)
+        else:
+            has_tab_changed = True
 
         tab_label = self.get_tab_label(page)
         tab_label.request_changed(is_important)
+
+        return has_tab_changed
 
     def remove_tab_changed(self, page):
 
@@ -477,27 +486,42 @@ class IconNotebook:
         tab_label.remove_changed()
 
         if self.parent_page is not None:
-            self.remove_unread_page(page)
+            self._remove_unread_page(page)
 
-    def append_unread_page(self, page):
+    def _append_unread_page(self, page, is_important=False):
 
-        if page in self.unread_pages:
+        is_currently_important = self.unread_pages.get(page)
+
+        if is_currently_important and not is_important:
+            # Important pages are persistent
+            return False
+
+        if is_currently_important == is_important:
+            return False
+
+        self.unread_pages[page] = is_important
+        self.update_pages_menu_button()
+        return True
+
+    def _remove_unread_page(self, page):
+
+        if page not in self.unread_pages:
             return
 
-        self.unread_pages.append(page)
+        important_page_removed = self.unread_pages.pop(page)
         self.update_pages_menu_button()
 
-    def remove_unread_page(self, page):
-
-        if page in self.unread_pages:
-            self.unread_pages.remove(page)
-            self.update_pages_menu_button()
-
-        if self.unread_pages:
+        if self.parent_page is None:
             return
 
-        if self.parent_page is not None:
+        if not self.unread_pages:
             self.window.notebook.remove_tab_changed(self.parent_page)
+            return
+
+        # No important unread pages left, reset top-level tab highlight
+        if important_page_removed and not any(is_important for is_important in self.unread_pages.values()):
+            self.window.notebook.remove_tab_changed(self.parent_page)
+            self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
 
     """ Tab User Status """
 
@@ -538,10 +562,10 @@ class IconNotebook:
             self.emit_switch_page_signal()
 
     def on_remove_page(self, _notebook, new_page, _page_num):
-        self.remove_unread_page(new_page)
+        self._remove_unread_page(new_page)
 
     def on_remove_all_pages(self, *_args):
-        self.remove_all_pages()
+        raise NotImplementedError
 
     def on_switch_page(self, _notebook, new_page, page_num):
 
@@ -610,7 +634,7 @@ class IconNotebook:
 
         self.popup_menu_pages.add_items(
             ("", None),
-            ("#" + _("Close All Tabs…"), self.on_remove_all_pages)
+            ("#" + _("Close All Tabs…"), self.remove_all_pages)
         )
 
         self.popup_menu_pages.update_model()
@@ -648,10 +672,6 @@ class IconNotebook:
             self.prev_page()
 
         return True
-
-    def on_tab_popup(self, widget, page):
-        # Dummy implementation
-        pass
 
     """ Signals (GTK 4) """
 

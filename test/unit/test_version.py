@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
+import time
 
 from unittest import TestCase
 
@@ -45,4 +45,4 @@ class VersionTest(TestCase):
 
         # Validate date of latest release
         date_format = "%Y-%m-%dT%H:%M:%S"
-        datetime.datetime.strptime(date, date_format)
+        time.strptime(date, date_format)

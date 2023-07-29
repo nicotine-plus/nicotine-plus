@@ -28,7 +28,6 @@ This module contains utility functions.
 import os
 import pickle
 import sys
-import webbrowser
 
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
@@ -50,13 +49,16 @@ def clean_file(filename):
     return filename
 
 
-def clean_path(path, absolute=False):
+def clean_path(path):
+
+    path = os.path.normpath(path)
 
     # Without hacks it is (up to Vista) not possible to have more
     # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
     # for drives - we shouldn't escape that
     drive = ""
-    if absolute and path[1:3] == ":\\" and path[0:1] and path[0].isalpha():
+
+    if len(path) >= 3 and path[1] == ":" and path[2] == os.sep:
         drive = path[:3]
         path = path[3:]
 
@@ -101,30 +103,33 @@ def human_length(seconds):
     return f"{minutes}:{seconds:02d}"
 
 
-def _human_speed_or_size(unit):
+def _human_speed_or_size(number, unit=None):
+
+    if unit == "B":
+        return humanize(number)
 
     try:
         for suffix in FILE_SIZE_SUFFIXES:
-            if unit < 1024:
-                if unit > 999:
-                    return f"{unit:.4g} {suffix}"
+            if number < 1024:
+                if number > 999:
+                    return f"{number:.4g} {suffix}"
 
-                return f"{unit:.3g} {suffix}"
+                return f"{number:.3g} {suffix}"
 
-            unit /= 1024
+            number /= 1024
 
     except TypeError:
         pass
 
-    return str(unit)
+    return str(number)
 
 
 def human_speed(speed):
     return _human_speed_or_size(speed) + "/s"
 
 
-def human_size(filesize):
-    return _human_speed_or_size(filesize)
+def human_size(filesize, unit=None):
+    return _human_speed_or_size(filesize, unit)
 
 
 def humanize(number):
@@ -224,14 +229,21 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     * mplayer $
     * echo $ | flite -t """
 
-    from subprocess import PIPE
-    from subprocess import Popen
+    # pylint: disable=consider-using-with
+
+    from subprocess import PIPE, Popen, STARTF_USESHOWWINDOW, STARTUPINFO
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
         background = False
 
     command = command.strip()
+    startupinfo = None
+
+    if sys.platform == "win32":
+        # Hide console window on Windows
+        startupinfo = STARTUPINFO()
+        startupinfo.dwFlags |= STARTF_USESHOWWINDOW
 
     if command.endswith("&"):
         command = command[:-1]
@@ -284,15 +296,15 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     try:
         if len(subcommands) == 1:  # no need to fool around with pipes
-            procs.append(Popen(subcommands[0], stdout=finalstdout))      # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[0], startupinfo=startupinfo, stdout=finalstdout))
         else:
-            procs.append(Popen(subcommands[0], stdout=PIPE))             # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[0], startupinfo=startupinfo, stdout=PIPE))
 
             for subcommand in subcommands[1:-1]:
-                procs.append(Popen(subcommand, stdin=procs[-1].stdout,   # pylint: disable=consider-using-with
+                procs.append(Popen(subcommand, startupinfo=startupinfo, stdin=procs[-1].stdout,
                                    stdout=PIPE))
 
-            procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout,  # pylint: disable=consider-using-with
+            procs.append(Popen(subcommands[-1], startupinfo=startupinfo, stdin=procs[-1].stdout,
                                stdout=finalstdout))
 
         if not background and not returnoutput:
@@ -302,7 +314,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         command = subcommands[len(procs)]
         command_no = len(procs) + 1
         num_commands = len(subcommands)
-        raise RuntimeError(f"Problem while executing command {command} ({command_no} of {num_commands}") from error
+        raise RuntimeError(
+            f"Problem while executing command {command} ({command_no} of "
+            f"{num_commands}): {error}") from error
 
     if not returnoutput:
         return True
@@ -321,6 +335,8 @@ def _try_open_uri(uri):
         except Exception:
             # Fall back to webbrowser module
             pass
+
+    import webbrowser
 
     if not webbrowser.open(uri):
         raise webbrowser.Error("No known URI provider available")

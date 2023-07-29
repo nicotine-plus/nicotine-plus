@@ -25,10 +25,12 @@ import importlib.util
 import os
 import pickle
 import shelve
+import shutil
 import stat
 import sys
 import time
 
+from collections import deque
 from multiprocessing import Process
 from multiprocessing import Queue
 from threading import Thread
@@ -208,28 +210,28 @@ class Scanner(Process):
             os.remove(db_path_encoded)
 
         elif os.path.isdir(db_path_encoded):
-            import shutil
             shutil.rmtree(db_path_encoded)
 
     def real2virtual(self, path):
 
         path = path.replace("/", "\\")
 
-        for virtual, real, *_unused in Shares.virtual_mapping(self.config):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace("/", "_").replace("\\", "_")
+        for shares in (self.config.sections["transfers"]["shared"], self.config.sections["transfers"]["buddyshared"]):
+            for virtual, real, *_unused in shares:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace("/", "_").replace("\\", "_")
 
-            real = real.replace("/", "\\")
-            if path == real:
-                return virtual
+                real = real.replace("/", "\\")
+                if path == real:
+                    return virtual
 
-            # Use rstrip to remove trailing separator from root directories
-            real = real.rstrip("\\") + "\\"
+                # Use rstrip to remove trailing separator from root directories
+                real = real.rstrip("\\") + "\\"
 
-            if path.startswith(real):
-                path_no_prefix = path[len(real):]
-                virtualpath = f"{virtual}\\{path_no_prefix}"
-                return virtualpath
+                if path.startswith(real):
+                    path_no_prefix = path[len(real):]
+                    virtualpath = f"{virtual}\\{path_no_prefix}"
+                    return virtualpath
 
         return "__INTERNAL_ERROR__" + path
 
@@ -270,10 +272,10 @@ class Scanner(Process):
         self.queue.put("indeterminate")
 
         if share_type == "buddy":
-            shared_folders = (x[1] for x in self.shared_buddy_folders)
+            shared_folders = (os.path.normpath(x[1]) for x in self.shared_buddy_folders)
             prefix = "buddy"
         else:
-            shared_folders = (x[1] for x in self.shared_folders)
+            shared_folders = (os.path.normpath(x[1]) for x in self.shared_folders)
             prefix = ""
 
         new_files = {}
@@ -321,8 +323,8 @@ class Scanner(Process):
         self.set_shares(share_type, files=new_files, streams=new_streams, mtimes=new_mtimes)
 
         # Update Search Index
-        # wordindex is a dict in format {word: [num, num, ..], ... } with num matching keys in newfileindex
-        # fileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
+        # wordindex is a dict in format { word: [num, num, ..], ... } with num matching keys in fileindex
+        # fileindex is a dict in format { num: (path, size, quality (bitrate, vbr, samplerate, bitdepth), length), ... }
         wordindex = self.get_files_index(new_files, prefix + "fileindex")
 
         # Save data to databases
@@ -340,7 +342,7 @@ class Scanner(Process):
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute folder, we exclude it
         if filename is None:
-            last_folder = os.path.basename(os.path.normpath(folder.replace("\\", "/")))
+            last_folder = os.path.basename(folder)
 
             if last_folder.startswith(".") or last_folder == "@eaDir":
                 return True
@@ -351,13 +353,13 @@ class Scanner(Process):
 
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
-            if len(folder) == 3 and folder[1] == ":" and folder[2] in ("\\", "/"):
+            if len(folder) == 3 and folder[1] == ":" and folder[2] == os.sep:
                 # Root directories are marked as hidden, but we allow scanning them
                 return False
 
             if entry is None:
                 if filename is not None:
-                    entry_stat = os.stat(encode_path(f"{folder}\\{filename}"))
+                    entry_stat = os.stat(encode_path(os.path.join(folder, filename)))
                 else:
                     entry_stat = os.stat(encode_path(folder))
             else:
@@ -367,75 +369,73 @@ class Scanner(Process):
 
         return False
 
-    def get_files_list(self, folder, oldmtimes, oldfiles, oldstreams, rebuild=False, folder_stat=None):
+    def get_files_list(self, shared_folder, oldmtimes, oldfiles, oldstreams, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
-        if folder_stat is None:
-            folder_stat = os.stat(encode_path(folder))
-
-        folder_unchanged = False
-        virtual_folder = self.real2virtual(folder)
-        mtime = folder_stat.st_mtime
-
-        file_list = []
         files = {}
         streams = {}
-        mtimes = {folder: mtime}
+        mtimes = {}
+        folders = deque([(shared_folder, None)])
 
-        if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
+        while folders:
+            folder, folder_stat = folders.pop()
+
+            if folder_stat is None:
+                folder_stat = os.stat(encode_path(folder))
+
+            folder_unchanged = False
+            virtual_folder = self.real2virtual(folder)
+            mtime = mtimes[folder] = folder_stat.st_mtime
+            file_list = []
+
+            if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
+                try:
+                    files[virtual_folder] = oldfiles[virtual_folder]
+                    streams[virtual_folder] = oldstreams[virtual_folder]
+                    folder_unchanged = True
+
+                except KeyError:
+                    self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
+                        "vdir": virtual_folder,
+                        "dir": folder
+                    }, LogLevel.MISCELLANEOUS))
+
             try:
-                files[virtual_folder] = oldfiles[virtual_folder]
-                streams[virtual_folder] = oldstreams[virtual_folder]
-                folder_unchanged = True
+                with os.scandir(encode_path(folder, prefix=False)) as entries:
+                    for entry in entries:
+                        if entry.is_file():
+                            try:
+                                if not folder_unchanged:
+                                    filename = entry.name.decode("utf-8", "replace")
 
-            except KeyError:
-                self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
-                    "vdir": virtual_folder,
-                    "dir": folder
-                }, LogLevel.MISCELLANEOUS))
+                                    if self.is_hidden(folder, filename, entry):
+                                        continue
 
-        try:
-            with os.scandir(encode_path(folder, prefix=False)) as entries:
-                for entry in entries:
-                    if entry.is_file():
-                        try:
-                            if not folder_unchanged:
-                                filename = entry.name.decode("utf-8", "replace")
+                                    # Get the metadata of the file
+                                    path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
+                                    data = self.get_file_info(filename, path, entry)
+                                    file_list.append(data)
 
-                                if self.is_hidden(folder, filename, entry):
-                                    continue
+                            except Exception as error:
+                                self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
+                                               {"path": entry.path, "error": error}, LogLevel.DEFAULT))
 
-                                # Get the metadata of the file
-                                path = entry.path.decode("utf-8", "replace")
-                                data = self.get_file_info(filename, path, entry)
-                                file_list.append(data)
+                            continue
 
-                        except Exception as error:
-                            self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {"path": entry.path, "error": error}, LogLevel.DEFAULT))
+                        path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
 
-                        continue
+                        if self.is_hidden(path, entry=entry):
+                            continue
 
-                    path = entry.path.decode("utf-8", "replace").replace("\\", os.sep)
+                        folders.append((path, entry.stat()))
 
-                    if self.is_hidden(path, entry=entry):
-                        continue
+            except OSError as error:
+                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
+                               {"path": folder, "error": error}, LogLevel.DEFAULT))
 
-                    dir_files, dir_streams, dir_mtimes = self.get_files_list(
-                        path, oldmtimes, oldfiles, oldstreams, rebuild, entry.stat()
-                    )
-
-                    files = {**files, **dir_files}
-                    streams = {**streams, **dir_streams}
-                    mtimes = {**mtimes, **dir_mtimes}
-
-        except OSError as error:
-            self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                           {"path": folder, "error": error}, LogLevel.DEFAULT))
-
-        if not folder_unchanged:
-            files[virtual_folder] = file_list
-            streams[virtual_folder] = self.get_dir_stream(file_list)
+            if not folder_unchanged:
+                files[virtual_folder] = file_list
+                streams[virtual_folder] = self.get_dir_stream(file_list)
 
         return files, streams, mtimes
 
@@ -443,7 +443,7 @@ class Scanner(Process):
         """ Get file metadata """
 
         audio = None
-        audio_info = None
+        quality = None
         duration = None
 
         if entry is None:
@@ -456,7 +456,7 @@ class Scanner(Process):
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                audio = self.tinytag.get(encode_path(pathname), size, tags=False)
+                audio = self.tinytag.get(encode_path(pathname), tags=False, size=size)
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
@@ -492,9 +492,9 @@ class Scanner(Process):
                 if not UINT32_LIMIT > bitdepth >= 0:
                     bitdepth = None
 
-            audio_info = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
+            quality = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
 
-        return [name, size, audio_info, duration]
+        return [name, size, quality, duration]
 
     @staticmethod
     def get_dir_stream(folder):
@@ -610,26 +610,20 @@ class Shares:
 
         path = path.replace("/", os.sep).replace("\\", os.sep)
 
-        for virtual, real, *_unused in self.virtual_mapping(config):
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace("/", "_").replace("\\", "_")
+        for shares in (config.sections["transfers"]["shared"], config.sections["transfers"]["buddyshared"]):
+            for virtual, real, *_unused in shares:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace("/", "_").replace("\\", "_")
+                real = os.path.normpath(real)
 
-            if path == virtual:
-                return real
+                if path == virtual:
+                    return real
 
-            if path.startswith(virtual + os.sep):
-                realpath = real.rstrip("/\\") + path[len(virtual):]
-                return realpath
+                if path.startswith(virtual + os.sep):
+                    realpath = real.rstrip(os.sep) + path[len(virtual):]
+                    return realpath
 
         return "__INTERNAL_ERROR__" + path
-
-    @staticmethod
-    def virtual_mapping(config_obj):
-
-        mapping = config_obj.sections["transfers"]["shared"][:]
-        mapping += config_obj.sections["transfers"]["buddyshared"]
-
-        return mapping
 
     @staticmethod
     def get_normalized_virtual_name(virtual_name, shared_folders):
@@ -781,7 +775,7 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            core.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            core.send_message_to_server(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
@@ -848,6 +842,8 @@ class Shares:
 
         for share in share_groups:
             for virtual_name, folder_path, *_unused in share:
+                folder_path = os.path.normpath(folder_path)
+
                 if not os.access(encode_path(folder_path), os.R_OK):
                     unavailable_shares.append((virtual_name, folder_path))
 
@@ -902,10 +898,10 @@ class Shares:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
-        for msg in self.pending_network_msgs:
-            core.protothread.emit_network_message_event(msg)
+        if self.pending_network_msgs:
+            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
+            self.pending_network_msgs.clear()
 
-        self.pending_network_msgs.clear()
         return error
 
     """ Network Messages """
@@ -944,15 +940,13 @@ class Shares:
 
         if not shares_list:
             # Nyah, nyah
-            shares_list = slskmessages.SharedFileListResponse(init=msg.init)
+            shares_list = slskmessages.SharedFileListResponse()
 
-        shares_list.init = msg.init
-        core.queue.append(shares_list)
+        core.send_message_to_peer(user, shares_list)
 
     def _folder_contents_request(self, msg):
         """ Peer code: 36 """
 
-        init = msg.init
         ip_address, _port = msg.init.addr
         username = msg.init.target_user
         checkuser, reason = core.network_filter.check_user(username, ip_address)
@@ -976,17 +970,17 @@ class Shares:
         if checkuser:
             try:
                 if msg.dir in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
+                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
+                        directory=msg.dir, token=msg.token, shares=shares[msg.dir]))
                     return
 
                 if msg.dir.rstrip("\\") in shares:
-                    core.queue.append(slskmessages.FolderContentsResponse(
-                        init=init, directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
+                    core.send_message_to_peer(username, slskmessages.FolderContentsResponse(
+                        directory=msg.dir, token=msg.token, shares=shares[msg.dir.rstrip("\\")]))
                     return
 
             except Exception as error:
                 log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
-            core.queue.append(slskmessages.FolderContentsResponse(init=init, directory=msg.dir, token=msg.token))
+            core.send_message_to_peer(username, slskmessages.FolderContentsResponse(directory=msg.dir, token=msg.token))

@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   debian:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
           path: build/package/
 
   flatpak:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:gnome-44
       options: --privileged
@@ -45,11 +45,10 @@ jobs:
       with:
         bundle: flatpak-package.flatpak
         manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
-        run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}
 
   windows:
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
       matrix:
         include:

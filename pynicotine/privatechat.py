@@ -29,7 +29,7 @@ class PrivateChat:
 
     def __init__(self):
 
-        self.completion_list = []
+        self.completions = set()
         self.private_message_queue = {}
         self.away_message_users = set()
         self.users = set()
@@ -62,8 +62,8 @@ class PrivateChat:
         self.update_completions()
 
     def _quit(self):
-        self.completion_list.clear()
-        self.users.clear()
+        self.remove_all_users(is_permanent=False)
+        self.completions.clear()
 
     def _server_login(self, msg):
 
@@ -74,8 +74,10 @@ class PrivateChat:
             core.watch_user(user)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
+
         self.private_message_queue.clear()
         self.away_message_users.clear()
+        self.update_completions()
 
     def _set_away_mode(self, is_away):
 
@@ -93,13 +95,17 @@ class PrivateChat:
         if user not in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].append(user)
 
-    def remove_user(self, user):
+    def remove_user(self, user, is_permanent=True):
 
-        if user in config.sections["privatechat"]["users"]:
+        if is_permanent and user in config.sections["privatechat"]["users"]:
             config.sections["privatechat"]["users"].remove(user)
 
         self.users.remove(user)
         events.emit("private-chat-remove-user", user)
+
+    def remove_all_users(self, is_permanent=True):
+        for user in self.users.copy():
+            self.remove_user(user, is_permanent)
 
     def show_user(self, user, switch_page=True):
 
@@ -161,7 +167,7 @@ class PrivateChat:
         else:
             message = ui_message = self.auto_replace(message)
 
-        core.queue.append(slskmessages.MessageUser(user, message))
+        core.send_message_to_server(slskmessages.MessageUser(user, message))
         core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         events.emit("send-private-message", user, ui_message)
@@ -180,7 +186,7 @@ class PrivateChat:
             users = core.transfers.get_downloading_users()
 
         if users:
-            core.queue.append(slskmessages.MessageUsers(users, message))
+            core.send_message_to_server(slskmessages.MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
         """ Server code: 3 """
@@ -214,7 +220,7 @@ class PrivateChat:
                 "message": msg.msg
             })
 
-            core.queue.append(slskmessages.MessageAcked(msg.msgid))
+            core.send_message_to_server(slskmessages.MessageAcked(msg.msgid))
 
         if user != "server":
             # Check ignore status for all other users except "server"
@@ -232,7 +238,7 @@ class PrivateChat:
             elif not queued_message:
                 # Ask for user's IP address and queue the private message until we receive the address
                 if user not in self.private_message_queue:
-                    core.queue.append(slskmessages.GetPeerAddress(user))
+                    core.request_ip_address(user)
 
                 self.private_message_queue_add(msg)
                 msg.user = None
@@ -271,15 +277,16 @@ class PrivateChat:
 
     def update_completions(self):
 
-        self.completion_list = [config.sections["server"]["login"]]
+        self.completions.clear()
+        self.completions.add(config.sections["server"]["login"])
 
         if config.sections["words"]["roomnames"]:
-            self.completion_list += core.chatrooms.server_rooms
+            self.completions.update(core.chatrooms.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completion_list += list(core.userlist.buddies)
+            self.completions.update(core.userlist.buddies)
 
         if config.sections["words"]["commands"]:
-            self.completion_list += core.pluginhandler.get_command_list("private_chat")
+            self.completions.update(core.pluginhandler.get_command_list("private_chat"))
 
-        events.emit("private-chat-completion-list", self.completion_list)
+        events.emit("private-chat-completions", self.completions.copy())

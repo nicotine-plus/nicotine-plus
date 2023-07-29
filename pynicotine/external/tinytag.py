@@ -122,7 +122,7 @@ class TinyTag(object):
     def get_image(self):
         return self._image_data
 
-    def get(cls, filename, size, tags=True, duration=True, image=False, ignore_errors=False, encoding=None):
+    def get(cls, filename, tags=True, duration=True, image=False, ignore_errors=False, encoding=None, size=None):
         filename_lower = filename.lower()
         if not cls._extension_mapping:
             cls._extension_mapping = {
@@ -138,6 +138,12 @@ class TinyTag(object):
             if not filename_lower.endswith(ext):
                 continue
             with io.open(filename, 'rb') as af:
+                if size is None:
+                    af.seek(0, os.SEEK_END)
+                    size = af.tell()
+                    af.seek(0)
+                if size <= 0:
+                    return TinyTag(None, size)
                 tag = tagclass(af, size, ignore_errors=ignore_errors)
                 tag._filename = filename
                 tag._default_encoding = encoding

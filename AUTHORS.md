@@ -162,20 +162,19 @@
 
 # Third-Party Attributions
 
- - Country flags licensed under the MIT License.  
-   Copyright (c) 2016–2017 Bowtie AB  
-   Copyright (c) 2018–2020 Jack Marsh  
-   https://github.com/jackiboy/flagpack
-
  - tinytag licensed under the MIT License.  
    Copyright (c) 2014–2022 Tom Wallroth  
    https://github.com/devsnd/tinytag
 
- - Country database licensed under the CC-BY-SA-4.0 License.
-   Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
-   This program includes IP2Location LITE data available from:
+ - Country flags licensed under the MIT License.  
+   Copyright (c) 2016–2021 Bowtie AB  
+   https://github.com/madebybowtie/FlagKit
+
+ - Country database licensed under the CC-BY-SA-4.0 License.  
+   Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.  
+   This program includes IP2Location LITE data available from:  
    https://lite.ip2location.com
 
- - Country database reader licensed under the MIT License.
-   Copyright (c) 2017 IP2Location.com
+ - Country database reader licensed under the MIT License.  
+   Copyright (c) 2017 IP2Location.com  
    https://github.com/chrislim2888/IP2Location-Python

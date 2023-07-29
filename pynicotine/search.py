@@ -73,7 +73,7 @@ class Searches:
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.searches.clear()
+        self.remove_all_searches()
 
     def _server_disconnect(self, _msg):
         events.cancel_scheduled(self._wishlist_timer_id)
@@ -83,11 +83,10 @@ class Searches:
 
         # First queue the visible search results
         for file in visible_files:
-            user, fullpath, destination, size, bitrate, length = file
+            user, fullpath, destination, size, file_attributes = file
 
             core.transfers.get_file(
-                user, fullpath, destination,
-                size=size, bitrate=bitrate, length=length)
+                user, fullpath, destination, size=size, file_attributes=file_attributes)
 
         # Ask for the rest of the files in the folder
         core.transfers.get_folder(user, folder)
@@ -126,6 +125,10 @@ class Searches:
 
         events.emit("remove-search", token)
 
+    def remove_all_searches(self):
+        for token in self.searches.copy():
+            self.remove_search(token)
+
     def show_search(self, token):
         events.emit("show-search", token)
 
@@ -142,7 +145,7 @@ class Searches:
 
         elif mode == "rooms":
             if not room:
-                room = _("Joined Rooms ")
+                room = core.chatrooms.JOINED_ROOMS_NAME
 
             if core:
                 feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
@@ -236,29 +239,29 @@ class Searches:
         events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
-        core.queue.append(slskmessages.FileSearch(self.token, text))
+        core.send_message_to_server(slskmessages.FileSearch(self.token, text))
 
-        """ Request a list of related searches from the server.
-        Seemingly non-functional since 2018 (always receiving empty lists). """
+        # Request a list of related searches from the server.
+        # Seemingly non-functional since 2018 (always receiving empty lists).
 
-        # core.queue.append(slskmessages.RelatedSearch(text))
+        # core.send_message_to_server(slskmessages.RelatedSearch(text))
 
     def do_rooms_search(self, text, room=None):
 
-        if room != _("Joined Rooms "):
-            core.queue.append(slskmessages.RoomSearch(room, self.token, text))
+        if room != core.chatrooms.JOINED_ROOMS_NAME:
+            core.send_message_to_server(slskmessages.RoomSearch(room, self.token, text))
             return
 
         for joined_room in core.chatrooms.joined_rooms:
-            core.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
+            core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
         for user in core.userlist.buddies:
-            core.queue.append(slskmessages.UserSearch(user, self.token, text))
+            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
 
     def do_peer_search(self, text, users):
         for user in users:
-            core.queue.append(slskmessages.UserSearch(user, self.token, text))
+            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -270,9 +273,12 @@ class Searches:
         log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
-        core.queue.append(slskmessages.WishlistSearch(token, text))
+        core.send_message_to_server(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
+
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
+            return
 
         searches = config.sections["server"]["autosearch"]
 
@@ -467,9 +473,13 @@ class Searches:
         if maxresults == 0:
             return
 
+        # Do all processing in lowercase
+        original_searchterm = searchterm
+        searchterm = searchterm.lower()
+
         # Remember excluded/partial words for later
-        excluded_words = []
-        partial_words = []
+        excluded_words = set()
+        partial_words = set()
 
         if "-" in searchterm or "*" in searchterm:
             for word in searchterm.split():
@@ -478,15 +488,14 @@ class Searches:
 
                 if word.startswith("-"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        excluded_words.append(subword)
+                        excluded_words.add(subword)
 
                 elif word.startswith("*"):
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
-                        partial_words.append(subword)
+                        partial_words.add(subword)
 
         # Strip punctuation
-        searchterm_old = searchterm
-        searchterm = searchterm.lower().translate(TRANSLATE_PUNCTUATION).strip()
+        searchterm = searchterm.translate(TRANSLATE_PUNCTUATION).strip()
 
         if len(searchterm) < config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
@@ -531,7 +540,7 @@ class Searches:
         if numresults != len(fileinfos):
             log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
                            "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
-                "query": searchterm_old,
+                "query": original_searchterm,
                 "expected_num": numresults,
                 "total_num": len(fileinfos)
             })
@@ -555,6 +564,6 @@ class Searches:
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
             "user": user,
-            "query": searchterm_old,
+            "query": original_searchterm,
             "num": numresults
         })

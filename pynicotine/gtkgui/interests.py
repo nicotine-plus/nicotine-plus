@@ -21,7 +21,6 @@
 from gi.repository import GLib
 from gi.repository import GObject
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -31,6 +30,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -64,22 +64,24 @@ class Interests:
         # Columns
         self.likes_list_view = TreeView(
             window, parent=self.likes_list_container,
+            delete_accelerator_callback=self.on_remove_thing_i_like,
             columns={
                 "likes": {
                     "column_type": "text",
                     "title": _("Likes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
 
         self.dislikes_list_view = TreeView(
             window, parent=self.dislikes_list_container,
+            delete_accelerator_callback=self.on_remove_thing_i_dislike,
             columns={
                 "dislikes": {
                     "column_type": "text",
                     "title": _("Dislikes"),
-                    "default_sort_column": "ascending"
+                    "default_sort_type": "ascending"
                 }
             }
         )
@@ -94,7 +96,7 @@ class Interests:
                     "title": _("Rating"),
                     "width": 0,
                     "sort_column": "rating_data",
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 },
                 "item": {
                     "column_type": "text",
@@ -145,7 +147,7 @@ class Interests:
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "rating_data": {
                     "data_type": GObject.TYPE_UINT,
-                    "default_sort_column": "descending"
+                    "default_sort_type": "descending"
                 }
             }
         )
@@ -225,7 +227,7 @@ class Interests:
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or core.user_status == slskmessages.UserStatus.OFFLINE:
+        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
@@ -395,10 +397,23 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user, rating in users.items():
+            user_stats = core.watched_users.get(user, {})
+
+            status = core.user_statuses.get(user, UserStatus.OFFLINE)
+            speed = user_stats.get("upload_speed", 0)
+            files = user_stats.get("files", 0)
+
+            h_files = humanize(files)
+            h_speed = human_speed(speed) if speed > 0 else ""
+
             self.similar_users_list_view.add_row([
-                USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE],
+                USER_STATUS_ICON_NAMES[status],
                 user,
-                "", "0", 0, 0, 0,
+                h_speed,
+                h_files,
+                status,
+                speed,
+                files,
                 rating
             ], select_row=False)
 
@@ -432,18 +447,15 @@ class Interests:
         if iterator is None:
             return
 
-        h_speed = ""
-        avgspeed = msg.avgspeed
-
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
-
+        speed = msg.avgspeed
         files = msg.files
+
+        h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(msg.files)
 
         self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
         self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", avgspeed)
+        self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
         self.similar_users_list_view.set_row_value(iterator, "files_data", files)
 
     @staticmethod

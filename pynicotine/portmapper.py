@@ -19,7 +19,6 @@
 import re
 import socket
 import struct
-import subprocess
 import sys
 
 from threading import Thread
@@ -110,6 +109,8 @@ class NATPMP(BaseImplementation):
 
     @staticmethod
     def _get_gateway_address():
+
+        import subprocess
 
         if sys.platform == "linux":
             output = subprocess.check_output(["ip", "route", "list"])
@@ -531,33 +532,37 @@ class PortMapper:
         log.add_debug("Creating Port Mapping rule...")
 
         try:
+            self._active_implementation = self._natpmp
+            self._natpmp.add_port_mapping(self.LEASE_DURATION)
+
+        except Exception as natpmp_error:
+            log.add_debug("NAT-PMP not available, falling back to UPnP: %s", natpmp_error)
+
             try:
-                self._active_implementation = self._natpmp
-                self._natpmp.add_port_mapping(self.LEASE_DURATION)
-
-            except Exception as error:
-                log.add_debug("NAT-PMP not available, falling back to UPnP: %s", error)
-
                 self._active_implementation = self._upnp
                 self._upnp.add_port_mapping(self.LEASE_DURATION)
 
-            log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
-                      "IP address %(ip_address)s port %(local_port)s"), {
-                "protocol": self._active_implementation.NAME,
-                "external_port": self._active_implementation.port,
-                "ip_address": self._active_implementation.local_ip_address,
-                "local_port": self._active_implementation.port
-            })
+            except Exception as upnp_error:
+                log.add_debug("UPnP not available, port forwarding failed: %s", upnp_error)
 
-        except Exception as error:
-            from traceback import format_exc
-            log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
-                "protocol": self._active_implementation.NAME,
-                "external_port": self._active_implementation.port,
-                "error": error
-            })
-            log.add_debug(format_exc())
-            self._active_implementation = None
+                log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
+                    "protocol": self._active_implementation.NAME if self._active_implementation else "PortMapper",
+                    "external_port": self._active_implementation.port if self._active_implementation else "",
+                    "error": upnp_error
+                })
+
+                from traceback import format_exc
+                log.add_debug(format_exc())
+                self._active_implementation = None
+                return
+
+        log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
+                  "IP address %(ip_address)s port %(local_port)s"), {
+            "protocol": self._active_implementation.NAME,
+            "external_port": self._active_implementation.port,
+            "ip_address": self._active_implementation.local_ip_address,
+            "local_port": self._active_implementation.port
+        })
 
     def _remove_port_mapping(self):
 
