@@ -845,17 +845,15 @@ class SetStatus(ServerMessage):
 
 class ServerPing(ServerMessage):
     """ Server code: 32 """
-    """ We test if the server responds. """
-    """ DEPRECATED """
+    """ We send this to the server at most once per minute to ensure the
+    connection stays alive.
+
+    Nicotine+ uses TCP keepalive instead. """
 
     __slots__ = ()
 
     def make_network_message(self):
         return b""
-
-    def parse_network_message(self, message):
-        # Empty message
-        pass
 
 
 class SendConnectToken(ServerMessage):
@@ -3486,7 +3484,7 @@ SERVER_MESSAGE_CODES = {
     FileSearchRoom: 25,           # Obsolete
     FileSearch: 26,
     SetStatus: 28,
-    ServerPing: 32,               # Deprecated
+    ServerPing: 32,
     SendConnectToken: 33,         # Obsolete
     SendDownloadSpeed: 34,        # Obsolete
     SharedFoldersFiles: 35,

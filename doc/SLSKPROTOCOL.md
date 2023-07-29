@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 28, 2023
+Last updated on July 30, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -178,7 +178,7 @@ but it handles the protocol well enough (and can be modified).
 | 25   | [File Search Room](#server-code-25)               | Obsolete   |
 | 26   | [File Search](#server-code-26)                    |            |
 | 28   | [Set Online Status](#server-code-28)              |            |
-| 32   | [Ping](#server-code-32)                           | Deprecated |
+| 32   | [Ping](#server-code-32)                           |            |
 | 33   | [Send Connect Token](#server-code-33)             | Obsolete   |
 | 34   | [Send Download Speed](#server-code-34)            | Obsolete   |
 | 35   | [Shared Folders & Files](#server-code-35)         |            |
@@ -597,16 +597,16 @@ We send our new status to the server. Status is a way to define whether we're av
 
 ### ServerPing
 
-**DEPRECATED**
+We send this to the server at most once per minute to ensure the connection stays alive.
 
-We test if the server responds.
+Nicotine+ uses TCP keepalive instead.
 
 ### Data Order
 
   - Send
       - Empty Message
   - Receive
-      - Empty Message
+      - *No Message*
 
 ## Server Code 33
 
