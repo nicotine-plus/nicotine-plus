@@ -9,6 +9,7 @@
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_exclude_entry">
@@ -19,6 +20,7 @@
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_file_type_entry">
@@ -29,6 +31,7 @@
     <property name="visible">True</property>
     <property name="width-chars">12</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_file_size_entry">
@@ -39,6 +42,7 @@
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_bitrate_entry">
@@ -49,6 +53,7 @@
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_length_entry">
@@ -59,6 +64,7 @@
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_country_entry">
@@ -69,6 +75,7 @@
     <property name="visible">True</property>
     <property name="width-chars">12</property>
     <signal name="activate" handler="on_refilter"/>
+    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkBox" id="container">

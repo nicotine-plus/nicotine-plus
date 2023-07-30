@@ -596,7 +596,6 @@ class Search:
 
             buffer = combobox.entry.get_buffer()
             buffer.connect("inserted-text", self.on_filter_entry_inserted_text, combobox)
-            buffer.connect_after("deleted-text", self.on_filter_entry_deleted_text)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_default_filters()
@@ -1689,11 +1688,12 @@ class Search:
         self.update_model()
 
     def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+
         if n_chars > 1 and chars == combobox.get_selected_id():
             self.on_refilter()
 
-    def on_filter_entry_deleted_text(self, buffer, _position, _n_chars):
-        if buffer.get_length() == 0:
+    def on_filter_entry_changed(self, entry):
+        if not entry.get_text():
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
