@@ -541,23 +541,19 @@ class ComboBox:
 
     def set_selected_pos(self, position):
 
+        if position is None:
+            return
+
         if GTK_API_VERSION >= 4:
             self.dropdown.set_selected(position)
         else:
             self.dropdown.set_active(position)
 
     def set_selected_id(self, item_id):
-
-        position = self._positions.get(item_id)
-
-        if position is None:
-            position = 0
-
-        self.set_selected_pos(position)
+        self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
         self.entry.set_text(text)
-        self.set_selected_id(text)
 
     def remove_pos(self, position):
 
@@ -655,6 +651,8 @@ class ComboBox:
         if not visible:
             self.entry.grab_focus_without_selecting()
             return
+
+        self.set_selected_id(self.get_text())
 
         if GTK_API_VERSION == 3:
             return
