@@ -1688,11 +1688,12 @@ class Search:
         self.update_model()
 
     def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+
         if n_chars > 1 and chars == combobox.get_selected_id():
             self.on_refilter()
 
     def on_filter_entry_changed(self, entry):
-        if entry.has_focus() and not entry.get_text():
+        if not entry.get_text():
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
