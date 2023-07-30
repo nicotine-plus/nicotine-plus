@@ -1692,9 +1692,6 @@ class Search:
         if n_chars > 1 and chars == combobox.get_selected_id():
             self.on_refilter()
 
-            # Highlight current list item
-            combobox.set_selected_id(chars)
-
     def on_filter_entry_changed(self, entry):
         if not entry.get_text():
             self.on_refilter()
