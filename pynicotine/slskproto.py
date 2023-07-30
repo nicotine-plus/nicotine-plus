@@ -42,6 +42,8 @@ from pynicotine.slskmessages import PEER_INIT_MESSAGE_CLASSES
 from pynicotine.slskmessages import PEER_INIT_MESSAGE_CODES
 from pynicotine.slskmessages import SERVER_MESSAGE_CLASSES
 from pynicotine.slskmessages import SERVER_MESSAGE_CODES
+from pynicotine.slskmessages import DOUBLE_UINT32_UNPACK
+from pynicotine.slskmessages import UINT32_UNPACK
 from pynicotine.slskmessages import AcceptChildren
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
@@ -89,43 +91,6 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
 from pynicotine.utils import human_speed
-
-
-# Set the maximum number of open files to the hard limit reported by the OS.
-# Our MAXSOCKETS value needs to be lower than the file limit, otherwise our open
-# sockets in combination with other file activity can exceed the file limit,
-# effectively halting the program.
-
-if sys.platform == "win32":
-    # For Windows, FD_SETSIZE is set to 512 in the Python source.
-    # This limit is hardcoded, so we'll have to live with it for now.
-
-    MAXSOCKETS = 512
-else:
-    import resource  # pylint: disable=import-error
-
-    if sys.platform == "darwin":
-        # Maximum number of files a process can open is 10240 on macOS.
-        # macOS reports INFINITE as hard limit, so we need this special case.
-
-        MAXFILELIMIT = 10240
-    else:
-        _SOFTLIMIT, MAXFILELIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)     # pylint: disable=no-member
-
-    try:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))  # pylint: disable=no-member
-
-    except Exception as rlimit_error:
-        log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
-
-    # Set the maximum number of open sockets to a lower value than the hard limit,
-    # otherwise we just waste resources.
-    # The maximum is 3072, but can be lower if the file limit is too low.
-
-    MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
-
-UINT32_UNPACK = struct.Struct("<I").unpack
-DOUBLE_UINT32_UNPACK = struct.Struct("<II").unpack
 
 
 class Connection:
@@ -363,6 +328,39 @@ class SoulseekNetworkThread(Thread):
     SOCKET_WRITE_BUFFER_SIZE = 1048576
     SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
+    # Set the maximum number of open files to the hard limit reported by the OS.
+    # Our MAX_SOCKETS value needs to be lower than the file limit, otherwise our open
+    # sockets in combination with other file activity can exceed the file limit,
+    # effectively halting the program.
+
+    if sys.platform == "win32":
+        # For Windows, FD_SETSIZE is set to 512 in the Python source.
+        # This limit is hardcoded, so we'll have to live with it for now.
+
+        MAX_SOCKETS = 512
+    else:
+        import resource  # pylint: disable=import-error
+
+        if sys.platform == "darwin":
+            # Maximum number of files a process can open is 10240 on macOS.
+            # macOS reports INFINITE as hard limit, so we need this special case.
+
+            MAX_FILE_LIMIT = 10240
+        else:
+            _SOFT_LIMIT, MAX_FILE_LIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)     # pylint: disable=no-member
+
+        try:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
+
+        except Exception as rlimit_error:
+            log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
+
+        # Set the maximum number of open sockets to a lower value than the hard limit,
+        # otherwise we just waste resources.
+        # The maximum is 3072, but can be lower if the file limit is too low.
+
+        MAX_SOCKETS = min(max(int(MAX_FILE_LIMIT * 0.75), 50), 3072)
+
     def __init__(self, user_addresses, portmapper):
 
         super().__init__(name="SoulseekNetworkThread")
@@ -499,7 +497,7 @@ class SoulseekNetworkThread(Thread):
             return False
 
         log.add(_("Listening on port: %i"), self._listen_port)
-        log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
+        log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
 
     """ Connections """
@@ -527,7 +525,7 @@ class SoulseekNetworkThread(Thread):
                     init.outgoing_msgs.clear()
 
     @staticmethod
-    def _connection_still_active(conn_obj):
+    def _is_connection_still_active(conn_obj):
 
         init = conn_obj.init
 
@@ -1044,7 +1042,7 @@ class SoulseekNetworkThread(Thread):
         if sock is self._server_socket:
             return
 
-        if num_sockets >= MAXSOCKETS and not self._connection_still_active(conn_obj):
+        if num_sockets >= self.MAX_SOCKETS and not self._is_connection_still_active(conn_obj):
             # Connection limit reached, close connection if inactive
             self._close_connection(self._conns, sock)
             return
@@ -1235,7 +1233,7 @@ class SoulseekNetworkThread(Thread):
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1494,7 +1492,7 @@ class SoulseekNetworkThread(Thread):
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem, idx)[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -1652,7 +1650,7 @@ class SoulseekNetworkThread(Thread):
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem[idx:idx + 8])
+            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
             msgsize_total = msgsize + 4
 
             try:
@@ -1702,7 +1700,7 @@ class SoulseekNetworkThread(Thread):
 
         msg_buffer_mem.release()
 
-        if search_result_received and not self._connection_still_active(conn_obj):
+        if search_result_received and not self._is_connection_still_active(conn_obj):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
@@ -2073,7 +2071,7 @@ class SoulseekNetworkThread(Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msgsize = UINT32_UNPACK(msg_buffer_mem[idx:idx + 4])[0]
+            msgsize = UINT32_UNPACK(msg_buffer_mem, idx)[0]
             msgsize_total = msgsize + 4
 
             if msgsize_total > buffer_len or msgsize < 0:
@@ -2213,7 +2211,7 @@ class SoulseekNetworkThread(Thread):
         msg_class = msg_obj.__class__
 
         if msg_class is InitPeerConnection:
-            if self._numsockets < MAXSOCKETS:
+            if self._numsockets < self.MAX_SOCKETS:
                 self._init_peer_connection(msg_obj)
             else:
                 # Connection limit reached, re-queue
@@ -2282,7 +2280,7 @@ class SoulseekNetworkThread(Thread):
 
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
-            while self._numsockets < MAXSOCKETS:
+            while self._numsockets < self.MAX_SOCKETS:
                 try:
                     incoming_sock, incoming_addr = sock.accept()
 

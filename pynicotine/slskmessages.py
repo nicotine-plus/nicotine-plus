@@ -34,6 +34,7 @@ server messages and p2p messages (between clients). """
 
 
 INT32_UNPACK = Struct("<i").unpack_from
+DOUBLE_UINT32_UNPACK = Struct("<II").unpack_from
 UINT32_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
