@@ -451,7 +451,7 @@ class ComboBox:
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
 
-        self.dropdown.connect("scroll-event", self.on_button_scroll_event)
+        self.dropdown.connect("scroll-event", self._on_button_scroll_event)
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
@@ -499,6 +499,23 @@ class ComboBox:
             factory.connect("bind", self._on_factory_bind)
 
         return factory
+
+    def _update_item_entry_text(self):
+        """ Set text entry text to the same value as selected item """
+
+        if GTK_API_VERSION == 3:
+            # Already supported natively in GTK 3
+            return
+
+        item = self.dropdown.get_selected_item()
+
+        if item is None:
+            return
+
+        item_text = item.get_string()
+
+        if self.get_text() != item_text:
+            self.set_text(item_text)
 
     """ General """
 
@@ -640,7 +657,7 @@ class ComboBox:
         self.set_selected_pos(new_position)
         return True
 
-    def on_button_scroll_event(self, *_args):
+    def _on_button_scroll_event(self, *_args):
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
@@ -671,20 +688,8 @@ class ComboBox:
         if self.entry is None:
             return
 
-        if GTK_API_VERSION >= 4:
-            item = self.dropdown.get_selected_item()
-
-            if item is None:
-                return
-
-            # Set text entry text to the same value as selected item
-            item_text = item.get_string()
-
-            if self.get_text() != item_text:
-                self.set_text(item_text)
-
-        elif self.get_selected_pos() == -1:
-            return
+        # Update text entry with text from the selected item
+        self._update_item_entry_text()
 
         # Cursor is normally placed at the beginning, move to the end
         self.entry.set_position(-1)
