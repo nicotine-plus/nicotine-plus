@@ -774,9 +774,15 @@ class MainWindow(Window):
         hamburger_menu = self.create_hamburger_menu()
         self.header_menu.set_menu_model(hamburger_menu.model)
 
-        if GTK_API_VERSION >= 4:
-            # F10 shortcut to open menu
-            self.header_menu.set_primary(True)
+        if GTK_API_VERSION == 3:
+            return
+
+        # F10 shortcut to open menu
+        self.header_menu.set_primary(True)
+
+        # Ensure menu button always gets focus after closing menu
+        popover = self.header_menu.get_popover()
+        popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
 
     def on_menu(self, *_args):
         self.header_menu.set_active(not self.header_menu.get_active())
