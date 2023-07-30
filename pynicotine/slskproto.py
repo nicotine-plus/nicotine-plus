@@ -1700,16 +1700,15 @@ class SoulseekNetworkThread(Thread):
 
         msg_buffer_mem.release()
 
+        if idx:
+            del msg_buffer[:idx]
+            conn_obj.has_post_init_activity = True
+
         if search_result_received and not self._is_connection_still_active(conn_obj):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
             self._close_connection(self._conns, conn_obj.sock)
-            return
-
-        if idx:
-            del msg_buffer[:idx]
-            conn_obj.has_post_init_activity = True
 
     def _process_peer_output(self, msg_obj):
 
