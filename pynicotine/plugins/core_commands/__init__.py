@@ -55,15 +55,6 @@ class Plugin(BasePlugin):
                 "description": _("Manage plugins"),
                 "parameters": ["<toggle|info>", "<plugin_name>"]
             },
-            "sample": {
-                "aliases": ["demo"],
-                "description": "Sample command description",
-                "disable": ["private_chat"],
-                "callback": self.sample_command,
-                "callback_private_chat": self.sample_command,
-                "parameters": ["<choice1|choice2>", "<something..>"],
-                "parameters_chatroom": ["<choice55|choice2>"]
-            },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
@@ -322,9 +313,6 @@ class Plugin(BasePlugin):
             self.core.quit()
         else:
             self.core.confirm_quit()
-
-    def sample_command(self, _args, **_unused):
-        self.output("Hello")
 
     """ Chat """
 
