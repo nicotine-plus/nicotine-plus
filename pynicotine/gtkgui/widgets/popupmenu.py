@@ -332,13 +332,18 @@ class FilePopupMenu(PopupMenu):
 
 class UserPopupMenu(PopupMenu):
 
+    def escape_username(self, username):
+        """ Escape underscores to disable mnemonics """
+
+        return username.replace("_", "__")
+
     def setup_user_menu(self, user=None, page=""):
 
         user_label = "U"
 
         if user is not None:
             self.user = user
-            user_label += self.user
+            user_label += self.escape_username(user)
 
         self.add_items(
             (user_label, self.on_copy_user),
@@ -378,7 +383,7 @@ class UserPopupMenu(PopupMenu):
         if not self.useritem:
             return
 
-        self.useritem.set_label(user.replace("_", "__"))  # Escape underscores to disable mnemonics
+        self.useritem.set_label(self.escape_username(user))
         self.model.remove(0)
         self.model.prepend_item(self.useritem)
 
