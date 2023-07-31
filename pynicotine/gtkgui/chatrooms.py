@@ -499,19 +499,22 @@ class ChatRoom:
 
         self.users_list_view.enable_sorting()
 
-        self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application)
-        self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application)
+        self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application, tab_name="chatrooms")
+        self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application, tab_name="chatrooms")
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
-                                                  connect_events=False)
-        self.popup_menu_user_list = UserPopupMenu(self.window.application, self.users_list_view.widget,
-                                                  self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(
+            self.window.application, parent=self.chat_view.widget, connect_events=False,
+            tab_name="chatrooms"
+        )
+        self.popup_menu_user_list = UserPopupMenu(
+            self.window.application, parent=self.users_list_view.widget,
+            callback=self.on_popup_menu_user, tab_name="chatrooms"
+        )
 
         for menu, menu_private_rooms in (
             (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),
             (self.popup_menu_user_list, self.popup_menu_private_rooms_list)
         ):
-            menu.setup_user_menu()
             menu.add_items(
                 ("", None),
                 ("#" + _("Sear_ch User's Files"), menu.on_search_user),
@@ -664,7 +667,7 @@ class ChatRoom:
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items and menu.user != core.login_username)
+        private_rooms_enabled = (menu_private_rooms.items and user != core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):

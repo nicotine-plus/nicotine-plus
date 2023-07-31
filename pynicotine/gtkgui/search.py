@@ -527,7 +527,7 @@ class Search:
         )
 
         # Popup menus
-        self.popup_menu_users = UserPopupMenu(self.window.application)
+        self.popup_menu_users = UserPopupMenu(self.window.application, tab_name="search")
 
         self.popup_menu_copy = PopupMenu(self.window.application)
         self.popup_menu_copy.add_items(
@@ -1190,7 +1190,6 @@ class Search:
 
     def add_popup_menu_user(self, popup, user):
 
-        popup.setup_user_menu(user)
         popup.add_items(
             ("", None),
             ("#" + _("Select User's Results"), self.on_select_user_results, user)
@@ -1208,7 +1207,7 @@ class Search:
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = UserPopupMenu(self.window.application)
+                popup = UserPopupMenu(self.window.application, username=user, tab_name="search")
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -1216,6 +1215,7 @@ class Search:
 
         # Single user, add items directly to "User Actions" submenu
         user = next(iter(self.selected_users), None)
+        self.popup_menu_users.setup_user_menu(user)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):

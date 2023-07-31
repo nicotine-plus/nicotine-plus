@@ -287,8 +287,9 @@ class UserInfo:
         )
 
         # Popup menus
-        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
-        self.user_popup_menu.setup_user_menu(user, page="userinfo")
+        self.user_popup_menu = UserPopupMenu(
+            self.window.application, callback=self.on_tab_popup, username=user, tab_name="userinfo"
+        )
         self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),

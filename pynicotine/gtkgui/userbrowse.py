@@ -217,8 +217,9 @@ class UserBrowse:
         )
 
         # Popup Menu (folder_tree_view)
-        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
-        self.user_popup_menu.setup_user_menu(user, page="userbrowse")
+        self.user_popup_menu = UserPopupMenu(
+            self.window.application, callback=self.on_tab_popup, username=user, tab_name="userbrowse"
+        )
         self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),

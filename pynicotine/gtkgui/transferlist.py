@@ -204,7 +204,7 @@ class TransferList:
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])
 
-        self.popup_menu_users = UserPopupMenu(window.application)
+        self.popup_menu_users = UserPopupMenu(window.application, tab_name="transfers")
         self.popup_menu_clear = PopupMenu(window.application)
         self.clear_all_button.set_menu_model(self.popup_menu_clear.model)
 
@@ -710,7 +710,6 @@ class TransferList:
 
     def add_popup_menu_user(self, popup, user):
 
-        popup.setup_user_menu(user)
         popup.add_items(
             ("", None),
             ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
@@ -728,7 +727,7 @@ class TransferList:
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = UserPopupMenu(self.window.application)
+                popup = UserPopupMenu(self.window.application, username=user, tab_name="transfers")
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -736,6 +735,7 @@ class TransferList:
 
         # Single user, add items directly to "User Actions" submenu
         user = next(iter(self.selected_users), None)
+        self.popup_menu_users.setup_user_menu(user)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_expand_tree(self, *_args):
