@@ -1,0 +1,4 @@
+Version = "2023-07-31r00"
+Authors = ["Nicotine+"]
+Name = "Sample Commands"
+Description = "Plugin to demonstrate the new plugin command system in Nicotine+ 3.3.0 and above."
