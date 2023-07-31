@@ -382,12 +382,14 @@ class CompletionEntry:
 class ComboBox:
 
     def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
-                 enable_arrow_keys=True, entry=None, visible=True, items=None):
+                 enable_arrow_keys=True, entry=None, visible=True, items=None,
+                 item_selected_callback=None):
 
         self.widget = None
         self.dropdown = None
         self.entry = entry
         self.enable_arrow_keys = enable_arrow_keys
+        self.item_selected_callback = item_selected_callback
 
         self._ids = {}
         self._positions = {}
@@ -693,6 +695,14 @@ class ComboBox:
 
         # Cursor is normally placed at the beginning, move to the end
         self.entry.set_position(-1)
+
+        if self.item_selected_callback is None:
+            return
+
+        selected_id = self.get_selected_id()
+
+        if selected_id is not None:
+            self.item_selected_callback(self, selected_id)
 
 
 class TextSearchBar:
