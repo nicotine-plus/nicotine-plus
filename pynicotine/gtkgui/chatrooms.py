@@ -105,6 +105,10 @@ class ChatRooms(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.chatrooms.remove_all_rooms()
 
+    def on_restore_removed_page(self, page_args):
+        room, is_private = page_args
+        core.chatrooms.show_room(room, is_private=is_private)
+
     def on_reordered_page(self, *_args):
 
         room_tab_order = {}
@@ -207,7 +211,7 @@ class ChatRooms(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(room, page.is_private))
         del self.pages[room]
 
         if room == core.chatrooms.GLOBAL_ROOM_NAME:

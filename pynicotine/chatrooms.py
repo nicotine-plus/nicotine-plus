@@ -96,13 +96,13 @@ class ChatRooms:
         events.emit("join-room", slskmessages.JoinRoom(self.GLOBAL_ROOM_NAME))
         core.send_message_to_server(slskmessages.JoinGlobalRoom())
 
-    def show_room(self, room, private=False):
+    def show_room(self, room, is_private=False):
 
         if room == self.GLOBAL_ROOM_NAME:
             self.show_global_room()
 
         elif room not in self.joined_rooms:
-            core.send_message_to_server(slskmessages.JoinRoom(room, private))
+            core.send_message_to_server(slskmessages.JoinRoom(room, is_private))
             return
 
         events.emit("show-room", room)

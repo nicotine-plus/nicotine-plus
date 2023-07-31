@@ -83,6 +83,10 @@ class UserBrowses(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.userbrowse.remove_all_users()
 
+    def on_restore_removed_page(self, page_args):
+        username, = page_args
+        core.userbrowse.browse_user(username)
+
     def on_get_shares(self, *_args):
 
         entry_text = self.window.userbrowse_entry.get_text().strip()
@@ -124,7 +128,7 @@ class UserBrowses(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
 
     def peer_connection_error(self, user, *_args, **_kwargs):

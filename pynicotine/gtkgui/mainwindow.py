@@ -602,6 +602,10 @@ class MainWindow(Window):
 
         # Notebook Tabs
 
+        action = Gio.SimpleAction(name="reopen-closed-tab")
+        action.connect("activate", self.on_reopen_closed_tab)
+        self.add_action(action)
+
         action = Gio.SimpleAction(name="close-tab")
         action.connect("activate", self.on_close_tab)
         self.add_action(action)
@@ -630,6 +634,7 @@ class MainWindow(Window):
             ("win.context-menu", ["<Shift>F10"]),
             ("win.change-focus-view", ["F6"]),
             ("win.show-log-history", ["<Primary>l"]),
+            ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
             ("win.cycle-tabs", ["<Primary>Tab"]),
             ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"]),
@@ -1008,6 +1013,18 @@ class MainWindow(Window):
             page_ids.append(page.id)
 
         config.sections["ui"]["modes_order"] = page_ids
+
+    def on_reopen_closed_tab(self, *_args):
+        """ Ctrl+Shift+T: reopen recently closed tab """
+
+        try:
+            notebook = getattr(self, self.current_page_id)
+
+        except AttributeError:
+            return False
+
+        notebook.restore_removed_page()
+        return True
 
     def on_close_tab(self, *_args):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """

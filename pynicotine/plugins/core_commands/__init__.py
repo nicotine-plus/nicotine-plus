@@ -553,7 +553,7 @@ class Plugin(BasePlugin):
         args_split = args.split(maxsplit=1)
         user, query = args_split[0], args_split[1]
 
-        self.core.search.do_search(query, "user", user=user)
+        self.core.search.do_search(query, "user", users=[user])
 
     """ Plugin Commands """
 
