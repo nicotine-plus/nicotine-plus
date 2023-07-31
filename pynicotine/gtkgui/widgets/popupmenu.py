@@ -314,6 +314,20 @@ class PopupMenu:
 
 class FilePopupMenu(PopupMenu):
 
+    def __init__(self, application, parent=None, callback=None, connect_events=True):
+
+        super().__init__(application=application, parent=parent, callback=callback,
+                         connect_events=connect_events)
+
+        self._setup_file_menu()
+
+    def _setup_file_menu(self):
+
+        self.add_items(
+            ("#" + "selected_files", None),
+            ("", None)
+        )
+
     def set_num_selected_files(self, num_files):
 
         self.actions["selected_files"].set_enabled(False)

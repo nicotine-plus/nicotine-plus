@@ -306,13 +306,11 @@ class UserBrowse:
         )
 
         # Popup Menu (file_list_view)
-        self.file_popup_menu = FilePopupMenu(self.window.application, self.file_list_view.widget,
-                                             self.on_file_popup_menu)
-
+        self.file_popup_menu = FilePopupMenu(
+            self.window.application, parent=self.file_list_view.widget, callback=self.on_file_popup_menu
+        )
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
-                ("#" + "selected_files", None),
-                ("", None),
                 ("#" + _("Up_load File(s)…"), self.on_upload_files),
                 ("#" + _("Upload Folder…"), self.on_upload_directory_to),
                 ("", None),
@@ -327,8 +325,6 @@ class UserBrowse:
             )
         else:
             self.file_popup_menu.add_items(
-                ("#" + "selected_files", None),
-                ("", None),
                 ("#" + _("_Download File(s)"), self.on_download_files),
                 ("#" + _("Download File(s) _To…"), self.on_download_files_to),
                 ("", None),

@@ -215,10 +215,10 @@ class TransferList:
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(window.application, self.tree_view.widget, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(
+            window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
+        )
         self.popup_menu.add_items(
-            ("#" + "selected_files", None),
-            ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
             ("#" + _("_Open in File Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),

@@ -536,10 +536,10 @@ class Search:
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(self.window.application, self.tree_view.widget, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(
+            self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
+        )
         self.popup_menu.add_items(
-            ("#" + "selected_files", None),
-            ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
