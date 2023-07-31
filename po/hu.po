@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-07-31 13:08+0000\n"
+"Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
 "Language: hu\n"
@@ -619,9 +619,8 @@ msgstr "Adjon meg új virtuális nevet a(z) '%(dir)s' számára:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1496
 #: pynicotine/gtkgui/dialogs/preferences.py:2338
 #: pynicotine/gtkgui/dialogs/wishlist.py:121
-#, fuzzy
 msgid "_Edit"
-msgstr "Osztályozás"
+msgstr "_Szerkesztés"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:68
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:251
@@ -757,9 +756,8 @@ msgid "Change Password"
 msgstr "Jelszó módosítása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
-#, fuzzy
 msgid "_Change"
-msgstr "A lap megváltozott"
+msgstr "_Változtat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:275
 msgid "No one"
@@ -864,9 +862,8 @@ msgstr "Adjon meg egy új letöltésszűrőt:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1466
 #: pynicotine/gtkgui/dialogs/preferences.py:2309
 #: pynicotine/gtkgui/userlist.py:424
-#, fuzzy
 msgid "_Add"
-msgstr "Hozzáadás (_A)…"
+msgstr "_Hozzáadás"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:439
 #: pynicotine/gtkgui/dialogs/preferences.py:472
@@ -1010,7 +1007,6 @@ msgid "Edit Replacement"
 msgstr "Helyettesítés szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1612
-#, fuzzy
 msgid "System default"
 msgstr "Rendszer alapértelmezett"
 
@@ -1727,7 +1723,6 @@ msgstr "Méret"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
-#, fuzzy
 msgid "Quality"
 msgstr "Minőség"
 
@@ -2073,9 +2068,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Adja meg a nevét a felhasználónak akinek szeretne feltölteni:"
 
 #: pynicotine/gtkgui/userbrowse.py:784 pynicotine/gtkgui/userbrowse.py:992
-#, fuzzy
 msgid "_Upload"
-msgstr "_Feltöltések"
+msgstr "_Feltöltés"
 
 #: pynicotine/gtkgui/userbrowse.py:968
 msgid "Select Destination Folder for Files"
@@ -2389,9 +2383,8 @@ msgid "Gift Privileges"
 msgstr "Jogosultság adása"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:574
-#, fuzzy
 msgid "_Give Privileges"
-msgstr "Jogosultság adása"
+msgstr "Kiváltságok _adása"
 
 #: pynicotine/gtkgui/widgets/textview.py:425
 msgid "--- old messages above ---"
@@ -2473,9 +2466,8 @@ msgstr ""
 "Adja meg annak a felhasználónak a nevét akinek üzenetet szeretne küldeni:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:233
-#, fuzzy
 msgid "_Message"
-msgstr "_ Üzenet mindenkinek"
+msgstr "_Üzenet"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:253
 msgid "Enter the name of the user whose profile you want to see:"
@@ -2483,9 +2475,8 @@ msgstr ""
 "Adja meg annak a felhasználónak a nevét, akinek a profilját látni szeretné:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:254
-#, fuzzy
 msgid "_View Profile"
-msgstr "Felhasználói profil megtekintése"
+msgstr "_Profil megtekintése"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:274
 msgid "Enter the name of the user whose shares you want to see:"
@@ -2494,9 +2485,8 @@ msgstr ""
 "szeretné:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:275
-#, fuzzy
 msgid "_Browse"
-msgstr "Fájlok _böngészése"
+msgstr "_Böngészés"
 
 #: pynicotine/gtkgui/widgets/treeview.py:637
 #, python-format
@@ -2746,7 +2736,6 @@ msgid "Cyprus"
 msgstr "Ciprus"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "Czechia"
 msgstr "Csehország"
 
@@ -3427,9 +3416,8 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
-msgstr "Türkiye"
+msgstr "Törökország"
 
 #: pynicotine/networkfilter.py:258
 msgid "Trinidad & Tobago"
@@ -3838,9 +3826,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Hibás argumentum, a lehetséges választási lehetőségek: %s"
 
 #: pynicotine/pluginsystem.py:858
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Használat: %(command)s %(args)s"
+msgstr "Használat: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:897
 #, python-format
@@ -4779,9 +4767,8 @@ msgid "_Personal Profile"
 msgstr "Személyes _profil"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:953
-#, fuzzy
 msgid "Configure Account"
-msgstr "Naplózás beállítása"
+msgstr "Fiók beállítása"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1020
 msgid ""
@@ -4815,12 +4802,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1260
 msgid "_Message All"
-msgstr "_ Üzenet mindenkinek"
+msgstr "_Üzenet mindenkinek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1276
-#, fuzzy
 msgid "Configure Ignored Users"
-msgstr "Figyelmen kívül hagyott felhasználók"
+msgstr "Figyelmen kívül hagyott felhasználók beállítása"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1343
 msgid ""
@@ -4851,9 +4837,8 @@ msgstr ""
 "hogy cseveghessen a Soulseek hálózat többi felhasználójával"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1567
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Felhasználói profil megtekintése"
+msgstr "Felhasználói profil beállítása"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Scanning Shares"
