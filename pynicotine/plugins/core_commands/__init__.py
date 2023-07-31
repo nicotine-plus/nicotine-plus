@@ -217,11 +217,17 @@ class Plugin(BasePlugin):
                 "parameters": ["<user or ip>"],
                 "parameters_private_chat": ["[user or ip]"]
             },
-            "rescan": {
-                "callback": self.rescan_command,
-                "description": _("Rescan shares"),
+            "share": {
+                "callback": self.share_command,
+                "description": _("Add share"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["[force|rebuild]"]
+                "parameters": ["<public|buddy>", "<folder path>"]
+            },
+            "unshare": {
+                "callback": self.unshare_command,
+                "description": _("Remove share"),
+                "group": _CommandGroup.SHARES,
+                "parameters": ["<virtual name or folder path>"]
             },
             "shares": {
                 "aliases": ["ls"],
@@ -229,6 +235,12 @@ class Plugin(BasePlugin):
                 "description": _("List shares"),
                 "group": _CommandGroup.SHARES,
                 "parameters": ["[public]", "[buddy]"]
+            },
+            "rescan": {
+                "callback": self.rescan_command,
+                "description": _("Rescan shares"),
+                "group": _CommandGroup.SHARES,
+                "parameters": ["[force|rebuild]"]
             },
             "search": {
                 "aliases": ["s"],
@@ -520,8 +532,8 @@ class Plugin(BasePlugin):
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
-        for share_index, share_group in enumerate(share_groups):
-            group_name = "buddy" if share_index == 1 else "public"
+        for group_index, share_group in enumerate(share_groups):
+            group_name = "buddy" if group_index == 1 else "public"
             num_shares = len(share_group)
             num_total += num_shares
 
@@ -536,6 +548,33 @@ class Plugin(BasePlugin):
             num_listed += num_shares
 
         self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+
+    def share_command(self, args, **_unused):
+
+        args_split = args.split(maxsplit=1)
+        group_name, folder_path = args_split[0], args_split[1].strip(' "')
+        virtual_name = self.core.shares.add_share(folder_path, group_name=group_name)
+
+        if not virtual_name:
+            self.output(_("Cannot share inaccessible folder \"%s\"") % folder_path)
+            return False
+
+        self.output(_("Added %(group_name)s share \"%(virtual_name)s\" (rescan required)") % {
+            "group_name": group_name,
+            "virtual_name": virtual_name
+        })
+        return True
+
+    def unshare_command(self, args, **_unused):
+
+        virtual_name_or_folder_path = args.strip(' "')
+
+        if not self.core.shares.remove_share(virtual_name_or_folder_path):
+            self.output(_("No share with name \"%s\"") % virtual_name_or_folder_path)
+            return False
+
+        self.output(_("Removed share \"%s\" (rescan required)") % virtual_name_or_folder_path)
+        return True
 
     """ Search Files """
 
