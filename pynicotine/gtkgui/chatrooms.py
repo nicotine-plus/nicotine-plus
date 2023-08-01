@@ -29,7 +29,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -73,6 +72,7 @@ class ChatRooms(IconNotebook):
         self.completion = ChatCompletion()
         self.roomlist = RoomList(window)
         self.command_help = None
+        self.room_wall = None
 
         if GTK_API_VERSION >= 4:
             self.window.chatrooms_paned.set_resize_start_child(True)
@@ -91,9 +91,6 @@ class ChatRooms(IconNotebook):
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
-            ("ticker-add", self.ticker_add),
-            ("ticker-remove", self.ticker_remove),
-            ("ticker-set", self.ticker_set),
             ("user-country", self.user_country),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room),
@@ -131,8 +128,15 @@ class ChatRooms(IconNotebook):
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
 
+            if self.room_wall is None:
+                self.room_wall = RoomWall(window=self.window)
+
             self.command_help.widget.unparent()
+            self.room_wall.widget.unparent()
+            self.room_wall.room = room
+
             tab.help_button.set_popover(self.command_help.widget)
+            tab.room_wall_button.set_popover(self.room_wall.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -296,27 +300,6 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.user_left_room(msg)
 
-    def ticker_set(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.ticker_set(msg)
-
-    def ticker_add(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.ticker_add(msg)
-
-    def ticker_remove(self, msg):
-
-        page = self.pages.get(msg.room)
-
-        if page is not None:
-            page.ticker_remove(msg)
-
     def echo_room_message(self, room, text, message_type):
 
         page = self.pages.get(room)
@@ -410,15 +393,13 @@ class ChatRoom:
             self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
-        self.tickers = Tickers(room)
-        self.room_wall = RoomWall(self.window, self)
         self.loaded = False
 
         self.activity_view = TextView(self.activity_view_container, parse_urls=False, editable=False,
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-                                  status_users=core.chatrooms.joined_rooms[self.room],
+                                  status_users=core.chatrooms.joined_rooms[self.room].users,
                                   username_event=self.username_event)
 
         # Event Text Search
@@ -703,31 +684,6 @@ class ChatRoom:
 
     def toggle_chat_buttons(self):
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
-
-    def ticker_set(self, msg):
-
-        self.tickers.clear_tickers()
-
-        for user, message in msg.msgs:
-            if core.network_filter.is_user_ignored(user) or \
-                    core.network_filter.is_user_ip_ignored(user):
-                # User ignored, ignore Ticker messages
-                continue
-
-            self.tickers.add_ticker(user, message)
-
-    def ticker_add(self, msg):
-
-        user = msg.user
-
-        if core.network_filter.is_user_ignored(user) or core.network_filter.is_user_ip_ignored(user):
-            # User ignored, ignore Ticker messages
-            return
-
-        self.tickers.add_ticker(msg.user, msg.msg)
-
-    def ticker_remove(self, msg):
-        self.tickers.remove_ticker(msg.user)
 
     def _show_notification(self, login, room, user, text, tag, is_global):
 
@@ -1048,7 +1004,7 @@ class ChatRoom:
 
         # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
-            room_users = core.chatrooms.joined_rooms[self.room]
+            room_users = core.chatrooms.joined_rooms[self.room].users
             completions.update(room_users)
 
         self.chatrooms.completion.set_completions(completions)

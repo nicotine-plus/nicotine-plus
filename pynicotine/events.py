@@ -100,7 +100,7 @@ EVENT_NAMES = {
     "show-room",
     "ticker-add",
     "ticker-remove",
-    "ticker-set",
+    "ticker-state",
     "user-joined-room",
     "user-left-room",
 
