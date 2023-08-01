@@ -79,6 +79,7 @@ class Logger:
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
+        events.connect("quit", self._close_log_files)
         events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
     """ Log Levels """
@@ -159,7 +160,7 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def close_log_file(self, log_file):
+    def _close_log_file(self, log_file):
 
         try:
             log_file.handle.close()
@@ -172,9 +173,9 @@ class Logger:
 
         del self._log_files[log_file.path]
 
-    def close_log_files(self):
+    def _close_log_files(self):
         for log_file in self._log_files.copy().values():
-            self.close_log_file(log_file)
+            self._close_log_file(log_file)
 
     def _close_inactive_log_files(self):
 
@@ -182,7 +183,7 @@ class Logger:
 
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
-                self.close_log_file(log_file)
+                self._close_log_file(log_file)
 
     def open_log(self, folder, filename):
         self._handle_log(folder, filename, self.open_log_callback)

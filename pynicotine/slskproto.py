@@ -428,7 +428,7 @@ class SoulseekNetworkThread(Thread):
         for event_name, callback in (
             ("enable-message-queue", self._enable_message_queue),
             ("queue-network-message", self._queue_network_message),
-            ("quit", self._quit),
+            ("schedule-quit", self._schedule_quit),
             ("start", self.start)
         ):
             events.connect(event_name, callback)
@@ -440,7 +440,7 @@ class SoulseekNetworkThread(Thread):
         if self._should_process_queue:
             self._queue.append(msg)
 
-    def _quit(self):
+    def _schedule_quit(self):
         self._want_abort = True
 
     """ Listening Socket """
@@ -2585,3 +2585,6 @@ class SoulseekNetworkThread(Thread):
         self._manual_server_disconnect = True
         self._server_disconnect()
         self._selector.close()
+
+        # We're ready to quit
+        events.emit_main_thread("quit")

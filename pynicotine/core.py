@@ -92,6 +92,7 @@ class Core:
             ("check-privileges", self._check_privileges),
             ("peer-address", self._get_peer_address),
             ("privileged-users", self._privileged_users),
+            ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
             ("server-timeout", self._server_timeout),
@@ -204,24 +205,14 @@ class Core:
 
     def quit(self, signal_type=None, _frame=None):
 
-        manual_disconnect = True
-
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": config.application_name,
             "version": config.version,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
 
-        events.emit("server-disconnect", manual_disconnect)
-        events.emit("quit")
-
-        log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
-            "program": config.application_name,
-            "version": config.version,
-            "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
-        })
-        log.close_log_files()
-        events.clear()
+        # Allow the networking thread to finish up before quitting
+        events.emit("schedule-quit")
 
     def connect(self):
 
@@ -308,6 +299,13 @@ class Core:
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
+
+    def _quit(self):
+
+        log.add(_("Quit %(program)s %(version)s!"), {
+            "program": config.application_name,
+            "version": config.version
+        })
 
     def _server_timeout(self):
         if not config.need_config():

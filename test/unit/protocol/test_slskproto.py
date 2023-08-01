@@ -89,7 +89,7 @@ class SoulseekNetworkTest(TestCase):
 
     def tearDown(self):
 
-        events.emit("quit")
+        events.emit("schedule-quit")
 
         sleep(SLSKPROTO_RUN_TIME / 2)
         self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access

@@ -43,6 +43,7 @@ EVENT_NAMES = {
     "queue-network-message",
     "quit",
     "remove-privileged-user",
+    "schedule-quit",
     "server-login",
     "server-disconnect",
     "server-timeout",
@@ -208,6 +209,7 @@ class Events:
         self._scheduler_event_id = 0
         self._is_active = True
 
+        self.connect("quit", self._quit)
         Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
@@ -223,16 +225,15 @@ class Events:
     def disconnect(self, event_name, function):
         self._callbacks[event_name].remove(function)
 
-    def clear(self):
-
-        self._callbacks.clear()
-        self._thread_events.clear()
-        self._pending_scheduler_events.clear()
-
-        self._is_active = False
-
     def emit(self, event_name, *args, **kwargs):
-        for function in self._callbacks.get(event_name, []):
+
+        callbacks = self._callbacks.get(event_name, [])
+
+        if event_name == "quit":
+            # Event and log modules register callbacks first, but need to quit last
+            callbacks.reverse()
+
+        for function in callbacks:
             function(*args, **kwargs)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
@@ -310,6 +311,14 @@ class Events:
             time.sleep(min(sleep_time, 1))
 
         self._scheduler_events.clear()
+
+    def _quit(self):
+
+        self._callbacks.clear()
+        self._thread_events.clear()
+        self._pending_scheduler_events.clear()
+
+        self._is_active = False
 
 
 events = Events()
