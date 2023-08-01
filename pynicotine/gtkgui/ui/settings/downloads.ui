@@ -48,7 +48,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="sent_files_permission_container">
+          <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
@@ -56,6 +56,13 @@
               <object class="GtkCheckButton" id="accept_sent_files_toggle">
                 <property name="label" translatable="yes">Allow users to send you any files:</property>
                 <property name="use-underline">True</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="sent_files_permission_container">
+                <property name="homogeneous">True</property>
+                <property name="sensitive" bind-source="accept_sent_files_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="visible">True</property>
               </object>
             </child>
