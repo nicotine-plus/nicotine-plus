@@ -72,7 +72,6 @@ class Core:
         self.cli_interface_address = None
         self.cli_listen_port = None
 
-        self.shutdown = False
         self.enable_cli = False
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
@@ -205,15 +204,13 @@ class Core:
 
     def quit(self, signal_type=None, _frame=None):
 
+        manual_disconnect = True
+
         log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
             "program": config.application_name,
             "version": config.version,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
-
-        # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
-        self.shutdown = True
-        manual_disconnect = True
 
         events.emit("server-disconnect", manual_disconnect)
         events.emit("quit")
@@ -224,6 +221,7 @@ class Core:
             "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
         })
         log.close_log_files()
+        events.clear()
 
     def connect(self):
 

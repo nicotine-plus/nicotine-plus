@@ -704,8 +704,7 @@ class Application:
         GLib.idle_add(self.raise_exception, exc_value)
 
     def on_process_thread_events(self):
-        events.process_thread_events()
-        return not core.shutdown
+        return events.process_thread_events()
 
     def on_activate(self, *_args):
 

@@ -206,6 +206,7 @@ class Events:
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
+        self._is_active = True
 
         Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
@@ -221,6 +222,14 @@ class Events:
 
     def disconnect(self, event_name, function):
         self._callbacks[event_name].remove(function)
+
+    def clear(self):
+
+        self._callbacks.clear()
+        self._thread_events.clear()
+        self._pending_scheduler_events.clear()
+
+        self._is_active = False
 
     def emit(self, event_name, *args, **kwargs):
         for function in self._callbacks.get(event_name, []):
@@ -246,10 +255,14 @@ class Events:
         self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
-        """ Called by the main loop 20 times per second to emit thread events in the main thread """
+        """ Called by the main loop 20 times per second to emit thread events in the main thread.
+        Return value indicates if the main loop should continue processing events. """
+
+        if not self._is_active:
+            return False
 
         if not self._thread_events:
-            return
+            return True
 
         event_list = []
 
@@ -259,9 +272,11 @@ class Events:
         for event_name, args, kwargs in event_list:
             self.emit(event_name, *args, **kwargs)
 
+        return True
+
     def _run_scheduler(self):
 
-        while True:
+        while self._is_active:
             # Scheduled events additions/removals from other threads
             while self._pending_scheduler_events:
                 event_id, event = self._pending_scheduler_events.popleft()
@@ -293,6 +308,8 @@ class Events:
                 continue
 
             time.sleep(min(sleep_time, 1))
+
+        self._scheduler_events.clear()
 
 
 events = Events()
