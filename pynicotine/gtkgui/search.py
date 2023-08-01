@@ -392,6 +392,7 @@ class Search:
         self.filters = {}
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
+        self.refiltering = False
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
@@ -405,31 +406,31 @@ class Search:
         # Combo boxes
         self.filter_include_combobox = ComboBox(
             container=self.filter_include_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_include_entry)
+            entry=self.filter_include_entry, item_selected_callback=self.on_refilter)
 
         self.filter_exclude_combobox = ComboBox(
             container=self.filter_exclude_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_exclude_entry)
+            entry=self.filter_exclude_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_type_combobox = ComboBox(
             container=self.filter_file_type_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_file_type_entry)
+            entry=self.filter_file_type_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_size_combobox = ComboBox(
             container=self.filter_file_size_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_file_size_entry)
+            entry=self.filter_file_size_entry, item_selected_callback=self.on_refilter)
 
         self.filter_bitrate_combobox = ComboBox(
             container=self.filter_bitrate_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_bitrate_entry)
+            entry=self.filter_bitrate_entry, item_selected_callback=self.on_refilter)
 
         self.filter_length_combobox = ComboBox(
             container=self.filter_length_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_length_entry)
+            entry=self.filter_length_entry, item_selected_callback=self.on_refilter)
 
         self.filter_country_combobox = ComboBox(
             container=self.filter_country_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_country_entry)
+            entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
             self.window, parent=self.tree_container, name="file_search",
@@ -595,7 +596,7 @@ class Search:
             combobox.entry.filter_id = filter_id
 
             buffer = combobox.entry.get_buffer()
-            buffer.connect("inserted-text", self.on_filter_entry_inserted_text, combobox)
+            buffer.connect_after("deleted-text", self.on_filter_entry_deleted_text)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_default_filters()
@@ -1586,6 +1587,8 @@ class Search:
         if self.populating_filters:
             return
 
+        self.refiltering = True
+
         filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
         filter_in_str = self.filter_include_combobox.get_text().strip()
         filter_out_str = self.filter_exclude_combobox.get_text().strip()
@@ -1687,13 +1690,10 @@ class Search:
         self.clear_model()
         self.update_model()
 
-    def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+        self.refiltering = False
 
-        if n_chars > 1 and chars == combobox.get_selected_id():
-            self.on_refilter()
-
-    def on_filter_entry_changed(self, entry):
-        if not entry.get_text():
+    def on_filter_entry_deleted_text(self, buffer, *_args):
+        if not self.refiltering and buffer.get_length() == 0:
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
