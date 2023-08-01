@@ -589,8 +589,16 @@ class ComboBox:
             self._entry_completion.remove_completion(self._ids[position])
 
     def remove_id(self, item_id):
-        position = self._positions[item_id]
+
+        position = self._positions.pop(item_id)
         self.remove_pos(position)
+
+        # Update positions for items after the removed one
+        for pos in range(position, len(self._positions)):
+            next_item_id = self._ids.pop(pos + 1)
+
+            self._ids[pos] = next_item_id
+            self._positions[next_item_id] = pos
 
     def clear(self):
 
