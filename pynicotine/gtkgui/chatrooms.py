@@ -70,7 +70,7 @@ class ChatRooms(IconNotebook):
 
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
-        self.roomlist = RoomList(window)
+        self.room_list = RoomList(window)
         self.command_help = None
         self.room_wall = None
 
@@ -84,10 +84,8 @@ class ChatRooms(IconNotebook):
             ("echo-room-message", self.echo_room_message),
             ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
-            ("private-room-added", self.private_room_added),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
-            ("room-list", self.room_list),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
@@ -192,9 +190,6 @@ class ChatRooms(IconNotebook):
                 self.unhighlight_room(room)
                 break
 
-    def room_list(self, msg):
-        self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
-
     def show_room(self, room):
 
         page = self.pages.get(room)
@@ -214,11 +209,8 @@ class ChatRooms(IconNotebook):
         self.remove_page(page.container)
         del self.pages[room]
 
-        if room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.roomlist.toggle_public_feed(False)
-            return
-
-        self.window.search.room_search_combobox.remove_id(room)
+        if room != core.chatrooms.GLOBAL_ROOM_NAME:
+            self.window.search.room_search_combobox.remove_id(room)
 
     def highlight_room(self, room, user):
 
@@ -264,15 +256,8 @@ class ChatRooms(IconNotebook):
             # Did not auto-join room, switch to tab
             core.chatrooms.show_room(msg.room)
 
-        if is_global:
-            self.roomlist.toggle_public_feed(True)
-            return
-
-        self.window.search.room_search_combobox.append(msg.room)
-
-    def private_room_added(self, msg):
-        user_count = 0
-        self.roomlist.update_room(msg.room, user_count)
+        if not is_global:
+            self.window.search.room_search_combobox.append(msg.room)
 
     def user_stats(self, msg):
         for page in self.pages.values():
@@ -339,9 +324,6 @@ class ChatRooms(IconNotebook):
             page.update_tags()
 
     def server_disconnect(self, *_args):
-
-        self.roomlist.clear()
-
         for page in self.pages.values():
             page.server_disconnect()
 
@@ -551,13 +533,6 @@ class ChatRoom:
         self.loaded = True
 
     def clear(self):
-
-        iterator = self.users_list_view.iterators.get(core.login_username)
-
-        if iterator is not None:
-            # Update user count in room list when leaving room
-            self.users_list_view.remove_row(iterator)
-            self.update_user_count()
 
         self.activity_view.clear()
         self.chat_view.clear()
@@ -830,10 +805,8 @@ class ChatRoom:
         self.update_user_count()
 
     def update_user_count(self):
-
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
-        self.chatrooms.roomlist.update_room(self.room, user_count, private=self.is_private)
 
     def user_stats(self, msg):
 
@@ -961,11 +934,6 @@ class ChatRoom:
         widget.grab_focus()
 
     def on_leave_room(self, *_args):
-
-        if self.room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.chatrooms.roomlist.public_feed_toggle.set_active(False)
-            return
-
         core.chatrooms.remove_room(self.room)
 
     def on_log_toggled(self, *_args):

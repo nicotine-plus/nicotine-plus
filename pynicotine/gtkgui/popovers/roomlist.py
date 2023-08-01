@@ -21,6 +21,7 @@ from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
@@ -33,6 +34,8 @@ from pynicotine.utils import humanize
 
 
 class RoomList(Popover):
+
+    PRIVATE_USERS_OFFSET = 10000000
 
     def __init__(self, window):
 
@@ -55,7 +58,7 @@ class RoomList(Popover):
         self.initializing_feed = False
 
         self.list_view = TreeView(
-            self.window, parent=self.list_container,
+            window, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
             columns={
                 # Visible columns
@@ -76,6 +79,7 @@ class RoomList(Popover):
 
                 # Hidden data columns
                 "users_data": {"data_type": GObject.TYPE_UINT},
+                "is_private_data": {"data_type": bool},
                 "room_weight_data": {"data_type": Pango.Weight},
                 "room_underline_data": {"data_type": Pango.Underline}
             }
@@ -102,6 +106,17 @@ class RoomList(Popover):
 
         window.room_list_button.set_popover(self.widget)
 
+        for event_name, callback in (
+            ("join-room", self.join_room),
+            ("private-room-added", self.private_room_added),
+            ("remove-room", self.remove_room),
+            ("room-list", self.room_list),
+            ("server-disconnect", self.clear),
+            ("user-joined-room", self.user_joined_room),
+            ("user-left-room", self.user_left_room)
+        ):
+            events.connect(event_name, callback)
+
     def get_selected_room(self):
 
         for iterator in self.list_view.get_selected_rows():
@@ -109,55 +124,91 @@ class RoomList(Popover):
 
         return None
 
-    def set_room_list(self, rooms, owned_rooms, other_private_rooms):
-
-        self.list_view.disable_sorting()
-        self.clear()
-
-        for room, users in owned_rooms:
-            self.update_room(room, users, private=True, owned=True)
-
-        for room, users in other_private_rooms:
-            self.update_room(room, users, private=True)
-
-        for room, users in rooms:
-            self.update_room(room, users)
-
-        self.list_view.enable_sorting()
-
     def toggle_public_feed(self, active):
 
         self.initializing_feed = True
         self.public_feed_toggle.set_active(active)
         self.initializing_feed = False
 
-    def update_room(self, room, user_count, private=False, owned=False):
+    def add_room(self, room, user_count=0, is_private=False, is_owned=False):
 
-        iterator = self.list_view.iterators.get(room)
         h_user_count = humanize(user_count)
 
-        if private or owned:
-            # Show private/owned rooms first
-            user_count += 10000000
+        if is_private:
+            # Show private rooms first
+            user_count += self.PRIVATE_USERS_OFFSET
 
-        if iterator is not None:
-            self.list_view.set_row_value(iterator, "users", h_user_count)
-            self.list_view.set_row_value(iterator, "users_data", user_count)
-            return
-
-        text_weight = Pango.Weight.BOLD if private else Pango.Weight.NORMAL
-        text_underline = Pango.Underline.SINGLE if owned else Pango.Underline.NONE
+        text_weight = Pango.Weight.BOLD if is_private else Pango.Weight.NORMAL
+        text_underline = Pango.Underline.SINGLE if is_owned else Pango.Underline.NONE
 
         self.list_view.add_row([
             room,
             h_user_count,
             user_count,
+            is_private,
             text_weight,
             text_underline
         ], select_row=False)
 
-    def clear(self):
+    def update_room_user_count(self, room, decrement=False):
+
+        iterator = self.list_view.iterators.get(room)
+
+        if iterator is None:
+            return
+
+        user_count = self.list_view.get_row_value(iterator, "users_data")
+        user_count = (user_count - 1 if decrement else user_count + 1)
+
+        if self.list_view.get_row_value(iterator, "is_private_data"):
+            h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
+        else:
+            h_user_count = humanize(user_count)
+
+        self.list_view.set_row_value(iterator, "users", h_user_count)
+        self.list_view.set_row_value(iterator, "users_data", user_count)
+
+    def clear(self, *_args):
         self.list_view.clear()
+
+    def private_room_added(self, msg):
+        self.add_room(msg.room, is_private=True)
+
+    def join_room(self, msg):
+
+        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
+            self.toggle_public_feed(True)
+
+        self.update_room_user_count(msg.room)
+
+    def remove_room(self, room):
+
+        if room == core.chatrooms.GLOBAL_ROOM_NAME:
+            self.toggle_public_feed(False)
+
+        self.update_room_user_count(room, decrement=True)
+
+    def user_joined_room(self, msg):
+        self.update_room_user_count(msg.room)
+
+    def user_left_room(self, msg):
+        self.update_room_user_count(msg.room, decrement=True)
+
+    def room_list(self, msg):
+
+        self.list_view.disable_sorting()
+        self.clear()
+
+        for room, user_count in msg.ownedprivaterooms:
+            self.add_room(room, user_count, is_private=True, is_owned=True)
+
+        for room, user_count in msg.otherprivaterooms:
+            self.add_room(room, user_count, is_private=True)
+
+        for room, user_count in msg.rooms:
+            self.add_room(room, user_count)
+
+        self.list_view.enable_sorting()
 
     def on_row_activated(self, *_args):
 
