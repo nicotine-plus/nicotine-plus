@@ -25,6 +25,7 @@ import operator
 import re
 
 from collections import defaultdict
+from itertools import islice
 
 from gi.repository import GObject
 
@@ -138,7 +139,6 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            tab.update_filter_widgets()
             self.window.application.notifications.update_title()
             break
 
@@ -171,14 +171,19 @@ class Searches(IconNotebook):
 
     def populate_search_history(self):
 
-        should_enable_history = config.sections["searches"]["enable_history"]
-        self.search_combobox.clear()
-
-        if not should_enable_history:
+        if not config.sections["searches"]["enable_history"]:
             return
 
-        for term in config.sections["searches"]["history"]:
+        for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
             self.search_combobox.append(str(term))
+
+    def add_search_history_item(self, term):
+
+        self.search_combobox.remove_id(term)
+        self.search_combobox.prepend(term)
+
+        while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
+            self.search_combobox.remove_pos(-1)
 
     def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
                     show_page=True):
@@ -230,8 +235,7 @@ class Searches(IconNotebook):
         if switch_page:
             self.show_search(token)
 
-        # Repopulate the combo list
-        self.populate_search_history()
+        self.add_search_history_item(search.term)
 
     def show_search(self, token):
 
@@ -263,6 +267,10 @@ class Searches(IconNotebook):
 
         self.search_combobox.clear()
 
+    def add_filter_history_item(self, filter_id, value):
+        for page in self.pages.values():
+            page.add_filter_history_item(filter_id, value)
+
     def clear_filter_history(self):
 
         # Clear filter history in config
@@ -274,7 +282,7 @@ class Searches(IconNotebook):
         # Update filters in search tabs
         for page in self.pages.values():
             page.filters_undo = page.FILTERS_EMPTY
-            page.update_filter_widgets()
+            page.populate_filter_history()
 
     def file_search_response(self, msg):
 
@@ -610,6 +618,7 @@ class Search:
             buffer.connect_after("deleted-text", self.on_filter_entry_deleted_text)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
+        self.populate_filter_history()
         self.populate_default_filters()
 
         # Wishlist
@@ -632,24 +641,6 @@ class Search:
 
     def update_filter_widgets(self):
 
-        for filter_id, widget in self.filter_comboboxes.items():
-            widget.set_row_separator_func(lambda *_args: 0)
-            widget.clear()
-
-            presets = self.FILTER_PRESETS.get(filter_id)
-
-            if presets:
-                for value in presets:
-                    widget.append(value)
-
-                widget.append("")  # Separator
-
-            for value in config.sections["searches"][filter_id]:
-                widget.append(value)
-
-            if presets:
-                widget.set_row_separator_func(self.on_combobox_check_separator)
-
         self.update_filter_counter(self.active_filter_count)
 
         if self.filters_undo == self.FILTERS_EMPTY:
@@ -662,6 +653,28 @@ class Search:
         if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
             self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
             self.clear_undo_filters_icon.set_property("icon-name", icon_name)
+
+    def populate_filter_history(self):
+
+        for filter_id, widget in self.filter_comboboxes.items():
+            widget.set_row_separator_func(lambda *_args: 0)
+            widget.clear()
+
+            presets = self.FILTER_PRESETS.get(filter_id)
+            filter_history = config.sections["searches"][filter_id]
+
+            if presets:
+                for index, value in enumerate(presets):
+                    widget.append(value, item_id=f"preset_{index}")
+
+                if filter_history:
+                    widget.append("")  # Separator
+
+            for value in islice(filter_history, core.search.RESULT_FILTER_HISTORY_LIMIT):
+                widget.append(value)
+
+            if presets:
+                widget.set_row_separator_func(self.on_combobox_check_separator)
 
     def populate_default_filters(self):
 
@@ -973,6 +986,44 @@ class Search:
         return iterator
 
     """ Result Filters """
+
+    def add_filter_history_item(self, filter_id, value):
+
+        combobox = self.filter_comboboxes[filter_id]
+        position = len(self.FILTER_PRESETS.get(filter_id)) + 1
+        num_items_limit = core.search.RESULT_FILTER_HISTORY_LIMIT + position
+
+        combobox.remove_id(value)
+        combobox.insert(position=position, item=value)
+
+        while combobox.get_num_items() > num_items_limit:
+            combobox.remove_pos(-1)
+
+    def push_history(self, filter_id, value):
+
+        if not value:
+            return
+
+        history = config.sections["searches"].get(filter_id)
+
+        if history is None:
+            # Button filters do not store history
+            return
+
+        if history and history[0] == value:
+            # Most recent item selected, nothing to do
+            return
+
+        if value in history:
+            history.remove(value)
+
+        elif len(history) >= core.search.RESULT_FILTER_HISTORY_LIMIT:
+            del history[-1]
+
+        history.insert(0, value)
+        config.write_configuration()
+
+        self.searches.add_filter_history_item(filter_id, value)
 
     @staticmethod
     def _split_operator(condition):
@@ -1567,31 +1618,6 @@ class Search:
 
     def on_copy_search_term(self, *_args):
         clipboard.copy_text(self.text)
-
-    @staticmethod
-    def push_history(filter_id, value):
-
-        if not value:
-            return
-
-        history = config.sections["searches"].get(filter_id)
-
-        if history is None:
-            # Button filters do not store history
-            return
-
-        if history and history[0] == value:
-            # Most recent item selected, nothing to do
-            return
-
-        if value in history:
-            history.remove(value)
-
-        elif len(history) >= 50:
-            del history[-1]
-
-        history.insert(0, value)
-        config.write_configuration()
 
     def on_refilter(self, *_args):
 

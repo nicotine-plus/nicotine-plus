@@ -20,6 +20,8 @@ import sys
 
 from locale import strxfrm
 
+from gi.repository import Gio
+from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -381,6 +383,12 @@ class CompletionEntry:
 
 class ComboBox:
 
+    class ListItem(GObject.Object):
+
+        def __init__(self, label):
+            super().__init__()
+            self.label = label
+
     def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
                  enable_arrow_keys=True, entry=None, visible=True, items=None,
                  item_selected_callback=None):
@@ -413,7 +421,7 @@ class ComboBox:
 
         factory = self._create_factory(should_bind=not has_entry)
         list_factory = self._create_factory(ellipsize=False)
-        self._model = Gtk.StringList()
+        self._model = Gio.ListStore(item_type=self.ListItem)
 
         self.dropdown = self._button = Gtk.DropDown(
             factory=factory, list_factory=list_factory, model=self._model,
@@ -514,27 +522,48 @@ class ComboBox:
         if item is None:
             return
 
-        item_text = item.get_string()
+        item_text = item.label
 
         if self.get_text() != item_text:
             self.set_text(item_text)
 
+    def _update_item_positions(self, start_position, added=False):
+
+        if added:
+            end_position = self.get_num_items() + 1
+            ids = self._ids.copy()
+        else:
+            end_position = self.get_num_items()
+            ids = self._ids
+
+        for position in range(start_position, end_position):
+            if added:
+                item_id = ids[position - 1]
+            else:
+                item_id = ids.pop(position + 1)
+
+            self._ids[position] = item_id
+            self._positions[item_id] = position
+
     """ General """
 
-    def append(self, item, item_id=None):
+    def insert(self, position, item, item_id=None):
 
         if item_id is None:
             item_id = item
 
-        if GTK_API_VERSION >= 4:
-            position = self._model.get_n_items()
+        if item_id in self._positions:
+            return
 
+        if position == -1:
+            position = self.get_num_items()
+
+        if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.append(item)
+                self._model.insert(position, self.ListItem(item))
                 self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
         else:
-            position = self._model.iter_n_children()
-            self.dropdown.append_text(item)
+            self.dropdown.insert_text(position, item)
 
         if self.entry:
             self._button.set_sensitive(True)
@@ -542,8 +571,19 @@ class ComboBox:
         if self._entry_completion:
             self._entry_completion.add_completion(item)
 
+        self._update_item_positions(start_position=(position + 1), added=True)
+
         self._ids[position] = item_id
         self._positions[item_id] = position
+
+    def append(self, item, item_id=None):
+        self.insert(position=-1, item=item, item_id=item_id)
+
+    def prepend(self, item, item_id=None):
+        self.insert(position=0, item=item, item_id=item_id)
+
+    def get_num_items(self):
+        return len(self._positions)
 
     def get_selected_pos(self):
 
@@ -576,6 +616,14 @@ class ComboBox:
 
     def remove_pos(self, position):
 
+        if position == -1:
+            position = (self.get_num_items() - 1)
+
+        item_id = self._ids.pop(position, None)
+
+        if item_id is None:
+            return
+
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
                 self._model.remove(position)
@@ -586,19 +634,15 @@ class ComboBox:
             self._button.set_sensitive(False)
 
         if self._entry_completion:
-            self._entry_completion.remove_completion(self._ids[position])
-
-    def remove_id(self, item_id):
-
-        position = self._positions.pop(item_id)
-        self.remove_pos(position)
+            self._entry_completion.remove_completion(item_id)
 
         # Update positions for items after the removed one
-        for pos in range(position, len(self._positions)):
-            next_item_id = self._ids.pop(pos + 1)
+        self._positions.pop(item_id, None)
+        self._update_item_positions(start_position=position)
 
-            self._ids[pos] = next_item_id
-            self._positions[next_item_id] = pos
+    def remove_id(self, item_id):
+        position = self._positions.get(item_id)
+        self.remove_pos(position)
 
     def clear(self):
 
@@ -607,7 +651,7 @@ class ComboBox:
 
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.splice(position=0, n_removals=self._model.get_n_items())
+                self._model.remove_all()
         else:
             self.dropdown.remove_all()
 
@@ -632,9 +676,9 @@ class ComboBox:
     def _on_factory_bind(self, _factory, list_item):
 
         label = list_item.get_child()
-        string_obj = list_item.get_item()
+        list_item = list_item.get_item()
 
-        label.set_text(string_obj.get_string())
+        label.set_text(list_item.label)
 
     def _on_factory_setup(self, _factory, list_item, ellipsize):
 
