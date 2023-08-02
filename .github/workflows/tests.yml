@@ -6,6 +6,7 @@ jobs:
 
   python:
     strategy:
+      fail-fast: false
       matrix:
         python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
     runs-on: ubuntu-20.04
@@ -39,6 +40,7 @@ jobs:
 
   ubuntu-debian:
     strategy:
+      fail-fast: false
       matrix:
         container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal']
     runs-on: ubuntu-latest
@@ -59,6 +61,7 @@ jobs:
 
   fedora-rocky:
     strategy:
+      fail-fast: false
       matrix:
         container: ['fedora:rawhide', 'rockylinux:8']
         gtk: [3, 4]
@@ -100,6 +103,7 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         gtk: [3, 4]
     defaults:
@@ -144,6 +148,7 @@ jobs:
   macos:
     runs-on: macos-11
     strategy:
+      fail-fast: false
       matrix:
         gtk: [3, 4]
     env:
