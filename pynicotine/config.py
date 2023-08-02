@@ -35,6 +35,7 @@ import sys
 from ast import literal_eval
 from collections import defaultdict
 
+from pynicotine.events import events
 from pynicotine.i18n import apply_translations
 from pynicotine.utils import encode_path
 from pynicotine.utils import load_file
@@ -575,6 +576,8 @@ class Config:
         log.init_log_levels()
         log.add_debug("Using configuration: %(file)s", {"file": self.filename})
 
+        events.connect("quit", self._quit)
+
     def parse_config(self, filename):
         """ Parses the config file """
 
@@ -821,6 +824,15 @@ class Config:
             return
 
         log.add(_("Config backed up to: %s"), filename)
+
+    def _quit(self):
+
+        self.parser.clear()
+        self.sections.clear()
+        self.defaults.clear()
+        self.removed_options.clear()
+
+        self.config_loaded = False
 
 
 config = Config()

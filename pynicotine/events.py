@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -207,10 +207,17 @@ class Events:
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
+        self._is_active = False
+
+    def enable(self):
+
+        if self._is_active:
+            return
+
         self._is_active = True
 
         self.connect("quit", self._quit)
-        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
+        Thread(target=self._run_scheduler, name="SchedulerThread").start()
 
     def connect(self, event_name, function):
 

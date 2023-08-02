@@ -29,6 +29,7 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.slskproto import SoulseekNetworkThread
 from pynicotine.slskmessages import ServerConnect, SetWaitPort
@@ -79,9 +80,13 @@ class SoulseekNetworkTest(TestCase):
         # Windows doesn't accept mock_socket in select() calls
         selectors.DefaultSelector = MagicMock()
 
+        config.data_dir = os.path.dirname(os.path.realpath(__file__))
+        config.filename = os.path.join(config.data_dir, "temp_config")
+
+        core.init_components(enabled_components={"network_thread", "portmapper"})
+
         config.sections["server"]["upnp"] = False
-        self.protothread = SoulseekNetworkThread(user_addresses={}, portmapper=Mock())
-        self.protothread.start()
+        core.start()
         events.emit("enable-message-queue")
 
         # Slight delay to allow the network thread to fully start
@@ -89,45 +94,48 @@ class SoulseekNetworkTest(TestCase):
 
     def tearDown(self):
 
-        events.emit("schedule-quit")
+        core.quit()
 
         sleep(SLSKPROTO_RUN_TIME / 2)
-        self.assertIsNone(self.protothread._server_socket)  # pylint: disable=protected-access
+
+        events.process_thread_events()
+        self.assertIsNone(core.portmapper)
+        self.assertIsNone(core._network_thread)
 
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
-        events.emit(
-            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525)
+        core.send_message_to_network_thread(
+            ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525)
         )
         sleep(SLSKPROTO_RUN_TIME)
 
         if hasattr(socket, "TCP_USER_TIMEOUT"):
             self.assertEqual(
-                self.protothread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
 
         elif hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             self.assertEqual(
-                self.protothread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(
-                self.protothread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
             self.assertEqual(
-                self.protothread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
 
         self.assertEqual(
-            self.protothread._server_socket.setblocking.call_count, 2)     # pylint: disable=no-member,protected-access
+            core._network_thread._server_socket.setblocking.call_count, 2)     # pylint: disable=no-member,protected-access
         self.assertEqual(
-            self.protothread._server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member,protected-access
+            core._network_thread._server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member,protected-access
 
     def test_login(self):
 
-        events.emit(
-            "queue-network-message", ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525))
-
+        core.send_message_to_network_thread(
+            ServerConnect(addr=("0.0.0.0", 0), login=("dummy", "dummy"), listen_port=65525)
+        )
         sleep(SLSKPROTO_RUN_TIME / 2)
 
-        events.emit("queue-network-message", SetWaitPort(1))
+        core.send_message_to_server(SetWaitPort(1))
 
         sleep(SLSKPROTO_RUN_TIME)

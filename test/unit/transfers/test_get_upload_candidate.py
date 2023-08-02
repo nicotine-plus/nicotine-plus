@@ -34,8 +34,15 @@ class GetUploadCandidateTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        core.init_components()
+        core.init_components(enabled_components={"transfers", "userlist"})
         core.transfers.privileged_users = {"puser1", "puser2"}
+
+    def tearDown(self):
+
+        core.quit()
+
+        self.assertIsNone(core.transfers)
+        self.assertIsNone(core.userlist)
 
     def add_transfers(self, users, status):
 
