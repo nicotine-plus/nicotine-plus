@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -29,7 +30,10 @@ class ConfigTest(TestCase):
     def setUp(self):
 
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        config.filename = os.path.join(config.data_dir, "config")
+        config.filename = os.path.join(config.data_dir, "temp_config")
+
+        default_config_path = os.path.join(config.data_dir, "config")
+        shutil.copy(default_config_path, config.filename)
 
         config.load_config()
 

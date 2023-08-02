@@ -24,7 +24,7 @@ from unittest import skipIf
 from unittest import TestCase
 
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FILE = os.path.join(USER_DATA, "config")
+CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
 COMMANDS = (
     ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"],  # GUI
     ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode", "--headless"]
