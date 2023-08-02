@@ -660,7 +660,7 @@ class IconNotebook:
         )
 
         self.popup_menu_pages.update_model()
-        self.popup_menu_pages.actions[_("_Reopen Closed Tab")].set_enabled(bool(self.recently_removed_pages))
+        self.popup_menu_pages.actions[_("Re_open Closed Tab")].set_enabled(bool(self.recently_removed_pages))
 
         if GTK_API_VERSION == 3:
             self.popup_menu_pages.popup(pos_x=0, pos_y=0)
