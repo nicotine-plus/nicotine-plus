@@ -77,6 +77,10 @@ class PrivateChats(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.privatechat.remove_all_users()
 
+    def on_restore_removed_page(self, page_args):
+        username, = page_args
+        core.privatechat.show_user(username)
+
     def on_reordered_page(self, *_args):
 
         tab_order = {}
@@ -175,7 +179,7 @@ class PrivateChats(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
 
     def highlight_user(self, user):

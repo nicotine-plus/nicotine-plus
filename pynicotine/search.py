@@ -132,9 +132,7 @@ class Searches:
     def show_search(self, token):
         events.emit("show-search", token)
 
-    def process_search_term(self, search_term, mode, room=None, user=None):
-
-        users = []
+    def process_search_term(self, search_term, mode, room=None, users=None):
 
         if mode == "global":
             if core:
@@ -161,12 +159,9 @@ class Searches:
                     search_term = feedback[0]
 
         elif mode == "user":
-            if user:
-                users.append(user)
-
             if core:
                 if not users:
-                    users.append(core.login_username)
+                    users = [core.login_username]
 
                 feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
@@ -203,10 +198,11 @@ class Searches:
 
         return search_term, search_term_without_special, room, users
 
-    def do_search(self, search_term, mode, room=None, user=None, switch_page=True):
+    def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
 
         # Validate search term and run it through plugins
-        search_term, _search_term_without_special, room, users = self.process_search_term(search_term, mode, room, user)
+        search_term, _search_term_without_special, room, users = self.process_search_term(
+            search_term, mode, room, users)
 
         # Get a new search token
         self.token = slskmessages.increment_token(self.token)
