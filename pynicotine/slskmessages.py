@@ -3441,7 +3441,7 @@ NETWORK_MESSAGE_EVENTS = {
     RoomSearch: "file-search-request-server",
     RoomTickerAdd: "ticker-add",
     RoomTickerRemove: "ticker-remove",
-    RoomTickerState: "ticker-set",
+    RoomTickerState: "ticker-state",
     SayChatroom: "say-chat-room",
     SharedFileListRequest: "shared-file-list-request",
     SharedFileListResponse: "shared-file-list-response",
