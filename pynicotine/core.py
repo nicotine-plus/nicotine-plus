@@ -103,11 +103,28 @@ class Core:
         if "error_handler" in enabled_components:
             self._init_thread_exception_hook()
 
+        if "cli" in enabled_components:
+            cli.enable_logging()
+
         events.enable()
         config.load_config()
 
-        if "cli" in enabled_components:
-            cli.enable_logging()
+        for event_name, callback in (
+            ("admin-message", self._admin_message),
+            ("change-password", self._change_password),
+            ("check-privileges", self._check_privileges),
+            ("peer-address", self._get_peer_address),
+            ("privileged-users", self._privileged_users),
+            ("quit", self._quit),
+            ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
+            ("server-timeout", self._server_timeout),
+            ("thread-callback", self._thread_callback),
+            ("user-stats", self._user_stats),
+            ("user-status", self._user_status),
+            ("watch-user", self._watch_user)
+        ):
+            events.connect(event_name, callback)
 
         script_dir = os.path.dirname(__file__)
 
@@ -184,23 +201,6 @@ class Core:
         if "pluginhandler" in enabled_components:
             from pynicotine.pluginsystem import PluginHandler
             self.pluginhandler = PluginHandler()
-
-        for event_name, callback in (
-            ("admin-message", self._admin_message),
-            ("change-password", self._change_password),
-            ("check-privileges", self._check_privileges),
-            ("peer-address", self._get_peer_address),
-            ("privileged-users", self._privileged_users),
-            ("quit", self._quit),
-            ("server-disconnect", self._server_disconnect),
-            ("server-login", self._server_login),
-            ("server-timeout", self._server_timeout),
-            ("thread-callback", self._thread_callback),
-            ("user-stats", self._user_stats),
-            ("user-status", self._user_status),
-            ("watch-user", self._watch_user)
-        ):
-            events.connect(event_name, callback)
 
     def _init_thread_exception_hook(self):
 

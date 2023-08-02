@@ -31,7 +31,6 @@ from unittest.mock import patch
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.slskproto import SoulseekNetworkThread
 from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
 
@@ -100,7 +99,7 @@ class SoulseekNetworkTest(TestCase):
 
         events.process_thread_events()
         self.assertIsNone(core.portmapper)
-        self.assertIsNone(core._network_thread)
+        self.assertIsNone(core._network_thread)  # pylint: disable=protected-access
 
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
@@ -110,24 +109,26 @@ class SoulseekNetworkTest(TestCase):
         )
         sleep(SLSKPROTO_RUN_TIME)
 
+        # pylint: disable=no-member,protected-access
+
         if hasattr(socket, "TCP_USER_TIMEOUT"):
             self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 10)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 10)
 
         elif hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 9)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 9)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(
-                core._network_thread._server_socket.ioctl.call_count, 1)       # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.ioctl.call_count, 1)
             self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 6)  # pylint: disable=no-member,protected-access
+                core._network_thread._server_socket.setsockopt.call_count, 6)
 
         self.assertEqual(
-            core._network_thread._server_socket.setblocking.call_count, 2)     # pylint: disable=no-member,protected-access
+            core._network_thread._server_socket.setblocking.call_count, 2)
         self.assertEqual(
-            core._network_thread._server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member,protected-access
+            core._network_thread._server_socket.connect_ex.call_count, 1)
 
     def test_login(self):
 
