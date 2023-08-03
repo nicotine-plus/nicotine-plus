@@ -117,7 +117,7 @@ class NATPMP(BaseImplementation):
             return output.rsplit(b"default via", maxsplit=1)[-1].split()[0]
 
         if sys.platform == "win32":
-            gateway_pattern = re.compile(b".*?0.0.0.0[ ]+0.0.0.0[ ]+(.*?)[ ]+?.*?\n")
+            gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
         else:
             gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
 

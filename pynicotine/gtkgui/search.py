@@ -324,7 +324,7 @@ class Search:
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
-    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<!!\s)")      # [pipe, ampersand, comma, semicolon, space]
     FILTERS_EMPTY = {
         "filterin": (None, ""),
         "filterout": (None, ""),
