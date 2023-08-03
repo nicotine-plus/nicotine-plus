@@ -1135,11 +1135,12 @@ class UserBrowse:
             else:
                 self.on_upload_directory_to()
 
-        else:  # [user is not self]
-            if not self.file_list_view.is_selection_empty():
-                self.on_download_files()  # (no prompt, Single or Multi-selection)
-            else:
-                self.on_download_directory()  # (without prompt, No-selection=All)
+            return True
+
+        if not self.file_list_view.is_selection_empty():
+            self.on_download_files()  # (no prompt, Single or Multi-selection)
+        else:
+            self.on_download_directory()  # (without prompt, No-selection=All)
 
         return True
 

@@ -644,10 +644,9 @@ class Transfers:
             if self.slot_limit_reached():
                 return False
 
-        else:
+        elif self.bandwidth_limit_reached():
             # Limit by maximum bandwidth
-            if self.bandwidth_limit_reached():
-                return False
+            return False
 
         # No limits
         return True
