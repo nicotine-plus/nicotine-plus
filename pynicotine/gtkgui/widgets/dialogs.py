@@ -258,7 +258,7 @@ class MessageDialog(Window):
         self.callback = callback
         self.callback_data = callback_data
         self.destructive_response_id = destructive_response_id
-        self.container = None
+        self.container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=6, visible=False)
         self.response_ids = {}
 
         if not buttons:
@@ -273,7 +273,6 @@ class MessageDialog(Window):
 
         from gi.repository import Adw  # pylint: disable=no-name-in-module
 
-        self.container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=6, visible=False)
         widget = Adw.MessageDialog(
             transient_for=self.parent.widget if self.parent else None, close_response="cancel",
             heading=title, body=message, body_use_markup=True, extra_child=self.container
@@ -322,8 +321,13 @@ class MessageDialog(Window):
             if response_type in {"cancel", "ok"}:
                 widget.set_default_response(response_id)
 
-        self.container = widget.get_message_area()
-        self._make_message_selectable()
+        message_area = widget.get_message_area()
+        self._make_message_selectable(message_area)
+
+        if GTK_API_VERSION >= 4:
+            message_area.append(self.container)  # pylint: disable=no-member
+        else:
+            message_area.add(self.container)     # pylint: disable=no-member
 
         return widget
 
@@ -337,12 +341,12 @@ class MessageDialog(Window):
         widget.connect("response", self.on_response)
         return widget
 
-    def _make_message_selectable(self):
+    def _make_message_selectable(self, message_area):
 
         if GTK_API_VERSION >= 4:
-            label = self.container.get_last_child()
+            label = message_area.get_last_child()
         else:
-            label = self.container.get_children()[-1]
+            label = message_area.get_children()[-1]
 
         label.set_selectable(True)
 
@@ -498,10 +502,10 @@ class EntryDialog(OptionDialog):
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
 
             if GTK_API_VERSION >= 4:
-                self.container.prepend(self.entry_container)                   # pylint: disable=no-member
+                self.container.prepend(self.entry_container)                    # pylint: disable=no-member
             else:
-                self.container.pack_start(self.entry_container, expand=False,  # pylint: disable=no-member
-                                          fill=False, padding=0)
+                self.container.add(self.entry_container)                        # pylint: disable=no-member
+                self.container.reorder_child(self.entry_container, position=0)  # pylint: disable=no-member
 
         if droplist:
             entry = self._add_combobox(droplist, visibility)
