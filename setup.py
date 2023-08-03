@@ -104,6 +104,6 @@ functionality while keeping current with the Soulseek protocol.""",
         ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
-        extras_require={"packaging": ["cx_Freeze"], "test": ["flake8", "pylint"]},
+        extras_require={"packaging": ["cx_Freeze"], "test": ["pycodestyle", "pylint"]},
         cmdclass={"build_py": BuildPyCommand}
     )

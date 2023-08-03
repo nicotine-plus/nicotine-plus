@@ -37,8 +37,8 @@ def install_pacman():
                 f"{prefix}gtk{gtk_version}",
                 f"{prefix}python-chardet",
                 f"{prefix}python-cx-freeze",
-                f"{prefix}python-flake8",
                 f"{prefix}python-pip",
+                f"{prefix}python-pycodestyle",
                 f"{prefix}python-pylint",
                 f"{prefix}python-gobject"]
 
