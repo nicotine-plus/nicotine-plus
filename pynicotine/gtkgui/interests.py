@@ -186,7 +186,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
 
-        popup = UserPopupMenu(
+        UserPopupMenu(
             self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
             tab_name="interests"
         )
