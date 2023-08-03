@@ -362,17 +362,15 @@ class NetworkThread(Thread):
 
         MAX_SOCKETS = min(max(int(MAX_FILE_LIMIT * 0.75), 50), 3072)
 
-    def __init__(self, user_addresses, portmapper):
+    def __init__(self):
 
-        super().__init__(name="SoulseekNetworkThread")
-
-        self._user_addresses = user_addresses
-        self._portmapper = portmapper
+        super().__init__(name="NetworkThread")
 
         self._queue = deque()
         self._pending_init_msgs = {}
         self._token_init_msgs = {}
         self._username_init_msgs = {}
+        self._user_addresses = {}
         self._should_process_queue = False
         self._want_abort = False
 
@@ -381,6 +379,7 @@ class NetworkThread(Thread):
         self._listen_port = None
         self._interface_name = None
         self._interface_address = None
+        self._portmapper = None
 
         self._server_socket = None
         self._server_address = None
@@ -1150,6 +1149,9 @@ class NetworkThread(Thread):
             self._should_process_queue = False
             return
 
+        self._portmapper = msg_obj.portmapper
+        self._user_addresses = msg_obj.user_addresses
+
         self._manual_server_disconnect = False
         events.cancel_scheduled(self._server_timer)
 
@@ -1422,7 +1424,10 @@ class NetworkThread(Thread):
         self._interface_name = self._interface_address = self._server_socket = None
 
         self._close_listen_socket()
-        self._portmapper.remove_port_mapping(blocking=True)
+
+        if self._portmapper is not None:
+            self._portmapper.remove_port_mapping(blocking=True)
+            self._portmapper = None
 
         self._parent_socket = None
         self._potential_parents.clear()
@@ -1433,6 +1438,7 @@ class NetworkThread(Thread):
         self._distrib_parent_speed_ratio = 1
         self._max_distrib_children = 0
         self._upload_speed = 0
+        self._user_addresses = None
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
