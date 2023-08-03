@@ -1454,9 +1454,6 @@ class NetworkThread(Thread):
         events.cancel_scheduled(self._conn_timeouts_timer_id)
         self._out_indirect_conn_request_times.clear()
 
-        if self._want_abort:
-            return
-
         # Reset connection stats
         events.emit_main_thread("set-connection-stats")
 
