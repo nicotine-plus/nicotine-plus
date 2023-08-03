@@ -40,7 +40,7 @@ def check_gtk_version(gtk_api_version):
         if gtk_api_version == "4":
             return check_gtk_version(gtk_api_version="3")
 
-        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(map(str, pygobject_version)))
+        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
 
     try:
         gi.require_version("Gtk", f"{gtk_api_version}.0")

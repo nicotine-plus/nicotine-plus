@@ -533,9 +533,9 @@ def strace(function):
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))})")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))})")
         retvalue = function(*args, **kwargs)
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))}): {repr(retvalue)}")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))}): {repr(retvalue)}")
         return retvalue
 
     return newfunc

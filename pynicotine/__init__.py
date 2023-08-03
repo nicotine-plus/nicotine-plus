@@ -104,8 +104,8 @@ def check_python_version():
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": ".".join(map(str, sys.version_info[:3])),
-            "min_version": ".".join(map(str, python_version))
+            "old_version": ".".join(str(x) for x in sys.version_info[:3]),
+            "min_version": ".".join(str(x) for x in python_version)
         }
 
     return None
