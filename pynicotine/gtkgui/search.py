@@ -1675,6 +1675,7 @@ class Search:
 
         if self.filters == filters:
             # Filters have not changed, no need to refilter
+            self.refiltering = False
             return
 
         if self.filters and filters == self.FILTERS_EMPTY:
