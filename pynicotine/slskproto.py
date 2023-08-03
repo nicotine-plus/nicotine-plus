@@ -313,9 +313,10 @@ class NetworkInterfaces:
         sock.bind((address, 0))
 
 
-class SoulseekNetworkThread(Thread):
-    """ This is a networking thread that actually does all the communication.
-    It sends data to the core via a callback function and receives data via a deque object.
+class NetworkThread(Thread):
+    """ This is the networking thread that does all the communication with
+    the Soulseek server and peers. Communication with the core is done
+    through events.
 
     The server and peers send each other small binary messages that start
     with length and message code followed by the actual message data. """

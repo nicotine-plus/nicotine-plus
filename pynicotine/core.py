@@ -138,8 +138,8 @@ class Core:
             self.portmapper = PortMapper()
 
         if "network_thread" in enabled_components:
-            from pynicotine.slskproto import SoulseekNetworkThread
-            self._network_thread = SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
+            from pynicotine.slskproto import NetworkThread
+            self._network_thread = NetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
         else:
             events.connect("schedule-quit", self._schedule_quit)
 
