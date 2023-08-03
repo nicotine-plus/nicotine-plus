@@ -67,6 +67,8 @@ class Dialog(Window):
             widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
 
         if content_box:
+            content_box.set_vexpand(True)
+
             if GTK_API_VERSION >= 4:
                 container.append(content_box)  # pylint: disable=no-member
             else:
