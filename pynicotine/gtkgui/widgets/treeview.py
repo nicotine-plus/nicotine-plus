@@ -758,7 +758,7 @@ def verify_grouping_mode(mode):
         mode = "user_grouping"
 
     # Verify mode validity
-    elif mode not in ("ungrouped", "folder_grouping", "user_grouping"):
+    elif mode not in {"ungrouped", "folder_grouping", "user_grouping"}:
         mode = "folder_grouping"
 
     return mode

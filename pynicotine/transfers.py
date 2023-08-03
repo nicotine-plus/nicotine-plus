@@ -204,9 +204,10 @@ class Transfers:
             events.cancel_scheduled(timer_id)
 
         need_update = False
+        ignored_statuses = {"Finished", "Filtered", "Paused"}
 
         for download in self.downloads:
-            if download.status not in ("Finished", "Filtered", "Paused"):
+            if download.status not in ignored_statuses:
                 download.status = "User logged off"
                 self.abort_download(download, abort_reason=None)
                 need_update = True
@@ -410,10 +411,10 @@ class Transfers:
                 # Only finished uploads are supposed to be restored
                 continue
 
-            if loaded_status in ("Aborted", "Paused"):
+            if loaded_status in {"Aborted", "Paused"}:
                 status = "Paused"
 
-            elif loaded_status in ("Filtered", "Finished"):
+            elif loaded_status in {"Filtered", "Finished"}:
                 status = loaded_status
 
             else:
@@ -449,9 +450,10 @@ class Transfers:
         """ When logging in, we request to watch the status of our downloads """
 
         users = set()
+        ignored_statuses = {"Filtered", "Finished"}
 
         for download in self.downloads:
-            if download.status in ("Filtered", "Finished"):
+            if download.status in ignored_statuses:
                 continue
 
             users.add(download.user)
@@ -605,7 +607,7 @@ class Transfers:
             upload_slot_limit = 1
 
         num_in_progress = 0
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
 
         for upload in self.uploads:
             if upload.status in active_statuses:
@@ -653,7 +655,7 @@ class Transfers:
 
     def file_is_upload_queued(self, user, filename):
 
-        statuses = ("Queued", "Getting status", "Transferring")
+        statuses = {"Queued", "Getting status", "Transferring"}
 
         return next(
             (upload.filename == filename and upload.status in statuses and upload.user == user
@@ -691,9 +693,9 @@ class Transfers:
         username = msg.user
         privileged = msg.privileged
         user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
-        download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection timeout", "Remote file error", "Cancelled")
-        upload_statuses = ("Getting status", "User logged off", "Connection timeout")
+        download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
+                             "User logged off", "Connection timeout", "Remote file error", "Cancelled"}
+        upload_statuses = {"Getting status", "User logged off", "Connection timeout"}
 
         if privileged is not None:
             if privileged:
@@ -950,7 +952,7 @@ class Transfers:
                 accepted = False
                 break
 
-            if status in ("Paused", "Filtered"):
+            if status in {"Paused", "Filtered"}:
                 accepted = False
                 break
 
@@ -1033,7 +1035,7 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
 
         for upload in self.uploads:
             if upload.status not in active_statuses or upload.user != user:
@@ -1078,7 +1080,7 @@ class Transfers:
         })
 
         if reason is not None:
-            if reason in ("Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+            if reason in {"Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"}:
                 # Don't allow internal statuses as reason
                 reason = "Cancelled"
 
@@ -1092,11 +1094,11 @@ class Transfers:
 
                 self.abort_upload(upload, abort_reason=reason)
 
-                if reason in ("Complete", "Finished"):
+                if reason in {"Complete", "Finished"}:
                     # A complete download of this file already exists on the user's end
                     self.upload_finished(upload)
 
-                elif reason in ("Cancelled", "Disallowed extension"):
+                elif reason in {"Cancelled", "Disallowed extension"}:
                     self.auto_clear_upload(upload)
 
                 self.check_upload_queue()
@@ -1358,7 +1360,7 @@ class Transfers:
         filename = msg.file
         reason = msg.reason
 
-        if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"):
+        if reason in {"Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"}:
             # Don't allow internal statuses as reason
             reason = "Cancelled"
 
@@ -1366,11 +1368,11 @@ class Transfers:
             if download.filename != filename or download.user != user:
                 continue
 
-            if download.status in ("Finished", "Paused"):
+            if download.status in {"Finished", "Paused"}:
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if reason in ("File not shared.", "File not shared", "Remote file error") and not download.legacy_attempt:
+            if reason in {"File not shared.", "File not shared", "Remote file error"} and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
@@ -1409,8 +1411,8 @@ class Transfers:
             if download.filename != filename or download.user != user:
                 continue
 
-            if download.status in ("Finished", "Paused", "Download folder error", "Local file error",
-                                   "User logged off"):
+            if download.status in {"Finished", "Paused", "Download folder error", "Local file error",
+                                   "User logged off"}:
                 # Check if there are more transfers with the same virtual path
                 continue
 
@@ -1875,7 +1877,7 @@ class Transfers:
 
     def get_downloading_users(self):
 
-        statuses = ("Queued", "Getting status", "Transferring")
+        statuses = {"Queued", "Getting status", "Transferring"}
         users = set()
 
         for upload in self.uploads:
@@ -2011,7 +2013,7 @@ class Transfers:
     def folder_downloaded_actions(self, user, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
-        statuses = ("Finished", "Paused", "Filtered")
+        statuses = {"Finished", "Paused", "Filtered"}
 
         for download in self.downloads:
             if download.path == folderpath and download.status not in statuses:
@@ -2220,10 +2222,10 @@ class Transfers:
 
     def check_download_queue(self):
 
-        statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
+        failed_statuses = {"Connection timeout", "Local file error", "Remote file error"}
 
         for download in reversed(self.downloads):
-            if download.status in statuslist_failed:
+            if download.status in failed_statuses:
                 # Retry failed downloads every 3 minutes
 
                 self.abort_download(download, abort_reason=None)
@@ -2243,7 +2245,7 @@ class Transfers:
         FIFO: Get the first queued item in the list """
 
         round_robin_queue = not config.sections["transfers"]["fifoqueue"]
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
         privileged_queue = False
 
         first_queued_transfers = {}
@@ -2378,7 +2380,7 @@ class Transfers:
 
     def retry_download(self, transfer, bypass_filter=False):
 
-        if transfer.status in ("Transferring", "Finished"):
+        if transfer.status in {"Transferring", "Finished"}:
             return
 
         user = transfer.user
@@ -2400,10 +2402,10 @@ class Transfers:
 
     def retry_download_limits(self):
 
-        statuslist_limited = ("Too many files", "Too many megabytes")
+        limited_statuses = {"Too many files", "Too many megabytes"}
 
         for download in reversed(self.downloads):
-            if download.status in statuslist_limited or download.status.startswith("User limit of"):
+            if download.status in limited_statuses or download.status.startswith("User limit of"):
                 # Re-queue limited downloads every 12 minutes
 
                 log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
@@ -2416,9 +2418,9 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        active_statuses = ["Getting status", "Transferring"]
+        active_statuses = {"Getting status", "Transferring"}
 
-        if transfer.status in active_statuses + ["Finished"]:
+        if transfer.status in active_statuses + {"Finished"}:
             # Don't retry active or finished uploads
             return
 
@@ -2487,8 +2489,10 @@ class Transfers:
 
     def abort_downloads(self, downloads, abort_reason="Paused"):
 
+        ignored_statuses = {abort_reason, "Finished"}
+
         for download in downloads:
-            if download.status not in (abort_reason, "Finished"):
+            if download.status not in ignored_statuses:
                 self.abort_download(download, abort_reason=abort_reason, update_parent=False)
 
         events.emit("abort-downloads", downloads, abort_reason)
@@ -2534,8 +2538,10 @@ class Transfers:
 
     def abort_uploads(self, uploads, denied_message=None, abort_reason="Cancelled"):
 
+        ignored_statuses = {abort_reason, "Finished"}
+
         for upload in uploads:
-            if upload.status not in (abort_reason, "Finished"):
+            if upload.status not in ignored_statuses:
                 self.abort_upload(
                     upload, denied_message=denied_message, abort_reason=abort_reason, update_parent=False)
 

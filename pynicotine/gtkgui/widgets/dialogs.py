@@ -292,7 +292,7 @@ class MessageDialog(Window):
                 widget.set_response_appearance(response_type, Adw.ResponseAppearance.DESTRUCTIVE)
                 continue
 
-            if response_type in ("cancel", "ok"):
+            if response_type in {"cancel", "ok"}:
                 widget.set_default_response(response_type)
 
                 if response_type == "ok":
@@ -323,7 +323,7 @@ class MessageDialog(Window):
 
             widget.add_button(button_label, response_id)
 
-            if response_type in ("cancel", "ok"):
+            if response_type in {"cancel", "ok"}:
                 widget.set_default_response(response_id)
 
         self.container = widget.get_message_area()

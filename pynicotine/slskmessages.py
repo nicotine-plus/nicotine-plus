@@ -2499,7 +2499,7 @@ class FileListMessage(PeerMessage):
             if len(attributes) == 3:
                 attribute1, attribute2, attribute3 = attributes
 
-                if attribute3 in (0, 1):
+                if attribute3 in {0, 1}:
                     bitrate = attribute1
                     length = attribute2
                     vbr = attribute3
@@ -2512,7 +2512,7 @@ class FileListMessage(PeerMessage):
             elif len(attributes) == 2:
                 attribute1, attribute2 = attributes
 
-                if attribute2 in (0, 1):
+                if attribute2 in {0, 1}:
                     bitrate = attribute1
                     vbr = attribute2
 

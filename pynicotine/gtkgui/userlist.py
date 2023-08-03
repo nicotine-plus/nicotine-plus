@@ -163,7 +163,7 @@ class UserList:
 
     def update_visible(self):
 
-        if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
+        if config.sections["ui"]["buddylistinchatrooms"] in {"always", "chatrooms"}:
             return
 
         self.window.userlist_content.set_visible(self.list_view.iterators)

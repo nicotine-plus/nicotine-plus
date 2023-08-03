@@ -682,7 +682,7 @@ class SoulseekNetworkThread(Thread):
     @staticmethod
     def _verify_peer_connection_type(conn_type):
 
-        if conn_type not in (ConnectionType.PEER, ConnectionType.FILE, ConnectionType.DISTRIBUTED):
+        if conn_type not in {ConnectionType.PEER, ConnectionType.FILE, ConnectionType.DISTRIBUTED}:
             log.add_conn("Unknown connection type %s", str(conn_type))
             return False
 

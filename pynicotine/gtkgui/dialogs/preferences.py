@@ -2393,7 +2393,7 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
-        self.mpris_radio.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in {"win32", "darwin"})
 
     def set_settings(self):
 
@@ -2430,7 +2430,7 @@ class NowPlayingPage:
         elif self.other_radio.get_active():
             player = "other"
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         return player
@@ -2443,7 +2443,7 @@ class NowPlayingPage:
 
     def set_player(self, player):
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         if player == "lastfm":

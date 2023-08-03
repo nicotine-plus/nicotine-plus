@@ -319,7 +319,7 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, **_unused):
 
-        force = (args.lstrip("- ") in ("force", "f"))
+        force = (args.lstrip("- ") in {"force", "f"})
 
         if force:
             self.core.quit()

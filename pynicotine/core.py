@@ -474,8 +474,8 @@ class Core:
         user = msg.user
         status = msg.status
 
-        if status not in (slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
-                          slskmessages.UserStatus.AWAY):
+        if status not in {slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
+                          slskmessages.UserStatus.AWAY}:
             log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
                 "status": status,
                 "user": user

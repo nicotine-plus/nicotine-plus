@@ -274,7 +274,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     current = []
 
     for argument in arguments:
-        if argument in ("|",):
+        if argument == "|":
             subcommands.append(current)
             current = []
         else:
@@ -326,7 +326,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
 def _try_open_uri(uri):
 
-    if sys.platform not in ("darwin", "win32"):
+    if sys.platform not in {"darwin", "win32"}:
         try:
             from gi.repository import Gio  # pylint: disable=import-error
             Gio.AppInfo.launch_default_for_uri(uri)

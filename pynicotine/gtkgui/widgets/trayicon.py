@@ -1085,7 +1085,7 @@ class TrayIcon:
 
     def watch_availability(self):
 
-        if sys.platform in ("win32", "darwin"):
+        if sys.platform in {"win32", "darwin"}:
             return
 
         Gio.bus_watch_name(

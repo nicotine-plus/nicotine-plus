@@ -584,7 +584,7 @@ class MainWindow(Window):
 
         state = config.sections["ui"]["buddylistinchatrooms"]
 
-        if state not in ("tab", "chatrooms", "always"):
+        if state not in {"tab", "chatrooms", "always"}:
             state = "tab"
 
         action = Gio.SimpleAction(
@@ -1157,7 +1157,7 @@ class MainWindow(Window):
     def set_tab_expand(self, page):
 
         tab_position = config.sections["ui"]["tabmain"]
-        expand = tab_position in ("Top", "Bottom")
+        expand = tab_position in {"Top", "Bottom"}
         self.notebook.set_tab_expand(page, expand)
 
     def set_tab_positions(self):
@@ -1295,7 +1295,7 @@ class MainWindow(Window):
             MessageDialog(parent=self, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
-        if level not in ("transfer", "connection", "message", "miscellaneous"):
+        if level not in {"transfer", "connection", "message", "miscellaneous"}:
             self.set_status_text(msg)
 
         self.log_view.append_line(msg, timestamp_format=timestamp_format)

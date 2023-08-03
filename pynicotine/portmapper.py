@@ -249,9 +249,9 @@ class UPnP(BaseImplementation):
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                    if found_service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                    if found_service_type in {"urn:schemas-upnp-org:service:WANIPConnection:1",
                                               "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANIPConnection:2"):
+                                              "urn:schemas-upnp-org:service:WANIPConnection:2"}:
                         # We found a router with UPnP enabled
                         service_type = found_service_type
                         control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text

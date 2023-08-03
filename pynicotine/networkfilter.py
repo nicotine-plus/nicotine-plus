@@ -480,7 +480,7 @@ class NetworkFilter:
 
             for part in parts:
                 # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
+                if part not in {s_address[seg], "*"}:
                     break
 
                 seg += 1

@@ -1181,7 +1181,7 @@ class Search:
 
     def update_wish_button(self):
 
-        if self.mode not in ("global", "wishlist"):
+        if self.mode not in {"global", "wishlist"}:
             self.add_wish_button.set_visible(False)
             return
 

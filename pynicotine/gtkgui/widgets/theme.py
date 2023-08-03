@@ -41,7 +41,7 @@ from pynicotine.utils import encode_path
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA_API_VERSION)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION)
 
 if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
@@ -695,7 +695,7 @@ def update_custom_css():
 def update_tag_visuals(tag, color_id):
 
     enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
-    is_hotspot_tag = (color_id in ("useraway", "useronline", "useroffline"))
+    is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
     color_hex = config.sections["ui"].get(color_id)
 
     if is_hotspot_tag and not enable_colored_usernames:
