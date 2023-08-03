@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
+from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -328,7 +329,7 @@ class MessageDialog(Window):
 
     def _create_dialog(self, title, message, buttons):
 
-        if LIBADWAITA_API_VERSION:
+        if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 2):
             widget = self._create_dialog_adw(title, message, buttons)
         else:
             widget = self._create_dialog_gtk(title, message, buttons)

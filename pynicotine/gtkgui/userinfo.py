@@ -32,6 +32,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
@@ -250,8 +251,14 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
+
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 8):
+                self.picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+            else:
+                self.picture.set_keep_aspect_ratio(True)
+
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)

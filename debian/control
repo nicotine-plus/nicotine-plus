@@ -7,7 +7,7 @@ Build-Depends: debhelper-compat (= 10),
                devscripts,
                dh-python,
                gettext,
-               gir1.2-gtk-4.0 (>= 4.8) | gir1.2-gtk-3.0 (>= 3.22.30),
+               gir1.2-gtk-4.0 (>= 4.6.9) | gir1.2-gtk-3.0 (>= 3.22.30),
                lintian,
                python3-all,
                python3-gdbm,
@@ -25,7 +25,7 @@ Package: nicotine
 Architecture: all
 Depends: ${python3:Depends},
          ${misc:Depends},
-         gir1.2-gtk-4.0 (>= 4.8) | gir1.2-gtk-3.0 (>= 3.22.30),
+         gir1.2-gtk-4.0 (>= 4.6.9) | gir1.2-gtk-3.0 (>= 3.22.30),
          python3-gdbm,
          python3-gi
 Recommends: gir1.2-gspell-1
