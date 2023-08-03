@@ -560,7 +560,7 @@ class Shares:
         self.should_compress_shares = False
         self.compressed_shares = {}
 
-        for share_type in ["public", "buddy"]:
+        for share_type in ("public", "buddy"):
             self.compressed_shares[share_type] = slskmessages.SharedFileListResponse()
 
         self.convert_shares()
