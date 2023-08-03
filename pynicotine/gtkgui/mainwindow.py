@@ -1055,7 +1055,7 @@ class MainWindow(Window):
             return False
 
         if backwards:
-            if current_page_num == 0:
+            if current_page_num <= 0:
                 notebook.set_current_page_num(num_pages - 1)
             else:
                 notebook.prev_page()

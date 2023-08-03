@@ -383,7 +383,7 @@ class IconNotebook:
             # Allow for restoring page after closing it
             self.recently_removed_pages.append(page_args)
 
-        if self.get_n_pages() == 0:
+        if self.get_n_pages() <= 0:
             self.parent.set_visible(False)
 
     def remove_all_pages(self, *_args):

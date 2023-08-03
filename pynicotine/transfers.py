@@ -1802,26 +1802,23 @@ class Transfers:
 
         transfers = config.sections["transfers"]
 
-        if transfers["remotedownloads"]:
+        if not transfers["remotedownloads"]:
+            return False
 
-            if transfers["uploadallowed"] == 0:
-                # No One can sent files to you
-                return False
+        if transfers["uploadallowed"] == 1:
+            # Everyone
+            return True
 
-            if transfers["uploadallowed"] == 1:
-                # Everyone can sent files to you
+        if transfers["uploadallowed"] == 2 and user in core.userlist.buddies:
+            # Buddies
+            return True
+
+        if transfers["uploadallowed"] == 3:
+            # Trusted buddies
+            user_data = core.userlist.buddies.get(user)
+
+            if user_data and user_data.is_trusted:
                 return True
-
-            if transfers["uploadallowed"] == 2 and user in core.userlist.buddies:
-                # Users in userlist
-                return True
-
-            if transfers["uploadallowed"] == 3:
-                # Trusted buddies
-                user_data = core.userlist.buddies.get(user)
-
-                if user_data and user_data.is_trusted:
-                    return True
 
         return False
 

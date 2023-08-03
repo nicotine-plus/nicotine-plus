@@ -243,7 +243,7 @@ class Core:
 
     def confirm_quit(self, remember=False):
 
-        if config.sections["ui"]["exitdialog"] != 0:  # 0: 'Quit program'
+        if config.sections["ui"]["exitdialog"] > 0:
             events.emit("confirm-quit", remember)
             return
 
@@ -534,7 +534,7 @@ class Core:
         hours = mins // 60
         days = hours // 24
 
-        if msg.seconds == 0:
+        if msg.seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
         else:

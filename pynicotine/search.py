@@ -466,7 +466,7 @@ class Searches:
 
         maxresults = config.sections["searches"]["maxresults"]
 
-        if maxresults == 0:
+        if maxresults <= 0:
             return
 
         # Do all processing in lowercase

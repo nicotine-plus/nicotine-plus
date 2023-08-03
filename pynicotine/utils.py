@@ -429,7 +429,7 @@ def load_file(path, load_func, use_old_file=False):
             if not os.path.isfile(path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path_encoded) == 0:
+            if os.path.getsize(path_encoded) <= 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 

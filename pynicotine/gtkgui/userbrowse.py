@@ -564,7 +564,7 @@ class UserBrowse:
 
         self.indeterminate_progress = False
 
-        if total == 0 or position == 0:
+        if total <= 0 or position <= 0:
             fraction = 0.0
         elif position >= total:
             fraction = 1.0

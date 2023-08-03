@@ -94,7 +94,7 @@ class Accelerator:
         required_mods = self.required_mods
         excluded_mods = ALL_MODIFIERS & ~required_mods
 
-        if required_mods & ~activated_mods != 0:
+        if required_mods & ~activated_mods:
             # Missing required modifiers
             return False
 

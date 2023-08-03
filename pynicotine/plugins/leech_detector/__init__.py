@@ -112,7 +112,7 @@ class Plugin(BasePlugin):
             self.probed[user] = "buddy"
             return
 
-        if stats["files"] == 0 and stats["dirs"] >= self.settings["num_folders"]:
+        if stats["files"] <= 0 and stats["dirs"] >= self.settings["num_folders"]:
             # SoulseekQt seems to only send the number of folders to the server in at least some cases
             self.log(
                 "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
@@ -120,7 +120,7 @@ class Plugin(BasePlugin):
             )
             # TODO: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request
 
-        if stats["files"] == 0 and stats["dirs"] == 0:
+        if stats["files"] <= 0 and stats["dirs"] <= 0:
             # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
             self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
 

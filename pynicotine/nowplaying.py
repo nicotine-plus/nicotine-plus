@@ -245,10 +245,10 @@ class NowPlaying:
         except KeyError:
             self.title["length"] = "?"
 
-        if self.title["artist"] != "":
+        if self.title["artist"]:
             self.title["nowplaying"] += self.title["artist"]
 
-        if self.title["title"] != "":
+        if self.title["title"]:
             self.title["nowplaying"] += " - " + self.title["title"]
 
         return True

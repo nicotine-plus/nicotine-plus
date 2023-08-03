@@ -543,7 +543,7 @@ class TreeView:
         return not self.iterators
 
     def is_selection_empty(self):
-        return self._selection.count_selected_rows() == 0
+        return self._selection.count_selected_rows() <= 0
 
     def is_row_expanded(self, iterator):
         path = self.model.get_path(iterator)

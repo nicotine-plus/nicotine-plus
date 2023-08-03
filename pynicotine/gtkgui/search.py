@@ -1100,7 +1100,7 @@ class Search:
 
     def check_filter(self, row):
 
-        if self.active_filter_count == 0:
+        if self.active_filter_count <= 0:
             return True
 
         for filter_id, (filter_value, _h_filter_value) in self.filters.items():
@@ -1704,7 +1704,7 @@ class Search:
         self.refiltering = False
 
     def on_filter_entry_deleted_text(self, buffer, *_args):
-        if not self.refiltering and buffer.get_length() == 0:
+        if not self.refiltering and buffer.get_length() <= 0:
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):

@@ -740,7 +740,7 @@ class SoulseekNetworkThread(Thread):
         elif user_address is not None:
             _ip_address, port = user_address
 
-            if port == 0:
+            if not port:
                 # Port 0 means the user is likely bugged, ask the server for a new address
                 user_address = None
 
@@ -1305,7 +1305,7 @@ class SoulseekNetworkThread(Thread):
                         user = msg.user
                         pending_init_msgs = self._pending_init_msgs.pop(msg.user, [])
 
-                        if msg.port == 0:
+                        if not msg.port:
                             log.add_conn(
                                 "Server reported port 0 for user %(user)s", {
                                     "user": user
@@ -1844,7 +1844,7 @@ class SoulseekNetworkThread(Thread):
                 conn_obj.filedown.leftbytes -= added_bytes_len
 
             current_time = time.time()
-            finished = (conn_obj.filedown.leftbytes == 0)
+            finished = (conn_obj.filedown.leftbytes <= 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
                 # We save resources by not sending data back to core
