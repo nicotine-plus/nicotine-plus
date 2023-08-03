@@ -2425,7 +2425,7 @@ class Transfers:
 
         active_statuses = {"Getting status", "Transferring"}
 
-        if transfer.status in active_statuses + {"Finished"}:
+        if transfer.status in active_statuses.union({"Finished"}):
             # Don't retry active or finished uploads
             return
 
