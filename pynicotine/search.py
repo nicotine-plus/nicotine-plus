@@ -34,7 +34,7 @@ from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
-class Search:
+class SearchRequest:
 
     __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
 
@@ -48,7 +48,7 @@ class Search:
         self.is_ignored = is_ignored
 
 
-class Searches:
+class Search:
 
     def __init__(self):
 
@@ -60,7 +60,7 @@ class Searches:
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            self.searches[self.token] = Search(token=self.token, term=term, mode="wishlist", is_ignored=True)
+            self.searches[self.token] = SearchRequest(token=self.token, term=term, mode="wishlist", is_ignored=True)
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -105,8 +105,10 @@ class Searches:
 
     def add_search(self, term, mode, room=None, users=None, is_ignored=False):
 
-        self.searches[self.token] = search = Search(token=self.token, term=term, mode=mode, room=room,
-                                                    users=users, is_ignored=is_ignored)
+        self.searches[self.token] = search = SearchRequest(
+            token=self.token, term=term, mode=mode, room=room, users=users,
+            is_ignored=is_ignored
+        )
         self.add_allowed_token(self.token)
         return search
 

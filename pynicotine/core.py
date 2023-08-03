@@ -167,8 +167,8 @@ class Core:
             self.shares = Shares()
 
         if "search" in enabled_components:
-            from pynicotine.search import Searches
-            self.search = Searches()
+            from pynicotine.search import Search
+            self.search = Search()
 
         if "transfers" in enabled_components:
             from pynicotine.transfers import Transfers
