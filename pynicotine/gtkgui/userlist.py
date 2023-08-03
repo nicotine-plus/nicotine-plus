@@ -63,15 +63,15 @@ class UserList:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "sort_column": "status_data",
-                    "hide_header": True
+                    "hide_header": True,
+                    "sort_column": "status_data"
                 },
                 "country": {
                     "column_type": "icon",
                     "title": _("Country"),
                     "width": 30,
-                    "sort_column": "country_data",
-                    "hide_header": True
+                    "hide_header": True,
+                    "sort_column": "country_data"
                 },
                 "user": {
                     "column_type": "text",
