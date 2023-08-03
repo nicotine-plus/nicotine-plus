@@ -539,6 +539,40 @@ class SayChatroom(ServerMessage):
         pos, self.msg = self.unpack_string(message, pos)
 
 
+class UsersMessage(ServerMessage):
+    __slots__ = ()
+
+    def parse_users(self, message, pos=0):
+        pos, numusers = self.unpack_uint32(message, pos)
+
+        users = []
+        for i in range(numusers):
+            users.append(UserData())
+            pos, users[i].username = self.unpack_string(message, pos)
+
+        pos, statuslen = self.unpack_uint32(message, pos)
+        for i in range(statuslen):
+            pos, users[i].status = self.unpack_uint32(message, pos)
+
+        pos, statslen = self.unpack_uint32(message, pos)
+        for i in range(statslen):
+            pos, users[i].avgspeed = self.unpack_uint32(message, pos)
+            pos, users[i].uploadnum = self.unpack_uint64(message, pos)
+            pos, users[i].files = self.unpack_uint32(message, pos)
+            pos, users[i].dirs = self.unpack_uint32(message, pos)
+
+        pos, slotslen = self.unpack_uint32(message, pos)
+        for i in range(slotslen):
+            pos, users[i].slotsfull = self.unpack_uint32(message, pos)
+
+        if message[pos:]:
+            pos, countrylen = self.unpack_uint32(message, pos)
+            for i in range(countrylen):
+                pos, users[i].country = self.unpack_string(message, pos)
+
+        return pos, users
+
+
 class UserData:
     """ When we join a room, the server sends us a bunch of these for each user. """
 
@@ -556,7 +590,7 @@ class UserData:
         self.country = country
 
 
-class JoinRoom(ServerMessage):
+class JoinRoom(UsersMessage):
     """ Server code: 14
 
     We send this message to the server when we want to join a room. If the
@@ -596,36 +630,6 @@ class JoinRoom(ServerMessage):
                 pos, operator = self.unpack_string(message, pos)
 
                 self.operators.append(operator)
-
-    def parse_users(self, message, pos):
-        pos, numusers = self.unpack_uint32(message, pos)
-
-        users = []
-        for i in range(numusers):
-            users.append(UserData())
-            pos, users[i].username = self.unpack_string(message, pos)
-
-        pos, statuslen = self.unpack_uint32(message, pos)
-        for i in range(statuslen):
-            pos, users[i].status = self.unpack_uint32(message, pos)
-
-        pos, statslen = self.unpack_uint32(message, pos)
-        for i in range(statslen):
-            pos, users[i].avgspeed = self.unpack_uint32(message, pos)
-            pos, users[i].uploadnum = self.unpack_uint64(message, pos)
-            pos, users[i].files = self.unpack_uint32(message, pos)
-            pos, users[i].dirs = self.unpack_uint32(message, pos)
-
-        pos, slotslen = self.unpack_uint32(message, pos)
-        for i in range(slotslen):
-            pos, users[i].slotsfull = self.unpack_uint32(message, pos)
-
-        if message[pos:]:
-            pos, countrylen = self.unpack_uint32(message, pos)
-            for i in range(countrylen):
-                pos, users[i].country = self.unpack_string(message, pos)
-
-        return pos, users
 
 
 class LeaveRoom(ServerMessage):
@@ -1339,7 +1343,7 @@ class AdminMessage(ServerMessage):
         _pos, self.msg = self.unpack_string(message)
 
 
-class GlobalUserList(ServerMessage):
+class GlobalUserList(UsersMessage):
     """ Server code: 67
 
     We send this to get a global list of all users online.
@@ -1356,36 +1360,6 @@ class GlobalUserList(ServerMessage):
 
     def parse_network_message(self, message):
         _pos, self.users = self.parse_users(message)
-
-    def parse_users(self, message):
-        pos, numusers = self.unpack_uint32(message)
-
-        users = []
-        for i in range(numusers):
-            users.append(UserData())
-            pos, users[i].username = self.unpack_string(message, pos)
-
-        pos, statuslen = self.unpack_uint32(message, pos)
-        for i in range(statuslen):
-            pos, users[i].status = self.unpack_uint32(message, pos)
-
-        pos, statslen = self.unpack_uint32(message, pos)
-        for i in range(statslen):
-            pos, users[i].avgspeed = self.unpack_uint32(message, pos)
-            pos, users[i].uploadnum = self.unpack_uint64(message, pos)
-            pos, users[i].files = self.unpack_uint32(message, pos)
-            pos, users[i].dirs = self.unpack_uint32(message, pos)
-
-        pos, slotslen = self.unpack_uint32(message, pos)
-        for i in range(slotslen):
-            pos, users[i].slotsfull = self.unpack_uint32(message, pos)
-
-        if message[pos:]:
-            pos, countrylen = self.unpack_uint32(message, pos)
-            for i in range(countrylen):
-                pos, users[i].country = self.unpack_string(message, pos)
-
-        return pos, users
 
 
 class TunneledMessage(ServerMessage):
