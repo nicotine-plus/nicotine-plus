@@ -184,8 +184,10 @@ def run():
     error = check_python_version()
 
     if error:
-        log.add(error)
+        print(error)
         return 1
+
+    core.init_components()
 
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
@@ -194,8 +196,6 @@ def run():
 
     except Exception as error:
         log.add(f"Faulthandler module could not be enabled. Error: {error}")
-
-    core.init_components()
 
     if not os.path.isdir(LOCALE_PATH):
         log.add("Translation files (.mo) are unavailable, using default English strings")
