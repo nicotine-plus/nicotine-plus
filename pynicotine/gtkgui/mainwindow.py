@@ -71,8 +71,6 @@ class MainWindow(Window):
         self.gesture_click = None
         self.scan_progress_indeterminate = False
 
-        application.connect("shutdown", self.on_shutdown)
-
         # Load UI
 
         (
@@ -1397,9 +1395,6 @@ class MainWindow(Window):
 
         core.confirm_quit(remember=True)
         return True
-
-    def on_shutdown(self, *_args):
-        config.write_configuration()
 
     def hide(self):
 
