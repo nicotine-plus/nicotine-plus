@@ -82,7 +82,7 @@ class SoulseekNetworkTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        core.init_components(enabled_components={"network_thread", "portmapper"})
+        core.init_components(enabled_components={"network_thread"})
 
         config.sections["server"]["upnp"] = False
         core.start()
