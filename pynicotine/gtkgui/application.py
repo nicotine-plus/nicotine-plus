@@ -667,10 +667,7 @@ class Application:
         if core.pluginhandler is not None:
             traceback = exc_traceback
 
-            while True:
-                if not traceback.tb_next:
-                    break
-
+            while traceback.tb_next:
                 filename = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in core.pluginhandler.enabled_plugins:
