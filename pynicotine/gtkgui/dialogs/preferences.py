@@ -1876,12 +1876,12 @@ class UserInterfacePage:
             }
         }
 
-    """ Icons """
+    # Icons #
 
     def on_clear_icon_theme(self, *_args):
         self.icon_theme_button.clear()
 
-    """ Fonts """
+    # Fonts #
 
     def get_font(self, button):
 
@@ -1900,7 +1900,7 @@ class UserInterfacePage:
         else:
             font_button.set_font("")
 
-    """ Colors """
+    # Colors #
 
     def on_color_entry_changed(self, entry):
 

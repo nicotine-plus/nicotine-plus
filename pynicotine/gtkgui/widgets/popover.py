@@ -21,8 +21,6 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
-""" Popover """
-
 
 class Popover:
 

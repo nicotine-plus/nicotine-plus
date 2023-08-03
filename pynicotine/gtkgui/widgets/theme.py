@@ -36,7 +36,7 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
-""" Global Style """
+# Global Style #
 
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
@@ -319,7 +319,7 @@ def set_global_style():
     update_custom_css()
 
 
-""" Icons """
+# Icons #
 
 
 if GTK_API_VERSION >= 4:
@@ -515,7 +515,7 @@ def on_icon_theme_changed(*_args):
 ICON_THEME.connect("changed", on_icon_theme_changed)
 
 
-""" Fonts and Colors """
+# Fonts and Colors #
 
 
 PANGO_STYLES = {

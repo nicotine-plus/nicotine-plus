@@ -46,8 +46,7 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
 
-""" Check if there's an appropriate (performant) database type for shelves """
-
+# Check if there's an appropriate (performant) database type for shelves
 if importlib.util.find_spec("_gdbm"):
 
     def shelve_open_gdbm(filename, flag="c", protocol=None, writeback=False):
@@ -509,9 +508,9 @@ class Scanner(Process):
         return stream
 
     def get_files_index(self, shared_files, fileindex_dest):
-        """ Update Search index with new files """
+        """ Update search index with new files.
 
-        """ We dump data directly into the file index database to save memory.
+        We dump data directly into the file index database to save memory.
         For the word index db, we can't use the same approach, as we need to access
         dict elements frequently. This would take too long to access from disk. """
 
@@ -604,7 +603,7 @@ class Shares:
         self.requested_share_times.clear()
         self.pending_network_msgs.clear()
 
-    """ Shares-related actions """
+    # Shares-related Actions #
 
     def virtual2real(self, path):
 
@@ -826,7 +825,7 @@ class Shares:
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
 
-    """ Scanning """
+    # Scanning #
 
     def build_scanner_process(self, shared_folders=None, init=False, rescan=True, rebuild=False):
 
@@ -943,7 +942,7 @@ class Shares:
 
         return error
 
-    """ Network Messages """
+    # Network Messages #
 
     def _shared_file_list_request(self, msg):
         """ Peer code: 4 """

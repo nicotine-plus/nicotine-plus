@@ -27,9 +27,6 @@ from gi.repository import Pango
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" File Choosers """
-
-
 class FileChooser:
 
     active_chooser = None  # Class variable keeping the file chooser object alive

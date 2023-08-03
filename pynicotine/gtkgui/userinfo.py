@@ -336,7 +336,7 @@ class UserInfo:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    """ General """
+    # General #
 
     def populate_stats(self):
 
@@ -441,7 +441,7 @@ class UserInfo:
 
         self.progress_bar.set_fraction(fraction)
 
-    """ Button States """
+    # Button States #
 
     def update_edit_button_state(self):
 
@@ -469,7 +469,7 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
 
-    """ Network Messages """
+    # Network Messages #
 
     def user_info_response(self, msg):
 
@@ -525,7 +525,7 @@ class UserInfo:
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
 
-    """ Callbacks """
+    # Callbacks #
 
     def on_draw_picture(self, area, context):
         """ Draws a centered picture that fills the drawing area """

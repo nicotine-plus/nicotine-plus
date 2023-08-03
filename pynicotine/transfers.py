@@ -232,7 +232,7 @@ class Transfers:
 
         self.user_update_counter = 0
 
-    """ Load Transfers """
+    # Load Transfers #
 
     def get_download_queue_file_name(self):
 
@@ -461,7 +461,7 @@ class Transfers:
         for user in users:
             core.watch_user(user)
 
-    """ Privileges """
+    # Privileges #
 
     def _add_to_privileged(self, user):
         self.privileged_users.add(user)
@@ -497,7 +497,7 @@ class Transfers:
 
         return False
 
-    """ File Actions """
+    # File Actions #
 
     @staticmethod
     def get_file_size(filename):
@@ -527,7 +527,7 @@ class Transfers:
                 "error": error
             })
 
-    """ Limits """
+    # Limits #
 
     def update_download_limits(self):
 
@@ -683,11 +683,12 @@ class Transfers:
 
         return False
 
-    """ Events """
+    # Events #
 
     def _user_status(self, msg):
-        """ Server code: 7 """
-        """ We get a status of a user and if he's online, we request a file from him """
+        """ Server code: 7
+
+        We get a status of a user and if he's online, we request a file from him """
 
         update = False
         username = msg.user
@@ -811,8 +812,9 @@ class Transfers:
             return
 
     def _folder_contents_response(self, msg, check_num_files=True):
-        """ Peer code: 37 """
-        """ When we got a contents of a folder, get all the files in it, but
+        """ Peer code: 37
+
+        When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders """
 
         username = msg.init.target_user
@@ -851,8 +853,9 @@ class Transfers:
                         username, virtualpath, path=destination, size=file_size, file_attributes=file_attributes)
 
     def _queue_upload(self, msg):
-        """ Peer code: 43 """
-        """ Peer remotely queued a download (upload here). This is the modern replacement to
+        """ Peer code: 43
+
+        Peer remotely queued a download (upload here). This is the modern replacement to
         a TransferRequest with direction 0 (download request). We will initiate the upload of
         the queued file later. """
 
@@ -1064,8 +1067,9 @@ class Transfers:
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
 
     def _transfer_response(self, msg):
-        """ Peer code: 41 """
-        """ Received a response to the file request from the peer """
+        """ Peer code: 41
+
+        Received a response to the file request from the peer """
 
         username = msg.init.target_user
         token = msg.token
@@ -1619,8 +1623,9 @@ class Transfers:
         self.update_upload(transfer, update_parent=False)
 
     def _place_in_queue_response(self, msg):
-        """ Peer code: 44 """
-        """ The peer tells us our place in queue for a particular transfer """
+        """ Peer code: 44
+
+        The peer tells us our place in queue for a particular transfer """
 
         username = msg.init.target_user
         filename = msg.filename
@@ -1631,7 +1636,7 @@ class Transfers:
                 self.update_download(download, update_parent=False)
                 return
 
-    """ Transfer Actions """
+    # Transfer Actions #
 
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
@@ -2597,7 +2602,7 @@ class Transfers:
 
         events.emit("clear-uploads", uploads, statuses)
 
-    """ Filters """
+    # Filters #
 
     def update_download_filters(self):
 
@@ -2647,7 +2652,7 @@ class Transfers:
 
         log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})
 
-    """ Saving """
+    # Saving #
 
     def get_downloads(self):
         """ Get a list of downloads """

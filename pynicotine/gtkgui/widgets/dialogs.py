@@ -29,8 +29,6 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
 
-""" Dialogs """
-
 
 class Dialog(Window):
 
@@ -242,9 +240,6 @@ class Dialog(Window):
 
     def close(self, *_args):
         self.widget.close()
-
-
-""" Message Dialogs """
 
 
 class MessageDialog(Window):

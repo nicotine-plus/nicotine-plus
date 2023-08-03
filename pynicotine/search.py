@@ -91,7 +91,7 @@ class Searches:
         # Ask for the rest of the files in the folder
         core.transfers.get_folder(user, folder)
 
-    """ Outgoing search requests """
+    # Outgoing Search Requests #
 
     @staticmethod
     def add_allowed_token(token):
@@ -179,10 +179,9 @@ class Searches:
         search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
 
         if config.sections["searches"]["remove_special_chars"]:
-            """
-            Remove special characters from search term
-            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
-            """
+            # Remove special characters from search term
+            # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+
             stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
@@ -371,7 +370,7 @@ class Searches:
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
 
-    """ Incoming search requests """
+    # Incoming Search Requests #
 
     @staticmethod
     def update_search_results(results, word_indices, exclude_word=False):

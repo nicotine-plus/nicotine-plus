@@ -39,9 +39,6 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
 
 
-""" Tray Icon """
-
-
 class ImplementationUnavailable(Exception):
     pass
 

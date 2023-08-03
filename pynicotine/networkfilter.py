@@ -297,7 +297,7 @@ class NetworkFilter:
         self.ip_ban_requested.clear()
         self.ip_ignore_requested.clear()
 
-    """ IP Filter List Management """
+    # IP Filter List Management #
 
     def _request_ip(self, user, action, request_list):
         """ Ask for the IP address of an unknown user. Once a GetPeerAddress
@@ -344,7 +344,7 @@ class NetworkFilter:
         config.write_configuration()
         return ip_addresses
 
-    """ IP List Lookup Functions """
+    # IP List Lookup Functions #
 
     @staticmethod
     def _get_previous_user_ip_addresses(user, ip_list):
@@ -447,7 +447,7 @@ class NetworkFilter:
 
         return True
 
-    """ IP Filter Rule Processing """
+    # IP Filter Rule Processing #
 
     def _check_user_ip_filtered(self, ip_list, username=None, ip_address=None):
         """ Check if an IP address is present in a list """
@@ -540,7 +540,7 @@ class NetworkFilter:
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
                 core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
-    """ Callbacks """
+    # Callbacks #
 
     def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):
         """ Check if a user's IP address has changed and update the lists """
@@ -578,7 +578,7 @@ class NetworkFilter:
         self._ban_unban_user_ip_callback(user, ip_address)
         self._ignore_unignore_user_ip_callback(user, ip_address)
 
-    """ Banning """
+    # Banning #
 
     def ban_user(self, user):
 
@@ -631,7 +631,7 @@ class NetworkFilter:
     def is_user_ip_banned(self, user=None, ip_address=None):
         return self._check_user_ip_filtered(config.sections["server"]["ipblocklist"], user, ip_address)
 
-    """ Ignoring """
+    # Ignoring #
 
     def ignore_user(self, user):
 

@@ -646,8 +646,8 @@ class Config:
                                   {"option": j, "section": i})
 
                 else:
-                    """ Attempt to get the default value for a config option. If there's no default
-                    value, it's a custom option from a plugin, so no checks are needed. """
+                    # Attempt to get the default value for a config option. If there's no default
+                    # value, it's a custom option from a plugin, so no checks are needed.
 
                     try:
                         default_val = self.defaults[i][j]
@@ -661,8 +661,8 @@ class Config:
                         self.sections[i][j] = val
                         continue
 
-                    """ Check that the value of a config option is of the same type as the default
-                    value. If that's not the case, reset the value. """
+                    # Check that the value of a config option is of the same type as the default
+                    # value. If that's not the case, reset the value.
 
                     try:
                         if not isinstance(default_val, str):

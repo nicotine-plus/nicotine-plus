@@ -513,7 +513,7 @@ class RestrictedUnpickler(pickle.Unpickler):
         raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
-""" Debugging """
+# Debugging #
 
 
 def debug(*args):

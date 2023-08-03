@@ -315,9 +315,9 @@ class NetworkInterfaces:
 
 class SoulseekNetworkThread(Thread):
     """ This is a networking thread that actually does all the communication.
-    It sends data to the core via a callback function and receives data via a deque object. """
+    It sends data to the core via a callback function and receives data via a deque object.
 
-    """ The server and peers send each other small binary messages that start
+    The server and peers send each other small binary messages that start
     with length and message code followed by the actual message data. """
 
     IN_PROGRESS_STALE_AFTER = 2
@@ -443,7 +443,7 @@ class SoulseekNetworkThread(Thread):
     def _schedule_quit(self):
         self._want_abort = True
 
-    """ Listening Socket """
+    # Listening Socket #
 
     def _create_listen_socket(self):
 
@@ -500,7 +500,7 @@ class SoulseekNetworkThread(Thread):
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
 
-    """ Connections """
+    # Connections #
 
     def _check_indirect_connection_timeouts(self):
 
@@ -1076,7 +1076,7 @@ class SoulseekNetworkThread(Thread):
                 })
                 self._close_connection(self._conns, sock)
 
-    """ Server Connection """
+    # Server Connection #
 
     def _set_server_timer(self):
 
@@ -1480,7 +1480,7 @@ class SoulseekNetworkThread(Thread):
         if self._server_timeout_value > 0:
             events.emit_main_thread("server-timeout")
 
-    """ Peer Init """
+    # Peer Init #
 
     def _process_peer_init_input(self, conn_obj, msg_buffer):
 
@@ -1611,7 +1611,7 @@ class SoulseekNetworkThread(Thread):
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    """ Peer Connection """
+    # Peer Connection #
 
     def _init_peer_connection(self, msg_obj):
 
@@ -1735,7 +1735,7 @@ class SoulseekNetworkThread(Thread):
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    """ File Connection """
+    # File Connection #
 
     @staticmethod
     def _is_upload(conn_obj):
@@ -1921,7 +1921,7 @@ class SoulseekNetworkThread(Thread):
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    """ Distributed Connection """
+    # Distributed Connection #
 
     def _accept_child_peer_connection(self, conn_obj):
 
@@ -2203,7 +2203,7 @@ class SoulseekNetworkThread(Thread):
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-    """ Internal Messages """
+    # Internal Messages #
 
     def _process_internal_messages(self, msg_obj):
 
@@ -2273,7 +2273,7 @@ class SoulseekNetworkThread(Thread):
             for msg in msg_obj.msgs:
                 self._emit_network_message_event(msg)
 
-    """ Input/Output """
+    # Input/Output #
 
     def _process_ready_input_socket(self, sock, current_time):
 
@@ -2528,7 +2528,7 @@ class SoulseekNetworkThread(Thread):
             # Nothing else to send, stop watching connection for writes
             self._modify_connection_events(conn_obj, selectors.EVENT_READ)
 
-    """ Networking Loop """
+    # Networking Loop #
 
     def run(self):
 

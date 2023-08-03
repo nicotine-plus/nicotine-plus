@@ -28,9 +28,9 @@ from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import debug
 from pynicotine.utils import human_length
 
-""" This module contains message classes, that networking and UI thread
-exchange. Basically there are three types of messages: internal messages,
-server messages and p2p messages (between clients). """
+# This module contains message classes, that networking and UI thread
+# exchange. Basically there are three types of messages: internal messages,
+# server messages and p2p messages (between clients).
 
 
 INT32_UNPACK = Struct("<i").unpack_from
@@ -58,9 +58,7 @@ def increment_token(token):
     return token
 
 
-"""
-Constants
-"""
+# Constants #
 
 
 class MessageType:
@@ -105,9 +103,7 @@ class FileAttribute:
     BIT_DEPTH = 5
 
 
-"""
-Messages
-"""
+# Messages #
 
 
 class Message:
@@ -118,9 +114,7 @@ class Message:
         return f"{self.__class__} {attrs}"
 
 
-"""
-Internal Messages
-"""
+# Internal Messages #
 
 
 class InternalMessage(Message):
@@ -332,9 +326,7 @@ class SlskMessage(Message):
         debug(type(self).__name__, self.__dict__, repr(message))
 
 
-"""
-Server Messages
-"""
+# Server Messages #
 
 
 class ServerMessage(SlskMessage):
@@ -343,8 +335,9 @@ class ServerMessage(SlskMessage):
 
 
 class Login(ServerMessage):
-    """ Server code: 1 """
-    """ We send this to the server right after the connection has been
+    """ Server code: 1
+
+    We send this to the server right after the connection has been
     established. Server responds with the greeting message. """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
@@ -402,8 +395,9 @@ class Login(ServerMessage):
 
 
 class SetWaitPort(ServerMessage):
-    """ Server code: 2 """
-    """ We send this to the server to indicate the port number that we
+    """ Server code: 2
+
+    We send this to the server to indicate the port number that we
     listen on (2234 by default). """
 
     __slots__ = ("port",)
@@ -416,8 +410,9 @@ class SetWaitPort(ServerMessage):
 
 
 class GetPeerAddress(ServerMessage):
-    """ Server code: 3 """
-    """ We send this to the server to ask for a peer's address
+    """ Server code: 3
+
+    We send this to the server to ask for a peer's address
     (IP address and port), given the peer's username. """
 
     __slots__ = ("user", "ip_address", "port")
@@ -437,8 +432,9 @@ class GetPeerAddress(ServerMessage):
 
 
 class WatchUser(ServerMessage):
-    """ Server code: 5 """
-    """ Used to be kept updated about a user's stats. When a user's
+    """ Server code: 5
+
+    Used to be kept updated about a user's stats. When a user's
     stats have changed, the server sends a GetUserStats response message
     with the new user stats. """
 
@@ -480,8 +476,9 @@ class WatchUser(ServerMessage):
 
 
 class UnwatchUser(ServerMessage):
-    """ Server code: 6 """
-    """ Used when we no longer want to be kept updated about a
+    """ Server code: 6
+
+    Used when we no longer want to be kept updated about a
     user's stats. """
 
     __slots__ = ("user",)
@@ -494,8 +491,9 @@ class UnwatchUser(ServerMessage):
 
 
 class GetUserStatus(ServerMessage):
-    """ Server code: 7 """
-    """ The server tells us if a user has gone away or has returned. """
+    """ Server code: 7
+
+    The server tells us if a user has gone away or has returned. """
 
     __slots__ = ("user", "status", "privileged")
 
@@ -517,8 +515,9 @@ class GetUserStatus(ServerMessage):
 
 
 class SayChatroom(ServerMessage):
-    """ Server code: 13 """
-    """ Either we want to say something in the chatroom, or someone else did. """
+    """ Server code: 13
+
+    Either we want to say something in the chatroom, or someone else did. """
 
     __slots__ = ("room", "msg", "user")
 
@@ -558,8 +557,9 @@ class UserData:
 
 
 class JoinRoom(ServerMessage):
-    """ Server code: 14 """
-    """ We send this message to the server when we want to join a room. If the
+    """ Server code: 14
+
+    We send this message to the server when we want to join a room. If the
     room doesn't exist, it is created.
 
     Server responds with this message when we join a room. Contains users list
@@ -629,8 +629,9 @@ class JoinRoom(ServerMessage):
 
 
 class LeaveRoom(ServerMessage):
-    """ Server code: 15 """
-    """ We send this to the server when we want to leave a room. """
+    """ Server code: 15
+
+    We send this to the server when we want to leave a room. """
 
     __slots__ = ("room",)
 
@@ -645,8 +646,9 @@ class LeaveRoom(ServerMessage):
 
 
 class UserJoinedRoom(ServerMessage):
-    """ Server code: 16 """
-    """ The server tells us someone has just joined a room we're in. """
+    """ Server code: 16
+
+    The server tells us someone has just joined a room we're in. """
 
     __slots__ = ("room", "userdata")
 
@@ -672,8 +674,9 @@ class UserJoinedRoom(ServerMessage):
 
 
 class UserLeftRoom(ServerMessage):
-    """ Server code: 17 """
-    """ The server tells us someone has just left a room we're in. """
+    """ Server code: 17
+
+    The server tells us someone has just left a room we're in. """
 
     __slots__ = ("room", "username")
 
@@ -687,12 +690,12 @@ class UserLeftRoom(ServerMessage):
 
 
 class ConnectToPeer(ServerMessage):
-    """ Server code: 18 """
-    """ Either we ask server to tell someone else we want to establish a
+    """ Server code: 18
+
+    Either we ask server to tell someone else we want to establish a
     connection with them, or server tells us someone wants to connect with us.
     Used when the side that wants a connection can't establish it, and tries
-    to go the other way around (direct connection has failed).
-    """
+    to go the other way around (direct connection has failed). """
 
     __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged")
 
@@ -725,8 +728,9 @@ class ConnectToPeer(ServerMessage):
 
 
 class MessageUser(ServerMessage):
-    """ Server code: 22 """
-    """ Chat phrase sent to someone or received by us in private. """
+    """ Server code: 22
+
+    Chat phrase sent to someone or received by us in private. """
 
     __slots__ = ("user", "msg", "msgid", "timestamp", "newmessage")
 
@@ -757,10 +761,10 @@ class MessageUser(ServerMessage):
 
 
 class MessageAcked(ServerMessage):
-    """ Server code: 23 """
-    """ We send this to the server to confirm that we received a private message.
-    If we don't send it, the server will keep sending the chat phrase to us.
-    """
+    """ Server code: 23
+
+    We send this to the server to confirm that we received a private message.
+    If we don't send it, the server will keep sending the chat phrase to us. """
 
     __slots__ = ("msgid",)
 
@@ -772,9 +776,11 @@ class MessageAcked(ServerMessage):
 
 
 class FileSearchRoom(ServerMessage):
-    """ Server code: 25 """
-    """ We send this to the server when we search for something in a room. """
-    """ OBSOLETE, use RoomSearch server message """
+    """ Server code: 25
+
+    We send this to the server when we search for something in a room.
+
+    OBSOLETE, use RoomSearch server message """
 
     __slots__ = ("token", "roomid", "searchterm")
 
@@ -793,15 +799,15 @@ class FileSearchRoom(ServerMessage):
 
 
 class FileSearch(ServerMessage):
-    """ Server code: 26 """
-    """ We send this to the server when we search for something. Alternatively,
+    """ Server code: 26
+
+    We send this to the server when we search for something. Alternatively,
     the server sends this message outside the distributed network to tell us
     that someone is searching for something, currently used for UserSearch and
     RoomSearch requests.
 
     The token is a number generated by the client and is used to track the
-    search results.
-    """
+    search results. """
 
     __slots__ = ("token", "searchterm", "user")
 
@@ -827,8 +833,9 @@ class FileSearch(ServerMessage):
 
 
 class SetStatus(ServerMessage):
-    """ Server code: 28 """
-    """ We send our new status to the server. Status is a way to define whether
+    """ Server code: 28
+
+    We send our new status to the server. Status is a way to define whether
     we're available (online) or busy (away).
 
     1 = Away
@@ -845,8 +852,9 @@ class SetStatus(ServerMessage):
 
 
 class ServerPing(ServerMessage):
-    """ Server code: 32 """
-    """ We send this to the server at most once per minute to ensure the
+    """ Server code: 32
+
+    We send this to the server at most once per minute to ensure the
     connection stays alive.
 
     Nicotine+ uses TCP keepalive instead. """
@@ -858,8 +866,9 @@ class ServerPing(ServerMessage):
 
 
 class SendConnectToken(ServerMessage):
-    """ Server code: 33 """
-    """ OBSOLETE, no longer used """
+    """ Server code: 33
+
+    OBSOLETE, no longer used """
 
     __slots__ = ("user", "token")
 
@@ -880,10 +889,12 @@ class SendConnectToken(ServerMessage):
 
 
 class SendDownloadSpeed(ServerMessage):
-    """ Server code: 34 """
-    """ We used to send this after a finished download to let the server update
-    the speed statistics for a user. """
-    """ OBSOLETE, use SendUploadSpeed server message """
+    """ Server code: 34
+
+    We used to send this after a finished download to let the server update
+    the speed statistics for a user.
+
+    OBSOLETE, use SendUploadSpeed server message """
 
     __slots__ = ("user", "speed")
 
@@ -900,8 +911,9 @@ class SendDownloadSpeed(ServerMessage):
 
 
 class SharedFoldersFiles(ServerMessage):
-    """ Server code: 35 """
-    """ We send this to server to indicate the number of folder and files
+    """ Server code: 35
+
+    We send this to server to indicate the number of folder and files
     that we share. """
 
     __slots__ = ("folders", "files")
@@ -919,8 +931,9 @@ class SharedFoldersFiles(ServerMessage):
 
 
 class GetUserStats(ServerMessage):
-    """ Server code: 36 """
-    """ The server sends this to indicate a change in a user's statistics,
+    """ Server code: 36
+
+    The server sends this to indicate a change in a user's statistics,
     if we've requested to watch the user in WatchUser previously. A user's
     stats can also be requested by sending a GetUserStats message to the
     server, but WatchUser should be used instead. """
@@ -946,10 +959,12 @@ class GetUserStats(ServerMessage):
 
 
 class QueuedDownloads(ServerMessage):
-    """ Server code: 40 """
-    """ The server sends this to indicate if someone has download slots available
-    or not. """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 40
+
+    The server sends this to indicate if someone has download slots available
+    or not.
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("user", "slotsfull")
 
@@ -963,8 +978,9 @@ class QueuedDownloads(ServerMessage):
 
 
 class Relogged(ServerMessage):
-    """ Server code: 41 """
-    """ The server sends this if someone else logged in under our nickname,
+    """ Server code: 41
+
+    The server sends this if someone else logged in under our nickname,
     and then disconnects us. """
 
     __slots__ = ()
@@ -975,8 +991,9 @@ class Relogged(ServerMessage):
 
 
 class UserSearch(ServerMessage):
-    """ Server code: 42 """
-    """ We send this to the server when we search a specific user's shares.
+    """ Server code: 42
+
+    We send this to the server when we search a specific user's shares.
     The token is a number generated by the client and is used to track the
     search results. """
 
@@ -1003,9 +1020,11 @@ class UserSearch(ServerMessage):
 
 
 class AddThingILike(ServerMessage):
-    """ Server code: 51 """
-    """ We send this to the server when we add an item to our likes list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 51
+
+    We send this to the server when we add an item to our likes list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("thing",)
 
@@ -1017,9 +1036,11 @@ class AddThingILike(ServerMessage):
 
 
 class RemoveThingILike(ServerMessage):
-    """ Server code: 52 """
-    """ We send this to the server when we remove an item from our likes list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 52
+
+    We send this to the server when we remove an item from our likes list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("thing",)
 
@@ -1031,10 +1052,12 @@ class RemoveThingILike(ServerMessage):
 
 
 class Recommendations(ServerMessage):
-    """ Server code: 54 """
-    """ The server sends us a list of personal recommendations and a number
-    for each. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 54
+
+    The server sends us a list of personal recommendations and a number
+    for each.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("recommendations", "unrecommendations")
 
@@ -1074,19 +1097,23 @@ class Recommendations(ServerMessage):
 
 
 class GlobalRecommendations(Recommendations):
-    """ Server code: 56 """
-    """ The server sends us a list of global recommendations and a number
-    for each. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 56
+
+    The server sends us a list of global recommendations and a number
+    for each.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ()
 
 
 class UserInterests(ServerMessage):
-    """ Server code: 57 """
-    """ We ask the server for a user's liked and hated interests. The server
-    responds with a list of interests. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 57
+
+    We ask the server for a user's liked and hated interests. The server
+    responds with a list of interests.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("user", "likes", "hates")
 
@@ -1116,10 +1143,12 @@ class UserInterests(ServerMessage):
 
 
 class AdminCommand(ServerMessage):
-    """ Server code: 58 """
-    """ We send this to the server to run an admin command (e.g. to ban or
-    silence a user) if we have admin status on the server. """
-    """ OBSOLETE, no longer used since Soulseek stopped supporting third-party
+    """ Server code: 58
+
+    We send this to the server to run an admin command (e.g. to ban or
+    silence a user) if we have admin status on the server.
+
+    OBSOLETE, no longer used since Soulseek stopped supporting third-party
     servers in 2002 """
 
     __slots__ = ("command", "command_args")
@@ -1140,10 +1169,12 @@ class AdminCommand(ServerMessage):
 
 
 class PlaceInLineResponse(ServerMessage):
-    """ Server code: 60 """
-    """ The server sends this to indicate change in place in queue while we're
-    waiting for files from another peer. """
-    """ OBSOLETE, use PlaceInQueueResponse peer message """
+    """ Server code: 60
+
+    The server sends this to indicate change in place in queue while we're
+    waiting for files from another peer.
+
+    OBSOLETE, use PlaceInQueueResponse peer message """
 
     __slots__ = ("token", "user", "place")
 
@@ -1167,9 +1198,11 @@ class PlaceInLineResponse(ServerMessage):
 
 
 class RoomAdded(ServerMessage):
-    """ Server code: 62 """
-    """ The server tells us a new room has been added. """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 62
+
+    The server tells us a new room has been added.
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("room",)
 
@@ -1181,9 +1214,11 @@ class RoomAdded(ServerMessage):
 
 
 class RoomRemoved(ServerMessage):
-    """ Server code: 63 """
-    """ The server tells us a room has been removed. """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 63
+
+    The server tells us a room has been removed.
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("room",)
 
@@ -1195,8 +1230,9 @@ class RoomRemoved(ServerMessage):
 
 
 class RoomList(ServerMessage):
-    """ Server code: 64 """
-    """ The server tells us a list of rooms and the number of users in
+    """ Server code: 64
+
+    The server tells us a list of rooms and the number of users in
     them. When connecting to the server, the server only sends us rooms
     with at least 5 users. A few select rooms are also excluded, such as
     nicotine and The Lobby. Requesting the room list yields a response
@@ -1253,10 +1289,12 @@ class RoomList(ServerMessage):
 
 
 class ExactFileSearch(ServerMessage):
-    """ Server code: 65 """
-    """ We send this to search for an exact file name and folder,
-    to find other sources. """
-    """ OBSOLETE, no results even with official client """
+    """ Server code: 65
+
+    We send this to search for an exact file name and folder,
+    to find other sources.
+
+    OBSOLETE, no results even with official client """
 
     __slots__ = ("token", "file", "folder", "size", "checksum", "user")
 
@@ -1288,8 +1326,9 @@ class ExactFileSearch(ServerMessage):
 
 
 class AdminMessage(ServerMessage):
-    """ Server code: 66 """
-    """ A global message from the server admin has arrived. """
+    """ Server code: 66
+
+    A global message from the server admin has arrived. """
 
     __slots__ = ("msg",)
 
@@ -1301,9 +1340,11 @@ class AdminMessage(ServerMessage):
 
 
 class GlobalUserList(ServerMessage):
-    """ Server code: 67 """
-    """ We send this to get a global list of all users online. """
-    """ OBSOLETE, no longer used """
+    """ Server code: 67
+
+    We send this to get a global list of all users online.
+
+    OBSOLETE, no longer used """
 
     __slots__ = ("users",)
 
@@ -1348,9 +1389,11 @@ class GlobalUserList(ServerMessage):
 
 
 class TunneledMessage(ServerMessage):
-    """ Server code: 68 """
-    """ Server message for tunneling a chat message. """
-    """ OBSOLETE, no longer used """
+    """ Server code: 68
+
+    Server message for tunneling a chat message.
+
+    OBSOLETE, no longer used """
 
     __slots__ = ("user", "token", "code", "msg", "addr")
 
@@ -1383,8 +1426,9 @@ class TunneledMessage(ServerMessage):
 
 
 class PrivilegedUsers(ServerMessage):
-    """ Server code: 69 """
-    """ The server sends us a list of privileged users, a.k.a. users who
+    """ Server code: 69
+
+    The server sends us a list of privileged users, a.k.a. users who
     have donated. """
 
     __slots__ = ("users",)
@@ -1402,8 +1446,9 @@ class PrivilegedUsers(ServerMessage):
 
 
 class HaveNoParent(ServerMessage):
-    """ Server code: 71 """
-    """ We inform the server if we have a distributed parent or not.
+    """ Server code: 71
+
+    We inform the server if we have a distributed parent or not.
     If not, the server eventually sends us a PossibleParents message with a
     list of 10 possible parents to connect to. """
 
@@ -1417,9 +1462,11 @@ class HaveNoParent(ServerMessage):
 
 
 class SearchParent(ServerMessage):
-    """ Server code: 73 """
-    """ We send the IP address of our parent to the server. """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Server code: 73
+
+    We send the IP address of our parent to the server.
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("parentip",)
 
@@ -1437,8 +1484,9 @@ class SearchParent(ServerMessage):
 
 
 class ParentMinSpeed(ServerMessage):
-    """ Server code: 83 """
-    """ The server informs us about the minimum upload speed required to become
+    """ Server code: 83
+
+    The server informs us about the minimum upload speed required to become
     a parent in the distributed network. """
 
     __slots__ = ("speed",)
@@ -1451,8 +1499,9 @@ class ParentMinSpeed(ServerMessage):
 
 
 class ParentSpeedRatio(ServerMessage):
-    """ Server code: 84 """
-    """ The server sends us a speed ratio determining the number of children we
+    """ Server code: 84
+
+    The server sends us a speed ratio determining the number of children we
     can have in the distributed network. The maximum number of children is our
     upload speed divided by the speed ratio. """
 
@@ -1466,8 +1515,9 @@ class ParentSpeedRatio(ServerMessage):
 
 
 class ParentInactivityTimeout(ServerMessage):
-    """ Server code: 86 """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 86
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("seconds",)
 
@@ -1479,8 +1529,9 @@ class ParentInactivityTimeout(ServerMessage):
 
 
 class SearchInactivityTimeout(ServerMessage):
-    """ Server code: 87 """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 87
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("seconds",)
 
@@ -1492,8 +1543,9 @@ class SearchInactivityTimeout(ServerMessage):
 
 
 class MinParentsInCache(ServerMessage):
-    """ Server code: 88 """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 88
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("num",)
 
@@ -1505,8 +1557,9 @@ class MinParentsInCache(ServerMessage):
 
 
 class DistribPingInterval(ServerMessage):
-    """ Server code: 90 """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 90
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("seconds",)
 
@@ -1518,10 +1571,12 @@ class DistribPingInterval(ServerMessage):
 
 
 class AddToPrivileged(ServerMessage):
-    """ Server code: 91 """
-    """ The server sends us the username of a new privileged user, which we
-    add to our list of global privileged users. """
-    """ OBSOLETE, no longer sent by the server """
+    """ Server code: 91
+
+    The server sends us the username of a new privileged user, which we
+    add to our list of global privileged users.
+
+    OBSOLETE, no longer sent by the server """
 
     __slots__ = ("user",)
 
@@ -1533,8 +1588,9 @@ class AddToPrivileged(ServerMessage):
 
 
 class CheckPrivileges(ServerMessage):
-    """ Server code: 92 """
-    """ We ask the server how much time we have left of our privileges.
+    """ Server code: 92
+
+    We ask the server how much time we have left of our privileges.
     The server responds with the remaining time, in seconds. """
 
     __slots__ = ("seconds",)
@@ -1550,8 +1606,9 @@ class CheckPrivileges(ServerMessage):
 
 
 class EmbeddedMessage(ServerMessage):
-    """ Server code: 93 """
-    """ The server sends us an embedded distributed message. The only type
+    """ Server code: 93
+
+    The server sends us an embedded distributed message. The only type
     of distributed message sent at present is DistribSearch (distributed code 3).
     If we receive such a message, we are a branch root in the distributed network,
     and we distribute the embedded message (not the unpacked distributed message)
@@ -1569,8 +1626,9 @@ class EmbeddedMessage(ServerMessage):
 
 
 class AcceptChildren(ServerMessage):
-    """ Server code: 100 """
-    """ We tell the server if we want to accept child nodes. """
+    """ Server code: 100
+
+    We tell the server if we want to accept child nodes. """
 
     __slots__ = ("enabled",)
 
@@ -1582,8 +1640,9 @@ class AcceptChildren(ServerMessage):
 
 
 class PossibleParents(ServerMessage):
-    """ Server code: 102 """
-    """ The server send us a list of 10 possible distributed parents to connect to.
+    """ Server code: 102
+
+    The server send us a list of 10 possible distributed parents to connect to.
     This message is sent to us at regular intervals until we tell the server we don't
     need more possible parents, through a HaveNoParent message. """
 
@@ -1604,15 +1663,17 @@ class PossibleParents(ServerMessage):
 
 
 class WishlistSearch(FileSearch):
-    """ Server code: 103 """
-    """ We send the server one of our wishlist search queries at each interval. """
+    """ Server code: 103
+
+    We send the server one of our wishlist search queries at each interval. """
 
     __slots__ = ()
 
 
 class WishlistInterval(ServerMessage):
-    """ Server code: 104 """
-    """ The server tells us the wishlist search interval. """
+    """ Server code: 104
+
+    The server tells us the wishlist search interval. """
 
     __slots__ = ("seconds",)
 
@@ -1624,9 +1685,11 @@ class WishlistInterval(ServerMessage):
 
 
 class SimilarUsers(ServerMessage):
-    """ Server code: 110 """
-    """ The server sends us a list of similar users related to our interests. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 110
+
+    The server sends us a list of similar users related to our interests.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("users",)
 
@@ -1647,11 +1710,13 @@ class SimilarUsers(ServerMessage):
 
 
 class ItemRecommendations(Recommendations):
-    """ Server code: 111 """
-    """ The server sends us a list of recommendations related to a specific
+    """ Server code: 111
+
+    The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an existing
-    recommendation list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    recommendation list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("thing",)
 
@@ -1668,10 +1733,12 @@ class ItemRecommendations(Recommendations):
 
 
 class ItemSimilarUsers(ServerMessage):
-    """ Server code: 112 """
-    """ The server sends us a list of similar users related to a specific item,
-    which is usually present in the like/dislike list or recommendation list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 112
+
+    The server sends us a list of similar users related to a specific item,
+    which is usually present in the like/dislike list or recommendation list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("thing", "users")
 
@@ -1692,8 +1759,9 @@ class ItemSimilarUsers(ServerMessage):
 
 
 class RoomTickerState(ServerMessage):
-    """ Server code: 113 """
-    """ The server returns a list of tickers in a chat room.
+    """ Server code: 113
+
+    The server returns a list of tickers in a chat room.
 
     Tickers are customizable, user-specific messages that appear on
     chat room walls. """
@@ -1717,8 +1785,9 @@ class RoomTickerState(ServerMessage):
 
 
 class RoomTickerAdd(ServerMessage):
-    """ Server code: 114 """
-    """ The server sends us a new ticker that was added to a chat room.
+    """ Server code: 114
+
+    The server sends us a new ticker that was added to a chat room.
 
     Tickers are customizable, user-specific messages that appear on
     chat room walls. """
@@ -1737,8 +1806,9 @@ class RoomTickerAdd(ServerMessage):
 
 
 class RoomTickerRemove(ServerMessage):
-    """ Server code: 115 """
-    """ The server informs us that a ticker was removed from a chat room.
+    """ Server code: 115
+
+    The server informs us that a ticker was removed from a chat room.
 
     Tickers are customizable, user-specific messages that appear on
     chat room walls. """
@@ -1755,8 +1825,9 @@ class RoomTickerRemove(ServerMessage):
 
 
 class RoomTickerSet(ServerMessage):
-    """ Server code: 116 """
-    """ We send this to the server when we change our own ticker in
+    """ Server code: 116
+
+    We send this to the server when we change our own ticker in
     a chat room. Sending an empty ticker string removes any existing
     ticker in the room.
 
@@ -1778,24 +1849,29 @@ class RoomTickerSet(ServerMessage):
 
 
 class AddThingIHate(AddThingILike):
-    """ Server code: 117 """
-    """ We send this to the server when we add an item to our hate list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 117
+
+    We send this to the server when we add an item to our hate list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ()
 
 
 class RemoveThingIHate(RemoveThingILike):
-    """ Server code: 118 """
-    """ We send this to the server when we remove an item from our hate list. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 118
+
+    We send this to the server when we remove an item from our hate list.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ()
 
 
 class RoomSearch(ServerMessage):
-    """ Server code: 120 """
-    """ We send this to the server to search files shared by users who have
+    """ Server code: 120
+
+    We send this to the server to search files shared by users who have
     joined a specific chat room. The token is a number generated by the client
     and is used to track the search results. """
 
@@ -1823,8 +1899,9 @@ class RoomSearch(ServerMessage):
 
 
 class SendUploadSpeed(ServerMessage):
-    """ Server code: 121 """
-    """ We send this after a finished upload to let the server update the speed
+    """ Server code: 121
+
+    We send this after a finished upload to let the server update the speed
     statistics for ourselves. """
 
     __slots__ = ("speed",)
@@ -1837,9 +1914,11 @@ class SendUploadSpeed(ServerMessage):
 
 
 class UserPrivileged(ServerMessage):
-    """ Server code: 122 """
-    """ We ask the server whether a user is privileged or not. """
-    """ DEPRECATED, use WatchUser and GetUserStatus server messages """
+    """ Server code: 122
+
+    We ask the server whether a user is privileged or not.
+
+    DEPRECATED, use WatchUser and GetUserStatus server messages """
 
     __slots__ = ("user", "privileged")
 
@@ -1856,8 +1935,9 @@ class UserPrivileged(ServerMessage):
 
 
 class GivePrivileges(ServerMessage):
-    """ Server code: 123 """
-    """ We give (part of) our privileges, specified in days, to another
+    """ Server code: 123
+
+    We give (part of) our privileges, specified in days, to another
     user on the network. """
 
     __slots__ = ("user", "days")
@@ -1875,8 +1955,9 @@ class GivePrivileges(ServerMessage):
 
 
 class NotifyPrivileges(ServerMessage):
-    """ Server code: 124 """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Server code: 124
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("token", "user")
 
@@ -1897,8 +1978,9 @@ class NotifyPrivileges(ServerMessage):
 
 
 class AckNotifyPrivileges(ServerMessage):
-    """ Server code: 125 """
-    """ DEPRECATED, no longer used """
+    """ Server code: 125
+
+    DEPRECATED, no longer used """
 
     __slots__ = ("token",)
 
@@ -1913,8 +1995,9 @@ class AckNotifyPrivileges(ServerMessage):
 
 
 class BranchLevel(ServerMessage):
-    """ Server code: 126 """
-    """ We tell the server what our position is in our branch (xth generation)
+    """ Server code: 126
+
+    We tell the server what our position is in our branch (xth generation)
     on the distributed network. """
 
     __slots__ = ("value",)
@@ -1927,8 +2010,9 @@ class BranchLevel(ServerMessage):
 
 
 class BranchRoot(ServerMessage):
-    """ Server code: 127 """
-    """ We tell the server the username of the root of the branch we’re in on
+    """ Server code: 127
+
+    We tell the server the username of the root of the branch we’re in on
     the distributed network. """
 
     __slots__ = ("user",)
@@ -1941,10 +2025,12 @@ class BranchRoot(ServerMessage):
 
 
 class ChildDepth(ServerMessage):
-    """ Server code: 129 """
-    """ We tell the server the maximum number of generation of children we
-    have on the distributed network. """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Server code: 129
+
+    We tell the server the maximum number of generation of children we
+    have on the distributed network.
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("value",)
 
@@ -1956,8 +2042,9 @@ class ChildDepth(ServerMessage):
 
 
 class ResetDistributed(ServerMessage):
-    """ Server code: 130 """
-    """ The server asks us to reset our distributed parent and children. """
+    """ Server code: 130
+
+    The server asks us to reset our distributed parent and children. """
 
     __slots__ = ()
 
@@ -1967,8 +2054,9 @@ class ResetDistributed(ServerMessage):
 
 
 class PrivateRoomUsers(ServerMessage):
-    """ Server code: 133 """
-    """ The server sends us a list of room users that we can alter
+    """ Server code: 133
+
+    The server sends us a list of room users that we can alter
     (add operator abilities / dismember). """
 
     __slots__ = ("room", "numusers", "users")
@@ -1989,8 +2077,9 @@ class PrivateRoomUsers(ServerMessage):
 
 
 class PrivateRoomAddUser(ServerMessage):
-    """ Server code: 134 """
-    """ We send this to inform the server that we've added a user to a private room. """
+    """ Server code: 134
+
+    We send this to inform the server that we've added a user to a private room. """
 
     __slots__ = ("room", "user")
 
@@ -2011,15 +2100,17 @@ class PrivateRoomAddUser(ServerMessage):
 
 
 class PrivateRoomRemoveUser(PrivateRoomAddUser):
-    """ Server code: 135 """
-    """ We send this to inform the server that we've removed a user from a private room. """
+    """ Server code: 135
+
+    We send this to inform the server that we've removed a user from a private room. """
 
     __slots__ = ()
 
 
 class PrivateRoomDismember(ServerMessage):
-    """ Server code: 136 """
-    """ We send this to the server to remove our own membership of a private room. """
+    """ Server code: 136
+
+    We send this to the server to remove our own membership of a private room. """
 
     __slots__ = ("room",)
 
@@ -2031,8 +2122,9 @@ class PrivateRoomDismember(ServerMessage):
 
 
 class PrivateRoomDisown(ServerMessage):
-    """ Server code: 137 """
-    """ We send this to the server to stop owning a private room. """
+    """ Server code: 137
+
+    We send this to the server to stop owning a private room. """
 
     __slots__ = ("room",)
 
@@ -2044,8 +2136,9 @@ class PrivateRoomDisown(ServerMessage):
 
 
 class PrivateRoomSomething(ServerMessage):
-    """ Server code: 138 """
-    """ OBSOLETE, no longer used """
+    """ Server code: 138
+
+    OBSOLETE, no longer used """
 
     __slots__ = ("room",)
 
@@ -2060,8 +2153,9 @@ class PrivateRoomSomething(ServerMessage):
 
 
 class PrivateRoomAdded(ServerMessage):
-    """ Server code: 139 """
-    """ The server sends us this message when we are added to a private room. """
+    """ Server code: 139
+
+    The server sends us this message when we are added to a private room. """
 
     __slots__ = ("room",)
 
@@ -2073,15 +2167,17 @@ class PrivateRoomAdded(ServerMessage):
 
 
 class PrivateRoomRemoved(PrivateRoomAdded):
-    """ Server code: 140 """
-    """ The server sends us this message when we are removed from a private room. """
+    """ Server code: 140
+
+    The server sends us this message when we are removed from a private room. """
 
     __slots__ = ()
 
 
 class PrivateRoomToggle(ServerMessage):
-    """ Server code: 141 """
-    """ We send this when we want to enable or disable invitations to private rooms. """
+    """ Server code: 141
+
+    We send this when we want to enable or disable invitations to private rooms. """
 
     __slots__ = ("enabled",)
 
@@ -2097,8 +2193,9 @@ class PrivateRoomToggle(ServerMessage):
 
 
 class ChangePassword(ServerMessage):
-    """ Server code: 142 """
-    """ We send this to the server to change our password. We receive a
+    """ Server code: 142
+
+    We send this to the server to change our password. We receive a
     response if our password changes. """
 
     __slots__ = ("password",)
@@ -2114,22 +2211,25 @@ class ChangePassword(ServerMessage):
 
 
 class PrivateRoomAddOperator(PrivateRoomAddUser):
-    """ Server code: 143 """
-    """ We send this to the server to add private room operator abilities to a user. """
+    """ Server code: 143
+
+    We send this to the server to add private room operator abilities to a user. """
 
     __slots__ = ()
 
 
 class PrivateRoomRemoveOperator(PrivateRoomAddUser):
-    """ Server code: 144 """
-    """ We send this to the server to remove private room operator abilities from a user. """
+    """ Server code: 144
+
+    We send this to the server to remove private room operator abilities from a user. """
 
     __slots__ = ()
 
 
 class PrivateRoomOperatorAdded(ServerMessage):
-    """ Server code: 145 """
-    """ The server send us this message when we're given operator abilities
+    """ Server code: 145
+
+    The server send us this message when we're given operator abilities
     in a private room. """
 
     __slots__ = ("room",)
@@ -2142,8 +2242,9 @@ class PrivateRoomOperatorAdded(ServerMessage):
 
 
 class PrivateRoomOperatorRemoved(ServerMessage):
-    """ Server code: 146 """
-    """ The server send us this message when our operator abilities are removed
+    """ Server code: 146
+
+    The server send us this message when our operator abilities are removed
     in a private room. """
 
     __slots__ = ("room",)
@@ -2159,8 +2260,9 @@ class PrivateRoomOperatorRemoved(ServerMessage):
 
 
 class PrivateRoomOwned(ServerMessage):
-    """ Server code: 148 """
-    """ The server sends us a list of operators in a specific room, that we can
+    """ Server code: 148
+
+    The server sends us a list of operators in a specific room, that we can
     remove operator abilities from. """
 
     __slots__ = ("room", "number", "operators")
@@ -2181,8 +2283,9 @@ class PrivateRoomOwned(ServerMessage):
 
 
 class MessageUsers(ServerMessage):
-    """ Server code: 149 """
-    """ Sends a broadcast private message to the given list of online users. """
+    """ Server code: 149
+
+    Sends a broadcast private message to the given list of online users. """
 
     __slots__ = ("users", "msg")
 
@@ -2202,10 +2305,12 @@ class MessageUsers(ServerMessage):
 
 
 class JoinGlobalRoom(ServerMessage):
-    """ Server code: 150 """
-    """ We ask the server to send us messages from all public rooms, also
-    known as public room feed. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 150
+
+    We ask the server to send us messages from all public rooms, also
+    known as public room feed.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ()
 
@@ -2214,10 +2319,12 @@ class JoinGlobalRoom(ServerMessage):
 
 
 class LeaveGlobalRoom(ServerMessage):
-    """ Server code: 151 """
-    """ We ask the server to stop sending us messages from all public rooms,
-    also known as public room feed. """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 151
+
+    We ask the server to stop sending us messages from all public rooms,
+    also known as public room feed.
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ()
 
@@ -2226,10 +2333,12 @@ class LeaveGlobalRoom(ServerMessage):
 
 
 class GlobalRoomMessage(ServerMessage):
-    """ Server code: 152 """
-    """ The server sends this when a new message has been written in the public
-    room feed (every single line written in every public room). """
-    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
+    """ Server code: 152
+
+    The server sends this when a new message has been written in the public
+    room feed (every single line written in every public room).
+
+    DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     __slots__ = ("room", "user", "msg")
 
@@ -2245,9 +2354,11 @@ class GlobalRoomMessage(ServerMessage):
 
 
 class RelatedSearch(ServerMessage):
-    """ Server code: 153 """
-    """ The server returns a list of related search terms for a search query. """
-    """ OBSOLETE, server sends empty list as of 2018 """
+    """ Server code: 153
+
+    The server returns a list of related search terms for a search query.
+
+    OBSOLETE, server sends empty list as of 2018 """
 
     __slots__ = ("query", "terms")
 
@@ -2270,8 +2381,9 @@ class RelatedSearch(ServerMessage):
 
 
 class CantConnectToPeer(ServerMessage):
-    """ Server code: 1001 """
-    """ We send this to say we can't connect to peer after it has asked us
+    """ Server code: 1001
+
+    We send this to say we can't connect to peer after it has asked us
     to connect. We receive this if we asked peer to connect and it can't do
     this. This message means a connection can't be established either way. """
 
@@ -2293,8 +2405,9 @@ class CantConnectToPeer(ServerMessage):
 
 
 class CantCreateRoom(ServerMessage):
-    """ Server code: 1003 """
-    """ Server tells us a new room cannot be created. This message only seems
+    """ Server code: 1003
+
+    Server tells us a new room cannot be created. This message only seems
     to be sent if you try to create a room with the same name as an existing
     private room. In other cases, such as using a room name with leading or
     trailing spaces, only a private message containing an error message is sent. """
@@ -2308,9 +2421,7 @@ class CantCreateRoom(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-"""
-Peer Init Messages
-"""
+# Peer Init Messages #
 
 
 class PeerInitMessage(SlskMessage):
@@ -2319,8 +2430,9 @@ class PeerInitMessage(SlskMessage):
 
 
 class PierceFireWall(PeerInitMessage):
-    """ Peer init code: 0 """
-    """ This message is sent in response to an indirect connection request
+    """ Peer init code: 0
+
+    This message is sent in response to an indirect connection request
     from another user. If the message goes through to the user, the connection
     is ready. The token is taken from the ConnectToPeer server message. """
 
@@ -2340,8 +2452,9 @@ class PierceFireWall(PeerInitMessage):
 
 
 class PeerInit(PeerInitMessage):
-    """ Peer init code: 1 """
-    """ This message is sent to initiate a direct connection to another
+    """ Peer init code: 1
+
+    This message is sent to initiate a direct connection to another
     peer. The token is apparently always 0 and ignored.
 
     Nicotine+ extends the PeerInit class to reuse and keep track of peer
@@ -2376,9 +2489,7 @@ class PeerInit(PeerInitMessage):
             self.target_user = self.init_user
 
 
-"""
-Peer Messages
-"""
+# Peer Messages #
 
 
 class PeerMessage(SlskMessage):
@@ -2572,8 +2683,9 @@ class FileListMessage(PeerMessage):
 
 
 class SharedFileListRequest(PeerMessage):
-    """ Peer code: 4 """
-    """ We send this to a peer to ask for a list of shared files. """
+    """ Peer code: 4
+
+    We send this to a peer to ask for a list of shared files. """
 
     __slots__ = ("init",)
 
@@ -2589,8 +2701,9 @@ class SharedFileListRequest(PeerMessage):
 
 
 class SharedFileListResponse(FileListMessage):
-    """ Peer code: 5 """
-    """ A peer responds with a list of shared files when we've sent
+    """ Peer code: 5
+
+    A peer responds with a list of shared files when we've sent
     a SharedFileListRequest. """
 
     __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type")
@@ -2689,11 +2802,13 @@ class SharedFileListResponse(FileListMessage):
 
 
 class FileSearchRequest(PeerMessage):
-    """ Peer code: 8 """
-    """ We send this to the peer when we search for a file.
+    """ Peer code: 8
+
+    We send this to the peer when we search for a file.
     Alternatively, the peer sends this to tell us it is
-    searching for a file. """
-    """ OBSOLETE, use UserSearch server message """
+    searching for a file.
+
+    OBSOLETE, use UserSearch server message """
 
     __slots__ = ("init", "token", "text", "searchterm")
 
@@ -2716,8 +2831,9 @@ class FileSearchRequest(PeerMessage):
 
 
 class FileSearchResponse(FileListMessage):
-    """ Peer code: 9 """
-    """ A peer sends this message when it has a file search match. The token is
+    """ Peer code: 9
+
+    A peer sends this message when it has a file search match. The token is
     taken from original FileSearch, UserSearch or RoomSearch server message. """
 
     __slots__ = ("init", "user", "token", "list", "privatelist", "freeulslots",
@@ -2799,8 +2915,9 @@ class FileSearchResponse(FileListMessage):
 
 
 class UserInfoRequest(PeerMessage):
-    """ Peer code: 15 """
-    """ We ask the other peer to send us their user information, picture and all. """
+    """ Peer code: 15
+
+    We ask the other peer to send us their user information, picture and all. """
 
     __slots__ = ("init",)
 
@@ -2816,8 +2933,9 @@ class UserInfoRequest(PeerMessage):
 
 
 class UserInfoResponse(PeerMessage):
-    """ Peer code: 16 """
-    """ A peer responds with this after we've sent a UserInfoRequest. """
+    """ Peer code: 16
+
+    A peer responds with this after we've sent a UserInfoRequest. """
 
     __slots__ = ("init", "descr", "pic", "totalupl", "queuesize", "slotsavail", "uploadallowed", "has_pic")
 
@@ -2867,10 +2985,12 @@ class UserInfoResponse(PeerMessage):
 
 
 class PMessageUser(PeerMessage):
-    """ Peer code: 22 """
-    """ Chat phrase sent to someone or received by us in private.
-    This is a Nicotine+ extension to the Soulseek protocol. """
-    """ OBSOLETE """
+    """ Peer code: 22
+
+    Chat phrase sent to someone or received by us in private.
+    This is a Nicotine+ extension to the Soulseek protocol.
+
+    OBSOLETE """
 
     __slots__ = ("init", "user", "msg", "msgid", "timestamp")
 
@@ -2898,8 +3018,9 @@ class PMessageUser(PeerMessage):
 
 
 class FolderContentsRequest(PeerMessage):
-    """ Peer code: 36 """
-    """ We ask the peer to send us the contents of a single folder. """
+    """ Peer code: 36
+
+    We ask the peer to send us the contents of a single folder. """
 
     __slots__ = ("init", "dir", "token")
 
@@ -2921,8 +3042,9 @@ class FolderContentsRequest(PeerMessage):
 
 
 class FolderContentsResponse(FileListMessage):
-    """ Peer code: 37 """
-    """ A peer responds with the contents of a particular folder
+    """ Peer code: 37
+
+    A peer responds with the contents of a particular folder
     (with all subfolders) after we've sent a FolderContentsRequest. """
 
     __slots__ = ("init", "dir", "token", "list")
@@ -2983,8 +3105,9 @@ class FolderContentsResponse(FileListMessage):
 
 
 class TransferRequest(PeerMessage):
-    """ Peer code: 40 """
-    """ This message is sent by a peer once they are ready to start uploading a file.
+    """ Peer code: 40
+
+    This message is sent by a peer once they are ready to start uploading a file.
     A TransferResponse message is expected from the recipient, either allowing or
     rejecting the upload attempt.
 
@@ -3023,8 +3146,9 @@ class TransferRequest(PeerMessage):
 
 
 class TransferResponse(PeerMessage):
-    """ Peer code: 41 """
-    """ Response to TransferRequest - We (or the other peer) either agrees,
+    """ Peer code: 41
+
+    Response to TransferRequest - We (or the other peer) either agrees,
     or tells the reason for rejecting the file transfer. """
 
     __slots__ = ("init", "allowed", "token", "reason", "filesize")
@@ -3061,8 +3185,9 @@ class TransferResponse(PeerMessage):
 
 
 class PlaceholdUpload(PeerMessage):
-    """ Peer code: 42 """
-    """ OBSOLETE, no longer used """
+    """ Peer code: 42
+
+    OBSOLETE, no longer used """
 
     __slots__ = ("init", "file")
 
@@ -3078,8 +3203,9 @@ class PlaceholdUpload(PeerMessage):
 
 
 class QueueUpload(PeerMessage):
-    """ Peer code: 43 """
-    """ This message is used to tell a peer that an upload should be queued on
+    """ Peer code: 43
+
+    This message is used to tell a peer that an upload should be queued on
     their end. Once the recipient is ready to transfer the requested file, they
     will send a TransferRequest to us. """
 
@@ -3098,8 +3224,9 @@ class QueueUpload(PeerMessage):
 
 
 class PlaceInQueueResponse(PeerMessage):
-    """ Peer code: 44 """
-    """ The peer replies with the upload queue placement of the requested file. """
+    """ Peer code: 44
+
+    The peer replies with the upload queue placement of the requested file. """
 
     __slots__ = ("init", "filename", "place")
 
@@ -3121,8 +3248,9 @@ class PlaceInQueueResponse(PeerMessage):
 
 
 class UploadFailed(PlaceholdUpload):
-    """ Peer code: 46 """
-    """ This message is sent whenever a file connection of an active upload
+    """ Peer code: 46
+
+    This message is sent whenever a file connection of an active upload
     closes. Soulseek NS clients can also send this message when a file can
     not be read. The recipient either re-queues the upload (download on their
     end), or ignores the message if the transfer finished. """
@@ -3131,8 +3259,9 @@ class UploadFailed(PlaceholdUpload):
 
 
 class UploadDenied(PeerMessage):
-    """ Peer code: 50 """
-    """ This message is sent to reject QueueUpload attempts and previously queued
+    """ Peer code: 50
+
+    This message is sent to reject QueueUpload attempts and previously queued
     files. The reason for rejection will appear in the transfer list of the recipient. """
 
     __slots__ = ("init", "file", "reason")
@@ -3155,16 +3284,19 @@ class UploadDenied(PeerMessage):
 
 
 class PlaceInQueueRequest(QueueUpload):
-    """ Peer code: 51 """
-    """ This message is sent when asking for the upload queue placement of a file. """
+    """ Peer code: 51
+
+    This message is sent when asking for the upload queue placement of a file. """
 
     __slots__ = ()
 
 
 class UploadQueueNotification(PeerMessage):
-    """ Peer code: 52 """
-    """ This message is sent to inform a peer about an upload attempt initiated by us. """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Peer code: 52
+
+    This message is sent to inform a peer about an upload attempt initiated by us.
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("init",)
 
@@ -3179,8 +3311,9 @@ class UploadQueueNotification(PeerMessage):
 
 
 class UnknownPeerMessage(PeerMessage):
-    """ Peer code: 12547 """
-    """ UNKNOWN """
+    """ Peer code: 12547
+
+    UNKNOWN """
 
     __slots__ = ("init",)
 
@@ -3192,9 +3325,7 @@ class UnknownPeerMessage(PeerMessage):
         pass
 
 
-"""
-File Messages
-"""
+# File Messages #
 
 
 class FileMessage(SlskMessage):
@@ -3250,9 +3381,7 @@ class FileOffset(FileMessage):
         _pos, self.offset = self.unpack_uint64(message)
 
 
-"""
-Distributed Messages
-"""
+# Distributed Messages #
 
 
 class DistribMessage(SlskMessage):
@@ -3261,9 +3390,11 @@ class DistribMessage(SlskMessage):
 
 
 class DistribPing(DistribMessage):
-    """ Distrib code: 0 """
-    """ We ping distributed children every 60 seconds. """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Distrib code: 0
+
+    We ping distributed children every 60 seconds.
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("init",)
 
@@ -3279,8 +3410,9 @@ class DistribPing(DistribMessage):
 
 
 class DistribSearch(DistribMessage):
-    """ Distrib code: 3 """
-    """ Search request that arrives through the distributed network.
+    """ Distrib code: 3
+
+    Search request that arrives through the distributed network.
     We transmit the search request to our child peers. """
 
     __slots__ = ("init", "unknown", "user", "token", "searchterm")
@@ -3309,8 +3441,9 @@ class DistribSearch(DistribMessage):
 
 
 class DistribBranchLevel(DistribMessage):
-    """ Distrib code: 4 """
-    """ We tell our distributed children what our position is in our branch (xth
+    """ Distrib code: 4
+
+    We tell our distributed children what our position is in our branch (xth
     generation) on the distributed network.
 
     If we receive a branch level of 0 from a parent, we should mark the parent as
@@ -3330,8 +3463,9 @@ class DistribBranchLevel(DistribMessage):
 
 
 class DistribBranchRoot(DistribMessage):
-    """ Distrib code: 5 """
-    """ We tell our distributed children the username of the root of the branch
+    """ Distrib code: 5
+
+    We tell our distributed children the username of the root of the branch
     we’re in on the distributed network.
 
     This message should not be sent when we're the branch root. """
@@ -3350,10 +3484,12 @@ class DistribBranchRoot(DistribMessage):
 
 
 class DistribChildDepth(DistribMessage):
-    """ Distrib code: 7 """
-    """ We tell our distributed parent the maximum number of generation of children
-    we have on the distributed network. """
-    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
+    """ Distrib code: 7
+
+    We tell our distributed parent the maximum number of generation of children
+    we have on the distributed network.
+
+    DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     __slots__ = ("init", "value")
 
@@ -3369,8 +3505,9 @@ class DistribChildDepth(DistribMessage):
 
 
 class DistribEmbeddedMessage(DistribMessage):
-    """ Distrib code: 93 """
-    """ A branch root sends us an embedded distributed message. We unpack the
+    """ Distrib code: 93
+
+    A branch root sends us an embedded distributed message. We unpack the
     distributed message and distribute it to our child peers. The only type of
     distributed message sent at present is DistribSearch (distributed code 3). """
 
@@ -3393,9 +3530,7 @@ class DistribEmbeddedMessage(DistribMessage):
         self.distrib_message = message[pos:].tobytes()
 
 
-"""
-Message Events
-"""
+# Message Events #
 
 
 NETWORK_MESSAGE_EVENTS = {
@@ -3462,9 +3597,7 @@ NETWORK_MESSAGE_EVENTS = {
 }
 
 
-"""
-Message Codes
-"""
+# Message Codes #
 
 
 SERVER_MESSAGE_CODES = {

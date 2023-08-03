@@ -28,7 +28,7 @@ from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.utils import encode_path
 
 
-""" UI Builder """
+# UI Builder #
 
 
 ui_data = {}

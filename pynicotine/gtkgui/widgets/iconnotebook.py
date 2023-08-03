@@ -39,9 +39,6 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 
 
-""" Icon Notebook """
-
-
 class TabLabel:
 
     def __init__(self, label, full_text=None, close_button_visible=False, close_callback=None):
@@ -309,7 +306,7 @@ class IconNotebook:
     def grab_focus(self):
         self.widget.grab_focus()
 
-    """ Tabs """
+    # Tabs #
 
     def get_tab_label(self, page):
         return self.tab_labels.get(page)
@@ -467,7 +464,7 @@ class IconNotebook:
     def reorder_child(self, page, order):
         self.widget.reorder_child(page, order)
 
-    """ Tab Highlights """
+    # Tab Highlights #
 
     def request_tab_changed(self, page, is_important=False, is_quiet=False):
 
@@ -534,7 +531,7 @@ class IconNotebook:
             self.window.notebook.remove_tab_changed(self.parent_page)
             self.window.notebook.request_tab_changed(self.parent_page, is_important=False)
 
-    """ Tab User Status """
+    # Tab User Status #
 
     def set_user_status(self, page, user, status):
 
@@ -552,7 +549,7 @@ class IconNotebook:
         tab_label.set_text(user)
         tab_label.set_tooltip_text(f"{user} ({status_text})")
 
-    """ Signals """
+    # Signals #
 
     def emit_switch_page_signal(self):
 
@@ -696,7 +693,7 @@ class IconNotebook:
 
         return True
 
-    """ Signals (GTK 4) """
+    # Signals (GTK 4) #
 
     def on_notebook_click_pressed(self, controller, _num_p, pressed_x, pressed_y):
 

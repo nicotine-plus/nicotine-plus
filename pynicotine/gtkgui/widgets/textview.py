@@ -37,9 +37,6 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
 
 
-""" Textview """
-
-
 class TextView:
 
     if GTK_API_VERSION >= 4:
@@ -234,7 +231,7 @@ class TextView:
         self.textbuffer.delete(start_iter, end_iter)
         self.tag_urls.clear()
 
-    """ Text Tags (usernames, URLs) """
+    # Text Tags (Usernames, URLs) #
 
     def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
@@ -267,7 +264,7 @@ class TextView:
         for tag in self.tag_urls.values():
             self.update_tag(tag)
 
-    """ Events """
+    # Events #
 
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 

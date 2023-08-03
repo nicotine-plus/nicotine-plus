@@ -229,7 +229,7 @@ class Core:
 
         threading.Thread.__init__ = init_thread_excepthook
 
-    """ Actions """
+    # Actions #
 
     def start(self):
 
@@ -341,7 +341,7 @@ class Core:
 
         self.watched_users[user] = {}
 
-    """ Message Callbacks """
+    # Message Callbacks #
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)

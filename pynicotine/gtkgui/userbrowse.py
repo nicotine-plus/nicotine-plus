@@ -396,7 +396,7 @@ class UserBrowse:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    """ Folder/File Views """
+    # Folder/File Views #
 
     def clear_model(self):
 
@@ -638,7 +638,7 @@ class UserBrowse:
         selected_file = next(iter(self.selected_files), "")
         return f"{selected_folder}{selected_file}"
 
-    """ Search """
+    # Search #
 
     def rebuild_search_matches(self):
 
@@ -715,7 +715,7 @@ class UserBrowse:
         self.select_search_match_files()
         return True
 
-    """ Callbacks (folder_tree_view) """
+    # Callbacks (folder_tree_view) #
 
     def on_select_dir(self, tree_view, iterator):
 
@@ -803,7 +803,7 @@ class UserBrowse:
         folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
         clipboard.copy_text(folder_url)
 
-    """ Key Bindings (folder_tree_view) """
+    # Key Bindings (folder_tree_view) #
 
     def on_folder_row_activated(self, tree_view, iterator, _column_id):
 
@@ -925,7 +925,7 @@ class UserBrowse:
         self.on_file_manager()
         return True
 
-    """ Callbacks (file_list_view) """
+    # Callbacks (file_list_view) #
 
     def on_file_popup_menu(self, menu, _widget):
 
@@ -1069,7 +1069,7 @@ class UserBrowse:
         file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
         clipboard.copy_text(file_url)
 
-    """ Key Bindings (file_list_view) """
+    # Key Bindings (file_list_view) #
 
     def on_file_row_activated(self, _tree_view, _iterator, _column_id):
 
@@ -1181,7 +1181,7 @@ class UserBrowse:
         self.on_file_properties(*_args)
         return True
 
-    """ Callbacks (General) """
+    # Callbacks (General) #
 
     def on_expand(self, *_args):
 
@@ -1236,7 +1236,7 @@ class UserBrowse:
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()
 
-    """ Key Bindings (General) """
+    # Key Bindings (General) #
 
     def on_expand_accelerator(self, *_args):
         """ Ctrl+\backslash: Expand / Collapse All """

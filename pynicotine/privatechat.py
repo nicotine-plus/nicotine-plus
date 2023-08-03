@@ -189,8 +189,9 @@ class PrivateChat:
             core.send_message_to_server(slskmessages.MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
-        """ Server code: 3 """
-        """ Received a user's IP address, process any queued private messages and check
+        """ Server code: 3
+
+        Received a user's IP address, process any queued private messages and check
         if the IP is ignored """
 
         user = msg.user

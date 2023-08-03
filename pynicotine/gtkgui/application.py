@@ -278,7 +278,7 @@ class Application:
                     )
                 )
 
-    """ Core Events """
+    # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
@@ -369,7 +369,7 @@ class Application:
             callback=self.on_invalid_password_response
         ).show()
 
-    """ Actions """
+    # Actions #
 
     def on_connect(self, *_args):
         core.connect()
@@ -615,7 +615,7 @@ class Application:
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
-    """ Running """
+    # Running #
 
     def raise_exception(self, exc_value):
         raise exc_value

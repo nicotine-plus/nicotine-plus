@@ -24,9 +24,6 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" Accelerator """
-
-
 class Accelerator:
 
     if GTK_API_VERSION >= 4:

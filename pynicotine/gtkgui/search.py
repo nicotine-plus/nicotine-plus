@@ -972,7 +972,7 @@ class Search:
         self.num_results_visible += 1
         return iterator
 
-    """ Result Filters """
+    # Result Filters #
 
     @staticmethod
     def _split_operator(condition):
@@ -1433,9 +1433,8 @@ class Search:
     def on_download_folders(self, *_args, download_location=""):
 
         if download_location:
-            """ Custom download location specified, remember it when peer sends a folder
-            contents reply """
-
+            # Custom download location specified, remember it when peer sends a folder
+            # contents reply
             requested_folders = core.transfers.requested_folders
         else:
             requested_folders = defaultdict(dict)
@@ -1445,8 +1444,8 @@ class Search:
             folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
             if folder in requested_folders[user]:
-                """ Ensure we don't send folder content requests for a folder more than once,
-                e.g. when several selected resuls belong to the same folder. """
+                # Ensure we don't send folder content requests for a folder more than once,
+                # e.g. when several selected resuls belong to the same folder
                 continue
 
             requested_folders[user][folder] = download_location

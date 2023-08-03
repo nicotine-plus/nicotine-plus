@@ -41,9 +41,6 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.slskmessages import UserStatus
 
 
-""" Treeview """
-
-
 class TreeView:
 
     def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
@@ -389,10 +386,10 @@ class TreeView:
             width = column.get_width()
             visible = column.get_visible()
 
-            """ A column width of zero should not be saved to the config.
-            When a column is hidden, the correct width will be remembered during the
-            run it was hidden. Subsequent runs will yield a zero width, so we
-            attempt to re-use a previously saved non-zero column width instead. """
+            # A column width of zero should not be saved to the config.
+            # When a column is hidden, the correct width will be remembered during the
+            # run it was hidden. Subsequent runs will yield a zero width, so we
+            # attempt to re-use a previously saved non-zero column width instead.
             try:
                 if width <= 0:
                     if not visible:
@@ -742,7 +739,7 @@ class TreeView:
         return True
 
 
-""" Legacy functions (to be removed) """
+# Legacy Functions (to be removed) #
 
 
 def verify_grouping_mode(mode):

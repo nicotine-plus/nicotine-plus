@@ -19,9 +19,6 @@
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" Window """
-
-
 class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive

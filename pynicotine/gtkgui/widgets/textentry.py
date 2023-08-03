@@ -31,9 +31,6 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.slskmessages import UserStatus
 
 
-""" Text Entry-related """
-
-
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
@@ -519,7 +516,7 @@ class ComboBox:
         if self.get_text() != item_text:
             self.set_text(item_text)
 
-    """ General """
+    # General #
 
     def append(self, item, item_id=None):
 
@@ -627,7 +624,7 @@ class ComboBox:
     def set_visible(self, visible):
         self.widget.set_visible(visible)
 
-    """ Callbacks """
+    # Callbacks #
 
     def _on_factory_bind(self, _factory, list_item):
 

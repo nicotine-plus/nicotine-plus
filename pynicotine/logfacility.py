@@ -82,7 +82,7 @@ class Logger:
         events.connect("quit", self._close_log_files)
         events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
 
-    """ Log Levels """
+    # Log Levels #
 
     def init_log_levels(self):
 
@@ -115,7 +115,7 @@ class Logger:
         if log_level in log_levels:
             log_levels.remove(log_level)
 
-    """ Log Files """
+    # Log Files #
 
     def _get_log_file(self, folder_path, base_name):
 
@@ -222,7 +222,7 @@ class Logger:
         self.write_log_file(
             folder_path=config.sections["logging"]["transferslogsdir"], base_name=self.transfers_file_name, text=msg)
 
-    """ Log Messages """
+    # Log Messages #
 
     def _format_log_message(self, level, msg, msg_args):
 
