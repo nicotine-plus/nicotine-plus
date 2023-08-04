@@ -615,6 +615,14 @@ class Application:
 
     # Running #
 
+    def _force_quit(self):
+        """ Used when the thread event processor fails due to an unhandled
+        exception, to force a shutdown """
+
+        core.quit()
+        events.emit("quit")
+        self._instance.quit()
+
     def raise_exception(self, exc_value):
         raise exc_value
 
@@ -632,8 +640,7 @@ class Application:
             return
 
         loop.quit()
-        core.quit()
-        self._instance.quit()
+        self._force_quit()
 
     def show_critical_error_dialog(self, error, loop):
 
@@ -656,7 +663,7 @@ class Application:
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            core.quit()
+            self._force_quit()
             self.raise_exception(exc_value)
             return
 
