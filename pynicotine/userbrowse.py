@@ -167,8 +167,8 @@ class UserBrowse:
                 for _code, _filename, _size, _ext, _attrs, *_unused in files:
                     break
 
-        except Exception as msg:
-            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": msg})
+        except Exception as error:
+            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
             return
 
         username = os.path.basename(filename)

@@ -131,11 +131,11 @@ class Config:
             if not os.path.isdir(path_encoded):
                 os.makedirs(path_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": path, "error": msg})
+                    {"path": path, "error": error})
             return False
 
         return True
@@ -150,11 +150,11 @@ class Config:
             if not os.path.isdir(data_dir_encoded):
                 os.makedirs(data_dir_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": self.data_dir, "error": msg})
+                    {"path": self.data_dir, "error": error})
 
     def load_config(self):
 
