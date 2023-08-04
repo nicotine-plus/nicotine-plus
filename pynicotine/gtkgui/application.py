@@ -91,7 +91,6 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("quit", self.on_quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -319,9 +318,6 @@ class Application:
             option_label=_("Remember choice") if remember else None,
             callback=self.on_confirm_quit_response
         ).show()
-
-    def on_quit(self):
-        self._instance.quit()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
         core.shares.rescan_shares(force=(response_id == "force_rescan"))
@@ -703,7 +699,14 @@ class Application:
         GLib.idle_add(self.raise_exception, exc_value)
 
     def on_process_thread_events(self):
-        return events.process_thread_events()
+
+        if events.process_thread_events():
+            # Continue processing events
+            return True
+
+        # Application is shutting down
+        self._instance.quit()
+        return False
 
     def on_activate(self, *_args):
 

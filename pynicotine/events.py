@@ -266,10 +266,10 @@ class Events:
         """ Called by the main loop 20 times per second to emit thread events in the main thread.
         Return value indicates if the main loop should continue processing events. """
 
-        if not self._is_active:
-            return False
-
         if not self._thread_events:
+            if not self._is_active:
+                return False
+
             return True
 
         event_list = []
@@ -321,8 +321,9 @@ class Events:
 
     def _quit(self):
 
+        self.process_thread_events()
+
         self._callbacks.clear()
-        self._thread_events.clear()
         self._pending_scheduler_events.clear()
 
         self._is_active = False

@@ -106,8 +106,8 @@ class Core:
         if "cli" in enabled_components:
             cli.enable_logging()
 
-        events.enable()
         config.load_config()
+        events.enable()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -371,6 +371,8 @@ class Core:
         self.chatrooms = None
         self.privatechat = None
         self.pluginhandler = None
+
+        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s!"), {
             "program": config.application_name,

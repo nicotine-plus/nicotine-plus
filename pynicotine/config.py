@@ -827,8 +827,6 @@ class Config:
 
     def _quit(self):
 
-        self.write_configuration()
-
         self.parser.clear()
         self.sections.clear()
         self.defaults.clear()

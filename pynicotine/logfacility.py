@@ -253,8 +253,9 @@ class Logger:
         msg = self._format_log_message(level, msg, msg_args)
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
-            self.write_log_file(
-                folder_path=config.sections["logging"]["debuglogsdir"], base_name=self.debug_file_name, text=msg)
+            events.invoke_main_thread(
+                self.write_log_file, folder_path=config.sections["logging"]["debuglogsdir"],
+                base_name=self.debug_file_name, text=msg)
 
         try:
             timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
