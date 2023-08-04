@@ -966,7 +966,8 @@ class NetworkThread(Thread):
                 self._total_download_bandwidth = 0
 
             if callback:
-                events.emit_main_thread("download-connection-closed", init.target_user, conn_obj.filedown.token)
+                events.emit_main_thread(
+                    "download-connection-closed", username=init.target_user, token=conn_obj.filedown.token)
 
             self._calc_download_limit()
 
@@ -978,7 +979,9 @@ class NetworkThread(Thread):
 
             if callback:
                 timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
-                events.emit_main_thread("upload-connection-closed", init.target_user, conn_obj.fileupl.token, timed_out)
+                events.emit_main_thread(
+                    "upload-connection-closed", username=init.target_user, token=conn_obj.fileupl.token,
+                    timed_out=timed_out)
 
             self._calc_upload_limit_function()
 
@@ -1840,7 +1843,9 @@ class NetworkThread(Thread):
 
                 except (OSError, ValueError) as error:
                     events.emit_main_thread(
-                        "download-file-error", conn_obj.filedown.token, conn_obj.filedown.file, error)
+                        "download-file-error", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
+                        error=error
+                    )
                     should_close_connection = True
 
                 added_bytes_len = len(added_bytes_mem)
@@ -1854,8 +1859,10 @@ class NetworkThread(Thread):
                 # We save resources by not sending data back to core
                 # every time a part of a file is downloaded
 
-                events.emit_main_thread("file-download-progress", conn_obj.filedown.init.target_user,
-                                        conn_obj.filedown.token, conn_obj.filedown.leftbytes)
+                events.emit_main_thread(
+                    "file-download-progress", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
+                    bytes_left=conn_obj.filedown.leftbytes
+                )
                 conn_obj.lastcallback = current_time
 
             if finished:
@@ -1876,7 +1883,10 @@ class NetworkThread(Thread):
                     self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                 except (OSError, ValueError) as error:
-                    events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
+                    events.emit_main_thread(
+                        "upload-file-error", username=conn_obj.init.target_user, token=conn_obj.fileupl.token,
+                        error=error
+                    )
                     should_close_connection = True
 
         msg_buffer_mem.release()
@@ -2511,7 +2521,10 @@ class NetworkThread(Thread):
                         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
             except (OSError, ValueError) as error:
-                events.emit_main_thread("upload-file-error", conn_obj.fileupl.token, conn_obj.fileupl.file, error)
+                events.emit_main_thread(
+                    "upload-file-error", username=conn_obj.init.target_user, token=conn_obj.fileupl.token,
+                    error=error
+                )
                 self._close_connection(self._conns, sock)
 
             # bytes_send can be zero if the offset equals the file size, check finished status here
@@ -2524,8 +2537,11 @@ class NetworkThread(Thread):
                     # We save resources by not sending data back to core
                     # every time a part of a file is uploaded
 
-                    events.emit_main_thread("file-upload-progress", conn_obj.fileupl.init.target_user,
-                                            conn_obj.fileupl.token, conn_obj.fileupl.offset, conn_obj.fileupl.sentbytes)
+                    events.emit_main_thread(
+                        "file-upload-progress", username=conn_obj.fileupl.init.target_user,
+                        token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
+                        bytes_sent=conn_obj.fileupl.sentbytes
+                    )
                     conn_obj.lastcallback = current_time
 
         if not conn_obj.obuf:
@@ -2554,9 +2570,11 @@ class NetworkThread(Thread):
             if (current_time - self._last_conn_stat_time) >= 1:
                 num_sockets = self._numsockets
 
-                events.emit_main_thread("set-connection-stats", num_sockets, self._total_downloads,
-                                        self._total_download_bandwidth, self._total_uploads,
-                                        self._total_upload_bandwidth)
+                events.emit_main_thread(
+                    "set-connection-stats", total_conns=num_sockets, download_conns=self._total_downloads,
+                    download_bandwidth=self._total_download_bandwidth, upload_conns=self._total_uploads,
+                    upload_bandwidth=self._total_upload_bandwidth
+                )
 
                 # Close stale outgoing connection attempts
                 for sock, conn_obj in self._connsinprogress.copy().items():
