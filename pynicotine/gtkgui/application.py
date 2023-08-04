@@ -633,6 +633,7 @@ class Application:
 
         loop.quit()
         core.quit()
+        self._instance.quit()
 
     def show_critical_error_dialog(self, error, loop):
 
