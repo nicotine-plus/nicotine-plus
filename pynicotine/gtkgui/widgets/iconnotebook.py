@@ -224,7 +224,9 @@ class TabLabel:
 
 
 class IconNotebook:
-    """ This class extends the functionality of a Gtk.Notebook widget. On top of what a Gtk.Notebook provides:
+    """This class extends the functionality of a Gtk.Notebook widget. On top of
+    what a Gtk.Notebook provides:
+
     - Icons on tabs
     - Context (right-click) menus for tabs
     - Dropdown menu for unread tabs

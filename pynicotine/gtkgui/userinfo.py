@@ -535,7 +535,7 @@ class UserInfo:
     # Callbacks #
 
     def on_draw_picture(self, area, context):
-        """ Draws a centered picture that fills the drawing area """
+        """Draws a centered picture that fills the drawing area."""
 
         area_width = area.get_allocated_width()
         area_height = area.get_allocated_height()

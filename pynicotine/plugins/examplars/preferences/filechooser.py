@@ -20,7 +20,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
-    """ File Chooser Example"""
+    """File Chooser Example."""
 
     def __init__(self, *args, **kwargs):
 

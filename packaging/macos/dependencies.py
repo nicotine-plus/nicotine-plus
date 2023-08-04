@@ -25,7 +25,7 @@ import sys
 
 
 def install_brew():
-    """ Install dependencies from the main Homebrew repos """
+    """Install dependencies from the main Homebrew repos."""
 
     gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or "3"
     use_libadwaita = gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
@@ -42,7 +42,7 @@ def install_brew():
 
 
 def install_pypi():
-    """ Install dependencies from PyPi """
+    """Install dependencies from PyPi."""
 
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", "cx_Freeze",
                            "-e", ".[packaging,test]", "semidbm"])

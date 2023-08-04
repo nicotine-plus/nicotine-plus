@@ -345,7 +345,7 @@ USER_STATUS_ICON_NAMES = {
 
 
 def load_custom_icons(update=False):
-    """ Load custom icon theme if one is selected """
+    """Load custom icon theme if one is selected."""
 
     if update:
         GTK_SETTINGS.reset_property("gtk-icon-theme-name")
@@ -453,7 +453,7 @@ def load_custom_icons(update=False):
 
 
 def load_icons():
-    """ Load custom icons necessary for the application to function """
+    """Load custom icons necessary for the application to function."""
 
     paths = (
         config.data_dir,  # Custom internal icon theme

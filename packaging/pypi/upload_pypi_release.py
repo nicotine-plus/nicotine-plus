@@ -24,14 +24,14 @@ import sys
 
 
 def create_packages():
-    """ Prepare source distribution and wheel """
+    """Prepare source distribution and wheel."""
 
     for target in ("sdist", "bdist_wheel"):
         subprocess.check_call([sys.executable, "setup.py", target])
 
 
 def upload_packages():
-    """ Upload release to PyPI """
+    """Upload release to PyPI."""
 
     subprocess.check_call([sys.executable, "-m", "twine", "upload", "dist/*"])
 

@@ -531,7 +531,7 @@ class MainWindow(Window):
             self.show_tab(self.userlist_page)
 
     def on_toggle_buddy_list(self, action, state):
-        """ Function used to switch around the UI the BuddyList position """
+        """Function used to switch around the UI the BuddyList position."""
 
         action.set_state(state)
 
@@ -727,7 +727,7 @@ class MainWindow(Window):
         return menu
 
     def create_hamburger_menu(self):
-        """ Menu button menu (header bar enabled) """
+        """Menu button menu (header bar enabled)"""
 
         menu = PopupMenu(self.application)
         self.add_connection_section(menu)
@@ -748,7 +748,7 @@ class MainWindow(Window):
         return menu
 
     def create_menu_bar(self):
-        """ Classic menu bar (header bar disabled) """
+        """Classic menu bar (header bar disabled)"""
 
         menu = PopupMenu(self.application)
         menu.add_items(
@@ -785,7 +785,8 @@ class MainWindow(Window):
     # Headerbar/Toolbar #
 
     def show_header_bar(self, page_id):
-        """ Set a headerbar for the main window (client side decorations enabled) """
+        """Set a headerbar for the main window (client side decorations
+        enabled)"""
 
         if self.widget.get_titlebar() != self.header_bar:
             self.widget.set_titlebar(self.header_bar)
@@ -811,7 +812,7 @@ class MainWindow(Window):
             self.header_end_container.add(end_widget)
 
     def hide_current_header_bar(self):
-        """ Hide the current CSD headerbar """
+        """Hide the current CSD headerbar."""
 
         if not self.current_page_id:
             return
@@ -835,7 +836,7 @@ class MainWindow(Window):
             toolbar.add(end_widget)
 
     def show_toolbar(self, page_id):
-        """ Show the non-CSD toolbar """
+        """Show the non-CSD toolbar."""
 
         if not self.widget.get_show_menubar():
             self.widget.set_show_menubar(True)
@@ -854,7 +855,7 @@ class MainWindow(Window):
         toolbar.set_visible(True)
 
     def hide_current_toolbar(self):
-        """ Hide the current toolbar """
+        """Hide the current toolbar."""
 
         if not self.current_page_id:
             return
@@ -863,8 +864,10 @@ class MainWindow(Window):
         toolbar.set_visible(False)
 
     def set_active_header_bar(self, page_id):
-        """ Switch out the active headerbar for another one. This is used when
-        changing the active notebook tab. """
+        """Switch out the active headerbar for another one.
+
+        This is used when changing the active notebook tab.
+        """
 
         if config.sections["ui"]["header_bar"]:
             self.hide_current_header_bar()
@@ -876,7 +879,7 @@ class MainWindow(Window):
         self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
 
     def on_change_focus_view(self, *_args):
-        """ F6: move focus between header bar/toolbar and main content """
+        """F6 - move focus between header bar/toolbar and main content."""
 
         title_widget = getattr(self, f"{self.current_page_id}_title")
 
@@ -1005,7 +1008,7 @@ class MainWindow(Window):
         config.sections["ui"]["modes_order"] = page_ids
 
     def on_reopen_closed_tab(self, *_args):
-        """ Ctrl+Shift+T: reopen recently closed tab """
+        """Ctrl+Shift+T - reopen recently closed tab."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1017,7 +1020,7 @@ class MainWindow(Window):
         return True
 
     def on_close_tab(self, *_args):
-        """ Ctrl+W and Ctrl+F4: close current secondary tab """
+        """Ctrl+W and Ctrl+F4 - close current secondary tab."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1034,7 +1037,7 @@ class MainWindow(Window):
         return True
 
     def on_cycle_tabs(self, _widget, _state, backwards=False):
-        """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
+        """Ctrl+Tab and Shift+Ctrl+Tab - cycle through secondary tabs."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1060,7 +1063,7 @@ class MainWindow(Window):
         return True
 
     def on_change_primary_tab(self, _widget, _state, tab_num=1):
-        """ Alt+1-9 or Ctrl+1-9: change main tab """
+        """Alt+1-9 or Ctrl+1-9 - change main tab."""
 
         visible_pages = []
 
@@ -1341,7 +1344,8 @@ class MainWindow(Window):
         self.update_bandwidth_label_underlines(transfer_type="upload")
 
     def update_bandwidth_label_underlines(self, transfer_type):
-        """ Underline status bar bandwidth labels when alternative speed limits are active """
+        """Underline status bar bandwidth labels when alternative speed limits
+        are active."""
 
         if transfer_type == "download":
             label = self.download_status_label

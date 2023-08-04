@@ -29,7 +29,7 @@ from pynicotine.logfacility import log
 
 
 def check_arguments():
-    """ Parse command line arguments specified by the user """
+    """Parse command line arguments specified by the user."""
 
     parser = argparse.ArgumentParser(
         description=_("Graphical client for the Soulseek peer-to-peer network"),
@@ -177,7 +177,7 @@ def rescan_shares():
 
 
 def run():
-    """ Run application and return its exit code """
+    """Run application and return its exit code."""
 
     set_up_python()
     rename_process(b"nicotine")

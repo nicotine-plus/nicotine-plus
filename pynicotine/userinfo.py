@@ -104,7 +104,7 @@ class UserInfo:
             })
 
     def _user_info_request(self, msg):
-        """ Peer code: 15 """
+        """Peer code 15."""
 
         user = msg.init.target_user
         ip_address, _port = msg.init.addr

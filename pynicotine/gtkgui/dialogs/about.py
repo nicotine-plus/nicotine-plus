@@ -173,8 +173,7 @@ class About(Dialog):
    - Patches for upload bandwidth management, banning, various UI improvements and more""",
 
         """>> <b>Geert Kloosterman</b>
-   - A script for importing Windows Soulseek
-     configuration""",
+   - A script for importing Windows Soulseek configuration""",
 
         """>> <b>Joe Halliwell</b>
    - Submitted a patch for optionally discarding search results after closing a search tab""",

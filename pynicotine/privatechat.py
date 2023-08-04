@@ -139,7 +139,7 @@ class PrivateChat:
         return message
 
     def private_message_queue_add(self, msg):
-        """ Queue a private message until we've received a user's IP address """
+        """Queue a private message until we've received a user's IP address."""
 
         user = msg.user
 
@@ -189,10 +189,11 @@ class PrivateChat:
             core.send_message_to_server(slskmessages.MessageUsers(users, message))
 
     def _get_peer_address(self, msg):
-        """ Server code: 3
+        """Server code 3.
 
-        Received a user's IP address, process any queued private messages and check
-        if the IP is ignored """
+        Received a user's IP address, process any queued private
+        messages and check if the IP is ignored
+        """
 
         user = msg.user
 
@@ -205,13 +206,13 @@ class PrivateChat:
             events.emit("message-user", msg_obj, queued_message=True)
 
     def _user_status(self, msg):
-        """ Server code: 7 """
+        """Server code 7."""
 
         if msg.status == slskmessages.UserStatus.OFFLINE:
             self.private_message_queue.pop(msg.user, None)
 
     def _message_user(self, msg, queued_message=False):
-        """ Server code: 22 """
+        """Server code 22."""
 
         user = msg.user
 

@@ -119,8 +119,9 @@ class TreeView:
         return self.model
 
     def redraw(self):
-        """ Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed values
-        if horizontal scrolling is present while fixed-height mode is enabled """
+        """Workaround for GTK 3 issue where GtkTreeView doesn't refresh changed
+        values if horizontal scrolling is present while fixed-height mode is
+        enabled."""
 
         if GTK_API_VERSION != 3 or self._h_adjustment.get_value() <= 0:
             return
@@ -376,7 +377,8 @@ class TreeView:
         self.widget.emit("columns-changed")
 
     def save_columns(self):
-        """ Save a treeview's column widths and visibilities for the next session """
+        """Save a treeview's column widths and visibilities for the next
+        session."""
 
         saved_columns = {}
         column_config = config.sections["columns"]
@@ -604,7 +606,7 @@ class TreeView:
         callback(self)
 
     def on_column_header_pressed(self, _treeview, column):
-        """ Reset sorting when column header has been pressed three times """
+        """Reset sorting when column header has been pressed three times."""
 
         if self._default_sort_column is None:
             # No default sort column for treeview, keep standard GTK behavior
@@ -651,7 +653,7 @@ class TreeView:
             menu.actions[title].connect("activate", self.on_column_header_toggled, columns, column_num - 1)
 
     def on_column_position_changed(self, column, _param):
-        """ Save column position and width to config """
+        """Save column position and width to config."""
 
         column_id = column.id
         offset = column.get_x_offset()
@@ -725,7 +727,7 @@ class TreeView:
         return True
 
     def on_copy_cell_data_accelerator(self, *_args):
-        """ Ctrl+C: copy cell data """
+        """Ctrl+C: copy cell data."""
 
         path, column = self.widget.get_cursor()
 
@@ -786,7 +788,7 @@ def create_grouping_menu(window, active_mode, callback):
 
 
 def set_treeview_selected_row(treeview, bin_x, bin_y):
-    """ Handles row selection when right-clicking in a treeview """
+    """Handles row selection when right-clicking in a treeview."""
 
     pathinfo = treeview.get_path_at_pos(bin_x, bin_y)
     selection = treeview.get_selection()

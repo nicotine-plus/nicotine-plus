@@ -43,7 +43,7 @@ class SharesTest(TestCase):
         self.assertIsNone(core.shares)
 
     def test_shares_scan(self):
-        """ Test a full shares scan """
+        """Test a full shares scan."""
 
         # Verify that modification time was saved for shares folder
         self.assertIn(SHARES_DIR, list(core.shares.share_dbs["mtimes"]))
@@ -74,7 +74,7 @@ class SharesTest(TestCase):
         self.assertEqual(core.shares.share_dbs["fileindex"][str(ogg_indexes[0])][0], "Shares\\nicotinetestdata.ogg")
 
     def test_hidden_file_folder_scan(self):
-        """ Test that hidden files and folders are excluded """
+        """Test that hidden files and folders are excluded."""
 
         # Check folders
         mtimes = list(core.shares.share_dbs["mtimes"])

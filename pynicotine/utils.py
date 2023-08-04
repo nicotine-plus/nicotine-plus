@@ -21,10 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains utility functions.
-"""
-
 import os
 import pickle
 import sys
@@ -74,8 +70,10 @@ def clean_path(path):
 
 
 def encode_path(path, prefix=True):
-    """ Converts a file path to bytes for processing by the system.
-    On Windows, also append prefix to enable extended-length path. """
+    """Converts a file path to bytes for processing by the system.
+
+    On Windows, also append prefix to enable extended-length path.
+    """
 
     if sys.platform == "win32" and prefix:
         path = path.replace("/", "\\")
@@ -137,8 +135,8 @@ def humanize(number):
 
 
 def factorize(filesize, base=1024):
-    """ Converts filesize string with a given unit into raw integer size,
-        defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+    """Converts filesize string with a given unit into raw integer size,
+    defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
     if not filesize:
         return None, None
@@ -173,7 +171,7 @@ def factorize(filesize, base=1024):
 
 
 def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
-    """ Truncates a string to fit inside a byte limit """
+    """Truncates a string to fit inside a byte limit."""
 
     string_bytes = string.encode(encoding)
 
@@ -191,7 +189,8 @@ def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
 
 
 def unescape(string):
-    """Removes quotes from the beginning and end of strings, and unescapes it."""
+    """Removes quotes from the beginning and end of strings, and unescapes
+    it."""
 
     string = string.encode("latin-1", "backslashreplace").decode("unicode-escape")
 
@@ -205,7 +204,8 @@ def unescape(string):
 
 
 def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
-    """Executes a string with commands, with partial support for bash-style quoting and pipes.
+    """Executes a string with commands, with partial support for bash-style
+    quoting and pipes.
 
     The different parts of the command should be separated by spaces, a double
     quotation mark can be used to embed spaces in an argument.
@@ -227,7 +227,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     Example commands:
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
-    * echo $ | flite -t """
+    * echo $ | flite -t
+    """
 
     # pylint: disable=consider-using-with
 
@@ -343,9 +344,9 @@ def _try_open_uri(uri):
 
 
 def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """ Currently used to either open a folder or play an audio file
-    Tries to run a user-specified command first, and falls back to
-    the system default. """
+    """Currently used to either open a folder or play an audio file Tries to
+    run a user-specified command first, and falls back to the system
+    default."""
 
     if file_path is None:
         return False
@@ -386,8 +387,11 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
 
 
 def open_uri(uri):
-    """ Open a URI in an external (web) browser. The given argument has
-    to be a properly formed URI including the scheme (fe. HTTP). """
+    """Open a URI in an external (web) browser.
+
+    The given argument has to be a properly formed URI including the
+    scheme (fe. HTTP).
+    """
 
     from pynicotine.config import config
 
@@ -504,9 +508,7 @@ def write_file_and_backup(path, callback, protect=False):
 
 
 class RestrictedUnpickler(pickle.Unpickler):
-    """
-    Don't allow code execution from pickles
-    """
+    """Don't allow code execution from pickles."""
 
     def find_class(self, module, name):
         # Forbid all globals
@@ -517,7 +519,7 @@ class RestrictedUnpickler(pickle.Unpickler):
 
 
 def debug(*args):
-    """ Prints debugging info. """
+    """Prints debugging info."""
 
     from pynicotine.logfacility import log
 
@@ -526,7 +528,7 @@ def debug(*args):
 
 
 def strace(function):
-    """ Decorator for debugging """
+    """Decorator for debugging."""
 
     from itertools import chain
     from pynicotine.logfacility import log

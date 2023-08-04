@@ -24,10 +24,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains configuration classes for Nicotine.
-"""
-
 import configparser
 import os
 import sys
@@ -43,8 +39,7 @@ from pynicotine.utils import write_file_and_backup
 
 
 class Config:
-    """
-    This class holds configuration information and provides the
+    """This class holds configuration information and provides the
     following methods:
 
     need_config() - returns true if configuration information is incomplete
@@ -85,9 +80,11 @@ class Config:
 
     @staticmethod
     def get_user_directories():
-        """ Returns a tuple:
+        """Returns a tuple:
+
         - the config directory
-        - the data directory """
+        - the data directory
+        """
 
         if sys.platform == "win32":
             try:
@@ -116,8 +113,8 @@ class Config:
         return config_dir, data_dir
 
     def create_config_folder(self):
-        """ Create the folder for storing the config file in, if the folder
-        doesn't exist """
+        """Create the folder for storing the config file in, if the folder
+        doesn't exist."""
 
         path, _filename = os.path.split(self.filename)
 
@@ -141,8 +138,8 @@ class Config:
         return True
 
     def create_data_folder(self):
-        """ Create the folder for storing data in (shared files etc.),
-        if the folder doesn't exist """
+        """Create the folder for storing data in (shared files etc.), if the
+        folder doesn't exist."""
 
         data_dir_encoded = encode_path(self.data_dir)
 
@@ -579,7 +576,7 @@ class Config:
         events.connect("quit", self._quit)
 
     def parse_config(self, filename):
-        """ Parses the config file """
+        """Parses the config file."""
 
         try:
             with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
@@ -591,8 +588,10 @@ class Config:
             self.parse_config(filename)
 
     def convert_config(self):
-        """ Converts the config to utf-8.
-        Mainly for upgrading Windows build. (22 July, 2020) """
+        """Converts the config to utf-8.
+
+        Mainly for upgrading Windows build. (22 July, 2020)
+        """
 
         try:
             from chardet import detect
@@ -628,7 +627,7 @@ class Config:
         return False
 
     def set_config(self):
-        """ Set config values parsed from file earlier """
+        """Set config values parsed from file earlier."""
 
         from pynicotine.logfacility import log
 

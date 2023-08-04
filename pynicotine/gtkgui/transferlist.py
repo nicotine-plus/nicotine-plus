@@ -860,28 +860,28 @@ class TransferList:
                 self.tree_view.select_row(i_transfer.iterator, should_scroll=False)
 
     def on_abort_transfers_accelerator(self, *_args):
-        """ T: abort transfer """
+        """T - abort transfer."""
 
         self.select_transfers()
         self.abort_selected_transfers()
         return True
 
     def on_retry_transfers_accelerator(self, *_args):
-        """ R: retry transfers """
+        """R - retry transfers."""
 
         self.select_transfers()
         self.retry_selected_transfers()
         return True
 
     def on_clear_transfers_accelerator(self, *_args):
-        """ Delete: clear transfers """
+        """Delete - clear transfers."""
 
         self.select_transfers()
         self.clear_selected_transfers()
         return True
 
     def on_file_properties_accelerator(self, *_args):
-        """ Alt+Return: show file properties dialog """
+        """Alt+Return - show file properties dialog."""
 
         self.select_transfers()
         self.on_file_properties()

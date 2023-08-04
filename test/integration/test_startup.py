@@ -34,7 +34,7 @@ COMMANDS = (
 class StartupTest(TestCase):
 
     def test_startup(self):
-        """ Verify that regular startup works """
+        """Verify that regular startup works."""
 
         for command in COMMANDS:
             # Assume failure by default
@@ -53,7 +53,7 @@ class StartupTest(TestCase):
 
     @skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
     def test_cli(self):
-        """ Verify that CLI-exclusive functionality works """
+        """Verify that CLI-exclusive functionality works."""
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
         self.assertIn(b"--help", output)
