@@ -135,6 +135,8 @@ class TransfersTest(TestCase):
     def test_queue_download(self):
         """ Verify that new downloads are prepended to the list """
 
+        config.sections["transfers"]["usernamesubfolders"] = False
+
         core.transfers.get_file("newuser", "Hello\\Path\\File.mp3", "")
         transfer = core.transfers.downloads[0]
 
@@ -218,6 +220,7 @@ class TransfersTest(TestCase):
 
         user = "newuser"
         folder = "Hello\\Path"
+        config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.transfers.get_folder_destination(user, folder)
 
         core.transfers.requested_folders[user][folder] = "test"
