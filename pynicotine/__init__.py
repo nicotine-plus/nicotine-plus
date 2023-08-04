@@ -18,7 +18,6 @@
 
 import argparse
 import io
-import multiprocessing
 import os
 import sys
 
@@ -120,14 +119,14 @@ def set_up_python():
         sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
     if is_frozen:
+        import multiprocessing
+
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
         os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
 
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
-
-    multiprocessing.set_start_method("spawn")
 
 
 def rename_process(new_name, debug_info=False):
