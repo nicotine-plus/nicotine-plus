@@ -48,7 +48,7 @@ from pynicotine.utils import encode_path
 if importlib.util.find_spec("_gdbm"):
 
     def shelve_open_gdbm(filename, flag="c", protocol=None, writeback=False):
-        import _gdbm  # pylint: disable=import-error
+        import _gdbm  # pylint: disable=import-error,import-private-name
         return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_gdbm
