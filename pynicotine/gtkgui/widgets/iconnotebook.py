@@ -644,8 +644,11 @@ class IconNotebook:
         # All pages
         for i in range(self.get_n_pages()):
             page = self.get_nth_page(i)
-            tab_label = self.get_tab_label(page)
 
+            if page in self.unread_pages:
+                continue
+
+            tab_label = self.get_tab_label(page)
             self.popup_menu_pages.add_items(
                 ("#" + tab_label.get_text(), self.on_show_page, page)
             )
