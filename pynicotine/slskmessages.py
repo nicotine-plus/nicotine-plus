@@ -143,17 +143,16 @@ class ServerConnect(InternalMessage):
     """ Core sends this to make networking thread establish a server connection. """
 
     __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port",
-                 "portmapper", "user_addresses")
+                 "portmapper")
 
     def __init__(self, addr=None, login=None, interface_name=None, interface_address=None,
-                 listen_port=None, portmapper=None, user_addresses=None):
+                 listen_port=None, portmapper=None):
         self.addr = addr
         self.login = login
         self.interface_name = interface_name
         self.interface_address = interface_address
         self.listen_port = listen_port
         self.portmapper = portmapper
-        self.user_addresses = user_addresses
 
 
 class ServerDisconnect(InternalMessage):
@@ -345,7 +344,7 @@ class Login(ServerMessage):
     established. Server responds with the greeting message. """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "checksum", "is_supporter")
+                 "banner", "ip_address", "local_address", "checksum", "is_supporter")
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
@@ -356,6 +355,7 @@ class Login(ServerMessage):
         self.reason = None
         self.banner = None
         self.ip_address = None
+        self.local_address = None
         self.checksum = None
         self.is_supporter = None
 

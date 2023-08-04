@@ -1153,7 +1153,6 @@ class NetworkThread(Thread):
             return
 
         self._portmapper = msg_obj.portmapper
-        self._user_addresses = msg_obj.user_addresses
 
         self._manual_server_disconnect = False
         events.cancel_scheduled(self._server_timer)
@@ -1260,7 +1259,8 @@ class NetworkThread(Thread):
                     elif msg_class is Login:
                         if msg.success:
                             # Ensure listening port is open
-                            local_ip_address, port = self._user_addresses[self._server_username]
+                            msg.local_address = self._user_addresses[self._server_username]
+                            local_ip_address, port = msg.local_address
                             self._portmapper.set_port(port, local_ip_address)
                             self._portmapper.add_port_mapping(blocking=True)
 
@@ -1304,8 +1304,7 @@ class NetworkThread(Thread):
                     elif msg_class is GetUserStatus:
                         if msg.status == UserStatus.OFFLINE:
                             # User went offline, reset stored IP address
-                            if msg.user in self._user_addresses:
-                                del self._user_addresses[msg.user]
+                            self._user_addresses.pop(msg.user, None)
 
                     elif msg_class is GetPeerAddress:
                         user = msg.user
@@ -1441,7 +1440,7 @@ class NetworkThread(Thread):
         self._distrib_parent_speed_ratio = 1
         self._max_distrib_children = 0
         self._upload_speed = 0
-        self._user_addresses = None
+        self._user_addresses.clear()
 
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)

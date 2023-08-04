@@ -275,8 +275,7 @@ class Core:
             interface_name=config.sections["server"]["interface"],
             interface_address=self.cli_interface_address,
             listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0],
-            portmapper=self.portmapper,
-            user_addresses=self.user_addresses
+            portmapper=self.portmapper
         ))
 
     def disconnect(self):
@@ -407,7 +406,8 @@ class Core:
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
             self.login_username = msg.username
-            self.public_port = self.cli_listen_port or config.sections["server"]["portrange"][0]
+            _local_ip_address, self.public_port = msg.local_address
+            self.user_addresses[self.login_username] = msg.local_address
 
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(msg.username)
@@ -434,6 +434,12 @@ class Core:
 
         user = msg.user
         notify = self._ip_requested.pop(user, None)
+        addr = (msg.ip_address, msg.port)
+        user_offline = (addr == ("0.0.0.0", 0))
+
+        # We already store a local IP address for our username
+        if user != self.login_username and not user_offline:
+            self.user_addresses[user] = addr
 
         self.user_countries[user] = country_code = self.network_filter.get_country_code(msg.ip_address)
         events.emit("user-country", user, country_code)
@@ -489,8 +495,9 @@ class Core:
         if user in self.watched_users or user in self.user_statuses:
             self.user_statuses[user] = status
 
+        # User went offline, reset stored IP address and country
         if status == slskmessages.UserStatus.OFFLINE:
-            # IP address is removed in slskproto.py
+            self.user_addresses.pop(user, None)
             self.user_countries.pop(user, None)
 
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
