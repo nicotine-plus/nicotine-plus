@@ -50,6 +50,7 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
