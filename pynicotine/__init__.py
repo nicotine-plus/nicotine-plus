@@ -165,13 +165,16 @@ def rename_process(new_name, debug_info=False):
 def rescan_shares():
 
     error = core.shares.rescan_shares(use_thread=False)
+    exit_code = 0
 
     if error:
         log.add("--------------------------------------------------")
         log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
-        return 1
 
-    return 0
+        exit_code = 1
+
+    core.quit()
+    return exit_code
 
 
 def run():
@@ -187,7 +190,7 @@ def run():
         print(error)
         return 1
 
-    core.init_components()
+    core.init_components(enabled_components={"cli", "shares"} if rescan else None)
 
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
