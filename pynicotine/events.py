@@ -217,7 +217,7 @@ class Events:
         self._is_active = True
 
         self.connect("quit", self._quit)
-        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
+        Thread(target=self._run_scheduler, name="SchedulerThread").start()
 
     def connect(self, event_name, function):
 
@@ -322,9 +322,7 @@ class Events:
     def _quit(self):
 
         self.process_thread_events()
-
         self._callbacks.clear()
-        self._pending_scheduler_events.clear()
 
         self._is_active = False
 
