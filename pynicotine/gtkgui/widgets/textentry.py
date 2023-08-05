@@ -51,8 +51,8 @@ class ChatEntry:
         Accelerator("Page_Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", widget, self.on_page_up_accelerator)
 
-        # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
-        if sys.platform not in {"win32", "darwin"}:
+        # Emoji Picker (disable on macOS for now until we render emoji properly there)
+        if sys.platform != "darwin":
             self.widget.set_property("show-emoji-icon", True)
 
         # Spell Check
