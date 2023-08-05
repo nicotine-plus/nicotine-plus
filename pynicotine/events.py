@@ -200,6 +200,8 @@ EVENT_NAMES = {
 
 class Events:
 
+    SCHEDULER_MAX_IDLE = 0.125
+
     def __init__(self):
 
         self._callbacks = {}
@@ -296,7 +298,7 @@ class Events:
 
             # No scheduled events
             if not self._scheduler_events:
-                time.sleep(1)
+                time.sleep(self.SCHEDULER_MAX_IDLE)
                 continue
 
             # Retrieve upcoming event
@@ -315,7 +317,7 @@ class Events:
 
                 continue
 
-            time.sleep(min(sleep_time, 1))
+            time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
 
         self._scheduler_events.clear()
 
