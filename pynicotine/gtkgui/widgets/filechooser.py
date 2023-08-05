@@ -158,7 +158,9 @@ class ImageChooser(FileChooser):
         # Only show image files
         file_filter = Gtk.FileFilter()
         file_filter.set_name(_("All images"))
-        file_filter.add_pixbuf_formats()
+
+        for pattern in ("*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff", "*.gif"):
+            file_filter.add_pattern(pattern)
 
         if self.using_new_api:
             filters = Gio.ListStore(item_type=Gtk.FileFilter)
