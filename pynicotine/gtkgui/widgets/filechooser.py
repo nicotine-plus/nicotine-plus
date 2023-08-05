@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
@@ -160,12 +161,17 @@ class ImageChooser(FileChooser):
         file_filter.add_pixbuf_formats()
 
         if self.using_new_api:
+            filters = Gio.ListStore(item_type=Gtk.FileFilter)
+            filters.append(file_filter)
+
+            self.file_chooser.set_filters(filters)
             self.file_chooser.set_default_filter(file_filter)
             return
 
+        self.file_chooser.add_filter(file_filter)
         self.file_chooser.set_filter(file_filter)
 
-        if GTK_API_VERSION == 3:
+        if GTK_API_VERSION == 3 and sys.platform not in {"win32", "darwin"}:
             # Image preview
             self.file_chooser.connect("update-preview", self.on_update_image_preview)
 
