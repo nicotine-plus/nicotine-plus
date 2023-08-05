@@ -755,13 +755,10 @@ class Win32Implementation(BaseImplementation):
         self._h_icon = None
         self._menu = None
         self._wm_taskbarcreated = windll.user32.RegisterWindowMessageW("TaskbarCreated")
-        self._window_messages_thread = Thread(target=self._process_window_messages, name="WinTrayIcon", daemon=True)
 
         self._register_class()
         self._create_window()
         self._update_icon()
-
-        self._window_messages_thread.start()
 
     def _register_class(self):
 
@@ -987,16 +984,6 @@ class Win32Implementation(BaseImplementation):
             None
         )
         windll.user32.PostMessageW(self._h_wnd, self.WM_NULL, 0, 0)
-
-    def _process_window_messages(self):
-
-        from ctypes import byref, windll, wintypes
-
-        msg = wintypes.MSG()
-
-        while windll.user32.GetMessageW(byref(msg), None, 0, 0):
-            windll.user32.TranslateMessage(byref(msg))
-            windll.user32.DispatchMessageW(byref(msg))
 
     def update_menu(self):
 
