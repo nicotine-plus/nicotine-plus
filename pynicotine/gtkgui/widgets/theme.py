@@ -420,29 +420,25 @@ def load_custom_icons(update=False):
         ("n", config.application_id),
         ("n", f"{config.application_id}-symbolic")
     )
-    extensions = [".jpg", ".jpeg", ".bmp", ".png", ".svg"]
+    extensions = (".png", ".svg", ".jpg", ".jpeg", ".bmp")
 
     # Move custom icons to internal icon theme location
-    for (original_name, replacement_name) in icon_names:
-        path = None
-        exts = extensions[:]
-        loaded = False
-
-        while not path or (exts and not loaded):
-            extension = exts.pop()
+    for original_name, replacement_name in icon_names:
+        for extension in extensions:
             path = os.path.join(user_icon_theme_path, original_name + extension)
+            path_encoded = encode_path(path)
+
+            if not os.path.isfile(path_encoded):
+                continue
 
             try:
-                path_encoded = encode_path(path)
+                shutil.copyfile(
+                    path_encoded,
+                    encode_path(os.path.join(icon_theme_path, replacement_name + extension))
+                )
+                break
 
-                if os.path.isfile(path_encoded):
-                    shutil.copyfile(
-                        path_encoded,
-                        encode_path(os.path.join(icon_theme_path, replacement_name + extension))
-                    )
-                    loaded = True
-
-            except Exception as error:
+            except OSError as error:
                 log.add(_("Error loading custom icon %(path)s: %(error)s"), {
                     "path": path,
                     "error": error
