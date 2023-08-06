@@ -91,6 +91,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -621,7 +622,6 @@ class Application:
 
         core.quit()
         events.emit("quit")
-        self._instance.quit()
 
     def raise_exception(self, exc_value):
         raise exc_value
@@ -707,14 +707,7 @@ class Application:
         GLib.idle_add(self.raise_exception, exc_value)
 
     def on_process_thread_events(self):
-
-        if events.process_thread_events():
-            # Continue processing events
-            return True
-
-        # Application is shutting down
-        self._instance.quit()
-        return False
+        return events.process_thread_events()
 
     def on_activate(self, *_args):
 

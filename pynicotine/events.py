@@ -323,6 +323,7 @@ class Events:
 
     def _quit(self):
 
+        # Ensure any remaining events are processed
         self.process_thread_events()
         self._callbacks.clear()
 
