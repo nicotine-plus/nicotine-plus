@@ -85,10 +85,13 @@ class ChatHistory(Popover):
         self.load_users()
 
     def load_user(self, file_path):
-        """ Reads the username and latest message from a given log file path. Usernames are
-        first extracted from the file name. In case the extracted username contains underscores,
-        attempt to fetch the original username from logged messages, since illegal filename
-        characters are substituted with underscores. """
+        """Reads the username and latest message from a given log file path.
+
+        Usernames are first extracted from the file name. In case the
+        extracted username contains underscores, attempt to fetch the
+        original username from logged messages, since illegal filename
+        characters are substituted with underscores.
+        """
 
         username = os.path.basename(file_path[:-4]).decode("utf-8", "replace")
         is_safe_username = ("_" not in username)
@@ -189,7 +192,7 @@ class ChatHistory(Popover):
             return
 
     def on_search_accelerator(self, *_args):
-        """ Ctrl+F: Search users """
+        """Ctrl+F - Search users."""
 
         self.search_entry.grab_focus()
         return True

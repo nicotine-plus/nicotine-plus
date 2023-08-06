@@ -686,7 +686,7 @@ class Search:
         self.set_filters(stored_filters)
 
     def set_filters(self, stored_filters):
-        """ Recall result filter values from a dict """
+        """Recall result filter values from a dict."""
 
         self.populating_filters = True
 
@@ -704,8 +704,10 @@ class Search:
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
-        """ Adds a list of search results to the treeview. Lists can either contain publicly or
-        privately shared files. """
+        """Adds a list of search results to the treeview.
+
+        Lists can either contain publicly or privately shared files.
+        """
 
         update_ui = False
 
@@ -976,7 +978,7 @@ class Search:
 
     @staticmethod
     def _split_operator(condition):
-        """ Returns: (operation, digit) """
+        """Returns (operation, digit)"""
 
         operators = {
             "<": operator.lt,
@@ -999,7 +1001,7 @@ class Search:
         return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
-        """ Check if any conditions in result_filter match value """
+        """Check if any conditions in result_filter match value."""
 
         allowed = blocked = False
 
@@ -1231,20 +1233,20 @@ class Search:
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):
-        """ Escape: hide filter bar """
+        """Escape - hide filter bar."""
 
         self.filters_button.set_active(False)
         return True
 
     def on_show_filter_bar_accelerator(self, *_args):
-        """ Ctrl+F: show filter bar """
+        """Ctrl+F - show filter bar."""
 
         self.filters_button.set_active(True)
         self.filter_include_combobox.grab_focus()
         return True
 
     def on_file_properties_accelerator(self, *_args):
-        """ Alt+Return: show file properties dialog """
+        """Alt+Return - show file properties dialog."""
 
         self.on_file_properties()
         return True

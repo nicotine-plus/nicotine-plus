@@ -95,12 +95,12 @@ class Search:
 
     @staticmethod
     def add_allowed_token(token):
-        """ Allow parsing search result messages for a search ID """
+        """Allow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.add(token)
 
     @staticmethod
     def remove_allowed_token(token):
-        """ Disallow parsing search result messages for a search ID """
+        """Disallow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
     def add_search(self, term, mode, room=None, users=None, is_ignored=False):
@@ -324,7 +324,7 @@ class Search:
         return wish in config.sections["server"]["autosearch"]
 
     def _set_wishlist_interval(self, msg):
-        """ Server code: 104 """
+        """Server code 104."""
 
         self.wishlist_interval = msg.seconds
 
@@ -338,7 +338,7 @@ class Search:
             log.add(_("Server does not permit performing wishlist searches at this time"))
 
     def _file_search_response(self, msg):
-        """ Peer message: 9 """
+        """Peer code 9."""
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             msg.token = None
@@ -361,13 +361,13 @@ class Search:
             msg.token = None
 
     def _file_search_request_server(self, msg):
-        """ Server code: 26, 42 and 120 """
+        """Server code 26, 42 and 120."""
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def _file_search_request_distributed(self, msg):
-        """ Distrib code: 3 """
+        """Distrib code 3."""
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
@@ -376,7 +376,7 @@ class Search:
 
     @staticmethod
     def update_search_results(results, word_indices, exclude_word=False):
-        """ Updates the search result list with indices for a new word """
+        """Updates the search result list with indices for a new word."""
 
         if word_indices is None:
             if exclude_word:
@@ -404,7 +404,8 @@ class Search:
         return results
 
     def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
-        """ Returns a list of common file indices for each word in a search term """
+        """Returns a list of common file indices for each word in a search
+        term."""
 
         try:
             words = searchterm.split()
@@ -450,8 +451,11 @@ class Search:
             return None
 
     def process_search_request(self, searchterm, user, token, direct=False):
-        """ Note: since this section is accessed every time a search request arrives several
-            times per second, please keep it as optimized and memory sparse as possible! """
+        """This section is accessed every time a search request arrives,
+        several times per second.
+
+        Please keep it as optimized and memory sparse as possible!
+        """
 
         if not searchterm:
             return

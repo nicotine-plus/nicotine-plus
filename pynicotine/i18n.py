@@ -53,8 +53,9 @@ LANGUAGES = (
 
 
 def _set_system_language(language=None):
-    """ Extracts the default system language and applies it on systems that don't
-    set the 'LANGUAGE' environment variable by default (Windows, macOS) """
+    """Extracts the default system language and applies it on systems that
+    don't set the 'LANGUAGE' environment variable by default (Windows,
+    macOS)"""
 
     if not language and os.getenv("LANGUAGE") is None:
         if sys.platform == "win32":
@@ -86,7 +87,8 @@ def apply_translations(language=None):
 
 
 def build_translations():
-    """ Builds .mo translation files in the 'mo' folder of the project repository """
+    """Builds .mo translation files in the 'mo' folder of the project
+    repository."""
 
     import glob
     import subprocess

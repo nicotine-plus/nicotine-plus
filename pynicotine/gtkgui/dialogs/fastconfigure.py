@@ -102,7 +102,7 @@ class FastConfigure(Dialog):
         self.reset_completeness()
 
     def reset_completeness(self):
-        """ Turns on the complete flag if everything required is filled in. """
+        """Turns on the complete flag if everything required is filled in."""
 
         page = self.stack.get_visible_child()
         page_complete = (

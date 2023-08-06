@@ -227,7 +227,8 @@ class Interests:
         self.similar_users_button.set_sensitive(False)
 
     def populate_recommendations(self):
-        """ Populates the lists of recommendations and similar users if empty """
+        """Populates the lists of recommendations and similar users if
+        empty."""
 
         if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
             return

@@ -45,8 +45,10 @@ class BaseImplementation:
 
 
 class NATPMP(BaseImplementation):
-    """ Implementation of the NAT-PMP protocol
-    https://www.rfc-editor.org/rfc/rfc6886 """
+    """Implementation of the NAT-PMP protocol.
+
+    https://www.rfc-editor.org/rfc/rfc6886.
+    """
 
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
@@ -172,7 +174,7 @@ class NATPMP(BaseImplementation):
 
 
 class UPnP(BaseImplementation):
-    """ Implementation of the UPnP protocol """
+    """Implementation of the UPnP protocol."""
 
     NAME = "UPnP"
     MULTICAST_HOST = "239.255.255.250"
@@ -187,7 +189,7 @@ class UPnP(BaseImplementation):
             self.control_url = control_url
 
     class SSDPResponse:
-        """ Simple Service Discovery Protocol (SSDP) response """
+        """Simple Service Discovery Protocol (SSDP) response."""
 
         def __init__(self, message):
 
@@ -200,7 +202,7 @@ class UPnP(BaseImplementation):
             return self.message.encode("utf-8")
 
     class SSDPRequest:
-        """ Simple Service Discovery Protocol (SSDP) request """
+        """Simple Service Discovery Protocol (SSDP) request."""
 
         def __init__(self, search_target):
 
@@ -370,9 +372,10 @@ class UPnP(BaseImplementation):
         return service
 
     def _request_port_mapping(self, public_port, private_ip, private_port, mapping_description, lease_duration):
-        """
-        Function that adds a port mapping to the router.
-        If a port mapping already exists, it is updated with a lease period of 12 hours.
+        """Function that adds a port mapping to the router.
+
+        If a port mapping already exists, it is updated with a lease
+        period of 12 hours.
         """
 
         from urllib.request import Request
@@ -430,14 +433,13 @@ class UPnP(BaseImplementation):
         return error_code, error_description
 
     def add_port_mapping(self, lease_duration):
-        """
-        This function supports creating a Port Mapping via the UPnP
-        IGDv1 and IGDv2 protocol.
+        """This function supports creating a Port Mapping via the UPnP IGDv1
+        and IGDv2 protocol.
 
         Any UPnP port mapping done with IGDv2 will expire after a
-        maximum of 7 days (lease period), according to the protocol.
-        We set the lease period to a shorter 12 hours, and regularly
-        renew the port mapping.
+        maximum of 7 days (lease period), according to the protocol. We
+        set the lease period to a shorter 12 hours, and regularly renew
+        the port mapping.
         """
 
         # Find router
@@ -511,7 +513,7 @@ class UPnP(BaseImplementation):
 
 
 class PortMapper:
-    """ Class that handles Port Mapping """
+    """Class that handles Port Mapping."""
 
     RENEWAL_INTERVAL = 14400  # 4 hours
     LEASE_DURATION = 43200    # 12 hours
@@ -605,8 +607,10 @@ class PortMapper:
         Thread(target=self._remove_port_mapping, name="RemovePortmapping", daemon=True).start()
 
     def _start_timer(self):
-        """ Port mapping entries last 12 hours, we need to regularly renew them.
-        The default interval is 4 hours. """
+        """Port mapping entries last 12 hours, we need to regularly renew them.
+
+        The default interval is 4 hours.
+        """
 
         self._cancel_timer()
         self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)

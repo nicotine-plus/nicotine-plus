@@ -365,7 +365,7 @@ class ChatView(TextView):
 
     @staticmethod
     def find_whole_word(word, text):
-        """ Returns start position of a whole word that is not in a subword """
+        """Returns start position of a whole word that is not in a subword."""
 
         if word not in text:
             return -1
@@ -482,7 +482,8 @@ class ChatView(TextView):
             self.update_user_tag(username)
 
     def on_page_down_accelerator(self, *_args):
-        """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
+        """Page_Down, Down: Give focus to text entry if already scrolled at the
+        bottom."""
 
         if self.adjustment_value >= self.adjustment_bottom:
             # Give focus to text entry upon scrolling down to the bottom

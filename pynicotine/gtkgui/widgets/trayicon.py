@@ -549,7 +549,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
-        """ Check if tray icons exist in the specified icon path """
+        """Check if tray icons exist in the specified icon path."""
 
         if not icon_path:
             return False
@@ -569,8 +569,8 @@ class StatusNotifierImplementation(BaseImplementation):
         return False
 
     def get_icon_path(self):
-        """ Returns an icon path to use for tray icons, or None to fall back to
-        system-wide icons. """
+        """Returns an icon path to use for tray icons, or None to fall back to
+        system-wide icons."""
 
         self.custom_icons = False
         custom_icon_path = os.path.join(config.data_dir, ".nicotine-icon-theme")
@@ -625,9 +625,11 @@ class StatusNotifierImplementation(BaseImplementation):
 
 
 class Win32Implementation(BaseImplementation):
-    """ Windows NotifyIcon implementation
+    """Windows NotifyIcon implementation.
+
     https://learn.microsoft.com/en-us/windows/win32/shell/notification-area
-    https://learn.microsoft.com/en-us/windows/win32/shell/taskbar """
+    https://learn.microsoft.com/en-us/windows/win32/shell/taskbar
+    """
 
     WINDOW_CLASS_NAME = "NicotineTrayIcon"
 

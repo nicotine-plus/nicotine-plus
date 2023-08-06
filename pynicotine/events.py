@@ -265,8 +265,12 @@ class Events:
         self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
-        """ Called by the main loop 20 times per second to emit thread events in the main thread.
-        Return value indicates if the main loop should continue processing events. """
+        """Called by the main loop 20 times per second to emit thread events in
+        the main thread.
+
+        Return value indicates if the main loop should continue
+        processing events.
+        """
 
         if not self._thread_events:
             if not self._is_active:

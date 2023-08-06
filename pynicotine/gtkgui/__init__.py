@@ -63,7 +63,7 @@ def check_gtk_version(gtk_api_version):
 
 
 def run(hidden, ci_mode, multi_instance):
-    """ Run Nicotine+ GTK GUI """
+    """Run Nicotine+ GTK GUI."""
 
     if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)

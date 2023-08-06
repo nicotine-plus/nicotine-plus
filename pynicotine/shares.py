@@ -103,8 +103,11 @@ class FileTypes:
 
 
 class Scanner:
-    """ Separate process responsible for building shares. It handles scanning of
-    folders and files, as well as building databases and writing them to disk. """
+    """Separate process responsible for building shares.
+
+    It handles scanning of folders and files, as well as building
+    databases and writing them to disk.
+    """
 
     def __init__(self, config_obj, queue, shared_folders, share_db_paths, init=False, rescan=True, rebuild=False):
 
@@ -166,7 +169,8 @@ class Scanner:
             Shares.close_shares(self.share_dbs)
 
     def create_compressed_shares_message(self, share_type):
-        """ Create a message that will later contain a compressed list of our shares """
+        """Create a message that will later contain a compressed list of our
+        shares."""
 
         if share_type == "public":
             streams = self.share_dbs.get("streams")
@@ -258,10 +262,8 @@ class Scanner:
                 return
 
     def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
-        """
-        Check for modified or new files via OS's last mtime on a directory,
-        or, if rebuild is True, all directories
-        """
+        """Check for modified or new files via OS's last mtime on a directory,
+        or, if rebuild is True, all directories."""
 
         # Reset progress
         self.queue.put("indeterminate")
@@ -332,7 +334,7 @@ class Scanner:
 
     @staticmethod
     def is_hidden(folder, filename=None, entry=None):
-        """ Stop sharing any dot/hidden directories/files """
+        """Stop sharing any dot/hidden directories/files."""
 
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute folder, we exclude it
@@ -365,7 +367,8 @@ class Scanner:
         return False
 
     def get_files_list(self, shared_folder, oldmtimes, oldfiles, oldstreams, rebuild=False):
-        """ Get a list of files with their filelength, bitrate and track length in seconds """
+        """Get a list of files with their filelength, bitrate and track length
+        in seconds."""
 
         files = {}
         streams = {}
@@ -435,7 +438,7 @@ class Scanner:
         return files, streams, mtimes
 
     def get_file_info(self, name, pathname, entry=None):
-        """ Get file metadata """
+        """Get file metadata."""
 
         audio = None
         quality = None
@@ -493,7 +496,7 @@ class Scanner:
 
     @staticmethod
     def get_dir_stream(folder):
-        """ Pack all files and metadata in directory """
+        """Pack all files and metadata in directory."""
 
         stream = bytearray()
         stream.extend(slskmessages.FileListMessage.pack_uint32(len(folder)))
@@ -504,11 +507,13 @@ class Scanner:
         return stream
 
     def get_files_index(self, shared_files, fileindex_dest):
-        """ Update search index with new files.
+        """Update search index with new files.
 
-        We dump data directly into the file index database to save memory.
-        For the word index db, we can't use the same approach, as we need to access
-        dict elements frequently. This would take too long to access from disk. """
+        We dump data directly into the file index database to save
+        memory. For the word index db, we can't use the same approach,
+        as we need to access dict elements frequently. This would take
+        too long to access from disk.
+        """
 
         self.share_dbs[fileindex_dest] = fileindex_db = self.create_db_file(fileindex_dest)
 
@@ -621,7 +626,7 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     def convert_shares(self):
-        """ Convert fs-based shared to virtual shared (pre 1.4.0) """
+        """Convert fs-based shared to virtual shared (pre 1.4.0)"""
 
         def _convert_to_virtual(shared_folder):
             if isinstance(shared_folder, tuple):
@@ -712,8 +717,11 @@ class Shares:
         return True
 
     def get_compressed_shares_message(self, share_type):
-        """ Returns the compressed shares message. Creates a new one if necessary, e.g.
-        if an individual file was added to our shares. """
+        """Returns the compressed shares message.
+
+        Creates a new one if necessary, e.g. if an individual file was
+        added to our shares.
+        """
 
         if self.should_compress_shares:
             self.rescan_shares(init=True, rescan=False)
@@ -792,7 +800,7 @@ class Shares:
             del share_dbs[database]
 
     def send_num_shared_folders_files(self):
-        """ Send number publicly shared files to the server. """
+        """Send number publicly shared files to the server."""
 
         if not (core and core.user_status != slskmessages.UserStatus.OFFLINE):
             return
@@ -945,7 +953,7 @@ class Shares:
     # Network Messages #
 
     def _shared_file_list_request(self, msg):
-        """ Peer code: 4 """
+        """Peer code 4."""
 
         user = msg.init.target_user
         request_time = time.time()
@@ -983,7 +991,7 @@ class Shares:
         core.send_message_to_peer(user, shares_list)
 
     def _folder_contents_request(self, msg):
-        """ Peer code: 36 """
+        """Peer code 36."""
 
         ip_address, _port = msg.init.addr
         username = msg.init.target_user

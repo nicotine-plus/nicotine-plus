@@ -180,8 +180,8 @@ class PopupMenu:
         self.menu_section.append_item(menuitem)
 
     def update_model(self):
-        """ This function is called before a menu model needs to be manipulated
-        (enabling/disabling actions, showing a menu in the GUI) """
+        """This function is called before a menu model needs to be manipulated
+        (enabling/disabling actions, showing a menu in the GUI)"""
 
         if not self.pending_items:
             return

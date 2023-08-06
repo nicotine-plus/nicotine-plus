@@ -25,10 +25,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This is the actual client code. Actual GUI classes are in the separate modules
-"""
-
 import json
 import os
 import signal
@@ -43,8 +39,11 @@ from pynicotine.logfacility import log
 
 
 class Core:
-    """ Core contains handlers for various messages from (mainly) the networking thread.
-    This class links the networking thread and user interface. """
+    """Core contains handlers for various messages from (mainly) the networking
+    thread.
+
+    This class links the networking thread and user interface.
+    """
 
     def __init__(self):
 
@@ -282,15 +281,15 @@ class Core:
         self.send_message_to_network_thread(slskmessages.ServerDisconnect())
 
     def send_message_to_network_thread(self, message):
-        """ Sends message to the networking thread to inform about something """
+        """Sends message to the networking thread to inform about something."""
         events.emit("queue-network-message", message)
 
     def send_message_to_server(self, message):
-        """ Sends message to the server """
+        """Sends message to the server."""
         events.emit("queue-network-message", message)
 
     def send_message_to_peer(self, username, message):
-        """ Sends message to a peer """
+        """Sends message to a peer."""
         events.emit("queue-network-message", slskmessages.SendNetworkMessage(username, message))
 
     def set_away_mode(self, is_away, save_state=False):
@@ -328,8 +327,8 @@ class Core:
         self.send_message_to_server(slskmessages.GetUserStats(username))
 
     def watch_user(self, user):
-        """ Tell the server we want to be notified of status/stat updates
-        for a user """
+        """Tell the server we want to be notified of status/stat updates for a
+        user."""
 
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
@@ -401,7 +400,7 @@ class Core:
         self.public_port = None
 
     def _server_login(self, msg):
-        """ Server code: 1 """
+        """Server code 1."""
 
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
@@ -430,7 +429,7 @@ class Core:
             log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
 
     def _get_peer_address(self, msg):
-        """ Server code: 3 """
+        """Server code 3."""
 
         user = msg.user
         notify = self._ip_requested.pop(user, None)
@@ -468,7 +467,7 @@ class Core:
         }, title=_("IP Address"))
 
     def _watch_user(self, msg):
-        """ Server code: 5 """
+        """Server code 5."""
 
         if msg.userexists:
             if msg.status is not None:  # Soulfind server support, sends userexists but no additional data
@@ -479,7 +478,7 @@ class Core:
         self.watched_users.pop(msg.user, None)
 
     def _user_status(self, msg):
-        """ Server code: 7 """
+        """Server code 7."""
 
         user = msg.user
         status = msg.status
@@ -503,7 +502,7 @@ class Core:
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
 
     def _user_stats(self, msg):
-        """ Server code: 36 """
+        """Server code 36."""
 
         username = msg.user
         upload_speed = msg.avgspeed
@@ -526,12 +525,12 @@ class Core:
 
     @staticmethod
     def _admin_message(msg):
-        """ Server code: 66 """
+        """Server code 66."""
 
         log.add(msg.msg, title=_("Soulseek Announcement"))
 
     def _privileged_users(self, msg):
-        """ Server code: 69 """
+        """Server code 69."""
 
         for user in msg.users:
             events.emit("add-privileged-user", user)
@@ -539,7 +538,7 @@ class Core:
         log.add(_("%i privileged users"), (len(msg.users)))
 
     def _check_privileges(self, msg):
-        """ Server code: 92 """
+        """Server code 92."""
 
         mins = msg.seconds // 60
         hours = mins // 60
@@ -561,7 +560,7 @@ class Core:
 
     @staticmethod
     def _change_password(msg):
-        """ Server code: 142 """
+        """Server code 142."""
 
         password = msg.password
         config.sections["server"]["passw"] = password

@@ -25,7 +25,7 @@ import sys
 
 
 def install_pacman():
-    """ Install dependencies from the main MinGW repos """
+    """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH") or "x86_64"
     prefix = f"mingw-w64-{arch}-"
@@ -49,7 +49,7 @@ def install_pacman():
 
 
 def install_pypi():
-    """ Install dependencies from PyPi """
+    """Install dependencies from PyPi."""
 
     packages = ["semidbm"]
     subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)

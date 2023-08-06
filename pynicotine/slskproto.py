@@ -17,10 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module implements Soulseek networking protocol.
-"""
-
 import errno
 import selectors
 import socket
@@ -94,9 +90,12 @@ from pynicotine.utils import human_speed
 
 
 class Connection:
-    """ Holds data about a connection. sock is a socket object,
-    addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
-    init is a PeerInit object (see slskmessages docstrings). """
+    """Holds data about a connection.
+
+    sock is a socket object, addr is (ip, port) pair, ibuf and obuf are
+    input and output msgBuffer, init is a PeerInit object (see
+    slskmessages docstrings).
+    """
 
     __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "lastactive", "lastreadlength")
 
@@ -201,8 +200,10 @@ class NetworkInterfaces:
 
     @classmethod
     def _get_interface_addresses_win32(cls):
-        """ Returns a dictionary of network interface names and IP addresses (Win32)
-        https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses """
+        """Returns a dictionary of network interface names and IP addresses (Win32).
+
+        https://learn.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
+        """
 
         # pylint: disable=invalid-name
 
@@ -223,7 +224,7 @@ class NetworkInterfaces:
             )
 
         if return_value:
-            log.add_debug("Failed to get list of network interfaces. Error code: %s", return_value)
+            log.add_debug("Failed to get list of network interfaces. Error code %s", return_value)
             return interface_addresses
 
         adapter_addresses = cls.IpAdapterAddresses.from_buffer(address_buffer)
@@ -243,7 +244,8 @@ class NetworkInterfaces:
 
     @classmethod
     def _get_interface_addresses_posix(cls):
-        """ Returns a dictionary of network interface names and IP addresses (POSIX) """
+        """Returns a dictionary of network interface names and IP addresses
+        (POSIX)"""
 
         interface_addresses = {}
 
@@ -274,7 +276,7 @@ class NetworkInterfaces:
 
     @classmethod
     def get_interface_addresses(cls):
-        """ Returns a dictionary of network interface names and IP addresses """
+        """Returns a dictionary of network interface names and IP addresses."""
 
         if sys.platform == "win32":
             return cls._get_interface_addresses_win32()
@@ -283,9 +285,11 @@ class NetworkInterfaces:
 
     @classmethod
     def bind_to_interface(cls, sock, interface_name):
-        """ Bind socket directly to interface on Linux and macOS. Other platforms can use
-        bind_to_interface_address() with an IP address retrieved from get_interface_addresses()
-        instead. """
+        """Bind socket directly to interface on Linux and macOS.
+
+        Other platforms can use bind_to_interface_address() with an IP
+        address retrieved from get_interface_addresses() instead.
+        """
 
         if not interface_name:
             return True
@@ -306,20 +310,25 @@ class NetworkInterfaces:
 
     @classmethod
     def bind_to_interface_address(cls, sock, address):
-        """ Bind socket to the IP address of a network interface, retrieved from
-        get_interface_addresses(). Alternative to bind_to_interface() for platforms that
-        do not support it. """
+        """Bind socket to the IP address of a network interface, retrieved from
+        get_interface_addresses().
+
+        Alternative to bind_to_interface() for platforms that do not
+        support it.
+        """
 
         sock.bind((address, 0))
 
 
 class NetworkThread(Thread):
-    """ This is the networking thread that does all the communication with
-    the Soulseek server and peers. Communication with the core is done
-    through events.
+    """This is the networking thread that does all the communication with the
+    Soulseek server and peers. Communication with the core is done through
+    events.
 
-    The server and peers send each other small binary messages that start
-    with length and message code followed by the actual message data. """
+    The server and peers send each other small binary messages that
+    start with length and message code followed by the actual message
+    data.
+    """
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
@@ -639,7 +648,10 @@ class NetworkThread(Thread):
 
     @staticmethod
     def _unpack_embedded_message(msg):
-        """ This message embeds a distributed message. We unpack the distributed message and process it. """
+        """This message embeds a distributed message.
+
+        We unpack the distributed message and process it.
+        """
 
         if msg.distrib_code not in DISTRIBUTED_MESSAGE_CLASSES:
             return None
@@ -668,8 +680,8 @@ class NetworkThread(Thread):
             conn_obj.selector_events = selector_events
 
     def _process_conn_messages(self, init):
-        """ A connection is established with the peer, time to queue up our peer
-        messages for delivery """
+        """A connection is established with the peer, time to queue up our peer
+        messages for delivery."""
 
         msgs = init.outgoing_msgs
 
@@ -729,7 +741,7 @@ class NetworkThread(Thread):
             self._initiate_connection_to_peer(user, conn_type, message)
 
     def _initiate_connection_to_peer(self, user, conn_type, message=None, in_address=None):
-        """ Prepare to initiate a connection with a peer """
+        """Prepare to initiate a connection with a peer."""
 
         init = PeerInit(init_user=self._server_username, target_user=user, conn_type=conn_type)
         user_address = self._user_addresses.get(user)
@@ -763,7 +775,7 @@ class NetworkThread(Thread):
             self._connect_to_peer(user, user_address, init)
 
     def _connect_to_peer(self, user, addr, init):
-        """ Initiate a connection with a peer """
+        """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
 
@@ -825,7 +837,8 @@ class NetworkThread(Thread):
             })
 
     def _connect_to_peer_indirect(self, init):
-        """ Send a message to the server to ask the peer to connect to us (indirect connection) """
+        """Send a message to the server to ask the peer to connect to us
+        (indirect connection)"""
 
         self._token = increment_token(self._token)
 
@@ -1094,11 +1107,14 @@ class NetworkThread(Thread):
 
     @staticmethod
     def _set_server_socket_keepalive(server_socket, idle=10, interval=2):
-        """ Ensure we are disconnected from the server in case of connectivity issues,
-        by sending TCP keepalive pings. Assuming default values are used, once we reach
-        10 seconds of idle time, we start sending keepalive pings once every 2 seconds.
-        If 10 failed pings have been sent in a row (20 seconds), the connection is presumed
-        dead. """
+        """Ensure we are disconnected from the server in case of connectivity
+        issues, by sending TCP keepalive pings.
+
+        Assuming default values are used, once we reach 10 seconds of
+        idle time, we start sending keepalive pings once every 2
+        seconds. If 10 failed pings have been sent in a row (20
+        seconds), the connection is presumed dead.
+        """
 
         count = 10
         timeout_seconds = (idle + (interval * count))
@@ -1139,7 +1155,7 @@ class NetworkThread(Thread):
             server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
 
     def _server_connect(self, msg_obj):
-        """ We're connecting to the server """
+        """We're connecting to the server."""
 
         if self._server_socket:
             return
@@ -1228,9 +1244,9 @@ class NetworkThread(Thread):
         self._queue_network_message(SetWaitPort(self._listen_port))
 
     def _process_server_input(self, msg_buffer):
-        """ Server has sent us something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them and the rest
-        of the msg_buffer. """
+        """Server has sent us something, this function retrieves messages from
+        the msg_buffer, creates message objects and returns them and the rest
+        of the msg_buffer."""
 
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
@@ -1420,7 +1436,7 @@ class NetworkThread(Thread):
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     def _server_disconnect(self):
-        """ We're disconnecting from the server, clean up """
+        """We're disconnecting from the server, clean up."""
 
         self._should_process_queue = False
         self._interface_name = self._interface_address = self._server_socket = None
@@ -1644,10 +1660,9 @@ class NetworkThread(Thread):
             self._close_socket(sock, shutdown=False)
 
     def _process_peer_input(self, conn_obj, msg_buffer):
-        """ We have a "P" connection (p2p exchange), peer has sent us
-        something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them
-        and the rest of the msg_buffer. """
+        """We have a "P" connection (p2p exchange), peer has sent us something,
+        this function retrieves messages from the msg_buffer, creates message
+        objects and returns them and the rest of the msg_buffer."""
 
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
@@ -1787,8 +1802,11 @@ class NetworkThread(Thread):
         self._download_limit_split = int(limit)
 
     def _calc_loops_per_second(self, current_time):
-        """ Calculate number of loops per second. This value is used to split the
-        per-second transfer speed limit evenly for each loop. """
+        """Calculate number of loops per second.
+
+        This value is used to split the per-second transfer speed limit
+        evenly for each loop.
+        """
 
         if current_time - self._last_cycle_time >= 1:
             self._loops_per_second = (self._last_cycle_loop_count + self._current_cycle_loop_count) // 2
@@ -1807,10 +1825,9 @@ class NetworkThread(Thread):
             limits[sock] = limit
 
     def _process_file_input(self, conn_obj, msg_buffer):
-        """ We have a "F" connection (filetransfer), peer has sent us
-        something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them
-        and the rest of the msg_buffer. """
+        """We have a "F" connection (filetransfer), peer has sent us something,
+        this function retrieves messages from the msg_buffer, creates message
+        objects and returns them and the rest of the msg_buffer."""
 
         msg_buffer_mem = memoryview(msg_buffer)
         idx = 0
@@ -1992,7 +2009,8 @@ class NetworkThread(Thread):
             self._queue_network_message(msg_child)
 
     def _distribute_embedded_message(self, msg):
-        """ Distributes an embedded message from the server to our child peers """
+        """Distributes an embedded message from the server to our child
+        peers."""
 
         if self._parent_socket is not None:
             # The server shouldn't send embedded messages while it's not our parent, but let's be safe
@@ -2012,7 +2030,7 @@ class NetworkThread(Thread):
         log.add_conn("Server is our parent, ready to distribute search requests as a branch root")
 
     def _verify_parent_connection(self, conn_obj, msg_class):
-        """ Verify that a connection is our current parent connection """
+        """Verify that a connection is our current parent connection."""
 
         if conn_obj.sock != self._parent_socket:
             log.add_conn(("Received a distributed message %(type)s from user %(user)s, who is not our parent. "
@@ -2025,8 +2043,11 @@ class NetworkThread(Thread):
         return True
 
     def _send_have_no_parent(self):
-        """ Inform the server we have no parent. The server should either send
-        us a PossibleParents message, or start sending us search requests. """
+        """Inform the server we have no parent.
+
+        The server should either send us a PossibleParents message, or
+        start sending us search requests.
+        """
 
         self._parent_socket = None
         self._branch_level = 0
@@ -2040,7 +2061,7 @@ class NetworkThread(Thread):
         self._queue_network_message(AcceptChildren(False))
 
     def _set_branch_root(self, username):
-        """ Inform the server and child peers of our branch root """
+        """Inform the server and child peers of our branch root."""
 
         if username == self._branch_root:
             return
@@ -2071,10 +2092,10 @@ class NetworkThread(Thread):
             self._queue_network_message(AcceptChildren(False))
 
     def _process_distrib_input(self, conn_obj, msg_buffer):
-        """ We have a distributed network connection, parent has sent us
-        something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them
-        and the rest of the msg_buffer. """
+        """We have a distributed network connection, parent has sent us
+        something, this function retrieves messages from the msg_buffer,
+        creates message objects and returns them and the rest of the
+        msg_buffer."""
 
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)

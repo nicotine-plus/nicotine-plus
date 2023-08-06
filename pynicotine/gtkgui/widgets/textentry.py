@@ -32,7 +32,7 @@ from pynicotine.slskmessages import UserStatus
 
 
 class ChatEntry:
-    """ Custom text entry with support for chat commands and completions """
+    """Custom text entry with support for chat commands and completions."""
 
     def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
 
@@ -107,11 +107,12 @@ class ChatEntry:
         self.widget.set_text("")
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
-        """ Tab and Shift+Tab: tab complete chat """
+        """Tab and Shift+Tab - tab complete chat."""
         return self.completion.on_tab_complete_accelerator(widget, state, backwards)
 
     def on_page_down_accelerator(self, *_args):
-        """ Page_Down, Down: Scroll chat view to bottom, and keep input focus in entry widget """
+        """Page_Down, Down - Scroll chat view to bottom, and keep input focus in
+        entry widget."""
 
         if self.completion and self.completion.selecting_completion:
             return False
@@ -120,7 +121,7 @@ class ChatEntry:
         return True
 
     def on_page_up_accelerator(self, *_args):
-        """ Page_Up: Move up into view to begin scrolling message history """
+        """Page_Up - Move up into view to begin scrolling message history."""
 
         if self.completion and self.completion.selecting_completion:
             return False
@@ -276,7 +277,7 @@ class ChatCompletion:
         self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
-        """ Tab and Shift+Tab: tab complete chat """
+        """Tab and Shift+Tab: tab complete chat."""
 
         if not config.sections["words"]["tab"]:
             return False
@@ -500,7 +501,7 @@ class ComboBox:
         return factory
 
     def _update_item_entry_text(self):
-        """ Set text entry text to the same value as selected item """
+        """Set text entry text to the same value as selected item."""
 
         if GTK_API_VERSION == 3:
             # Already supported natively in GTK 3
@@ -792,13 +793,13 @@ class TextSearchBar:
         self.on_search_match(search_type="next")
 
     def on_hide_search_accelerator(self, *_args):
-        """ Escape: hide search bar """
+        """Escape - hide search bar."""
 
         self.set_visible(False)
         return True
 
     def on_show_search_accelerator(self, *_args):
-        """ Ctrl+F: show search bar """
+        """Ctrl+F - show search bar."""
 
         self.set_visible(True)
         return True

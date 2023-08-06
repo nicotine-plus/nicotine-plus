@@ -217,8 +217,8 @@ class FileChooserSave(FileChooser):
 
 
 class FileChooserButton:
-    """ This class expands the functionality of a GtkButton to open a file
-    chooser and display the name of a selected folder or file """
+    """This class expands the functionality of a GtkButton to open a file
+    chooser and display the name of a selected folder or file."""
 
     def __init__(self, button, parent, chooser_type="file", selected_function=None):
 

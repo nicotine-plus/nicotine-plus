@@ -600,7 +600,7 @@ class Application:
         config.sections["ui"]["dark_mode"] = not state
 
     def on_away_accelerator(self, action, *_args):
-        """ Ctrl+H: Away/Online toggle """
+        """Ctrl+H: Away/Online toggle."""
 
         current_time = time.time()
 
@@ -610,15 +610,15 @@ class Application:
             action.cooldown_time = current_time
 
     def on_away(self, *_args):
-        """ Away/Online status button """
+        """Away/Online status button."""
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
     # Running #
 
     def _force_quit(self):
-        """ Used when the thread event processor fails due to an unhandled
-        exception, to force a shutdown """
+        """Used when the thread event processor fails due to an unhandled
+        exception, to force a shutdown."""
 
         core.quit()
         events.emit("quit")
