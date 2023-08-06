@@ -200,7 +200,7 @@ EVENT_NAMES = {
 
 class Events:
 
-    SCHEDULER_MAX_IDLE = 0.125
+    SCHEDULER_MAX_IDLE = 1
 
     def __init__(self):
 
@@ -219,7 +219,7 @@ class Events:
         self._is_active = True
 
         self.connect("quit", self._quit)
-        Thread(target=self._run_scheduler, name="SchedulerThread").start()
+        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
 
@@ -319,15 +319,15 @@ class Events:
 
             time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
 
-        self._scheduler_events.clear()
-
     def _quit(self):
 
         # Ensure any remaining events are processed
         self.process_thread_events()
-        self._callbacks.clear()
 
         self._is_active = False
+        self._callbacks.clear()
+        self._pending_scheduler_events.clear()
+        self._scheduler_events.clear()
 
 
 events = Events()
