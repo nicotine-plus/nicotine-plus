@@ -703,6 +703,7 @@ class ComboBox:
 class SpellChecker:
 
     checker = None
+    module = None
 
     def __init__(self):
 
@@ -710,15 +711,22 @@ class SpellChecker:
         self.entry = None
 
     @classmethod
-    def check_available(cls):
+    def _load_module(cls):
+
+        if SpellChecker.module is not None:
+            return
 
         try:
             gi.require_version("Gspell", "1")
             from gi.repository import Gspell
-            return Gspell
+            SpellChecker.module = Gspell
 
         except (ImportError, ValueError):
-            return None
+            pass
+
+    def is_available(self):
+        self._load_module()
+        return bool(SpellChecker.module)
 
     def reset(self):
 
@@ -731,27 +739,29 @@ class SpellChecker:
             self.entry = None
 
         if not config.sections["ui"]["spellcheck"]:
-            SpellChecker.checker = None
+            SpellChecker.checker = SpellChecker.module = None
 
     def set_entry(self, entry):
 
+        # Only one active entry at a time
         self.reset()
 
         if not config.sections["ui"]["spellcheck"]:
             return
 
-        gspell = self.check_available()
+        # Attempt to load spell check module in case it was recently installed
+        self._load_module()
 
-        if gspell is None:
+        if SpellChecker.module is None:
             return
 
         if SpellChecker.checker is None:
-            SpellChecker.checker = gspell.Checker()
+            SpellChecker.checker = SpellChecker.module.Checker()
 
-        self.buffer = gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+        self.buffer = SpellChecker.module.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
         self.buffer.set_spell_checker(SpellChecker.checker)
 
-        self.entry = gspell.Entry.get_from_gtk_entry(entry)
+        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry)
         self.entry.set_inline_spell_checking(True)
 
 

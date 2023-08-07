@@ -1299,7 +1299,7 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        self.enable_spell_checker_toggle.set_visible(bool(SpellChecker.check_available()))
+        self.enable_spell_checker_toggle.set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
