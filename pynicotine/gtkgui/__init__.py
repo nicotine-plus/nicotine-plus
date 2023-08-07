@@ -84,6 +84,10 @@ def run(hidden, ci_mode, multi_instance):
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
+        # Use Cairo renderer for now, GL renderer has memory leaks
+        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
+        os.environ["GSK_RENDERER"] = "cairo"
+
     error = check_gtk_version(gtk_api_version=os.getenv("NICOTINE_GTK_VERSION", "4"))
 
     if error:
