@@ -50,6 +50,9 @@ class SearchRequest:
 
 class Search:
 
+    SEARCH_HISTORY_LIMIT = 200
+    RESULT_FILTER_HISTORY_LIMIT = 50
+
     def __init__(self):
 
         self.searches = {}
@@ -217,7 +220,7 @@ class Search:
             items.insert(0, search_term)
 
             # Clear old items
-            del items[200:]
+            del items[self.SEARCH_HISTORY_LIMIT:]
             config.write_configuration()
 
         if mode == "global":
