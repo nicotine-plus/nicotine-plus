@@ -22,11 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-    To install Nicotine+ on a GNU/Linux distribution, run:
-    pip3 install .
-"""
-
 import glob
 
 from setuptools import find_packages
@@ -104,6 +99,6 @@ functionality while keeping current with the Soulseek protocol.""",
         ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
-        extras_require={"packaging": ["cx_Freeze"], "test": ["flake8", "pylint"]},
+        extras_require={"packaging": ["cx_Freeze"], "test": ["pycodestyle", "pylint"]},
         cmdclass={"build_py": BuildPyCommand}
     )

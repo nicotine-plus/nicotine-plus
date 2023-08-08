@@ -20,7 +20,6 @@ import os
 import sys
 
 from locale import strxfrm
-from threading import Thread
 
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
@@ -37,9 +36,6 @@ from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
-
-
-""" Tray Icon """
 
 
 class ImplementationUnavailable(Exception):
@@ -553,7 +549,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
-        """ Check if tray icons exist in the specified icon path """
+        """Check if tray icons exist in the specified icon path."""
 
         if not icon_path:
             return False
@@ -573,8 +569,8 @@ class StatusNotifierImplementation(BaseImplementation):
         return False
 
     def get_icon_path(self):
-        """ Returns an icon path to use for tray icons, or None to fall back to
-        system-wide icons. """
+        """Returns an icon path to use for tray icons, or None to fall back to
+        system-wide icons."""
 
         self.custom_icons = False
         custom_icon_path = os.path.join(config.data_dir, ".nicotine-icon-theme")
@@ -629,9 +625,11 @@ class StatusNotifierImplementation(BaseImplementation):
 
 
 class Win32Implementation(BaseImplementation):
-    """ Windows NotifyIcon implementation
+    """Windows NotifyIcon implementation.
+
     https://learn.microsoft.com/en-us/windows/win32/shell/notification-area
-    https://learn.microsoft.com/en-us/windows/win32/shell/taskbar """
+    https://learn.microsoft.com/en-us/windows/win32/shell/taskbar
+    """
 
     WINDOW_CLASS_NAME = "NicotineTrayIcon"
 
@@ -758,13 +756,10 @@ class Win32Implementation(BaseImplementation):
         self._h_icon = None
         self._menu = None
         self._wm_taskbarcreated = windll.user32.RegisterWindowMessageW("TaskbarCreated")
-        self._window_messages_thread = Thread(target=self._process_window_messages, name="WinTrayIcon", daemon=True)
 
         self._register_class()
         self._create_window()
-        self._update_icon()
-
-        self._window_messages_thread.start()
+        self.update_icon()
 
     def _register_class(self):
 
@@ -884,7 +879,7 @@ class Win32Implementation(BaseImplementation):
             windll.user32.DestroyIcon(self._h_icon)
             self._h_icon = None
 
-    def _update_icon(self, title="", message="", icon_name=None):
+    def _update_notify_icon(self, title="", message="", icon_name=None):
         # pylint: disable=attribute-defined-outside-init,no-member
 
         if self._h_wnd is None:
@@ -924,7 +919,7 @@ class Win32Implementation(BaseImplementation):
 
         windll.shell32.Shell_NotifyIconW(action, byref(self._notify_id))
 
-    def _remove_icon(self):
+    def _remove_notify_icon(self):
 
         from ctypes import byref, windll
 
@@ -991,16 +986,6 @@ class Win32Implementation(BaseImplementation):
         )
         windll.user32.PostMessageW(self._h_wnd, self.WM_NULL, 0, 0)
 
-    def _process_window_messages(self):
-
-        from ctypes import byref, windll, wintypes
-
-        msg = wintypes.MSG()
-
-        while windll.user32.GetMessageW(byref(msg), None, 0, 0):
-            windll.user32.TranslateMessage(byref(msg))
-            windll.user32.DispatchMessageW(byref(msg))
-
     def update_menu(self):
 
         from ctypes import byref, windll
@@ -1016,10 +1001,10 @@ class Win32Implementation(BaseImplementation):
                 windll.user32.InsertMenuItemW(self._menu, item_id, False, byref(item_info))
 
     def set_icon_name(self, icon_name):
-        self._update_icon(icon_name=icon_name)
+        self._update_notify_icon(icon_name=icon_name)
 
     def show_notification(self, title, message):
-        self._update_icon(title=title, message=message)
+        self._update_notify_icon(title=title, message=message)
 
     def on_process_window_message(self, h_wnd, msg, w_param, l_param):
 
@@ -1037,7 +1022,7 @@ class Win32Implementation(BaseImplementation):
             elif l_param in (self.NIN_BALLOONHIDE, self.NIN_BALLOONTIMEOUT, self.NIN_BALLOONUSERCLICK):
                 if not config.sections["ui"]["trayicon"]:
                     # Notification dismissed, but user has disabled tray icon
-                    self._remove_icon()
+                    self._remove_notify_icon()
 
         elif msg == self.WM_COMMAND:
             # Menu item pressed
@@ -1047,8 +1032,8 @@ class Win32Implementation(BaseImplementation):
 
         elif msg == self._wm_taskbarcreated:
             # Taskbar process restarted, create new icon
-            self._remove_icon()
-            self._update_icon()
+            self._remove_notify_icon()
+            self._update_notify_icon()
 
         return windll.user32.DefWindowProcW(
             wintypes.HWND(h_wnd),
@@ -1059,7 +1044,7 @@ class Win32Implementation(BaseImplementation):
 
     def unload(self, is_shutdown=False):
 
-        self._remove_icon()
+        self._remove_notify_icon()
 
         if not is_shutdown:
             # Keep notification support as long as we're running
@@ -1085,7 +1070,7 @@ class TrayIcon:
 
     def watch_availability(self):
 
-        if sys.platform in ("win32", "darwin"):
+        if sys.platform in {"win32", "darwin"}:
             return
 
         Gio.bus_watch_name(

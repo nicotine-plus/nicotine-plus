@@ -6,6 +6,7 @@ jobs:
 
   python:
     strategy:
+      fail-fast: false
       matrix:
         python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
     runs-on: ubuntu-20.04
@@ -28,10 +29,10 @@ jobs:
           sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
           python -m pip install -e ".[test]"
 
-      - name: Flake8 linter
-        run: python -m flake8
+      - name: PEP 8 style checks
+        run: python -m pycodestyle
 
-      - name: Pylint linter
+      - name: Linting
         run: python -m pylint pynicotine test
 
       - name: Integration and unit tests
@@ -39,6 +40,7 @@ jobs:
 
   ubuntu-debian:
     strategy:
+      fail-fast: false
       matrix:
         container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal']
     runs-on: ubuntu-latest
@@ -59,6 +61,7 @@ jobs:
 
   fedora-rocky:
     strategy:
+      fail-fast: false
       matrix:
         container: ['fedora:rawhide', 'rockylinux:8']
         gtk: [3, 4]
@@ -80,7 +83,7 @@ jobs:
 
       - name: Install dependencies (Fedora)
         if: matrix.container == 'fedora:rawhide'
-        run: dnf -y install pylint python3-flake8
+        run: dnf -y install pylint python3-pycodestyle
 
       - name: Install dependencies (Rocky Linux)
         if: matrix.container == 'rockylinux:8'
@@ -88,10 +91,10 @@ jobs:
           dnf -y install gcc python3-devel python3-pip
           python3 -m pip install -e ".[test]"
 
-      - name: Flake8 linter
-        run: python3 -m flake8
+      - name: PEP 8 style checks
+        run: python3 -m pycodestyle
 
-      - name: Pylint linter
+      - name: Linting
         run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
@@ -100,6 +103,7 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         gtk: [3, 4]
     defaults:
@@ -124,18 +128,18 @@ jobs:
             mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
             mingw-w64-${{ env.ARCH }}-python-chardet
             mingw-w64-${{ env.ARCH }}-python-cx-freeze
-            mingw-w64-${{ env.ARCH }}-python-flake8
             mingw-w64-${{ env.ARCH }}-python-pip
+            mingw-w64-${{ env.ARCH }}-python-pycodestyle
             mingw-w64-${{ env.ARCH }}-python-pylint
             mingw-w64-${{ env.ARCH }}-python-gobject
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
 
-      - name: Flake8 linter
-        run: python3 -m flake8
+      - name: PEP 8 style checks
+        run: python3 -m pycodestyle
 
-      - name: Pylint linter
+      - name: Linting
         run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
@@ -144,6 +148,7 @@ jobs:
   macos:
     runs-on: macos-11
     strategy:
+      fail-fast: false
       matrix:
         gtk: [3, 4]
     env:
@@ -167,10 +172,10 @@ jobs:
       - name: Install dependencies
         run: python packaging/macos/dependencies.py
 
-      - name: Flake8 linter
-        run: python -m flake8
+      - name: PEP 8 style checks
+        run: python -m pycodestyle
 
-      - name: Pylint linter
+      - name: Linting
         run: python -m pylint pynicotine test
 
       - name: Integration and unit tests

@@ -24,10 +24,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" This module contains classes that deal with file transfers:
-the transfer manager.
-"""
-
 import json
 import os
 import os.path
@@ -56,7 +52,7 @@ from pynicotine.utils import write_file_and_backup
 
 
 class Transfer:
-    """ This class holds information about a single transfer """
+    """This class holds information about a single transfer."""
 
     __slots__ = ("sock", "user", "filename",
                  "path", "token", "size", "file", "start_time", "last_update",
@@ -91,7 +87,7 @@ class Transfer:
 
 
 class Transfers:
-    """ This is the transfers manager """
+    """This is the transfers manager."""
 
     def __init__(self):
 
@@ -204,9 +200,10 @@ class Transfers:
             events.cancel_scheduled(timer_id)
 
         need_update = False
+        ignored_statuses = {"Finished", "Filtered", "Paused"}
 
         for download in self.downloads:
-            if download.status not in ("Finished", "Filtered", "Paused"):
+            if download.status not in ignored_statuses:
                 download.status = "User logged off"
                 self.abort_download(download, abort_reason=None)
                 need_update = True
@@ -231,7 +228,7 @@ class Transfers:
 
         self.user_update_counter = 0
 
-    """ Load Transfers """
+    # Load Transfers #
 
     def get_download_queue_file_name(self):
 
@@ -264,7 +261,7 @@ class Transfers:
 
     @staticmethod
     def load_transfers_file(transfers_file):
-        """ Loads a file of transfers in json format """
+        """Loads a file of transfers in json format."""
 
         def json_keys_to_integer(dictionary):
             # JSON stores file attribute types as strings, convert them back to integers
@@ -284,7 +281,7 @@ class Transfers:
 
     @staticmethod
     def load_legacy_transfers_file(transfers_file):
-        """ Loads a download queue file in pickle format (legacy) """
+        """Loads a download queue file in pickle format (legacy)"""
 
         transfers_file = encode_path(transfers_file)
 
@@ -410,10 +407,10 @@ class Transfers:
                 # Only finished uploads are supposed to be restored
                 continue
 
-            if loaded_status in ("Aborted", "Paused"):
+            if loaded_status in {"Aborted", "Paused"}:
                 status = "Paused"
 
-            elif loaded_status in ("Filtered", "Finished"):
+            elif loaded_status in {"Filtered", "Finished"}:
                 status = loaded_status
 
             else:
@@ -446,12 +443,13 @@ class Transfers:
             )
 
     def watch_stored_downloads(self):
-        """ When logging in, we request to watch the status of our downloads """
+        """When logging in, we request to watch the status of our downloads."""
 
         users = set()
+        ignored_statuses = {"Filtered", "Finished"}
 
         for download in self.downloads:
-            if download.status in ("Filtered", "Finished"):
+            if download.status in ignored_statuses:
                 continue
 
             users.add(download.user)
@@ -459,7 +457,7 @@ class Transfers:
         for user in users:
             core.watch_user(user)
 
-    """ Privileges """
+    # Privileges #
 
     def _add_to_privileged(self, user):
         self.privileged_users.add(user)
@@ -495,7 +493,7 @@ class Transfers:
 
         return False
 
-    """ File Actions """
+    # File Actions #
 
     @staticmethod
     def get_file_size(filename):
@@ -525,7 +523,7 @@ class Transfers:
                 "error": error
             })
 
-    """ Limits """
+    # Limits #
 
     def update_download_limits(self):
 
@@ -605,7 +603,7 @@ class Transfers:
             upload_slot_limit = 1
 
         num_in_progress = 0
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
 
         for upload in self.uploads:
             if upload.status in active_statuses:
@@ -644,17 +642,16 @@ class Transfers:
             if self.slot_limit_reached():
                 return False
 
-        else:
+        elif self.bandwidth_limit_reached():
             # Limit by maximum bandwidth
-            if self.bandwidth_limit_reached():
-                return False
+            return False
 
         # No limits
         return True
 
     def file_is_upload_queued(self, user, filename):
 
-        statuses = ("Queued", "Getting status", "Transferring")
+        statuses = {"Queued", "Getting status", "Transferring"}
 
         return next(
             (upload.filename == filename and upload.status in statuses and upload.user == user
@@ -682,19 +679,22 @@ class Transfers:
 
         return False
 
-    """ Events """
+    # Events #
 
     def _user_status(self, msg):
-        """ Server code: 7 """
-        """ We get a status of a user and if he's online, we request a file from him """
+        """Server code 7.
+
+        We get a status of a user and if he's online, we request a file
+        from him
+        """
 
         update = False
         username = msg.user
         privileged = msg.privileged
         user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
-        download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection timeout", "Remote file error", "Cancelled")
-        upload_statuses = ("Getting status", "User logged off", "Connection timeout")
+        download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
+                             "User logged off", "Connection timeout", "Remote file error", "Cancelled"}
+        upload_statuses = {"Getting status", "User logged off", "Connection timeout"}
 
         if privileged is not None:
             if privileged:
@@ -739,7 +739,7 @@ class Transfers:
             events.emit("update-uploads")
 
     def _connect_to_peer(self, msg):
-        """ Server code: 18 """
+        """Server code 18."""
 
         if msg.privileged is None:
             return
@@ -750,7 +750,7 @@ class Transfers:
             events.emit("remove-privileged-user", msg.user)
 
     def _user_stats(self, msg):
-        """ Server code: 36 """
+        """Server code 36."""
 
         if msg.user == core.login_username:
             self.upload_speed = msg.avgspeed
@@ -768,7 +768,7 @@ class Transfers:
                 self._cant_connect_queue_file(user, i.file, is_offline)
 
     def _cant_connect_queue_file(self, username, filename, is_offline):
-        """ We can't connect to the user, either way (QueueUpload). """
+        """We can't connect to the user, either way (QueueUpload)."""
 
         for download in self.downloads:
             if download.filename != filename or download.user != username:
@@ -784,7 +784,8 @@ class Transfers:
             break
 
     def _cant_connect_upload(self, username, token, is_offline):
-        """ We can't connect to the user, either way (TransferRequest, FileUploadInit). """
+        """We can't connect to the user, either way (TransferRequest,
+        FileUploadInit)."""
 
         for upload in self.uploads:
             if upload.token != token or upload.user != username:
@@ -810,9 +811,11 @@ class Transfers:
             return
 
     def _folder_contents_response(self, msg, check_num_files=True):
-        """ Peer code: 37 """
-        """ When we got a contents of a folder, get all the files in it, but
-        skip the files in subfolders """
+        """Peer code 37.
+
+        When we got a contents of a folder, get all the files in it, but
+        skip the files in subfolders
+        """
 
         username = msg.init.target_user
         file_list = msg.list
@@ -850,10 +853,13 @@ class Transfers:
                         username, virtualpath, path=destination, size=file_size, file_attributes=file_attributes)
 
     def _queue_upload(self, msg):
-        """ Peer code: 43 """
-        """ Peer remotely queued a download (upload here). This is the modern replacement to
-        a TransferRequest with direction 0 (download request). We will initiate the upload of
-        the queued file later. """
+        """Peer code 43.
+
+        Peer remotely queued a download (upload here). This is the
+        modern replacement to a TransferRequest with direction 0
+        (download request). We will initiate the upload of the queued
+        file later.
+        """
 
         user = msg.init.target_user
         filename = msg.file
@@ -889,7 +895,7 @@ class Transfers:
         self.check_upload_queue()
 
     def _transfer_request(self, msg):
-        """ Peer code: 40 """
+        """Peer code 40."""
 
         user = msg.init.target_user
 
@@ -951,7 +957,7 @@ class Transfers:
                 accepted = False
                 break
 
-            if status in ("Paused", "Filtered"):
+            if status in {"Paused", "Filtered"}:
                 accepted = False
                 break
 
@@ -1005,9 +1011,12 @@ class Transfers:
         return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
     def _transfer_request_uploads(self, msg):
-        """ Remote peer is requesting to download a file through your upload queue.
-        Note that the QueueUpload peer message has replaced this method of requesting
-        a download in most clients. """
+        """Remote peer is requesting to download a file through your upload
+        queue.
+
+        Note that the QueueUpload peer message has replaced this method
+        of requesting a download in most clients.
+        """
 
         user = msg.init.target_user
         filename = msg.file
@@ -1034,7 +1043,7 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
 
         for upload in self.uploads:
             if upload.status not in active_statuses or upload.user != user:
@@ -1063,8 +1072,10 @@ class Transfers:
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
 
     def _transfer_response(self, msg):
-        """ Peer code: 41 """
-        """ Received a response to the file request from the peer """
+        """Peer code 41.
+
+        Received a response to the file request from the peer
+        """
 
         username = msg.init.target_user
         token = msg.token
@@ -1079,7 +1090,7 @@ class Transfers:
         })
 
         if reason is not None:
-            if reason in ("Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"):
+            if reason in {"Queued", "Getting status", "Transferring", "Paused", "Filtered", "User logged off"}:
                 # Don't allow internal statuses as reason
                 reason = "Cancelled"
 
@@ -1093,11 +1104,11 @@ class Transfers:
 
                 self.abort_upload(upload, abort_reason=reason)
 
-                if reason in ("Complete", "Finished"):
+                if reason in {"Complete", "Finished"}:
                     # A complete download of this file already exists on the user's end
                     self.upload_finished(upload)
 
-                elif reason in ("Cancelled", "Disallowed extension"):
+                elif reason in {"Cancelled", "Disallowed extension"}:
                     self.auto_clear_upload(upload)
 
                 self.check_upload_queue()
@@ -1142,7 +1153,7 @@ class Transfers:
         self.check_upload_queue()
 
     def _download_file_error(self, username, token, error):
-        """ Networking thread encountered a local file error for download """
+        """Networking thread encountered a local file error for download."""
 
         for download in self.downloads:
             if download.token != token or download.user != username:
@@ -1153,7 +1164,7 @@ class Transfers:
             return
 
     def _upload_file_error(self, username, token, error):
-        """ Networking thread encountered a local file error for upload """
+        """Networking thread encountered a local file error for upload."""
 
         for upload in self.uploads:
             if upload.token != token or upload.user != username:
@@ -1166,7 +1177,7 @@ class Transfers:
             return
 
     def _file_download_init(self, msg):
-        """ A peer is requesting to start uploading a file to us """
+        """A peer is requesting to start uploading a file to us."""
 
         username = msg.init.target_user
         token = msg.token
@@ -1274,7 +1285,7 @@ class Transfers:
         events.emit("file-upload-init", msg)
 
     def _file_upload_init(self, msg):
-        """ We are requesting to start uploading a file to a peer """
+        """We are requesting to start uploading a file to a peer."""
 
         username = msg.init.target_user
         token = msg.token
@@ -1353,13 +1364,13 @@ class Transfers:
         core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
 
     def _upload_denied(self, msg):
-        """ Peer code: 50 """
+        """Peer code 50."""
 
         user = msg.init.target_user
         filename = msg.file
         reason = msg.reason
 
-        if reason in ("Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"):
+        if reason in {"Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"}:
             # Don't allow internal statuses as reason
             reason = "Cancelled"
 
@@ -1367,11 +1378,11 @@ class Transfers:
             if download.filename != filename or download.user != user:
                 continue
 
-            if download.status in ("Finished", "Paused"):
+            if download.status in {"Finished", "Paused"}:
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if reason in ("File not shared.", "File not shared", "Remote file error") and not download.legacy_attempt:
+            if reason in {"File not shared.", "File not shared", "Remote file error"} and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
@@ -1401,7 +1412,7 @@ class Transfers:
             return
 
     def _upload_failed(self, msg):
-        """ Peer code: 46 """
+        """Peer code 46."""
 
         user = msg.init.target_user
         filename = msg.file
@@ -1410,8 +1421,8 @@ class Transfers:
             if download.filename != filename or download.user != user:
                 continue
 
-            if download.status in ("Finished", "Paused", "Download folder error", "Local file error",
-                                   "User logged off"):
+            if download.status in {"Finished", "Paused", "Download folder error", "Local file error",
+                                   "User logged off"}:
                 # Check if there are more transfers with the same virtual path
                 continue
 
@@ -1436,7 +1447,7 @@ class Transfers:
             return
 
     def _file_download_progress(self, username, token, bytes_left):
-        """ A file download is in progress """
+        """A file download is in progress."""
 
         for download in self.downloads:
             if download.token != token or download.user != username:
@@ -1469,7 +1480,7 @@ class Transfers:
             return
 
     def _file_upload_progress(self, username, token, offset, bytes_sent):
-        """ A file upload is in progress """
+        """A file upload is in progress."""
 
         for upload in self.uploads:
             if upload.token != token or upload.user != username:
@@ -1505,7 +1516,7 @@ class Transfers:
             return
 
     def _download_connection_closed(self, username, token):
-        """ A file download connection has closed for any reason """
+        """A file download connection has closed for any reason."""
 
         for download in self.downloads:
             if download.token != token or download.user != username:
@@ -1527,7 +1538,7 @@ class Transfers:
             return
 
     def _upload_connection_closed(self, username, token, timed_out):
-        """ A file upload connection has closed for any reason """
+        """A file upload connection has closed for any reason."""
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for upload in self.uploads.copy():
@@ -1567,7 +1578,7 @@ class Transfers:
             return
 
     def _place_in_queue_request(self, msg):
-        """ Peer code: 51 """
+        """Peer code 51."""
 
         user = msg.init.target_user
         filename = msg.file
@@ -1618,8 +1629,10 @@ class Transfers:
         self.update_upload(transfer, update_parent=False)
 
     def _place_in_queue_response(self, msg):
-        """ Peer code: 44 """
-        """ The peer tells us our place in queue for a particular transfer """
+        """Peer code 44.
+
+        The peer tells us our place in queue for a particular transfer
+        """
 
         username = msg.init.target_user
         filename = msg.filename
@@ -1630,7 +1643,7 @@ class Transfers:
                 self.update_download(download, update_parent=False)
                 return
 
-    """ Transfer Actions """
+    # Transfer Actions #
 
     def get_folder(self, user, folder):
         core.send_message_to_peer(user, slskmessages.FolderContentsRequest(directory=folder, token=1))
@@ -1803,26 +1816,23 @@ class Transfers:
 
         transfers = config.sections["transfers"]
 
-        if transfers["remotedownloads"]:
+        if not transfers["remotedownloads"]:
+            return False
 
-            if transfers["uploadallowed"] == 0:
-                # No One can sent files to you
-                return False
+        if transfers["uploadallowed"] == 1:
+            # Everyone
+            return True
 
-            if transfers["uploadallowed"] == 1:
-                # Everyone can sent files to you
+        if transfers["uploadallowed"] == 2 and user in core.userlist.buddies:
+            # Buddies
+            return True
+
+        if transfers["uploadallowed"] == 3:
+            # Trusted buddies
+            user_data = core.userlist.buddies.get(user)
+
+            if user_data and user_data.is_trusted:
                 return True
-
-            if transfers["uploadallowed"] == 2 and user in core.userlist.buddies:
-                # Users in userlist
-                return True
-
-            if transfers["uploadallowed"] == 3:
-                # Trusted buddies
-                user_data = core.userlist.buddies.get(user)
-
-                if user_data and user_data.is_trusted:
-                    return True
 
         return False
 
@@ -1879,7 +1889,7 @@ class Transfers:
 
     def get_downloading_users(self):
 
-        statuses = ("Queued", "Getting status", "Transferring")
+        statuses = {"Queued", "Getting status", "Transferring"}
         users = set()
 
         for upload in self.uploads:
@@ -1918,7 +1928,7 @@ class Transfers:
         return max_bytes
 
     def get_download_basename(self, virtual_path, download_folder_path, avoid_conflict=False):
-        """ Returns the download basename for a virtual file path """
+        """Returns the download basename for a virtual file path."""
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
@@ -1944,7 +1954,7 @@ class Transfers:
         return corrected_basename
 
     def get_complete_download_file_path(self, user, virtual_path, download_folder_path, size):
-        """ Returns the download path of a complete download, if available """
+        """Returns the download path of a complete download, if available."""
 
         if not download_folder_path:
             download_folder_path = self.get_default_download_folder(user)
@@ -1966,7 +1976,8 @@ class Transfers:
         return None
 
     def get_incomplete_download_file_path(self, username, virtual_path):
-        """ Returns the path to store a download while it's still transferring """
+        """Returns the path to store a download while it's still
+        transferring."""
 
         from hashlib import md5
         md5sum = md5()
@@ -1988,7 +1999,7 @@ class Transfers:
         return os.path.join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
     def get_current_download_file_path(self, username, virtual_path, download_folder_path, size):
-        """ Returns the current file path of a download """
+        """Returns the current file path of a download."""
 
         return (self.get_complete_download_file_path(username, virtual_path, download_folder_path, size)
                 or self.get_incomplete_download_file_path(username, virtual_path))
@@ -2015,7 +2026,7 @@ class Transfers:
     def folder_downloaded_actions(self, user, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
-        statuses = ("Finished", "Paused", "Filtered")
+        statuses = {"Finished", "Paused", "Filtered"}
 
         for download in self.downloads:
             if download.path == folderpath and download.status not in statuses:
@@ -2224,10 +2235,10 @@ class Transfers:
 
     def check_download_queue(self):
 
-        statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
+        failed_statuses = {"Connection timeout", "Local file error", "Remote file error"}
 
         for download in reversed(self.downloads):
-            if download.status in statuslist_failed:
+            if download.status in failed_statuses:
                 # Retry failed downloads every 3 minutes
 
                 self.abort_download(download, abort_reason=None)
@@ -2242,12 +2253,14 @@ class Transfers:
                 )
 
     def get_upload_candidate(self):
-        """ Retrieve a suitable queued transfer for uploading.
+        """Retrieve a suitable queued transfer for uploading.
+
         Round Robin: Get the first queued item from the oldest user
-        FIFO: Get the first queued item in the list """
+        FIFO: Get the first queued item in the list
+        """
 
         round_robin_queue = not config.sections["transfers"]["fifoqueue"]
-        active_statuses = ("Getting status", "Transferring")
+        active_statuses = {"Getting status", "Transferring"}
         privileged_queue = False
 
         first_queued_transfers = {}
@@ -2321,7 +2334,7 @@ class Transfers:
         return first_queued_transfers[target_user]
 
     def check_upload_queue(self):
-        """ Find next file to upload """
+        """Find next file to upload."""
 
         if not self.uploads:
             # No uploads exist
@@ -2349,17 +2362,19 @@ class Transfers:
         )
 
     def update_user_counter(self, user):
-        """ Called when an upload associated with a user has changed. The user update counter
-        is used by the Round Robin queue system to determine which user has waited the longest
-        since their last download. """
+        """Called when an upload associated with a user has changed.
+
+        The user update counter is used by the Round Robin queue system
+        to determine which user has waited the longest since their last
+        download.
+        """
 
         self.user_update_counter += 1
         self.user_update_counters[user] = self.user_update_counter
 
     def ban_users(self, users, ban_message=None):
-        """ Ban a user, cancel all the user's uploads, send a 'Banned'
-        message via the transfers, and clear the transfers from the
-        uploads list. """
+        """Ban a user, cancel all the user's uploads, send a 'Banned' message
+        via the transfers, and clear the transfers from the uploads list."""
 
         if not ban_message and config.sections["transfers"]["usecustomban"]:
             ban_message = config.sections["transfers"]["customban"]
@@ -2382,7 +2397,7 @@ class Transfers:
 
     def retry_download(self, transfer, bypass_filter=False):
 
-        if transfer.status in ("Transferring", "Finished"):
+        if transfer.status in {"Transferring", "Finished"}:
             return
 
         user = transfer.user
@@ -2404,10 +2419,10 @@ class Transfers:
 
     def retry_download_limits(self):
 
-        statuslist_limited = ("Too many files", "Too many megabytes")
+        limited_statuses = {"Too many files", "Too many megabytes"}
 
         for download in reversed(self.downloads):
-            if download.status in statuslist_limited or download.status.startswith("User limit of"):
+            if download.status in limited_statuses or download.status.startswith("User limit of"):
                 # Re-queue limited downloads every 12 minutes
 
                 log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
@@ -2420,9 +2435,9 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        active_statuses = ["Getting status", "Transferring"]
+        active_statuses = {"Getting status", "Transferring"}
 
-        if transfer.status in active_statuses + ["Finished"]:
+        if transfer.status in active_statuses.union({"Finished"}):
             # Don't retry active or finished uploads
             return
 
@@ -2491,8 +2506,10 @@ class Transfers:
 
     def abort_downloads(self, downloads, abort_reason="Paused"):
 
+        ignored_statuses = {abort_reason, "Finished"}
+
         for download in downloads:
-            if download.status not in (abort_reason, "Finished"):
+            if download.status not in ignored_statuses:
                 self.abort_download(download, abort_reason=abort_reason, update_parent=False)
 
         events.emit("abort-downloads", downloads, abort_reason)
@@ -2538,8 +2555,10 @@ class Transfers:
 
     def abort_uploads(self, uploads, denied_message=None, abort_reason="Cancelled"):
 
+        ignored_statuses = {abort_reason, "Finished"}
+
         for upload in uploads:
-            if upload.status not in (abort_reason, "Finished"):
+            if upload.status not in ignored_statuses:
                 self.abort_upload(
                     upload, denied_message=denied_message, abort_reason=abort_reason, update_parent=False)
 
@@ -2595,7 +2614,7 @@ class Transfers:
 
         events.emit("clear-uploads", uploads, statuses)
 
-    """ Filters """
+    # Filters #
 
     def update_download_filters(self):
 
@@ -2645,10 +2664,10 @@ class Transfers:
 
         log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})
 
-    """ Saving """
+    # Saving #
 
     def get_downloads(self):
-        """ Get a list of downloads """
+        """Get a list of downloads."""
         return [
             [download.user, download.filename, download.path, download.status, download.size,
              download.current_byte_offset, download.file_attributes]
@@ -2656,7 +2675,7 @@ class Transfers:
         ]
 
     def get_uploads(self):
-        """ Get a list of finished uploads """
+        """Get a list of finished uploads."""
         return [
             [upload.user, upload.filename, upload.path, upload.status, upload.size, upload.current_byte_offset,
              upload.file_attributes]
@@ -2670,7 +2689,7 @@ class Transfers:
         json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
     def save_transfers(self):
-        """ Save list of transfers """
+        """Save list of transfers."""
 
         if not self.allow_saving_transfers:
             # Don't save if transfers didn't load properly!

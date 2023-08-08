@@ -19,7 +19,6 @@
 import os
 
 from unittest import TestCase
-from unittest.mock import Mock
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -33,15 +32,23 @@ class TransfersTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        core.init_components()
+        core.init_components(enabled_components={"shares", "transfers", "userbrowse", "userlist"})
         config.sections["transfers"]["downloaddir"] = config.data_dir
 
-        core.transfers._start()  # pylint: disable=protected-access
-        core.transfers._server_login(Mock())  # pylint: disable=protected-access
+        core.start()
         core.transfers.allow_saving_transfers = False
 
+    def tearDown(self):
+
+        core.quit()
+
+        self.assertIsNone(core.shares)
+        self.assertIsNone(core.transfers)
+        self.assertIsNone(core.userbrowse)
+        self.assertIsNone(core.userlist)
+
     def test_load_downloads(self):
-        """ Test loading a downloads.json file """
+        """Test loading a downloads.json file."""
 
         self.assertEqual(len(core.transfers.downloads), 17)
 
@@ -89,11 +96,12 @@ class TransfersTest(TestCase):
         self.assertFalse(core.transfers.downloads[4].file_attributes)
 
     def test_save_downloads(self):
-        """ Verify that the order of the download list at the end of the session
-        is identical to the one we loaded. Ignore the last four transfers, since their missing
-        properties will be added at the end of the session. """
+        """Verify that the order of the download list at the end of the session
+        is identical to the one we loaded.
 
-        core.transfers._server_disconnect(Mock())  # pylint: disable=protected-access
+        Ignore the last four transfers, since their missing properties
+        will be added at the end of the session.
+        """
 
         old_transfers = core.transfers.load_transfers_file(core.transfers.downloads_file_name)[:12]
 
@@ -101,7 +109,7 @@ class TransfersTest(TestCase):
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_load_uploads(self):
-        """ Test loading a uploads.json file """
+        """Test loading a uploads.json file."""
 
         # Only finished uploads are loaded, other types should never be stored
         self.assertEqual(len(core.transfers.uploads), 3)
@@ -128,7 +136,9 @@ class TransfersTest(TestCase):
         })
 
     def test_queue_download(self):
-        """ Verify that new downloads are prepended to the list """
+        """Verify that new downloads are prepended to the list."""
+
+        config.sections["transfers"]["usernamesubfolders"] = False
 
         core.transfers.get_file("newuser", "Hello\\Path\\File.mp3", "")
         transfer = core.transfers.downloads[0]
@@ -138,7 +148,7 @@ class TransfersTest(TestCase):
         self.assertEqual(transfer.path, config.data_dir)
 
     def test_push_upload(self):
-        """ Verify that new uploads are prepended to the list """
+        """Verify that new uploads are prepended to the list."""
 
         core.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
         core.transfers.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
@@ -149,8 +159,11 @@ class TransfersTest(TestCase):
         self.assertEqual(transfer.path, os.path.join(os.sep, "home", "test"))
 
     def test_long_basename(self):
-        """ Verify that the basename in download paths doesn't exceed 255 bytes.
-        The basename can be shorter than 255 bytes when a truncated multi-byte character is discarded. """
+        """Verify that the basename in download paths doesn't exceed 255 bytes.
+
+        The basename can be shorter than 255 bytes when a truncated
+        multi-byte character is discarded.
+        """
 
         user = "abc"
         finished_folder_path = os.path.join(os.sep, "path", "to", "somewhere", "downloads")
@@ -209,10 +222,11 @@ class TransfersTest(TestCase):
         self.assertTrue(finished_basename.endswith("片"))
 
     def test_download_folder_destination(self):
-        """ Verify that the correct download destination is used """
+        """Verify that the correct download destination is used."""
 
         user = "newuser"
         folder = "Hello\\Path"
+        config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.transfers.get_folder_destination(user, folder)
 
         core.transfers.requested_folders[user][folder] = "test"
@@ -234,7 +248,7 @@ class TransfersTest(TestCase):
         self.assertEqual(destination_depth, os.path.join(config.data_dir, "newuser", "Test"))
 
     def test_download_subfolders(self):
-        """ Verify that subfolders are downloaded to the correct location """
+        """Verify that subfolders are downloaded to the correct location."""
 
         user = "random"
         target_folder = "share\\Soulseek"

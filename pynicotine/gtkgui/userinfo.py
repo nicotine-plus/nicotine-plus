@@ -32,6 +32,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
@@ -250,8 +251,14 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
+
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 8):
+                self.picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+            else:
+                self.picture.set_keep_aspect_ratio(True)
+
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
@@ -336,7 +343,7 @@ class UserInfo:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    """ General """
+    # General #
 
     def populate_stats(self):
 
@@ -432,7 +439,7 @@ class UserInfo:
 
         self.indeterminate_progress = False
 
-        if total == 0 or position == 0:
+        if total <= 0 or position <= 0:
             fraction = 0.0
         elif position >= total:
             fraction = 1.0
@@ -441,7 +448,7 @@ class UserInfo:
 
         self.progress_bar.set_fraction(fraction)
 
-    """ Button States """
+    # Button States #
 
     def update_edit_button_state(self):
 
@@ -469,7 +476,7 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
 
-    """ Network Messages """
+    # Network Messages #
 
     def user_info_response(self, msg):
 
@@ -525,10 +532,10 @@ class UserInfo:
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
 
-    """ Callbacks """
+    # Callbacks #
 
     def on_draw_picture(self, area, context):
-        """ Draws a centered picture that fills the drawing area """
+        """Draws a centered picture that fills the drawing area."""
 
         area_width = area.get_allocated_width()
         area_height = area.get_allocated_height()

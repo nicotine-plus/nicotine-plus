@@ -332,7 +332,7 @@ class Search:
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
-    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<!!\s)")      # [pipe, ampersand, comma, semicolon, space]
     FILTERS_EMPTY = {
         "filterin": (None, ""),
         "filterout": (None, ""),
@@ -699,7 +699,7 @@ class Search:
         self.set_filters(stored_filters)
 
     def set_filters(self, stored_filters):
-        """ Recall result filter values from a dict """
+        """Recall result filter values from a dict."""
 
         self.populating_filters = True
 
@@ -717,8 +717,10 @@ class Search:
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
-        """ Adds a list of search results to the treeview. Lists can either contain publicly or
-        privately shared files. """
+        """Adds a list of search results to the treeview.
+
+        Lists can either contain publicly or privately shared files.
+        """
 
         update_ui = False
 
@@ -985,7 +987,7 @@ class Search:
         self.num_results_visible += 1
         return iterator
 
-    """ Result Filters """
+    # Result Filters #
 
     def add_filter_history_item(self, filter_id, value):
 
@@ -1027,7 +1029,7 @@ class Search:
 
     @staticmethod
     def _split_operator(condition):
-        """ Returns: (operation, digit) """
+        """Returns (operation, digit)"""
 
         operators = {
             "<": operator.lt,
@@ -1050,7 +1052,7 @@ class Search:
         return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
-        """ Check if any conditions in result_filter match value """
+        """Check if any conditions in result_filter match value."""
 
         allowed = blocked = False
 
@@ -1151,7 +1153,7 @@ class Search:
 
     def check_filter(self, row):
 
-        if self.active_filter_count == 0:
+        if self.active_filter_count <= 0:
             return True
 
         for filter_id, (filter_value, _h_filter_value) in self.filters.items():
@@ -1232,7 +1234,7 @@ class Search:
 
     def update_wish_button(self):
 
-        if self.mode not in ("global", "wishlist"):
+        if self.mode not in {"global", "wishlist"}:
             self.add_wish_button.set_visible(False)
             return
 
@@ -1282,20 +1284,20 @@ class Search:
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):
-        """ Escape: hide filter bar """
+        """Escape - hide filter bar."""
 
         self.filters_button.set_active(False)
         return True
 
     def on_show_filter_bar_accelerator(self, *_args):
-        """ Ctrl+F: show filter bar """
+        """Ctrl+F - show filter bar."""
 
         self.filters_button.set_active(True)
         self.filter_include_combobox.grab_focus()
         return True
 
     def on_file_properties_accelerator(self, *_args):
-        """ Alt+Return: show file properties dialog """
+        """Alt+Return - show file properties dialog."""
 
         self.on_file_properties()
         return True
@@ -1484,9 +1486,8 @@ class Search:
     def on_download_folders(self, *_args, download_location=""):
 
         if download_location:
-            """ Custom download location specified, remember it when peer sends a folder
-            contents reply """
-
+            # Custom download location specified, remember it when peer sends a folder
+            # contents reply
             requested_folders = core.transfers.requested_folders
         else:
             requested_folders = defaultdict(dict)
@@ -1496,8 +1497,8 @@ class Search:
             folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
             if folder in requested_folders[user]:
-                """ Ensure we don't send folder content requests for a folder more than once,
-                e.g. when several selected resuls belong to the same folder. """
+                # Ensure we don't send folder content requests for a folder more than once,
+                # e.g. when several selected resuls belong to the same folder
                 continue
 
             requested_folders[user][folder] = download_location
@@ -1702,6 +1703,7 @@ class Search:
 
         if self.filters == filters:
             # Filters have not changed, no need to refilter
+            self.refiltering = False
             return
 
         if self.filters and filters == self.FILTERS_EMPTY:
@@ -1730,26 +1732,31 @@ class Search:
         self.refiltering = False
 
     def on_filter_entry_deleted_text(self, buffer, *_args):
-        if not self.refiltering and buffer.get_length() == 0:
+        if not self.refiltering and buffer.get_length() <= 0:
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
 
-        history = config.sections["searches"].get(entry.filter_id)
-        recall_text = history[0] if history else ""
-        text = entry.get_text()
+        entry_text = entry.get_text()
+        filter_id = entry.filter_id
+        _filter_value, h_filter_value = self.filters.get(filter_id)
 
-        # Recall last filter entry if box empty
-        if not text:
-            entry.grab_focus_without_selecting()
+        if not entry_text:
+            # Recall last filter
+            history = config.sections["searches"].get(filter_id)
+            recall_text = history[0] if history else ""
+
             entry.set_text(recall_text)
             entry.set_position(-1)
+            entry.grab_focus_without_selecting()
 
-        # Activate new filter entry or Clear Filter
-        if text != recall_text:
-            self.on_refilter()
-        else:
+        elif entry_text == h_filter_value:
+            # Clear Filter
             entry.set_text("")
+            return
+
+        # Activate new, edited or recalled filter
+        self.on_refilter()
 
     def on_clear_undo_filters(self, *_args):
 

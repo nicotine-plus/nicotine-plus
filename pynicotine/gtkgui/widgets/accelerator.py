@@ -24,9 +24,6 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" Accelerator """
-
-
 class Accelerator:
 
     if GTK_API_VERSION >= 4:
@@ -94,7 +91,7 @@ class Accelerator:
         required_mods = self.required_mods
         excluded_mods = ALL_MODIFIERS & ~required_mods
 
-        if required_mods & ~activated_mods != 0:
+        if required_mods & ~activated_mods:
             # Missing required modifiers
             return False
 

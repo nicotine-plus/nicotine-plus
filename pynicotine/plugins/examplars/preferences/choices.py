@@ -20,7 +20,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
-    """ Radio Button/Dropdown Example """
+    """Radio Button/Dropdown Example."""
 
     def __init__(self, *args, **kwargs):
 

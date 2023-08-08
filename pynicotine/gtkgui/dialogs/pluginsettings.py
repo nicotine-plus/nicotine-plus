@@ -268,34 +268,34 @@ class PluginSettings(Dialog):
             description = data.get("description", "")
             option_value = config.sections["plugins"][self.plugin_id.lower()][option_name]
 
-            if option_type in ("integer", "int", "float"):
+            if option_type in {"integer", "int", "float"}:
                 self._add_numerical_option(
                     option_name, option_value, description, minimum=data.get("minimum", 0),
                     maximum=data.get("maximum", 99999), stepsize=data.get("stepsize", 1),
-                    decimals=(0 if option_type in ("integer", "int") else 2)
+                    decimals=(0 if option_type in {"integer", "int"} else 2)
                 )
 
-            elif option_type in ("bool",):
+            elif option_type == "bool":
                 self._add_boolean_option(option_name, option_value, description)
 
-            elif option_type in ("radio",):
+            elif option_type == "radio":
                 self._add_radio_option(
                     option_name, option_value, description, items=data.get("options", []))
 
-            elif option_type in ("dropdown",):
+            elif option_type == "dropdown":
                 self._add_dropdown_option(
                     option_name, option_value, description, items=data.get("options", []))
 
-            elif option_type in ("str", "string"):
+            elif option_type in {"str", "string"}:
                 self._add_entry_option(option_name, option_value, description)
 
-            elif option_type in ("textview",):
+            elif option_type == "textview":
                 self._add_textview_option(option_name, option_value, description)
 
-            elif option_type in ("list string",):
+            elif option_type == "list string":
                 self._add_list_option(option_name, option_value, description)
 
-            elif option_type in ("file",):
+            elif option_type == "file":
                 self._add_file_option(
                     option_name, option_value, description, file_chooser_type=data.get("chooser"))
 

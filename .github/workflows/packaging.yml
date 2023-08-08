@@ -50,6 +50,7 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
@@ -72,13 +73,14 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           release: false
+          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-gettext
             mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
             mingw-w64-${{ matrix.arch }}-python-chardet
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-flake8
             mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-python-pycodestyle
             mingw-w64-${{ matrix.arch }}-python-pylint
             mingw-w64-${{ matrix.arch }}-python-gobject
 

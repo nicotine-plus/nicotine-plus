@@ -37,9 +37,6 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
 
 
-""" Textview """
-
-
 class TextView:
 
     if GTK_API_VERSION >= 4:
@@ -234,7 +231,7 @@ class TextView:
         self.textbuffer.delete(start_iter, end_iter)
         self.tag_urls.clear()
 
-    """ Text Tags (usernames, URLs) """
+    # Text Tags (Usernames, URLs) #
 
     def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
@@ -267,7 +264,7 @@ class TextView:
         for tag in self.tag_urls.values():
             self.update_tag(tag)
 
-    """ Events """
+    # Events #
 
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
@@ -368,7 +365,7 @@ class ChatView(TextView):
 
     @staticmethod
     def find_whole_word(word, text):
-        """ Returns start position of a whole word that is not in a subword """
+        """Returns start position of a whole word that is not in a subword."""
 
         if word not in text:
             return -1
@@ -485,7 +482,8 @@ class ChatView(TextView):
             self.update_user_tag(username)
 
     def on_page_down_accelerator(self, *_args):
-        """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
+        """Page_Down, Down: Give focus to text entry if already scrolled at the
+        bottom."""
 
         if self.adjustment_value >= self.adjustment_bottom:
             # Give focus to text entry upon scrolling down to the bottom

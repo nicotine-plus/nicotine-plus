@@ -29,7 +29,6 @@ import time
 
 from operator import itemgetter
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -51,6 +50,7 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
@@ -1299,13 +1299,7 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.enable_spell_checker_toggle.set_visible(False)
-
+        self.enable_spell_checker_toggle.set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
@@ -1757,15 +1751,11 @@ class UserInterfacePage:
                 "trayicon": self.tray_icon_toggle,
                 "startup_hidden": self.minimize_tray_startup_toggle,
                 "language": self.language_combobox,
-
                 "reverse_file_paths": self.reverse_file_paths_toggle,
                 "file_size_unit": self.exact_file_sizes_toggle,
-
                 "tab_select_previous": self.tab_restore_startup_toggle,
                 "tabclosers": self.tab_close_buttons_toggle,
-
                 "icontheme": self.icon_theme_button,
-
                 "chatlocal": self.color_chat_local_entry,
                 "chatremote": self.color_chat_remote_entry,
                 "chatcommand": self.color_chat_command_entry,
@@ -1782,7 +1772,6 @@ class UserInterfacePage:
                 "tab_default": self.color_tab_entry,
                 "tab_hilite": self.color_tab_highlighted_entry,
                 "tab_changed": self.color_tab_changed_entry,
-
                 "usernamestyle": self.chat_username_appearance_combobox,
                 "usernamehotspots": self.chat_colored_usernames_toggle
             }
@@ -1830,7 +1819,6 @@ class UserInterfacePage:
                 "trayicon": self.tray_icon_toggle.get_active(),
                 "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
                 "language": self.language_combobox.get_selected_id(),
-
                 "globalfont": self.get_font(self.font_global_button),
                 "listfont": self.get_font(self.font_list_button),
                 "textviewfont": self.get_font(self.font_text_view_button),
@@ -1838,10 +1826,8 @@ class UserInterfacePage:
                 "searchfont": self.get_font(self.font_search_button),
                 "transfersfont": self.get_font(self.font_transfers_button),
                 "browserfont": self.get_font(self.font_browse_button),
-
                 "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
                 "file_size_unit": "B" if self.exact_file_sizes_toggle.get_active() else "",
-
                 "tabmain": self.tab_position_main_combobox.get_selected_id(),
                 "tabrooms": self.tab_position_chatrooms_combobox.get_selected_id(),
                 "tabprivate": self.tab_position_private_chat_combobox.get_selected_id(),
@@ -1851,9 +1837,7 @@ class UserInterfacePage:
                 "modes_visible": enabled_tabs,
                 "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
                 "tabclosers": self.tab_close_buttons_toggle.get_active(),
-
                 "icontheme": self.icon_theme_button.get_path(),
-
                 "chatlocal": self.color_chat_local_entry.get_text(),
                 "chatremote": self.color_chat_remote_entry.get_text(),
                 "chatcommand": self.color_chat_command_entry.get_text(),
@@ -1870,18 +1854,17 @@ class UserInterfacePage:
                 "tab_hilite": self.color_tab_highlighted_entry.get_text(),
                 "tab_default": self.color_tab_entry.get_text(),
                 "tab_changed": self.color_tab_changed_entry.get_text(),
-
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
                 "usernamehotspots": self.chat_colored_usernames_toggle.get_active()
             }
         }
 
-    """ Icons """
+    # Icons #
 
     def on_clear_icon_theme(self, *_args):
         self.icon_theme_button.clear()
 
-    """ Fonts """
+    # Fonts #
 
     def get_font(self, button):
 
@@ -1900,7 +1883,7 @@ class UserInterfacePage:
         else:
             font_button.set_font("")
 
-    """ Colors """
+    # Colors #
 
     def on_color_entry_changed(self, entry):
 
@@ -2393,7 +2376,7 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
-        self.mpris_radio.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in {"win32", "darwin"})
 
     def set_settings(self):
 
@@ -2430,7 +2413,7 @@ class NowPlayingPage:
         elif self.other_radio.get_active():
             player = "other"
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         return player
@@ -2443,7 +2426,7 @@ class NowPlayingPage:
 
     def set_player(self, player):
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         if player == "lastfm":
@@ -2920,12 +2903,9 @@ class Preferences(Dialog):
         # Fonts and colors
         update_custom_css()
 
-        self.application.window.chatrooms.update_tags()
-        self.application.window.privatechat.update_tags()
-
-        # Chatrooms
-        self.application.window.chatrooms.toggle_chat_buttons()
-        self.application.window.privatechat.toggle_chat_buttons()
+        # Chats
+        self.application.window.chatrooms.update_widgets()
+        self.application.window.privatechat.update_widgets()
 
         # Transfers
         core.transfers.update_download_limits()
@@ -2989,15 +2969,15 @@ class Preferences(Dialog):
         ).show()
 
     def on_widget_scroll_event(self, _widget, event):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
-        to container (GTK 3) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
+        scroll event to container (GTK 3)"""
 
         self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
-        in the container (GTK 4) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate
+        scrolling in the container (GTK 4)"""
 
         adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
@@ -3076,13 +3056,13 @@ class Preferences(Dialog):
         self.content.get_vadjustment().set_value(0)
 
     def on_sidebar_tab_accelerator(self, *_args):
-        """ Tab: navigate to widget after preferences sidebar """
+        """Tab - navigate to widget after preferences sidebar."""
 
         self.content.child_focus(Gtk.DirectionType.TAB_FORWARD)
         return True
 
     def on_sidebar_shift_tab_accelerator(self, *_args):
-        """ Shift+Tab: navigate to widget before preferences sidebar """
+        """Shift+Tab - navigate to widget before preferences sidebar."""
 
         self.ok_button.grab_focus()
         return True

@@ -267,7 +267,7 @@ class Plugin(BasePlugin):
             }
         }
 
-    """ Application Commands """
+    # Application Commands #
 
     def help_command(self, args, user=None, room=None):
 
@@ -319,14 +319,14 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, **_unused):
 
-        force = (args.lstrip("- ") in ("force", "f"))
+        force = (args.lstrip("- ") in {"force", "f"})
 
         if force:
             self.core.quit()
         else:
             self.core.confirm_quit()
 
-    """ Chat """
+    # Chat #
 
     def clear_command(self, _args, user=None, room=None):
 
@@ -342,7 +342,7 @@ class Plugin(BasePlugin):
     def now_command(self, _args, **_unused):
         self.core.now_playing.display_now_playing(callback=self.send_message)
 
-    """ Chat Rooms """
+    # Chat Rooms #
 
     def join_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
@@ -371,7 +371,7 @@ class Plugin(BasePlugin):
         self.send_public(room, text)
         return True
 
-    """ Private Chat """
+    # Private Chat #
 
     def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
@@ -403,7 +403,7 @@ class Plugin(BasePlugin):
 
         self.send_private(user, text, show_ui=True, switch_page=False)
 
-    """ Users """
+    # Users #
 
     def add_buddy_command(self, args, user=None, **_unused):
 
@@ -433,7 +433,7 @@ class Plugin(BasePlugin):
 
         self.core.userinfo.show_user(user)
 
-    """ Network Filters """
+    # Network Filters #
 
     def ip_address_command(self, args, user=None, **_unused):
 
@@ -506,7 +506,7 @@ class Plugin(BasePlugin):
 
         self.output(_("Unignored %s") % (" & ".join(unignored_ip_addresses) or user))
 
-    """ Configure Shares """
+    # Configure Shares #
 
     def rescan_command(self, args, **_unused):
 
@@ -564,7 +564,7 @@ class Plugin(BasePlugin):
         self.output(_("Removed share \"%s\" (rescan required)") % virtual_name_or_folder_path)
         return True
 
-    """ Search Files """
+    # Search Files #
 
     def search_command(self, args, **_unused):
         self.core.search.do_search(args, "global")
@@ -582,7 +582,7 @@ class Plugin(BasePlugin):
 
         self.core.search.do_search(query, "user", users=[user])
 
-    """ Plugin Commands """
+    # Plugin Commands #
 
     def plugin_handler_command(self, args, **_unused):
 

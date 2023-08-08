@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -200,6 +200,8 @@ EVENT_NAMES = {
 
 class Events:
 
+    SCHEDULER_MAX_IDLE = 1
+
     def __init__(self):
 
         self._callbacks = {}
@@ -207,6 +209,13 @@ class Events:
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
+        self._is_active = False
+
+    def enable(self):
+
+        if self._is_active:
+            return
+
         self._is_active = True
 
         self.connect("quit", self._quit)
@@ -256,13 +265,17 @@ class Events:
         self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
-        """ Called by the main loop 20 times per second to emit thread events in the main thread.
-        Return value indicates if the main loop should continue processing events. """
+        """Called by the main loop 20 times per second to emit thread events in
+        the main thread.
 
-        if not self._is_active:
-            return False
+        Return value indicates if the main loop should continue
+        processing events.
+        """
 
         if not self._thread_events:
+            if not self._is_active:
+                return False
+
             return True
 
         event_list = []
@@ -289,7 +302,7 @@ class Events:
 
             # No scheduled events
             if not self._scheduler_events:
-                time.sleep(1)
+                time.sleep(self.SCHEDULER_MAX_IDLE)
                 continue
 
             # Retrieve upcoming event
@@ -308,17 +321,17 @@ class Events:
 
                 continue
 
-            time.sleep(min(sleep_time, 1))
-
-        self._scheduler_events.clear()
+            time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
 
     def _quit(self):
 
-        self._callbacks.clear()
-        self._thread_events.clear()
-        self._pending_scheduler_events.clear()
+        # Ensure any remaining events are processed
+        self.process_thread_events()
 
         self._is_active = False
+        self._callbacks.clear()
+        self._pending_scheduler_events.clear()
+        self._scheduler_events.clear()
 
 
 events = Events()

@@ -35,10 +35,18 @@ class SearchTest(TestCase):
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        core.init_components()
+        core.init_components(enabled_components={"pluginhandler", "search"})
+
+    def tearDown(self):
+
+        core.quit()
+
+        self.assertIsNone(core.pluginhandler)
+        self.assertIsNone(core.search)
 
     def test_do_search(self):
-        """ Test the do_search function, including the outgoing search term and search history """
+        """Test the do_search function, including the outgoing search term and
+        search history."""
 
         old_token = core.search.token
 
@@ -66,7 +74,7 @@ class SearchTest(TestCase):
                          "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
 
     def test_search_token_increment(self):
-        """ Test that search token increments work properly """
+        """Test that search token increments work properly."""
 
         old_token = core.search.token
 
@@ -74,7 +82,7 @@ class SearchTest(TestCase):
         self.assertEqual(old_token, core.search.token - 1)
 
     def test_wishlist_add(self):
-        """ Test that items are added to the wishlist properly """
+        """Test that items are added to the wishlist properly."""
 
         old_token = core.search.token
 
@@ -93,7 +101,7 @@ class SearchTest(TestCase):
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
 
     def test_create_search_result_list(self):
-        """ Test creating search result lists from the word index """
+        """Test creating search result lists from the word index."""
 
         word_index = {
             "iso": [34, 35, 36, 37, 38],

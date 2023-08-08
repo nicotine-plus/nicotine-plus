@@ -33,9 +33,6 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
-""" Popup/Context Menu """
-
-
 class PopupMenu:
 
     popup_id_counter = 0
@@ -183,8 +180,8 @@ class PopupMenu:
         self.menu_section.append_item(menuitem)
 
     def update_model(self):
-        """ This function is called before a menu model needs to be manipulated
-        (enabling/disabling actions, showing a menu in the GUI) """
+        """This function is called before a menu model needs to be manipulated
+        (enabling/disabling actions, showing a menu in the GUI)"""
 
         if not self.pending_items:
             return
@@ -246,7 +243,7 @@ class PopupMenu:
 
         menu.popup_at_pointer(event)
 
-    """ Events """
+    # Events #
 
     def _callback(self, controller=None, pos_x=None, pos_y=None):
 
@@ -462,7 +459,7 @@ class UserPopupMenu(PopupMenu):
         super().update_model()
         self.update_username_item()
 
-    """ Events """
+    # Events #
 
     def on_search_user(self, *_args):
 

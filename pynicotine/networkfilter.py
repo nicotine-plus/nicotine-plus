@@ -26,7 +26,7 @@ from pynicotine.external.ip2location import IP2Location
 
 
 class NetworkFilter:
-    """ Functions related to banning and ignoring users """
+    """Functions related to banning and ignoring users."""
 
     COUNTRIES = {
         "AD": _("Andorra"),
@@ -297,12 +297,15 @@ class NetworkFilter:
         self.ip_ban_requested.clear()
         self.ip_ignore_requested.clear()
 
-    """ IP Filter List Management """
+    # IP Filter List Management #
 
     def _request_ip(self, user, action, request_list):
-        """ Ask for the IP address of an unknown user. Once a GetPeerAddress
-         response arrives, either ban_unban_user_ip_callback or
-         ignore_unignore_user_ip_callback is called. """
+        """Ask for the IP address of an unknown user.
+
+        Once a GetPeerAddress response arrives, either
+        ban_unban_user_ip_callback or ignore_unignore_user_ip_callback
+        is called.
+        """
 
         if user not in request_list:
             request_list[user] = action
@@ -310,7 +313,7 @@ class NetworkFilter:
         core.request_ip_address(user)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
-        """ Add the current IP address and username of a user to a list """
+        """Add the current IP address and username of a user to a list."""
 
         if not username:
             # Try to get a username from currently active connections
@@ -331,7 +334,7 @@ class NetworkFilter:
         return ip_address
 
     def _remove_user_ips_from_list(self, ip_list, username=None, ip_addresses=None):
-        """ Remove the previously saved IP address of a user from a list """
+        """Remove the previously saved IP address of a user from a list."""
 
         if not ip_addresses:
             # Try to get a known address for the user
@@ -344,11 +347,11 @@ class NetworkFilter:
         config.write_configuration()
         return ip_addresses
 
-    """ IP List Lookup Functions """
+    # IP List Lookup Functions #
 
     @staticmethod
     def _get_previous_user_ip_addresses(user, ip_list):
-        """ Retrieve IP address of a user previously saved in an IP list """
+        """Retrieve IP address of a user previously saved in an IP list."""
 
         ip_addresses = set()
 
@@ -364,8 +367,8 @@ class NetworkFilter:
 
     @staticmethod
     def get_online_user_ip_address(user):
-        """ Try to lookup an address from watched known connections,
-        for updating an IP list item if the address is unspecified """
+        """Try to lookup an address from watched known connections, for
+        updating an IP list item if the address is unspecified."""
 
         user_address = core.user_addresses.get(user)
 
@@ -377,7 +380,7 @@ class NetworkFilter:
         return user_ip_address
 
     def _get_user_ip_addresses(self, user, ip_list, request_action):
-        """ Returns the known IP addresses of a user, requests one otherwise """
+        """Returns the known IP addresses of a user, requests one otherwise."""
 
         ip_addresses = set()
 
@@ -406,8 +409,8 @@ class NetworkFilter:
 
     @staticmethod
     def get_online_username(ip_address):
-        """ Try to match a username from watched and known connections,
-        for updating an IP list item if the username is unspecified """
+        """Try to match a username from watched and known connections, for
+        updating an IP list item if the username is unspecified."""
 
         for username, user_address in core.user_addresses.items():
             if ip_address == user_address[0]:
@@ -426,7 +429,7 @@ class NetworkFilter:
 
     @staticmethod
     def is_ip_address(ip_address, allow_zero=True, allow_wildcard=True):
-        """ Check if the given value is an IPv4 address or not """
+        """Check if the given value is an IPv4 address or not."""
 
         if not ip_address or ip_address is None or ip_address.count(".") != 3:
             return False
@@ -447,10 +450,10 @@ class NetworkFilter:
 
         return True
 
-    """ IP Filter Rule Processing """
+    # IP Filter Rule Processing #
 
     def _check_user_ip_filtered(self, ip_list, username=None, ip_address=None):
-        """ Check if an IP address is present in a list """
+        """Check if an IP address is present in a list."""
 
         if username and username in ip_list.values():
             # Username is present in the list, so we want to filter it
@@ -480,7 +483,7 @@ class NetworkFilter:
 
             for part in parts:
                 # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
+                if part not in {s_address[seg], "*"}:
                     break
 
                 seg += 1
@@ -495,8 +498,8 @@ class NetworkFilter:
         return False
 
     def check_user(self, user, ip_address=None):
-        """ Check if this user is banned, geoip-blocked, and which shares
-        it is allowed to access based on transfer and shares settings. """
+        """Check if this user is banned, geoip-blocked, and which shares it is
+        allowed to access based on transfer and shares settings."""
 
         if self.is_user_banned(user) or self.is_user_ip_banned(user, ip_address):
             if config.sections["transfers"]["usecustomban"]:
@@ -533,17 +536,17 @@ class NetworkFilter:
         return 1, ""
 
     def close_banned_ip_connections(self):
-        """ Close all connections whose IP address exists in the ban list """
+        """Close all connections whose IP address exists in the ban list."""
 
         for ip_address in config.sections["server"]["ipblocklist"]:
             # We can't close wildcard patterns nor dummy (zero) addresses
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
                 core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
-    """ Callbacks """
+    # Callbacks #
 
     def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):
-        """ Check if a user's IP address has changed and update the lists """
+        """Check if a user's IP address has changed and update the lists."""
 
         previous_ip_addresses = self._get_previous_user_ip_addresses(username, ip_list)
 
@@ -560,7 +563,7 @@ class NetworkFilter:
             self._add_user_ip_to_list(ip_list, username, ip_address)
 
     def _get_peer_address(self, msg):
-        """ Server code: 3 """
+        """Server code 3."""
 
         user = msg.user
 
@@ -578,7 +581,7 @@ class NetworkFilter:
         self._ban_unban_user_ip_callback(user, ip_address)
         self._ignore_unignore_user_ip_callback(user, ip_address)
 
-    """ Banning """
+    # Banning #
 
     def ban_user(self, user):
 
@@ -631,7 +634,7 @@ class NetworkFilter:
     def is_user_ip_banned(self, user=None, ip_address=None):
         return self._check_user_ip_filtered(config.sections["server"]["ipblocklist"], user, ip_address)
 
-    """ Ignoring """
+    # Ignoring #
 
     def ignore_user(self, user):
 

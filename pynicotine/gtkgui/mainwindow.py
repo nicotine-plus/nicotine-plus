@@ -71,9 +71,7 @@ class MainWindow(Window):
         self.gesture_click = None
         self.scan_progress_indeterminate = False
 
-        application.connect("shutdown", self.on_shutdown)
-
-        """ Load UI """
+        # Load UI
 
         (
             self.add_buddy_entry,
@@ -208,8 +206,7 @@ class MainWindow(Window):
             self.vertical_paned.child_set_property(self.log_container, "resize", False)
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
-        """ Logging """
-
+        # Logging
         self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
                                  parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
         self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
@@ -218,9 +215,7 @@ class MainWindow(Window):
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
 
-        """ Notebook Tabs """
-
-        # Initialize main notebook
+        # Main notebook
         self.notebook = IconNotebook(
             self,
             parent=self.content,
@@ -228,7 +223,7 @@ class MainWindow(Window):
             reorder_page_callback=self.on_page_reordered
         )
 
-        # Initialize other notebooks
+        # Secondary notebooks
         self.interests = Interests(self)
         self.chatrooms = ChatRooms(self)
         self.search = Searches(self)
@@ -239,14 +234,12 @@ class MainWindow(Window):
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
-        """ Actions and Menu """
-
+        # Actions and menu
         self.set_up_actions()
         self.set_up_action_accels()
         self.set_up_menu()
 
-        """ Tab Visibility/Order """
-
+        # Tab visibility/order
         self.append_main_tabs()
         self.set_tab_positions()
         self.set_main_tabs_order()
@@ -254,8 +247,7 @@ class MainWindow(Window):
         self.set_last_session_tab()
         self.connect_tab_signals()
 
-        """ Events """
-
+        # Events
         for event_name, callback in (
             ("hide-scan-progress", self.hide_scan_progress),
             ("server-login", self.server_login),
@@ -270,15 +262,13 @@ class MainWindow(Window):
         ):
             events.connect(event_name, callback)
 
-        """ Apply UI Customizations """
-
+        # Apply UI customizations
         set_global_style()
 
-        """ Show Window """
-
+        # Show window
         self.init_window()
 
-    """ Initialize """
+    # Initialize #
 
     def init_window(self):
 
@@ -337,7 +327,7 @@ class MainWindow(Window):
     def set_help_overlay(self, help_overlay):
         self.widget.set_help_overlay(help_overlay)
 
-    """ Window State """
+    # Window State #
 
     def on_window_active_changed(self, *_args):
 
@@ -386,7 +376,7 @@ class MainWindow(Window):
             # Fix for Windows where minimized window is not shown when unhiding from tray
             self.widget.deiconify()
 
-    """ Connection """
+    # Connection #
 
     def server_login(self, msg):
 
@@ -451,7 +441,7 @@ class MainWindow(Window):
         self.user_status_icon.set_property("icon-name", USER_STATUS_ICON_NAMES[status])
         self.user_status_label.set_text(status_text)
 
-    """ Action Callbacks """
+    # Action Callbacks #
 
     # View
 
@@ -541,7 +531,7 @@ class MainWindow(Window):
             self.show_tab(self.userlist_page)
 
     def on_toggle_buddy_list(self, action, state):
-        """ Function used to switch around the UI the BuddyList position """
+        """Function used to switch around the UI the BuddyList position."""
 
         action.set_state(state)
 
@@ -549,7 +539,7 @@ class MainWindow(Window):
         self.set_toggle_buddy_list(mode)
         config.sections["ui"]["buddylistinchatrooms"] = mode
 
-    """ Actions """
+    # Actions #
 
     def add_action(self, action):
         self.widget.add_action(action)
@@ -584,7 +574,7 @@ class MainWindow(Window):
 
         state = config.sections["ui"]["buddylistinchatrooms"]
 
-        if state not in ("tab", "chatrooms", "always"):
+        if state not in {"tab", "chatrooms", "always"}:
             state = "tab"
 
         action = Gio.SimpleAction(
@@ -646,7 +636,7 @@ class MainWindow(Window):
             self.application.set_accels_for_action(f"win.primary-tab-{num}",
                                                    [f"<Primary>{num}", f"<Alt>{num}"])
 
-    """ Primary Menus """
+    # Primary Menus #
 
     @staticmethod
     def add_connection_section(menu):
@@ -737,7 +727,7 @@ class MainWindow(Window):
         return menu
 
     def create_hamburger_menu(self):
-        """ Menu button menu (header bar enabled) """
+        """Menu button menu (header bar enabled)"""
 
         menu = PopupMenu(self.application)
         self.add_connection_section(menu)
@@ -758,7 +748,7 @@ class MainWindow(Window):
         return menu
 
     def create_menu_bar(self):
-        """ Classic menu bar (header bar disabled) """
+        """Classic menu bar (header bar disabled)"""
 
         menu = PopupMenu(self.application)
         menu.add_items(
@@ -792,10 +782,11 @@ class MainWindow(Window):
     def on_menu(self, *_args):
         self.header_menu.set_active(not self.header_menu.get_active())
 
-    """ Headerbar/toolbar """
+    # Headerbar/Toolbar #
 
     def show_header_bar(self, page_id):
-        """ Set a headerbar for the main window (client side decorations enabled) """
+        """Set a headerbar for the main window (client side decorations
+        enabled)"""
 
         if self.widget.get_titlebar() != self.header_bar:
             self.widget.set_titlebar(self.header_bar)
@@ -821,7 +812,7 @@ class MainWindow(Window):
             self.header_end_container.add(end_widget)
 
     def hide_current_header_bar(self):
-        """ Hide the current CSD headerbar """
+        """Hide the current CSD headerbar."""
 
         if not self.current_page_id:
             return
@@ -845,7 +836,7 @@ class MainWindow(Window):
             toolbar.add(end_widget)
 
     def show_toolbar(self, page_id):
-        """ Show the non-CSD toolbar """
+        """Show the non-CSD toolbar."""
 
         if not self.widget.get_show_menubar():
             self.widget.set_show_menubar(True)
@@ -864,7 +855,7 @@ class MainWindow(Window):
         toolbar.set_visible(True)
 
     def hide_current_toolbar(self):
-        """ Hide the current toolbar """
+        """Hide the current toolbar."""
 
         if not self.current_page_id:
             return
@@ -873,8 +864,10 @@ class MainWindow(Window):
         toolbar.set_visible(False)
 
     def set_active_header_bar(self, page_id):
-        """ Switch out the active headerbar for another one. This is used when
-        changing the active notebook tab. """
+        """Switch out the active headerbar for another one.
+
+        This is used when changing the active notebook tab.
+        """
 
         if config.sections["ui"]["header_bar"]:
             self.hide_current_header_bar()
@@ -886,7 +879,7 @@ class MainWindow(Window):
         self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
 
     def on_change_focus_view(self, *_args):
-        """ F6: move focus between header bar/toolbar and main content """
+        """F6 - move focus between header bar/toolbar and main content."""
 
         title_widget = getattr(self, f"{self.current_page_id}_title")
 
@@ -919,7 +912,7 @@ class MainWindow(Window):
             title_widget = getattr(self, f"{self.current_page_id}_title")
             title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
-    """ Main Notebook """
+    # Main Notebook #
 
     def append_main_tabs(self):
 
@@ -1015,7 +1008,7 @@ class MainWindow(Window):
         config.sections["ui"]["modes_order"] = page_ids
 
     def on_reopen_closed_tab(self, *_args):
-        """ Ctrl+Shift+T: reopen recently closed tab """
+        """Ctrl+Shift+T - reopen recently closed tab."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1027,7 +1020,7 @@ class MainWindow(Window):
         return True
 
     def on_close_tab(self, *_args):
-        """ Ctrl+W and Ctrl+F4: close current secondary tab """
+        """Ctrl+W and Ctrl+F4 - close current secondary tab."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1044,7 +1037,7 @@ class MainWindow(Window):
         return True
 
     def on_cycle_tabs(self, _widget, _state, backwards=False):
-        """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
+        """Ctrl+Tab and Shift+Ctrl+Tab - cycle through secondary tabs."""
 
         try:
             notebook = getattr(self, self.current_page_id)
@@ -1055,7 +1048,7 @@ class MainWindow(Window):
             return False
 
         if backwards:
-            if current_page_num == 0:
+            if current_page_num <= 0:
                 notebook.set_current_page_num(num_pages - 1)
             else:
                 notebook.prev_page()
@@ -1070,7 +1063,7 @@ class MainWindow(Window):
         return True
 
     def on_change_primary_tab(self, _widget, _state, tab_num=1):
-        """ Alt+1-9 or Ctrl+1-9: change main tab """
+        """Alt+1-9 or Ctrl+1-9 - change main tab."""
 
         visible_pages = []
 
@@ -1157,7 +1150,7 @@ class MainWindow(Window):
     def set_tab_expand(self, page):
 
         tab_position = config.sections["ui"]["tabmain"]
-        expand = tab_position in ("Top", "Bottom")
+        expand = tab_position in {"Top", "Bottom"}
         self.notebook.set_tab_expand(page, expand)
 
     def set_tab_positions(self):
@@ -1180,22 +1173,22 @@ class MainWindow(Window):
         self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
         self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
 
-    """ Search """
+    # Search #
 
     def on_search(self, *_args):
         self.search.on_search()
 
-    """ User Info """
+    # User Info #
 
     def on_show_user_profile(self, *_args):
         self.userinfo.on_show_user_profile()
 
-    """ Shares """
+    # Shares #
 
     def on_get_shares(self, *_args):
         self.userbrowse.on_get_shares()
 
-    """ Chat """
+    # Chat #
 
     def on_get_private_chat(self, *_args):
         self.privatechat.on_get_private_chat()
@@ -1203,7 +1196,7 @@ class MainWindow(Window):
     def on_create_room(self, *_args):
         self.chatrooms.on_create_room()
 
-    """ Away Mode """
+    # Away Mode #
 
     def set_away_mode(self, _is_away):
         self.update_user_status()
@@ -1250,12 +1243,12 @@ class MainWindow(Window):
             self.set_auto_away(False)
             self.away_cooldown_time = current_time
 
-    """ User Actions """
+    # User Actions #
 
     def on_add_buddy(self, *_args):
         self.userlist.on_add_buddy()
 
-    """ Log Pane """
+    # Log Pane #
 
     def create_log_context_menu(self):
 
@@ -1295,7 +1288,7 @@ class MainWindow(Window):
             MessageDialog(parent=self, title=title, message=msg).show()
 
         # Keep verbose debug messages out of statusbar to make it more useful
-        if level not in ("transfer", "connection", "message", "miscellaneous"):
+        if level not in {"transfer", "connection", "message", "miscellaneous"}:
             self.set_status_text(msg)
 
         self.log_view.append_line(msg, timestamp_format=timestamp_format)
@@ -1318,7 +1311,7 @@ class MainWindow(Window):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
-    """ Status Bar """
+    # Status Bar #
 
     def set_status_text(self, msg):
         self.status_label.set_text(msg)
@@ -1351,7 +1344,8 @@ class MainWindow(Window):
         self.update_bandwidth_label_underlines(transfer_type="upload")
 
     def update_bandwidth_label_underlines(self, transfer_type):
-        """ Underline status bar bandwidth labels when alternative speed limits are active """
+        """Underline status bar bandwidth labels when alternative speed limits
+        are active."""
 
         if transfer_type == "download":
             label = self.download_status_label
@@ -1395,7 +1389,7 @@ class MainWindow(Window):
         self.scan_progress_indeterminate = False
         self.scan_progress_bar.set_visible(False)
 
-    """ Exit """
+    # Exit #
 
     def on_close_request(self, *_args):
 
@@ -1405,9 +1399,6 @@ class MainWindow(Window):
 
         core.confirm_quit(remember=True)
         return True
-
-    def on_shutdown(self, *_args):
-        config.write_configuration()
 
     def hide(self):
 

@@ -37,7 +37,7 @@ class Notifications:
     def _quit(self):
         self.tts.clear()
 
-    """ Notification Messages """
+    # Notification Messages #
 
     def show_notification(self, message, title=None):
         events.emit("show-notification", message, title=title)
@@ -54,7 +54,7 @@ class Notifications:
     def show_search_notification(self, search_token, message, title=None):
         events.emit("show-search-notification", search_token, message, title=title)
 
-    """ TTS """
+    # TTS #
 
     def new_tts(self, message, args=None):
 

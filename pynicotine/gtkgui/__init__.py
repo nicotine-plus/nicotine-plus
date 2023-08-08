@@ -27,7 +27,7 @@ def check_gtk_version(gtk_api_version):
 
     # Require minor version of GTK
     if gtk_api_version == "4":
-        pygobject_version = (3, 42, 2)
+        pygobject_version = (3, 42, 1)
     else:
         gtk_api_version = "3"
         pygobject_version = (3, 26, 1)
@@ -40,7 +40,7 @@ def check_gtk_version(gtk_api_version):
         if gtk_api_version == "4":
             return check_gtk_version(gtk_api_version="3")
 
-        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(map(str, pygobject_version)))
+        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
 
     try:
         gi.require_version("Gtk", f"{gtk_api_version}.0")
@@ -63,7 +63,7 @@ def check_gtk_version(gtk_api_version):
 
 
 def run(hidden, ci_mode, multi_instance):
-    """ Run Nicotine+ GTK GUI """
+    """Run Nicotine+ GTK GUI."""
 
     if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)
@@ -83,6 +83,10 @@ def run(hidden, ci_mode, multi_instance):
     if sys.platform == "win32":
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
+
+        # Use Cairo renderer for now, GL renderer has memory leaks
+        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
+        os.environ["GSK_RENDERER"] = "cairo"
 
     error = check_gtk_version(gtk_api_version=os.getenv("NICOTINE_GTK_VERSION", "4"))
 

@@ -1,0 +1,2 @@
+# Classify man pages as documentation
+*.1 linguist-documentation

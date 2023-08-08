@@ -396,7 +396,7 @@ class UserBrowse:
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    """ Folder/File Views """
+    # Folder/File Views #
 
     def clear_model(self):
 
@@ -564,7 +564,7 @@ class UserBrowse:
 
         self.indeterminate_progress = False
 
-        if total == 0 or position == 0:
+        if total <= 0 or position <= 0:
             fraction = 0.0
         elif position >= total:
             fraction = 1.0
@@ -638,7 +638,7 @@ class UserBrowse:
         selected_file = next(iter(self.selected_files), "")
         return f"{selected_folder}{selected_file}"
 
-    """ Search """
+    # Search #
 
     def rebuild_search_matches(self):
 
@@ -715,7 +715,7 @@ class UserBrowse:
         self.select_search_match_files()
         return True
 
-    """ Callbacks (folder_tree_view) """
+    # Callbacks (folder_tree_view) #
 
     def on_select_dir(self, tree_view, iterator):
 
@@ -803,7 +803,7 @@ class UserBrowse:
         folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
         clipboard.copy_text(folder_url)
 
-    """ Key Bindings (folder_tree_view) """
+    # Key Bindings (folder_tree_view) #
 
     def on_folder_row_activated(self, tree_view, iterator, _column_id):
 
@@ -824,8 +824,7 @@ class UserBrowse:
         # TODO: Mouse double-click actions will need keycode state & mods [Shift/Ctrl+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
-        """ Left: collapse row
-            Shift+Left (Gtk) | "-" | "/" (Gtk) | """
+        """Left, Shift+Left (Gtk), "-", "/" (Gtk) - collapse row."""
 
         iterator = self.folder_tree_view.get_focused_row()
 
@@ -836,8 +835,7 @@ class UserBrowse:
         return True
 
     def on_folder_expand_accelerator(self, *_args):
-        """ Right: expand row
-            Shift+Right (Gtk) | "+" (Gtk) |    """
+        """Right, Shift+Right (Gtk), "+" (Gtk) - expand row."""
 
         iterator = self.folder_tree_view.get_focused_row()
 
@@ -852,7 +850,7 @@ class UserBrowse:
         return True
 
     def on_folder_collapse_sub_accelerator(self, *_args):
-        """ \backslash: collapse or expand to show subs """
+        """\backslash: collapse or expand to show subs."""
 
         iterator = self.folder_tree_view.get_focused_row()
 
@@ -864,7 +862,7 @@ class UserBrowse:
         return True
 
     def on_folder_expand_sub_accelerator(self, *_args):
-        """ =equal: expand only (dont move focus)   """
+        """=equal: expand only (dont move focus)"""
 
         iterator = self.folder_tree_view.get_focused_row()
 
@@ -875,7 +873,7 @@ class UserBrowse:
         return True
 
     def on_folder_focus_filetree_accelerator(self, *_args):
-        """ Shift+Enter: focus selection over FileTree  """
+        """Shift+Enter - focus selection over FileTree."""
 
         if not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
@@ -885,8 +883,7 @@ class UserBrowse:
         return True
 
     def on_folder_transfer_to_accelerator(self, *_args):
-        """ Ctrl+Enter: Upload Folder To...
-                        Download Folder Into...         """
+        """Ctrl+Enter - Upload Folder To, Download Folder Into."""
 
         if self.user == config.sections["server"]["login"]:
             if not self.file_list_view.is_empty():
@@ -900,8 +897,7 @@ class UserBrowse:
         return True
 
     def on_folder_transfer_accelerator(self, *_args):
-        """ Shift+Ctrl+Enter: Upload Folder Recursive To...
-            (without prompt)  Download Folder           """
+        """Shift+Ctrl+Enter - Upload Folder Recursive To, Download Folder (without prompt)."""
 
         if self.user == config.sections["server"]["login"]:
             self.on_folder_expand_sub_accelerator()
@@ -917,7 +913,7 @@ class UserBrowse:
         return True
 
     def on_folder_open_manager_accelerator(self, *_args):
-        """ Ctrl+Alt+Enter: Open folder in File Manager... """
+        """Ctrl+Alt+Enter - Open folder in File Manager."""
 
         if self.user != config.sections["server"]["login"]:
             return False
@@ -925,7 +921,7 @@ class UserBrowse:
         self.on_file_manager()
         return True
 
-    """ Callbacks (file_list_view) """
+    # Callbacks (file_list_view) #
 
     def on_file_popup_menu(self, menu, _widget):
 
@@ -1069,7 +1065,7 @@ class UserBrowse:
         file_url = core.userbrowse.get_soulseek_url(self.user, file_path)
         clipboard.copy_text(file_url)
 
-    """ Key Bindings (file_list_view) """
+    # Key Bindings (file_list_view) #
 
     def on_file_row_activated(self, _tree_view, _iterator, _column_id):
 
@@ -1081,7 +1077,7 @@ class UserBrowse:
             self.on_download_files()
 
     def on_focus_folder_left_accelerator(self, *_args):
-        """ Left: focus back parent folder (left arrow) """
+        """Left - focus back parent folder (left arrow)."""
 
         column_id = self.file_list_view.get_focused_column()
 
@@ -1092,15 +1088,13 @@ class UserBrowse:
         return True
 
     def on_focus_folder_accelerator(self, *_args):
-        """ Shift+Tab: focus selection back parent folder
-            BackSpace | \backslash |                  """
+        """Shift+Tab, BackSpace, \backslash - focus selection back parent folder"""
 
         self.folder_tree_view.grab_focus()
         return True
 
     def on_file_transfer_to_accelerator(self, *_args):
-        """ Ctrl+Enter: Upload File(s) To...
-                        Download File(s) Into...  """
+        """Ctrl+Enter - Upload File(s) To, Download File(s) Into."""
 
         if self.file_list_view.is_empty():  # avoid navigation trap
             self.folder_tree_view.grab_focus()
@@ -1120,8 +1114,7 @@ class UserBrowse:
         return True
 
     def on_file_transfer_accelerator(self, *_args):
-        """ Shift+Ctrl+Enter: Upload File(s) To...
-            (without prompt)  Download File(s) """
+        """Shift+Ctrl+Enter - Upload File(s) To, Download File(s) (without prompt)."""
 
         if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
@@ -1135,17 +1128,17 @@ class UserBrowse:
             else:
                 self.on_upload_directory_to()
 
-        else:  # [user is not self]
-            if not self.file_list_view.is_selection_empty():
-                self.on_download_files()  # (no prompt, Single or Multi-selection)
-            else:
-                self.on_download_directory()  # (without prompt, No-selection=All)
+            return True
+
+        if not self.file_list_view.is_selection_empty():
+            self.on_download_files()  # (no prompt, Single or Multi-selection)
+        else:
+            self.on_download_directory()  # (without prompt, No-selection=All)
 
         return True
 
     def on_file_transfer_multi_accelerator(self, *_args):
-        """ Shift+Enter: Send to Player (multiple files)
-                         Download Files (multiple)   """
+        """Shift+Enter - Send to Player, Download Files (multiple)."""
 
         if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
@@ -1161,7 +1154,7 @@ class UserBrowse:
         return True
 
     def on_file_open_manager_accelerator(self, *_args):
-        """ Ctrl+Alt+Enter: Open in File Manager """
+        """Ctrl+Alt+Enter - Open in File Manager."""
 
         if self.user == config.sections["server"]["login"]:
             self.on_file_manager()
@@ -1172,7 +1165,7 @@ class UserBrowse:
         return True
 
     def on_file_properties_accelerator(self, *_args):
-        """ Alt+Enter: show file properties dialog """
+        """Alt+Enter - show file properties dialog."""
 
         if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
@@ -1180,7 +1173,7 @@ class UserBrowse:
         self.on_file_properties(*_args)
         return True
 
-    """ Callbacks (General) """
+    # Callbacks (General) #
 
     def on_expand(self, *_args):
 
@@ -1235,16 +1228,16 @@ class UserBrowse:
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()
 
-    """ Key Bindings (General) """
+    # Key Bindings (General) #
 
     def on_expand_accelerator(self, *_args):
-        """ Ctrl+\backslash: Expand / Collapse All """
+        """Ctrl+\backslash - Expand / Collapse All."""
 
         self.expand_button.set_active(not self.expand_button.get_active())
         return True
 
     def on_save_accelerator(self, *_args):
-        """ Ctrl+S: Save Shares List """
+        """Ctrl+S - Save Shares List."""
 
         if not self.save_button.get_sensitive():
             return False
@@ -1253,19 +1246,19 @@ class UserBrowse:
         return True
 
     def on_refresh_accelerator(self, *_args):
-        """ Ctrl+R or F5: Refresh """
+        """Ctrl+R or F5 - Refresh."""
 
         self.on_refresh()
         return True
 
     def on_search_accelerator(self, *_args):
-        """ Ctrl+F: Find """
+        """Ctrl+F - Find."""
 
         self.search_entry.grab_focus()
         return True
 
     def on_search_next_accelerator(self, *_args):
-        """ Ctrl+G or F3: Find Next """
+        """Ctrl+G or F3 - Find Next."""
 
         if not self.find_search_matches():
             self.search_entry.grab_focus()
@@ -1273,7 +1266,7 @@ class UserBrowse:
         return True
 
     def on_search_previous_accelerator(self, *_args):
-        """ Shift+Ctrl+G or Shift+F3: Find Previous """
+        """Shift+Ctrl+G or Shift+F3 - Find Previous."""
 
         if not self.find_search_matches(reverse=True):
             self.search_entry.grab_focus()
@@ -1281,7 +1274,7 @@ class UserBrowse:
         return True
 
     def on_search_escape_accelerator(self, *_args):
-        """ Escape: navigate out of search_entry """
+        """Escape - navigate out of search_entry."""
 
         if not self.file_list_view.is_selection_empty():
             self.file_list_view.grab_focus()

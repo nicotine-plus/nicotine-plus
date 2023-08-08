@@ -203,14 +203,17 @@ class BasePlugin:
         log.add(f"{self.human_name}: {msg}", msg_args)
 
     def send_public(self, room, text):
-        """ Send chat message to a room, must already be joined. """
+        """Send chat message to a room, must already be joined."""
 
         core.chatrooms.send_message(room, text)
 
     def send_private(self, user, text, show_ui=True, switch_page=True):
-        """ Send user message in private.
-        show_ui controls if the UI opens a private chat view for the user.
-        switch_page controls whether the user's private chat view should be opened. """
+        """Send user message in private.
+
+        show_ui controls if the UI opens a private chat view for the
+        user. switch_page controls whether the user's private chat view
+        should be opened.
+        """
 
         if show_ui:
             core.privatechat.show_user(user, switch_page)
@@ -218,23 +221,27 @@ class BasePlugin:
         core.privatechat.send_message(user, text)
 
     def echo_public(self, room, text, message_type="local"):
-        """ Display a raw message in chat rooms (not sent to others).
+        """Display a raw message in chat rooms (not sent to others).
+
         message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
+        available message_type values: action, remote, local, hilite
+        """
 
         core.chatrooms.echo_message(room, text, message_type)
 
     def echo_private(self, user, text, message_type="local"):
-        """ Display a raw message in private (not sent to others).
+        """Display a raw message in private (not sent to others).
+
         message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
+        available message_type values: action, remote, local, hilite
+        """
 
         core.privatechat.show_user(user)
         core.privatechat.echo_message(user, text, message_type)
 
     def send_message(self, text):
-        """ Convenience function to send a message to the same user/room
-        a plugin command runs for """
+        """Convenience function to send a message to the same user/room a
+        plugin command runs for."""
 
         if self.parent.command_source is None:
             # Function was not called from a command
@@ -249,8 +256,8 @@ class BasePlugin:
         func(source, text)
 
     def echo_message(self, text, message_type="local"):
-        """ Convenience function to display a raw message the same window
-        a plugin command runs from """
+        """Convenience function to display a raw message the same window a
+        plugin command runs from."""
 
         if self.parent.command_source is None:
             # Function was not called from a command
@@ -270,7 +277,6 @@ class BasePlugin:
 
 
 class ResponseThrottle:
-
     """
     ResponseThrottle - Mutnick 2016
 
@@ -438,7 +444,7 @@ class PluginHandler:
 
     def _import_plugin_instance(self, plugin_name):
 
-        if sys.platform in ("win32", "darwin") and plugin_name == "now_playing_sender":
+        if sys.platform in {"win32", "darwin"} and plugin_name == "now_playing_sender":
             # MPRIS is not available on Windows and macOS
             return None
 
@@ -571,7 +577,7 @@ class PluginHandler:
                     if file_path == "core_commands":
                         continue
 
-                    if sys.platform in ("win32", "darwin") and file_path == "now_playing_sender":
+                    if sys.platform in {"win32", "darwin"} and file_path == "now_playing_sender":
                         # MPRIS is not available on Windows and macOS
                         continue
 
@@ -741,8 +747,10 @@ class PluginHandler:
             log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def get_command_list(self, command_interface):
-        """ Returns a list of every command and alias available. Currently used for
-        auto-completion in chats. """
+        """Returns a list of every command and alias available.
+
+        Currently used for auto-completion in chats.
+        """
 
         commands = []
 
@@ -758,8 +766,10 @@ class PluginHandler:
         return commands
 
     def get_command_groups_data(self, command_interface, search_query=None):
-        """ Returns the available command groups and data of commands in them. Currently used
-        for the /help command. """
+        """Returns the available command groups and data of commands in them.
+
+        Currently used for the /help command.
+        """
 
         command_groups = {}
 
@@ -908,9 +918,11 @@ class PluginHandler:
         return is_successful
 
     def _trigger_event(self, function_name, args):
-        """ Triggers an event for the plugins. Since events and notifications
-        are precisely the same except for how n+ responds to them, both can be
-        triggered by this function. """
+        """Triggers an event for the plugins.
+
+        Since events and notifications are precisely the same except for
+        how n+ responds to them, both can be triggered by this function.
+        """
 
         for module, plugin in self.enabled_plugins.items():
             try:
@@ -999,7 +1011,9 @@ class PluginHandler:
     def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.
 
-        Note that country is only set when the user requested the resolving"""
+        Note that country is only set when the user requested the
+        resolving
+        """
         self._trigger_event("user_resolve_notification", (user, ip_address, port, country))
 
     def server_connect_notification(self):

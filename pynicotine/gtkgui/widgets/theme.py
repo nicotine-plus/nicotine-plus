@@ -36,12 +36,12 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
-""" Global Style """
+# Global Style #
 
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA_API_VERSION)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION)
 
 if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
@@ -90,7 +90,7 @@ if USE_COLOR_SCHEME_PORTAL:
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-        USE_COLOR_SCHEME_PORTAL = None
+        USE_COLOR_SCHEME_PORTAL = False
 
 
 def set_dark_mode(enabled):
@@ -319,7 +319,7 @@ def set_global_style():
     update_custom_css()
 
 
-""" Icons """
+# Icons #
 
 
 if GTK_API_VERSION >= 4:
@@ -345,7 +345,7 @@ USER_STATUS_ICON_NAMES = {
 
 
 def load_custom_icons(update=False):
-    """ Load custom icon theme if one is selected """
+    """Load custom icon theme if one is selected."""
 
     if update:
         GTK_SETTINGS.reset_property("gtk-icon-theme-name")
@@ -420,29 +420,25 @@ def load_custom_icons(update=False):
         ("n", config.application_id),
         ("n", f"{config.application_id}-symbolic")
     )
-    extensions = [".jpg", ".jpeg", ".bmp", ".png", ".svg"]
+    extensions = (".png", ".svg", ".jpg", ".jpeg", ".bmp")
 
     # Move custom icons to internal icon theme location
-    for (original_name, replacement_name) in icon_names:
-        path = None
-        exts = extensions[:]
-        loaded = False
-
-        while not path or (exts and not loaded):
-            extension = exts.pop()
+    for original_name, replacement_name in icon_names:
+        for extension in extensions:
             path = os.path.join(user_icon_theme_path, original_name + extension)
+            path_encoded = encode_path(path)
+
+            if not os.path.isfile(path_encoded):
+                continue
 
             try:
-                path_encoded = encode_path(path)
+                shutil.copyfile(
+                    path_encoded,
+                    encode_path(os.path.join(icon_theme_path, replacement_name + extension))
+                )
+                break
 
-                if os.path.isfile(path_encoded):
-                    shutil.copyfile(
-                        path_encoded,
-                        encode_path(os.path.join(icon_theme_path, replacement_name + extension))
-                    )
-                    loaded = True
-
-            except Exception as error:
+            except OSError as error:
                 log.add(_("Error loading custom icon %(path)s: %(error)s"), {
                     "path": path,
                     "error": error
@@ -453,7 +449,7 @@ def load_custom_icons(update=False):
 
 
 def load_icons():
-    """ Load custom icons necessary for the application to function """
+    """Load custom icons necessary for the application to function."""
 
     paths = (
         config.data_dir,  # Custom internal icon theme
@@ -515,7 +511,7 @@ def on_icon_theme_changed(*_args):
 ICON_THEME.connect("changed", on_icon_theme_changed)
 
 
-""" Fonts and Colors """
+# Fonts and Colors #
 
 
 PANGO_STYLES = {
@@ -695,7 +691,7 @@ def update_custom_css():
 def update_tag_visuals(tag, color_id):
 
     enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
-    is_hotspot_tag = (color_id in ("useraway", "useronline", "useroffline"))
+    is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
     color_hex = config.sections["ui"].get(color_id)
 
     if is_hotspot_tag and not enable_colored_usernames:

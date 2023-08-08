@@ -49,7 +49,7 @@ class Plugin(BasePlugin):
         self.remove_mpris_signal_receiver()
 
     def add_mpris_signal_receiver(self):
-        """ Receive updates related to MPRIS """
+        """Receive updates related to MPRIS."""
 
         self.signal_id = self.bus.signal_subscribe(
             sender=None,
@@ -62,12 +62,12 @@ class Plugin(BasePlugin):
         )
 
     def remove_mpris_signal_receiver(self):
-        """ Stop receiving updates related to MPRIS """
+        """Stop receiving updates related to MPRIS."""
 
         self.bus.signal_unsubscribe(self.signal_id)
 
     def get_current_mpris_player(self):
-        """ Returns the MPRIS client currently selected in Now Playing """
+        """Returns the MPRIS client currently selected in Now Playing."""
 
         player = self.config.sections["players"]["npothercommand"]
 
@@ -90,7 +90,7 @@ class Plugin(BasePlugin):
         return player
 
     def get_current_mpris_song_url(self, player):
-        """ Returns the current song url for the selected MPRIS client """
+        """Returns the current song url for the selected MPRIS client."""
 
         dbus_proxy = Gio.DBusProxy.new_sync(
             bus=self.bus,
@@ -106,7 +106,7 @@ class Plugin(BasePlugin):
         return song_url
 
     def send_now_playing(self):
-        """ Broadcast Now Playing in selected rooms """
+        """Broadcast Now Playing in selected rooms."""
 
         for room in self.settings["rooms"]:
             playing = self.core.now_playing.get_np()

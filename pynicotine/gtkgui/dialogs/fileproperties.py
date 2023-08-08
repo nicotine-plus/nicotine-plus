@@ -87,7 +87,7 @@ class FileProperties(Dialog):
                        "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):
-        """ Updates the UI with properties for the selected file """
+        """Updates the UI with properties for the selected file."""
 
         properties = self.properties[self.current_index]
 

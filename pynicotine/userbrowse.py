@@ -56,7 +56,8 @@ class UserBrowse:
             core.watch_user(user)  # Get notified of user status
 
     def send_upload_attempt_notification(self, username):
-        """ Send notification to user when attempting to initiate upload from our end """
+        """Send notification to user when attempting to initiate upload from
+        our end."""
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
@@ -77,7 +78,7 @@ class UserBrowse:
             self.remove_user(user)
 
     def _parse_local_shares(self, username, msg):
-        """ Parse a local shares list and show it in the UI """
+        """Parse a local shares list and show it in the UI."""
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
@@ -86,7 +87,7 @@ class UserBrowse:
         events.emit_main_thread("shared-file-list-response", msg)
 
     def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
-        """ Browse your own shares """
+        """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
 
@@ -99,7 +100,7 @@ class UserBrowse:
         self._show_user(username, path=path, local_share_type=share_type)
 
     def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
-        """ Browse a user's shares """
+        """Browse a user's shares."""
 
         if not username:
             return
@@ -167,8 +168,8 @@ class UserBrowse:
                 for _code, _filename, _size, _ext, _attrs, *_unused in files:
                     break
 
-        except Exception as msg:
-            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": msg})
+        except Exception as error:
+            log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
             return
 
         username = os.path.basename(filename)

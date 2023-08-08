@@ -264,7 +264,7 @@ class RoomList(Popover):
         core.chatrooms.request_private_room_toggle(self.private_room_toggle.get_active())
 
     def on_search_accelerator(self, *_args):
-        """ Ctrl+F: Search rooms """
+        """Ctrl+F - Search rooms."""
 
         self.search_entry.grab_focus()
         return True

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
@@ -25,9 +26,6 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-
-
-""" File Choosers """
 
 
 class FileChooser:
@@ -160,15 +158,22 @@ class ImageChooser(FileChooser):
         # Only show image files
         file_filter = Gtk.FileFilter()
         file_filter.set_name(_("All images"))
-        file_filter.add_pixbuf_formats()
+
+        for pattern in ("*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff", "*.gif"):
+            file_filter.add_pattern(pattern)
 
         if self.using_new_api:
+            filters = Gio.ListStore(item_type=Gtk.FileFilter)
+            filters.append(file_filter)
+
+            self.file_chooser.set_filters(filters)
             self.file_chooser.set_default_filter(file_filter)
             return
 
+        self.file_chooser.add_filter(file_filter)
         self.file_chooser.set_filter(file_filter)
 
-        if GTK_API_VERSION == 3:
+        if GTK_API_VERSION == 3 and sys.platform not in {"win32", "darwin"}:
             # Image preview
             self.file_chooser.connect("update-preview", self.on_update_image_preview)
 
@@ -212,8 +217,8 @@ class FileChooserSave(FileChooser):
 
 
 class FileChooserButton:
-    """ This class expands the functionality of a GtkButton to open a file
-    chooser and display the name of a selected folder or file """
+    """This class expands the functionality of a GtkButton to open a file
+    chooser and display the name of a selected folder or file."""
 
     def __init__(self, button, parent, chooser_type="file", selected_function=None):
 

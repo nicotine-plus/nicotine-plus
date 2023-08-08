@@ -186,7 +186,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
 
-        popup = UserPopupMenu(
+        UserPopupMenu(
             self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
             tab_name="interests"
         )
@@ -227,7 +227,8 @@ class Interests:
         self.similar_users_button.set_sensitive(False)
 
     def populate_recommendations(self):
-        """ Populates the lists of recommendations and similar users if empty """
+        """Populates the lists of recommendations and similar users if
+        empty."""
 
         if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
             return

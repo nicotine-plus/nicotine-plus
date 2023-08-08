@@ -25,10 +25,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This is the actual client code. Actual GUI classes are in the separate modules
-"""
-
 import json
 import os
 import signal
@@ -43,8 +39,11 @@ from pynicotine.logfacility import log
 
 
 class Core:
-    """ Core contains handlers for various messages from (mainly) the networking thread.
-    This class links the networking thread and user interface. """
+    """Core contains handlers for various messages from (mainly) the networking
+    thread.
+
+    This class links the networking thread and user interface.
+    """
 
     def __init__(self):
 
@@ -64,6 +63,7 @@ class Core:
         self.portmapper = None
         self.notifications = None
         self.update_checker = None
+        self._network_thread = None
 
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
@@ -72,7 +72,7 @@ class Core:
         self.cli_interface_address = None
         self.cli_listen_port = None
 
-        self.enable_cli = False
+        self.enabled_components = set()
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
@@ -85,6 +85,28 @@ class Core:
         self.user_statuses = {}
         self.watched_users = {}
         self._ip_requested = {}
+
+    def init_components(self, enabled_components=None):
+
+        # Enable all components by default
+        if enabled_components is None:
+            enabled_components = {
+                "error_handler", "cli", "portmapper", "network_thread", "notifications",
+                "network_filter", "now_playing", "statistics", "update_checker", "shares",
+                "search", "transfers", "interests", "userbrowse", "userinfo", "userlist",
+                "chatrooms", "privatechat", "pluginhandler"
+            }
+
+        self.enabled_components = enabled_components
+
+        if "error_handler" in enabled_components:
+            self._init_thread_exception_hook()
+
+        if "cli" in enabled_components:
+            cli.enable_logging()
+
+        config.load_config()
+        events.enable()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -103,32 +125,6 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-    def init_components(self, enable_cli=False):
-
-        from pynicotine.chatrooms import ChatRooms
-        from pynicotine.interests import Interests
-        from pynicotine.networkfilter import NetworkFilter
-        from pynicotine.notifications import Notifications
-        from pynicotine.nowplaying import NowPlaying
-        from pynicotine.pluginsystem import PluginHandler
-        from pynicotine.portmapper import PortMapper
-        from pynicotine.privatechat import PrivateChat
-        from pynicotine.search import Searches
-        from pynicotine.shares import Shares
-        from pynicotine.slskproto import SoulseekNetworkThread
-        from pynicotine.statistics import Statistics
-        from pynicotine.transfers import Transfers
-        from pynicotine.userbrowse import UserBrowse
-        from pynicotine.userinfo import UserInfo
-        from pynicotine.userlist import UserList
-
-        self.enable_cli = enable_cli
-        self._init_thread_exception_hook()
-        config.load_config()
-
-        if enable_cli:
-            cli.enable_logging()
-
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -136,25 +132,74 @@ class Core:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
-        self.portmapper = PortMapper()
-        SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
+        if "portmapper" in enabled_components:
+            from pynicotine.portmapper import PortMapper
+            self.portmapper = PortMapper()
 
-        self.notifications = Notifications()
-        self.network_filter = NetworkFilter()
-        self.now_playing = NowPlaying()
-        self.statistics = Statistics()
-        self.update_checker = UpdateChecker()
+        if "network_thread" in enabled_components:
+            from pynicotine.slskproto import NetworkThread
+            self._network_thread = NetworkThread()
+        else:
+            events.connect("schedule-quit", self._schedule_quit)
 
-        self.shares = Shares()
-        self.search = Searches()
-        self.transfers = Transfers()
-        self.interests = Interests()
-        self.userbrowse = UserBrowse()
-        self.userinfo = UserInfo()
-        self.userlist = UserList()
-        self.chatrooms = ChatRooms()
-        self.privatechat = PrivateChat()
-        self.pluginhandler = PluginHandler()
+        if "notifications" in enabled_components:
+            from pynicotine.notifications import Notifications
+            self.notifications = Notifications()
+
+        if "network_filter" in enabled_components:
+            from pynicotine.networkfilter import NetworkFilter
+            self.network_filter = NetworkFilter()
+
+        if "now_playing" in enabled_components:
+            from pynicotine.nowplaying import NowPlaying
+            self.now_playing = NowPlaying()
+
+        if "statistics" in enabled_components:
+            from pynicotine.statistics import Statistics
+            self.statistics = Statistics()
+
+        if "update_checker" in enabled_components:
+            self.update_checker = UpdateChecker()
+
+        if "shares" in enabled_components:
+            from pynicotine.shares import Shares
+            self.shares = Shares()
+
+        if "search" in enabled_components:
+            from pynicotine.search import Search
+            self.search = Search()
+
+        if "transfers" in enabled_components:
+            from pynicotine.transfers import Transfers
+            self.transfers = Transfers()
+
+        if "interests" in enabled_components:
+            from pynicotine.interests import Interests
+            self.interests = Interests()
+
+        if "userbrowse" in enabled_components:
+            from pynicotine.userbrowse import UserBrowse
+            self.userbrowse = UserBrowse()
+
+        if "userinfo" in enabled_components:
+            from pynicotine.userinfo import UserInfo
+            self.userinfo = UserInfo()
+
+        if "userlist" in enabled_components:
+            from pynicotine.userlist import UserList
+            self.userlist = UserList()
+
+        if "chatrooms" in enabled_components:
+            from pynicotine.chatrooms import ChatRooms
+            self.chatrooms = ChatRooms()
+
+        if "privatechat" in enabled_components:
+            from pynicotine.privatechat import PrivateChat
+            self.privatechat = PrivateChat()
+
+        if "pluginhandler" in enabled_components:
+            from pynicotine.pluginsystem import PluginHandler
+            self.pluginhandler = PluginHandler()
 
     def _init_thread_exception_hook(self):
 
@@ -183,11 +228,11 @@ class Core:
 
         threading.Thread.__init__ = init_thread_excepthook
 
-    """ Actions """
+    # Actions #
 
     def start(self):
 
-        if self.enable_cli:
+        if "cli" in self.enabled_components:
             cli.enable_prompt()
 
         events.emit("start")
@@ -197,7 +242,7 @@ class Core:
 
     def confirm_quit(self, remember=False):
 
-        if config.sections["ui"]["exitdialog"] != 0:  # 0: 'Quit program'
+        if config.sections["ui"]["exitdialog"] > 0:
             events.emit("confirm-quit", remember)
             return
 
@@ -228,22 +273,23 @@ class Core:
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface_name=config.sections["server"]["interface"],
             interface_address=self.cli_interface_address,
-            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0]
+            listen_port=self.cli_listen_port or config.sections["server"]["portrange"][0],
+            portmapper=self.portmapper
         ))
 
     def disconnect(self):
         self.send_message_to_network_thread(slskmessages.ServerDisconnect())
 
     def send_message_to_network_thread(self, message):
-        """ Sends message to the networking thread to inform about something """
+        """Sends message to the networking thread to inform about something."""
         events.emit("queue-network-message", message)
 
     def send_message_to_server(self, message):
-        """ Sends message to the server """
+        """Sends message to the server."""
         events.emit("queue-network-message", message)
 
     def send_message_to_peer(self, username, message):
-        """ Sends message to a peer """
+        """Sends message to a peer."""
         events.emit("queue-network-message", slskmessages.SendNetworkMessage(username, message))
 
     def set_away_mode(self, is_away, save_state=False):
@@ -281,8 +327,8 @@ class Core:
         self.send_message_to_server(slskmessages.GetUserStats(username))
 
     def watch_user(self, user):
-        """ Tell the server we want to be notified of status/stat updates
-        for a user """
+        """Tell the server we want to be notified of status/stat updates for a
+        user."""
 
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
@@ -295,12 +341,36 @@ class Core:
 
         self.watched_users[user] = {}
 
-    """ Message Callbacks """
+    # Message Callbacks #
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
 
+    def _schedule_quit(self):
+        events.emit("quit")
+
     def _quit(self):
+
+        self._network_thread = None
+        self.portmapper = None
+        self.notifications = None
+        self.network_filter = None
+        self.now_playing = None
+        self.statistics = None
+        self.update_checker = None
+
+        self.shares = None
+        self.search = None
+        self.transfers = None
+        self.interests = None
+        self.userbrowse = None
+        self.userinfo = None
+        self.userlist = None
+        self.chatrooms = None
+        self.privatechat = None
+        self.pluginhandler = None
+
+        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s!"), {
             "program": config.application_name,
@@ -330,12 +400,13 @@ class Core:
         self.public_port = None
 
     def _server_login(self, msg):
-        """ Server code: 1 """
+        """Server code 1."""
 
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
             self.login_username = msg.username
-            self.public_port = self.cli_listen_port or config.sections["server"]["portrange"][0]
+            _local_ip_address, self.public_port = msg.local_address
+            self.user_addresses[self.login_username] = msg.local_address
 
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(msg.username)
@@ -358,10 +429,16 @@ class Core:
             log.add(_("Unable to connect to the server. Reason: %s"), msg.reason, title=_("Cannot Connect"))
 
     def _get_peer_address(self, msg):
-        """ Server code: 3 """
+        """Server code 3."""
 
         user = msg.user
         notify = self._ip_requested.pop(user, None)
+        addr = (msg.ip_address, msg.port)
+        user_offline = (addr == ("0.0.0.0", 0))
+
+        # We already store a local IP address for our username
+        if user != self.login_username and not user_offline:
+            self.user_addresses[user] = addr
 
         self.user_countries[user] = country_code = self.network_filter.get_country_code(msg.ip_address)
         events.emit("user-country", user, country_code)
@@ -390,7 +467,7 @@ class Core:
         }, title=_("IP Address"))
 
     def _watch_user(self, msg):
-        """ Server code: 5 """
+        """Server code 5."""
 
         if msg.userexists:
             if msg.status is not None:  # Soulfind server support, sends userexists but no additional data
@@ -401,13 +478,13 @@ class Core:
         self.watched_users.pop(msg.user, None)
 
     def _user_status(self, msg):
-        """ Server code: 7 """
+        """Server code 7."""
 
         user = msg.user
         status = msg.status
 
-        if status not in (slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
-                          slskmessages.UserStatus.AWAY):
+        if status not in {slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
+                          slskmessages.UserStatus.AWAY}:
             log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
                 "status": status,
                 "user": user
@@ -417,14 +494,15 @@ class Core:
         if user in self.watched_users or user in self.user_statuses:
             self.user_statuses[user] = status
 
+        # User went offline, reset stored IP address and country
         if status == slskmessages.UserStatus.OFFLINE:
-            # IP address is removed in slskproto.py
+            self.user_addresses.pop(user, None)
             self.user_countries.pop(user, None)
 
         self.pluginhandler.user_status_notification(user, status, msg.privileged)
 
     def _user_stats(self, msg):
-        """ Server code: 36 """
+        """Server code 36."""
 
         username = msg.user
         upload_speed = msg.avgspeed
@@ -447,12 +525,12 @@ class Core:
 
     @staticmethod
     def _admin_message(msg):
-        """ Server code: 66 """
+        """Server code 66."""
 
         log.add(msg.msg, title=_("Soulseek Announcement"))
 
     def _privileged_users(self, msg):
-        """ Server code: 69 """
+        """Server code 69."""
 
         for user in msg.users:
             events.emit("add-privileged-user", user)
@@ -460,13 +538,13 @@ class Core:
         log.add(_("%i privileged users"), (len(msg.users)))
 
     def _check_privileges(self, msg):
-        """ Server code: 92 """
+        """Server code 92."""
 
         mins = msg.seconds // 60
         hours = mins // 60
         days = hours // 24
 
-        if msg.seconds == 0:
+        if msg.seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
         else:
@@ -482,7 +560,7 @@ class Core:
 
     @staticmethod
     def _change_password(msg):
-        """ Server code: 142 """
+        """Server code 142."""
 
         password = msg.password
         config.sections["server"]["passw"] = password

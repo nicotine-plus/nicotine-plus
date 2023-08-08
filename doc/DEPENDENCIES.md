@@ -6,7 +6,7 @@
 
 - [python3](https://www.python.org/) >= 3.6;
 - [python3-gdbm](https://docs.python.org/3/library/dbm.html#module-dbm.gnu) for scanning shared files.
-- [gtk3](https://gtk.org/) >= 3.22.30 or [gtk4](https://gtk.org/) >= 4.8 for graphical interface;
+- [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30 for graphical interface;
 - [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
 
 ### Recommended
@@ -20,8 +20,8 @@
 
 ## Testing
 
-- [flake8](https://flake8.pycqa.org/) for lint checks;
-- [pylint](https://pylint.pycqa.org/) for lint checks.
+- [pycodestyle](https://pycodestyle.pycqa.org/) for code style checks;
+- [pylint](https://pylint.pycqa.org/) for linting.
 
 
 ## Installing Dependencies
@@ -73,19 +73,19 @@ sudo zypper install gettext-runtime python3-setuptools
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install pylint3 python3-flake8
+sudo apt install pylint3 python3-pycodestyle
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install pylint python3-flake8
+sudo dnf install pylint python3-pycodestyle
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install python3-pylint python3-flake8
+sudo zypper install python3-pylint python3-pycodestyle
 ```
 
 ### Windows and macOS

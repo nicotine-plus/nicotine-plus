@@ -248,7 +248,7 @@ class ChatRooms:
         core.send_message_to_server(slskmessages.RoomTickerSet(room, message))
 
     def _join_room(self, msg):
-        """ Server code: 14 """
+        """Server code 14."""
 
         self.joined_rooms[msg.room] = room_obj = Room(name=msg.room, is_private=msg.private)
 
@@ -270,13 +270,13 @@ class ChatRooms:
         core.pluginhandler.join_chatroom_notification(msg.room)
 
     def _leave_room(self, msg):
-        """ Server code: 15 """
+        """Server code 15."""
 
         core.pluginhandler.leave_chatroom_notification(msg.room)
         self.remove_room(msg.room)
 
     def _private_room_users(self, msg):
-        """ Server code: 133 """
+        """Server code 133."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -287,7 +287,7 @@ class ChatRooms:
         private_room["joined"] = msg.numusers
 
     def _private_room_add_user(self, msg):
-        """ Server code: 134 """
+        """Server code 134."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -295,7 +295,7 @@ class ChatRooms:
             private_room["users"].append(msg.user)
 
     def _private_room_remove_user(self, msg):
-        """ Server code: 135 """
+        """Server code 135."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -303,25 +303,25 @@ class ChatRooms:
             private_room["users"].remove(msg.user)
 
     def _private_room_added(self, msg):
-        """ Server code: 139 """
+        """Server code 139."""
 
         if msg.room not in self.private_rooms:
             self.create_private_room(msg.room)
             log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
 
     def _private_room_removed(self, msg):
-        """ Server code: 140 """
+        """Server code 140."""
 
         if msg.room in self.private_rooms:
             del self.private_rooms[msg.room]
 
     def _private_room_toggle(self, msg):
-        """ Server code: 141 """
+        """Server code 141."""
 
         config.sections["server"]["private_chatrooms"] = msg.enabled
 
     def _private_room_add_operator(self, msg):
-        """ Server code: 143 """
+        """Server code 143."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -329,7 +329,7 @@ class ChatRooms:
             private_room["operators"].append(msg.user)
 
     def _private_room_remove_operator(self, msg):
-        """ Server code: 144 """
+        """Server code 144."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -337,7 +337,7 @@ class ChatRooms:
             private_room["operators"].remove(msg.user)
 
     def _private_room_operator_added(self, msg):
-        """ Server code: 145 """
+        """Server code 145."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -345,7 +345,7 @@ class ChatRooms:
             private_room["operators"].append(core.login_username)
 
     def _private_room_operator_removed(self, msg):
-        """ Server code: 146 """
+        """Server code 146."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -353,7 +353,7 @@ class ChatRooms:
             private_room["operators"].remove(core.login_username)
 
     def _private_room_owned(self, msg):
-        """ Server code: 148 """
+        """Server code 148."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -363,12 +363,12 @@ class ChatRooms:
         private_room["operators"] = msg.operators
 
     def _global_room_message(self, msg):
-        """ Server code: 152 """
+        """Server code 152."""
 
         core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def _room_list(self, msg):
-        """ Server code: 64 """
+        """Server code 64."""
 
         login_username = core.login_username
 
@@ -412,7 +412,7 @@ class ChatRooms:
             core.privatechat.update_completions()
 
     def _say_chat_room(self, msg):
-        """ Server code: 13 """
+        """Server code 13."""
 
         room = msg.room
 
@@ -445,7 +445,7 @@ class ChatRooms:
         core.pluginhandler.incoming_public_chat_notification(room, user, msg.msg)
 
     def _user_joined_room(self, msg):
-        """ Server code: 16 """
+        """Server code 16."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -464,7 +464,7 @@ class ChatRooms:
         core.pluginhandler.user_join_chatroom_notification(msg.room, username)
 
     def _user_left_room(self, msg):
-        """ Server code: 17 """
+        """Server code 17."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -483,7 +483,7 @@ class ChatRooms:
         core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
 
     def _ticker_state(self, msg):
-        """ Server code: 113 """
+        """Server code 113."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -502,7 +502,7 @@ class ChatRooms:
             room_obj.tickers[user] = message
 
     def _ticker_add(self, msg):
-        """ Server code: 114 """
+        """Server code 114."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -519,7 +519,7 @@ class ChatRooms:
         room_obj.tickers[user] = msg.msg
 
     def _ticker_remove(self, msg):
-        """ Server code: 115 """
+        """Server code 115."""
 
         room_obj = self.joined_rooms.get(msg.room)
 

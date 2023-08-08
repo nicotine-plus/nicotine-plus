@@ -30,8 +30,8 @@ from pynicotine.utils import human_length
 
 
 class NowPlaying:
-    """ This class contains code for retrieving information about the song currently
-    playing in a media player """
+    """This class contains code for retrieving information about the song
+    currently playing in a media player."""
 
     def __init__(self):
         self.title_clear()
@@ -61,7 +61,7 @@ class NowPlaying:
         if get_player is None:
             player = config.sections["players"]["npplayer"]
 
-            if sys.platform in ("win32", "darwin") and player == "mpris":
+            if sys.platform in {"win32", "darwin"} and player == "mpris":
                 player = "lastfm"
         else:
             player = get_player()
@@ -118,7 +118,7 @@ class NowPlaying:
         return None
 
     def lastfm(self, user):
-        """ Function to get the last song played via Last.fm API """
+        """Function to get the last song played via Last.fm API."""
 
         try:
             user, apikey = user.split(";")
@@ -163,7 +163,8 @@ class NowPlaying:
         return True
 
     def mpris(self, player):
-        """ Function to get the currently playing song via DBus MPRIS v2 interface """
+        """Function to get the currently playing song via DBus MPRIS v2
+        interface."""
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
@@ -245,16 +246,16 @@ class NowPlaying:
         except KeyError:
             self.title["length"] = "?"
 
-        if self.title["artist"] != "":
+        if self.title["artist"]:
             self.title["nowplaying"] += self.title["artist"]
 
-        if self.title["title"] != "":
+        if self.title["title"]:
             self.title["nowplaying"] += " - " + self.title["title"]
 
         return True
 
     def listenbrainz(self, username):
-        """ Function to get the currently playing song via ListenBrainz API """
+        """Function to get the currently playing song via ListenBrainz API."""
 
         if not username:
             log.add(_("ListenBrainz: Please provide your ListenBrainz username"), title=_("Now Playing Error"))

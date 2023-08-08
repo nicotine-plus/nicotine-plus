@@ -24,10 +24,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains configuration classes for Nicotine.
-"""
-
 import configparser
 import os
 import sys
@@ -35,6 +31,7 @@ import sys
 from ast import literal_eval
 from collections import defaultdict
 
+from pynicotine.events import events
 from pynicotine.i18n import apply_translations
 from pynicotine.utils import encode_path
 from pynicotine.utils import load_file
@@ -42,8 +39,7 @@ from pynicotine.utils import write_file_and_backup
 
 
 class Config:
-    """
-    This class holds configuration information and provides the
+    """This class holds configuration information and provides the
     following methods:
 
     need_config() - returns true if configuration information is incomplete
@@ -84,9 +80,11 @@ class Config:
 
     @staticmethod
     def get_user_directories():
-        """ Returns a tuple:
+        """Returns a tuple:
+
         - the config directory
-        - the data directory """
+        - the data directory
+        """
 
         if sys.platform == "win32":
             try:
@@ -115,8 +113,8 @@ class Config:
         return config_dir, data_dir
 
     def create_config_folder(self):
-        """ Create the folder for storing the config file in, if the folder
-        doesn't exist """
+        """Create the folder for storing the config file in, if the folder
+        doesn't exist."""
 
         path, _filename = os.path.split(self.filename)
 
@@ -130,18 +128,18 @@ class Config:
             if not os.path.isdir(path_encoded):
                 os.makedirs(path_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": path, "error": msg})
+                    {"path": path, "error": error})
             return False
 
         return True
 
     def create_data_folder(self):
-        """ Create the folder for storing data in (shared files etc.),
-        if the folder doesn't exist """
+        """Create the folder for storing data in (shared files etc.), if the
+        folder doesn't exist."""
 
         data_dir_encoded = encode_path(self.data_dir)
 
@@ -149,11 +147,11 @@ class Config:
             if not os.path.isdir(data_dir_encoded):
                 os.makedirs(data_dir_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": self.data_dir, "error": msg})
+                    {"path": self.data_dir, "error": error})
 
     def load_config(self):
 
@@ -575,8 +573,10 @@ class Config:
         log.init_log_levels()
         log.add_debug("Using configuration: %(file)s", {"file": self.filename})
 
+        events.connect("quit", self._quit)
+
     def parse_config(self, filename):
-        """ Parses the config file """
+        """Parses the config file."""
 
         try:
             with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
@@ -588,8 +588,10 @@ class Config:
             self.parse_config(filename)
 
     def convert_config(self):
-        """ Converts the config to utf-8.
-        Mainly for upgrading Windows build. (22 July, 2020) """
+        """Converts the config to utf-8.
+
+        Mainly for upgrading Windows build. (22 July, 2020)
+        """
 
         try:
             from chardet import detect
@@ -625,7 +627,7 @@ class Config:
         return False
 
     def set_config(self):
-        """ Set config values parsed from file earlier """
+        """Set config values parsed from file earlier."""
 
         from pynicotine.logfacility import log
 
@@ -643,8 +645,8 @@ class Config:
                                   {"option": j, "section": i})
 
                 else:
-                    """ Attempt to get the default value for a config option. If there's no default
-                    value, it's a custom option from a plugin, so no checks are needed. """
+                    # Attempt to get the default value for a config option. If there's no default
+                    # value, it's a custom option from a plugin, so no checks are needed.
 
                     try:
                         default_val = self.defaults[i][j]
@@ -658,8 +660,8 @@ class Config:
                         self.sections[i][j] = val
                         continue
 
-                    """ Check that the value of a config option is of the same type as the default
-                    value. If that's not the case, reset the value. """
+                    # Check that the value of a config option is of the same type as the default
+                    # value. If that's not the case, reset the value.
 
                     try:
                         if not isinstance(default_val, str):
@@ -673,7 +675,7 @@ class Config:
                         if i != "plugins" and j != "filter":
                             if (isinstance(eval_val, type(default_val))
                                     or (isinstance(default_val, bool)
-                                        and isinstance(eval_val, int) and eval_val in (0, 1))):
+                                        and isinstance(eval_val, int) and eval_val in {0, 1})):
                                 # Value is valid
                                 pass
 
@@ -821,6 +823,15 @@ class Config:
             return
 
         log.add(_("Config backed up to: %s"), filename)
+
+    def _quit(self):
+
+        self.parser.clear()
+        self.sections.clear()
+        self.defaults.clear()
+        self.removed_options.clear()
+
+        self.config_loaded = False
 
 
 config = Config()

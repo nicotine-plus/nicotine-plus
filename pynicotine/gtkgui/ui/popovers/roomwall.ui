@@ -11,7 +11,7 @@
     <property name="visible">True</property>
     <child>
       <object class="GtkLabel">
-        <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
+        <property name="label" translatable="yes">Write a single message that other room users can read later. Recent messages are shown at the top.</property>
         <property name="max-width-chars">55</property>
         <property name="mnemonic-widget">message_view_container</property>
         <property name="visible">True</property>

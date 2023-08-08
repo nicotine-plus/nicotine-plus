@@ -34,7 +34,7 @@ from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
-class Search:
+class SearchRequest:
 
     __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
 
@@ -48,7 +48,7 @@ class Search:
         self.is_ignored = is_ignored
 
 
-class Searches:
+class Search:
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
@@ -63,7 +63,7 @@ class Searches:
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            self.searches[self.token] = Search(token=self.token, term=term, mode="wishlist", is_ignored=True)
+            self.searches[self.token] = SearchRequest(token=self.token, term=term, mode="wishlist", is_ignored=True)
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -94,22 +94,24 @@ class Searches:
         # Ask for the rest of the files in the folder
         core.transfers.get_folder(user, folder)
 
-    """ Outgoing search requests """
+    # Outgoing Search Requests #
 
     @staticmethod
     def add_allowed_token(token):
-        """ Allow parsing search result messages for a search ID """
+        """Allow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.add(token)
 
     @staticmethod
     def remove_allowed_token(token):
-        """ Disallow parsing search result messages for a search ID """
+        """Disallow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
     def add_search(self, term, mode, room=None, users=None, is_ignored=False):
 
-        self.searches[self.token] = search = Search(token=self.token, term=term, mode=mode, room=room,
-                                                    users=users, is_ignored=is_ignored)
+        self.searches[self.token] = search = SearchRequest(
+            token=self.token, term=term, mode=mode, room=room, users=users,
+            is_ignored=is_ignored
+        )
         self.add_allowed_token(self.token)
         return search
 
@@ -182,10 +184,9 @@ class Searches:
         search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
 
         if config.sections["searches"]["remove_special_chars"]:
-            """
-            Remove special characters from search term
-            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
-            """
+            # Remove special characters from search term
+            # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+
             stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
@@ -326,7 +327,7 @@ class Searches:
         return wish in config.sections["server"]["autosearch"]
 
     def _set_wishlist_interval(self, msg):
-        """ Server code: 104 """
+        """Server code 104."""
 
         self.wishlist_interval = msg.seconds
 
@@ -340,7 +341,7 @@ class Searches:
             log.add(_("Server does not permit performing wishlist searches at this time"))
 
     def _file_search_response(self, msg):
-        """ Peer message: 9 """
+        """Peer code 9."""
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             msg.token = None
@@ -363,22 +364,22 @@ class Searches:
             msg.token = None
 
     def _file_search_request_server(self, msg):
-        """ Server code: 26, 42 and 120 """
+        """Server code 26, 42 and 120."""
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def _file_search_request_distributed(self, msg):
-        """ Distrib code: 3 """
+        """Distrib code 3."""
 
         self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
 
-    """ Incoming search requests """
+    # Incoming Search Requests #
 
     @staticmethod
     def update_search_results(results, word_indices, exclude_word=False):
-        """ Updates the search result list with indices for a new word """
+        """Updates the search result list with indices for a new word."""
 
         if word_indices is None:
             if exclude_word:
@@ -406,7 +407,8 @@ class Searches:
         return results
 
     def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
-        """ Returns a list of common file indices for each word in a search term """
+        """Returns a list of common file indices for each word in a search
+        term."""
 
         try:
             words = searchterm.split()
@@ -452,8 +454,11 @@ class Searches:
             return None
 
     def process_search_request(self, searchterm, user, token, direct=False):
-        """ Note: since this section is accessed every time a search request arrives several
-            times per second, please keep it as optimized and memory sparse as possible! """
+        """This section is accessed every time a search request arrives,
+        several times per second.
+
+        Please keep it as optimized and memory sparse as possible!
+        """
 
         if not searchterm:
             return
@@ -469,7 +474,7 @@ class Searches:
 
         maxresults = config.sections["searches"]["maxresults"]
 
-        if maxresults == 0:
+        if maxresults <= 0:
             return
 
         # Do all processing in lowercase

@@ -37,12 +37,13 @@ GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
 GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 LIBADWAITA_API_VERSION = 0
+LIBADWAITA_MINOR_VERSION = 0
 
 if GTK_API_VERSION >= 4:
     try:
         if os.getenv("NICOTINE_LIBADWAITA") is None:
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
+                sys.platform in {"win32", "darwin"} or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
             ))
 
         if os.getenv("NICOTINE_LIBADWAITA") == "1":
@@ -50,6 +51,7 @@ if GTK_API_VERSION >= 4:
 
             from gi.repository import Adw  # pylint: disable=ungrouped-imports
             LIBADWAITA_API_VERSION = Adw.MAJOR_VERSION
+            LIBADWAITA_MINOR_VERSION = Adw.MINOR_VERSION
 
     except (ImportError, ValueError):
         pass
@@ -89,7 +91,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("quit", self.on_quit),
+            ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -130,16 +132,6 @@ class Application:
 
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
-
-    def init_spell_checker(self):
-
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker()
-
-        except (ImportError, ValueError):
-            self.spell_checker = False
 
     def set_up_actions(self):
 
@@ -278,7 +270,7 @@ class Application:
                     )
                 )
 
-    """ Core Events """
+    # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
@@ -317,9 +309,6 @@ class Application:
             option_label=_("Remember choice") if remember else None,
             callback=self.on_confirm_quit_response
         ).show()
-
-    def on_quit(self):
-        self._instance.quit()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
         core.shares.rescan_shares(force=(response_id == "force_rescan"))
@@ -369,7 +358,7 @@ class Application:
             callback=self.on_invalid_password_response
         ).show()
 
-    """ Actions """
+    # Actions #
 
     def on_connect(self, *_args):
         core.connect()
@@ -601,7 +590,7 @@ class Application:
         config.sections["ui"]["dark_mode"] = not state
 
     def on_away_accelerator(self, action, *_args):
-        """ Ctrl+H: Away/Online toggle """
+        """Ctrl+H: Away/Online toggle."""
 
         current_time = time.time()
 
@@ -611,11 +600,18 @@ class Application:
             action.cooldown_time = current_time
 
     def on_away(self, *_args):
-        """ Away/Online status button """
+        """Away/Online status button."""
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
-    """ Running """
+    # Running #
+
+    def _force_quit(self):
+        """Used when the thread event processor fails due to an unhandled
+        exception, to force a shutdown."""
+
+        core.quit()
+        events.emit("quit")
 
     def raise_exception(self, exc_value):
         raise exc_value
@@ -634,7 +630,7 @@ class Application:
             return
 
         loop.quit()
-        core.quit()
+        self._force_quit()
 
     def show_critical_error_dialog(self, error, loop):
 
@@ -657,7 +653,7 @@ class Application:
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            core.quit()
+            self._force_quit()
             self.raise_exception(exc_value)
             return
 
@@ -667,10 +663,7 @@ class Application:
         if core.pluginhandler is not None:
             traceback = exc_traceback
 
-            while True:
-                if not traceback.tb_next:
-                    break
-
+            while traceback.tb_next:
                 filename = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in core.pluginhandler.enabled_plugins:

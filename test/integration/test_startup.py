@@ -24,7 +24,7 @@ from unittest import skipIf
 from unittest import TestCase
 
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FILE = os.path.join(USER_DATA, "config")
+CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
 COMMANDS = (
     ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"],  # GUI
     ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode", "--headless"]
@@ -34,7 +34,7 @@ COMMANDS = (
 class StartupTest(TestCase):
 
     def test_startup(self):
-        """ Verify that regular startup works """
+        """Verify that regular startup works."""
 
         for command in COMMANDS:
             # Assume failure by default
@@ -53,7 +53,7 @@ class StartupTest(TestCase):
 
     @skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
     def test_cli(self):
-        """ Verify that CLI-exclusive functionality works """
+        """Verify that CLI-exclusive functionality works."""
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
         self.assertIn(b"--help", output)

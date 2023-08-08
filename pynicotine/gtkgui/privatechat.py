@@ -37,6 +37,7 @@ from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.logfacility import log
@@ -58,6 +59,7 @@ class PrivateChats(IconNotebook):
 
         self.highlighted_users = []
         self.completion = ChatCompletion()
+        self.spell_checker = SpellChecker()
         self.history = ChatHistory(window)
         self.command_help = None
 
@@ -100,6 +102,7 @@ class PrivateChats(IconNotebook):
             if tab.container != page:
                 continue
 
+            self.spell_checker.set_entry(tab.chat_entry)
             self.completion.set_entry(tab.chat_entry)
             tab.update_room_user_completions()
 
@@ -221,10 +224,6 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.message_user(msg)
 
-    def toggle_chat_buttons(self):
-        for page in self.pages.values():
-            page.toggle_chat_buttons()
-
     def update_completions(self, completions):
 
         page = self.get_current_page()
@@ -234,9 +233,16 @@ class PrivateChats(IconNotebook):
                 tab.update_completions(completions)
                 break
 
-    def update_tags(self):
-        for page in self.pages.values():
-            page.update_tags()
+    def update_widgets(self):
+
+        page = self.get_current_page()
+
+        for tab in self.pages.values():
+            if tab.container == page:
+                self.spell_checker.set_entry(tab.chat_entry)
+
+            tab.toggle_chat_buttons()
+            tab.update_tags()
 
     def server_disconnect(self, *_args):
 

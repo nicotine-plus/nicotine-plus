@@ -21,10 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains utility functions.
-"""
-
 import os
 import pickle
 import sys
@@ -74,8 +70,10 @@ def clean_path(path):
 
 
 def encode_path(path, prefix=True):
-    """ Converts a file path to bytes for processing by the system.
-    On Windows, also append prefix to enable extended-length path. """
+    """Converts a file path to bytes for processing by the system.
+
+    On Windows, also append prefix to enable extended-length path.
+    """
 
     if sys.platform == "win32" and prefix:
         path = path.replace("/", "\\")
@@ -137,8 +135,8 @@ def humanize(number):
 
 
 def factorize(filesize, base=1024):
-    """ Converts filesize string with a given unit into raw integer size,
-        defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+    """Converts filesize string with a given unit into raw integer size,
+    defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
     if not filesize:
         return None, None
@@ -173,7 +171,7 @@ def factorize(filesize, base=1024):
 
 
 def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
-    """ Truncates a string to fit inside a byte limit """
+    """Truncates a string to fit inside a byte limit."""
 
     string_bytes = string.encode(encoding)
 
@@ -191,7 +189,8 @@ def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
 
 
 def unescape(string):
-    """Removes quotes from the beginning and end of strings, and unescapes it."""
+    """Removes quotes from the beginning and end of strings, and unescapes
+    it."""
 
     string = string.encode("latin-1", "backslashreplace").decode("unicode-escape")
 
@@ -205,7 +204,8 @@ def unescape(string):
 
 
 def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
-    """Executes a string with commands, with partial support for bash-style quoting and pipes.
+    """Executes a string with commands, with partial support for bash-style
+    quoting and pipes.
 
     The different parts of the command should be separated by spaces, a double
     quotation mark can be used to embed spaces in an argument.
@@ -227,11 +227,12 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     Example commands:
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
-    * echo $ | flite -t """
+    * echo $ | flite -t
+    """
 
     # pylint: disable=consider-using-with
 
-    from subprocess import PIPE, Popen, STARTF_USESHOWWINDOW, STARTUPINFO
+    from subprocess import PIPE, Popen
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
@@ -241,6 +242,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     startupinfo = None
 
     if sys.platform == "win32":
+        from subprocess import STARTF_USESHOWWINDOW, STARTUPINFO
         # Hide console window on Windows
         startupinfo = STARTUPINFO()
         startupinfo.dwFlags |= STARTF_USESHOWWINDOW
@@ -274,7 +276,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     current = []
 
     for argument in arguments:
-        if argument in ("|",):
+        if argument == "|":
             subcommands.append(current)
             current = []
         else:
@@ -326,7 +328,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
 def _try_open_uri(uri):
 
-    if sys.platform not in ("darwin", "win32"):
+    if sys.platform not in {"darwin", "win32"}:
         try:
             from gi.repository import Gio  # pylint: disable=import-error
             Gio.AppInfo.launch_default_for_uri(uri)
@@ -343,9 +345,9 @@ def _try_open_uri(uri):
 
 
 def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """ Currently used to either open a folder or play an audio file
-    Tries to run a user-specified command first, and falls back to
-    the system default. """
+    """Currently used to either open a folder or play an audio file Tries to
+    run a user-specified command first, and falls back to the system
+    default."""
 
     if file_path is None:
         return False
@@ -386,8 +388,11 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
 
 
 def open_uri(uri):
-    """ Open a URI in an external (web) browser. The given argument has
-    to be a properly formed URI including the scheme (fe. HTTP). """
+    """Open a URI in an external (web) browser.
+
+    The given argument has to be a properly formed URI including the
+    scheme (fe. HTTP).
+    """
 
     from pynicotine.config import config
 
@@ -429,7 +434,7 @@ def load_file(path, load_func, use_old_file=False):
             if not os.path.isfile(path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path_encoded) == 0:
+            if os.path.getsize(path_encoded) <= 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 
@@ -504,20 +509,18 @@ def write_file_and_backup(path, callback, protect=False):
 
 
 class RestrictedUnpickler(pickle.Unpickler):
-    """
-    Don't allow code execution from pickles
-    """
+    """Don't allow code execution from pickles."""
 
     def find_class(self, module, name):
         # Forbid all globals
         raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
 
 
-""" Debugging """
+# Debugging #
 
 
 def debug(*args):
-    """ Prints debugging info. """
+    """Prints debugging info."""
 
     from pynicotine.logfacility import log
 
@@ -526,16 +529,16 @@ def debug(*args):
 
 
 def strace(function):
-    """ Decorator for debugging """
+    """Decorator for debugging."""
 
     from itertools import chain
     from pynicotine.logfacility import log
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))})")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))})")
         retvalue = function(*args, **kwargs)
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))}): {repr(retvalue)}")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))}): {repr(retvalue)}")
         return retvalue
 
     return newfunc

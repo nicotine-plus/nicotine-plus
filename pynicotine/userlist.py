@@ -277,7 +277,7 @@ class UserList:
         config.write_configuration()
 
     def _user_status(self, msg):
-        """ Server code: 7 """
+        """Server code 7."""
 
         user = msg.user
 

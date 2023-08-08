@@ -23,7 +23,7 @@ import subprocess
 
 
 def update_pot():
-    """ Update .pot translation template """
+    """Update .pot translation template."""
 
     # Desktop, Python and GtkBuilder files
     files = (sorted(glob.glob("data/**/*.in", recursive=True), key=os.path.abspath)
