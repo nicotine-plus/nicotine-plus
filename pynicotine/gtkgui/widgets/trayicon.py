@@ -953,11 +953,11 @@ class Win32Implementation(BaseImplementation):
 
         if is_checked is not None:
             item_info.f_mask |= self.MIIM_STATE
-            item_info.f_state = self.MFS_CHECKED if is_checked else self.MFS_UNCHECKED
+            item_info.f_state |= self.MFS_CHECKED if is_checked else self.MFS_UNCHECKED
 
         if is_sensitive is not None:
             item_info.f_mask |= self.MIIM_STATE
-            item_info.f_state = self.MFS_ENABLED if is_sensitive else self.MFS_DISABLED
+            item_info.f_state |= self.MFS_ENABLED if is_sensitive else self.MFS_DISABLED
 
         return item_info
 
