@@ -133,16 +133,6 @@ class Application:
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
 
-    def init_spell_checker(self):
-
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker()
-
-        except (ImportError, ValueError):
-            self.spell_checker = False
-
     def set_up_actions(self):
 
         # Regular actions
