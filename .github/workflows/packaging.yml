@@ -124,7 +124,9 @@ jobs:
           cache-dependency-path: setup.py
 
       - name: Install build dependencies
-        run: python packaging/macos/dependencies.py
+        run: |
+          brew update
+          python packaging/macos/dependencies.py
 
       - name: Freeze application
         run: python packaging/macos/setup.py bdist_dmg
