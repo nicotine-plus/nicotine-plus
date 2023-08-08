@@ -232,7 +232,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     # pylint: disable=consider-using-with
 
-    from subprocess import PIPE, Popen, STARTF_USESHOWWINDOW, STARTUPINFO
+    from subprocess import PIPE, Popen
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
@@ -242,6 +242,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     startupinfo = None
 
     if sys.platform == "win32":
+        from subprocess import STARTF_USESHOWWINDOW, STARTUPINFO
         # Hide console window on Windows
         startupinfo = STARTUPINFO()
         startupinfo.dwFlags |= STARTF_USESHOWWINDOW
