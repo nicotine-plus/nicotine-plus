@@ -88,6 +88,10 @@ class UserInfos(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.userinfo.remove_all_users()
 
+    def on_restore_removed_page(self, page_args):
+        username, = page_args
+        core.userinfo.show_user(username)
+
     def on_show_user_profile(self, *_args):
 
         username = self.window.userinfo_entry.get_text().strip()
@@ -126,7 +130,7 @@ class UserInfos(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
 
     def ban_unban_user(self, user):
@@ -287,8 +291,9 @@ class UserInfo:
         )
 
         # Popup menus
-        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
-        self.user_popup_menu.setup_user_menu(user, page="userinfo")
+        self.user_popup_menu = UserPopupMenu(
+            self.window.application, callback=self.on_tab_popup, username=user, tab_name="userinfo"
+        )
         self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),

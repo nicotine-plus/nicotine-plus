@@ -17,10 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.utils import encode_path
 
 
@@ -29,9 +31,16 @@ class ConfigTest(TestCase):
     def setUp(self):
 
         config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        config.filename = os.path.join(config.data_dir, "config")
+        config.filename = os.path.join(config.data_dir, "temp_config")
 
-        config.load_config()
+        default_config_path = os.path.join(config.data_dir, "config")
+        shutil.copy(default_config_path, config.filename)
+
+        core.init_components(enabled_components={})
+
+    def tearDown(self):
+        core.quit()
+        self.assertFalse(config.sections)
 
     def test_load_config(self):
         """ Test loading a config file """

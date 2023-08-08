@@ -84,7 +84,7 @@ class FastConfigure(Dialog):
             activate_row_callback=self.on_edit_shared_folder,
             delete_accelerator_callback=self.on_remove_shared_folder,
             columns={
-                "virtual_folder": {
+                "virtual_name": {
                     "column_type": "text",
                     "title": _("Virtual Folder"),
                     "width": 1,
@@ -141,25 +141,12 @@ class FastConfigure(Dialog):
 
     def on_add_shared_folder_selected(self, selected, _data):
 
-        shared_folders = config.sections["transfers"]["shared"]
-        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
-
         for folder_path in selected:
-            if folder_path is None:
-                continue
+            virtual_name = core.shares.add_share(folder_path)
 
-            if folder_path in (x[1] for x in shared_folders + buddy_shared_folders):
-                continue
-
-            self.rescan_required = True
-
-            virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(folder_path), shared_folders=(shared_folders + buddy_shared_folders)
-            )
-            mapping = (virtual_name, folder_path)
-
-            self.shares_list_view.add_row([virtual_name, folder_path])
-            config.sections["transfers"]["shared"].append(mapping)
+            if virtual_name:
+                self.shares_list_view.add_row([virtual_name, folder_path])
+                self.rescan_required = True
 
     def on_add_shared_folder(self, *_args):
 
@@ -172,34 +159,26 @@ class FastConfigure(Dialog):
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual_name = dialog.get_entry_value()
+        new_virtual_name = dialog.get_entry_value()
+        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
-        if not virtual_name:
+        if new_virtual_name == old_virtual_name:
             return
 
         self.rescan_required = True
-
-        shared_folders = config.sections["transfers"]["shared"]
-        buddy_shared_folders = config.sections["transfers"]["buddyshared"]
-
-        virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name, shared_folders=(shared_folders + buddy_shared_folders)
-        )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
-        old_mapping = (old_virtual_name, folder_path)
-        new_mapping = (virtual_name, folder_path)
+        core.shares.remove_share(old_virtual_name)
+        new_virtual_name = core.shares.add_share(
+            folder_path, virtual_name=new_virtual_name, validate_path=False
+        )
 
-        shared_folders.remove(old_mapping)
-        shared_folders.append(new_mapping)
-
-        self.shares_list_view.set_row_value(iterator, "virtual_folder", virtual_name)
+        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
             folder_path = self.shares_list_view.get_row_value(iterator, "folder")
 
             EntryDialog(
@@ -216,11 +195,9 @@ class FastConfigure(Dialog):
     def on_remove_shared_folder(self, *_args):
 
         for iterator in reversed(self.shares_list_view.get_selected_rows()):
-            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_folder")
-            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-            mapping = (virtual_name, folder_path)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
-            config.sections["transfers"]["shared"].remove(mapping)
+            core.shares.remove_share(virtual_name)
             self.shares_list_view.remove_row(iterator)
 
             self.rescan_required = True

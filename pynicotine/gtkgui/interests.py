@@ -186,8 +186,10 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
 
-        popup = UserPopupMenu(self.window.application, self.similar_users_list_view.widget, self.on_popup_ru_menu)
-        popup.setup_user_menu()
+        popup = UserPopupMenu(
+            self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
+            tab_name="interests"
+        )
 
         for event_name, callback in (
             ("add-dislike", self.add_thing_i_hate),

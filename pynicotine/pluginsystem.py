@@ -481,7 +481,7 @@ class PluginHandler:
 
         # Disable plugins
         for plugin in self.list_installed_plugins():
-            self.disable_plugin(plugin)
+            self.disable_plugin(plugin, is_permanent=False)
 
     def _cli_command(self, command, args):
         self.trigger_cli_command_event(command, args or "")
@@ -655,7 +655,7 @@ class PluginHandler:
 
         return plugin_list
 
-    def disable_plugin(self, plugin_name):
+    def disable_plugin(self, plugin_name, is_permanent=True):
 
         if plugin_name == "core_commands":
             return False
@@ -711,8 +711,7 @@ class PluginHandler:
                     # Builtin module
                     continue
 
-            # All plugins are unloaded on shutdown, but we want to remember them
-            if not core.shutdown and plugin_name in config.sections["plugins"]["enabled"]:
+            if is_permanent and plugin_name in config.sections["plugins"]["enabled"]:
                 config.sections["plugins"]["enabled"].remove(plugin_name)
 
             del self.enabled_plugins[plugin_name]

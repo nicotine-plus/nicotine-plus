@@ -77,6 +77,10 @@ class PrivateChats(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.privatechat.remove_all_users()
 
+    def on_restore_removed_page(self, page_args):
+        username, = page_args
+        core.privatechat.show_user(username)
+
     def on_reordered_page(self, *_args):
 
         tab_order = {}
@@ -175,7 +179,7 @@ class PrivateChats(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
 
     def highlight_user(self, user):
@@ -279,12 +283,16 @@ class PrivateChat:
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = UserPopupMenu(self.window.application, self.chat_view.widget,
-                                                  connect_events=False)
-        self.popup_menu_user_tab = UserPopupMenu(self.window.application, None, self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(
+            self.window.application, parent=self.chat_view.widget, connect_events=False,
+            username=user, tab_name="privatechat"
+        )
+        self.popup_menu_user_tab = UserPopupMenu(
+            self.window.application, callback=self.on_popup_menu_user, username=user,
+            tab_name="privatechat"
+        )
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
-            menu.setup_user_menu(user, page="privatechat")
             menu.add_items(
                 ("", None),
                 ("#" + _("Close All Tabs…"), self.on_close_all_tabs),

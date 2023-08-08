@@ -3,79 +3,79 @@
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkEntry" id="filter_include_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Include text…</property>
     <property name="primary-icon-name">emblem-ok-symbolic</property>
     <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_exclude_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Exclude text…</property>
     <property name="primary-icon-name">action-unavailable-symbolic</property>
     <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
     <property name="visible">True</property>
     <property name="width-chars">14</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_file_type_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File type…</property>
     <property name="primary-icon-name">text-x-generic-symbolic</property>
     <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
     <property name="visible">True</property>
     <property name="width-chars">12</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_file_size_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">File size…</property>
     <property name="primary-icon-name">drive-harddisk-symbolic</property>
     <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_bitrate_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Bitrate…</property>
     <property name="primary-icon-name">audio-volume-high-symbolic</property>
     <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_length_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Duration…</property>
     <property name="primary-icon-name">media-playback-start-symbolic</property>
     <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
     <property name="visible">True</property>
     <property name="width-chars">10</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkEntry" id="filter_country_entry">
     <property name="hexpand">True</property>
+    <property name="max-width-chars">0</property>
     <property name="placeholder-text" translatable="yes">Country code…</property>
     <property name="primary-icon-name">mark-location-symbolic</property>
     <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
     <property name="visible">True</property>
     <property name="width-chars">12</property>
     <signal name="activate" handler="on_refilter"/>
-    <signal name="changed" handler="on_filter_entry_changed"/>
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkBox" id="container">

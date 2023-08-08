@@ -83,6 +83,10 @@ class UserBrowses(IconNotebook):
     def on_remove_all_pages(self, *_args):
         core.userbrowse.remove_all_users()
 
+    def on_restore_removed_page(self, page_args):
+        username, = page_args
+        core.userbrowse.browse_user(username)
+
     def on_get_shares(self, *_args):
 
         entry_text = self.window.userbrowse_entry.get_text().strip()
@@ -124,7 +128,7 @@ class UserBrowses(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
 
     def peer_connection_error(self, user, *_args, **_kwargs):
@@ -217,8 +221,9 @@ class UserBrowse:
         )
 
         # Popup Menu (folder_tree_view)
-        self.user_popup_menu = UserPopupMenu(self.window.application, None, self.on_tab_popup)
-        self.user_popup_menu.setup_user_menu(user, page="userbrowse")
+        self.user_popup_menu = UserPopupMenu(
+            self.window.application, callback=self.on_tab_popup, username=user, tab_name="userbrowse"
+        )
         self.user_popup_menu.add_items(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
@@ -305,13 +310,11 @@ class UserBrowse:
         )
 
         # Popup Menu (file_list_view)
-        self.file_popup_menu = FilePopupMenu(self.window.application, self.file_list_view.widget,
-                                             self.on_file_popup_menu)
-
+        self.file_popup_menu = FilePopupMenu(
+            self.window.application, parent=self.file_list_view.widget, callback=self.on_file_popup_menu
+        )
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
-                ("#" + "selected_files", None),
-                ("", None),
                 ("#" + _("Up_load File(s)…"), self.on_upload_files),
                 ("#" + _("Upload Folder…"), self.on_upload_directory_to),
                 ("", None),
@@ -326,8 +329,6 @@ class UserBrowse:
             )
         else:
             self.file_popup_menu.add_items(
-                ("#" + "selected_files", None),
-                ("", None),
                 ("#" + _("_Download File(s)"), self.on_download_files),
                 ("#" + _("Download File(s) _To…"), self.on_download_files_to),
                 ("", None),

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -43,6 +43,7 @@ EVENT_NAMES = {
     "queue-network-message",
     "quit",
     "remove-privileged-user",
+    "schedule-quit",
     "server-login",
     "server-disconnect",
     "server-timeout",
@@ -100,7 +101,7 @@ EVENT_NAMES = {
     "show-room",
     "ticker-add",
     "ticker-remove",
-    "ticker-set",
+    "ticker-state",
     "user-joined-room",
     "user-left-room",
 
@@ -206,7 +207,16 @@ class Events:
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
         self._scheduler_event_id = 0
+        self._is_active = False
 
+    def enable(self):
+
+        if self._is_active:
+            return
+
+        self._is_active = True
+
+        self.connect("quit", self._quit)
         Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
@@ -223,7 +233,14 @@ class Events:
         self._callbacks[event_name].remove(function)
 
     def emit(self, event_name, *args, **kwargs):
-        for function in self._callbacks.get(event_name, []):
+
+        callbacks = self._callbacks.get(event_name, [])
+
+        if event_name == "quit":
+            # Event and log modules register callbacks first, but need to quit last
+            callbacks.reverse()
+
+        for function in callbacks:
             function(*args, **kwargs)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
@@ -246,10 +263,14 @@ class Events:
         self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
-        """ Called by the main loop 20 times per second to emit thread events in the main thread """
+        """ Called by the main loop 20 times per second to emit thread events in the main thread.
+        Return value indicates if the main loop should continue processing events. """
+
+        if not self._is_active:
+            return False
 
         if not self._thread_events:
-            return
+            return True
 
         event_list = []
 
@@ -259,9 +280,11 @@ class Events:
         for event_name, args, kwargs in event_list:
             self.emit(event_name, *args, **kwargs)
 
+        return True
+
     def _run_scheduler(self):
 
-        while True:
+        while self._is_active:
             # Scheduled events additions/removals from other threads
             while self._pending_scheduler_events:
                 event_id, event = self._pending_scheduler_events.popleft()
@@ -293,6 +316,16 @@ class Events:
                 continue
 
             time.sleep(min(sleep_time, 1))
+
+        self._scheduler_events.clear()
+
+    def _quit(self):
+
+        self._callbacks.clear()
+        self._thread_events.clear()
+        self._pending_scheduler_events.clear()
+
+        self._is_active = False
 
 
 events = Events()

@@ -6,7 +6,7 @@
     <property name="title" translatable="yes">Keyboard Shortcuts</property>
     <child>
       <object class="GtkShortcutsSection">
-        <property name="max-height">12</property>
+        <property name="max-height">13</property>
         <property name="section-name">shortcuts</property>
         <property name="visible">True</property>
         <child>
@@ -120,6 +120,13 @@
               <object class="GtkShortcutsShortcut">
                 <property name="action-name">win.cycle-tabs</property>
                 <property name="title" translatable="yes">Go to Next Secondary Tab</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="action-name">win.reopen-closed-tab</property>
+                <property name="title" translatable="yes">Reopen Closed Secondary Tab</property>
                 <property name="visible">True</property>
               </object>
             </child>

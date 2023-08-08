@@ -64,6 +64,7 @@ class Core:
         self.portmapper = None
         self.notifications = None
         self.update_checker = None
+        self._network_thread = None
 
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
@@ -72,8 +73,7 @@ class Core:
         self.cli_interface_address = None
         self.cli_listen_port = None
 
-        self.shutdown = False
-        self.enable_cli = False
+        self.enabled_components = set()
         self.user_status = slskmessages.UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
@@ -87,12 +87,35 @@ class Core:
         self.watched_users = {}
         self._ip_requested = {}
 
+    def init_components(self, enabled_components=None):
+
+        # Enable all components by default
+        if enabled_components is None:
+            enabled_components = {
+                "error_handler", "cli", "portmapper", "network_thread", "notifications",
+                "network_filter", "now_playing", "statistics", "update_checker", "shares",
+                "search", "transfers", "interests", "userbrowse", "userinfo", "userlist",
+                "chatrooms", "privatechat", "pluginhandler"
+            }
+
+        self.enabled_components = enabled_components
+
+        if "error_handler" in enabled_components:
+            self._init_thread_exception_hook()
+
+        if "cli" in enabled_components:
+            cli.enable_logging()
+
+        events.enable()
+        config.load_config()
+
         for event_name, callback in (
             ("admin-message", self._admin_message),
             ("change-password", self._change_password),
             ("check-privileges", self._check_privileges),
             ("peer-address", self._get_peer_address),
             ("privileged-users", self._privileged_users),
+            ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
             ("server-timeout", self._server_timeout),
@@ -103,32 +126,6 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-    def init_components(self, enable_cli=False):
-
-        from pynicotine.chatrooms import ChatRooms
-        from pynicotine.interests import Interests
-        from pynicotine.networkfilter import NetworkFilter
-        from pynicotine.notifications import Notifications
-        from pynicotine.nowplaying import NowPlaying
-        from pynicotine.pluginsystem import PluginHandler
-        from pynicotine.portmapper import PortMapper
-        from pynicotine.privatechat import PrivateChat
-        from pynicotine.search import Searches
-        from pynicotine.shares import Shares
-        from pynicotine.slskproto import SoulseekNetworkThread
-        from pynicotine.statistics import Statistics
-        from pynicotine.transfers import Transfers
-        from pynicotine.userbrowse import UserBrowse
-        from pynicotine.userinfo import UserInfo
-        from pynicotine.userlist import UserList
-
-        self.enable_cli = enable_cli
-        self._init_thread_exception_hook()
-        config.load_config()
-
-        if enable_cli:
-            cli.enable_logging()
-
         script_dir = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
@@ -136,25 +133,74 @@ class Core:
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
-        self.portmapper = PortMapper()
-        SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
+        if "portmapper" in enabled_components:
+            from pynicotine.portmapper import PortMapper
+            self.portmapper = PortMapper()
 
-        self.notifications = Notifications()
-        self.network_filter = NetworkFilter()
-        self.now_playing = NowPlaying()
-        self.statistics = Statistics()
-        self.update_checker = UpdateChecker()
+        if "network_thread" in enabled_components:
+            from pynicotine.slskproto import SoulseekNetworkThread
+            self._network_thread = SoulseekNetworkThread(user_addresses=self.user_addresses, portmapper=self.portmapper)
+        else:
+            events.connect("schedule-quit", self._schedule_quit)
 
-        self.shares = Shares()
-        self.search = Searches()
-        self.transfers = Transfers()
-        self.interests = Interests()
-        self.userbrowse = UserBrowse()
-        self.userinfo = UserInfo()
-        self.userlist = UserList()
-        self.chatrooms = ChatRooms()
-        self.privatechat = PrivateChat()
-        self.pluginhandler = PluginHandler()
+        if "notifications" in enabled_components:
+            from pynicotine.notifications import Notifications
+            self.notifications = Notifications()
+
+        if "network_filter" in enabled_components:
+            from pynicotine.networkfilter import NetworkFilter
+            self.network_filter = NetworkFilter()
+
+        if "now_playing" in enabled_components:
+            from pynicotine.nowplaying import NowPlaying
+            self.now_playing = NowPlaying()
+
+        if "statistics" in enabled_components:
+            from pynicotine.statistics import Statistics
+            self.statistics = Statistics()
+
+        if "update_checker" in enabled_components:
+            self.update_checker = UpdateChecker()
+
+        if "shares" in enabled_components:
+            from pynicotine.shares import Shares
+            self.shares = Shares()
+
+        if "search" in enabled_components:
+            from pynicotine.search import Searches
+            self.search = Searches()
+
+        if "transfers" in enabled_components:
+            from pynicotine.transfers import Transfers
+            self.transfers = Transfers()
+
+        if "interests" in enabled_components:
+            from pynicotine.interests import Interests
+            self.interests = Interests()
+
+        if "userbrowse" in enabled_components:
+            from pynicotine.userbrowse import UserBrowse
+            self.userbrowse = UserBrowse()
+
+        if "userinfo" in enabled_components:
+            from pynicotine.userinfo import UserInfo
+            self.userinfo = UserInfo()
+
+        if "userlist" in enabled_components:
+            from pynicotine.userlist import UserList
+            self.userlist = UserList()
+
+        if "chatrooms" in enabled_components:
+            from pynicotine.chatrooms import ChatRooms
+            self.chatrooms = ChatRooms()
+
+        if "privatechat" in enabled_components:
+            from pynicotine.privatechat import PrivateChat
+            self.privatechat = PrivateChat()
+
+        if "pluginhandler" in enabled_components:
+            from pynicotine.pluginsystem import PluginHandler
+            self.pluginhandler = PluginHandler()
 
     def _init_thread_exception_hook(self):
 
@@ -187,7 +233,7 @@ class Core:
 
     def start(self):
 
-        if self.enable_cli:
+        if "cli" in self.enabled_components:
             cli.enable_prompt()
 
         events.emit("start")
@@ -211,19 +257,8 @@ class Core:
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
 
-        # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
-        self.shutdown = True
-        manual_disconnect = True
-
-        events.emit("server-disconnect", manual_disconnect)
-        events.emit("quit")
-
-        log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
-            "program": config.application_name,
-            "version": config.version,
-            "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
-        })
-        log.close_log_files()
+        # Allow the networking thread to finish up before quitting
+        events.emit("schedule-quit")
 
     def connect(self):
 
@@ -310,6 +345,35 @@ class Core:
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
+
+    def _schedule_quit(self):
+        events.emit("quit")
+
+    def _quit(self):
+
+        self._network_thread = None
+        self.portmapper = None
+        self.notifications = None
+        self.network_filter = None
+        self.now_playing = None
+        self.statistics = None
+        self.update_checker = None
+
+        self.shares = None
+        self.search = None
+        self.transfers = None
+        self.interests = None
+        self.userbrowse = None
+        self.userinfo = None
+        self.userlist = None
+        self.chatrooms = None
+        self.privatechat = None
+        self.pluginhandler = None
+
+        log.add(_("Quit %(program)s %(version)s!"), {
+            "program": config.application_name,
+            "version": config.version
+        })
 
     def _server_timeout(self):
         if not config.need_config():

@@ -382,12 +382,14 @@ class CompletionEntry:
 class ComboBox:
 
     def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
-                 enable_arrow_keys=True, entry=None, visible=True, items=None):
+                 enable_arrow_keys=True, entry=None, visible=True, items=None,
+                 item_selected_callback=None):
 
         self.widget = None
         self.dropdown = None
         self.entry = entry
         self.enable_arrow_keys = enable_arrow_keys
+        self.item_selected_callback = item_selected_callback
 
         self._ids = {}
         self._positions = {}
@@ -451,7 +453,7 @@ class ComboBox:
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
 
-        self.dropdown.connect("scroll-event", self.on_button_scroll_event)
+        self.dropdown.connect("scroll-event", self._on_button_scroll_event)
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
@@ -500,6 +502,23 @@ class ComboBox:
 
         return factory
 
+    def _update_item_entry_text(self):
+        """ Set text entry text to the same value as selected item """
+
+        if GTK_API_VERSION == 3:
+            # Already supported natively in GTK 3
+            return
+
+        item = self.dropdown.get_selected_item()
+
+        if item is None:
+            return
+
+        item_text = item.get_string()
+
+        if self.get_text() != item_text:
+            self.set_text(item_text)
+
     """ General """
 
     def append(self, item, item_id=None):
@@ -541,23 +560,19 @@ class ComboBox:
 
     def set_selected_pos(self, position):
 
+        if position is None:
+            return
+
         if GTK_API_VERSION >= 4:
             self.dropdown.set_selected(position)
         else:
             self.dropdown.set_active(position)
 
     def set_selected_id(self, item_id):
-
-        position = self._positions.get(item_id)
-
-        if position is None:
-            position = 0
-
-        self.set_selected_pos(position)
+        self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
         self.entry.set_text(text)
-        self.set_selected_id(text)
 
     def remove_pos(self, position):
 
@@ -574,8 +589,16 @@ class ComboBox:
             self._entry_completion.remove_completion(self._ids[position])
 
     def remove_id(self, item_id):
-        position = self._positions[item_id]
+
+        position = self._positions.pop(item_id)
         self.remove_pos(position)
+
+        # Update positions for items after the removed one
+        for pos in range(position, len(self._positions)):
+            next_item_id = self._ids.pop(pos + 1)
+
+            self._ids[pos] = next_item_id
+            self._positions[next_item_id] = pos
 
     def clear(self):
 
@@ -644,7 +667,7 @@ class ComboBox:
         self.set_selected_pos(new_position)
         return True
 
-    def on_button_scroll_event(self, *_args):
+    def _on_button_scroll_event(self, *_args):
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
@@ -655,6 +678,8 @@ class ComboBox:
         if not visible:
             self.entry.grab_focus_without_selecting()
             return
+
+        self.set_selected_id(self.get_text())
 
         if GTK_API_VERSION == 3:
             return
@@ -673,23 +698,19 @@ class ComboBox:
         if self.entry is None:
             return
 
-        if GTK_API_VERSION >= 4:
-            item = self.dropdown.get_selected_item()
-
-            if item is None:
-                return
-
-            # Set text entry text to the same value as selected item
-            item_text = item.get_string()
-
-            if self.get_text() != item_text:
-                self.set_text(item_text)
-
-        elif self.get_selected_pos() == -1:
-            return
+        # Update text entry with text from the selected item
+        self._update_item_entry_text()
 
         # Cursor is normally placed at the beginning, move to the end
         self.entry.set_position(-1)
+
+        if self.item_selected_callback is None:
+            return
+
+        selected_id = self.get_selected_id()
+
+        if selected_id is not None:
+            self.item_selected_callback(self, selected_id)
 
 
 class TextSearchBar:

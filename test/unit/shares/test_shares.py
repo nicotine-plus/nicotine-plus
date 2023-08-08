@@ -33,13 +33,14 @@ class SharesTest(TestCase):
         config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
         config.filename = os.path.join(config.data_dir, "temp_config")
 
-        core.init_components()
+        core.init_components(enabled_components={"shares"})
 
         config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
         core.shares.rescan_shares(use_thread=False)
 
     def tearDown(self):
-        core.shares.close_shares(core.shares.share_dbs)
+        core.quit()
+        self.assertIsNone(core.shares)
 
     def test_shares_scan(self):
         """ Test a full shares scan """

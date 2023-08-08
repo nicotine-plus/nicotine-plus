@@ -34,6 +34,7 @@ server messages and p2p messages (between clients). """
 
 
 INT32_UNPACK = Struct("<i").unpack_from
+DOUBLE_UINT32_UNPACK = Struct("<II").unpack_from
 UINT32_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
@@ -845,17 +846,15 @@ class SetStatus(ServerMessage):
 
 class ServerPing(ServerMessage):
     """ Server code: 32 """
-    """ We test if the server responds. """
-    """ DEPRECATED """
+    """ We send this to the server at most once per minute to ensure the
+    connection stays alive.
+
+    Nicotine+ uses TCP keepalive instead. """
 
     __slots__ = ()
 
     def make_network_message(self):
         return b""
-
-    def parse_network_message(self, message):
-        # Empty message
-        pass
 
 
 class SendConnectToken(ServerMessage):
@@ -3442,7 +3441,7 @@ NETWORK_MESSAGE_EVENTS = {
     RoomSearch: "file-search-request-server",
     RoomTickerAdd: "ticker-add",
     RoomTickerRemove: "ticker-remove",
-    RoomTickerState: "ticker-set",
+    RoomTickerState: "ticker-state",
     SayChatroom: "say-chat-room",
     SharedFileListRequest: "shared-file-list-request",
     SharedFileListResponse: "shared-file-list-response",
@@ -3486,7 +3485,7 @@ SERVER_MESSAGE_CODES = {
     FileSearchRoom: 25,           # Obsolete
     FileSearch: 26,
     SetStatus: 28,
-    ServerPing: 32,               # Deprecated
+    ServerPing: 32,
     SendConnectToken: 33,         # Obsolete
     SendDownloadSpeed: 34,        # Obsolete
     SharedFoldersFiles: 35,

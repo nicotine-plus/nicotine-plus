@@ -14,6 +14,7 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 [Daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) are built in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build of Nicotine+, run the following:
 
 ```sh
+sudo apt update
 sudo apt install python3-launchpadlib software-properties-common
 sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu jammy main'
 sudo apt install nicotine

@@ -22,6 +22,8 @@
 
 import sys
 
+from collections import deque
+
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -242,6 +244,7 @@ class IconNotebook:
         self.pages = {}
         self.tab_labels = {}
         self.unread_pages = {}
+        self.recently_removed_pages = deque(maxlen=5)  # Low limit to prevent excessive server traffic
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
@@ -366,11 +369,19 @@ class IconNotebook:
     def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
         self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=0)
 
-    def remove_page(self, page):
+    def restore_removed_page(self, *_args):
+        if self.recently_removed_pages:
+            self.on_restore_removed_page(page_args=self.recently_removed_pages.pop())
+
+    def remove_page(self, page, page_args=None):
 
         self.widget.remove_page(self.page_num(page))
         self._remove_unread_page(page)
         del self.tab_labels[page]
+
+        if page_args:
+            # Allow for restoring page after closing it
+            self.recently_removed_pages.append(page_args)
 
         if self.get_n_pages() == 0:
             self.parent.set_visible(False)
@@ -382,7 +393,7 @@ class IconNotebook:
             title=_("Close All Tabs?"),
             message=_("Do you really want to close all tabs?"),
             destructive_response_id="ok",
-            callback=self.on_remove_all_pages
+            callback=self._on_remove_all_pages
         ).show()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
@@ -561,8 +572,18 @@ class IconNotebook:
             # Show active page and focus default widget
             self.emit_switch_page_signal()
 
+    def on_restore_removed_page(self, page_args):
+        raise NotImplementedError
+
     def on_remove_page(self, _notebook, new_page, _page_num):
         self._remove_unread_page(new_page)
+
+    def _on_remove_all_pages(self, *args):
+
+        self.on_remove_all_pages(args)
+
+        # Don't allow restoring tabs after removing all
+        self.recently_removed_pages.clear()
 
     def on_remove_all_pages(self, *_args):
         raise NotImplementedError
@@ -634,10 +655,12 @@ class IconNotebook:
 
         self.popup_menu_pages.add_items(
             ("", None),
+            ("#" + _("Re_open Closed Tab"), self.restore_removed_page),
             ("#" + _("Close All Tabs…"), self.remove_all_pages)
         )
 
         self.popup_menu_pages.update_model()
+        self.popup_menu_pages.actions[_("Re_open Closed Tab")].set_enabled(bool(self.recently_removed_pages))
 
         if GTK_API_VERSION == 3:
             self.popup_menu_pages.popup(pos_x=0, pos_y=0)

@@ -617,46 +617,44 @@ class SharesPage:
             }
         }
 
-    def _set_shared_folder_buddy_only(self, iterator, is_buddy_only):
+    def _edit_shared_folder(self, iterator, new_virtual_name, new_is_buddy_only):
 
-        if is_buddy_only == self.shares_list_view.get_row_value(iterator, "buddy_only"):
+        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
+
+        if new_virtual_name == virtual_name and new_is_buddy_only == is_buddy_only:
             return
 
         self.rescan_required = True
 
-        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-        mapping = (virtual_name, folder_path)
+        group_name = "buddy" if new_is_buddy_only else "public"
 
-        self.shares_list_view.set_row_value(iterator, "buddy_only", is_buddy_only)
+        core.shares.remove_share(
+            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
+        )
+        new_virtual_name = core.shares.add_share(
+            folder_path, group_name=group_name, virtual_name=new_virtual_name,
+            share_groups=(self.shared_folders, self.buddy_shared_folders), validate_path=False
+        )
 
-        if is_buddy_only:
-            self.shared_folders.remove(mapping)
-            self.buddy_shared_folders.append(mapping)
-            return
-
-        self.buddy_shared_folders.remove(mapping)
-        self.shared_folders.append(mapping)
+        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.set_row_value(iterator, "buddy_only", new_is_buddy_only)
 
     def on_add_shared_folder_selected(self, selected, _data):
 
         for folder_path in selected:
-            if folder_path is None:
-                continue
+            virtual_name = core.shares.add_share(
+                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders)
+            )
 
-            if folder_path in (x[1] for x in self.shared_folders + self.buddy_shared_folders):
+            if not virtual_name:
                 continue
 
             self.rescan_required = True
-
-            virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(folder_path), shared_folders=(self.shared_folders + self.buddy_shared_folders)
-            )
-            mapping = (virtual_name, folder_path)
             is_buddy_only = False
 
             self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
-            self.shared_folders.append(mapping)
 
     def on_add_shared_folder(self, *_args):
 
@@ -669,33 +667,10 @@ class SharesPage:
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual_name = dialog.get_entry_value()
-        is_buddy_only = dialog.get_option_value()
+        new_virtual_name = dialog.get_entry_value()
+        new_is_buddy_only = dialog.get_option_value()
 
-        if not virtual_name:
-            return
-
-        self.rescan_required = True
-
-        virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name, shared_folders=(self.shared_folders + self.buddy_shared_folders)
-        )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
-        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-
-        old_mapping = (old_virtual_name, folder_path)
-        new_mapping = (virtual_name, folder_path)
-
-        if old_mapping in self.buddy_shared_folders:
-            shared_folders = self.buddy_shared_folders
-        else:
-            shared_folders = self.shared_folders
-
-        shared_folders.remove(old_mapping)
-        shared_folders.append(new_mapping)
-
-        self.shares_list_view.set_row_value(iterator, "virtual_name", virtual_name)
-        self._set_shared_folder_buddy_only(iterator, is_buddy_only)
+        self._edit_shared_folder(iterator, new_virtual_name, new_is_buddy_only)
 
     def on_edit_shared_folder(self, *_args):
 
@@ -718,7 +693,11 @@ class SharesPage:
             return
 
     def on_toggle_folder_buddy_only(self, list_view, iterator):
-        self._set_shared_folder_buddy_only(iterator, is_buddy_only=not list_view.get_row_value(iterator, "buddy_only"))
+
+        virtual_name = list_view.get_row_value(iterator, "virtual_name")
+        is_buddy_only = list_view.get_row_value(iterator, "buddy_only")
+
+        self._edit_shared_folder(iterator, virtual_name, not is_buddy_only)
 
     def on_remove_shared_folder(self, *_args):
 
@@ -726,14 +705,10 @@ class SharesPage:
 
         for iterator in iterators:
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
-            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-            mapping = (virtual_name, folder_path)
 
-            if mapping in self.buddy_shared_folders:
-                self.buddy_shared_folders.remove(mapping)
-            else:
-                self.shared_folders.remove(mapping)
-
+            core.shares.remove_share(
+                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
+            )
             self.shares_list_view.remove_row(iterator)
 
         if iterators:

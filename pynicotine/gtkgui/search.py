@@ -122,6 +122,13 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
 
+    def on_restore_removed_page(self, page_args):
+        search_term, mode, room, users = page_args
+        core.search.do_search(search_term, mode, room=room, users=users)
+
+    def on_remove_all_pages(self, *_args):
+        core.search.remove_all_searches()
+
     def on_switch_search_page(self, _notebook, page, _page_num):
 
         if self.window.current_page_id != self.window.search_page.id:
@@ -134,9 +141,6 @@ class Searches(IconNotebook):
             tab.update_filter_widgets()
             self.window.application.notifications.update_title()
             break
-
-    def on_remove_all_pages(self, *_args):
-        core.search.remove_all_searches()
 
     def on_search_mode(self, action, state):
 
@@ -163,7 +167,7 @@ class Searches(IconNotebook):
         user = self.user_search_combobox.get_text()
 
         self.window.search_entry.set_text("")
-        core.search.do_search(text, mode, room=room, user=user)
+        core.search.do_search(text, mode, room=room, users=[user])
 
     def populate_search_history(self):
 
@@ -176,12 +180,15 @@ class Searches(IconNotebook):
         for term in config.sections["searches"]["history"]:
             self.search_combobox.append(str(term))
 
-    def create_page(self, token, text, mode=None, mode_label=None, show_page=True):
+    def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
+                    show_page=True):
 
         page = self.pages.get(token)
 
         if page is None:
-            self.pages[token] = page = Search(self, text, token, mode, mode_label, show_page)
+            self.pages[token] = page = Search(
+                self, text=text, token=token, mode=mode, mode_label=mode_label,
+                room=room, users=users, show_page=show_page)
         else:
             mode_label = page.mode_label
 
@@ -206,17 +213,19 @@ class Searches(IconNotebook):
 
         mode = search.mode
         mode_label = None
+        room = search.room
+        users = search.users
 
         if mode == "rooms":
-            mode_label = search.room.strip()
+            mode_label = room.strip()
 
         elif mode == "user":
-            mode_label = ",".join(search.users)
+            mode_label = ",".join(users)
 
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term, mode, mode_label)
+        self.create_page(token, search.term, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
@@ -242,7 +251,7 @@ class Searches(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container)
+        self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
         del self.pages[token]
 
     def clear_search_history(self):
@@ -327,7 +336,7 @@ class Search:
         "filterlength": (None, "")
     }
 
-    def __init__(self, searches, text, token, mode, mode_label, show_page):
+    def __init__(self, searches, text, token, mode, mode_label, room, users, show_page):
 
         (
             self.add_wish_button,
@@ -384,6 +393,8 @@ class Search:
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
+        self.room = room
+        self.searched_users = users
         self.show_page = show_page
         self.users = {}
         self.folders = {}
@@ -392,6 +403,7 @@ class Search:
         self.filters = {}
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
+        self.refiltering = False
         self.active_filter_count = 0
         self.num_results_found = 0
         self.num_results_visible = 0
@@ -405,31 +417,31 @@ class Search:
         # Combo boxes
         self.filter_include_combobox = ComboBox(
             container=self.filter_include_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_include_entry)
+            entry=self.filter_include_entry, item_selected_callback=self.on_refilter)
 
         self.filter_exclude_combobox = ComboBox(
             container=self.filter_exclude_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_exclude_entry)
+            entry=self.filter_exclude_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_type_combobox = ComboBox(
             container=self.filter_file_type_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_file_type_entry)
+            entry=self.filter_file_type_entry, item_selected_callback=self.on_refilter)
 
         self.filter_file_size_combobox = ComboBox(
             container=self.filter_file_size_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_file_size_entry)
+            entry=self.filter_file_size_entry, item_selected_callback=self.on_refilter)
 
         self.filter_bitrate_combobox = ComboBox(
             container=self.filter_bitrate_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_bitrate_entry)
+            entry=self.filter_bitrate_entry, item_selected_callback=self.on_refilter)
 
         self.filter_length_combobox = ComboBox(
             container=self.filter_length_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_length_entry)
+            entry=self.filter_length_entry, item_selected_callback=self.on_refilter)
 
         self.filter_country_combobox = ComboBox(
             container=self.filter_country_container, has_entry=True, enable_arrow_keys=False,
-            entry=self.filter_country_entry)
+            entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
             self.window, parent=self.tree_container, name="file_search",
@@ -527,7 +539,7 @@ class Search:
         )
 
         # Popup menus
-        self.popup_menu_users = UserPopupMenu(self.window.application)
+        self.popup_menu_users = UserPopupMenu(self.window.application, tab_name="search")
 
         self.popup_menu_copy = PopupMenu(self.window.application)
         self.popup_menu_copy.add_items(
@@ -536,10 +548,10 @@ class Search:
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = FilePopupMenu(self.window.application, self.tree_view.widget, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(
+            self.window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
+        )
         self.popup_menu.add_items(
-            ("#" + "selected_files", None),
-            ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
@@ -595,7 +607,7 @@ class Search:
             combobox.entry.filter_id = filter_id
 
             buffer = combobox.entry.get_buffer()
-            buffer.connect("inserted-text", self.on_filter_entry_inserted_text, combobox)
+            buffer.connect_after("deleted-text", self.on_filter_entry_deleted_text)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_default_filters()
@@ -1190,7 +1202,6 @@ class Search:
 
     def add_popup_menu_user(self, popup, user):
 
-        popup.setup_user_menu(user)
         popup.add_items(
             ("", None),
             ("#" + _("Select User's Results"), self.on_select_user_results, user)
@@ -1208,7 +1219,7 @@ class Search:
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = UserPopupMenu(self.window.application)
+                popup = UserPopupMenu(self.window.application, username=user, tab_name="search")
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
@@ -1216,6 +1227,7 @@ class Search:
 
         # Single user, add items directly to "User Actions" submenu
         user = next(iter(self.selected_users), None)
+        self.popup_menu_users.setup_user_menu(user)
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):
@@ -1586,6 +1598,8 @@ class Search:
         if self.populating_filters:
             return
 
+        self.refiltering = True
+
         filter_in = filter_out = filter_size = filter_bitrate = filter_country = filter_file_type = filter_length = None
         filter_in_str = self.filter_include_combobox.get_text().strip()
         filter_out_str = self.filter_exclude_combobox.get_text().strip()
@@ -1687,16 +1701,10 @@ class Search:
         self.clear_model()
         self.update_model()
 
-    def on_filter_entry_inserted_text(self, _buffer, _position, chars, n_chars, combobox):
+        self.refiltering = False
 
-        if n_chars > 1 and chars == combobox.get_selected_id():
-            self.on_refilter()
-
-            # Highlight current list item
-            combobox.set_selected_id(chars)
-
-    def on_filter_entry_changed(self, entry):
-        if not entry.get_text():
+    def on_filter_entry_deleted_text(self, buffer, *_args):
+        if not self.refiltering and buffer.get_length() == 0:
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
