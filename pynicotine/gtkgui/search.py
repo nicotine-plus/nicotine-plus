@@ -1711,21 +1711,26 @@ class Search:
 
     def on_filter_entry_icon_press(self, entry, *_args):
 
-        history = config.sections["searches"].get(entry.filter_id)
-        recall_text = history[0] if history else ""
-        text = entry.get_text()
+        entry_text = entry.get_text()
+        filter_id = entry.filter_id
+        _filter_value, h_filter_value = self.filters.get(filter_id)
 
-        # Recall last filter entry if box empty
-        if not text:
-            entry.grab_focus_without_selecting()
+        if not entry_text:
+            # Recall last filter
+            history = config.sections["searches"].get(filter_id)
+            recall_text = history[0] if history else ""
+
             entry.set_text(recall_text)
             entry.set_position(-1)
+            entry.grab_focus_without_selecting()
 
-        # Activate new filter entry or Clear Filter
-        if text != recall_text:
-            self.on_refilter()
-        else:
+        elif entry_text == h_filter_value:
+            # Clear Filter
             entry.set_text("")
+            return
+
+        # Activate new, edited or recalled filter
+        self.on_refilter()
 
     def on_clear_undo_filters(self, *_args):
 
