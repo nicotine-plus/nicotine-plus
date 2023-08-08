@@ -768,8 +768,9 @@ class SpellChecker:
         except (ImportError, ValueError):
             pass
 
-    def is_available(self):
-        self._load_module()
+    @classmethod
+    def is_available(cls):
+        cls._load_module()
         return bool(SpellChecker.module)
 
     def reset(self):
