@@ -28,9 +28,10 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
 
 ```sh
-sudo apt update && sudo apt install python3-launchpadlib software-properties-common
-sudo add-apt-repository -u 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
-sudo apt install nicotine
+sudo apt update; sudo apt install python3-launchpadlib software-properties-common
+sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
+sudo apt update; sudo apt install nicotine
 ```
 
 If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
