@@ -30,6 +30,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_DIR
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
+from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
@@ -127,7 +128,8 @@ def set_visual_settings():
 
 def set_global_css():
 
-    css = b"""
+    css = bytearray()
+    css_default = b"""
     /* Tweaks */
 
     flowbox, flowboxchild {
@@ -290,13 +292,28 @@ def set_global_css():
     }
     """
 
+    css_libadwaita_1_4 = b"""
+    /* Tweaks (libadwaita 1.4+) */
+
+    window:not(.preferences-border) headerbar.titlebar {
+        /* Make title/header bars flat to match other libadwaita apps */
+        background: none;
+        box-shadow: none;
+        color: inherit;
+    }
+    """
+
     global_css_provider = Gtk.CssProvider()
+    css.extend(css_default)
 
     if GTK_API_VERSION >= 4:
-        css += css_gtk4
+        css.extend(css_gtk4)
 
         if LIBADWAITA_API_VERSION:
-            css += css_libadwaita
+            css.extend(css_libadwaita)
+
+        if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
+            css.extend(css_libadwaita_1_4)
 
         load_css(global_css_provider, css)
 
@@ -305,7 +322,7 @@ def set_global_css():
         )
 
     else:
-        css += css_gtk3
+        css.extend(css_gtk3)
         load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
