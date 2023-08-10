@@ -11,18 +11,24 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ### Ubuntu/Debian
 
-[Daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) are built in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build of Nicotine+, run the following:
+To use [unstable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/unstable) on Ubuntu and Debian, add the *nicotine-team/unstable* PPA repository.
+
+On Ubuntu and distributions based on it (e.g. Linux Mint, elementary OS, Pop!_OS, various Ubuntu flavors), run the following:
+
+```sh
+sudo add-apt-repository ppa:nicotine-team/unstable
+sudo apt update; sudo apt install nicotine
+```
+
+On Debian and distributions based on it (e.g. Devuan, Peppermint OS), run the following:
 
 ```sh
 sudo apt update; sudo apt install python3-launchpadlib software-properties-common
 sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu jammy main'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
 sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
-
-Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip). Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
 
 ### Flatpak
 

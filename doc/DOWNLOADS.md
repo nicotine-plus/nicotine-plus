@@ -25,18 +25,24 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 
 ### Ubuntu/Debian
 
-To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository.
+
+On Ubuntu and distributions based on it (e.g. Linux Mint, elementary OS, Pop!_OS, various Ubuntu flavors), run the following:
+
+```sh
+sudo add-apt-repository ppa:nicotine-team/stable
+sudo apt update; sudo apt install nicotine
+```
+
+On Debian and distributions based on it (e.g. Devuan, Peppermint OS), run the following:
 
 ```sh
 sudo apt update; sudo apt install python3-launchpadlib software-properties-common
 sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
 sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
-
-Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
+If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip). Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
 ### Flatpak (GNU/Linux)
 
