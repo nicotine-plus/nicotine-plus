@@ -1688,6 +1688,11 @@ class UserInterfacePage:
             "interests": self.tab_visible_interests_toggle
         }
 
+        rgba = Gdk.RGBA()
+
+        for button in self.color_buttons.values():
+            button.set_rgba(rgba)
+
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
