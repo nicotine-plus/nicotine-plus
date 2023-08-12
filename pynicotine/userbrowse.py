@@ -145,10 +145,6 @@ class UserBrowse:
 
         filename_encoded = encode_path(filename)
 
-        def json_keys_to_integer(dictionary):
-            # JSON stores file attribute types as strings, convert them back to integers
-            return {int(k): v for k, v in dictionary}
-
         try:
             try:
                 # Try legacy format first
@@ -161,7 +157,8 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename_encoded, encoding="utf-8") as file_handle:
-                    shares_list = json.load(file_handle, object_pairs_hook=json_keys_to_integer)
+                    # JSON stores file attribute types as strings, convert them back to integers with object_hook
+                    shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
             # Basic sanity check
             for _folder, files in shares_list:
@@ -196,8 +193,21 @@ class UserBrowse:
             path = os.path.join(shares_folder, clean_file(user))
 
             with open(encode_path(path), "w", encoding="utf-8") as file_handle:
-                # Add line breaks for readability, but avoid indentation to decrease file size
-                json.dump(list(self.user_shares[user].items()), file_handle, ensure_ascii=False, indent=0)
+                # Dump every folder to the file individually to avoid large memory usage
+                json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+                is_first_item = True
+
+                file_handle.write("[")
+
+                for item in self.user_shares[user].items():
+                    if is_first_item:
+                        is_first_item = False
+                    else:
+                        file_handle.write(", ")
+
+                    file_handle.write(json_encoder.encode(item))
+
+                file_handle.write("]")
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {"user": user, "dir": shares_folder})

@@ -263,21 +263,14 @@ class Transfers:
     def load_transfers_file(transfers_file):
         """Loads a file of transfers in json format."""
 
-        def json_keys_to_integer(dictionary):
-            # JSON stores file attribute types as strings, convert them back to integers
-            try:
-                return {int(k): v for k, v in dictionary}
-
-            except ValueError:
-                return dictionary
-
         transfers_file = encode_path(transfers_file)
 
         if not os.path.isfile(transfers_file):
             return None
 
         with open(transfers_file, encoding="utf-8") as handle:
-            return json.load(handle, object_pairs_hook=json_keys_to_integer)
+            # JSON stores file attribute types as strings, convert them back to integers with object_hook
+            return json.load(handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
     @staticmethod
     def load_legacy_transfers_file(transfers_file):
@@ -2682,11 +2675,11 @@ class Transfers:
             for upload in reversed(self.uploads) if upload.status == "Finished"
         ]
 
-    def save_downloads_callback(self, filename):
-        json.dump(self.get_downloads(), filename, ensure_ascii=False)
+    def save_downloads_callback(self, file_handle):
+        file_handle.write(json.dumps(self.get_downloads(), check_circular=False, ensure_ascii=False))
 
-    def save_uploads_callback(self, filename):
-        json.dump(self.get_uploads(), filename, ensure_ascii=False)
+    def save_uploads_callback(self, file_handle):
+        file_handle.write(json.dumps(self.get_uploads(), check_circular=False, ensure_ascii=False))
 
     def save_transfers(self):
         """Save list of transfers."""
