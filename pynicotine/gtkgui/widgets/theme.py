@@ -705,6 +705,11 @@ def update_custom_css():
         )
 
 
+def update_tag_property(tag, property_name, value):
+    if tag.get_property(property_name) != value:
+        tag.set_property(property_name, value)
+
+
 def update_tag_visuals(tag, color_id):
 
     enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
@@ -715,31 +720,28 @@ def update_tag_visuals(tag, color_id):
         color_hex = None
 
     if not color_hex:
-        tag.set_property("foreground-set", False)
+        update_tag_property(tag, "foreground-set", False)
     else:
-        tag.set_property("foreground", color_hex)
+        rgba = Gdk.RGBA()
+        rgba.parse(color_hex)
+
+        update_tag_property(tag, "foreground-rgba", rgba)
 
     # URLs
     if color_id == "urlcolor":
-        tag.set_property("underline", Pango.Underline.SINGLE)
+        update_tag_property(tag, "underline", Pango.Underline.SINGLE)
 
     # Hotspots
     if not is_hotspot_tag:
         return
 
-    usernamestyle = config.sections["ui"]["usernamestyle"]
+    username_style = config.sections["ui"]["usernamestyle"]
 
-    if usernamestyle == "bold":
-        tag.set_property("weight", Pango.Weight.BOLD)
-    else:
-        tag.set_property("weight", Pango.Weight.NORMAL)
+    weight_style = Pango.Weight.BOLD if username_style == "bold" else Pango.Weight.NORMAL
+    update_tag_property(tag, "weight", weight_style)
 
-    if usernamestyle == "italic":
-        tag.set_property("style", Pango.Style.ITALIC)
-    else:
-        tag.set_property("style", Pango.Style.NORMAL)
+    italic_style = Pango.Style.ITALIC if username_style == "italic" else Pango.Style.NORMAL
+    update_tag_property(tag, "style", italic_style)
 
-    if usernamestyle == "underline":
-        tag.set_property("underline", Pango.Underline.SINGLE)
-    else:
-        tag.set_property("underline", Pango.Underline.NONE)
+    underline_style = Pango.Underline.SINGLE if username_style == "underline" else Pango.Underline.NONE
+    update_tag_property(tag, "underline", underline_style)

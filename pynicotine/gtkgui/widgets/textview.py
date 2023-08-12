@@ -446,6 +446,7 @@ class ChatView(TextView):
     def get_user_tag(self, username):
 
         if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
             self.update_user_tag(username)
 
         return self.tag_users[username]
@@ -466,10 +467,10 @@ class ChatView(TextView):
 
     def update_user_tag(self, username):
 
-        status = UserStatus.OFFLINE
-
         if username not in self.tag_users:
-            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+            return
+
+        status = UserStatus.OFFLINE
 
         if username in self.status_users:
             status = core.user_statuses.get(username, UserStatus.OFFLINE)
