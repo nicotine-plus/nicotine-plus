@@ -148,8 +148,8 @@ class Transfers:
 
         self.allow_saving_transfers = True
 
-        # Save list of transfers every minute
-        events.schedule(delay=60, callback=self.save_transfers, repeat=True)
+        # Save list of transfers every 3 minutes
+        events.schedule(delay=180, callback=self.save_transfers, repeat=True)
 
         self.update_download_filters()
         self.update_download_limits()
