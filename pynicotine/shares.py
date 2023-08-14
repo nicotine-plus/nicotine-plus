@@ -81,8 +81,10 @@ class FileTypes:
         "7z", "br", "bz2", "gz", "iso", "lz", "lzma", "rar", "tar", "tbz", "tbz2", "tgz", "xz", "zip", "zst"
     }
     AUDIO = {
-        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "dff", "dts", "flac", "it", "m4a", "mid", "midi", "mod",
-        "mp1", "mp2", "mp3", "oga", "ogg", "opus", "s3m", "wav", "wma", "wv", "xm"
+        "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "au", "bwav", "bwf", "dff", "dsd", "dsf", "dts", "flac",
+        "gbs", "gym", "it", "m4a", "m4b", "mid", "midi", "mod", "mp1", "mp2", "mp3", "mp+", "mpc", "nsf", "nsfe",
+        "ofr", "ofs", "oga", "ogg", "opus", "psf", "psf1", "psf2", "s3m", "sid", "spc", "spx", "ssf", "tak", "tta",
+        "wav", "vgm", "vgz", "wma", "vqf", "wv", "xm"
     }
     EXECUTABLE = {
         "apk", "appimage", "bat", "deb", "dmg", "flatpak", "exe", "jar", "msi", "pkg", "rpm", "sh"
