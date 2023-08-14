@@ -83,7 +83,7 @@ class FileTypes:
     }
     AUDIO = {
         "aac", "ac3", "afc", "aifc", "aif", "aiff", "ape", "au", "bwav", "bwf", "dff", "dsd", "dsf", "dts", "flac",
-        "gbs", "gym", "it", "m4a", "m4b", "mid", "midi", "mod", "mp1", "mp2", "mp3", "mp+", "mpc", "nsf", "nsfe",
+        "gbs", "gym", "it", "m4a", "m4b", "mid", "midi", "mka", "mod", "mp1", "mp2", "mp3", "mp+", "mpc", "nsf", "nsfe",
         "ofr", "ofs", "oga", "ogg", "opus", "psf", "psf1", "psf2", "s3m", "sid", "spc", "spx", "ssf", "tak", "tta",
         "wav", "vgm", "vgz", "wma", "vqf", "wv", "xm"
     }
@@ -95,9 +95,9 @@ class FileTypes:
         "raw", "svg", "svgz", "tif", "tiff", "webp"
     }
     DOCUMENT_TEXT = {
-        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mobi", "nfo",
-        "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256", "srt",
-        "txt", "xls", "xlsx", "xps"
+        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "mobi",
+        "nfo", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256",
+        "srt", "txt", "xls", "xlsx", "xps"
     }
     VIDEO = {
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
