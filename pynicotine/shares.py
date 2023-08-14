@@ -38,6 +38,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.external.tinytag import TinyTag
 from pynicotine.logfacility import LogLevel
 from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
@@ -128,9 +129,6 @@ class Scanner:
 
         try:
             rename_process(b"nicotine-scan")
-
-            from pynicotine.external.tinytag import TinyTag
-            self.tinytag = TinyTag()
 
             if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
                 # Failed to load shares, rebuild
@@ -403,17 +401,17 @@ class Scanner:
             try:
                 with os.scandir(encode_path(folder, prefix=False)) as entries:
                     for entry in entries:
+                        basename = entry.name.decode("utf-8", "replace")
+
                         if entry.is_file():
                             try:
                                 if not folder_unchanged:
-                                    filename = entry.name.decode("utf-8", "replace")
-
-                                    if self.is_hidden(folder, filename, entry):
+                                    if self.is_hidden(folder, basename, entry):
                                         continue
 
                                     # Get the metadata of the file
-                                    path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
-                                    data = self.get_file_info(filename, path, entry)
+                                    file_path = os.path.join(folder, basename)
+                                    data = self.get_file_info(basename, file_path, entry)
                                     file_list.append(data)
 
                             except Exception as error:
@@ -422,7 +420,7 @@ class Scanner:
 
                             continue
 
-                        path = os.path.join(folder, entry.name.decode("utf-8", "replace"))
+                        path = os.path.join(folder, basename)
 
                         if self.is_hidden(path, entry=entry):
                             continue
@@ -439,15 +437,29 @@ class Scanner:
 
         return files, streams, mtimes
 
-    def get_file_info(self, name, pathname, entry=None):
+    def get_audio_tag(self, encoded_file_path, size):
+
+        parser_class = TinyTag._get_parser_for_filename(encoded_file_path)  # pylint: disable=protected-access
+
+        if parser_class is None:
+            return None
+
+        with open(encoded_file_path, "rb") as file_handle:
+            tag = parser_class(file_handle, size)
+            tag.load(tags=False, duration=True, image=False)
+
+        return tag
+
+    def get_file_info(self, basename, file_path, entry=None):
         """Get file metadata."""
 
-        audio = None
+        tag = None
         quality = None
         duration = None
+        encoded_file_path = encode_path(file_path)
 
         if entry is None:
-            file_stat = os.stat(encode_path(pathname))
+            file_stat = os.stat(encoded_file_path)
         else:
             file_stat = entry.stat()
 
@@ -456,17 +468,17 @@ class Scanner:
         # We skip metadata scanning of files without meaningful content
         if size > 128:
             try:
-                audio = self.tinytag.get(encode_path(pathname), tags=False, size=size)
+                tag = self.get_audio_tag(encoded_file_path, size)
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
-                               {"path": pathname, "error": error}, LogLevel.DEFAULT))
+                               {"path": file_path, "error": error}, LogLevel.DEFAULT))
 
-        if audio is not None:
-            bitrate = audio.bitrate
-            samplerate = audio.samplerate
-            bitdepth = audio.bitdepth
-            duration = audio.duration
+        if tag is not None:
+            bitrate = tag.bitrate
+            samplerate = tag.samplerate
+            bitdepth = tag.bitdepth
+            duration = tag.duration
 
             if bitrate is not None:
                 bitrate = int(bitrate + 0.5)  # Round the value with minimal performance loss
@@ -492,9 +504,9 @@ class Scanner:
                 if not UINT32_LIMIT > bitdepth >= 0:
                     bitdepth = None
 
-            quality = (bitrate, int(audio.is_vbr), samplerate, bitdepth)
+            quality = (bitrate, int(tag.is_vbr), samplerate, bitdepth)
 
-        return [name, size, quality, duration]
+        return [basename, size, quality, duration]
 
     @staticmethod
     def get_dir_stream(folder):
