@@ -2870,6 +2870,14 @@ class Preferences(Dialog):
         return (portmap_required, rescan_required, user_profile_required, completion_required,
                 ip_ban_required, search_required, options)
 
+    def _update_settings_closed(self, rescan_required):
+
+        if rescan_required:
+            core.shares.rescan_shares()
+
+        if config.need_config():
+            core.setup()
+
     def update_settings(self, settings_closed=False):
 
         (portmap_required, rescan_required, user_profile_required, completion_required,
@@ -2946,16 +2954,13 @@ class Preferences(Dialog):
         if not settings_closed:
             return
 
-        if rescan_required:
-            core.shares.rescan_shares()
-
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
             self.application.window.show()
 
-        if config.need_config():
-            core.setup()
+        # Slight delay to allow dialog to close fully
+        GLib.idle_add(self._update_settings_closed, rescan_required)
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
