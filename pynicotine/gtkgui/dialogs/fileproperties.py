@@ -96,7 +96,7 @@ class FileProperties(Dialog):
 
         size = properties["size"]
         h_size = human_size(properties["size"])
-        bytes_size = humanize(properties["size"])
+        bytes_size = properties["size"]  # Don't humanize for easier use in filters
 
         self.filename_value_label.set_text(properties["filename"])
         self.folder_value_label.set_text(properties["directory"])
