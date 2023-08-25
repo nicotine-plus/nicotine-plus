@@ -253,7 +253,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. In order to allow users to connect to you without trouble, an open listening port is crucial.</property>
+                <property name="label" translatable="yes">Nicotine+ uses a peer-to-peer network to connect to other users. To make sure that other users can connect to you without problems, it is important to have an open listening port.</property>
                 <property name="max-width-chars">60</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
