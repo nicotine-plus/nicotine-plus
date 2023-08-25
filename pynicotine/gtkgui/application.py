@@ -344,8 +344,8 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
         title = _("Invalid Password")
-        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                "if this is your first time logging in.") % config.sections["server"]["login"]
+        msg = _("Either user %s already exists, or the password you entered is invalid."
+                " If this is the first time you log in, please choose a different username.") % config.sections["server"]["login"]
 
         OptionDialog(
             parent=self.window,
