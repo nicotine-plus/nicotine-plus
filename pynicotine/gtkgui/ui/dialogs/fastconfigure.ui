@@ -253,7 +253,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Nicotine+ uses a peer-to-peer network to connect to other users. To make sure that other users can connect to you without problems, it is important to have an open listening port.</property>
+                <property name="label" translatable="yes">To make connections with other Soulseek peers, a listening port on your router has to be forwarded to your computer.</property>
                 <property name="max-width-chars">60</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
