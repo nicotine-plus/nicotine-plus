@@ -95,12 +95,11 @@ class FileProperties(Dialog):
             button.set_visible(len(self.properties) > 1)
 
         size = properties["size"]
-        h_size = human_size(properties["size"])
-        bytes_size = properties["size"]  # Don't humanize for easier use in filters
+        h_size = human_size(size)
 
         self.filename_value_label.set_text(properties["filename"])
         self.folder_value_label.set_text(properties["directory"])
-        self.filesize_value_label.set_text(f"{h_size} ({bytes_size} B)")
+        self.filesize_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
         self.username_value_label.set_text(properties["user"])
 
         path = properties.get("path") or ""
