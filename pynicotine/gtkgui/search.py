@@ -165,9 +165,10 @@ class Searches(IconNotebook):
         mode = self.window.lookup_action("search-mode").get_state().get_string()
         room = self.room_search_combobox.get_text()
         user = self.user_search_combobox.get_text()
+        users = [user] if user else []
 
         self.window.search_entry.set_text("")
-        core.search.do_search(text, mode, room=room, users=[user])
+        core.search.do_search(text, mode, room=room, users=users)
 
     def populate_search_history(self):
 
