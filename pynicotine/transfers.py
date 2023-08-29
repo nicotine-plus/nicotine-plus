@@ -646,10 +646,10 @@ class Transfers:
 
         statuses = {"Queued", "Getting status", "Transferring"}
 
-        return next(
-            (upload.filename == filename and upload.status in statuses and upload.user == user
-             for upload in self.uploads), False
-        )
+        return bool(next(
+            (upload for upload in self.uploads
+             if upload.filename == filename and upload.status in statuses and upload.user == user), None
+        ))
 
     @staticmethod
     def file_is_readable(filename, real_path):
