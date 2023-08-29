@@ -992,7 +992,11 @@ class Search:
     def add_filter_history_item(self, filter_id, value):
 
         combobox = self.filter_comboboxes[filter_id]
-        position = len(self.FILTER_PRESETS.get(filter_id)) + 1
+        position = len(self.FILTER_PRESETS.get(filter_id, ()))
+
+        if position:
+            position += 1  # Separator item
+
         num_items_limit = core.search.RESULT_FILTER_HISTORY_LIMIT + position
 
         combobox.remove_id(value)
