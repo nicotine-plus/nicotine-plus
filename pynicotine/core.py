@@ -246,24 +246,20 @@ class Core:
     def setup(self):
         events.emit("setup")
 
-    def confirm_quit(self, remember=False):
+    def confirm_quit(self):
+        events.emit("confirm-quit")
 
-        if config.sections["ui"]["exitdialog"] > 0:
-            events.emit("confirm-quit", remember)
-            return
+    def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
 
-        self.quit()
-
-    def quit(self, signal_type=None, _frame=None):
-
-        log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
-            "program": config.application_name,
-            "version": config.version,
-            "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
-        })
+        if not should_finish_uploads:
+            log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
+                "program": config.application_name,
+                "version": config.version,
+                "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
+            })
 
         # Allow the networking thread to finish up before quitting
-        events.emit("schedule-quit")
+        events.emit("schedule-quit", should_finish_uploads)
 
     def connect(self):
 
@@ -352,7 +348,7 @@ class Core:
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
 
-    def _schedule_quit(self):
+    def _schedule_quit(self, _should_finish_uploads):
         events.emit("quit")
 
     def _quit(self):

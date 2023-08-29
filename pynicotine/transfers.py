@@ -92,6 +92,7 @@ class Transfers:
     def __init__(self):
 
         self.allow_saving_transfers = False
+        self.pending_shutdown = False
         self.downloads = deque()
         self.uploads = deque()
         self.privileged_users = set()
@@ -127,6 +128,7 @@ class Transfers:
             ("queue-upload", self._queue_upload),
             ("quit", self._quit),
             ("remove-privileged-user", self._remove_from_privileged),
+            ("schedule-quit", self._schedule_quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
@@ -154,6 +156,14 @@ class Transfers:
         self.update_download_filters()
         self.update_download_limits()
         self.update_upload_limits()
+
+    def _schedule_quit(self, should_finish_uploads):
+
+        if not should_finish_uploads:
+            return
+
+        self.pending_shutdown = True
+        self.check_upload_queue()
 
     def _quit(self):
 
@@ -225,8 +235,10 @@ class Transfers:
         self.requested_folders.clear()
         self.transfer_request_times.clear()
         self.user_update_counters.clear()
-
         self.user_update_counter = 0
+
+        # Quit in case we were waiting for uploads to finish
+        self.check_upload_queue()
 
     # Load Transfers #
 
@@ -2206,6 +2218,10 @@ class Transfers:
         if self.file_is_upload_queued(username, virtual_path):
             return False, "Queued"
 
+        # Are we waiting for existing uploads to finish?
+        if self.pending_shutdown:
+            return False, "Pending shutdown."
+
         # Has user hit queue limit?
         enable_limits = True
 
@@ -2285,6 +2301,7 @@ class Transfers:
                 if username in first_queued_transfers:
                     del first_queued_transfers[username]
 
+        has_active_uploads = bool(uploading_users)
         oldest_time = None
         target_username = None
 
@@ -2321,24 +2338,20 @@ class Transfers:
                 target_username = username
                 oldest_time = update_time
 
-        if not target_username:
-            return None
-
-        return first_queued_transfers[target_username]
+        return first_queued_transfers.get(target_username), has_active_uploads
 
     def check_upload_queue(self):
         """Find next file to upload."""
 
-        if not self.uploads:
-            # No uploads exist
-            return
-
         if not self.allow_new_uploads():
             return
 
-        upload_candidate = self.get_upload_candidate()
+        upload_candidate, has_active_uploads = self.get_upload_candidate()
 
         if upload_candidate is None:
+            if not has_active_uploads and self.pending_shutdown:
+                self.pending_shutdown = False
+                core.quit()
             return
 
         username = upload_candidate.user

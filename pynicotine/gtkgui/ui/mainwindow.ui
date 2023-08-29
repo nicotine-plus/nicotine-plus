@@ -1775,8 +1775,8 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="user_status_button">
-                <property name="action-name">app.away</property>
+              <object class="GtkToggleButton" id="user_status_button">
+                <property name="action-name">win.toggle-status</property>
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkBox">
