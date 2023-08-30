@@ -27,10 +27,10 @@ class Room:
 
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name=None, is_private=False):
+    def __init__(self, name=None):
 
         self.name = name
-        self.is_private = is_private
+        self.is_private = False
         self.users = set()
         self.tickers = {}
 
@@ -102,6 +102,11 @@ class ChatRooms:
                 core.send_message_to_server(slskmessages.JoinRoom(room))
 
     def _server_disconnect(self, _msg):
+
+        for room_obj in self.joined_rooms.values():
+            room_obj.tickers.clear()
+            room_obj.users.clear()
+
         self.server_rooms.clear()
         self.pending_autojoin_rooms.clear()
         self.update_completions()
@@ -250,7 +255,12 @@ class ChatRooms:
     def _join_room(self, msg):
         """Server code 14."""
 
-        self.joined_rooms[msg.room] = room_obj = Room(name=msg.room, is_private=msg.private)
+        room_obj = self.joined_rooms.get(msg.room)
+
+        if room_obj is None:
+            self.joined_rooms[msg.room] = room_obj = Room(name=msg.room)
+
+        room_obj.is_private = msg.private
 
         if msg.room not in config.sections["server"]["autojoin"]:
             config.sections["server"]["autojoin"].append(msg.room)
