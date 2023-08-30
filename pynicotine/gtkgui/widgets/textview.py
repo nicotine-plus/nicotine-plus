@@ -430,6 +430,10 @@ class ChatView(TextView):
             self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
                              timestamp_format=timestamp_format)
 
+    def clear(self):
+        super().clear()
+        self.tag_users.clear()
+
     def get_line_tag(self, user, text, login=None):
 
         if text.startswith("/me "):
