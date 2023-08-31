@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-08-23 13:54+0000\n"
+"Last-Translator: Gabriele <gabboxl0@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -313,7 +313,7 @@ msgstr "_No"
 
 #: pynicotine/gtkgui/application.py:307 pynicotine/gtkgui/mainwindow.py:662
 msgid "_Quit"
-msgstr "Esci"
+msgstr "_Esci"
 
 #: pynicotine/gtkgui/application.py:311
 msgid "_Run in Background"
@@ -504,7 +504,7 @@ msgstr "Pulisci Vista Attività"
 #: pynicotine/gtkgui/chatrooms.py:528 pynicotine/gtkgui/chatrooms.py:543
 #: pynicotine/gtkgui/chatrooms.py:548
 msgid "_Leave Room"
-msgstr "Abbandona Canale"
+msgstr "_Abbandona stanza"
 
 #: pynicotine/gtkgui/chatrooms.py:536 pynicotine/gtkgui/chatrooms.py:698
 #: pynicotine/gtkgui/privatechat.py:300 pynicotine/gtkgui/privatechat.py:356
@@ -621,9 +621,8 @@ msgstr "Inserisci nuovo nome per virtuale per '%(dir)s':"
 #: pynicotine/gtkgui/dialogs/preferences.py:1496
 #: pynicotine/gtkgui/dialogs/preferences.py:2338
 #: pynicotine/gtkgui/dialogs/wishlist.py:121
-#, fuzzy
 msgid "_Edit"
-msgstr "Modifica"
+msgstr "_Modifica"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:68
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:251
@@ -759,9 +758,8 @@ msgid "Change Password"
 msgstr "Cambia Password"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:231
-#, fuzzy
 msgid "_Change"
-msgstr "Scheda Cambiata"
+msgstr "_Cambia"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:275
 msgid "No one"
@@ -866,9 +864,8 @@ msgstr "Inserisci un nuovo filtro download:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1466
 #: pynicotine/gtkgui/dialogs/preferences.py:2309
 #: pynicotine/gtkgui/userlist.py:424
-#, fuzzy
 msgid "_Add"
-msgstr "_Aggiungi…"
+msgstr "_Aggiungi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:439
 #: pynicotine/gtkgui/dialogs/preferences.py:472
@@ -1012,7 +1009,6 @@ msgid "Edit Replacement"
 msgstr "Modifica sostituzione"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1612
-#, fuzzy
 msgid "System default"
 msgstr "Predefinito di sistema"
 
@@ -1235,7 +1231,7 @@ msgstr "Scegli un Nome File per il Backup di Configurazione"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:61
 msgid "Transfer Statistics"
-msgstr "Statistiche Trasferimento"
+msgstr "Statistiche trasferimento"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:81
 #, python-format
@@ -1253,7 +1249,7 @@ msgstr "Sei sicuro di voler azzerare le statistiche di trasferimento?"
 #: pynicotine/gtkgui/dialogs/wishlist.py:46
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:313
 msgid "Wishlist"
-msgstr "Lista dei Desideri"
+msgstr "Lista desideri"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:58 pynicotine/gtkgui/search.py:279
 msgid "Wish"
@@ -1471,7 +1467,7 @@ msgstr "Sfoglia Condivisi con Amici"
 
 #: pynicotine/gtkgui/mainwindow.py:721
 msgid "_Keyboard Shortcuts"
-msgstr "Scorciatoie da Tastiera"
+msgstr "_Scorciatoie tastiera"
 
 #: pynicotine/gtkgui/mainwindow.py:722
 msgid "_Setup Assistant"
@@ -1479,7 +1475,7 @@ msgstr "Configurazione Guidata"
 
 #: pynicotine/gtkgui/mainwindow.py:723
 msgid "_Transfer Statistics"
-msgstr "Statistiche Trasferimento"
+msgstr "_Statistiche trasferimento"
 
 #: pynicotine/gtkgui/mainwindow.py:725
 msgid "Report a _Bug"
@@ -1582,7 +1578,7 @@ msgstr "[Debug] Varie"
 
 #: pynicotine/gtkgui/mainwindow.py:1253
 msgid "_Find…"
-msgstr "Cerca…"
+msgstr "_Cerca…"
 
 #: pynicotine/gtkgui/mainwindow.py:1255 pynicotine/gtkgui/mainwindow.py:1281
 msgid "_Copy"
@@ -1697,7 +1693,7 @@ msgstr "_Globale"
 
 #: pynicotine/gtkgui/search.py:73
 msgid "_Buddies"
-msgstr "Amici"
+msgstr "_Amici"
 
 #: pynicotine/gtkgui/search.py:74 pynicotine/gtkgui/ui/mainwindow.ui:1414
 msgid "_Rooms"
@@ -1730,7 +1726,6 @@ msgstr "Dimensione"
 
 #: pynicotine/gtkgui/search.py:495 pynicotine/gtkgui/userbrowse.py:285
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
-#, fuzzy
 msgid "Quality"
 msgstr "Qualità"
 
@@ -1947,7 +1942,7 @@ msgstr "Apri nel Gestore dei File"
 
 #: pynicotine/gtkgui/transferlist.py:228
 msgid "_Clear"
-msgstr "Pulisci"
+msgstr "_Pulisci"
 
 #: pynicotine/gtkgui/transferlist.py:231
 msgid "_Search"
@@ -2076,7 +2071,6 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Inserisci il nome dell'utente verso cui fare upload:"
 
 #: pynicotine/gtkgui/userbrowse.py:784 pynicotine/gtkgui/userbrowse.py:992
-#, fuzzy
 msgid "_Upload"
 msgstr "_Upload"
 
@@ -2094,7 +2088,7 @@ msgstr "Copia Immagine"
 
 #: pynicotine/gtkgui/userinfo.py:312
 msgid "Save Picture"
-msgstr "Salva Immagine"
+msgstr "Salva immagine"
 
 #: pynicotine/gtkgui/userinfo.py:375
 #, python-format
@@ -2392,9 +2386,8 @@ msgid "Gift Privileges"
 msgstr "Regala Privilegi"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:574
-#, fuzzy
 msgid "_Give Privileges"
-msgstr "Concedi Pri_vilegi..."
+msgstr "_Concedi privilegi"
 
 #: pynicotine/gtkgui/widgets/textview.py:425
 msgid "--- old messages above ---"
@@ -2475,27 +2468,24 @@ msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Inserisci il nome dell'utente a cui desideri inviare un messaggio:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:233
-#, fuzzy
 msgid "_Message"
-msgstr "_Messaggia tutti"
+msgstr "_Messaggia"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:253
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr "Inserisci il nome dell'utente di cui vuoi vedere il profilo:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:254
-#, fuzzy
 msgid "_View Profile"
-msgstr "Visualizza Profilo Utente"
+msgstr "_Visualizza profilo"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:274
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Inserisci il nome dell'utente di cui desideri ricevere i condivisi:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:275
-#, fuzzy
 msgid "_Browse"
-msgstr "Sfoglia File"
+msgstr "_Sfoglia"
 
 #: pynicotine/gtkgui/widgets/treeview.py:637
 #, python-format
@@ -2745,7 +2735,6 @@ msgid "Cyprus"
 msgstr "Cipro"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "Czechia"
 msgstr "Cechia"
 
@@ -3426,9 +3415,8 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
-msgstr "Turkiye"
+msgstr "Turchia"
 
 #: pynicotine/networkfilter.py:258
 msgid "Trinidad & Tobago"
@@ -3841,9 +3829,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Parametro non valido, scelte possibili: %s"
 
 #: pynicotine/pluginsystem.py:858
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Utilizzo: %(command)s %(args)s"
+msgstr "Utilizzo: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:897
 #, python-format
@@ -4274,7 +4262,7 @@ msgstr "Chat Stanza Comando Aiuto"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:134 pynicotine/gtkgui/ui/privatechat.ui:88
 msgid "_Log"
-msgstr "Registro"
+msgstr "_Registro"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:198
 msgid "Room Wall"
@@ -4774,9 +4762,8 @@ msgid "_Personal Profile"
 msgstr "Profilo _Personale"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:953
-#, fuzzy
 msgid "Configure Account"
-msgstr "Configura registro"
+msgstr "Configura account"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1020
 msgid ""
@@ -4811,9 +4798,8 @@ msgid "_Message All"
 msgstr "_Messaggia tutti"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1276
-#, fuzzy
 msgid "Configure Ignored Users"
-msgstr "Configura utenti bloccati"
+msgstr "Configura utenti ignorati"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1343
 msgid ""
@@ -4844,9 +4830,8 @@ msgstr ""
 "utenti sulla rete Soulseek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1567
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Visualizza Profilo Utente"
+msgstr "Configura profilo utente"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Scanning Shares"
@@ -6222,7 +6207,7 @@ msgstr "Modifica Interessi"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:677
 msgid "Save _Picture"
-msgstr "Salva Immagine"
+msgstr "Salva _Immagine"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:715
 msgid "_Refresh Profile"

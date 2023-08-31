@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 20:16+0300\n"
-"PO-Revision-Date: 2023-08-02 11:06+0000\n"
+"PO-Revision-Date: 2023-08-17 22:47+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -2670,37 +2670,30 @@ msgid "Belize"
 msgstr "Belize"
 
 #: pynicotine/networkfilter.py:69
-#, fuzzy
 msgid "Canada"
 msgstr "Canadá"
 
 #: pynicotine/networkfilter.py:70
-#, fuzzy
 msgid "Cocos (Keeling) Islands"
 msgstr "Ilhas Cocos (Keeling)"
 
 #: pynicotine/networkfilter.py:71
-#, fuzzy
 msgid "Democratic Republic of Congo"
 msgstr "República Democrática do Congo"
 
 #: pynicotine/networkfilter.py:72
-#, fuzzy
 msgid "Central African Republic"
-msgstr "República Centro-Africana"
+msgstr "República Centrafricana"
 
 #: pynicotine/networkfilter.py:73
-#, fuzzy
 msgid "Congo"
 msgstr "Congo"
 
 #: pynicotine/networkfilter.py:74
-#, fuzzy
 msgid "Switzerland"
 msgstr "Suíça"
 
 #: pynicotine/networkfilter.py:75
-#, fuzzy
 msgid "Ivory Coast"
 msgstr "Costa do Marfim"
 
@@ -3609,9 +3602,8 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
-msgstr "Türkiye"
+msgstr "Turquia"
 
 #: pynicotine/networkfilter.py:258
 #, fuzzy
@@ -4038,9 +4030,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Argumento inválido, escolhas possíveis: %s"
 
 #: pynicotine/pluginsystem.py:858
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Uso: %(command)s %(args)s"
+msgstr "Uso: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:897
 #, python-format
@@ -4982,9 +4974,8 @@ msgid "_Personal Profile"
 msgstr "Perfil _Pessoal"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:953
-#, fuzzy
 msgid "Configure Account"
-msgstr "Configurar o registro"
+msgstr "Configurar Conta"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1020
 msgid ""
@@ -5020,9 +5011,8 @@ msgid "_Message All"
 msgstr "_Mensagens para Todos"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1276
-#, fuzzy
 msgid "Configure Ignored Users"
-msgstr "Usuários Ignorados"
+msgstr "Configurar Usuários Ignorados"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1343
 msgid ""
@@ -5053,9 +5043,8 @@ msgstr ""
 "conversar com outros usuários na rede Soulseek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1567
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Exibir Perfil de Usuário"
+msgstr "Configurar Perfil do Usuário"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Scanning Shares"
