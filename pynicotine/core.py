@@ -65,10 +65,6 @@ class Core:
         self.update_checker = None
         self._network_thread = None
 
-        # Handle Ctrl+C and "kill" exit gracefully
-        for signal_type in (signal.SIGINT, signal.SIGTERM):
-            signal.signal(signal_type, self.quit)
-
         self.cli_interface_address = None
         self.cli_listen_port = None
 
@@ -91,16 +87,19 @@ class Core:
         # Enable all components by default
         if enabled_components is None:
             enabled_components = {
-                "error_handler", "cli", "portmapper", "network_thread", "notifications",
-                "network_filter", "now_playing", "statistics", "update_checker", "shares",
-                "search", "transfers", "interests", "userbrowse", "userinfo", "userlist",
+                "error_handler", "signal_handler", "cli", "portmapper", "network_thread",
+                "notifications", "network_filter", "now_playing", "statistics", "update_checker",
+                "shares", "search", "transfers", "interests", "userbrowse", "userinfo", "userlist",
                 "chatrooms", "privatechat", "pluginhandler"
             }
 
         self.enabled_components = enabled_components
 
         if "error_handler" in enabled_components:
-            self._init_thread_exception_hook()
+            self._init_error_handler()
+
+        if "signal_handler" in enabled_components:
+            self._init_signal_handler()
 
         if "cli" in enabled_components:
             cli.enable_logging()
@@ -201,7 +200,13 @@ class Core:
             from pynicotine.pluginsystem import PluginHandler
             self.pluginhandler = PluginHandler()
 
-    def _init_thread_exception_hook(self):
+    def _init_signal_handler(self):
+        """Handle Ctrl+C and "kill" exit gracefully."""
+
+        for signal_type in (signal.SIGINT, signal.SIGTERM):
+            signal.signal(signal_type, self.quit)
+
+    def _init_error_handler(self):
 
         def thread_excepthook(args):
             sys.excepthook(*args[:3])
