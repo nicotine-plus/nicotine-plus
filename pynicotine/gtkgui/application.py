@@ -613,10 +613,10 @@ class Application:
         core.quit()
         events.emit("quit")
 
-    def raise_exception(self, exc_value):
+    def _raise_exception(self, exc_value):
         raise exc_value
 
-    def on_critical_error_response(self, _dialog, response_id, data):
+    def _show_critical_error_dialog_response(self, _dialog, response_id, data):
 
         loop, error = data
 
@@ -626,13 +626,12 @@ class Application:
             clipboard.copy_text(error)
             open_uri(config.issue_tracker_url)
 
-            self.show_critical_error_dialog(error, loop)
+            self._show_critical_error_dialog(error, loop)
             return
 
         loop.quit()
-        self._force_quit()
 
-    def show_critical_error_dialog(self, error, loop):
+    def _show_critical_error_dialog(self, error, loop):
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
@@ -646,7 +645,7 @@ class Application:
                 ("quit", _("_Quit Nicotine+")),
                 ("copy_report_bug", _("_Copy & Report Bug"))
             ],
-            callback=self.on_critical_error_response,
+            callback=self._show_critical_error_dialog_response,
             callback_data=(loop, error)
         ).show()
 
@@ -654,7 +653,7 @@ class Application:
 
         if self.ci_mode:
             self._force_quit()
-            self.raise_exception(exc_value)
+            self._raise_exception(exc_value)
             return
 
         from traceback import format_tb
@@ -681,11 +680,15 @@ class Application:
         error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
                  f"Python Version: {config.python_version} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
-        self.show_critical_error_dialog(error, loop)
+        self._show_critical_error_dialog(error, loop)
 
         # Keep dialog open if error occurs on startup
         loop.run()
-        self.raise_exception(exc_value)
+
+        # Dialog was closed, quit
+        sys.excepthook = None
+        self._force_quit()
+        self._raise_exception(exc_value)
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
 
@@ -694,7 +697,7 @@ class Application:
             return
 
         # Raise exception in the main thread
-        GLib.idle_add(self.raise_exception, exc_value)
+        GLib.idle_add(self._raise_exception, exc_value)
 
     def on_process_thread_events(self):
         return events.process_thread_events()
@@ -710,6 +713,10 @@ class Application:
         from pynicotine.gtkgui.widgets.notifications import Notifications
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        # Process thread events 20 times per second.
+        # High priority to ensure there are no delays.
+        GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
         load_icons()
 
@@ -732,10 +739,6 @@ class Application:
 
         if not start_hidden:
             self.window.show()
-
-        # Process thread events 20 times per second
-        # High priority to ensure there are no delays
-        GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
