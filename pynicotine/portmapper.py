@@ -20,6 +20,7 @@ import re
 import socket
 import struct
 import sys
+import time
 
 from threading import Thread
 from urllib.parse import urlsplit
@@ -521,6 +522,7 @@ class PortMapper:
     def __init__(self):
 
         self._active_implementation = None
+        self._is_mapping_port = False
         self._timer = None
         self._natpmp = NATPMP()
         self._upnp = UPnP()
@@ -529,8 +531,20 @@ class PortMapper:
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
 
+    def _wait_until_ready(self):
+
+        while self._is_mapping_port:
+            # Port mapping in progress, wait until it's finished
+            time.sleep(0.1)
+
     def _add_port_mapping(self):
 
+        self._wait_until_ready()
+
+        if not config.sections["server"]["upnp"]:
+            return
+
+        self._is_mapping_port = True
         log.add_debug("Creating Port Mapping rule...")
 
         try:
@@ -548,14 +562,16 @@ class PortMapper:
                 log.add_debug("UPnP not available, port forwarding failed: %s", upnp_error)
 
                 log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
-                    "protocol": self._active_implementation.NAME if self._active_implementation else "PortMapper",
-                    "external_port": self._active_implementation.port if self._active_implementation else "",
+                    "protocol": self._active_implementation.NAME,
+                    "external_port": self._active_implementation.port,
                     "error": upnp_error
                 })
 
                 from traceback import format_exc
                 log.add_debug(format_exc())
+
                 self._active_implementation = None
+                self._is_mapping_port = False
                 return
 
         log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
@@ -565,11 +581,16 @@ class PortMapper:
             "ip_address": self._active_implementation.local_ip_address,
             "local_port": self._active_implementation.port
         })
+        self._is_mapping_port = False
 
     def _remove_port_mapping(self):
 
+        self._wait_until_ready()
+
         if not self._active_implementation:
             return
+
+        self._is_mapping_port = True
 
         try:
             self._active_implementation.remove_port_mapping()
@@ -581,6 +602,7 @@ class PortMapper:
             })
 
         self._active_implementation = None
+        self._is_mapping_port = False
 
     def add_port_mapping(self, blocking=False):
 
