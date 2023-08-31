@@ -30,7 +30,7 @@ class Application:
 
     def __init__(self):
 
-        sys.excepthook = self.exception_hook
+        sys.excepthook = self.on_critical_error
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
@@ -54,8 +54,13 @@ class Application:
         config.write_configuration()
         return 0
 
-    def exception_hook(self, _exc_type, exc_value, _exc_traceback):
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+
+        sys.excepthook = None
+
         core.quit()
+        events.emit("quit")
+
         raise exc_value
 
     def on_confirm_quit_response(self, user_input):
