@@ -147,5 +147,9 @@ class UserInfo:
         else:
             uploadallowed = 0
 
-        core.send_message_to_server(
-            slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+        core.send_message_to_peer(
+            username, slskmessages.UserInfoResponse(
+                descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
+                uploadallowed=uploadallowed
+            )
+        )
