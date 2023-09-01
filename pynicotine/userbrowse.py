@@ -227,8 +227,6 @@ class UserBrowse:
         if requested_folder is None:
             return
 
-        remove_prefix = requested_folder.rsplit("\\", 1)[0]
-
         for folder, files in self.user_shares[user].items():
             if not recurse and requested_folder != folder:
                 continue
@@ -242,7 +240,7 @@ class UserBrowse:
                 core.transfers.requested_folders[user][folder] = prefix
 
             # Get final download destination
-            destination = core.transfers.get_folder_destination(user, folder, remove_prefix)
+            destination = core.transfers.get_folder_destination(user, folder, root_folder_path=requested_folder)
 
             if files:
                 for _code, filename, file_size, _ext, file_attributes, *_unused in files:

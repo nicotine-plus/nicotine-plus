@@ -1829,21 +1829,20 @@ class Transfers:
 
         return False
 
-    def get_folder_destination(self, user, folder, remove_prefix="", remove_destination=True):
+    def get_folder_destination(self, user, folder_path, root_folder_path="", remove_destination=True):
 
-        if not remove_prefix and "\\" in folder:
-            remove_prefix = folder.rsplit("\\", 1)[0]
-
-        # Get the last folders in folder path, excluding remove_prefix
-        target_folders = folder.replace(remove_prefix, "").lstrip("\\").replace("\\", os.sep)
+        # Remove parent folders of the requested folder from path
+        parent_folder_path = root_folder_path if root_folder_path else folder_path
+        removed_parent_folders = parent_folder_path.rsplit("\\", 1)[0] if "\\" in parent_folder_path else ""
+        target_folders = folder_path.replace(removed_parent_folders, "").lstrip("\\").replace("\\", os.sep)
 
         # Check if a custom download location was specified
-        if (user in self.requested_folders and folder in self.requested_folders[user]
-                and self.requested_folders[user][folder]):
-            download_location = self.requested_folders[user][folder]
+        if (user in self.requested_folders and folder_path in self.requested_folders[user]
+                and self.requested_folders[user][folder_path]):
+            download_location = self.requested_folders[user][folder_path]
 
             if remove_destination:
-                del self.requested_folders[user][folder]
+                del self.requested_folders[user][folder_path]
         else:
             download_location = self.get_default_download_folder(user)
 

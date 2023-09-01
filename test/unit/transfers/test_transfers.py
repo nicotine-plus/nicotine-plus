@@ -251,9 +251,10 @@ class TransfersTest(TestCase):
         """Verify that subfolders are downloaded to the correct location."""
 
         user = "random"
-        target_folder = "share\\Soulseek"
-
         core.userbrowse.user_shares[user] = dict([
+            ("share", [
+                (1, "root1.mp3", 1000, "", {})
+            ]),
             ("share\\Music", [
                 (1, "music1.mp3", 1000000, "", {}),
                 (1, "music2.mp3", 2000000, "", {})
@@ -265,25 +266,46 @@ class TransfersTest(TestCase):
             ("share\\Soulseek\\folder1", [
                 (1, "file3.mp3", 5000000, "", {})
             ]),
-            ("share\\Soulseek\\folder1\\folder", [
+            ("share\\Soulseek\\folder1\\sub1", [
                 (1, "file4.mp3", 6000000, "", {})
             ]),
             ("share\\Soulseek\\folder2", [
                 (1, "file5.mp3", 7000000, "", {})
             ]),
-            ("share\\Soulseek\\folder2\\folder3", [
+            ("share\\Soulseek\\folder2\\sub2", [
                 (1, "file6.mp3", 8000000, "", {})
             ])
         ])
 
+        # Share root
+        target_folder = "share"
+
         core.transfers.downloads.clear()
         core.userbrowse.download_folder(user, target_folder, prefix="test", recurse=True)
 
+        self.assertEqual(len(core.transfers.downloads), 9)
+
+        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test", "share", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test", "share", "Soulseek", "folder2"))
+        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test", "share", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test", "share", "Soulseek", "folder1"))
+        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test", "share", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test", "share", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[6].path, os.path.join("test", "share", "Music"))
+        self.assertEqual(core.transfers.downloads[7].path, os.path.join("test", "share", "Music"))
+        self.assertEqual(core.transfers.downloads[8].path, os.path.join("test", "share"))
+
+        # Share subfolder
+        target_folder = "share\\Soulseek"
+
+        core.transfers.downloads.clear()
+        core.userbrowse.download_folder(user, target_folder, prefix="test2", recurse=True)
+
         self.assertEqual(len(core.transfers.downloads), 6)
 
-        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test", "Soulseek", "folder2", "folder3"))
-        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test", "Soulseek", "folder2"))
-        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test", "Soulseek", "folder1", "folder"))
-        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test", "Soulseek", "folder1"))
-        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test", "Soulseek"))
-        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test2", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test2", "Soulseek", "folder2"))
+        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test2", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test2", "Soulseek", "folder1"))
+        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test2", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test2", "Soulseek"))
