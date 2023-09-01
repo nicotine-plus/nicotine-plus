@@ -288,7 +288,13 @@ class TransferList:
         if not transfer:
             return
 
-        self.window.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
+        try:
+            _folder_path, basename = transfer.filename.rsplit("\\", 1)
+
+        except ValueError:
+            basename = transfer.filename
+
+        self.window.search_entry.set_text(basename)
         self.window.change_main_page(self.window.search_page)
 
     def translate_status(self, status):
@@ -893,17 +899,22 @@ class TransferList:
         selected_size = 0
 
         for transfer in self.selected_transfers:
-            fullname = transfer.filename
-            filename = fullname.split("\\")[-1]
-            directory = fullname.rsplit("\\", 1)[0]
+            file_path = transfer.filename
             file_size = transfer.size
             selected_size += file_size
 
+            try:
+                folder_path, basename = file_path.rsplit("\\", 1)
+
+            except ValueError:
+                folder_path = ""
+                basename = file_path
+
             data.append({
                 "user": transfer.user,
-                "fn": fullname,
-                "filename": filename,
-                "directory": directory,
+                "fn": file_path,
+                "filename": basename,
+                "directory": folder_path,
                 "path": transfer.path,
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,

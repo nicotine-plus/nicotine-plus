@@ -725,48 +725,48 @@ class Search:
 
         update_ui = False
 
-        for _code, fullpath, size, _ext, file_attributes, *_unused in result_list:
+        for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
                 self.max_limited = True
                 break
 
-            fullpath_lower = fullpath.lower()
+            file_path_lower = file_path.lower()
 
-            if any(word in fullpath_lower for word in self.searchterm_words_ignore):
+            if any(word in file_path_lower for word in self.searchterm_words_ignore):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
                                'search term "%(query)s"'), {
-                    "filepath": fullpath,
+                    "filepath": file_path,
                     "user": user,
                     "query": self.text
                 })
                 continue
 
-            if not any(word in fullpath_lower for word in self.searchterm_words_include):
+            if not any(word in file_path_lower for word in self.searchterm_words_include):
                 # Certain users may send us wrong results, filter out such ones
                 log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
                                  'search query "%(query)s"'), {
-                    "filepath": fullpath,
+                    "filepath": file_path,
                     "user": user,
                     "query": self.text
                 })
                 continue
 
             self.num_results_found += 1
-            fullpath_split = fullpath.split("\\")
+            file_path_split = file_path.split("\\")
 
             if config.sections["ui"]["reverse_file_paths"]:
                 # Reverse file path, file name is the first item. next() retrieves the name and removes
                 # it from the iterator.
-                fullpath_split = reversed(fullpath_split)
-                name = next(fullpath_split)
+                file_path_split = reversed(file_path_split)
+                name = next(file_path_split)
 
             else:
                 # Regular file path, file name is the last item. Retrieve it and remove it from the list.
-                name = fullpath_split.pop()
+                name = file_path_split.pop()
 
             # Join the resulting items into a folder path
-            folder = "\\".join(fullpath_split)
+            folder = "\\".join(file_path_split)
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
@@ -792,7 +792,7 @@ class Search:
                     size,
                     bitrate,
                     length,
-                    fullpath,
+                    file_path,
                     has_free_slots,
                     file_attributes,
                     self.num_results_found
@@ -874,7 +874,7 @@ class Search:
 
     def add_row_to_model(self, row):
         (user, flag, h_speed, h_queue, folder, _unused, _unused, _unused, _unused,
-            _unused, country_code, speed, queue, _unused, _unused, _unused, fullpath, has_free_slots,
+            _unused, country_code, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
             _unused, row_id) = row
 
         expand_user = False
@@ -947,7 +947,7 @@ class Search:
                             empty_int,
                             empty_int,
                             empty_int,
-                            fullpath.rsplit("\\", 1)[0] + "\\",
+                            file_path.rsplit("\\", 1)[0] + "\\",
                             has_free_slots,
                             empty_dict,
                             row_id
@@ -1438,8 +1438,7 @@ class Search:
         selected_length = 0
 
         for iterator in self.selected_results:
-            virtual_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            directory, filename = virtual_path.rsplit("\\", 1)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
             selected_length += self.tree_view.get_row_value(iterator, "length_data")
@@ -1447,11 +1446,18 @@ class Search:
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
+            try:
+                folder_path, basename = file_path.rsplit("\\", 1)
+
+            except ValueError:
+                folder_path = ""
+                basename = file_path
+
             data.append({
                 "user": self.tree_view.get_row_value(iterator, "user"),
-                "fn": virtual_path,
-                "filename": filename,
-                "directory": directory,
+                "fn": file_path,
+                "filename": basename,
+                "directory": folder_path,
                 "size": file_size,
                 "speed": self.tree_view.get_row_value(iterator, "speed_data"),
                 "queue_position": self.tree_view.get_row_value(iterator, "in_queue_data"),
@@ -1470,11 +1476,11 @@ class Search:
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.transfers.get_file(user, filepath, prefix, size=size, file_attributes=file_attributes)
+            core.transfers.get_file(user, file_path, prefix, size=size, file_attributes=file_attributes)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
@@ -1519,11 +1525,11 @@ class Search:
                 destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
 
                 (user, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, _unused, size, _unused, _unused, fullpath, _unused,
+                    _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
                 visible_files.append(
-                    (user, fullpath, destination, size, file_attributes))
+                    (user, file_path, destination, size, file_attributes))
 
             core.search.request_folder_download(user, folder, visible_files)
 
@@ -1542,16 +1548,16 @@ class Search:
     def on_copy_file_path(self, *_args):
 
         for iterator in self.selected_results:
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            clipboard.copy_text(filepath)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            clipboard.copy_text(file_path)
             return
 
     def on_copy_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, filepath)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            url = core.userbrowse.get_soulseek_url(user, file_path)
             clipboard.copy_text(url)
             return
 
@@ -1559,8 +1565,8 @@ class Search:
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
             return
 
