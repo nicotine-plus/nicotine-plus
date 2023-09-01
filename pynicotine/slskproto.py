@@ -544,9 +544,9 @@ class NetworkThread(Thread):
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
-    def _has_existing_user_socket(self, user, conn_type):
+    def _has_existing_user_socket(self, username, conn_type):
 
-        prev_init = self._username_init_msgs.get(user + conn_type)
+        prev_init = self._username_init_msgs.get(username + conn_type)
 
         if prev_init is not None and prev_init.sock is not None:
             return True
@@ -700,7 +700,7 @@ class NetworkThread(Thread):
 
         return True
 
-    def _send_message_to_peer(self, user, message):
+    def _send_message_to_peer(self, username, message):
 
         conn_type = message.msgtype
 
@@ -708,11 +708,11 @@ class NetworkThread(Thread):
             return
 
         # Check if there's already a connection for the specified username
-        init = self._username_init_msgs.get(user + conn_type)
+        init = self._username_init_msgs.get(username + conn_type)
 
         if init is None and conn_type != ConnectionType.FILE:
             # Check if we have a pending PeerInit message (currently requesting user IP address)
-            pending_init_msgs = self._pending_init_msgs.get(user, [])
+            pending_init_msgs = self._pending_init_msgs.get(username, [])
 
             for msg in pending_init_msgs:
                 if msg.conn_type == conn_type:
@@ -721,13 +721,13 @@ class NetworkThread(Thread):
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
             "type": message.__class__,
-            "user": user
+            "user": username
         })
 
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
                 "type": conn_type,
-                "user": user
+                "user": username
             })
 
             init.outgoing_msgs.append(message)
@@ -738,13 +738,13 @@ class NetworkThread(Thread):
 
         else:
             # This is a new peer, initiate a connection
-            self._initiate_connection_to_peer(user, conn_type, message)
+            self._initiate_connection_to_peer(username, conn_type, message)
 
-    def _initiate_connection_to_peer(self, user, conn_type, message=None, in_address=None):
+    def _initiate_connection_to_peer(self, username, conn_type, message=None, in_address=None):
         """Prepare to initiate a connection with a peer."""
 
-        init = PeerInit(init_user=self._server_username, target_user=user, conn_type=conn_type)
-        user_address = self._user_addresses.get(user)
+        init = PeerInit(init_user=self._server_username, target_user=username, conn_type=conn_type)
+        user_address = self._user_addresses.get(username)
 
         if in_address is not None:
             user_address = in_address
@@ -760,21 +760,21 @@ class NetworkThread(Thread):
             init.outgoing_msgs.append(message)
 
         if user_address is None:
-            if user not in self._pending_init_msgs:
-                self._pending_init_msgs[user] = []
+            if username not in self._pending_init_msgs:
+                self._pending_init_msgs[username] = []
 
-            self._pending_init_msgs[user].append(init)
-            self._queue_network_message(GetPeerAddress(user))
+            self._pending_init_msgs[username].append(init)
+            self._queue_network_message(GetPeerAddress(username))
 
             log.add_conn("Requesting address for user %(user)s", {
-                "user": user
+                "user": username
             })
 
         else:
             init.addr = user_address
-            self._connect_to_peer(user, user_address, init)
+            self._connect_to_peer(username, user_address, init)
 
-    def _connect_to_peer(self, user, addr, init):
+    def _connect_to_peer(self, username, addr, init):
         """Initiate a connection with a peer."""
 
         conn_type = init.conn_type
@@ -782,11 +782,11 @@ class NetworkThread(Thread):
         if not self._verify_peer_connection_type(conn_type):
             return
 
-        if self._has_existing_user_socket(user, conn_type):
+        if self._has_existing_user_socket(username, conn_type):
             log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
                           "but existing connection already exists"), {
                 "type": conn_type,
-                "user": user,
+                "user": username,
                 "addr": addr
             })
             return
@@ -800,7 +800,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             "type": conn_type,
-            "user": user,
+            "user": username,
             "addr": addr
         })
 
@@ -861,7 +861,7 @@ class NetworkThread(Thread):
         self._conns[sock] = conn_obj
 
         init = conn_obj.init
-        user = init.target_user
+        username = init.target_user
         conn_type = init.conn_type
         token = init.token
         init.sock = sock
@@ -869,7 +869,7 @@ class NetworkThread(Thread):
         log.add_conn(("Established outgoing connection of type %(type)s with user %(user)s. List of "
                       "outgoing messages: %(messages)s"), {
             "type": conn_type,
-            "user": user,
+            "user": username,
             "messages": init.outgoing_msgs
         })
 
@@ -877,7 +877,7 @@ class NetworkThread(Thread):
             log.add_conn(("Responding to indirect connection request of type %(type)s from "
                           "user %(user)s, token %(token)s"), {
                 "type": conn_type,
-                "user": user,
+                "user": username,
                 "token": token
             })
             self._queue_network_message(PierceFireWall(sock, token))
@@ -887,7 +887,7 @@ class NetworkThread(Thread):
             # Direct connection established
             log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
                 "type": conn_type,
-                "user": user
+                "user": username
             })
             self._queue_network_message(init)
 
@@ -898,25 +898,25 @@ class NetworkThread(Thread):
                 log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
                               "%(user)s"), {
                     "type": conn_type,
-                    "user": user
+                    "user": username
                 })
 
         self._process_conn_messages(init)
 
     def _replace_existing_connection(self, init):
 
-        user = init.target_user
+        username = init.target_user
         conn_type = init.conn_type
 
-        if user == self._server_username or not self._has_existing_user_socket(user, conn_type):
+        if username == self._server_username or not self._has_existing_user_socket(username, conn_type):
             return
 
         log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
             "type": init.conn_type,
-            "user": user
+            "user": username
         })
 
-        prev_init = self._username_init_msgs[user + conn_type]
+        prev_init = self._username_init_msgs[username + conn_type]
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
 
@@ -1007,22 +1007,22 @@ class NetworkThread(Thread):
             return
 
         conn_type = init.conn_type
-        user = init.target_user
+        username = init.target_user
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             "type": conn_type,
-            "user": user,
+            "user": username,
             "addr": conn_obj.addr
         })
 
-        if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(user, None):
+        if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(username, None):
             if len(self._child_peers) == self._max_distrib_children - 1:
                 log.add_conn("Available to accept a new distributed child peer")
                 self._queue_network_message(AcceptChildren(True))
 
             log.add_conn("List of current child peers: %s", str(list(self._child_peers.keys())))
 
-        init_key = user + conn_type
+        init_key = username + conn_type
         user_init = self._username_init_msgs.get(init_key)
 
         if user_init is None:
@@ -1030,7 +1030,7 @@ class NetworkThread(Thread):
 
         log.add_conn("Removing PeerInit message of type %(type)s for user %(user)s %(addr)s", {
             "type": conn_type,
-            "user": user,
+            "user": username,
             "addr": conn_obj.addr
         })
 
@@ -1300,7 +1300,7 @@ class NetworkThread(Thread):
                             self._queue_network_message(ServerDisconnect())
 
                     elif msg_class is ConnectToPeer:
-                        user = msg.user
+                        username = msg.user
                         addr = (msg.ip_address, msg.port)
                         conn_type = msg.conn_type
                         token = msg.token
@@ -1308,14 +1308,14 @@ class NetworkThread(Thread):
                         log.add_conn(("Received indirect connection request of type %(type)s from user %(user)s, "
                                       "token %(token)s, address %(addr)s"), {
                             "type": conn_type,
-                            "user": user,
+                            "user": username,
                             "token": token,
                             "addr": addr
                         })
 
-                        init = PeerInit(addr=addr, init_user=user, target_user=user,
+                        init = PeerInit(addr=addr, init_user=username, target_user=username,
                                         conn_type=conn_type, indirect=True, token=token)
-                        self._connect_to_peer(user, addr, init)
+                        self._connect_to_peer(username, addr, init)
 
                     elif msg_class is GetUserStatus:
                         if msg.status == UserStatus.OFFLINE:
@@ -1323,13 +1323,13 @@ class NetworkThread(Thread):
                             self._user_addresses.pop(msg.user, None)
 
                     elif msg_class is GetPeerAddress:
-                        user = msg.user
+                        username = msg.user
                         pending_init_msgs = self._pending_init_msgs.pop(msg.user, [])
 
                         if not msg.port:
                             log.add_conn(
                                 "Server reported port 0 for user %(user)s", {
-                                    "user": user
+                                    "user": username
                                 }
                             )
 
@@ -1341,14 +1341,14 @@ class NetworkThread(Thread):
                             # attempt a direct connection to the peer/user
                             if user_offline:
                                 events.emit_main_thread(
-                                    "peer-connection-error", user, init.outgoing_msgs[:], is_offline=True)
+                                    "peer-connection-error", username, init.outgoing_msgs[:], is_offline=True)
                             else:
                                 init.addr = addr
-                                self._connect_to_peer(user, addr, init)
+                                self._connect_to_peer(username, addr, init)
 
                         # We already store a local IP address for our username
-                        if user != self._server_username and not user_offline:
-                            self._user_addresses[msg.user] = addr
+                        if username != self._server_username and not user_offline:
+                            self._user_addresses[username] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
                         if msg.user == self._server_username and msg.avgspeed is not None:
@@ -1368,11 +1368,11 @@ class NetworkThread(Thread):
                         log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
 
                         if self._parent_socket is None and self._potential_parents:
-                            for user in self._potential_parents:
-                                addr = self._potential_parents[user]
+                            for username in self._potential_parents:
+                                addr = self._potential_parents[username]
 
-                                log.add_conn("Attempting parent connection to user %s", user)
-                                self._initiate_connection_to_peer(user, ConnectionType.DISTRIBUTED, in_address=addr)
+                                log.add_conn("Attempting parent connection to user %s", username)
+                                self._initiate_connection_to_peer(username, ConnectionType.DISTRIBUTED, in_address=addr)
 
                     elif msg_class is ParentMinSpeed:
                         self._distrib_parent_min_speed = msg.speed
@@ -1558,14 +1558,14 @@ class NetworkThread(Thread):
                         })
 
                     elif msg_class is PeerInit:
-                        user = msg.target_user
+                        username = msg.target_user
                         conn_type = msg.conn_type
                         addr = conn_obj.addr
 
                         log.add_conn(("Received incoming direct connection of type %(type)s from user "
                                       "%(user)s %(addr)s"), {
                             "type": conn_type,
-                            "user": user,
+                            "user": username,
                             "addr": addr
                         })
 
@@ -1958,29 +1958,29 @@ class NetworkThread(Thread):
         if conn_obj.init.conn_type != ConnectionType.DISTRIBUTED:
             return
 
-        user = conn_obj.init.target_user
+        username = conn_obj.init.target_user
 
-        if user == self._server_username:
+        if username == self._server_username:
             # We can't connect to ourselves
             return
 
-        if user in self._potential_parents:
+        if username in self._potential_parents:
             # This is not a child peer, ignore
             return
 
         if self._parent_socket is None and not self._is_server_parent:
             # We have no parent user and the server hasn't sent search requests, no point
             # in accepting child peers
-            log.add_conn("Rejecting distributed child peer connection from user %s, since we have no parent", user)
+            log.add_conn("Rejecting distributed child peer connection from user %s, since we have no parent", username)
             return
 
         if len(self._child_peers) >= self._max_distrib_children:
             log.add_conn(("Rejecting distributed child peer connection from user %(user)s, since child peer limit "
-                          "of %(limit)s was reached"), {"user": user, "limit": self._max_distrib_children})
+                          "of %(limit)s was reached"), {"user": username, "limit": self._max_distrib_children})
             self._close_connection(self._conns, conn_obj.sock)
             return
 
-        self._child_peers[user] = conn_obj
+        self._child_peers[username] = conn_obj
         self._queue_network_message(DistribBranchLevel(conn_obj.init, self._branch_level))
 
         if self._parent_socket is not None:
@@ -1988,7 +1988,7 @@ class NetworkThread(Thread):
             self._queue_network_message(DistribBranchRoot(conn_obj.init, self._branch_root))
 
         log.add_conn("Adopting user %(user)s as distributed child peer. List of current child peers: %(peers)s", {
-            "user": user,
+            "user": username,
             "peers": list(self._child_peers.keys())
         })
 

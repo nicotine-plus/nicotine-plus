@@ -430,29 +430,29 @@ class ChatRooms:
             msg.room = None
             return
 
-        user = msg.user
+        username = msg.user
 
         log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
-            "user": user,
+            "user": username,
             "room": room,
             "message": msg.msg
         })
 
-        if core.network_filter.is_user_ignored(user):
+        if core.network_filter.is_user_ignored(username):
             msg.room = None
             return
 
-        if core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ip_ignored(username):
             msg.room = None
             return
 
-        event = core.pluginhandler.incoming_public_chat_event(room, user, msg.msg)
+        event = core.pluginhandler.incoming_public_chat_event(room, username, msg.msg)
         if event is None:
             msg.room = None
             return
 
-        _room, _user, msg.msg = event
-        core.pluginhandler.incoming_public_chat_notification(room, user, msg.msg)
+        _room, _username, msg.msg = event
+        core.pluginhandler.incoming_public_chat_notification(room, username, msg.msg)
 
     def _user_joined_room(self, msg):
         """Server code 16."""
@@ -503,13 +503,13 @@ class ChatRooms:
 
         room_obj.tickers.clear()
 
-        for user, message in msg.msgs:
-            if core.network_filter.is_user_ignored(user) or \
-                    core.network_filter.is_user_ip_ignored(user):
+        for username, message in msg.msgs:
+            if core.network_filter.is_user_ignored(username) or \
+                    core.network_filter.is_user_ip_ignored(username):
                 # User ignored, ignore ticker message
                 continue
 
-            room_obj.tickers[user] = message
+            room_obj.tickers[username] = message
 
     def _ticker_add(self, msg):
         """Server code 114."""
@@ -520,13 +520,13 @@ class ChatRooms:
             msg.room = None
             return
 
-        user = msg.user
+        username = msg.user
 
-        if core.network_filter.is_user_ignored(user) or core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ignored(username) or core.network_filter.is_user_ip_ignored(username):
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[user] = msg.msg
+        room_obj.tickers[username] = msg.msg
 
     def _ticker_remove(self, msg):
         """Server code 115."""

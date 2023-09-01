@@ -117,11 +117,11 @@ class NowPlaying:
 
         return None
 
-    def lastfm(self, user):
+    def lastfm(self, username):
         """Function to get the last song played via Last.fm API."""
 
         try:
-            user, apikey = user.split(";")
+            username, apikey = username.split(";")
 
         except ValueError:
             log.add(_("Last.fm: Please provide both your Last.fm username and API key"), title=_("Now Playing Error"))
@@ -129,8 +129,8 @@ class NowPlaying:
 
         try:
             from urllib.request import urlopen
-            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
-                          f"&limit=1&format=json"), timeout=10) as response:
+            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
+                          f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:

@@ -179,7 +179,7 @@ class Uploads(TransferList):
         self.select_transfers()
 
         for transfer in self.transfer_list:
-            if transfer.user in self.selected_users and transfer not in self.selected_transfers:
+            if transfer.username in self.selected_users and transfer not in self.selected_transfers:
                 self.selected_transfers[transfer] = None
 
         self.abort_selected_transfers()

@@ -148,7 +148,7 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = core.userbrowse.get_soulseek_url(transfer.user, transfer.virtual_path)
+            url = core.userbrowse.get_soulseek_url(transfer.username, transfer.virtual_path)
             clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
@@ -157,14 +157,14 @@ class Downloads(TransferList):
 
         if transfer:
             url = core.userbrowse.get_soulseek_url(
-                transfer.user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+                transfer.username, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
         for transfer in self.selected_transfers:
             file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.virtual_path, transfer.folder_path, transfer.size)
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
             folder_path = os.path.dirname(file_path)
 
             if transfer.status == "Finished":
@@ -177,7 +177,7 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.virtual_path, transfer.folder_path, transfer.size)
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 
@@ -187,7 +187,7 @@ class Downloads(TransferList):
         requested_folders = set()
 
         for transfer in self.selected_transfers:
-            user = transfer.user
+            user = transfer.username
             folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
 
             if user not in requested_users and folder_path not in requested_folders:

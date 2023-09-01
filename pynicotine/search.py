@@ -82,15 +82,15 @@ class Search:
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
-    def request_folder_download(self, user, folder, visible_files):
+    def request_folder_download(self, username, folder_path, visible_files):
 
         # First queue the visible search results
         for file_path, destination, size, file_attributes, *_unused in visible_files:
             core.transfers.get_file(
-                user, file_path, destination, size=size, file_attributes=file_attributes)
+                username, file_path, destination, size=size, file_attributes=file_attributes)
 
         # Ask for the rest of the files in the folder
-        core.transfers.get_folder(user, folder)
+        core.transfers.get_folder(username, folder_path)
 
     # Outgoing Search Requests #
 
@@ -254,12 +254,12 @@ class Search:
             core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
-        for user in core.userlist.buddies:
-            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
+        for username in core.userlist.buddies:
+            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):
-        for user in users:
-            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
+        for username in users:
+            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -451,7 +451,7 @@ class Search:
             log.add_debug("Error: DB closed during search, perhaps due to rescanning shares or closing the application")
             return None
 
-    def process_search_request(self, searchterm, user, token, direct=False):
+    def process_search_request(self, searchterm, username, token, direct=False):
         """This section is accessed every time a search request arrives,
         several times per second.
 
@@ -465,7 +465,7 @@ class Search:
             # Don't return _any_ results when this option is disabled
             return
 
-        if not direct and user == core.login_username:
+        if not direct and username == core.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -503,7 +503,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, _reason = core.network_filter.check_user(user)
+        checkuser, _reason = core.network_filter.check_user(username)
 
         if not checkuser:
             return
@@ -562,10 +562,10 @@ class Search:
             None, core.login_username,
             token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
-        core.send_message_to_peer(user, message)
+        core.send_message_to_peer(username, message)
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
-            "user": user,
+            "user": username,
             "query": original_searchterm,
             "num": numresults
         })

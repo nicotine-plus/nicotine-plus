@@ -50,43 +50,43 @@ class UserInfo:
         if not msg.success:
             return
 
-        for user in self.users:
-            core.watch_user(user)  # Get notified of user status
+        for username in self.users:
+            core.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
 
-    def show_user(self, user, refresh=False, switch_page=True):
+    def show_user(self, username, refresh=False, switch_page=True):
 
-        if user not in self.users:
-            self.users.add(user)
+        if username not in self.users:
+            self.users.add(username)
             refresh = True
 
-        events.emit("user-info-show-user", user=user, refresh=refresh, switch_page=switch_page)
+        events.emit("user-info-show-user", user=username, refresh=refresh, switch_page=switch_page)
 
         if core.user_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", user)
+            events.emit("peer-connection-error", username)
             return
 
         if not refresh:
             return
 
         # Request user description, picture and queue information
-        core.send_message_to_peer(user, slskmessages.UserInfoRequest())
+        core.send_message_to_peer(username, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
-        core.watch_user(user)
+        core.watch_user(username)
 
         # Request user interests
-        core.send_message_to_server(slskmessages.UserInterests(user))
+        core.send_message_to_server(slskmessages.UserInterests(username))
 
-    def remove_user(self, user):
-        self.users.remove(user)
-        events.emit("user-info-remove-user", user)
+    def remove_user(self, username):
+        self.users.remove(username)
+        events.emit("user-info-remove-user", username)
 
     def remove_all_users(self):
-        for user in self.users.copy():
-            self.remove_user(user)
+        for username in self.users.copy():
+            self.remove_user(username)
 
     @staticmethod
     def save_user_picture(file_path, picture_bytes):
@@ -106,21 +106,21 @@ class UserInfo:
     def _user_info_request(self, msg):
         """Peer code 15."""
 
-        user = msg.init.target_user
+        username = msg.init.target_user
         ip_address, _port = msg.init.addr
         request_time = time.time()
 
-        if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
+        if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_info_times[user] = request_time
+        self.requested_info_times[username] = request_time
 
-        if core.login_username != user:
-            log.add(_("User %(user)s is viewing your profile"), {"user": user})
+        if core.login_username != username:
+            log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
-        status, reason = core.network_filter.check_user(user, ip_address)
+        status, reason = core.network_filter.check_user(username, ip_address)
 
         if not status:
             pic = None

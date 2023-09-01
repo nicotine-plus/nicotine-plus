@@ -48,12 +48,12 @@ class GetUploadCandidateTest(TestCase):
 
         transfer_list = []
 
-        for user in users:
-            folder_path = f"{user}/{len(core.transfers.uploads)}"
-            transfer = Transfer(user=user, folder_path=folder_path, status=status)
+        for username in users:
+            folder_path = f"{username}/{len(core.transfers.uploads)}"
+            transfer = Transfer(username=username, folder_path=folder_path, status=status)
 
             transfer_list.append(transfer)
-            core.transfers.append_upload(user, folder_path, transfer)
+            core.transfers.append_upload(username, folder_path, transfer)
             core.transfers.update_upload(transfer)
 
         return transfer_list
@@ -118,7 +118,7 @@ class GetUploadCandidateTest(TestCase):
         in_progress_transfers = self.add_transfers(in_progress, status="Getting status")
 
         candidates = self.consume_transfers(queued_transfers, in_progress_transfers, clear_first=clear_first)
-        users = [transfer.user if transfer else None for transfer in candidates]
+        users = [transfer.username if transfer else None for transfer in candidates]
 
         # `expected` should contain `None` in cases where there aren't
         # expected to be any queued users without existing in progress uploads

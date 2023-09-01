@@ -55,9 +55,9 @@ class PrivateChat:
         if not config.sections["privatechat"]["store"]:
             return
 
-        for user in config.sections["privatechat"]["users"]:
-            if isinstance(user, str) and user not in self.users:
-                self.show_user(user, switch_page=False)
+        for username in config.sections["privatechat"]["users"]:
+            if isinstance(username, str) and username not in self.users:
+                self.show_user(username, switch_page=False)
 
         self.update_completions()
 
@@ -70,8 +70,8 @@ class PrivateChat:
         if not msg.success:
             return
 
-        for user in self.users:
-            core.watch_user(user)  # Get notified of user status
+        for username in self.users:
+            core.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
 
@@ -85,36 +85,36 @@ class PrivateChat:
             # Reset list of users we've sent away messages to when the away session ends
             self.away_message_users.clear()
 
-    def add_user(self, user):
+    def add_user(self, username):
 
-        if user in self.users:
+        if username in self.users:
             return
 
-        self.users.add(user)
+        self.users.add(username)
 
-        if user not in config.sections["privatechat"]["users"]:
-            config.sections["privatechat"]["users"].append(user)
+        if username not in config.sections["privatechat"]["users"]:
+            config.sections["privatechat"]["users"].append(username)
 
-    def remove_user(self, user, is_permanent=True):
+    def remove_user(self, username, is_permanent=True):
 
-        if is_permanent and user in config.sections["privatechat"]["users"]:
-            config.sections["privatechat"]["users"].remove(user)
+        if is_permanent and username in config.sections["privatechat"]["users"]:
+            config.sections["privatechat"]["users"].remove(username)
 
-        self.users.remove(user)
-        events.emit("private-chat-remove-user", user)
+        self.users.remove(username)
+        events.emit("private-chat-remove-user", username)
 
     def remove_all_users(self, is_permanent=True):
-        for user in self.users.copy():
-            self.remove_user(user, is_permanent)
+        for username in self.users.copy():
+            self.remove_user(username, is_permanent)
 
-    def show_user(self, user, switch_page=True):
+    def show_user(self, username, switch_page=True):
 
-        self.add_user(user)
-        events.emit("private-chat-show-user", user, switch_page)
-        core.watch_user(user)
+        self.add_user(username)
+        events.emit("private-chat-show-user", username, switch_page)
+        core.watch_user(username)
 
-    def clear_private_messages(self, user):
-        events.emit("clear-private-messages", user)
+    def clear_private_messages(self, username):
+        events.emit("clear-private-messages", username)
 
     def auto_replace(self, message):
 
@@ -141,36 +141,36 @@ class PrivateChat:
     def private_message_queue_add(self, msg):
         """Queue a private message until we've received a user's IP address."""
 
-        user = msg.user
+        username = msg.user
 
-        if user not in self.private_message_queue:
-            self.private_message_queue[user] = [msg]
+        if username not in self.private_message_queue:
+            self.private_message_queue[username] = [msg]
         else:
-            self.private_message_queue[user].append(msg)
+            self.private_message_queue[username].append(msg)
 
-    def send_automatic_message(self, user, message):
-        self.send_message(user, f"[Automatic Message] {message}")
+    def send_automatic_message(self, username, message):
+        self.send_message(username, f"[Automatic Message] {message}")
 
-    def echo_message(self, user, message, message_type="local"):
-        events.emit("echo-private-message", user, message, message_type)
+    def echo_message(self, username, message, message_type="local"):
+        events.emit("echo-private-message", username, message, message_type)
 
-    def send_message(self, user, message):
+    def send_message(self, username, message):
 
-        user_text = core.pluginhandler.outgoing_private_chat_event(user, message)
+        user_text = core.pluginhandler.outgoing_private_chat_event(username, message)
         if user_text is None:
             return
 
-        user, message = user_text
+        username, message = user_text
 
         if message == self.CTCP_VERSION:
             ui_message = "CTCP VERSION"
         else:
             message = ui_message = self.auto_replace(message)
 
-        core.send_message_to_server(slskmessages.MessageUser(user, message))
-        core.pluginhandler.outgoing_private_chat_notification(user, message)
+        core.send_message_to_server(slskmessages.MessageUser(username, message))
+        core.pluginhandler.outgoing_private_chat_notification(username, message)
 
-        events.emit("send-private-message", user, ui_message)
+        events.emit("send-private-message", username, ui_message)
 
     def send_message_users(self, target, message):
 
@@ -195,14 +195,14 @@ class PrivateChat:
         messages and check if the IP is ignored
         """
 
-        user = msg.user
+        username = msg.user
 
-        if user not in self.private_message_queue:
+        if username not in self.private_message_queue:
             return
 
-        for msg_obj in self.private_message_queue[user][:]:
-            self.private_message_queue[user].remove(msg_obj)
-            msg_obj.user = user
+        for msg_obj in self.private_message_queue[username][:]:
+            self.private_message_queue[username].remove(msg_obj)
+            msg_obj.user = username
             events.emit("message-user", msg_obj, queued_message=True)
 
     def _user_status(self, msg):
@@ -214,46 +214,46 @@ class PrivateChat:
     def _message_user(self, msg, queued_message=False):
         """Server code 22."""
 
-        user = msg.user
+        username = msg.user
 
         if not queued_message:
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
-                "user": user,
+                "user": username,
                 "message": msg.msg
             })
 
             core.send_message_to_server(slskmessages.MessageAcked(msg.msgid))
 
-        if user != "server":
+        if username != "server":
             # Check ignore status for all other users except "server"
-            if core.network_filter.is_user_ignored(user):
+            if core.network_filter.is_user_ignored(username):
                 msg.user = None
                 return
 
-            user_address = core.user_addresses.get(user)
+            user_address = core.user_addresses.get(username)
 
             if user_address is not None:
-                if core.network_filter.is_user_ip_ignored(user):
+                if core.network_filter.is_user_ip_ignored(username):
                     msg.user = None
                     return
 
             elif not queued_message:
                 # Ask for user's IP address and queue the private message until we receive the address
-                if user not in self.private_message_queue:
-                    core.request_ip_address(user)
+                if username not in self.private_message_queue:
+                    core.request_ip_address(username)
 
                 self.private_message_queue_add(msg)
                 msg.user = None
                 return
 
-        user_text = core.pluginhandler.incoming_private_chat_event(user, msg.msg)
+        user_text = core.pluginhandler.incoming_private_chat_event(username, msg.msg)
         if user_text is None:
             msg.user = None
             return
 
-        self.show_user(user, switch_page=False)
+        self.show_user(username, switch_page=False)
 
-        _user, msg.msg = user_text
+        _username, msg.msg = user_text
         msg.msg = self.censor_chat(msg.msg)
 
         # SEND CLIENT VERSION to user if the following string is sent
@@ -262,10 +262,10 @@ class PrivateChat:
             ctcpversion = True
             msg.msg = "CTCP VERSION"
 
-        core.pluginhandler.incoming_private_chat_notification(user, msg.msg)
+        core.pluginhandler.incoming_private_chat_notification(username, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(user, f"{config.application_name} {config.version}")
+            self.send_message(username, f"{config.application_name} {config.version}")
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply
@@ -273,9 +273,9 @@ class PrivateChat:
 
         autoreply = config.sections["server"]["autoreply"]
 
-        if autoreply and core.user_status == slskmessages.UserStatus.AWAY and user not in self.away_message_users:
-            self.send_automatic_message(user, autoreply)
-            self.away_message_users.add(user)
+        if autoreply and core.user_status == slskmessages.UserStatus.AWAY and username not in self.away_message_users:
+            self.send_automatic_message(username, autoreply)
+            self.away_message_users.add(username)
 
     def update_completions(self):
 

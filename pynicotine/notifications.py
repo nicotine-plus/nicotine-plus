@@ -48,8 +48,8 @@ class Notifications:
     def show_download_notification(self, message, title=None, high_priority=False):
         events.emit("show-download-notification", message, title=title, high_priority=high_priority)
 
-    def show_private_chat_notification(self, user, message, title=None):
-        events.emit("show-private-chat-notification", user, message, title=title)
+    def show_private_chat_notification(self, username, message, title=None):
+        events.emit("show-private-chat-notification", username, message, title=title)
 
     def show_search_notification(self, search_token, message, title=None):
         events.emit("show-search-notification", search_token, message, title=title)

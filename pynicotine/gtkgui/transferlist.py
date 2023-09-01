@@ -254,7 +254,7 @@ class TransferList:
             return
 
         # Dummy Transfer object for user/folder rows
-        user = transfer.user
+        user = transfer.username
         folder_path = self.get_transfer_folder_path(transfer)
 
         if folder_path is not None:
@@ -273,8 +273,8 @@ class TransferList:
         if transfer.virtual_path is not None and transfer not in self.selected_transfers:
             self.selected_transfers[transfer] = None
 
-        if select_user and transfer.user not in self.selected_users:
-            self.selected_users[transfer.user] = None
+        if select_user and transfer.username not in self.selected_users:
+            self.selected_users[transfer.username] = None
 
         self.select_child_transfers(transfer)
 
@@ -346,7 +346,7 @@ class TransferList:
             return
 
         if transfer is not None:
-            username = transfer.user
+            username = transfer.username
 
             if self.paths:
                 user_folder_path = username + self.get_transfer_folder_path(transfer)
@@ -400,7 +400,7 @@ class TransferList:
             # Remove parent row if no children are present anymore
             if user_folder_path:
                 transfer = self.tree_view.get_row_value(iterator, "transfer_data")
-                _user_iter, user_child_transfers = self.users[transfer.user]
+                _user_iter, user_child_transfers = self.users[transfer.username]
                 user_child_transfers.remove(transfer)
                 del self.paths[user_folder_path]
             else:
@@ -517,7 +517,7 @@ class TransferList:
         user_folder_path_iterator = None
         parent_iterator = None
 
-        user = transfer.user
+        user = transfer.username
         basename = transfer.virtual_path.split("\\")[-1]
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
 
@@ -551,7 +551,7 @@ class TransferList:
                         empty_int,
                         empty_int,
                         empty_int,
-                        Transfer(user=user),  # Dummy Transfer object
+                        Transfer(username=user),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -573,7 +573,7 @@ class TransferList:
                 user_folder_path = user + original_folder_path
 
                 if user_folder_path not in self.paths:
-                    path_transfer = Transfer(user=user, folder_path=original_folder_path)  # Dummy Transfer object
+                    path_transfer = Transfer(username=user, folder_path=original_folder_path)  # Dummy Transfer object
                     iterator = self.tree_view.add_row(
                         [
                             user,
@@ -692,7 +692,7 @@ class TransferList:
         if transfer.iterator is None:
             return
 
-        user = transfer.user
+        user = transfer.username
 
         if self.grouping_mode == "folder_grouping":
             user_folder_path = user + self.get_transfer_folder_path(transfer)
@@ -856,7 +856,7 @@ class TransferList:
                 continue
 
             # Dummy Transfer object for folder rows
-            user_folder_path = transfer.user + self.get_transfer_folder_path(transfer)
+            user_folder_path = transfer.username + self.get_transfer_folder_path(transfer)
             user_folder_path_data = self.paths.get(user_folder_path)
 
             if not user_folder_path_data:
@@ -913,7 +913,7 @@ class TransferList:
                 basename = file_path
 
             data.append({
-                "user": transfer.user,
+                "user": transfer.username,
                 "file_path": file_path,
                 "basename": basename,
                 "virtual_folder_path": folder_path,

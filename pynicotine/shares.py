@@ -687,7 +687,7 @@ class Shares:
         log.add(exception)
         return False
 
-    def file_is_shared(self, user, virtualfilename, realfilename):
+    def file_is_shared(self, username, virtualfilename, realfilename):
 
         log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s", {
             "virtual_name": virtualfilename,
@@ -701,7 +701,7 @@ class Shares:
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
             if bshared_files is not None:
-                user_data = core.userlist.buddies.get(user)
+                user_data = core.userlist.buddies.get(username)
 
                 if user_data:
                     # Check if buddy is trusted
@@ -969,24 +969,24 @@ class Shares:
     def _shared_file_list_request(self, msg):
         """Peer code 4."""
 
-        user = msg.init.target_user
+        username = msg.init.target_user
         request_time = time.time()
 
-        if user in self.requested_share_times and request_time < self.requested_share_times[user] + 0.4:
+        if username in self.requested_share_times and request_time < self.requested_share_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_share_times[user] = request_time
+        self.requested_share_times[username] = request_time
 
-        log.add(_("User %(user)s is browsing your list of shared files"), {"user": user})
+        log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 
         ip_address, _port = msg.init.addr
-        checkuser, reason = core.network_filter.check_user(user, ip_address)
+        checkuser, reason = core.network_filter.check_user(username, ip_address)
 
         if not checkuser:
             message = core.ban_message % reason
-            core.privatechat.send_automatic_message(user, message)
+            core.privatechat.send_automatic_message(username, message)
 
         shares_list = None
 
@@ -1002,7 +1002,7 @@ class Shares:
             # Nyah, nyah
             shares_list = slskmessages.SharedFileListResponse()
 
-        core.send_message_to_peer(user, shares_list)
+        core.send_message_to_peer(username, shares_list)
 
     def _folder_contents_request(self, msg):
         """Peer code 36."""

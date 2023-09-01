@@ -332,20 +332,20 @@ class Core:
     def request_user_stats(self, username):
         self.send_message_to_server(slskmessages.GetUserStats(username))
 
-    def watch_user(self, user):
+    def watch_user(self, username):
         """Tell the server we want to be notified of status/stat updates for a
         user."""
 
         if self.user_status == slskmessages.UserStatus.OFFLINE:
             return
 
-        if user in self.watched_users:
+        if username in self.watched_users:
             return
 
-        self.send_message_to_server(slskmessages.WatchUser(user))
-        self.send_message_to_server(slskmessages.GetUserStatus(user))  # Get privilege status
+        self.send_message_to_server(slskmessages.WatchUser(username))
+        self.send_message_to_server(slskmessages.GetUserStatus(username))  # Get privilege status
 
-        self.watched_users[user] = {}
+        self.watched_users[username] = {}
 
     # Message Callbacks #
 
@@ -437,23 +437,23 @@ class Core:
     def _get_peer_address(self, msg):
         """Server code 3."""
 
-        user = msg.user
-        notify = self._ip_requested.pop(user, None)
+        username = msg.user
+        notify = self._ip_requested.pop(username, None)
         addr = (msg.ip_address, msg.port)
         user_offline = (addr == ("0.0.0.0", 0))
 
         # We already store a local IP address for our username
-        if user != self.login_username and not user_offline:
-            self.user_addresses[user] = addr
+        if username != self.login_username and not user_offline:
+            self.user_addresses[username] = addr
 
-        self.user_countries[user] = country_code = self.network_filter.get_country_code(msg.ip_address)
-        events.emit("user-country", user, country_code)
+        self.user_countries[username] = country_code = self.network_filter.get_country_code(msg.ip_address)
+        events.emit("user-country", username, country_code)
 
         if not notify:
-            self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
+            self.pluginhandler.user_resolve_notification(username, msg.ip_address, msg.port)
             return
 
-        self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
+        self.pluginhandler.user_resolve_notification(username, msg.ip_address, msg.port, country_code)
 
         if country_code:
             country_name = self.network_filter.COUNTRIES.get(country_code, _("Unknown"))
@@ -462,11 +462,11 @@ class Core:
             country = ""
 
         if msg.ip_address == "0.0.0.0":
-            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
+            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), username)
             return
 
         log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
-            "user": user,
+            "user": username,
             "ip": msg.ip_address,
             "port": msg.port,
             "country": country
@@ -486,26 +486,26 @@ class Core:
     def _user_status(self, msg):
         """Server code 7."""
 
-        user = msg.user
+        username = msg.user
         status = msg.status
 
         if status not in {slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
                           slskmessages.UserStatus.AWAY}:
             log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
                 "status": status,
-                "user": user
+                "user": username
             })
 
         # Store statuses for watched users, update statuses of room members
-        if user in self.watched_users or user in self.user_statuses:
-            self.user_statuses[user] = status
+        if username in self.watched_users or username in self.user_statuses:
+            self.user_statuses[username] = status
 
         # User went offline, reset stored IP address and country
         if status == slskmessages.UserStatus.OFFLINE:
-            self.user_addresses.pop(user, None)
-            self.user_countries.pop(user, None)
+            self.user_addresses.pop(username, None)
+            self.user_countries.pop(username, None)
 
-        self.pluginhandler.user_status_notification(user, status, msg.privileged)
+        self.pluginhandler.user_status_notification(username, status, msg.privileged)
 
     def _user_stats(self, msg):
         """Server code 36."""
@@ -538,8 +538,8 @@ class Core:
     def _privileged_users(self, msg):
         """Server code 69."""
 
-        for user in msg.users:
-            events.emit("add-privileged-user", user)
+        for username in msg.users:
+            events.emit("add-privileged-user", username)
 
         log.add(_("%i privileged users"), (len(msg.users)))
 

@@ -54,7 +54,7 @@ class TransfersTest(TestCase):
 
         transfer = core.transfers.downloads[0]
 
-        self.assertEqual(transfer.user, "user17")
+        self.assertEqual(transfer.username, "user17")
         self.assertEqual(transfer.virtual_path, "Downloaded\\Song17.mp3")
         self.assertEqual(transfer.status, "User logged off")
         self.assertEqual(transfer.size, 0)
@@ -63,7 +63,7 @@ class TransfersTest(TestCase):
 
         transfer = core.transfers.downloads[16]
 
-        self.assertEqual(transfer.user, "user1")
+        self.assertEqual(transfer.username, "user1")
         self.assertEqual(transfer.virtual_path, "Downloaded\\Song1.mp3")
         self.assertEqual(transfer.status, "Paused")
         self.assertEqual(transfer.size, 10093741)
@@ -116,7 +116,7 @@ class TransfersTest(TestCase):
 
         transfer = core.transfers.uploads[0]
 
-        self.assertEqual(transfer.user, "user5")
+        self.assertEqual(transfer.username, "user5")
         self.assertEqual(transfer.virtual_path, "Junk\\Song5.mp3")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 11733776)
@@ -125,7 +125,7 @@ class TransfersTest(TestCase):
 
         transfer = core.transfers.uploads[2]
 
-        self.assertEqual(transfer.user, "user3")
+        self.assertEqual(transfer.username, "user3")
         self.assertEqual(transfer.virtual_path, "Junk\\Song3.flac")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 27231044)
@@ -143,7 +143,7 @@ class TransfersTest(TestCase):
         core.transfers.get_file("newuser", "Hello\\Path\\File.mp3", "")
         transfer = core.transfers.downloads[0]
 
-        self.assertEqual(transfer.user, "newuser")
+        self.assertEqual(transfer.username, "newuser")
         self.assertEqual(transfer.virtual_path, "Hello\\Path\\File.mp3")
         self.assertEqual(transfer.folder_path, config.data_folder_path)
 
@@ -154,7 +154,7 @@ class TransfersTest(TestCase):
         core.transfers.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
         transfer = core.transfers.uploads[1]
 
-        self.assertEqual(transfer.user, "newuser2")
+        self.assertEqual(transfer.username, "newuser2")
         self.assertEqual(transfer.virtual_path, "Hello\\Upload\\File.mp3")
         self.assertEqual(transfer.folder_path, os.path.join(os.sep, "home", "test"))
 
@@ -165,14 +165,14 @@ class TransfersTest(TestCase):
         multi-byte character is discarded.
         """
 
-        user = "abc"
+        username = "abc"
         finished_folder_path = os.path.join(os.sep, "path", "to", "somewhere", "downloads")
 
         # Short file extension
         virtual_path = ("Music\\Test\\片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片.mp3")
-        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(username, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
@@ -186,7 +186,7 @@ class TransfersTest(TestCase):
         virtual_path = ("Music\\Test\\abc123456.片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片"
                         "片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片片")
-        incomplete_file_path = core.transfers.get_incomplete_download_file_path(user, virtual_path)
+        incomplete_file_path = core.transfers.get_incomplete_download_file_path(username, virtual_path)
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
@@ -224,22 +224,22 @@ class TransfersTest(TestCase):
     def test_download_folder_destination(self):
         """Verify that the correct download destination is used."""
 
-        user = "newuser"
+        username = "newuser"
         folder_path = "Hello\\Path"
         config.sections["transfers"]["usernamesubfolders"] = False
-        destination_default = core.transfers.get_folder_destination(user, folder_path)
+        destination_default = core.transfers.get_folder_destination(username, folder_path)
 
-        core.transfers.requested_folders[user][folder_path] = "test"
-        destination_custom = core.transfers.get_folder_destination(user, folder_path)
+        core.transfers.requested_folders[username][folder_path] = "test"
+        destination_custom = core.transfers.get_folder_destination(username, folder_path)
 
         config.sections["transfers"]["usernamesubfolders"] = True
-        destination_user = core.transfers.get_folder_destination(user, folder_path)
+        destination_user = core.transfers.get_folder_destination(username, folder_path)
 
         folder_path = "Hello"
-        destination_root = core.transfers.get_folder_destination(user, folder_path)
+        destination_root = core.transfers.get_folder_destination(username, folder_path)
 
         folder_path = "Hello\\Path\\Depth\\Test"
-        destination_depth = core.transfers.get_folder_destination(user, folder_path)
+        destination_depth = core.transfers.get_folder_destination(username, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
         self.assertEqual(destination_custom, os.path.join("test", "Path"))
@@ -250,8 +250,8 @@ class TransfersTest(TestCase):
     def test_download_subfolders(self):
         """Verify that subfolders are downloaded to the correct location."""
 
-        user = "random"
-        core.userbrowse.user_shares[user] = dict([
+        username = "random"
+        core.userbrowse.user_shares[username] = dict([
             ("share", [
                 (1, "root1.mp3", 1000, "", {})
             ]),
@@ -281,7 +281,7 @@ class TransfersTest(TestCase):
         target_folder_path = "share"
 
         core.transfers.downloads.clear()
-        core.userbrowse.download_folder(user, target_folder_path, prefix="test", recurse=True)
+        core.userbrowse.download_folder(username, target_folder_path, prefix="test", recurse=True)
 
         self.assertEqual(len(core.transfers.downloads), 9)
 
@@ -302,7 +302,7 @@ class TransfersTest(TestCase):
         target_folder_path = "share\\Soulseek"
 
         core.transfers.downloads.clear()
-        core.userbrowse.download_folder(user, target_folder_path, prefix="test2", recurse=True)
+        core.userbrowse.download_folder(username, target_folder_path, prefix="test2", recurse=True)
 
         self.assertEqual(len(core.transfers.downloads), 6)
 
