@@ -159,7 +159,7 @@ class Scanner:
                 _("Serious error occurred while rescanning shares. If this problem persists, "
                   "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
                   "report with this stack trace included: %(trace)s"), {
-                    "dir": self.config.data_dir,
+                    "dir": self.config.data_folder_path,
                     "trace": "\n" + format_exc()
                 }, LogLevel.DEFAULT
             ))
@@ -195,7 +195,7 @@ class Scanner:
         if share_db is not None:
             share_db.close()
 
-        db_path = os.path.join(self.config.data_dir, destination + ".db")
+        db_path = os.path.join(self.config.data_folder_path, destination + ".db")
         self.remove_db_file(db_path)
 
         return shelve.open(db_path, flag="n", protocol=pickle.HIGHEST_PROTOCOL)
@@ -224,7 +224,7 @@ class Scanner:
                 if path == real:
                     return virtual
 
-                # Use rstrip to remove trailing separator from root directories
+                # Use rstrip to remove trailing separator from root folders
                 real = real.rstrip("\\") + "\\"
 
                 if path.startswith(real):
@@ -262,8 +262,8 @@ class Scanner:
                 return
 
     def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
-        """Check for modified or new files via OS's last mtime on a directory,
-        or, if rebuild is True, all directories."""
+        """Check for modified or new files via OS's last mtime on a folder,
+        or, if rebuild is True, all folders."""
 
         # Reset progress
         self.queue.put("indeterminate")
@@ -334,7 +334,7 @@ class Scanner:
 
     @staticmethod
     def is_hidden(folder, filename=None, entry=None):
-        """Stop sharing any dot/hidden directories/files."""
+        """Stop sharing any dot/hidden folders/files."""
 
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute folder, we exclude it
@@ -351,7 +351,7 @@ class Scanner:
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
             if len(folder) == 3 and folder[1] == ":" and folder[2] == os.sep:
-                # Root directories are marked as hidden, but we allow scanning them
+                # Root folders are marked as hidden, but we allow scanning them
                 return False
 
             if entry is None:
@@ -510,7 +510,7 @@ class Scanner:
 
     @staticmethod
     def get_dir_stream(folder):
-        """Pack all files and metadata in directory."""
+        """Pack all files and metadata in folder."""
 
         stream = bytearray()
         stream.extend(slskmessages.FileListMessage.pack_uint32(len(folder)))
@@ -579,16 +579,16 @@ class Shares:
 
         self.convert_shares()
         self.share_db_paths = [
-            ("files", os.path.join(config.data_dir, "files.db")),
-            ("streams", os.path.join(config.data_dir, "streams.db")),
-            ("wordindex", os.path.join(config.data_dir, "wordindex.db")),
-            ("fileindex", os.path.join(config.data_dir, "fileindex.db")),
-            ("mtimes", os.path.join(config.data_dir, "mtimes.db")),
-            ("buddyfiles", os.path.join(config.data_dir, "buddyfiles.db")),
-            ("buddystreams", os.path.join(config.data_dir, "buddystreams.db")),
-            ("buddywordindex", os.path.join(config.data_dir, "buddywordindex.db")),
-            ("buddyfileindex", os.path.join(config.data_dir, "buddyfileindex.db")),
-            ("buddymtimes", os.path.join(config.data_dir, "buddymtimes.db"))
+            ("files", os.path.join(config.data_folder_path, "files.db")),
+            ("streams", os.path.join(config.data_folder_path, "streams.db")),
+            ("wordindex", os.path.join(config.data_folder_path, "wordindex.db")),
+            ("fileindex", os.path.join(config.data_folder_path, "fileindex.db")),
+            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
+            ("buddyfiles", os.path.join(config.data_folder_path, "buddyfiles.db")),
+            ("buddystreams", os.path.join(config.data_folder_path, "buddystreams.db")),
+            ("buddywordindex", os.path.join(config.data_folder_path, "buddywordindex.db")),
+            ("buddyfileindex", os.path.join(config.data_folder_path, "buddyfileindex.db")),
+            ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db"))
         ]
 
         for event_name, callback in (

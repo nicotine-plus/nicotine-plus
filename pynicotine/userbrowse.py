@@ -127,7 +127,7 @@ class UserBrowse:
 
     def create_user_shares_folder(self):
 
-        shares_folder = os.path.join(config.data_dir, "usershares")
+        shares_folder = os.path.join(config.data_folder_path, "usershares")
         shares_folder_encoded = encode_path(shares_folder)
 
         try:

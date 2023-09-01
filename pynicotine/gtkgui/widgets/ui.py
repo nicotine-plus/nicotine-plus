@@ -23,7 +23,7 @@ from xml.etree import ElementTree
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.utils import encode_path
 
@@ -37,7 +37,7 @@ ui_data = {}
 def load(scope, path):
 
     if path not in ui_data:
-        with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
+        with open(encode_path(os.path.join(GTK_GUI_FOLDER_PATH, "ui", path)), encoding="utf-8") as file_handle:
             ui_xml_tree = ElementTree.parse(file_handle)
 
             for node in ui_xml_tree.iterfind('.//*[@translatable="yes"]'):

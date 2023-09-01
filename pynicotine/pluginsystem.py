@@ -381,7 +381,7 @@ class PluginHandler:
         self.plugin_folders.append(os.path.join(prefix, "plugins"))
 
         # Load home folder plugins
-        self.user_plugin_folder = os.path.join(config.data_dir, "plugins")
+        self.user_plugin_folder = os.path.join(config.data_folder_path, "plugins")
         self.plugin_folders.append(self.user_plugin_folder)
 
         for event_name, callback in (

@@ -2973,7 +2973,7 @@ class Preferences(Dialog):
         FileChooserSave(
             parent=self,
             callback=self.on_back_up_config_response,
-            initial_folder=os.path.dirname(config.filename),
+            initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
         ).show()

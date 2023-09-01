@@ -35,7 +35,7 @@ from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
-GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
+GTK_GUI_FOLDER_PATH = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 LIBADWAITA_API_VERSION = 0
 LIBADWAITA_MINOR_VERSION = 0
 

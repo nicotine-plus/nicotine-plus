@@ -23,19 +23,19 @@ from unittest import TestCase
 from pynicotine.config import config
 from pynicotine.core import core
 
-SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".sharedfiles")
+SHARES_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".sharedfiles")
 
 
 class SharesTest(TestCase):
 
     def setUp(self):
 
-        config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
-        config.filename = os.path.join(config.data_dir, "temp_config")
+        config.data_folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
+        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
         core.init_components(enabled_components={"shares"})
 
-        config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+        config.sections["transfers"]["shared"] = [("Shares", SHARES_FOLDER_PATH)]
         core.shares.rescan_shares(use_thread=False)
 
     def tearDown(self):
@@ -46,7 +46,7 @@ class SharesTest(TestCase):
         """Test a full shares scan."""
 
         # Verify that modification time was saved for shares folder
-        self.assertIn(SHARES_DIR, list(core.shares.share_dbs["mtimes"]))
+        self.assertIn(SHARES_FOLDER_PATH, list(core.shares.share_dbs["mtimes"]))
 
         # Verify that shared files were added
         self.assertIn(["dummy_file", 0, None, None], core.shares.share_dbs["files"]["Shares"])
@@ -79,13 +79,13 @@ class SharesTest(TestCase):
         # Check folders
         mtimes = list(core.shares.share_dbs["mtimes"])
 
-        self.assertNotIn(os.path.join(SHARES_DIR, ".abc"), mtimes)
-        self.assertNotIn(os.path.join(SHARES_DIR, ".xyz"), mtimes)
-        self.assertIn(os.path.join(SHARES_DIR, "folder1"), mtimes)
-        self.assertIn(os.path.join(SHARES_DIR, "folder2"), mtimes)
-        self.assertNotIn(os.path.join(SHARES_DIR, "folder2", ".poof"), mtimes)
-        self.assertIn(os.path.join(SHARES_DIR, "folder2", "test"), mtimes)
-        self.assertIn(os.path.join(SHARES_DIR, "something"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".abc"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz"), mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder1"), mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, "folder2", ".poof"), mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2", "test"), mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "something"), mtimes)
 
         # Check files
         files = core.shares.share_dbs["files"]["Shares"]

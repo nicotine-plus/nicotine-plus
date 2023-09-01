@@ -53,8 +53,8 @@ class Config:
 
     def __init__(self):
 
-        config_dir, self.data_dir = self.get_user_folders()
-        self.filename = os.path.join(config_dir, "config")
+        config_folder_path, self.data_folder_path = self.get_user_folders()
+        self.config_file_path = os.path.join(config_folder_path, "config")
         self.version = "3.3.0.dev5"
         self.python_version = sys.version.split()[0]
         self.gtk_version = ""
@@ -116,7 +116,7 @@ class Config:
         """Create the folder for storing the config file in, if the folder
         doesn't exist."""
 
-        folder_path, _basename = os.path.split(self.filename)
+        folder_path, _basename = os.path.split(self.config_file_path)
 
         if not folder_path:
             # Only file name specified, use current folder
@@ -141,21 +141,21 @@ class Config:
         """Create the folder for storing data in (shared files etc.), if the
         folder doesn't exist."""
 
-        data_dir_encoded = encode_path(self.data_dir)
+        data_folder_path_encoded = encode_path(self.data_folder_path)
 
         try:
-            if not os.path.isdir(data_dir_encoded):
-                os.makedirs(data_dir_encoded)
+            if not os.path.isdir(data_folder_path_encoded):
+                os.makedirs(data_folder_path_encoded)
 
         except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": self.data_dir, "error": error})
+                    {"path": self.data_folder_path, "error": error})
 
     def load_config(self):
 
-        log_dir = os.path.join(self.data_dir, "logs")
+        log_folder_path = os.path.join(self.data_folder_path, "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -181,9 +181,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join(self.data_dir, "incomplete"),
-                "downloaddir": os.path.join(self.data_dir, "downloads"),
-                "uploaddir": os.path.join(self.data_dir, "received"),
+                "incompletedir": os.path.join(self.data_folder_path, "incomplete"),
+                "downloaddir": os.path.join(self.data_folder_path, "downloads"),
+                "uploaddir": os.path.join(self.data_folder_path, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -268,9 +268,9 @@ class Config:
             "logging": {
                 "debug": False,
                 "debugmodes": [],
-                "debuglogsdir": os.path.join(log_dir, "debug"),
+                "debuglogsdir": os.path.join(log_folder_path, "debug"),
                 "logcollapsed": True,
-                "transferslogsdir": os.path.join(log_dir, "transfers"),
+                "transferslogsdir": os.path.join(log_folder_path, "transfers"),
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
@@ -278,8 +278,8 @@ class Config:
                 "chatrooms": True,
                 "transfers": False,
                 "debug_file_output": False,
-                "roomlogsdir": os.path.join(log_dir, "rooms"),
-                "privatelogsdir": os.path.join(log_dir, "private"),
+                "roomlogsdir": os.path.join(log_folder_path, "rooms"),
+                "privatelogsdir": os.path.join(log_folder_path, "private"),
                 "readroomlogs": True,
                 "readroomlines": 200,
                 "readprivatelines": 200,
@@ -559,7 +559,7 @@ class Config:
         self.create_config_folder()
         self.create_data_folder()
 
-        load_file(self.filename, self.parse_config)
+        load_file(self.config_file_path, self.parse_config)
 
         # Update config values from file
         self.set_config()
@@ -571,7 +571,7 @@ class Config:
 
         from pynicotine.logfacility import log
         log.init_log_levels()
-        log.add_debug("Using configuration: %(file)s", {"file": self.filename})
+        log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
 
         events.connect("quit", self._quit)
 
@@ -603,8 +603,8 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        file_path_conv = encode_path(f"{self.filename}.conv")
-        os.replace(self.filename, file_path_conv)
+        file_path_conv = encode_path(f"{self.config_file_path}.conv")
+        os.replace(self.config_file_path, file_path_conv)
 
         with open(file_path_conv, "rb") as file_handle:
             rawdata = file_handle.read()
@@ -612,7 +612,7 @@ class Config:
         from_encoding = detect(rawdata)["encoding"]
 
         with open(file_path_conv, encoding=from_encoding) as file_read:
-            with open(encode_path(self.filename), "w", encoding="utf-8") as file_write:
+            with open(encode_path(self.config_file_path), "w", encoding="utf-8") as file_write:
                 for line in file_read:
                     file_write.write(line[:-1] + "\r\n")
 
@@ -795,8 +795,8 @@ class Config:
 
         from pynicotine.logfacility import log
 
-        write_file_and_backup(self.filename, self.write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
+        write_file_and_backup(self.config_file_path, self.write_config_callback, protect=True)
+        log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
 
     def write_config_backup(self, file_path):
 
@@ -816,7 +816,7 @@ class Config:
                 if not os.path.exists(file_path_encoded):
                     raise FileNotFoundError("Config file missing")
 
-                tar.add(self.filename)
+                tar.add(self.config_file_path)
 
         except Exception as error:
             log.add(_("Error backing up config: %s"), error)

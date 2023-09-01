@@ -30,11 +30,11 @@ class ConfigTest(TestCase):
 
     def setUp(self):
 
-        config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        config.filename = os.path.join(config.data_dir, "temp_config")
+        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
+        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        default_config_path = os.path.join(config.data_dir, "config")
-        shutil.copy(default_config_path, config.filename)
+        default_config_path = os.path.join(config.data_folder_path, "config")
+        shutil.copy(default_config_path, config.config_file_path)
 
         core.init_components(enabled_components={})
 
@@ -59,11 +59,11 @@ class ConfigTest(TestCase):
         config.sections["server"]["login"] = "newname"
         config.write_configuration()
 
-        with open(encode_path(config.filename), encoding="utf-8") as file_handle:
+        with open(encode_path(config.config_file_path), encoding="utf-8") as file_handle:
             self.assertIn("newname", file_handle.read())
 
         # Verify that the backup is valid
-        old_config = encode_path(f"{config.filename}.old")
+        old_config = encode_path(f"{config.config_file_path}.old")
         self.assertTrue(os.path.exists(old_config))
 
         with open(old_config, encoding="utf-8") as file_handle:

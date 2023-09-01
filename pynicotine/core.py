@@ -124,11 +124,12 @@ class Core:
         ):
             events.connect(event_name, callback)
 
-        script_dir = os.path.dirname(__file__)
+        script_folder_path = os.path.dirname(__file__)
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
-        log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
+        log.add_debug("Using %(program)s executable: %(exe)s", {
+            "program": config.application_name, "exe": script_folder_path})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         if "portmapper" in enabled_components:

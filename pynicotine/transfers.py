@@ -103,8 +103,8 @@ class Transfers:
         self.user_update_counter = 0
         self.user_update_counters = {}
 
-        self.downloads_file_name = os.path.join(config.data_dir, "downloads.json")
-        self.uploads_file_name = os.path.join(config.data_dir, "uploads.json")
+        self.downloads_file_name = os.path.join(config.data_folder_path, "downloads.json")
+        self.uploads_file_name = os.path.join(config.data_folder_path, "uploads.json")
 
         self._transfer_timeout_timer_id = None
         self._download_queue_timer_id = None
@@ -232,10 +232,9 @@ class Transfers:
 
     def get_download_queue_file_name(self):
 
-        data_dir = config.data_dir
-        downloads_file_json = os.path.join(data_dir, "downloads.json")
-        downloads_file_1_4_2 = os.path.join(data_dir, "config.transfers.pickle")
-        downloads_file_1_4_1 = os.path.join(data_dir, "transfers.pickle")
+        downloads_file_json = os.path.join(config.data_folder_path, "downloads.json")
+        downloads_file_1_4_2 = os.path.join(config.data_folder_path, "config.transfers.pickle")
+        downloads_file_1_4_1 = os.path.join(config.data_folder_path, "transfers.pickle")
 
         if os.path.exists(encode_path(downloads_file_json)):
             # New file format
@@ -253,10 +252,7 @@ class Transfers:
         return downloads_file_json
 
     def get_upload_list_file_name(self):
-
-        data_dir = config.data_dir
-        uploads_file_json = os.path.join(data_dir, "uploads.json")
-
+        uploads_file_json = os.path.join(config.data_folder_path, "uploads.json")
         return uploads_file_json
 
     @staticmethod

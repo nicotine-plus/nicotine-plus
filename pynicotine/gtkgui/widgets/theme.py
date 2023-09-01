@@ -28,7 +28,7 @@ from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.logfacility import log
@@ -367,7 +367,7 @@ def load_custom_icons(update=False):
     if update:
         GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
-    icon_theme_path = os.path.join(config.data_dir, CUSTOM_ICON_THEME_NAME)
+    icon_theme_path = os.path.join(config.data_folder_path, CUSTOM_ICON_THEME_NAME)
     icon_theme_path_encoded = encode_path(icon_theme_path)
 
     parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
@@ -469,8 +469,8 @@ def load_icons():
     """Load custom icons necessary for the application to function."""
 
     paths = (
-        config.data_dir,  # Custom internal icon theme
-        os.path.join(GTK_GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
+        config.data_folder_path,  # Custom internal icon theme
+        os.path.join(GTK_GUI_FOLDER_PATH, "icons"),  # Support running from folder, as well as macOS and Windows
         os.path.join(sys.prefix, "share", "icons")  # Support Python venv
     )
 

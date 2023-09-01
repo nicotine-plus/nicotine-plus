@@ -29,11 +29,11 @@ class TransfersTest(TestCase):
 
     def setUp(self):
 
-        config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        config.filename = os.path.join(config.data_dir, "temp_config")
+        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
+        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
         core.init_components(enabled_components={"shares", "transfers", "userbrowse", "userlist"})
-        config.sections["transfers"]["downloaddir"] = config.data_dir
+        config.sections["transfers"]["downloaddir"] = config.data_folder_path
 
         core.start()
         core.transfers.allow_saving_transfers = False
@@ -145,7 +145,7 @@ class TransfersTest(TestCase):
 
         self.assertEqual(transfer.user, "newuser")
         self.assertEqual(transfer.virtual_path, "Hello\\Path\\File.mp3")
-        self.assertEqual(transfer.folder_path, config.data_dir)
+        self.assertEqual(transfer.folder_path, config.data_folder_path)
 
     def test_push_upload(self):
         """Verify that new uploads are prepended to the list."""
@@ -177,7 +177,7 @@ class TransfersTest(TestCase):
 
         self.assertLess(
             len(incomplete_basename.encode("utf-8")),
-            core.transfers.get_basename_byte_limit(config.data_dir)
+            core.transfers.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETE42d26e9276e024cdaeac645438912b88"))
         self.assertTrue(incomplete_basename.endswith(".mp3"))
@@ -191,7 +191,7 @@ class TransfersTest(TestCase):
 
         self.assertLess(
             len(incomplete_basename.encode("utf-8")),
-            core.transfers.get_basename_byte_limit(config.data_dir)
+            core.transfers.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETEf98e3f07a3fc60e114534045f26707d2."))
         self.assertTrue(incomplete_basename.endswith("片"))
@@ -204,7 +204,7 @@ class TransfersTest(TestCase):
 
         self.assertLess(
             len(finished_basename.encode("utf-8")),
-            core.transfers.get_basename_byte_limit(config.data_dir)
+            core.transfers.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(finished_basename.startswith("片"))
         self.assertTrue(finished_basename.endswith(".mp3"))
@@ -216,7 +216,7 @@ class TransfersTest(TestCase):
 
         self.assertLess(
             len(finished_basename.encode("utf-8")),
-            core.transfers.get_basename_byte_limit(config.data_dir)
+            core.transfers.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(finished_basename.startswith(".片"))
         self.assertTrue(finished_basename.endswith("片"))
@@ -241,11 +241,11 @@ class TransfersTest(TestCase):
         folder_path = "Hello\\Path\\Depth\\Test"
         destination_depth = core.transfers.get_folder_destination(user, folder_path)
 
-        self.assertEqual(destination_default, os.path.join(config.data_dir, "Path"))
+        self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
         self.assertEqual(destination_custom, os.path.join("test", "Path"))
-        self.assertEqual(destination_user, os.path.join(config.data_dir, "newuser", "Path"))
-        self.assertEqual(destination_root, os.path.join(config.data_dir, "newuser", "Hello"))
-        self.assertEqual(destination_depth, os.path.join(config.data_dir, "newuser", "Test"))
+        self.assertEqual(destination_user, os.path.join(config.data_folder_path, "newuser", "Path"))
+        self.assertEqual(destination_root, os.path.join(config.data_folder_path, "newuser", "Hello"))
+        self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Test"))
 
     def test_download_subfolders(self):
         """Verify that subfolders are downloaded to the correct location."""

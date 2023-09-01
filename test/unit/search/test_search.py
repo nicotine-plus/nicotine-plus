@@ -32,8 +32,8 @@ class SearchTest(TestCase):
 
     def setUp(self):
 
-        config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        config.filename = os.path.join(config.data_dir, "temp_config")
+        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
+        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
         core.init_components(enabled_components={"pluginhandler", "search"})
 
