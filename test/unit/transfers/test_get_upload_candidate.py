@@ -49,11 +49,11 @@ class GetUploadCandidateTest(TestCase):
         transfer_list = []
 
         for user in users:
-            filename = f"{user}/{len(core.transfers.uploads)}"
-            transfer = Transfer(user=user, path=filename, status=status)
+            folder_path = f"{user}/{len(core.transfers.uploads)}"
+            transfer = Transfer(user=user, folder_path=folder_path, status=status)
 
             transfer_list.append(transfer)
-            core.transfers.append_upload(user, filename, transfer)
+            core.transfers.append_upload(user, folder_path, transfer)
             core.transfers.update_upload(transfer)
 
         return transfer_list

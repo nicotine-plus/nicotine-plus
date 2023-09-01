@@ -250,15 +250,16 @@ class TransferList:
 
     def select_child_transfers(self, transfer):
 
-        if transfer.filename is not None:
+        if transfer.virtual_path is not None:
             return
 
         # Dummy Transfer object for user/folder rows
         user = transfer.user
+        folder_path = self.get_transfer_folder_path(transfer)
 
-        if transfer.path is not None:
-            user_path = user + transfer.path
-            row_data = self.paths[user_path]
+        if folder_path is not None:
+            user_folder_path = user + folder_path
+            row_data = self.paths[user_folder_path]
         else:
             row_data = self.users[user]
 
@@ -269,7 +270,7 @@ class TransferList:
 
     def select_transfer(self, transfer, select_user=False):
 
-        if transfer.filename is not None and transfer not in self.selected_transfers:
+        if transfer.virtual_path is not None and transfer not in self.selected_transfers:
             self.selected_transfers[transfer] = None
 
         if select_user and transfer.user not in self.selected_users:
@@ -289,10 +290,10 @@ class TransferList:
             return
 
         try:
-            _folder_path, basename = transfer.filename.rsplit("\\", 1)
+            _folder_path, basename = transfer.virtual_path.rsplit("\\", 1)
 
         except ValueError:
-            basename = transfer.filename
+            basename = transfer.virtual_path
 
         self.window.search_entry.set_text(basename)
         self.window.change_main_page(self.window.search_page)
@@ -348,17 +349,18 @@ class TransferList:
             username = transfer.user
 
             if self.paths:
-                user_path = username + self.get_transfer_folder_path(transfer)
-                user_path_iter, user_path_child_transfers = self.paths[user_path]
-                self.update_parent_row(user_path_iter, user_path_child_transfers, user_path=user_path)
+                user_folder_path = username + self.get_transfer_folder_path(transfer)
+                user_folder_path_iter, user_folder_path_child_transfers = self.paths[user_folder_path]
+                self.update_parent_row(
+                    user_folder_path_iter, user_folder_path_child_transfers, user_folder_path=user_folder_path)
 
             user_iter, user_child_transfers = self.users[username]
             self.update_parent_row(user_iter, user_child_transfers, username=username)
 
         else:
             if self.paths:
-                for user_path, (user_path_iter, child_transfers) in self.paths.copy().items():
-                    self.update_parent_row(user_path_iter, child_transfers, user_path=user_path)
+                for user_folder_path, (user_folder_path_iter, child_transfers) in self.paths.copy().items():
+                    self.update_parent_row(user_folder_path_iter, child_transfers, user_folder_path=user_folder_path)
 
             for username, (user_iter, child_transfers) in self.users.copy().items():
                 self.update_parent_row(user_iter, child_transfers, username=username)
@@ -387,7 +389,7 @@ class TransferList:
     def get_percent(current_byte_offset, size):
         return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
 
-    def update_parent_row(self, iterator, child_transfers, username=None, user_path=None):
+    def update_parent_row(self, iterator, child_transfers, username=None, user_folder_path=None):
 
         speed = 0.0
         total_size = current_byte_offset = 0
@@ -396,11 +398,11 @@ class TransferList:
 
         if not child_transfers:
             # Remove parent row if no children are present anymore
-            if user_path:
+            if user_folder_path:
                 transfer = self.tree_view.get_row_value(iterator, "transfer_data")
                 _user_iter, user_child_transfers = self.users[transfer.user]
                 user_child_transfers.remove(transfer)
-                del self.paths[user_path]
+                del self.paths[user_folder_path]
             else:
                 del self.users[username]
 
@@ -419,7 +421,7 @@ class TransferList:
                 # "Finished" status always has the lowest priority
                 parent_status = status
 
-            if status == "Filtered" and transfer.filename:
+            if status == "Filtered" and transfer.virtual_path:
                 # We don't want to count filtered files when calculating the progress
                 continue
 
@@ -512,11 +514,11 @@ class TransferList:
         expand_user = False
         expand_folder = False
         user_iterator = None
-        user_path_iterator = None
+        user_folder_path_iterator = None
         parent_iterator = None
 
         user = transfer.user
-        shortfn = transfer.filename.split("\\")[-1]
+        basename = transfer.virtual_path.split("\\")[-1]
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
 
         if config.sections["ui"]["reverse_file_paths"]:
@@ -571,7 +573,7 @@ class TransferList:
                 user_folder_path = user + original_folder_path
 
                 if user_folder_path not in self.paths:
-                    path_transfer = Transfer(user=user, path=original_folder_path)  # Dummy Transfer object
+                    path_transfer = Transfer(user=user, folder_path=original_folder_path)  # Dummy Transfer object
                     iterator = self.tree_view.add_row(
                         [
                             user,
@@ -600,9 +602,9 @@ class TransferList:
                     self.row_id += 1
                     self.paths[user_folder_path] = (iterator, [])
 
-                user_path_iterator, user_path_child_transfers = self.paths[user_folder_path]
-                parent_iterator = user_path_iterator
-                user_path_child_transfers.append(transfer)
+                user_folder_path_iterator, user_folder_path_child_transfers = self.paths[user_folder_path]
+                parent_iterator = user_folder_path_iterator
+                user_folder_path_child_transfers.append(transfer)
 
                 # Group by folder, path not visible in file rows
                 folder_path = ""
@@ -621,8 +623,8 @@ class TransferList:
         row = [
             user,
             folder_path,
-            get_file_type_icon_name(shortfn),
-            shortfn,
+            get_file_type_icon_name(basename),
+            basename,
             self.translate_status(status),
             self.get_hqueue_position(queue_position),
             self.get_percent(current_byte_offset, size),
@@ -647,7 +649,7 @@ class TransferList:
             self.tree_view.expand_row(user_iterator)
 
         if expand_folder:
-            self.tree_view.expand_row(user_path_iterator)
+            self.tree_view.expand_row(user_folder_path_iterator)
 
         return True
 
@@ -693,9 +695,9 @@ class TransferList:
         user = transfer.user
 
         if self.grouping_mode == "folder_grouping":
-            user_path = user + self.get_transfer_folder_path(transfer)
-            _user_path_iter, user_path_child_transfers = self.paths[user_path]
-            user_path_child_transfers.remove(transfer)
+            user_folder_path = user + self.get_transfer_folder_path(transfer)
+            _user_folder_path_iter, user_folder_path_child_transfers = self.paths[user_folder_path]
+            user_folder_path_child_transfers.remove(transfer)
         else:
             _user_iter, user_child_transfers = self.users[user]
             user_child_transfers.remove(transfer)
@@ -802,7 +804,7 @@ class TransferList:
 
     def on_file_path_tooltip(self, treeview, iterator):
         transfer = treeview.get_row_value(iterator, "transfer_data")
-        return transfer.filename or transfer.path
+        return transfer.virtual_path or self.get_transfer_folder_path(transfer)
 
     def on_row_activated(self, _treeview, iterator, _column_id):
 
@@ -854,15 +856,15 @@ class TransferList:
                 continue
 
             # Dummy Transfer object for folder rows
-            user_path = transfer.user + transfer.path
-            user_path_data = self.paths.get(user_path)
+            user_folder_path = transfer.user + self.get_transfer_folder_path(transfer)
+            user_folder_path_data = self.paths.get(user_folder_path)
 
-            if not user_path_data:
+            if not user_folder_path_data:
                 continue
 
-            _user_path_iter, user_path_child_transfers = user_path_data
+            _user_folder_path_iter, user_folder_path_child_transfers = user_folder_path_data
 
-            for i_transfer in user_path_child_transfers:
+            for i_transfer in user_folder_path_child_transfers:
                 self.tree_view.select_row(i_transfer.iterator, should_scroll=False)
 
     def on_abort_transfers_accelerator(self, *_args):
@@ -899,7 +901,7 @@ class TransferList:
         selected_size = 0
 
         for transfer in self.selected_transfers:
-            file_path = transfer.filename
+            file_path = transfer.virtual_path
             file_size = transfer.size
             selected_size += file_size
 
@@ -915,7 +917,7 @@ class TransferList:
                 "file_path": file_path,
                 "basename": basename,
                 "virtual_folder_path": folder_path,
-                "real_folder_path": transfer.path,
+                "real_folder_path": transfer.folder_path,
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
                 "size": file_size,
@@ -942,7 +944,7 @@ class TransferList:
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            clipboard.copy_text(transfer.filename)
+            clipboard.copy_text(transfer.virtual_path)
 
     def on_play_files(self, *_args):
         # Implemented in subclasses

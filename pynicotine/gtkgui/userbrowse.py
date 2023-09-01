@@ -1030,7 +1030,7 @@ class UserBrowse:
 
                 data.append({
                     "user": self.user,
-                    "fn": file_path,
+                    "file_path": file_path,
                     "basename": basename,
                     "virtual_folder_path": folder_path,
                     "size": file_size,

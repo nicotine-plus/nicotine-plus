@@ -91,7 +91,8 @@ class Uploads(TransferList):
         self.init_transfers(core.transfers.uploads)
 
     def get_transfer_folder_path(self, transfer):
-        return transfer.filename.rsplit("\\", 1)[0]
+        virtual_path = transfer.virtual_path
+        return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
 
     def retry_selected_transfers(self):
         core.transfers.retry_uploads(self.selected_transfers)
@@ -134,7 +135,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.filename)
+            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path)
             clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
@@ -143,7 +144,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit("\\", 1)[0] + "\\")
+            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -151,14 +152,14 @@ class Uploads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            open_file_path(file_path=transfer.path, command=config.sections["ui"]["filemanager"])
+            open_file_path(file_path=transfer.folder_path, command=config.sections["ui"]["filemanager"])
 
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            basename = transfer.filename.split("\\")[-1]
+            basename = transfer.virtual_path.split("\\")[-1]
 
-            open_file_path(file_path=os.path.join(transfer.path, basename),
+            open_file_path(file_path=os.path.join(transfer.folder_path, basename),
                            command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
@@ -169,7 +170,7 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder_path = transfer.filename.rsplit("\\", 1)[0] + "\\"
+        folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
 
         core.userbrowse.browse_user(user, path=folder_path)
 

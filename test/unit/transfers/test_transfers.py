@@ -55,7 +55,7 @@ class TransfersTest(TestCase):
         transfer = core.transfers.downloads[0]
 
         self.assertEqual(transfer.user, "user17")
-        self.assertEqual(transfer.filename, "Downloaded\\Song17.mp3")
+        self.assertEqual(transfer.virtual_path, "Downloaded\\Song17.mp3")
         self.assertEqual(transfer.status, "User logged off")
         self.assertEqual(transfer.size, 0)
         self.assertIsNone(transfer.current_byte_offset)
@@ -64,7 +64,7 @@ class TransfersTest(TestCase):
         transfer = core.transfers.downloads[16]
 
         self.assertEqual(transfer.user, "user1")
-        self.assertEqual(transfer.filename, "Downloaded\\Song1.mp3")
+        self.assertEqual(transfer.virtual_path, "Downloaded\\Song1.mp3")
         self.assertEqual(transfer.status, "Paused")
         self.assertEqual(transfer.size, 10093741)
         self.assertEqual(transfer.current_byte_offset, 5000)
@@ -117,7 +117,7 @@ class TransfersTest(TestCase):
         transfer = core.transfers.uploads[0]
 
         self.assertEqual(transfer.user, "user5")
-        self.assertEqual(transfer.filename, "Junk\\Song5.mp3")
+        self.assertEqual(transfer.virtual_path, "Junk\\Song5.mp3")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 11733776)
         self.assertEqual(transfer.current_byte_offset, 11733776)
@@ -126,7 +126,7 @@ class TransfersTest(TestCase):
         transfer = core.transfers.uploads[2]
 
         self.assertEqual(transfer.user, "user3")
-        self.assertEqual(transfer.filename, "Junk\\Song3.flac")
+        self.assertEqual(transfer.virtual_path, "Junk\\Song3.flac")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 27231044)
         self.assertEqual(transfer.current_byte_offset, 27231044)
@@ -144,8 +144,8 @@ class TransfersTest(TestCase):
         transfer = core.transfers.downloads[0]
 
         self.assertEqual(transfer.user, "newuser")
-        self.assertEqual(transfer.filename, "Hello\\Path\\File.mp3")
-        self.assertEqual(transfer.path, config.data_dir)
+        self.assertEqual(transfer.virtual_path, "Hello\\Path\\File.mp3")
+        self.assertEqual(transfer.folder_path, config.data_dir)
 
     def test_push_upload(self):
         """Verify that new uploads are prepended to the list."""
@@ -155,8 +155,8 @@ class TransfersTest(TestCase):
         transfer = core.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")
-        self.assertEqual(transfer.filename, "Hello\\Upload\\File.mp3")
-        self.assertEqual(transfer.path, os.path.join(os.sep, "home", "test"))
+        self.assertEqual(transfer.virtual_path, "Hello\\Upload\\File.mp3")
+        self.assertEqual(transfer.folder_path, os.path.join(os.sep, "home", "test"))
 
     def test_long_basename(self):
         """Verify that the basename in download paths doesn't exceed 255 bytes.
@@ -285,15 +285,18 @@ class TransfersTest(TestCase):
 
         self.assertEqual(len(core.transfers.downloads), 9)
 
-        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test", "share", "Soulseek", "folder2", "sub2"))
-        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test", "share", "Soulseek", "folder2"))
-        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test", "share", "Soulseek", "folder1", "sub1"))
-        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test", "share", "Soulseek", "folder1"))
-        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test", "share", "Soulseek"))
-        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test", "share", "Soulseek"))
-        self.assertEqual(core.transfers.downloads[6].path, os.path.join("test", "share", "Music"))
-        self.assertEqual(core.transfers.downloads[7].path, os.path.join("test", "share", "Music"))
-        self.assertEqual(core.transfers.downloads[8].path, os.path.join("test", "share"))
+        self.assertEqual(
+            core.transfers.downloads[0].folder_path, os.path.join("test", "share", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(
+            core.transfers.downloads[1].folder_path, os.path.join("test", "share", "Soulseek", "folder2"))
+        self.assertEqual(
+            core.transfers.downloads[2].folder_path, os.path.join("test", "share", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(core.transfers.downloads[3].folder_path, os.path.join("test", "share", "Soulseek", "folder1"))
+        self.assertEqual(core.transfers.downloads[4].folder_path, os.path.join("test", "share", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[5].folder_path, os.path.join("test", "share", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[6].folder_path, os.path.join("test", "share", "Music"))
+        self.assertEqual(core.transfers.downloads[7].folder_path, os.path.join("test", "share", "Music"))
+        self.assertEqual(core.transfers.downloads[8].folder_path, os.path.join("test", "share"))
 
         # Share subfolder
         target_folder_path = "share\\Soulseek"
@@ -303,9 +306,9 @@ class TransfersTest(TestCase):
 
         self.assertEqual(len(core.transfers.downloads), 6)
 
-        self.assertEqual(core.transfers.downloads[0].path, os.path.join("test2", "Soulseek", "folder2", "sub2"))
-        self.assertEqual(core.transfers.downloads[1].path, os.path.join("test2", "Soulseek", "folder2"))
-        self.assertEqual(core.transfers.downloads[2].path, os.path.join("test2", "Soulseek", "folder1", "sub1"))
-        self.assertEqual(core.transfers.downloads[3].path, os.path.join("test2", "Soulseek", "folder1"))
-        self.assertEqual(core.transfers.downloads[4].path, os.path.join("test2", "Soulseek"))
-        self.assertEqual(core.transfers.downloads[5].path, os.path.join("test2", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[0].folder_path, os.path.join("test2", "Soulseek", "folder2", "sub2"))
+        self.assertEqual(core.transfers.downloads[1].folder_path, os.path.join("test2", "Soulseek", "folder2"))
+        self.assertEqual(core.transfers.downloads[2].folder_path, os.path.join("test2", "Soulseek", "folder1", "sub1"))
+        self.assertEqual(core.transfers.downloads[3].folder_path, os.path.join("test2", "Soulseek", "folder1"))
+        self.assertEqual(core.transfers.downloads[4].folder_path, os.path.join("test2", "Soulseek"))
+        self.assertEqual(core.transfers.downloads[5].folder_path, os.path.join("test2", "Soulseek"))
