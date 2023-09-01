@@ -984,11 +984,9 @@ class Transfers:
         # If this file is not in your download queue, then it must be
         # a remotely initiated download and someone is manually uploading to you
         if accepted and self.can_upload(user):
-            folder_path = ""
-            if config.sections["transfers"]["uploadsinsubdirs"]:
-                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-                folder_path = os.path.join(
-                    os.path.normpath(config.sections["transfers"]["uploaddir"]), user, parent_folder_path)
+            parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+            folder_path = os.path.join(
+                os.path.normpath(config.sections["transfers"]["uploaddir"]), user, parent_folder_path)
 
             transfer = Transfer(user=user, virtual_path=virtual_path, folder_path=folder_path, status="Queued",
                                 size=size, token=token)

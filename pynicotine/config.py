@@ -219,7 +219,6 @@ class Config:
                 "uploadallowed": 3,
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
-                "uploadsinsubdirs": True,
                 "rescanonstartup": True,
                 "enablefilters": False,
                 "downloadregexp": "",
@@ -456,7 +455,8 @@ class Config:
                 "friendsonly",
                 "enabletransferbuttons",
                 "uselimit",
-                "usealtlimits"
+                "usealtlimits",
+                "uploadsinsubdirs"
             ),
             "server": (
                 "lastportstatuscheck",
