@@ -194,7 +194,7 @@ class UserBrowse:
         self.num_folders = 0
         self.share_size = 0
 
-        self.selected_folder = None
+        self.selected_folder_path = None
         self.selected_folder_size = 0
         self.selected_files = {}
 
@@ -206,7 +206,7 @@ class UserBrowse:
         self.folder_tree_view = TreeView(
             self.window, parent=self.folder_tree_container, has_tree=True, always_select=True,
             activate_row_callback=self.on_folder_row_activated,
-            select_row_callback=self.on_select_dir,
+            select_row_callback=self.on_select_folder,
             columns={
                 # Visible columns
                 "folder": {
@@ -236,28 +236,28 @@ class UserBrowse:
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
-                ("#" + _("Upload Folder…"), self.on_upload_directory_to),
-                ("#" + _("Upload Folder & Subfolders…"), self.on_upload_directory_recursive_to),
+                ("#" + _("Upload Folder…"), self.on_upload_folder_to),
+                ("#" + _("Upload Folder & Subfolders…"), self.on_upload_folder_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy _URL"), self.on_copy_dir_url),
+                ("#" + _("Copy _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User"), self.user_popup_menu)
             )
         else:
             self.folder_popup_menu.add_items(
-                ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-                ("#" + _("Download Folder & Subfolders"), self.on_download_directory_recursive),
-                ("#" + _("Download Folder & Subfolders To…"), self.on_download_directory_recursive_to),
+                ("#" + _("_Download Folder"), self.on_download_folder),
+                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
+                ("#" + _("Download Folder & Subfolders"), self.on_download_folder_recursive),
+                ("#" + _("Download Folder & Subfolders To…"), self.on_download_folder_recursive_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy _URL"), self.on_copy_dir_url),
+                ("#" + _("Copy _URL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User"), self.user_popup_menu)
             )
@@ -316,7 +316,7 @@ class UserBrowse:
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
                 ("#" + _("Up_load File(s)…"), self.on_upload_files),
-                ("#" + _("Upload Folder…"), self.on_upload_directory_to),
+                ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("", None),
                 ("#" + _("Send to _Player"), self.on_play_files),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
@@ -332,8 +332,8 @@ class UserBrowse:
                 ("#" + _("_Download File(s)"), self.on_download_files),
                 ("#" + _("Download File(s) _To…"), self.on_download_files_to),
                 ("", None),
-                ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
+                ("#" + _("_Download Folder"), self.on_download_folder),
+                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
@@ -403,7 +403,7 @@ class UserBrowse:
         self.query = None
         self.search_list.clear()
 
-        self.selected_folder = None
+        self.selected_folder_path = None
         self.selected_files.clear()
 
         self.folder_tree_view.clear()
@@ -414,7 +414,7 @@ class UserBrowse:
         self.clear_model()
         private_size = num_private_folders = 0
 
-        # Generate the directory tree and select first directory
+        # Generate the folder tree and select first folder
         size, num_folders = self.create_folder_tree(shares)
 
         if private_shares:
@@ -481,13 +481,13 @@ class UserBrowse:
         if not self.queued_path:
             return
 
-        folder = filename = None
-        path_split = self.queued_path.rsplit("\\", 1)
+        try:
+            folder_path, basename = self.queued_path.rsplit("\\", 1)
 
-        if len(path_split) >= 2:
-            folder, filename = path_split
+        except ValueError:
+            folder_path = basename = None
 
-        iterator = self.folder_tree_view.iterators.get(folder)
+        iterator = self.folder_tree_view.iterators.get(folder_path)
 
         if not iterator:
             return
@@ -497,7 +497,7 @@ class UserBrowse:
         # Scroll to the requested folder
         self.folder_tree_view.select_row(iterator)
 
-        iterator = self.file_list_view.iterators.get(filename)
+        iterator = self.file_list_view.iterators.get(basename)
 
         if not iterator:
             self.folder_tree_view.grab_focus()
@@ -582,15 +582,15 @@ class UserBrowse:
         self.refresh_button.set_sensitive(True)
         self.save_button.set_sensitive(not self.folder_tree_view.is_empty())
 
-    def set_directory(self, directory):
+    def set_selected_folder(self, folder_path):
 
-        if directory is None or self.selected_folder == directory:
+        if folder_path is None or self.selected_folder_path == folder_path:
             return
 
         self.file_list_view.clear()
 
-        self.selected_folder = directory
-        files = core.userbrowse.user_shares[self.user].get(directory)
+        self.selected_folder_path = folder_path
+        files = core.userbrowse.user_shares[self.user].get(folder_path)
 
         if not files:
             return
@@ -600,14 +600,14 @@ class UserBrowse:
 
         selected_folder_size = 0
 
-        for _code, filename, size, _ext, file_attributes, *_unused in files:
+        for _code, basename, size, _ext, file_attributes, *_unused in files:
             selected_folder_size += size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
             self.file_list_view.add_row([
-                get_file_type_icon_name(filename),
-                filename,
+                get_file_type_icon_name(basename),
+                basename,
                 h_size,
                 h_quality,
                 h_length,
@@ -625,13 +625,13 @@ class UserBrowse:
         self.selected_files.clear()
 
         for iterator in self.file_list_view.get_selected_rows():
-            rawfilename = self.file_list_view.get_row_value(iterator, "filename")
+            basename = self.file_list_view.get_row_value(iterator, "filename")
             filesize = self.file_list_view.get_row_value(iterator, "size_data")
 
-            self.selected_files[rawfilename] = filesize
+            self.selected_files[basename] = filesize
 
     def get_selected_folder_path(self):
-        return f'{self.selected_folder or ""}\\'
+        return f'{self.selected_folder_path or ""}\\'
 
     def get_selected_file_path(self):
         selected_folder = self.get_selected_folder_path()
@@ -645,24 +645,21 @@ class UserBrowse:
         self.search_list.clear()
         temp_list = set()
 
-        for directory, files in core.userbrowse.user_shares[self.user].items():
-
-            if self.query in directory.lower():
-                temp_list.add(directory)
+        for folder_path, files in core.userbrowse.user_shares[self.user].items():
+            if self.query in folder_path.lower():
+                temp_list.add(folder_path)
                 continue
 
-            for file_data in files:
-                filename = file_data[1]
-
-                if self.query in filename.lower():
-                    temp_list.add(directory)
+            for _code, basename, *_unused in files:
+                if self.query in basename.lower():
+                    temp_list.add(folder_path)
 
         self.search_list = sorted(temp_list, key=strxfrm)
 
     def select_search_match_folder(self):
 
-        directory = self.search_list[self.search_position]
-        iterator = self.folder_tree_view.iterators[directory]
+        folder_path = self.search_list[self.search_position]
+        iterator = self.folder_tree_view.iterators[folder_path]
 
         self.folder_tree_view.select_row(iterator)
 
@@ -717,30 +714,29 @@ class UserBrowse:
 
     # Callbacks (folder_tree_view) #
 
-    def on_select_dir(self, tree_view, iterator):
+    def on_select_folder(self, tree_view, iterator):
 
         if iterator is None:
             return
 
         folder_path = tree_view.get_row_value(iterator, "folder_path_data")
-        self.set_directory(folder_path)
+        self.set_selected_folder(folder_path)
 
     def on_folder_popup_menu(self, *_args):
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_directory(self, *_args):
+    def on_download_folder(self, *_args):
+        if self.selected_folder_path is not None:
+            core.userbrowse.download_folder(self.user, self.selected_folder_path)
 
-        if self.selected_folder is not None:
-            core.userbrowse.download_folder(self.user, self.selected_folder)
+    def on_download_folder_recursive(self, *_args):
+        core.userbrowse.download_folder(self.user, self.selected_folder_path, prefix="", recurse=True)
 
-    def on_download_directory_recursive(self, *_args):
-        core.userbrowse.download_folder(self.user, self.selected_folder, prefix="", recurse=True)
+    def on_download_folder_to_selected(self, selected_folder_path, recurse):
+        core.userbrowse.download_folder(self.user, self.selected_folder_path,
+                                        prefix=os.path.join(selected_folder_path, ""), recurse=recurse)
 
-    def on_download_directory_to_selected(self, selected, recurse):
-        core.userbrowse.download_folder(self.user, self.selected_folder,
-                                        prefix=os.path.join(selected, ""), recurse=recurse)
-
-    def on_download_directory_to(self, *_args, recurse=False):
+    def on_download_folder_to(self, *_args, recurse=False):
 
         if recurse:
             str_title = _("Select Destination for Downloading Multiple Folders")
@@ -750,30 +746,27 @@ class UserBrowse:
         FolderChooser(
             parent=self.window,
             title=str_title,
-            callback=self.on_download_directory_to_selected,
+            callback=self.on_download_folder_to_selected,
             callback_data=recurse,
-            initial_folder=config.sections["transfers"]["downloaddir"]
+            initial_folder=core.transfers.get_default_download_folder()
         ).show()
 
-    def on_download_directory_recursive_to(self, *_args):
-        self.on_download_directory_to(recurse=True)
+    def on_download_folder_recursive_to(self, *_args):
+        self.on_download_folder_to(recurse=True)
 
-    def on_upload_directory_to_response(self, dialog, _response_id, recurse):
+    def on_upload_folder_to_response(self, dialog, _response_id, recurse):
 
         user = dialog.get_entry_value()
-        folder = self.selected_folder
 
-        if not user or folder is None:
+        if not user or self.selected_folder_path is None:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
-        core.userbrowse.upload_folder(user, folder, recurse=recurse)
+        core.userbrowse.upload_folder(user, self.selected_folder_path, recurse=recurse)
 
-    def on_upload_directory_to(self, *_args, recurse=False):
+    def on_upload_folder_to(self, *_args, recurse=False):
 
-        folder = self.selected_folder
-
-        if folder is None:
+        if self.selected_folder_path is None:
             return
 
         if recurse:
@@ -786,19 +779,19 @@ class UserBrowse:
             title=str_title,
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
-            callback=self.on_upload_directory_to_response,
+            callback=self.on_upload_folder_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
-    def on_upload_directory_recursive_to(self, *_args):
-        self.on_upload_directory_to(recurse=True)
+    def on_upload_folder_recursive_to(self, *_args):
+        self.on_upload_folder_to(recurse=True)
 
     def on_copy_folder_path(self, *_args):
         folder_path = self.get_selected_folder_path()
         clipboard.copy_text(folder_path)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
         folder_path = self.get_selected_folder_path()
         folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
         clipboard.copy_text(folder_url)
@@ -887,12 +880,12 @@ class UserBrowse:
 
         if self.user == config.sections["server"]["login"]:
             if not self.file_list_view.is_empty():
-                self.on_upload_directory_to()
+                self.on_upload_folder_to()
             else:
-                self.on_upload_directory_recursive_to()
+                self.on_upload_folder_recursive_to()
 
         elif not self.file_list_view.is_empty():
-            self.on_download_directory_to()
+            self.on_download_folder_to()
 
         return True
 
@@ -901,7 +894,7 @@ class UserBrowse:
 
         if self.user == config.sections["server"]["login"]:
             self.on_folder_expand_sub_accelerator()
-            self.on_upload_directory_recursive_to()
+            self.on_upload_folder_recursive_to()
             return True
 
         if self.file_list_view.is_empty():
@@ -909,7 +902,7 @@ class UserBrowse:
             self.on_folder_expand_sub_accelerator()
             return True
 
-        self.on_download_directory()  # without prompt
+        self.on_download_folder()  # without prompt
         return True
 
     def on_folder_open_manager_accelerator(self, *_args):
@@ -932,56 +925,45 @@ class UserBrowse:
 
     def on_download_files(self, *_args, prefix=""):
 
-        folder = self.selected_folder
-        files = core.userbrowse.user_shares[self.user].get(folder)
+        folder_path = self.selected_folder_path
+        files = core.userbrowse.user_shares[self.user].get(folder_path)
 
         if not files:
             return
 
         for file_data in files:
-            # Find the wanted file
-            filename = file_data[1]
+            _code, basename, *_unused = file_data
 
-            if filename not in self.selected_files:
+            # Find the wanted file
+            if basename not in self.selected_files:
                 continue
 
-            core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
+            core.userbrowse.download_file(self.user, folder_path, file_data, prefix=prefix)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
 
     def on_download_files_to(self, *_args):
 
-        try:
-            _path_start, folder = self.selected_folder.rsplit("\\", 1)
-        except ValueError:
-            folder = self.selected_folder
-
-        download_folder = config.sections["transfers"]["downloaddir"]
-        path = os.path.join(download_folder, folder)
-
-        if not os.path.isdir(path.encode("utf-8")):
-            path = download_folder
-
         FolderChooser(
             parent=self.window,
             title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
-            initial_folder=path
+            initial_folder=core.transfers.get_default_download_folder()
         ).show()
 
     def on_upload_files_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
-        folder = self.selected_folder
+        folder_path = self.selected_folder_path
 
-        if not user or folder is None:
+        if not user or folder_path is None:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
 
         for basename, size in self.selected_files.items():
-            core.userbrowse.upload_file(user, folder, (None, basename, size))
+            core.userbrowse.upload_file(user, folder_path, (None, basename, size))
 
     def on_upload_files(self, *_args):
 
@@ -996,55 +978,61 @@ class UserBrowse:
 
     def on_play_files(self, *_args):
 
-        path = core.shares.virtual2real(self.selected_folder)
+        folder_path = core.shares.virtual2real(self.selected_folder_path)
 
-        for base_name in self.selected_files:
-            open_file_path(file_path=os.path.join(path, base_name),
+        for basename in self.selected_files:
+            open_file_path(file_path=os.path.join(folder_path, basename),
                            command=config.sections["players"]["default"])
 
     def on_file_manager(self, *_args):
 
-        if self.selected_folder is None:
+        if self.selected_folder_path is None:
             return
 
-        open_file_path(file_path=core.shares.virtual2real(self.selected_folder),
+        open_file_path(file_path=core.shares.virtual2real(self.selected_folder_path),
                        command=config.sections["ui"]["filemanager"])
 
     def on_file_properties(self, _action, _state, all_files=False):
 
         data = []
-        folder = self.selected_folder
+        folder_path = self.selected_folder_path
         selected_size = 0
         selected_length = 0
 
         if all_files:
-            files = core.userbrowse.user_shares[self.user].get(folder)
+            files = core.userbrowse.user_shares[self.user].get(folder_path)
 
             if not files:
                 return
 
-            for _code, filename, file_size, _ext, file_attributes, *_unused in files:
-                virtual_path = "\\".join([folder, filename])
+            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                file_path = "\\".join([folder_path, basename])
                 _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                 selected_size += file_size
                 selected_length += length
 
-                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "file_attributes": file_attributes})
+                data.append({
+                    "user": self.user,
+                    "file_path": file_path,
+                    "basename": basename,
+                    "virtual_folder_path": folder_path,
+                    "size": file_size,
+                    "file_attributes": file_attributes
+                })
 
         else:
             for iterator in self.file_list_view.get_selected_rows():
-                filename = self.file_list_view.get_row_value(iterator, "filename")
+                basename = self.file_list_view.get_row_value(iterator, "filename")
+                file_path = "\\".join([folder_path, basename])
                 file_size = self.file_list_view.get_row_value(iterator, "size_data")
-                virtual_path = "\\".join([folder, filename])
                 selected_size += file_size
                 selected_length += self.file_list_view.get_row_value(iterator, "length_data")
 
                 data.append({
                     "user": self.user,
-                    "fn": virtual_path,
-                    "filename": filename,
-                    "directory": folder,
+                    "fn": file_path,
+                    "basename": basename,
+                    "virtual_folder_path": folder_path,
                     "size": file_size,
                     "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
@@ -1126,14 +1114,14 @@ class UserBrowse:
             if not self.file_list_view.is_selection_empty():
                 self.on_upload_files()
             else:
-                self.on_upload_directory_to()
+                self.on_upload_folder_to()
 
             return True
 
         if not self.file_list_view.is_selection_empty():
             self.on_download_files()  # (no prompt, Single or Multi-selection)
         else:
-            self.on_download_directory()  # (without prompt, No-selection=All)
+            self.on_download_folder()  # (without prompt, No-selection=All)
 
         return True
 
@@ -1205,14 +1193,15 @@ class UserBrowse:
 
         # Remember selection after refresh
         self.select_files()
-        path = self.get_selected_file_path()
+        file_path = self.get_selected_file_path()
 
         self.clear_model()
         self.info_bar.set_visible(False)
         self.info_bar.set_reveal_child(False)
 
         self.set_in_progress()
-        core.userbrowse.browse_user(self.user, path=path, local_share_type=self.local_share_type, new_request=True)
+        core.userbrowse.browse_user(
+            self.user, path=file_path, local_share_type=self.local_share_type, new_request=True)
 
     def on_focus(self):
 

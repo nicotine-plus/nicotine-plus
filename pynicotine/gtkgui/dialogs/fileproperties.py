@@ -40,11 +40,10 @@ class FileProperties(Dialog):
             self.country_row,
             self.country_value_label,
             self.download_button,
-            self.filename_value_label,
-            self.filesize_value_label,
             self.folder_value_label,
             self.length_row,
             self.length_value_label,
+            self.name_value_label,
             self.next_button,
             self.path_row,
             self.path_value_label,
@@ -53,6 +52,7 @@ class FileProperties(Dialog):
             self.quality_value_label,
             self.queue_row,
             self.queue_value_label,
+            self.size_value_label,
             self.speed_row,
             self.speed_value_label,
             self.username_value_label
@@ -97,20 +97,20 @@ class FileProperties(Dialog):
         size = properties["size"]
         h_size = human_size(size)
 
-        self.filename_value_label.set_text(properties["filename"])
-        self.folder_value_label.set_text(properties["directory"])
-        self.filesize_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
+        self.name_value_label.set_text(properties["basename"])
+        self.folder_value_label.set_text(properties["virtual_folder_path"])
+        self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
         self.username_value_label.set_text(properties["user"])
 
-        path = properties.get("path") or ""
+        real_folder_path = properties.get("real_folder_path") or ""
         h_quality, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_audio_quality_length(
             size, properties.get("file_attributes"), always_show_bitrate=True)
         queue_position = properties.get("queue_position") or 0
         speed = properties.get("speed") or 0
         country = properties.get("country") or ""
 
-        self.path_value_label.set_text(path)
-        self.path_row.set_visible(bool(path))
+        self.path_value_label.set_text(real_folder_path)
+        self.path_row.set_visible(bool(real_folder_path))
 
         self.quality_value_label.set_text(h_quality)
         self.quality_row.set_visible(bool(h_quality))
@@ -161,6 +161,6 @@ class FileProperties(Dialog):
         properties = self.properties[self.current_index]
 
         core.transfers.get_file(
-            properties["user"], properties["fn"], size=properties["size"],
+            properties["user"], properties["file_path"], size=properties["size"],
             file_attributes=properties.get("file_attributes")
         )

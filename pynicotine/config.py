@@ -53,7 +53,7 @@ class Config:
 
     def __init__(self):
 
-        config_dir, self.data_dir = self.get_user_directories()
+        config_dir, self.data_dir = self.get_user_folders()
         self.filename = os.path.join(config_dir, "config")
         self.version = "3.3.0.dev5"
         self.python_version = sys.version.split()[0]
@@ -79,27 +79,27 @@ class Config:
         self.removed_options = {}
 
     @staticmethod
-    def get_user_directories():
+    def get_user_folders():
         """Returns a tuple:
 
-        - the config directory
-        - the data directory
+        - the config folder
+        - the data folder
         """
 
         if sys.platform == "win32":
             try:
-                data_dir = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
+                data_folder_path = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
-                data_dir, _filename = os.path.split(sys.argv[0])
+                data_folder_path, _basename = os.path.split(sys.argv[0])
 
-            config_dir = os.path.join(data_dir, "config")
-            return config_dir, data_dir
+            config_folder_path = os.path.join(data_folder_path, "config")
+            return config_folder_path, data_folder_path
 
         home = os.path.expanduser("~")
-        legacy_dir = os.path.join(home, ".nicotine")
+        legacy_folder_path = os.path.join(home, ".nicotine")
 
-        if os.path.isdir(legacy_dir.encode("utf-8")):
-            return legacy_dir, legacy_dir
+        if os.path.isdir(legacy_folder_path.encode("utf-8")):
+            return legacy_folder_path, legacy_folder_path
 
         def xdg_path(xdg, default):
             path = os.environ.get(xdg)
@@ -107,32 +107,32 @@ class Config:
 
             return os.path.join(path, "nicotine")
 
-        config_dir = xdg_path("XDG_CONFIG_HOME", os.path.join(home, ".config"))
-        data_dir = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
+        config_folder_path = xdg_path("XDG_CONFIG_HOME", os.path.join(home, ".config"))
+        data_folder_path = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
 
-        return config_dir, data_dir
+        return config_folder_path, data_folder_path
 
     def create_config_folder(self):
         """Create the folder for storing the config file in, if the folder
         doesn't exist."""
 
-        path, _filename = os.path.split(self.filename)
+        folder_path, _basename = os.path.split(self.filename)
 
-        if not path:
+        if not folder_path:
             # Only file name specified, use current folder
             return True
 
-        path_encoded = encode_path(path)
+        folder_path_encoded = encode_path(folder_path)
 
         try:
-            if not os.path.isdir(path_encoded):
-                os.makedirs(path_encoded)
+            if not os.path.isdir(folder_path_encoded):
+                os.makedirs(folder_path_encoded)
 
         except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": path, "error": error})
+                    {"path": folder_path, "error": error})
             return False
 
         return True
@@ -575,17 +575,17 @@ class Config:
 
         events.connect("quit", self._quit)
 
-    def parse_config(self, filename):
+    def parse_config(self, file_path):
         """Parses the config file."""
 
         try:
-            with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
+            with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
                 file_handle.seek(0)
                 self.parser.read_file(file_handle)
 
         except UnicodeDecodeError:
             self.convert_config()
-            self.parse_config(filename)
+            self.parse_config(file_path)
 
     def convert_config(self):
         """Converts the config to utf-8.
@@ -603,20 +603,20 @@ class Config:
                     "the application again.")
             sys.exit()
 
-        conv_filename = encode_path(f"{self.filename}.conv")
-        os.replace(self.filename, conv_filename)
+        file_path_conv = encode_path(f"{self.filename}.conv")
+        os.replace(self.filename, file_path_conv)
 
-        with open(conv_filename, "rb") as file_handle:
+        with open(file_path_conv, "rb") as file_handle:
             rawdata = file_handle.read()
 
         from_encoding = detect(rawdata)["encoding"]
 
-        with open(conv_filename, encoding=from_encoding) as file_read:
+        with open(file_path_conv, encoding=from_encoding) as file_read:
             with open(encode_path(self.filename), "w", encoding="utf-8") as file_write:
                 for line in file_read:
                     file_write.write(line[:-1] + "\r\n")
 
-        os.remove(conv_filename)
+        os.remove(file_path_conv)
 
     def need_config(self):
 
@@ -763,8 +763,8 @@ class Config:
 
         self.config_loaded = True
 
-    def write_config_callback(self, filename):
-        self.parser.write(filename)
+    def write_config_callback(self, file_path):
+        self.parser.write(file_path)
 
     def write_configuration(self):
 
@@ -798,22 +798,22 @@ class Config:
         write_file_and_backup(self.filename, self.write_config_callback, protect=True)
         log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
 
-    def write_config_backup(self, filename):
+    def write_config_backup(self, file_path):
 
         from pynicotine.logfacility import log
 
-        if not filename.endswith(".tar.bz2"):
-            filename += ".tar.bz2"
+        if not file_path.endswith(".tar.bz2"):
+            file_path += ".tar.bz2"
 
-        filename_encoded = encode_path(filename)
+        file_path_encoded = encode_path(file_path)
 
         try:
-            if os.path.exists(filename_encoded):
-                raise FileExistsError(f"File {filename} exists")
+            if os.path.exists(file_path_encoded):
+                raise FileExistsError(f"File {file_path} exists")
 
             import tarfile
-            with tarfile.open(filename_encoded, "w:bz2") as tar:
-                if not os.path.exists(filename_encoded):
+            with tarfile.open(file_path_encoded, "w:bz2") as tar:
+                if not os.path.exists(file_path_encoded):
                     raise FileNotFoundError("Config file missing")
 
                 tar.add(self.filename)
@@ -822,7 +822,7 @@ class Config:
             log.add(_("Error backing up config: %s"), error)
             return
 
-        log.add(_("Config backed up to: %s"), filename)
+        log.add(_("Config backed up to: %s"), file_path)
 
     def _quit(self):
 

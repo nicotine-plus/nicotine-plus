@@ -28,7 +28,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -626,7 +625,7 @@ class UserInfo:
         FileChooserSave(
             parent=self.window,
             callback=self.on_save_picture_response,
-            initial_folder=config.sections["transfers"]["downloaddir"],
+            initial_folder=core.transfers.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
 

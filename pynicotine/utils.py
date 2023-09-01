@@ -37,12 +37,12 @@ REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
-def clean_file(filename):
+def clean_file(basename):
 
     for char in ILLEGALFILECHARS:
-        filename = filename.replace(char, REPLACEMENTCHAR)
+        basename = basename.replace(char, REPLACEMENTCHAR)
 
-    return filename
+    return basename
 
 
 def clean_path(path):
@@ -422,33 +422,33 @@ def open_uri(uri):
     return False
 
 
-def load_file(path, load_func, use_old_file=False):
+def load_file(file_path, load_func, use_old_file=False):
 
     try:
         if use_old_file:
-            path = f"{path}.old"
+            file_path = f"{file_path}.old"
 
-        elif os.path.isfile(encode_path(f"{path}.old")):
-            path_encoded = encode_path(path)
+        elif os.path.isfile(encode_path(f"{file_path}.old")):
+            file_path_encoded = encode_path(file_path)
 
-            if not os.path.isfile(path_encoded):
+            if not os.path.isfile(file_path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path_encoded) <= 0:
+            if os.path.getsize(file_path_encoded) <= 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 
-        return load_func(path)
+        return load_func(file_path)
 
     except Exception as error:
         from pynicotine.logfacility import log
         log.add(_("Something went wrong while reading file %(filename)s: %(error)s"),
-                {"filename": path, "error": error})
+                {"filename": file_path, "error": error})
 
         if not use_old_file:
             # Attempt to load data from .old file
-            log.add(_("Attempting to load backup of file %s"), path)
-            return load_file(path, load_func, use_old_file=True)
+            log.add(_("Attempting to load backup of file %s"), file_path)
+            return load_file(file_path, load_func, use_old_file=True)
 
     return None
 

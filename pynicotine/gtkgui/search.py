@@ -554,7 +554,7 @@ class Search:
         self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -766,7 +766,7 @@ class Search:
                 name = file_path_split.pop()
 
             # Join the resulting items into a folder path
-            folder = "\\".join(file_path_split)
+            folder_path = "\\".join(file_path_split)
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
@@ -780,7 +780,7 @@ class Search:
                     get_flag_icon_name(country_code),
                     h_speed,
                     h_queue,
-                    folder,
+                    folder_path,
                     get_file_type_icon_name(name),
                     name,
                     h_size,
@@ -873,7 +873,7 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        (user, flag, h_speed, h_queue, folder, _unused, _unused, _unused, _unused,
+        (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
             _unused, country_code, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
             _unused, row_id) = row
 
@@ -926,16 +926,16 @@ class Search:
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
-                user_folder = user + folder
+                user_folder_path = user + folder_path
 
-                if user_folder not in self.folders:
+                if user_folder_path not in self.folders:
                     iterator = self.tree_view.add_row(
                         [
                             user,
                             flag,
                             h_speed,
                             h_queue,
-                            folder,
+                            folder_path,
                             empty_str,
                             empty_str,
                             empty_str,
@@ -955,12 +955,12 @@ class Search:
                     )
                     user_child_iterators.append(iterator)
                     expand_folder = self.expand_button.get_active()
-                    self.folders[user_folder] = (iterator, [])
+                    self.folders[user_folder_path] = (iterator, [])
 
                 row = row[:]
                 row[4] = ""  # Folder not visible for file row if "group by folder" is enabled
 
-                user_folder_iterator, user_folder_child_iterators = self.folders[user_folder]
+                user_folder_iterator, user_folder_child_iterators = self.folders[user_folder_path]
                 parent_iterator = user_folder_iterator
 
             else:
@@ -1322,8 +1322,8 @@ class Search:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
-            user_folder = selected_user + self.tree_view.get_row_value(iterator, "folder")
-            user_folder_data = self.folders.get(user_folder)
+            user_folder_path = selected_user + self.tree_view.get_row_value(iterator, "folder")
+            user_folder_data = self.folders.get(user_folder_path)
 
             if not user_folder_data:
                 continue
@@ -1348,11 +1348,11 @@ class Search:
 
     def select_child_results(self, iterator, user):
 
-        folder = self.tree_view.get_row_value(iterator, "folder")
+        folder_path = self.tree_view.get_row_value(iterator, "folder")
 
-        if folder:
-            user_folder = user + folder
-            row_data = self.folders[user_folder]
+        if folder_path:
+            user_folder_path = user + folder_path
+            row_data = self.folders[user_folder_path]
         else:
             row_data = self.users[user]
 
@@ -1396,14 +1396,14 @@ class Search:
 
         self.select_results()
 
-        folder = treeview.get_row_value(iterator, "folder")
-        filename = treeview.get_row_value(iterator, "filename")
+        folder_path = treeview.get_row_value(iterator, "folder")
+        basename = treeview.get_row_value(iterator, "filename")
 
-        if not folder and not filename:
+        if not folder_path and not basename:
             # Don't activate user rows
             return
 
-        if not filename:
+        if not basename:
             self.on_download_folders()
         else:
             self.on_download_files()
@@ -1423,13 +1423,13 @@ class Search:
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder)
+            if user not in requested_users and folder_path not in requested_folders:
+                core.userbrowse.browse_user(user, path=folder_path)
 
                 requested_users.add(user)
-                requested_folders.add(folder)
+                requested_folders.add(folder_path)
 
     def on_file_properties(self, *_args):
 
@@ -1455,9 +1455,9 @@ class Search:
 
             data.append({
                 "user": self.tree_view.get_row_value(iterator, "user"),
-                "fn": file_path,
-                "filename": basename,
-                "directory": folder_path,
+                "file_path": file_path,
+                "basename": basename,
+                "virtual_folder_path": folder_path,
                 "size": file_size,
                 "speed": self.tree_view.get_row_value(iterator, "speed_data"),
                 "queue_position": self.tree_view.get_row_value(iterator, "in_queue_data"),
@@ -1491,7 +1491,7 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initial_folder=config.sections["transfers"]["downloaddir"]
+            initial_folder=core.transfers.get_default_download_folder()
         ).show()
 
     def on_download_folders(self, *_args, download_location=""):
@@ -1505,33 +1505,32 @@ class Search:
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
+            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
-            if folder in requested_folders[user]:
+            if folder_path in requested_folders[user]:
                 # Ensure we don't send folder content requests for a folder more than once,
                 # e.g. when several selected resuls belong to the same folder
                 continue
 
-            requested_folders[user][folder] = download_location
+            requested_folders[user][folder_path] = download_location
 
             visible_files = []
             for row in self.all_data:
                 # Find the wanted folder
-                if folder != row[16].rsplit("\\", 1)[0]:
+                if folder_path != row[16].rsplit("\\", 1)[0]:
                     continue
 
                 # remove_destination is False because we need the destination for the full folder
                 # contents response later
-                destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
+                destination = core.transfers.get_folder_destination(user, folder_path, remove_destination=False)
 
-                (user, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
+                (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
                     _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
-                visible_files.append(
-                    (user, file_path, destination, size, file_attributes))
+                visible_files.append((file_path, destination, size, file_attributes))
 
-            core.search.request_folder_download(user, folder, visible_files)
+            core.search.request_folder_download(user, folder_path, visible_files)
 
     def on_download_folders_to_selected(self, selected, _data):
         self.on_download_folders(download_location=selected)
@@ -1542,7 +1541,7 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
-            initial_folder=config.sections["transfers"]["downloaddir"]
+            initial_folder=core.transfers.get_default_download_folder()
         ).show()
 
     def on_copy_file_path(self, *_args):
@@ -1561,7 +1560,7 @@ class Search:
             clipboard.copy_text(url)
             return
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")

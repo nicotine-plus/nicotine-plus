@@ -212,7 +212,7 @@ class TransferList:
         self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -517,10 +517,10 @@ class TransferList:
 
         user = transfer.user
         shortfn = transfer.filename.split("\\")[-1]
-        original_path = path = self.get_transfer_folder_path(transfer)
+        original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
 
         if config.sections["ui"]["reverse_file_paths"]:
-            path = self.path_separator.join(reversed(path.split(self.path_separator)))
+            folder_path = self.path_separator.join(reversed(folder_path.split(self.path_separator)))
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -568,14 +568,14 @@ class TransferList:
                 # Group by folder
 
                 # Make sure we don't add files to the wrong user in the TreeView
-                user_path = user + original_path
+                user_folder_path = user + original_folder_path
 
-                if user_path not in self.paths:
-                    path_transfer = Transfer(user=user, path=original_path)  # Dummy Transfer object
+                if user_folder_path not in self.paths:
+                    path_transfer = Transfer(user=user, path=original_folder_path)  # Dummy Transfer object
                     iterator = self.tree_view.add_row(
                         [
                             user,
-                            path,
+                            folder_path,
                             empty_str,
                             empty_str,
                             empty_str,
@@ -598,14 +598,14 @@ class TransferList:
                     user_child_transfers.append(path_transfer)
                     expand_folder = self.expand_button.get_active()
                     self.row_id += 1
-                    self.paths[user_path] = (iterator, [])
+                    self.paths[user_folder_path] = (iterator, [])
 
-                user_path_iterator, user_path_child_transfers = self.paths[user_path]
+                user_path_iterator, user_path_child_transfers = self.paths[user_folder_path]
                 parent_iterator = user_path_iterator
                 user_path_child_transfers.append(transfer)
 
                 # Group by folder, path not visible in file rows
-                path = ""
+                folder_path = ""
             else:
                 parent_iterator = user_iterator
                 user_child_transfers.append(transfer)
@@ -620,7 +620,7 @@ class TransferList:
         # Add a new transfer
         row = [
             user,
-            path,
+            folder_path,
             get_file_type_icon_name(shortfn),
             shortfn,
             self.translate_status(status),
@@ -912,10 +912,10 @@ class TransferList:
 
             data.append({
                 "user": transfer.user,
-                "fn": file_path,
-                "filename": basename,
-                "directory": folder_path,
-                "path": transfer.path,
+                "file_path": file_path,
+                "basename": basename,
+                "virtual_folder_path": folder_path,
+                "real_folder_path": transfer.path,
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
                 "size": file_size,
@@ -933,7 +933,7 @@ class TransferList:
         # Implemented in subclasses
         raise NotImplementedError
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
         # Implemented in subclasses
         raise NotImplementedError
 

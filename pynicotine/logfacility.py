@@ -117,9 +117,9 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, base_name):
+    def _get_log_file(self, folder_path, basename):
 
-        file_path = os.path.join(folder_path, base_name)
+        file_path = os.path.join(folder_path, basename)
         log_file = self._log_files.get(file_path)
 
         if log_file is not None:
@@ -139,10 +139,10 @@ class Logger:
 
         return log_file
 
-    def write_log_file(self, folder_path, base_name, text, timestamp=None):
+    def write_log_file(self, folder_path, basename, text, timestamp=None):
 
         folder_path = os.path.normpath(folder_path)
-        log_file = self._get_log_file(folder_path, base_name)
+        log_file = self._get_log_file(folder_path, basename)
         timestamp_format = config.sections["logging"]["log_timestamp"]
         timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
         text = f"{timestamp} {text}\n"
@@ -156,7 +156,7 @@ class Logger:
             should_log_file = (folder_path != os.path.normpath(config.sections["logging"]["debuglogsdir"]))
 
             self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
-                "filename": os.path.join(folder_path, base_name),
+                "filename": os.path.join(folder_path, basename),
                 "error": error
             }, should_log_file=should_log_file)
 
@@ -185,31 +185,31 @@ class Logger:
             if (current_time - log_file.last_active) >= 10:
                 self._close_log_file(log_file)
 
-    def open_log(self, folder, filename):
-        self._handle_log(folder, filename, self.open_log_callback)
+    def open_log(self, folder_path, basename):
+        self._handle_log(folder_path, basename, self.open_log_callback)
 
-    def delete_log(self, folder, filename):
-        self._handle_log(folder, filename, self.delete_log_callback)
+    def delete_log(self, folder_path, basename):
+        self._handle_log(folder_path, basename, self.delete_log_callback)
 
-    def _handle_log(self, folder, filename, callback):
+    def _handle_log(self, folder_path, basename, callback):
 
-        folder_encoded = encode_path(folder)
-        path = os.path.join(folder, f"{clean_file(filename)}.log")
+        folder_path_encoded = encode_path(folder_path)
+        file_path = os.path.join(folder_path, f"{clean_file(basename)}.log")
 
         try:
-            if not os.path.isdir(folder_encoded):
-                os.makedirs(folder_encoded)
+            if not os.path.isdir(folder_path_encoded):
+                os.makedirs(folder_path_encoded)
 
-            callback(path)
+            callback(file_path)
 
         except Exception as error:
-            log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": path, "error": error})
+            log.add(_("Cannot access log file %(path)s: %(error)s"), {"path": file_path, "error": error})
 
-    def open_log_callback(self, path):
-        open_file_path(path, create_file=True)
+    def open_log_callback(self, file_path):
+        open_file_path(file_path, create_file=True)
 
-    def delete_log_callback(self, path):
-        os.remove(encode_path(path))
+    def delete_log_callback(self, file_path):
+        os.remove(encode_path(file_path))
 
     def log_transfer(self, msg, msg_args=None):
 
@@ -220,7 +220,7 @@ class Logger:
             msg = msg % msg_args
 
         self.write_log_file(
-            folder_path=config.sections["logging"]["transferslogsdir"], base_name=self.transfers_file_name, text=msg)
+            folder_path=config.sections["logging"]["transferslogsdir"], basename=self.transfers_file_name, text=msg)
 
     # Log Messages #
 
@@ -255,7 +255,7 @@ class Logger:
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             events.invoke_main_thread(
                 self.write_log_file, folder_path=config.sections["logging"]["debuglogsdir"],
-                base_name=self.debug_file_name, text=msg)
+                basename=self.debug_file_name, text=msg)
 
         try:
             timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")

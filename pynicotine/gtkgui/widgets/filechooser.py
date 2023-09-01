@@ -182,10 +182,10 @@ class ImageChooser(FileChooser):
 
     def on_update_image_preview(self, chooser):
 
-        path = chooser.get_preview_filename()
+        file_path = chooser.get_preview_filename()
 
         try:
-            image_data = GdkPixbuf.Pixbuf.new_from_file_at_size(path, width=300, height=700)
+            image_data = GdkPixbuf.Pixbuf.new_from_file_at_size(file_path, width=300, height=700)
             self.preview.set_from_pixbuf(image_data)
             chooser.set_preview_widget_active(True)
 

@@ -442,22 +442,22 @@ def load_custom_icons(update=False):
     # Move custom icons to internal icon theme location
     for original_name, replacement_name in icon_names:
         for extension in extensions:
-            path = os.path.join(user_icon_theme_path, original_name + extension)
-            path_encoded = encode_path(path)
+            file_path = os.path.join(user_icon_theme_path, original_name + extension)
+            file_path_encoded = encode_path(file_path)
 
-            if not os.path.isfile(path_encoded):
+            if not os.path.isfile(file_path_encoded):
                 continue
 
             try:
                 shutil.copyfile(
-                    path_encoded,
+                    file_path_encoded,
                     encode_path(os.path.join(icon_theme_path, replacement_name + extension))
                 )
                 break
 
             except OSError as error:
                 log.add(_("Error loading custom icon %(path)s: %(error)s"), {
-                    "path": path,
+                    "path": file_path,
                     "error": error
                 })
 
@@ -491,9 +491,9 @@ def get_flag_icon_name(country_code):
     return f"nplus-flag-{country_code.lower()}"
 
 
-def get_file_type_icon_name(filename):
+def get_file_type_icon_name(basename):
 
-    result = filename.rsplit(".", 1)
+    result = basename.rsplit(".", 1)
 
     if len(result) < 2:
         return "text-x-generic-symbolic"

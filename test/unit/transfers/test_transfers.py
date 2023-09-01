@@ -225,21 +225,21 @@ class TransfersTest(TestCase):
         """Verify that the correct download destination is used."""
 
         user = "newuser"
-        folder = "Hello\\Path"
+        folder_path = "Hello\\Path"
         config.sections["transfers"]["usernamesubfolders"] = False
-        destination_default = core.transfers.get_folder_destination(user, folder)
+        destination_default = core.transfers.get_folder_destination(user, folder_path)
 
-        core.transfers.requested_folders[user][folder] = "test"
-        destination_custom = core.transfers.get_folder_destination(user, folder)
+        core.transfers.requested_folders[user][folder_path] = "test"
+        destination_custom = core.transfers.get_folder_destination(user, folder_path)
 
         config.sections["transfers"]["usernamesubfolders"] = True
-        destination_user = core.transfers.get_folder_destination(user, folder)
+        destination_user = core.transfers.get_folder_destination(user, folder_path)
 
-        folder = "Hello"
-        destination_root = core.transfers.get_folder_destination(user, folder)
+        folder_path = "Hello"
+        destination_root = core.transfers.get_folder_destination(user, folder_path)
 
-        folder = "Hello\\Path\\Depth\\Test"
-        destination_depth = core.transfers.get_folder_destination(user, folder)
+        folder_path = "Hello\\Path\\Depth\\Test"
+        destination_depth = core.transfers.get_folder_destination(user, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_dir, "Path"))
         self.assertEqual(destination_custom, os.path.join("test", "Path"))
@@ -278,10 +278,10 @@ class TransfersTest(TestCase):
         ])
 
         # Share root
-        target_folder = "share"
+        target_folder_path = "share"
 
         core.transfers.downloads.clear()
-        core.userbrowse.download_folder(user, target_folder, prefix="test", recurse=True)
+        core.userbrowse.download_folder(user, target_folder_path, prefix="test", recurse=True)
 
         self.assertEqual(len(core.transfers.downloads), 9)
 
@@ -296,10 +296,10 @@ class TransfersTest(TestCase):
         self.assertEqual(core.transfers.downloads[8].path, os.path.join("test", "share"))
 
         # Share subfolder
-        target_folder = "share\\Soulseek"
+        target_folder_path = "share\\Soulseek"
 
         core.transfers.downloads.clear()
-        core.userbrowse.download_folder(user, target_folder, prefix="test2", recurse=True)
+        core.userbrowse.download_folder(user, target_folder_path, prefix="test2", recurse=True)
 
         self.assertEqual(len(core.transfers.downloads), 6)
 

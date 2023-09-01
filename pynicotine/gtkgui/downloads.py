@@ -151,7 +151,7 @@ class Downloads(TransferList):
             url = core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
             clipboard.copy_text(url)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -188,13 +188,13 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             user = transfer.user
-            folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
+            folder_path = transfer.filename.rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder)
+            if user not in requested_users and folder_path not in requested_folders:
+                core.userbrowse.browse_user(user, path=folder_path)
 
                 requested_users.add(user)
-                requested_folders.add(folder)
+                requested_folders.add(folder_path)
 
     def on_clear_queued(self, *_args):
         core.transfers.clear_downloads(statuses=["Queued"])

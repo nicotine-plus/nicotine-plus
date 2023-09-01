@@ -1890,12 +1890,12 @@ class Transfers:
 
         return users
 
-    def get_default_download_folder(self, user):
+    def get_default_download_folder(self, user=None):
 
         downloaddir = os.path.normpath(config.sections["transfers"]["downloaddir"])
 
         # Check if username subfolders should be created for downloads
-        if config.sections["transfers"]["usernamesubfolders"]:
+        if user and config.sections["transfers"]["usernamesubfolders"]:
             try:
                 downloaddir = os.path.join(downloaddir, clean_file(user))
                 downloaddir_encoded = encode_path(downloaddir)

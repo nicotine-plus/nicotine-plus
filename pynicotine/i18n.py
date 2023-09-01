@@ -21,9 +21,9 @@ import locale
 import os
 import sys
 
-CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
-BASE_FOLDER = os.path.normpath(os.path.join(CURRENT_FOLDER, ".."))
-LOCALE_PATH = os.path.join(CURRENT_FOLDER, "locale")
+CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
+BASE_PATH = os.path.normpath(os.path.join(CURRENT_PATH, ".."))
+LOCALE_PATH = os.path.join(CURRENT_PATH, "locale")
 TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
@@ -97,19 +97,20 @@ def build_translations():
         if language_code == "en":
             continue
 
-        lc_messages_dir = os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES")
-        po_file = os.path.join(BASE_FOLDER, "po", f"{language_code}.po")
-        mo_file = os.path.join(lc_messages_dir, "nicotine.mo")
+        lc_messages_folder_path = os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES")
+        po_file_path = os.path.join(BASE_PATH, "po", f"{language_code}.po")
+        mo_file_path = os.path.join(lc_messages_folder_path, "nicotine.mo")
 
-        if not os.path.exists(lc_messages_dir):
-            os.makedirs(lc_messages_dir)
+        if not os.path.exists(lc_messages_folder_path):
+            os.makedirs(lc_messages_folder_path)
 
-        subprocess.check_call(["msgfmt", "--check", po_file, "-o", mo_file])
+        subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
 
     # Merge translations into .desktop and appdata files
-    for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
-        subprocess.check_call(["msgfmt", "--desktop", f"--template={desktop_file}", "-d", "po",
-                               "-o", desktop_file[:-3]])
+    for desktop_file_path in glob.glob(os.path.join(BASE_PATH, "data", "*.desktop.in")):
+        subprocess.check_call(["msgfmt", "--desktop", f"--template={desktop_file_path}", "-d", "po",
+                               "-o", desktop_file_path[:-3]])
 
-    for appdata_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.appdata.xml.in")):
-        subprocess.check_call(["msgfmt", "--xml", f"--template={appdata_file}", "-d", "po", "-o", appdata_file[:-3]])
+    for appdata_file_path in glob.glob(os.path.join(BASE_PATH, "data", "*.appdata.xml.in")):
+        subprocess.check_call(["msgfmt", "--xml", f"--template={appdata_file_path}", "-d", "po",
+                               "-o", appdata_file_path[:-3]])

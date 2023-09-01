@@ -29,8 +29,8 @@ from cx_Freeze import Executable, setup  # pylint: disable=import-error
 
 if sys.platform == "win32":
     GUI_BASE = "Win32GUI"
-    SYS_BASE = sys.prefix
-    LIB_FOLDER = os.path.join(SYS_BASE, "bin")
+    SYS_BASE_PATH = sys.prefix
+    LIB_PATH = os.path.join(SYS_BASE_PATH, "bin")
     LIB_EXTENSION = ".dll"
     UNAVAILABLE_MODULES = [
         "fcntl", "grp", "nis", "ossaudiodev", "posix", "pwd", "readline", "resource", "spwd", "syslog", "termios"
@@ -39,8 +39,8 @@ if sys.platform == "win32":
 
 elif sys.platform == "darwin":
     GUI_BASE = None
-    SYS_BASE = "/usr/local"
-    LIB_FOLDER = os.path.join(SYS_BASE, "lib")
+    SYS_BASE_PATH = "/usr/local"
+    LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     LIB_EXTENSION = (".dylib", ".so")
     UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
@@ -120,20 +120,21 @@ def add_pixbuf_loaders():
     temp_loaders_file = os.path.join(TEMP_PATH, "loaders.cache")
 
     with open(temp_loaders_file, "w", encoding="utf-8") as temp_file_handle, \
-         open(os.path.join(SYS_BASE, loaders_file), "r", encoding="utf-8") as real_file_handle:
+         open(os.path.join(SYS_BASE_PATH, loaders_file), "r", encoding="utf-8") as real_file_handle:
         data = real_file_handle.read()
 
         if sys.platform == "win32":
             data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders", "lib")
 
         elif sys.platform == "darwin":
-            data = data.replace(os.path.join(SYS_BASE, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), "@executable_path/lib")
+            data = data.replace(
+                os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), "@executable_path/lib")
 
         temp_file_handle.write(data)
 
     add_file(file_path=temp_loaders_file, output_path="lib/pixbuf-loaders.cache")
     add_files(
-        folder_path=os.path.join(SYS_BASE, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), output_path="lib",
+        folder_path=os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), output_path="lib",
         starts_with="libpixbufloader-", ends_with=LIB_EXTENSION
     )
 
@@ -185,12 +186,12 @@ def add_typelibs():
         required_typelibs.append("Adw-")
 
     required_typelibs = tuple(required_typelibs)
-    folder_path = os.path.join(SYS_BASE, "lib/girepository-1.0")
+    folder_path = os.path.join(SYS_BASE_PATH, "lib/girepository-1.0")
 
     if sys.platform == "darwin":
         # Remove absolute paths added by Homebrew (macOS)
         process_files(
-            folder_path=os.path.join(SYS_BASE, "share/gir-1.0"),
+            folder_path=os.path.join(SYS_BASE_PATH, "share/gir-1.0"),
             callback=_add_typelibs_callback, starts_with=required_typelibs, ends_with=".gir"
         )
         folder_path = TEMP_PATH
@@ -205,36 +206,36 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        add_file(file_path=os.path.join(LIB_FOLDER, "gdbus.exe"), output_path="lib/gdbus.exe")
+        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
 
     # This also includes all dlls required by GTK
     add_files(
-        folder_path=LIB_FOLDER, output_path="lib",
+        folder_path=LIB_PATH, output_path="lib",
         starts_with="libgtk-%s" % GTK_VERSION, ends_with=LIB_EXTENSION
     )
 
     if GTK_VERSION == "4":
         # ANGLE (OpenGL ES)
         add_files(
-            folder_path=LIB_FOLDER, output_path="lib",
+            folder_path=LIB_PATH, output_path="lib",
             starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
         )
 
     if USE_LIBADWAITA:
         add_files(
-            folder_path=LIB_FOLDER, output_path="lib",
+            folder_path=LIB_PATH, output_path="lib",
             starts_with="libadwaita-", ends_with=LIB_EXTENSION
         )
 
     # Schemas
     add_file(
-        file_path=os.path.join(SYS_BASE, "share/glib-2.0/schemas/gschemas.compiled"),
+        file_path=os.path.join(SYS_BASE_PATH, "share/glib-2.0/schemas/gschemas.compiled"),
         output_path="lib/schemas/gschemas.compiled"
     )
 
     # Fontconfig
     add_files(
-        folder_path=os.path.join(SYS_BASE, "etc/fonts"), output_path="share/fonts",
+        folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
         ends_with=".conf", recursive=True, resource=True
     )
 
@@ -252,7 +253,7 @@ def add_icon_packs():
         "hicolor"
     )
     add_files(
-        folder_path=os.path.join(SYS_BASE, "share/icons"), output_path="share/icons",
+        folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
         starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True, resource=True
     )
 
@@ -265,7 +266,7 @@ def add_themes():
         "Mac"
     )
     add_files(
-        folder_path=os.path.join(SYS_BASE, "share/themes"), output_path="share/themes",
+        folder_path=os.path.join(SYS_BASE_PATH, "share/themes"), output_path="share/themes",
         starts_with=required_themes, ends_with=".css", recursive=True, resource=True
     )
 
@@ -282,7 +283,7 @@ def add_translations():
     build_translations()
 
     add_files(
-        folder_path=os.path.join(SYS_BASE, "share/locale"), output_path="share/locale",
+        folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
         starts_with=tuple(i[0] for i in LANGUAGES), ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True, resource=True
     )
 

@@ -620,11 +620,11 @@ class ChatRoom:
     def read_room_logs(self):
 
         numlines = config.sections["logging"]["readroomlines"]
-        filename = f"{clean_file(self.room)}.log"
-        path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
+        basename = f"{clean_file(self.room)}.log"
+        file_path = os.path.join(config.sections["logging"]["roomlogsdir"], basename)
 
         self.chat_view.append_log_lines(
-            path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+            file_path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
@@ -753,7 +753,7 @@ class ChatRoom:
         if self.log_toggle.get_active():
             log.write_log_file(
                 folder_path=config.sections["logging"]["roomlogsdir"],
-                base_name=f"{clean_file(self.room)}.log", text=line
+                basename=f"{clean_file(self.room)}.log", text=line
             )
 
     def echo_room_message(self, text, message_type):

@@ -137,7 +137,7 @@ class Uploads(TransferList):
             url = core.userbrowse.get_soulseek_url(user, transfer.filename)
             clipboard.copy_text(url)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -156,9 +156,9 @@ class Uploads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            base_name = str.split(transfer.filename, "\\")[-1]
+            basename = transfer.filename.split("\\")[-1]
 
-            open_file_path(file_path=os.path.join(transfer.path, base_name),
+            open_file_path(file_path=os.path.join(transfer.path, basename),
                            command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
@@ -169,9 +169,9 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
+        folder_path = transfer.filename.rsplit("\\", 1)[0] + "\\"
 
-        core.userbrowse.browse_user(user, path=folder)
+        core.userbrowse.browse_user(user, path=folder_path)
 
     def on_abort_users(self, *_args):
 

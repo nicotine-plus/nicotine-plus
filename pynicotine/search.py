@@ -85,11 +85,9 @@ class Search:
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results
-        for file in visible_files:
-            user, fullpath, destination, size, file_attributes = file
-
+        for file_path, destination, size, file_attributes, *_unused in visible_files:
             core.transfers.get_file(
-                user, fullpath, destination, size=size, file_attributes=file_attributes)
+                user, file_path, destination, size=size, file_attributes=file_attributes)
 
         # Ask for the rest of the files in the folder
         core.transfers.get_folder(user, folder)

@@ -380,7 +380,7 @@ class PluginHandler:
         prefix = os.path.dirname(os.path.realpath(__file__))
         self.plugin_folders.append(os.path.join(prefix, "plugins"))
 
-        # Load home directory plugins
+        # Load home folder plugins
         self.user_plugin_folder = os.path.join(config.data_dir, "plugins")
         self.plugin_folders.append(self.user_plugin_folder)
 
@@ -455,17 +455,17 @@ class PluginHandler:
 
         except Exception:
             # Import user plugin
-            path = self.get_plugin_path(plugin_name)
+            plugin_path = self.get_plugin_path(plugin_name)
 
-            if path is None:
+            if plugin_path is None:
                 log.add_debug("Failed to load plugin '%s', could not find it", plugin_name)
                 return None
 
             # Add plugin folder to path in order to support relative imports
-            sys.path.append(path)
+            sys.path.append(plugin_path)
 
             import importlib.util
-            spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(path, "__init__.py"))
+            spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(plugin_path, "__init__.py"))
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
@@ -599,7 +599,7 @@ class PluginHandler:
             return False
 
         plugin = self.enabled_plugins[plugin_name]
-        path = self.get_plugin_path(plugin_name)
+        plugin_path = self.get_plugin_path(plugin_name)
 
         try:
             plugin.disable()
@@ -633,12 +633,12 @@ class PluginHandler:
 
         finally:
             # Remove references to relative modules
-            if path in sys.path:
-                sys.path.remove(path)
+            if plugin_path in sys.path:
+                sys.path.remove(plugin_path)
 
             for name, module in sys.modules.copy().items():
                 try:
-                    if module.__file__.startswith(path):
+                    if module.__file__.startswith(plugin_path):
                         sys.modules.pop(name, None)
                         del module
 

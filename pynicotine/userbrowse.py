@@ -141,35 +141,35 @@ class UserBrowse:
 
         return shares_folder
 
-    def load_shares_list_from_disk(self, filename):
+    def load_shares_list_from_disk(self, file_path):
 
-        filename_encoded = encode_path(filename)
+        file_path_encoded = encode_path(file_path)
 
         try:
             try:
                 # Try legacy format first
                 import bz2
 
-                with bz2.BZ2File(filename_encoded) as file_handle:
+                with bz2.BZ2File(file_path_encoded) as file_handle:
                     shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
 
             except Exception:
                 # Try new format
 
-                with open(filename_encoded, encoding="utf-8") as file_handle:
+                with open(file_path_encoded, encoding="utf-8") as file_handle:
                     # JSON stores file attribute types as strings, convert them back to integers with object_hook
                     shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
             # Basic sanity check
             for _folder, files in shares_list:
-                for _code, _filename, _size, _ext, _attrs, *_unused in files:
+                for _code, _basename, _size, _ext, _attrs, *_unused in files:
                     break
 
         except Exception as error:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
             return
 
-        username = os.path.basename(filename)
+        username = os.path.basename(file_path)
         user_share = self.user_shares.get(username)
 
         if user_share:
@@ -184,15 +184,15 @@ class UserBrowse:
 
     def save_shares_list_to_disk(self, user):
 
-        shares_folder = self.create_user_shares_folder()
+        folder_path = self.create_user_shares_folder()
 
-        if not shares_folder:
+        if not folder_path:
             return
 
         try:
-            path = os.path.join(shares_folder, clean_file(user))
+            file_path = os.path.join(folder_path, clean_file(user))
 
-            with open(encode_path(path), "w", encoding="utf-8") as file_handle:
+            with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
                 # Dump every folder to the file individually to avoid large memory usage
                 json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
                 is_first_item = True
@@ -210,76 +210,77 @@ class UserBrowse:
                 file_handle.write("]")
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
-                    {"user": user, "dir": shares_folder})
+                    {"user": user, "dir": folder_path})
 
         except Exception as error:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {"user": user, "error": error})
 
-    def download_file(self, user, folder, file_data, prefix=""):
+    def download_file(self, user, folder_path, file_data, prefix=""):
 
-        _code, filename, file_size, _ext, file_attributes, *_unused = file_data
-        virtualpath = "\\".join([folder, filename])
+        _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+        file_path = "\\".join([folder_path, basename])
 
-        core.transfers.get_file(user, virtualpath, prefix, size=file_size, file_attributes=file_attributes)
+        core.transfers.get_file(user, file_path, prefix, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, user, requested_folder, prefix="", recurse=False):
+    def download_folder(self, user, requested_folder_path, prefix="", recurse=False):
 
-        if requested_folder is None:
+        if requested_folder_path is None:
             return
 
-        for folder, files in self.user_shares[user].items():
-            if not recurse and requested_folder != folder:
+        for folder_path, files in self.user_shares[user].items():
+            if not recurse and requested_folder_path != folder_path:
                 continue
 
-            if requested_folder not in folder:
+            if requested_folder_path not in folder_path:
                 # Not a subfolder of the requested folder, skip
                 continue
 
             # Remember custom download location
             if prefix:
-                core.transfers.requested_folders[user][folder] = prefix
+                core.transfers.requested_folders[user][folder_path] = prefix
 
             # Get final download destination
-            destination = core.transfers.get_folder_destination(user, folder, root_folder_path=requested_folder)
+            destination = core.transfers.get_folder_destination(
+                user, folder_path, root_folder_path=requested_folder_path)
 
             if files:
-                for _code, filename, file_size, _ext, file_attributes, *_unused in files:
-                    virtualpath = "\\".join([folder, filename])
+                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                    file_path = "\\".join([folder_path, basename])
 
                     core.transfers.get_file(
-                        user, virtualpath, destination, size=file_size, file_attributes=file_attributes)
+                        user, file_path, destination, size=file_size, file_attributes=file_attributes)
 
             if not recurse:
                 # Downloading a single folder, no need to continue
                 return
 
-    def upload_file(self, user, folder, file_data, locally_queued=False):
+    def upload_file(self, user, folder_path, file_data, locally_queued=False):
 
-        _code, filename, file_size, *_unused = file_data
-        virtualpath = "\\".join([folder, filename])
+        _code, basename, file_size, *_unused = file_data
+        file_path = "\\".join([folder_path, basename])
 
-        core.transfers.push_file(user, virtualpath, size=file_size, locally_queued=locally_queued)
+        core.transfers.push_file(user, file_path, size=file_size, locally_queued=locally_queued)
 
-    def upload_folder(self, user, requested_folder, recurse=False):
+    def upload_folder(self, user, requested_folder_path, recurse=False):
 
-        if not requested_folder or not user:
+        if not requested_folder_path or not user:
             return
 
-        for folder, files in self.user_shares[user].items():
-            if not recurse and requested_folder != folder:
+        for folder_path, files in self.user_shares[user].items():
+            if not recurse and requested_folder_path != folder_path:
                 continue
 
-            if requested_folder not in folder:
+            if requested_folder_path not in folder_path:
                 # Not a subfolder of the requested folder, skip
                 continue
 
             if files:
                 locally_queued = False
 
-                for _code, filename, file_size, *_unused in files:
-                    virtualpath = "\\".join([folder, filename])
+                for _code, basename, file_size, *_unused in files:
+                    file_path = "\\".join([folder_path, basename])
 
-                    core.transfers.push_file(user, virtualpath, size=file_size, locally_queued=locally_queued)
+                    core.transfers.push_file(user, file_path, size=file_size, locally_queued=locally_queued)
                     locally_queued = True
 
             if not recurse:

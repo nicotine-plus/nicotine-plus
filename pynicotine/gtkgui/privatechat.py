@@ -334,11 +334,11 @@ class PrivateChat:
     def read_private_log(self):
 
         numlines = config.sections["logging"]["readprivatelines"]
-        filename = f"{clean_file(self.user)}.log"
-        path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
+        basename = f"{clean_file(self.user)}.log"
+        file_path = os.path.join(config.sections["logging"]["privatelogsdir"], basename)
 
         self.chat_view.append_log_lines(
-            path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
+            file_path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
         )
 
     def server_disconnect(self):
@@ -451,7 +451,7 @@ class PrivateChat:
 
         if self.log_toggle.get_active():
             log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"], base_name=f"{clean_file(self.user)}.log",
+                folder_path=config.sections["logging"]["privatelogsdir"], basename=f"{clean_file(self.user)}.log",
                 text=line, timestamp=timestamp
             )
             self.chats.history.update_user(self.user, line)
@@ -486,7 +486,7 @@ class PrivateChat:
         if self.log_toggle.get_active():
             log.write_log_file(
                 folder_path=config.sections["logging"]["privatelogsdir"],
-                base_name=f"{clean_file(self.user)}.log", text=line
+                basename=f"{clean_file(self.user)}.log", text=line
             )
             self.chats.history.update_user(self.user, line)
 

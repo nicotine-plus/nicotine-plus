@@ -535,9 +535,9 @@ class Application:
     def on_browse_buddy_shares(self, *_args):
         core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
 
-    def on_load_shares_from_disk_selected(self, selected, _data):
-        for filename in selected:
-            core.userbrowse.load_shares_list_from_disk(filename)
+    def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
+        for file_path in selected_file_paths:
+            core.userbrowse.load_shares_list_from_disk(file_path)
 
     def on_load_shares_from_disk(self, *_args):
 
@@ -663,12 +663,12 @@ class Application:
             traceback = exc_traceback
 
             while traceback.tb_next:
-                filename = traceback.tb_frame.f_code.co_filename
+                file_path = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in core.pluginhandler.enabled_plugins:
-                    path = core.pluginhandler.get_plugin_path(plugin_name)
+                    plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
-                    if filename.startswith(path):
+                    if file_path.startswith(plugin_path):
                         core.pluginhandler.show_plugin_error(
                             plugin_name, exc_type, exc_value, exc_traceback)
                         return
