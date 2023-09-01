@@ -1423,7 +1423,7 @@ class Search:
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder = self.tree_view.get_row_value(iterator, "folder").rsplit("\\", 1)[0] + "\\"
+            folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
 
             if user not in requested_users and folder not in requested_folders:
                 core.userbrowse.browse_user(user, path=folder)
