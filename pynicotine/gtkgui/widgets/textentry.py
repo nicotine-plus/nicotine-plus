@@ -757,6 +757,10 @@ class SpellChecker:
     @classmethod
     def _load_module(cls):
 
+        if GTK_API_VERSION >= 4:
+            # No spell checkers available in GTK 4 yet
+            return
+
         if SpellChecker.module is not None:
             return
 
