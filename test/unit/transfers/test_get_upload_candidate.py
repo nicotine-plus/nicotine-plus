@@ -90,7 +90,7 @@ class GetUploadCandidateTest(TestCase):
             if clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
 
-            candidate = core.transfers.get_upload_candidate()
+            candidate, _has_active_uploads = core.transfers.get_upload_candidate()
 
             if not clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))

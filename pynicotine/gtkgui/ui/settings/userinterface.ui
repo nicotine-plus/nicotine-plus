@@ -84,7 +84,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel" id="close_action_label">
-                        <property name="label" translatable="yes">When closing Nicotine+:</property>
+                        <property name="label" translatable="yes">When closing window:</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>

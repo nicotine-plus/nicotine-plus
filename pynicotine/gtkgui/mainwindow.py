@@ -250,6 +250,7 @@ class MainWindow(Window):
         # Events
         for event_name, callback in (
             ("hide-scan-progress", self.hide_scan_progress),
+            ("schedule-quit", self.schedule_quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("set-away-mode", self.set_away_mode),
@@ -318,9 +319,9 @@ class MainWindow(Window):
 
         # System window close (X)
         if GTK_API_VERSION >= 4:
-            self.widget.connect("close-request", self.on_close_request)
+            self.widget.connect("close-request", self.on_close_window_request)
         else:
-            self.widget.connect("delete-event", self.on_close_request)
+            self.widget.connect("delete-event", self.on_close_window_request)
 
         self.application.add_window(self.widget)
 
@@ -409,6 +410,7 @@ class MainWindow(Window):
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
+        self.lookup_action("toggle-status").set_enabled(is_online)
 
         for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
                             "message-downloading-users", "message-buddies"):
@@ -423,6 +425,9 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
+        if core.transfers.pending_shutdown:
+            return
+
         username = core.login_username
 
         if status == UserStatus.AWAY:
@@ -438,6 +443,7 @@ class MainWindow(Window):
         if self.user_status_button.get_tooltip_text() != username:
             self.user_status_button.set_tooltip_text(username)
 
+        self.user_status_button.set_active(False)
         self.user_status_icon.set_property("icon-name", USER_STATUS_ICON_NAMES[status])
         self.user_status_label.set_text(status_text)
 
@@ -560,6 +566,11 @@ class MainWindow(Window):
         action.connect("activate", self.on_change_focus_view)
         self.add_action(action)
 
+        action = Gio.SimpleAction(name="toggle-status")
+        action.set_enabled(False)
+        action.connect("activate", self.on_toggle_status)
+        self.add_action(action)
+
         # View
 
         state = GLib.Variant("b", config.sections["ui"]["header_bar"])
@@ -613,10 +624,6 @@ class MainWindow(Window):
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
 
-        action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
-        action.connect("activate", self.on_close_request)
-        self.add_action(action)
-
     def set_up_action_accels(self):
 
         for action_name, accelerators in (
@@ -627,8 +634,7 @@ class MainWindow(Window):
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
             ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"]),
-            ("win.close", ["<Primary>q"])
+            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
         ):
             self.application.set_accels_for_action(action_name, accelerators)
 
@@ -654,11 +660,9 @@ class MainWindow(Window):
 
     def add_quit_item(self, menu):
 
-        label = _("_Quit…") if config.sections["ui"]["exitdialog"] else _("_Quit")
-
         menu.add_items(
             ("", None),
-            ("#" + label, "app.confirm-quit")
+            ("#" + _("_Quit…"), "app.confirm-quit")
         )
 
     def create_file_menu(self):
@@ -1389,16 +1393,38 @@ class MainWindow(Window):
         self.scan_progress_indeterminate = False
         self.scan_progress_bar.set_visible(False)
 
+    def on_toggle_status(self, *_args):
+
+        if core.transfers.pending_shutdown:
+            core.transfers.pending_shutdown = False
+            self.update_user_status()
+            return
+
+        self.application.lookup_action("away").emit()
+
     # Exit #
 
-    def on_close_request(self, *_args):
+    def on_close_window_request(self, *_args):
 
-        if config.sections["ui"]["exitdialog"] >= 2:  # 2: 'Run in Background'
+        if not config.sections["ui"]["exitdialog"]:     # 'Quit Program'
+            core.quit()
+
+        elif config.sections["ui"]["exitdialog"] == 1:  # 'Show Confirmation Dialog'
+            core.confirm_quit()
+
+        elif config.sections["ui"]["exitdialog"] >= 2:  # 'Run in Background'
             self.hide()
-            return True
 
-        core.confirm_quit(remember=True)
         return True
+
+    def schedule_quit(self, should_finish_uploads):
+
+        if not should_finish_uploads:
+            return
+
+        self.user_status_button.set_active(True)
+        self.user_status_icon.set_property("icon-name", "system-shutdown-symbolic")
+        self.user_status_label.set_text(_("Quitting..."))
 
     def hide(self):
 

@@ -223,6 +223,7 @@ class Application:
             ("app.disconnect", ["<Shift><Primary>d"]),
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
+            ("app.confirm-quit", ["<Primary>q"]),
             ("app.quit", ["<Primary><Alt>q"]),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
@@ -274,22 +275,16 @@ class Application:
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.get_option_value()
+        should_finish_uploads = dialog.get_option_value()
 
         if response_id == "quit":
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
-
-            core.quit()
+            core.quit(should_finish_uploads=should_finish_uploads)
 
         elif response_id == "run_background":
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
-
             if self.window.is_visible():
                 self.window.hide()
 
-    def on_confirm_quit(self, remember=True):
+    def on_confirm_quit(self):
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
@@ -306,7 +301,7 @@ class Application:
             title=_("Quit Nicotine+"),
             message=_("Do you really want to exit?"),
             buttons=buttons,
-            option_label=_("Remember choice") if remember else None,
+            option_label=_("Wait for uploads to finish"),
             callback=self.on_confirm_quit_response
         ).show()
 
