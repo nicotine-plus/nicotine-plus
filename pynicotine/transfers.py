@@ -2354,7 +2354,7 @@ class Transfers:
                 core.quit()
             return
 
-        username = upload_candidate.user
+        username = upload_candidate.username
 
         log.add_transfer(
             "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
@@ -2432,7 +2432,7 @@ class Transfers:
 
                 log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
                     "filename": download.virtual_path,
-                    "user": download.user
+                    "user": download.username
                 })
 
                 self.abort_download(download, abort_reason=None)
