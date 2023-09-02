@@ -13,6 +13,7 @@
 ### Issues closed on GitHub
 
  * Bind Nicotine+ to specified network adapter ([#871](https://github.com/nicotine-plus/nicotine-plus/issues/871))
+ * Finish running transfers and quit ([#885](https://github.com/nicotine-plus/nicotine-plus/issues/885))
  * Implement search request delivery to child peers ([#994](https://github.com/nicotine-plus/nicotine-plus/issues/994))
  * Improvement ideas for the search result filters ([#1400](https://github.com/nicotine-plus/nicotine-plus/issues/1400))
  * Force download a filtered file ([#1419](https://github.com/nicotine-plus/nicotine-plus/issues/1419))
