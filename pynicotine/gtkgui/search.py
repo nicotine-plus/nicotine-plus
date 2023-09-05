@@ -947,7 +947,7 @@ class Search:
                             empty_int,
                             empty_int,
                             empty_int,
-                            file_path.rsplit("\\", 1)[0] + "\\",
+                            file_path.rsplit("\\", 1)[0],
                             has_free_slots,
                             empty_dict,
                             row_id
