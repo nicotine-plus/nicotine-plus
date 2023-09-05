@@ -411,7 +411,7 @@ class IconNotebook:
 
         if self.unread_pages:
             icon_name = "emblem-important-symbolic"
-            tooltip_text = _("Unread Tabs")
+            tooltip_text = _("%i Unread Tab(s)") % len(self.unread_pages)
         else:
             icon_name = "pan-down-symbolic"
             tooltip_text = _("All Tabs")
