@@ -38,6 +38,7 @@ from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
+from pynicotine.slskmessages import FileListMessage
 from pynicotine.transfers import Transfer
 from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
@@ -899,11 +900,17 @@ class TransferList:
 
         data = []
         selected_size = 0
+        selected_length = 0
 
         for transfer in self.selected_transfers:
             file_path = transfer.virtual_path
             file_size = transfer.size
+            file_attributes = transfer.file_attributes
+            _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
             selected_size += file_size
+
+            if length:
+                selected_length += length
 
             try:
                 folder_path, basename = file_path.rsplit("\\", 1)
@@ -921,14 +928,14 @@ class TransferList:
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
                 "size": file_size,
-                "file_attributes": transfer.file_attributes
+                "file_attributes": file_attributes
             })
 
         if data:
             if self.file_properties is None:
                 self.file_properties = FileProperties(self.window.application, download_button=False)
 
-            self.file_properties.update_properties(data, total_size=selected_size)
+            self.file_properties.update_properties(data, selected_size, selected_length)
             self.file_properties.show()
 
     def on_copy_url(self, *_args):
