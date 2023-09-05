@@ -102,21 +102,16 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, refresh=False, switch_page=True):
+    def show_user(self, user, switch_page=True, **_unused):
 
         page = self.pages.get(user)
 
         if page is None:
-            refresh = True
             self.pages[user] = page = UserInfo(self, user)
 
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
-
-        if refresh:
-            page.update_button_states()
-            page.set_in_progress()
 
         if switch_page:
             self.set_current_page(page.container)
@@ -270,7 +265,7 @@ class UserInfo:
         self.user = user
         self.picture_data = None
         self.picture_surface = None
-        self.indeterminate_progress = True
+        self.indeterminate_progress = False
 
         # Set up likes list
         self.likes_list_view = TreeView(
@@ -327,6 +322,7 @@ class UserInfo:
         )
 
         self.populate_stats()
+        self.update_button_states()
 
     def clear(self):
 
@@ -533,6 +529,19 @@ class UserInfo:
 
     # Callbacks #
 
+    def on_show_progress_bar(self, progress_bar):
+        """Enables indeterminate progress bar mode when tab is active."""
+
+        if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
+            self.set_in_progress()
+
+    def on_hide_progress_bar(self, progress_bar):
+        """Disables indeterminate progress bar mode when switching to another tab."""
+
+        if self.indeterminate_progress:
+            self.indeterminate_progress = False
+            progress_bar.set_fraction(0.0)
+
     def on_draw_picture(self, area, context):
         """Draws a centered picture that fills the drawing area."""
 
@@ -630,6 +639,7 @@ class UserInfo:
         ).show()
 
     def on_refresh(self, *_args):
+        self.set_in_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

@@ -103,14 +103,15 @@ class UserBrowses(IconNotebook):
 
     def show_user(self, user, path=None, local_share_type=None, switch_page=True):
 
-        if user not in self.pages:
+        page = self.pages.get(user)
+
+        if page is None:
             self.pages[user] = page = UserBrowse(self, user)
 
             self.append_page(page.container, user, focus_callback=page.on_focus,
                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        page = self.pages[user]
         page.local_share_type = local_share_type
         page.queued_path = path
 
@@ -188,7 +189,7 @@ class UserBrowse:
         self.userbrowses = userbrowses
         self.window = userbrowses.window
         self.user = user
-        self.indeterminate_progress = True
+        self.indeterminate_progress = False
         self.local_share_type = None
         self.queued_path = None
         self.num_folders = 0
@@ -383,7 +384,6 @@ class UserBrowse:
         Accelerator("<Primary>s", self.container, self.on_save_accelerator)  # Save Shares List
 
         self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
-        self.set_in_progress()
 
     def clear(self):
 
@@ -556,6 +556,9 @@ class UserBrowse:
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
+
+        self.info_bar.set_visible(False)
+        self.info_bar.set_reveal_child(False)
 
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
@@ -1163,6 +1166,19 @@ class UserBrowse:
 
     # Callbacks (General) #
 
+    def on_show_progress_bar(self, progress_bar):
+        """Enables indeterminate progress bar mode when tab is active."""
+
+        if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
+            self.set_in_progress()
+
+    def on_hide_progress_bar(self, progress_bar):
+        """Disables indeterminate progress bar mode when switching to another tab."""
+
+        if self.indeterminate_progress:
+            self.indeterminate_progress = False
+            progress_bar.set_fraction(0.0)
+
     def on_expand(self, *_args):
 
         active = self.expand_button.get_active()
@@ -1196,10 +1212,8 @@ class UserBrowse:
         file_path = self.get_selected_file_path()
 
         self.clear_model()
-        self.info_bar.set_visible(False)
-        self.info_bar.set_reveal_child(False)
-
         self.set_in_progress()
+
         core.userbrowse.browse_user(
             self.user, path=file_path, local_share_type=self.local_share_type, new_request=True)
 

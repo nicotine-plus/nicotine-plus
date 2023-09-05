@@ -266,6 +266,8 @@
                         <property name="pulse-step">0.72</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
+                        <signal name="map" handler="on_show_progress_bar"/>
+                        <signal name="unmap" handler="on_hide_progress_bar"/>
                       </object>
                     </child>
                     <style>
