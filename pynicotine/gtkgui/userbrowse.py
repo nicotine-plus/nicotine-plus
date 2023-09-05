@@ -161,7 +161,9 @@ class UserBrowses(IconNotebook):
             page.shared_file_list(msg)
 
     def server_disconnect(self, *_args):
+
         for user, page in self.pages.items():
+            page.peer_connection_error()
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
