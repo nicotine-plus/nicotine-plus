@@ -1390,7 +1390,7 @@ class MainWindow(Window):
         return True
 
     def hide_scan_progress(self):
-        self.scan_progress_indeterminate = False
+        self.set_scan_progress(0.0)  # Ensure we stop pulse mode
         self.scan_progress_bar.set_visible(False)
 
     def on_toggle_status(self, *_args):
