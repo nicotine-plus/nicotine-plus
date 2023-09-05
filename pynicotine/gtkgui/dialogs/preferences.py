@@ -2230,9 +2230,6 @@ class UrlHandlersPage:
         self.protocols = config.sections["urls"]["protocols"].copy()
 
         for protocol, command in self.protocols.items():
-            if command[-1:] == "&":
-                command = command[:-1].rstrip()
-
             self.protocol_list_view.add_row([str(protocol), str(command)], select_row=False)
 
     def get_settings(self):

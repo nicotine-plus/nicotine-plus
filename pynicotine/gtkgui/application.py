@@ -281,8 +281,7 @@ class Application:
             core.quit(should_finish_uploads=should_finish_uploads)
 
         elif response_id == "run_background":
-            if self.window.is_visible():
-                self.window.hide()
+            self.window.hide()
 
     def on_confirm_quit(self):
 

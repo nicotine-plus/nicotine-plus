@@ -141,23 +141,25 @@ def factorize(filesize, base=1024):
     if not filesize:
         return None, None
 
-    if filesize[-1:].lower() == "b":
+    filesize = filesize.lower()
+
+    if filesize.endswith("b"):
         base = 1000  # Byte suffix detected, prepare to use decimal if necessary
         filesize = filesize[:-1]
 
-    if filesize[-1:].lower() == "i":
+    if filesize.endswith("i"):
         base = 1024  # Binary requested, stop using decimal
         filesize = filesize[:-1]
 
-    if filesize.lower()[-1:] == "g":
+    if filesize.endswith("g"):
         factor = pow(base, 3)
         filesize = filesize[:-1]
 
-    elif filesize.lower()[-1:] == "m":
+    elif filesize.endswith("m"):
         factor = pow(base, 2)
         filesize = filesize[:-1]
 
-    elif filesize.lower()[-1:] == "k":
+    elif filesize.endswith("k"):
         factor = base
         filesize = filesize[:-1]
 

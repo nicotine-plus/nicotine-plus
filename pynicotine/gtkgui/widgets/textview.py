@@ -242,7 +242,7 @@ class TextView:
             tag.color_id = color_id
 
         if url:
-            if url[:4] == "www.":
+            if url.startswith("www."):
                 url = "http://" + url
 
             tag.url = url
