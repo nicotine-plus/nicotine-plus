@@ -1005,16 +1005,14 @@ class UserBrowse:
         selected_length = 0
 
         if all_files:
-            files = core.userbrowse.user_shares[self.user].get(folder_path)
-
-            if not files:
-                return
-
-            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
-                file_path = "\\".join([folder_path, basename])
+            for file_data in core.userbrowse.user_shares[self.user].get(folder_path):
+                _code, basename, file_size, _ext, file_attributes, *_unused = file_data
                 _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
+                file_path = "\\".join([folder_path, basename])
                 selected_size += file_size
-                selected_length += length
+
+                if length:
+                    selected_length += length
 
                 data.append({
                     "user": self.user,
