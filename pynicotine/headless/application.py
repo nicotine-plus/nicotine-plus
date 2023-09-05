@@ -46,9 +46,9 @@ class Application:
         core.start()
         core.connect()
 
-        # Main loop, process events from threads 20 times per second
+        # Main loop, process events from threads 10 times per second
         while events.process_thread_events():
-            time.sleep(0.05)
+            time.sleep(0.1)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
