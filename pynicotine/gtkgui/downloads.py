@@ -183,18 +183,13 @@ class Downloads(TransferList):
 
     def on_browse_folder(self, *_args):
 
-        requested_users = set()
-        requested_folders = set()
+        transfer = next(iter(self.selected_transfers), None)
 
-        for transfer in self.selected_transfers:
+        if transfer:
             user = transfer.username
             folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder_path not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder_path)
-
-                requested_users.add(user)
-                requested_folders.add(folder_path)
+            core.userbrowse.browse_user(user, path=folder_path)
 
     def on_clear_queued(self, *_args):
         core.transfers.clear_downloads(statuses=["Queued"])
