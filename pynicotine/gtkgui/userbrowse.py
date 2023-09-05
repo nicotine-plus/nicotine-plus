@@ -215,7 +215,8 @@ class UserBrowse:
                 "folder": {
                     "column_type": "text",
                     "title": _("Folder"),
-                    "hide_header": True
+                    "hide_header": True,
+                    "tooltip_callback": self.on_folder_path_tooltip
                 },
 
                 # Hidden data columns
@@ -726,6 +727,9 @@ class UserBrowse:
 
         folder_path = tree_view.get_row_value(iterator, "folder_path_data")
         self.set_selected_folder(folder_path)
+
+    def on_folder_path_tooltip(self, treeview, iterator):
+        return treeview.get_row_value(iterator, "folder_path_data")
 
     def on_folder_popup_menu(self, *_args):
         self.user_popup_menu.toggle_user_items()
