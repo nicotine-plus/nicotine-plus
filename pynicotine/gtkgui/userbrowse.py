@@ -1009,7 +1009,7 @@ class UserBrowse:
         selected_length = 0
 
         if all_files:
-            for file_data in core.userbrowse.user_shares[self.user].get(folder_path):
+            for file_data in core.userbrowse.user_shares[self.user].get(folder_path, ()):
                 _code, basename, file_size, _ext, file_attributes, *_unused = file_data
                 _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                 file_path = "\\".join([folder_path, basename])
