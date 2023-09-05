@@ -369,6 +369,8 @@ class UserInfo:
                 self.picture.set_paintable(None)
 
             self.picture_data = None
+            self.picture_surface = None
+
             self.placeholder_picture.set_visible(True)
             return
 
