@@ -449,6 +449,7 @@ class ComboBox:
         self._model = self.dropdown.get_model()
 
         self.dropdown.connect("scroll-event", self._on_button_scroll_event)
+        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
@@ -461,7 +462,6 @@ class ComboBox:
             add_css_class(self.dropdown, "dropdown-scrollbar")
 
         self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
-        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
 
         if self.entry is None:
             self.entry = self.dropdown.get_child()
