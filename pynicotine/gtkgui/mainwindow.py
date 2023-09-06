@@ -242,6 +242,7 @@ class MainWindow(Window):
         # Tab visibility/order
         self.append_main_tabs()
         self.set_tab_positions()
+        self.set_buddy_list_position()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
@@ -478,73 +479,6 @@ class MainWindow(Window):
 
         config.sections["logging"]["logcollapsed"] = not visible
 
-    def set_toggle_buddy_list(self, mode, force_show=True):
-
-        if self.userlist.container.get_parent() == self.buddy_list_container:
-
-            if mode == "always":
-                return
-
-            self.buddy_list_container.remove(self.userlist.container)
-            self.buddy_list_container.set_visible(False)
-
-        elif self.userlist.container.get_parent() == self.chatrooms_buddy_list_container:
-
-            if mode == "chatrooms":
-                return
-
-            self.chatrooms_buddy_list_container.remove(self.userlist.container)
-            self.chatrooms_buddy_list_container.set_visible(False)
-
-        elif self.userlist.container.get_parent() == self.userlist_content:
-
-            if mode == "tab":
-                return
-
-            self.userlist_content.remove(self.userlist.container)
-            self.hide_tab(self.userlist_page)
-
-        if mode == "always":
-
-            if GTK_API_VERSION >= 4:
-                self.buddy_list_container.append(self.userlist.container)
-            else:
-                self.buddy_list_container.add(self.userlist.container)
-
-            self.userlist.toolbar.set_visible(True)
-            self.buddy_list_container.set_visible(True)
-            return
-
-        if mode == "chatrooms":
-
-            if GTK_API_VERSION >= 4:
-                self.chatrooms_buddy_list_container.append(self.userlist.container)
-            else:
-                self.chatrooms_buddy_list_container.add(self.userlist.container)
-
-            self.userlist.toolbar.set_visible(True)
-            self.chatrooms_buddy_list_container.set_visible(True)
-            return
-
-        self.userlist.toolbar.set_visible(False)
-
-        if GTK_API_VERSION >= 4:
-            self.userlist_content.append(self.userlist.container)
-        else:
-            self.userlist_content.add(self.userlist.container)
-
-        if force_show:
-            self.show_tab(self.userlist_page)
-
-    def on_toggle_buddy_list(self, action, state):
-        """Function used to switch around the UI the BuddyList position."""
-
-        action.set_state(state)
-
-        mode = state.get_string()
-        self.set_toggle_buddy_list(mode)
-        config.sections["ui"]["buddylistinchatrooms"] = mode
-
     # Actions #
 
     def add_action(self, action):
@@ -582,17 +516,6 @@ class MainWindow(Window):
         action = Gio.SimpleAction(name="show-log-history", state=state)
         action.connect("change-state", self.on_show_log_history)
         self.add_action(action)
-
-        state = config.sections["ui"]["buddylistinchatrooms"]
-
-        if state not in {"tab", "chatrooms", "always"}:
-            state = "tab"
-
-        action = Gio.SimpleAction(
-            name="toggle-buddy-list", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", state))
-        action.connect("change-state", self.on_toggle_buddy_list)
-        self.add_action(action)
-        self.set_toggle_buddy_list(state, force_show=False)
 
         # Search
 
@@ -681,10 +604,6 @@ class MainWindow(Window):
             ("$" + _("Prefer Dark _Mode"), "app.prefer-dark-mode"),
             ("$" + _("Use _Header Bar"), "win.use-header-bar"),
             ("$" + _("Show _Log History Pane"), "win.show-log-history"),
-            ("", None),
-            ("O" + _("Buddy List in Separate Tab"), "win.toggle-buddy-list", "tab"),
-            ("O" + _("Buddy List in Chat Rooms"), "win.toggle-buddy-list", "chatrooms"),
-            ("O" + _("Buddy List Always Visible"), "win.toggle-buddy-list", "always")
         )
 
         return menu
@@ -1090,9 +1009,6 @@ class MainWindow(Window):
 
     def show_tab(self, page):
 
-        if page == self.userlist_page:
-            self.lookup_action("toggle-buddy-list").emit("activate", GLib.Variant("s", "tab"))
-
         config.sections["ui"]["modes_visible"][page.id] = True
         page.set_visible(True)
 
@@ -1120,11 +1036,15 @@ class MainWindow(Window):
     def set_main_tabs_visibility(self):
 
         visible_tab_found = False
+        buddies_tab_active = (config.sections["ui"]["buddylistinchatrooms"] == "tab")
 
         for i in range(self.notebook.get_n_pages()):
             page = self.notebook.get_nth_page(i)
 
             if config.sections["ui"]["modes_visible"].get(page.id, True):
+                if page.id == "userlist" and not buddies_tab_active:
+                    continue
+
                 visible_tab_found = True
                 self.show_tab(page)
                 continue
@@ -1176,6 +1096,62 @@ class MainWindow(Window):
         self.userinfo.set_tab_pos(positions.get(config.sections["ui"]["tabinfo"], default_pos))
         self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
         self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
+
+    def set_buddy_list_position(self):
+
+        parent_container = self.userlist.container.get_parent()
+        mode = config.sections["ui"]["buddylistinchatrooms"]
+
+        if mode not in {"tab", "chatrooms", "always"}:
+            mode = "tab"
+
+        if parent_container == self.buddy_list_container:
+            if mode == "always":
+                return
+
+            self.buddy_list_container.remove(self.userlist.container)
+            self.buddy_list_container.set_visible(False)
+
+        elif parent_container == self.chatrooms_buddy_list_container:
+            if mode == "chatrooms":
+                return
+
+            self.chatrooms_buddy_list_container.remove(self.userlist.container)
+            self.chatrooms_buddy_list_container.set_visible(False)
+
+        elif parent_container == self.userlist_content:
+            if mode == "tab":
+                return
+
+            self.userlist_content.remove(self.userlist.container)
+
+        if mode == "always":
+            if GTK_API_VERSION >= 4:
+                self.buddy_list_container.append(self.userlist.container)
+            else:
+                self.buddy_list_container.add(self.userlist.container)
+
+            self.userlist.toolbar.set_visible(True)
+            self.buddy_list_container.set_visible(True)
+            return
+
+        if mode == "chatrooms":
+            if GTK_API_VERSION >= 4:
+                self.chatrooms_buddy_list_container.append(self.userlist.container)
+            else:
+                self.chatrooms_buddy_list_container.add(self.userlist.container)
+
+            self.userlist.toolbar.set_visible(True)
+            self.chatrooms_buddy_list_container.set_visible(True)
+            return
+
+        if mode == "tab":
+            self.userlist.toolbar.set_visible(False)
+
+            if GTK_API_VERSION >= 4:
+                self.userlist_content.append(self.userlist.container)
+            else:
+                self.userlist_content.add(self.userlist.container)
 
     # Search #
 
