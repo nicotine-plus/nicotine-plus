@@ -1487,6 +1487,7 @@ class UserInterfacePage:
     def __init__(self, application):
 
         (
+            self.buddy_list_position_label,
             self.chat_colored_usernames_toggle,
             self.chat_username_appearance_label,
             self.close_action_label,
@@ -1604,6 +1605,16 @@ class UserInterfacePage:
                 (_("italic"), "italic"),
                 (_("underline"), "underline"),
                 (_("normal"), "normal")
+            )
+        )
+
+        self.buddy_list_position_combobox = ComboBox(
+            container=self.buddy_list_position_label.get_parent(), label=self.buddy_list_position_label,
+            item_selected_callback=self.on_select_buddy_list_position,
+            items=(
+                (_("Separate Buddies tab"), "tab"),
+                (_("Sidebar in Chat Rooms tab"), "chatrooms"),
+                (_("Always visible sidebar"), "always")
             )
         )
 
@@ -1778,7 +1789,8 @@ class UserInterfacePage:
                 "tab_hilite": self.color_tab_highlighted_entry,
                 "tab_changed": self.color_tab_changed_entry,
                 "usernamestyle": self.chat_username_appearance_combobox,
-                "usernamehotspots": self.chat_colored_usernames_toggle
+                "usernamehotspots": self.chat_colored_usernames_toggle,
+                "buddylistinchatrooms": self.buddy_list_position_combobox
             }
         }
 
@@ -1860,7 +1872,8 @@ class UserInterfacePage:
                 "tab_default": self.color_tab_entry.get_text(),
                 "tab_changed": self.color_tab_changed_entry.get_text(),
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
-                "usernamehotspots": self.chat_colored_usernames_toggle.get_active()
+                "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
+                "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id()
             }
         }
 
@@ -1930,6 +1943,15 @@ class UserInterfacePage:
                 return
 
         entry.set_text("")
+
+    # Tabs #
+
+    def on_select_buddy_list_position(self, _combobox, selected_id):
+
+        buddies_tab_active = (selected_id == "tab")
+
+        self.tab_visible_userlist_toggle.set_active(buddies_tab_active)
+        self.tab_visible_userlist_toggle.set_sensitive(buddies_tab_active)
 
 
 class LoggingPage:
@@ -2931,6 +2953,7 @@ class Preferences(Dialog):
 
         # Main notebook
         self.application.window.set_tab_positions()
+        self.application.window.set_buddy_list_position()
         self.application.window.set_main_tabs_visibility()
         self.application.window.notebook.set_tab_text_colors()
 

@@ -726,14 +726,12 @@ class ComboBox:
 
     def _on_item_selected(self, *_args):
 
-        if self.entry is None:
-            return
+        if self.entry is not None:
+            # Update text entry with text from the selected item
+            self._update_item_entry_text()
 
-        # Update text entry with text from the selected item
-        self._update_item_entry_text()
-
-        # Cursor is normally placed at the beginning, move to the end
-        self.entry.set_position(-1)
+            # Cursor is normally placed at the beginning, move to the end
+            self.entry.set_position(-1)
 
         if self.item_selected_callback is None:
             return

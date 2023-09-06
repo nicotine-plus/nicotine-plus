@@ -431,6 +431,22 @@
                 </child>
               </object>
             </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="buddy_list_position_label">
+                        <property name="label" translatable="yes">Buddy list position:</property>
+                        <property name="visible">True</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
             <child>
               <object class="GtkFrame">
                 <property name="vexpand">True</property>
