@@ -160,6 +160,11 @@ def set_global_css():
         padding-right: 1px;
     }
 
+    infobar box {
+        /* Remove unwanted padding from info bars */
+        padding: 0;
+    }
+
     /* Borders */
 
     .border-top,
