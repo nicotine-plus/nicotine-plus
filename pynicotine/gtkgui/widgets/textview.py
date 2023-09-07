@@ -209,6 +209,9 @@ class TextView:
 
         return ""
 
+    def grab_focus(self):
+        self.widget.grab_focus()
+
     def update_cursor(self, pos_x, pos_y):
 
         cursor = self.TEXT_CURSOR

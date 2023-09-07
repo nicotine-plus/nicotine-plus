@@ -336,7 +336,6 @@ class MessageDialog(Window):
 
             action_box.append(action_area)                            # pylint: disable=no-member
         else:
-            widget.set_css_name("messagedialog")
             widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
             widget.set_skip_taskbar_hint(True)                        # pylint: disable=no-member
             widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
