@@ -56,7 +56,7 @@ class ChatEntry:
 
         # Emoji Picker (disable on macOS for now until we render emoji properly there)
         if sys.platform != "darwin":
-            self.widget.set_property("show-emoji-icon", True)
+            self.widget.props.show_emoji_icon = True
 
     def on_enter(self, *_args):
 
@@ -453,7 +453,7 @@ class ComboBox:
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
-                cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+                cell.props.ellipsize = Pango.EllipsizeMode.END
 
             container.add(self.widget)
             return
@@ -468,7 +468,7 @@ class ComboBox:
             self.entry.set_width_chars(8)
         else:
             self.dropdown.get_child().destroy()
-            self.dropdown.set_property("child", self.entry)
+            self.dropdown.add(self.entry)  # pylint: disable=no-member
 
         self._button = self.entry.get_parent().get_children()[-1]
         container.add(self.widget)
@@ -702,9 +702,9 @@ class ComboBox:
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
-    def _on_dropdown_visible(self, popover, param):
+    def _on_dropdown_visible(self, popover, _param):
 
-        visible = popover.get_property(param.name)
+        visible = popover.get_visible()
 
         if not visible:
             self.entry.grab_focus_without_selecting()

@@ -20,8 +20,11 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -73,7 +76,10 @@ class FastConfigure(Dialog):
             close_destroy=False
         )
 
-        self.main_icon.set_property("icon-name", config.application_id)
+        icon_name = config.application_id
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.main_icon.set_from_icon_name(icon_name, *icon_args)
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(

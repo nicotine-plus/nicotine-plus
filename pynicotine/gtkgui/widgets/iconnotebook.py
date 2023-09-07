@@ -182,7 +182,9 @@ class TabLabel:
         add_css_class(self.container, "bold")
 
         icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
-        self.end_icon.set_property("icon-name", icon_name)
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.end_icon.set_from_icon_name(icon_name, *icon_args)
         self.end_icon.set_visible(True)
         add_css_class(self.end_icon, "colored-icon")
 
@@ -194,7 +196,10 @@ class TabLabel:
         remove_css_class(self.container, "notebook-tab-highlight")
         remove_css_class(self.container, "bold")
 
-        self.end_icon.set_property("icon-name", None)
+        icon_name = None
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.end_icon.set_from_icon_name(icon_name, *icon_args)
         self.end_icon.set_visible(False)
         remove_css_class(self.end_icon, "colored-icon")
 
@@ -210,7 +215,10 @@ class TabLabel:
         add_css_class(self.start_icon, "user-status")
 
     def set_start_icon_name(self, icon_name):
-        self.start_icon.set_property("icon-name", icon_name)
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.start_icon.set_from_icon_name(icon_name, *icon_args)
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
@@ -436,9 +444,9 @@ class IconNotebook:
         tab_label = self.get_tab_label(page)
 
         if GTK_API_VERSION >= 4:
-            self.widget.get_page(page).set_property("tab-expand", expand)  # pylint: disable=no-member
+            self.widget.get_page(page).props.tab_expand = expand        # pylint: disable=no-member
         else:
-            self.widget.child_set_property(page, "tab-expand", expand)     # pylint: disable=no-member
+            self.widget.child_set_property(page, "tab-expand", expand)  # pylint: disable=no-member
 
         tab_label.set_centered(expand)
 

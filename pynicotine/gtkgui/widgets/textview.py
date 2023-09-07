@@ -58,7 +58,11 @@ class TextView:
             pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
             wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
         )
-        parent.set_property("child", self.widget)
+
+        if GTK_API_VERSION >= 4:
+            parent.set_child(self.widget)  # pylint: disable=no-member
+        else:
+            parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)

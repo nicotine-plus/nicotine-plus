@@ -359,7 +359,10 @@ Copyright (c) 2017 IP2Location.com
             close_destroy=False
         )
 
-        self.main_icon.set_property("icon-name", config.application_id)
+        icon_name = config.application_id
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.main_icon.set_from_icon_name(icon_name, *icon_args)
         self.website_label.connect("activate-link", lambda x, url: open_uri(url))
 
         for label_widget, text in (

@@ -28,6 +28,7 @@ from collections import defaultdict
 from itertools import islice
 
 from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -651,9 +652,12 @@ class Search:
             tooltip_text = _("Restore Filters")
             icon_name = "edit-undo-symbolic"
 
-        if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
-            self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
-            self.clear_undo_filters_icon.set_property("icon-name", icon_name)
+        if self.clear_undo_filters_icon.get_icon_name() == icon_name:
+            return
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
+        self.clear_undo_filters_icon.set_from_icon_name(icon_name, *icon_args)
 
     def populate_filter_history(self):
 
@@ -1244,12 +1248,15 @@ class Search:
             return
 
         if not core.search.is_wish(self.text):
-            self.add_wish_icon.set_property("icon-name", "list-add-symbolic")
-            self.add_wish_label.set_label(_("Add Wi_sh"))
-            return
+            icon_name = "list-add-symbolic"
+            label = _("Add Wi_sh")
+        else:
+            icon_name = "list-remove-symbolic"
+            label = _("Remove Wi_sh")
 
-        self.add_wish_icon.set_property("icon-name", "list-remove-symbolic")
-        self.add_wish_label.set_label(_("Remove Wi_sh"))
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.add_wish_icon.set_from_icon_name(icon_name, *icon_args)
+        self.add_wish_label.set_label(label)
 
     def on_add_wish(self, *_args):
 
@@ -1603,15 +1610,17 @@ class Search:
         active = self.expand_button.get_active()
 
         if active:
+            icon_name = "go-up-symbolic"
             self.tree_view.expand_all_rows()
-            self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
+            icon_name = "go-down-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
                 self.tree_view.expand_root_rows()
 
-            self.expand_icon.set_property("icon-name", "go-down-symbolic")
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.expand_icon.set_from_icon_name(icon_name, *icon_args)
 
         config.sections["searches"]["expand_searches"] = active
 

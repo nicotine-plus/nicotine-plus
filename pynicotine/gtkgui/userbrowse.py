@@ -27,10 +27,12 @@ from locale import strxfrm
 
 from gi.repository import GLib
 from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
@@ -1188,11 +1190,14 @@ class UserBrowse:
         active = self.expand_button.get_active()
 
         if active:
+            icon_name = "go-up-symbolic"
             self.folder_tree_view.expand_all_rows()
-            self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
+            icon_name = "go-down-symbolic"
             self.folder_tree_view.collapse_all_rows()
-            self.expand_icon.set_property("icon-name", "go-down-symbolic")
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.expand_icon.set_from_icon_name(icon_name, *icon_args)
 
         config.sections["userbrowse"]["expand_folders"] = active
 

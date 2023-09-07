@@ -3039,15 +3039,15 @@ class Preferences(Dialog):
             for obj in page.__dict__.values():
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
-                        check_button_label = obj.get_last_child()
+                        try:
+                            check_button_label = obj.get_last_child()
+                            check_button_label.set_wrap(True)   # pylint: disable=no-member
+                        except AttributeError:
+                            pass
                     else:
                         check_button_label = obj.get_child()
+                        check_button_label.set_line_wrap(True)  # pylint: disable=no-member
                         obj.set_receives_default(True)
-
-                    try:
-                        check_button_label.set_property("wrap", True)
-                    except AttributeError:
-                        pass
 
                 elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
                     if isinstance(obj, ComboBox):
@@ -3080,7 +3080,10 @@ class Preferences(Dialog):
             page.container.set_margin_top(14)
             page.container.set_margin_bottom(18)
 
-        self.viewport.set_property("child", self.pages[page_id].container)
+        if GTK_API_VERSION >= 4:
+            self.viewport.set_child(self.pages[page_id].container)  # pylint: disable=no-member
+        else:
+            self.viewport.add(self.pages[page_id].container)        # pylint: disable=no-member
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)

@@ -430,6 +430,8 @@ class MainWindow(Window):
             return
 
         username = core.login_username
+        icon_name = USER_STATUS_ICON_NAMES[status]
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         if status == UserStatus.AWAY:
             status_text = _("Away")
@@ -445,7 +447,7 @@ class MainWindow(Window):
             self.user_status_button.set_tooltip_text(username)
 
         self.user_status_button.set_active(False)
-        self.user_status_icon.set_property("icon-name", USER_STATUS_ICON_NAMES[status])
+        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(status_text)
 
     # Action Callbacks #
@@ -1398,8 +1400,11 @@ class MainWindow(Window):
         if not should_finish_uploads:
             return
 
+        icon_name = "system-shutdown-symbolic"
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
         self.user_status_button.set_active(True)
-        self.user_status_icon.set_property("icon-name", "system-shutdown-symbolic")
+        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(_("Quitting..."))
 
     def hide(self):

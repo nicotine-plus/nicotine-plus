@@ -69,9 +69,13 @@ class TreeView:
         self._clicked_column_reset_sort = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
+        self._h_adjustment = parent.get_hadjustment()
 
-        parent.set_property("child", self.widget)
-        self._h_adjustment = self.widget.get_parent().get_hadjustment()
+        if GTK_API_VERSION >= 4:
+            parent.set_child(self.widget)  # pylint: disable=no-member
+        else:
+            parent.add(self.widget)        # pylint: disable=no-member
+
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
@@ -272,10 +276,14 @@ class TreeView:
             if not isinstance(width, int):
                 width = None
 
+            # Allow individual cells to receive visual focus
+            mode = Gtk.CellRendererMode.ACTIVATABLE if len(columns) > 1 else Gtk.CellRendererMode.INERT
             xalign = 0.0
 
             if column_type == "text":
-                renderer = Gtk.CellRendererText(single_paragraph_mode=True, xpad=width_padding, ypad=height_padding)
+                renderer = Gtk.CellRendererText(
+                    mode=mode, single_paragraph_mode=True, xpad=width_padding, ypad=height_padding
+                )
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 text_underline_column = column_data.get("text_underline_column")
                 text_weight_column = column_data.get("text_weight_column")
@@ -288,32 +296,33 @@ class TreeView:
 
             elif column_type == "number":
                 xalign = 1
-                renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
+                renderer = Gtk.CellRendererText(mode=mode, xalign=xalign, xpad=width_padding, ypad=height_padding)
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, text=column_index)
                 column.set_alignment(xalign)
 
             elif column_type == "progress":
-                renderer = Gtk.CellRendererProgress(ypad=progress_padding)
+                renderer = Gtk.CellRendererProgress(mode=mode, ypad=progress_padding)
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, value=column_index)
 
             elif column_type == "toggle":
                 xalign = 0.5
-                renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
+                renderer = Gtk.CellRendererToggle(mode=mode, xalign=xalign, xpad=13)
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
 
             elif column_type == "icon":
-                renderer = Gtk.CellRendererPixbuf(xalign=1.0)
+                icon_args = {}
 
                 if column_id == "country":
                     if GTK_API_VERSION >= 4:
                         # Custom icon size defined in theme.py
-                        renderer.set_property("icon-size", Gtk.IconSize.NORMAL)  # pylint: disable=no-member
+                        icon_args["icon_size"] = Gtk.IconSize.NORMAL
                     else:
                         # Use the same size as the original icon
-                        renderer.set_property("stock-size", 0)
+                        icon_args["stock_size"] = 0
 
+                renderer = Gtk.CellRendererPixbuf(mode=mode, xalign=1.0, **icon_args)
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, icon_name=column_index)
 
             column_header = column.get_button()
@@ -339,10 +348,6 @@ class TreeView:
 
                 if width > 0:
                     column.set_fixed_width(width)
-
-            # Allow individual cells to receive visual focus
-            if len(columns) > 1:
-                renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
             column.set_reorderable(True)
             column.set_min_width(24)

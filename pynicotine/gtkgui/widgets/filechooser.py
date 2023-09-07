@@ -244,13 +244,14 @@ class FileChooserButton:
         box = Gtk.Box(spacing=6, visible=True)
 
         if GTK_API_VERSION >= 4:
-            box.append(self.icon)   # pylint: disable=no-member
-            box.append(self.label)  # pylint: disable=no-member
+            box.append(self.icon)       # pylint: disable=no-member
+            box.append(self.label)      # pylint: disable=no-member
+            self.button.set_child(box)  # pylint: disable=no-member
         else:
-            box.add(self.icon)   # pylint: disable=no-member
-            box.add(self.label)  # pylint: disable=no-member
+            box.add(self.icon)          # pylint: disable=no-member
+            box.add(self.label)         # pylint: disable=no-member
+            self.button.add(box)        # pylint: disable=no-member
 
-        self.button.set_property("child", box)
         self.button.connect("clicked", self.open_file_chooser)
 
     def open_file_chooser_response(self, selected, _data):

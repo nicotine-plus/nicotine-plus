@@ -516,8 +516,9 @@ class UserInfo:
         self.country_label.set_text(country_text)
 
         icon_name = get_flag_icon_name(country_code)
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-        self.country_icon.set_property("icon-name", icon_name)
+        self.country_icon.set_from_icon_name(icon_name, *icon_args)
         self.country_icon.set_visible(bool(icon_name))
 
     def user_interests(self, msg):

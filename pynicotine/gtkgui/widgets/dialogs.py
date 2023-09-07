@@ -463,17 +463,19 @@ class EntryDialog(OptionDialog):
                              ("ok", action_button_label)])
 
         self.entry_container = None
-        self.entry = self._add_entry_combobox(default, visibility, droplist, activates_default=not use_second_entry)
+        self.entry = self._add_entry_combobox(
+            default, activates_default=not use_second_entry, visibility=visibility, droplist=droplist)
         self.second_entry = None
 
         if use_second_entry:
             self.second_entry = self._add_entry_combobox(
-                second_default, visibility, second_droplist, activates_default=False)
+                second_default, activates_default=False, visibility=visibility, droplist=second_droplist)
 
-    def _add_combobox(self, items, visibility=True):
+    def _add_combobox(self, items, visibility=True, activates_default=True):
 
         combobox = ComboBox(container=self.entry_container, has_entry=True)
         entry = combobox.entry
+        entry.set_activates_default(activates_default)
         entry.set_width_chars(45)
         entry.set_visibility(visibility)
 
@@ -483,12 +485,13 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return entry
 
-    def _add_entry(self, visibility=True):
+    def _add_entry(self, visibility=True, activates_default=True):
 
         if GTK_API_VERSION >= 4 and not visibility:
-            entry = Gtk.PasswordEntry(show_peek_icon=True, width_chars=50, visible=True)
+            entry = Gtk.PasswordEntry(
+                activates_default=activates_default, show_peek_icon=True, width_chars=50, visible=True)
         else:
-            entry = Gtk.Entry(visibility=visibility, width_chars=50, visible=True)
+            entry = Gtk.Entry(activates_default=activates_default, visibility=visibility, width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(entry)  # pylint: disable=no-member
@@ -498,7 +501,7 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return entry
 
-    def _add_entry_combobox(self, default, visibility, droplist=None, activates_default=True):
+    def _add_entry_combobox(self, default, activates_default=True, visibility=True, droplist=None):
 
         if self.entry_container is None:
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
@@ -510,13 +513,11 @@ class EntryDialog(OptionDialog):
                 self.container.reorder_child(self.entry_container, position=0)  # pylint: disable=no-member
 
         if droplist:
-            entry = self._add_combobox(droplist, visibility)
+            entry = self._add_combobox(droplist, activates_default=activates_default, visibility=visibility)
         else:
-            entry = self._add_entry(visibility)
+            entry = self._add_entry(activates_default=activates_default, visibility=visibility)
 
-        entry.set_property("activates-default", activates_default)
         entry.set_text(default)
-
         return entry
 
     def get_entry_value(self):

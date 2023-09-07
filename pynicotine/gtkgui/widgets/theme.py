@@ -109,18 +109,18 @@ def set_dark_mode(enabled):
         if color_scheme is not None:
             enabled = (color_scheme == ColorScheme.PREFER_DARK)
 
-    GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
+    GTK_SETTINGS.props.gtk_application_prefer_dark_theme = enabled
 
 
 def set_use_header_bar(enabled):
-    GTK_SETTINGS.set_property("gtk-dialogs-use-header", enabled)
+    GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
 def set_visual_settings():
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
-        GTK_SETTINGS.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+        GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
@@ -371,7 +371,7 @@ def load_custom_icons(update=False):
     icon_theme_path = os.path.join(config.data_folder_path, CUSTOM_ICON_THEME_NAME)
     icon_theme_path_encoded = encode_path(icon_theme_path)
 
-    parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+    parent_icon_theme_name = GTK_SETTINGS.props.gtk_icon_theme_name
 
     if parent_icon_theme_name == CUSTOM_ICON_THEME_NAME:
         return
@@ -463,7 +463,7 @@ def load_custom_icons(update=False):
                 })
 
     # Enable custom icon theme
-    GTK_SETTINGS.set_property("gtk-icon-theme-name", CUSTOM_ICON_THEME_NAME)
+    GTK_SETTINGS.props.gtk_icon_theme_name = CUSTOM_ICON_THEME_NAME
 
 
 def load_icons():
@@ -683,7 +683,7 @@ def _get_custom_color_css():
 
 def update_custom_css():
 
-    using_custom_icon_theme = (GTK_SETTINGS.get_property("gtk-icon-theme-name") == CUSTOM_ICON_THEME_NAME)
+    using_custom_icon_theme = (GTK_SETTINGS.props.gtk_icon_theme_name == CUSTOM_ICON_THEME_NAME)
     css = bytearray(
         f"""
         .colored-icon {{
@@ -706,31 +706,30 @@ def update_custom_css():
         )
 
 
-def update_tag_property(tag, property_name, value):
-    if tag.get_property(property_name) != value:
-        tag.set_property(property_name, value)
-
-
 def update_tag_visuals(tag, color_id):
 
     enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
     is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
     color_hex = config.sections["ui"].get(color_id)
+    tag_props = tag.props
 
     if is_hotspot_tag and not enable_colored_usernames:
         color_hex = None
 
     if not color_hex:
-        update_tag_property(tag, "foreground-set", False)
+        if tag_props.foreground_set:
+            tag_props.foreground_set = False
     else:
-        rgba = Gdk.RGBA()
-        rgba.parse(color_hex)
+        current_rgba = tag_props.foreground_rgba
+        new_rgba = Gdk.RGBA()
+        new_rgba.parse(color_hex)
 
-        update_tag_property(tag, "foreground-rgba", rgba)
+        if current_rgba is None or not new_rgba.equal(current_rgba):
+            tag_props.foreground_rgba = new_rgba
 
     # URLs
-    if color_id == "urlcolor":
-        update_tag_property(tag, "underline", Pango.Underline.SINGLE)
+    if color_id == "urlcolor" and tag_props.underline != Pango.Underline.SINGLE:
+        tag_props.underline = Pango.Underline.SINGLE
 
     # Hotspots
     if not is_hotspot_tag:
@@ -739,10 +738,13 @@ def update_tag_visuals(tag, color_id):
     username_style = config.sections["ui"]["usernamestyle"]
 
     weight_style = Pango.Weight.BOLD if username_style == "bold" else Pango.Weight.NORMAL
-    update_tag_property(tag, "weight", weight_style)
+    if tag_props.weight != weight_style:
+        tag_props.weight = weight_style
 
     italic_style = Pango.Style.ITALIC if username_style == "italic" else Pango.Style.NORMAL
-    update_tag_property(tag, "style", italic_style)
+    if tag_props.style != italic_style:
+        tag_props.style = italic_style
 
     underline_style = Pango.Underline.SINGLE if username_style == "underline" else Pango.Underline.NONE
-    update_tag_property(tag, "underline", underline_style)
+    if tag_props.underline != underline_style:
+        tag_props.underline = underline_style

@@ -23,6 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -754,7 +755,6 @@ class TransferList:
         if expanded:
             icon_name = "go-up-symbolic"
             self.tree_view.expand_all_rows()
-
         else:
             icon_name = "go-down-symbolic"
             self.tree_view.collapse_all_rows()
@@ -762,7 +762,8 @@ class TransferList:
             if self.grouping_mode == "folder_grouping":
                 self.tree_view.expand_root_rows()
 
-        self.expand_icon.set_property("icon-name", icon_name)
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.expand_icon.set_from_icon_name(icon_name, *icon_args)
 
         config.sections["transfers"][f"{self.type}sexpanded"] = expanded
         config.write_configuration()

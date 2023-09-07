@@ -223,15 +223,16 @@ class PluginSettings(Dialog):
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label_text, mnemonic_widget=button, visible=True)
 
-            button.set_property("child", label_container)
             button.connect("clicked", callback, treeview)
             add_css_class(button, "flat")
 
             if GTK_API_VERSION >= 4:
+                button.set_child(label_container)           # pylint: disable=no-member
                 label_container.append(icon)                # pylint: disable=no-member
                 label_container.append(label)               # pylint: disable=no-member
                 button_container.append(button)             # pylint: disable=no-member
             else:
+                button.add(label_container)                 # pylint: disable=no-member
                 label_container.add(icon)                   # pylint: disable=no-member
                 label_container.add(label)                  # pylint: disable=no-member
                 button_container.add(button)                # pylint: disable=no-member
