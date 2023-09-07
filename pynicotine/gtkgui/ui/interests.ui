@@ -28,34 +28,27 @@
               </object>
             </child>
             <child>
+              <object class="GtkEntry" id="add_like_entry">
+                <property name="hexpand">True</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="placeholder-text" translatable="yes">Add something you like…</property>
+                <property name="primary-icon-name">non-starred-symbolic</property>
+                <property name="visible">True</property>
+                <property name="width-chars">15</property>
+                <signal name="activate" handler="on_add_thing_i_like"/>
+                <signal name="icon-press" handler="on_add_thing_i_like"/>
+              </object>
+            </child>
+            <child>
               <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkEntry" id="add_like_entry">
+                  <object class="GtkScrolledWindow" id="likes_list_container">
                     <property name="hexpand">True</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-start">6</property>
-                    <property name="placeholder-text" translatable="yes">Add something you like…</property>
-                    <property name="primary-icon-name">non-starred-symbolic</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">15</property>
-                    <signal name="activate" handler="on_add_thing_i_like"/>
-                    <signal name="icon-press" handler="on_add_thing_i_like"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="vexpand">True</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="likes_list_container">
-                        <property name="hexpand">True</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -75,34 +68,27 @@
               </object>
             </child>
             <child>
+              <object class="GtkEntry" id="add_dislike_entry">
+                <property name="hexpand">True</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
+                <property name="primary-icon-name">action-unavailable-symbolic</property>
+                <property name="visible">True</property>
+                <property name="width-chars">15</property>
+                <signal name="activate" handler="on_add_thing_i_dislike"/>
+                <signal name="icon-press" handler="on_add_thing_i_dislike"/>
+              </object>
+            </child>
+            <child>
               <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkEntry" id="add_dislike_entry">
+                  <object class="GtkScrolledWindow" id="dislikes_list_container">
                     <property name="hexpand">True</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-start">6</property>
-                    <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
-                    <property name="primary-icon-name">action-unavailable-symbolic</property>
                     <property name="visible">True</property>
-                    <property name="width-chars">15</property>
-                    <signal name="activate" handler="on_add_thing_i_dislike"/>
-                    <signal name="icon-press" handler="on_add_thing_i_dislike"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="vexpand">True</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="dislikes_list_container">
-                        <property name="hexpand">True</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
