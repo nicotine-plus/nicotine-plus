@@ -57,7 +57,7 @@ class CLIInputProcessor(Thread):
                 return
 
             # Small time window to set custom prompt
-            time.sleep(0.75)
+            time.sleep(0.25)
 
     def _handle_prompt_callback(self, user_input, callback):
 

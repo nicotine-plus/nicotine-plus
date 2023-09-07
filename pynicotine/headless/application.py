@@ -67,7 +67,7 @@ class Application:
         if user_input.lower().startswith("y"):
             core.quit()
 
-    def on_confirm_quit(self, _remember):
+    def on_confirm_quit(self):
         cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
 
     def on_shares_unavailable_response(self, user_input):
