@@ -317,7 +317,7 @@ class TreeView:
                 if column_id == "country":
                     if GTK_API_VERSION >= 4:
                         # Custom icon size defined in theme.py
-                        icon_args["icon_size"] = Gtk.IconSize.NORMAL
+                        icon_args["icon_size"] = Gtk.IconSize.NORMAL  # pylint: disable=no-member
                     else:
                         # Use the same size as the original icon
                         icon_args["stock_size"] = 0
