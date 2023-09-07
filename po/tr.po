@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-07-26 15:10+0000\n"
+"PO-Revision-Date: 2023-09-07 17:39+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -212,9 +212,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Bağlanmadan önce bir kullanıcı adı ve parola belirtmeniz gerekir…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "%(program)s %(version)s yükleniyor"
+msgstr "%(program)s %(version)s'tan çık!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -356,7 +356,7 @@ msgstr "Gerçekten çıkmak istiyor musunuz?"
 
 #: pynicotine/gtkgui/application.py:303
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Yüklemelerin bitmesini bekle"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -744,14 +744,12 @@ msgid "Remove"
 msgstr "Kaldır"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Öge"
+msgstr "Öge Ekle"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "İlgi Alanlarını Düzenle"
+msgstr "Ögeyi Düzenle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1702,7 +1700,7 @@ msgstr "Yüklenenler: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Çıkılıyor..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -2310,9 +2308,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Tüm sekmeleri gerçekten kapatmak istiyor musunuz?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Okunmayan Sekmeler"
+msgstr "%i Okunmayan Sekme"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2320,9 +2318,8 @@ msgstr "Tüm Sekmeler"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "Sekmeyi _Kapat"
+msgstr "Kapatılan Sekmeyi _Yeniden Aç"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3697,14 +3694,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Kullanıcı veya IP adresini yok sayma listelerinden kaldır"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "_Dilek Ekle"
+msgstr "Paylaşım ekle"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "_Dileği Kaldır"
+msgstr "Paylaşımı kaldır"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3779,22 +3774,24 @@ msgstr "%s yok sayılması kaldırıldı"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Erişilemeyen \"%s\" klasörü paylaşılamıyor"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"%(group_name)s paylaşımı \"%(virtual_name)s\" eklendi (yenidedn tarama "
+"gerekli)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "\"%s\" adında paylaşım yok"
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "\"%s\" paylaşımı kaldırıldı (yeniden tarama gerekli)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4036,9 +4033,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "%(host)s:%(port)s sunucusuna bağlanılamıyor: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Başlangıçta sunucuya otomatik bağlan"
+msgstr "Sunucuya %i saniye içinde yeniden bağlanılıyor"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4348,6 +4345,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Diğer Soulseek eşleriyle bağlantı kurmak için, yönlendiricinizdeki dinleyen "
+"bir bağlantı noktasının bilgisayarınıza yönlendirilmesi gerekir."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4484,9 +4483,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Sonraki İkincil Sekmeye Git"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "İkincil Sekmeyi Kapat"
+msgstr "Kapatılan İkincil Sekmeyi Yeniden Aç"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4922,14 +4920,12 @@ msgid "_Accept private room invitations"
 msgstr "Özel oda davetlerini _kabul et"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Oda duvarı özelliği, bir odadaki kullanıcıların diğerlerine gösterilecek "
-"benzersiz bir mesaj belirlemesine olanak tanır. Son mesajlar en üstte "
-"gösterilir."
+"Diğer oda kullanıcılarının daha sonra okuyabileceği bir mesaj yazın. Son "
+"mesajlar en üstte gösterilir."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5328,9 +5324,8 @@ msgid "IP Addresses"
 msgstr "IP Adresleri"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Yazım denetleyicisini etkinleştir (yeniden başlatma gerektirir)"
+msgstr "Yazım denetleyicisini etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -5969,9 +5964,8 @@ msgid "Language (requires a restart):"
 msgstr "Dil (yeniden başlatma gerektirir):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "Nicotine+'ı kapatırken:"
+msgstr "Pencereyi kapatırken:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
