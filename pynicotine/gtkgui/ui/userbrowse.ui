@@ -249,22 +249,16 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkBox">
-                        <property name="vexpand">True</property>
+                      <object class="GtkScrolledWindow" id="file_list_container">
+                        <property name="hexpand">True</property>
                         <property name="visible">True</property>
-                        <child>
-                          <object class="GtkScrolledWindow" id="file_list_container">
-                            <property name="hexpand">True</property>
-                            <property name="visible">True</property>
-                            <property name="width-request">450</property>
-                            <style>
-                              <class name="userbrowse-view"/>
-                            </style>
-                          </object>
-                        </child>
+                        <property name="width-request">450</property>
+                        <style>
+                          <class name="userbrowse-view"/>
+                        </style>
                       </object>
                     </child>
                   </object>
