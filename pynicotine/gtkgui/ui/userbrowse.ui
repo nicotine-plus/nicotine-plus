@@ -112,7 +112,7 @@
                                         <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="share_size_label">
-                                            <property name="label">0.0 B</property>
+                                            <property name="label">0 B</property>
                                             <property name="mnemonic-widget">_share_size_button</property>
                                             <property name="visible">True</property>
                                             <style>
