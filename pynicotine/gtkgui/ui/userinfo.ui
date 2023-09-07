@@ -31,78 +31,70 @@
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
-                    <property name="spacing">18</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <property name="vexpand">True</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-top">6</property>
+                        <property name="spacing">12</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkBox">
-                            <property name="margin-end">6</property>
-                            <property name="margin-start">12</property>
+                          <object class="GtkLabel" id="user_label">
+                            <property name="margin-bottom">6</property>
                             <property name="margin-top">6</property>
-                            <property name="spacing">12</property>
+                            <property name="single-line-mode">True</property>
                             <property name="visible">True</property>
-                            <child>
-                              <object class="GtkLabel" id="user_label">
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="single-line-mode">True</property>
-                                <property name="visible">True</property>
-                                <property name="wrap">True</property>
-                                <property name="wrap-mode">word-char</property>
-                                <property name="xalign">0</property>
-                                <style>
-                                  <class name="title-2"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkImage" id="country_icon">
-                                <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
-                                <property name="visible">False</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="halign">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="valign">start</property>
-                                <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkButton" id="edit_profile_button">
-                                    <property name="tooltip-text" translatable="yes">Edit Profile</property>
-                                    <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_edit_profile"/>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="icon-name">document-edit-symbolic</property>
-                                        <property name="visible">True</property>
-                                      </object>
-                                    </child>
-                                    <style>
-                                      <class name="circular"/>
-                                      <class name="image-button"/>
-                                    </style>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="title-2"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="country_icon">
+                            <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                            <property name="visible">False</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkBox">
-                            <property name="vexpand">True</property>
+                            <property name="halign">end</property>
+                            <property name="hexpand">True</property>
+                            <property name="valign">start</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkScrolledWindow" id="description_view_container">
-                                <property name="hexpand">True</property>
+                              <object class="GtkButton" id="edit_profile_button">
+                                <property name="tooltip-text" translatable="yes">Edit Profile</property>
                                 <property name="visible">True</property>
+                                <signal name="clicked" handler="on_edit_profile"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">document-edit-symbolic</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="circular"/>
+                                  <class name="image-button"/>
+                                </style>
                               </object>
                             </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="vexpand">True</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkScrolledWindow" id="description_view_container">
+                            <property name="hexpand">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>
@@ -112,6 +104,7 @@
                         <property name="margin-bottom">12</property>
                         <property name="margin-end">12</property>
                         <property name="margin-start">12</property>
+                        <property name="margin-top">12</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">24</property>
                         <property name="visible">True</property>
@@ -330,7 +323,6 @@
                     <child>
                       <object class="GtkBox">
                         <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkBox">
@@ -387,6 +379,7 @@
                         </child>
                         <child>
                           <object class="GtkBox">
+                            <property name="margin-top">18</property>
                             <property name="vexpand">True</property>
                             <property name="visible">True</property>
                             <child>
