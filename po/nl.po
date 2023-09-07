@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-06-19 15:51+0000\n"
+"PO-Revision-Date: 2023-09-07 17:39+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -211,9 +211,9 @@ msgstr ""
 "Je moet een gebruikersnaam en wachtwoord opgeven voordat je verbinding maakt…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Bezig met laden %(program)s %(version)s"
+msgstr "Stop %(program)s %(version)s!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -353,7 +353,7 @@ msgstr "Wil je echt afsluiten?"
 
 #: pynicotine/gtkgui/application.py:303
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Wacht tot de uploads klaar zijn"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -741,14 +741,12 @@ msgid "Remove"
 msgstr "Verwijderen"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Voorwerp"
+msgstr "Item toevoegen"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "Interesses bewerken"
+msgstr "Item bewerken"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1698,7 +1696,7 @@ msgstr "Uploads: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Stoppen..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -2306,9 +2304,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Wil je echt alle tabbladen sluiten?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Ongelezen Tabbladen"
+msgstr "%i Ongelezen Tab(s)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2316,9 +2314,8 @@ msgstr "Alle Tabs"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "_Sluit Tab"
+msgstr "Heropen gesloten Tab"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3693,14 +3690,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Gebruiker of IP-adres uit negeerlijsten verwijderen"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "Wens toevoegen"
+msgstr "Gedeelde map toevoegen"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "Verwijder wen_s"
+msgstr "Verwijder gedeelde map"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3776,22 +3771,22 @@ msgstr "Ontnegeer %s"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Kan onbereikbare map \"%s\" niet delen"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
-msgstr ""
+msgstr "Share %(group_name)s toegevoegd \"%(virtual_name)s\" (herscan nodig)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Geen share genaamd \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Share \"%s\" verwijderd (herscan nodig)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4037,9 +4032,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Kan niet met server %(host)s:%(port)s verbinden: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Automatisch verbinden met de server bij het opstarten"
+msgstr "Automatisch verbinden met server in %i seconden"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4350,6 +4345,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Om te verbinden met andere Soulseek gebruikers, moet een afluisterapparaat "
+"van je router naar je computer worden gestuurd."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4487,9 +4484,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Ga naar het volgende secundaire tabblad"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Secundair tabblad sluiten"
+msgstr "Secundair tabblad heropenen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4925,14 +4921,12 @@ msgid "_Accept private room invitations"
 msgstr "_Uitnodigingen voor privékamers accepteren"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Met de kamerwandfunctie kunnen gebruikers in een kamer een uniek bericht "
-"opgeven dat aan anderen wordt getoond. Recente berichten worden bovenaan "
-"getoond."
+"Schrijf een bericht dat andere kamergebruikers later kunnen lezen. Recente "
+"berichten worden aan de top getoond."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5338,9 +5332,8 @@ msgid "IP Addresses"
 msgstr "IP-adressen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Spellingscontrole inschakelen (vereist een herstart)"
+msgstr "Spellingscontrole inschakelen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -5976,9 +5969,8 @@ msgid "Language (requires a restart):"
 msgstr "Taal (herstart vereist):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "Als je Nicotine+ sluit:"
+msgstr "Als je het venster sluit:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
