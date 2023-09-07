@@ -229,7 +229,7 @@ class TransferList:
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
+            ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("_Search"), self.on_file_search),
             ("", None),
             (">" + _("Copy"), self.popup_menu_copy),

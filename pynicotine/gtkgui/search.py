@@ -567,7 +567,8 @@ class Search:
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
-            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
+            ("#" + _("View User _Profile"), self.on_user_profile),
+            ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             (">" + _("Copy"), self.popup_menu_copy),
@@ -1425,18 +1426,21 @@ class Search:
 
     def on_browse_folder(self, *_args):
 
-        requested_users = set()
-        requested_folders = set()
+        iterator = next(iter(self.selected_results), None)
 
-        for iterator in self.selected_results:
+        if iterator:
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder_path not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder_path)
+            core.userbrowse.browse_user(user, path=folder_path)
 
-                requested_users.add(user)
-                requested_folders.add(folder_path)
+    def on_user_profile(self, *_args):
+
+        iterator = next(iter(self.selected_results), None)
+
+        if iterator:
+            user = self.tree_view.get_row_value(iterator, "user")
+            core.userinfo.show_user(user)
 
     def on_file_properties(self, *_args):
 
