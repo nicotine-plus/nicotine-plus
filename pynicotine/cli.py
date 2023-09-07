@@ -33,6 +33,15 @@ class CLIInputProcessor(Thread):
 
         super().__init__(name="CLIInputProcessor", daemon=True)
 
+        try:
+            # Enable line editing and history
+            import readline
+            readline.set_auto_history(True)
+
+        except ImportError:
+            # Readline is not available on this OS
+            pass
+
         self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
