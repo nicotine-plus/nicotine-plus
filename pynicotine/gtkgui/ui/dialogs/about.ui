@@ -56,6 +56,27 @@
                   </object>
                 </child>
                 <child>
+                  <object class="GtkBox" id="status_container">
+                    <property name="halign">center</property>
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="status_label">
+                        <property name="justify">center</property>
+                        <property name="selectable">True</property>
+                        <property name="visible">True</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="status_icon">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkLabel" id="website_label">
                     <property name="halign">center</property>
                     <property name="justify">center</property>
@@ -69,6 +90,7 @@
               <object class="GtkLabel" id="copyright_label">
                 <property name="halign">center</property>
                 <property name="justify">center</property>
+                <property name="margin-top">6</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>

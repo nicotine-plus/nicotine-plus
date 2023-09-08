@@ -587,28 +587,17 @@ class UpdateChecker:
     def _check(self):
 
         try:
-            h_latest_version, latest_version, date = self.retrieve_latest_version()
-            version = self.create_integer_version(config.version)
-            title = _("Up to Date")
-
-            if latest_version > version:
-                title = _("Out of Date")
-                message = _("Version %(version)s is available, released on %(date)s") % {
-                    "version": h_latest_version,
-                    "date": date
-                }
-
-            elif version > latest_version:
-                message = _("You are using a development version of %s") % config.application_name
-
-            else:
-                message = _("You are using the latest version of %s") % config.application_name
+            error_message = None
+            h_latest_version, latest_version = self.retrieve_latest_version()
+            current_version = self.create_integer_version(config.version)
+            is_outdated = (current_version < latest_version)
 
         except Exception as error:
-            title = _("Latest Version Unknown")
-            message = _("Cannot retrieve latest version: %s") % error
+            error_message = str(error)
+            h_latest_version = None
+            is_outdated = False
 
-        log.add(message, title=title)
+        events.emit_main_thread("check-latest-version", h_latest_version, is_outdated, error_message)
 
     @staticmethod
     def create_integer_version(version):
@@ -634,12 +623,7 @@ class UpdateChecker:
         h_latest_version = data["info"]["version"]
         latest_version = cls.create_integer_version(h_latest_version)
 
-        try:
-            date = data["releases"][h_latest_version][0]["upload_time"]
-        except Exception:
-            date = None
-
-        return h_latest_version, latest_version, date
+        return h_latest_version, latest_version
 
 
 core = Core()
