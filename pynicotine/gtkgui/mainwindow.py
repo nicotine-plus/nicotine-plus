@@ -491,7 +491,7 @@ class MainWindow(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + _("_Quit"), "app.quit")
+            ("#" + _("_Quit"), "app.confirm-quit-uploads")
         )
 
     def create_file_menu(self):

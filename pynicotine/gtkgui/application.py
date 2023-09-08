@@ -148,7 +148,7 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
-            ("force-quit", self.on_force_quit_request, None, True),
+            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
@@ -221,7 +221,7 @@ class Application:
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
-            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.quit", ["<Primary><Alt>q"]),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -736,8 +736,8 @@ class Application:
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
 
-    def on_force_quit_request(self, *_args):
-        core.quit()
+    def on_confirm_quit_uploads_request(self, *_args):
+        core.confirm_quit(only_on_active_uploads=True)
 
     def on_quit_request(self, *_args):
-        core.confirm_quit(only_on_active_uploads=True)
+        core.quit()

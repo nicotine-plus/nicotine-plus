@@ -284,7 +284,7 @@ class Uploads(Transfers):
         statuses = {"Getting status", "Transferring"}
 
         return bool(next(
-            (upload for upload in self.uploads if upload.status in statuses), None
+            (upload for upload in self.transfers if upload.status in statuses), None
         ))
 
     def file_is_upload_queued(self, username, virtual_path):
