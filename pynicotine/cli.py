@@ -35,8 +35,7 @@ class CLIInputProcessor(Thread):
 
         try:
             # Enable line editing and history
-            import readline
-            readline.get_line_buffer()
+            import readline  # noqa: F401  # pylint:disable=unused-import
 
         except ImportError:
             # Readline is not available on this OS
