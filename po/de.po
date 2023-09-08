@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-07-26 15:10+0000\n"
+"PO-Revision-Date: 2023-09-07 18:09+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -211,9 +211,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Bitte gebe einen Benutzernamen und Passwort an…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Laden von %(program)s %(version)s"
+msgstr "Beenden von %(program)s %(version)s!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -354,7 +354,7 @@ msgstr "Willst du wirklich aussteigen?"
 
 #: pynicotine/gtkgui/application.py:303
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Warten bis das Hochladen fertig ist"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -372,7 +372,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/dialogs.py:462
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 msgid "_Cancel"
-msgstr "Abbrechen"
+msgstr "_Abbrechen"
 
 #: pynicotine/gtkgui/application.py:326 pynicotine/gtkgui/uploads.py:44
 msgid "_Retry"
@@ -630,7 +630,7 @@ msgstr "Freigabe hinzufügen"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:186
 #: pynicotine/gtkgui/dialogs/preferences.py:684
 msgid "Edit Shared Folder"
-msgstr "Freigegebenen Ordner bearbeiten"
+msgstr "Freigabe bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:187
 #: pynicotine/gtkgui/dialogs/preferences.py:685
@@ -743,14 +743,12 @@ msgid "Remove"
 msgstr "Entfernen"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Eintrag"
+msgstr "Artikel hinzufügen"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "Interessen bearbeiten"
+msgstr "Artikel bearbeiten"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1702,7 +1700,7 @@ msgstr "Uploads: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Beenden …"
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -2088,7 +2086,7 @@ msgstr "Freibabenliste speichern"
 
 #: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:322
 msgid "Upload Folder…"
-msgstr "Ordner hochladen…"
+msgstr "Ordner hochladen …"
 
 #: pynicotine/gtkgui/userbrowse.py:243
 msgid "Upload Folder & Subfolders…"
@@ -2311,9 +2309,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Wirklich alle Registerkarten schließen?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Ungelesene Tabs"
+msgstr "%i Ungelesene Tab(s)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2321,9 +2319,8 @@ msgstr "Alle Tabs"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "Tab schließen"
+msgstr "Wieder öffnen Geschlossenes Tab"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3709,14 +3706,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Benutzer oder IP-Adresse aus Ignorierliste entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "_Wunsch hinzufügen"
+msgstr "Freigabe hinzufügen"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "_Wunsch entfernen"
+msgstr "Freigabe entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3793,22 +3788,24 @@ msgstr "%s nicht mehr ignoriert"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Nicht zugänglicher Ordner \"%s\" kann nicht geteilt werden"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Zugefügt %(group_name)s geteilte Ordner \"%(virtual_name)s\" (erneut scannen "
+"benötigt)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Kein geteilter Ordner namens \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Freigabe \"%s\" entfernt (erneut scannen benötigt)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4056,9 +4053,9 @@ msgstr ""
 "Kann keine Verbindung zu Server herstellen: %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Automatisch zum Server verbinden beim Starten"
+msgstr "Zum Server verbinden in %i Sekunden"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4376,6 +4373,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Um mit anderen Soulseek-Anwender zu verbinden, muss ein Hörport auf Ihrem "
+"Router an Ihren Computer weitergeleitet werden."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4513,9 +4512,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Gehe zum nächsten sekundären Tab"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Sekundäre Tab schließen"
+msgstr "Sekundäre geschlossene Tab wieder öffnen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4794,8 +4792,8 @@ msgstr "Liste öffnen"
 #: pynicotine/gtkgui/ui/mainwindow.ui:776
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
-"Öffnet eine lokale Liste der freigegebenen Dateien, die zuvor auf der "
-"Festplatte gespeichert wurde"
+"Öffnet eine lokale Liste der Freigaben, die zuvor auf der Festplatte "
+"gespeichert wurde"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:791
 msgid "Configure Shares"
@@ -4806,9 +4804,9 @@ msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
 "also save the list to disk, and inspect it later on."
 msgstr ""
-"Geben Sie den Namen eines Benutzers ein, dessen freigegebene Dateien Sie "
-"durchsuchen möchten. Sie können die Liste auch auf der Festplatte speichern "
-"und später überprüfen."
+"Geben Sie den Namen eines Benutzers ein, dessen Freigaben Sie durchsuchen "
+"möchten. Sie können die Liste auch auf der Festplatte speichern und später "
+"überprüfen."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:882
 msgid "Enter the username of the person whose information you want to see"
@@ -4961,14 +4959,12 @@ msgid "_Accept private room invitations"
 msgstr "_Einladungen zu privaten Räumen annehmen"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Mit der Raumwandfunktion können Benutzer in einem Raum eine eindeutige "
-"Nachricht angeben, die anderen angezeigt wird. Die letzten Nachrichten "
-"werden oben angezeigt."
+"Schreiben Sie eine einzige Nachricht, dass andere Zimmerbenutzer später "
+"lesen können. Neueste Nachrichten werden oben angezeigt."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5374,9 +5370,8 @@ msgid "IP Addresses"
 msgstr "IP-Adressen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Rechtschreibprüfung aktivieren (erfordert Neustart)"
+msgstr "Rechtschreibprüfung aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -5772,7 +5767,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:60
 msgid "Show privately shared files in search results"
-msgstr "Privat freigegebene Dateien in den Suchergebnissen anzeigen"
+msgstr "Private Freigaben in den Suchergebnissen anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
 msgid ""
@@ -6016,9 +6011,8 @@ msgid "Language (requires a restart):"
 msgstr "Sprache (erfordert einen Neustart):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "Beim Schließen von Nicotine+:"
+msgstr "Beim Schließen des Fensters:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
@@ -6255,7 +6249,7 @@ msgstr "Profil bearbeiten"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:164
 msgid "Shared Files"
-msgstr "Freigegebene Dateien"
+msgstr "Freigaben"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:191
 msgid "Shared Folders"
