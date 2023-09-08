@@ -336,7 +336,11 @@ setup(
             ],
             include_resources=include_resources,
             codesign_identity="-",
-            codesign_deep=True
+            codesign_deep=True,
+            codesign_options="runtime",
+            codesign_strict="all",
+            codesign_timestamp=True,
+            codesign_verify=True
         ),
         "bdist_dmg": dict(
             applications_shortcut=True
@@ -348,7 +352,7 @@ setup(
             script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
             base=GUI_BASE,
             target_name=APPLICATION_NAME,
-            icon=os.path.join(CURRENT_PATH, ICON_NAME),
+            icon=os.path.join(CURRENT_PATH, ICON_NAME) if sys.platform == "win32" else None,
             copyright=COPYRIGHT,
             shortcut_name=APPLICATION_NAME,
             shortcut_dir="ProgramMenuFolder"
