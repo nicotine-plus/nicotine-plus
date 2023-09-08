@@ -36,7 +36,7 @@ class CLIInputProcessor(Thread):
         try:
             # Enable line editing and history
             import readline
-            readline.set_auto_history(True)
+            readline.get_line_buffer()
 
         except ImportError:
             # Readline is not available on this OS
