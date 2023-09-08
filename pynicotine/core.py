@@ -251,8 +251,8 @@ class Core:
     def setup(self):
         events.emit("setup")
 
-    def confirm_quit(self):
-        events.emit("confirm-quit")
+    def confirm_quit(self, only_on_active_uploads=False):
+        events.emit("confirm-quit", only_on_active_uploads)
 
     def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
 
