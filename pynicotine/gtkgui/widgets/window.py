@@ -68,5 +68,8 @@ class Window:
     def set_title(self, title):
         self.widget.set_title(title)
 
+    def hide(self):
+        self.widget.set_visible(False)
+
     def close(self, *_args):
         self.widget.close()

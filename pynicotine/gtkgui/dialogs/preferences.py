@@ -1540,6 +1540,7 @@ class UserInterfacePage:
             self.font_text_view_clear_button,
             self.font_transfers_button,
             self.font_transfers_clear_button,
+            self.header_bar_toggle,
             self.icon_theme_button,
             self.icon_theme_clear_button,
             self.icon_view,
@@ -1790,7 +1791,8 @@ class UserInterfacePage:
                 "tab_changed": self.color_tab_changed_entry,
                 "usernamestyle": self.chat_username_appearance_combobox,
                 "usernamehotspots": self.chat_colored_usernames_toggle,
-                "buddylistinchatrooms": self.buddy_list_position_combobox
+                "buddylistinchatrooms": self.buddy_list_position_combobox,
+                "header_bar": self.header_bar_toggle
             }
         }
 
@@ -1873,7 +1875,8 @@ class UserInterfacePage:
                 "tab_changed": self.color_tab_changed_entry.get_text(),
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
                 "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
-                "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id()
+                "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id(),
+                "header_bar": self.header_bar_toggle.get_active()
             }
         }
 
@@ -2927,6 +2930,11 @@ class Preferences(Dialog):
         dark_mode_state = config.sections["ui"]["dark_mode"]
         set_dark_mode(dark_mode_state)
         self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
+
+        # Header bar
+        header_bar_state = config.sections["ui"]["header_bar"]
+        self.application.window.set_use_header_bar(header_bar_state)
+        self.application.window.lookup_action("use-header-bar").set_state(GLib.Variant("b", header_bar_state))
 
         # Icons
         load_custom_icons(update=True)

@@ -42,7 +42,8 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="tray_options_container">
-                    <property name="spacing">24</property>
+                    <property name="homogeneous">True</property>
+                    <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkCheckButton" id="tray_icon_toggle">
@@ -53,12 +54,19 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="minimize_tray_startup_toggle">
+                        <property name="halign">end</property>
                         <property name="label" translatable="yes">Minimize to tray on startup</property>
                         <property name="sensitive" bind-source="tray_icon_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                         <property name="use-underline">True</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="header_bar_toggle">
+                    <property name="label" translatable="yes">Use header bar</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
                 <child>

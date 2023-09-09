@@ -378,109 +378,6 @@ class MainWindow(Window):
             # Fix for Windows where minimized window is not shown when unhiding from tray
             self.widget.deiconify()
 
-    # Connection #
-
-    def server_login(self, msg):
-
-        if not msg.success:
-            return
-
-        focus_widget = None
-        self.update_user_status()
-
-        if self.current_page_id == self.userbrowse_page.id:
-            focus_widget = self.userbrowse_entry
-
-        if self.current_page_id == self.userinfo_page.id:
-            focus_widget = self.userinfo_entry
-
-        if self.current_page_id == self.search_page.id:
-            focus_widget = self.search_entry
-
-        if focus_widget is not None:
-            focus_widget.grab_focus()
-
-    def server_disconnect(self, _msg):
-        self.update_user_status()
-
-    def update_user_status(self):
-
-        status = core.user_status
-        is_online = (status != UserStatus.OFFLINE)
-        is_away = (status == UserStatus.AWAY)
-
-        # Action status
-        self.application.lookup_action("connect").set_enabled(not is_online)
-        self.lookup_action("toggle-status").set_enabled(is_online)
-
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
-                            "message-downloading-users", "message-buddies"):
-            self.application.lookup_action(action_name).set_enabled(is_online)
-
-        self.application.tray_icon.update_user_status()
-
-        # Away mode
-        if not is_away:
-            self.set_auto_away(False)
-        else:
-            self.remove_away_timer()
-
-        # Status bar
-        if core.transfers.pending_shutdown:
-            return
-
-        username = core.login_username
-        icon_name = USER_STATUS_ICON_NAMES[status]
-        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-
-        if status == UserStatus.AWAY:
-            status_text = _("Away")
-
-        elif status == UserStatus.ONLINE:
-            status_text = _("Online")
-
-        else:
-            username = None
-            status_text = _("Offline")
-
-        if self.user_status_button.get_tooltip_text() != username:
-            self.user_status_button.set_tooltip_text(username)
-
-        self.user_status_button.set_active(False)
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(status_text)
-
-    # Action Callbacks #
-
-    # View
-
-    def on_use_header_bar(self, action, state):
-
-        action.set_state(state)
-        enabled = state.get_boolean()
-
-        if enabled:
-            self.hide_current_toolbar()
-            self.show_header_bar(self.current_page_id)
-
-        else:
-            self.hide_current_header_bar()
-            self.show_toolbar(self.current_page_id)
-
-        set_use_header_bar(enabled)
-        config.sections["ui"]["header_bar"] = enabled
-
-    def on_show_log_history(self, action, state):
-
-        action.set_state(state)
-        visible = state.get_boolean()
-        self.log_view.auto_scroll = visible
-
-        if visible:
-            self.log_view.scroll_bottom()
-
-        config.sections["logging"]["logcollapsed"] = not visible
-
     # Actions #
 
     def add_action(self, action):
@@ -801,6 +698,43 @@ class MainWindow(Window):
             self.show_toolbar(page_id)
 
         self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
+
+    def _show_dialogs(self, dialogs):
+        for dialog in dialogs:
+            dialog.show()
+
+    def set_use_header_bar(self, enabled):
+
+        if enabled == (not self.widget.get_show_menubar()):
+            return
+
+        active_dialogs = Window.active_dialogs
+
+        # Hide active dialogs to prevent parenting issues
+        for dialog in reversed(active_dialogs):
+            dialog.hide()
+
+        # Toggle header bar
+        if enabled:
+            self.hide_current_toolbar()
+            self.show_header_bar(self.current_page_id)
+        else:
+            self.hide_current_header_bar()
+            self.show_toolbar(self.current_page_id)
+
+        set_use_header_bar(enabled)
+        config.sections["ui"]["header_bar"] = enabled
+
+        # Show active dialogs again after slight delay
+        if active_dialogs:
+            GLib.idle_add(self._show_dialogs, active_dialogs)
+
+    def on_use_header_bar(self, action, state):
+
+        action.set_state(state)
+        enabled = state.get_boolean()
+
+        self.set_use_header_bar(enabled)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
@@ -1154,6 +1088,78 @@ class MainWindow(Window):
             else:
                 self.userlist_content.add(self.userlist.container)
 
+    # Connection #
+
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        focus_widget = None
+        self.update_user_status()
+
+        if self.current_page_id == self.userbrowse_page.id:
+            focus_widget = self.userbrowse_entry
+
+        if self.current_page_id == self.userinfo_page.id:
+            focus_widget = self.userinfo_entry
+
+        if self.current_page_id == self.search_page.id:
+            focus_widget = self.search_entry
+
+        if focus_widget is not None:
+            focus_widget.grab_focus()
+
+    def server_disconnect(self, _msg):
+        self.update_user_status()
+
+    def update_user_status(self):
+
+        status = core.user_status
+        is_online = (status != UserStatus.OFFLINE)
+        is_away = (status == UserStatus.AWAY)
+
+        # Action status
+        self.application.lookup_action("connect").set_enabled(not is_online)
+        self.lookup_action("toggle-status").set_enabled(is_online)
+
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
+                            "message-downloading-users", "message-buddies"):
+            self.application.lookup_action(action_name).set_enabled(is_online)
+
+        self.application.tray_icon.update_user_status()
+
+        # Away mode
+        if not is_away:
+            self.set_auto_away(False)
+        else:
+            self.remove_away_timer()
+
+        # Status bar
+        if core.transfers.pending_shutdown:
+            return
+
+        username = core.login_username
+        icon_name = USER_STATUS_ICON_NAMES[status]
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        if status == UserStatus.AWAY:
+            status_text = _("Away")
+
+        elif status == UserStatus.ONLINE:
+            status_text = _("Online")
+
+        else:
+            username = None
+            status_text = _("Offline")
+
+        if self.user_status_button.get_tooltip_text() != username:
+            self.user_status_button.set_tooltip_text(username)
+
+        self.user_status_button.set_active(False)
+        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.user_status_label.set_text(status_text)
+
     # Search #
 
     def on_search(self, *_args):
@@ -1292,6 +1298,17 @@ class MainWindow(Window):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
+    def on_show_log_history(self, action, state):
+
+        action.set_state(state)
+        visible = state.get_boolean()
+        self.log_view.auto_scroll = visible
+
+        if visible:
+            self.log_view.scroll_bottom()
+
+        config.sections["logging"]["logcollapsed"] = not visible
+
     # Status Bar #
 
     def set_status_text(self, msg):
@@ -1415,8 +1432,8 @@ class MainWindow(Window):
         for dialog in reversed(Window.active_dialogs):
             dialog.close()
 
-        # Run in Background
-        self.widget.set_visible(False)
-
         # Save config, in case application is killed later
         config.write_configuration()
+
+        # Hide window
+        super().hide()
