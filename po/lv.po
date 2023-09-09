@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-08-09 11:20+0000\n"
+"PO-Revision-Date: 2023-09-09 14:55+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -211,9 +211,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Pirms savienojuma izveides ir jānorāda lietotājvārds un parole…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Notiek ielāde %(program)s %(version)s"
+msgstr "Iziet %(program)s %(version)s!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -350,8 +350,9 @@ msgid "Do you really want to exit?"
 msgstr "Vai tiešām vēlaties iziet?"
 
 #: pynicotine/gtkgui/application.py:303
+#, fuzzy
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Gaidiet augšupielādes pabeigšanu"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -738,14 +739,12 @@ msgid "Remove"
 msgstr "Noņemt"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Vienums"
+msgstr "Pievienot Vienumu"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "Rediģēt Intereses"
+msgstr "Rediģēt Vienumu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1693,7 +1692,7 @@ msgstr "Augšupielādes: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Iziet..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -2302,9 +2301,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Vai tiešām vēlaties aizvērt visas cilnes?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Neizlasītās Cilnes"
+msgstr "%i Nelasīta(s) Cilne(s)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2312,9 +2311,8 @@ msgstr "Visas Cilnes"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "Aizvērt _Cilni"
+msgstr "_Atkārtoti Atvērt Aizvērto Cilni"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3687,14 +3685,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Noņemt lietotāju vai IP adresi no ignorēšanas sarakstiem"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "Pievienot Vēl_mi"
+msgstr "Pievienot koplietojumu"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "Noņemt Vēl_mi"
+msgstr "Noņemt koplietojumu"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3769,22 +3765,24 @@ msgstr "Neignorēts %s"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Nevar kopīgot nepieejamu mapi \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Pievienots %(group_name)s koplietojums \"%(virtual_name)s\" (nepieciešama "
+"pārskenēšana)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Nav koplietojuma ar nosaukumu \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Noņemts koplietojums \"%s\" (nepieciešama pārskenēšana)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4025,9 +4023,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nevar izveidot savienojumu ar serveri %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Automātiska savienošanās ar serveri startēšanas laikā"
+msgstr "Atkārtota savienojuma izveide ar serveri pēc %i sekundēm"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4338,6 +4336,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Lai izveidotu savienojumu ar citiem Soulseek lietotājiem, maršrutētāja "
+"klausīšanās ports ir jāpārsūta uz jūsu datoru."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4474,9 +4474,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Dodieties uz Nākamo Sekundāro Cilni"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Aizvērt Sekundāro Cilni"
+msgstr "Atkārtoti Atvērt Aizvērto Sekundāro Cilni"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4912,13 +4911,12 @@ msgid "_Accept private room invitations"
 msgstr "_Pieņemt privāto istabu ielūgumus"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Istabas sienas funkcija ļauj lietotājiem istabā parādīt unikālu ziņu, ko "
-"varēs redzēt pārējie. Jaunākās ziņas tiek rādītas augšpusē."
+"Uzrakstiet vienu ziņojumu, ko pārējie istabas lietotāji varēs izlasīt vēlāk. "
+"Jaunākās ziņas tiek rādītas augšdaļā."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5321,9 +5319,8 @@ msgid "IP Addresses"
 msgstr "IP Adreses"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Iespējot pareizrakstības pārbaudi (nepieciešams restartēt)"
+msgstr "Iespējot pareizrakstības pārbaudi"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -5961,9 +5958,8 @@ msgid "Language (requires a restart):"
 msgstr "Valoda (nepieciešams restartēt):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "Aizverot Nicotine+:"
+msgstr "Aizverot logu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
