@@ -19,6 +19,7 @@
 
 import glob
 import os
+import platform
 import ssl
 import subprocess
 import sys
@@ -39,7 +40,7 @@ if sys.platform == "win32":
 
 elif sys.platform == "darwin":
     GUI_BASE = None
-    SYS_BASE_PATH = "/usr/local"
+    SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     LIB_EXTENSION = (".dylib", ".so")
     UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
