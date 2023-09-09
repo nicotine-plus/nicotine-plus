@@ -26,22 +26,15 @@ import glob
 
 from setuptools import find_packages
 from setuptools import setup
-from setuptools.command.build_py import build_py
 
 from pynicotine.config import config
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import build_translations
 
 
-class BuildPyCommand(build_py):
-
-    def run(self):
-        build_translations()
-        build_py.run(self)
-
-
 if __name__ == "__main__":
 
+    build_translations()
     setup(
         name="nicotine-plus",
         version=config.version,
@@ -99,6 +92,5 @@ functionality while keeping current with the Soulseek protocol.""",
         ],
         python_requires=">=3.6",
         install_requires=["PyGObject>=3.22"],
-        extras_require={"packaging": ["cx_Freeze"], "test": ["pycodestyle", "pylint"]},
-        cmdclass={"build_py": BuildPyCommand}
+        extras_require={"packaging": ["cx_Freeze"], "test": ["pycodestyle", "pylint"]}
     )
