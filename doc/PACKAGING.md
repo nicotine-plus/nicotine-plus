@@ -15,13 +15,13 @@ Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ### Building a Source Distribution
 
-To build source distribution files `.tar.bz2` and `.tar.gz` from the Git repository, run:
+To build a source distribution archive `.tar.gz` from the Git repository, run:
 
 ```sh
-python3 setup.py sdist --formats=bztar,gztar
+python3 -m build --sdist --no-isolation
 ```
 
-The source distribution files will be located in the `dist/` subfolder.
+The source distribution archive will be located in the `dist/` subfolder.
 
 ### Building a Debian Package
 
@@ -36,7 +36,7 @@ sudo apt build-dep .
 Generate the "upstream" tarball:
 
 ```sh
-python3 setup.py sdist
+python3 -m build --sdist --no-isolation
 mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 

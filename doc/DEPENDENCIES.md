@@ -15,6 +15,7 @@
 
 ## Building
 
+- [build](https://pypa-build.readthedocs.io/) for building;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
 - [setuptools](https://setuptools.pypa.io/) for packaging.
 
@@ -53,19 +54,19 @@ sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject pyt
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gettext python3-setuptools
+sudo apt install gettext python3-build python3-setuptools
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gettext python3-setuptools
+sudo dnf install gettext python3-build python3-setuptools
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install gettext-runtime python3-setuptools
+sudo zypper install gettext-runtime python3-build python3-setuptools
 ```
 
 #### Installing Test Dependencies

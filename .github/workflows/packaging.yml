@@ -15,11 +15,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
+          sudo apt install python3-build
           sudo apt build-dep .
 
       - name: Build Debian package
         run: |
-          python3 setup.py sdist
+          python3 -m build --sdist --no-isolation
           mk-origtargz dist/nicotine-plus-*.tar.gz
           debuild -sa -us -uc
 
