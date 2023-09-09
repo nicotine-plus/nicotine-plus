@@ -38,6 +38,7 @@ On Debian and distributions based on it (e.g. Devuan, Peppermint OS), run the fo
 
 ```sh
 sudo apt update; sudo apt install python3-launchpadlib software-properties-common
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6E60F93DCD3E27CBE2F0CCA16CEB6050A30E5769
 sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
 sudo apt update; sudo apt install nicotine
 ```
