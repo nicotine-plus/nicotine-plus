@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-08-06 09:46+0000\n"
-"Last-Translator: Tagomago <tagomago@disroot.org>\n"
+"PO-Revision-Date: 2023-09-09 14:55+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -213,9 +213,9 @@ msgstr ""
 "conectarse…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Cargando %(program)s %(version)s"
+msgstr "¡Salir de %(program)s %(version)s!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -358,7 +358,7 @@ msgstr "¿De verdad quieres salir?"
 
 #: pynicotine/gtkgui/application.py:303
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Espera a que finalice la carga"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -414,7 +414,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:505 pynicotine/gtkgui/application.py:518
 msgid "_Send Message"
-msgstr "Enviar mensaje"
+msgstr "_Enviar un mensaje"
 
 #: pynicotine/gtkgui/application.py:516
 msgid "Message Buddies"
@@ -748,14 +748,12 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Elemento"
+msgstr "Añadir un elemento"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "Editar los intereses"
+msgstr "Editar un elemento"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -931,7 +929,7 @@ msgstr "Limpiar"
 #: pynicotine/gtkgui/dialogs/preferences.py:285
 #: pynicotine/gtkgui/ui/downloads.ui:56
 msgid "Resume"
-msgstr "Reintentar"
+msgstr "Reanudar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:286
 #: pynicotine/gtkgui/dialogs/preferences.py:755
@@ -1331,7 +1329,7 @@ msgstr "No se ha seleccionado ningún complemento"
 #: pynicotine/gtkgui/widgets/trayicon.py:108
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
 msgid "Preferences"
-msgstr "Configuración"
+msgstr "Preferencias"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2975
 msgid "Pick a File Name for Config Backup"
@@ -1707,7 +1705,7 @@ msgstr "Subidas: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Saliendo..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -1801,7 +1799,7 @@ msgstr "_Usuario"
 #: pynicotine/gtkgui/search.py:482
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:260
 msgid "In Queue"
-msgstr "En cola"
+msgstr "En espera"
 
 #: pynicotine/gtkgui/search.py:497 pynicotine/gtkgui/transferlist.py:125
 #: pynicotine/gtkgui/userbrowse.py:276
@@ -1937,7 +1935,7 @@ msgstr "Total: %s"
 
 #: pynicotine/gtkgui/search.py:1492
 msgid "Select Destination Folder for File(s)"
-msgstr "Seleccione carpeta de destino para el/los archivo(s)"
+msgstr "Seleccione la carpeta de destino para el(los) archivo(s)"
 
 #: pynicotine/gtkgui/search.py:1542 pynicotine/gtkgui/userbrowse.py:749
 msgid "Select Destination Folder"
@@ -1945,7 +1943,7 @@ msgstr "Seleccionar la carpeta de destino"
 
 #: pynicotine/gtkgui/transferlist.py:82
 msgid "Queued"
-msgstr "En cola"
+msgstr "A la cola"
 
 #: pynicotine/gtkgui/transferlist.py:83
 msgid "Queued (prioritized)"
@@ -2317,9 +2315,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "¿De verdad quieres cerrar todas las pestañas?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Pestañas no leídas"
+msgstr "%i Pestaña(s) no leída(s)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2327,9 +2325,8 @@ msgstr "Todas las pestañas"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "_Cerrar pestaña"
+msgstr "Re_abrir la pestaña cerrada"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3708,14 +3705,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Eliminar al usuario o la dirección IP de las listas de ignorados"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "Añadir de_seo"
+msgstr "Añadir una acción"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "Eliminar de_seo"
+msgstr "Eliminar una acción"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3791,22 +3786,26 @@ msgstr "Dejar de ignorar %s"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "No se puede acceder a la carpeta \"%s\" y no se puede compartir"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Añadido %(group_name)s y compartir \"%(virtual_name)s\" (es necesario volver "
+"a escanear)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "No hay ninguna acción con el nombre \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
 msgstr ""
+"Se ha eliminado el recurso compartido \"%s\" (es necesario volver a "
+"escanearlo)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4056,9 +4055,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "No se puede conectar al servidor %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Conexión automática al servidor al arranque"
+msgstr "Reconexión al servidor en %i segundo(s)"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4375,6 +4374,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Para conectarte con otros usuarios de Soulseek, debes redirigir un puerto de "
+"escucha de tu router a tu ordenador."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4512,9 +4513,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Ir a la pestaña secundaria siguiente"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Cerrar pestaña secundaria"
+msgstr "Reabrir una pestaña secundaria cerrada"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4957,14 +4957,12 @@ msgid "_Accept private room invitations"
 msgstr "_Aceptar invitaciones a salas privadas"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"La función de muro de la sala permite a los usuarios de una sala especificar "
-"un mensaje único para mostrar a los demás. Los mensajes recientes se "
-"muestran en la parte superior."
+"Escribe un único mensaje que otros usuarios de la sala podrán leer más "
+"tarde. Los mensajes recientes se muestran en la parte superior."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5369,9 +5367,8 @@ msgid "IP Addresses"
 msgstr "Direcciones IP"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Activar el corrector ortográfico (requiere un reinicio)"
+msgstr "Activar el corrector ortográfico"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -6017,9 +6014,8 @@ msgid "Language (requires a restart):"
 msgstr "Idioma (requiere reiniciar):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "Al cerrar Nicotine+:"
+msgstr "Al cerrar la ventana:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
