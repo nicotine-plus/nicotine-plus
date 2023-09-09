@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
-
 from unittest import TestCase
 
 from pynicotine.config import config
@@ -40,9 +38,5 @@ class VersionTest(TestCase):
         self.assertIsInstance(local_version, int)
 
         # Validate version of latest release
-        _hlatest_version, latest_version, date = UpdateChecker.retrieve_latest_version()
+        _h_latest_version, latest_version = UpdateChecker.retrieve_latest_version()
         self.assertIsInstance(latest_version, int)
-
-        # Validate date of latest release
-        date_format = "%Y-%m-%dT%H:%M:%S"
-        time.strptime(date, date_format)

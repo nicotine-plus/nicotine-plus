@@ -644,7 +644,6 @@ class MainWindow(Window):
             ("", None),
             ("#" + _("Report a _Bug"), "app.report-bug"),
             ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("#" + _("Check _Latest Version"), "app.check-latest-version"),
             ("", None),
             ("#" + _("_About Nicotine+"), "app.about")
         )

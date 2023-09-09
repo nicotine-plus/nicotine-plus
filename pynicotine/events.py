@@ -27,6 +27,7 @@ EVENT_NAMES = {
     "add-privileged-user",
     "admin-message",
     "change-password",
+    "check-latest-version",
     "check-privileges",
     "cli-command",
     "cli-prompt-finished",

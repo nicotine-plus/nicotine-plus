@@ -19,9 +19,13 @@
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.utils import open_uri
 
 
@@ -342,6 +346,9 @@ Copyright (c) 2017 IP2Location.com
             self.copyright_label,
             self.license_container,
             self.main_icon,
+            self.status_container,
+            self.status_icon,
+            self.status_label,
             self.translators_container,
             self.version_label,
             self.website_label
@@ -350,14 +357,17 @@ Copyright (c) 2017 IP2Location.com
         super().__init__(
             parent=application.window,
             content_box=self.container,
+            show_callback=self.on_show,
             close_callback=self.on_close,
             title=_("About"),
             width=425,
-            height=500,
+            height=540,
             resizable=False,
             show_title=False,
             close_destroy=False
         )
+
+        self.is_version_outdated = False
 
         icon_name = config.application_id
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -386,6 +396,52 @@ Copyright (c) 2017 IP2Location.com
                     container.append(label)  # pylint: disable=no-member
                 else:
                     container.add(label)     # pylint: disable=no-member
+
+        events.connect("check-latest-version", self.on_check_latest_version)
+
+    def on_check_latest_version(self, latest_version, is_outdated, error):
+
+        if error:
+            icon_name = "emblem-important-symbolic"
+            css_class = "error"
+            message = _("Error checking latest version: %s") % error
+
+        elif is_outdated:
+            icon_name = "dialog-warning-symbolic"
+            css_class = "warning"
+            message = _("New release available: %s") % latest_version
+
+        else:
+            icon_name = "object-select-symbolic"
+            css_class = "success"
+            message = _("Up to date")
+
+        self.is_version_outdated = is_outdated
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.status_label.set_label(message)
+        add_css_class(self.status_container, css_class)
+
+    def on_show(self, *_args):
+
+        if self.is_version_outdated:
+            # No need to check latest version again
+            return
+
+        if not self.is_visible():
+            return
+
+        for css_class in ("error", "warning", "success"):
+            remove_css_class(self.status_container, css_class)
+
+        icon_name = "emblem-synchronizing-symbolic"
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.status_label.set_label(_("Checking latest version…"))
+
+        core.update_checker.check()
 
     def on_close(self, *_args):
         self.main_icon.grab_focus()

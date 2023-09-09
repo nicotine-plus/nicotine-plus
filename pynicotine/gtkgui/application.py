@@ -181,7 +181,6 @@ class Application:
             ("transfer-statistics", self.on_transfer_statistics, None, True),
             ("report-bug", self.on_report_bug, None, True),
             ("improve-translations", self.on_improve_translations, None, True),
-            ("check-latest-version", self.on_check_latest_version, None, True),
             ("about", self.on_about, None, True)
         ):
             if parameter_type:
@@ -467,9 +466,6 @@ class Application:
     @staticmethod
     def on_improve_translations(*_args):
         open_uri(config.translations_url)
-
-    def on_check_latest_version(self, *_args):
-        core.update_checker.check()
 
     def on_wishlist(self, *_args):
 
