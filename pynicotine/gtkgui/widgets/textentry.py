@@ -421,7 +421,7 @@ class ComboBox:
             container.append(self.widget)
             return
 
-        self.widget = Gtk.Box(visible=True)
+        self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
