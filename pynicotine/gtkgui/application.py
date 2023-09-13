@@ -197,9 +197,6 @@ class Application:
         enabled_logs = config.sections["logging"]["debugmodes"]
 
         for action_name, callback, state in (
-            # General
-            ("prefer-dark-mode", self.on_prefer_dark_mode, config.sections["ui"]["dark_mode"]),
-
             # Logging
             ("log-downloads", self.on_debug_downloads, ("download" in enabled_logs)),
             ("log-uploads", self.on_debug_uploads, ("upload" in enabled_logs)),
@@ -567,17 +564,6 @@ class Application:
 
     def on_personal_profile(self, *_args):
         core.userinfo.show_user(core.login_username)
-
-    @staticmethod
-    def on_prefer_dark_mode(action, *_args):
-
-        from pynicotine.gtkgui.widgets.theme import set_dark_mode
-
-        state = config.sections["ui"]["dark_mode"]
-        set_dark_mode(not state)
-        action.set_state(GLib.Variant("b", not state))
-
-        config.sections["ui"]["dark_mode"] = not state
 
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""

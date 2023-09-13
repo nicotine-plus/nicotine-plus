@@ -2929,12 +2929,10 @@ class Preferences(Dialog):
         # Dark mode
         dark_mode_state = config.sections["ui"]["dark_mode"]
         set_dark_mode(dark_mode_state)
-        self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
 
         # Header bar
         header_bar_state = config.sections["ui"]["header_bar"]
         self.application.window.set_use_header_bar(header_bar_state)
-        self.application.window.lookup_action("use-header-bar").set_state(GLib.Variant("b", header_bar_state))
 
         # Icons
         load_custom_icons(update=True)

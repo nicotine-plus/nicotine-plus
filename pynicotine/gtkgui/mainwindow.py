@@ -406,11 +406,6 @@ class MainWindow(Window):
 
         # View
 
-        state = GLib.Variant("b", config.sections["ui"]["header_bar"])
-        action = Gio.SimpleAction(name="use-header-bar", state=state)
-        action.connect("change-state", self.on_use_header_bar)
-        self.add_action(action)
-
         state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
         action = Gio.SimpleAction(name="show-log-history", state=state)
         action.connect("change-state", self.on_show_log_history)
@@ -496,17 +491,6 @@ class MainWindow(Window):
 
         return menu
 
-    def create_view_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("$" + _("Prefer Dark _Mode"), "app.prefer-dark-mode"),
-            ("$" + _("Use _Header Bar"), "win.use-header-bar"),
-            ("$" + _("Show _Log History Pane"), "win.show-log-history"),
-        )
-
-        return menu
-
     def add_configure_shares_section(self, menu):
 
         menu.add_items(
@@ -552,12 +536,6 @@ class MainWindow(Window):
 
         menu = PopupMenu(self.application)
         self.add_connection_section(menu)
-
-        menu.add_items(
-            (">" + _("_View"), self.create_view_menu()),
-            ("", None)
-        )
-
         self.add_configure_shares_section(menu)
         self.add_browse_shares_section(menu)
 
@@ -574,7 +552,6 @@ class MainWindow(Window):
         menu = PopupMenu(self.application)
         menu.add_items(
             (">" + _("_File"), self.create_file_menu()),
-            (">" + _("_View"), self.create_view_menu()),
             (">" + _("_Shares"), self.create_shares_menu()),
             (">" + _("_Help"), self.create_help_menu())
         )
@@ -728,13 +705,6 @@ class MainWindow(Window):
         # Show active dialogs again after slight delay
         if active_dialogs:
             GLib.idle_add(self._show_dialogs, active_dialogs)
-
-    def on_use_header_bar(self, action, state):
-
-        action.set_state(state)
-        enabled = state.get_boolean()
-
-        self.set_use_header_bar(enabled)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
