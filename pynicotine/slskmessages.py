@@ -2838,11 +2838,7 @@ class SharedFileListResponse(FileListMessage):
 
         else:
             try:
-                try:
-                    msg_list.extend(self.pack_uint32(len(self.list)))
-
-                except TypeError:
-                    msg_list.extend(self.pack_uint32(len(list(self.list))))
+                msg_list.extend(self.pack_uint32(len(self.list)))
 
                 for key in self.list:
                     msg_list.extend(self.pack_string(key))

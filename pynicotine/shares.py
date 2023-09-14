@@ -57,9 +57,16 @@ if importlib.util.find_spec("_gdbm"):
 elif importlib.util.find_spec("semidbm"):
 
     import semidbm  # pylint: disable=import-error
+
+    def semidbm_len(self):
+        return len(self._index)  # pylint: disable=protected-access
+
     try:
         # semidbm throws an exception when calling sync on a read-only dict, avoid this
         del semidbm.db._SemiDBMReadOnly.sync  # pylint: disable=protected-access
+
+        # Add missing __len__() method
+        semidbm.db._SemiDBM.__len__ = semidbm_len  # pylint: disable=protected-access
 
     except AttributeError:
         pass
@@ -138,7 +145,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs.get("buddyfiles", {})))
+                start_num_folders = len(self.share_dbs.get("buddyfiles", {}))
 
                 self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
                 self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
@@ -830,13 +837,8 @@ class Shares:
                 shared = {}
                 index = []
 
-            try:
-                sharedfolders = len(shared)
-                sharedfiles = len(index)
-
-            except TypeError:
-                sharedfolders = len(list(shared))
-                sharedfiles = len(list(index))
+            sharedfolders = len(shared)
+            sharedfiles = len(index)
 
             core.send_message_to_server(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
