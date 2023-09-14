@@ -679,10 +679,14 @@ class ComboBox:
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
         if not self.enable_arrow_keys:
-            return True
+            return False
 
         if GTK_API_VERSION == 3:
             # Gtk.ComboBox already supports this functionality
+            return False
+
+        if self._entry_completion and self.entry.get_last_child().get_visible():
+            # Completion popup is visible
             return False
 
         current_position = self.get_selected_pos()
