@@ -679,7 +679,7 @@ class ComboBox:
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
         if not self.enable_arrow_keys:
-            return False
+            return True
 
         if GTK_API_VERSION == 3:
             # Gtk.ComboBox already supports this functionality
