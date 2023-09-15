@@ -18,7 +18,6 @@
 
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -43,10 +42,6 @@ class Popover:
 
         if not self.widget.is_visible():
             return
-
-        if GTK_API_VERSION >= 4:
-            # Workaround for https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
-            self.widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
         self._resize_popover()
 
