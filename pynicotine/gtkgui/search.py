@@ -124,6 +124,9 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
 
+    def on_focus(self, *_args):
+        self.window.search_entry.grab_focus()
+
     def on_restore_removed_page(self, page_args):
         search_term, mode, room, users = page_args
         core.search.do_search(search_term, mode, room=room, users=users)

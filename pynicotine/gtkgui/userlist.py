@@ -161,6 +161,13 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
+    def on_focus(self, *_args):
+
+        self.update_visible()
+
+        if self.container.get_visible():
+            self.list_view.grab_focus()
+
     def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in {"always", "chatrooms"}:

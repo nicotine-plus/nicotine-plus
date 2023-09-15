@@ -755,10 +755,11 @@ class MainWindow(Window):
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
         ):
+            notebook = getattr(self, tab_id)
             page = getattr(self, f"{tab_id}_page")
             page.id = tab_id
 
-            self.notebook.append_page(page, tab_text)
+            self.notebook.append_page(page, tab_text, focus_callback=notebook.on_focus)
 
             tab_label = self.notebook.get_tab_label(page)
             tab_label.set_start_icon_name(tab_icon_name)
@@ -775,55 +776,7 @@ class MainWindow(Window):
         self.userbrowse.connect_signals()
 
     def on_switch_page(self, _notebook, page, _page_num):
-
-        focus_widget = None
         self.set_active_header_bar(page.id)
-
-        if page == self.chatrooms_page:
-            if not self.chatrooms.get_n_pages():
-                focus_widget = self.chatrooms_entry
-
-        elif page == self.private_page:
-            if not self.privatechat.get_n_pages():
-                focus_widget = self.private_entry
-
-        elif page == self.uploads_page:
-            self.uploads.update_model()
-            self.notebook.remove_tab_changed(self.uploads_page)
-
-            if self.uploads.container.get_visible():
-                focus_widget = self.uploads.tree_view
-
-        elif page == self.downloads_page:
-            self.downloads.update_model()
-            self.notebook.remove_tab_changed(self.downloads_page)
-
-            if self.downloads.container.get_visible():
-                focus_widget = self.downloads.tree_view
-
-        elif page == self.search_page:
-            focus_widget = self.search_entry
-
-        elif page == self.userinfo_page:
-            if not self.userinfo.get_n_pages():
-                focus_widget = self.userinfo_entry
-
-        elif page == self.userbrowse_page:
-            if not self.userbrowse.get_n_pages():
-                focus_widget = self.userbrowse_entry
-
-        elif page == self.userlist_page:
-            self.userlist.update_visible()
-
-            if self.userlist.container.get_visible():
-                focus_widget = self.userlist.list_view
-
-        elif page == self.interests_page:
-            self.interests.populate_recommendations()
-            focus_widget = self.interests.recommendations_list_view
-
-        if focus_widget is not None:
-            GLib.idle_add(lambda: focus_widget.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_page_reordered(self, *_args):
 

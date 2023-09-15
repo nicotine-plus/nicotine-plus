@@ -237,6 +237,14 @@ class TransferList:
             (">" + _("User Actions"), self.popup_menu_users)
         )
 
+    def on_focus(self, *_args):
+
+        self.update_model()
+        self.window.notebook.remove_tab_changed(self.transfer_page)
+
+        if self.container.get_visible():
+            self.tree_view.grab_focus()
+
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
         self.update_model()

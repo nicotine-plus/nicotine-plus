@@ -71,6 +71,10 @@ class TabLabel:
         self.close_button_visible = close_button_visible and close_callback
         self.close_callback = close_callback
 
+        if close_callback:
+            self.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
+            self.gesture_click.connect("pressed", close_callback)
+
         self.start_icon = Gtk.Image(visible=False)
         self.end_icon = Gtk.Image(visible=False)
 
@@ -351,16 +355,13 @@ class IconNotebook:
         self.tab_labels[page] = tab_label = TabLabel(
             text, full_text, close_button_visible=config.sections["ui"]["tabclosers"], close_callback=close_callback)
 
-        if close_callback:
-            tab_label.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
-            tab_label.gesture_click.connect("pressed", close_callback)
+        if focus_callback:
+            page.focus_callback = focus_callback
 
         if GTK_API_VERSION >= 4:
             page.get_first_child().set_visible(False)
         else:
             page.get_children()[0].set_visible(False)
-
-        page.focus_callback = focus_callback
 
         if position is None:
             # Open new tab adjacent to current tab
@@ -385,6 +386,9 @@ class IconNotebook:
 
         self.widget.remove_page(self.page_num(page))
         self._remove_unread_page(page)
+        self.popup_menu_pages.clear()
+
+        del page.focus_callback
         del self.tab_labels[page]
 
         if page_args:
@@ -580,6 +584,10 @@ class IconNotebook:
             # Show active page and focus default widget
             self.emit_switch_page_signal()
 
+    def on_focus_page(self, page):
+        if hasattr(page, "focus_callback"):
+            page.focus_callback()
+
     def on_restore_removed_page(self, page_args):
         raise NotImplementedError
 
@@ -611,15 +619,13 @@ class IconNotebook:
             current_page.get_children()[0].set_visible(False)
             new_page.get_children()[0].set_visible(True)
 
-        if self.parent_page is None:
-            return
-
         # Focus the default widget on the page
-        if self.window.current_page_id == self.parent_page.id:
-            GLib.idle_add(new_page.focus_callback, priority=GLib.PRIORITY_HIGH_IDLE)
+        if self.parent_page is None or self.window.current_page_id == self.parent_page.id:
+            GLib.idle_add(self.on_focus_page, new_page, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight
-        self.remove_tab_changed(new_page)
+        if self.parent_page is not None:
+            self.remove_tab_changed(new_page)
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
