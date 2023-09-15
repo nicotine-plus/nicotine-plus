@@ -220,7 +220,6 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Minutes of inactivity before going away (0 to disable):</property>
                 <property name="mnemonic-widget">auto_away_spinner</property>
-                <property name="tooltip-text" translatable="yes">Once you interact with the application being away, status will be set to online.</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
