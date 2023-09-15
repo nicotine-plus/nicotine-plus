@@ -353,6 +353,7 @@ class UserInfo:
             del menu.parent
 
         self.__dict__.clear()
+        self.indeterminate_progress = False  # Stop progress bar timer
 
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
