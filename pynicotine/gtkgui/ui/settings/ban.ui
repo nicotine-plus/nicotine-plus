@@ -68,7 +68,6 @@
                 <child>
                   <object class="GtkCheckButton" id="geo_block_message_toggle">
                     <property name="label" translatable="yes">Use custom geo block message:</property>
-                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
@@ -90,7 +89,6 @@
                 <child>
                   <object class="GtkCheckButton" id="ban_message_toggle">
                     <property name="label" translatable="yes">Use custom ban message:</property>
-                    <property name="tooltip-text" translatable="yes">Sent to users as the reason for being banned.</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
