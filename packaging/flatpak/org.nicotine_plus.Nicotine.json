@@ -13,7 +13,6 @@
         "--device=dri",
         "--filesystem=host",
         "--filesystem=xdg-run/gvfs",
-        "--talk-name=org.freedesktop.Notifications",
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
