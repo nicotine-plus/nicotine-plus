@@ -27,7 +27,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 class Accelerator:
 
     if GTK_API_VERSION >= 4:
-        shortcut_controllers = {}
         shortcut_triggers = {}
     else:
         KEYMAP = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
@@ -40,11 +39,11 @@ class Accelerator:
                 # Use Command key instead of Ctrl in accelerators on macOS
                 accelerator = accelerator.replace("<Primary>", "<Meta>")
 
-            shortcut_controller = self.shortcut_controllers.get(widget)
+            shortcut_controller = getattr(widget, "shortcut_controller", None)
             shortcut_trigger = self.shortcut_triggers.get(accelerator)
 
             if not shortcut_controller:
-                self.shortcut_controllers[widget] = shortcut_controller = Gtk.ShortcutController(
+                widget.shortcut_controller = shortcut_controller = Gtk.ShortcutController(
                     propagation_phase=Gtk.PropagationPhase.CAPTURE
                 )
                 widget.add_controller(shortcut_controller)

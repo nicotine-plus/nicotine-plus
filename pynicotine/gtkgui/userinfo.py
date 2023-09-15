@@ -128,6 +128,7 @@ class UserInfos(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
+        page.destroy_widgets()
 
     def ban_unban_user(self, user):
 
@@ -324,6 +325,11 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.popup_menus = (
+            self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
+            self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu
+        )
+
         self.populate_stats()
         self.update_button_states()
 
@@ -334,9 +340,15 @@ class UserInfo:
         self.dislikes_list_view.clear()
         self.load_picture(None)
 
-        for menu in (self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
-                     self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)

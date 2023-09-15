@@ -184,6 +184,7 @@ class PrivateChats(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
+        page.destroy_widgets()
 
     def highlight_user(self, user):
 
@@ -321,6 +322,8 @@ class PrivateChat:
             (">" + _("User"), self.popup_menu_user_tab),
         )
 
+        self.popup_menus = (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu)
+
         self.read_private_log()
 
     def load(self):
@@ -350,8 +353,15 @@ class PrivateChat:
         self.chat_view.clear()
         self.chats.unhighlight_user(self.user)
 
-        for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.popup_menu_user_tab.set_parent(label)

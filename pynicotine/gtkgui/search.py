@@ -259,6 +259,7 @@ class Searches(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
         del self.pages[token]
+        page.destroy_widgets()
 
     def clear_search_history(self):
 
@@ -584,6 +585,11 @@ class Search:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
+        self.popup_menus = (
+            self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
+            self.tree_view.column_menu
+        )
+
         # Key bindings
         for widget in (self.container, self.tree_view.widget):
             Accelerator("<Primary>f", widget, self.on_show_filter_bar_accelerator)
@@ -631,9 +637,15 @@ class Search:
 
         self.clear_model(stored_results=True)
 
-        for menu in (self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
-                     self.tree_view.column_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)

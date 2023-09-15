@@ -353,7 +353,7 @@ class IconNotebook:
 
         if close_callback:
             tab_label.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
-            tab_label.gesture_click.connect("pressed", close_callback, page)
+            tab_label.gesture_click.connect("pressed", close_callback)
 
         if GTK_API_VERSION >= 4:
             page.get_first_child().set_visible(False)

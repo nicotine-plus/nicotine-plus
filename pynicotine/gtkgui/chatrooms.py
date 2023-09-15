@@ -215,6 +215,7 @@ class ChatRooms(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(room, page.is_private))
         del self.pages[room]
+        page.destroy_widgets()
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             self.window.search.room_search_combobox.remove_id(room)
@@ -527,6 +528,12 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
+        self.popup_menus = (
+            self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
+            self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
+            self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu
+        )
+
         self.setup_public_feed()
         self.update_user_count()
         self.read_room_logs()
@@ -548,10 +555,15 @@ class ChatRoom:
         self.chat_view.clear()
         self.users_list_view.clear()
 
-        for menu in (self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
-                     self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
-                     self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
