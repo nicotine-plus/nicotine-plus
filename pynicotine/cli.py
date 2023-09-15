@@ -119,8 +119,8 @@ class CLI:
             import termios
             self._tty_attributes = termios.tcgetattr(sys.stdin)
 
-        except ImportError:
-            # Not available on Windows
+        except Exception:
+            # Not a terminal, or using Windows
             pass
 
         self._input_processor.start()
