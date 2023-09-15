@@ -736,8 +736,8 @@ class UploadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
-            self.use_upload_bandwidth_radio,
-            self.use_upload_slots_radio
+            self.use_upload_slots_bandwidth_radio,
+            self.use_upload_slots_fixed_radio
         ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
@@ -768,7 +768,7 @@ class UploadsPage:
             "transfers": {
                 "autoclear_uploads": self.autoclear_uploads_toggle,
                 "uploadbandwidth": self.upload_bandwidth_spinner,
-                "useupslots": self.use_upload_slots_radio,
+                "useupslots": self.use_upload_slots_fixed_radio,
                 "uploadslots": self.upload_slots_spinner,
                 "uploadlimit": self.speed_spinner,
                 "uploadlimitalt": self.alt_speed_spinner,
@@ -812,7 +812,7 @@ class UploadsPage:
             "transfers": {
                 "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
                 "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
-                "useupslots": self.use_upload_slots_radio.get_active(),
+                "useupslots": self.use_upload_slots_fixed_radio.get_active(),
                 "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
                 "uploadlimit": self.speed_spinner.get_value_as_int(),
