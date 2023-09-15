@@ -253,6 +253,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="auto_reply_message_entry">
+                <property name="show-emoji-icon">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>

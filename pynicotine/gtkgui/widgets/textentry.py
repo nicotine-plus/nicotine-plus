@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from locale import strxfrm
 
 import gi
@@ -53,10 +51,6 @@ class ChatEntry:
         Accelerator("Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", widget, self.on_page_up_accelerator)
-
-        # Emoji Picker (disable on macOS for now until we render emoji properly there)
-        if sys.platform != "darwin":
-            self.widget.props.show_emoji_icon = True
 
     def on_enter(self, *_args):
 

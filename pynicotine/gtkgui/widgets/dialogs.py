@@ -432,8 +432,7 @@ class MessageDialog(Window):
 
 class OptionDialog(MessageDialog):
 
-    def __init__(self, parent, title, message, callback, callback_data=None, long_message=None, option_label="",
-                 option_value=False, buttons=None, destructive_response_id=None):
+    def __init__(self, *args, option_label="", option_value=False, buttons=None, **kwargs):
 
         if not buttons:
             buttons = [
@@ -441,9 +440,7 @@ class OptionDialog(MessageDialog):
                 ("ok", _("_Yes"))
             ]
 
-        super().__init__(parent=parent, title=title, message=message, long_message=long_message,
-                         callback=callback, callback_data=callback_data, buttons=buttons,
-                         destructive_response_id=destructive_response_id)
+        super().__init__(*args, buttons=buttons, **kwargs)
 
         self.toggle = None
 
@@ -473,25 +470,27 @@ class OptionDialog(MessageDialog):
 
 class EntryDialog(OptionDialog):
 
-    def __init__(self, parent, title, callback, message=None, callback_data=None, default="", use_second_entry=False,
-                 second_default="", option_label="", option_value=False, action_button_label=_("_OK"), visibility=True,
-                 droplist=None, second_droplist=None):
+    def __init__(self, *args, default="", use_second_entry=False,
+                 second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
+                 visibility=True, show_emoji_icon=False, **kwargs):
 
-        super().__init__(parent=parent, title=title, message=message, callback=callback,
-                         callback_data=callback_data, option_label=option_label,
-                         option_value=option_value,
-                         buttons=[
-                             ("cancel", _("_Cancel")),
-                             ("ok", action_button_label)])
+        super().__init__(*args, buttons=[
+            ("cancel", _("_Cancel")),
+            ("ok", action_button_label)
+        ], **kwargs)
 
         self.entry_container = None
         self.entry = self.default_focus_widget = self._add_entry_combobox(
-            default, activates_default=not use_second_entry, visibility=visibility, droplist=droplist)
+            default, activates_default=not use_second_entry, visibility=visibility,
+            show_emoji_icon=show_emoji_icon, droplist=droplist
+        )
         self.second_entry = None
 
         if use_second_entry:
             self.second_entry = self._add_entry_combobox(
-                second_default, activates_default=False, visibility=visibility, droplist=second_droplist)
+                second_default, activates_default=False, visibility=visibility,
+                show_emoji_icon=show_emoji_icon, droplist=second_droplist
+            )
 
     def _add_combobox(self, items, visibility=True, activates_default=True):
 
@@ -507,13 +506,15 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return entry
 
-    def _add_entry(self, visibility=True, activates_default=True):
+    def _add_entry(self, visibility=True, show_emoji_icon=False, activates_default=True):
 
         if GTK_API_VERSION >= 4 and not visibility:
             entry = Gtk.PasswordEntry(
                 activates_default=activates_default, show_peek_icon=True, width_chars=50, visible=True)
         else:
-            entry = Gtk.Entry(activates_default=activates_default, visibility=visibility, width_chars=50, visible=True)
+            entry = Gtk.Entry(
+                activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
+                width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(entry)  # pylint: disable=no-member
@@ -523,7 +524,8 @@ class EntryDialog(OptionDialog):
         self.container.set_visible(True)
         return entry
 
-    def _add_entry_combobox(self, default, activates_default=True, visibility=True, droplist=None):
+    def _add_entry_combobox(self, default, activates_default=True, visibility=True, show_emoji_icon=False,
+                            droplist=None):
 
         if self.entry_container is None:
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
@@ -537,7 +539,8 @@ class EntryDialog(OptionDialog):
         if droplist:
             entry = self._add_combobox(droplist, activates_default=activates_default, visibility=visibility)
         else:
-            entry = self._add_entry(activates_default=activates_default, visibility=visibility)
+            entry = self._add_entry(
+                activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon)
 
         entry.set_text(default)
         return entry

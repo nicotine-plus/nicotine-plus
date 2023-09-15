@@ -497,7 +497,8 @@ class Application:
             message=_("Send private message to all users who are downloading from you:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="downloading"
+            callback_data="downloading",
+            show_emoji_icon=True
         ).show()
 
     def on_message_buddies(self, *_args):
@@ -510,7 +511,8 @@ class Application:
             message=_("Send private message to all online buddies:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="buddies"
+            callback_data="buddies",
+            show_emoji_icon=True
         ).show()
 
     def on_rescan_shares(self, *_args):
