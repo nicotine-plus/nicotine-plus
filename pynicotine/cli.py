@@ -106,10 +106,23 @@ class CLIInputProcessor(Thread):
 class CLI:
 
     def __init__(self):
+
         self._input_processor = CLIInputProcessor()
         self._log_message_queue = deque(maxlen=1000)
+        self._tty_attributes = None
+
+        events.connect("quit", self._quit)
 
     def enable_prompt(self):
+
+        try:
+            import termios
+            self._tty_attributes = termios.tcgetattr(sys.stdin)
+
+        except ImportError:
+            # Not available on Windows
+            pass
+
         self._input_processor.start()
 
     def enable_logging(self):
@@ -148,6 +161,17 @@ class CLI:
             return
 
         self._print_log_message(log_message)
+
+    def _quit(self, *_args):
+        """Restores TTY attributes and re-enables echo on quit."""
+
+        if self._tty_attributes is None:
+            return
+
+        import termios
+        termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        self._tty_attributes = None
 
 
 cli = CLI()
