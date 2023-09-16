@@ -168,7 +168,7 @@ class CLI:
         if self._tty_attributes is None:
             return
 
-        import termios
+        import termios  # pylint: disable=import-error
         termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
 
         self._tty_attributes = None
