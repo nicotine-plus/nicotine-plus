@@ -221,7 +221,7 @@ class UserBrowse:
         _code, basename, file_size, _ext, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.transfers.get_file(username, file_path, prefix, size=file_size, file_attributes=file_attributes)
+        core.downloads.get_file(username, file_path, prefix, size=file_size, file_attributes=file_attributes)
 
     def download_folder(self, username, requested_folder_path, prefix="", recurse=False):
 
@@ -238,17 +238,17 @@ class UserBrowse:
 
             # Remember custom download location
             if prefix:
-                core.transfers.requested_folders[username][folder_path] = prefix
+                core.downloads.requested_folders[username][folder_path] = prefix
 
             # Get final download destination
-            destination = core.transfers.get_folder_destination(
+            destination = core.downloads.get_folder_destination(
                 username, folder_path, root_folder_path=requested_folder_path)
 
             if files:
                 for _code, basename, file_size, _ext, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
-                    core.transfers.get_file(
+                    core.downloads.get_file(
                         username, file_path, destination, size=file_size, file_attributes=file_attributes)
 
             if not recurse:
@@ -260,7 +260,7 @@ class UserBrowse:
         _code, basename, file_size, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.transfers.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
+        core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
 
     def upload_folder(self, username, requested_folder_path, recurse=False):
 
@@ -281,7 +281,7 @@ class UserBrowse:
                 for _code, basename, file_size, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
-                    core.transfers.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
+                    core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
                     locally_queued = True
 
             if not recurse:

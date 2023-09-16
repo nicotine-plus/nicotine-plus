@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.core import core
 from pynicotine.gtkgui.popovers.transferspeeds import TransferSpeeds
 
 
@@ -23,3 +24,7 @@ class UploadSpeeds(TransferSpeeds):
 
     def __init__(self, window):
         super().__init__(window=window, transfer_type="upload")
+
+    @staticmethod
+    def update_transfer_limits():
+        core.uploads.update_transfer_limits()

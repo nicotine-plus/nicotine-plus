@@ -1059,7 +1059,7 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
-        if core.transfers.pending_shutdown:
+        if core.uploads.pending_shutdown:
             return
 
         username = core.login_username
@@ -1312,8 +1312,8 @@ class MainWindow(Window):
 
     def on_toggle_status(self, *_args):
 
-        if core.transfers.pending_shutdown:
-            core.transfers.pending_shutdown = False
+        if core.uploads.pending_shutdown:
+            core.uploads.pending_shutdown = False
             self.update_user_status()
             return
 

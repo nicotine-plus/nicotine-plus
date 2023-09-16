@@ -51,7 +51,8 @@ class Core:
         self.statistics = None
         self.shares = None
         self.search = None
-        self.transfers = None
+        self.downloads = None
+        self.uploads = None
         self.interests = None
         self.userbrowse = None
         self.userinfo = None
@@ -89,7 +90,7 @@ class Core:
             enabled_components = {
                 "error_handler", "signal_handler", "cli", "portmapper", "network_thread",
                 "notifications", "network_filter", "now_playing", "statistics", "update_checker",
-                "shares", "search", "transfers", "interests", "userbrowse", "userinfo", "userlist",
+                "shares", "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "userlist",
                 "chatrooms", "privatechat", "pluginhandler"
             }
 
@@ -155,7 +156,7 @@ class Core:
             self.now_playing = NowPlaying()
 
         if "statistics" in enabled_components:
-            from pynicotine.statistics import Statistics
+            from pynicotine.transfers import Statistics
             self.statistics = Statistics()
 
         if "update_checker" in enabled_components:
@@ -169,9 +170,13 @@ class Core:
             from pynicotine.search import Search
             self.search = Search()
 
-        if "transfers" in enabled_components:
-            from pynicotine.transfers import Transfers
-            self.transfers = Transfers()
+        if "downloads" in enabled_components:
+            from pynicotine.downloads import Downloads
+            self.downloads = Downloads()
+
+        if "uploads" in enabled_components:
+            from pynicotine.uploads import Uploads
+            self.uploads = Uploads()
 
         if "interests" in enabled_components:
             from pynicotine.interests import Interests
@@ -363,7 +368,8 @@ class Core:
 
         self.shares = None
         self.search = None
-        self.transfers = None
+        self.downloads = None
+        self.uploads = None
         self.interests = None
         self.userbrowse = None
         self.userinfo = None

@@ -591,7 +591,7 @@ class NetworkFilter:
         config.sections["server"]["banlist"].append(username)
         config.write_configuration()
 
-        core.transfers.ban_users({username})
+        core.uploads.ban_users({username})
         events.emit("ban-user", username)
 
     def unban_user(self, username):

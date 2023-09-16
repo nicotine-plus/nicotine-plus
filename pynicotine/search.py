@@ -86,11 +86,11 @@ class Search:
 
         # First queue the visible search results
         for file_path, destination, size, file_attributes, *_unused in visible_files:
-            core.transfers.get_file(
+            core.downloads.get_file(
                 username, file_path, destination, size=size, file_attributes=file_attributes)
 
         # Ask for the rest of the files in the folder
-        core.transfers.get_folder(username, folder_path)
+        core.downloads.get_folder(username, folder_path)
 
     # Outgoing Search Requests #
 
@@ -553,9 +553,9 @@ class Search:
 
         fileinfos.sort(key=itemgetter(1))
 
-        uploadspeed = core.transfers.upload_speed
-        queuesize = core.transfers.get_upload_queue_size()
-        slotsavail = core.transfers.allow_new_uploads()
+        uploadspeed = core.uploads.upload_speed
+        queuesize = core.uploads.get_upload_queue_size()
+        slotsavail = core.uploads.allow_new_uploads()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResponse(

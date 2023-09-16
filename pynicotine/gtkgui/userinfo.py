@@ -652,7 +652,7 @@ class UserInfo:
         FileChooserSave(
             parent=self.window,
             callback=self.on_save_picture_response,
-            initial_folder=core.transfers.get_default_download_folder(),
+            initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
 

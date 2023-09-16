@@ -2947,10 +2947,10 @@ class Preferences(Dialog):
         self.application.window.privatechat.update_widgets()
 
         # Transfers
-        core.transfers.update_download_limits()
-        core.transfers.update_download_filters()
-        core.transfers.update_upload_limits()
-        core.transfers.check_upload_queue()
+        core.downloads.update_transfer_limits()
+        core.downloads.update_download_filters()
+        core.uploads.update_transfer_limits()
+        core.uploads.check_upload_queue()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"]:

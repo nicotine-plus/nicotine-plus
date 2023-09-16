@@ -34,14 +34,14 @@ class GetUploadCandidateTest(TestCase):
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"transfers", "userlist"})
-        core.transfers.privileged_users = {"puser1", "puser2"}
+        core.init_components(enabled_components={"uploads", "userlist"})
+        core.uploads.privileged_users = {"puser1", "puser2"}
 
     def tearDown(self):
 
         core.quit()
 
-        self.assertIsNone(core.transfers)
+        self.assertIsNone(core.uploads)
         self.assertIsNone(core.userlist)
 
     def add_transfers(self, users, status):
@@ -49,25 +49,25 @@ class GetUploadCandidateTest(TestCase):
         transfer_list = []
 
         for username in users:
-            folder_path = f"{username}/{len(core.transfers.uploads)}"
+            folder_path = f"{username}/{len(core.uploads.transfers)}"
             transfer = Transfer(username=username, folder_path=folder_path, status=status)
 
             transfer_list.append(transfer)
-            core.transfers.append_upload(username, folder_path, transfer)
-            core.transfers.update_upload(transfer)
+            core.uploads.append_upload(username, folder_path, transfer)
+            core.uploads.update_upload(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
-        core.transfers.update_upload(transfer)
-        core.transfers.uploads.remove(transfer)
+        core.uploads.update_upload(transfer)
+        core.uploads.transfers.remove(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):
-        """Call core.transfers.get_upload_candidate until no uploads are left.
+        """Call core.uploads.get_upload_candidate until no uploads are left.
 
-        Transfers should be added to core.transfers in the desired starting
+        Transfers should be added to core.uploads in the desired starting
         states already.
 
         One in progress upload will be removed each time get_upload_candidate
@@ -84,13 +84,13 @@ class GetUploadCandidateTest(TestCase):
         candidates = []
         none_count = 0  # prevent infinite loop in case of bug or bad test setup
 
-        while len(core.transfers.uploads) > 0 and none_count < NUM_ALLOWED_NONE:
+        while len(core.uploads.transfers) > 0 and none_count < NUM_ALLOWED_NONE:
 
             # "finish" one in progress transfer, if any
             if clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
 
-            candidate, _has_active_uploads = core.transfers.get_upload_candidate()
+            candidate, _has_active_uploads = core.uploads.get_upload_candidate()
 
             if not clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
