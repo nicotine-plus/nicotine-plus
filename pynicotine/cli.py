@@ -116,7 +116,7 @@ class CLI:
     def enable_prompt(self):
 
         try:
-            import termios
+            import termios  # pylint: disable=import-error
             self._tty_attributes = termios.tcgetattr(sys.stdin)
 
         except Exception:
