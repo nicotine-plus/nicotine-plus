@@ -52,7 +52,7 @@ class TextView:
                  horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
         self.widget = Gtk.TextView(
-            accepts_tab=False, cursor_visible=editable, editable=editable,
+            accepts_tab=False, editable=editable,
             left_margin=horizontal_margin, right_margin=horizontal_margin,
             top_margin=vertical_margin, bottom_margin=vertical_margin,
             pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
@@ -211,6 +211,15 @@ class TextView:
 
     def grab_focus(self):
         self.widget.grab_focus()
+
+    def place_cursor_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        self.textbuffer.place_cursor(iterator)
 
     def update_cursor(self, pos_x, pos_y):
 
@@ -497,6 +506,6 @@ class ChatView(TextView):
         """Page_Down, Down: Give focus to text entry if already scrolled at the
         bottom."""
 
-        if self.adjustment_value >= self.adjustment_bottom:
+        if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
             # Give focus to text entry upon scrolling down to the bottom
             self.chat_entry.grab_focus_without_selecting()

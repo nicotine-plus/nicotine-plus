@@ -53,6 +53,7 @@ class RoomWall(Popover):
         messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(tickers.items())]
 
         self.message_view.append_line("\n".join(messages))
+        self.message_view.place_cursor_at_line(0)
 
     def _clear_room_wall_message(self, update_list=True):
 

@@ -2637,6 +2637,7 @@ class PluginsPage:
 
         self.plugin_description_view.clear()
         self.plugin_description_view.append_line(plugin_description)
+        self.plugin_description_view.place_cursor_at_line(0)
 
         self.check_plugin_settings_button(self.selected_plugin)
 
