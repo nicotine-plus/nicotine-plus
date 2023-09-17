@@ -601,10 +601,10 @@ def _get_custom_font_css():
         ("window, popover", config.sections["ui"]["globalfont"]),
         ("treeview", config.sections["ui"]["listfont"]),
         ("textview", config.sections["ui"]["textviewfont"]),
-        (".chat-view", config.sections["ui"]["chatfont"]),
-        (".search-view", config.sections["ui"]["searchfont"]),
-        (".transfers-view", config.sections["ui"]["transfersfont"]),
-        (".userbrowse-view", config.sections["ui"]["browserfont"])
+        (".chat-view textview", config.sections["ui"]["chatfont"]),
+        (".search-view treeview", config.sections["ui"]["searchfont"]),
+        (".transfers-view treeview", config.sections["ui"]["transfersfont"]),
+        (".userbrowse-view treeview", config.sections["ui"]["browserfont"])
     ):
         font_description = Pango.FontDescription.from_string(font)
 
