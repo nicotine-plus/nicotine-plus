@@ -37,6 +37,7 @@ class SharesTest(TestCase):
 
         config.sections["transfers"]["shared"] = [("Shares", SHARES_FOLDER_PATH)]
         core.shares.rescan_shares(use_thread=False)
+        core.shares.load_shares(core.shares.share_dbs, core.shares.scanner_share_db_paths)
 
     def tearDown(self):
         core.quit()
@@ -71,7 +72,7 @@ class SharesTest(TestCase):
 
         # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
         self.assertIn(ogg_indexes[0], nicotinetestdata_indexes)
-        self.assertEqual(core.shares.share_dbs["fileindex"][str(ogg_indexes[0])][0], "Shares\\nicotinetestdata.ogg")
+        self.assertEqual(core.shares.share_dbs["fileindex"][ogg_indexes[0]][0], "Shares\\nicotinetestdata.ogg")
 
     def test_hidden_file_folder_scan(self):
         """Test that hidden files and folders are excluded."""

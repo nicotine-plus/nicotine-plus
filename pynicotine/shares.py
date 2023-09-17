@@ -21,16 +21,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gc
-import importlib.util
 import os
-import pickle
-import shelve
 import shutil
 import stat
 import sys
 import time
 
 from collections import deque
+from os import SEEK_END
+from os import SEEK_SET
+from pickle import HIGHEST_PROTOCOL
+from pickle import dumps
+from pickle import Unpickler
+from pickle import UnpicklingError
+from struct import Struct
 from threading import Thread
 
 from pynicotine import rename_process
@@ -44,44 +48,6 @@ from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
-
-# Check if there's an appropriate (performant) database type for shelves
-if importlib.util.find_spec("_gdbm"):
-
-    def shelve_open_gdbm(filename, flag="c", protocol=None, writeback=False):
-        import _gdbm  # pylint: disable=import-error,import-private-name
-        return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
-
-    shelve.open = shelve_open_gdbm
-
-elif importlib.util.find_spec("semidbm"):
-
-    import semidbm  # pylint: disable=import-error
-
-    def semidbm_len(self):
-        return len(self._index)  # pylint: disable=protected-access
-
-    try:
-        # semidbm throws an exception when calling sync on a read-only dict, avoid this
-        del semidbm.db._SemiDBMReadOnly.sync  # pylint: disable=protected-access
-
-        # Add missing __len__() method
-        semidbm.db._SemiDBM.__len__ = semidbm_len  # pylint: disable=protected-access
-
-    except AttributeError:
-        pass
-
-    def shelve_open_semidbm(filename, flag="c", protocol=None, writeback=False):
-        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
-
-    shelve.open = shelve_open_semidbm
-
-else:
-    log.add(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-        "option1": "python3-gdbm",
-        "option2": "semidbm"
-    })
-    sys.exit()
 
 
 class FileTypes:
@@ -110,6 +76,125 @@ class FileTypes:
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
         "mkv", "mts", "ogv", "ts", "vob", "webm", "wmv"
     }
+
+
+class RestrictedUnpickler(Unpickler):
+    """Don't allow code execution from pickles."""
+
+    def find_class(self, module, name):
+        # Forbid all globals
+        raise UnpicklingError(f"global '{module}.{name}' is forbidden")
+
+
+class DatabaseError(Exception):
+    pass
+
+
+class Database:
+    """Custom key-value database format for Nicotine+ shares."""
+
+    FILE_HEADER = b"N+DB"
+    LENGTH_DATA_SIZE = 8
+    PACK_LENGTHS = Struct("!II").pack
+    UNPACK_LENGTHS = Struct("!II").unpack_from
+
+    def __init__(self, file_path, overwrite=True, uses_int_keys=False):
+
+        folder_path = os.path.dirname(file_path)
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        if overwrite and os.path.exists(file_path):
+            os.remove(file_path)
+
+        self._value_offsets = self._load_value_offsets(file_path, uses_int_keys)
+        self._file_handle = open(  # pylint: disable=consider-using-with
+            file_path, mode=("ab+" if overwrite else "rb")
+        )
+        self._file_offset = self._file_handle.seek(0, SEEK_END)
+
+    def _load_value_offsets(self, file_path, uses_int_keys=False):
+
+        value_offsets = {}
+
+        with open(file_path, "ab+") as file_handle:
+            file_size = os.fstat(file_handle.fileno()).st_size
+
+            if not file_size:
+                file_handle.write(self.FILE_HEADER)
+                return value_offsets
+
+            file_handle.seek(0)
+
+            if file_handle.read(len(self.FILE_HEADER)) != self.FILE_HEADER:
+                raise DatabaseError("Not a database file")
+
+            current_offset = file_handle.tell()
+
+            while current_offset < file_size:
+                length_data = file_handle.read(self.LENGTH_DATA_SIZE)
+                key_length, value_length = self.UNPACK_LENGTHS(length_data)
+
+                encoded_key = file_handle.read(key_length)
+                key = int(encoded_key) if uses_int_keys else encoded_key.decode("utf-8")
+
+                value_offset = (current_offset + self.LENGTH_DATA_SIZE + key_length)
+                current_offset = (value_offset + value_length)
+
+                file_handle.seek(current_offset)
+                value_offsets[key] = value_offset
+
+        return value_offsets
+
+    def __contains__(self, key):
+        return key in self._value_offsets
+
+    def __iter__(self):
+        for key in self._value_offsets:
+            yield key
+
+    def __len__(self):
+        return len(self._value_offsets)
+
+    def __getitem__(self, key):
+
+        value_offset = self._value_offsets[key]
+
+        self._file_handle.seek(value_offset, SEEK_SET)
+        return RestrictedUnpickler(self._file_handle).load()
+
+    def __setitem__(self, key, value):
+
+        encoded_key = str(key).encode("utf-8")
+        pickled_value = dumps(value, protocol=HIGHEST_PROTOCOL)
+
+        key_length = len(encoded_key)
+        length_data = self.PACK_LENGTHS(key_length, len(pickled_value))
+        item_data = (length_data + encoded_key + pickled_value)
+
+        self._file_handle.write(item_data)
+
+        self._value_offsets[key] = self._file_offset + self.LENGTH_DATA_SIZE + key_length
+        self._file_offset += len(item_data)
+
+    def get(self, key, default=None):
+
+        if key in self._value_offsets:
+            return self[key]
+
+        return default
+
+    def update(self, obj):
+        for key, value in obj.items():
+            self[key] = value
+
+    def close(self):
+
+        if self._file_handle.mode != "rb":
+            os.fsync(self._file_handle)
+
+        self._file_handle.close()
 
 
 class Scanner:
@@ -205,7 +290,7 @@ class Scanner:
         db_path = os.path.join(self.config.data_folder_path, destination + ".db")
         self.remove_db_file(db_path)
 
-        return shelve.open(db_path, flag="n", protocol=pickle.HIGHEST_PROTOCOL)
+        return Database(encode_path(db_path))
 
     @staticmethod
     def remove_db_file(db_path):
@@ -557,7 +642,7 @@ class Scanner:
 
                 # Add to file index
                 fileinfo[0] = f"{folder}\\{filename}"
-                fileindex_db[f"{file_index}"] = fileinfo
+                fileindex_db[file_index] = fileinfo
 
                 # Collect words from filenames for Search index
                 # Use set to prevent duplicates
@@ -590,11 +675,13 @@ class Shares:
             ("streams", os.path.join(config.data_folder_path, "streams.db")),
             ("wordindex", os.path.join(config.data_folder_path, "wordindex.db")),
             ("fileindex", os.path.join(config.data_folder_path, "fileindex.db")),
-            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
             ("buddyfiles", os.path.join(config.data_folder_path, "buddyfiles.db")),
             ("buddystreams", os.path.join(config.data_folder_path, "buddystreams.db")),
             ("buddywordindex", os.path.join(config.data_folder_path, "buddywordindex.db")),
-            ("buddyfileindex", os.path.join(config.data_folder_path, "buddyfileindex.db")),
+            ("buddyfileindex", os.path.join(config.data_folder_path, "buddyfileindex.db"))
+        ]
+        self.scanner_share_db_paths = [
+            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
             ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db"))
         ]
 
@@ -674,7 +761,8 @@ class Shares:
 
             try:
                 if os.path.exists(db_path_encoded):
-                    shares[destination] = shelve.open(db_path, flag="r", protocol=pickle.HIGHEST_PROTOCOL)
+                    shares[destination] = Database(
+                        db_path_encoded, overwrite=False, uses_int_keys=("fileindex" in destination))
 
             except Exception:
                 from traceback import format_exc
@@ -857,7 +945,7 @@ class Shares:
             config,
             scanner_queue,
             shared_folders,
-            self.share_db_paths,
+            self.share_db_paths + self.scanner_share_db_paths,
             init,
             rescan,
             rebuild

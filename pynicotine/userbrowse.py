@@ -28,7 +28,6 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
-from pynicotine.utils import RestrictedUnpickler
 
 
 class UserBrowse:
@@ -152,6 +151,7 @@ class UserBrowse:
                 import bz2
 
                 with bz2.BZ2File(file_path_encoded) as file_handle:
+                    from pynicotine.shares import RestrictedUnpickler
                     shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
 
             except Exception:
