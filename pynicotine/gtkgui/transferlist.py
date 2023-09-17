@@ -246,7 +246,10 @@ class TransferList:
             self.tree_view.grab_focus()
 
     def init_transfers(self, transfer_list):
+
         self.transfer_list = transfer_list
+
+        self.container.get_parent().set_visible(bool(transfer_list))
         self.update_model()
 
     def select_transfers(self):
