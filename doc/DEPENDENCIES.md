@@ -11,7 +11,8 @@
 
 ### Recommended
 
-- [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat.
+- [libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) for Adwaita theme on GNOME (GTK 4).
+- [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat (GTK 3).
 
 ## Building
 
@@ -34,19 +35,19 @@
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1 gir1.2-gtk-3.0 python3-gi python3-gdbm
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi python3-gdbm
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gspell gtk3 python3-gobject
+sudo dnf install gspell gtk4 libaadwaita python3-gobject
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject python3-dbm
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python3-gobject python3-dbm
 ```
 
 #### Installing Build Dependencies
