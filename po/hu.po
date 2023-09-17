@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-05 23:51+0300\n"
-"PO-Revision-Date: 2023-07-31 13:08+0000\n"
+"PO-Revision-Date: 2023-09-15 22:54+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -211,9 +211,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "A csatlakozás előtt meg kell adni egy felhasználónevet és jelszót…"
 
 #: pynicotine/core.py:377
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "%(program)s %(version)s betöltése"
+msgstr "Kilépés a(z) %(program)s %(version)s programból!"
 
 #: pynicotine/core.py:431
 #, python-format
@@ -353,7 +353,7 @@ msgstr "Valóban ki akar lépni?"
 
 #: pynicotine/gtkgui/application.py:303
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Várja meg, amíg a feltöltés befejeződik"
 
 #: pynicotine/gtkgui/application.py:321
 msgid "Shares Not Available"
@@ -739,14 +739,12 @@ msgid "Remove"
 msgstr "Eltávolít"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:357
-#, fuzzy
 msgid "Add Item"
-msgstr "Tétel"
+msgstr "Tétel hozzáadása"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:380
-#, fuzzy
 msgid "Edit Item"
-msgstr "Érdeklődési körök szerkesztése"
+msgstr "Tétel szerkesztése"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1697,7 +1695,7 @@ msgstr "Feltöltések: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1427
 msgid "Quitting..."
-msgstr ""
+msgstr "Kilépés..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -2305,9 +2303,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Tényleg be szeretné zárni az összes lapot?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:414
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Olvasatlan lapok"
+msgstr "%i Olvasatlan lap"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:417
 msgid "All Tabs"
@@ -2315,9 +2313,8 @@ msgstr "Minden lap"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:660
 #: pynicotine/gtkgui/widgets/iconnotebook.py:665
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "Lap _bezárása"
+msgstr "Bezárt lap ú_jramegnyitása"
 
 #: pynicotine/gtkgui/widgets/notifications.py:120
 #, python-format
@@ -3697,14 +3694,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Felhasználó vagy IP-cím eltávolítása a mellőzőlistáról"
 
 #: pynicotine/plugins/core_commands/__init__.py:213
-#, fuzzy
 msgid "Add share"
-msgstr "Kíván_ság hozzáadása"
+msgstr "Megosztás hozzáadása"
 
 #: pynicotine/plugins/core_commands/__init__.py:219
-#, fuzzy
 msgid "Remove share"
-msgstr "Kíván_ság eltávolítása"
+msgstr "Megosztás eltávolítása"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "List shares"
@@ -3780,22 +3775,23 @@ msgstr "%s mellőzése visszavonva"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Nem lehet megosztani az elérhetetlen mappát „%s”"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"%(group_name)s „%(virtual_name)s” megosztás hozzáadva (újrakeresés szükséges)"
 
 #: pynicotine/plugins/core_commands/__init__.py:561
-#, fuzzy, python-format
+#, python-format
 msgid "No share with name \"%s\""
-msgstr "Megosztás csak barátoknak"
+msgstr "Nincs megosztás ezzel a névvel „%s”"
 
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "„%s” megosztás eltávolítva (újrakeresés szükséges)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4043,9 +4039,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nem lehet csatlakozni a szerverre, %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1106
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Automatikus csatlakozás a kiszolgálóhoz indításkor"
+msgstr "Újracsatlakozás a szerverhez %i másodperc múlva"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
@@ -4359,6 +4355,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Egy Soulseek-társhoz való csatlakozáshoz, az útválasztó egy figyelőportját "
+"továbbítani kell az illető számítógépére."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4495,9 +4493,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "A következő másodlagos lapra lépés"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Másodlagos lap bezárása"
+msgstr "Bezárt másodlagos lap újramegnyitása"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4940,13 +4937,12 @@ msgid "_Accept private room invitations"
 msgstr "Privát szobai meghívások el_fogadása"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"A szobafal lehetővé teszi a felhasználók számára egyedi üzenet "
-"megjelenítését másoknak. A legutóbbi üzenetek felül jelennek meg."
+"Írjon egyetlen üzenetet, amelyet a szoba többi felhasználója később "
+"elolvashat. A legutóbbi üzenetek felül jelennek meg."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5354,9 +5350,8 @@ msgid "IP Addresses"
 msgstr "IP-címek"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:44
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Helyesírás-ellenőrzés engedélyezése (újraindítás szükséges)"
+msgstr "Helyesírás-ellenőrzés engedélyezése"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
@@ -5687,7 +5682,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:66
 msgid "Other"
-msgstr "Egyéb"
+msgstr "Más"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:106
 msgid "Now Playing Format"
@@ -5991,9 +5986,8 @@ msgid "Language (requires a restart):"
 msgstr "Nyelv (újraindítás szükséges):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:87
-#, fuzzy
 msgid "When closing window:"
-msgstr "A Nicotine+ bezárásakor:"
+msgstr "Az ablak bezárásakor:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:110
 msgid "Notifications"
