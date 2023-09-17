@@ -52,6 +52,7 @@ class BasePlugin:
     # Attributes that are assigned when the plugin loads, do not modify these
     internal_name = None  # Technical plugin name based on plugin folder name
     human_name = None     # Friendly plugin name specified in the PLUGININFO file
+    path = None           # Folder path where plugin files are stored
     parent = None         # Reference to PluginHandler
     config = None         # Reference to global Config handler
     core = None           # Reference to Core
@@ -448,6 +449,8 @@ class PluginHandler:
             # MPRIS is not available on Windows and macOS
             return None
 
+        plugin_path = self.get_plugin_path(plugin_name)
+
         try:
             # Import builtin plugin
             from importlib import import_module
@@ -455,8 +458,6 @@ class PluginHandler:
 
         except Exception:
             # Import user plugin
-            plugin_path = self.get_plugin_path(plugin_name)
-
             if plugin_path is None:
                 log.add_debug("Failed to load plugin '%s', could not find it", plugin_name)
                 return None
@@ -472,13 +473,15 @@ class PluginHandler:
         # Set class attributes to make name available while initializing plugin
         BasePlugin.internal_name = plugin_name
         BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+        BasePlugin.path = plugin_path
 
         instance = plugin.Plugin()
         instance.internal_name = BasePlugin.internal_name
         instance.human_name = BasePlugin.human_name
+        instance.path = BasePlugin.path
 
         # Reset class attributes
-        BasePlugin.internal_name = BasePlugin.human_name = None
+        BasePlugin.internal_name = BasePlugin.human_name = BasePlugin.path = None
 
         self.plugin_settings(plugin_name, instance)
 
@@ -599,9 +602,10 @@ class PluginHandler:
             return False
 
         plugin = self.enabled_plugins[plugin_name]
-        plugin_path = self.get_plugin_path(plugin_name)
+        plugin_path = None
 
         try:
+            plugin_path = str(plugin.path)
             plugin.disable()
 
             for command, data in plugin.commands.items():
@@ -632,6 +636,9 @@ class PluginHandler:
             return False
 
         finally:
+            if not plugin_path:
+                plugin_path = str(self.get_plugin_path(plugin_name))
+
             # Remove references to relative modules
             if plugin_path in sys.path:
                 sys.path.remove(plugin_path)
