@@ -193,7 +193,7 @@ class PluginSettings(Dialog):
             hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
-        frame_container = Gtk.Frame(child=container, visible=True)
+        frame_container = Gtk.Frame(child=container, margin_top=6, visible=True)
         add_css_class(scrolled_window, "border-bottom")
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
