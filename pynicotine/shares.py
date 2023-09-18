@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gc
+import mmap
 import os
 import shutil
 import stat
@@ -109,10 +110,15 @@ class Database:
             os.remove(file_path)
 
         self._value_offsets = self._load_value_offsets(file_path, uses_int_keys)
-        self._file_handle = open(  # pylint: disable=consider-using-with
-            file_path, mode=("ab+" if overwrite else "rb")
-        )
+
+        if overwrite:
+            self._file_handle = open(file_path, mode="ab+")  # pylint: disable=consider-using-with
+        else:
+            with open(file_path, mode="rb") as file_handle:
+                self._file_handle = mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ)
+
         self._file_offset = self._file_handle.seek(0, SEEK_END)
+        self._overwrite = overwrite
 
     def _load_value_offsets(self, file_path, uses_int_keys=False):
 
@@ -127,23 +133,29 @@ class Database:
 
             file_handle.seek(0)
 
-            if file_handle.read(len(self.FILE_HEADER)) != self.FILE_HEADER:
-                raise DatabaseError("Not a database file")
+            with mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ) as contents:
+                contents_view = memoryview(contents)
 
-            current_offset = file_handle.tell()
+                try:
+                    file_header_length = current_offset = len(self.FILE_HEADER)
 
-            while current_offset < file_size:
-                length_data = file_handle.read(self.LENGTH_DATA_SIZE)
-                key_length, value_length = self.UNPACK_LENGTHS(length_data)
+                    if contents_view[:file_header_length] != self.FILE_HEADER:
+                        raise DatabaseError("Not a database file")
 
-                encoded_key = file_handle.read(key_length)
-                key = int(encoded_key) if uses_int_keys else encoded_key.decode("utf-8")
+                    while current_offset < file_size:
+                        key_offset = (current_offset + self.LENGTH_DATA_SIZE)
+                        key_length, value_length = self.UNPACK_LENGTHS(contents_view[current_offset:key_offset])
+                        value_offset = (key_offset + key_length)
 
-                value_offset = (current_offset + self.LENGTH_DATA_SIZE + key_length)
-                current_offset = (value_offset + value_length)
+                        if uses_int_keys:
+                            key = int(contents_view[key_offset:value_offset])
+                        else:
+                            key = str(contents_view[key_offset:value_offset], encoding="utf-8")
 
-                file_handle.seek(current_offset)
-                value_offsets[key] = value_offset
+                        value_offsets[key] = value_offset
+                        current_offset = (value_offset + value_length)
+                finally:
+                    contents_view.release()
 
         return value_offsets
 
@@ -191,7 +203,7 @@ class Database:
 
     def close(self):
 
-        if self._file_handle.mode != "rb":
+        if self._overwrite:
             os.fsync(self._file_handle)
 
         self._file_handle.close()
