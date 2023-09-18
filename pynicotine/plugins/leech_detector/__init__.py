@@ -36,7 +36,7 @@ class Plugin(BasePlugin):
             "num_files": 1,
             "num_folders": 1,
             "open_private_chat": True,
-            "messaged_users": []
+            "detected_leechers": []
         }
         self.metasettings = {
             "message": {
@@ -56,14 +56,14 @@ class Plugin(BasePlugin):
                 "description": "Open chat tabs when sending private messages to leechers",
                 "type": "bool"
             },
-            "messaged_users": {
-                "description": "Previously messaged users",
+            "detected_leechers": {
+                "description": "Detected leechers",
                 "type": "list string"
             }
         }
 
         self.probed_users = {}
-        self.messaged_users = set()
+        self.detected_leechers = set()
 
     def loaded_notification(self):
 
@@ -76,8 +76,8 @@ class Plugin(BasePlugin):
         if self.settings["num_folders"] < min_num_folders:
             self.settings["num_folders"] = min_num_folders
 
-        # Separate messaged_users set for faster membership checks
-        self.messaged_users = set(self.settings["messaged_users"])
+        # Separate leechers set for faster membership checks
+        self.detected_leechers = set(self.settings["detected_leechers"])
 
         self.log(
             "Require users have a minimum of %d files in %d shared public folders.",
@@ -107,19 +107,19 @@ class Plugin(BasePlugin):
 
         num_files = stats["files"]
         num_folders = stats["dirs"]
-        was_messaged = (user in self.messaged_users)
+        is_previous_leecher = (user in self.detected_leechers)
 
         if num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"]:
-            if was_messaged:
-                self.messaged_users.remove(user)
-                self.settings["messaged_users"].remove(user)
+            if is_previous_leecher:
+                self.detected_leechers.remove(user)
+                self.settings["detected_leechers"].remove(user)
 
             self.probed_users[user] = "okay"
             self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
             return
 
-        if was_messaged:
-            # Still leeching, but we already messaged user previously
+        if is_previous_leecher:
+            # Still leeching, but we already messaged the user previously
             self.probed_users[user] = "processed"
             return
 
@@ -172,7 +172,7 @@ class Plugin(BasePlugin):
 
             self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
 
-        self.messaged_users.add(user)
-        self.settings["messaged_users"].append(user)
+        self.detected_leechers.add(user)
+        self.settings["detected_leechers"].append(user)
 
         self.log("Leecher %s doesn't share enough files. Message sent.", user)
