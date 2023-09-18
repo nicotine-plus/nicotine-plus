@@ -76,6 +76,7 @@ class Plugin(BasePlugin):
         if self.settings["num_folders"] < min_num_folders:
             self.settings["num_folders"] = min_num_folders
 
+        # Separate messaged_users set for faster membership checks
         self.messaged_users = set(self.settings["messaged_users"])
 
         self.log(
@@ -84,10 +85,6 @@ class Plugin(BasePlugin):
         )
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-
-        if user in self.messaged_users:
-            # Already messaged user previously
-            return
 
         if user in self.probed_users:
             # We already have stats for this user.
@@ -110,10 +107,20 @@ class Plugin(BasePlugin):
 
         num_files = stats["files"]
         num_folders = stats["dirs"]
+        was_messaged = (user in self.messaged_users)
 
         if num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"]:
+            if was_messaged:
+                self.messaged_users.remove(user)
+                self.settings["messaged_users"].remove(user)
+
             self.probed_users[user] = "okay"
             self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
+            return
+
+        if was_messaged:
+            # Still leeching, but we already messaged user previously
+            self.probed_users[user] = "processed"
             return
 
         if user in self.core.userlist.buddies:
@@ -165,7 +172,7 @@ class Plugin(BasePlugin):
 
             self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
 
-        self.settings["messaged_users"].append(user)
         self.messaged_users.add(user)
+        self.settings["messaged_users"].append(user)
 
         self.log("Leecher %s doesn't share enough files. Message sent.", user)
