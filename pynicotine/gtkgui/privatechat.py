@@ -335,6 +335,11 @@ class PrivateChat:
         self.loaded = True
 
     def read_private_log_finished(self):
+
+        if not hasattr(self, "chat_view"):
+            # Tab was closed
+            return
+
         self.chat_view.scroll_bottom()
         self.chat_view.auto_scroll = True
 

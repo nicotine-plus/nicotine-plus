@@ -628,6 +628,10 @@ class ChatRoom:
 
     def read_room_logs_finished(self):
 
+        if not hasattr(self, "chat_view"):
+            # Tab was closed
+            return
+
         self.activity_view.scroll_bottom()
         self.chat_view.scroll_bottom()
 
