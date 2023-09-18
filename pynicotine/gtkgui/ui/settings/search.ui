@@ -396,7 +396,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="filter_help_label">
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Result Filter Help</property>
                         <property name="mnemonic-widget">filter_help_button</property>

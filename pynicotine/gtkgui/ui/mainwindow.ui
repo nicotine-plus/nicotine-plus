@@ -1083,7 +1083,7 @@
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="private_history_label">
                                 <property name="label" translatable="yes">Chat _History</property>
                                 <property name="mnemonic-widget">private_history_button</property>
                                 <property name="use-underline">True</property>
@@ -1410,7 +1410,7 @@
                                 <property name="spacing">6</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_list_label">
                                     <property name="label" translatable="yes">_Rooms</property>
                                     <property name="mnemonic-widget">room_list_button</property>
                                     <property name="use-underline">True</property>

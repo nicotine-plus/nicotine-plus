@@ -363,6 +363,7 @@ class ChatRoom:
             self.help_button,
             self.log_toggle,
             self.room_wall_button,
+            self.room_wall_label,
             self.speech_toggle,
             self.users_container,
             self.users_label,
@@ -383,6 +384,7 @@ class ChatRoom:
             self.chat_paned.set_shrink_end_child(False)
 
             self.room_wall_button.set_has_frame(False)
+            self.room_wall_label.set_mnemonic_widget(self.room_wall_button.get_first_child())
         else:
             self.users_paned.child_set_property(self.chat_paned, "resize", True)
             self.users_paned.child_set_property(self.chat_paned, "shrink", False)

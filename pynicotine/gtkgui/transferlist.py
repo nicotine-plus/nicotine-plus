@@ -58,6 +58,7 @@ class TransferList:
 
         (
             self.clear_all_button,
+            self.clear_all_label,
             self.container,
             self.tree_container
         ) = ui.load(scope=self, path=f"{transfer_type}s.ui")
@@ -67,6 +68,7 @@ class TransferList:
 
         if GTK_API_VERSION >= 4:
             self.clear_all_button.set_has_frame(False)
+            self.clear_all_label.set_mnemonic_widget(self.clear_all_button.get_first_child())
 
         self.transfer_list = []
         self.users = {}

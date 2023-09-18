@@ -203,7 +203,7 @@
                     <property name="spacing">6</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="clear_all_label">
                         <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear _All…</property>
                         <property name="mnemonic-widget">clear_all_button</property>

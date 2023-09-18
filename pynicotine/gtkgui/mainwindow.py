@@ -122,11 +122,13 @@ class MainWindow(Window):
             self.private_end,
             self.private_entry,
             self.private_history_button,
+            self.private_history_label,
             self.private_page,
             self.private_title,
             self.private_toolbar,
             self.private_toolbar_content,
             self.room_list_button,
+            self.room_list_label,
             self.room_search_entry,
             self.scan_progress_bar,
             self.search_content,
@@ -193,6 +195,16 @@ class MainWindow(Window):
             self.vertical_paned.set_shrink_start_child(False)
             self.vertical_paned.set_resize_end_child(False)
             self.vertical_paned.set_shrink_end_child(False)
+
+            # Workaround for screen reader support in GTK <4.12
+            for label, button in (
+                (self.search_mode_label, self.search_mode_button),
+                (self.private_history_label, self.private_history_button),
+                (self.room_list_label, self.room_list_button),
+                (self.download_status_label, self.download_status_button),
+                (self.upload_status_label, self.upload_status_button)
+            ):
+                label.set_mnemonic_widget(button.get_first_child())
         else:
             self.header_bar.set_has_subtitle(False)
             self.header_bar.set_show_close_button(True)

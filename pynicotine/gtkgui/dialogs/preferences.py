@@ -2043,6 +2043,7 @@ class SearchesPage:
             self.filter_file_type_entry,
             self.filter_free_slot_toggle,
             self.filter_help_button,
+            self.filter_help_label,
             self.filter_include_entry,
             self.filter_length_entry,
             self.max_displayed_results_spinner,
@@ -2058,6 +2059,9 @@ class SearchesPage:
 
         self.filter_help = SearchFilterHelp(application.preferences)
         self.filter_help_button.set_popover(self.filter_help.widget)
+
+        if GTK_API_VERSION >= 4:
+            self.filter_help_label.set_mnemonic_widget(self.filter_help_button.get_first_child())
 
         self.options = {
             "searches": {
