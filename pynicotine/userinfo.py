@@ -138,9 +138,9 @@ class UserInfo:
 
             descr = unescape(config.sections["userinfo"]["descr"])
 
-        totalupl = core.transfers.get_total_uploads_allowed()
-        queuesize = core.transfers.get_upload_queue_size()
-        slotsavail = core.transfers.allow_new_uploads()
+        totalupl = core.uploads.get_total_uploads_allowed()
+        queuesize = core.uploads.get_upload_queue_size()
+        slotsavail = core.uploads.allow_new_uploads()
 
         if config.sections["transfers"]["remotedownloads"]:
             uploadallowed = config.sections["transfers"]["uploadallowed"]

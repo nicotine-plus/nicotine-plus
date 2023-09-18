@@ -88,23 +88,23 @@ class Uploads(TransferList):
         self.upload_speeds = UploadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.transfers.uploads)
+        self.init_transfers(core.uploads.transfers)
 
     def get_transfer_folder_path(self, transfer):
         virtual_path = transfer.virtual_path
         return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
 
     def retry_selected_transfers(self):
-        core.transfers.retry_uploads(self.selected_transfers)
+        core.uploads.retry_uploads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        core.transfers.abort_uploads(self.selected_transfers, denied_message="Cancelled")
+        core.uploads.abort_uploads(self.selected_transfers, denied_message="Cancelled")
 
     def clear_selected_transfers(self):
-        core.transfers.clear_uploads(uploads=self.selected_transfers)
+        core.uploads.clear_uploads(uploads=self.selected_transfers)
 
     def on_clear_queued_response(self, *_args):
-        core.transfers.clear_uploads(statuses=["Queued"])
+        core.uploads.clear_uploads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -117,7 +117,7 @@ class Uploads(TransferList):
         ).show()
 
     def on_clear_all_response(self, *_args):
-        core.transfers.clear_uploads()
+        core.uploads.clear_uploads()
 
     def on_try_clear_all(self, *_args):
 
@@ -186,27 +186,27 @@ class Uploads(TransferList):
 
     def on_ban_users(self, *_args):
         self.select_transfers()
-        core.transfers.ban_users(self.selected_users)
+        core.uploads.ban_users(self.selected_users)
 
     def on_clear_queued(self, *_args):
-        core.transfers.clear_uploads(statuses=["Queued"])
+        core.uploads.clear_uploads(statuses=["Queued"])
 
     def on_clear_finished(self, *_args):
-        core.transfers.clear_uploads(statuses=["Finished"])
+        core.uploads.clear_uploads(statuses=["Finished"])
 
     def on_clear_cancelled(self, *_args):
-        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
+        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
-        core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
+        core.uploads.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
 
     def on_clear_logged_off(self, *_args):
-        core.transfers.clear_uploads(statuses=["User logged off"])
+        core.uploads.clear_uploads(statuses=["User logged off"])
 
     def on_clear_finished_cancelled(self, *_args):
-        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
+        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
-        core.transfers.clear_uploads(
+        core.uploads.clear_uploads(
             statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
                       "Local file error", "Remote file error"])

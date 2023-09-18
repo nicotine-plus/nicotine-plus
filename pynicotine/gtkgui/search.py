@@ -1506,7 +1506,7 @@ class Search:
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.transfers.get_file(user, file_path, prefix, size=size, file_attributes=file_attributes)
+            core.downloads.get_file(user, file_path, prefix, size=size, file_attributes=file_attributes)
 
     def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
@@ -1517,7 +1517,7 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initial_folder=core.transfers.get_default_download_folder()
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
     def on_download_folders(self, *_args, download_location=""):
@@ -1525,7 +1525,7 @@ class Search:
         if download_location:
             # Custom download location specified, remember it when peer sends a folder
             # contents reply
-            requested_folders = core.transfers.requested_folders
+            requested_folders = core.downloads.requested_folders
         else:
             requested_folders = defaultdict(dict)
 
@@ -1548,7 +1548,7 @@ class Search:
 
                 # remove_destination is False because we need the destination for the full folder
                 # contents response later
-                destination = core.transfers.get_folder_destination(user, folder_path, remove_destination=False)
+                destination = core.downloads.get_folder_destination(user, folder_path, remove_destination=False)
 
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
                     _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
@@ -1567,7 +1567,7 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
-            initial_folder=core.transfers.get_default_download_folder()
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
     def on_copy_file_path(self, *_args):

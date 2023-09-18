@@ -283,7 +283,7 @@ class FastConfigure(Dialog):
         self.listen_port_entry.set_value(listen_port)
 
         # share_page
-        self.download_folder_button.set_path(core.transfers.get_default_download_folder())
+        self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
 

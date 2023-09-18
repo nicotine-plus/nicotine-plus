@@ -89,22 +89,22 @@ class Downloads(TransferList):
         self.download_speeds = DownloadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.transfers.downloads)
+        self.init_transfers(core.downloads.transfers)
 
     def get_transfer_folder_path(self, transfer):
         return transfer.folder_path
 
     def retry_selected_transfers(self):
-        core.transfers.retry_downloads(self.selected_transfers)
+        core.downloads.retry_downloads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        core.transfers.abort_downloads(self.selected_transfers)
+        core.downloads.abort_downloads(self.selected_transfers)
 
     def clear_selected_transfers(self):
-        core.transfers.clear_downloads(downloads=self.selected_transfers)
+        core.downloads.clear_downloads(downloads=self.selected_transfers)
 
     def on_clear_queued_response(self, *_args):
-        core.transfers.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -117,7 +117,7 @@ class Downloads(TransferList):
         ).show()
 
     def on_clear_all_response(self, *_args):
-        core.transfers.clear_downloads()
+        core.downloads.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -163,7 +163,7 @@ class Downloads(TransferList):
     def on_open_file_manager(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
+            file_path = core.downloads.get_current_download_file_path(
                 transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
             folder_path = os.path.dirname(file_path)
 
@@ -176,7 +176,7 @@ class Downloads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
+            file_path = core.downloads.get_current_download_file_path(
                 transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
@@ -192,19 +192,19 @@ class Downloads(TransferList):
             core.userbrowse.browse_user(user, path=folder_path)
 
     def on_clear_queued(self, *_args):
-        core.transfers.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses=["Queued"])
 
     def on_clear_finished(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished"])
+        core.downloads.clear_downloads(statuses=["Finished"])
 
     def on_clear_paused(self, *_args):
-        core.transfers.clear_downloads(statuses=["Paused"])
+        core.downloads.clear_downloads(statuses=["Paused"])
 
     def on_clear_finished_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
+        core.downloads.clear_downloads(statuses=["Finished", "Filtered"])
 
     def on_clear_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Filtered"])
+        core.downloads.clear_downloads(statuses=["Filtered"])
 
     def on_clear_deleted(self, *_args):
-        core.transfers.clear_downloads(clear_deleted=True)
+        core.downloads.clear_downloads(clear_deleted=True)

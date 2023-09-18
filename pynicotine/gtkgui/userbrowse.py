@@ -772,7 +772,7 @@ class UserBrowse:
             title=str_title,
             callback=self.on_download_folder_to_selected,
             callback_data=recurse,
-            initial_folder=core.transfers.get_default_download_folder()
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
     def on_download_folder_recursive_to(self, *_args):
@@ -973,7 +973,7 @@ class UserBrowse:
             parent=self.window,
             title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
-            initial_folder=core.transfers.get_default_download_folder()
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
     def on_upload_files_response(self, dialog, _response_id, _data):

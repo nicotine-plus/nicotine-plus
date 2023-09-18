@@ -183,7 +183,7 @@ class PrivateChat:
             users = set(core.userlist.buddies)
 
         elif target == "downloading":
-            users = core.transfers.get_downloading_users()
+            users = core.uploads.get_downloading_users()
 
         if users:
             core.send_message_to_server(slskmessages.MessageUsers(users, message))
