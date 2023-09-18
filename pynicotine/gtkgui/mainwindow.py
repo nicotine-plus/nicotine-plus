@@ -1329,7 +1329,7 @@ class MainWindow(Window):
             self.update_user_status()
             return
 
-        self.application.lookup_action("away").emit()
+        self.application.lookup_action("away").activate()
 
     # Exit #
 
