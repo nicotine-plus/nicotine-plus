@@ -58,8 +58,7 @@ class FileProperties(Dialog):
             self.username_value_label
         ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
