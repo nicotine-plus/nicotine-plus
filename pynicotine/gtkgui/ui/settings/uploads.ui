@@ -158,7 +158,6 @@
                 <property name="adjustment">_speed_adjustment</property>
                 <property name="max-width-chars">6</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -181,7 +180,6 @@
               <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="adjustment">_alt_speed_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -243,7 +241,6 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                 <property name="adjustment">_upload_bandwidth_adjustment</property>
                 <property name="numeric">True</property>
                 <property name="sensitive" bind-source="use_upload_slots_fixed_radio" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -344,7 +341,6 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkSpinButton" id="max_queued_size_spinner">
                 <property name="adjustment">_max_queued_size_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Mebibytes (2^20 bytes).</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>

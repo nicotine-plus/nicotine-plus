@@ -128,7 +128,6 @@
               <object class="GtkSpinButton" id="speed_spinner">
                 <property name="adjustment">_speed_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -151,7 +150,6 @@
               <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="adjustment">_alt_speed_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
