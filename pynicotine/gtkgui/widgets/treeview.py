@@ -24,6 +24,8 @@ import random
 import string
 import time
 
+import gi.module
+
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
@@ -116,8 +118,15 @@ class TreeView:
 
     def create_model(self):
 
-        model_class = Gtk.TreeStore if self.has_tree else Gtk.ListStore
-        self.model = model_class(*self._data_types)
+        # Bypass Tree/ListStore overrides for improved performance in set_value()
+        gtk_module = gi.module.get_introspection_module("Gtk")
+        model_class = gtk_module.TreeStore if self.has_tree else gtk_module.ListStore
+
+        if hasattr(gtk_module.ListStore, "insert_with_valuesv"):
+            gtk_module.ListStore.insert_with_values = gtk_module.ListStore.insert_with_valuesv
+
+        self.model = model_class()
+        self.model.set_column_types(self._data_types)
 
         self.widget.set_model(self.model)
         return self.model
@@ -441,16 +450,20 @@ class TreeView:
         key = values[self._iterator_key_column]
 
         for i, value in enumerate(values):
-            gvalue = self._column_gvalues[i]
-            gvalue.set_value(value)
-            values[i] = gvalue
+            if isinstance(value, (float, int)) and value > 2147483647:
+                # Need gvalue conversion for large integers
+                gvalue = self._column_gvalues[i]
+                gvalue.set_value(value)
+                value = gvalue
+
+            values[i] = value
 
         if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(  # pylint: disable=no-member
                 parent_iterator, position, self._column_numbers, values
             )
         else:
-            self.iterators[key] = iterator = self.model.insert_with_valuesv(position, self._column_numbers, values)
+            self.iterators[key] = iterator = self.model.insert_with_values(position, self._column_numbers, values)
 
         self._iterator_keys[iterator.user_data] = key
 
@@ -481,10 +494,14 @@ class TreeView:
     def set_row_value(self, iterator, column_id, value):
 
         column_index = self._column_ids[column_id]
-        gvalue = self._column_gvalues[column_index]
-        gvalue.set_value(value)
 
-        return self.model.set_value(iterator, column_index, gvalue)
+        if isinstance(value, (float, int)) and value > 2147483647:
+            # Need gvalue conversion for large integers
+            gvalue = self._column_gvalues[column_index]
+            gvalue.set_value(value)
+            value = gvalue
+
+        return self.model.set_value(iterator, column_index, value)
 
     def remove_row(self, iterator):
         del self.iterators[self._iterator_keys[iterator.user_data]]
