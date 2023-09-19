@@ -102,30 +102,33 @@ class Plugin(BasePlugin):
     def user_stats_notification(self, user, stats):
 
         if user not in self.probed_users:
-            # We did not trigger this notification
+            # We are not watching this user
+            return
+
+        if self.probed_users[user] == "okay":
+            # User was already accepted previously, nothing to do
             return
 
         num_files = stats["files"]
         num_folders = stats["dirs"]
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
 
-        if is_user_accepted and user in self.detected_leechers:
-            self.detected_leechers.remove(user)
-            self.settings["detected_leechers"].remove(user)
+        if is_user_accepted or user in self.core.userlist.buddies:
+            if user in self.detected_leechers:
+                self.detected_leechers.remove(user)
+                self.settings["detected_leechers"].remove(user)
+
+            self.probed_users[user] = "okay"
+
+            if is_user_accepted:
+                self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
+            else:
+                self.log("Buddy %s is only sharing %s files in %s folders. Not complaining.",
+                         (user, num_files, num_folders))
+            return
 
         if self.probed_users[user] != "requesting":
-            # We already dealt with this user.
-            return
-
-        if is_user_accepted:
-            self.probed_users[user] = "okay"
-            self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
-            return
-
-        if user in self.core.userlist.buddies:
-            self.probed_users[user] = "buddy"
-            self.log("Buddy %s is only sharing %s files in %s folders. Not complaining.",
-                     (user, num_files, num_folders))
+            # We already messaged this user previously
             return
 
         if num_files <= 0 and num_folders >= self.settings["num_folders"]:
