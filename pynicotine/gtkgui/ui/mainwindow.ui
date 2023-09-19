@@ -1699,6 +1699,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">network-wireless-symbolic</property>
+                        <property name="tooltip-text" bind-source="_connections_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1730,6 +1731,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">go-down-symbolic</property>
+                        <property name="tooltip-text" bind-source="download_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1760,6 +1762,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">go-up-symbolic</property>
+                        <property name="tooltip-text" bind-source="upload_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1790,6 +1793,7 @@
                     <child>
                       <object class="GtkImage" id="user_status_icon">
                         <property name="icon-name">nplus-status-offline</property>
+                        <property name="tooltip-text" bind-source="user_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                         <style>
                           <class name="colored-icon"/>
