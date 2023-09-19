@@ -101,26 +101,21 @@ class Plugin(BasePlugin):
             # We did not trigger this notification
             return
 
+        num_files = stats["files"]
+        num_folders = stats["dirs"]
+        is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
+
+        if is_user_accepted and user in self.detected_leechers:
+            self.detected_leechers.remove(user)
+            self.settings["detected_leechers"].remove(user)
+
         if self.probed_users[user] != "requesting":
             # We already dealt with this user.
             return
 
-        num_files = stats["files"]
-        num_folders = stats["dirs"]
-        is_previous_leecher = (user in self.detected_leechers)
-
-        if num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"]:
-            if is_previous_leecher:
-                self.detected_leechers.remove(user)
-                self.settings["detected_leechers"].remove(user)
-
+        if is_user_accepted:
             self.probed_users[user] = "okay"
             self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
-            return
-
-        if is_previous_leecher:
-            # Still leeching, but we already messaged the user previously
-            self.probed_users[user] = "processed"
             return
 
         if user in self.core.userlist.buddies:
