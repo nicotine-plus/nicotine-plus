@@ -48,7 +48,7 @@ class UserList:
             self.container,
             self.list_container,
             self.toolbar
-        ) = ui.load(scope=self, path="buddylist.ui")
+        ) = ui.load(scope=self, path="userlist.ui")
 
         self.window = window
 
