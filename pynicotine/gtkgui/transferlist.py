@@ -246,6 +246,9 @@ class TransferList:
 
         if self.container.get_visible():
             self.tree_view.grab_focus()
+            return True
+
+        return False
 
     def init_transfers(self, transfer_list):
 

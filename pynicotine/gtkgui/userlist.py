@@ -167,6 +167,9 @@ class UserList:
 
         if self.container.get_visible():
             self.list_view.grab_focus()
+            return True
+
+        return False
 
     def update_visible(self):
 

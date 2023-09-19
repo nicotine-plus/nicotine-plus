@@ -77,8 +77,15 @@ class PrivateChats(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
-        if not self.get_n_pages():
+
+        if self.get_n_pages():
+            return True
+
+        if self.window.private_entry.is_sensitive():
             self.window.private_entry.grab_focus()
+            return True
+
+        return False
 
     def on_remove_all_pages(self, *_args):
         core.privatechat.remove_all_users()
@@ -521,6 +528,7 @@ class PrivateChat:
 
     def on_focus(self, *_args):
         self.chat_entry.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.privatechat.remove_user(self.user)

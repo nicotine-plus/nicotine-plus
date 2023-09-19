@@ -87,8 +87,15 @@ class UserInfos(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
-        if not self.get_n_pages():
+
+        if self.get_n_pages():
+            return True
+
+        if self.window.userinfo_entry.is_sensitive():
             self.window.userinfo_entry.grab_focus()
+            return True
+
+        return False
 
     def on_remove_all_pages(self, *_args):
         core.userinfo.remove_all_users()
@@ -662,6 +669,7 @@ class UserInfo:
 
     def on_focus(self, *_args):
         self.description_view.widget.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.userinfo.remove_user(self.user)

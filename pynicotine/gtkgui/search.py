@@ -125,7 +125,12 @@ class Searches(IconNotebook):
         self.populate_search_history()
 
     def on_focus(self, *_args):
-        self.window.search_entry.grab_focus()
+
+        if self.window.search_entry.is_sensitive():
+            self.window.search_entry.grab_focus()
+            return True
+
+        return False
 
     def on_restore_removed_page(self, page_args):
         search_term, mode, room, users = page_args
@@ -1817,9 +1822,10 @@ class Search:
 
         if self.window.search_entry.get_text():
             # Search entry contains text, let it grab focus instead
-            return
+            return True
 
         self.tree_view.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.search.remove_search(self.token)

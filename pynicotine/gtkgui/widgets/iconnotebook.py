@@ -585,8 +585,13 @@ class IconNotebook:
             self.emit_switch_page_signal()
 
     def on_focus_page(self, page):
-        if hasattr(page, "focus_callback"):
-            page.focus_callback()
+
+        if not hasattr(page, "focus_callback"):
+            return
+
+        if not page.focus_callback():
+            # Page didn't grab focus, fall back to the notebook
+            self.widget.grab_focus()
 
     def on_restore_removed_page(self, page_args):
         raise NotImplementedError

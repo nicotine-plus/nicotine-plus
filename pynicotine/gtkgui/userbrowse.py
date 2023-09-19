@@ -84,8 +84,15 @@ class UserBrowses(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
-        if not self.get_n_pages():
+
+        if self.get_n_pages():
+            return True
+
+        if self.window.userbrowse_entry.is_sensitive():
             self.window.userbrowse_entry.grab_focus()
+            return True
+
+        return False
 
     def on_remove_all_pages(self, *_args):
         core.userbrowse.remove_all_users()
@@ -1243,9 +1250,10 @@ class UserBrowse:
 
         if not self.file_list_view.is_selection_empty():
             self.file_list_view.grab_focus()
-            return
+            return True
 
         self.folder_tree_view.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.userbrowse.remove_user(self.user)

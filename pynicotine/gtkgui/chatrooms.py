@@ -100,8 +100,15 @@ class ChatRooms(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
-        if not self.get_n_pages():
+
+        if self.get_n_pages():
+            return True
+
+        if self.window.chatrooms_entry.is_sensitive():
             self.window.chatrooms_entry.grab_focus()
+            return True
+
+        return False
 
     def on_remove_all_pages(self, *_args):
         core.chatrooms.remove_all_rooms()
@@ -962,8 +969,10 @@ class ChatRoom:
             self.update_room_user_completions()
 
     def on_focus(self, *_args):
+
         widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view.widget
         widget.grab_focus()
+        return True
 
     def on_leave_room(self, *_args):
         core.chatrooms.remove_room(self.room)

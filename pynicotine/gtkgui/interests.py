@@ -209,8 +209,10 @@ class Interests:
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
+
         self.populate_recommendations()
         self.recommendations_list_view.grab_focus()
+        return True
 
     def server_login(self, msg):
 
