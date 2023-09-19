@@ -103,7 +103,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="label" bind-source="results_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                    <property name="label" translatable="yes">Results</property>
                     <property name="mnemonic-widget">results_button</property>
                     <property name="visible">True</property>
                     <style>
@@ -113,7 +113,6 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="results_button">
-                    <property name="tooltip-text" translatable="yes">Results</property>
                     <property name="visible">True</property>
                     <signal name="clicked" handler="on_counter_button"/>
                     <child>

@@ -1410,10 +1410,12 @@ class Search:
                 total = self.num_results_found
 
             self.results_button.set_tooltip_text(_("Total: %s") % total)
-
-        else:  # Hide the tooltip if there are no hidden results
+        else:
             str_plus = ""
-            self.results_button.set_has_tooltip(False)
+            tooltip_text = _("Results")
+
+            if self.results_button.get_tooltip_text() != tooltip_text:
+                self.results_button.set_tooltip_text(tooltip_text)
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
