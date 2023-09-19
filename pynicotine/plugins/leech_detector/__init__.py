@@ -91,7 +91,11 @@ class Plugin(BasePlugin):
             return
 
         self.probed_users[user] = "requesting"
-        self.core.request_user_stats(user)
+
+        if user in self.core.watched_users:
+            self.core.request_user_stats(user)
+        else:
+            self.core.watch_user(user)
 
         self.log("Getting statistics from the server for new user %s…", user)
 
