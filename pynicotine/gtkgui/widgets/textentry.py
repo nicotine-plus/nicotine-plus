@@ -387,10 +387,7 @@ class ComboBox:
         self._entry_completion = None
         self._item_selected_handler = None
 
-        self._create_combobox(container, has_entry, has_entry_completion)
-
-        if label:
-            label.set_mnemonic_widget(self.widget)
+        self._create_combobox(container, label, has_entry, has_entry_completion)
 
         if items:
             for item, item_id in items:
@@ -398,7 +395,7 @@ class ComboBox:
 
         self.set_visible(visible)
 
-    def _create_combobox_gtk4(self, container, has_entry):
+    def _create_combobox_gtk4(self, container, label, has_entry):
 
         factory = self._create_factory(should_bind=not has_entry)
         list_factory = self._create_factory(ellipsize=False)
@@ -412,6 +409,10 @@ class ComboBox:
 
         if not has_entry:
             self.widget = self.dropdown
+
+            if label:
+                label.set_mnemonic_widget(self.widget)
+
             container.append(self.widget)
             return
 
@@ -419,6 +420,9 @@ class ComboBox:
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
+
+        if label:
+            label.set_mnemonic_widget(self.entry)
 
         popover = self.dropdown.get_last_child()
         popover.connect("notify::visible", self._on_dropdown_visible)
@@ -437,13 +441,16 @@ class ComboBox:
         add_css_class(self.widget, "linked")
         container.append(self.widget)
 
-    def _create_combobox_gtk3(self, container, has_entry, has_entry_completion):
+    def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
 
         self.dropdown.connect("scroll-event", self._on_button_scroll_event)
         self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
+
+        if label:
+            label.set_mnemonic_widget(self.widget)
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
@@ -467,12 +474,12 @@ class ComboBox:
         self._button = self.entry.get_parent().get_children()[-1]
         container.add(self.widget)
 
-    def _create_combobox(self, container, has_entry, has_entry_completion):
+    def _create_combobox(self, container, label, has_entry, has_entry_completion):
 
         if GTK_API_VERSION >= 4:
-            self._create_combobox_gtk4(container, has_entry)
+            self._create_combobox_gtk4(container, label, has_entry)
         else:
-            self._create_combobox_gtk3(container, has_entry, has_entry_completion)
+            self._create_combobox_gtk3(container, label, has_entry, has_entry_completion)
 
         if has_entry:
             Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
