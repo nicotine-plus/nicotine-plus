@@ -164,6 +164,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>

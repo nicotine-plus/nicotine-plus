@@ -275,6 +275,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_download_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -314,6 +315,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_download_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_download_files_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -511,6 +513,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_upload_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -550,6 +553,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_upload_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_upload_files_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>

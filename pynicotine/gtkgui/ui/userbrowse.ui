@@ -62,6 +62,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="label" bind-source="_num_folders_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                                        <property name="mnemonic-widget">_num_folders_button</property>
                                         <property name="visible">True</property>
                                         <style>
                                           <class name="heading"/>
@@ -100,6 +101,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="label" bind-source="_share_size_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                                        <property name="mnemonic-widget">_share_size_button</property>
                                         <property name="visible">True</property>
                                         <style>
                                           <class name="heading"/>
