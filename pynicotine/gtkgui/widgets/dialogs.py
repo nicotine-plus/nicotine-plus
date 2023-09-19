@@ -265,6 +265,7 @@ class MessageDialog(Window):
         self.callback_data = callback_data
         self.destructive_response_id = destructive_response_id
         self.container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=6, visible=False)
+        self.message_label = None
         self.default_focus_widget = None
 
         if not buttons:
@@ -291,6 +292,7 @@ class MessageDialog(Window):
         widget = window_class(
             destroy_with_parent=True,
             transient_for=self.parent.widget if self.parent else None,
+            title=title,
             resizable=False,
             child=window_child
         )
@@ -309,9 +311,9 @@ class MessageDialog(Window):
         title_label = Gtk.Label(
             halign=Gtk.Align.CENTER, label=title, valign=Gtk.Align.START, wrap=True, max_width_chars=60, visible=True
         )
-        message_label = Gtk.Label(
+        self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, selectable=True, use_markup=True, visible=True
+            max_width_chars=60, use_markup=True, visible=True
         )
 
         add_css_class(title_label, "title-2")
@@ -331,7 +333,7 @@ class MessageDialog(Window):
             box.append(message_area)                                  # pylint: disable=no-member
 
             message_area.append(title_label)                          # pylint: disable=no-member
-            message_area.append(message_label)                        # pylint: disable=no-member
+            message_area.append(self.message_label)                   # pylint: disable=no-member
             message_area.append(self.container)                       # pylint: disable=no-member
 
             action_box.append(action_area)                            # pylint: disable=no-member
@@ -348,7 +350,7 @@ class MessageDialog(Window):
             box.add(message_area)                                     # pylint: disable=no-member
 
             message_area.add(title_label)                             # pylint: disable=no-member
-            message_area.add(message_label)                           # pylint: disable=no-member
+            message_area.add(self.message_label)                      # pylint: disable=no-member
             message_area.add(self.container)                          # pylint: disable=no-member
 
             action_box.add(action_area)                               # pylint: disable=no-member
@@ -372,6 +374,7 @@ class MessageDialog(Window):
                     button.set_can_default(True)       # pylint: disable=no-member
                     widget.set_default(button)         # pylint: disable=no-member
 
+                self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
 
         return widget
@@ -450,6 +453,7 @@ class OptionDialog(MessageDialog):
     def _add_option_toggle(self, option_label, option_value):
 
         toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
+        self.message_label.set_mnemonic_widget(toggle)
 
         if option_label:
             if GTK_API_VERSION >= 4:
@@ -484,6 +488,7 @@ class EntryDialog(OptionDialog):
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
+        self.message_label.set_mnemonic_widget(self.entry)
         self.second_entry = None
 
         if use_second_entry:
