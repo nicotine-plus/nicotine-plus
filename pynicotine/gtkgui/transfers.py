@@ -48,7 +48,7 @@ from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
 
 
-class TransferList:
+class Transfers:
 
     path_separator = path_label = retry_label = abort_label = None
     deprioritized_statuses = ()

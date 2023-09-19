@@ -30,13 +30,13 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
-from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
-class Downloads(TransferList):
+class Downloads(Transfers):
 
     def __init__(self, window):
 
@@ -53,7 +53,7 @@ class Downloads(TransferList):
         self.expand_icon = window.downloads_expand_icon
         self.grouping_button = window.downloads_grouping_button
 
-        TransferList.__init__(self, window, transfer_type="download")
+        super().__init__(window, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
             window.downloads_content.append(self.container)
