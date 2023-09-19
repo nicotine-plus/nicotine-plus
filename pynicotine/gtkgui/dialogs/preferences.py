@@ -731,7 +731,7 @@ class UploadsPage:
             self.speed_spinner,
             self.upload_bandwidth_spinner,
             self.upload_double_click_label,
-            self.upload_queue_type_label,
+            self.upload_queue_behavior_label,
             self.upload_slots_spinner,
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
@@ -756,11 +756,11 @@ class UploadsPage:
             )
         )
 
-        self.upload_queue_type_combobox = ComboBox(
-            container=self.upload_queue_type_label.get_parent(), label=self.upload_queue_type_label,
+        self.upload_queue_behavior_combobox = ComboBox(
+            container=self.upload_queue_behavior_label.get_parent(), label=self.upload_queue_behavior_label,
             items=(
-                (_("Round Robin"), None),
-                (_("First In, First Out"), None)
+                (_("Cycle between users"), None),
+                (_("First in, first out"), None)
             )
         )
 
@@ -772,7 +772,7 @@ class UploadsPage:
                 "uploadslots": self.upload_slots_spinner,
                 "uploadlimit": self.speed_spinner,
                 "uploadlimitalt": self.alt_speed_spinner,
-                "fifoqueue": self.upload_queue_type_combobox,
+                "fifoqueue": self.upload_queue_behavior_combobox,
                 "limitby": self.limit_total_transfers_radio,
                 "queuelimit": self.max_queued_size_spinner,
                 "filelimit": self.max_queued_files_spinner,
@@ -817,7 +817,7 @@ class UploadsPage:
                 "use_upload_speed_limit": use_speed_limit,
                 "uploadlimit": self.speed_spinner.get_value_as_int(),
                 "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
-                "fifoqueue": bool(self.upload_queue_type_combobox.get_selected_pos()),
+                "fifoqueue": bool(self.upload_queue_behavior_combobox.get_selected_pos()),
                 "limitby": self.limit_total_transfers_radio.get_active(),
                 "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
                 "filelimit": self.max_queued_files_spinner.get_value_as_int(),

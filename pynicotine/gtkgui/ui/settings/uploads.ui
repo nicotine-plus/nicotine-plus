@@ -210,12 +210,10 @@
           <object class="GtkBox">
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
-            <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
-First In, First Out: Files will be uploaded in the order they were queued.</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel" id="upload_queue_type_label">
-                <property name="label" translatable="yes">Upload queue type:</property>
+              <object class="GtkLabel" id="upload_queue_behavior_label">
+                <property name="label" translatable="yes">Upload queue behavior:</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
