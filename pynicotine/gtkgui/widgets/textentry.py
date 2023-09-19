@@ -667,6 +667,7 @@ class ComboBox:
 
         if ellipsize:
             label.set_ellipsize(Pango.EllipsizeMode.END)
+            label.set_mnemonic_widget(self.widget)
 
         list_item.set_child(label)
 
