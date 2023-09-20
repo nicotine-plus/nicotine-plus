@@ -1193,8 +1193,8 @@ class MainWindow(Window):
             ("#" + _("_Copy"), self.log_view.on_copy_text),
             ("#" + _("Copy _All"), self.log_view.on_copy_all_text),
             ("", None),
-            ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
-            ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
+            ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
+            ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
             ("", None),
             (">" + _("_Log Categories"), popup_menu_log_categories),
             ("", None),
@@ -1226,8 +1226,8 @@ class MainWindow(Window):
         open_file_path(config.sections["logging"]["debuglogsdir"], create_folder=True)
 
     @staticmethod
-    def on_view_transfer_log(*_args):
-        log.open_log(config.sections["logging"]["transferslogsdir"], "transfers")
+    def on_view_transfer_logs(*_args):
+        open_file_path(config.sections["logging"]["transferslogsdir"], create_folder=True)
 
     def on_clear_log_view(self, *_args):
         self.log_view.on_clear_all_text()
