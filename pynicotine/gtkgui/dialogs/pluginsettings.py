@@ -250,12 +250,12 @@ class PluginSettings(Dialog):
 
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
-        button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, button_widget, homogeneous=True)
+        container = Gtk.Box(visible=True)
+        label = self._generate_widget_container(description, container, homogeneous=True)
 
-        self.option_widgets[option_name] = FileChooserButton(button_widget, self.widget, file_chooser_type)
-        label.set_mnemonic_widget(button_widget)
-
+        self.option_widgets[option_name] = FileChooserButton(
+            container, window=self.widget, label=label, chooser_type=file_chooser_type
+        )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_options(self):

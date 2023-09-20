@@ -53,7 +53,6 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path

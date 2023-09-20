@@ -245,15 +245,15 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.container,
             self.download_double_click_label,
-            self.download_folder_button,
+            self.download_folder_label,
             self.enable_filters_toggle,
             self.enable_username_subfolders_toggle,
             self.file_finished_command_entry,
             self.filter_list_container,
             self.filter_status_label,
             self.folder_finished_command_entry,
-            self.incomplete_folder_button,
-            self.received_folder_button,
+            self.incomplete_folder_label,
+            self.received_folder_label,
             self.sent_files_permission_container,
             self.speed_spinner,
             self.use_alt_speed_limit_radio,
@@ -288,13 +288,16 @@ class DownloadsPage:
         )
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, parent=application.preferences, chooser_type="folder"
+            self.download_folder_label.get_parent(), window=application.preferences,
+            label=self.download_folder_label, chooser_type="folder"
         )
         self.incomplete_folder_button = FileChooserButton(
-            self.incomplete_folder_button, parent=application.preferences, chooser_type="folder"
+            self.incomplete_folder_label.get_parent(), window=application.preferences,
+            label=self.incomplete_folder_label, chooser_type="folder"
         )
         self.received_folder_button = FileChooserButton(
-            self.received_folder_button, parent=application.preferences, chooser_type="folder"
+            self.received_folder_label.get_parent(), window=application.preferences,
+            label=self.received_folder_label, chooser_type="folder"
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
@@ -835,7 +838,8 @@ class UserProfilePage:
         (
             self.container,
             self.description_view_container,
-            self.select_picture_button
+            self.reset_picture_button,
+            self.select_picture_label
         ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
@@ -843,7 +847,9 @@ class UserProfilePage:
 
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
-            self.select_picture_button, parent=application.preferences, chooser_type="image")
+            self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
+            end_button=self.reset_picture_button, chooser_type="image", is_flat=True
+        )
 
         self.options = {
             "userinfo": {
@@ -1541,8 +1547,8 @@ class UserInterfacePage:
             self.font_transfers_button,
             self.font_transfers_clear_button,
             self.header_bar_toggle,
-            self.icon_theme_button,
             self.icon_theme_clear_button,
+            self.icon_theme_label,
             self.icon_view,
             self.language_label,
             self.minimize_tray_startup_toggle,
@@ -1749,7 +1755,10 @@ class UserInterfacePage:
 
             self.icon_view.insert(box, -1)
 
-        self.icon_theme_button = FileChooserButton(self.icon_theme_button, application.preferences, "folder")
+        self.icon_theme_button = FileChooserButton(
+            self.icon_theme_label.get_parent(), window=application.preferences,
+            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
+        )
 
         self.options = {
             "notifications": {
@@ -1962,31 +1971,35 @@ class LoggingPage:
     def __init__(self, application):
 
         (
-            self.chatroom_log_folder_button,
+            self.chatroom_log_folder_label,
             self.container,
-            self.debug_log_folder_button,
+            self.debug_log_folder_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
             self.log_private_chat_toggle,
             self.log_timestamp_format_entry,
             self.log_transfer_toggle,
-            self.private_chat_log_folder_button,
-            self.transfer_log_folder_button
+            self.private_chat_log_folder_label,
+            self.transfer_log_folder_label
         ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
         self.private_chat_log_folder_button = FileChooserButton(
-            self.private_chat_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.private_chat_log_folder_label.get_parent(), window=application.preferences,
+            label=self.private_chat_log_folder_label, chooser_type="folder"
         )
         self.chatroom_log_folder_button = FileChooserButton(
-            self.chatroom_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.chatroom_log_folder_label.get_parent(), window=application.preferences,
+            label=self.chatroom_log_folder_label, chooser_type="folder"
         )
         self.transfer_log_folder_button = FileChooserButton(
-            self.transfer_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.transfer_log_folder_label.get_parent(), window=application.preferences,
+            label=self.transfer_log_folder_label, chooser_type="folder"
         )
         self.debug_log_folder_button = FileChooserButton(
-            self.debug_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.debug_log_folder_label.get_parent(), window=application.preferences,
+            label=self.debug_log_folder_label, chooser_type="folder"
         )
 
         self.options = {

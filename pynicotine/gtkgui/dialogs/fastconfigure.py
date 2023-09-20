@@ -42,7 +42,7 @@ class FastConfigure(Dialog):
 
         (
             self.account_page,
-            self.download_folder_button,
+            self.download_folder_container,
             self.listen_port_entry,
             self.main_icon,
             self.next_button,
@@ -83,7 +83,9 @@ class FastConfigure(Dialog):
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, self, "folder", selected_function=self.on_download_folder_selected)
+            self.download_folder_container, window=self, chooser_type="folder",
+            selected_function=self.on_download_folder_selected
+        )
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,

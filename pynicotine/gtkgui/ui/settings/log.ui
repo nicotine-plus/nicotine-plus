@@ -105,19 +105,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="chatroom_log_folder_label">
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
-                <property name="mnemonic-widget">chatroom_log_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="chatroom_log_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -128,19 +121,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="private_chat_log_folder_label">
                 <property name="label" translatable="yes">Private chat logs folder:</property>
-                <property name="mnemonic-widget">private_chat_log_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="private_chat_log_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -151,19 +137,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="transfer_log_folder_label">
                 <property name="label" translatable="yes">Transfer logs folder:</property>
-                <property name="mnemonic-widget">transfer_log_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="transfer_log_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -174,19 +153,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="debug_log_folder_label">
                 <property name="label" translatable="yes">Debug logs folder:</property>
-                <property name="mnemonic-widget">debug_log_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="debug_log_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>

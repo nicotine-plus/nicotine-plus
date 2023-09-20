@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="icon_theme_clear_button">
+    <property name="tooltip-text" translatable="yes">Clear</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_clear_icon_theme"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">edit-clear-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
     <property name="spacing">30</property>
@@ -1876,41 +1887,12 @@
                 <property name="spacing">12</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="icon_theme_label">
                     <property name="label" translatable="yes">Icon theme folder:</property>
-                    <property name="mnemonic-widget">icon_theme_button</property>
                     <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
                     <property name="xalign">0</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkButton" id="icon_theme_button">
-                        <property name="hexpand">True</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="icon_theme_clear_button">
-                        <property name="tooltip-text" translatable="yes">Clear</property>
-                        <property name="visible">True</property>
-                        <signal name="clicked" handler="on_clear_icon_theme"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">edit-clear-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="linked"/>
-                    </style>
                   </object>
                 </child>
               </object>
