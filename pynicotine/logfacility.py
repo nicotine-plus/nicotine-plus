@@ -74,7 +74,8 @@ class Logger:
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
         self.debug_file_name = f"debug_{current_date_time}.log"
-        self.transfers_file_name = f"transfers_{current_date_time}.log"
+        self.downloads_file_name = f"downloads_{current_date_time}.log"
+        self.uploads_file_name = f"uploads_{current_date_time}.log"
 
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
@@ -211,7 +212,7 @@ class Logger:
     def delete_log_callback(self, file_path):
         os.remove(encode_path(file_path))
 
-    def log_transfer(self, msg, msg_args=None):
+    def log_transfer(self, basename, msg, msg_args=None):
 
         if not config.sections["logging"]["transfers"]:
             return
@@ -220,7 +221,7 @@ class Logger:
             msg = msg % msg_args
 
         self.write_log_file(
-            folder_path=config.sections["logging"]["transferslogsdir"], basename=self.transfers_file_name, text=msg)
+            folder_path=config.sections["logging"]["transferslogsdir"], basename=basename, text=msg)
 
     # Log Messages #
 
@@ -270,11 +271,11 @@ class Logger:
                 sys.stdout = open(os.devnull, "w", encoding="utf-8")  # pylint: disable=consider-using-with
 
     def add_download(self, msg, msg_args=None):
-        self.log_transfer(msg, msg_args)
+        self.log_transfer(self.downloads_file_name, msg, msg_args)
         self.add(msg, msg_args=msg_args, level=LogLevel.DOWNLOAD)
 
     def add_upload(self, msg, msg_args=None):
-        self.log_transfer(msg, msg_args)
+        self.log_transfer(self.uploads_file_name, msg, msg_args)
         self.add(msg, msg_args=msg_args, level=LogLevel.UPLOAD)
 
     def add_search(self, msg, msg_args=None):
