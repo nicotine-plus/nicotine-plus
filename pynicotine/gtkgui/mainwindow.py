@@ -957,7 +957,18 @@ class MainWindow(Window):
         }
 
         # Main notebook
-        self.notebook.set_tab_pos(positions.get(config.sections["ui"]["tabmain"], default_pos))
+        main_position = positions.get(config.sections["ui"]["tabmain"], default_pos)
+        self.notebook.set_tab_pos(main_position)
+
+        # Ensure title/menubar borders are visible when needed
+        remove_css_class(self.widget, "menubar-border")
+        remove_css_class(self.widget, "titlebar-border")
+
+        if main_position != Gtk.PositionType.TOP:
+            if config.sections["ui"]["header_bar"]:
+                add_css_class(self.widget, "titlebar-border")
+
+            add_css_class(self.widget, "menubar-border")
 
         # Other notebooks
         self.chatrooms.set_tab_pos(positions.get(config.sections["ui"]["tabrooms"], default_pos))
