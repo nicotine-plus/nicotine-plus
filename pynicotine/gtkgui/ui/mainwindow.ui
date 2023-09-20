@@ -1651,13 +1651,12 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="spacing">6</property>
+        <property name="spacing">18</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkLabel" id="status_label">
             <property name="ellipsize">end</property>
             <property name="hexpand">True</property>
-            <property name="margin-end">12</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
@@ -1666,18 +1665,12 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <property name="spacing">18</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkProgressBar" id="scan_progress_bar">
-                <property name="pulse-step">0.8</property>
-                <property name="show-text">True</property>
-                <property name="text" translatable="yes">Scanning Shares</property>
-                <property name="valign">center</property>
-                <property name="visible">False</property>
-              </object>
-            </child>
+          <object class="GtkProgressBar" id="scan_progress_bar">
+            <property name="pulse-step">0.8</property>
+            <property name="show-text">True</property>
+            <property name="text" translatable="yes">Scanning Shares</property>
+            <property name="valign">center</property>
+            <property name="visible">False</property>
           </object>
         </child>
         <child>
