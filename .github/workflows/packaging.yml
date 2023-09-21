@@ -124,9 +124,7 @@ jobs:
           cache-dependency-path: setup.py
 
       - name: Install build dependencies
-        run: |
-          python packaging/macos/dependencies.py
-          python -m pip install --upgrade --pre --extra-index-url https://marcelotduarte.github.io/packages/ cx_Freeze
+        run: python packaging/macos/dependencies.py
 
       - name: Freeze application
         run: python packaging/macos/setup.py bdist_dmg
