@@ -1071,9 +1071,11 @@ class Uploads(Transfers):
                 return False, reason
 
         # Do we actually share that file with the world?
-        if (not core.shares.file_is_shared(username, virtual_path, real_path)
-                or not self.file_is_readable(virtual_path, real_path)):
+        if not core.shares.file_is_shared(username, virtual_path, real_path):
             return False, "File not shared."
+
+        if not self.file_is_readable(virtual_path, real_path):
+            return False, "File read error."
 
         return True, None
 
