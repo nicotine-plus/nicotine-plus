@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-07 17:39+0000\n"
+"PO-Revision-Date: 2023-09-21 09:58+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -37,9 +37,9 @@ msgid ""
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
-"Nicotine + wil een aangenaam, gratis en open source (FOSS) alternatief zijn "
-"voor de officiële Soulseek-cliënt, die extra functionaliteit biedt terwijl "
-"het up-to-date blijft met het Soulseek-protocol."
+"Nicotine+ wil een aangename, gratis en open source (FOSS) alternatief zijn "
+"voor de officiële Soulseek-cliënt, die extra functionaliteit biedt en up-to-"
+"date blijft met het Soulseek-protocol."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:759
@@ -661,24 +661,22 @@ msgid "About"
 msgstr "Over"
 
 #: pynicotine/gtkgui/dialogs/about.py:407
-#, fuzzy, python-format
+#, python-format
 msgid "Error checking latest version: %s"
-msgstr "Kan laatste versie niet ophalen: %s"
+msgstr "Kan laatste versie niet controleren: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:412
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Nieuwe versie beschikbaar: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:417
-#, fuzzy
 msgid "Up to date"
 msgstr "Up-to-date"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "Controleer _laatste versie"
+msgstr "Controleer laatste versie…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1226,18 +1224,16 @@ msgid "normal"
 msgstr "Normaal"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
-#, fuzzy
 msgid "Separate Buddies tab"
-msgstr "Bericht vrienden"
+msgstr "Verdeel vrienden tab"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1623
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Vriendenlijst in kamers"
+msgstr "Zijbalk in chatkamers tab"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1624
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Altijd zichtbare zijbalk"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1629
 msgid "Top"
@@ -1737,12 +1733,10 @@ msgid "Copy _All"
 msgstr "Kopieer _Alles"
 
 #: pynicotine/gtkgui/mainwindow.py:1195
-#, fuzzy
 msgid "View _Debug Logs"
-msgstr "Debug logs bekijken"
+msgstr "_Debug logs bekijken"
 
 #: pynicotine/gtkgui/mainwindow.py:1196
-#, fuzzy
 msgid "View _Transfer Logs"
 msgstr "Open _Bestandsoverdracht Log"
 
@@ -1918,9 +1912,8 @@ msgid "View User _Profile"
 msgstr "Bekijk gebruiker _Profiel"
 
 #: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Blader door map"
+msgstr "_Blader door map"
 
 #: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
 #: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
@@ -4241,14 +4234,12 @@ msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Kan vorig bestand niet herstellen %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:29
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Zoekterm…"
+msgstr "Zoek in activiteitenlog…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:65 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Zoekterm…"
+msgstr "Zoek in chatlog…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:98 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4370,6 +4361,8 @@ msgstr "Nicotine+ is klaar voor gebruik!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek is een onversleuteld protocol, niet bedoeld voor beveiligde "
+"communicatie."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -4851,9 +4844,8 @@ msgid "Configure User Profile"
 msgstr "Gebruikersprofiel configureren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1621
-#, fuzzy
 msgid "Search log…"
-msgstr "Zoekterm…"
+msgstr "Zoek log…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1676
 msgid "Scanning Shares"
@@ -4876,9 +4868,8 @@ msgid "Show Log History Pane"
 msgstr "Toon Log Geschiedenis Paneel"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Zoekterm…"
+msgstr "Zoek chat log…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -4901,9 +4892,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr "Gebruik alternatieve download snelheidslimiet (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Zoekterm…"
+msgstr "Zoek in chatkamers…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -5852,16 +5842,14 @@ msgid "Upload queue type:"
 msgstr "Upload wachtrij type:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
 msgstr ""
-"Zet uploads in de wachtrij als de totale overdrachtssnelheid (kB/s) bereikt "
+"Zet uploads in de wachtrij tot de totale overdrachtssnelheid (kB/s) bereikt "
 "is:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Beperk het aantal upload slots tot:"
+msgstr "Beperkt aantal upload slots:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Prioritize all buddies"
@@ -5872,13 +5860,12 @@ msgid "Queue Limits"
 msgstr "Wachtrijlimieten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Beperk het aantal resultaten per zoekopdracht:"
+msgstr "Maximaal aantal bestanden in de wachtrij per gebruiker:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Maximale totaal aantal MiB in de wachtrij per gebruiker:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -5926,9 +5913,8 @@ msgid "Minimize to tray on startup"
 msgstr "Minimaliseren naar lade bij opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:78
-#, fuzzy
 msgid "Use header bar"
-msgstr "Gebruik _Kopbalk"
+msgstr "Gebruik Kopbalk"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:89
 msgid "Language (requires a restart):"
@@ -5999,9 +5985,8 @@ msgid "Highlighted tab label color:"
 msgstr "Gemarkeerde tabblad label kleur:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:458
-#, fuzzy
 msgid "Buddy list position:"
-msgstr "Vriendenlijst verborgen"
+msgstr "Vriendenlijst positie:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:483
 msgid "Visible main tabs:"
