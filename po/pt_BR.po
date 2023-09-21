@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-11 11:54+0000\n"
+"PO-Revision-Date: 2023-09-21 09:58+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -665,24 +665,22 @@ msgid "About"
 msgstr "Sobre"
 
 #: pynicotine/gtkgui/dialogs/about.py:407
-#, fuzzy, python-format
+#, python-format
 msgid "Error checking latest version: %s"
-msgstr "Não é possível recuperar a versão mais recente: %s"
+msgstr "Erro ao verificar a versão mais recente: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:412
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Novo lançamento disponível: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:417
-#, fuzzy
 msgid "Up to date"
 msgstr "Atualizado"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "Verificar _Última versão"
+msgstr "Verificando a versão mais recente…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1230,18 +1228,16 @@ msgid "normal"
 msgstr "normal"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
-#, fuzzy
 msgid "Separate Buddies tab"
-msgstr "Mensagens de Amigos"
+msgstr "Aba de Amigos Separados"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1623
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Lista de amigos em salas de bate-papo"
+msgstr "Barra lateral na aba Salas de bate-papo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1624
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Barra lateral sempre visível"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1629
 msgid "Top"
@@ -4586,6 +4582,8 @@ msgstr "Você está pronto para usar Nicotine+!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek é um protocolo não criptografado, não destinado à comunicação "
+"segura."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -6102,7 +6100,7 @@ msgstr "Limite o número de resultados por pesquisa:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Tamanho total máximo de arquivos enfileirados por usuário (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -6225,7 +6223,7 @@ msgstr "Cor do rótulo da aba destacada:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:458
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Posição na lista de amigos:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:483
 msgid "Visible main tabs:"
