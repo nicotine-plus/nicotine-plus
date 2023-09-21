@@ -123,14 +123,14 @@ class Interests:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 135,
+                    "width": 120,
                     "expand_column": True,
                     "iterator_key": True
                 },
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
-                    "width": 60,
+                    "width": 90,
                     "sort_column": "speed_data",
                     "expand_column": True
                 },
