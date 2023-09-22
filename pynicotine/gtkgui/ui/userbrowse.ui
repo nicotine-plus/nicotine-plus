@@ -16,6 +16,7 @@
           <object class="GtkBox">
             <property name="hexpand">True</property>
             <property name="orientation">vertical</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkBox" id="info_bar_container">
                 <property name="visible">True</property>
@@ -222,6 +223,7 @@
                 <property name="row-spacing">1</property>
                 <property name="selection-mode">none</property>
                 <property name="vexpand">True</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="can-focus">False</property>
