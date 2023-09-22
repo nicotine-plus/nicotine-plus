@@ -189,7 +189,7 @@ class Downloads(Transfers):
         username = msg.user
         user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
         download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection timeout", "Remote file error", "Cancelled"}
+                             "User logged off", "Connection closed", "Connection timeout", "Cancelled"}
 
         for download in reversed(self.transfers.copy()):
             if (download.username == username
@@ -526,7 +526,7 @@ class Downloads(Transfers):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if reason in {"File not shared.", "File not shared", "Remote file error"} and not download.legacy_attempt:
+            if reason == "File not shared." and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
@@ -581,7 +581,7 @@ class Downloads(Transfers):
                 break
 
             # Already failed once previously, give up
-            self.abort_download(download, abort_reason="Remote file error")
+            self.abort_download(download, abort_reason="Connection closed")
 
             log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
                 "filename": virtual_path,
@@ -1009,7 +1009,7 @@ class Downloads(Transfers):
 
     def check_download_queue(self):
 
-        failed_statuses = {"Connection timeout", "Local file error", "Remote file error"}
+        failed_statuses = {"Connection closed", "Connection timeout", "File read error.", "Local file error"}
 
         for download in reversed(self.transfers):
             if download.status in failed_statuses:

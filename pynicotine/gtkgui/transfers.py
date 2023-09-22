@@ -88,6 +88,7 @@ class Transfers:
             "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
             "Transferring": _("Transferring"),
+            "Connection closed": _("Connection closed"),
             "Connection timeout": _("Connection timeout"),
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
@@ -103,7 +104,7 @@ class Transfers:
             "File not shared.": _("File not shared"),
             "Download folder error": _("Download folder error"),
             "Local file error": _("Local file error"),
-            "Remote file error": _("Remote file error")
+            "File read error.": _("File read error")
         }
 
         self.tree_view = TreeView(
