@@ -259,7 +259,7 @@ class IconNotebook:
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
-        self.pages_button_container = Gtk.Box(visible=(self.parent_page is not None))
+        self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
         if GTK_API_VERSION >= 4:
