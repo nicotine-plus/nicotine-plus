@@ -433,6 +433,7 @@ class UserInfo:
 
         self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
 
         self.refresh_button.set_sensitive(True)
 
@@ -448,6 +449,7 @@ class UserInfo:
 
         self.indeterminate_progress = True
 
+        self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
