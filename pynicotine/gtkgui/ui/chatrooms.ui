@@ -257,6 +257,7 @@
                   <object class="GtkEntry">
                     <property name="max-width-chars">50</property>
                     <property name="visible">True</property>
+                    <property name="width-chars">0</property>
                   </object>
                 </child>
               </object>

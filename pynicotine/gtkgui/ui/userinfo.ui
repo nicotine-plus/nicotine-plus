@@ -315,6 +315,7 @@
                           <object class="GtkEntry">
                             <property name="max-width-chars">40</property>
                             <property name="visible">True</property>
+                            <property name="width-chars">0</property>
                           </object>
                         </child>
                       </object>
@@ -406,6 +407,7 @@
                           <object class="GtkEntry">
                             <property name="max-width-chars">35</property>
                             <property name="visible">True</property>
+                            <property name="width-chars">0</property>
                           </object>
                         </child>
                       </object>
