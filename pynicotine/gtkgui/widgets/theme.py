@@ -165,6 +165,12 @@ def set_global_css():
         padding: 0;
     }
 
+    progressbar.osd trough,
+    progressbar.osd progress {
+        /* Make overlay progress bars slightly more legible */
+        min-height: 4px;
+    }
+
     /* Borders */
 
     .border-top,
