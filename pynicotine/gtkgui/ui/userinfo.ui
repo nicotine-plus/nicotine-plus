@@ -45,12 +45,12 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkLabel" id="user_label">
+                                <property name="ellipsize">end</property>
                                 <property name="margin-bottom">6</property>
                                 <property name="margin-top">6</property>
                                 <property name="single-line-mode">True</property>
+                                <property name="tooltip-text" bind-source="user_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                 <property name="visible">True</property>
-                                <property name="wrap">True</property>
-                                <property name="wrap-mode">word-char</property>
                                 <property name="xalign">0</property>
                                 <style>
                                   <class name="title-2"/>
@@ -225,7 +225,6 @@
                                     <property name="label" translatable="yes">Free Upload Slots</property>
                                     <property name="mnemonic-widget">free_upload_slots_label</property>
                                     <property name="visible">True</property>
-                                    <property name="wrap">True</property>
                                     <property name="xalign">0</property>
                                     <style>
                                       <class name="dim-label"/>
