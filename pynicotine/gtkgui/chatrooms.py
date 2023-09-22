@@ -374,8 +374,7 @@ class ChatRoom:
             self.speech_toggle,
             self.users_container,
             self.users_label,
-            self.users_list_container,
-            self.users_paned
+            self.users_list_container
         ) = ui.load(scope=self, path="chatrooms.ui")
 
         self.chatrooms = chatrooms
@@ -384,19 +383,11 @@ class ChatRoom:
         self.is_private = is_private
 
         if GTK_API_VERSION >= 4:
-            self.users_paned.set_resize_start_child(True)
-            self.users_paned.set_shrink_start_child(False)
-            self.users_paned.set_resize_end_child(False)
-            self.users_paned.set_shrink_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
 
             self.room_wall_button.set_has_frame(False)
             self.room_wall_label.set_mnemonic_widget(self.room_wall_button.get_first_child())
         else:
-            self.users_paned.child_set_property(self.chat_paned, "resize", True)
-            self.users_paned.child_set_property(self.chat_paned, "shrink", False)
-            self.users_paned.child_set_property(self.users_container, "resize", False)
-            self.users_paned.child_set_property(self.users_container, "shrink", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
         self.loaded = False
@@ -552,13 +543,6 @@ class ChatRoom:
         self.read_room_logs()
 
     def load(self):
-
-        # Get the X position of the rightmost edge of the user list, and set the width to 400
-        window_width = self.window.get_width()
-        position = (self.window.chatrooms_paned.get_position() or self.window.horizontal_paned.get_position()
-                    or window_width)
-        self.users_paned.set_position(position - 400)
-
         GLib.idle_add(self.read_room_logs_finished)
         self.loaded = True
 
