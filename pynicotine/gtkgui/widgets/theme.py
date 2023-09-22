@@ -196,7 +196,6 @@ def set_global_css():
     /* Buttons */
 
     .count {
-        font-feature-settings: "tnum";
         min-width: 12px;
         padding-left: 10px;
         padding-right: 10px;

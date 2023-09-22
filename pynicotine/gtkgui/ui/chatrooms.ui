@@ -152,6 +152,7 @@
             <property name="hexpand">False</property>
             <property name="orientation">vertical</property>
             <property name="visible">True</property>
+            <property name="width-request">180</property>
             <child>
               <object class="GtkBox">
                 <property name="margin-bottom">6</property>
@@ -171,7 +172,7 @@
                         <property name="label" bind-source="_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="mnemonic-widget">_users_button</property>
                         <property name="visible">True</property>
-                        <property name="width-chars">3</property>
+                        <property name="width-chars">4</property>
                         <style>
                           <class name="heading"/>
                         </style>
