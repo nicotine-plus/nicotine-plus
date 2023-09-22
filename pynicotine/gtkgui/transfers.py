@@ -769,10 +769,10 @@ class Transfers:
         expanded = self.expand_button.get_active()
 
         if expanded:
-            icon_name = "go-up-symbolic"
+            icon_name = "view-restore-symbolic"
             self.tree_view.expand_all_rows()
         else:
-            icon_name = "go-down-symbolic"
+            icon_name = "view-fullscreen-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
