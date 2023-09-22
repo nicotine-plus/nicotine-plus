@@ -190,6 +190,7 @@ class MainWindow(Window):
             self.horizontal_paned.set_shrink_start_child(False)
             self.horizontal_paned.set_resize_end_child(False)
             self.chatrooms_paned.set_resize_end_child(False)
+            self.chatrooms_paned.set_shrink_start_child(False)
 
             self.vertical_paned.set_resize_start_child(True)
             self.vertical_paned.set_shrink_start_child(False)
@@ -213,6 +214,7 @@ class MainWindow(Window):
             self.horizontal_paned.child_set_property(self.vertical_paned, "shrink", False)
             self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
             self.chatrooms_paned.child_set_property(self.chatrooms_buddy_list_container, "resize", False)
+            self.chatrooms_paned.child_set_property(self.chatrooms_container, "shrink", False)
 
             self.vertical_paned.child_set_property(self.content, "resize", True)
             self.vertical_paned.child_set_property(self.content, "shrink", False)
