@@ -233,7 +233,6 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
-            self.horizontal_paned,
             self.ignore_unignore_user_label,
             self.info_bar_container,
             self.likes_list_container,
