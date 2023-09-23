@@ -708,12 +708,8 @@ class TreeView:
 
     def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        try:
-            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
-
-        except TypeError:
-            return False
+        bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+        is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
 
         if is_blank:
             return False
