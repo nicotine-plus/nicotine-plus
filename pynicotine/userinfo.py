@@ -128,11 +128,11 @@ class UserInfo:
         if core.login_username != username:
             log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
-        status, reason = core.network_filter.check_user(username, ip_address)
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
-        if not status:
+        if permission_level == "banned":
             pic = None
-            descr = core.ban_message % reason
+            descr = core.ban_message % reject_reason
             descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 

@@ -41,19 +41,42 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="buddy_shares_visible_everyone_toggle">
-            <property name="label" translatable="yes">Show buddy-only shares to everyone</property>
-            <property name="tooltip-text" translatable="yes">Buddy-only shares are visible to everyone, but only buddies can download.</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
-            <signal name="toggled" handler="on_buddy_share_visible_changed"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="buddy_shares_trusted_only_toggle">
-            <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
-            <property name="use-underline">True</property>
-            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Visible to everyone:</property>
+                <property name="mnemonic-widget">reveal_buddy_shares_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkCheckButton" id="reveal_buddy_shares_toggle">
+                    <property name="label" translatable="yes">Buddy shares</property>
+                    <property name="use-underline">True</property>
+                    <property name="visible">True</property>
+                    <signal name="toggled" handler="on_reveal_share_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="reveal_trusted_shares_toggle">
+                    <property name="label" translatable="yes">Trusted shares</property>
+                    <property name="use-underline">True</property>
+                    <property name="visible">True</property>
+                    <signal name="toggled" handler="on_reveal_share_changed"/>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>

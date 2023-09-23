@@ -37,7 +37,7 @@ class SharesTest(TestCase):
 
         config.sections["transfers"]["shared"] = [("Shares", SHARES_FOLDER_PATH)]
         core.shares.rescan_shares(use_thread=False)
-        core.shares.load_shares_instance(
+        core.shares.load_shares(
             core.shares.share_dbs, core.shares.share_db_paths + core.shares.scanner_share_db_paths
         )
 

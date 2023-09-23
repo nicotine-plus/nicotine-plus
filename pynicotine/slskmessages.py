@@ -2812,30 +2812,35 @@ class SharedFileListResponse(FileListMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type", "share_type")
+    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type", "share_type",
+                 "public_shares", "buddy_shares", "trusted_shares")
 
-    def __init__(self, init=None, user=None, shares=None, buddy_shares=None, share_type=None):
+    def __init__(self, init=None, user=None, public_shares=None, buddy_shares=None, trusted_shares=None,
+                 share_type=None):
         self.init = init
         self.user = user
-        self.list = shares
-        self.privatelist = buddy_shares
+        self.public_shares = public_shares
+        self.buddy_shares = buddy_shares
+        self.trusted_shares = trusted_shares
         self.share_type = share_type
+        self.list = []
+        self.privatelist = []
         self.unknown = 0
         self.built = None
         self.type = None
 
-    def _make_shares_list(self, share_lists):
+    def _make_shares_list(self, share_groups):
 
         try:
             msg_list = bytearray()
             num_folders = 0
 
-            for shares in share_lists:
+            for shares in share_groups:
                 num_folders += len(shares)
 
             msg_list.extend(self.pack_uint32(num_folders))
 
-            for shares in share_lists:
+            for shares in share_groups:
                 for key in shares:
                     msg_list.extend(self.pack_string(key))
                     msg_list.extend(shares[key])
@@ -2854,18 +2859,26 @@ class SharedFileListResponse(FileListMessage):
             return self.built
 
         msg = bytearray()
-        share_lists = [self.list]
+        share_groups = [self.public_shares]
+        private_share_groups = []
 
-        if self.share_type != "public" and self.privatelist:
-            share_lists.append(self.privatelist)
+        if self.share_type in {"buddy", "trusted"} and self.buddy_shares:
+            share_groups.append(self.buddy_shares)
 
-        msg.extend(self._make_shares_list(share_lists))
+        if self.share_type == "trusted" and self.trusted_shares:
+            share_groups.append(self.trusted_shares)
+
+        msg.extend(self._make_shares_list(share_groups))
 
         # Unknown purpose, but official clients always send a value of 0
         msg.extend(self.pack_uint32(self.unknown))
 
-        if self.share_type == "public" and self.privatelist:
-            msg.extend(self._make_shares_list(share_lists=[self.privatelist]))
+        for shares in (self.buddy_shares, self.trusted_shares):
+            if shares and shares not in share_groups:
+                private_share_groups.append(shares)
+
+        if private_share_groups:
+            msg.extend(self._make_shares_list(share_groups=private_share_groups))
 
         self.built = zlib.compress(msg)
         return self.built
@@ -2954,7 +2967,7 @@ class FileSearchResponse(FileListMessage):
     """
 
     __slots__ = ("init", "user", "token", "list", "privatelist", "freeulslots",
-                 "ulspeed", "inqueue", "fifoqueue", "unknown", "private_list")
+                 "ulspeed", "inqueue", "fifoqueue", "unknown")
 
     def __init__(self, init=None, user=None, token=None, shares=None, freeulslots=None,
                  ulspeed=None, inqueue=None, fifoqueue=None, private_shares=None):

@@ -539,13 +539,19 @@ class DownloadsPage:
 
 class SharesPage:
 
+    GROUP_NAMES = {
+        _("Public"): "public",
+        _("Buddies"): "buddy",
+        _("Trusted buddies"): "trusted"
+    }
+
     def __init__(self, application):
 
         (
-            self.buddy_shares_trusted_only_toggle,
-            self.buddy_shares_visible_everyone_toggle,
             self.container,
             self.rescan_on_startup_toggle,
+            self.reveal_buddy_shares_toggle,
+            self.reveal_trusted_shares_toggle,
             self.shares_list_container
         ) = ui.load(scope=self, path="settings/shares.ui")
 
@@ -555,6 +561,7 @@ class SharesPage:
         self.recompress_shares_required = False
         self.shared_folders = []
         self.buddy_shared_folders = []
+        self.trusted_shared_folders = []
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
@@ -574,11 +581,10 @@ class SharesPage:
                     "width": 150,
                     "expand_column": True
                 },
-                "buddy_only": {
-                    "column_type": "toggle",
-                    "title": _("Buddy-only"),
-                    "width": 0,
-                    "toggle_callback": self.on_toggle_folder_buddy_only
+                "accessible_to": {
+                    "column_type": "text",
+                    "title": _("Accessible To"),
+                    "width": 0
                 }
             }
         )
@@ -586,8 +592,8 @@ class SharesPage:
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
-                "buddy_shares_visible_everyone": self.buddy_shares_visible_everyone_toggle,
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
         }
 
@@ -599,16 +605,19 @@ class SharesPage:
 
         self.shared_folders = config.sections["transfers"]["shared"][:]
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
-
-        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
-            is_buddy_only = True
-            self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
+        self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
-            is_buddy_only = False
             self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
+                [str(virtual_name), os.path.normpath(folder_path), _("Public")], select_row=False)
+
+        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Buddies")], select_row=False)
+
+        for virtual_name, folder_path, *_unused in self.trusted_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Trusted")], select_row=False)
 
         self.rescan_required = self.recompress_shares_required = False
 
@@ -618,53 +627,28 @@ class SharesPage:
             "transfers": {
                 "shared": self.shared_folders[:],
                 "buddyshared": self.buddy_shared_folders[:],
+                "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
-                "buddy_shares_visible_everyone": self.buddy_shares_visible_everyone_toggle.get_active(),
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle.get_active()
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
         }
 
-    def _edit_shared_folder(self, iterator, new_virtual_name, new_is_buddy_only):
-
-        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
-        is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
-
-        if new_virtual_name == virtual_name and new_is_buddy_only == is_buddy_only:
-            return
-
-        self.rescan_required = True
-
-        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-        group_name = "buddy" if new_is_buddy_only else "public"
-
-        core.shares.remove_share(
-            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
-        )
-        new_virtual_name = core.shares.add_share(
-            folder_path, group_name=group_name, virtual_name=new_virtual_name,
-            share_groups=(self.shared_folders, self.buddy_shared_folders), validate_path=False
-        )
-
-        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
-        self.shares_list_view.set_row_value(iterator, "buddy_only", new_is_buddy_only)
-
-    def on_buddy_share_visible_changed(self, *_args):
+    def on_reveal_share_changed(self, *_args):
         self.recompress_shares_required = True
 
     def on_add_shared_folder_selected(self, selected, _data):
 
         for folder_path in selected:
             virtual_name = core.shares.add_share(
-                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders)
+                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
 
             if not virtual_name:
                 continue
 
             self.rescan_required = True
-            is_buddy_only = False
-
-            self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
+            self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
@@ -678,36 +662,53 @@ class SharesPage:
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
         new_virtual_name = dialog.get_entry_value()
-        new_is_buddy_only = dialog.get_option_value()
+        new_accessible_to = dialog.get_second_entry_value()
+        new_accessible_to_short = new_accessible_to.replace(_("Trusted buddies"), _("Trusted"))
 
-        self._edit_shared_folder(iterator, new_virtual_name, new_is_buddy_only)
+        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        accessible_to = self.shares_list_view.get_row_value(iterator, "accessible_to")
+
+        if new_virtual_name == virtual_name and new_accessible_to_short == accessible_to:
+            return
+
+        self.rescan_required = True
+
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        group_name = self.GROUP_NAMES.get(new_accessible_to)
+
+        core.shares.remove_share(
+            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
+        )
+        new_virtual_name = core.shares.add_share(
+            folder_path, group_name=group_name, virtual_name=new_virtual_name,
+            share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders),
+            validate_path=False
+        )
+
+        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.set_row_value(iterator, "accessible_to", new_accessible_to_short)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
             folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-            is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
+            default_item = self.shares_list_view.get_row_value(iterator, "accessible_to")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
-                option_value=is_buddy_only,
-                option_label=_("Share with buddies only"),
+                second_default=default_item.replace(_("Trusted"), _("Trusted buddies")),
+                second_droplist=list(self.GROUP_NAMES),
+                use_second_entry=True,
+                second_entry_editable=False,
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
             return
-
-    def on_toggle_folder_buddy_only(self, list_view, iterator):
-
-        virtual_name = list_view.get_row_value(iterator, "virtual_name")
-        is_buddy_only = list_view.get_row_value(iterator, "buddy_only")
-
-        self._edit_shared_folder(iterator, virtual_name, not is_buddy_only)
 
     def on_remove_shared_folder(self, *_args):
 
@@ -717,7 +718,7 @@ class SharesPage:
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
             core.shares.remove_share(
-                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
+                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
             self.shares_list_view.remove_row(iterator)
 

@@ -505,26 +505,29 @@ class MainWindow(Window):
 
         return menu
 
-    def add_configure_shares_section(self, menu):
-
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("_Configure Shares"), "app.configure-shares"),
-            ("", None)
-        )
-
     def add_browse_shares_section(self, menu):
 
         menu.add_items(
-            ("#" + _("_Browse Public Shares"), "app.browse-public-shares"),
-            ("#" + _("Bro_wse Buddy Shares"), "app.browse-buddy-shares"),
-            ("", None)
+            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
+            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
+            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
         )
 
     def create_shares_menu(self):
 
         menu = PopupMenu(self.application)
-        self.add_configure_shares_section(menu)
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None)
+        )
+        self.add_browse_shares_section(menu)
+
+        return menu
+
+    def create_browse_shares_menu(self):
+
+        menu = PopupMenu(self.application)
         self.add_browse_shares_section(menu)
 
         return menu
@@ -550,10 +553,13 @@ class MainWindow(Window):
 
         menu = PopupMenu(self.application)
         self.add_connection_section(menu)
-        self.add_configure_shares_section(menu)
-        self.add_browse_shares_section(menu)
-
-        menu.add_items((">" + _("_Help"), self.create_help_menu()))
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            (">" + _("_Browse Shares"), self.create_browse_shares_menu()),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None),
+            (">" + _("_Help"), self.create_help_menu())
+        )
         self.add_preferences_item(menu)
         self.add_quit_item(menu)
 
