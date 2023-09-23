@@ -396,6 +396,9 @@ class IconNotebook:
             self.recently_removed_pages.append(page_args)
 
         if self.get_n_pages() <= 0:
+            if self.window.current_page_id == self.parent_page.id:
+                self.window.notebook.grab_focus()
+
             self.parent.set_visible(False)
 
     def remove_all_pages(self, *_args):
