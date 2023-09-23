@@ -340,6 +340,7 @@ class UserInfo:
             self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu
         )
 
+        self.load_picture(None)
         self.populate_stats()
         self.update_button_states()
 
@@ -390,12 +391,13 @@ class UserInfo:
 
         if not data:
             if GTK_API_VERSION >= 4:
-                self.picture.set_paintable(None)
+                # Empty paintable to prevent container width from shrinking
+                self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
 
             self.picture_data = None
             self.picture_surface = None
 
-            self.placeholder_picture.set_visible(True)
+            self.picture_container.set_visible_child(self.placeholder_picture)
             return
 
         try:
@@ -407,7 +409,7 @@ class UserInfo:
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            self.picture_view.set_visible(True)
+            self.picture_container.set_visible_child(self.picture_view)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
