@@ -499,6 +499,12 @@ class Core:
                 "user": username
             })
 
+        # Ignore invalid status updates for our own username in case we've already
+        # changed our status again by the time they arrive from the server
+        if username == core.login_username and status != self.user_status:
+            msg.user = None
+            return
+
         # Store statuses for watched users, update statuses of room members
         if username in self.watched_users or username in self.user_statuses:
             self.user_statuses[username] = status
