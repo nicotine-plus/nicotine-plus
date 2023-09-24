@@ -549,8 +549,9 @@ class ComboBox:
                 if last_position == position:
                     self._model.append(item)
                 else:
+                    num_removals = (last_position - position)
                     inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
-                    self._model.splice(position, last_position - position, inserted_items)
+                    self._model.splice(position, num_removals, inserted_items)
 
                 self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
         else:
@@ -642,7 +643,7 @@ class ComboBox:
 
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.splice(0, self.get_num_items(), [])
+                self._model.splice(position=0, n_removals=self._model.get_n_items())
         else:
             self.dropdown.remove_all()
 
