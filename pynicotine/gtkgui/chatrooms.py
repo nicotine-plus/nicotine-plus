@@ -439,7 +439,7 @@ class ChatRoom:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 155,
+                    "width": 110,
                     "expand_column": True,
                     "iterator_key": True,
                     "default_sort_type": "ascending",
@@ -449,7 +449,7 @@ class ChatRoom:
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
-                    "width": 100,
+                    "width": 80,
                     "sort_column": "speed_data",
                     "expand_column": True
                 },
