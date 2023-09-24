@@ -45,7 +45,6 @@ class PrivateChat:
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
-            ("set-away-mode", self._set_away_mode),
             ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
@@ -78,12 +77,6 @@ class PrivateChat:
         self.private_message_queue.clear()
         self.away_message_users.clear()
         self.update_completions()
-
-    def _set_away_mode(self, is_away):
-
-        if not is_away:
-            # Reset list of users we've sent away messages to when the away session ends
-            self.away_message_users.clear()
 
     def add_user(self, username):
 
@@ -207,6 +200,10 @@ class PrivateChat:
 
     def _user_status(self, msg):
         """Server code 7."""
+
+        if msg.user == core.login_username and msg.status != slskmessages.UserStatus.AWAY:
+            # Reset list of users we've sent away messages to when the away session ends
+            self.away_message_users.clear()
 
         if msg.status == slskmessages.UserStatus.OFFLINE:
             self.private_message_queue.pop(msg.user, None)

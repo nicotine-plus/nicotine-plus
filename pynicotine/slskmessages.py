@@ -515,9 +515,9 @@ class GetUserStatus(ServerMessage):
 
     __slots__ = ("user", "status", "privileged")
 
-    def __init__(self, user=None):
+    def __init__(self, user=None, status=None):
         self.user = user
-        self.status = None
+        self.status = status
         self.privileged = None
 
     def make_network_message(self):

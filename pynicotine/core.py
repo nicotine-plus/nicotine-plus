@@ -305,10 +305,11 @@ class Core:
             config.sections["server"]["away"] = is_away
 
         self.user_status = slskmessages.UserStatus.AWAY if is_away else slskmessages.UserStatus.ONLINE
-        self.request_set_status(is_away and 1 or 2)
+        self.request_set_status(self.user_status)
 
-        # Reset away message users
-        events.emit("set-away-mode", is_away)
+        # Fake a user status message, since server doesn't send updates when we
+        # disable away mode
+        events.emit("user-status", slskmessages.GetUserStatus(core.login_username, self.user_status))
 
     def request_change_password(self, password):
         self.send_message_to_server(slskmessages.ChangePassword(password))

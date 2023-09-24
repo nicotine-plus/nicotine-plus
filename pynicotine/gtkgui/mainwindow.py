@@ -269,13 +269,13 @@ class MainWindow(Window):
             ("schedule-quit", self.schedule_quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
-            ("set-away-mode", self.set_away_mode),
             ("set-connection-stats", self.set_connection_stats),
             ("set-scan-indeterminate", self.set_scan_indeterminate),
             ("set-scan-progress", self.set_scan_progress),
             ("show-scan-progress", self.show_scan_progress),
             ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits)
+            ("update-upload-limits", self.update_upload_limits),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -1134,8 +1134,9 @@ class MainWindow(Window):
 
     # Away Mode #
 
-    def set_away_mode(self, _is_away):
-        self.update_user_status()
+    def user_status(self, msg):
+        if msg.user == core.login_username:
+            self.update_user_status()
 
     def set_auto_away(self, active=True):
 
