@@ -355,7 +355,7 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
         return False
 
     try:
-        file_path = os.path.normpath(file_path)
+        file_path = os.path.abspath(file_path)
         file_path_encoded = encode_path(file_path)
 
         if not os.path.exists(file_path_encoded):
