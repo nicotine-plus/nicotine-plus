@@ -359,8 +359,6 @@ class ResponseThrottle:
         return willing_to_respond
 
     def responded(self):
-        # possible TODO's: we could actually say public the msg here
-        # make more stateful - track past msg's as additional responder willingness criteria, etc
         self.plugin_usage[self.room] = {"last_time": time(), "last_request": self.request, "last_nick": self.nick}
 
 
