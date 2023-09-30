@@ -4,7 +4,41 @@
 
 ### Changes
 
- * ..
+ * Enabled GTK 4 support by default
+ * New visual style on Windows, macOS and GNOME
+ * Added "Chat History" popover to view all previous private chats with users
+ * Added generic file type search result filters (audio / image / video / text / archive / executable)
+ * Added audio duration search result filter
+ * Added path bar when browsing user shares
+ * Added option to wait for active uploads to finish before quitting
+ * Added option to send a private message to all online buddies and users in upload queue
+ * Added a warning dialog if shared folders are unavailable before rescanning
+ * Added Ctrl+Shift+T shortcut to reopen previously closed tabs
+ * Added option to always display file sizes as bytes
+ * Added popovers for toggling download/upload speeds to the status bar
+ * Added option to configure text view font
+ * Added option to clear downloads that are no longer available on disk
+ * Added option to choose language for user interface
+ * Added notification bubbles for wishlist results
+ * Added new audio quality column to file lists (replaces bitrate column)
+ * Added file type icons to file lists
+ * Added button to view your own user profile
+ * Added button in Preferences to open download folder in file manager
+ * Improved pane and column resizing when shrinking window
+ * Joined rooms are now remembered between sessions
+ * Searching in lists now searches all columns
+ * Clicking the "Clear Filters" button turns it into an undo button
+ * Window title in "File Properties" dialog shows the total size of all selected files
+ * Resuming a single filtered download allows for bypassing download filter
+ * Transfer logs are now split into per-session download and upload logs
+ * Completed Soulseek protocol implementation
+ * Added new command system for plugins
+ * Added basic CLI support (type /help for a list of commands)
+ * Windows: Added option to bind Nicotine+ to a specific network interface
+ * Bumped minimum Python version requirement to 3.6
+ * Bumped minimum GTK 3 version requirement to 3.22.30
+ * Various accessibility improvements
+ * ...and too many other refinements, under-the-hood improvements and code rewrites to count
 
 ### Corrections
 
