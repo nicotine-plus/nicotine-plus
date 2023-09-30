@@ -279,6 +279,14 @@ class Uploads(Transfers):
         # No limits
         return True
 
+    def has_active_uploads(self):
+
+        statuses = {"Getting status", "Transferring"}
+
+        return bool(next(
+            (upload for upload in self.transfers if upload.status in statuses), None
+        ))
+
     def file_is_upload_queued(self, username, virtual_path):
 
         statuses = {"Queued", "Getting status", "Transferring"}
