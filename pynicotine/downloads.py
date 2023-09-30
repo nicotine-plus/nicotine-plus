@@ -787,16 +787,7 @@ class Downloads(Transfers):
 
         # Check if username subfolders should be created for downloads
         if username and config.sections["transfers"]["usernamesubfolders"]:
-            try:
-                download_folder_path = os.path.join(download_folder_path, clean_file(username))
-                download_folder_path_encoded = encode_path(download_folder_path)
-
-                if not os.path.isdir(download_folder_path_encoded):
-                    os.makedirs(download_folder_path_encoded)
-
-            except Exception as error:
-                log.add(_("Unable to save download to username subfolder, falling back "
-                          "to default download folder. Error: %s"), error)
+            download_folder_path = os.path.join(download_folder_path, clean_file(username))
 
         return download_folder_path
 
