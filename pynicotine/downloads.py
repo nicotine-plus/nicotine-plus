@@ -345,25 +345,24 @@ class Downloads(Transfers):
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
 
-        # Check if download exists in our default download folder
-        if self.get_complete_download_file_path(username, virtual_path, size):
-            cancel_reason = "Complete"
-            accepted = False
-
-        # If this file is not in your download queue, then it must be
-        # a remotely initiated download and someone is manually uploading to you
         if accepted and self.can_upload(username):
-            parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-            folder_path = os.path.join(
-                os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
+            if self.get_complete_download_file_path(username, virtual_path, size):
+                # Check if download exists in our default download folder
+                cancel_reason = "Complete"
+            else:
+                # If this file is not in your download queue, then it must be
+                # a remotely initiated download and someone is manually uploading to you
+                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+                folder_path = os.path.join(
+                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
 
-            transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path, status="Queued",
-                                size=size, token=token)
-            self.transfers.appendleft(transfer)
-            self.update_download(transfer)
-            core.watch_user(username)
+                transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path,
+                                    status="Queued", size=size, token=token)
+                self.transfers.appendleft(transfer)
+                self.update_download(transfer)
+                core.watch_user(username)
 
-            return slskmessages.TransferResponse(allowed=True, token=token)
+                return slskmessages.TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             "user": username,
