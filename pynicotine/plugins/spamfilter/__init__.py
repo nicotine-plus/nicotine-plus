@@ -32,7 +32,7 @@ class Plugin(BasePlugin):
             "minlength": 200,
             "maxlength": 400,
             "maxdiffcharacters": 10,
-            "badprivatephrases": ["buy viagra now", "mybrute.com", "mybrute.es", "0daymusic.biz"]
+            "badprivatephrases": ["buy viagra now", "mybrute.com", "mybrute.es"]
         }
         self.metasettings = {
             "minlength": {
