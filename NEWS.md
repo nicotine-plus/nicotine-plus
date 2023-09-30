@@ -18,6 +18,7 @@
  * Improvement ideas for the search result filters ([#1400](https://github.com/nicotine-plus/nicotine-plus/issues/1400))
  * Force download a filtered file ([#1419](https://github.com/nicotine-plus/nicotine-plus/issues/1419))
  * Reopen closed tabs ([#1424](https://github.com/nicotine-plus/nicotine-plus/issues/1424))
+ * Anyone willing to maintain an official Nicotine+ Debian package? ([#1448](https://github.com/nicotine-plus/nicotine-plus/issues/1448))
  * Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
  * List of GTK 4 regressions ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
  * Get date in transfer total up/dl statistic ([#1598](https://github.com/nicotine-plus/nicotine-plus/issues/1598))
@@ -44,6 +45,7 @@
  * Feature: Provide a list of all open chat and chat room tabs ([#2079](https://github.com/nicotine-plus/nicotine-plus/issues/2079))
  * Clear deleted files ([#2084](https://github.com/nicotine-plus/nicotine-plus/issues/2084))
  * Let other users know the minimum number of files and folders set in the Leech Detector plugin ([#2103](https://github.com/nicotine-plus/nicotine-plus/issues/2103))
+ * Save leechers persistently ([#2105](https://github.com/nicotine-plus/nicotine-plus/issues/2105))
  * Easier way to remove ban from a user ([#2111](https://github.com/nicotine-plus/nicotine-plus/issues/2111))
  * \[3.3.0.dev1\] Tray icon has disappeared in the latest version ([#2113](https://github.com/nicotine-plus/nicotine-plus/issues/2113))
  * \[3.3.0.dev1\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
@@ -93,6 +95,10 @@
  * \[3.3.0.dev5\] Share scanning process not working in Windows and macOS builds ([#2608](https://github.com/nicotine-plus/nicotine-plus/issues/2608))
  * \[3.3.0.dev5\] Error message whilst exiting n+ ([#2610](https://github.com/nicotine-plus/nicotine-plus/issues/2610))
  * \[3.3.0.dev5\] When typing in "Include text" box and hitting enter, Nicotine runs into a critical error ([#2628](https://github.com/nicotine-plus/nicotine-plus/issues/2628)
+ * \[3.3.0.dev5\] Nicotine+ App won't open ([#2638](https://github.com/nicotine-plus/nicotine-plus/issues/2638)
+ * Read-only editfields aren't read by Orca screen-reader correctly ([#2647](https://github.com/nicotine-plus/nicotine-plus/issues/2647)
+ * \[3.3.0.dev5\] Crash on the Upload window ([#2663](https://github.com/nicotine-plus/nicotine-plus/issues/2663)
+ * Download folder for remote user keeps appearing ([#2667](https://github.com/nicotine-plus/nicotine-plus/issues/2667)
 
 
 ## Version 3.2.9 (March 5, 2023)
