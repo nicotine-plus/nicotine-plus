@@ -68,15 +68,26 @@ class Application:
             core.quit()
 
     def on_confirm_quit(self):
-        cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
+        cli.prompt(_("Do you really want to quit Nicotine+ (y/n)? "), callback=self.on_confirm_quit_response)
 
     def on_shares_unavailable_response(self, user_input):
 
-        if user_input == "test":
+        user_input = user_input.lower()
+
+        if user_input.startswith("y"):
             core.shares.rescan_shares()
-            return
 
-        log.add("no")
+        elif user_input.startswith("f"):
+            core.shares.rescan_shares(force=True)
 
-    def on_shares_unavailable(self, _shares):
-        cli.prompt("Enter some text: ", callback=self.on_shares_unavailable_response)
+    def on_shares_unavailable(self, shares):
+
+        message = _("The following shares are unavailable:") + "\n\n"
+
+        for virtual_name, folder_path in shares:
+            message += f'• "{virtual_name}" {folder_path}\n'
+
+        message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
+        message += "\n" + _("Retry (y/n/force)? ")
+
+        cli.prompt(message, callback=self.on_shares_unavailable_response)
