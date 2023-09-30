@@ -37,6 +37,7 @@ class Application:
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
+            ("invalid-password", self.on_invalid_password),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
@@ -67,8 +68,12 @@ class Application:
         if user_input.lower().startswith("y"):
             core.quit()
 
-    def on_confirm_quit(self):
+    def on_confirm_quit(self, _only_on_active_uploads):
         cli.prompt(_("Do you really want to quit Nicotine+ (y/n)? "), callback=self.on_confirm_quit_response)
+
+    def on_invalid_password(self):
+        log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
+                  "if this is your first time logging in."), config.sections["server"]["login"])
 
     def on_shares_unavailable_response(self, user_input):
 
