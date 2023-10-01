@@ -189,7 +189,7 @@ class Downloads(Transfers):
         username = msg.user
         user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
         download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection timeout", "Remote file error", "Cancelled"}
+                             "User logged off", "Connection closed", "Connection timeout", "Cancelled"}
 
         for download in reversed(self.transfers.copy()):
             if (download.username == username
@@ -345,25 +345,24 @@ class Downloads(Transfers):
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
 
-        # Check if download exists in our default download folder
-        if self.get_complete_download_file_path(username, virtual_path, size):
-            cancel_reason = "Complete"
-            accepted = False
-
-        # If this file is not in your download queue, then it must be
-        # a remotely initiated download and someone is manually uploading to you
         if accepted and self.can_upload(username):
-            parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-            folder_path = os.path.join(
-                os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
+            if self.get_complete_download_file_path(username, virtual_path, size):
+                # Check if download exists in our default download folder
+                cancel_reason = "Complete"
+            else:
+                # If this file is not in your download queue, then it must be
+                # a remotely initiated download and someone is manually uploading to you
+                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+                folder_path = os.path.join(
+                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
 
-            transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path, status="Queued",
-                                size=size, token=token)
-            self.transfers.appendleft(transfer)
-            self.update_download(transfer)
-            core.watch_user(username)
+                transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path,
+                                    status="Queued", size=size, token=token)
+                self.transfers.appendleft(transfer)
+                self.update_download(transfer)
+                core.watch_user(username)
 
-            return slskmessages.TransferResponse(allowed=True, token=token)
+                return slskmessages.TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             "user": username,
@@ -526,7 +525,7 @@ class Downloads(Transfers):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if reason in {"File not shared.", "File not shared", "Remote file error"} and not download.legacy_attempt:
+            if reason == "File not shared." and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
@@ -581,7 +580,7 @@ class Downloads(Transfers):
                 break
 
             # Already failed once previously, give up
-            self.abort_download(download, abort_reason="Remote file error")
+            self.abort_download(download, abort_reason="Connection closed")
 
             log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
                 "filename": virtual_path,
@@ -787,16 +786,7 @@ class Downloads(Transfers):
 
         # Check if username subfolders should be created for downloads
         if username and config.sections["transfers"]["usernamesubfolders"]:
-            try:
-                download_folder_path = os.path.join(download_folder_path, clean_file(username))
-                download_folder_path_encoded = encode_path(download_folder_path)
-
-                if not os.path.isdir(download_folder_path_encoded):
-                    os.makedirs(download_folder_path_encoded)
-
-            except Exception as error:
-                log.add(_("Unable to save download to username subfolder, falling back "
-                          "to default download folder. Error: %s"), error)
+            download_folder_path = os.path.join(download_folder_path, clean_file(username))
 
         return download_folder_path
 
@@ -1009,7 +999,7 @@ class Downloads(Transfers):
 
     def check_download_queue(self):
 
-        failed_statuses = {"Connection timeout", "Local file error", "Remote file error"}
+        failed_statuses = {"Connection closed", "Connection timeout", "File read error.", "Local file error"}
 
         for download in reversed(self.transfers):
             if download.status in failed_statuses:

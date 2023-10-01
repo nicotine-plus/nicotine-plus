@@ -187,8 +187,10 @@ class MainWindow(Window):
             self.header_bar.set_show_title_buttons(True)
 
             self.horizontal_paned.set_resize_start_child(True)
+            self.horizontal_paned.set_shrink_start_child(False)
             self.horizontal_paned.set_resize_end_child(False)
             self.chatrooms_paned.set_resize_end_child(False)
+            self.chatrooms_paned.set_shrink_start_child(False)
 
             self.vertical_paned.set_resize_start_child(True)
             self.vertical_paned.set_shrink_start_child(False)
@@ -209,8 +211,10 @@ class MainWindow(Window):
             self.header_bar.set_show_close_button(True)
 
             self.horizontal_paned.child_set_property(self.vertical_paned, "resize", True)
+            self.horizontal_paned.child_set_property(self.vertical_paned, "shrink", False)
             self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
             self.chatrooms_paned.child_set_property(self.chatrooms_buddy_list_container, "resize", False)
+            self.chatrooms_paned.child_set_property(self.chatrooms_container, "shrink", False)
 
             self.vertical_paned.child_set_property(self.content, "resize", True)
             self.vertical_paned.child_set_property(self.content, "shrink", False)
@@ -265,13 +269,13 @@ class MainWindow(Window):
             ("schedule-quit", self.schedule_quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
-            ("set-away-mode", self.set_away_mode),
             ("set-connection-stats", self.set_connection_stats),
             ("set-scan-indeterminate", self.set_scan_indeterminate),
             ("set-scan-progress", self.set_scan_progress),
             ("show-scan-progress", self.show_scan_progress),
             ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits)
+            ("update-upload-limits", self.update_upload_limits),
+            ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
 
@@ -490,7 +494,7 @@ class MainWindow(Window):
 
         menu.add_items(
             ("", None),
-            ("#" + _("_Quit…"), "app.confirm-quit")
+            ("#" + _("_Quit"), "app.confirm-quit-uploads")
         )
 
     def create_file_menu(self):
@@ -1130,8 +1134,9 @@ class MainWindow(Window):
 
     # Away Mode #
 
-    def set_away_mode(self, _is_away):
-        self.update_user_status()
+    def user_status(self, msg):
+        if msg.user == core.login_username:
+            self.update_user_status()
 
     def set_auto_away(self, active=True):
 

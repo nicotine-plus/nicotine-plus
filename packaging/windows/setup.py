@@ -77,14 +77,6 @@ INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
 )
 
 include_files = []
-include_resources = []
-
-
-def add_file(file_path, output_path, resource=False):
-
-    # macOS has a separate 'Resources' location used for data files
-    file_list = include_resources if resource and sys.platform == "darwin" else include_files
-    file_list.append((file_path, output_path))
 
 
 def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
@@ -101,16 +93,18 @@ def process_files(folder_path, callback, callback_data=None, starts_with=None, e
         callback(full_path, short_path, callback_data)
 
 
-def _add_files_callback(full_path, short_path, callback_data):
-
-    output_path, resource = callback_data
-    add_file(full_path, os.path.join(output_path, short_path), resource=resource)
+def add_file(file_path, output_path):
+    include_files.append((file_path, output_path))
 
 
-def add_files(folder_path, output_path, starts_with=None, ends_with=None, recursive=False, resource=False):
+def _add_files_callback(full_path, short_path, output_path):
+    add_file(full_path, os.path.join(output_path, short_path))
+
+
+def add_files(folder_path, output_path, starts_with=None, ends_with=None, recursive=False):
 
     process_files(
-        folder_path, _add_files_callback, callback_data=(output_path, resource),
+        folder_path, _add_files_callback, callback_data=output_path,
         starts_with=starts_with, ends_with=ends_with, recursive=recursive
     )
 
@@ -237,7 +231,7 @@ def add_gtk():
     # Fontconfig
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "etc/fonts"), output_path="share/fonts",
-        ends_with=".conf", recursive=True, resource=True
+        ends_with=".conf", recursive=True
     )
 
     # Pixbuf loaders
@@ -255,7 +249,7 @@ def add_icon_packs():
     )
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
-        starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True, resource=True
+        starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True
     )
 
 
@@ -268,7 +262,7 @@ def add_themes():
     )
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/themes"), output_path="share/themes",
-        starts_with=required_themes, ends_with=".css", recursive=True, resource=True
+        starts_with=required_themes, ends_with=".css", recursive=True
     )
 
 
@@ -285,7 +279,7 @@ def add_translations():
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in LANGUAGES), ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True, resource=True
+        starts_with=tuple(i[0] for i in LANGUAGES), ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True
     )
 
 
@@ -335,7 +329,6 @@ setup(
                 ("CFBundleInfoDictionaryVersion", "6.0"),
                 ("NSHumanReadableCopyright", COPYRIGHT)
             ],
-            include_resources=include_resources,
             codesign_identity="-",
             codesign_deep=True,
             codesign_entitlements=os.path.join(CURRENT_PATH, "codesign-entitlements.plist"),
@@ -354,7 +347,7 @@ setup(
             script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
             base=GUI_BASE,
             target_name=APPLICATION_NAME,
-            icon=os.path.join(CURRENT_PATH, ICON_NAME) if sys.platform == "win32" else None,
+            icon=os.path.join(CURRENT_PATH, ICON_NAME),
             copyright=COPYRIGHT,
             shortcut_name=APPLICATION_NAME,
             shortcut_dir="ProgramMenuFolder"

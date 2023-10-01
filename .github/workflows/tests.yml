@@ -126,7 +126,6 @@ jobs:
           install: >-
             mingw-w64-${{ env.ARCH }}-gettext
             mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
-            mingw-w64-${{ env.ARCH }}-python-chardet
             mingw-w64-${{ env.ARCH }}-python-cx-freeze
             mingw-w64-${{ env.ARCH }}-python-pip
             mingw-w64-${{ env.ARCH }}-python-pycodestyle

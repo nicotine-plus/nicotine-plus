@@ -578,45 +578,9 @@ class Config:
     def parse_config(self, file_path):
         """Parses the config file."""
 
-        try:
-            with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
-                file_handle.seek(0)
-                self.parser.read_file(file_handle)
-
-        except UnicodeDecodeError:
-            self.convert_config()
-            self.parse_config(file_path)
-
-    def convert_config(self):
-        """Converts the config to utf-8.
-
-        Mainly for upgrading Windows build. (22 July, 2020)
-        """
-
-        try:
-            from chardet import detect
-
-        except ImportError:
-            from pynicotine.logfacility import log
-
-            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start "
-                    "the application again.")
-            sys.exit()
-
-        file_path_conv = encode_path(f"{self.config_file_path}.conv")
-        os.replace(self.config_file_path, file_path_conv)
-
-        with open(file_path_conv, "rb") as file_handle:
-            rawdata = file_handle.read()
-
-        from_encoding = detect(rawdata)["encoding"]
-
-        with open(file_path_conv, encoding=from_encoding) as file_read:
-            with open(encode_path(self.config_file_path), "w", encoding="utf-8") as file_write:
-                for line in file_read:
-                    file_write.write(line[:-1] + "\r\n")
-
-        os.remove(file_path_conv)
+        with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
+            file_handle.seek(0)
+            self.parser.read_file(file_handle)
 
     def need_config(self):
 

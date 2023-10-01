@@ -65,6 +65,7 @@
   </object>
   <object class="GtkBox" id="search_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -242,6 +243,7 @@
   </object>
   <object class="GtkBox" id="downloads_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -362,7 +364,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="downloads_expand_icon">
-                                <property name="icon-name">go-down-symbolic</property>
+                                <property name="icon-name">view-fullscreen-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -480,6 +482,7 @@
   </object>
   <object class="GtkBox" id="uploads_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -600,7 +603,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="uploads_expand_icon">
-                                <property name="icon-name">go-down-symbolic</property>
+                                <property name="icon-name">view-fullscreen-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -728,6 +731,7 @@
   </object>
   <object class="GtkBox" id="userbrowse_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -891,6 +895,7 @@
   </object>
   <object class="GtkBox" id="userinfo_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1043,6 +1048,7 @@
   </object>
   <object class="GtkBox" id="private_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1203,6 +1209,7 @@
   </object>
   <object class="GtkBox" id="userlist_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1366,6 +1373,7 @@
   </object>
   <object class="GtkBox" id="chatrooms_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkPaned" id="chatrooms_paned">
         <property name="hexpand">True</property>
@@ -1537,6 +1545,7 @@
   </object>
   <object class="GtkBox" id="interests_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox" id="interests_container">
         <property name="orientation">vertical</property>

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-07 18:09+0000\n"
+"PO-Revision-Date: 2023-09-21 18:30+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -666,24 +666,22 @@ msgid "About"
 msgstr "Über"
 
 #: pynicotine/gtkgui/dialogs/about.py:407
-#, fuzzy, python-format
+#, python-format
 msgid "Error checking latest version: %s"
-msgstr "Fehler beim Abrufen der neuesten Version: %s"
+msgstr "Fehler beim Prüfen der letzten Version: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:412
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Neue Version verfügbar: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:417
-#, fuzzy
 msgid "Up to date"
-msgstr "Aktuell"
+msgstr "Aktuäl"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "_Neueste Version Überprüfen"
+msgstr "Neueste Version überprüfen …"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1233,18 +1231,16 @@ msgid "normal"
 msgstr "normal"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
-#, fuzzy
 msgid "Separate Buddies tab"
-msgstr "Freunde Nachricht senden"
+msgstr "Getrennter Freunden Tab"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1623
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Freundesliste in Chatrooms"
+msgstr "Seitenleiste im Chatrooms-Tab"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1624
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Immer sichtbare Seitenleiste"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1629
 msgid "Top"
@@ -1744,14 +1740,12 @@ msgid "Copy _All"
 msgstr "_Alles kopieren"
 
 #: pynicotine/gtkgui/mainwindow.py:1195
-#, fuzzy
 msgid "View _Debug Logs"
 msgstr "Debug-Protokolle anzeigen"
 
 #: pynicotine/gtkgui/mainwindow.py:1196
-#, fuzzy
 msgid "View _Transfer Logs"
-msgstr "_Übertragungsprotokoll öffnen"
+msgstr "Übertragungsprotokoll anzeigen"
 
 #: pynicotine/gtkgui/mainwindow.py:1198
 msgid "_Log Categories"
@@ -1926,9 +1920,8 @@ msgid "View User _Profile"
 msgstr "Benutzer _Profil anzeigen"
 
 #: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Ordner durchsuchen"
+msgstr "_Ordner durchsuchen"
 
 #: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
 #: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
@@ -4269,14 +4262,12 @@ msgstr ""
 "Die vorherige Datei kann nicht wiederhergestellt werden %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:29
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Suchbegriff…"
+msgstr "Aktivitätenprotokoll durchsuchen …"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:65 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Suchbegriff…"
+msgstr "Chatprotokoll durchsuchen …"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:98 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4398,6 +4389,8 @@ msgstr "Sie sind bereit, Nicotine+ zu verwenden!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek ist ein unverschlüsseltes Protokoll, das nicht für eine sichere "
+"Kommunikation bestimmt ist."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -4887,9 +4880,8 @@ msgid "Configure User Profile"
 msgstr "Benutzerprofil konfigurieren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1621
-#, fuzzy
 msgid "Search log…"
-msgstr "Suchbegriff…"
+msgstr "Suchprotokoll …"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1676
 msgid "Scanning Shares"
@@ -4912,9 +4904,8 @@ msgid "Show Log History Pane"
 msgstr "Protokolfenster anzeigen"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Suchbegriff…"
+msgstr "Durchsuche Chat-Geschichte …"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -4939,9 +4930,8 @@ msgstr ""
 "s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Suchbegriff…"
+msgstr "Zimmer suchen …"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -5893,16 +5883,12 @@ msgid "Upload queue type:"
 msgstr "Typ der Upload-Warteschlange:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr ""
-"Uploads in die Warteschlange stellen, wenn die "
-"Gesamtübertragungsgeschwindigkeit (KiB/s) erreicht:"
+msgstr "Upload-Slots zuweisen, bis die Gesamtgeschwindigkeit (KiB/s) erreicht:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Upload-Slots begrenzen auf:"
+msgstr "Feste Anzahl der Upload-Slots:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Prioritize all buddies"
@@ -5913,13 +5899,12 @@ msgid "Queue Limits"
 msgstr "Warteschlangenbeschränkungen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Anzahl der Ergebnisse pro Suche begrenzen:"
+msgstr "Maximale Anzahl an Dateien in der Warteschlange pro Benutzer:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Maximale Gesamtgröße der ausgewählten Dateien pro Benutzer (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -5967,9 +5952,8 @@ msgid "Minimize to tray on startup"
 msgstr "Beim Starten in die Taskleiste minimieren"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:78
-#, fuzzy
 msgid "Use header bar"
-msgstr "_Kopfleiste verwenden"
+msgstr "Kopfleiste verwenden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:89
 msgid "Language (requires a restart):"
@@ -6042,7 +6026,7 @@ msgstr "Farbe der hervorgehobenen Tabsbeschriftung:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:458
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Freundenliste Stelle:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:483
 msgid "Visible main tabs:"

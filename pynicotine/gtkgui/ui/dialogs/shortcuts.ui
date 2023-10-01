@@ -65,7 +65,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="action-name">app.confirm-quit</property>
-                <property name="title" translatable="yes">Quit / Run in Background</property>
+                <property name="title" translatable="yes">Confirm Quit</property>
                 <property name="visible">True</property>
               </object>
             </child>

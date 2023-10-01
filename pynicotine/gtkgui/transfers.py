@@ -88,6 +88,7 @@ class Transfers:
             "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
             "Transferring": _("Transferring"),
+            "Connection closed": _("Connection closed"),
             "Connection timeout": _("Connection timeout"),
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
@@ -103,7 +104,7 @@ class Transfers:
             "File not shared.": _("File not shared"),
             "Download folder error": _("Download folder error"),
             "Local file error": _("Local file error"),
-            "Remote file error": _("Remote file error")
+            "File read error.": _("File read error")
         }
 
         self.tree_view = TreeView(
@@ -769,10 +770,10 @@ class Transfers:
         expanded = self.expand_button.get_active()
 
         if expanded:
-            icon_name = "go-up-symbolic"
+            icon_name = "view-restore-symbolic"
             self.tree_view.expand_all_rows()
         else:
-            icon_name = "go-down-symbolic"
+            icon_name = "view-fullscreen-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":

@@ -48,7 +48,6 @@ EVENT_NAMES = {
     "server-login",
     "server-disconnect",
     "server-timeout",
-    "set-away-mode",
     "set-connection-stats",
     "set-scan-indeterminate",
     "set-scan-progress",

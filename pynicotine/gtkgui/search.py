@@ -1020,6 +1020,9 @@ class Search:
         combobox = self.filter_comboboxes[filter_id]
         position = len(self.FILTER_PRESETS.get(filter_id, ()))
 
+        if position == combobox.get_num_items():
+            combobox.append("")  # Separator item
+
         if position:
             position += 1  # Separator item
 
@@ -1636,10 +1639,10 @@ class Search:
         active = self.expand_button.get_active()
 
         if active:
-            icon_name = "go-up-symbolic"
+            icon_name = "view-restore-symbolic"
             self.tree_view.expand_all_rows()
         else:
-            icon_name = "go-down-symbolic"
+            icon_name = "view-fullscreen-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":

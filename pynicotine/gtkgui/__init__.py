@@ -88,6 +88,9 @@ def run(hidden, ci_mode, multi_instance):
         # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
         os.environ["GSK_RENDERER"] = "cairo"
 
+        # Disable client-side decorations when header bar is disabled
+        os.environ["GTK_CSD"] = "0"
+
     error = check_gtk_version(gtk_api_version=os.getenv("NICOTINE_GTK_VERSION", "4"))
 
     if error:

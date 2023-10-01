@@ -251,8 +251,8 @@ class Core:
     def setup(self):
         events.emit("setup")
 
-    def confirm_quit(self):
-        events.emit("confirm-quit")
+    def confirm_quit(self, only_on_active_uploads=False):
+        events.emit("confirm-quit", only_on_active_uploads)
 
     def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
 
@@ -305,10 +305,11 @@ class Core:
             config.sections["server"]["away"] = is_away
 
         self.user_status = slskmessages.UserStatus.AWAY if is_away else slskmessages.UserStatus.ONLINE
-        self.request_set_status(is_away and 1 or 2)
+        self.request_set_status(self.user_status)
 
-        # Reset away message users
-        events.emit("set-away-mode", is_away)
+        # Fake a user status message, since server doesn't send updates when we
+        # disable away mode
+        events.emit("user-status", slskmessages.GetUserStatus(core.login_username, self.user_status))
 
     def request_change_password(self, password):
         self.send_message_to_server(slskmessages.ChangePassword(password))
@@ -497,6 +498,12 @@ class Core:
                 "status": status,
                 "user": username
             })
+
+        # Ignore invalid status updates for our own username in case we've already
+        # changed our status again by the time they arrive from the server
+        if username == core.login_username and status != self.user_status:
+            msg.user = None
+            return
 
         # Store statuses for watched users, update statuses of room members
         if username in self.watched_users or username in self.user_statuses:

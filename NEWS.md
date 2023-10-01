@@ -4,7 +4,40 @@
 
 ### Changes
 
- * ..
+ * Enabled GTK 4 support by default (new visual style on Windows, macOS and GNOME)
+ * Added "Chat History" popover to view all previous private chats with users
+ * Added generic file type search result filters (audio / image / video / text / archive / executable)
+ * Added audio duration search result filter
+ * Added path bar when browsing user shares
+ * Added option to wait for active uploads to finish before quitting
+ * Added function to send a private message to all online buddies and users in upload queue
+ * Added a warning dialog if shared folders are unavailable before rescanning
+ * Added Ctrl+Shift+T shortcut to reopen recently closed tabs
+ * Added option to show exact file sizes in bytes
+ * Added popovers in the status bar for selecting download and upload speed limits
+ * Added option to configure text view font
+ * Added function to clear downloads that no longer exist on disk
+ * Added preference to choose user interface language
+ * Added wishlist results found notification
+ * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
+ * Added file type icons to file lists
+ * Added button to view personal profile
+ * Added buttons in Preferences to open download folder locations in file manager
+ * Improved pane and column resizing when shrinking window
+ * Removed "Auto-join" check box, joined chat rooms are now remembered between sessions
+ * Searching in lists now searches all columns
+ * Allow search result filters to be restored after clicking the "Clear Filters" button
+ * Window title in "File Properties" dialog shows the total size of all selected files
+ * Resuming a single filtered download allows for bypassing download filter
+ * Transfer log files are now split into per-session download and upload logs
+ * Completed Soulseek protocol implementation of distributed peers
+ * Added new command system for plugins
+ * Added keyboard input to headless CLI (type /help for a list of available commands)
+ * Windows: Added option to bind Nicotine+ to a specific network interface
+ * Bumped minimum Python version requirement to 3.6
+ * Bumped minimum GTK 3 version requirement to 3.22.30
+ * Various accessibility improvements
+ * ...and too many other refinements, under-the-hood improvements and code rewrites to count
 
 ### Corrections
 
@@ -18,6 +51,7 @@
  * Improvement ideas for the search result filters ([#1400](https://github.com/nicotine-plus/nicotine-plus/issues/1400))
  * Force download a filtered file ([#1419](https://github.com/nicotine-plus/nicotine-plus/issues/1419))
  * Reopen closed tabs ([#1424](https://github.com/nicotine-plus/nicotine-plus/issues/1424))
+ * Anyone willing to maintain an official Nicotine+ Debian package? ([#1448](https://github.com/nicotine-plus/nicotine-plus/issues/1448))
  * Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
  * List of GTK 4 regressions ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
  * Get date in transfer total up/dl statistic ([#1598](https://github.com/nicotine-plus/nicotine-plus/issues/1598))
@@ -44,6 +78,7 @@
  * Feature: Provide a list of all open chat and chat room tabs ([#2079](https://github.com/nicotine-plus/nicotine-plus/issues/2079))
  * Clear deleted files ([#2084](https://github.com/nicotine-plus/nicotine-plus/issues/2084))
  * Let other users know the minimum number of files and folders set in the Leech Detector plugin ([#2103](https://github.com/nicotine-plus/nicotine-plus/issues/2103))
+ * Save leechers persistently ([#2105](https://github.com/nicotine-plus/nicotine-plus/issues/2105))
  * Easier way to remove ban from a user ([#2111](https://github.com/nicotine-plus/nicotine-plus/issues/2111))
  * \[3.3.0.dev1\] Tray icon has disappeared in the latest version ([#2113](https://github.com/nicotine-plus/nicotine-plus/issues/2113))
  * \[3.3.0.dev1\] Critical error (UI window with bug report) ([#2116](https://github.com/nicotine-plus/nicotine-plus/issues/2116))
@@ -93,6 +128,10 @@
  * \[3.3.0.dev5\] Share scanning process not working in Windows and macOS builds ([#2608](https://github.com/nicotine-plus/nicotine-plus/issues/2608))
  * \[3.3.0.dev5\] Error message whilst exiting n+ ([#2610](https://github.com/nicotine-plus/nicotine-plus/issues/2610))
  * \[3.3.0.dev5\] When typing in "Include text" box and hitting enter, Nicotine runs into a critical error ([#2628](https://github.com/nicotine-plus/nicotine-plus/issues/2628)
+ * \[3.3.0.dev5\] Nicotine+ App won't open ([#2638](https://github.com/nicotine-plus/nicotine-plus/issues/2638)
+ * Read-only editfields aren't read by Orca screen-reader correctly ([#2647](https://github.com/nicotine-plus/nicotine-plus/issues/2647)
+ * \[3.3.0.dev5\] Crash on the Upload window ([#2663](https://github.com/nicotine-plus/nicotine-plus/issues/2663)
+ * Download folder for remote user keeps appearing ([#2667](https://github.com/nicotine-plus/nicotine-plus/issues/2667)
 
 
 ## Version 3.2.9 (March 5, 2023)

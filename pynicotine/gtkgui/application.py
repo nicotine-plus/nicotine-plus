@@ -148,6 +148,7 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
+            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
@@ -279,24 +280,38 @@ class Application:
         elif response_id == "run_background":
             self.window.hide()
 
-    def on_confirm_quit(self):
+    def on_confirm_quit(self, only_on_active_uploads=False):
+
+        has_active_uploads = core.uploads.has_active_uploads()
+
+        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+            # Never show confirmation dialog when main window is hidden
+            core.quit()
+            return
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
+        if has_active_uploads:
+            message = _("You are still uploading files. Do you really want to exit?")
+            option_label = _("Wait for uploads to finish")
+        else:
+            message = _("Do you really want to exit?")
+            option_label = None
 
         buttons = [
             ("cancel", _("_No")),
             ("quit", _("_Quit"))
         ]
 
-        if self.window.is_visible():
+        if not only_on_active_uploads:
             buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
             parent=self.window,
             title=_("Quit Nicotine+"),
-            message=_("Do you really want to exit?"),
+            message=message,
             buttons=buttons,
-            option_label=_("Wait for uploads to finish"),
+            option_label=option_label,
             callback=self.on_confirm_quit_response
         ).show()
 
@@ -720,6 +735,9 @@ class Application:
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
+
+    def on_confirm_quit_uploads_request(self, *_args):
+        core.confirm_quit(only_on_active_uploads=True)
 
     def on_quit_request(self, *_args):
         core.quit()

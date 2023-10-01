@@ -14,6 +14,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | Operating System                                                                        | Package Name        |
 |-----------------------------------------------------------------------------------------|---------------------|
 | [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`         |
+| [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`          |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
 | [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |

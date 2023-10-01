@@ -92,9 +92,9 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Complete              |                                             |
 | Disallowed extension  | Sent by Soulseek NS for filtered extensions |
 | File not shared.      | Note: Ends with a dot                       |
+| File read error.      | Note: Ends with a dot                       |
 | Pending shutdown.     | Note: Ends with a dot                       |
 | Queued                |                                             |
-| Remote file error     |                                             |
 | Too many files        |                                             |
 | Too many megabytes    |                                             |
 
@@ -104,6 +104,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | ---------------------------------- | ----------------------------------------------------------- |
 | Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
 | File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
 | User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 | User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 

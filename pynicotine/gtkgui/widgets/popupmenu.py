@@ -410,13 +410,15 @@ class UserPopupMenu(PopupMenu):
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
 
-        self.actions[_("Ban User")].set_state(GLib.Variant("b", core.network_filter.is_user_banned(self.username)))
-        self.actions[_("Ignore User")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ignored(self.username)))
-        self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ip_banned(self.username)))
-        self.actions[_("Ignore IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ip_ignored(self.username)))
+        for action_id, value in (
+            (_("Ban User"), core.network_filter.is_user_banned(self.username)),
+            (_("Ignore User"), core.network_filter.is_user_ignored(self.username)),
+            (_("Ban IP Address"), core.network_filter.is_user_ip_banned(self.username)),
+            (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
+        ):
+            # Disable menu item if it's our own username and we haven't banned ourselves before
+            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.login_username or value))
+            self.actions[action_id].set_state(GLib.Variant("b", value))
 
         self.editing = False
 

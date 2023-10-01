@@ -28,6 +28,7 @@ from locale import strxfrm
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -45,7 +46,9 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import FileListMessage
@@ -194,11 +197,14 @@ class UserBrowse:
             self.folder_tree_container,
             self.info_bar_container,
             self.num_folders_label,
+            self.path_bar,
             self.progress_bar,
             self.refresh_button,
             self.retry_button,
             self.save_button,
+            self.search_button,
             self.search_entry,
+            self.search_entry_revealer,
             self.share_size_label
         ) = ui.load(scope=self, path="userbrowse.ui")
 
@@ -220,6 +226,7 @@ class UserBrowse:
         self.search_position = 0
 
         self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
+        self.path_bar.get_parent().get_hadjustment().connect("changed", self.on_path_bar_scroll)
 
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
@@ -392,6 +399,7 @@ class UserBrowse:
         for widget in (self.container, self.folder_tree_view.widget, self.file_list_view.widget):
             Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
+        Accelerator("Escape", self.search_entry, self.on_search_escape_accelerator)
         Accelerator("F3", self.container, self.on_search_next_accelerator)
         Accelerator("<Shift>F3", self.container, self.on_search_previous_accelerator)
         Accelerator("<Primary>g", self.container, self.on_search_next_accelerator)  # Next search match
@@ -435,6 +443,7 @@ class UserBrowse:
         self.search_list.clear()
 
         self.selected_folder_path = None
+        self.populate_path_bar()
         self.selected_files.clear()
 
         self.folder_tree_view.clear()
@@ -454,8 +463,8 @@ class UserBrowse:
         self.share_size = size + private_size
         self.num_folders = num_folders + num_private_folders
 
-        self.share_size_label.set_text(human_size(self.share_size))
         self.num_folders_label.set_text(humanize(self.num_folders))
+        self.share_size_label.set_text(human_size(self.share_size))
 
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
@@ -579,6 +588,7 @@ class UserBrowse:
 
         self.indeterminate_progress = True
 
+        self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
@@ -607,14 +617,60 @@ class UserBrowse:
 
         self.userbrowses.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
+
         self.refresh_button.set_sensitive(True)
         self.save_button.set_sensitive(not self.folder_tree_view.is_empty())
+
+    def populate_path_bar(self, folder_path=""):
+
+        for widget in list(self.path_bar):
+            self.path_bar.remove(widget)
+
+        for index, folder in enumerate(folder_path.split("\\")):
+            i_folder_path = "\\".join(folder_path.split("\\")[:index + 1])
+
+            if index:
+                label = Gtk.Label(label="\\", visible=True)
+
+                add_css_class(label, "dim-label")
+                add_css_class(label, "heading")
+
+                if GTK_API_VERSION >= 4:
+                    self.path_bar.append(label)  # pylint: disable=no-member
+                else:
+                    self.path_bar.add(label)     # pylint: disable=no-member
+
+            if len(folder) > 10:
+                width_chars = 10
+                ellipsize = Pango.EllipsizeMode.END
+            else:
+                width_chars = -1
+                ellipsize = Pango.EllipsizeMode.NONE
+
+            button_label = Gtk.Label(label=folder, ellipsize=ellipsize, width_chars=width_chars, visible=True)
+            button = Gtk.Button(child=button_label, visible=True)
+            button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
+
+            add_css_class(button_label, "normal")
+            add_css_class(button, "flat")
+            remove_css_class(button, "text-button")
+
+            if GTK_API_VERSION >= 4:
+                self.path_bar.append(button)  # pylint: disable=no-member
+            else:
+                self.path_bar.add(button)     # pylint: disable=no-member
+
+        if folder_path:
+            remove_css_class(button_label, "normal")
+            add_css_class(button_label, "heading")
 
     def set_selected_folder(self, folder_path):
 
         if folder_path is None or self.selected_folder_path == folder_path:
             return
 
+        self.populate_path_bar(folder_path)
         self.file_list_view.clear()
 
         self.selected_folder_path = folder_path
@@ -1205,15 +1261,26 @@ class UserBrowse:
             self.indeterminate_progress = False
             progress_bar.set_fraction(0.0)
 
+    def on_path_bar_clicked(self, _button, folder_path):
+
+        iterator = self.folder_tree_view.iterators.get(folder_path)
+
+        if iterator:
+            self.folder_tree_view.select_row(iterator)
+            self.folder_tree_view.grab_focus()
+
+    def on_path_bar_scroll(self, adjustment, *_args):
+        adjustment.set_value(adjustment.get_upper())
+
     def on_expand(self, *_args):
 
         active = self.expand_button.get_active()
 
         if active:
-            icon_name = "go-up-symbolic"
+            icon_name = "view-restore-symbolic"
             self.folder_tree_view.expand_all_rows()
         else:
-            icon_name = "go-down-symbolic"
+            icon_name = "view-fullscreen-symbolic"
             self.folder_tree_view.collapse_all_rows()
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -1223,6 +1290,17 @@ class UserBrowse:
 
     def on_tab_popup(self, *_args):
         self.user_popup_menu.toggle_user_items()
+
+    def on_search_enabled(self, *_args):
+        self.search_button.set_active(self.search_entry_revealer.get_reveal_child())
+
+    def on_show_search(self, *_args):
+
+        active = self.search_button.get_active()
+        self.search_entry_revealer.set_reveal_child(active)
+
+        if active:
+            self.search_entry.grab_focus()
 
     def on_search(self, *_args):
         self.find_search_matches()
@@ -1287,7 +1365,10 @@ class UserBrowse:
     def on_search_accelerator(self, *_args):
         """Ctrl+F - Find."""
 
-        self.search_entry.grab_focus()
+        if self.search_button.get_sensitive():
+            self.search_button.set_active(True)
+            self.search_entry.grab_focus()
+
         return True
 
     def on_search_next_accelerator(self, *_args):
@@ -1308,6 +1389,8 @@ class UserBrowse:
 
     def on_search_escape_accelerator(self, *_args):
         """Escape - navigate out of search_entry."""
+
+        self.search_button.set_active(False)
 
         if not self.file_list_view.is_selection_empty():
             self.file_list_view.grab_focus()

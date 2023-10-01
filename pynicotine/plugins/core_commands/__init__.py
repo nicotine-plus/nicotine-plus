@@ -382,11 +382,11 @@ class Plugin(BasePlugin):
             user = args
 
         if user not in self.core.privatechat.users:
-            self.output(f"Not messaging with user {user}")
+            self.output(_("Not messaging with user %s") % user)
             return False
 
-        self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
+        self.output(_("Closed private chat of user %s") % user)
         return True
 
     def ctcpversion_command(self, args, user=None, **_unused):
@@ -535,7 +535,10 @@ class Plugin(BasePlugin):
 
             num_listed += num_shares
 
-        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+        self.output("\n" + _("%(num_listed)s shares listed (%(num_total)s configured)") % {
+            "num_listed": num_listed,
+            "num_total": num_total
+        })
 
     def share_command(self, args, **_unused):
 
