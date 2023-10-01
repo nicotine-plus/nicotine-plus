@@ -281,7 +281,7 @@ class Uploads(Transfers):
 
     def has_active_uploads(self):
 
-        statuses = {"Getting status", "Transferring"}
+        statuses = {"Queued", "Getting status", "Transferring"}
 
         return bool(next(
             (upload for upload in self.transfers if upload.status in statuses), None
