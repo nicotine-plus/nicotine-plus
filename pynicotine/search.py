@@ -465,6 +465,10 @@ class Search:
             # Don't return _any_ results when this option is disabled
             return
 
+        if core.uploads.pending_shutdown:
+            # Don't return results when waiting to quit after finishing uploads
+            return
+
         if not direct and username == core.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
