@@ -4,17 +4,16 @@
 
 ### Changes
 
- * Enabled GTK 4 support by default
- * New visual style on Windows, macOS and GNOME
+ * Enabled GTK 4 support by default (new visual style on Windows, macOS and GNOME)
  * Added "Chat History" popover to view all previous private chats with users
  * Added generic file type search result filters (audio / image / video / text / archive / executable)
  * Added audio duration search result filter
  * Added path bar when browsing user shares
  * Added option to wait for active uploads to finish before quitting
- * Added option to send a private message to all online buddies and users in upload queue
+ * Added function to send a private message to all online buddies and users in upload queue
  * Added a warning dialog if shared folders are unavailable before rescanning
  * Added Ctrl+Shift+T shortcut to reopen recently closed tabs
- * Added option to always display file sizes as bytes
+ * Added option to show exact file sizes in bytes
  * Added popovers in the status bar for selecting download and upload speed limits
  * Added option to configure text view font
  * Added function to clear downloads that no longer exist on disk
