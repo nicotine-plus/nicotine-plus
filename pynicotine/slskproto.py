@@ -197,14 +197,12 @@ class NetworkInterfaces:
 
     elif sys.platform == "linux":
         SIOCGIFADDR = 0x8915
-        SO_BINDTODEVICE = 25
 
-    elif sys.platform.startswith("sunos"):  # Solaris
-        SIOCGIFADDR = -0x3fdf96f3
+    elif sys.platform.startswith("sunos"):
+        SIOCGIFADDR = -0x3fdf96f3  # Solaris
 
-    else:  # macOS, *BSD
-        SIOCGIFADDR = 0xc0206921
-        IP_BOUND_IF = 25
+    else:
+        SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
     @classmethod
     def _get_interface_addresses_win32(cls):
@@ -292,37 +290,9 @@ class NetworkInterfaces:
         return cls._get_interface_addresses_posix()
 
     @classmethod
-    def bind_to_interface(cls, sock, interface_name):
-        """Bind socket directly to interface on Linux and macOS.
-
-        Other platforms can use bind_to_interface_address() with an IP
-        address retrieved from get_interface_addresses() instead.
-        """
-
-        if not interface_name:
-            return True
-
-        try:
-            if sys.platform == "linux":
-                sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
-                return True
-
-            if sys.platform == "darwin":
-                sock.setsockopt(socket.IPPROTO_IP, cls.IP_BOUND_IF, socket.if_nametoindex(interface_name))
-                return True
-
-        except OSError:
-            pass
-
-        return False
-
-    @classmethod
     def bind_to_interface_address(cls, sock, address):
         """Bind socket to the IP address of a network interface, retrieved from
         get_interface_addresses().
-
-        Alternative to bind_to_interface() for platforms that do not
-        support it.
         """
 
         sock.bind((address, 0))
@@ -553,20 +523,13 @@ class NetworkThread(Thread):
         return False
 
     def _bind_socket_interface(self, sock):
+        """Attempt to bind socket to an IP address, if provided with the
+        --bindip CLI argument. Otherwise retrieve the IP address of the
+        requested interface name, cache it for later, and bind to it.
+        """
 
-        # Attempt to bind socket to an IP address, if provided with the --bindip CLI argument
-        # or the platform doesn't support binding directly to an interface name
-        if self._interface_address and sock is not self._listen_socket:
-            NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
-            return True
-
-        # If no IP address is stored, attempt to bind directly to network interface name
-        if NetworkInterfaces.bind_to_interface(sock, self._interface_name):
-            return True
-
-        # System does not support binding directly to a network interface name
-        # Retrieve the IP address of the interface, cache it for later, and bind to it instead
-        self._interface_address = NetworkInterfaces.get_interface_addresses().get(self._interface_name)
+        self._interface_address = (
+            self._interface_address or NetworkInterfaces.get_interface_addresses().get(self._interface_name))
 
         if self._interface_address:
             if sock is not self._listen_socket:
