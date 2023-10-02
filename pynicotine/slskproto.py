@@ -194,9 +194,17 @@ class NetworkInterfaces:
             ("description", wintypes.LPWSTR),
             ("friendly_name", wintypes.LPWSTR)
         ]
-    else:
+
+    elif sys.platform == "linux":
+        SIOCGIFADDR = 0x8915
         SO_BINDTODEVICE = 25
-        SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
+
+    elif sys.platform.startswith("sunos"):  # Solaris
+        SIOCGIFADDR = -0x3fdf96f3
+
+    else:  # macOS, *BSD
+        SIOCGIFADDR = 0xc0206921
+        IP_BOUND_IF = 25
 
     @classmethod
     def _get_interface_addresses_win32(cls):
@@ -300,7 +308,7 @@ class NetworkInterfaces:
                 return True
 
             if sys.platform == "darwin":
-                sock.setsockopt(socket.IPPROTO_IP, cls.SO_BINDTODEVICE, socket.if_nametoindex(interface_name))
+                sock.setsockopt(socket.IPPROTO_IP, cls.IP_BOUND_IF, socket.if_nametoindex(interface_name))
                 return True
 
         except OSError:
