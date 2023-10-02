@@ -358,6 +358,7 @@ class NetworkThread(Thread):
         self._interface_name = None
         self._interface_address = None
         self._portmapper = None
+        self._local_ip_address = ""
 
         self._server_socket = None
         self._server_address = None
@@ -461,7 +462,7 @@ class NetworkThread(Thread):
             log.add(_("Specified network interface '%s' is not available"), self._interface_name)
             return False
 
-        ip_address = self._interface_address or "0.0.0.0"
+        ip_address = self._interface_address or self._find_local_ip_address()
 
         try:
             self._listen_socket.bind((ip_address, self._listen_port))
@@ -474,6 +475,7 @@ class NetworkThread(Thread):
             self._listen_port = None
             return False
 
+        self._local_ip_address = ip_address or "127.0.0.1"
         log.add(_("Listening on port: %i"), self._listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
@@ -537,15 +539,15 @@ class NetworkThread(Thread):
 
             return True
 
+        if not self._interface_name:
+            return True
+
         return False
 
     def _find_local_ip_address(self):
 
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
-
-            # Use the interface we have selected
-            self._bind_socket_interface(local_socket)
 
             try:
                 # Send a broadcast packet on a local address (doesn't need to be reachable,
@@ -556,8 +558,7 @@ class NetworkThread(Thread):
                 ip_address = local_socket.getsockname()[0]
 
             except OSError:
-                # Fall back to localhost
-                ip_address = "127.0.0.1"
+                ip_address = ""
 
         return ip_address
 
@@ -1180,7 +1181,7 @@ class NetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = (self._find_local_ip_address(), self._listen_port)
+        self._user_addresses[login] = (self._local_ip_address, self._listen_port)
         conn_obj.login = True
 
         self._server_address = addr
@@ -1402,6 +1403,7 @@ class NetworkThread(Thread):
 
         self._should_process_queue = False
         self._interface_name = self._interface_address = self._server_socket = None
+        self._local_ip_address = ""
 
         self._close_listen_socket()
 
