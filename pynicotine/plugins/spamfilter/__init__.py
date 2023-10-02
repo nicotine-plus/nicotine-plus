@@ -32,7 +32,7 @@ class Plugin(BasePlugin):
             "minlength": 200,
             "maxlength": 400,
             "maxdiffcharacters": 10,
-            "badprivatephrases": ["buy viagra now", "mybrute.com", "mybrute.es"]
+            "badprivatephrases": []
         }
         self.metasettings = {
             "minlength": {
@@ -48,7 +48,7 @@ class Plugin(BasePlugin):
                 "type": "integer"
             },
             "badprivatephrases": {
-                "description": "Filter chat room and private messages containing the following phrases:",
+                "description": "Filter chat messages containing phrase:",
                 "type": "list string"
             }
         }
