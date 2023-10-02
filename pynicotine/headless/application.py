@@ -69,7 +69,7 @@ class Application:
             core.quit()
 
     def on_confirm_quit(self, _only_on_active_uploads):
-        cli.prompt(_("Do you really want to exit? %s ") % "[y/n]", callback=self.on_confirm_quit_response)
+        cli.prompt(_("Do you really want to exit? %s ") % "[y/N]", callback=self.on_confirm_quit_response)
 
     def on_invalid_password(self):
         log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
@@ -79,7 +79,7 @@ class Application:
 
         user_input = user_input.lower()
 
-        if user_input.startswith("y"):
+        if not user_input or user_input.startswith("y"):
             core.shares.rescan_shares()
 
         elif user_input.startswith("f"):
@@ -93,6 +93,6 @@ class Application:
             message += f'• "{virtual_name}" {folder_path}\n'
 
         message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
-        message += "\n" + _("Retry rescan? %s ") % "[y/n/force]"
+        message += "\n" + _("Retry rescan? %s ") % "[Y/n/force]"
 
         cli.prompt(message, callback=self.on_shares_unavailable_response)
