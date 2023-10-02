@@ -69,7 +69,8 @@ class Application:
             core.quit()
 
     def on_confirm_quit(self, _only_on_active_uploads):
-        cli.prompt(_("Do you really want to exit? %s ") % "[y/N]", callback=self.on_confirm_quit_response)
+        responses = "[y/N]"
+        cli.prompt(_("Do you really want to exit? %s ") % responses, callback=self.on_confirm_quit_response)
 
     def on_invalid_password(self):
         log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
@@ -87,12 +88,13 @@ class Application:
 
     def on_shares_unavailable(self, shares):
 
+        responses = "[Y/n/force]"
         message = _("The following shares are unavailable:") + "\n\n"
 
         for virtual_name, folder_path in shares:
             message += f'• "{virtual_name}" {folder_path}\n'
 
         message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
-        message += "\n" + _("Retry rescan? %s ") % "[Y/n/force]"
+        message += "\n" + _("Retry rescan? %s ") % responses
 
         cli.prompt(message, callback=self.on_shares_unavailable_response)
