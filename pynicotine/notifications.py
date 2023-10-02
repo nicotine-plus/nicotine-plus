@@ -67,7 +67,7 @@ class Notifications:
                                   .replace("(", " ").replace(")", " "))
 
             try:
-                message = message % args
+                message %= args
 
             except Exception as error:
                 log.add(_("Text-to-speech for message failed: %s"), error)

@@ -1072,7 +1072,7 @@ class NetworkThread(Thread):
             self._server_timeout_value = 15
 
         elif 0 < self._server_timeout_value < 600:
-            self._server_timeout_value = self._server_timeout_value * 2
+            self._server_timeout_value *= 2
 
         self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
         log.add(_("Reconnecting to server in %i seconds"), self._server_timeout_value)
@@ -1749,7 +1749,7 @@ class NetworkThread(Thread):
             return
 
         if not limit_per_transfer and self._total_uploads > 1:
-            limit = limit // self._total_uploads
+            limit //= self._total_uploads
 
         self._upload_limit_split = int(limit)
 
@@ -1770,7 +1770,7 @@ class NetworkThread(Thread):
             return
 
         if self._total_downloads > 1:
-            limit = limit // self._total_downloads
+            limit //= self._total_downloads
 
         self._download_limit_split = int(limit)
 
@@ -1792,7 +1792,7 @@ class NetworkThread(Thread):
 
     def _set_conn_speed_limit(self, sock, limit, limits):
 
-        limit = limit // (self._loops_per_second or 1)
+        limit //= (self._loops_per_second or 1)
 
         if limit > 0:
             limits[sock] = limit
@@ -2472,7 +2472,7 @@ class NetworkThread(Thread):
         if limit is None:
             # Unlimited download data
             if len(data) >= conn_obj.lastreadlength // 2:
-                conn_obj.lastreadlength = conn_obj.lastreadlength * 2
+                conn_obj.lastreadlength *= 2
         else:
             # Speed Limited Download data (transfers)
             conn_obj.lastreadlength = limit

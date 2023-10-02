@@ -489,7 +489,7 @@ class Transfers:
 
         if transfer.modifier and status == "Queued":
             # Priority status
-            status = status + f" ({transfer.modifier})"
+            status += f" ({transfer.modifier})"
 
         size = transfer.size or 0
         speed = transfer.speed or 0
