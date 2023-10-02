@@ -290,6 +290,15 @@ class NetworkInterfaces:
         return cls._get_interface_addresses_posix()
 
     @classmethod
+    def get_interface_address(cls, interface_name):
+        """Returns the IP address of a specific network interface."""
+
+        if not interface_name:
+            return None
+
+        return cls.get_interface_addresses().get(interface_name)
+
+    @classmethod
     def bind_to_interface_address(cls, sock, address):
         """Bind socket to the IP address of a network interface, retrieved from
         get_interface_addresses().
@@ -531,7 +540,7 @@ class NetworkThread(Thread):
         """
 
         self._interface_address = (
-            self._interface_address or NetworkInterfaces.get_interface_addresses().get(self._interface_name))
+            self._interface_address or NetworkInterfaces.get_interface_address(self._interface_name))
 
         if self._interface_address:
             if sock is not self._listen_socket:
