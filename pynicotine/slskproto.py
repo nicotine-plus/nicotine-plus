@@ -338,38 +338,29 @@ class NetworkThread(Thread):
     SOCKET_WRITE_BUFFER_SIZE = 1048576
     SLEEP_MIN_IDLE = 0.016  # ~60 times per second
 
-    # Set the maximum number of open files to the hard limit reported by the OS.
-    # Our MAX_SOCKETS value needs to be lower than the file limit, otherwise our open
-    # sockets in combination with other file activity can exceed the file limit,
-    # effectively halting the program.
+    try:
+        import resource
 
-    if sys.platform == "win32":
-        # For Windows, FD_SETSIZE is set to 512 in the Python source.
+        # Increase the process file limit to a maximum of 10240 (macOS limit), to provide
+        # breathing room for opening both peer sockets and regular files (file transfers,
+        # log files etc.)
+
+        _SOFT_FILE_LIMIT, HARD_FILE_LIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)    # pylint: disable=no-member
+        MAX_FILE_LIMIT = min(HARD_FILE_LIMIT, 10240)
+
+        resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
+
+        # Reserve 2/3 of the file limit for sockets, but always limit the maximum number
+        # of sockets to 3072 to improve performance.
+
+        MAX_SOCKETS = min(int(MAX_FILE_LIMIT * (2 / 3)), 3072)
+
+    except ImportError:
+        # For Windows, FD_SETSIZE is set to 512 in CPython.
         # This limit is hardcoded, so we'll have to live with it for now.
+        # https://github.com/python/cpython/issues/72894
 
         MAX_SOCKETS = 512
-    else:
-        import resource  # pylint: disable=import-error
-
-        if sys.platform == "darwin":
-            # Maximum number of files a process can open is 10240 on macOS.
-            # macOS reports INFINITE as hard limit, so we need this special case.
-
-            MAX_FILE_LIMIT = 10240
-        else:
-            _SOFT_LIMIT, MAX_FILE_LIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)     # pylint: disable=no-member
-
-        try:
-            resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
-
-        except Exception as rlimit_error:
-            log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
-
-        # Set the maximum number of open sockets to a lower value than the hard limit,
-        # otherwise we just waste resources.
-        # The maximum is 3072, but can be lower if the file limit is too low.
-
-        MAX_SOCKETS = min(max(int(MAX_FILE_LIMIT * 0.75), 50), 3072)
 
     def __init__(self):
 
