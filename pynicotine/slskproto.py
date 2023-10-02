@@ -264,7 +264,7 @@ class NetworkInterfaces:
 
         for _i, interface_name in interface_name_index:
             try:
-                import fcntl  # pylint: disable=import-error
+                import fcntl
 
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                     ip_interface = fcntl.ioctl(sock.fileno(),
@@ -274,7 +274,7 @@ class NetworkInterfaces:
                     ip_address = socket.inet_ntoa(ip_interface[20:24])
                     interface_addresses[interface_name] = ip_address
 
-            except OSError as error:
+            except (ImportError, OSError) as error:
                 log.add_debug("Failed to get IP address for network interface %s: %s", (interface_name, error))
                 continue
 
