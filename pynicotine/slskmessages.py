@@ -120,7 +120,7 @@ class Message:
 
 class InternalMessage(Message):
     __slots__ = ()
-    msgtype = MessageType.INTERNAL
+    msg_type = MessageType.INTERNAL
 
 
 class CloseConnection(InternalMessage):
@@ -343,7 +343,7 @@ class SlskMessage(Message):
 
 class ServerMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.SERVER
+    msg_type = MessageType.SERVER
 
 
 class Login(ServerMessage):
@@ -2527,7 +2527,7 @@ class CantCreateRoom(ServerMessage):
 
 class PeerInitMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.INIT
+    msg_type = MessageType.INIT
 
 
 class PierceFireWall(PeerInitMessage):
@@ -2598,7 +2598,7 @@ class PeerInit(PeerInitMessage):
 
 class PeerMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.PEER
+    msg_type = MessageType.PEER
 
     def parse_file_size(self, message, pos):
 
@@ -3454,7 +3454,7 @@ class UnknownPeerMessage(PeerMessage):
 
 class FileMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.FILE
+    msg_type = MessageType.FILE
 
 
 class FileDownloadInit(FileMessage):
@@ -3518,7 +3518,7 @@ class FileOffset(FileMessage):
 
 class DistribMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.DISTRIBUTED
+    msg_type = MessageType.DISTRIBUTED
 
 
 class DistribPing(DistribMessage):
