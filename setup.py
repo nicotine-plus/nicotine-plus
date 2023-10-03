@@ -43,9 +43,9 @@ if __name__ == "__main__":
         long_description="""Nicotine+ is a graphical client for the Soulseek peer-to-peer
 network.
 
-Nicotine+ aims to be a pleasant, free and open source (FOSS)
-alternative to the official Soulseek client, providing additional
-functionality while keeping current with the Soulseek protocol.""",
+Nicotine+ aims to be a lightweight, pleasant, free and open
+source (FOSS) alternative to the official Soulseek client, while
+also providing a comprehensive set of features.""",
         author=config.author,
         author_email="nicotine-team@lists.launchpad.net",
         url=config.website_url,
