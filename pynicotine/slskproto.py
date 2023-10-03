@@ -460,7 +460,7 @@ class NetworkThread(Thread):
             # Socket was not registered
             pass
 
-        self._close_socket(self._listen_socket, shutdown=False)
+        self._close_socket(self._listen_socket)
         self._listen_socket = None
         self._listen_port = None
 
@@ -895,29 +895,22 @@ class NetworkThread(Thread):
         self._close_connection(self._conns, prev_init.sock, callback=False)
 
     @staticmethod
-    def _close_socket(sock, shutdown=True):
+    def _close_socket(sock):
 
-        # In certain cases, a shutdown isn't possible, e.g. if a connection wasn't established
-        if shutdown:
-            try:
-                log.add_conn("Shutting down socket %s", sock)
-                sock.shutdown(socket.SHUT_RDWR)
+        try:
+            log.add_conn("Shutting down socket %s", sock)
+            sock.shutdown(socket.SHUT_RDWR)
 
-            except OSError as error:
+        except OSError as error:
+            # Can't call shutdown if connection wasn't established, ignore error
+            if error.errno != errno.ENOTCONN:
                 log.add_conn("Failed to shut down socket %(sock)s: %(error)s", {
                     "sock": sock,
                     "error": error
                 })
 
-        try:
-            log.add_conn("Closing socket %s", sock)
-            sock.close()
-
-        except OSError as error:
-            log.add_conn("Failed to close socket %(sock)s: %(error)s", {
-                "sock": sock,
-                "error": error
-            })
+        log.add_conn("Closing socket %s", sock)
+        sock.close()
 
     def _close_connection(self, connection_list, sock, callback=True):
 
@@ -928,7 +921,7 @@ class NetworkThread(Thread):
             return
 
         self._selector.unregister(sock)
-        self._close_socket(sock, shutdown=(connection_list != self._connsinprogress))
+        self._close_socket(sock)
         self._numsockets -= 1
 
         conn_obj.ibuf.clear()
@@ -1174,7 +1167,7 @@ class NetworkThread(Thread):
 
         except OSError as error:
             self._connect_error(error, conn_obj)
-            self._close_socket(server_socket, shutdown=False)
+            self._close_socket(server_socket)
             self._server_disconnect()
 
     def _establish_outgoing_server_connection(self, conn_obj):
@@ -1630,7 +1623,7 @@ class NetworkThread(Thread):
 
         except OSError as error:
             self._connect_error(error, conn_obj)
-            self._close_socket(sock, shutdown=False)
+            self._close_socket(sock)
 
     def _process_peer_input(self, conn_obj, msg_buffer):
         """We have a "P" connection (p2p exchange), peer has sent us something,
