@@ -103,6 +103,7 @@ class SearchTest(TestCase):
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
 
+        max_results = 1500
         word_index = {
             "iso": [34, 35, 36, 37, 38],
             "lts": [63, 68, 73],
@@ -110,16 +111,18 @@ class SearchTest(TestCase):
             "linux": [35, 36]
         }
 
-        search_term = "linux game iso stem"
-        excluded_words = ["linux", "game"]
-        partial_words = ["stem"]
+        included_words = {"iso"}
+        excluded_words = {"linux", "game"}
+        partial_words = {"stem"}
 
-        results = core.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        results = core.search.create_search_result_list(
+            included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, {37, 38})
 
-        search_term = "linux game lts music iso cd"
-        excluded_words = ["linux", "game", "music", "cd"]
-        partial_words = []
+        included_words = {"lts", "iso"}
+        excluded_words = {"linux", "game", "music", "cd"}
+        partial_words = set()
 
-        results = core.search.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        results = core.search.create_search_result_list(
+            included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, set())

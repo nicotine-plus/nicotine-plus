@@ -378,11 +378,11 @@ class Search:
     # Incoming Search Requests #
 
     @staticmethod
-    def _update_search_results(results, word_indices, exclude_word=False):
+    def _update_search_results(results, word_indices, excluded=False):
         """Updates the search result list with indices for a new word."""
 
         if word_indices is None:
-            if exclude_word:
+            if excluded:
                 # We don't care if an excluded word doesn't exist in our DB
                 return results
 
@@ -390,14 +390,14 @@ class Search:
             return None
 
         if results is None:
-            if exclude_word:
+            if excluded:
                 # No results yet, but word is excluded. Bail.
                 return set()
 
             # First match for included word, return results
             return set(word_indices)
 
-        if exclude_word:
+        if excluded:
             # Remove results for excluded word
             results.difference_update(word_indices)
         else:
@@ -406,53 +406,68 @@ class Search:
 
         return results
 
-    def create_search_result_list(self, search_term, word_index, excluded_words, partial_words):
+    def create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
         """Returns a list of common file indices for each word in a search
         term."""
 
+        results = None
+
         try:
-            words = search_term.split()
-            num_words = len(words)
-            results = None
+            # Start with the word with the least results to reduce memory usage
+            start_word = min(included_words, key=lambda word: len(word_index[word]), default=None)
 
-            for current_index, word in enumerate(words):
-                exclude_word = False
-
-                if word in excluded_words:
-                    # Excluded search words (e.g. -hello)
-
-                    if results is None and current_index < num_words:
-                        # Re-append the word so we can re-process it once we've found a match
-                        words.append(word)
-                        continue
-
-                    exclude_word = True
-
-                elif word in partial_words:
-                    # Partial search words (e.g. *ello)
-
-                    partial_results = set()
-
-                    for complete_word in word_index:
-                        if complete_word.endswith(word):
-                            indices = word_index[complete_word]
-                            partial_results.update(indices)
-
-                    if partial_results:
-                        results = self._update_search_results(results, partial_results)
-                        continue
-
-                results = self._update_search_results(results, word_index.get(word), exclude_word)
-
-                if results is None:
-                    # No matches found
-                    break
-
+        except KeyError:
+            # No results
             return results
 
-        except ValueError:
-            log.add_debug("Error: DB closed during search, perhaps due to rescanning shares or closing the application")
-            return None
+        has_single_word = (sum(len(words) for words in (included_words, excluded_words, partial_words)) == 1)
+        included_words.discard(start_word)
+
+        # Partial search words (e.g. *ello)
+        for word in partial_words:
+            partial_results = set()
+            num_partial_results = 0
+
+            for complete_word in word_index:
+                if complete_word.endswith(word):
+                    indices = word_index[complete_word]
+
+                    if has_single_word:
+                        # Attempt to avoid large memory usage if someone searches for e.g. "*lac"
+                        indices = indices[:max_results - num_partial_results]
+
+                    partial_results.update(indices)
+
+                    if not has_single_word:
+                        continue
+
+                    num_partial_results = len(partial_results)
+
+                    if num_partial_results >= max_results:
+                        break
+
+            if partial_results:
+                results = self._update_search_results(results, partial_results)
+
+        # Included search words (e.g. hello)
+        start_results = word_index.get(start_word)
+
+        if start_results:
+            if has_single_word:
+                # Attempt to avoid large memory usage if someone searches for e.g. "flac"
+                start_results = start_results[:max_results]
+
+            results = self._update_search_results(results, start_results)
+
+            for word in included_words:
+                results = self._update_search_results(results, word_index.get(word))
+
+        # Excluded search words (e.g. -hello)
+        if results:
+            for word in excluded_words:
+                results = self._update_search_results(results, word_index.get(word), excluded=True)
+
+        return results
 
     def create_file_info_list(self, results, max_results, permission_level):
         """ Given a list of file indices, retrieve the file information for each index """
@@ -503,6 +518,8 @@ class Search:
                     else:
                         private_fileinfos.append(fileinfo)
 
+        results.clear()
+
         if fileinfos:
             fileinfos.sort(key=itemgetter(1))
 
@@ -540,11 +557,24 @@ class Search:
         if max_results <= 0:
             return
 
-        # Do all processing in lowercase
+        if len(search_term) < config.sections["searches"]["min_search_chars"]:
+            # Don't send search response if search term contains too few characters
+            return
+
+        permission_level, _reject_reason = core.network_filter.check_user_permission(username)
+
+        if permission_level == "banned":
+            return
+
+        word_index = core.shares.share_dbs.get("wordindex")
+
+        if word_index is None:
+            return
+
         original_search_term = search_term
         search_term = search_term.lower()
 
-        # Remember excluded/partial words for later
+        # Extract included/excluded/partial words from search term
         excluded_words = set()
         partial_words = set()
 
@@ -563,23 +593,11 @@ class Search:
 
         # Strip punctuation
         search_term = search_term.translate(TRANSLATE_PUNCTUATION).strip()
-
-        if len(search_term) < config.sections["searches"]["min_search_chars"]:
-            # Don't send search response if search term contains too few characters
-            return
-
-        permission_level, _reject_reason = core.network_filter.check_user_permission(username)
-
-        if permission_level == "banned":
-            return
-
-        word_index = core.shares.share_dbs.get("wordindex")
-
-        if word_index is None:
-            return
+        included_words = (set(search_term.split()) - excluded_words - partial_words)
 
         # Find common file matches for each word in search term
-        results = self.create_search_result_list(search_term, word_index, excluded_words, partial_words)
+        results = self.create_search_result_list(
+            included_words, excluded_words, partial_words, max_results, word_index)
 
         if not results:
             return
