@@ -321,9 +321,10 @@ class NetworkThread(Thread):
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
     CONNECTION_BACKLOG_LENGTH = 4096
+    MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
-    SLEEP_MIN_IDLE = 0.016  # ~60 times per second
+    SLEEP_MIN_IDLE = 0.016                 # ~60 times per second
 
     try:
         import resource
@@ -1216,11 +1217,20 @@ class NetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
             msg_size_total = msg_size + 4
+
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from server. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE
+                })
+                should_close_connection = True
+                break
 
             if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
@@ -1374,6 +1384,10 @@ class NetworkThread(Thread):
 
         msg_buffer_mem.release()
 
+        if should_close_connection:
+            self._close_connection(self._conns, self._server_socket)
+            return
+
         if idx:
             del msg_buffer[:idx]
 
@@ -1483,6 +1497,15 @@ class NetworkThread(Thread):
         while buffer_len >= 8 and init is None:
             msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
             msg_size_total = msg_size + 4
+
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from peer %(addr)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "addr": conn_obj.addr
+                })
+                should_close_connection = True
+                break
 
             if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
@@ -1634,12 +1657,23 @@ class NetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
         search_result_received = False
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
             msg_size_total = msg_size + 4
+
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from user %(user)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "user": conn_obj.init.target_user
+                })
+                should_close_connection = True
+                break
+
             msg_class = PEER_MESSAGE_CLASSES.get(msg_type)
 
             # Send progress to the main thread
@@ -1681,6 +1715,10 @@ class NetworkThread(Thread):
             buffer_len -= msg_size_total
 
         msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, conn_obj.sock)
+            return
 
         if idx:
             del msg_buffer[:idx]
@@ -2067,6 +2105,15 @@ class NetworkThread(Thread):
         while buffer_len >= 5:
             msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
             msg_size_total = msg_size + 4
+
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from user %(user)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "user": conn_obj.init.target_user
+                })
+                should_close_connection = True
+                break
 
             if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
