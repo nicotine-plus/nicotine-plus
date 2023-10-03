@@ -1639,29 +1639,23 @@ class NetworkThread(Thread):
         while buffer_len >= 8:
             msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
             msgsize_total = msgsize + 4
+            msg_class = PEER_MESSAGE_CLASSES.get(msgtype)
 
-            try:
-                # Send progress to the main thread
-                peer_class = PEER_MESSAGE_CLASSES[msgtype]
+            # Send progress to the main thread
+            if msg_class is SharedFileListResponse:
+                events.emit_main_thread(
+                    "shared-file-list-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
 
-                if peer_class is SharedFileListResponse:
-                    events.emit_main_thread(
-                        "shared-file-list-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
-
-                elif peer_class is UserInfoResponse:
-                    events.emit_main_thread(
-                        "user-info-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
-
-            except KeyError:
-                pass
+            elif msg_class is UserInfoResponse:
+                events.emit_main_thread(
+                    "user-info-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
 
             if msgsize_total > buffer_len or msgsize < 0:
                 # Invalid message size or buffer is being filled
                 break
 
             # Unpack peer messages
-            if msgtype in PEER_MESSAGE_CLASSES:
-                msg_class = PEER_MESSAGE_CLASSES[msgtype]
+            if msg_class:
                 msg = self._unpack_network_message(
                     msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
 
