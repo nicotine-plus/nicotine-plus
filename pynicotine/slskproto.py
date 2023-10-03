@@ -1411,6 +1411,7 @@ class NetworkThread(Thread):
 
         if self._portmapper is not None:
             self._portmapper.remove_port_mapping(blocking=True)
+            self._portmapper.set_port(port=None, local_ip_address=None)
             self._portmapper = None
 
         self._parent_socket = None

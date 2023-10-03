@@ -522,14 +522,18 @@ class PortMapper:
     def __init__(self):
 
         self._active_implementation = None
+        self._has_port = False
         self._is_mapping_port = False
         self._timer = None
         self._natpmp = NATPMP()
         self._upnp = UPnP()
 
     def set_port(self, port, local_ip_address):
+
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
+
+        self._has_port = (port is not None)
 
     def _wait_until_ready(self):
 
@@ -608,6 +612,9 @@ class PortMapper:
 
         # Check if we want to do a port mapping
         if not config.sections["server"]["upnp"]:
+            return
+
+        if not self._has_port:
             return
 
         # Do the port mapping
