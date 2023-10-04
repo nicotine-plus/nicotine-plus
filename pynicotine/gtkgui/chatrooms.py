@@ -958,7 +958,7 @@ class ChatRoom:
 
     def on_focus(self, *_args):
 
-        widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view.widget
+        widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view
         widget.grab_focus()
         return True
 

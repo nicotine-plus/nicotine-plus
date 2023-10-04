@@ -671,7 +671,7 @@ class UserInfo:
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.widget.grab_focus()
+        self.description_view.grab_focus()
         return True
 
     def on_close(self, *_args):

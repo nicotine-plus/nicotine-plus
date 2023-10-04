@@ -109,7 +109,7 @@ class ChatEntry:
         if self.completion and self.completion.selecting_completion:
             return False
 
-        self.chat_view.widget.grab_focus()
+        self.chat_view.grab_focus()
         return True
 
 
