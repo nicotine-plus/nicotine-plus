@@ -470,13 +470,6 @@ class ChatRoom:
             }
         )
 
-        self.users_list_view.disable_sorting()
-
-        for userdata in users:
-            self.add_user_row(userdata)
-
-        self.users_list_view.enable_sorting()
-
         self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application, tab_name="chatrooms")
         self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application, tab_name="chatrooms")
 
@@ -539,7 +532,7 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.update_user_count()
+        self.populate_room_users(users)
         self.read_room_logs()
 
     def load(self):
@@ -638,6 +631,37 @@ class ChatRoom:
 
         self.chat_view.append_log_lines(
             file_path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+        )
+
+    def populate_room_users(self, users):
+
+        # Temporarily disable sorting for increased performance
+        self.users_list_view.disable_sorting()
+
+        for userdata in users:
+            username = userdata.username
+            iterator = self.users_list_view.iterators.get(username)
+
+            if iterator is not None:
+                self.users_list_view.remove_row(iterator)
+
+            self.add_user_row(userdata)
+
+        self.users_list_view.enable_sorting()
+
+        # Update user count
+        self.update_user_count()
+
+        # Update all username tags in chat log
+        self.chat_view.update_user_tags()
+
+        # Add room users to completion list
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
+
+        self.activity_view.append_line(
+            _("%s joined the room") % core.login_username,
+            timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
@@ -927,30 +951,7 @@ class ChatRoom:
         self.chat_view.update_user_tags()
 
     def join_room(self, msg):
-
-        # Temporarily disable sorting for increased performance
-        self.users_list_view.disable_sorting()
-
-        for userdata in msg.users:
-            username = userdata.username
-            iterator = self.users_list_view.iterators.get(username)
-
-            if iterator is not None:
-                self.users_list_view.remove_row(iterator)
-
-            self.add_user_row(userdata)
-
-        self.users_list_view.enable_sorting()
-
-        # Update user count
-        self.update_user_count()
-
-        # Update all username tags in chat log
-        self.chat_view.update_user_tags()
-
-        # Add room users to completion list
-        if self.chatrooms.get_current_page() == self.container:
-            self.update_room_user_completions()
+        self.populate_room_users(msg.users)
 
     def on_focus(self, *_args):
 

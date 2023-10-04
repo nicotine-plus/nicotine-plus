@@ -464,6 +464,12 @@ class ChatRooms:
             return
 
         username = msg.userdata.username
+
+        if username == core.login_username:
+            # Redundant message, we're already present in the list of users
+            msg.room = None
+            return
+
         room_obj.users.add(username)
         core.user_statuses[username] = msg.userdata.status
 
