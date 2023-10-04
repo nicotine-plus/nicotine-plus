@@ -199,8 +199,6 @@ class Config:
                 "uploadslots": 2,
                 "afterfinish": "",
                 "afterfolder": "",
-                "lock": True,
-                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -255,15 +253,12 @@ class Config:
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
-                "cycle": False,  # TODO: remove in 3.3.0
                 "dropdown": False,
                 "characters": 3,
                 "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
-                "commands": True,
-                "aliases": True,
-                "onematch": False  # TODO: remove in 3.3.0
+                "commands": True
             },
             "logging": {
                 "debug": False,
@@ -351,7 +346,6 @@ class Config:
                 "tabinfo": "Top",
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
-                "tab_status_icons": True,
                 "globalfont": "",
                 "textviewfont": "",
                 "chatfont": "",
@@ -395,7 +389,6 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "file_path_tooltips": True,
                 "reverse_file_paths": True,
                 "file_size_unit": ""
             },
@@ -456,7 +449,9 @@ class Config:
                 "enabletransferbuttons",
                 "uselimit",
                 "usealtlimits",
-                "uploadsinsubdirs"
+                "uploadsinsubdirs",
+                "reverseorder",
+                "lock"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -496,7 +491,8 @@ class Config:
                 "showaway",
                 "decimalsep",
                 "urgencyhint",
-                "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
+                "tab_status_icons",
+                "file_path_tooltips"
             ),
             "columns": (
                 "downloads",
@@ -553,6 +549,11 @@ class Config:
             ),
             "notifications": (
                 "notification_tab_icons"
+            ),
+            "words": (
+                "cycle",
+                "onematch",
+                "aliases"
             )
         }
 
@@ -693,12 +694,6 @@ class Config:
                         use_speed_limit = "unlimited"
 
                     self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Migrate file size units (TODO: remove as only in 3.3.0.dev)
-                if option == "file_size_unit" and section == "ui":
-                    file_size_unit = "B" if self.sections[section].get("exact_file_sizes", False) else ""
-                    self.sections[section][option] = file_size_unit
                     continue
 
                 # Set default value
