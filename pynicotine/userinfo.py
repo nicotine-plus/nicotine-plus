@@ -104,7 +104,7 @@ class UserInfo:
                 "error": error
             })
 
-    def _user_info_progress(self, username, sock, *_args):
+    def _user_info_progress(self, username, sock, _buffer_len, _msg_size_total):
 
         if username not in self.users:
             # We've removed the user. Close the connection to stop the user from

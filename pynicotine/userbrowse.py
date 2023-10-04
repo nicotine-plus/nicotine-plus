@@ -309,7 +309,7 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
-    def _shared_file_list_progress(self, username, sock, *_args):
+    def _shared_file_list_progress(self, username, sock, _buffer_len, _msg_size_total):
 
         if username not in self.user_shares:
             # We've removed the user. Close the connection to stop the user from
