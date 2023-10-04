@@ -197,7 +197,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_interests(msg)
 
-    def user_info_progress(self, user, position, total):
+    def user_info_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 

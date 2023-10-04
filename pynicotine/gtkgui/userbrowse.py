@@ -164,7 +164,7 @@ class UserBrowses(IconNotebook):
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
 
-    def shared_file_list_progress(self, user, position, total):
+    def shared_file_list_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 

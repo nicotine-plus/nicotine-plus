@@ -1679,11 +1679,11 @@ class NetworkThread(Thread):
             # Send progress to the main thread
             if msg_class is SharedFileListResponse:
                 events.emit_main_thread(
-                    "shared-file-list-progress", conn_obj.init.target_user, buffer_len, msg_size_total)
+                    "shared-file-list-progress", conn_obj.init.target_user, conn_obj.sock, buffer_len, msg_size_total)
 
             elif msg_class is UserInfoResponse:
                 events.emit_main_thread(
-                    "user-info-progress", conn_obj.init.target_user, buffer_len, msg_size_total)
+                    "user-info-progress", conn_obj.init.target_user, conn_obj.sock, buffer_len, msg_size_total)
 
             if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled

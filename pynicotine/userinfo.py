@@ -38,6 +38,7 @@ class UserInfo:
             ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("user-info-progress", self._user_info_progress),
             ("user-info-request", self._user_info_request)
         ):
             events.connect(event_name, callback)
@@ -102,6 +103,13 @@ class UserInfo:
                 "filename": file_path,
                 "error": error
             })
+
+    def _user_info_progress(self, username, sock, *_args):
+
+        if username not in self.users:
+            # We've removed the user. Close the connection to stop the user from
+            # sending their response and wasting bandwidth.
+            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
 
     def _user_info_request(self, msg):
         """Peer code 15."""

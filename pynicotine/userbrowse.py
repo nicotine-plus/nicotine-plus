@@ -40,6 +40,7 @@ class UserBrowse:
         for event_name, callback in (
             ("quit", self._quit),
             ("server-login", self._server_login),
+            ("shared-file-list-progress", self._shared_file_list_progress),
             ("shared-file-list-response", self._shared_file_list_response)
         ):
             events.connect(event_name, callback)
@@ -308,6 +309,13 @@ class UserBrowse:
             file_path = None
 
         self.browse_user(username, path=file_path)
+
+    def _shared_file_list_progress(self, username, sock, *_args):
+
+        if username not in self.user_shares:
+            # We've removed the user. Close the connection to stop the user from
+            # sending their response and wasting bandwidth.
+            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
 
     def _shared_file_list_response(self, msg):
 
