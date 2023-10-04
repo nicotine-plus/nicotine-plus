@@ -120,8 +120,7 @@ class PrivateChats(IconNotebook):
             if self.command_help is None:
                 self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
 
-            self.command_help.widget.unparent()
-            tab.help_button.set_popover(self.command_help.widget)
+            self.command_help.set_menu_button(tab.help_button)
 
             if not tab.loaded:
                 tab.load()

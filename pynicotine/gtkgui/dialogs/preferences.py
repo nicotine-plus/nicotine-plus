@@ -2071,7 +2071,7 @@ class SearchesPage:
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.filter_help_button.set_popover(self.filter_help.widget)
+        self.filter_help.set_menu_button(self.filter_help_button)
 
         if GTK_API_VERSION >= 4:
             self.filter_help_label.set_mnemonic_widget(self.filter_help_button.get_first_child())

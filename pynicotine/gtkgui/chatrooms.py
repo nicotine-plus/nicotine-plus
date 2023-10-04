@@ -147,12 +147,9 @@ class ChatRooms(IconNotebook):
             if self.room_wall is None:
                 self.room_wall = RoomWall(window=self.window)
 
-            self.command_help.widget.unparent()
-            self.room_wall.widget.unparent()
+            self.command_help.set_menu_button(tab.help_button)
+            self.room_wall.set_menu_button(tab.room_wall_button)
             self.room_wall.room = room
-
-            tab.help_button.set_popover(self.command_help.widget)
-            tab.room_wall_button.set_popover(self.room_wall.widget)
 
             if not tab.loaded:
                 tab.load()
