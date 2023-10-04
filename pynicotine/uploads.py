@@ -833,7 +833,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def push_file(self, username, virtual_path, size, folder_path="", transfer=None, locally_queued=False):
+    def push_file(self, username, virtual_path, size, folder_path=None, transfer=None, locally_queued=False):
 
         real_path = core.shares.virtual2real(virtual_path)
         size_attempt = self.get_file_size(real_path)

@@ -817,11 +817,11 @@ class UserBrowse:
             core.userbrowse.download_folder(self.user, self.selected_folder_path)
 
     def on_download_folder_recursive(self, *_args):
-        core.userbrowse.download_folder(self.user, self.selected_folder_path, prefix="", recurse=True)
+        core.userbrowse.download_folder(self.user, self.selected_folder_path, recurse=True)
 
     def on_download_folder_to_selected(self, selected_folder_path, recurse):
-        core.userbrowse.download_folder(self.user, self.selected_folder_path,
-                                        prefix=os.path.join(selected_folder_path, ""), recurse=recurse)
+        core.userbrowse.download_folder(
+            self.user, self.selected_folder_path, download_folder_path=selected_folder_path, recurse=recurse)
 
     def on_download_folder_to(self, *_args, recurse=False):
 
@@ -1010,7 +1010,7 @@ class UserBrowse:
 
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_files(self, *_args, prefix=""):
+    def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.selected_folder_path
         files = core.userbrowse.user_shares[self.user].get(folder_path)
@@ -1025,10 +1025,11 @@ class UserBrowse:
             if basename not in self.selected_files:
                 continue
 
-            core.userbrowse.download_file(self.user, folder_path, file_data, prefix=prefix)
+            core.userbrowse.download_file(
+                self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
-    def on_download_files_to_selected(self, selected, _data):
-        self.on_download_files(prefix=selected)
+    def on_download_files_to_selected(self, selected_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_folder_path)
 
     def on_download_files_to(self, *_args):
 

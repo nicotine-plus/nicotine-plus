@@ -24,7 +24,6 @@
 import operator
 import re
 
-from collections import defaultdict
 from itertools import islice
 
 from gi.repository import GObject
@@ -1508,7 +1507,7 @@ class Search:
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.show()
 
-    def on_download_files(self, *_args, prefix=""):
+    def on_download_files(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
@@ -1516,10 +1515,11 @@ class Search:
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.downloads.get_file(user, file_path, prefix, size=size, file_attributes=file_attributes)
+            core.downloads.get_file(
+                user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected, _data):
-        self.on_download_files(prefix=selected)
+    def on_download_files_to_selected(self, selected_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_folder_path)
 
     def on_download_files_to(self, *_args):
 
@@ -1530,25 +1530,16 @@ class Search:
             initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
-    def on_download_folders(self, *_args, download_location=""):
-
-        if download_location:
-            # Custom download location specified, remember it when peer sends a folder
-            # contents reply
-            requested_folders = core.downloads.requested_folders
-        else:
-            requested_folders = defaultdict(dict)
+    def on_download_folders(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
-            if folder_path in requested_folders[user]:
+            if folder_path in core.downloads.requested_folders[user]:
                 # Ensure we don't send folder content requests for a folder more than once,
-                # e.g. when several selected resuls belong to the same folder
+                # e.g. when several selected results belong to the same folder
                 continue
-
-            requested_folders[user][folder_path] = download_location
 
             visible_files = []
             for row in self.all_data:
@@ -1556,20 +1547,17 @@ class Search:
                 if folder_path != row[16].rsplit("\\", 1)[0]:
                     continue
 
-                # remove_destination is False because we need the destination for the full folder
-                # contents response later
-                destination = core.downloads.get_folder_destination(user, folder_path, remove_destination=False)
-
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
                     _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
-                visible_files.append((file_path, destination, size, file_attributes))
+                visible_files.append((file_path, size, file_attributes))
 
-            core.search.request_folder_download(user, folder_path, visible_files)
+            core.search.request_folder_download(
+                user, folder_path, visible_files, download_folder_path=download_folder_path)
 
-    def on_download_folders_to_selected(self, selected, _data):
-        self.on_download_folders(download_location=selected)
+    def on_download_folders_to_selected(self, selected_folder_path, _data):
+        self.on_download_folders(download_folder_path=selected_folder_path)
 
     def on_download_folders_to(self, *_args):
 

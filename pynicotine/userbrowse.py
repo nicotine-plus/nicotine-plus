@@ -217,14 +217,15 @@ class UserBrowse:
         except Exception as error:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {"user": username, "error": error})
 
-    def download_file(self, username, folder_path, file_data, prefix=""):
+    def download_file(self, username, folder_path, file_data, download_folder_path=None):
 
         _code, basename, file_size, _ext, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.downloads.get_file(username, file_path, prefix, size=file_size, file_attributes=file_attributes)
+        core.downloads.get_file(
+            username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username, requested_folder_path, prefix="", recurse=False):
+    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False):
 
         if requested_folder_path is None:
             return
@@ -237,20 +238,18 @@ class UserBrowse:
                 # Not a subfolder of the requested folder, skip
                 continue
 
-            # Remember custom download location
-            if prefix:
-                core.downloads.requested_folders[username][folder_path] = prefix
-
             # Get final download destination
-            destination = core.downloads.get_folder_destination(
-                username, folder_path, root_folder_path=requested_folder_path)
+            destination_folder_path = core.downloads.get_folder_destination(
+                username, folder_path, root_folder_path=requested_folder_path,
+                download_folder_path=download_folder_path)
 
             if files:
                 for _code, basename, file_size, _ext, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
                     core.downloads.get_file(
-                        username, file_path, destination, size=file_size, file_attributes=file_attributes)
+                        username, file_path, folder_path=destination_folder_path, size=file_size,
+                        file_attributes=file_attributes)
 
             if not recurse:
                 # Downloading a single folder, no need to continue

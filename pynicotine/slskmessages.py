@@ -3170,13 +3170,11 @@ class FolderContentsResponse(FileListMessage):
         self._parse_network_message(message)
 
     def _parse_network_message(self, message):
-        shares = {}
         pos, self.token = self.unpack_uint32(message)
-        pos, folder = self.unpack_string(message, pos)
-
-        shares[folder] = {}
-
+        pos, self.dir = self.unpack_string(message, pos)
         pos, ndir = self.unpack_uint32(message, pos)
+
+        folders = {}
 
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
@@ -3184,7 +3182,7 @@ class FolderContentsResponse(FileListMessage):
             pos, nfiles = self.unpack_uint32(message, pos)
 
             ext = None
-            shares[folder][directory] = []
+            folders[directory] = []
 
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
@@ -3193,15 +3191,16 @@ class FolderContentsResponse(FileListMessage):
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, attrs = self.unpack_file_attributes(message, pos)
 
-                shares[folder][directory].append((code, name, size, ext, attrs))
+                folders[directory].append((code, name, size, ext, attrs))
 
-        self.list = shares
+        self.list = folders
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir))
         msg.extend(self.pack_uint32(1))
+
         msg.extend(self.pack_string(self.dir))
 
         if self.list is not None:
