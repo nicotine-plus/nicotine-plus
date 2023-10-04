@@ -173,12 +173,16 @@ class PrivateChats(IconNotebook):
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.chat_view.update_user_tag(msg.user)
 
-    def show_user(self, user, switch_page=True):
+    def show_user(self, user, switch_page=True, remembered=False):
 
         if user not in self.pages:
             self.pages[user] = page = PrivateChat(self, user)
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            tab_position = -1 if remembered else 0
+
+            self.insert_page(
+                page.container, user, focus_callback=page.on_focus, close_callback=page.on_close, user=user,
+                position=tab_position
+            )
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:

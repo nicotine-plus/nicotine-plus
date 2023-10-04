@@ -263,7 +263,7 @@ class ChatRooms:
         room_obj.is_private = msg.private
 
         if msg.room not in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].append(msg.room)
+            config.sections["server"]["autojoin"].insert(0, msg.room)
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
