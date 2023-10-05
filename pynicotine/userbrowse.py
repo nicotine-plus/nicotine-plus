@@ -87,20 +87,27 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
+    def browse_local_shares(self, path=None, share_type=None, new_request=False):
         """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.compressed_shares.get(share_type)
+            if not share_type:
+                # Check our own permission level, and show relevant shares for it
+                ip_address, _port = core.user_addresses[username]
+                current_share_type, _reason = core.network_filter.check_user_permission(username, ip_address)
+            else:
+                current_share_type = share_type
+
+            msg = core.shares.compressed_shares.get(current_share_type)
             Thread(
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
         self._show_user(username, path=path, local_share_type=share_type)
 
-    def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_share_type=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
 
         if not username:

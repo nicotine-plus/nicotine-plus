@@ -636,7 +636,8 @@ class Shares:
         self.compressed_shares = {
             "public": slskmessages.SharedFileListResponse(),
             "buddy": slskmessages.SharedFileListResponse(),
-            "trusted": slskmessages.SharedFileListResponse()
+            "trusted": slskmessages.SharedFileListResponse(),
+            "banned": slskmessages.SharedFileListResponse()
         }
         self.file_path_index = ()
 
@@ -1049,7 +1050,7 @@ class Shares:
             message = core.ban_message % reject_reason
             core.privatechat.send_automatic_message(username, message)
 
-        shares_list = self.compressed_shares.get(permission_level) or slskmessages.SharedFileListResponse()
+        shares_list = self.compressed_shares.get(permission_level)
         core.send_message_to_peer(username, shares_list)
 
     def _folder_contents_request(self, msg):

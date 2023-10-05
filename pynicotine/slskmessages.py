@@ -2859,8 +2859,11 @@ class SharedFileListResponse(FileListMessage):
             return self.built
 
         msg = bytearray()
-        share_groups = [self.public_shares]
+        share_groups = []
         private_share_groups = []
+
+        if self.share_type:
+            share_groups.append(self.public_shares)
 
         if self.share_type in {"buddy", "trusted"} and self.buddy_shares:
             share_groups.append(self.buddy_shares)
