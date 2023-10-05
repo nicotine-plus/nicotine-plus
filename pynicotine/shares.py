@@ -230,6 +230,8 @@ class Scanner:
         self.streams = {}
         self.mtimes = {}
         self.word_index = defaultdict(list)
+        self.processed_share_names = set()
+        self.processed_share_paths = set()
         self.current_file_index = 0
         self.tinytag = None
         self.version = 3
@@ -407,22 +409,35 @@ class Scanner:
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
         if share_type == "trusted":
-            shared_folder_paths = (os.path.normpath(x[1]) for x in shared_trusted_folders)
+            shared_folder_paths = sorted(shared_trusted_folders)
             prefix = "trusted"
 
         elif share_type == "buddy":
-            shared_folder_paths = (os.path.normpath(x[1]) for x in shared_buddy_folders)
+            shared_folder_paths = sorted(shared_buddy_folders)
             prefix = "buddy"
 
         else:
-            shared_folder_paths = (os.path.normpath(x[1]) for x in shared_public_folders)
+            shared_folder_paths = sorted(shared_public_folders)
             prefix = ""
 
         old_files = self.share_dbs.get(prefix + "files", {})
         old_mtimes = self.share_dbs.get(prefix + "mtimes", {})
 
-        for folder_path in shared_folder_paths:
+        for virtual_name, folder_path, *_unused in shared_folder_paths:
+            if virtual_name in self.processed_share_names:
+                # No duplicate names
+                continue
+
+            folder_path = os.path.normpath(folder_path)
+
+            if folder_path in self.processed_share_paths:
+                # No duplicate folder paths
+                continue
+
             self.scan_shared_folder(folder_path, old_mtimes, old_files, rebuild)
+
+            self.processed_share_names.add(virtual_name)
+            self.processed_share_paths.add(folder_path)
 
         # Save data to databases
         self.mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
