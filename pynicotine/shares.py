@@ -256,15 +256,15 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = (
-                    len(self.share_dbs.get("streams", {}))
-                    + len(self.share_dbs.get("buddystreams", {}))
-                    + len(self.share_dbs.get("trustedstreams", {}))
+                start_num_folders = sum(
+                    len(self.share_dbs.get(x, {})) for x in ("streams", "buddystreams", "trustedstreams")
                 )
-
                 self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
                 self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
                                None, LogLevel.DEFAULT))
+
+                # Clear previous word index to prevent inconsistent state if the scanner fails
+                self.set_shares(word_index={})
 
                 num_public_folders = self.rescan_dirs("public", rebuild=self.rebuild)
                 num_buddy_folders = self.rescan_dirs("buddy", rebuild=self.rebuild)
@@ -273,13 +273,20 @@ class Scanner:
                 self.set_shares(word_index=self.word_index)
                 self.word_index.clear()
 
+                self.create_compressed_shares()
+
+                file_path_index = (
+                    list(self.share_dbs.get("files"))
+                    + list(self.share_dbs.get("buddyfiles"))
+                    + list(self.share_dbs.get("trustedfiles"))
+                )
+                self.queue.put(file_path_index)
+
                 self.queue.put(
                     (_("Rescan complete: %(num)s folders found"),
                      {"num": num_public_folders + num_buddy_folders + num_trusted_folders},
                      LogLevel.DEFAULT)
                 )
-
-                self.create_compressed_shares()
 
         except Exception:
             from traceback import format_exc
@@ -331,7 +338,7 @@ class Scanner:
         if share_db is not None:
             share_db.close()
 
-        db_path = os.path.join(self.config.data_folder_path, destination + ".db")
+        db_path = os.path.join(self.config.data_folder_path, f"{destination}.db")
         self.remove_db_file(db_path)
 
         return Database(encode_path(db_path))
@@ -398,7 +405,7 @@ class Scanner:
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
-                                {"filename": destination + ".db", "error": error}, LogLevel.DEFAULT))
+                                {"filename": f"{destination}.db", "error": error}, LogLevel.DEFAULT))
                 return
 
     def rescan_dirs(self, share_type, rebuild=False):
@@ -420,8 +427,8 @@ class Scanner:
             shared_folder_paths = sorted(shared_public_folders)
             prefix = ""
 
-        old_files = self.share_dbs.get(prefix + "files", {})
-        old_mtimes = self.share_dbs.get(prefix + "mtimes", {})
+        old_files = self.share_dbs.get(f"{prefix}files", {})
+        old_mtimes = self.share_dbs.get(f"{prefix}mtimes", {})
 
         for virtual_name, folder_path, *_unused in shared_folder_paths:
             if virtual_name in self.processed_share_names:
@@ -757,20 +764,13 @@ class Shares:
     def load_shares_instance(self):
 
         if not self.load_shares(self.share_dbs, self.share_db_paths, remove_failed=False):
+            # Disable search engine if databases failed to load
             self.file_path_index = ()
             word_index = self.share_dbs.get("wordindex")
 
             if word_index is not None:
                 word_index.close()
                 del self.share_dbs["wordindex"]
-
-            return
-
-        self.file_path_index = tuple(
-            list(self.share_dbs.get("files"))
-            + list(self.share_dbs.get("buddyfiles"))
-            + list(self.share_dbs.get("trustedfiles"))
-        )
 
     def file_is_shared(self, username, virtualfilename, realfilename):
 
@@ -955,6 +955,9 @@ class Shares:
                 elif isinstance(item, slskmessages.SharedFileListResponse):
                     self.compressed_shares[item.type] = item
 
+                elif isinstance(item, list):
+                    self.file_path_index = tuple(item)
+
         return False
 
     def check_shares_available(self):
@@ -992,6 +995,7 @@ class Shares:
         # Hand over database control to the scanner process
         self.rescanning = True
         self.close_shares(self.share_dbs)
+        self.file_path_index = ()
 
         share_groups = self.get_shared_folders()
         scanner, scanner_queue = self.build_scanner_process(share_groups, init, rescan, rebuild)
