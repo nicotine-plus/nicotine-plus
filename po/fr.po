@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-10-01 20:16+0000\n"
+"PO-Revision-Date: 2023-10-05 20:10+0000\n"
 "Last-Translator: Jean-Baptiste ALLAIN <Poorygon@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -215,9 +215,9 @@ msgstr ""
 "connecter…"
 
 #: pynicotine/core.py:383
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Chargement de %(program)s %(version)s"
+msgstr "Fermeture de %(program)s %(version)s!"
 
 #: pynicotine/core.py:437
 #, python-format
@@ -957,7 +957,7 @@ msgstr "Modifier le mot de passe"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:225
 msgid "_Change"
-msgstr "_Modifier"
+msgstr "_Changer"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:269
 msgid "No one"
@@ -1498,7 +1498,7 @@ msgstr "_Reprendre"
 
 #: pynicotine/gtkgui/downloads.py:46
 msgid "P_ause"
-msgstr "Pause"
+msgstr "P_ause"
 
 #: pynicotine/gtkgui/downloads.py:64
 msgid "Finished / Filtered"
@@ -1663,7 +1663,7 @@ msgstr "_Raccourcis clavier"
 
 #: pynicotine/gtkgui/mainwindow.py:534
 msgid "_Setup Assistant"
-msgstr "Assistant de configuration"
+msgstr "_Assistant de configuration"
 
 #: pynicotine/gtkgui/mainwindow.py:535
 msgid "_Transfer Statistics"
@@ -3898,12 +3898,14 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:561
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Aucun partage avec le nom \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:564
-#, python-format
+#, fuzzy, python-format
 msgid "Removed share \"%s\" (rescan required)"
 msgstr ""
+"Le dossier partagé \"%s\" a été retiré (Réanalyse des dossiers partagé "
+"requis)"
 
 #: pynicotine/pluginsystem.py:401
 msgid "Loading plugin system"
@@ -4374,10 +4376,13 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:256
+#, fuzzy
 msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Pour être connecté avec les autres utilisateurs du réseau Soulseek, un port "
+"qui est ouvert sur votre routeur doit être redirigé vers votre ordinateur."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4423,6 +4428,8 @@ msgstr "Vous êtes prêt à utiliser Nicotine+ !"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek est un protocole non encrypté et n'est en aucun prévu à une "
+"communication sécurisée."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
