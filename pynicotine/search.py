@@ -366,16 +366,77 @@ class Search:
     def _file_search_request_server(self, msg):
         """Server code 26, 42 and 120."""
 
-        self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
+        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def _file_search_request_distributed(self, msg):
         """Distrib code 3."""
 
-        self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
+        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
 
     # Incoming Search Requests #
+
+    @staticmethod
+    def _create_file_info_list(results, max_results, permission_level):
+        """ Given a list of file indices, retrieve the file information for each index """
+
+        reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
+        reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
+        is_buddy = (permission_level == "buddy")
+        is_trusted = (permission_level == "trusted")
+
+        fileinfos = []
+        private_fileinfos = []
+        num_fileinfos = 0
+
+        public_files = core.shares.share_dbs.get("files")
+        buddy_files = core.shares.share_dbs.get("buddyfiles")
+        trusted_files = core.shares.share_dbs.get("trustedfiles")
+
+        for index in islice(results, min(len(results), max_results)):
+            try:
+                file_path = core.shares.file_path_index[index]
+
+            except IndexError as error:
+                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
+                break
+
+            fileinfo = public_files.get(file_path)
+
+            if fileinfo is not None:
+                fileinfos.append(fileinfo)
+                continue
+
+            if is_buddy or reveal_buddy_shares:
+                fileinfo = buddy_files.get(file_path)
+
+                if fileinfo is not None:
+                    if is_buddy:
+                        fileinfos.append(fileinfo)
+                    else:
+                        private_fileinfos.append(fileinfo)
+                    continue
+
+            if is_trusted or reveal_trusted_shares:
+                fileinfo = trusted_files.get(file_path)
+
+                if fileinfo is not None:
+                    if is_trusted:
+                        fileinfos.append(fileinfo)
+                    else:
+                        private_fileinfos.append(fileinfo)
+
+        results.clear()
+
+        if fileinfos:
+            fileinfos.sort(key=itemgetter(1))
+
+        if private_fileinfos:
+            private_fileinfos.sort(key=itemgetter(1))
+
+        num_fileinfos = len(fileinfos) + len(private_fileinfos)
+        return num_fileinfos, fileinfos, private_fileinfos
 
     @staticmethod
     def _update_search_results(results, word_indices, excluded=False):
@@ -406,7 +467,7 @@ class Search:
 
         return results
 
-    def create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
+    def _create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
         """Returns a list of common file indices for each word in a search
         term."""
 
@@ -469,67 +530,7 @@ class Search:
 
         return results
 
-    def create_file_info_list(self, results, max_results, permission_level):
-        """ Given a list of file indices, retrieve the file information for each index """
-
-        reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
-        reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
-        is_buddy = (permission_level == "buddy")
-        is_trusted = (permission_level == "trusted")
-
-        fileinfos = []
-        private_fileinfos = []
-        num_fileinfos = 0
-
-        public_files = core.shares.share_dbs.get("files")
-        buddy_files = core.shares.share_dbs.get("buddyfiles")
-        trusted_files = core.shares.share_dbs.get("trustedfiles")
-
-        for index in islice(results, min(len(results), max_results)):
-            try:
-                file_path = core.shares.file_path_index[index]
-
-            except IndexError as error:
-                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
-                break
-
-            fileinfo = public_files.get(file_path)
-
-            if fileinfo is not None:
-                fileinfos.append(fileinfo)
-                continue
-
-            if is_buddy or reveal_buddy_shares:
-                fileinfo = buddy_files.get(file_path)
-
-                if fileinfo is not None:
-                    if is_buddy:
-                        fileinfos.append(fileinfo)
-                    else:
-                        private_fileinfos.append(fileinfo)
-                    continue
-
-            if is_trusted or reveal_trusted_shares:
-                fileinfo = trusted_files.get(file_path)
-
-                if fileinfo is not None:
-                    if is_trusted:
-                        fileinfos.append(fileinfo)
-                    else:
-                        private_fileinfos.append(fileinfo)
-
-        results.clear()
-
-        if fileinfos:
-            fileinfos.sort(key=itemgetter(1))
-
-        if private_fileinfos:
-            private_fileinfos.sort(key=itemgetter(1))
-
-        num_fileinfos = len(fileinfos) + len(private_fileinfos)
-        return num_fileinfos, fileinfos, private_fileinfos
-
-    def process_search_request(self, search_term, username, token, direct=False):
+    def _process_search_request(self, search_term, username, token, direct=False):
         """This section is accessed every time a search request arrives,
         several times per second.
 
@@ -596,14 +597,14 @@ class Search:
         included_words = (set(search_term.split()) - excluded_words - partial_words)
 
         # Find common file matches for each word in search term
-        results = self.create_search_result_list(
+        results = self._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
 
         if not results:
             return
 
         # Get file information for each file index in result list
-        num_results, fileinfos, private_fileinfos = self.create_file_info_list(
+        num_results, fileinfos, private_fileinfos = self._create_file_info_list(
             results, max_results, permission_level)
 
         if not num_results:

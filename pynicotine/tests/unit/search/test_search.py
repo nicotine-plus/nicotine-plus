@@ -115,7 +115,7 @@ class SearchTest(TestCase):
         excluded_words = {"linux", "game"}
         partial_words = {"stem"}
 
-        results = core.search.create_search_result_list(
+        results = core.search._create_search_result_list(  # pylint: disable=protected-access
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, {37, 38})
 
@@ -123,6 +123,6 @@ class SearchTest(TestCase):
         excluded_words = {"linux", "game", "music", "cd"}
         partial_words = set()
 
-        results = core.search.create_search_result_list(
+        results = core.search._create_search_result_list(  # pylint: disable=protected-access
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, set())
