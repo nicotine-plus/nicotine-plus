@@ -191,7 +191,6 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "buddysharestrustedonly": False,
                 "reveal_buddy_shares": False,
                 "reveal_trusted_shares": False,
                 "friendsnolimits": False,
@@ -437,7 +436,8 @@ class Config:
                 "usealtlimits",
                 "uploadsinsubdirs",
                 "reverseorder",
-                "lock"
+                "lock",
+                "buddysharestrustedonly"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -693,6 +693,13 @@ class Config:
 
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
+
+        # Migrate old trusted buddy shares to new format
+        if self.sections["transfers"].get("buddysharestrustedonly", False):
+            buddy_shares = self.sections["transfers"]["buddyshared"]
+
+            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
+            buddy_shares.clear()
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]
