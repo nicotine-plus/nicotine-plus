@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -262,7 +263,7 @@ class PrivateChat:
         core.pluginhandler.incoming_private_chat_notification(username, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(username, f"{config.application_name} {config.version}")
+            self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply

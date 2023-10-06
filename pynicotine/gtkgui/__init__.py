@@ -19,7 +19,6 @@
 import os
 import sys
 
-from pynicotine.config import config
 from pynicotine.logfacility import log
 
 
@@ -52,12 +51,14 @@ def check_gtk_version(gtk_api_version):
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
 
     from gi.repository import Gtk
-    config.gtk_version = f"{gtk_api_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
     if sys.platform == "win32":
         # Ensure all Windows-specific APIs are available
         gi.require_version("GdkWin32", f"{gtk_api_version}.0")
         from gi.repository import GdkWin32  # noqa: F401  # pylint:disable=no-name-in-module,unused-import
+
+    gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
     return None
 
@@ -102,8 +103,6 @@ def run(hidden, ci_mode, multi_instance):
     if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
-
-    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
     from pynicotine.gtkgui.application import Application
     return Application(hidden, ci_mode, multi_instance).run()

@@ -55,23 +55,6 @@ class Config:
 
         config_folder_path, self.data_folder_path = self.get_user_folders()
         self.config_file_path = os.path.join(config_folder_path, "config")
-        self.version = "3.3.0.dev5"
-        self.python_version = sys.version.split()[0]
-        self.gtk_version = ""
-
-        self.application_name = "Nicotine+"
-        self.application_id = "org.nicotine_plus.Nicotine"
-        self.author = "Nicotine+ Team"
-        self.copyright = """© 2004–2023 Nicotine+ Contributors
-© 2003–2004 Nicotine Contributors
-© 2001–2003 PySoulSeek Contributors"""
-
-        self.website_url = "https://nicotine-plus.org"
-        self.privileges_url = "https://www.slsknet.org/qtlogin.php?username=%s"
-        self.portchecker_url = "https://www.slsknet.org/porttest.php?port=%s"
-        self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
-
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)

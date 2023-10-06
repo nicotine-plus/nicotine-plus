@@ -28,6 +28,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -290,8 +291,8 @@ class MainWindow(Window):
     def init_window(self):
 
         # Set main window title and icon
-        self.set_title(config.application_name)
-        self.widget.set_default_icon_name(config.application_id)
+        self.set_title(pynicotine.__application_name__)
+        self.widget.set_default_icon_name(pynicotine.__application_id__)
 
         # Set main window size
         self.widget.set_default_size(width=config.sections["ui"]["width"],

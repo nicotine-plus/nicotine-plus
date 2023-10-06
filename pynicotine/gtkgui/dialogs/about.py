@@ -16,9 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gtk
 
-from pynicotine.config import config
+import pynicotine
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -369,18 +371,20 @@ Copyright (c) 2017 IP2Location.com
 
         self.is_version_outdated = False
 
-        icon_name = config.application_id
+        icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
         self.website_label.connect("activate-link", lambda x, url: open_uri(url))
 
         for label_widget, text in (
-            (self.application_name_label, config.application_name),
-            (self.version_label, (f"{config.version}   •   Python {config.python_version}   •   "
-                                  f"GTK {config.gtk_version}")),
-            (self.website_label, f"<a href='{config.website_url}' title='{config.website_url}'>{_('Website')}</a>"),
-            (self.copyright_label, f"<small>{config.copyright}</small>")
+            (self.application_name_label, pynicotine.__application_name__),
+            (self.version_label, (f"{pynicotine.__version__}   •   Python {sys.version.split()[0]}   •   "
+                                  f"GTK {gtk_version}")),
+            (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
+                                  f"{_('Website')}</a>")),
+            (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
         ):
             label_widget.set_markup(text)
 
