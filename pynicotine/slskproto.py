@@ -213,38 +213,37 @@ class NetworkInterfaces:
 
         # pylint: disable=invalid-name
 
-        from ctypes import byref, create_string_buffer, windll, wintypes
+        from ctypes import POINTER, byref, cast, create_string_buffer, windll, wintypes
 
         interface_addresses = {}
-        address_buffer_size = wintypes.ULONG(1024 * 15)
+        adapter_addresses_size = wintypes.ULONG()
         return_value = cls.ERROR_BUFFER_OVERFLOW
 
         while return_value == cls.ERROR_BUFFER_OVERFLOW:
-            address_buffer = create_string_buffer(address_buffer_size.value)
+            p_adapter_addresses = cast(
+                create_string_buffer(adapter_addresses_size.value), POINTER(cls.IpAdapterAddresses)
+            )
             return_value = windll.Iphlpapi.GetAdaptersAddresses(
                 cls.AF_INET,
                 (cls.GAA_FLAG_SKIP_ANYCAST | cls.GAA_FLAG_SKIP_MULTICAST | cls.GAA_FLAG_SKIP_DNS_SERVER),
                 None,
-                byref(address_buffer),
-                byref(address_buffer_size),
+                p_adapter_addresses,
+                byref(adapter_addresses_size),
             )
 
         if return_value:
             log.add_debug("Failed to get list of network interfaces. Error code %s", return_value)
             return interface_addresses
 
-        adapter_addresses = cls.IpAdapterAddresses.from_buffer(address_buffer)
+        while p_adapter_addresses:
+            adapter_addresses = p_adapter_addresses.contents
 
-        while True:
             if adapter_addresses.first_unicast_address:
                 interface_name = adapter_addresses.friendly_name
                 socket_address = adapter_addresses.first_unicast_address[0].address
                 interface_addresses[interface_name] = socket.inet_ntoa(socket_address.lp_sockaddr[0].sin_addr)
 
-            if not adapter_addresses.next:
-                break
-
-            adapter_addresses = adapter_addresses.next[0]
+            p_adapter_addresses = adapter_addresses.next
 
         return interface_addresses
 
