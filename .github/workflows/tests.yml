@@ -27,13 +27,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
-          python -m pip install build .[test]
+          python -m pip install build .[tests]
 
       - name: PEP 8 style checks
         run: python -m pycodestyle
 
       - name: Linting
-        run: python -m pylint pynicotine test
+        run: python -m pylint pynicotine
 
       - name: Integration and unit tests
         run: xvfb-run python -m unittest -v
@@ -93,13 +93,13 @@ jobs:
         run: |
           dnf -y install gcc python3-devel python3-pip
           python3 -m pip install --upgrade setuptools
-          python3 -m pip install build .[test]
+          python3 -m pip install build .[tests]
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
 
       - name: Linting
-        run: python3 -m pylint pynicotine test
+        run: python3 -m pylint pynicotine
 
       - name: Integration and unit tests
         run: xvfb-run python3 -m unittest -v
@@ -133,6 +133,7 @@ jobs:
           install: >-
             mingw-w64-${{ env.ARCH }}-gettext
             mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ env.ARCH }}-python-build
             mingw-w64-${{ env.ARCH }}-python-cx-freeze
             mingw-w64-${{ env.ARCH }}-python-pip
             mingw-w64-${{ env.ARCH }}-python-pycodestyle
@@ -146,10 +147,13 @@ jobs:
         run: python3 -m pycodestyle
 
       - name: Linting
-        run: python3 -m pylint pynicotine test
+        run: python3 -m pylint pynicotine
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
 
   macos:
     runs-on: macos-11
@@ -182,7 +186,10 @@ jobs:
         run: python -m pycodestyle
 
       - name: Linting
-        run: python -m pylint pynicotine test
+        run: python -m pylint pynicotine
 
       - name: Integration and unit tests
         run: python -m unittest -v
+
+      - name: Build
+        run: python -m build

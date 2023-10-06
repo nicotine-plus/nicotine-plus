@@ -35,6 +35,7 @@ def install_pacman():
     packages = [f"{prefix}ca-certificates",
                 f"{prefix}gettext",
                 f"{prefix}gtk{gtk_version}",
+                f"{prefix}python-build",
                 f"{prefix}python-cx-freeze",
                 f"{prefix}python-pip",
                 f"{prefix}python-pycodestyle",

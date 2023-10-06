@@ -45,7 +45,7 @@ def install_pypi():
     """Install dependencies from PyPi."""
 
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", "cx_Freeze",
-                           "-e", ".[packaging,test]", "semidbm"])
+                           "-e", ".[packaging,tests]", "build", "semidbm"])
 
 
 if __name__ == "__main__":
