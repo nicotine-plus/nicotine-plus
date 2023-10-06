@@ -21,8 +21,6 @@ import os
 import subprocess
 import sys
 
-""" Script used to install dependencies in MinGW """
-
 
 def install_pacman():
     """Install dependencies from the main MinGW repos."""

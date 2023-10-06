@@ -44,10 +44,10 @@ class Plugin(BasePlugin):
             self.log("Forcing collection of generation %s...", str(i))
             self.log("Collected %s objects", str(gc.collect(i)))
 
-        unclaimed = ["A total of %s objects that could not be freed:" % len(gc.garbage)]
+        unclaimed = [f"A total of {len(gc.garbage)} objects that could not be freed:"]
 
         for i in gc.garbage:
-            unclaimed.append("%s: %s (%s)" % (type(i), str(i), repr(i)))
+            unclaimed.append(f"{type(i)}: {str(i)} ({repr(i)})")
 
         self.log("\n".join(unclaimed))
         self.log("Done.")

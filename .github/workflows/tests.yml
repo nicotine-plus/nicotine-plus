@@ -33,7 +33,7 @@ jobs:
         run: python -m pycodestyle
 
       - name: Linting
-        run: python -m pylint pynicotine
+        run: python -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: xvfb-run python -m unittest -v
@@ -99,7 +99,7 @@ jobs:
         run: python3 -m pycodestyle
 
       - name: Linting
-        run: python3 -m pylint pynicotine
+        run: python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: xvfb-run python3 -m unittest -v
@@ -147,7 +147,7 @@ jobs:
         run: python3 -m pycodestyle
 
       - name: Linting
-        run: python3 -m pylint pynicotine
+        run: python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
@@ -186,7 +186,7 @@ jobs:
         run: python -m pycodestyle
 
       - name: Linting
-        run: python -m pylint pynicotine
+        run: python -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: python -m unittest -v

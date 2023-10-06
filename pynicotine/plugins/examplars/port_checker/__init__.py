@@ -91,15 +91,15 @@ class Plugin(BasePlugin):
 
         status = self._check_port(ip_address, port)
 
-        if announce and status in ("open", "closed"):
+        if announce and status in {"open", "closed"}:
             self.throttle.responded()
-            self.send_public(self.checkroom, "%s: Your port is %s" % (user, status))
+            self.send_public(self.checkroom, f"{user}: Your port is {status}")
 
         self.log("User %s on %s:%s port is %s.", (user, ip_address, port, status))
 
     def _check_port(self, ip_address, port):
 
-        if ip_address in ("0.0.0.0",) or port in (0,):
+        if ip_address == "0.0.0.0" or not port:
             return "unknown"
 
         timeout = self.settings["socket_timeout"]
@@ -111,7 +111,7 @@ class Plugin(BasePlugin):
         result = sock.connect_ex((ip_address, port))
         sock.close()
 
-        if result == 0:
+        if not result:
             return "open"
 
         return "closed"

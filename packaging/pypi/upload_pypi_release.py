@@ -20,8 +20,6 @@
 import subprocess
 import sys
 
-""" Script used to create new Nicotine+ releases on PyPi """
-
 
 def create_packages():
     """Prepare source distribution and wheel."""

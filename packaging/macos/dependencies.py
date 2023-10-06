@@ -21,8 +21,6 @@ import os
 import subprocess
 import sys
 
-""" Script used to install dependencies in Homebrew """
-
 
 def install_brew():
     """Install dependencies from the main Homebrew repos."""

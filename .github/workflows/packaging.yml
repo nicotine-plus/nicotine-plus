@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Debian package
         run: |
-          python3 -m build --sdist --no-isolation
+          python3 -m build --sdist
           mk-origtargz dist/nicotine-plus-*.tar.gz
           debuild -sa -us -uc
 
