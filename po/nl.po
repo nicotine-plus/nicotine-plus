@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-21 09:58+0000\n"
+"PO-Revision-Date: 2023-10-06 02:10+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -509,7 +509,7 @@ msgstr "_Kopiëer en Rapporteer Bug"
 
 #: pynicotine/gtkgui/chatrooms.py:178
 msgid "Create New Room?"
-msgstr "Ruimte creëren?"
+msgstr "Nieuwe ruimte creëren?"
 
 #: pynicotine/gtkgui/chatrooms.py:179
 #, python-format
@@ -596,7 +596,7 @@ msgstr "Verlaat Kamer"
 #: pynicotine/gtkgui/chatrooms.py:529 pynicotine/gtkgui/chatrooms.py:697
 #: pynicotine/gtkgui/privatechat.py:325 pynicotine/gtkgui/privatechat.py:390
 msgid "Copy Link"
-msgstr "Kopieer URL"
+msgstr "Kopieer Link"
 
 #: pynicotine/gtkgui/chatrooms.py:532
 msgid "View Room Log"
@@ -676,7 +676,7 @@ msgstr "Up-to-date"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
 msgid "Checking latest version…"
-msgstr "Controleer laatste versie…"
+msgstr "De nieuwste versie controleren…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1349,7 +1349,7 @@ msgstr "Gebruikersnaam:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2504
 msgid "Command:"
-msgstr "Bevel:"
+msgstr "Opdracht:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2512
 #: pynicotine/gtkgui/dialogs/preferences.py:2515
@@ -1422,7 +1422,7 @@ msgstr "Voorkeuren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3022
 msgid "Pick a File Name for Config Backup"
-msgstr "Kies een bestandsnaam voor Config Backup"
+msgstr "Kies een bestandsnaam voor Configuratiebackup"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:61
 msgid "Transfer Statistics"
@@ -2129,7 +2129,7 @@ msgstr "Mislukt"
 
 #: pynicotine/gtkgui/uploads.py:69
 msgid "User Logged Off"
-msgstr "Gebruiker afgemeld"
+msgstr "Gebruiker is afgemeld"
 
 #: pynicotine/gtkgui/uploads.py:113
 msgid "Clear Queued Uploads"
@@ -4315,8 +4315,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
-"Om te verbinden met andere Soulseek gebruikers, moet een afluisterapparaat "
-"van je router naar je computer worden gestuurd."
+"Om te verbinden met andere Soulseek gebruikers, moet een luisterpoort van je "
+"router naar je computer worden gestuurd."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4487,7 +4487,7 @@ msgstr "Bewerken"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Cut"
-msgstr "Snijdt"
+msgstr "Knip"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:183
 msgid "Paste"
@@ -5112,7 +5112,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:346
 msgid "Filters files based upon their duration."
-msgstr "Filtert bestanden op basis van hun duur."
+msgstr "Filtert bestanden op basis van hun afspeelduur."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:356
 msgid ""
@@ -5520,7 +5520,7 @@ msgstr "Controleer filters"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:525
 msgid "Unverified"
-msgstr "Niet-gecontroleerd"
+msgstr "Niet geverifieerd"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:33
 msgid ""
@@ -5819,7 +5819,7 @@ msgstr "Per overdracht"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:127
 msgid "Total transfers"
-msgstr "Totaal transfers"
+msgstr "Totaal aantal overdrachten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:199
 #: pynicotine/gtkgui/ui/userinfo.ui:177
@@ -5881,7 +5881,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:50
 msgid "Media player command:"
-msgstr "Media speler commando:"
+msgstr "Mediaspeler commando:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:66
 msgid "File manager command:"
