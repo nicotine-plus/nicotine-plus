@@ -38,6 +38,9 @@ jobs:
       - name: Integration and unit tests
         run: xvfb-run python -m unittest -v
 
+      - name: Build
+        run: python -m build
+
   ubuntu-debian:
     strategy:
       fail-fast: false

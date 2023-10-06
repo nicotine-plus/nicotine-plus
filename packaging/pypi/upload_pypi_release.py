@@ -26,7 +26,7 @@ import sys
 def create_packages():
     """Prepare source distribution and wheel."""
 
-    subprocess.check_call([sys.executable, "-m", "build", "--sdist", "--wheel", "--no-isolation"])
+    subprocess.check_call([sys.executable, "-m", "build", "--sdist", "--wheel"])
 
 
 def upload_packages():
