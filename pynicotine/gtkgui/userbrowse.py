@@ -1327,11 +1327,11 @@ class UserBrowse:
 
     def on_focus(self):
 
-        if not self.file_list_view.is_selection_empty():
+        if self.file_list_view.is_selection_empty():
+            self.folder_tree_view.grab_focus()
+        else:
             self.file_list_view.grab_focus()
-            return True
 
-        self.folder_tree_view.grab_focus()
         return True
 
     def on_close(self, *_args):

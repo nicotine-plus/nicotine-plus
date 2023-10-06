@@ -1813,11 +1813,10 @@ class Search:
 
     def on_focus(self, *_args):
 
-        if self.window.search_entry.get_text():
-            # Search entry contains text, let it grab focus instead
-            return True
+        if not self.window.search_entry.get_text():
+            # Only focus treeview if we're not entering a new search term
+            self.tree_view.grab_focus()
 
-        self.tree_view.grab_focus()
         return True
 
     def on_close(self, *_args):
