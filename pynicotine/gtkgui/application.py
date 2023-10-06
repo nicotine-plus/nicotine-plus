@@ -26,6 +26,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -61,9 +62,9 @@ class Application:
 
     def __init__(self, start_hidden, ci_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=config.application_id)
-        GLib.set_application_name(config.application_name)
-        GLib.set_prgname(config.application_id)
+        self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
+        GLib.set_application_name(pynicotine.__application_name__)
+        GLib.set_prgname(pynicotine.__application_id__)
 
         if multi_instance:
             self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
@@ -376,7 +377,7 @@ class Application:
         import urllib.parse
 
         login = urllib.parse.quote(core.login_username)
-        open_uri(config.privileges_url % login)
+        open_uri(pynicotine.__privileges_url__ % login)
         core.request_check_privileges()
 
     def on_preferences(self, *_args, page_id="network"):
@@ -473,11 +474,11 @@ class Application:
 
     @staticmethod
     def on_report_bug(*_args):
-        open_uri(config.issue_tracker_url)
+        open_uri(pynicotine.__issue_tracker_url__)
 
     @staticmethod
     def on_improve_translations(*_args):
-        open_uri(config.translations_url)
+        open_uri(pynicotine.__translations_url__)
 
     def on_wishlist(self, *_args):
 
@@ -617,7 +618,7 @@ class Application:
             from pynicotine.gtkgui.widgets import clipboard
 
             clipboard.copy_text(error)
-            open_uri(config.issue_tracker_url)
+            open_uri(pynicotine.__issue_tracker_url__)
 
             self._show_critical_error_dialog(error, loop)
             return
@@ -670,8 +671,9 @@ class Application:
 
         # Show critical error dialog
         loop = GLib.MainLoop()
-        error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
-                 f"Python Version: {config.python_version} ({sys.platform})\n\n"
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        error = (f"Nicotine+ Version: {pynicotine.__version__}\nGTK Version: {gtk_version}\n"
+                 f"Python Version: {sys.version.split()[0]} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
         self._show_critical_error_dialog(error, loop)
 

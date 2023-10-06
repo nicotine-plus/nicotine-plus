@@ -34,6 +34,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -137,7 +138,7 @@ class NetworkPage:
 
         # Listening port status
         if core.public_port:
-            url = config.portchecker_url % str(core.public_port)
+            url = pynicotine.__port_checker_url__ % str(core.public_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
@@ -1729,14 +1730,14 @@ class UserInterfacePage:
              ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
-            (config.application_id, _("Window"), 64, ())]
+            (pynicotine.__application_id__, _("Window"), 64, ())]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Online (Tray)"), 16, ()),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16, ()),
-                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, ()),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16, ())]
+                (f"{pynicotine.__application_id__}-connect", _("Online (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-away", _("Away (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-disconnect", _("Offline (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-msg", _("Message (Tray)"), 16, ())]
 
         for icon_name, label, pixel_size, css_classes in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)

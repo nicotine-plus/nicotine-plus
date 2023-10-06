@@ -55,13 +55,13 @@ BUILD_PATH = os.path.join(CURRENT_PATH, "build")
 PROJECT_PATH = os.path.abspath(os.path.join(CURRENT_PATH, "..", ".."))
 sys.path.append(PROJECT_PATH)
 
-from pynicotine.config import config  # noqa: E402  # pylint: disable=import-error,wrong-import-position
+import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
-APPLICATION_NAME = config.application_name
-APPLICATION_ID = config.application_id
-VERSION = config.version
-AUTHOR = config.author
-COPYRIGHT = config.copyright
+APPLICATION_NAME = pynicotine.__application_name__
+APPLICATION_ID = pynicotine.__application_id__
+VERSION = pynicotine.__version__
+AUTHOR = pynicotine.__author__
+COPYRIGHT = pynicotine.__copyright__
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"

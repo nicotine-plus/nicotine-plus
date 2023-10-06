@@ -26,6 +26,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
@@ -445,15 +446,15 @@ def load_custom_icons(update=False):
         ("hilite", "nplus-tab-highlight"),
         ("hilite3", "nplus-tab-changed"),
         ("trayicon_away", "nplus-tray-away"),
-        ("trayicon_away", f"{config.application_id}-away"),
+        ("trayicon_away", f"{pynicotine.__application_id__}-away"),
         ("trayicon_connect", "nplus-tray-connect"),
-        ("trayicon_connect", f"{config.application_id}-connect"),
+        ("trayicon_connect", f"{pynicotine.__application_id__}-connect"),
         ("trayicon_disconnect", "nplus-tray-disconnect"),
-        ("trayicon_disconnect", f"{config.application_id}-disconnect"),
+        ("trayicon_disconnect", f"{pynicotine.__application_id__}-disconnect"),
         ("trayicon_msg", "nplus-tray-msg"),
-        ("trayicon_msg", f"{config.application_id}-msg"),
-        ("n", config.application_id),
-        ("n", f"{config.application_id}-symbolic")
+        ("trayicon_msg", f"{pynicotine.__application_id__}-msg"),
+        ("n", pynicotine.__application_id__),
+        ("n", f"{pynicotine.__application_id__}-symbolic")
     )
     extensions = (".png", ".svg", ".jpg", ".jpeg", ".bmp")
 

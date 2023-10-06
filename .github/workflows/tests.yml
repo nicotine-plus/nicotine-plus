@@ -86,13 +86,14 @@ jobs:
 
       - name: Install dependencies (Fedora)
         if: matrix.container == 'fedora:rawhide'
-        run: dnf -y install pylint python3-pycodestyle
+        run: dnf -y install pylint python3-build python3-pycodestyle
 
       - name: Install dependencies (Rocky Linux)
         if: matrix.container == 'rockylinux:8'
         run: |
           dnf -y install gcc python3-devel python3-pip
-          python3 -m pip install -e ".[test]"
+          python3 -m pip install --upgrade setuptools
+          python3 -m pip install build .[test]
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -102,6 +103,9 @@ jobs:
 
       - name: Integration and unit tests
         run: xvfb-run python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
 
   windows:
     runs-on: windows-latest
