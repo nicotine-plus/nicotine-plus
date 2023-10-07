@@ -35,10 +35,10 @@ class Plugin(BasePlugin):
             "Current counts: %s\n"
             "Enabling GB debug output (check stderr)\n"
             "Enabling tracemalloc",
-            (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))
+            (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))    # pylint: disable=no-member
 
-        gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE)
-        tracemalloc.start()
+        gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE)  # pylint: disable=no-member
+        tracemalloc.start()                                                           # pylint: disable=no-member
 
         for i in range(3):
             self.log("Forcing collection of generation %s...", str(i))
@@ -54,7 +54,7 @@ class Plugin(BasePlugin):
 
     def disable(self):
 
-        gc.set_debug(0)
+        gc.set_debug(0)  # pylint: disable=no-member
         snapshot = tracemalloc.take_snapshot()
 
         self.log("[ Top 50 memory allocations ]\n")
@@ -70,4 +70,4 @@ class Plugin(BasePlugin):
 
             self.log("")
 
-        tracemalloc.stop()
+        tracemalloc.stop()  # pylint: disable=no-member
