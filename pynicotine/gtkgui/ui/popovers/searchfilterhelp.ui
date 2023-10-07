@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkScrolledWindow" id="container">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="can-focus">True</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="margin-bottom">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-start">18</property>
+            <property name="margin-top">18</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Search Result Filters</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="heading"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Search result filters are used to refine which search results are displayed.</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Each list of search results has its own filter which can be revealed by toggling the Result Filters button. A filter is made up of multiple fields, all of which are applied when pressing Enter in any one of its fields. Filtering is applied immediately to results already received, and also to those yet to arrive.</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">As the name suggests, a search result filter cannot expand your original search, it can only narrow it down. To broaden or change your search terms, perform a new search.</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Result Filter Usage</property>
+                <property name="margin-top">6</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="heading"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Include Text</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Files, folders and usernames containing this text will be shown.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Case is insensitive, but word order is important: 'Instrumental Remix' will not show any 'Remix Instrumental'</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Use | (or pipes) to seperate several exact phrases. Example:
+    Remix|Dub Mix|Instrumental</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Exclude Text</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">As above, but files, folders and usernames are filtered out if the text matches.</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">File Type</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Filters files based upon their file extension.</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will reveal more from the list of results. Example:
+    flac wav ape</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results with an exclamation mark! Example:
+    !mp3 !jpg</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">File Size</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Filters files based upon their file size.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">By default, the unit used is bytes (B) and files greater than or equal to (&gt;=) the value will be matched.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
+    20m to show files larger than 20 MiB (mebibytes).</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
+    =1024 matches files that are exactly 1 KiB (kibibyte).</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Prepend ! to a value to exclude files of a specific size:
+    !30.5m to hide files that are 30.5 MiB (mebibytes).</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value. Use a space between each condition to include a range:
+    &gt;10.5m &lt;1g to show files larger than 10.5 MiB, but smaller than 1 GiB.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">The better-known variants kb, mb, and gb can also be used for kilobyte, megabyte, and gigabyte units.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Bitrate</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Filters files based upon their bitrate.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Values must be entered as numeric digits only. The unit is always Kb/s (Kilobits per second).</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, &gt;, &lt;= or &gt;= can be used, and multiple conditions can be specified, for example to show files with a bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:
+    256 &lt;=1411</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Duration</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Filters files based upon their duration.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">By default, files longer than or equal to (&gt;=) the entered duration will be matched, unless an operator (=, !, &lt;=, &lt; or &gt;) is used.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:
+    =53 shows files that are around 53 seconds long.
+    &gt;5:30 to show files more than 5 and a half minutes long.
+    &lt;5:30:00 shows files less than 5 and a half hours long.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Multiple conditions can be specified:
+    &gt;6:00 &lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54 !8:43 !7:32 to hide some specific files from the results.
+    =5:34 =4:23 =3:05 to include files with specific durations.</property>
+                    <property name="margin-start">12</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Country</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Filters files based upon users' geographical location according to country codes defined by ISO 3166-2:
+    US will only show results from users with IP addresses in the United States.
+    !GB will hide results that come from users in Great Britain.</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Multiple countries can be specified with commas or spaces.</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Free Slot</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <style>
+                  <class name="italic"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free, i.e. files that are available immediately.</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

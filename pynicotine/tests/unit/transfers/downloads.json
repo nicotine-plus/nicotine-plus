@@ -1,0 +1,19 @@
+[
+    ["user1", "Downloaded\\Song1.mp3", "", "Paused", 10093741, 5000, {"0": 320, "1": 252}],
+    ["user2", "Downloaded\\Song2.mp3", "", "User logged off", 10734496, null, {"0": 319, "1": 268}],
+    ["user3", "Downloaded\\Song3.flac", "", "User logged off", 27231044, null, {"0": 792, "1": 268}],
+    ["user4", "Downloaded\\Song4.mp3", "", "User logged off", 9456698, null, {"0": 128, "1": 0}],
+    ["user5", "Downloaded\\Song5.mp3", "", "User logged off", 11733776, null, {"0": 319, "1": 293}],
+    ["user6", "Downloaded\\Song6.mp3", "", "User logged off", 7868544, null, {"0": 160, "1": 393}],
+    ["user7", "Downloaded\\Song7.mp3", "", "User logged off", 18070994, null, {"0": 320, "1": 451}],
+    ["user8", "Downloaded\\Song8.mp3", "", "User logged off", 11412838, null, {"0": 319, "1": 285}],
+    ["user9", "Downloaded\\Song9.mp3", "", "User logged off", 278806, null, {}],
+    ["user10", "Downloaded\\Song10.mp3", "", "User logged off", 10734496, null, {"0": 319, "1": 268}],
+    ["user11", "Downloaded\\Song11.mp3", "", "User logged off", 14411885, null, {"0": 319, "1": 360}],
+    ["user12", "Downloaded\\Song12.mp3", "", "User logged off", 5085884, null, {"0": 320, "1": 127}],
+    ["user13", "Downloaded\\Song13.mp3", "", "Finished", 43443, 43443, "", ""],
+    ["user14", "Downloaded\\Song14.mp3", "", "User logged off", 3745634, null, "238 (vbr)", "2:53"],
+    ["user15", "Downloaded\\Song15.mp3", "", "User logged off", 9456698, null, "128", "4:50"],
+    ["user16", "Downloaded\\Song16.mp3", "", "User logged off", 232137, null, "{\"0\": 256, \"1\": 476}", ""],
+    ["user17", "Downloaded\\Song17.mp3", ""]
+]

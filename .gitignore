@@ -1,0 +1,36 @@
+# Auto-generated files
+*.desktop
+*.appdata.xml
+
+# Translation Machine Object files
+*.mo
+
+# Python byte code files
+*.pyc
+
+# Pot backup files
+*.po~
+
+# Temporary test files
+pynicotine/tests/**/*temp_config*
+pynicotine/tests/**/*.db
+pynicotine/tests/**/*.json
+pynicotine/tests/**/*.old
+
+# Ignore venv files
+venv/*
+.env/
+
+# Ignore packaging directories and files
+*.json~
+install.txt
+MANIFEST
+.flatpak-builder/
+build/
+dist/
+debian/files
+nicotine_plus.egg-info/
+packaging/flatpak/build-dir/
+packaging/flatpak/.flatpak-builder/
+packaging/macos/build/
+packaging/windows/build/

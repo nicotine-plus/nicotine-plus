@@ -1,0 +1,59 @@
+.TH NICOTINE+ 1
+
+.SH NAME
+nicotine - graphical client for the Soulseek peer-to-peer network
+
+.SH SYNOPSIS
+.B nicotine
+[options]
+
+.SH DESCRIPTION
+.BI Nicotine+
+is a graphical application that allows users to interact with the Soulseek peer-to-peer network.
+
+.SH OPTIONS
+.TP
+.BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
+Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
+.TP
+.BI \-u " <dir>" "\fR,\fP \-\^\-user-data=" <dir>
+Use <dir> as directory for user data and plugins. If <dir> does not exists a new empty directory will be created.
+.TP
+.B \-h, \-\^\-help
+Show command help and exit.
+.TP
+.B \-s, \-\^\-hidden
+Start the program without showing window.
+.TP
+.BI \-b " <ip>" "\fR,\fP \-\^\-bindip=" <ip>
+Bind sockets to the given <ip> (useful for VPN).
+.TP
+.BI \-l " <port>" "\fR,\fP \-\^\-port=" <port>
+Listen on the given port. Overrides the port range configuration.
+.TP
+.B \-r, \-\^\-rescan
+Rescan shared files.
+.TP
+.B \-n, \-\^\-headless
+Start the program in headless mode (no GUI).
+.TP
+.B \-v, \-\^\-version
+Show version number and exit.
+
+.SH EXIT STATUS
+The regular exit status of the program is 0.
+.br
+If required dependencies are not present, the exit status is 1.
+.br
+If the given list of arguments cannot be parsed, the exit status is 2.
+
+.SH FILES
+.TP
+.I ~/.config/nicotine/config
+The configuration file.
+.TP
+.I ~/.local/share/nicotine/
+Other personal files such as downloads, shares and logs.
+
+.SH AUTHOR
+Nicotine+ Team <https://nicotine-plus.org/>

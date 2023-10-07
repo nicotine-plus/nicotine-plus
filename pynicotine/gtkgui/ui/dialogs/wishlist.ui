@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkBox" id="container">
+    <property name="height-request">300</property>
+    <property name="margin-bottom">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-start">12</property>
+    <property name="margin-top">12</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">12</property>
+    <property name="visible">True</property>
+    <property name="width-request">320</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
+        <property name="max-width-chars">55</property>
+        <property name="mnemonic-widget">list_container</property>
+        <property name="visible">True</property>
+        <property name="wrap">True</property>
+        <property name="xalign">0</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkEntry" id="wish_entry">
+        <property name="placeholder-text" translatable="yes">Add Wish…</property>
+        <property name="primary-icon-name">list-add-symbolic</property>
+        <property name="visible">True</property>
+        <signal name="activate" handler="on_add_wish"/>
+        <signal name="icon-press" handler="on_add_wish"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkFrame">
+        <property name="vexpand">True</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkScrolledWindow" id="list_container">
+                <property name="vexpand">True</property>
+                <property name="visible">True</property>
+                <style>
+                  <class name="border-bottom"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
+                <property name="spacing">6</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkButton" id="_edit_button">
+                    <property name="tooltip-text" translatable="yes">Edit…</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_edit_wish"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">document-edit-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Edit…</property>
+                            <property name="mnemonic-widget">_edit_button</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="_remove_button">
+                    <property name="tooltip-text" translatable="yes">Remove</property>
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_remove_wish"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">list-remove-symbolic</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Remove</property>
+                            <property name="mnemonic-widget">_remove_button</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkButton" id="_clear_all_button">
+                        <property name="tooltip-text" translatable="yes">Clear All…</property>
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_clear_wishlist"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">edit-clear-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">Clear All…</property>
+                                <property name="mnemonic-widget">_clear_all_button</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

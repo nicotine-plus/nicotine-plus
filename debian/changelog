@@ -1,0 +1,186 @@
+nicotine (3.3.0-dev5) kinetic; urgency=medium
+
+  * Development version.
+
+ -- Mat <mail@mathias.is>  Fri, 31 Mar 2023 12:57:11 +0300
+
+nicotine (3.2.9-1) kinetic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 05 Mar 2023 19:55:56 +0300
+
+nicotine (3.2.8-1) kinetic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Thu, 05 Jan 2023 19:23:54 +0300
+
+nicotine (3.2.7-1) kinetic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Wed, 30 Nov 2022 23:29:12 +0300
+
+nicotine (3.2.6-1) jammy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 21 Oct 2022 15:22:43 +0300
+
+nicotine (3.2.5-1) jammy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Tue, 30 Aug 2022 16:36:27 +0300
+
+nicotine (3.2.4-1) jammy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 07 Aug 2022 17:08:56 +0300
+
+nicotine (3.2.3-1) jammy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 05 Aug 2022 18:20:47 +0300
+
+nicotine (3.2.2-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 19 Mar 2022 20:29:41 +0300
+
+nicotine (3.2.1-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Wed, 09 Feb 2022 21:01:58 +0300
+
+nicotine (3.2.0-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 18 Dec 2021 21:59:03 +0300
+
+nicotine (3.1.1-1) hirsute; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Mon, 02 Aug 2021 06:55:39 +0300
+
+nicotine (3.1.0-1) hirsute; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 23 Jul 2021 18:27:07 +0300
+
+nicotine (3.0.6-1) hirsute; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 01 May 2021 00:32:57 +0300
+
+nicotine (3.0.5-1) hirsute; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 24 Apr 2021 03:03:29 +0300
+
+nicotine (3.0.4-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Wed, 07 Apr 2021 22:44:41 +0300
+
+nicotine (3.0.3-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Thu, 01 Apr 2021 01:28:43 +0300
+
+nicotine (3.0.2-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Mon, 01 Mar 2021 00:32:48 +0300
+
+nicotine (3.0.1-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 26 Feb 2021 20:12:52 +0300
+
+nicotine (3.0.0-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 12 Feb 2021 01:02:46 +0300
+
+nicotine (2.2.2-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Tue, 15 Dec 2020 06:25:23 +0300
+
+nicotine (2.2.1-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Mon, 14 Dec 2020 00:36:38 +0300
+
+nicotine (2.2.0-1) groovy; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Fri, 04 Dec 2020 17:00:00 +0300
+
+nicotine (2.1.2-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Mon, 12 Oct 2020 20:14:46 +0300
+
+nicotine (2.1.1-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 26 Sep 2020 19:58:58 +0300
+
+nicotine (2.1.0-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 12 Sep 2020 16:49:51 +0300
+
+nicotine (2.0.1-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mathias <mail@mathias.is>  Mon, 16 Jul 2020 20:23:00 +0300
+
+nicotine (2.0.0-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mathias <mail@mathias.is>  Mon, 14 Jul 2020 20:35:00 +0300
+
+nicotine (1.4.3-2) focal; urgency=medium
+
+  * Dropped Python requirement from 3.7 to 3.5 for Xenial support
+
+ -- Mathias <mail@mathias.is>  Wed, 20 May 2020 22:01:00 +0300
+
+nicotine (1.4.3-1) eoan; urgency=medium
+
+  * Ported to Python3 and GTk+3.
+
+ -- Lene Preuss <lene.preuss@gmail.com>  Sun, 03 May 2020 15:53:07 +0200
+
+nicotine (1.4.2-1) eoan; urgency=medium
+
+  * Latest upstream.
+
+ -- Kip Warner <kip@thevertigo.com>  Sat, 27 Feb 2020 18:49:00 -0800
+

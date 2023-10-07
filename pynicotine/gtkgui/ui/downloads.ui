@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkBox" id="container">
+    <property name="hexpand">True</property>
+    <property name="orientation">vertical</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkBox">
+        <property name="vexpand">True</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkScrolledWindow" id="tree_container">
+            <property name="hexpand">True</property>
+            <property name="visible">True</property>
+            <style>
+              <class name="transfers-view"/>
+            </style>
+          </object>
+        </child>
+        <style>
+          <class name="border-bottom"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-bottom">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-top">6</property>
+        <property name="spacing">6</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">6</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkButton" id="_resume_button">
+                <property name="tooltip-text" bind-source="_resume_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_retry_transfer"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">edit-redo-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="_resume_label">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Resume</property>
+                        <property name="mnemonic-widget">_resume_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="_pause_button">
+                <property name="tooltip-text" bind-source="_pause_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_abort_transfer"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">media-playback-pause-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="_pause_label">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Pause</property>
+                        <property name="mnemonic-widget">_pause_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="_clear_button">
+                <property name="tooltip-text" bind-source="_clear_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_clear_transfer"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">edit-delete-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="_clear_label">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear</property>
+                        <property name="mnemonic-widget">_clear_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
+            <property name="spacing">6</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkButton" id="_clear_finished_button">
+                <property name="tooltip-text" translatable="yes">Clear All Finished/Filtered Downloads</property>
+                <property name="visible">True</property>
+                <signal name="clicked" handler="on_clear_finished_filtered"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="mnemonic-widget">_clear_finished_button</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="clear_all_button">
+                <property name="direction">up</property>
+                <property name="tooltip-text" translatable="yes">Clear Specific Downloads</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="clear_all_label">
+                        <property name="ellipsize">end</property>
+                        <property name="label" translatable="yes">Clear _All…</property>
+                        <property name="mnemonic-widget">clear_all_button</property>
+                        <property name="use-underline">True</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">pan-up-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

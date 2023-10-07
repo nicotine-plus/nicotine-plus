@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkAdjustment" id="_speed_adjustment">
+    <property name="page-increment">50</property>
+    <property name="step-increment">10</property>
+    <property name="upper">1000000</property>
+  </object>
+  <object class="GtkAdjustment" id="_alt_speed_adjustment">
+    <property name="page-increment">50</property>
+    <property name="step-increment">10</property>
+    <property name="upper">1000000</property>
+  </object>
+  <object class="GtkBox" id="container">
+    <property name="margin-bottom">18</property>
+    <property name="margin-end">18</property>
+    <property name="margin-start">18</property>
+    <property name="margin-top">18</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">12</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">Download Speed Limits</property>
+        <property name="visible">True</property>
+        <property name="wrap">True</property>
+        <property name="xalign">0</property>
+        <style>
+          <class name="heading"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkRadioButton" id="use_unlimited_speed_radio">
+        <property name="active">True</property>
+        <property name="hexpand">True</property>
+        <property name="label" translatable="yes">Unlimited download speed</property>
+        <property name="visible">True</property>
+        <signal name="toggled" handler="on_active_limit_toggled"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkRadioButton" id="use_speed_limit_radio">
+            <property name="group">use_unlimited_speed_radio</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Use download speed limit (KiB/s):</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="on_active_limit_toggled"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="speed_spinner">
+            <property name="adjustment">_speed_adjustment</property>
+            <property name="numeric">True</property>
+            <property name="valign">center</property>
+            <property name="visible">True</property>
+            <signal name="value-changed" handler="on_limit_changed"/>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkRadioButton" id="use_alt_speed_limit_radio">
+            <property name="group">use_unlimited_speed_radio</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Use alternative download speed limit (KiB/s):</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="on_active_limit_toggled"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="alt_speed_spinner">
+            <property name="adjustment">_alt_speed_adjustment</property>
+            <property name="numeric">True</property>
+            <property name="valign">center</property>
+            <property name="visible">True</property>
+            <signal name="value-changed" handler="on_alt_limit_changed"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

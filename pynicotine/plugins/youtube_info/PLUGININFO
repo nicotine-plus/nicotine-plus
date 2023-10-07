@@ -1,0 +1,4 @@
+Version = "2022-12-17r00"
+Authors = ["Nicotine+"]
+Name = "YouTube Info"
+Description = "This plugin discretely displays information for YouTube links posted in chat (only you can see it).\n\nPlaceholders:\n- %title%\n- %description%\n- %duration%\n- %quality%\n- %channel%\n- %views%\n- %likes%\n\nRequest an API key:\nhttps://developers.google.com/youtube/v3/getting-started"
