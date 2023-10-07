@@ -69,6 +69,7 @@ EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
     "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
 ]
 INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
+    # pylint: disable=no-member
     {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
 )
 
