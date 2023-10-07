@@ -214,10 +214,10 @@ class UPnP(BaseImplementation):
                 "MX": str(UPnP.MX_RESPONSE_DELAY)
             }
 
-        def sendto(self, sock, addr):
+        def send(self, sock):
 
             msg = bytes(self)
-            sock.sendto(msg, addr)
+            sock.send(msg)
 
             log.add_debug("UPnP: SSDP request: %s", msg)
 
@@ -314,29 +314,30 @@ class UPnP(BaseImplementation):
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
+                sock.connect((UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
 
                 # Protocol 1
                 wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
                 wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ppp1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
                 # Protocol 2
                 wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
-                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
                 locations = set()
