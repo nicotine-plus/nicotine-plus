@@ -255,6 +255,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
+                self.queue.put("rescanning")
                 start_num_folders = sum(
                     len(self.share_dbs.get(x, {})) for x in ("streams", "buddystreams", "trustedstreams")
                 )
@@ -408,9 +409,6 @@ class Scanner:
                 return
 
     def rescan_dirs(self, share_type, rebuild=False):
-
-        # Reset progress
-        self.queue.put("indeterminate")
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
@@ -947,14 +945,14 @@ class Shares:
                     template, args, log_level = item
                     log.add(template, msg_args=args, level=log_level)
 
-                elif item == "indeterminate":
-                    emit_event("show-scan-progress")
-
                 elif isinstance(item, slskmessages.SharedFileListResponse):
                     self.compressed_shares[item.type] = item
 
                 elif isinstance(item, list):
                     self.file_path_index = tuple(item)
+
+                elif item == "rescanning":
+                    emit_event("shares-scanning")
 
         return False
 
@@ -995,6 +993,8 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.file_path_index = ()
 
+        events.emit("shares-preparing")
+
         share_groups = self.get_shared_folders()
         scanner, scanner_queue = self.build_scanner_process(share_groups, init, rescan, rebuild)
         scanner.start()
@@ -1012,7 +1012,7 @@ class Shares:
 
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue, emit_event)
-        emit_event("hide-scan-progress")
+        emit_event("shares-ready")
 
         # Scanning done, load shares in the main process again
         self.load_shares_instance()

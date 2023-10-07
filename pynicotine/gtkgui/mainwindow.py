@@ -266,12 +266,13 @@ class MainWindow(Window):
 
         # Events
         for event_name, callback in (
-            ("hide-scan-progress", self.hide_scan_progress),
             ("schedule-quit", self.schedule_quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("set-connection-stats", self.set_connection_stats),
-            ("show-scan-progress", self.show_scan_progress),
+            ("shares-preparing", self.shares_preparing),
+            ("shares-ready", self.shares_ready),
+            ("shares-scanning", self.shares_scanning),
             ("update-download-limits", self.update_download_limits),
             ("update-upload-limits", self.update_upload_limits),
             ("user-status", self.user_status)
@@ -1319,17 +1320,21 @@ class MainWindow(Window):
 
         remove_css_class(label, "underline")
 
-    def show_scan_progress(self):
+    def shares_preparing(self):
 
         if self.scan_progress_indeterminate:
             return
 
         self.scan_progress_indeterminate = True
 
+        self.scan_progress_bar.set_text(_("Preparing Shares"))
         self.scan_progress_bar.set_visible(True)
         self.scan_progress_bar.pulse()
 
         GLib.timeout_add(500, self.pulse_scan_progress)
+
+    def shares_scanning(self):
+        self.scan_progress_bar.set_text(_("Scanning Shares"))
 
     def pulse_scan_progress(self):
 
@@ -1339,7 +1344,7 @@ class MainWindow(Window):
         self.scan_progress_bar.pulse()
         return True
 
-    def hide_scan_progress(self):
+    def shares_ready(self):
 
         self.scan_progress_indeterminate = False
 
