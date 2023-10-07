@@ -718,9 +718,9 @@ class MainWindow(Window):
         set_use_header_bar(enabled)
         config.sections["ui"]["header_bar"] = enabled
 
-        # Show active dialogs again after slight delay
+        # Show active dialogs again
         if active_dialogs:
-            GLib.idle_add(self._show_dialogs, active_dialogs)
+            self._show_dialogs(active_dialogs)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""

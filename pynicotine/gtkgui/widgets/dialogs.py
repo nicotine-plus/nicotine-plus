@@ -232,13 +232,9 @@ class Dialog(Window):
         # Focus default button
         self._focus_default_button()
 
-        if not self.parent.is_visible():
-            # In case parent window appears a few frames later, ensure dialog is modal
-            GLib.idle_add(self._finish_show, priority=GLib.PRIORITY_LOW)
-            return
-
-        # Show the dialog
-        self._finish_show()
+        # Show dialog after slight delay to work around issue where dialogs don't
+        # close if another one is shown right after
+        GLib.idle_add(self._finish_show)
 
 
 class MessageDialog(Window):
@@ -424,13 +420,9 @@ class MessageDialog(Window):
         if self.default_focus_widget:
             self.default_focus_widget.grab_focus()
 
-        if self.parent and not self.parent.is_visible():
-            # In case parent window appears a few frames later, ensure dialog is modal
-            GLib.idle_add(self._finish_show, priority=GLib.PRIORITY_LOW)
-            return
-
-        # Show the dialog
-        self._finish_show()
+        # Show dialog after slight delay to work around issue where dialogs don't
+        # close if another one is shown right after
+        GLib.idle_add(self._finish_show)
 
 
 class OptionDialog(MessageDialog):
