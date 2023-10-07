@@ -95,7 +95,8 @@ class DatabaseError(Exception):
 class Database:
     """Custom key-value database format for Nicotine+ shares."""
 
-    FILE_HEADER = b"N+DB"
+    FILE_SIGNATURE = b"N+DB"
+    VERSION = 1
     LENGTH_DATA_SIZE = 8
     PACK_LENGTHS = Struct("!II").pack
     UNPACK_LENGTHS = Struct("!II").unpack_from
@@ -129,7 +130,8 @@ class Database:
             file_size = os.fstat(file_handle.fileno()).st_size
 
             if not file_size:
-                file_handle.write(self.FILE_HEADER)
+                file_handle.write(self.FILE_SIGNATURE)
+                file_handle.write(bytes([self.VERSION]))
                 return value_offsets
 
             file_handle.seek(0)
@@ -138,10 +140,15 @@ class Database:
                 contents_view = memoryview(contents)
 
                 try:
-                    file_header_length = current_offset = len(self.FILE_HEADER)
+                    file_signature_length = len(self.FILE_SIGNATURE)
 
-                    if contents_view[:file_header_length] != self.FILE_HEADER:
+                    if contents_view[:file_signature_length] != self.FILE_SIGNATURE:
                         raise DatabaseError("Not a database file")
+
+                    if contents_view[file_signature_length:file_signature_length + 1][0] != self.VERSION:
+                        raise DatabaseError("Invalid database version")
+
+                    current_offset = (file_signature_length + 1)
 
                     while current_offset < file_size:
                         key_offset = (current_offset + self.LENGTH_DATA_SIZE)
@@ -234,21 +241,13 @@ class Scanner:
         self.processed_share_paths = set()
         self.current_file_index = 0
         self.tinytag = None
-        self.version = 3
 
     def run(self):
 
         try:
             rename_process(b"nicotine-scan")
 
-            shares_loaded = Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True)
-            old_mtimes = self.share_dbs.get("mtimes")
-            share_version = None
-
-            if old_mtimes is not None:
-                share_version = old_mtimes.get("__NICOTINE_SHARE_VERSION__")
-
-            if not shares_loaded or share_version != self.version:
+            if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
                 # Failed to load shares or version is invalid, rebuild
                 self.rescan = self.rebuild = True
 
@@ -447,7 +446,6 @@ class Scanner:
             self.processed_share_paths.add(folder_path)
 
         # Save data to databases
-        self.mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
         num_folders = len(self.streams)
         self.set_shares(share_type, files=self.files, streams=self.streams, mtimes=self.mtimes)
 
