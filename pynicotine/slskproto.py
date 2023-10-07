@@ -558,16 +558,12 @@ class NetworkThread(Thread):
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
 
-            try:
-                # Send a broadcast packet on a local address (doesn't need to be reachable,
-                # but MacOS requires port to be non-zero)
-                local_socket.connect(("10.255.255.255", 1))
+            # Send a broadcast packet on a local address (doesn't need to be reachable,
+            # but MacOS requires port to be non-zero)
+            local_socket.connect(("10.255.255.255", 1))
 
-                # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
-                ip_address = local_socket.getsockname()[0]
-
-            except OSError:
-                ip_address = ""
+            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+            ip_address = local_socket.getsockname()[0]
 
         return ip_address
 
