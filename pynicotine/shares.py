@@ -247,40 +247,27 @@ class Scanner:
         try:
             rename_process(b"nicotine-scan")
 
-            if not Shares.load_shares(self.share_dbs, self.share_db_paths, remove_failed=True):
-                # Failed to load shares or version is invalid, rebuild
-                self.rescan = self.rebuild = True
-
             if self.init:
                 self.create_compressed_shares()
 
             if self.rescan:
                 self.queue.put("rescanning")
-                start_num_folders = sum(
-                    len(self.share_dbs.get(x, {})) for x in ("streams", "buddystreams", "trustedstreams")
-                )
-                self.queue.put((_("%(num)s folders found before rescan"), {"num": start_num_folders}, LogLevel.DEFAULT))
                 self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
                                None, LogLevel.DEFAULT))
 
                 # Clear previous word index to prevent inconsistent state if the scanner fails
                 self.set_shares(word_index={})
 
-                num_public_folders = self.rescan_dirs("public", rebuild=self.rebuild)
-                num_buddy_folders = self.rescan_dirs("buddy", rebuild=self.rebuild)
-                num_trusted_folders = self.rescan_dirs("trusted", rebuild=self.rebuild)
+                # Scan shares
+                num_public_folders = self.rescan_dirs("public")
+                num_buddy_folders = self.rescan_dirs("buddy")
+                num_trusted_folders = self.rescan_dirs("trusted")
 
                 self.set_shares(word_index=self.word_index)
                 self.word_index.clear()
 
                 self.create_compressed_shares()
-
-                file_path_index = (
-                    list(self.share_dbs.get("files"))
-                    + list(self.share_dbs.get("buddyfiles"))
-                    + list(self.share_dbs.get("trustedfiles"))
-                )
-                self.queue.put(file_path_index)
+                self.create_file_path_index()
 
                 self.queue.put(
                     (_("Rescan complete: %(num)s folders found"),
@@ -328,31 +315,30 @@ class Scanner:
         self.queue.put(compressed_shares)
 
     def create_compressed_shares(self):
+
+        if not Shares.load_shares(
+            self.share_dbs, self.share_db_paths, destinations={"streams", "buddystreams", "trustedstreams"}
+        ):
+            # Failed to load shares or version is invalid, rebuild
+            self.rescan = self.rebuild = True
+
         for share_type in ("public", "buddy", "trusted"):
             self.create_compressed_shares_message(share_type)
 
-    def create_db_file(self, destination):
+        Shares.close_shares(self.share_dbs)
 
-        share_db = self.share_dbs.get(destination)
+    def create_file_path_index(self):
 
-        if share_db is not None:
-            share_db.close()
-
-        db_path = os.path.join(self.config.data_folder_path, f"{destination}.db")
-        self.remove_db_file(db_path)
-
-        return Database(encode_path(db_path))
-
-    @staticmethod
-    def remove_db_file(db_path):
-
-        db_path_encoded = encode_path(db_path)
-
-        if os.path.isfile(db_path_encoded):
-            os.remove(db_path_encoded)
-
-        elif os.path.isdir(db_path_encoded):
-            shutil.rmtree(db_path_encoded)
+        Shares.load_shares(
+            self.share_dbs, self.share_db_paths, destinations={"files", "buddyfiles", "trustedfiles"}
+        )
+        file_path_index = (
+            list(self.share_dbs.get("files"))
+            + list(self.share_dbs.get("buddyfiles"))
+            + list(self.share_dbs.get("trustedfiles"))
+        )
+        self.queue.put(file_path_index)
+        Shares.close_shares(self.share_dbs)
 
     def real2virtual(self, path):
 
@@ -400,15 +386,16 @@ class Scanner:
                 destination = f"{share_type}{destination}"
 
             try:
-                self.share_dbs[destination] = share_db = self.create_db_file(destination)
+                share_db = Shares.create_db_file(self.share_dbs, self.config.data_folder_path, destination)
                 share_db.update(source)
+                share_db.close()
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
                                 {"filename": f"{destination}.db", "error": error}, LogLevel.DEFAULT))
                 return
 
-    def rescan_dirs(self, share_type, rebuild=False):
+    def rescan_dirs(self, share_type):
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
@@ -424,6 +411,11 @@ class Scanner:
             shared_folder_paths = sorted(shared_public_folders)
             prefix = ""
 
+        if not Shares.load_shares(
+            self.share_dbs, self.share_db_paths, destinations={f"{prefix}files", f"{prefix}mtimes"}
+        ):
+            self.rebuild = True
+
         old_files = self.share_dbs.get(f"{prefix}files", {})
         old_mtimes = self.share_dbs.get(f"{prefix}mtimes", {})
 
@@ -438,7 +430,7 @@ class Scanner:
                 # No duplicate folder paths
                 continue
 
-            self.scan_shared_folder(folder_path, old_mtimes, old_files, rebuild)
+            self.scan_shared_folder(folder_path, old_mtimes, old_files)
 
             self.processed_share_names.add(virtual_name)
             self.processed_share_paths.add(folder_path)
@@ -487,7 +479,7 @@ class Scanner:
 
         return False
 
-    def scan_shared_folder(self, shared_folder_path, oldmtimes, oldfiles, rebuild=False):
+    def scan_shared_folder(self, shared_folder_path, old_mtimes, old_files):
         """Scan a shared folder for all subfolders, files and their metadata."""
 
         folder_paths = deque([shared_folder_path])
@@ -524,8 +516,8 @@ class Scanner:
                             self.mtimes[path] = file_mtime = file_stat.st_mtime
                             virtual_file_path = f"{virtual_folder_path}\\{basename}"
 
-                            if not rebuild and file_mtime == oldmtimes.get(path) and path in oldfiles:
-                                full_path_file_data = oldfiles[path]
+                            if not self.rebuild and file_mtime == old_mtimes.get(path) and path in old_files:
+                                full_path_file_data = old_files[path]
                                 full_path_file_data[0] = virtual_file_path  # Virtual name might have changed
                             else:
                                 full_path_file_data = self.get_file_info(virtual_file_path, path, file_stat)
@@ -648,16 +640,14 @@ class Shares:
         self.share_db_paths = [
             ("wordindex", os.path.join(config.data_folder_path, "wordindex.db")),
             ("files", os.path.join(config.data_folder_path, "files.db")),
+            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
             ("streams", os.path.join(config.data_folder_path, "streams.db")),
             ("buddyfiles", os.path.join(config.data_folder_path, "buddyfiles.db")),
+            ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db")),
             ("buddystreams", os.path.join(config.data_folder_path, "buddystreams.db")),
             ("trustedfiles", os.path.join(config.data_folder_path, "trustedfiles.db")),
+            ("trustedmtimes", os.path.join(config.data_folder_path, "trustedmtimes.db")),
             ("trustedstreams", os.path.join(config.data_folder_path, "trustedstreams.db"))
-        ]
-        self.scanner_share_db_paths = [
-            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
-            ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db")),
-            ("trustedmtimes", os.path.join(config.data_folder_path, "trustedmtimes.db"))
         ]
 
         for event_name, callback in (
@@ -688,6 +678,30 @@ class Shares:
         self.pending_network_msgs.clear()
 
     # Shares-related Actions #
+
+    @classmethod
+    def create_db_file(cls, share_dbs, folder_path, destination):
+
+        share_db = share_dbs.pop(destination, None)
+
+        if share_db is not None:
+            share_db.close()
+
+        db_path = os.path.join(folder_path, f"{destination}.db")
+        cls.remove_db_file(db_path)
+
+        return Database(encode_path(db_path))
+
+    @staticmethod
+    def remove_db_file(db_path):
+
+        db_path_encoded = encode_path(db_path)
+
+        if os.path.isfile(db_path_encoded):
+            os.remove(db_path_encoded)
+
+        elif os.path.isdir(db_path_encoded):
+            shutil.rmtree(db_path_encoded)
 
     def virtual2real(self, path):
 
@@ -730,12 +744,15 @@ class Shares:
                                                        for x in config.sections["transfers"]["buddyshared"]]
 
     @classmethod
-    def load_shares(cls, shares, dbs, remove_failed=False):
+    def load_shares(cls, shares, dbs, destinations=None):
 
         errors = []
         exception = None
 
         for destination, db_path in dbs:
+            if destinations and destination not in destinations:
+                continue
+
             try:
                 shares[destination] = Database(encode_path(db_path), overwrite=False)
 
@@ -745,8 +762,7 @@ class Shares:
                 errors.append(db_path)
                 exception = format_exc()
 
-                if remove_failed:
-                    Scanner.remove_db_file(db_path)
+                cls.remove_db_file(db_path)
 
         if not errors:
             return True
@@ -759,7 +775,11 @@ class Shares:
 
     def load_shares_instance(self):
 
-        if not self.load_shares(self.share_dbs, self.share_db_paths, remove_failed=False):
+        if not self.load_shares(
+            self.share_dbs, self.share_db_paths, destinations={
+                "wordindex", "files", "streams", "buddyfiles", "buddystreams", "trustedfiles", "trustedstreams"
+            }
+        ):
             # Disable search engine if databases failed to load
             self.file_path_index = ()
             word_index = self.share_dbs.get("wordindex")
@@ -878,9 +898,12 @@ class Shares:
 
     @staticmethod
     def close_shares(share_dbs):
-        for database in share_dbs.copy():
-            share_dbs[database].close()
-            del share_dbs[database]
+
+        for destination in share_dbs.copy():
+            database = share_dbs.pop(destination, None)
+
+            if database is not None:
+                database.close()
 
     def send_num_shared_folders_files(self):
         """Send number publicly shared files to the server."""
@@ -916,7 +939,7 @@ class Shares:
             config,
             scanner_queue,
             share_groups,
-            self.share_db_paths + self.scanner_share_db_paths,
+            self.share_db_paths,
             init,
             rescan,
             rebuild,
