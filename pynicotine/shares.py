@@ -95,8 +95,8 @@ class DatabaseError(Exception):
 class Database:
     """Custom key-value database format for Nicotine+ shares."""
 
-    FILE_SIGNATURE = b"N+DB"
-    VERSION = 1
+    FILE_SIGNATURE = b"DBN+"
+    VERSION = 3
     LENGTH_DATA_SIZE = 8
     PACK_LENGTHS = Struct("!II").pack
     UNPACK_LENGTHS = Struct("!II").unpack_from
@@ -104,6 +104,7 @@ class Database:
     def __init__(self, file_path, overwrite=True):
 
         folder_path = os.path.dirname(file_path)
+        mode = "ab+" if overwrite else "rb"
 
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
@@ -111,22 +112,22 @@ class Database:
         if overwrite and os.path.exists(file_path):
             os.remove(file_path)
 
-        self._value_offsets = self._load_value_offsets(file_path)
+        self._value_offsets = self._load_value_offsets(file_path, mode)
 
         if overwrite:
-            self._file_handle = open(file_path, mode="ab+")  # pylint: disable=consider-using-with
+            self._file_handle = open(file_path, mode)  # pylint: disable=consider-using-with
         else:
-            with open(file_path, mode="rb") as file_handle:
+            with open(file_path, mode) as file_handle:
                 self._file_handle = mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ)
 
         self._file_offset = self._file_handle.seek(0, SEEK_END)
         self._overwrite = overwrite
 
-    def _load_value_offsets(self, file_path):
+    def _load_value_offsets(self, file_path, mode):
 
         value_offsets = {}
 
-        with open(file_path, "ab+") as file_handle:
+        with open(file_path, mode) as file_handle:  # pylint: disable=unspecified-encoding
             file_size = os.fstat(file_handle.fileno()).st_size
 
             if not file_size:
@@ -146,7 +147,7 @@ class Database:
                         raise DatabaseError("Not a database file")
 
                     if contents_view[file_signature_length:file_signature_length + 1][0] != self.VERSION:
-                        raise DatabaseError("Invalid database version")
+                        raise DatabaseError("Incompatible version")
 
                     current_offset = (file_signature_length + 1)
 
@@ -247,8 +248,9 @@ class Scanner:
         try:
             rename_process(b"nicotine-scan")
 
-            if self.init:
-                self.create_compressed_shares()
+            if self.init and not self.create_compressed_shares():
+                # Failed to load shares or version is invalid, rebuild
+                self.rescan = self.rebuild = True
 
             if self.rescan:
                 self.queue.put("rescanning")
@@ -280,7 +282,7 @@ class Scanner:
 
             self.queue.put((
                 _("Serious error occurred while rescanning shares. If this problem persists, "
-                  "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
+                  "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
                   "report with this stack trace included: %(trace)s"), {
                     "dir": self.config.data_folder_path,
                     "trace": "\n" + format_exc()
@@ -295,9 +297,9 @@ class Scanner:
         """Create a message that will later contain a compressed list of our
         shares."""
 
-        streams = self.share_dbs.get("streams")
-        buddy_streams = self.share_dbs.get("buddystreams")
-        trusted_streams = self.share_dbs.get("trustedstreams")
+        public_streams = self.share_dbs["public_streams"]
+        buddy_streams = self.share_dbs["buddy_streams"]
+        trusted_streams = self.share_dbs["trusted_streams"]
 
         if share_type == "public" and not self.reveal_buddy_shares:
             buddy_streams = None
@@ -306,7 +308,8 @@ class Scanner:
             trusted_streams = None
 
         compressed_shares = slskmessages.SharedFileListResponse(
-            public_shares=streams, buddy_shares=buddy_streams, trusted_shares=trusted_streams, share_type=share_type
+            public_shares=public_streams, buddy_shares=buddy_streams, trusted_shares=trusted_streams,
+            share_type=share_type
         )
         compressed_shares.make_network_message()
         compressed_shares.public_shares = compressed_shares.buddy_shares = compressed_shares.trusted_shares = None
@@ -317,25 +320,25 @@ class Scanner:
     def create_compressed_shares(self):
 
         if not Shares.load_shares(
-            self.share_dbs, self.share_db_paths, destinations={"streams", "buddystreams", "trustedstreams"}
+            self.share_dbs, self.share_db_paths, destinations={"public_streams", "buddy_streams", "trusted_streams"}
         ):
-            # Failed to load shares or version is invalid, rebuild
-            self.rescan = self.rebuild = True
+            return False
 
         for share_type in ("public", "buddy", "trusted"):
             self.create_compressed_shares_message(share_type)
 
         Shares.close_shares(self.share_dbs)
+        return True
 
     def create_file_path_index(self):
 
         Shares.load_shares(
-            self.share_dbs, self.share_db_paths, destinations={"files", "buddyfiles", "trustedfiles"}
+            self.share_dbs, self.share_db_paths, destinations={"public_files", "buddy_files", "trusted_files"}
         )
         file_path_index = (
-            list(self.share_dbs.get("files"))
-            + list(self.share_dbs.get("buddyfiles"))
-            + list(self.share_dbs.get("trustedfiles"))
+            list(self.share_dbs["public_files"])
+            + list(self.share_dbs["buddy_files"])
+            + list(self.share_dbs["trusted_files"])
         )
         self.queue.put(file_path_index)
         Shares.close_shares(self.share_dbs)
@@ -375,14 +378,14 @@ class Scanner:
             (files, "files"),
             (streams, "streams"),
             (mtimes, "mtimes"),
-            (word_index, "wordindex")
+            (word_index, "words")
         ]
 
         for source, destination in storable_objects:
             if source is None:
                 continue
 
-            if share_type and share_type != "public":
+            if destination != "words":
                 destination = f"{share_type}{destination}"
 
             try:
@@ -392,7 +395,7 @@ class Scanner:
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
-                                {"filename": f"{destination}.db", "error": error}, LogLevel.DEFAULT))
+                                {"filename": f"{destination}.dbn", "error": error}, LogLevel.DEFAULT))
                 return
 
     def rescan_dirs(self, share_type):
@@ -401,23 +404,21 @@ class Scanner:
 
         if share_type == "trusted":
             shared_folder_paths = sorted(shared_trusted_folders)
-            prefix = "trusted"
 
         elif share_type == "buddy":
             shared_folder_paths = sorted(shared_buddy_folders)
-            prefix = "buddy"
 
         else:
             shared_folder_paths = sorted(shared_public_folders)
-            prefix = ""
 
         if not Shares.load_shares(
-            self.share_dbs, self.share_db_paths, destinations={f"{prefix}files", f"{prefix}mtimes"}
+            self.share_dbs, self.share_db_paths, destinations={f"{share_type}_files", f"{share_type}_mtimes"}
         ):
+            # No previous share databases, rebuild
             self.rebuild = True
 
-        old_files = self.share_dbs.get(f"{prefix}files", {})
-        old_mtimes = self.share_dbs.get(f"{prefix}mtimes", {})
+        old_files = self.share_dbs.get(f"{share_type}_files")
+        old_mtimes = self.share_dbs.get(f"{share_type}_mtimes")
 
         for virtual_name, folder_path, *_unused in shared_folder_paths:
             if virtual_name in self.processed_share_names:
@@ -638,16 +639,16 @@ class Shares:
 
         self.convert_shares()
         self.share_db_paths = [
-            ("wordindex", os.path.join(config.data_folder_path, "wordindex.db")),
-            ("files", os.path.join(config.data_folder_path, "files.db")),
-            ("mtimes", os.path.join(config.data_folder_path, "mtimes.db")),
-            ("streams", os.path.join(config.data_folder_path, "streams.db")),
-            ("buddyfiles", os.path.join(config.data_folder_path, "buddyfiles.db")),
-            ("buddymtimes", os.path.join(config.data_folder_path, "buddymtimes.db")),
-            ("buddystreams", os.path.join(config.data_folder_path, "buddystreams.db")),
-            ("trustedfiles", os.path.join(config.data_folder_path, "trustedfiles.db")),
-            ("trustedmtimes", os.path.join(config.data_folder_path, "trustedmtimes.db")),
-            ("trustedstreams", os.path.join(config.data_folder_path, "trustedstreams.db"))
+            ("words", os.path.join(config.data_folder_path, "words.dbn")),
+            ("public_files", os.path.join(config.data_folder_path, "publicfiles.dbn")),
+            ("public_mtimes", os.path.join(config.data_folder_path, "publicmtimes.dbn")),
+            ("public_streams", os.path.join(config.data_folder_path, "publicstreams.dbn")),
+            ("buddy_files", os.path.join(config.data_folder_path, "buddyfiles.dbn")),
+            ("buddy_mtimes", os.path.join(config.data_folder_path, "buddymtimes.dbn")),
+            ("buddy_streams", os.path.join(config.data_folder_path, "buddystreams.dbn")),
+            ("trusted_files", os.path.join(config.data_folder_path, "trustedfiles.dbn")),
+            ("trusted_mtimes", os.path.join(config.data_folder_path, "trustedmtimes.dbn")),
+            ("trusted_streams", os.path.join(config.data_folder_path, "trustedstreams.dbn"))
         ]
 
         for event_name, callback in (
@@ -687,7 +688,7 @@ class Shares:
         if share_db is not None:
             share_db.close()
 
-        db_path = os.path.join(folder_path, f"{destination}.db")
+        db_path = os.path.join(folder_path, f"{destination}.dbn")
         cls.remove_db_file(db_path)
 
         return Database(encode_path(db_path))
@@ -727,8 +728,8 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     def convert_shares(self):
-        """Convert fs-based shared to virtual shared (pre 1.4.0)"""
 
+        # Convert fs-based shared to virtual shared (pre-1.4.0)
         def _convert_to_virtual(shared_folder):
             if isinstance(shared_folder, tuple):
                 return shared_folder
@@ -743,50 +744,62 @@ class Shares:
         config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
                                                        for x in config.sections["transfers"]["buddyshared"]]
 
-    @classmethod
-    def load_shares(cls, shares, dbs, destinations=None):
+        # Remove old share databases (pre-3.3.0)
+        for destination in (
+            "wordindex", "fileindex", "files", "mtimes", "streams",
+            "buddywordindex", "buddyfileindex", "buddyfiles", "buddymtimes", "buddystreams"
+        ):
+            file_path = os.path.join(config.data_folder_path, f"{destination}.db")
+            file_path_encoded = encode_path(file_path)
 
-        errors = []
+            try:
+                if os.path.exists(file_path_encoded):
+                    os.remove(file_path_encoded)
+
+            except OSError as error:
+                log.add_debug("Failed to remove old share database %s: %s", (file_path, error))
+
+    @classmethod
+    def load_shares(cls, share_dbs, share_db_paths, destinations=None):
+
+        error_paths = []
         exception = None
 
-        for destination, db_path in dbs:
+        for destination, db_path in share_db_paths:
             if destinations and destination not in destinations:
                 continue
 
             try:
-                shares[destination] = Database(encode_path(db_path), overwrite=False)
+                share_dbs[destination] = Database(encode_path(db_path), overwrite=False)
 
             except Exception:
                 from traceback import format_exc
 
-                errors.append(db_path)
+                error_paths.append(db_path)
                 exception = format_exc()
 
                 cls.remove_db_file(db_path)
 
-        if not errors:
+        if not error_paths:
             return True
 
         log.add(_("Failed to process the following databases: %(names)s"), {
-            "names": "\n".join(errors)
+            "names": "\n".join(error_paths)
         })
         log.add(exception)
+
+        cls.close_shares(share_dbs)
         return False
 
     def load_shares_instance(self):
 
         if not self.load_shares(
             self.share_dbs, self.share_db_paths, destinations={
-                "wordindex", "files", "streams", "buddyfiles", "buddystreams", "trustedfiles", "trustedstreams"
+                "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
+                "trusted_files", "trusted_streams"
             }
         ):
-            # Disable search engine if databases failed to load
             self.file_path_index = ()
-            word_index = self.share_dbs.get("wordindex")
-
-            if word_index is not None:
-                word_index.close()
-                del self.share_dbs["wordindex"]
 
     def file_is_shared(self, username, virtualfilename, realfilename):
 
@@ -795,13 +808,13 @@ class Shares:
             "path": realfilename
         })
 
-        shared_files = self.share_dbs.get("files")
-        buddy_shared_files = self.share_dbs.get("buddyfiles")
-        trusted_shared_files = self.share_dbs.get("trustedfiles")
+        public_shared_files = self.share_dbs.get("public_files")
+        buddy_shared_files = self.share_dbs.get("buddy_files")
+        trusted_shared_files = self.share_dbs.get("trusted_files")
         file_is_shared = False
 
         if not realfilename.startswith("__INTERNAL_ERROR__"):
-            if shared_files is not None and realfilename in shared_files:
+            if public_shared_files is not None and realfilename in public_shared_files:
                 file_is_shared = True
 
             elif (buddy_shared_files is not None and username in core.userlist.buddies
@@ -914,16 +927,16 @@ class Shares:
         if self.rescanning:
             return
 
-        num_shared_folders = len(self.share_dbs.get("streams", {}))
-        num_shared_files = len(self.share_dbs.get("files", {}))
+        num_shared_folders = len(self.share_dbs.get("public_streams", {}))
+        num_shared_files = len(self.share_dbs.get("public_files", {}))
 
         if config.sections["transfers"]["reveal_buddy_shares"]:
-            num_shared_folders += len(self.share_dbs.get("buddystreams", {}))
-            num_shared_files += len(self.share_dbs.get("buddyfiles", {}))
+            num_shared_folders += len(self.share_dbs.get("buddy_streams", {}))
+            num_shared_files += len(self.share_dbs.get("buddy_files", {}))
 
         if config.sections["transfers"]["reveal_trusted_shares"]:
-            num_shared_folders += len(self.share_dbs.get("trustedstreams", {}))
-            num_shared_files += len(self.share_dbs.get("trustedfiles", {}))
+            num_shared_folders += len(self.share_dbs.get("trusted_streams", {}))
+            num_shared_files += len(self.share_dbs.get("trusted_files", {}))
 
         core.send_message_to_server(slskmessages.SharedFoldersFiles(num_shared_folders, num_shared_files))
 
@@ -1092,9 +1105,9 @@ class Shares:
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
         reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
-        public_shares = self.share_dbs.get("streams")
-        buddy_shares = self.share_dbs.get("buddystreams")
-        trusted_shares = self.share_dbs.get("trustedstreams")
+        public_shares = self.share_dbs.get("public_streams")
+        buddy_shares = self.share_dbs.get("buddy_streams")
+        trusted_shares = self.share_dbs.get("trusted_streams")
         folder_data = None
 
         try:

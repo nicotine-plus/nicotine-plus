@@ -64,13 +64,13 @@ class SharesTest(TestCase):
         """Test a full shares scan."""
 
         # Verify that modification times were saved
-        mtimes = list(core.shares.share_dbs["mtimes"])
-        buddy_mtimes = list(core.shares.share_dbs["buddymtimes"])
-        trusted_mtimes = list(core.shares.share_dbs["trustedmtimes"])
+        public_mtimes = list(core.shares.share_dbs["public_mtimes"])
+        buddy_mtimes = list(core.shares.share_dbs["buddy_mtimes"])
+        trusted_mtimes = list(core.shares.share_dbs["trusted_mtimes"])
 
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3"), mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3"), public_mtimes)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "nicotinevbr2.mp3"), buddy_mtimes)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "something2", "nothing2"), buddy_mtimes)
         self.assertIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, "nicotinetestdata3.ogg"), trusted_mtimes)
@@ -78,21 +78,21 @@ class SharesTest(TestCase):
                       trusted_mtimes)
 
         # Verify that shared files were added
-        files = core.shares.share_dbs["files"]
-        buddy_files = core.shares.share_dbs["buddyfiles"]
-        trusted_files = core.shares.share_dbs["trustedfiles"]
+        public_files = core.shares.share_dbs["public_files"]
+        buddy_files = core.shares.share_dbs["buddy_files"]
+        trusted_files = core.shares.share_dbs["trusted_files"]
 
         self.assertEqual(
             ["Shares\\dummy_file", 0, None, None],
-            files[os.path.join(SHARES_FOLDER_PATH, "dummy_file")]
+            public_files[os.path.join(SHARES_FOLDER_PATH, "dummy_file")]
         )
         self.assertEqual(
             ["Shares\\nicotinetestdata.mp3", 80919, (128, 0, 44100, None), 5],
-            files[os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3")]
+            public_files[os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3")]
         )
         self.assertEqual(
             ["Shares\\nicotinevbr.mp3", 36609, (32, 1, 44100, None), 9],
-            files[os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3")]
+            public_files[os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3")]
         )
         self.assertEqual(
             ["Secrets\\nicotinevbr2.mp3", 36609, (32, 1, 44100, None), 9],
@@ -108,12 +108,12 @@ class SharesTest(TestCase):
         )
 
         # Verify that expected folders are empty
-        self.assertEqual(core.shares.share_dbs["streams"]["Shares\\folder2"], b"\x00\x00\x00\x00")
-        self.assertEqual(core.shares.share_dbs["buddystreams"]["Secrets\\folder3"], b"\x00\x00\x00\x00")
-        self.assertEqual(core.shares.share_dbs["trustedstreams"]["Trusted\\folder\\folder2"], b"\x00\x00\x00\x00")
+        self.assertEqual(core.shares.share_dbs["public_streams"]["Shares\\folder2"], b"\x00\x00\x00\x00")
+        self.assertEqual(core.shares.share_dbs["buddy_streams"]["Secrets\\folder3"], b"\x00\x00\x00\x00")
+        self.assertEqual(core.shares.share_dbs["trusted_streams"]["Trusted\\folder\\folder2"], b"\x00\x00\x00\x00")
 
         # Verify that search index was updated
-        word_index = core.shares.share_dbs["wordindex"]
+        word_index = core.shares.share_dbs["words"]
         nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
         nicotinetestdata2_indexes = list(word_index["nicotinetestdata2"])
         nicotinetestdata3_indexes = list(word_index["nicotinetestdata3"])
@@ -136,15 +136,15 @@ class SharesTest(TestCase):
         self.assertIn(ogg_indexes[1], nicotinetestdata2_indexes)
         self.assertIn(ogg_indexes[2], nicotinetestdata3_indexes)
         self.assertEqual(
-            core.shares.share_dbs["files"][core.shares.file_path_index[ogg_indexes[0]]][0],
+            core.shares.share_dbs["public_files"][core.shares.file_path_index[ogg_indexes[0]]][0],
             "Shares\\nicotinetestdata.ogg"
         )
         self.assertEqual(
-            core.shares.share_dbs["buddyfiles"][core.shares.file_path_index[ogg_indexes[1]]][0],
+            core.shares.share_dbs["buddy_files"][core.shares.file_path_index[ogg_indexes[1]]][0],
             "Secrets\\nicotinetestdata2.ogg"
         )
         self.assertEqual(
-            core.shares.share_dbs["trustedfiles"][core.shares.file_path_index[ogg_indexes[2]]][0],
+            core.shares.share_dbs["trusted_files"][core.shares.file_path_index[ogg_indexes[2]]][0],
             "Trusted\\nicotinetestdata3.ogg"
         )
 
@@ -152,17 +152,17 @@ class SharesTest(TestCase):
         """Test that hidden files and folders are excluded."""
 
         # Check modification times
-        mtimes = list(core.shares.share_dbs["mtimes"])
-        buddy_mtimes = list(core.shares.share_dbs["buddymtimes"])
-        trusted_mtimes = list(core.shares.share_dbs["trustedmtimes"])
+        public_mtimes = list(core.shares.share_dbs["public_mtimes"])
+        buddy_mtimes = list(core.shares.share_dbs["buddy_mtimes"])
+        trusted_mtimes = list(core.shares.share_dbs["trusted_mtimes"])
 
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".abc", "nothing"), mtimes)
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz", "nothing"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder1", "nothing"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2", "test", "nothing"), mtimes)
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, "folder2", ".poof", "nothing"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2", "test", "nothing"), mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "something", "nothing"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".abc", "nothing"), public_mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz", "nothing"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder1", "nothing"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2", "test", "nothing"), public_mtimes)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, "folder2", ".poof", "nothing"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "folder2", "test", "nothing"), public_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "something", "nothing"), public_mtimes)
 
         self.assertNotIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "folder3", ".poof2", "nothing2"), buddy_mtimes)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "folder3", "test2", "nothing2"), buddy_mtimes)
@@ -173,15 +173,15 @@ class SharesTest(TestCase):
                       trusted_mtimes)
 
         # Check file data
-        files = core.shares.share_dbs["files"]
-        buddy_files = core.shares.share_dbs["buddyfiles"]
-        trusted_files = core.shares.share_dbs["trustedfiles"]
+        public_files = core.shares.share_dbs["public_files"]
+        buddy_files = core.shares.share_dbs["buddy_files"]
+        trusted_files = core.shares.share_dbs["trusted_files"]
 
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".abc_file"), files)
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".hidden_file"), files)
-        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz_file"), files)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), files)
-        self.assertEqual(len(files), 7)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".abc_file"), public_files)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".hidden_file"), public_files)
+        self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz_file"), public_files)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), public_files)
+        self.assertEqual(len(public_files), 7)
 
         self.assertNotIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, ".uvw_file"), buddy_files)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "dummy_file2"), buddy_files)

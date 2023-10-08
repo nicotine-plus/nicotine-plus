@@ -390,9 +390,9 @@ class Search:
         private_fileinfos = []
         num_fileinfos = 0
 
-        public_files = core.shares.share_dbs.get("files")
-        buddy_files = core.shares.share_dbs.get("buddyfiles")
-        trusted_files = core.shares.share_dbs.get("trustedfiles")
+        public_files = core.shares.share_dbs.get("public_files")
+        buddy_files = core.shares.share_dbs.get("buddy_files")
+        trusted_files = core.shares.share_dbs.get("trusted_files")
 
         for index in islice(results, min(len(results), max_results)):
             try:
@@ -567,7 +567,7 @@ class Search:
         if permission_level == "banned":
             return
 
-        word_index = core.shares.share_dbs.get("wordindex")
+        word_index = core.shares.share_dbs.get("words")
 
         if word_index is None:
             return

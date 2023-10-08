@@ -9,7 +9,7 @@ recursive-include pynicotine *
 
 exclude 404.md
 recursive-exclude * *.appdata.xml
-recursive-exclude * *.db
+recursive-exclude * *.dbn
 recursive-exclude * *.desktop
 recursive-exclude * *.mo
 recursive-exclude * *.old
