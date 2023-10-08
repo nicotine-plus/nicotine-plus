@@ -248,9 +248,14 @@ class Scanner:
         try:
             rename_process(b"nicotine-scan")
 
-            if self.init and not self.create_compressed_shares():
-                # Failed to load shares or version is invalid, rebuild
-                self.rescan = self.rebuild = True
+            if self.init:
+                try:
+                    self.create_compressed_shares()
+                    self.create_file_path_index()
+
+                except Exception:
+                    # Failed to load shares or version is invalid, rebuild
+                    self.rescan = self.rebuild = True
 
             if self.rescan:
                 self.queue.put("rescanning")
@@ -319,28 +324,28 @@ class Scanner:
 
     def create_compressed_shares(self):
 
-        if not Shares.load_shares(
+        Shares.load_shares(
             self.share_dbs, self.share_db_paths, destinations={"public_streams", "buddy_streams", "trusted_streams"}
-        ):
-            return False
+        )
 
         for share_type in ("public", "buddy", "trusted"):
             self.create_compressed_shares_message(share_type)
 
         Shares.close_shares(self.share_dbs)
-        return True
 
     def create_file_path_index(self):
 
         Shares.load_shares(
             self.share_dbs, self.share_db_paths, destinations={"public_files", "buddy_files", "trusted_files"}
         )
+
         file_path_index = (
             list(self.share_dbs["public_files"])
             + list(self.share_dbs["buddy_files"])
             + list(self.share_dbs["trusted_files"])
         )
         self.queue.put(file_path_index)
+
         Shares.close_shares(self.share_dbs)
 
     def real2virtual(self, path):
@@ -388,15 +393,20 @@ class Scanner:
             if destination != "words":
                 destination = f"{share_type}{destination}"
 
+            share_db = None
+
             try:
-                share_db = Shares.create_db_file(self.share_dbs, self.config.data_folder_path, destination)
+                share_db = Shares.create_db_file(self.config.data_folder_path, destination)
                 share_db.update(source)
-                share_db.close()
 
             except Exception as error:
                 self.queue.put((_("Can't save %(filename)s: %(error)s"),
                                 {"filename": f"{destination}.dbn", "error": error}, LogLevel.DEFAULT))
                 return
+
+            finally:
+                if share_db is not None:
+                    share_db.close()
 
     def rescan_dirs(self, share_type):
 
@@ -411,9 +421,11 @@ class Scanner:
         else:
             shared_folder_paths = sorted(shared_public_folders)
 
-        if not Shares.load_shares(
-            self.share_dbs, self.share_db_paths, destinations={f"{share_type}_files", f"{share_type}_mtimes"}
-        ):
+        try:
+            Shares.load_shares(
+                self.share_dbs, self.share_db_paths, destinations={f"{share_type}_files", f"{share_type}_mtimes"})
+
+        except Exception:
             # No previous share databases, rebuild
             self.rebuild = True
 
@@ -438,6 +450,8 @@ class Scanner:
 
         # Save data to databases
         num_folders = len(self.streams)
+
+        Shares.close_shares(self.share_dbs)
         self.set_shares(share_type, files=self.files, streams=self.streams, mtimes=self.mtimes)
 
         for dictionary in (self.files, self.streams, self.mtimes):
@@ -657,6 +671,7 @@ class Shares:
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
             ("shared-file-list-request", self._shared_file_list_request),
+            ("shares-ready", self._shares_ready),
             ("start", self._start)
         ):
             events.connect(event_name, callback)
@@ -681,12 +696,7 @@ class Shares:
     # Shares-related Actions #
 
     @classmethod
-    def create_db_file(cls, share_dbs, folder_path, destination):
-
-        share_db = share_dbs.pop(destination, None)
-
-        if share_db is not None:
-            share_db.close()
+    def create_db_file(cls, folder_path, destination):
 
         db_path = os.path.join(folder_path, f"{destination}.dbn")
         cls.remove_db_file(db_path)
@@ -762,7 +772,6 @@ class Shares:
     @classmethod
     def load_shares(cls, share_dbs, share_db_paths, destinations=None):
 
-        error_paths = []
         exception = None
 
         for destination, db_path in share_db_paths:
@@ -772,34 +781,13 @@ class Shares:
             try:
                 share_dbs[destination] = Database(encode_path(db_path), overwrite=False)
 
-            except Exception:
-                from traceback import format_exc
-
-                error_paths.append(db_path)
-                exception = format_exc()
-
+            except Exception as error:
+                exception = error
                 cls.remove_db_file(db_path)
 
-        if not error_paths:
-            return True
-
-        log.add(_("Failed to process the following databases: %(names)s"), {
-            "names": "\n".join(error_paths)
-        })
-        log.add(exception)
-
-        cls.close_shares(share_dbs)
-        return False
-
-    def load_shares_instance(self):
-
-        if not self.load_shares(
-            self.share_dbs, self.share_db_paths, destinations={
-                "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
-                "trusted_files", "trusted_streams"
-            }
-        ):
-            self.file_path_index = ()
+        if exception:
+            cls.close_shares(share_dbs)
+            raise exception
 
     def file_is_shared(self, username, virtualfilename, realfilename):
 
@@ -975,7 +963,7 @@ class Shares:
                 item = scanner_queue.get()
 
                 if isinstance(item, Exception):
-                    return True
+                    return False
 
                 if isinstance(item, tuple):
                     template, args, log_level = item
@@ -990,7 +978,7 @@ class Shares:
                 elif item == "rescanning":
                     emit_event("shares-scanning")
 
-        return False
+        return True
 
     def check_shares_available(self):
 
@@ -1047,22 +1035,33 @@ class Shares:
     def _process_scanner(self, scanner, scanner_queue, emit_event):
 
         # Let the scanner process do its thing
-        error = self.process_scanner_messages(scanner, scanner_queue, emit_event)
-        emit_event("shares-ready")
+        successful = self.process_scanner_messages(scanner, scanner_queue, emit_event)
+        emit_event("shares-ready", successful)
+
+        return successful
+
+    def _shares_ready(self, successful):
 
         # Scanning done, load shares in the main process again
-        self.load_shares_instance()
+        try:
+            self.load_shares(
+                self.share_dbs, self.share_db_paths, destinations={
+                    "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
+                    "trusted_files", "trusted_streams"
+                })
+
+        except Exception:
+            self.file_path_index = ()
+
         self.rescanning = False
 
-        if not error:
+        if successful:
             self.send_num_shared_folders_files()
 
         # Process any file transfer queue requests that arrived while scanning
         if self.pending_network_msgs:
             core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
             self.pending_network_msgs.clear()
-
-        return error
 
     # Network Messages #
 

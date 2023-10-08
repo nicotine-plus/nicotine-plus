@@ -1344,7 +1344,7 @@ class MainWindow(Window):
         self.scan_progress_bar.pulse()
         return True
 
-    def shares_ready(self):
+    def shares_ready(self, _successful):
 
         self.scan_progress_indeterminate = False
 
