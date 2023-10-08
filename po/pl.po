@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-08-06 09:46+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"PO-Revision-Date: 2023-10-08 14:00+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -829,14 +829,12 @@ msgid "Remove"
 msgstr "Usuń"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:358
-#, fuzzy
 msgid "Add Item"
-msgstr "Obiekt"
+msgstr "Dodaj obiekt"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:381
-#, fuzzy
 msgid "Edit Item"
-msgstr "Edytuj zainteresowania"
+msgstr "Edytuj obiekt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:69
 #: pynicotine/gtkgui/ui/settings/network.ui:27
@@ -1773,7 +1771,7 @@ msgstr "Wysyłane: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1358
 msgid "Quitting..."
-msgstr ""
+msgstr "Wychodzenie..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:67
 msgid "Latest Message"
@@ -1926,9 +1924,8 @@ msgid "View User _Profile"
 msgstr "Wyświetl profil użytkownika"
 
 #: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Przeglądaj folder"
+msgstr "_Przeglądaj folder"
 
 #: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
 #: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
@@ -2242,9 +2239,8 @@ msgid "Enter the name of the user you want to upload to:"
 msgstr "Wprowadź użytkownika, któremu chcesz wysłać:"
 
 #: pynicotine/gtkgui/userbrowse.py:812 pynicotine/gtkgui/userbrowse.py:1005
-#, fuzzy
 msgid "_Upload"
-msgstr "_Wysyłane"
+msgstr "_Wyślij"
 
 #: pynicotine/gtkgui/userbrowse.py:981
 msgid "Select Destination Folder for Files"
@@ -2484,9 +2480,8 @@ msgid "Gift Privileges"
 msgstr "Przywileje prezentowe"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:595
-#, fuzzy
 msgid "_Give Privileges"
-msgstr "Podaruj przywileje"
+msgstr "_Udziel pozwolenia"
 
 #: pynicotine/gtkgui/widgets/textview.py:446
 msgid "--- old messages above ---"
@@ -2567,27 +2562,24 @@ msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Wprowadź nazwę użytkownika, do którego chcesz wysłać wiadomość:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:229
-#, fuzzy
 msgid "_Message"
-msgstr "_Wiadomość do wszystkich"
+msgstr "_Wiadomość"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:249
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr "Wprowadź nazwę użytkownika, którego profil chcesz wyświetlić:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:250
-#, fuzzy
 msgid "_View Profile"
-msgstr "Wyświetl profil użytkownika"
+msgstr "_Zobacz profil"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:270
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Wprowadź nazwę użytkownika, którego listę zasobów chcesz otrzymać:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:271
-#, fuzzy
 msgid "_Browse"
-msgstr "Przeglądaj pliki"
+msgstr "_Przeglądaj"
 
 #: pynicotine/gtkgui/widgets/treeview.py:664
 #, python-format
@@ -2837,7 +2829,6 @@ msgid "Cyprus"
 msgstr "Cypr"
 
 #: pynicotine/networkfilter.py:87
-#, fuzzy
 msgid "Czechia"
 msgstr "Czechy"
 
@@ -3518,7 +3509,6 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #: pynicotine/networkfilter.py:257
-#, fuzzy
 msgid "Türkiye"
 msgstr "Turcja"
 
@@ -4028,9 +4018,8 @@ msgid "%(num)s folders found before rescan"
 msgstr "Znaleziono %(num)s folderów podczas ponownego skanowania"
 
 #: pynicotine/shares.py:151
-#, fuzzy
 msgid "Rebuilding shares…"
-msgstr "Ponowne skanowanie zasobów…"
+msgstr "Ponowne budowanie zasobów…"
 
 #: pynicotine/shares.py:151
 msgid "Rescanning shares…"
@@ -4793,9 +4782,8 @@ msgid "_Personal Profile"
 msgstr "_Profil personalny"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:957
-#, fuzzy
 msgid "Configure Account"
-msgstr "Konfiguracja logowania zdarzeń"
+msgstr "Konfiguruj konto"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1024
 msgid ""
@@ -5610,9 +5598,8 @@ msgid "Public IP address:"
 msgstr "Publiczny adres IP:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port:"
-msgstr "Zakres portów nasłuchujących:"
+msgstr "Port nasłuchujący:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
