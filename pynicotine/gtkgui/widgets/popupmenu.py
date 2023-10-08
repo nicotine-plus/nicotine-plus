@@ -229,7 +229,7 @@ class PopupMenu:
             rectangle.y = pos_y
 
             # Width/height 4 instead of 1 to work around this GTK bug in most cases:
-            # https://gitlab.gnome.org/GNOME/gtk/-/issues/4563
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5712
             rectangle.width = rectangle.height = 4
 
             menu.set_pointing_to(rectangle)
