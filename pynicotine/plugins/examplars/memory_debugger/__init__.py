@@ -18,7 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gc
-import tracemalloc
 
 from pynicotine.pluginsystem import BasePlugin
 
@@ -26,6 +25,8 @@ from pynicotine.pluginsystem import BasePlugin
 class Plugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
+
+        import tracemalloc
 
         super().__init__(*args, **kwargs)
 
@@ -53,6 +54,8 @@ class Plugin(BasePlugin):
         self.log("Done.")
 
     def disable(self):
+
+        import tracemalloc
 
         gc.set_debug(0)  # pylint: disable=no-member
         snapshot = tracemalloc.take_snapshot()
