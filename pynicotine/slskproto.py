@@ -2343,19 +2343,6 @@ class NetworkThread(Thread):
 
             return
 
-        conn_obj_in_progress = self._connsinprogress.get(sock)
-
-        if conn_obj_in_progress is not None:
-            try:
-                # Check if the socket has any data for us
-                sock.recv(1, socket.MSG_PEEK)
-
-            except OSError as error:
-                self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._connsinprogress, sock, callback=False)
-
-            return
-
         conn_obj_established = self._conns.get(sock)
 
         if conn_obj_established is not None:
@@ -2384,21 +2371,15 @@ class NetworkThread(Thread):
         conn_obj_in_progress = self._connsinprogress.get(sock)
 
         if conn_obj_in_progress is not None:
-            try:
-                # Connection has been established
-                conn_obj_in_progress.lastactive = current_time
+            # Connection has been established
+            conn_obj_in_progress.lastactive = current_time
 
-                if sock is self._server_socket:
-                    self._establish_outgoing_server_connection(conn_obj_in_progress)
-                else:
-                    self._establish_outgoing_peer_connection(conn_obj_in_progress)
+            if sock is self._server_socket:
+                self._establish_outgoing_server_connection(conn_obj_in_progress)
+            else:
+                self._establish_outgoing_peer_connection(conn_obj_in_progress)
 
-                del self._connsinprogress[sock]
-
-            except OSError as error:
-                self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._connsinprogress, sock, callback=False)
-
+            del self._connsinprogress[sock]
             return
 
         conn_obj_established = self._conns.get(sock)
