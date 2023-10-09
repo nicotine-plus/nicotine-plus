@@ -181,12 +181,16 @@ class Searches(IconNotebook):
     def populate_search_history(self):
 
         if not config.sections["searches"]["enable_history"]:
+            self.search_combobox.clear()
             return
 
         for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
             self.search_combobox.append(str(term))
 
     def add_search_history_item(self, term):
+
+        if not config.sections["searches"]["enable_history"]:
+            return
 
         self.search_combobox.remove_id(term)
         self.search_combobox.prepend(term)
