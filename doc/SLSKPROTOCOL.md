@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 30, 2023
+Last updated on October 9, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -2011,8 +2011,9 @@ A peer responds with a list of shared files after we've sent a [SharedFileListRe
   - Send
     1.  Iterate through shares database
         1.  **data**
+    2. zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **uint32** <ins>number of directories</ins>
     3.  Iterate <ins>number of directories</ins>
         1.  **string** <ins>directory</ins>
@@ -2093,8 +2094,9 @@ A peer sends this message when it has a file search match. The token is taken fr
         6.  Iterate for <ins>number of attributes</ins>
             1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
             2.  **uint32** <ins>attribute value</ins>
+    11. zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **string** <ins>username</ins>
     3.  **uint32** <ins>token</ins>
     4.  **uint32** <ins>number of results</ins>
@@ -2207,8 +2209,9 @@ A peer responds with the contents of a particular folder (with all subfolders) a
             6.  Iterate for <ins>number of attributes</ins>
                 1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
+    5.  zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>folder</ins>
     4.  **uint32** <ins>number of folders</ins>
