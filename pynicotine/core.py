@@ -37,6 +37,7 @@ from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.utils import UINT32_LIMIT
 
 
 class Core:
@@ -320,7 +321,8 @@ class Core:
         self.send_message_to_server(slskmessages.CheckPrivileges())
 
     def request_give_privileges(self, username, days):
-        self.send_message_to_server(slskmessages.GivePrivileges(username, days))
+        if UINT32_LIMIT >= days > 0:
+            self.send_message_to_server(slskmessages.GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
 
