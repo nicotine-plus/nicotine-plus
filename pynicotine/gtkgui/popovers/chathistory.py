@@ -33,6 +33,7 @@ from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
 
@@ -171,7 +172,7 @@ class ChatHistory(Popover):
         self.remove_user(username)
 
         if not timestamp:
-            timestamp_format = config.sections["logging"]["log_timestamp"]
+            timestamp_format = config.sections["logging"]["log_timestamp"] or log.DEFAULT_TIMESTAMP_FORMAT
             timestamp = time.time()
             h_timestamp = time.strftime(timestamp_format)
             message = f"{h_timestamp} {message}"

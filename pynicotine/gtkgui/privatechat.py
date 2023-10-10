@@ -268,6 +268,8 @@ class PrivateChats(IconNotebook):
 
 class PrivateChat:
 
+    DEFAULT_TIMESTAMP_FORMAT = "%x %X"
+
     def __init__(self, chats, user):
 
         (
@@ -358,10 +360,9 @@ class PrivateChat:
         numlines = config.sections["logging"]["readprivatelines"]
         basename = f"{clean_file(self.user)}.log"
         file_path = os.path.join(config.sections["logging"]["privatelogsdir"], basename)
+        timestamp_format = config.sections["logging"]["private_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
 
-        self.chat_view.append_log_lines(
-            file_path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
-        )
+        self.chat_view.append_log_lines(file_path, numlines, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
         self.offline_message = False
@@ -457,7 +458,7 @@ class PrivateChat:
             line = f"[{self.user}] {text}"
             speech = text
 
-        timestamp_format = config.sections["logging"]["private_timestamp"]
+        timestamp_format = config.sections["logging"]["private_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
 
         if not newmessage:
             tag = usertag = self.chat_view.tag_highlight
@@ -493,7 +494,7 @@ class PrivateChat:
             tag = self.chat_view.tag_local
 
         if message_type != "command":
-            timestamp_format = config.sections["logging"]["private_timestamp"]
+            timestamp_format = config.sections["logging"]["private_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
         else:
             timestamp_format = None
 
@@ -503,14 +504,17 @@ class PrivateChat:
 
         my_username = core.login_username
         tag = self.chat_view.get_line_tag(my_username, text)
+        timestamp_format = config.sections["logging"]["private_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
 
         if tag == self.chat_view.tag_action:
             line = f"* {my_username} {text[4:]}"
         else:
             line = f"[{my_username}] {text}"
 
-        self.chat_view.append_line(line, tag=tag, timestamp_format=config.sections["logging"]["private_timestamp"],
-                                   username=my_username, usertag=self.chat_view.get_user_tag(my_username))
+        self.chat_view.append_line(
+            line, tag=tag, timestamp_format=timestamp_format, username=my_username,
+            usertag=self.chat_view.get_user_tag(my_username)
+        )
 
         if self.log_toggle.get_active():
             log.write_log_file(

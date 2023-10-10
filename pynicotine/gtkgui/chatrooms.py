@@ -355,6 +355,8 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
+    DEFAULT_TIMESTAMP_FORMAT = "%X"
+
     def __init__(self, chatrooms, room, users, is_private):
 
         (
@@ -631,10 +633,9 @@ class ChatRoom:
         numlines = config.sections["logging"]["readroomlines"]
         basename = f"{clean_file(self.room)}.log"
         file_path = os.path.join(config.sections["logging"]["roomlogsdir"], basename)
+        timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
 
-        self.chat_view.append_log_lines(
-            file_path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
-        )
+        self.chat_view.append_log_lines(file_path, numlines, timestamp_format=timestamp_format)
 
     def populate_room_users(self, users):
 
@@ -662,10 +663,10 @@ class ChatRoom:
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
 
+        timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
+
         self.activity_view.append_line(
-            _("%s joined the room") % core.login_username,
-            timestamp_format=config.sections["logging"]["rooms_timestamp"]
-        )
+            _("%s joined the room") % core.login_username, timestamp_format=timestamp_format)
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
 
@@ -769,7 +770,7 @@ class ChatRoom:
 
         line = "\n-- ".join(line.split("\n"))
         usertag = self.chat_view.get_user_tag(user)
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
 
         if user != login_username:
             self.chat_view.append_line(
@@ -804,7 +805,7 @@ class ChatRoom:
             tag = self.chat_view.tag_local
 
         if message_type != "command":
-            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
         else:
             timestamp_format = None
 
@@ -822,10 +823,11 @@ class ChatRoom:
         if self.chatrooms.completion.entry == self.chat_entry:
             self.chatrooms.completion.add_completion(username)
 
+        timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
+
         if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
             self.activity_view.append_line(
-                _("%s joined the room") % username, timestamp_format=config.sections["logging"]["rooms_timestamp"]
-            )
+                _("%s joined the room") % username, timestamp_format=timestamp_format)
 
         self.add_user_row(userdata)
 
@@ -846,7 +848,7 @@ class ChatRoom:
 
         if not core.network_filter.is_user_ignored(username) and \
                 not core.network_filter.is_user_ip_ignored(username):
-            timestamp_format = config.sections["logging"]["rooms_timestamp"]
+            timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
             self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
         self.users_list_view.remove_row(iterator)
@@ -906,8 +908,9 @@ class ChatRoom:
             return
 
         if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
+            timestamp_format = config.sections["logging"]["rooms_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
             self.activity_view.append_line(
-                action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
+                action % user, timestamp_format=timestamp_format)
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
         self.users_list_view.set_row_value(iterator, "status_data", status)

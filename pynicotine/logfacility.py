@@ -50,6 +50,7 @@ class LogLevel:
 
 class Logger:
 
+    DEFAULT_TIMESTAMP_FORMAT = "%x %X"
     PREFIXES = {
         LogLevel.DOWNLOAD: "Download",
         LogLevel.UPLOAD: "Upload",
@@ -60,7 +61,6 @@ class Logger:
         LogLevel.TRANSFER: "Transfer",
         LogLevel.MISCELLANEOUS: "Misc"
     }
-
     EXCLUDED_MSGS = {
         slskmessages.ChangePassword,
         slskmessages.DistribEmbeddedMessage,
@@ -146,7 +146,7 @@ class Logger:
 
         try:
             log_file = self._get_log_file(folder_path, basename)
-            timestamp_format = config.sections["logging"]["log_timestamp"]
+            timestamp_format = config.sections["logging"]["log_timestamp"] or self.DEFAULT_TIMESTAMP_FORMAT
             timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
             text = f"{timestamp} {text}\n"
 
@@ -260,7 +260,7 @@ class Logger:
                 basename=self.debug_file_name, text=msg)
 
         try:
-            timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
+            timestamp_format = config.sections["logging"].get("log_timestamp") or self.DEFAULT_TIMESTAMP_FORMAT
             events.emit("log-message", timestamp_format, msg, title, level)
 
         except Exception as error:
