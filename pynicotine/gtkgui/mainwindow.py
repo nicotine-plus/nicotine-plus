@@ -1071,7 +1071,6 @@ class MainWindow(Window):
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
-        self.lookup_action("toggle-status").set_enabled(is_online)
 
         for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
                             "message-downloading-users", "message-buddies"):
