@@ -1106,9 +1106,16 @@ class MainWindow(Window):
         if self.user_status_button.get_tooltip_text() != username:
             self.user_status_button.set_tooltip_text(username)
 
-        self.user_status_button.set_active(False)
         self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(status_text)
+
+        # Disable button toggled state without activating action
+        toggle_status_action = self.lookup_action("toggle-status")
+        toggle_status_action.set_enabled(False)
+
+        self.user_status_button.set_active(False)
+
+        toggle_status_action.set_enabled(is_online)
 
     # Search #
 
