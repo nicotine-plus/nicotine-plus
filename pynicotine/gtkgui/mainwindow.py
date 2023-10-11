@@ -1079,32 +1079,25 @@ class MainWindow(Window):
 
         self.application.tray_icon.update_user_status()
 
-        # Away mode
-        if not is_away:
-            self.set_auto_away(False)
-        else:
-            self.remove_away_timer()
-
-        # Status bar
         if core.uploads.pending_shutdown:
             return
 
-        username = core.login_username
+        # Status bar
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-        if status == UserStatus.AWAY:
+        if is_away:
             status_text = _("Away")
 
-        elif status == UserStatus.ONLINE:
+        elif is_online:
             status_text = _("Online")
+            self._create_away_timer()
 
         else:
-            username = None
             status_text = _("Offline")
 
-        if self.user_status_button.get_tooltip_text() != username:
-            self.user_status_button.set_tooltip_text(username)
+        if self.user_status_button.get_tooltip_text() != core.login_username:
+            self.user_status_button.set_tooltip_text(core.login_username)
 
         self.user_status_button.set_active(False)
         self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
@@ -1141,37 +1134,37 @@ class MainWindow(Window):
 
     def set_auto_away(self, active=True):
 
-        if active:
+        if active and core.user_status != UserStatus.AWAY:
             self.auto_away = True
-            self.away_timer_id = None
+            core.set_away_mode(True)
 
-            if core.user_status != UserStatus.AWAY:
-                core.set_away_mode(True)
-
-            return
-
-        if self.auto_away:
+        elif self.auto_away and core.user_status == UserStatus.AWAY:
             self.auto_away = False
+            core.set_away_mode(False)
 
-            if core.user_status == UserStatus.AWAY:
-                core.set_away_mode(False)
+        self._create_away_timer()
 
-        # Reset away timer
-        self.remove_away_timer()
-        self.create_away_timer()
+    def _create_away_timer(self):
 
-    def create_away_timer(self):
+        self._remove_away_timer()
 
         if core.user_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
 
-        if away_interval > 0:
-            self.away_timer_id = events.schedule(delay=(60 * away_interval), callback=self.set_auto_away)
+        if not away_interval:
+            return
 
-    def remove_away_timer(self):
+        self.away_timer_id = events.schedule(delay=(60 * away_interval), callback=self.set_auto_away)
+
+    def _remove_away_timer(self):
+
+        if self.away_timer_id is None:
+            return
+
         events.cancel_scheduled(self.away_timer_id)
+        self.away_timer_id = None
 
     def on_cancel_auto_away(self, *_args):
 
