@@ -471,9 +471,9 @@ class NetworkThread(Thread):
             log.add(_("Specified network interface '%s' is not available"), self._interface_name)
             return False
 
-        ip_address = self._interface_address or self._find_local_ip_address()
-
         try:
+            ip_address = self._interface_address or self._find_local_ip_address()
+
             self._listen_socket.bind((ip_address, self._listen_port))
             self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
