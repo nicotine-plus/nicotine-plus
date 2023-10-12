@@ -268,7 +268,10 @@ class Searches(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
+        if page.show_page:
+            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
         del self.pages[token]
         page.destroy_widgets()
 
