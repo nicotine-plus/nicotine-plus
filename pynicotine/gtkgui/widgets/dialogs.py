@@ -355,13 +355,14 @@ class MessageDialog(Window):
             button = Gtk.Button(label=button_label, use_underline=True, hexpand=True, visible=True)
             button.connect("clicked", self._on_button_pressed, response_type)
 
-            if response_type == self.destructive_response_id:
-                add_css_class(button, "destructive-action")
-
             if GTK_API_VERSION >= 4:
                 action_area.append(button)  # pylint: disable=no-member
             else:
                 action_area.add(button)     # pylint: disable=no-member
+
+            if response_type == self.destructive_response_id:
+                add_css_class(button, "destructive-action")
+                continue
 
             if response_type in {"cancel", "ok"}:
                 if GTK_API_VERSION >= 4:
