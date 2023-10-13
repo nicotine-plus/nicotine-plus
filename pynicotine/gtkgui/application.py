@@ -156,6 +156,7 @@ class Application:
             ("rescan-shares", self.on_rescan_shares, None, True),
             ("browse-public-shares", self.on_browse_public_shares, None, True),
             ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
+            ("browse-trusted-shares", self.on_browse_trusted_shares, None, True),
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
             # Configuration
@@ -539,6 +540,9 @@ class Application:
 
     def on_browse_buddy_shares(self, *_args):
         core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
+
+    def on_browse_trusted_shares(self, *_args):
+        core.userbrowse.browse_local_shares(share_type="trusted", new_request=True)
 
     def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
         for file_path in selected_file_paths:

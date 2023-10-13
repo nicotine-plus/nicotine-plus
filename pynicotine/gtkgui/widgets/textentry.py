@@ -588,7 +588,11 @@ class ComboBox:
         return self._ids.get(self.get_selected_pos())
 
     def get_text(self):
-        return self.entry.get_text()
+
+        if self.entry:
+            return self.entry.get_text()
+
+        return self.get_selected_id()
 
     def set_selected_pos(self, position):
 
@@ -604,7 +608,12 @@ class ComboBox:
         self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
-        self.entry.set_text(text)
+
+        if self.entry:
+            self.entry.set_text(text)
+            return
+
+        self.set_selected_id(text)
 
     def remove_pos(self, position):
 

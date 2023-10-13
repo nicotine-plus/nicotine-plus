@@ -212,7 +212,7 @@ class Plugin(BasePlugin):
                 "callback": self.share_command,
                 "description": _("Add share"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["<public|buddy>", "<folder path>"]
+                "parameters": ["<public|buddy|trusted>", "<folder path>"]
             },
             "unshare": {
                 "callback": self.unshare_command,
@@ -517,11 +517,16 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
+        group_names = {
+            0: "public",
+            1: "buddy",
+            2: "trusted"
+        }
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
         for group_index, share_group in enumerate(share_groups):
-            group_name = "buddy" if group_index == 1 else "public"
+            group_name = group_names.get(group_index)
             num_shares = len(share_group)
             num_total += num_shares
 

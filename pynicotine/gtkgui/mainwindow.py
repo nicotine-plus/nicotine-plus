@@ -266,14 +266,13 @@ class MainWindow(Window):
 
         # Events
         for event_name, callback in (
-            ("hide-scan-progress", self.hide_scan_progress),
             ("schedule-quit", self.schedule_quit),
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("set-connection-stats", self.set_connection_stats),
-            ("set-scan-indeterminate", self.set_scan_indeterminate),
-            ("set-scan-progress", self.set_scan_progress),
-            ("show-scan-progress", self.show_scan_progress),
+            ("shares-preparing", self.shares_preparing),
+            ("shares-ready", self.shares_ready),
+            ("shares-scanning", self.shares_scanning),
             ("update-download-limits", self.update_download_limits),
             ("update-upload-limits", self.update_upload_limits),
             ("user-status", self.user_status)
@@ -507,26 +506,29 @@ class MainWindow(Window):
 
         return menu
 
-    def add_configure_shares_section(self, menu):
-
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("_Configure Shares"), "app.configure-shares"),
-            ("", None)
-        )
-
     def add_browse_shares_section(self, menu):
 
         menu.add_items(
-            ("#" + _("_Browse Public Shares"), "app.browse-public-shares"),
-            ("#" + _("Bro_wse Buddy Shares"), "app.browse-buddy-shares"),
-            ("", None)
+            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
+            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
+            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
         )
 
     def create_shares_menu(self):
 
         menu = PopupMenu(self.application)
-        self.add_configure_shares_section(menu)
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None)
+        )
+        self.add_browse_shares_section(menu)
+
+        return menu
+
+    def create_browse_shares_menu(self):
+
+        menu = PopupMenu(self.application)
         self.add_browse_shares_section(menu)
 
         return menu
@@ -552,10 +554,13 @@ class MainWindow(Window):
 
         menu = PopupMenu(self.application)
         self.add_connection_section(menu)
-        self.add_configure_shares_section(menu)
-        self.add_browse_shares_section(menu)
-
-        menu.add_items((">" + _("_Help"), self.create_help_menu()))
+        menu.add_items(
+            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
+            (">" + _("_Browse Shares"), self.create_browse_shares_menu()),
+            ("#" + _("Configure _Shares"), "app.configure-shares"),
+            ("", None),
+            (">" + _("_Help"), self.create_help_menu())
+        )
         self.add_preferences_item(menu)
         self.add_quit_item(menu)
 
@@ -1315,22 +1320,21 @@ class MainWindow(Window):
 
         remove_css_class(label, "underline")
 
-    def show_scan_progress(self):
-        self.scan_progress_bar.set_visible(True)
-
-    def set_scan_progress(self, value):
-        self.scan_progress_indeterminate = False
-        self.scan_progress_bar.set_fraction(value)
-
-    def set_scan_indeterminate(self):
+    def shares_preparing(self):
 
         if self.scan_progress_indeterminate:
             return
 
         self.scan_progress_indeterminate = True
 
+        self.scan_progress_bar.set_text(_("Preparing Shares"))
+        self.scan_progress_bar.set_visible(True)
         self.scan_progress_bar.pulse()
+
         GLib.timeout_add(500, self.pulse_scan_progress)
+
+    def shares_scanning(self):
+        self.scan_progress_bar.set_text(_("Scanning Shares"))
 
     def pulse_scan_progress(self):
 
@@ -1340,8 +1344,11 @@ class MainWindow(Window):
         self.scan_progress_bar.pulse()
         return True
 
-    def hide_scan_progress(self):
-        self.set_scan_progress(0.0)  # Ensure we stop pulse mode
+    def shares_ready(self, _successful):
+
+        self.scan_progress_indeterminate = False
+
+        self.scan_progress_bar.set_fraction(0.0)  # Ensure we stop pulse mode
         self.scan_progress_bar.set_visible(False)
 
     def on_toggle_status(self, *_args):

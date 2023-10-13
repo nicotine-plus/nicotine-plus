@@ -1677,7 +1677,6 @@
           <object class="GtkProgressBar" id="scan_progress_bar">
             <property name="pulse-step">0.8</property>
             <property name="show-text">True</property>
-            <property name="text" translatable="yes">Scanning Shares</property>
             <property name="valign">center</property>
             <property name="visible">False</property>
           </object>

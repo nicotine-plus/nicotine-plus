@@ -176,10 +176,9 @@ def rename_process(new_name, debug_info=False):
 
 def rescan_shares():
 
-    error = core.shares.rescan_shares(use_thread=False)
     exit_code = 0
 
-    if error:
+    if not core.shares.rescan_shares(use_thread=False):
         log.add("--------------------------------------------------")
         log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
 

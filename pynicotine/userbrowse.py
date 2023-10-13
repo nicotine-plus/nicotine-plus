@@ -28,7 +28,6 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
-from pynicotine.utils import RestrictedUnpickler
 
 
 class UserBrowse:
@@ -88,20 +87,27 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
+    def browse_local_shares(self, path=None, share_type=None, new_request=False):
         """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message(share_type)
+            if not share_type:
+                # Check our own permission level, and show relevant shares for it
+                ip_address, _port = core.user_addresses[username]
+                current_share_type, _reason = core.network_filter.check_user_permission(username, ip_address)
+            else:
+                current_share_type = share_type
+
+            msg = core.shares.compressed_shares.get(current_share_type)
             Thread(
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
         self._show_user(username, path=path, local_share_type=share_type)
 
-    def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_share_type=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
 
         if not username:
@@ -153,6 +159,7 @@ class UserBrowse:
                 import bz2
 
                 with bz2.BZ2File(file_path_encoded) as file_handle:
+                    from pynicotine.shares import RestrictedUnpickler
                     shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
 
             except Exception:
@@ -321,4 +328,4 @@ class UserBrowse:
         username = msg.init.target_user
 
         if username in self.user_shares:
-            self.user_shares[username] = dict(msg.list + msg.privatelist)
+            self.user_shares[username] = dict(msg.list + msg.privatelist) if msg.privatelist else dict(msg.list)

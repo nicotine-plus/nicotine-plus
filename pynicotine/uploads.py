@@ -1048,10 +1048,10 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         ip_address, _port = addr
-        checkuser, reason = core.network_filter.check_user(username, ip_address)
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
-        if not checkuser:
-            return False, reason
+        if permission_level == "banned":
+            return False, reject_reason
 
         if core.shares.rescanning:
             core.shares.pending_network_msgs.append(msg)

@@ -467,7 +467,7 @@ class OptionDialog(MessageDialog):
 
 class EntryDialog(OptionDialog):
 
-    def __init__(self, *args, default="", use_second_entry=False,
+    def __init__(self, *args, default="", use_second_entry=False, second_entry_editable=True,
                  second_default="", action_button_label=_("_OK"), droplist=None, second_droplist=None,
                  visibility=True, show_emoji_icon=False, **kwargs):
 
@@ -477,32 +477,37 @@ class EntryDialog(OptionDialog):
         ], **kwargs)
 
         self.entry_container = None
-        self.entry = self.default_focus_widget = self._add_entry_combobox(
+        self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
-        self.message_label.set_mnemonic_widget(self.entry)
         self.second_entry = None
 
         if use_second_entry:
-            self.second_entry = self._add_entry_combobox(
-                second_default, activates_default=False, visibility=visibility,
+            self.second_entry_combobox = self._add_entry_combobox(
+                second_default, has_entry=second_entry_editable, activates_default=False, visibility=visibility,
                 show_emoji_icon=show_emoji_icon, droplist=second_droplist
             )
 
-    def _add_combobox(self, items, visibility=True, activates_default=True):
+    def _add_combobox(self, items, has_entry=True, visibility=True, activates_default=True):
 
-        combobox = ComboBox(container=self.entry_container, has_entry=True)
-        entry = combobox.entry
-        entry.set_activates_default(activates_default)
-        entry.set_width_chars(45)
-        entry.set_visibility(visibility)
+        combobox = ComboBox(container=self.entry_container, has_entry=has_entry)
 
-        for item in items:
-            combobox.append(item)
+        if has_entry:
+            entry = combobox.entry
+            entry.set_activates_default(activates_default)
+            entry.set_width_chars(45)
+            entry.set_visibility(visibility)
+
+        if items is not None:
+            for item in items:
+                combobox.append(item)
+
+        if activates_default:
+            self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)
 
         self.container.set_visible(True)
-        return entry
+        return combobox
 
     def _add_entry(self, visibility=True, show_emoji_icon=False, activates_default=True):
 
@@ -519,11 +524,14 @@ class EntryDialog(OptionDialog):
         else:
             self.entry_container.add(entry)     # pylint: disable=no-member
 
+        if activates_default:
+            self.message_label.set_mnemonic_widget(entry)
+
         self.container.set_visible(True)
         return entry
 
-    def _add_entry_combobox(self, default, activates_default=True, visibility=True, show_emoji_icon=False,
-                            droplist=None):
+    def _add_entry_combobox(self, default, activates_default=True, has_entry=True, visibility=True,
+                            show_emoji_icon=False, droplist=None):
 
         if self.entry_container is None:
             self.entry_container = Gtk.Box(hexpand=True, orientation=Gtk.Orientation.VERTICAL, spacing=12, visible=True)
@@ -534,21 +542,22 @@ class EntryDialog(OptionDialog):
                 self.container.add(self.entry_container)                        # pylint: disable=no-member
                 self.container.reorder_child(self.entry_container, position=0)  # pylint: disable=no-member
 
-        if droplist:
-            entry = self._add_combobox(droplist, activates_default=activates_default, visibility=visibility)
+        if not has_entry or droplist:
+            entry_combobox = self._add_combobox(
+                droplist, has_entry=has_entry, activates_default=activates_default, visibility=visibility)
         else:
-            entry = self._add_entry(
+            entry_combobox = self._add_entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon)
 
-        entry.set_text(default)
-        return entry
+        entry_combobox.set_text(default)
+        return entry_combobox
 
     def get_entry_value(self):
-        return self.entry.get_text()
+        return self.entry_combobox.get_text()
 
     def get_second_entry_value(self):
 
-        if self.second_entry is not None:
-            return self.second_entry.get_text()
+        if self.second_entry_combobox is not None:
+            return self.second_entry_combobox.get_text()
 
         return None
