@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-21 09:58+0000\n"
+"PO-Revision-Date: 2023-10-15 23:04+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -1737,14 +1737,12 @@ msgid "Copy _All"
 msgstr "Copiar_Tudo"
 
 #: pynicotine/gtkgui/mainwindow.py:1195
-#, fuzzy
 msgid "View _Debug Logs"
-msgstr "Exibir logs de depuração"
+msgstr "Exibir_Registros de Depuração"
 
 #: pynicotine/gtkgui/mainwindow.py:1196
-#, fuzzy
 msgid "View _Transfer Logs"
-msgstr "Abrir_Registro de Transferência"
+msgstr "Exibir_Registros de Transferências"
 
 #: pynicotine/gtkgui/mainwindow.py:1198
 msgid "_Log Categories"
@@ -1919,9 +1917,8 @@ msgid "View User _Profile"
 msgstr "Exibir Perfil_de_Usuário"
 
 #: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Navegar Pasta"
+msgstr "_Navegar Pasta"
 
 #: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
 #: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
@@ -4453,14 +4450,12 @@ msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Não foi possível restaurar o arquivo anterior %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:29
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Pesquisar termo…"
+msgstr "Registro de atividades de pesquisa…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:65 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Pesquisar termo…"
+msgstr "Pesquisar registro de bate-papo…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:98 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -5070,9 +5065,8 @@ msgid "Configure User Profile"
 msgstr "Configurar Perfil do Usuário"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1621
-#, fuzzy
 msgid "Search log…"
-msgstr "Pesquisar termo…"
+msgstr "Pesquisar no registro…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1676
 msgid "Scanning Shares"
@@ -5095,9 +5089,8 @@ msgid "Show Log History Pane"
 msgstr "Mostrar painel de histórico de registro"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Pesquisar termo…"
+msgstr "Pesquisar histórico de bate-papo…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -5120,9 +5113,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr "Usar limite alternativo de velocidade de download (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Pesquisar termo…"
+msgstr "Pesquisar salas…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -6075,15 +6067,12 @@ msgid "Upload queue type:"
 msgstr "Tipo de fila de upload:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr ""
-"Uploads de fila se a velocidade total de transferência atingir (KiB/s):"
+msgstr "Aloque slots de upload até atingir a velocidade total (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Limitar o número de slots de upload para:"
+msgstr "Número fixo de slots de upload:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Prioritize all buddies"
@@ -6094,9 +6083,8 @@ msgid "Queue Limits"
 msgstr "Limites de fila"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Limite o número de resultados por pesquisa:"
+msgstr "Número máximo de arquivos enfileirados por usuário:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
@@ -6148,9 +6136,8 @@ msgid "Minimize to tray on startup"
 msgstr "Minimizar para bandeja na inicialização"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:78
-#, fuzzy
 msgid "Use header bar"
-msgstr "Usar _Barra de Cabeçalho"
+msgstr "Usar barra de cabeçalho"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:89
 msgid "Language (requires a restart):"
