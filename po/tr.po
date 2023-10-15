@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-07 17:39+0000\n"
+"PO-Revision-Date: 2023-10-15 23:04+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -665,24 +665,22 @@ msgid "About"
 msgstr "Hakkında"
 
 #: pynicotine/gtkgui/dialogs/about.py:407
-#, fuzzy, python-format
+#, python-format
 msgid "Error checking latest version: %s"
-msgstr "En son sürüm alınamıyor: %s"
+msgstr "En son sürüm denetlenirken hata oluştu: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:412
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Yeni sürüm var: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:417
-#, fuzzy
 msgid "Up to date"
 msgstr "Güncel"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "_En Son Sürümü Denetle"
+msgstr "En son sürüm denetleniyor…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1230,18 +1228,16 @@ msgid "normal"
 msgstr "normal"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1622
-#, fuzzy
 msgid "Separate Buddies tab"
-msgstr "Mesaj Arkadaşları"
+msgstr "Arkadaşlar sekmesini ayır"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1623
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Sohbet Odalarında Arkadaş Listesi"
+msgstr "Sohbet Odaları sekmesinde kenar çubuğu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1624
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Her zaman görünür kenar çubuğu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1629
 msgid "Top"
@@ -1742,14 +1738,12 @@ msgid "Copy _All"
 msgstr "_Tümünü Kopyala"
 
 #: pynicotine/gtkgui/mainwindow.py:1195
-#, fuzzy
 msgid "View _Debug Logs"
-msgstr "Hata Ayıklama Günlüklerini Görüntüle"
+msgstr "_Hata Ayıklama Günlüklerini Görüntüle"
 
 #: pynicotine/gtkgui/mainwindow.py:1196
-#, fuzzy
 msgid "View _Transfer Logs"
-msgstr "_Aktarım Günlüğünü Aç"
+msgstr "_Aktarım Günlüklerini Görüntüle"
 
 #: pynicotine/gtkgui/mainwindow.py:1198
 msgid "_Log Categories"
@@ -1924,9 +1918,8 @@ msgid "View User _Profile"
 msgstr "Kullanıcı _Profilini Görüntüle"
 
 #: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Klasöre Göz At"
+msgstr "Klasöre _Göz At"
 
 #: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
 #: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
@@ -4246,14 +4239,12 @@ msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Önceki dosya %(path)s geri yüklenemiyor: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:29
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Arama terimi…"
+msgstr "Etkinlik günlüğünde ara…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:65 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Arama terimi…"
+msgstr "Sohbet günlüğünde ara…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:98 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4372,6 +4363,7 @@ msgstr "Nicotine+ kullanmaya hazırsınız!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek güvenli iletişim için tasarlanmamış şifreli olmayan bir protokoldür."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -4850,9 +4842,8 @@ msgid "Configure User Profile"
 msgstr "Kullanıcı Profilini Yapılandır"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1621
-#, fuzzy
 msgid "Search log…"
-msgstr "Arama terimi…"
+msgstr "Günlükte ara…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1676
 msgid "Scanning Shares"
@@ -4875,9 +4866,8 @@ msgid "Show Log History Pane"
 msgstr "Günlük Geçmişi Bölmesini Göster"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Arama terimi…"
+msgstr "Sohbet geçmişinde ara…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -4900,9 +4890,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr "Alternatif indirme hızı sınırı kullan (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Arama terimi…"
+msgstr "Odalarda ara…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -5848,15 +5837,12 @@ msgid "Upload queue type:"
 msgstr "Yükleme kuyruğu türü:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr ""
-"Toplam aktarım hızı bu değere ulaştığında yüklemeleri kuyruğa al (KiB/s):"
+msgstr "Toplam hız bu değere ulaşana kadar yükleme yuvaları tahsis et (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Yükleme yuvalarının sayısını şununla sınırla:"
+msgstr "Sabit yükleme yuvası sayısı:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Prioritize all buddies"
@@ -5867,13 +5853,12 @@ msgid "Queue Limits"
 msgstr "Kuyruk Sınırları"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Arama başına sonuç sayısını sınırla:"
+msgstr "Kullanıcı başına kuyruğa alınan en fazla dosya sayısı:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Kullanıcı başına kuyruğa alınan en yüksek toplam dosya boyutu (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -5921,9 +5906,8 @@ msgid "Minimize to tray on startup"
 msgstr "Başlangıçta tepsi simgesine küçült"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:78
-#, fuzzy
 msgid "Use header bar"
-msgstr "_Başlık Çubuğu Kullan"
+msgstr "Başlık çubuğu kullan"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:89
 msgid "Language (requires a restart):"
@@ -5995,7 +5979,7 @@ msgstr "Vurgulanan sekme etiketi rengi:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:458
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Arkadaş listesi konumu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:483
 msgid "Visible main tabs:"
