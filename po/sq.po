@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-09-07 19:08+0000\n"
+"PO-Revision-Date: 2023-10-13 22:31+0000\n"
 "Last-Translator: W L <wl@mailhole.de>\n"
 "Language-Team: Albanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sq/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -73,7 +73,7 @@ msgstr "Ekipi Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
-msgstr ""
+msgstr "Soulseek Klient"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:35
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
@@ -87,11 +87,11 @@ msgstr ""
 #: pynicotine/__init__.py:36
 #, python-format
 msgid "Website: %s"
-msgstr ""
+msgstr "Uebsajti: %s"
 
 #: pynicotine/__init__.py:42
 msgid "show this help message and exit"
-msgstr ""
+msgstr "shfaq këtë mesazh ndihmës dhe dil"
 
 #: pynicotine/__init__.py:45
 msgid "file"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: pynicotine/__init__.py:54
 msgid "start the program without showing window"
-msgstr ""
+msgstr "starto programin pa shfaqur dritaren"
 
 #: pynicotine/__init__.py:57
 msgid "ip"
@@ -127,7 +127,7 @@ msgstr "porti"
 
 #: pynicotine/__init__.py:62
 msgid "listen on the given port"
-msgstr ""
+msgstr "dëgjo në portin e caktuar"
 
 #: pynicotine/__init__.py:66
 msgid "rescan shared files"
@@ -139,7 +139,7 @@ msgstr ""
 
 #: pynicotine/__init__.py:74
 msgid "display version and exit"
-msgstr ""
+msgstr "shfaqë versionion dhe dil"
 
 #: pynicotine/__init__.py:104
 #, python-format
@@ -171,12 +171,12 @@ msgstr ""
 #: pynicotine/config.py:822
 #, python-format
 msgid "Error backing up config: %s"
-msgstr ""
+msgstr "Gabim gjatë ruajtjes së konfigurationit: %s"
 
 #: pynicotine/config.py:825
 #, python-format
 msgid "Config backed up to: %s"
-msgstr ""
+msgstr "Konfiguration u ruajt tek: %s"
 
 #: pynicotine/core.py:130 pynicotine/core.py:134
 #: pynicotine/gtkgui/__init__.py:103
@@ -195,7 +195,7 @@ msgstr "duke ndaluar"
 
 #: pynicotine/core.py:263
 msgid "application closing"
-msgstr ""
+msgstr "aplikacioni po ndalohet"
 
 #: pynicotine/core.py:272
 msgid "You need to specify a username and password before connecting…"
@@ -209,7 +209,7 @@ msgstr ""
 #: pynicotine/core.py:437
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
-msgstr ""
+msgstr "Nuk mund të lidhej me serverin. Arsyeja: %s"
 
 #: pynicotine/core.py:437
 msgid "Cannot Connect"
@@ -232,25 +232,27 @@ msgstr "Panjohur"
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
+"Nuk mund të merrej IP e përdoruesit :%s, pasiqë ky përdorures nuk është në "
+"linjë"
 
 #: pynicotine/core.py:470
 #, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr ""
+msgstr "IP e përdoruesit %(user)s: %(ip)s, port %(port)i%(country)s"
 
 #: pynicotine/core.py:475 pynicotine/gtkgui/dialogs/preferences.py:920
 #: pynicotine/gtkgui/dialogs/preferences.py:1056
 msgid "IP Address"
-msgstr ""
+msgstr "IP Adresa"
 
 #: pynicotine/core.py:538
 msgid "Soulseek Announcement"
-msgstr ""
+msgstr "Njoftimet e Soulseek"
 
 #: pynicotine/core.py:546
 #, python-format
 msgid "%i privileged users"
-msgstr ""
+msgstr "%i përdoruesit e privilegjuar"
 
 #: pynicotine/core.py:556
 msgid ""
@@ -267,7 +269,7 @@ msgstr ""
 
 #: pynicotine/core.py:577
 msgid "Your password has been changed"
-msgstr ""
+msgstr "Fjalkalimi juaj u ndryshua"
 
 #: pynicotine/core.py:577
 msgid "Password Changed"
@@ -392,7 +394,7 @@ msgstr ""
 #: pynicotine/gtkgui/application.py:296
 #: pynicotine/plugins/core_commands/__init__.py:61
 msgid "Quit Nicotine+"
-msgstr ""
+msgstr "Mbylle Nicotine+"
 
 #: pynicotine/gtkgui/application.py:297
 msgid "Do you really want to exit?"
@@ -467,7 +469,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:618
 msgid "Critical Error"
-msgstr ""
+msgstr "Gabim Kritik"
 
 #: pynicotine/gtkgui/application.py:619
 msgid ""
@@ -481,20 +483,20 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:624
 msgid "_Copy & Report Bug"
-msgstr ""
+msgstr "_Kopjo edhe Raporto Bug"
 
 #: pynicotine/gtkgui/chatrooms.py:178
 msgid "Create New Room?"
-msgstr ""
+msgstr "Krijo një dhomë të re?"
 
 #: pynicotine/gtkgui/chatrooms.py:179
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
-msgstr ""
+msgstr "A dëshironi të krijoni një dhomë të re \"%s\"?"
 
 #: pynicotine/gtkgui/chatrooms.py:180
 msgid "Make room private"
-msgstr ""
+msgstr "Krijo dhomë private"
 
 #: pynicotine/gtkgui/chatrooms.py:436 pynicotine/gtkgui/interests.py:118
 #: pynicotine/gtkgui/transfers.py:142 pynicotine/gtkgui/userlist.py:64
@@ -558,7 +560,7 @@ msgstr "Kopjo"
 #: pynicotine/gtkgui/chatrooms.py:517 pynicotine/gtkgui/chatrooms.py:530
 #: pynicotine/gtkgui/privatechat.py:326
 msgid "Copy All"
-msgstr ""
+msgstr "Kopjo të gjitha"
 
 #: pynicotine/gtkgui/chatrooms.py:519
 msgid "Clear Activity View"
@@ -584,7 +586,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:535 pynicotine/gtkgui/privatechat.py:331
 msgid "Clear Message View"
-msgstr ""
+msgstr "Fshij pamjes e mesazheve"
 
 #: pynicotine/gtkgui/chatrooms.py:715
 #, python-format
@@ -610,17 +612,17 @@ msgstr ""
 #: pynicotine/gtkgui/chatrooms.py:839
 #, python-format
 msgid "%s left the room"
-msgstr ""
+msgstr "%s la nga dhona"
 
 #: pynicotine/gtkgui/chatrooms.py:887
 #, python-format
 msgid "%s has gone away"
-msgstr ""
+msgstr "%s u largua nga dhona"
 
 #: pynicotine/gtkgui/chatrooms.py:890
 #, python-format
 msgid "%s has returned"
-msgstr ""
+msgstr "%s u kthye"
 
 #: pynicotine/gtkgui/chatrooms.py:1003 pynicotine/gtkgui/privatechat.py:414
 msgid "Delete Logged Messages?"
@@ -837,7 +839,7 @@ msgstr "Kërkimet"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:75
 msgid "User Profile"
-msgstr ""
+msgstr "Profili i Përdoruesit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:76
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
@@ -858,12 +860,12 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:79
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
-msgstr ""
+msgstr "Përdoruesit e Bllokuar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:80
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
-msgstr ""
+msgstr "Përdoruesit e Injouar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:81
 #: pynicotine/gtkgui/ui/settings/plugin.ui:29
@@ -878,7 +880,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:141
 #: pynicotine/gtkgui/ui/settings/network.ui:153
 msgid "Check Port Status"
-msgstr ""
+msgstr "Provo gjendjen e Portit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:143
 #, python-format
@@ -887,7 +889,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:194
 msgid "Password Change Rejected"
-msgstr ""
+msgstr "Ndryshimi i fjalëkalimit nuk u aprovua"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:213
 msgid "Enter a new password for your Soulseek account:"
@@ -1088,7 +1090,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/popupmenu.py:377
 #: pynicotine/gtkgui/widgets/popupmenu.py:418
 msgid "Ignore IP Address"
-msgstr ""
+msgstr "Injoro IP adresen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1003
 msgid "Enter an IP address you want to ignore:"
@@ -1113,7 +1115,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/popupmenu.py:376
 #: pynicotine/gtkgui/widgets/popupmenu.py:416
 msgid "Ban IP Address"
-msgstr ""
+msgstr "Blloko IP adresen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1160
 msgid "Enter an IP address you want to ban:"
@@ -4720,9 +4722,8 @@ msgid "Configure User Profile"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1621
-#, fuzzy
 msgid "Search log…"
-msgstr "Kërko"
+msgstr "Kërko log…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1676
 msgid "Scanning Shares"
@@ -4769,9 +4770,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Kërkimet"
+msgstr "Kërko dhomat…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
