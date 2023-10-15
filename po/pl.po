@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-20 16:24+0300\n"
-"PO-Revision-Date: 2023-10-08 14:00+0000\n"
-"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
+"PO-Revision-Date: 2023-10-11 14:58+0000\n"
+"Last-Translator: Piotr Strebski <strebski@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -212,9 +212,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Musisz podać nazwę użytkownika i hasło przed połączeniem…"
 
 #: pynicotine/core.py:383
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Ładowanie %(program)s %(version)s"
+msgstr "Wychodzenie z %(program)s %(version)s!"
 
 #: pynicotine/core.py:437
 #, python-format
@@ -419,7 +419,7 @@ msgstr "Czy na pewno chcesz wyjść?"
 
 #: pynicotine/gtkgui/application.py:299
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Poczekaj na zakończenie przesyłania"
 
 #: pynicotine/gtkgui/application.py:317
 msgid "Shares Not Available"
@@ -665,24 +665,22 @@ msgid "About"
 msgstr "O alikacji"
 
 #: pynicotine/gtkgui/dialogs/about.py:407
-#, fuzzy, python-format
+#, python-format
 msgid "Error checking latest version: %s"
-msgstr "Nie można pobrać najnowszej wersji: %s"
+msgstr "Błąd podczas sprawdzania najnowszej wersji: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:412
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Dostępna nowa wersja: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:417
-#, fuzzy
 msgid "Up to date"
-msgstr "Aktualna"
+msgstr "Aktualny"
 
 #: pynicotine/gtkgui/dialogs/about.py:442
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "Sprawdź _ostatnią wersje"
+msgstr "Sprawdzanie najnowszej wersji…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
@@ -1241,7 +1239,7 @@ msgstr "Lista znajomych w pokojach rozmów"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1624
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Zawsze widoczny pasek boczny"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1629
 msgid "Top"
@@ -3859,7 +3857,7 @@ msgstr "Nieignorowany %s"
 #: pynicotine/plugins/core_commands/__init__.py:547
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Nie można udostępnić niedostępnego folderu „%s”"
 
 #: pynicotine/plugins/core_commands/__init__.py:550
 #, python-format
@@ -3874,7 +3872,7 @@ msgstr "Współdziel tylko z przyjaciólmi"
 #: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Usunięto udział „%s” (wymagane ponowne skanowanie)"
 
 #: pynicotine/pluginsystem.py:401
 msgid "Loading plugin system"
@@ -4335,6 +4333,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Aby połączyć się z innymi urządzeniami Soulseek, port nasłuchiwania w "
+"routerze musi zostać przekierowany do komputera."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4380,6 +4380,8 @@ msgstr "Jesteś gotowy by używać Nicotine+!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek to niezaszyfrowany protokół nieprzeznaczony do bezpiecznej "
+"komunikacji."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -5882,7 +5884,7 @@ msgstr "Maksymalna liczba zachowanych wyników na wyszukiwanie:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Maksymalny łączny rozmiar plików w kolejce na użytkownika (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
