@@ -256,7 +256,7 @@ class Transfers:
         self.transfer_list = transfer_list
 
         self.container.get_parent().set_visible(bool(transfer_list))
-        self.update_model()
+        self.update_model(select_parent=False)
 
     def select_transfers(self):
 
@@ -330,7 +330,7 @@ class Transfers:
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
-    def update_model(self, transfer=None, update_parent=True):
+    def update_model(self, transfer=None, update_parent=True, select_parent=True):
 
         if self.window.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
@@ -339,11 +339,11 @@ class Transfers:
         update_counters = False
 
         if transfer is not None:
-            update_counters = self.update_specific(transfer)
+            update_counters = self.update_specific(transfer, select_parent=select_parent)
 
         elif self.transfer_list:
             for transfer_i in reversed(self.transfer_list):
-                row_added = self.update_specific(transfer_i)
+                row_added = self.update_specific(transfer_i, select_parent=select_parent)
 
                 if row_added and not update_counters:
                     update_counters = True
@@ -481,7 +481,7 @@ class Transfers:
             self.tree_view.set_row_value(iterator, "size_data", total_size)
             transfer.size = total_size
 
-    def update_specific(self, transfer):
+    def update_specific(self, transfer, select_parent=False):
 
         current_byte_offset = transfer.current_byte_offset or 0
         queue_position = transfer.queue_position or 0
@@ -546,6 +546,7 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
+            select_iterator = None
             empty_int = 0
             empty_str = ""
 
@@ -625,11 +626,27 @@ class Transfers:
                 parent_iterator = user_folder_path_iterator
                 user_folder_path_child_transfers.append(transfer)
 
+                if select_parent:
+                    self.tree_view.expand_row(user_iterator)
+                    select_iterator = user_folder_path_iterator
+
                 # Group by folder, path not visible in file rows
                 folder_path = ""
             else:
                 parent_iterator = user_iterator
                 user_child_transfers.append(transfer)
+
+                if select_parent:
+                    select_iterator = user_iterator
+
+            if select_iterator and (not self.tree_view.is_row_selected(select_iterator)
+                                    or self.tree_view.get_num_selected_rows() != 1):
+                # Select parent row of newly added transfer, and scroll to it.
+                # Unselect any other rows to prevent accidental actions on previously
+                # selected transfers.
+                self.tree_view.unselect_all_rows()
+                self.tree_view.select_row(select_iterator, expand_rows=False)
+
         else:
             # No grouping
             if user not in self.users:
@@ -810,7 +827,7 @@ class Transfers:
         self.tree_view.create_model()
 
         if self.transfer_list:
-            self.update_model()
+            self.update_model(select_parent=False)
 
         action.set_state(state)
 
