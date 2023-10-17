@@ -121,8 +121,8 @@ class UserInfos(IconNotebook):
         if page is None:
             self.pages[user] = page = UserInfo(self, user)
 
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            self.prepend_page(page.container, user, focus_callback=page.on_focus,
+                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -197,7 +197,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_interests(msg)
 
-    def user_info_progress(self, user, position, total):
+    def user_info_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 
@@ -671,7 +671,7 @@ class UserInfo:
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.widget.grab_focus()
+        self.description_view.grab_focus()
         return True
 
     def on_close(self, *_args):

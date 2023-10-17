@@ -120,7 +120,7 @@ class Message:
 
 class InternalMessage(Message):
     __slots__ = ()
-    msgtype = MessageType.INTERNAL
+    msg_type = MessageType.INTERNAL
 
 
 class CloseConnection(InternalMessage):
@@ -343,7 +343,7 @@ class SlskMessage(Message):
 
 class ServerMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.SERVER
+    msg_type = MessageType.SERVER
 
 
 class Login(ServerMessage):
@@ -2527,7 +2527,7 @@ class CantCreateRoom(ServerMessage):
 
 class PeerInitMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.INIT
+    msg_type = MessageType.INIT
 
 
 class PierceFireWall(PeerInitMessage):
@@ -2598,7 +2598,7 @@ class PeerInit(PeerInitMessage):
 
 class PeerMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.PEER
+    msg_type = MessageType.PEER
 
     def parse_file_size(self, message, pos):
 
@@ -2812,16 +2812,45 @@ class SharedFileListResponse(FileListMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type")
+    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type", "share_type",
+                 "public_shares", "buddy_shares", "trusted_shares")
 
-    def __init__(self, init=None, user=None, shares=None):
+    def __init__(self, init=None, user=None, public_shares=None, buddy_shares=None, trusted_shares=None,
+                 share_type=None):
         self.init = init
         self.user = user
-        self.list = shares
-        self.unknown = 0
+        self.public_shares = public_shares
+        self.buddy_shares = buddy_shares
+        self.trusted_shares = trusted_shares
+        self.share_type = share_type
+        self.list = []
         self.privatelist = []
+        self.unknown = 0
         self.built = None
         self.type = None
+
+    def _make_shares_list(self, share_groups):
+
+        try:
+            msg_list = bytearray()
+            num_folders = 0
+
+            for shares in share_groups:
+                num_folders += len(shares)
+
+            msg_list.extend(self.pack_uint32(num_folders))
+
+            for shares in share_groups:
+                for key in shares:
+                    msg_list.extend(self.pack_string(key))
+                    msg_list.extend(shares[key])
+
+        except Exception as error:
+            from pynicotine.logfacility import log
+            msg_list = self.pack_uint32(0)
+            log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
+
+        return msg_list
 
     def make_network_message(self):
         # Elaborate hack to save CPU
@@ -2830,29 +2859,29 @@ class SharedFileListResponse(FileListMessage):
             return self.built
 
         msg = bytearray()
-        msg_list = bytearray()
+        share_groups = []
+        private_share_groups = []
 
-        if self.list is None:
-            # DB is closed
-            msg_list = self.pack_uint32(0)
+        if self.share_type:
+            share_groups.append(self.public_shares)
 
-        else:
-            try:
-                msg_list.extend(self.pack_uint32(len(self.list)))
+        if self.share_type in {"buddy", "trusted"} and self.buddy_shares:
+            share_groups.append(self.buddy_shares)
 
-                for key in self.list:
-                    msg_list.extend(self.pack_string(key))
-                    msg_list.extend(self.list[key])
+        if self.share_type == "trusted" and self.trusted_shares:
+            share_groups.append(self.trusted_shares)
 
-            except Exception as error:
-                from pynicotine.logfacility import log
-                msg_list = self.pack_uint32(0)
-                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
-
-        msg.extend(msg_list)
+        msg.extend(self._make_shares_list(share_groups))
 
         # Unknown purpose, but official clients always send a value of 0
         msg.extend(self.pack_uint32(self.unknown))
+
+        for shares in (self.buddy_shares, self.trusted_shares):
+            if shares and shares not in share_groups:
+                private_share_groups.append(shares)
+
+        if private_share_groups:
+            msg.extend(self._make_shares_list(share_groups=private_share_groups))
 
         self.built = zlib.compress(msg)
         return self.built
@@ -2944,12 +2973,12 @@ class FileSearchResponse(FileListMessage):
                  "ulspeed", "inqueue", "fifoqueue", "unknown")
 
     def __init__(self, init=None, user=None, token=None, shares=None, freeulslots=None,
-                 ulspeed=None, inqueue=None, fifoqueue=None):
+                 ulspeed=None, inqueue=None, fifoqueue=None, private_shares=None):
         self.init = init
         self.user = user
         self.token = token
         self.list = shares
-        self.privatelist = []
+        self.privatelist = private_shares
         self.freeulslots = freeulslots
         self.ulspeed = ulspeed
         self.inqueue = inqueue
@@ -2969,6 +2998,12 @@ class FileSearchResponse(FileListMessage):
         msg.extend(self.pack_uint32(self.ulspeed))
         msg.extend(self.pack_uint32(self.inqueue))
         msg.extend(self.pack_uint32(self.unknown))
+
+        if self.privatelist:
+            msg.extend(self.pack_uint32(len(self.privatelist)))
+
+            for fileinfo in self.privatelist:
+                msg.extend(self.pack_file_info(fileinfo))
 
         return zlib.compress(msg)
 
@@ -3170,13 +3205,11 @@ class FolderContentsResponse(FileListMessage):
         self._parse_network_message(message)
 
     def _parse_network_message(self, message):
-        shares = {}
         pos, self.token = self.unpack_uint32(message)
-        pos, folder = self.unpack_string(message, pos)
-
-        shares[folder] = {}
-
+        pos, self.dir = self.unpack_string(message, pos)
         pos, ndir = self.unpack_uint32(message, pos)
+
+        folders = {}
 
         for _ in range(ndir):
             pos, directory = self.unpack_string(message, pos)
@@ -3184,7 +3217,7 @@ class FolderContentsResponse(FileListMessage):
             pos, nfiles = self.unpack_uint32(message, pos)
 
             ext = None
-            shares[folder][directory] = []
+            folders[directory] = []
 
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
@@ -3193,15 +3226,16 @@ class FolderContentsResponse(FileListMessage):
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
                 pos, attrs = self.unpack_file_attributes(message, pos)
 
-                shares[folder][directory].append((code, name, size, ext, attrs))
+                folders[directory].append((code, name, size, ext, attrs))
 
-        self.list = shares
+        self.list = folders
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir))
         msg.extend(self.pack_uint32(1))
+
         msg.extend(self.pack_string(self.dir))
 
         if self.list is not None:
@@ -3454,7 +3488,7 @@ class UnknownPeerMessage(PeerMessage):
 
 class FileMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.FILE
+    msg_type = MessageType.FILE
 
 
 class FileDownloadInit(FileMessage):
@@ -3518,7 +3552,7 @@ class FileOffset(FileMessage):
 
 class DistribMessage(SlskMessage):
     __slots__ = ()
-    msgtype = MessageType.DISTRIBUTED
+    msg_type = MessageType.DISTRIBUTED
 
 
 class DistribPing(DistribMessage):

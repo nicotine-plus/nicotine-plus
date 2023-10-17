@@ -22,6 +22,7 @@ import os
 
 from gi.repository import Gtk
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -76,7 +77,7 @@ class FastConfigure(Dialog):
             close_destroy=False
         )
 
-        icon_name = config.application_id
+        icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)

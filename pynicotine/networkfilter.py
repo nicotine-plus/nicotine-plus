@@ -497,29 +497,37 @@ class NetworkFilter:
         # Not filtered
         return False
 
-    def check_user(self, username, ip_address=None):
+    def close_banned_ip_connections(self):
+        """Close all connections whose IP address exists in the ban list."""
+
+        for ip_address in config.sections["server"]["ipblocklist"]:
+            # We can't close wildcard patterns nor dummy (zero) addresses
+            if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
+                core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
+
+    # Permission Level #
+
+    def check_user_permission(self, username, ip_address=None):
         """Check if this user is banned, geoip-blocked, and which shares it is
         allowed to access based on transfer and shares settings."""
 
         if self.is_user_banned(username) or self.is_user_ip_banned(username, ip_address):
             if config.sections["transfers"]["usecustomban"]:
                 ban_message = config.sections["transfers"]["customban"]
-                return 0, f"Banned ({ban_message})"
+                return "banned", f"Banned ({ban_message})"
 
-            return 0, "Banned"
+            return "banned", "Banned"
 
         user_data = core.userlist.buddies.get(username)
 
         if user_data:
-            if config.sections["transfers"]["buddysharestrustedonly"] and not user_data.is_trusted:
-                # Only trusted buddies allowed, and user isn't trusted
-                return 1, ""
+            if user_data.is_trusted:
+                return "trusted", ""
 
-            # For sending buddy-only shares
-            return 2, ""
+            return "buddy", ""
 
         if ip_address is None or not config.sections["transfers"]["geoblock"]:
-            return 1, ""
+            return "public", ""
 
         country_code = self.get_country_code(ip_address)
 
@@ -529,19 +537,11 @@ class NetworkFilter:
         if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if config.sections["transfers"]["usecustomgeoblock"]:
                 ban_message = config.sections["transfers"]["customgeoblock"]
-                return 0, f"Banned ({ban_message})"
+                return "banned", f"Banned ({ban_message})"
 
-            return 0, "Banned"
+            return "banned", "Banned"
 
-        return 1, ""
-
-    def close_banned_ip_connections(self):
-        """Close all connections whose IP address exists in the ban list."""
-
-        for ip_address in config.sections["server"]["ipblocklist"]:
-            # We can't close wildcard patterns nor dummy (zero) addresses
-            if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
-                core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
+        return "public", ""
 
     # Callbacks #
 

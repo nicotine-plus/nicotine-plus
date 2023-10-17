@@ -18,8 +18,6 @@
 
 import os
 
-from xml.etree import ElementTree
-
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -38,27 +36,40 @@ def load(scope, path):
 
     if path not in ui_data:
         with open(encode_path(os.path.join(GTK_GUI_FOLDER_PATH, "ui", path)), encoding="utf-8") as file_handle:
-            ui_xml_tree = ElementTree.parse(file_handle)
+            ui_content = file_handle.read()
 
-            for node in ui_xml_tree.iterfind('.//*[@translatable="yes"]'):
-                node.text = _(node.text)
-                del node.attrib["translatable"]
+            # Translate UI strings using Python's gettext
+            start_tag = ' translatable="yes">'
+            end_tag = "</property>"
+            start_tag_len = len(start_tag)
+            tag_start_pos = ui_content.find(start_tag)
 
-            ui_xml_string = ElementTree.tostring(ui_xml_tree.getroot(), encoding="unicode")
+            while tag_start_pos > -1:
+                string_start_pos = (tag_start_pos + start_tag_len)
+                string_end_pos = ui_content.find(end_tag, string_start_pos)
 
+                original_string = ui_content[string_start_pos:string_end_pos]
+                translated_string = _(original_string)
+                ui_content = ui_content.replace(original_string, translated_string)
+
+                # Find next translatable string
+                new_string_end_pos = (string_end_pos + (len(translated_string) - len(original_string)))
+                tag_start_pos = ui_content.find(start_tag, new_string_end_pos)
+
+            # GTK 4 replacements
             if GTK_API_VERSION >= 4:
-                ui_xml_string = (
-                    ui_xml_string
+                ui_content = (
+                    ui_content
                     .replace("GtkRadioButton", "GtkCheckButton")
                     .replace('"can-focus"', '"focusable"'))
 
                 if GTK_MINOR_VERSION >= 10:
-                    ui_xml_string = (
-                        ui_xml_string
+                    ui_content = (
+                        ui_content
                         .replace("GtkColorButton", "GtkColorDialogButton")
                         .replace("GtkFontButton", "GtkFontDialogButton"))
 
-            ui_data[path] = ui_xml_string
+            ui_data[path] = ui_content
 
     if GTK_API_VERSION >= 4:
         builder = Gtk.Builder(scope)

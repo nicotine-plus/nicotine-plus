@@ -281,7 +281,7 @@ class Uploads(Transfers):
 
     def has_active_uploads(self):
 
-        statuses = {"Getting status", "Transferring"}
+        statuses = {"Queued", "Getting status", "Transferring"}
 
         return bool(next(
             (upload for upload in self.transfers if upload.status in statuses), None
@@ -833,7 +833,7 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def push_file(self, username, virtual_path, size, folder_path="", transfer=None, locally_queued=False):
+    def push_file(self, username, virtual_path, size, folder_path=None, transfer=None, locally_queued=False):
 
         real_path = core.shares.virtual2real(virtual_path)
         size_attempt = self.get_file_size(real_path)
@@ -1048,10 +1048,10 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         ip_address, _port = addr
-        checkuser, reason = core.network_filter.check_user(username, ip_address)
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
-        if not checkuser:
-            return False, reason
+        if permission_level == "banned":
+            return False, reject_reason
 
         if core.shares.rescanning:
             core.shares.pending_network_msgs.append(msg)

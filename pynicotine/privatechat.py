@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -56,7 +57,7 @@ class PrivateChat:
 
         for username in config.sections["privatechat"]["users"]:
             if isinstance(username, str) and username not in self.users:
-                self.show_user(username, switch_page=False)
+                self.show_user(username, switch_page=False, remembered=True)
 
         self.update_completions()
 
@@ -86,7 +87,7 @@ class PrivateChat:
         self.users.add(username)
 
         if username not in config.sections["privatechat"]["users"]:
-            config.sections["privatechat"]["users"].append(username)
+            config.sections["privatechat"]["users"].insert(0, username)
 
     def remove_user(self, username, is_permanent=True):
 
@@ -100,10 +101,10 @@ class PrivateChat:
         for username in self.users.copy():
             self.remove_user(username, is_permanent)
 
-    def show_user(self, username, switch_page=True):
+    def show_user(self, username, switch_page=True, remembered=False):
 
         self.add_user(username)
-        events.emit("private-chat-show-user", username, switch_page)
+        events.emit("private-chat-show-user", username, switch_page, remembered)
         core.watch_user(username)
 
     def clear_private_messages(self, username):
@@ -262,7 +263,7 @@ class PrivateChat:
         core.pluginhandler.incoming_private_chat_notification(username, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(username, f"{config.application_name} {config.version}")
+            self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply

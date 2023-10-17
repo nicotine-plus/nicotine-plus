@@ -31,11 +31,13 @@ import signal
 import sys
 import threading
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.utils import UINT32_LIMIT
 
 
 class Core:
@@ -127,11 +129,12 @@ class Core:
 
         script_folder_path = os.path.dirname(__file__)
 
-        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
+        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": sys.version.split()[0]})
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
         log.add_debug("Using %(program)s executable: %(exe)s", {
-            "program": config.application_name, "exe": script_folder_path})
-        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+            "program": pynicotine.__application_name__, "exe": script_folder_path})
+        log.add(_("Loading %(program)s %(version)s"), {
+            "program": pynicotine.__application_name__, "version": pynicotine.__version__})
 
         if "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
@@ -258,8 +261,8 @@ class Core:
 
         if not should_finish_uploads:
             log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
-                "program": config.application_name,
-                "version": config.version,
+                "program": pynicotine.__application_name__,
+                "version": pynicotine.__version__,
                 "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
             })
 
@@ -318,7 +321,8 @@ class Core:
         self.send_message_to_server(slskmessages.CheckPrivileges())
 
     def request_give_privileges(self, username, days):
-        self.send_message_to_server(slskmessages.GivePrivileges(username, days))
+        if UINT32_LIMIT >= days > 0:
+            self.send_message_to_server(slskmessages.GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
 
@@ -382,8 +386,8 @@ class Core:
         config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s!"), {
-            "program": config.application_name,
-            "version": config.version
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__
         })
 
     def _server_timeout(self):
@@ -602,7 +606,7 @@ class UpdateChecker:
         try:
             error_message = None
             h_latest_version, latest_version = self.retrieve_latest_version()
-            current_version = self.create_integer_version(config.version)
+            current_version = self.create_integer_version(pynicotine.__version__)
             is_outdated = (current_version < latest_version)
 
         except Exception as error:

@@ -23,6 +23,7 @@ from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -67,10 +68,10 @@ class Notifications:
         self.set_urgency_hint(bool(notification_text))
 
         if not notification_text:
-            self.application.window.set_title(config.application_name)
+            self.application.window.set_title(pynicotine.__application_name__)
             return
 
-        self.application.window.set_title(f"{config.application_name} - {notification_text}")
+        self.application.window.set_title(f"{pynicotine.__application_name__} - {notification_text}")
 
     def set_urgency_hint(self, enabled):
 
@@ -87,7 +88,7 @@ class Notifications:
     def _show_notification(self, message, title=None, action=None, action_target=None, high_priority=False):
 
         if title is None:
-            title = config.application_name
+            title = pynicotine.__application_name__
 
         title = title.strip()
         message = message.strip()

@@ -125,8 +125,8 @@ class UserBrowses(IconNotebook):
         if page is None:
             self.pages[user] = page = UserBrowse(self, user)
 
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            self.prepend_page(page.container, user, focus_callback=page.on_focus,
+                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         page.local_share_type = local_share_type
@@ -164,7 +164,7 @@ class UserBrowses(IconNotebook):
         if page is not None:
             self.set_user_status(page.container, msg.user, msg.status)
 
-    def shared_file_list_progress(self, user, position, total):
+    def shared_file_list_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 
@@ -817,11 +817,11 @@ class UserBrowse:
             core.userbrowse.download_folder(self.user, self.selected_folder_path)
 
     def on_download_folder_recursive(self, *_args):
-        core.userbrowse.download_folder(self.user, self.selected_folder_path, prefix="", recurse=True)
+        core.userbrowse.download_folder(self.user, self.selected_folder_path, recurse=True)
 
     def on_download_folder_to_selected(self, selected_folder_path, recurse):
-        core.userbrowse.download_folder(self.user, self.selected_folder_path,
-                                        prefix=os.path.join(selected_folder_path, ""), recurse=recurse)
+        core.userbrowse.download_folder(
+            self.user, self.selected_folder_path, download_folder_path=selected_folder_path, recurse=recurse)
 
     def on_download_folder_to(self, *_args, recurse=False):
 
@@ -1010,7 +1010,7 @@ class UserBrowse:
 
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_files(self, *_args, prefix=""):
+    def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.selected_folder_path
         files = core.userbrowse.user_shares[self.user].get(folder_path)
@@ -1025,10 +1025,11 @@ class UserBrowse:
             if basename not in self.selected_files:
                 continue
 
-            core.userbrowse.download_file(self.user, folder_path, file_data, prefix=prefix)
+            core.userbrowse.download_file(
+                self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
-    def on_download_files_to_selected(self, selected, _data):
-        self.on_download_files(prefix=selected)
+    def on_download_files_to_selected(self, selected_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_folder_path)
 
     def on_download_files_to(self, *_args):
 
@@ -1326,11 +1327,11 @@ class UserBrowse:
 
     def on_focus(self):
 
-        if not self.file_list_view.is_selection_empty():
+        if self.file_list_view.is_selection_empty():
+            self.folder_tree_view.grab_focus()
+        else:
             self.file_list_view.grab_focus()
-            return True
 
-        self.folder_tree_view.grab_focus()
         return True
 
     def on_close(self, *_args):

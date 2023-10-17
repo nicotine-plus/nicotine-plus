@@ -263,7 +263,7 @@ class ChatRooms:
         room_obj.is_private = msg.private
 
         if msg.room not in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].append(msg.room)
+            config.sections["server"]["autojoin"].insert(0, msg.room)
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
@@ -464,6 +464,12 @@ class ChatRooms:
             return
 
         username = msg.userdata.username
+
+        if username == core.login_username:
+            # Redundant message, we're already present in the list of users
+            msg.room = None
+            return
+
         room_obj.users.add(username)
         core.user_statuses[username] = msg.userdata.status
 

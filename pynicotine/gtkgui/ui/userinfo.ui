@@ -596,7 +596,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">dialog-error-symbolic</property>
+                                <property name="icon-name">microphone-sensitivity-muted-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>

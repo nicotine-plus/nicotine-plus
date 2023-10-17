@@ -219,7 +219,7 @@ class Logger:
             return
 
         if msg_args:
-            msg = msg % msg_args
+            msg %= msg_args
 
         self.write_log_file(
             folder_path=config.sections["logging"]["transferslogsdir"], basename=basename, text=msg)
@@ -231,7 +231,7 @@ class Logger:
         prefix = self.PREFIXES.get(level)
 
         if msg_args:
-            msg = msg % msg_args
+            msg %= msg_args
 
         if prefix:
             msg = f"[{prefix}] {msg}"

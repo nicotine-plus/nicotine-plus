@@ -27,6 +27,8 @@ import tempfile
 
 from cx_Freeze import Executable, setup  # pylint: disable=import-error
 
+# pylint: disable=duplicate-code
+
 
 if sys.platform == "win32":
     GUI_BASE = "Win32GUI"
@@ -55,13 +57,7 @@ BUILD_PATH = os.path.join(CURRENT_PATH, "build")
 PROJECT_PATH = os.path.abspath(os.path.join(CURRENT_PATH, "..", ".."))
 sys.path.append(PROJECT_PATH)
 
-from pynicotine.config import config  # noqa: E402  # pylint: disable=import-error,wrong-import-position
-
-APPLICATION_NAME = config.application_name
-APPLICATION_ID = config.application_id
-VERSION = config.version
-AUTHOR = config.author
-COPYRIGHT = config.copyright
+import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
@@ -73,6 +69,7 @@ EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
     "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
 ]
 INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
+    # pylint: disable=no-member
     {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
 )
 
@@ -145,7 +142,7 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
         data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
         temp_file_handle.write(data)
 
-    subprocess.check_call(["g-ir-compiler", "--output=%s" % temp_file_typelib, temp_file_gir])
+    subprocess.check_call(["g-ir-compiler", f"--output={temp_file_typelib}", temp_file_gir])
 
 
 def add_typelibs():
@@ -206,7 +203,7 @@ def add_gtk():
     # This also includes all dlls required by GTK
     add_files(
         folder_path=LIB_PATH, output_path="lib",
-        starts_with="libgtk-%s" % GTK_VERSION, ends_with=LIB_EXTENSION
+        starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
     )
 
     if GTK_VERSION == "4":
@@ -279,7 +276,7 @@ def add_translations():
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in LANGUAGES), ends_with="gtk%s0.mo" % GTK_VERSION, recursive=True
+        starts_with=tuple(i[0] for i in LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
     )
 
 
@@ -296,60 +293,60 @@ add_translations()
 
 # Setup
 setup(
-    name=APPLICATION_NAME,
-    description=APPLICATION_NAME,
-    author=AUTHOR,
-    version=VERSION,
+    name=pynicotine.__application_name__,
+    description=pynicotine.__application_name__,
+    author=pynicotine.__author__,
+    version=pynicotine.__version__,
     options={
-        "build": dict(
-            build_base=BUILD_PATH
-        ),
-        "build_exe": dict(
-            build_exe=os.path.join(BUILD_PATH, "package", APPLICATION_NAME),
-            packages=INCLUDED_MODULES,
-            excludes=EXCLUDED_MODULES,
-            include_files=include_files,
-            zip_include_packages=["*"],
-            zip_exclude_packages=[MODULE_NAME]
-        ),
-        "bdist_msi": dict(
-            all_users=True,
-            dist_dir=BUILD_PATH,
-            install_icon=os.path.join(CURRENT_PATH, ICON_NAME),
-            upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
-        ),
-        "bdist_mac": dict(
-            bundle_name=APPLICATION_NAME,
-            iconfile=os.path.join(CURRENT_PATH, ICON_NAME),
-            plist_items=[
-                ("CFBundleName", APPLICATION_NAME),
-                ("CFBundleIdentifier", APPLICATION_ID),
-                ("CFBundleShortVersionString", VERSION),
-                ("CFBundleVersion", VERSION),
+        "build": {
+            "build_base": BUILD_PATH
+        },
+        "build_exe": {
+            "build_exe": os.path.join(BUILD_PATH, "package", pynicotine.__application_name__),
+            "packages": INCLUDED_MODULES,
+            "excludes": EXCLUDED_MODULES,
+            "include_files": include_files,
+            "zip_include_packages": ["*"],
+            "zip_exclude_packages": [MODULE_NAME]
+        },
+        "bdist_msi": {
+            "all_users": True,
+            "dist_dir": BUILD_PATH,
+            "install_icon": os.path.join(CURRENT_PATH, ICON_NAME),
+            "upgrade_code": "{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
+        },
+        "bdist_mac": {
+            "bundle_name": pynicotine.__application_name__,
+            "iconfile": os.path.join(CURRENT_PATH, ICON_NAME),
+            "plist_items": [
+                ("CFBundleName", pynicotine.__application_name__),
+                ("CFBundleIdentifier", pynicotine.__application_id__),
+                ("CFBundleShortVersionString", pynicotine.__version__),
+                ("CFBundleVersion", pynicotine.__version__),
                 ("CFBundleInfoDictionaryVersion", "6.0"),
-                ("NSHumanReadableCopyright", COPYRIGHT)
+                ("NSHumanReadableCopyright", pynicotine.__copyright__)
             ],
-            codesign_identity="-",
-            codesign_deep=True,
-            codesign_entitlements=os.path.join(CURRENT_PATH, "codesign-entitlements.plist"),
-            codesign_options="runtime",
-            codesign_strict="all",
-            codesign_timestamp=True,
-            codesign_verify=True
-        ),
-        "bdist_dmg": dict(
-            applications_shortcut=True
-        )
+            "codesign_identity": "-",
+            "codesign_deep": True,
+            "codesign_entitlements": os.path.join(CURRENT_PATH, "codesign-entitlements.plist"),
+            "codesign_options": "runtime",
+            "codesign_strict": "all",
+            "codesign_timestamp": True,
+            "codesign_verify": True
+        },
+        "bdist_dmg": {
+            "applications_shortcut": True
+        }
     },
     packages=[],
     executables=[
         Executable(
             script=os.path.join(PROJECT_PATH, SCRIPT_NAME),
             base=GUI_BASE,
-            target_name=APPLICATION_NAME,
+            target_name=pynicotine.__application_name__,
             icon=os.path.join(CURRENT_PATH, ICON_NAME),
-            copyright=COPYRIGHT,
-            shortcut_name=APPLICATION_NAME,
+            copyright=pynicotine.__copyright__,
+            shortcut_name=pynicotine.__application_name__,
             shortcut_dir="ProgramMenuFolder"
         )
     ],

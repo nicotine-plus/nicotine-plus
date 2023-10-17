@@ -20,10 +20,10 @@
 import hashlib
 import os
 
-""" Generates SHA256 checksums for files placed in the same folder as this script """
-
 
 def generate_sha256_hashes():
+    """Generates SHA256 checksums for files placed in the same folder as
+    this script."""
 
     current_folder_path = os.path.dirname(os.path.realpath(__file__))
     current_script_name = os.path.basename(os.path.realpath(__file__))
@@ -43,7 +43,7 @@ def generate_sha256_hashes():
         with open(entry.path, "rb") as file_handle:
             sha256_hash.update(file_handle.read())
 
-        with open(entry.path + ".sha256", "w") as file_handle:
+        with open(entry.path + ".sha256", "w", encoding="utf-8") as file_handle:
             output = sha256_hash.hexdigest() + "  " + os.path.basename(entry.name)
             file_handle.write(output)
 

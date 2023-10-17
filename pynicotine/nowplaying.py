@@ -106,7 +106,7 @@ class NowPlaying:
         title = title.replace("$f", "%(filename)s")
         title = title.replace("$p", "%(program)s")
 
-        title = title % self.title
+        title %= self.title
         title = " ".join(x for x in title.replace("\r", "\n").split("\n") if x)
 
         if title:

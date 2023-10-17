@@ -147,12 +147,9 @@ class ChatRooms(IconNotebook):
             if self.room_wall is None:
                 self.room_wall = RoomWall(window=self.window)
 
-            self.command_help.widget.unparent()
-            self.room_wall.widget.unparent()
+            self.command_help.set_menu_button(tab.help_button)
+            self.room_wall.set_menu_button(tab.room_wall_button)
             self.room_wall.room = room
-
-            tab.help_button.set_popover(self.command_help.widget)
-            tab.room_wall_button.set_popover(self.room_wall.widget)
 
             if not tab.loaded:
                 tab.load()
@@ -264,11 +261,17 @@ class ChatRooms(IconNotebook):
         self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users, is_private=msg.private)
         is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
 
-        if is_global:
-            self.prepend_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
+        if is_auto_joined:
+            tab_position = -1
+        elif is_global or core.chatrooms.GLOBAL_ROOM_NAME not in self.pages:
+            tab_position = 0
         else:
-            self.append_page(tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room)
+            tab_position = 1
 
+        self.insert_page(
+            tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
+            position=tab_position
+        )
         tab.set_label(self.get_tab_label_inner(tab.container))
 
         if not is_auto_joined:
@@ -470,13 +473,6 @@ class ChatRoom:
             }
         )
 
-        self.users_list_view.disable_sorting()
-
-        for userdata in users:
-            self.add_user_row(userdata)
-
-        self.users_list_view.enable_sorting()
-
         self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application, tab_name="chatrooms")
         self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application, tab_name="chatrooms")
 
@@ -539,7 +535,7 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.update_user_count()
+        self.populate_room_users(users)
         self.read_room_logs()
 
     def load(self):
@@ -638,6 +634,37 @@ class ChatRoom:
 
         self.chat_view.append_log_lines(
             file_path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+        )
+
+    def populate_room_users(self, users):
+
+        # Temporarily disable sorting for increased performance
+        self.users_list_view.disable_sorting()
+
+        for userdata in users:
+            username = userdata.username
+            iterator = self.users_list_view.iterators.get(username)
+
+            if iterator is not None:
+                self.users_list_view.remove_row(iterator)
+
+            self.add_user_row(userdata)
+
+        self.users_list_view.enable_sorting()
+
+        # Update user count
+        self.update_user_count()
+
+        # Update all username tags in chat log
+        self.chat_view.update_user_tags()
+
+        # Add room users to completion list
+        if self.chatrooms.get_current_page() == self.container:
+            self.update_room_user_completions()
+
+        self.activity_view.append_line(
+            _("%s joined the room") % core.login_username,
+            timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def populate_user_menu(self, user, menu, menu_private_rooms):
@@ -927,34 +954,11 @@ class ChatRoom:
         self.chat_view.update_user_tags()
 
     def join_room(self, msg):
-
-        # Temporarily disable sorting for increased performance
-        self.users_list_view.disable_sorting()
-
-        for userdata in msg.users:
-            username = userdata.username
-            iterator = self.users_list_view.iterators.get(username)
-
-            if iterator is not None:
-                self.users_list_view.remove_row(iterator)
-
-            self.add_user_row(userdata)
-
-        self.users_list_view.enable_sorting()
-
-        # Update user count
-        self.update_user_count()
-
-        # Update all username tags in chat log
-        self.chat_view.update_user_tags()
-
-        # Add room users to completion list
-        if self.chatrooms.get_current_page() == self.container:
-            self.update_room_user_completions()
+        self.populate_room_users(msg.users)
 
     def on_focus(self, *_args):
 
-        widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view.widget
+        widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view
         widget.grab_focus()
         return True
 

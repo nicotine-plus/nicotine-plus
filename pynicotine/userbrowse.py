@@ -28,7 +28,6 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
-from pynicotine.utils import RestrictedUnpickler
 
 
 class UserBrowse:
@@ -40,6 +39,7 @@ class UserBrowse:
         for event_name, callback in (
             ("quit", self._quit),
             ("server-login", self._server_login),
+            ("shared-file-list-progress", self._shared_file_list_progress),
             ("shared-file-list-response", self._shared_file_list_response)
         ):
             events.connect(event_name, callback)
@@ -87,20 +87,27 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, share_type="buddy", new_request=False):
+    def browse_local_shares(self, path=None, share_type=None, new_request=False):
         """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            msg = core.shares.get_compressed_shares_message(share_type)
+            if not share_type:
+                # Check our own permission level, and show relevant shares for it
+                ip_address, _port = core.user_addresses[username]
+                current_share_type, _reason = core.network_filter.check_user_permission(username, ip_address)
+            else:
+                current_share_type = share_type
+
+            msg = core.shares.compressed_shares.get(current_share_type)
             Thread(
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
         self._show_user(username, path=path, local_share_type=share_type)
 
-    def browse_user(self, username, path=None, local_share_type="buddy", new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_share_type=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
 
         if not username:
@@ -152,6 +159,7 @@ class UserBrowse:
                 import bz2
 
                 with bz2.BZ2File(file_path_encoded) as file_handle:
+                    from pynicotine.shares import RestrictedUnpickler
                     shares_list = RestrictedUnpickler(file_handle, encoding="utf-8").load()
 
             except Exception:
@@ -216,14 +224,15 @@ class UserBrowse:
         except Exception as error:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {"user": username, "error": error})
 
-    def download_file(self, username, folder_path, file_data, prefix=""):
+    def download_file(self, username, folder_path, file_data, download_folder_path=None):
 
         _code, basename, file_size, _ext, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.downloads.get_file(username, file_path, prefix, size=file_size, file_attributes=file_attributes)
+        core.downloads.get_file(
+            username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username, requested_folder_path, prefix="", recurse=False):
+    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False):
 
         if requested_folder_path is None:
             return
@@ -236,20 +245,18 @@ class UserBrowse:
                 # Not a subfolder of the requested folder, skip
                 continue
 
-            # Remember custom download location
-            if prefix:
-                core.downloads.requested_folders[username][folder_path] = prefix
-
             # Get final download destination
-            destination = core.downloads.get_folder_destination(
-                username, folder_path, root_folder_path=requested_folder_path)
+            destination_folder_path = core.downloads.get_folder_destination(
+                username, folder_path, root_folder_path=requested_folder_path,
+                download_folder_path=download_folder_path)
 
             if files:
                 for _code, basename, file_size, _ext, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
                     core.downloads.get_file(
-                        username, file_path, destination, size=file_size, file_attributes=file_attributes)
+                        username, file_path, folder_path=destination_folder_path, size=file_size,
+                        file_attributes=file_attributes)
 
             if not recurse:
                 # Downloading a single folder, no need to continue
@@ -309,9 +316,16 @@ class UserBrowse:
 
         self.browse_user(username, path=file_path)
 
+    def _shared_file_list_progress(self, username, sock, _buffer_len, _msg_size_total):
+
+        if username not in self.user_shares:
+            # We've removed the user. Close the connection to stop the user from
+            # sending their response and wasting bandwidth.
+            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+
     def _shared_file_list_response(self, msg):
 
         username = msg.init.target_user
 
         if username in self.user_shares:
-            self.user_shares[username] = dict(msg.list + msg.privatelist)
+            self.user_shares[username] = dict(msg.list + msg.privatelist) if msg.privatelist else dict(msg.list)

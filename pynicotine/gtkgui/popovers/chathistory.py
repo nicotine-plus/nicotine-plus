@@ -81,7 +81,7 @@ class ChatHistory(Popover):
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
 
-        window.private_history_button.set_popover(self.widget)
+        self.set_menu_button(window.private_history_button)
         self.load_users()
 
     def load_user(self, file_path):

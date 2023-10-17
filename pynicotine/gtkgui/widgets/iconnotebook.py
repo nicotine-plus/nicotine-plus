@@ -388,7 +388,9 @@ class IconNotebook:
         self._remove_unread_page(page)
         self.popup_menu_pages.clear()
 
-        del page.focus_callback
+        if hasattr(page, "focus_callback"):
+            del page.focus_callback
+
         del self.tab_labels[page]
 
         if page_args:
