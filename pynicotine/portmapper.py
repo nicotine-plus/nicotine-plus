@@ -113,11 +113,25 @@ class NATPMP(BaseImplementation):
     @staticmethod
     def _get_gateway_address():
 
-        import subprocess
-
         if sys.platform == "linux":
-            output = subprocess.check_output(["ip", "route", "list"])
-            return output.rsplit(b"default via", maxsplit=1)[-1].split()[0]
+            gateway_address = None
+
+            with open("/proc/net/route", encoding="utf-8") as file_handle:
+                next(file_handle)  # Skip header
+
+                for line in file_handle:
+                    routes = line.strip().split()
+                    destination_address = socket.inet_ntoa(struct.pack("<L", int(routes[1], 16)))
+
+                    if destination_address != "0.0.0.0":
+                        continue
+
+                    gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    break
+
+            return gateway_address
+
+        import subprocess
 
         if sys.platform == "win32":
             gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
