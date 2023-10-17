@@ -259,7 +259,7 @@ class IconNotebook:
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
-        self.pages_button_container = Gtk.Box(visible=(self.parent_page is not None))
+        self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
         if GTK_API_VERSION >= 4:
@@ -388,7 +388,9 @@ class IconNotebook:
         self._remove_unread_page(page)
         self.popup_menu_pages.clear()
 
-        del page.focus_callback
+        if hasattr(page, "focus_callback"):
+            del page.focus_callback
+
         del self.tab_labels[page]
 
         if page_args:
@@ -396,6 +398,9 @@ class IconNotebook:
             self.recently_removed_pages.append(page_args)
 
         if self.get_n_pages() <= 0:
+            if self.window.current_page_id == self.parent_page.id:
+                self.window.notebook.grab_focus()
+
             self.parent.set_visible(False)
 
     def remove_all_pages(self, *_args):

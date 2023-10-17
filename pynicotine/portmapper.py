@@ -113,11 +113,25 @@ class NATPMP(BaseImplementation):
     @staticmethod
     def _get_gateway_address():
 
-        import subprocess
-
         if sys.platform == "linux":
-            output = subprocess.check_output(["ip", "route", "list"])
-            return output.rsplit(b"default via", maxsplit=1)[-1].split()[0]
+            gateway_address = None
+
+            with open("/proc/net/route", encoding="utf-8") as file_handle:
+                next(file_handle)  # Skip header
+
+                for line in file_handle:
+                    routes = line.strip().split()
+                    destination_address = socket.inet_ntoa(struct.pack("<L", int(routes[1], 16)))
+
+                    if destination_address != "0.0.0.0":
+                        continue
+
+                    gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    break
+
+            return gateway_address
+
+        import subprocess
 
         if sys.platform == "win32":
             gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
@@ -214,10 +228,10 @@ class UPnP(BaseImplementation):
                 "MX": str(UPnP.MX_RESPONSE_DELAY)
             }
 
-        def sendto(self, sock, addr):
+        def send(self, sock):
 
             msg = bytes(self)
-            sock.sendto(msg, addr)
+            sock.send(msg)
 
             log.add_debug("UPnP: SSDP request: %s", msg)
 
@@ -314,29 +328,30 @@ class UPnP(BaseImplementation):
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
+                sock.connect((UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
 
                 # Protocol 1
                 wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
                 wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ppp1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
                 # Protocol 2
                 wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
-                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
                 locations = set()
@@ -522,14 +537,18 @@ class PortMapper:
     def __init__(self):
 
         self._active_implementation = None
+        self._has_port = False
         self._is_mapping_port = False
         self._timer = None
         self._natpmp = NATPMP()
         self._upnp = UPnP()
 
     def set_port(self, port, local_ip_address):
+
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
+
+        self._has_port = (port is not None)
 
     def _wait_until_ready(self):
 
@@ -608,6 +627,9 @@ class PortMapper:
 
         # Check if we want to do a port mapping
         if not config.sections["server"]["upnp"]:
+            return
+
+        if not self._has_port:
             return
 
         # Do the port mapping

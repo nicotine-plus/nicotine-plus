@@ -58,7 +58,7 @@
         <child>
           <object class="GtkCheckButton" id="show_private_results_toggle">
             <property name="label" translatable="yes">Show privately shared files in search results</property>
-            <property name="tooltip-text" translatable="yes">Other Soulseek clients may have the option to share files privately. If so, these files will be prefixed with '[PRIVATE]', and can not be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
+            <property name="tooltip-text" translatable="yes">Privately shared files that have been made visible to everyone will be prefixed with '[PRIVATE]', and can not be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
             <property name="use-underline">True</property>
             <property name="visible">True</property>
           </object>

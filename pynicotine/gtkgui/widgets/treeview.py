@@ -479,6 +479,9 @@ class TreeView:
 
         return iterators
 
+    def get_num_selected_rows(self):
+        return self._selection.count_selected_rows()
+
     def get_focused_row(self):
 
         path, _column = self.widget.get_cursor()
@@ -507,7 +510,7 @@ class TreeView:
         del self.iterators[self._iterator_keys[iterator.user_data]]
         self.model.remove(iterator)
 
-    def select_row(self, iterator=None, should_scroll=True):
+    def select_row(self, iterator=None, expand_rows=True, should_scroll=True):
 
         if iterator is None:
             # Select first row if available
@@ -519,7 +522,9 @@ class TreeView:
         if should_scroll:
             path = self.model.get_path(iterator)
 
-            self.widget.expand_to_path(path)
+            if expand_rows:
+                self.widget.expand_to_path(path)
+
             self.widget.set_cursor(path)
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
@@ -569,6 +574,9 @@ class TreeView:
     def is_row_expanded(self, iterator):
         path = self.model.get_path(iterator)
         return self.widget.row_expanded(path)
+
+    def is_row_selected(self, iterator):
+        return self._selection.iter_is_selected(iterator)
 
     def grab_focus(self):
         self.widget.grab_focus()
@@ -708,16 +716,13 @@ class TreeView:
 
     def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        try:
-            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
+        bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+        result = self.widget.get_path_at_pos(bin_x, bin_y)
 
-        except TypeError:
+        if not result:
             return False
 
-        if is_blank:
-            return False
-
+        path, column, _cell_x, _cell_y = result
         column_id = column.id
         iterator = self.model.get_iter(path)
 

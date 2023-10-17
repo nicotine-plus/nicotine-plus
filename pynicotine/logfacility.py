@@ -143,12 +143,13 @@ class Logger:
     def write_log_file(self, folder_path, basename, text, timestamp=None):
 
         folder_path = os.path.normpath(folder_path)
-        log_file = self._get_log_file(folder_path, basename)
-        timestamp_format = config.sections["logging"]["log_timestamp"]
-        timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-        text = f"{timestamp} {text}\n"
 
         try:
+            log_file = self._get_log_file(folder_path, basename)
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+            text = f"{timestamp} {text}\n"
+
             log_file.handle.write(text.encode("utf-8", "replace"))
             log_file.last_active = time.time()
 
@@ -218,7 +219,7 @@ class Logger:
             return
 
         if msg_args:
-            msg = msg % msg_args
+            msg %= msg_args
 
         self.write_log_file(
             folder_path=config.sections["logging"]["transferslogsdir"], basename=basename, text=msg)
@@ -230,7 +231,7 @@ class Logger:
         prefix = self.PREFIXES.get(level)
 
         if msg_args:
-            msg = msg % msg_args
+            msg %= msg_args
 
         if prefix:
             msg = f"[{prefix}] {msg}"

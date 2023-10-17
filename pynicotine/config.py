@@ -55,23 +55,6 @@ class Config:
 
         config_folder_path, self.data_folder_path = self.get_user_folders()
         self.config_file_path = os.path.join(config_folder_path, "config")
-        self.version = "3.3.0.dev5"
-        self.python_version = sys.version.split()[0]
-        self.gtk_version = ""
-
-        self.application_name = "Nicotine+"
-        self.application_id = "org.nicotine_plus.Nicotine"
-        self.author = "Nicotine+ Team"
-        self.copyright = """© 2004–2023 Nicotine+ Contributors
-© 2003–2004 Nicotine Contributors
-© 2001–2003 PySoulSeek Contributors"""
-
-        self.website_url = "https://nicotine-plus.org"
-        self.privileges_url = "https://www.slsknet.org/qtlogin.php?username=%s"
-        self.portchecker_url = "https://www.slsknet.org/porttest.php?port=%s"
-        self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
-
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
@@ -187,6 +170,7 @@ class Config:
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
+                "trustedshared": [],
                 "uploadbandwidth": 50,
                 "use_upload_speed_limit": "unlimited",
                 "uploadlimit": 1000,
@@ -199,8 +183,6 @@ class Config:
                 "uploadslots": 2,
                 "afterfinish": "",
                 "afterfolder": "",
-                "lock": True,
-                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -209,7 +191,8 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "buddysharestrustedonly": False,
+                "reveal_buddy_shares": False,
+                "reveal_trusted_shares": False,
                 "friendsnolimits": False,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
@@ -255,15 +238,12 @@ class Config:
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
-                "cycle": False,  # TODO: remove in 3.3.0
                 "dropdown": False,
                 "characters": 3,
                 "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
-                "commands": True,
-                "aliases": True,
-                "onematch": False  # TODO: remove in 3.3.0
+                "commands": True
             },
             "logging": {
                 "debug": False,
@@ -351,7 +331,6 @@ class Config:
                 "tabinfo": "Top",
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
-                "tab_status_icons": True,
                 "globalfont": "",
                 "textviewfont": "",
                 "chatfont": "",
@@ -395,7 +374,6 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "file_path_tooltips": True,
                 "reverse_file_paths": True,
                 "file_size_unit": ""
             },
@@ -456,7 +434,10 @@ class Config:
                 "enabletransferbuttons",
                 "uselimit",
                 "usealtlimits",
-                "uploadsinsubdirs"
+                "uploadsinsubdirs",
+                "reverseorder",
+                "lock",
+                "buddysharestrustedonly"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -496,7 +477,8 @@ class Config:
                 "showaway",
                 "decimalsep",
                 "urgencyhint",
-                "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
+                "tab_status_icons",
+                "file_path_tooltips"
             ),
             "columns": (
                 "downloads",
@@ -553,6 +535,11 @@ class Config:
             ),
             "notifications": (
                 "notification_tab_icons"
+            ),
+            "words": (
+                "cycle",
+                "onematch",
+                "aliases"
             )
         }
 
@@ -578,45 +565,9 @@ class Config:
     def parse_config(self, file_path):
         """Parses the config file."""
 
-        try:
-            with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
-                file_handle.seek(0)
-                self.parser.read_file(file_handle)
-
-        except UnicodeDecodeError:
-            self.convert_config()
-            self.parse_config(file_path)
-
-    def convert_config(self):
-        """Converts the config to utf-8.
-
-        Mainly for upgrading Windows build. (22 July, 2020)
-        """
-
-        try:
-            from chardet import detect
-
-        except ImportError:
-            from pynicotine.logfacility import log
-
-            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start "
-                    "the application again.")
-            sys.exit()
-
-        file_path_conv = encode_path(f"{self.config_file_path}.conv")
-        os.replace(self.config_file_path, file_path_conv)
-
-        with open(file_path_conv, "rb") as file_handle:
-            rawdata = file_handle.read()
-
-        from_encoding = detect(rawdata)["encoding"]
-
-        with open(file_path_conv, encoding=from_encoding) as file_read:
-            with open(encode_path(self.config_file_path), "w", encoding="utf-8") as file_write:
-                for line in file_read:
-                    file_write.write(line[:-1] + "\r\n")
-
-        os.remove(file_path_conv)
+        with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
+            file_handle.seek(0)
+            self.parser.read_file(file_handle)
 
     def need_config(self):
 
@@ -731,12 +682,6 @@ class Config:
                     self.sections[section][option] = use_speed_limit
                     continue
 
-                # Migrate file size units (TODO: remove as only in 3.3.0.dev)
-                if option == "file_size_unit" and section == "ui":
-                    file_size_unit = "B" if self.sections[section].get("exact_file_sizes", False) else ""
-                    self.sections[section][option] = file_size_unit
-                    continue
-
                 # Set default value
                 self.sections[section][option] = value
 
@@ -748,6 +693,13 @@ class Config:
 
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
+
+        # Migrate old trusted buddy shares to new format
+        if self.sections["transfers"].get("buddysharestrustedonly", False):
+            buddy_shares = self.sections["transfers"]["buddyshared"]
+
+            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
+            buddy_shares.clear()
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]

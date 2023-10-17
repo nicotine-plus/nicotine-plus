@@ -193,7 +193,7 @@ class PluginSettings(Dialog):
             hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
-        frame_container = Gtk.Frame(child=container, visible=True)
+        frame_container = Gtk.Frame(child=container, margin_top=6, visible=True)
         add_css_class(scrolled_window, "border-bottom")
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -333,9 +333,7 @@ class PluginSettings(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
-            return [
-                widget.get_row_value(iterator, "description") for iterator in widget.iterators.values()
-            ]
+            return list(widget.iterators)
 
         if isinstance(widget, FileChooserButton):
             return widget.get_path()
@@ -347,6 +345,9 @@ class PluginSettings(Dialog):
         value = window.get_entry_value()
 
         if not value:
+            return
+
+        if value in treeview.iterators:
             return
 
         treeview.add_row([value])
@@ -369,7 +370,9 @@ class PluginSettings(Dialog):
             return
 
         treeview, iterator = data
-        treeview.set_row_value(iterator, "description", value)
+
+        treeview.remove_row(iterator)
+        treeview.add_row([value])
 
     def on_edit(self, _button=None, treeview=None):
 

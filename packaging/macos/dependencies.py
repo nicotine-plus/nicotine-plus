@@ -21,8 +21,6 @@ import os
 import subprocess
 import sys
 
-""" Script used to install dependencies in Homebrew """
-
 
 def install_brew():
     """Install dependencies from the main Homebrew repos."""
@@ -45,7 +43,7 @@ def install_pypi():
     """Install dependencies from PyPi."""
 
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", "cx_Freeze",
-                           "-e", ".[packaging,test]", "semidbm"])
+                           "-e", ".[packaging,tests]", "build"])
 
 
 if __name__ == "__main__":

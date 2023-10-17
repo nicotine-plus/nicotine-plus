@@ -18,7 +18,7 @@
 
 from unittest import TestCase
 
-from pynicotine.config import config
+import pynicotine
 from pynicotine.core import UpdateChecker
 
 
@@ -34,7 +34,7 @@ class VersionTest(TestCase):
     def test_update_check(self):
 
         # Validate local version
-        local_version = UpdateChecker.create_integer_version(config.version)
+        local_version = UpdateChecker.create_integer_version(pynicotine.__version__)
         self.assertIsInstance(local_version, int)
 
         # Validate version of latest release

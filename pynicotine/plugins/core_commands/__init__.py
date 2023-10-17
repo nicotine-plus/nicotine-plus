@@ -212,7 +212,7 @@ class Plugin(BasePlugin):
                 "callback": self.share_command,
                 "description": _("Add share"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["<public|buddy>", "<folder path>"]
+                "parameters": ["<public|buddy|trusted>", "<folder path>"]
             },
             "unshare": {
                 "callback": self.unshare_command,
@@ -382,11 +382,11 @@ class Plugin(BasePlugin):
             user = args
 
         if user not in self.core.privatechat.users:
-            self.output(f"Not messaging with user {user}")
+            self.output(_("Not messaging with user %s") % user)
             return False
 
-        self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
+        self.output(_("Closed private chat of user %s") % user)
         return True
 
     def ctcpversion_command(self, args, user=None, **_unused):
@@ -517,11 +517,16 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
+        group_names = {
+            0: "public",
+            1: "buddy",
+            2: "trusted"
+        }
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
         for group_index, share_group in enumerate(share_groups):
-            group_name = "buddy" if group_index == 1 else "public"
+            group_name = group_names.get(group_index)
             num_shares = len(share_group)
             num_total += num_shares
 
@@ -535,7 +540,10 @@ class Plugin(BasePlugin):
 
             num_listed += num_shares
 
-        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+        self.output("\n" + _("%(num_listed)s shares listed (%(num_total)s configured)") % {
+            "num_listed": num_listed,
+            "num_total": num_total
+        })
 
     def share_command(self, args, **_unused):
 

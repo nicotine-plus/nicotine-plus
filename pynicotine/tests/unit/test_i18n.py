@@ -18,9 +18,11 @@
 
 import glob
 import os
+import subprocess
 
 from unittest import TestCase
 
+from pynicotine.i18n import BASE_PATH
 from pynicotine.i18n import LANGUAGES
 from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import build_translations
@@ -28,7 +30,20 @@ from pynicotine.i18n import build_translations
 
 class I18nTest(TestCase):
 
+    def test_po_files(self):
+        """Verify that translation files don't contain errors."""
+
+        po_file_paths = glob.glob(os.path.join(BASE_PATH, "po", "*.po"))
+        self.assertTrue(po_file_paths)
+
+        for po_file_path in po_file_paths:
+            error_output = subprocess.check_output(
+                ["msgfmt", "--check", po_file_path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
+
+            self.assertFalse(error_output)
+
     def test_build_translations(self):
+        """Verify that translations are built and installed properly."""
 
         build_translations()
         mo_file_paths = glob.glob(os.path.join(LOCALE_PATH, "**", "*.mo"), recursive=True)

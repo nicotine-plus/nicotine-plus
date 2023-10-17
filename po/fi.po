@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 16:24+0300\n"
+"POT-Creation-Date: 2023-10-16 02:35+0300\n"
 "PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -35,42 +35,43 @@ msgstr "Nicotine+ on graafinen asiakas Soulseek-vertaisverkolle."
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
 #, fuzzy
 msgid ""
-"Nicotine+ aims to be a pleasant, free and open source (FOSS) alternative to "
-"the official Soulseek client, providing additional functionality while "
-"keeping current with the Soulseek protocol."
+"Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
+"alternative to the official Soulseek client, while also providing a "
+"comprehensive set of features."
 msgstr ""
 "Nicotine+ pyrkii olemaan miellyttävä, ilmainen ja avoimen lähdekoodin (FOSS) "
 "vaihtoehto viralliselle Soulseek-asiakkaalle, joka tarjoaa lisätoimintoja ja "
 "pitää samalla ajan Soulseek-protokollan ajan."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
-#: pynicotine/gtkgui/mainwindow.py:759
+#: pynicotine/gtkgui/mainwindow.py:769
 #: pynicotine/plugins/core_commands/__init__.py:30
-#: pynicotine/gtkgui/ui/mainwindow.ui:212
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:510
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:694
+#: pynicotine/gtkgui/ui/mainwindow.ui:213
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:511
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:695
+#: pynicotine/gtkgui/ui/userbrowse.ui:144
 #, fuzzy
 msgid "Search Files"
 msgstr "_Etsi tiedostoja"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:33
 #: pynicotine/gtkgui/dialogs/preferences.py:72
-#: pynicotine/gtkgui/mainwindow.py:760 pynicotine/gtkgui/mainwindow.py:1178
-#: pynicotine/gtkgui/widgets/trayicon.py:92
-#: pynicotine/gtkgui/ui/mainwindow.ui:450
+#: pynicotine/gtkgui/mainwindow.py:770 pynicotine/gtkgui/mainwindow.py:1206
+#: pynicotine/gtkgui/widgets/trayicon.py:93
+#: pynicotine/gtkgui/ui/mainwindow.ui:452
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:522
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:523
 msgid "Downloads"
 msgstr "Tulevat"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:37
-#: pynicotine/gtkgui/mainwindow.py:762
-#: pynicotine/gtkgui/widgets/trayicon.py:104
-#: pynicotine/gtkgui/widgets/trayicon.py:269
+#: pynicotine/gtkgui/mainwindow.py:772
+#: pynicotine/gtkgui/widgets/trayicon.py:105
+#: pynicotine/gtkgui/widgets/trayicon.py:270
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:246
-#: pynicotine/gtkgui/ui/mainwindow.ui:851
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:546
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:716
+#: pynicotine/gtkgui/ui/mainwindow.ui:855
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:547
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:717
 #, fuzzy
 msgid "Browse Shares"
 msgstr "Selaa jakoja"
@@ -85,7 +86,7 @@ msgstr "Nicotine+"
 msgid "Soulseek Client"
 msgstr "Soulseek-asiakas"
 
-#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:35
+#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 #, fuzzy
 msgid "Graphical client for the Soulseek peer-to-peer network"
@@ -96,77 +97,77 @@ msgstr "Soulseekin vertaisverkon graafinen asiakasohjelma"
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;jakaminen;musiikki;P2P;vertaisverkko; GTK;"
 
-#: pynicotine/__init__.py:36
+#: pynicotine/__init__.py:49
 #, fuzzy, python-format
 msgid "Website: %s"
 msgstr "Suoritettu: %s"
 
-#: pynicotine/__init__.py:42
+#: pynicotine/__init__.py:55
 #, fuzzy
 msgid "show this help message and exit"
 msgstr "näytä tämä ohjeviesti ja lopeta"
 
-#: pynicotine/__init__.py:45
+#: pynicotine/__init__.py:58
 #, fuzzy
 msgid "file"
 msgstr "tiedosto"
 
-#: pynicotine/__init__.py:46
+#: pynicotine/__init__.py:59
 #, fuzzy
 msgid "use non-default configuration file"
 msgstr "käytä muita kuin oletusmääritystiedostoja"
 
-#: pynicotine/__init__.py:49
+#: pynicotine/__init__.py:62
 #, fuzzy
 msgid "dir"
 msgstr "Dir"
 
-#: pynicotine/__init__.py:50
+#: pynicotine/__init__.py:63
 #, fuzzy
 msgid "alternative directory for user data and plugins"
 msgstr "muiden kuin oletuskansioiden käyttäminen laajennuksia varten"
 
-#: pynicotine/__init__.py:54
+#: pynicotine/__init__.py:67
 #, fuzzy
 msgid "start the program without showing window"
 msgstr "käynnistä ohjelma näyttämättä ikkunaa"
 
-#: pynicotine/__init__.py:57
+#: pynicotine/__init__.py:70
 #, fuzzy
 msgid "ip"
 msgstr "Ip"
 
-#: pynicotine/__init__.py:58
+#: pynicotine/__init__.py:71
 #, fuzzy
 msgid "bind sockets to the given IP (useful for VPN)"
 msgstr "sido vastakkeita annettuun IP-osoitteeseen (hyödyllinen VPN:lle)"
 
-#: pynicotine/__init__.py:61
+#: pynicotine/__init__.py:74
 #, fuzzy
 msgid "port"
 msgstr "satama"
 
-#: pynicotine/__init__.py:62
+#: pynicotine/__init__.py:75
 #, fuzzy
 msgid "listen on the given port"
 msgstr "kuunnella annettua porttia"
 
-#: pynicotine/__init__.py:66
+#: pynicotine/__init__.py:79
 #, fuzzy
 msgid "rescan shared files"
 msgstr "Uudelleenskannaa jakosi"
 
-#: pynicotine/__init__.py:70
+#: pynicotine/__init__.py:83
 #, fuzzy
 msgid "start the program in headless mode (no GUI)"
 msgstr "käynnistä ohjelma päättömässä tilassa (ei GUI:ta)"
 
-#: pynicotine/__init__.py:74
+#: pynicotine/__init__.py:87
 #, fuzzy
 msgid "display version and exit"
 msgstr "näytä versio ja lopeta"
 
-#: pynicotine/__init__.py:104
+#: pynicotine/__init__.py:117
 #, fuzzy, python-format
 msgid ""
 "You are using an unsupported version of Python (%(old_version)s).\n"
@@ -175,7 +176,7 @@ msgstr ""
 "Käytät Pythonin versiota, jota ei tueta (%(old_version)s).\n"
 "Asenna Python %(min_version)s tai uusi."
 
-#: pynicotine/__init__.py:171
+#: pynicotine/__init__.py:183
 #, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
@@ -193,106 +194,106 @@ msgstr "Sinut on lisätty yksityiseen huoneeseen: %(room)s"
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Chat-viesti käyttäjältä %(user)s huoneessa %(room)s: %(message)s"
 
-#: pynicotine/config.py:134 pynicotine/config.py:153
+#: pynicotine/config.py:117 pynicotine/config.py:136
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Ei voi luoda hakemistoa '%(path)s', virheilmoitus %(error)s"
 
-#: pynicotine/config.py:822
+#: pynicotine/config.py:774
 #, fuzzy, python-format
 msgid "Error backing up config: %s"
 msgstr "Virhe varmuuskopioitaessa määritystä: %s"
 
-#: pynicotine/config.py:825
+#: pynicotine/config.py:777
 #, fuzzy, python-format
 msgid "Config backed up to: %s"
 msgstr "Määritys varmuuskopioitusti: %s"
 
-#: pynicotine/core.py:130 pynicotine/core.py:134
-#: pynicotine/gtkgui/__init__.py:103
+#: pynicotine/core.py:132 pynicotine/core.py:136
+#: pynicotine/gtkgui/__init__.py:61
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
-#: pynicotine/core.py:260
+#: pynicotine/core.py:263
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
 msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
-#: pynicotine/core.py:263
+#: pynicotine/core.py:266
 #, fuzzy
 msgid "terminating"
 msgstr "Päättämisestä"
 
-#: pynicotine/core.py:263
+#: pynicotine/core.py:266
 #, fuzzy
 msgid "application closing"
 msgstr "sovelluksen sulkeminen"
 
-#: pynicotine/core.py:272
+#: pynicotine/core.py:275
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
 "Sinun on määritettävä käyttäjänimi ja salasana ennen yhteyden muodostamista…"
 
-#: pynicotine/core.py:383
+#: pynicotine/core.py:388
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s!"
 msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
-#: pynicotine/core.py:437
+#: pynicotine/core.py:442
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Yhteyden muodostaminen palvelimeen ei onnistu. Syy: %s"
 
-#: pynicotine/core.py:437
+#: pynicotine/core.py:442
 #, fuzzy
 msgid "Cannot Connect"
 msgstr "Ei voi yhdistää"
 
-#: pynicotine/core.py:461 pynicotine/gtkgui/dialogs/preferences.py:136
-#: pynicotine/gtkgui/search.py:1479 pynicotine/gtkgui/userinfo.py:533
-#: pynicotine/gtkgui/widgets/popupmenu.py:581
+#: pynicotine/core.py:466 pynicotine/gtkgui/dialogs/preferences.py:136
+#: pynicotine/gtkgui/search.py:1488 pynicotine/gtkgui/userinfo.py:536
+#: pynicotine/gtkgui/widgets/popupmenu.py:586
 #: pynicotine/gtkgui/widgets/treeview.py:601
 #: pynicotine/gtkgui/widgets/treeview.py:606
 #: pynicotine/gtkgui/ui/settings/network.ui:143
-#: pynicotine/gtkgui/ui/userinfo.ui:134 pynicotine/gtkgui/ui/userinfo.ui:161
-#: pynicotine/gtkgui/ui/userinfo.ui:188 pynicotine/gtkgui/ui/userinfo.ui:215
-#: pynicotine/gtkgui/ui/userinfo.ui:242 pynicotine/gtkgui/ui/userinfo.ui:269
-#: pynicotine/gtkgui/ui/userinfo.ui:296
+#: pynicotine/gtkgui/ui/userinfo.ui:137 pynicotine/gtkgui/ui/userinfo.ui:164
+#: pynicotine/gtkgui/ui/userinfo.ui:191 pynicotine/gtkgui/ui/userinfo.ui:218
+#: pynicotine/gtkgui/ui/userinfo.ui:245 pynicotine/gtkgui/ui/userinfo.ui:272
+#: pynicotine/gtkgui/ui/userinfo.ui:300
 #, fuzzy
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: pynicotine/core.py:467
+#: pynicotine/core.py:472
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Käyttäjän %s IP-osoitetta ei voi noutaa, koska tämä käyttäjä on offline-"
 "tilassa"
 
-#: pynicotine/core.py:470
+#: pynicotine/core.py:475
 #, fuzzy, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "Käyttäjän %(user)s IP osoite on %(ip)s, portti %(port)i%(country)s"
 
-#: pynicotine/core.py:475 pynicotine/gtkgui/dialogs/preferences.py:920
-#: pynicotine/gtkgui/dialogs/preferences.py:1056
+#: pynicotine/core.py:480 pynicotine/gtkgui/dialogs/preferences.py:928
+#: pynicotine/gtkgui/dialogs/preferences.py:1064
 #, fuzzy
 msgid "IP Address"
 msgstr "Näytä IP-osoite"
 
-#: pynicotine/core.py:538
+#: pynicotine/core.py:549
 #, fuzzy
 msgid "Soulseek Announcement"
 msgstr "Soulseek-asiakas"
 
-#: pynicotine/core.py:546
+#: pynicotine/core.py:557
 #, python-format
 msgid "%i privileged users"
 msgstr "%i etuoikeutettua käyttäjää"
 
-#: pynicotine/core.py:556
+#: pynicotine/core.py:567
 #, fuzzy
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
@@ -301,7 +302,7 @@ msgstr ""
 "Sinulla ei ole etuoikeuksia. Oikeuksia ei tarvita, mutta salli latausten "
 "jonottaminen muiden kuin etuoikeutettujen käyttäjien edelle."
 
-#: pynicotine/core.py:559
+#: pynicotine/core.py:570
 #, fuzzy, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -310,163 +311,159 @@ msgstr ""
 "%(days)i päivää, %(hours)i tuntia, %(minutes)i minuuttia, %(seconds)i "
 "sekuntia latausoikeuksia jäljellä."
 
-#: pynicotine/core.py:577
+#: pynicotine/core.py:588
 #, fuzzy
 msgid "Your password has been changed"
 msgstr "Salasanasi on vaihdettu. Salasana on %s"
 
-#: pynicotine/core.py:577
+#: pynicotine/core.py:588
 #, fuzzy
 msgid "Password Changed"
 msgstr "Salasanan muutos hylätty"
 
-#: pynicotine/downloads.py:399
+#: pynicotine/downloads.py:400
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Lataa I/O-virhe: %s"
 
-#: pynicotine/downloads.py:444
+#: pynicotine/downloads.py:445
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Ei saa yksinomaista lukitusta tiedostoon - I/O -virhe: %s"
 
-#: pynicotine/downloads.py:457
+#: pynicotine/downloads.py:458
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi tallentaa: %(error)s"
 
-#: pynicotine/downloads.py:463 pynicotine/downloads.py:968
+#: pynicotine/downloads.py:464 pynicotine/downloads.py:963
 #, fuzzy
 msgid "Download Folder Error"
 msgstr "Lataushakemistovirhe"
 
-#: pynicotine/downloads.py:477
+#: pynicotine/downloads.py:478
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Lataus aloitettu: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/downloads.py:798
-#, fuzzy, python-format
-msgid ""
-"Unable to save download to username subfolder, falling back to default "
-"download folder. Error: %s"
-msgstr ""
-"Latausta ei voi tallentaa käyttäjänimen alikansioon, joka palaa "
-"oletuslatauksen kansioon. Virhe: %s"
-
-#: pynicotine/downloads.py:894
+#: pynicotine/downloads.py:889
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s ladattu kohteesta %(user)s"
 
-#: pynicotine/downloads.py:898
+#: pynicotine/downloads.py:893
 #, fuzzy
 msgid "File Downloaded"
 msgstr "Tiedosto ladattu"
 
-#: pynicotine/downloads.py:904
+#: pynicotine/downloads.py:899
 #, python-format
 msgid "Executed: %s"
 msgstr "Suoritettu: %s"
 
-#: pynicotine/downloads.py:907
+#: pynicotine/downloads.py:902
 #, fuzzy, python-format
 msgid "Trouble executing '%s'"
 msgstr "Ongelmia %s-"
 
-#: pynicotine/downloads.py:923
+#: pynicotine/downloads.py:918
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s ladattu kohteesta %(user)s"
 
-#: pynicotine/downloads.py:927
+#: pynicotine/downloads.py:922
 #, fuzzy
 msgid "Folder Downloaded"
 msgstr "Kansio ladattu"
 
-#: pynicotine/downloads.py:933
+#: pynicotine/downloads.py:928
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Suoritettu kansiolle: %s"
 
-#: pynicotine/downloads.py:936
+#: pynicotine/downloads.py:931
 #, fuzzy, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Ongelmia suorittamisessa kansiossa: %s"
 
-#: pynicotine/downloads.py:960
+#: pynicotine/downloads.py:955
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Ei voinut siirtää %(tempfile)s-tiedostoa %(file)s-kansioon: %(error)s"
 
-#: pynicotine/downloads.py:993
+#: pynicotine/downloads.py:988
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Lataus valmis: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/downloads.py:1091
+#: pynicotine/downloads.py:1086
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Lataus keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/downloads.py:1174
+#: pynicotine/downloads.py:1169
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Virhe: Lataussuodin epäonnistui! Tarkista suotimet. Syy: %s"
 
-#: pynicotine/downloads.py:1189
+#: pynicotine/downloads.py:1184
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Virhe: %(num)d Lataussuotimet epäonnistuivat! %(error)s "
 
-#: pynicotine/gtkgui/__init__.py:43 pynicotine/gtkgui/__init__.py:52
+#: pynicotine/gtkgui/__init__.py:42 pynicotine/gtkgui/__init__.py:51
 #, fuzzy, python-format
 msgid "Cannot find %s, please install it."
 msgstr "%s ei löydä, asenna se."
 
-#: pynicotine/gtkgui/__init__.py:100
+#: pynicotine/gtkgui/__init__.py:104
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
 "Graafista ympäristöä ei ole saatavilla, käytetään headless (ei GUI) -tilaa"
 
-#: pynicotine/gtkgui/application.py:287
-#: pynicotine/gtkgui/widgets/dialogs.py:442
+#: pynicotine/gtkgui/application.py:297
+#, fuzzy
+msgid "You are still uploading files. Do you really want to exit?"
+msgstr "Haluatko todella poistua Nicotine+:sta?"
+
+#: pynicotine/gtkgui/application.py:298
+msgid "Wait for uploads to finish"
+msgstr ""
+
+#: pynicotine/gtkgui/application.py:300
+#, fuzzy
+msgid "Do you really want to exit?"
+msgstr "Haluatko todella poistua Nicotine+:sta?"
+
+#: pynicotine/gtkgui/application.py:304
+#: pynicotine/gtkgui/widgets/dialogs.py:435
 #, fuzzy
 msgid "_No"
 msgstr "Ei"
 
-#: pynicotine/gtkgui/application.py:288
+#: pynicotine/gtkgui/application.py:305 pynicotine/gtkgui/mainwindow.py:497
 #, fuzzy
 msgid "_Quit"
 msgstr "_Quit"
 
-#: pynicotine/gtkgui/application.py:292
+#: pynicotine/gtkgui/application.py:309
 #, fuzzy
 msgid "_Run in Background"
 msgstr "Suorita taustalla"
 
-#: pynicotine/gtkgui/application.py:296
+#: pynicotine/gtkgui/application.py:313
 #: pynicotine/plugins/core_commands/__init__.py:61
 #, fuzzy
 msgid "Quit Nicotine+"
 msgstr "Lopeta Nicotine+"
 
-#: pynicotine/gtkgui/application.py:297
-#, fuzzy
-msgid "Do you really want to exit?"
-msgstr "Haluatko todella poistua Nicotine+:sta?"
-
-#: pynicotine/gtkgui/application.py:299
-msgid "Wait for uploads to finish"
-msgstr ""
-
-#: pynicotine/gtkgui/application.py:317
+#: pynicotine/gtkgui/application.py:334
 #, fuzzy
 msgid "Shares Not Available"
 msgstr "Osakkeita ei saatavilla"
 
-#: pynicotine/gtkgui/application.py:318
+#: pynicotine/gtkgui/application.py:335 pynicotine/headless/application.py:97
 #, fuzzy
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
@@ -474,29 +471,29 @@ msgstr ""
 "Varmista, että ulkoiset levyt on asennettu ja kansioiden käyttöoikeudet ovat "
 "oikeat."
 
-#: pynicotine/gtkgui/application.py:321 pynicotine/gtkgui/application.py:345
+#: pynicotine/gtkgui/application.py:338 pynicotine/gtkgui/application.py:362
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:43
-#: pynicotine/gtkgui/widgets/dialogs.py:482
+#: pynicotine/gtkgui/widgets/dialogs.py:475
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 #, fuzzy
 msgid "_Cancel"
 msgstr "_Cancel"
 
-#: pynicotine/gtkgui/application.py:322 pynicotine/gtkgui/uploads.py:44
+#: pynicotine/gtkgui/application.py:339 pynicotine/gtkgui/uploads.py:44
 msgid "_Retry"
 msgstr "_Yritä uudelleen"
 
-#: pynicotine/gtkgui/application.py:323
+#: pynicotine/gtkgui/application.py:340
 #, fuzzy
 msgid "_Force Rescan"
 msgstr "_Pakota uudelleenskannaus"
 
-#: pynicotine/gtkgui/application.py:336
+#: pynicotine/gtkgui/application.py:353
 #, fuzzy
 msgid "Invalid Password"
 msgstr "Salasana:"
 
-#: pynicotine/gtkgui/application.py:337
+#: pynicotine/gtkgui/application.py:354 pynicotine/headless/application.py:76
 #, fuzzy, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -505,47 +502,47 @@ msgstr ""
 "Käyttäjä %s on jo olemassa, eikä kirjoittamasi salasana kelpaa. Valitse "
 "toinen käyttäjänimi, jos kirjaudut sisään ensimmäistä kertaa."
 
-#: pynicotine/gtkgui/application.py:346
+#: pynicotine/gtkgui/application.py:363
 #, fuzzy
 msgid "Change _Login Details"
 msgstr "Muuta kirjautumistietoja"
 
-#: pynicotine/gtkgui/application.py:496
+#: pynicotine/gtkgui/application.py:513
 #, fuzzy
 msgid "Message Downloading Users"
 msgstr "Viestejä lataavat käyttäjät"
 
-#: pynicotine/gtkgui/application.py:497
+#: pynicotine/gtkgui/application.py:514
 #, fuzzy
 msgid "Send private message to all users who are downloading from you:"
 msgstr "Lähetä yksityisviesti kaikille käyttäjille, jotka lataavat sinulta:"
 
-#: pynicotine/gtkgui/application.py:498 pynicotine/gtkgui/application.py:512
+#: pynicotine/gtkgui/application.py:515 pynicotine/gtkgui/application.py:529
 #, fuzzy
 msgid "_Send Message"
 msgstr "Lähetä viesti"
 
-#: pynicotine/gtkgui/application.py:510
+#: pynicotine/gtkgui/application.py:527
 #, fuzzy
 msgid "Message Buddies"
 msgstr "Viestit"
 
-#: pynicotine/gtkgui/application.py:511
+#: pynicotine/gtkgui/application.py:528
 #, fuzzy
 msgid "Send private message to all online buddies:"
 msgstr "Lähetä yksityisviesti kaikille online-kavereille:"
 
-#: pynicotine/gtkgui/application.py:537
+#: pynicotine/gtkgui/application.py:557
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "Tallennettujen jakojen luettelotiedoston valitseminen"
 
-#: pynicotine/gtkgui/application.py:618
+#: pynicotine/gtkgui/application.py:638
 #, fuzzy
 msgid "Critical Error"
 msgstr "Kriittinen virhe"
 
-#: pynicotine/gtkgui/application.py:619
+#: pynicotine/gtkgui/application.py:639
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -554,173 +551,173 @@ msgstr ""
 "Nicotine+ on kohdannut kriittisen virheen ja sen on poistuttava. Kopioi "
 "seuraava viesti ja sisällytä se vikaraporttiin:"
 
-#: pynicotine/gtkgui/application.py:623
+#: pynicotine/gtkgui/application.py:643
 #, fuzzy
 msgid "_Quit Nicotine+"
 msgstr "Lopeta Nicotine+"
 
-#: pynicotine/gtkgui/application.py:624
+#: pynicotine/gtkgui/application.py:644
 #, fuzzy
 msgid "_Copy & Report Bug"
 msgstr "Kopioi & raportoi virhe"
 
-#: pynicotine/gtkgui/chatrooms.py:178
+#: pynicotine/gtkgui/chatrooms.py:175
 #, fuzzy
 msgid "Create New Room?"
 msgstr "Luodaanko uusi huone?"
 
-#: pynicotine/gtkgui/chatrooms.py:179
+#: pynicotine/gtkgui/chatrooms.py:176
 #, fuzzy, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Haluatko todella luoda uuden huoneen \"%s\"?"
 
-#: pynicotine/gtkgui/chatrooms.py:180
+#: pynicotine/gtkgui/chatrooms.py:177
 #, fuzzy
 msgid "Make room private"
 msgstr "Tee huoneesta yksityinen"
 
-#: pynicotine/gtkgui/chatrooms.py:436 pynicotine/gtkgui/interests.py:118
-#: pynicotine/gtkgui/transfers.py:142 pynicotine/gtkgui/userlist.py:64
+#: pynicotine/gtkgui/chatrooms.py:430 pynicotine/gtkgui/interests.py:118
+#: pynicotine/gtkgui/transfers.py:143 pynicotine/gtkgui/userlist.py:64
 msgid "Status"
 msgstr "Tila"
 
-#: pynicotine/gtkgui/chatrooms.py:443 pynicotine/gtkgui/search.py:478
+#: pynicotine/gtkgui/chatrooms.py:437 pynicotine/gtkgui/search.py:484
 #: pynicotine/gtkgui/userlist.py:71
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:310
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:394
-#: pynicotine/gtkgui/ui/userinfo.ui:285
+#: pynicotine/gtkgui/ui/userinfo.ui:288
 #, fuzzy
 msgid "Country"
 msgstr "Maa"
 
-#: pynicotine/gtkgui/chatrooms.py:450
-#: pynicotine/gtkgui/dialogs/preferences.py:926
-#: pynicotine/gtkgui/dialogs/preferences.py:1062
+#: pynicotine/gtkgui/chatrooms.py:444
+#: pynicotine/gtkgui/dialogs/preferences.py:934
+#: pynicotine/gtkgui/dialogs/preferences.py:1070
 #: pynicotine/gtkgui/interests.py:125
 #: pynicotine/gtkgui/popovers/chathistory.py:62
-#: pynicotine/gtkgui/privatechat.py:333 pynicotine/gtkgui/search.py:472
-#: pynicotine/gtkgui/transfers.py:117 pynicotine/gtkgui/userbrowse.py:268
-#: pynicotine/gtkgui/userbrowse.py:282 pynicotine/gtkgui/userbrowse.py:348
-#: pynicotine/gtkgui/userbrowse.py:363 pynicotine/gtkgui/userlist.py:78
+#: pynicotine/gtkgui/privatechat.py:336 pynicotine/gtkgui/search.py:478
+#: pynicotine/gtkgui/transfers.py:118 pynicotine/gtkgui/userbrowse.py:275
+#: pynicotine/gtkgui/userbrowse.py:289 pynicotine/gtkgui/userbrowse.py:355
+#: pynicotine/gtkgui/userbrowse.py:370 pynicotine/gtkgui/userlist.py:78
 msgid "User"
 msgstr "Käyttäjä"
 
-#: pynicotine/gtkgui/chatrooms.py:460 pynicotine/gtkgui/interests.py:132
-#: pynicotine/gtkgui/search.py:485 pynicotine/gtkgui/transfers.py:164
+#: pynicotine/gtkgui/chatrooms.py:454 pynicotine/gtkgui/interests.py:132
+#: pynicotine/gtkgui/search.py:491 pynicotine/gtkgui/transfers.py:165
 #: pynicotine/gtkgui/userlist.py:85
 msgid "Speed"
 msgstr "Nopeus"
 
-#: pynicotine/gtkgui/chatrooms.py:467 pynicotine/gtkgui/interests.py:139
-#: pynicotine/gtkgui/userlist.py:91 pynicotine/gtkgui/ui/mainwindow.ui:328
-#: pynicotine/gtkgui/ui/mainwindow.ui:566
+#: pynicotine/gtkgui/chatrooms.py:461 pynicotine/gtkgui/interests.py:139
+#: pynicotine/gtkgui/userlist.py:91 pynicotine/gtkgui/ui/mainwindow.ui:330
+#: pynicotine/gtkgui/ui/mainwindow.ui:569
 msgid "Files"
 msgstr "Tiedosto(a)/(t)"
 
-#: pynicotine/gtkgui/chatrooms.py:507
+#: pynicotine/gtkgui/chatrooms.py:494
 #, fuzzy
 msgid "Sear_ch User's Files"
 msgstr "_Etsi tiedostoja"
 
-#: pynicotine/gtkgui/chatrooms.py:508 pynicotine/gtkgui/chatrooms.py:666
+#: pynicotine/gtkgui/chatrooms.py:495 pynicotine/gtkgui/chatrooms.py:677
 #: pynicotine/gtkgui/userlist.py:144 pynicotine/gtkgui/userlist.py:209
 #, fuzzy
 msgid "Private Rooms"
 msgstr "_Keskusteluhuoneet"
 
-#: pynicotine/gtkgui/chatrooms.py:514 pynicotine/gtkgui/chatrooms.py:526
-#: pynicotine/gtkgui/privatechat.py:322
+#: pynicotine/gtkgui/chatrooms.py:501 pynicotine/gtkgui/chatrooms.py:513
+#: pynicotine/gtkgui/privatechat.py:325
 #, fuzzy
 msgid "Find…"
 msgstr "Etsi"
 
-#: pynicotine/gtkgui/chatrooms.py:516 pynicotine/gtkgui/chatrooms.py:528
-#: pynicotine/gtkgui/chatrooms.py:693 pynicotine/gtkgui/chatrooms.py:696
-#: pynicotine/gtkgui/privatechat.py:324 pynicotine/gtkgui/privatechat.py:389
-#: pynicotine/gtkgui/search.py:583 pynicotine/gtkgui/transfers.py:237
+#: pynicotine/gtkgui/chatrooms.py:503 pynicotine/gtkgui/chatrooms.py:515
+#: pynicotine/gtkgui/chatrooms.py:704 pynicotine/gtkgui/chatrooms.py:707
+#: pynicotine/gtkgui/privatechat.py:327 pynicotine/gtkgui/privatechat.py:392
+#: pynicotine/gtkgui/search.py:589 pynicotine/gtkgui/transfers.py:238
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
 msgid "Copy"
 msgstr "Kopioi"
 
-#: pynicotine/gtkgui/chatrooms.py:517 pynicotine/gtkgui/chatrooms.py:530
-#: pynicotine/gtkgui/privatechat.py:326
+#: pynicotine/gtkgui/chatrooms.py:504 pynicotine/gtkgui/chatrooms.py:517
+#: pynicotine/gtkgui/privatechat.py:329
 msgid "Copy All"
 msgstr "Kopioi kaikki"
 
-#: pynicotine/gtkgui/chatrooms.py:519
+#: pynicotine/gtkgui/chatrooms.py:506
 #, fuzzy
 msgid "Clear Activity View"
 msgstr "Tyhjennä aktiviteettinäkymä"
 
-#: pynicotine/gtkgui/chatrooms.py:521 pynicotine/gtkgui/chatrooms.py:536
-#: pynicotine/gtkgui/chatrooms.py:541
+#: pynicotine/gtkgui/chatrooms.py:508 pynicotine/gtkgui/chatrooms.py:523
+#: pynicotine/gtkgui/chatrooms.py:528
 #, fuzzy
 msgid "_Leave Room"
 msgstr "Poistu huoneesta 'huone'"
 
-#: pynicotine/gtkgui/chatrooms.py:529 pynicotine/gtkgui/chatrooms.py:697
-#: pynicotine/gtkgui/privatechat.py:325 pynicotine/gtkgui/privatechat.py:390
+#: pynicotine/gtkgui/chatrooms.py:516 pynicotine/gtkgui/chatrooms.py:708
+#: pynicotine/gtkgui/privatechat.py:328 pynicotine/gtkgui/privatechat.py:393
 #, fuzzy
 msgid "Copy Link"
 msgstr "Kopioi_URL"
 
-#: pynicotine/gtkgui/chatrooms.py:532
+#: pynicotine/gtkgui/chatrooms.py:519
 #, fuzzy
 msgid "View Room Log"
 msgstr "Näytä huoneloki"
 
-#: pynicotine/gtkgui/chatrooms.py:533
+#: pynicotine/gtkgui/chatrooms.py:520
 #, fuzzy
 msgid "Delete Room Log…"
 msgstr "Poista huoneloki…"
 
-#: pynicotine/gtkgui/chatrooms.py:535 pynicotine/gtkgui/privatechat.py:331
+#: pynicotine/gtkgui/chatrooms.py:522 pynicotine/gtkgui/privatechat.py:334
 #, fuzzy
 msgid "Clear Message View"
 msgstr "Tyhjennä viestinäkymä"
 
-#: pynicotine/gtkgui/chatrooms.py:715
-#, fuzzy, python-format
-msgid "%(user)s mentioned you in room %(room)s"
-msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
-
-#: pynicotine/gtkgui/chatrooms.py:720
-#: pynicotine/gtkgui/widgets/notifications.py:62
-#, fuzzy, python-format
-msgid "Mentioned by %(user)s in Room %(room)s"
-msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
-
-#: pynicotine/gtkgui/chatrooms.py:738
-#, fuzzy, python-format
-msgid "Message by %(user)s in Room %(room)s"
-msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
-
-#: pynicotine/gtkgui/chatrooms.py:816
+#: pynicotine/gtkgui/chatrooms.py:666 pynicotine/gtkgui/chatrooms.py:827
 #, python-format
 msgid "%s joined the room"
 msgstr "%s on liittynyt huoneeseen"
 
-#: pynicotine/gtkgui/chatrooms.py:839
+#: pynicotine/gtkgui/chatrooms.py:726
+#, fuzzy, python-format
+msgid "%(user)s mentioned you in room %(room)s"
+msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
+
+#: pynicotine/gtkgui/chatrooms.py:731
+#: pynicotine/gtkgui/widgets/notifications.py:63
+#, fuzzy, python-format
+msgid "Mentioned by %(user)s in Room %(room)s"
+msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
+
+#: pynicotine/gtkgui/chatrooms.py:749
+#, fuzzy, python-format
+msgid "Message by %(user)s in Room %(room)s"
+msgstr "Käyttäjä %(user)s mainitsi nimesi huoneessa %(room)s"
+
+#: pynicotine/gtkgui/chatrooms.py:850
 #, python-format
 msgid "%s left the room"
 msgstr "%s on lähtenyt huoneesta"
 
-#: pynicotine/gtkgui/chatrooms.py:887
+#: pynicotine/gtkgui/chatrooms.py:898
 #, python-format
 msgid "%s has gone away"
 msgstr "%s on mennyt pois"
 
-#: pynicotine/gtkgui/chatrooms.py:890
+#: pynicotine/gtkgui/chatrooms.py:901
 #, python-format
 msgid "%s has returned"
 msgstr "%s on palannut"
 
-#: pynicotine/gtkgui/chatrooms.py:1003 pynicotine/gtkgui/privatechat.py:414
+#: pynicotine/gtkgui/chatrooms.py:991 pynicotine/gtkgui/privatechat.py:417
 #, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "Poistetaanko kirjatut viestit?"
 
-#: pynicotine/gtkgui/chatrooms.py:1004
+#: pynicotine/gtkgui/chatrooms.py:992
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
@@ -728,84 +725,84 @@ msgstr ""
 "Haluatko varmasti poistaa pysyvästi kaikki tämän huoneen lokiin kirjatut "
 "viestit?"
 
-#: pynicotine/gtkgui/dialogs/about.py:362
+#: pynicotine/gtkgui/dialogs/about.py:364
 #, fuzzy
 msgid "About"
 msgstr "Djibouti"
 
-#: pynicotine/gtkgui/dialogs/about.py:407
+#: pynicotine/gtkgui/dialogs/about.py:411
 #, fuzzy, python-format
 msgid "Error checking latest version: %s"
 msgstr "Virhe noudettaessa uusinta versiota"
 
-#: pynicotine/gtkgui/dialogs/about.py:412
+#: pynicotine/gtkgui/dialogs/about.py:416
 #, python-format
 msgid "New release available: %s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:417
+#: pynicotine/gtkgui/dialogs/about.py:421
 #, fuzzy
 msgid "Up to date"
 msgstr "Ajan tasalla"
 
-#: pynicotine/gtkgui/dialogs/about.py:442
+#: pynicotine/gtkgui/dialogs/about.py:446
 #, fuzzy
 msgid "Checking latest version…"
 msgstr "Asiakkaan versio"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:71
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:72
 #, fuzzy
 msgid "Setup Assistant"
 msgstr "_Setup avustaja"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:97
-#: pynicotine/gtkgui/dialogs/preferences.py:564
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:98
+#: pynicotine/gtkgui/dialogs/preferences.py:573
 #, fuzzy
 msgid "Virtual Folder"
 msgstr "Näennäiskansio"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:103
-#: pynicotine/gtkgui/dialogs/preferences.py:571 pynicotine/gtkgui/search.py:499
-#: pynicotine/gtkgui/uploads.py:43 pynicotine/gtkgui/userbrowse.py:233
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:104
+#: pynicotine/gtkgui/dialogs/preferences.py:580 pynicotine/gtkgui/search.py:505
+#: pynicotine/gtkgui/uploads.py:43 pynicotine/gtkgui/userbrowse.py:240
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:131
 #, fuzzy
 msgid "Folder"
 msgstr "Kansio"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:122
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:123
 #, fuzzy
 msgid "_Finish"
 msgstr "Valmis"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:122
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:123
 #, fuzzy
 msgid "_Next"
 msgstr "_Seuraava"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:163
-#: pynicotine/gtkgui/dialogs/preferences.py:667
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:164
+#: pynicotine/gtkgui/dialogs/preferences.py:658
 #, fuzzy
 msgid "Add a Shared Folder"
 msgstr "Jaetun kansion lisääminen"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:194
-#: pynicotine/gtkgui/dialogs/preferences.py:687
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:195
+#: pynicotine/gtkgui/dialogs/preferences.py:700
 #, fuzzy
 msgid "Edit Shared Folder"
 msgstr "Jaot"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:195
-#: pynicotine/gtkgui/dialogs/preferences.py:688
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:196
+#: pynicotine/gtkgui/dialogs/preferences.py:701
 #, fuzzy, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Kirjoita %(dir)s-niminen uusi näennäisnimi:"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:197
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:198
 #: pynicotine/gtkgui/dialogs/preferences.py:465
-#: pynicotine/gtkgui/dialogs/preferences.py:692
-#: pynicotine/gtkgui/dialogs/preferences.py:1411
-#: pynicotine/gtkgui/dialogs/preferences.py:1473
-#: pynicotine/gtkgui/dialogs/preferences.py:2343
+#: pynicotine/gtkgui/dialogs/preferences.py:707
+#: pynicotine/gtkgui/dialogs/preferences.py:1419
+#: pynicotine/gtkgui/dialogs/preferences.py:1481
+#: pynicotine/gtkgui/dialogs/preferences.py:2351
 #: pynicotine/gtkgui/dialogs/wishlist.py:120
 #, fuzzy
 msgid "_Edit"
@@ -829,7 +826,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Tiedoston ominaisuudet (%(num)i tai %(total)i)"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:46
-#: pynicotine/gtkgui/widgets/dialogs.py:478
+#: pynicotine/gtkgui/widgets/dialogs.py:471
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:23
 #, fuzzy
 msgid "_OK"
@@ -856,8 +853,8 @@ msgstr "Asetukset"
 #: pynicotine/gtkgui/ui/settings/ignore.ui:120
 #: pynicotine/gtkgui/ui/settings/ignore.ui:225
 #: pynicotine/gtkgui/ui/settings/ignore.ui:241
-#: pynicotine/gtkgui/ui/settings/shares.ui:80
-#: pynicotine/gtkgui/ui/settings/shares.ui:96
+#: pynicotine/gtkgui/ui/settings/shares.ui:112
+#: pynicotine/gtkgui/ui/settings/shares.ui:128
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:105
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:121
 #, fuzzy
@@ -875,8 +872,8 @@ msgstr "Lisätä…"
 #: pynicotine/gtkgui/ui/settings/chats.ui:797
 #: pynicotine/gtkgui/ui/settings/downloads.ui:388
 #: pynicotine/gtkgui/ui/settings/downloads.ui:404
-#: pynicotine/gtkgui/ui/settings/shares.ui:111
-#: pynicotine/gtkgui/ui/settings/shares.ui:127
+#: pynicotine/gtkgui/ui/settings/shares.ui:143
+#: pynicotine/gtkgui/ui/settings/shares.ui:159
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:136
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:152
 #, fuzzy
@@ -902,8 +899,8 @@ msgstr "Muokata…"
 #: pynicotine/gtkgui/ui/settings/ignore.ui:151
 #: pynicotine/gtkgui/ui/settings/ignore.ui:256
 #: pynicotine/gtkgui/ui/settings/ignore.ui:272
-#: pynicotine/gtkgui/ui/settings/shares.ui:142
-#: pynicotine/gtkgui/ui/settings/shares.ui:158
+#: pynicotine/gtkgui/ui/settings/shares.ui:174
+#: pynicotine/gtkgui/ui/settings/shares.ui:190
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:167
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:183
 msgid "Remove"
@@ -926,7 +923,7 @@ msgid "Network"
 msgstr "Verkko"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:70
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:27
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:28
 #, fuzzy
 msgid "User Interface"
 msgstr "Käyttöliittymä"
@@ -938,11 +935,11 @@ msgid "Shares"
 msgstr "Jaot"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:73
-#: pynicotine/gtkgui/mainwindow.py:761 pynicotine/gtkgui/mainwindow.py:1179
-#: pynicotine/gtkgui/widgets/trayicon.py:93
-#: pynicotine/gtkgui/ui/mainwindow.ui:688
+#: pynicotine/gtkgui/mainwindow.py:771 pynicotine/gtkgui/mainwindow.py:1207
+#: pynicotine/gtkgui/widgets/trayicon.py:94
+#: pynicotine/gtkgui/ui/mainwindow.ui:691
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:534
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:535
 msgid "Uploads"
 msgstr "Lähtevät"
 
@@ -958,7 +955,7 @@ msgstr "Selaa_käyttäjä"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:76
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:946
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:947
 #, fuzzy
 msgid "Chats"
 msgstr "Keskusteluhuoneet"
@@ -1056,9 +1053,11 @@ msgid "Everyone"
 msgstr "Kaikki"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:271
-#: pynicotine/gtkgui/mainwindow.py:765 pynicotine/gtkgui/search.py:241
-#: pynicotine/gtkgui/ui/mainwindow.ui:1336
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:582
+#: pynicotine/gtkgui/dialogs/preferences.py:544
+#: pynicotine/gtkgui/dialogs/preferences.py:616
+#: pynicotine/gtkgui/mainwindow.py:775 pynicotine/gtkgui/search.py:244
+#: pynicotine/gtkgui/ui/mainwindow.ui:1343
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:583
 #: pynicotine/gtkgui/ui/userlist.ui:18
 msgid "Buddies"
 msgstr "Kaverit"
@@ -1069,27 +1068,27 @@ msgid "Trusted Buddies"
 msgstr "Luotetut käyttäjät"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:279
-#: pynicotine/gtkgui/dialogs/preferences.py:751
+#: pynicotine/gtkgui/dialogs/preferences.py:759
 #, fuzzy
 msgid "Nothing"
 msgstr "Ei mitään"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
-#: pynicotine/gtkgui/dialogs/preferences.py:752
+#: pynicotine/gtkgui/dialogs/preferences.py:760
 #, fuzzy
 msgid "Send to Player"
 msgstr "Lähetä soittimelle"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
-#: pynicotine/gtkgui/dialogs/preferences.py:753
+#: pynicotine/gtkgui/dialogs/preferences.py:761
 #: pynicotine/gtkgui/widgets/filechooser.py:251
 #, fuzzy
 msgid "Open in File Manager"
 msgstr "_Open tiedostonhallinnan avulla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:282
-#: pynicotine/gtkgui/dialogs/preferences.py:754
-#: pynicotine/gtkgui/mainwindow.py:1180
+#: pynicotine/gtkgui/dialogs/preferences.py:762
+#: pynicotine/gtkgui/mainwindow.py:1208
 msgid "Search"
 msgstr "Etsi"
 
@@ -1100,16 +1099,16 @@ msgid "Pause"
 msgstr "Keskeytetty"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:284
-#: pynicotine/gtkgui/dialogs/preferences.py:756
+#: pynicotine/gtkgui/dialogs/preferences.py:764
 #: pynicotine/gtkgui/ui/downloads.ui:116
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:5
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1563
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1609
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1655
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1701
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1747
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1793
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1839
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1564
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1610
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1656
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1702
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1748
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1794
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1840
 msgid "Clear"
 msgstr "Tyhjennä"
 
@@ -1120,7 +1119,7 @@ msgid "Resume"
 msgstr "Jatkaa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:286
-#: pynicotine/gtkgui/dialogs/preferences.py:758
+#: pynicotine/gtkgui/dialogs/preferences.py:766
 #, fuzzy
 msgid "Browse Folder"
 msgstr "Selaa tiedostoja"
@@ -1154,13 +1153,13 @@ msgid "Enter a new download filter:"
 msgstr "Syötä uusi lataussuodin:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:434
-#: pynicotine/gtkgui/dialogs/preferences.py:974
-#: pynicotine/gtkgui/dialogs/preferences.py:1004
-#: pynicotine/gtkgui/dialogs/preferences.py:1130
-#: pynicotine/gtkgui/dialogs/preferences.py:1161
-#: pynicotine/gtkgui/dialogs/preferences.py:1384
-#: pynicotine/gtkgui/dialogs/preferences.py:1443
-#: pynicotine/gtkgui/dialogs/preferences.py:2314
+#: pynicotine/gtkgui/dialogs/preferences.py:982
+#: pynicotine/gtkgui/dialogs/preferences.py:1012
+#: pynicotine/gtkgui/dialogs/preferences.py:1138
+#: pynicotine/gtkgui/dialogs/preferences.py:1169
+#: pynicotine/gtkgui/dialogs/preferences.py:1392
+#: pynicotine/gtkgui/dialogs/preferences.py:1451
+#: pynicotine/gtkgui/dialogs/preferences.py:2322
 #: pynicotine/gtkgui/userlist.py:437
 #, fuzzy
 msgid "_Add"
@@ -1192,114 +1191,128 @@ msgstr "%(num)d Epäonnistui! %(error)s "
 msgid "Filters Successful"
 msgstr "Suodattimet onnistuivat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:577
-#, fuzzy
-msgid "Buddy-only"
-msgstr "Vain buddy"
+#: pynicotine/gtkgui/dialogs/preferences.py:543
+#: pynicotine/gtkgui/dialogs/preferences.py:612
+#: pynicotine/gtkgui/dialogs/preferences.py:651
+msgid "Public"
+msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:691
+#: pynicotine/gtkgui/dialogs/preferences.py:545
+#: pynicotine/gtkgui/dialogs/preferences.py:666
+#: pynicotine/gtkgui/dialogs/preferences.py:703
 #, fuzzy
-msgid "Share with buddies only"
-msgstr "Jaa vain kavereiden kanssa"
+msgid "Trusted buddies"
+msgstr "Luotetut käyttäjät"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:755
+#: pynicotine/gtkgui/dialogs/preferences.py:586
+msgid "Accessible To"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/preferences.py:620
+#: pynicotine/gtkgui/dialogs/preferences.py:666
+#: pynicotine/gtkgui/dialogs/preferences.py:703
+#: pynicotine/gtkgui/userlist.py:97
+msgid "Trusted"
+msgstr "Luotettu"
+
+#: pynicotine/gtkgui/dialogs/preferences.py:763
 #: pynicotine/gtkgui/ui/uploads.ui:56
 msgid "Abort"
 msgstr "Keskeytä"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:757
+#: pynicotine/gtkgui/dialogs/preferences.py:765
 #: pynicotine/gtkgui/ui/userbrowse.ui:5 pynicotine/gtkgui/ui/userinfo.ui:5
 msgid "Retry"
 msgstr "Yritä uudelleen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:765
+#: pynicotine/gtkgui/dialogs/preferences.py:773
 #, fuzzy
 msgid "Round Robin"
 msgstr "Kiertovuorottelu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:766
+#: pynicotine/gtkgui/dialogs/preferences.py:774
 msgid "First In, First Out"
 msgstr "Ensimmäinen sisään, ensimmäinen ulos"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:907
-#: pynicotine/gtkgui/dialogs/preferences.py:1043
+#: pynicotine/gtkgui/dialogs/preferences.py:915
+#: pynicotine/gtkgui/dialogs/preferences.py:1051
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:170
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:233
 msgid "Username"
 msgstr "Käyttäjänimi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:972
-#: pynicotine/gtkgui/userinfo.py:489 pynicotine/gtkgui/widgets/popupmenu.py:374
-#: pynicotine/gtkgui/widgets/popupmenu.py:414
+#: pynicotine/gtkgui/dialogs/preferences.py:980
+#: pynicotine/gtkgui/userinfo.py:492 pynicotine/gtkgui/widgets/popupmenu.py:377
+#: pynicotine/gtkgui/widgets/popupmenu.py:418
 #, fuzzy
 msgid "Ignore User"
 msgstr "Ohita käyttäjä"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:973
+#: pynicotine/gtkgui/dialogs/preferences.py:981
 #, fuzzy
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1002
-#: pynicotine/gtkgui/widgets/popupmenu.py:377
-#: pynicotine/gtkgui/widgets/popupmenu.py:418
+#: pynicotine/gtkgui/dialogs/preferences.py:1010
+#: pynicotine/gtkgui/widgets/popupmenu.py:380
+#: pynicotine/gtkgui/widgets/popupmenu.py:420
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "Näytä IP-osoite"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1003
+#: pynicotine/gtkgui/dialogs/preferences.py:1011
 #, fuzzy
 msgid "Enter an IP address you want to ignore:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1003
-#: pynicotine/gtkgui/dialogs/preferences.py:1160
+#: pynicotine/gtkgui/dialogs/preferences.py:1011
+#: pynicotine/gtkgui/dialogs/preferences.py:1168
 #, fuzzy
 msgid "* is a wildcard"
 msgstr "* on yleismerkki"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1128
-#: pynicotine/gtkgui/userinfo.py:485 pynicotine/gtkgui/widgets/popupmenu.py:373
-#: pynicotine/gtkgui/widgets/popupmenu.py:413
+#: pynicotine/gtkgui/dialogs/preferences.py:1136
+#: pynicotine/gtkgui/userinfo.py:488 pynicotine/gtkgui/widgets/popupmenu.py:376
+#: pynicotine/gtkgui/widgets/popupmenu.py:417
 #, fuzzy
 msgid "Ban User"
 msgstr "Käyttäjän kieltäminen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1129
+#: pynicotine/gtkgui/dialogs/preferences.py:1137
 #, fuzzy
 msgid "Enter the name of the user you want to ban:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1159
-#: pynicotine/gtkgui/widgets/popupmenu.py:376
-#: pynicotine/gtkgui/widgets/popupmenu.py:416
+#: pynicotine/gtkgui/dialogs/preferences.py:1167
+#: pynicotine/gtkgui/widgets/popupmenu.py:379
+#: pynicotine/gtkgui/widgets/popupmenu.py:419
 #, fuzzy
 msgid "Ban IP Address"
 msgstr "Näytä IP-osoite"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1160
+#: pynicotine/gtkgui/dialogs/preferences.py:1168
 #, fuzzy
 msgid "Enter an IP address you want to ban:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1236
-#: pynicotine/gtkgui/dialogs/preferences.py:1250
+#: pynicotine/gtkgui/dialogs/preferences.py:1244
+#: pynicotine/gtkgui/dialogs/preferences.py:1258
 #, fuzzy
 msgid "Pattern"
 msgstr "Kuvio"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1257
+#: pynicotine/gtkgui/dialogs/preferences.py:1265
 #, fuzzy
 msgid "Replacement"
 msgstr "Korvaaminen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1381
+#: pynicotine/gtkgui/dialogs/preferences.py:1389
 #, fuzzy
 msgid "Censor Pattern"
 msgstr "Sensuroi kuvio"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1382
-#: pynicotine/gtkgui/dialogs/preferences.py:1409
+#: pynicotine/gtkgui/dialogs/preferences.py:1390
+#: pynicotine/gtkgui/dialogs/preferences.py:1417
 #, fuzzy
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
@@ -1310,297 +1323,297 @@ msgstr ""
 "ympärille, jos et halua yhdistää sanojen sisällä olevia merkkijonoja "
 "(saattaa epäonnistua rivien alussa ja lopussa)."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1408
+#: pynicotine/gtkgui/dialogs/preferences.py:1416
 #, fuzzy
 msgid "Edit Censored Pattern"
 msgstr "Sensuroidut kuviot"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1441
+#: pynicotine/gtkgui/dialogs/preferences.py:1449
 #, fuzzy
 msgid "Add Replacement"
 msgstr "Korvaaminen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1442
-#: pynicotine/gtkgui/dialogs/preferences.py:1472
+#: pynicotine/gtkgui/dialogs/preferences.py:1450
+#: pynicotine/gtkgui/dialogs/preferences.py:1480
 #, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Kirjoita tekstimalli ja korvaa vastaavasti:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1471
+#: pynicotine/gtkgui/dialogs/preferences.py:1479
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Korvaaminen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1591
+#: pynicotine/gtkgui/dialogs/preferences.py:1599
 #, fuzzy
 msgid "System default"
 msgstr "Oletus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1601
+#: pynicotine/gtkgui/dialogs/preferences.py:1609
 #, fuzzy
 msgid "Quit program"
 msgstr "Lopeta ohjelma"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1602
+#: pynicotine/gtkgui/dialogs/preferences.py:1610
 #, fuzzy
 msgid "Show confirmation dialog"
 msgstr "Näytä vahvistus -valintaikkuna"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1603
+#: pynicotine/gtkgui/dialogs/preferences.py:1611
 #, fuzzy
 msgid "Run in the background"
 msgstr "Suorita taustalla"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1611
+#: pynicotine/gtkgui/dialogs/preferences.py:1619
 #, fuzzy
 msgid "bold"
 msgstr "rohkea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1612
+#: pynicotine/gtkgui/dialogs/preferences.py:1620
 #, fuzzy
 msgid "italic"
 msgstr "kursivoitu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1613
+#: pynicotine/gtkgui/dialogs/preferences.py:1621
 #, fuzzy
 msgid "underline"
 msgstr "Linjalla"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1614
+#: pynicotine/gtkgui/dialogs/preferences.py:1622
 #, fuzzy
 msgid "normal"
 msgstr "normaali"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1622
+#: pynicotine/gtkgui/dialogs/preferences.py:1630
 #, fuzzy
 msgid "Separate Buddies tab"
 msgstr "Viestit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1623
+#: pynicotine/gtkgui/dialogs/preferences.py:1631
 #, fuzzy
 msgid "Sidebar in Chat Rooms tab"
 msgstr "Kaverilista keskusteluhuoneissa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1624
+#: pynicotine/gtkgui/dialogs/preferences.py:1632
 msgid "Always visible sidebar"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1629
+#: pynicotine/gtkgui/dialogs/preferences.py:1637
 #, fuzzy
 msgid "Top"
 msgstr "Huippu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1630
+#: pynicotine/gtkgui/dialogs/preferences.py:1638
 #, fuzzy
 msgid "Bottom"
 msgstr "Pohja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1631
+#: pynicotine/gtkgui/dialogs/preferences.py:1639
 #, fuzzy
 msgid "Left"
 msgstr "Vasen"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1632
+#: pynicotine/gtkgui/dialogs/preferences.py:1640
 #, fuzzy
 msgid "Right"
 msgstr "Oikea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1726
-#: pynicotine/gtkgui/mainwindow.py:1084
-#: pynicotine/gtkgui/widgets/iconnotebook.py:557
+#: pynicotine/gtkgui/dialogs/preferences.py:1734
+#: pynicotine/gtkgui/mainwindow.py:1104
+#: pynicotine/gtkgui/widgets/iconnotebook.py:562
 #: pynicotine/gtkgui/widgets/treeview.py:593
 #: pynicotine/plugins/core_commands/__init__.py:318
 msgid "Online"
 msgstr "Linjalla"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1727
-#: pynicotine/gtkgui/mainwindow.py:1081
-#: pynicotine/gtkgui/widgets/iconnotebook.py:554
-#: pynicotine/gtkgui/widgets/trayicon.py:98
+#: pynicotine/gtkgui/dialogs/preferences.py:1735
+#: pynicotine/gtkgui/mainwindow.py:1101
+#: pynicotine/gtkgui/widgets/iconnotebook.py:559
+#: pynicotine/gtkgui/widgets/trayicon.py:99
 #: pynicotine/gtkgui/widgets/treeview.py:590
 #: pynicotine/plugins/core_commands/__init__.py:318
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:33
 msgid "Away"
 msgstr "Poissa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1728
-#: pynicotine/gtkgui/mainwindow.py:1088
-#: pynicotine/gtkgui/widgets/iconnotebook.py:560
+#: pynicotine/gtkgui/dialogs/preferences.py:1736
+#: pynicotine/gtkgui/mainwindow.py:1108
+#: pynicotine/gtkgui/widgets/iconnotebook.py:565
 #: pynicotine/gtkgui/widgets/treeview.py:595
 #: pynicotine/plugins/core_commands/__init__.py:314
-#: pynicotine/gtkgui/ui/mainwindow.ui:1807
+#: pynicotine/gtkgui/ui/mainwindow.ui:1808
 msgid "Offline"
 msgstr "Poissa linjalta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1730
+#: pynicotine/gtkgui/dialogs/preferences.py:1738
 #, fuzzy
 msgid "Tab Changed"
 msgstr "Salasanan muutos hylätty"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1731
+#: pynicotine/gtkgui/dialogs/preferences.py:1739
 #, fuzzy
 msgid "Tab Highlight"
 msgstr "Korostaa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1732
+#: pynicotine/gtkgui/dialogs/preferences.py:1740
 #, fuzzy
 msgid "Window"
 msgstr "Ikkuna"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1736
+#: pynicotine/gtkgui/dialogs/preferences.py:1744
 #, fuzzy
 msgid "Online (Tray)"
 msgstr "Yhdistä"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1737
+#: pynicotine/gtkgui/dialogs/preferences.py:1745
 #, fuzzy
 msgid "Away (Tray)"
 msgstr "Poissa (lokero)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1738
+#: pynicotine/gtkgui/dialogs/preferences.py:1746
 #, fuzzy
 msgid "Offline (Tray)"
 msgstr "Poissa linjalta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1739
+#: pynicotine/gtkgui/dialogs/preferences.py:1747
 #, fuzzy
 msgid "Message (Tray)"
 msgstr "Viesti (lokero)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2251
+#: pynicotine/gtkgui/dialogs/preferences.py:2259
 msgid "Protocol"
 msgstr "Protokolla"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2259
+#: pynicotine/gtkgui/dialogs/preferences.py:2267
 #, fuzzy
 msgid "Command"
 msgstr "Kommentit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2312
+#: pynicotine/gtkgui/dialogs/preferences.py:2320
 #, fuzzy
 msgid "Add URL Handler"
 msgstr "Ajuri"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2313
+#: pynicotine/gtkgui/dialogs/preferences.py:2321
 #, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Anna URL-käsittelijän protokolla ja komento:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2341
+#: pynicotine/gtkgui/dialogs/preferences.py:2349
 #, fuzzy
 msgid "Edit Command"
 msgstr "Muokkaa kommentteja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2342
+#: pynicotine/gtkgui/dialogs/preferences.py:2350
 #, fuzzy, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "Kirjoita %(dir)s-niminen uusi näennäisnimi:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2492
+#: pynicotine/gtkgui/dialogs/preferences.py:2500
 #, fuzzy
 msgid "Username;APIKEY:"
 msgstr "Käyttäjänimi:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2496
+#: pynicotine/gtkgui/dialogs/preferences.py:2504
 #, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr "Asiakkaan nimi (esim. amarok, uskalias, exaile) tai tyhjä autoille:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2500
+#: pynicotine/gtkgui/dialogs/preferences.py:2508
 #: pynicotine/gtkgui/ui/settings/network.ui:68
 #, fuzzy
 msgid "Username:"
 msgstr "Käyttäjänimi:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2504
+#: pynicotine/gtkgui/dialogs/preferences.py:2512
 #, fuzzy
 msgid "Command:"
 msgstr "Kommentit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2512
-#: pynicotine/gtkgui/dialogs/preferences.py:2515
+#: pynicotine/gtkgui/dialogs/preferences.py:2520
+#: pynicotine/gtkgui/dialogs/preferences.py:2523
 #, fuzzy
 msgid "Title"
 msgstr "Nimike"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2514
+#: pynicotine/gtkgui/dialogs/preferences.py:2522
 #, fuzzy, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Nyt toistetaan (yleensä \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2515
 #: pynicotine/gtkgui/dialogs/preferences.py:2523
+#: pynicotine/gtkgui/dialogs/preferences.py:2531
 #, fuzzy
 msgid "Artist"
 msgstr "Taiteilija"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2517
-#: pynicotine/gtkgui/search.py:536 pynicotine/gtkgui/userbrowse.py:319
+#: pynicotine/gtkgui/dialogs/preferences.py:2525
+#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/userbrowse.py:326
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:181
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:330
 #, fuzzy
 msgid "Duration"
 msgstr "Kesto"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2519
+#: pynicotine/gtkgui/dialogs/preferences.py:2527
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:281
 msgid "Bitrate"
 msgstr "Bittinopeus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2521
+#: pynicotine/gtkgui/dialogs/preferences.py:2529
 #, fuzzy
 msgid "Comment"
 msgstr "Kommentti"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2525
+#: pynicotine/gtkgui/dialogs/preferences.py:2533
 #, fuzzy
 msgid "Album"
 msgstr "Albumi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2527
+#: pynicotine/gtkgui/dialogs/preferences.py:2535
 #, fuzzy
 msgid "Track Number"
 msgstr "Raidan numero"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2529
+#: pynicotine/gtkgui/dialogs/preferences.py:2537
 #, fuzzy
 msgid "Year"
 msgstr "Vuosi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2531
+#: pynicotine/gtkgui/dialogs/preferences.py:2539
 #, fuzzy
 msgid "Filename (URI)"
 msgstr "Tiedostonimi (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2533
+#: pynicotine/gtkgui/dialogs/preferences.py:2541
 #, fuzzy
 msgid "Program"
 msgstr "Ohjelma"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2594
+#: pynicotine/gtkgui/dialogs/preferences.py:2602
 #, fuzzy
 msgid "Enabled"
 msgstr "Käytössä"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2601
+#: pynicotine/gtkgui/dialogs/preferences.py:2609
 #, fuzzy
 msgid "Plugin"
 msgstr "Laajennukset"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2640
+#: pynicotine/gtkgui/dialogs/preferences.py:2648
 #, fuzzy
 msgid "No Plugin Selected"
 msgstr "Laajenninta ei ole valittu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2727
-#: pynicotine/gtkgui/widgets/trayicon.py:108
+#: pynicotine/gtkgui/dialogs/preferences.py:2735
+#: pynicotine/gtkgui/widgets/trayicon.py:109
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
 #, fuzzy
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3022
+#: pynicotine/gtkgui/dialogs/preferences.py:3034
 #, fuzzy
 msgid "Pick a File Name for Config Backup"
 msgstr "Valitse config-varmuuskopion tiedostonimi"
@@ -1631,7 +1644,7 @@ msgstr "Haluatko todella nollata siirtotilastot?"
 msgid "Wishlist"
 msgstr "_Wishlist"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:59 pynicotine/gtkgui/search.py:310
+#: pynicotine/gtkgui/dialogs/wishlist.py:59 pynicotine/gtkgui/search.py:316
 #, fuzzy
 msgid "Wish"
 msgstr "Toivottaa"
@@ -1676,16 +1689,16 @@ msgstr "Keskeytetty"
 msgid "Finished / Filtered"
 msgstr "Tyhjennä valmiit / keskeytetyt"
 
-#: pynicotine/gtkgui/downloads.py:66 pynicotine/gtkgui/transfers.py:97
+#: pynicotine/gtkgui/downloads.py:66 pynicotine/gtkgui/transfers.py:98
 #: pynicotine/gtkgui/uploads.py:66
 msgid "Finished"
 msgstr "Valmis"
 
-#: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/transfers.py:96
+#: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/transfers.py:97
 msgid "Paused"
 msgstr "Keskeytetty"
 
-#: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/transfers.py:98
+#: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/transfers.py:99
 msgid "Filtered"
 msgstr "Suodatettu"
 
@@ -1737,12 +1750,12 @@ msgid ""
 msgstr ""
 "Haluatko todella ladata %(num)i tiedostoja %(user)sn kansiosta %(folder)s?"
 
-#: pynicotine/gtkgui/interests.py:71 pynicotine/gtkgui/userinfo.py:291
+#: pynicotine/gtkgui/interests.py:71 pynicotine/gtkgui/userinfo.py:290
 #, fuzzy
 msgid "Likes"
 msgstr "Tykkää"
 
-#: pynicotine/gtkgui/interests.py:83 pynicotine/gtkgui/userinfo.py:303
+#: pynicotine/gtkgui/interests.py:83 pynicotine/gtkgui/userinfo.py:302
 #, fuzzy
 msgid "Dislikes"
 msgstr "En pidä"
@@ -1762,7 +1775,7 @@ msgid "Re_commendations for Item"
 msgstr "Suosituksia tälle"
 
 #: pynicotine/gtkgui/interests.py:167 pynicotine/gtkgui/interests.py:175
-#: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/userinfo.py:323
+#: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/userinfo.py:322
 #, fuzzy
 msgid "_Search for Item"
 msgstr "_Etsi tätä"
@@ -1773,13 +1786,13 @@ msgid "_Remove Item"
 msgstr "_Poista tämä"
 
 #: pynicotine/gtkgui/interests.py:182 pynicotine/gtkgui/interests.py:476
-#: pynicotine/gtkgui/userinfo.py:320
+#: pynicotine/gtkgui/userinfo.py:319
 #, fuzzy
 msgid "I _Like This"
 msgstr "Pidän tästä"
 
 #: pynicotine/gtkgui/interests.py:183 pynicotine/gtkgui/interests.py:479
-#: pynicotine/gtkgui/userinfo.py:321
+#: pynicotine/gtkgui/userinfo.py:320
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Pidän tästä"
@@ -1809,196 +1822,210 @@ msgstr "Samankaltaiset käyttäjät"
 msgid "Similar Users"
 msgstr "Samankaltaiset käyttäjät"
 
-#: pynicotine/gtkgui/mainwindow.py:479
+#: pynicotine/gtkgui/mainwindow.py:483
 msgid "_Connect"
 msgstr "_Yhdistä"
 
-#: pynicotine/gtkgui/mainwindow.py:480
+#: pynicotine/gtkgui/mainwindow.py:484
 msgid "_Disconnect"
 msgstr "_Katkaise yhteys"
 
-#: pynicotine/gtkgui/mainwindow.py:481
+#: pynicotine/gtkgui/mainwindow.py:485
 #, fuzzy
 msgid "Soulseek _Privileges"
 msgstr "_Etuoikeutettu"
 
-#: pynicotine/gtkgui/mainwindow.py:487
+#: pynicotine/gtkgui/mainwindow.py:491
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Preferences"
 
-#: pynicotine/gtkgui/mainwindow.py:493
+#: pynicotine/gtkgui/mainwindow.py:512
 #, fuzzy
-msgid "_Quit…"
-msgstr "_Quit"
+msgid "Browse _Public Shares"
+msgstr "Selaa jakoja"
 
-#: pynicotine/gtkgui/mainwindow.py:508
+#: pynicotine/gtkgui/mainwindow.py:513
+#, fuzzy
+msgid "Browse _Buddy Shares"
+msgstr "Selaa jakoja"
+
+#: pynicotine/gtkgui/mainwindow.py:514
+#, fuzzy
+msgid "Browse _Trusted Shares"
+msgstr "Selaa jakoja"
+
+#: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 #, fuzzy
 msgid "_Rescan Shares"
 msgstr "Uudelleenskannaa jakosi"
 
-#: pynicotine/gtkgui/mainwindow.py:509
+#: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
 #, fuzzy
-msgid "_Configure Shares"
+msgid "Configure _Shares"
 msgstr "Skannataan jakoja"
 
-#: pynicotine/gtkgui/mainwindow.py:516
-#, fuzzy
-msgid "_Browse Public Shares"
-msgstr "Selaa jakoja"
-
-#: pynicotine/gtkgui/mainwindow.py:517
-#, fuzzy
-msgid "Bro_wse Buddy Shares"
-msgstr "Selaa jakoja"
-
-#: pynicotine/gtkgui/mainwindow.py:533
+#: pynicotine/gtkgui/mainwindow.py:540
 #, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Keyboard pikakuvakkeet"
 
-#: pynicotine/gtkgui/mainwindow.py:534
+#: pynicotine/gtkgui/mainwindow.py:541
 #, fuzzy
 msgid "_Setup Assistant"
 msgstr "_Setup avustaja"
 
-#: pynicotine/gtkgui/mainwindow.py:535
+#: pynicotine/gtkgui/mainwindow.py:542
 #, fuzzy
 msgid "_Transfer Statistics"
 msgstr "Siirrot"
 
-#: pynicotine/gtkgui/mainwindow.py:537
+#: pynicotine/gtkgui/mainwindow.py:544
 #, fuzzy
 msgid "Report a _Bug"
 msgstr "Ilmoituksen _Bug"
 
-#: pynicotine/gtkgui/mainwindow.py:538
+#: pynicotine/gtkgui/mainwindow.py:545
 #, fuzzy
 msgid "Improve T_ranslations"
 msgstr "Paranna T_käännöksiä"
 
-#: pynicotine/gtkgui/mainwindow.py:540
+#: pynicotine/gtkgui/mainwindow.py:547
 #, fuzzy
 msgid "_About Nicotine+"
 msgstr "Tietoja _Nicotine+"
 
-#: pynicotine/gtkgui/mainwindow.py:553 pynicotine/gtkgui/mainwindow.py:567
+#: pynicotine/gtkgui/mainwindow.py:559
+#, fuzzy
+msgid "_Browse Shares"
+msgstr "Selaa jakoja"
+
+#: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 #, fuzzy
 msgid "_Help"
 msgstr "_Help"
 
-#: pynicotine/gtkgui/mainwindow.py:565
+#: pynicotine/gtkgui/mainwindow.py:575
 msgid "_File"
 msgstr "_Tiedosto"
 
-#: pynicotine/gtkgui/mainwindow.py:566
+#: pynicotine/gtkgui/mainwindow.py:576
 #, fuzzy
 msgid "_Shares"
 msgstr "_Shares"
 
-#: pynicotine/gtkgui/mainwindow.py:763 pynicotine/gtkgui/ui/mainwindow.ui:1013
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:558
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:738
+#: pynicotine/gtkgui/mainwindow.py:773 pynicotine/gtkgui/ui/mainwindow.ui:1018
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:559
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:739
 #, fuzzy
 msgid "User Profiles"
 msgstr "Selaa_käyttäjä"
 
-#: pynicotine/gtkgui/mainwindow.py:764
+#: pynicotine/gtkgui/mainwindow.py:774
 #: pynicotine/plugins/core_commands/__init__.py:28
-#: pynicotine/gtkgui/ui/mainwindow.ui:1173
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:570
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:760
+#: pynicotine/gtkgui/ui/mainwindow.ui:1179
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:571
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:761
 #, fuzzy
 msgid "Private Chat"
 msgstr "Yksityinen keskustelu"
 
-#: pynicotine/gtkgui/mainwindow.py:766
+#: pynicotine/gtkgui/mainwindow.py:776
 #: pynicotine/plugins/core_commands/__init__.py:27
-#: pynicotine/gtkgui/ui/mainwindow.ui:1500
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:594
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:782
+#: pynicotine/gtkgui/ui/mainwindow.ui:1508
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:595
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:783
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Keskustelupalstat"
 
-#: pynicotine/gtkgui/mainwindow.py:767 pynicotine/gtkgui/ui/mainwindow.ui:1555
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:606
-#: pynicotine/gtkgui/ui/userinfo.ui:338
+#: pynicotine/gtkgui/mainwindow.py:777 pynicotine/gtkgui/ui/mainwindow.ui:1564
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:607
+#: pynicotine/gtkgui/ui/userinfo.ui:346
 msgid "Interests"
 msgstr "Kiinnostuksen kohteet"
 
-#: pynicotine/gtkgui/mainwindow.py:1181
+#: pynicotine/gtkgui/mainwindow.py:1209
 #: pynicotine/plugins/core_commands/__init__.py:26
 #, fuzzy
 msgid "Chat"
 msgstr "Jutella"
 
-#: pynicotine/gtkgui/mainwindow.py:1183
+#: pynicotine/gtkgui/mainwindow.py:1211
 #, fuzzy
 msgid "[Debug] Connections"
 msgstr "Yhteydet"
 
-#: pynicotine/gtkgui/mainwindow.py:1184
+#: pynicotine/gtkgui/mainwindow.py:1212
 #, fuzzy
 msgid "[Debug] Messages"
 msgstr "Viestit"
 
-#: pynicotine/gtkgui/mainwindow.py:1185
+#: pynicotine/gtkgui/mainwindow.py:1213
 #, fuzzy
 msgid "[Debug] Transfers"
 msgstr "Siirrot"
 
-#: pynicotine/gtkgui/mainwindow.py:1186
+#: pynicotine/gtkgui/mainwindow.py:1214
 #, fuzzy
 msgid "[Debug] Miscellaneous"
 msgstr "Sekalainen"
 
-#: pynicotine/gtkgui/mainwindow.py:1190
+#: pynicotine/gtkgui/mainwindow.py:1218
 #, fuzzy
 msgid "_Find…"
 msgstr "Etsi"
 
-#: pynicotine/gtkgui/mainwindow.py:1192 pynicotine/gtkgui/mainwindow.py:1218
+#: pynicotine/gtkgui/mainwindow.py:1220 pynicotine/gtkgui/mainwindow.py:1246
 #, fuzzy
 msgid "_Copy"
 msgstr "Kopioi"
 
-#: pynicotine/gtkgui/mainwindow.py:1193
+#: pynicotine/gtkgui/mainwindow.py:1221
 #, fuzzy
 msgid "Copy _All"
 msgstr "Kopioi kaikki"
 
-#: pynicotine/gtkgui/mainwindow.py:1195
+#: pynicotine/gtkgui/mainwindow.py:1223
 #, fuzzy
 msgid "View _Debug Logs"
 msgstr "Näytä virheenkorjauslokit"
 
-#: pynicotine/gtkgui/mainwindow.py:1196
+#: pynicotine/gtkgui/mainwindow.py:1224
 #, fuzzy
 msgid "View _Transfer Logs"
 msgstr "Siirtää"
 
-#: pynicotine/gtkgui/mainwindow.py:1198
+#: pynicotine/gtkgui/mainwindow.py:1226
 #, fuzzy
 msgid "_Log Categories"
 msgstr "Luokat"
 
-#: pynicotine/gtkgui/mainwindow.py:1200
+#: pynicotine/gtkgui/mainwindow.py:1228
 #, fuzzy
 msgid "Clear Log View"
 msgstr "Tyhjennä loki"
 
-#: pynicotine/gtkgui/mainwindow.py:1266
+#: pynicotine/gtkgui/mainwindow.py:1294
 #, fuzzy, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Lataukset: %(speed)s"
 
-#: pynicotine/gtkgui/mainwindow.py:1270
+#: pynicotine/gtkgui/mainwindow.py:1298
 #, fuzzy, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Lataukset: %(speed)s"
 
-#: pynicotine/gtkgui/mainwindow.py:1358
+#: pynicotine/gtkgui/mainwindow.py:1330
+#, fuzzy
+msgid "Preparing Shares"
+msgstr "Skannataan jakoja"
+
+#: pynicotine/gtkgui/mainwindow.py:1337
+msgid "Scanning Shares"
+msgstr "Skannataan jakoja"
+
+#: pynicotine/gtkgui/mainwindow.py:1388
 msgid "Quitting..."
 msgstr ""
 
@@ -2013,8 +2040,8 @@ msgstr "Huone"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:75
 #: pynicotine/plugins/core_commands/__init__.py:32
-#: pynicotine/gtkgui/ui/chatrooms.ui:179 pynicotine/gtkgui/ui/mainwindow.ui:288
-#: pynicotine/gtkgui/ui/mainwindow.ui:526
+#: pynicotine/gtkgui/ui/chatrooms.ui:184 pynicotine/gtkgui/ui/mainwindow.ui:290
+#: pynicotine/gtkgui/ui/mainwindow.ui:529
 #: pynicotine/gtkgui/ui/settings/ban.ui:130
 #: pynicotine/gtkgui/ui/settings/ignore.ui:66
 msgid "Users"
@@ -2044,30 +2071,30 @@ msgstr "Yksityinen huone, jota ei ole"
 msgid "Cancel Room Membership"
 msgstr "Peruuta huoneen jäsenyys"
 
-#: pynicotine/gtkgui/privatechat.py:316 pynicotine/gtkgui/search.py:592
-#: pynicotine/gtkgui/userbrowse.py:250 pynicotine/gtkgui/userinfo.py:315
-#: pynicotine/gtkgui/widgets/iconnotebook.py:681
+#: pynicotine/gtkgui/privatechat.py:319 pynicotine/gtkgui/search.py:598
+#: pynicotine/gtkgui/userbrowse.py:257 pynicotine/gtkgui/userinfo.py:314
+#: pynicotine/gtkgui/widgets/iconnotebook.py:686
 #, fuzzy
 msgid "Close All Tabs…"
 msgstr "Sulje kaikki välilehdet…"
 
-#: pynicotine/gtkgui/privatechat.py:317 pynicotine/gtkgui/search.py:593
-#: pynicotine/gtkgui/userbrowse.py:251 pynicotine/gtkgui/userinfo.py:316
+#: pynicotine/gtkgui/privatechat.py:320 pynicotine/gtkgui/search.py:599
+#: pynicotine/gtkgui/userbrowse.py:258 pynicotine/gtkgui/userinfo.py:315
 #, fuzzy
 msgid "_Close Tab"
 msgstr "Sulje"
 
-#: pynicotine/gtkgui/privatechat.py:328
+#: pynicotine/gtkgui/privatechat.py:331
 #, fuzzy
 msgid "View Chat Log"
 msgstr "Näytä keskusteluloki"
 
-#: pynicotine/gtkgui/privatechat.py:329
+#: pynicotine/gtkgui/privatechat.py:332
 #, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Poista keskusteluloki…"
 
-#: pynicotine/gtkgui/privatechat.py:415
+#: pynicotine/gtkgui/privatechat.py:418
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
@@ -2075,148 +2102,148 @@ msgstr ""
 "Haluatko varmasti poistaa pysyvästi kaikki tämän käyttäjän lokiin kirjatut "
 "viestit?"
 
-#: pynicotine/gtkgui/privatechat.py:436
-#: pynicotine/gtkgui/widgets/notifications.py:57
+#: pynicotine/gtkgui/privatechat.py:439
+#: pynicotine/gtkgui/widgets/notifications.py:58
 #, python-format
 msgid "Private Message from %(user)s"
 msgstr "Yksityinen viesti käyttäjältä %(user)s"
 
-#: pynicotine/gtkgui/privatechat.py:463
+#: pynicotine/gtkgui/privatechat.py:466
 #, fuzzy
 msgid "* Messages sent while you were offline"
 msgstr ""
 "* Offline-tilassa lähetetyt viestit. Palvelin ilmoittaa aikaleimat, ja ne "
 "voivat olla poissa käytöstä."
 
-#: pynicotine/gtkgui/search.py:74
+#: pynicotine/gtkgui/search.py:73
 #, fuzzy
 msgid "_Global"
 msgstr "Globaali"
 
-#: pynicotine/gtkgui/search.py:75
+#: pynicotine/gtkgui/search.py:74
 #, fuzzy
 msgid "_Buddies"
 msgstr "Kaverit"
 
-#: pynicotine/gtkgui/search.py:76 pynicotine/gtkgui/ui/mainwindow.ui:1418
+#: pynicotine/gtkgui/search.py:75 pynicotine/gtkgui/ui/mainwindow.ui:1426
 #, fuzzy
 msgid "_Rooms"
 msgstr "Huoneet"
 
-#: pynicotine/gtkgui/search.py:77
+#: pynicotine/gtkgui/search.py:76
 #, fuzzy
 msgid "_User"
 msgstr "Käyttäjä"
 
-#: pynicotine/gtkgui/search.py:492
+#: pynicotine/gtkgui/search.py:498
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:260
 #, fuzzy
 msgid "In Queue"
 msgstr "Jonossa"
 
-#: pynicotine/gtkgui/search.py:507 pynicotine/gtkgui/transfers.py:129
-#: pynicotine/gtkgui/userbrowse.py:293
+#: pynicotine/gtkgui/search.py:513 pynicotine/gtkgui/transfers.py:130
+#: pynicotine/gtkgui/userbrowse.py:300
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:146
 #, fuzzy
 msgid "File Type"
 msgstr "Tiedoston tyyppi"
 
-#: pynicotine/gtkgui/search.py:514 pynicotine/gtkgui/transfers.py:135
+#: pynicotine/gtkgui/search.py:520 pynicotine/gtkgui/transfers.py:136
 msgid "Filename"
 msgstr "Tiedoston nimi"
 
-#: pynicotine/gtkgui/search.py:522 pynicotine/gtkgui/transfers.py:158
-#: pynicotine/gtkgui/userbrowse.py:307
+#: pynicotine/gtkgui/search.py:528 pynicotine/gtkgui/transfers.py:159
+#: pynicotine/gtkgui/userbrowse.py:314
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:106
 msgid "Size"
 msgstr "Koko"
 
-#: pynicotine/gtkgui/search.py:529 pynicotine/gtkgui/userbrowse.py:313
+#: pynicotine/gtkgui/search.py:535 pynicotine/gtkgui/userbrowse.py:320
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:208
 #, fuzzy
 msgid "Quality"
 msgstr "Laatu"
 
-#: pynicotine/gtkgui/search.py:565 pynicotine/gtkgui/transfers.py:217
-#: pynicotine/gtkgui/userbrowse.py:345 pynicotine/gtkgui/userbrowse.py:360
+#: pynicotine/gtkgui/search.py:571 pynicotine/gtkgui/transfers.py:218
+#: pynicotine/gtkgui/userbrowse.py:352 pynicotine/gtkgui/userbrowse.py:367
 #, fuzzy
 msgid "Copy _File Path"
 msgstr "Kopioi _File polku"
 
-#: pynicotine/gtkgui/search.py:566 pynicotine/gtkgui/transfers.py:218
-#: pynicotine/gtkgui/userbrowse.py:266 pynicotine/gtkgui/userbrowse.py:280
-#: pynicotine/gtkgui/userbrowse.py:346 pynicotine/gtkgui/userbrowse.py:361
+#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/transfers.py:219
+#: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userbrowse.py:287
+#: pynicotine/gtkgui/userbrowse.py:353 pynicotine/gtkgui/userbrowse.py:368
 msgid "Copy _URL"
 msgstr "Kopioi_URL"
 
-#: pynicotine/gtkgui/search.py:567 pynicotine/gtkgui/transfers.py:219
+#: pynicotine/gtkgui/search.py:573 pynicotine/gtkgui/transfers.py:220
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Kopioi kansion URL"
 
-#: pynicotine/gtkgui/search.py:574 pynicotine/gtkgui/userbrowse.py:352
+#: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/userbrowse.py:359
 #, fuzzy
 msgid "_Download File(s)"
 msgstr "_Lataa tiedosto(t)"
 
-#: pynicotine/gtkgui/search.py:575 pynicotine/gtkgui/userbrowse.py:353
+#: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/userbrowse.py:360
 #, fuzzy
 msgid "Download File(s) _To…"
 msgstr "Lataa tiedosto(t) paikkaan..."
 
-#: pynicotine/gtkgui/search.py:576
+#: pynicotine/gtkgui/search.py:582
 #, fuzzy
 msgid "Download _Folder(s)"
 msgstr "_Lataa tiedosto(t)"
 
-#: pynicotine/gtkgui/search.py:577
+#: pynicotine/gtkgui/search.py:583
 #, fuzzy
 msgid "Download F_older(s) To…"
 msgstr "Lataa tiedosto(t) paikkaan..."
 
-#: pynicotine/gtkgui/search.py:579 pynicotine/gtkgui/widgets/popupmenu.py:359
+#: pynicotine/gtkgui/search.py:585 pynicotine/gtkgui/widgets/popupmenu.py:362
 #, fuzzy
 msgid "View User _Profile"
 msgstr "Näytä käyttäjän _profiili"
 
-#: pynicotine/gtkgui/search.py:580 pynicotine/gtkgui/transfers.py:234
+#: pynicotine/gtkgui/search.py:586 pynicotine/gtkgui/transfers.py:235
 #, fuzzy
 msgid "_Browse Folder"
 msgstr "Selaa tiedostoja"
 
-#: pynicotine/gtkgui/search.py:581 pynicotine/gtkgui/transfers.py:228
-#: pynicotine/gtkgui/userbrowse.py:263 pynicotine/gtkgui/userbrowse.py:277
-#: pynicotine/gtkgui/userbrowse.py:343 pynicotine/gtkgui/userbrowse.py:358
+#: pynicotine/gtkgui/search.py:587 pynicotine/gtkgui/transfers.py:229
+#: pynicotine/gtkgui/userbrowse.py:270 pynicotine/gtkgui/userbrowse.py:284
+#: pynicotine/gtkgui/userbrowse.py:350 pynicotine/gtkgui/userbrowse.py:365
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "F_ile ominaisuudet"
 
-#: pynicotine/gtkgui/search.py:584 pynicotine/gtkgui/transfers.py:239
+#: pynicotine/gtkgui/search.py:590 pynicotine/gtkgui/transfers.py:240
 #, fuzzy
 msgid "User Actions"
 msgstr "Siirrot"
 
-#: pynicotine/gtkgui/search.py:589
+#: pynicotine/gtkgui/search.py:595
 #, fuzzy
 msgid "Copy Search Term"
 msgstr "Kopioi hakusana"
 
-#: pynicotine/gtkgui/search.py:591
+#: pynicotine/gtkgui/search.py:597
 #, fuzzy
 msgid "Clear All Results"
 msgstr "Tyhjennä kaikki tulokset"
 
-#: pynicotine/gtkgui/search.py:670
+#: pynicotine/gtkgui/search.py:676
 #, fuzzy
 msgid "Clear Filters"
 msgstr "Tyhjennä suodatushistoria"
 
-#: pynicotine/gtkgui/search.py:673
+#: pynicotine/gtkgui/search.py:679
 #, fuzzy
 msgid "Restore Filters"
 msgstr "Salli suotimet"
 
-#: pynicotine/gtkgui/search.py:772
+#: pynicotine/gtkgui/search.py:778
 #, fuzzy, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -2225,63 +2252,63 @@ msgstr ""
 "Virheellinen hakutulos %(filepath)s käyttäjältä %(user)s suodatettiin "
 "hakukyselylle \"%(query)s\""
 
-#: pynicotine/gtkgui/search.py:800 pynicotine/gtkgui/userbrowse.py:499
+#: pynicotine/gtkgui/search.py:806 pynicotine/gtkgui/userbrowse.py:508
 #, fuzzy, python-format
 msgid "[PRIVATE]  %s"
 msgstr "[yksityinen]"
 
-#: pynicotine/gtkgui/search.py:884
-#: pynicotine/gtkgui/widgets/notifications.py:65
+#: pynicotine/gtkgui/search.py:890
+#: pynicotine/gtkgui/widgets/notifications.py:66
 #, fuzzy
 msgid "Wishlist Results Found"
 msgstr "Toivelistatulokset löydetty"
 
-#: pynicotine/gtkgui/search.py:1222
+#: pynicotine/gtkgui/search.py:1231
 #, fuzzy, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Result [%d]"
 
-#: pynicotine/gtkgui/search.py:1224 pynicotine/gtkgui/ui/search.ui:182
+#: pynicotine/gtkgui/search.py:1233 pynicotine/gtkgui/ui/search.ui:182
 #, fuzzy
 msgid "_Result Filters"
 msgstr "Salli suotimet"
 
-#: pynicotine/gtkgui/search.py:1226
+#: pynicotine/gtkgui/search.py:1235
 #, fuzzy, python-format
 msgid "%d active filter(s)"
 msgstr "Kaikkien aktiivisten suodattimien tyhjentäminen"
 
-#: pynicotine/gtkgui/search.py:1273
+#: pynicotine/gtkgui/search.py:1282
 #, fuzzy
 msgid "Add Wi_sh"
 msgstr "Lisää Wi_sh"
 
-#: pynicotine/gtkgui/search.py:1276
+#: pynicotine/gtkgui/search.py:1285
 #, fuzzy
 msgid "Remove Wi_sh"
 msgstr "Poista alias"
 
-#: pynicotine/gtkgui/search.py:1293
+#: pynicotine/gtkgui/search.py:1302
 #, fuzzy
 msgid "Select User's Results"
 msgstr "Valitse käyttäjän siirrot"
 
-#: pynicotine/gtkgui/search.py:1412
+#: pynicotine/gtkgui/search.py:1421
 #, fuzzy, python-format
 msgid "Total: %s"
 msgstr "Koko"
 
-#: pynicotine/gtkgui/search.py:1415 pynicotine/gtkgui/ui/search.ui:106
+#: pynicotine/gtkgui/search.py:1424 pynicotine/gtkgui/ui/search.ui:106
 #, fuzzy
 msgid "Results"
 msgstr "Tulokset"
 
-#: pynicotine/gtkgui/search.py:1525
+#: pynicotine/gtkgui/search.py:1535
 #, fuzzy
 msgid "Select Destination Folder for File(s)"
 msgstr "Valitse Käyttäjän tiedostojen lataamisen kohde"
 
-#: pynicotine/gtkgui/search.py:1575 pynicotine/gtkgui/userbrowse.py:775
+#: pynicotine/gtkgui/search.py:1573 pynicotine/gtkgui/userbrowse.py:831
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Valitse kansio"
@@ -2310,104 +2337,109 @@ msgstr "Siirtää"
 
 #: pynicotine/gtkgui/transfers.py:91
 #, fuzzy
+msgid "Connection closed"
+msgstr "Vertaiskäyttäjä sulki yhteyden"
+
+#: pynicotine/gtkgui/transfers.py:92
+#, fuzzy
 msgid "Connection timeout"
 msgstr "Yhdistetään"
 
-#: pynicotine/gtkgui/transfers.py:92
+#: pynicotine/gtkgui/transfers.py:93
 #, fuzzy
 msgid "Pending shutdown"
 msgstr "Odottava sammutus"
 
-#: pynicotine/gtkgui/transfers.py:93
+#: pynicotine/gtkgui/transfers.py:94
 msgid "User logged off"
 msgstr "Käyttäjä kirjautui ulos"
 
-#: pynicotine/gtkgui/transfers.py:94
+#: pynicotine/gtkgui/transfers.py:95
 #, fuzzy
 msgid "Disallowed extension"
 msgstr "Kielletty pidennys"
 
-#: pynicotine/gtkgui/transfers.py:95 pynicotine/gtkgui/uploads.py:67
+#: pynicotine/gtkgui/transfers.py:96 pynicotine/gtkgui/uploads.py:67
 #, fuzzy
 msgid "Cancelled"
 msgstr "Peruuta"
 
-#: pynicotine/gtkgui/transfers.py:99
+#: pynicotine/gtkgui/transfers.py:100
 msgid "Banned"
 msgstr "Estetty"
 
-#: pynicotine/gtkgui/transfers.py:100
+#: pynicotine/gtkgui/transfers.py:101
 #, fuzzy
 msgid "Too many files"
 msgstr "Liian monta tiedostoa"
 
-#: pynicotine/gtkgui/transfers.py:101
+#: pynicotine/gtkgui/transfers.py:102
 #, fuzzy
 msgid "Too many megabytes"
 msgstr "Liian monta megatavua"
 
-#: pynicotine/gtkgui/transfers.py:102 pynicotine/gtkgui/transfers.py:103
+#: pynicotine/gtkgui/transfers.py:103 pynicotine/gtkgui/transfers.py:104
 msgid "File not shared"
 msgstr "Tiedostoa ei jaettu"
 
-#: pynicotine/gtkgui/transfers.py:104
+#: pynicotine/gtkgui/transfers.py:105
 #, fuzzy
 msgid "Download folder error"
 msgstr "Lataushakemistovirhe"
 
-#: pynicotine/gtkgui/transfers.py:105
+#: pynicotine/gtkgui/transfers.py:106
 msgid "Local file error"
 msgstr "Paikallinen tiedostovirhe"
 
-#: pynicotine/gtkgui/transfers.py:106
+#: pynicotine/gtkgui/transfers.py:107
 #, fuzzy
-msgid "Remote file error"
-msgstr "Etätiedoston virhe"
+msgid "File read error"
+msgstr "Siirrot"
 
-#: pynicotine/gtkgui/transfers.py:147
+#: pynicotine/gtkgui/transfers.py:148
 #, fuzzy
 msgid "Queue"
 msgstr "Jonotettu"
 
-#: pynicotine/gtkgui/transfers.py:153
+#: pynicotine/gtkgui/transfers.py:154
 msgid "Percent"
 msgstr "Prosenttia"
 
-#: pynicotine/gtkgui/transfers.py:170
+#: pynicotine/gtkgui/transfers.py:171
 #, fuzzy
 msgid "Time Elapsed"
 msgstr "Aikaa kulunut"
 
-#: pynicotine/gtkgui/transfers.py:176
+#: pynicotine/gtkgui/transfers.py:177
 #, fuzzy
 msgid "Time Left"
 msgstr "Aikaa jäljellä"
 
-#: pynicotine/gtkgui/transfers.py:226 pynicotine/gtkgui/userbrowse.py:341
+#: pynicotine/gtkgui/transfers.py:227 pynicotine/gtkgui/userbrowse.py:348
 #, fuzzy
 msgid "Send to _Player"
 msgstr "Lähetä soittimelle"
 
-#: pynicotine/gtkgui/transfers.py:227
+#: pynicotine/gtkgui/transfers.py:228
 #, fuzzy
 msgid "_Open in File Manager"
 msgstr "_Open tiedostonhallinnan avulla"
 
-#: pynicotine/gtkgui/transfers.py:232
+#: pynicotine/gtkgui/transfers.py:233
 msgid "_Clear"
 msgstr "_Tyhjennä"
 
-#: pynicotine/gtkgui/transfers.py:235
+#: pynicotine/gtkgui/transfers.py:236
 #, fuzzy
 msgid "_Search"
 msgstr "Etsi"
 
-#: pynicotine/gtkgui/transfers.py:238
+#: pynicotine/gtkgui/transfers.py:239
 #, fuzzy
 msgid "Clear All"
 msgstr "Tyhjennä loki"
 
-#: pynicotine/gtkgui/transfers.py:741
+#: pynicotine/gtkgui/transfers.py:742
 msgid "Select User's Transfers"
 msgstr "Valitse käyttäjän siirrot"
 
@@ -2456,62 +2488,62 @@ msgstr "Tyhjennä loki"
 msgid "Do you really want to clear all uploads?"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/userbrowse.py:249
+#: pynicotine/gtkgui/userbrowse.py:256
 #, fuzzy
 msgid "_Save Shares List to Disk"
 msgstr "_Save jakojen luettelo levylle"
 
-#: pynicotine/gtkgui/userbrowse.py:259 pynicotine/gtkgui/userbrowse.py:339
+#: pynicotine/gtkgui/userbrowse.py:266 pynicotine/gtkgui/userbrowse.py:346
 #, fuzzy
 msgid "Upload Folder…"
 msgstr "Lataa kansio…"
 
-#: pynicotine/gtkgui/userbrowse.py:260
+#: pynicotine/gtkgui/userbrowse.py:267
 #, fuzzy
 msgid "Upload Folder & Subfolders…"
 msgstr "Lataa kansio (alikansioineen) käyttäjälle"
 
-#: pynicotine/gtkgui/userbrowse.py:262 pynicotine/gtkgui/userbrowse.py:342
+#: pynicotine/gtkgui/userbrowse.py:269 pynicotine/gtkgui/userbrowse.py:349
 #, fuzzy
 msgid "Open in File _Manager"
 msgstr "Avaa tiedostotiedostossa _Manager"
 
-#: pynicotine/gtkgui/userbrowse.py:265 pynicotine/gtkgui/userbrowse.py:279
+#: pynicotine/gtkgui/userbrowse.py:272 pynicotine/gtkgui/userbrowse.py:286
 #, fuzzy
 msgid "Copy _Folder Path"
 msgstr "Kopioi kansion URL"
 
-#: pynicotine/gtkgui/userbrowse.py:272 pynicotine/gtkgui/userbrowse.py:355
+#: pynicotine/gtkgui/userbrowse.py:279 pynicotine/gtkgui/userbrowse.py:362
 #, fuzzy
 msgid "_Download Folder"
 msgstr "_Lataushakemisto"
 
-#: pynicotine/gtkgui/userbrowse.py:273 pynicotine/gtkgui/userbrowse.py:356
+#: pynicotine/gtkgui/userbrowse.py:280 pynicotine/gtkgui/userbrowse.py:363
 #, fuzzy
 msgid "Download Folder _To…"
 msgstr "Lataa hakemisto_paikkaan..."
 
-#: pynicotine/gtkgui/userbrowse.py:274
+#: pynicotine/gtkgui/userbrowse.py:281
 #, fuzzy
 msgid "Download Folder & Subfolders"
 msgstr "_Lataa tiedosto(t)"
 
-#: pynicotine/gtkgui/userbrowse.py:275
+#: pynicotine/gtkgui/userbrowse.py:282
 #, fuzzy
 msgid "Download Folder & Subfolders To…"
 msgstr "Lataa tiedosto(t) paikkaan..."
 
-#: pynicotine/gtkgui/userbrowse.py:299
+#: pynicotine/gtkgui/userbrowse.py:306
 #, fuzzy
 msgid "File Name"
 msgstr "Tiedoston nimi"
 
-#: pynicotine/gtkgui/userbrowse.py:338
+#: pynicotine/gtkgui/userbrowse.py:345
 #, fuzzy
 msgid "Up_load File(s)…"
 msgstr "Uploadaa tiedosto(ja)"
 
-#: pynicotine/gtkgui/userbrowse.py:549
+#: pynicotine/gtkgui/userbrowse.py:558
 #, fuzzy
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
@@ -2520,7 +2552,7 @@ msgstr ""
 "Käyttäjän jaettujen tiedostojen luettelo on tyhjä. Käyttäjä ei joko jaa "
 "mitään tai hän jakaa tiedostoja yksityisesti."
 
-#: pynicotine/gtkgui/userbrowse.py:564
+#: pynicotine/gtkgui/userbrowse.py:573
 #, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
@@ -2530,57 +2562,57 @@ msgstr ""
 "Jaettuja tiedostoja ei voi pyytää käyttäjältä. Joko käyttäjä on offline-"
 "tilassa, molemmilla on suljettu kuunteluportti tai tilapäinen yhteysongelma."
 
-#: pynicotine/gtkgui/userbrowse.py:773
+#: pynicotine/gtkgui/userbrowse.py:829
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Valitse kohde ladataksesi kansion käyttäjältä"
 
-#: pynicotine/gtkgui/userbrowse.py:804
+#: pynicotine/gtkgui/userbrowse.py:860
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Lataa kansio (alikansioineen) käyttäjälle"
 
-#: pynicotine/gtkgui/userbrowse.py:806
+#: pynicotine/gtkgui/userbrowse.py:862
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Lataa kansio…"
 
-#: pynicotine/gtkgui/userbrowse.py:811 pynicotine/gtkgui/userbrowse.py:1004
+#: pynicotine/gtkgui/userbrowse.py:867 pynicotine/gtkgui/userbrowse.py:1061
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/userbrowse.py:812 pynicotine/gtkgui/userbrowse.py:1005
+#: pynicotine/gtkgui/userbrowse.py:868 pynicotine/gtkgui/userbrowse.py:1062
 #, fuzzy
 msgid "_Upload"
 msgstr "_Lähtevät"
 
-#: pynicotine/gtkgui/userbrowse.py:981
+#: pynicotine/gtkgui/userbrowse.py:1038
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Valitse Käyttäjän tiedostojen lataamisen kohde"
 
-#: pynicotine/gtkgui/userbrowse.py:1003
+#: pynicotine/gtkgui/userbrowse.py:1060
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Lataa tiedostot"
 
-#: pynicotine/gtkgui/userinfo.py:335
+#: pynicotine/gtkgui/userinfo.py:334
 #, fuzzy
 msgid "Copy Picture"
 msgstr "Kuva:"
 
-#: pynicotine/gtkgui/userinfo.py:336
+#: pynicotine/gtkgui/userinfo.py:335
 #, fuzzy
 msgid "Save Picture"
 msgstr "Tallenna kuva"
 
-#: pynicotine/gtkgui/userinfo.py:414
+#: pynicotine/gtkgui/userinfo.py:415
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Kuvan lataaminen käyttäjälle epäonnistui %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:425
+#: pynicotine/gtkgui/userinfo.py:426
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -2590,38 +2622,34 @@ msgstr ""
 "Tietoja ei voi pyytää käyttäjältä. Joko teillä molemmilla on suljettu "
 "kuunteluportti, käyttäjä on offline-tilassa tai yhteysongelma on tilapäinen."
 
-#: pynicotine/gtkgui/userinfo.py:481
+#: pynicotine/gtkgui/userinfo.py:484
 #, fuzzy
 msgid "Remove _Buddy"
 msgstr "Poista alias"
 
-#: pynicotine/gtkgui/userinfo.py:481
+#: pynicotine/gtkgui/userinfo.py:484
 #, fuzzy
 msgid "Add _Buddy"
 msgstr "Lisää kaveri…"
 
-#: pynicotine/gtkgui/userinfo.py:485
+#: pynicotine/gtkgui/userinfo.py:488
 #, fuzzy
 msgid "Unban User"
 msgstr "Käyttäjän kieltäminen"
 
-#: pynicotine/gtkgui/userinfo.py:489
+#: pynicotine/gtkgui/userinfo.py:492
 #, fuzzy
 msgid "Unignore User"
 msgstr "Ohita käyttäjä"
 
-#: pynicotine/gtkgui/userinfo.py:512
+#: pynicotine/gtkgui/userinfo.py:515
 msgid "Yes"
 msgstr "Kyllä"
 
-#: pynicotine/gtkgui/userinfo.py:512
+#: pynicotine/gtkgui/userinfo.py:515
 #, fuzzy
 msgid "No"
 msgstr "Ei"
-
-#: pynicotine/gtkgui/userlist.py:97
-msgid "Trusted"
-msgstr "Luotettu"
 
 #: pynicotine/gtkgui/userlist.py:103
 #, fuzzy
@@ -2667,13 +2695,13 @@ msgstr "Lisää käyttäjä listalle"
 msgid "Add a note about user %s:"
 msgstr "Lisää muutama käyttäjään %s] liittyvä muistiinpano:"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:272
+#: pynicotine/gtkgui/widgets/dialogs.py:268
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:5
 #, fuzzy
 msgid "Close"
 msgstr "Sulje"
 
-#: pynicotine/gtkgui/widgets/dialogs.py:443
+#: pynicotine/gtkgui/widgets/dialogs.py:436
 #, fuzzy
 msgid "_Yes"
 msgstr "_Joo"
@@ -2719,114 +2747,114 @@ msgstr "(Ei mitään)"
 msgid "Close Tab"
 msgstr "Sulje"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:405
+#: pynicotine/gtkgui/widgets/iconnotebook.py:410
 #, fuzzy
 msgid "Close All Tabs?"
 msgstr "Suljetko kaikki välilehdet?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:406
+#: pynicotine/gtkgui/widgets/iconnotebook.py:411
 #, fuzzy
 msgid "Do you really want to close all tabs?"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:427
+#: pynicotine/gtkgui/widgets/iconnotebook.py:432
 #, fuzzy, python-format
 msgid "%i Unread Tab(s)"
 msgstr "Lukemattomat välilehdet"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:430
+#: pynicotine/gtkgui/widgets/iconnotebook.py:435
 #, fuzzy
 msgid "All Tabs"
 msgstr "Suljetko kaikki välilehdet?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:680
 #: pynicotine/gtkgui/widgets/iconnotebook.py:685
+#: pynicotine/gtkgui/widgets/iconnotebook.py:690
 #, fuzzy
 msgid "Re_open Closed Tab"
 msgstr "Sulje"
 
-#: pynicotine/gtkgui/widgets/notifications.py:120
+#: pynicotine/gtkgui/widgets/notifications.py:121
 #, fuzzy, python-format
 msgid "Unable to show notification: %s"
 msgstr "Ilmoitusikkunaa ei voi näyttää: %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:331
+#: pynicotine/gtkgui/widgets/popupmenu.py:334
 #, fuzzy, python-format
 msgid "%s File(s) Selected"
 msgstr "Ei, ei, ei, ei. Valitut tiedostot"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:362
-#: pynicotine/gtkgui/ui/userinfo.ui:450
+#: pynicotine/gtkgui/widgets/popupmenu.py:365
+#: pynicotine/gtkgui/ui/userinfo.ui:476
 #, fuzzy
 msgid "Send M_essage"
 msgstr "Lähetä viesti"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:365
-#: pynicotine/gtkgui/ui/userinfo.ui:482
+#: pynicotine/gtkgui/widgets/popupmenu.py:368
+#: pynicotine/gtkgui/ui/userinfo.ui:510
 #, fuzzy
 msgid "_Browse Files"
 msgstr "Selaa tiedostoja"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:368
-#: pynicotine/gtkgui/widgets/popupmenu.py:408
+#: pynicotine/gtkgui/widgets/popupmenu.py:371
+#: pynicotine/gtkgui/widgets/popupmenu.py:411
 #, fuzzy
 msgid "_Add Buddy"
 msgstr "Lisää kaveri…"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:371
-#: pynicotine/gtkgui/widgets/popupmenu.py:406
+#: pynicotine/gtkgui/widgets/popupmenu.py:374
+#: pynicotine/gtkgui/widgets/popupmenu.py:409
 #, fuzzy
 msgid "_Gift Privileges…"
 msgstr "Anna etuoikeudet"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:378
-#: pynicotine/gtkgui/ui/userinfo.ui:605
+#: pynicotine/gtkgui/widgets/popupmenu.py:381
+#: pynicotine/gtkgui/ui/userinfo.ui:637
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Näytä IP-osoite"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:441
+#: pynicotine/gtkgui/widgets/popupmenu.py:446
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Poista yksityisestä huoneesta %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:443
+#: pynicotine/gtkgui/widgets/popupmenu.py:448
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Lisää yksityiseen huoneeseen %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:450
+#: pynicotine/gtkgui/widgets/popupmenu.py:455
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Poista operaattorina %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:452
+#: pynicotine/gtkgui/widgets/popupmenu.py:457
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Lisää %s -operaattoriksi"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:574
+#: pynicotine/gtkgui/widgets/popupmenu.py:579
 #, fuzzy
 msgid "Please enter number of days."
 msgstr "Anna kokonaisluku!"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:585
+#: pynicotine/gtkgui/widgets/popupmenu.py:590
 #, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
 "Lahjapäiviä Soulseek-oikeuksistasi käyttäjälle %(user)s (%(days_left)s):"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:586
+#: pynicotine/gtkgui/widgets/popupmenu.py:591
 #, fuzzy, python-format
 msgid "%(days)s days left"
 msgstr "%(days)s päivää jäljellä"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:593
+#: pynicotine/gtkgui/widgets/popupmenu.py:598
 #, fuzzy
 msgid "Gift Privileges"
 msgstr "Anna etuoikeudet"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:595
+#: pynicotine/gtkgui/widgets/popupmenu.py:600
 #, fuzzy
 msgid "_Give Privileges"
 msgstr "Anna etuoikeudet"
@@ -2836,114 +2864,114 @@ msgstr "Anna etuoikeudet"
 msgid "--- old messages above ---"
 msgstr "--- vanhat viestit ---"
 
-#: pynicotine/gtkgui/widgets/theme.py:355
+#: pynicotine/gtkgui/widgets/theme.py:368
 #, fuzzy
 msgid "Executable"
 msgstr "Suoritettu: %s"
 
-#: pynicotine/gtkgui/widgets/theme.py:356
+#: pynicotine/gtkgui/widgets/theme.py:369
 #, fuzzy
 msgid "Audio"
 msgstr "Audio"
 
-#: pynicotine/gtkgui/widgets/theme.py:357
+#: pynicotine/gtkgui/widgets/theme.py:370
 #, fuzzy
 msgid "Image"
 msgstr "Kuva:"
 
-#: pynicotine/gtkgui/widgets/theme.py:358
+#: pynicotine/gtkgui/widgets/theme.py:371
 #, fuzzy
 msgid "Archive"
 msgstr "Arkisto"
 
-#: pynicotine/gtkgui/widgets/theme.py:359 pynicotine/pluginsystem.py:787
+#: pynicotine/gtkgui/widgets/theme.py:372 pynicotine/pluginsystem.py:785
 #: pynicotine/gtkgui/ui/settings/network.ui:274
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "Sekalainen"
 
-#: pynicotine/gtkgui/widgets/theme.py:360
+#: pynicotine/gtkgui/widgets/theme.py:373
 #, fuzzy
 msgid "Video"
 msgstr "Video"
 
-#: pynicotine/gtkgui/widgets/theme.py:361
+#: pynicotine/gtkgui/widgets/theme.py:374
 #, fuzzy
 msgid "Document/Text"
 msgstr "Asiakirja/teksti"
 
-#: pynicotine/gtkgui/widgets/theme.py:465
+#: pynicotine/gtkgui/widgets/theme.py:478
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Virhe ladattaessa mukautettua kuvaketta %(path)s: %(error)s"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:102
+#: pynicotine/gtkgui/widgets/trayicon.py:103
 #, fuzzy
 msgid "Send Message"
 msgstr "Lähetä viesti"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:103
-#: pynicotine/gtkgui/widgets/trayicon.py:248
+#: pynicotine/gtkgui/widgets/trayicon.py:104
+#: pynicotine/gtkgui/widgets/trayicon.py:249
 #, fuzzy
 msgid "View User Profile"
 msgstr "Näytä käyttäjäprofiili"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:109
+#: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:75
 msgid "Quit"
 msgstr "Poistu"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:117
+#: pynicotine/gtkgui/widgets/trayicon.py:118
 #, fuzzy
 msgid "Hide Nicotine+"
 msgstr "Nicotine+"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:119
+#: pynicotine/gtkgui/widgets/trayicon.py:120
 #, fuzzy
 msgid "Show Nicotine+"
 msgstr "Nicotine+"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:127
+#: pynicotine/gtkgui/widgets/trayicon.py:128
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:26
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:127
+#: pynicotine/gtkgui/widgets/trayicon.py:128
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:19
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:227
+#: pynicotine/gtkgui/widgets/trayicon.py:228
 #, fuzzy
 msgid "Start Messaging"
 msgstr "Aloita viestit"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:228
+#: pynicotine/gtkgui/widgets/trayicon.py:229
 #, fuzzy
 msgid "Enter the name of the user whom you want to send a message:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:229
+#: pynicotine/gtkgui/widgets/trayicon.py:230
 #, fuzzy
 msgid "_Message"
 msgstr "Viestit"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:249
+#: pynicotine/gtkgui/widgets/trayicon.py:250
 #, fuzzy
 msgid "Enter the name of the user whose profile you want to see:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:250
+#: pynicotine/gtkgui/widgets/trayicon.py:251
 #, fuzzy
 msgid "_View Profile"
 msgstr "Näytä käyttäjäprofiili"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:270
+#: pynicotine/gtkgui/widgets/trayicon.py:271
 #, fuzzy
 msgid "Enter the name of the user whose shares you want to see:"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:271
+#: pynicotine/gtkgui/widgets/trayicon.py:272
 #, fuzzy
 msgid "_Browse"
 msgstr "Selaa tiedostoja"
@@ -2953,27 +2981,41 @@ msgstr "Selaa tiedostoja"
 msgid "Column #%i"
 msgstr "Sarake #%i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:793
+#: pynicotine/gtkgui/widgets/treeview.py:790
 #, fuzzy
 msgid "Ungrouped"
 msgstr "Ryhmittelemätön"
 
-#: pynicotine/gtkgui/widgets/treeview.py:796
+#: pynicotine/gtkgui/widgets/treeview.py:793
 #, fuzzy
 msgid "Group by Folder"
 msgstr "Kopioi kansion URL"
 
-#: pynicotine/gtkgui/widgets/treeview.py:799
+#: pynicotine/gtkgui/widgets/treeview.py:796
 #, fuzzy
 msgid "Group by User"
 msgstr "Ryhmit ole hyvä ja ryhmit ole hyvä"
 
-#: pynicotine/logfacility.py:159
+#: pynicotine/headless/application.py:73
+#, fuzzy, python-format
+msgid "Do you really want to exit? %s"
+msgstr "Haluatko todella poistua Nicotine+:sta?"
+
+#: pynicotine/headless/application.py:92
+msgid "The following shares are unavailable:"
+msgstr ""
+
+#: pynicotine/headless/application.py:98
+#, python-format
+msgid "Retry rescan? %s"
+msgstr ""
+
+#: pynicotine/logfacility.py:160
 #, fuzzy, python-format
 msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr "Lokitiedostoon %(filename)s\" ei voinut kirjoittaa: %(error)s"
 
-#: pynicotine/logfacility.py:207
+#: pynicotine/logfacility.py:208
 #, fuzzy, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi tallentaa: %(error)s"
@@ -4485,6 +4527,16 @@ msgstr "Kirjoita %(command)s luettelo käytettävissä olevista komennoista"
 msgid "Not joined in room %s"
 msgstr "%s on liittynyt huoneeseen"
 
+#: pynicotine/plugins/core_commands/__init__.py:385
+#, python-format
+msgid "Not messaging with user %s"
+msgstr ""
+
+#: pynicotine/plugins/core_commands/__init__.py:389
+#, fuzzy, python-format
+msgid "Closed private chat of user %s"
+msgstr "Sulje tämänhetkinen yksityiskeskustelu"
+
 #: pynicotine/plugins/core_commands/__init__.py:466
 #, fuzzy, python-format
 msgid "Banned %s"
@@ -4505,32 +4557,37 @@ msgstr "Huomioimatta jätettävät käyttäjät:"
 msgid "Unignored %s"
 msgstr "Ohita käyttäjä"
 
-#: pynicotine/plugins/core_commands/__init__.py:547
+#: pynicotine/plugins/core_commands/__init__.py:543
+#, python-format
+msgid "%(num_listed)s shares listed (%(num_total)s configured)"
+msgstr ""
+
+#: pynicotine/plugins/core_commands/__init__.py:555
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:550
+#: pynicotine/plugins/core_commands/__init__.py:558
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:561
+#: pynicotine/plugins/core_commands/__init__.py:569
 #, python-format
 msgid "No share with name \"%s\""
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:564
+#: pynicotine/plugins/core_commands/__init__.py:572
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
 msgstr ""
 
-#: pynicotine/pluginsystem.py:401
+#: pynicotine/pluginsystem.py:399
 #, fuzzy
 msgid "Loading plugin system"
 msgstr "Ladattu laajennus %s"
 
-#: pynicotine/pluginsystem.py:504
+#: pynicotine/pluginsystem.py:502
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
@@ -4539,18 +4596,18 @@ msgstr ""
 "Laajenninta %(name)s ei voi ladata. Laajennuskansion nimessä on virheellisiä "
 "merkkejä: %(characters)s"
 
-#: pynicotine/pluginsystem.py:536
+#: pynicotine/pluginsystem.py:534
 #, fuzzy, python-format
 msgid "Conflicting %(interface)s command in plugin %(name)s: %(command)s"
 msgstr ""
 "Ristiriitainen %(interface)s-komento laajennuksessa %(name)s: %(command)s"
 
-#: pynicotine/pluginsystem.py:561
+#: pynicotine/pluginsystem.py:559
 #, fuzzy, python-format
 msgid "Loaded plugin %s"
 msgstr "Ladattu laajennus %s"
 
-#: pynicotine/pluginsystem.py:565
+#: pynicotine/pluginsystem.py:563
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(module)s\n"
@@ -4559,12 +4616,12 @@ msgstr ""
 "Laajennus ei voi ladata %(module)s\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:630
+#: pynicotine/pluginsystem.py:628
 #, fuzzy, python-format
 msgid "Unloaded plugin %s"
 msgstr "Lataamätön laajennus %s"
 
-#: pynicotine/pluginsystem.py:634
+#: pynicotine/pluginsystem.py:632
 #, fuzzy, python-format
 msgid ""
 "Unable to unload plugin %(module)s\n"
@@ -4573,7 +4630,7 @@ msgstr ""
 "Laajennuslaajennusta ei voi poistaa %(module)s\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:718
+#: pynicotine/pluginsystem.py:716
 #, fuzzy, python-format
 msgid ""
 "Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
@@ -4582,27 +4639,27 @@ msgstr ""
 "Laajennus %(module)s epäonnistui virheellä %(errortype)s: %(error)s.\n"
 "Jäljet: %(trace)s"
 
-#: pynicotine/pluginsystem.py:786
+#: pynicotine/pluginsystem.py:784
 #, fuzzy
 msgid "No description"
 msgstr "Oma kuvaus:"
 
-#: pynicotine/pluginsystem.py:866
+#: pynicotine/pluginsystem.py:864
 #, fuzzy, python-format
 msgid "Missing %s argument"
 msgstr "Puuttuva %s argumentti"
 
-#: pynicotine/pluginsystem.py:875
+#: pynicotine/pluginsystem.py:873
 #, fuzzy, python-format
 msgid "Invalid argument, possible choices: %s"
 msgstr "Väärä SoulSeek meta-url: %s"
 
-#: pynicotine/pluginsystem.py:880
+#: pynicotine/pluginsystem.py:878
 #, fuzzy, python-format
 msgid "Usage: %(command)s %(parameters)s"
 msgstr "Käyttö: %(command)s %(args)s"
 
-#: pynicotine/pluginsystem.py:919
+#: pynicotine/pluginsystem.py:917
 #, fuzzy, python-format
 msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
@@ -4611,18 +4668,18 @@ msgstr ""
 "Tuntematon komento: %(command)s. Kirjoita %(help_command)s luetellaksesi "
 "käytettävissä olevat komennot."
 
-#: pynicotine/portmapper.py:450
+#: pynicotine/portmapper.py:451
 #, fuzzy
 msgid "No UPnP devices found"
 msgstr "UPnP-laitteita ei löytynyt"
 
-#: pynicotine/portmapper.py:564
+#: pynicotine/portmapper.py:569
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr "UPnP: Ulkoinen portti %(external_port)s: %(error)s ei voinut välittää"
 
-#: pynicotine/portmapper.py:577
+#: pynicotine/portmapper.py:582
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
@@ -4631,123 +4688,103 @@ msgstr ""
 "UPnP: Ulkoinen portti %(external_port)s välitettiin onnistuneesti "
 "paikalliseen IP-osoitteeseen %(ip_address)s porttiin %(local_port)s"
 
-#: pynicotine/privatechat.py:220
+#: pynicotine/privatechat.py:218
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Yksityinen viesti käyttäjältä %(user)s"
 
-#: pynicotine/search.py:271
+#: pynicotine/search.py:273
 #, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr "Haetaan toivelistakohdetta \"%s\""
 
-#: pynicotine/search.py:333
+#: pynicotine/search.py:335
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Toivelistan odotusajaksi on määritetty %s sekuntia"
 
-#: pynicotine/search.py:339
+#: pynicotine/search.py:341
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Palvelin ei salli toivelistahakujen suorittamista tällä hetkellä"
 
-#: pynicotine/search.py:567
+#: pynicotine/search.py:402 pynicotine/slskmessages.py:2851
+#, fuzzy, python-format
+msgid "Unable to read shares database. Please rescan your shares. Error: %s"
+msgstr "Jaetietokantaa ei voi lukea. Tarkista osakkeesi uudelleen. Virhe: %s"
+
+#: pynicotine/search.py:625
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Käyttäjä %(user)s etsii \"%(query)s\", palauttaa %(num)i tulokset"
 
-#: pynicotine/shares.py:80
-#, fuzzy, python-format
-msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-msgstr "%(option1)s tai %(option2)s ei löydä, asenna jompikumpi."
-
-#: pynicotine/shares.py:150
-#, fuzzy, python-format
-msgid "%(num)s folders found before rescan"
-msgstr "%(num)s-kansiot löytyivät uudelleenskannaumisen jälkeen"
-
-#: pynicotine/shares.py:151
+#: pynicotine/shares.py:262
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Kaverijakoja skannataan"
 
-#: pynicotine/shares.py:151
+#: pynicotine/shares.py:262
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Kaverijakoja skannataan"
 
-#: pynicotine/shares.py:158
+#: pynicotine/shares.py:280
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Uudelleenskannaus valmis: %(num)s kansioita löydetty"
 
-#: pynicotine/shares.py:166
+#: pynicotine/shares.py:289
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
-"delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
+"delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Vakava virhe skannattaessa jakoja uudelleen. Jos ongelma toistuu, poista "
 "%(dir)s/*.db yritä uudelleen. Jos tämä ei auta, tee virheilmoitus, jossa on "
 "tämä pinon jälki: %(trace)s"
 
-#: pynicotine/shares.py:267
+#: pynicotine/shares.py:403
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Ei voi tallentaa asetustiedostoa, I/O -virhe: %s"
 
-#: pynicotine/shares.py:320 pynicotine/shares.py:438
-#, fuzzy, python-format
-msgid "Error while scanning folder %(path)s: %(error)s"
-msgstr "Virhe skannattaessa kansiota %(path)s: %(error)s"
-
-#: pynicotine/shares.py:425
+#: pynicotine/shares.py:551
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Virhe skannattaessa tiedostoa %(path)s: %(error)s"
 
-#: pynicotine/shares.py:481
+#: pynicotine/shares.py:555
+#, fuzzy, python-format
+msgid "Error while scanning folder %(path)s: %(error)s"
+msgstr "Virhe skannattaessa kansiota %(path)s: %(error)s"
+
+#: pynicotine/shares.py:588
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Virhe etsittäessä tiedoston %(path)s metatietoja: %(error)s"
 
-#: pynicotine/shares.py:691
-#, fuzzy, python-format
-msgid "Failed to process the following databases: %(names)s"
-msgstr "Seuraavien tietokantojen käsitteleminen epäonnistui: %(names)s"
-
-#: pynicotine/shares.py:846
-#, fuzzy, python-format
-msgid "Failed to send number of shared files to the server: %s"
-msgstr "Jaettujen tiedostojen lähettäminen palvelimeen epäonnistui: %s"
-
-#: pynicotine/shares.py:924
+#: pynicotine/shares.py:1007
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Uudelleenskannaus keskeytettiin, koska jakoja ei ollut saatavilla"
 
-#: pynicotine/shares.py:984
+#: pynicotine/shares.py:1081
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Käyttäjä %(user)s selaa jaettujen tiedostojen luetteloa"
 
-#: pynicotine/shares.py:1045
+#: pynicotine/shares.py:1123
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Jaetun kansion %(folder)s nouta epäonnistui: %(error)s"
 
-#: pynicotine/slskmessages.py:2850
-#, fuzzy, python-format
-msgid "Unable to read shares database. Please rescan your shares. Error: %s"
-msgstr "Jaetietokantaa ei voi lukea. Tarkista osakkeesi uudelleen. Virhe: %s"
-
-#: pynicotine/slskproto.py:492
+#: pynicotine/slskproto.py:471
 #, fuzzy, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "Määritettyä verkkoliitäntää %s ei ole olemassa"
 
-#: pynicotine/slskproto.py:503
+#: pynicotine/slskproto.py:482
 #, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -4756,92 +4793,92 @@ msgstr ""
 "Ei voi kuunnella portista %(port)s. Varmista, että mikään muu sovellus ei "
 "käytä sitä, tai valitse toinen portti. Virhe: %(error)s"
 
-#: pynicotine/slskproto.py:508
+#: pynicotine/slskproto.py:488
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "Kuunnellaan porttia %i"
 
-#: pynicotine/slskproto.py:813
+#: pynicotine/slskproto.py:781
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Ei voi yhdistää palvelimeen %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:1106
+#: pynicotine/slskproto.py:1067
 #, fuzzy, python-format
 msgid "Reconnecting to server in %i seconds"
 msgstr "Muodosta automaattinen yhteys palvelimeen käynnistettäessä"
 
-#: pynicotine/slskproto.py:1177
+#: pynicotine/slskproto.py:1138
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Yhdistetään %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1214
+#: pynicotine/slskproto.py:1175
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Yhdistetty palvelimeen %(host)s:%(port)s, kirjaudutaan sisään..."
 
-#: pynicotine/slskproto.py:1485
+#: pynicotine/slskproto.py:1461
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Yhteys palvelimeen %(host)s:%(port)s katkaistu"
 
-#: pynicotine/slskproto.py:1491
+#: pynicotine/slskproto.py:1467
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Joku kirjautui Soulseek-tilillesi muualla"
 
-#: pynicotine/uploads.py:615 pynicotine/uploads.py:657
+#: pynicotine/uploads.py:623 pynicotine/uploads.py:665
 #, fuzzy, python-format
 msgid "Upload I/O error: %s"
 msgstr "Lataa I/O-virhe: %s"
 
-#: pynicotine/uploads.py:671
+#: pynicotine/uploads.py:679
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Lähetys aloitettu: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/uploads.py:978
+#: pynicotine/uploads.py:986
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Lataus valmis: käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/uploads.py:1279
+#: pynicotine/uploads.py:1289
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Lähtevä keskeytetty, käyttäjä %(user)s, tiedosto %(file)s"
 
-#: pynicotine/userbrowse.py:139
+#: pynicotine/userbrowse.py:146
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Ei voi luoda hakemistoa '%(folder)s', virheilmoitus %(error)s"
 
-#: pynicotine/userbrowse.py:170
+#: pynicotine/userbrowse.py:178
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Jakojen lataus levyltä epäonnistui: %(error)s"
 
-#: pynicotine/userbrowse.py:213
+#: pynicotine/userbrowse.py:221
 #, fuzzy, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr "Tallennettu luettelo käyttäjän %(user)s jaetuista tiedostoista %(dir)s"
 
-#: pynicotine/userbrowse.py:217
+#: pynicotine/userbrowse.py:225
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Ei voi luoda hakemistoa '%(user)s', virheilmoitus %(error)s"
 
-#: pynicotine/userinfo.py:98
+#: pynicotine/userinfo.py:99
 #, fuzzy, python-format
 msgid "Picture saved to %s"
 msgstr "Kuva tallennettu %s"
 
-#: pynicotine/userinfo.py:101
+#: pynicotine/userinfo.py:102
 #, fuzzy, python-format
 msgid "Cannot save picture to %(filename)s: %(error)s"
 msgstr "Ei voi tallentaa asetustiedostoa, I/O -virhe: %s"
 
-#: pynicotine/userinfo.py:121
+#: pynicotine/userinfo.py:129
 #, fuzzy, python-format
 msgid "User %(user)s is viewing your profile"
 msgstr "%(user)s tekee Käyttäjätieto-pyynnön"
@@ -4866,77 +4903,77 @@ msgstr "Käyttäjä %s ei ole linjalla"
 msgid "Buddy Status"
 msgstr "Kaverilista"
 
-#: pynicotine/utils.py:386
+#: pynicotine/utils.py:385
 #, fuzzy, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi tallentaa: %(error)s"
 
-#: pynicotine/utils.py:422
+#: pynicotine/utils.py:421
 #, fuzzy, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
 msgstr "Ei voi tallentaa asetustiedostoa, I/O -virhe: %s"
 
-#: pynicotine/utils.py:447
+#: pynicotine/utils.py:446
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "Jokin meni vikaan tiedostoa luettäessä %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:452
+#: pynicotine/utils.py:451
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Yritetään ladata tiedoston varmuuskopiointia %s"
 
-#: pynicotine/utils.py:473
+#: pynicotine/utils.py:472
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi varmuuskopioida: %(error)s"
 
-#: pynicotine/utils.py:493
+#: pynicotine/utils.py:492
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Tiedostoa %(path)s ei voi tallentaa: %(error)s"
 
-#: pynicotine/utils.py:504
+#: pynicotine/utils.py:503
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Aiempaa tiedostoa %(path)s ei voi palauttaa: %(error)s"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:29
+#: pynicotine/gtkgui/ui/chatrooms.ui:27
 #, fuzzy
 msgid "Search activity log…"
 msgstr "Haut"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:65 pynicotine/gtkgui/ui/privatechat.ui:18
+#: pynicotine/gtkgui/ui/chatrooms.ui:63 pynicotine/gtkgui/ui/privatechat.ui:18
 #, fuzzy
 msgid "Search chat log…"
 msgstr "Haut"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:98 pynicotine/gtkgui/ui/privatechat.ui:51
+#: pynicotine/gtkgui/ui/chatrooms.ui:96 pynicotine/gtkgui/ui/privatechat.ui:51
 #, fuzzy
 msgid "Send message…"
 msgstr "Lähetä viesti"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:107 pynicotine/gtkgui/ui/privatechat.ui:60
+#: pynicotine/gtkgui/ui/chatrooms.ui:105 pynicotine/gtkgui/ui/privatechat.ui:60
 #, fuzzy
 msgid "Toggle Text-to-Speech"
 msgstr "Tekstin muuttaminen puheeksi"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:122
+#: pynicotine/gtkgui/ui/chatrooms.ui:120
 #, fuzzy
 msgid "Chat Room Command Help"
 msgstr "Keskusteluryhmän komennon ohje"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:137 pynicotine/gtkgui/ui/privatechat.ui:90
+#: pynicotine/gtkgui/ui/chatrooms.ui:135 pynicotine/gtkgui/ui/privatechat.ui:90
 #, fuzzy
 msgid "_Log"
 msgstr "_Log"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:202
+#: pynicotine/gtkgui/ui/chatrooms.ui:207
 #, fuzzy
 msgid "Room Wall"
 msgstr "Huoneen seinä"
 
-#: pynicotine/gtkgui/ui/chatrooms.ui:217
+#: pynicotine/gtkgui/ui/chatrooms.ui:222
 #, fuzzy
 msgid "R_oom Wall"
 msgstr "Huoneen seinä"
@@ -5032,7 +5069,7 @@ msgstr "Jaot"
 #, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
-"Soulseek network by sharing your own collection and by resharing what you "
+"Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
 "Soulseekin käyttäjät voivat ladata osakkeistasi. Osallistu Soulseek-"
@@ -5127,8 +5164,8 @@ msgstr "Näytä lokiruutu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
 #, fuzzy
-msgid "Quit / Run in Background"
-msgstr "Suorita taustalla"
+msgid "Confirm Quit"
+msgstr "Lokiin kirjaamisen määrittäminen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 #, fuzzy
@@ -5146,7 +5183,7 @@ msgid "Open Context Menu"
 msgstr "Avaa pikavalikko"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:103
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:291
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:292
 #, fuzzy
 msgid "Tabs"
 msgstr "Välilehdet"
@@ -5177,7 +5214,7 @@ msgid "Close Secondary Tab"
 msgstr "Sulje toissijainen välilehti"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:144
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:814
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:815
 #, fuzzy
 msgid "Lists"
 msgstr "Listalle"
@@ -5263,9 +5300,9 @@ msgid "Refresh"
 msgstr "Tiedostojen päivittäminen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:286
-#: pynicotine/gtkgui/ui/mainwindow.ui:361
-#: pynicotine/gtkgui/ui/mainwindow.ui:599 pynicotine/gtkgui/ui/search.ui:200
-#: pynicotine/gtkgui/ui/userbrowse.ui:193
+#: pynicotine/gtkgui/ui/mainwindow.ui:363
+#: pynicotine/gtkgui/ui/mainwindow.ui:602 pynicotine/gtkgui/ui/search.ui:200
+#: pynicotine/gtkgui/ui/userbrowse.ui:103
 #, fuzzy
 msgid "Expand / Collapse All"
 msgstr "Laajenna / Supista kaikki"
@@ -5376,22 +5413,22 @@ msgstr "Tulevat"
 msgid "Clear _All…"
 msgstr "Tyhjennä loki"
 
-#: pynicotine/gtkgui/ui/interests.ui:18
+#: pynicotine/gtkgui/ui/interests.ui:14
 #, fuzzy
 msgid "Personal Interests"
 msgstr "Kiinnostuksen kohteet"
 
-#: pynicotine/gtkgui/ui/interests.ui:36
+#: pynicotine/gtkgui/ui/interests.ui:33
 #, fuzzy
 msgid "Add something you like…"
 msgstr "Lisää jotain, josta pidät…"
 
-#: pynicotine/gtkgui/ui/interests.ui:58
+#: pynicotine/gtkgui/ui/interests.ui:55
 #, fuzzy
 msgid "Personal Dislikes"
 msgstr "En pidä"
 
-#: pynicotine/gtkgui/ui/interests.ui:76
+#: pynicotine/gtkgui/ui/interests.ui:73
 #, fuzzy
 msgid "Add something you dislike…"
 msgstr "Lisää jotain, josta et pidä…"
@@ -5416,9 +5453,9 @@ msgstr "Avaa päävalikko"
 msgid "Room…"
 msgstr "Huone"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:721
-#: pynicotine/gtkgui/ui/mainwindow.ui:884
-#: pynicotine/gtkgui/ui/mainwindow.ui:1073
+#: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:724
+#: pynicotine/gtkgui/ui/mainwindow.ui:888
+#: pynicotine/gtkgui/ui/mainwindow.ui:1079
 #, fuzzy
 msgid "Username…"
 msgstr "Käyttäjänimi:"
@@ -5436,22 +5473,22 @@ msgid ""
 msgstr ""
 "Hakukuviot: sanalla = termi, ilman sanaa = -termi, osittainen sana = *erm"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:94
+#: pynicotine/gtkgui/ui/mainwindow.ui:95
 #, fuzzy
 msgid "Search Scope"
 msgstr "Haun laajuus"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:140
+#: pynicotine/gtkgui/ui/mainwindow.ui:141
 #, fuzzy
 msgid "_Wishlist"
 msgstr "_Wishlist"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:156
+#: pynicotine/gtkgui/ui/mainwindow.ui:157
 #, fuzzy
 msgid "Configure Searches"
 msgstr "Hakujen määrittäminen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:223
+#: pynicotine/gtkgui/ui/mainwindow.ui:224
 #, fuzzy
 msgid ""
 "Enter a search term to search for files shared by other users on the "
@@ -5460,18 +5497,18 @@ msgstr ""
 "Kirjoita hakusana muiden Käyttäjien Soulseek-verkossa jakamien tiedostojen "
 "etsimiseen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:376
-#: pynicotine/gtkgui/ui/mainwindow.ui:614 pynicotine/gtkgui/ui/search.ui:215
+#: pynicotine/gtkgui/ui/mainwindow.ui:378
+#: pynicotine/gtkgui/ui/mainwindow.ui:617 pynicotine/gtkgui/ui/search.ui:215
 #, fuzzy
 msgid "File Grouping Mode"
 msgstr "Tiedostojen ryhmittelemistila"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:394
+#: pynicotine/gtkgui/ui/mainwindow.ui:396
 #, fuzzy
 msgid "Configure Downloads"
 msgstr "Latausten määrittäminen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:461
+#: pynicotine/gtkgui/ui/mainwindow.ui:463
 #, fuzzy
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
@@ -5480,41 +5517,41 @@ msgstr ""
 "Muilta käyttäjiltä lataamasi tiedostot jonotetaan tähän, ja ne voidaan "
 "keskeyttää ja jatkaa pyynnöstä"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:632
+#: pynicotine/gtkgui/ui/mainwindow.ui:635
 #, fuzzy
 msgid "Configure Uploads"
 msgstr "Latausten määrittäminen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:699
+#: pynicotine/gtkgui/ui/mainwindow.ui:702
 #, fuzzy
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
 "Käyttäjien yritykset ladata jaetut tiedostot jonotetaan ja hallitaan täällä"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:723
+#: pynicotine/gtkgui/ui/mainwindow.ui:726
 #, fuzzy
 msgid "Enter the username of the person whose files you want to see"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:778
+#: pynicotine/gtkgui/ui/mainwindow.ui:782
 #, fuzzy
 msgid "_Open List"
 msgstr "_Open luettelo"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:780
+#: pynicotine/gtkgui/ui/mainwindow.ui:784
 #, fuzzy
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
 "Avaa paikallisen luettelon aiemmin levylle tallennetuista jaetuista "
 "tiedostoista"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:795
+#: pynicotine/gtkgui/ui/mainwindow.ui:799
 #, fuzzy
 msgid "Configure Shares"
 msgstr "Skannataan jakoja"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:862
+#: pynicotine/gtkgui/ui/mainwindow.ui:866
 #, fuzzy
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
@@ -5523,22 +5560,22 @@ msgstr ""
 "Kirjoita sen käyttäjän nimi, jonka jaettuja tiedostoja haluat selata. Voit "
 "myös tallentaa luettelon levylle ja tarkistaa sen myöhemmin."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:886
+#: pynicotine/gtkgui/ui/mainwindow.ui:890
 #, fuzzy
 msgid "Enter the username of the person whose information you want to see"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:941
+#: pynicotine/gtkgui/ui/mainwindow.ui:946
 #, fuzzy
 msgid "_Personal Profile"
 msgstr "En pidä"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:957
+#: pynicotine/gtkgui/ui/mainwindow.ui:962
 #, fuzzy
 msgid "Configure Account"
 msgstr "Lokiin kirjaamisen määrittäminen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1024
+#: pynicotine/gtkgui/ui/mainwindow.ui:1029
 #, fuzzy
 msgid ""
 "Enter the name of a user to view their user description, information and "
@@ -5547,23 +5584,23 @@ msgstr ""
 "Anna käyttäjän nimi, jos haluat tarkastella käyttäjän kuvausta, tietoja ja "
 "henkilökohtaista kuvaa"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1075
+#: pynicotine/gtkgui/ui/mainwindow.ui:1081
 #, fuzzy
 msgid "Enter the username of the person you want to send a message to"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1091
+#: pynicotine/gtkgui/ui/mainwindow.ui:1097
 #, fuzzy
 msgid "Chat _History"
 msgstr "Keskusteluhistoria"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1117
-#: pynicotine/gtkgui/ui/mainwindow.ui:1444
+#: pynicotine/gtkgui/ui/mainwindow.ui:1123
+#: pynicotine/gtkgui/ui/mainwindow.ui:1452
 #, fuzzy
 msgid "Configure Chats"
 msgstr "Jaesuuksien määrittäminen"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1184
+#: pynicotine/gtkgui/ui/mainwindow.ui:1190
 #, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
@@ -5571,27 +5608,27 @@ msgstr ""
 "Kirjoita käyttäjän nimi, jos haluat aloittaa tekstikeskustelun hänen "
 "kanssaan yksityisesti"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1232 pynicotine/gtkgui/ui/userlist.ui:31
+#: pynicotine/gtkgui/ui/mainwindow.ui:1239 pynicotine/gtkgui/ui/userlist.ui:31
 #, fuzzy
 msgid "Add buddy…"
 msgstr "Lisää kaveri…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1234 pynicotine/gtkgui/ui/userlist.ui:33
+#: pynicotine/gtkgui/ui/mainwindow.ui:1241 pynicotine/gtkgui/ui/userlist.ui:33
 #, fuzzy
 msgid "Enter the username of the person you want to add to your buddy list"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1264
+#: pynicotine/gtkgui/ui/mainwindow.ui:1271
 #, fuzzy
 msgid "_Message All"
 msgstr "Viestit"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1280
+#: pynicotine/gtkgui/ui/mainwindow.ui:1287
 #, fuzzy
 msgid "Configure Ignored Users"
 msgstr "Huomioimatta jätettävät käyttäjät:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1347
+#: pynicotine/gtkgui/ui/mainwindow.ui:1354
 #, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
@@ -5600,12 +5637,12 @@ msgstr ""
 "Käyttäjien lisääminen kaveriluetteloon tiettyjen kansioiden jakamiseksi "
 "heidän kanssaan ja ilmoitusten saamiseksi online-tilassa"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1400
+#: pynicotine/gtkgui/ui/mainwindow.ui:1408
 #, fuzzy
 msgid "Join or create room…"
 msgstr "Liity tai luo huone…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1402
+#: pynicotine/gtkgui/ui/mainwindow.ui:1410
 #, fuzzy
 msgid ""
 "Enter the name of a room you want to join. If the room doesn't exist, it "
@@ -5614,7 +5651,7 @@ msgstr ""
 "Kirjoita sen huoneen nimi, johon haluat liittyä. Jos huonetta ei ole, se "
 "luodaan."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1511
+#: pynicotine/gtkgui/ui/mainwindow.ui:1519
 #, fuzzy
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
@@ -5623,36 +5660,32 @@ msgstr ""
 "Liity olemassa olevaan keskustelupalstaan tai luo uusi huone, jossa voit "
 "keskustella muiden Soulseek-verkon käyttäjien kanssa"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1571
+#: pynicotine/gtkgui/ui/mainwindow.ui:1580
 #, fuzzy
 msgid "Configure User Profile"
 msgstr "Näytä käyttäjäprofiili"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1621
+#: pynicotine/gtkgui/ui/mainwindow.ui:1630
 #, fuzzy
 msgid "Search log…"
 msgstr "Haut"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1676
-msgid "Scanning Shares"
-msgstr "Skannataan jakoja"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1694
+#: pynicotine/gtkgui/ui/mainwindow.ui:1695
 #, fuzzy
 msgid "Connections"
 msgstr "Yhteydet"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1726
+#: pynicotine/gtkgui/ui/mainwindow.ui:1727
 #, fuzzy
 msgid "Downloading (Speed / Active Users)"
 msgstr "Lataaminen (nopeus / aktiiviset käyttäjät)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1757
+#: pynicotine/gtkgui/ui/mainwindow.ui:1758
 #, fuzzy
 msgid "Uploading (Speed / Active Users)"
 msgstr "Lataaminen (nopeus / aktiiviset käyttäjät)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1825
+#: pynicotine/gtkgui/ui/mainwindow.ui:1826
 #, fuzzy
 msgid "Show Log History Pane"
 msgstr "Näytä _Log -ruutu"
@@ -6247,22 +6280,22 @@ msgstr "Yksityinen keskustelu"
 #: pynicotine/gtkgui/ui/settings/chats.ui:446
 #: pynicotine/gtkgui/ui/settings/log.ui:72
 #: pynicotine/gtkgui/ui/settings/network.ui:317
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:354
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:396
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:438
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:881
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:923
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1026
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1068
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1110
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1152
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1194
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1236
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1307
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1349
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1391
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1460
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1502
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:355
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:397
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:439
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:882
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:924
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1027
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1069
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1111
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1153
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1195
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1237
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1308
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1350
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1392
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1461
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1503
 msgid "Default"
 msgstr "Oletus"
 
@@ -6352,7 +6385,7 @@ msgid "Double-click action for downloads:"
 msgstr "Odottaa latausta"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:169
-#: pynicotine/gtkgui/ui/userbrowse.ui:74
+#: pynicotine/gtkgui/ui/userbrowse.ui:45
 #, fuzzy
 msgid "Folders"
 msgstr "Kansiot"
@@ -6487,8 +6520,8 @@ msgstr "Näytä IP-osoite"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
 #, fuzzy
-msgid "Listening port:"
-msgstr "Kuunnellaan porttia %i"
+msgid "Listening port (requires a restart):"
+msgstr "Kuunteluportin alue (vaatii uudelleenkäynnistyksen):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 #, fuzzy
@@ -6533,8 +6566,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
 #, fuzzy
-msgid "Network interface:"
-msgstr "Haut"
+msgid "Network interface (requires a restart):"
+msgstr "Kuunteluportin alue (vaatii uudelleenkäynnistyksen):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 #, fuzzy
@@ -6622,9 +6655,9 @@ msgstr "Yksityisesti jaettujen tiedostojen näyttäminen hakutuloksissa"
 #: pynicotine/gtkgui/ui/settings/search.ui:61
 #, fuzzy
 msgid ""
-"Other Soulseek clients may have the option to share files privately. If so, "
-"these files will be prefixed with '[PRIVATE]', and can not be downloaded "
-"until the uploader gives explicit permission. Ask them kindly."
+"Privately shared files that have been made visible to everyone will be "
+"prefixed with '[PRIVATE]', and can not be downloaded until the uploader "
+"gives explicit permission. Ask them kindly."
 msgstr ""
 "Muut asiakkaat voivat tarjota mahdollisuuden lähettää yksityisesti jaettuja "
 "tiedostoja vastauksena hakupyyntöihin. Tällaiset tiedostot on etuliitteenä "
@@ -6738,10 +6771,19 @@ msgstr ""
 "käynnistettäessä. Jos se ei ole käytössä, jauksesi päivitetään vain, kun "
 "käynnistät uudelleenskannausen manuaalisesti."
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:45
+#: pynicotine/gtkgui/ui/settings/shares.ui:50
+msgid "Visible to everyone:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
-msgid "Limit buddy-only shares to trusted buddies"
-msgstr "Rajoita vain buddy-osakkeet luotettaviin kavereihin"
+msgid "Buddy shares"
+msgstr "Kaverilista"
+
+#: pynicotine/gtkgui/ui/settings/shares.ui:72
+#, fuzzy
+msgid "Trusted shares"
+msgstr "Uudelleenskannaa jakosi"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 #, fuzzy
@@ -6769,7 +6811,7 @@ msgid "Total transfers"
 msgstr "kaikki siirrot"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:199
-#: pynicotine/gtkgui/ui/userinfo.ui:177
+#: pynicotine/gtkgui/ui/userinfo.ui:180
 #, fuzzy
 msgid "Upload Slots"
 msgstr "Lähtevät"
@@ -6856,274 +6898,274 @@ msgstr "Oma kuvaus:"
 msgid "Picture:"
 msgstr "Kuva:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:49
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:50
 #, fuzzy
 msgid "Prefer dark mode"
 msgstr "Suosi tummaa tilaa"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:60
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:61
 #, fuzzy
 msgid "Display tray icon"
 msgstr "Näytä lokero -kuvake"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:68
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:69
 #, fuzzy
 msgid "Minimize to tray on startup"
 msgstr "Pienennä lokeroon käynnistettäessä"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:78
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:79
 #, fuzzy
 msgid "Use header bar"
 msgstr "Käytä _Header-palkkia"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:89
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:90
 #, fuzzy
 msgid "Language (requires a restart):"
 msgstr "Kuunteluportin alue (vaatii uudelleenkäynnistyksen):"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:105
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:106
 #, fuzzy
 msgid "When closing window:"
 msgstr "Suljet Nicotine+:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:128
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:129
 #, fuzzy
 msgid "Notifications"
 msgstr "Ilmoitukset"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:150
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:151
 #, fuzzy
 msgid "Enable sound for notifications"
 msgstr "Ääni ilmoitusvalikkojen ottaminen käyttöön"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:156
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:157
 #, fuzzy
 msgid "Show notification for private chats and mentions in the window title"
 msgstr ""
 "Näytä ilmoitus yksityisistä keskusteluista ja maininnat ikkunan otsikossa"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:177
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:178
 #, fuzzy
 msgid "Show notifications for:"
 msgstr "Ilmoituskuvakkeiden näyttäminen välilehdissä"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:204
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:205
 #, fuzzy
 msgid "Finished file downloads"
 msgstr "Tiedosto ladattu"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:216
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:217
 #, fuzzy
 msgid "Finished folder downloads"
 msgstr "Kansio ladattu"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:228
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:229
 #, fuzzy
 msgid "Private messages"
 msgstr "Yksityinen viesti %s"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:240
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:241
 #, fuzzy
 msgid "Chat room messages"
 msgstr "Keskusteluryhmän viesti:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:252
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:253
 #, fuzzy
 msgid "Chat room mentions"
 msgstr "Täydellistymä"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:264
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:265
 #, fuzzy
 msgid "Wishlist results found"
 msgstr "Toivelistatulokset löydetty"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:313
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:314
 #, fuzzy
 msgid "Restore the previously active main tab at startup"
 msgstr "Palauta aiemmin avoimet yksityiset keskustelut käynnistettäessä"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:319
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:320
 #, fuzzy
 msgid "Close-buttons on secondary tabs"
 msgstr "Toissijaisten välilehtien sulkemispainikkeet"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:330
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:331
 #, fuzzy
 msgid "Regular tab label color:"
 msgstr "Tavallisen välilehden otsikon väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:372
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:373
 #, fuzzy
 msgid "Changed tab label color:"
 msgstr "Muutettu välilehden otsikon väriä:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:414
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:415
 #, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Korostettun välilehden otsikon väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:458
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:459
 msgid "Buddy list position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:483
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:484
 #, fuzzy
 msgid "Visible main tabs:"
 msgstr "Näkyvät ensisijaiset välilehdet:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:637
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:638
 #, fuzzy
 msgid "Tab bar positions:"
 msgstr "Välilehtipalkin sijainti:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:672
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:673
 #, fuzzy
 msgid "Main tabs"
 msgstr "Päävälilehdet"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:831
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:832
 #, fuzzy
 msgid "Show reverse file paths (requires a restart)"
 msgstr ""
 "Käänteisten tiedostopolkujen näyttäminen haku- ja siirtonäkökoissa "
 "(edellyttää uudelleenkäynnistystä)"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:838
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:839
 #, fuzzy
 msgid "Show exact file sizes (requires a restart)"
 msgstr "Verkkoliittymä (edellyttää uudelleenkäynnistystä):"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:857
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:858
 #, fuzzy
 msgid "List text color:"
 msgstr "Luetteloteksti"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:899
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:900
 #, fuzzy
 msgid "Queued search result text color:"
 msgstr "Jonossa haettu hakutulostekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:968
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:969
 #, fuzzy
 msgid "Enable colored usernames"
 msgstr "Keskusteluryhmän viesti:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:979
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:980
 #, fuzzy
 msgid "Chat username appearance:"
 msgstr "Chat-käyttäjänimen ulkoasu:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1002
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1003
 #, fuzzy
 msgid "Remote text color:"
 msgstr "Tekstin etäväri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1044
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1045
 #, fuzzy
 msgid "Local text color:"
 msgstr "Paikallinen tiedostovirhe"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1086
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1087
 #, fuzzy
 msgid "Command output text color:"
 msgstr "Tekstin etäväri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1128
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1129
 #, fuzzy
 msgid "/me action text color:"
 msgstr "/me-toiminnon tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1170
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1171
 #, fuzzy
 msgid "Highlighted text color:"
 msgstr "Korostettu tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1212
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1213
 #, fuzzy
 msgid "URL link text color:"
 msgstr "URL-linkin tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1261
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1262
 #, fuzzy
 msgid "User Statuses"
 msgstr "Yhdysvallat"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1283
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1284
 #, fuzzy
 msgid "Online color:"
 msgstr "Online-tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1325
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1326
 #, fuzzy
 msgid "Away color:"
 msgstr "Poissa-tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1367
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1368
 #, fuzzy
 msgid "Offline color:"
 msgstr "Offline-tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1414
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1415
 #, fuzzy
 msgid "Text Entries"
 msgstr "Tekstimerkinnät"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1436
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1437
 #, fuzzy
 msgid "Text entry background color:"
 msgstr "Tekstin taustaväri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1478
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1479
 #, fuzzy
 msgid "Text entry text color:"
 msgstr "Tekstin tekstin väri:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1525
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1526
 #, fuzzy
 msgid "Fonts"
 msgstr "Fontit"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1542
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1543
 #, fuzzy
 msgid "Global font:"
 msgstr "Globaali"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1588
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1589
 #, fuzzy
 msgid "List font:"
 msgstr "Luetteloteksti"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1634
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1635
 #, fuzzy
 msgid "Text view font:"
 msgstr "Tekstinäkymän fontti:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1680
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1681
 #, fuzzy
 msgid "Chat font:"
 msgstr "Keskustelujen kirjasintyyppi:"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1726
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1727
 #, fuzzy
 msgid "Transfers font:"
 msgstr "Siirrot"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1772
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1773
 #, fuzzy
 msgid "Search font:"
 msgstr "Etsi tiedostoja"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1818
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1819
 #, fuzzy
 msgid "Browse font:"
 msgstr "Selaa tiedostoja"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1868
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1869
 #, fuzzy
 msgid "Icons"
 msgstr "Kuvakkeet"
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1891
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1892
 #, fuzzy
 msgid "Icon theme folder:"
 msgstr "Keskeneräinen tiedostokansio:"
@@ -7152,67 +7194,57 @@ msgstr "Viestit"
 msgid "Clear Specific Uploads"
 msgstr "Tyhjennä loki"
 
-#: pynicotine/gtkgui/ui/userbrowse.ui:113
-#, fuzzy
-msgid "Shared"
-msgstr "Jaettu"
-
-#: pynicotine/gtkgui/ui/userbrowse.ui:150
-#, fuzzy
-msgid "Search Files and Folders"
-msgstr "Etsi tiedostoja ja kansioita (tarkka vastaavuus)"
-
 #: pynicotine/gtkgui/ui/userbrowse.ui:161
 #, fuzzy
 msgid "Save Shares List to Disk"
 msgstr "_Save jakojen luettelo levylle"
 
-#: pynicotine/gtkgui/ui/userbrowse.ui:177
+#: pynicotine/gtkgui/ui/userbrowse.ui:178
 #, fuzzy
 msgid "Refresh Files"
 msgstr "Tiedostojen päivittäminen"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:71
+#: pynicotine/gtkgui/ui/userinfo.ui:76
 #, fuzzy
 msgid "Edit Profile"
 msgstr "Jaot"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:123
+#: pynicotine/gtkgui/ui/userinfo.ui:126
 #, fuzzy
 msgid "Shared Files"
 msgstr "_Etsi tiedostoja"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:150
+#: pynicotine/gtkgui/ui/userinfo.ui:153
 #, fuzzy
 msgid "Shared Folders"
 msgstr "Jaot"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:204
+#: pynicotine/gtkgui/ui/userinfo.ui:207
 #, fuzzy
 msgid "Queued Uploads"
 msgstr "Lähtevät"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:231
+#: pynicotine/gtkgui/ui/userinfo.ui:234
 #, fuzzy
 msgid "Free Upload Slots"
 msgstr "Vapaa latauspaikka"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:258
+#: pynicotine/gtkgui/ui/userinfo.ui:261
 #, fuzzy
 msgid "Upload Speed"
 msgstr "Lähtevät"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:351
+#: pynicotine/gtkgui/ui/userinfo.ui:360
 #, fuzzy
 msgid "Edit Interests"
 msgstr "Kiinnostuksen kohteet"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:638
+#: pynicotine/gtkgui/ui/userinfo.ui:671
 #, fuzzy
 msgid "Save _Picture"
 msgstr "Tallenna _Picture"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:676
+#: pynicotine/gtkgui/ui/userinfo.ui:710
 #, fuzzy
 msgid "_Refresh Profile"
 msgstr "Tiedostojen päivittäminen"
@@ -7221,6 +7253,74 @@ msgstr "Tiedostojen päivittäminen"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+"
+
+#, fuzzy, python-format
+#~ msgid ""
+#~ "Unable to save download to username subfolder, falling back to default "
+#~ "download folder. Error: %s"
+#~ msgstr ""
+#~ "Latausta ei voi tallentaa käyttäjänimen alikansioon, joka palaa "
+#~ "oletuslatauksen kansioon. Virhe: %s"
+
+#, fuzzy
+#~ msgid "Buddy-only"
+#~ msgstr "Vain buddy"
+
+#, fuzzy
+#~ msgid "Share with buddies only"
+#~ msgstr "Jaa vain kavereiden kanssa"
+
+#, fuzzy
+#~ msgid "_Quit…"
+#~ msgstr "_Quit"
+
+#, fuzzy
+#~ msgid "_Configure Shares"
+#~ msgstr "Skannataan jakoja"
+
+#, fuzzy
+#~ msgid "Remote file error"
+#~ msgstr "Etätiedoston virhe"
+
+#, fuzzy, python-format
+#~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
+#~ msgstr "%(option1)s tai %(option2)s ei löydä, asenna jompikumpi."
+
+#, fuzzy, python-format
+#~ msgid "%(num)s folders found before rescan"
+#~ msgstr "%(num)s-kansiot löytyivät uudelleenskannaumisen jälkeen"
+
+#, fuzzy, python-format
+#~ msgid "Failed to process the following databases: %(names)s"
+#~ msgstr "Seuraavien tietokantojen käsitteleminen epäonnistui: %(names)s"
+
+#, fuzzy, python-format
+#~ msgid "Failed to send number of shared files to the server: %s"
+#~ msgstr "Jaettujen tiedostojen lähettäminen palvelimeen epäonnistui: %s"
+
+#, fuzzy
+#~ msgid "Quit / Run in Background"
+#~ msgstr "Suorita taustalla"
+
+#, fuzzy
+#~ msgid "Listening port:"
+#~ msgstr "Kuunnellaan porttia %i"
+
+#, fuzzy
+#~ msgid "Network interface:"
+#~ msgstr "Haut"
+
+#, fuzzy
+#~ msgid "Limit buddy-only shares to trusted buddies"
+#~ msgstr "Rajoita vain buddy-osakkeet luotettaviin kavereihin"
+
+#, fuzzy
+#~ msgid "Shared"
+#~ msgstr "Jaettu"
+
+#, fuzzy
+#~ msgid "Search Files and Folders"
+#~ msgstr "Etsi tiedostoja ja kansioita (tarkka vastaavuus)"
 
 #, fuzzy
 #~ msgid "Out of Date"
@@ -8220,9 +8320,6 @@ msgstr "Nicotine+"
 
 #~ msgid "Establishing connection"
 #~ msgstr "Muodostetaan yhteyttä"
-
-#~ msgid "Connection closed by peer"
-#~ msgstr "Vertaiskäyttäjä sulki yhteyden"
 
 #~ msgid "Clear Groups"
 #~ msgstr "Tyhjennä ryhmät"

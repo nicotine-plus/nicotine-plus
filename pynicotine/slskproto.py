@@ -194,9 +194,15 @@ class NetworkInterfaces:
             ("description", wintypes.LPWSTR),
             ("friendly_name", wintypes.LPWSTR)
         ]
+
+    elif sys.platform == "linux":
+        SIOCGIFADDR = 0x8915
+
+    elif sys.platform.startswith("sunos"):
+        SIOCGIFADDR = -0x3fdf96f3  # Solaris
+
     else:
-        SO_BINDTODEVICE = 25
-        SIOCGIFADDR = 0x8915 if sys.platform == "linux" else 0xc0206921  # 0xc0206921 for *BSD, macOS
+        SIOCGIFADDR = 0xc0206921   # macOS, *BSD
 
     @classmethod
     def _get_interface_addresses_win32(cls):
@@ -207,38 +213,37 @@ class NetworkInterfaces:
 
         # pylint: disable=invalid-name
 
-        from ctypes import byref, create_string_buffer, windll, wintypes
+        from ctypes import POINTER, byref, cast, create_string_buffer, windll, wintypes
 
         interface_addresses = {}
-        address_buffer_size = wintypes.ULONG(1024 * 15)
+        adapter_addresses_size = wintypes.ULONG()
         return_value = cls.ERROR_BUFFER_OVERFLOW
 
         while return_value == cls.ERROR_BUFFER_OVERFLOW:
-            address_buffer = create_string_buffer(address_buffer_size.value)
+            p_adapter_addresses = cast(
+                create_string_buffer(adapter_addresses_size.value), POINTER(cls.IpAdapterAddresses)
+            )
             return_value = windll.Iphlpapi.GetAdaptersAddresses(
                 cls.AF_INET,
                 (cls.GAA_FLAG_SKIP_ANYCAST | cls.GAA_FLAG_SKIP_MULTICAST | cls.GAA_FLAG_SKIP_DNS_SERVER),
                 None,
-                byref(address_buffer),
-                byref(address_buffer_size),
+                p_adapter_addresses,
+                byref(adapter_addresses_size),
             )
 
         if return_value:
             log.add_debug("Failed to get list of network interfaces. Error code %s", return_value)
             return interface_addresses
 
-        adapter_addresses = cls.IpAdapterAddresses.from_buffer(address_buffer)
+        while p_adapter_addresses:
+            adapter_addresses = p_adapter_addresses.contents
 
-        while True:
             if adapter_addresses.first_unicast_address:
                 interface_name = adapter_addresses.friendly_name
                 socket_address = adapter_addresses.first_unicast_address[0].address
                 interface_addresses[interface_name] = socket.inet_ntoa(socket_address.lp_sockaddr[0].sin_addr)
 
-            if not adapter_addresses.next:
-                break
-
-            adapter_addresses = adapter_addresses.next[0]
+            p_adapter_addresses = adapter_addresses.next
 
         return interface_addresses
 
@@ -258,7 +263,7 @@ class NetworkInterfaces:
 
         for _i, interface_name in interface_name_index:
             try:
-                import fcntl  # pylint: disable=import-error
+                import fcntl
 
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
                     ip_interface = fcntl.ioctl(sock.fileno(),
@@ -268,7 +273,7 @@ class NetworkInterfaces:
                     ip_address = socket.inet_ntoa(ip_interface[20:24])
                     interface_addresses[interface_name] = ip_address
 
-            except OSError as error:
+            except (ImportError, OSError) as error:
                 log.add_debug("Failed to get IP address for network interface %s: %s", (interface_name, error))
                 continue
 
@@ -284,37 +289,18 @@ class NetworkInterfaces:
         return cls._get_interface_addresses_posix()
 
     @classmethod
-    def bind_to_interface(cls, sock, interface_name):
-        """Bind socket directly to interface on Linux and macOS.
-
-        Other platforms can use bind_to_interface_address() with an IP
-        address retrieved from get_interface_addresses() instead.
-        """
+    def get_interface_address(cls, interface_name):
+        """Returns the IP address of a specific network interface."""
 
         if not interface_name:
-            return True
+            return None
 
-        try:
-            if sys.platform == "linux":
-                sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
-                return True
-
-            if sys.platform == "darwin":
-                sock.setsockopt(socket.IPPROTO_IP, cls.SO_BINDTODEVICE, socket.if_nametoindex(interface_name))
-                return True
-
-        except OSError:
-            pass
-
-        return False
+        return cls.get_interface_addresses().get(interface_name)
 
     @classmethod
     def bind_to_interface_address(cls, sock, address):
         """Bind socket to the IP address of a network interface, retrieved from
         get_interface_addresses().
-
-        Alternative to bind_to_interface() for platforms that do not
-        support it.
         """
 
         sock.bind((address, 0))
@@ -334,42 +320,34 @@ class NetworkThread(Thread):
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
     CONNECTION_BACKLOG_LENGTH = 4096
+    MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
-    SLEEP_MIN_IDLE = 0.016  # ~60 times per second
+    SLEEP_MIN_IDLE = 0.016                 # ~60 times per second
 
-    # Set the maximum number of open files to the hard limit reported by the OS.
-    # Our MAX_SOCKETS value needs to be lower than the file limit, otherwise our open
-    # sockets in combination with other file activity can exceed the file limit,
-    # effectively halting the program.
+    try:
+        import resource
 
-    if sys.platform == "win32":
-        # For Windows, FD_SETSIZE is set to 512 in the Python source.
+        # Increase the process file limit to a maximum of 10240 (macOS limit), to provide
+        # breathing room for opening both peer sockets and regular files (file transfers,
+        # log files etc.)
+
+        _SOFT_FILE_LIMIT, HARD_FILE_LIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)    # pylint: disable=no-member
+        MAX_FILE_LIMIT = min(HARD_FILE_LIMIT, 10240)
+
+        resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
+
+        # Reserve 2/3 of the file limit for sockets, but always limit the maximum number
+        # of sockets to 3072 to improve performance.
+
+        MAX_SOCKETS = min(int(MAX_FILE_LIMIT * (2 / 3)), 3072)
+
+    except ImportError:
+        # For Windows, FD_SETSIZE is set to 512 in CPython.
         # This limit is hardcoded, so we'll have to live with it for now.
+        # https://github.com/python/cpython/issues/72894
 
         MAX_SOCKETS = 512
-    else:
-        import resource  # pylint: disable=import-error
-
-        if sys.platform == "darwin":
-            # Maximum number of files a process can open is 10240 on macOS.
-            # macOS reports INFINITE as hard limit, so we need this special case.
-
-            MAX_FILE_LIMIT = 10240
-        else:
-            _SOFT_LIMIT, MAX_FILE_LIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)     # pylint: disable=no-member
-
-        try:
-            resource.setrlimit(resource.RLIMIT_NOFILE, (MAX_FILE_LIMIT, MAX_FILE_LIMIT))  # pylint: disable=no-member
-
-        except Exception as rlimit_error:
-            log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
-
-        # Set the maximum number of open sockets to a lower value than the hard limit,
-        # otherwise we just waste resources.
-        # The maximum is 3072, but can be lower if the file limit is too low.
-
-        MAX_SOCKETS = min(max(int(MAX_FILE_LIMIT * 0.75), 50), 3072)
 
     def __init__(self):
 
@@ -389,6 +367,7 @@ class NetworkThread(Thread):
         self._interface_name = None
         self._interface_address = None
         self._portmapper = None
+        self._local_ip_address = ""
 
         self._server_socket = None
         self._server_address = None
@@ -481,7 +460,7 @@ class NetworkThread(Thread):
             # Socket was not registered
             pass
 
-        self._close_socket(self._listen_socket, shutdown=False)
+        self._close_socket(self._listen_socket)
         self._listen_socket = None
         self._listen_port = None
 
@@ -492,9 +471,9 @@ class NetworkThread(Thread):
             log.add(_("Specified network interface '%s' is not available"), self._interface_name)
             return False
 
-        ip_address = self._interface_address or "0.0.0.0"
-
         try:
+            ip_address = self._interface_address or self._find_local_ip_address()
+
             self._listen_socket.bind((ip_address, self._listen_port))
             self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
@@ -505,6 +484,7 @@ class NetworkThread(Thread):
             self._listen_port = None
             return False
 
+        self._local_ip_address = ip_address or "127.0.0.1"
         log.add(_("Listening on port: %i"), self._listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
@@ -554,25 +534,21 @@ class NetworkThread(Thread):
         return False
 
     def _bind_socket_interface(self, sock):
+        """Attempt to bind socket to an IP address, if provided with the
+        --bindip CLI argument. Otherwise retrieve the IP address of the
+        requested interface name, cache it for later, and bind to it.
+        """
 
-        # Attempt to bind socket to an IP address, if provided with the --bindip CLI argument
-        # or the platform doesn't support binding directly to an interface name
-        if self._interface_address and sock is not self._listen_socket:
-            NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
-            return True
-
-        # If no IP address is stored, attempt to bind directly to network interface name
-        if NetworkInterfaces.bind_to_interface(sock, self._interface_name):
-            return True
-
-        # System does not support binding directly to a network interface name
-        # Retrieve the IP address of the interface, cache it for later, and bind to it instead
-        self._interface_address = NetworkInterfaces.get_interface_addresses().get(self._interface_name)
+        self._interface_address = (
+            self._interface_address or NetworkInterfaces.get_interface_address(self._interface_name))
 
         if self._interface_address:
             if sock is not self._listen_socket:
                 NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
 
+            return True
+
+        if not self._interface_name:
             return True
 
         return False
@@ -582,20 +558,12 @@ class NetworkThread(Thread):
         # Create a UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
 
-            # Use the interface we have selected
-            self._bind_socket_interface(local_socket)
+            # Send a broadcast packet on a local address (doesn't need to be reachable,
+            # but MacOS requires port to be non-zero)
+            local_socket.connect(("10.255.255.255", 1))
 
-            try:
-                # Send a broadcast packet on a local address (doesn't need to be reachable,
-                # but MacOS requires port to be non-zero)
-                local_socket.connect(("10.255.255.255", 1))
-
-                # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
-                ip_address = local_socket.getsockname()[0]
-
-            except OSError:
-                # Fall back to localhost
-                ip_address = "127.0.0.1"
+            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+            ip_address = local_socket.getsockname()[0]
 
         return ip_address
 
@@ -702,7 +670,7 @@ class NetworkThread(Thread):
 
     def _send_message_to_peer(self, username, message):
 
-        conn_type = message.msgtype
+        conn_type = message.msg_type
 
         if not self._verify_peer_connection_type(conn_type):
             return
@@ -923,29 +891,22 @@ class NetworkThread(Thread):
         self._close_connection(self._conns, prev_init.sock, callback=False)
 
     @staticmethod
-    def _close_socket(sock, shutdown=True):
+    def _close_socket(sock):
 
-        # In certain cases, a shutdown isn't possible, e.g. if a connection wasn't established
-        if shutdown:
-            try:
-                log.add_conn("Shutting down socket %s", sock)
-                sock.shutdown(socket.SHUT_RDWR)
+        try:
+            log.add_conn("Shutting down socket %s", sock)
+            sock.shutdown(socket.SHUT_RDWR)
 
-            except OSError as error:
+        except OSError as error:
+            # Can't call shutdown if connection wasn't established, ignore error
+            if error.errno != errno.ENOTCONN:
                 log.add_conn("Failed to shut down socket %(sock)s: %(error)s", {
                     "sock": sock,
                     "error": error
                 })
 
-        try:
-            log.add_conn("Closing socket %s", sock)
-            sock.close()
-
-        except OSError as error:
-            log.add_conn("Failed to close socket %(sock)s: %(error)s", {
-                "sock": sock,
-                "error": error
-            })
+        log.add_conn("Closing socket %s", sock)
+        sock.close()
 
     def _close_connection(self, connection_list, sock, callback=True):
 
@@ -956,7 +917,7 @@ class NetworkThread(Thread):
             return
 
         self._selector.unregister(sock)
-        self._close_socket(sock, shutdown=(connection_list != self._connsinprogress))
+        self._close_socket(sock)
         self._numsockets -= 1
 
         conn_obj.ibuf.clear()
@@ -1100,7 +1061,7 @@ class NetworkThread(Thread):
             self._server_timeout_value = 15
 
         elif 0 < self._server_timeout_value < 600:
-            self._server_timeout_value = self._server_timeout_value * 2
+            self._server_timeout_value *= 2
 
         self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
         log.add(_("Reconnecting to server in %i seconds"), self._server_timeout_value)
@@ -1202,7 +1163,7 @@ class NetworkThread(Thread):
 
         except OSError as error:
             self._connect_error(error, conn_obj)
-            self._close_socket(server_socket, shutdown=False)
+            self._close_socket(server_socket)
             self._server_disconnect()
 
     def _establish_outgoing_server_connection(self, conn_obj):
@@ -1218,7 +1179,7 @@ class NetworkThread(Thread):
         )
 
         login, password = conn_obj.login
-        self._user_addresses[login] = (self._find_local_ip_address(), self._listen_port)
+        self._user_addresses[login] = (self._local_ip_address, self._listen_port)
         conn_obj.login = True
 
         self._server_address = addr
@@ -1251,21 +1212,30 @@ class NetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
-            msgsize_total = msgsize + 4
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size_total = msg_size + 4
 
-            if msgsize_total > buffer_len or msgsize < 0:
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from server. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE
+                })
+                should_close_connection = True
+                break
+
+            if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
                 break
 
             # Unpack server messages
-            if msgtype in SERVER_MESSAGE_CLASSES:
-                msg_class = SERVER_MESSAGE_CLASSES[msgtype]
+            if msg_type in SERVER_MESSAGE_CLASSES:
+                msg_class = SERVER_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
+                    msg_class, msg_buffer_mem[idx + 8:idx + msg_size_total], msg_size - 4, "server")
 
                 if msg is not None:
                     if msg_class is EmbeddedMessage:
@@ -1399,15 +1369,19 @@ class NetworkThread(Thread):
 
             else:
                 log.add_debug("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    "type": msgtype,
-                    "size": msgsize - 4,
-                    "msg_buffer": msg_buffer[idx + 8:idx + msgsize_total]
+                    "type": msg_type,
+                    "size": msg_size - 4,
+                    "msg_buffer": msg_buffer[idx + 8:idx + msg_size_total]
                 })
 
-            idx += msgsize_total
-            buffer_len -= msgsize_total
+            idx += msg_size_total
+            buffer_len -= msg_size_total
 
         msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, self._server_socket)
+            return
 
         if idx:
             del msg_buffer[:idx]
@@ -1440,11 +1414,13 @@ class NetworkThread(Thread):
 
         self._should_process_queue = False
         self._interface_name = self._interface_address = self._server_socket = None
+        self._local_ip_address = ""
 
         self._close_listen_socket()
 
         if self._portmapper is not None:
             self._portmapper.remove_port_mapping(blocking=True)
+            self._portmapper.set_port(port=None, local_ip_address=None)
             self._portmapper = None
 
         self._parent_socket = None
@@ -1514,21 +1490,30 @@ class NetworkThread(Thread):
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msgsize = UINT32_UNPACK(msg_buffer_mem, idx)[0]
-            msgsize_total = msgsize + 4
+            msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
+            msg_size_total = msg_size + 4
 
-            if msgsize_total > buffer_len or msgsize < 0:
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from peer %(addr)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "addr": conn_obj.addr
+                })
+                should_close_connection = True
+                break
+
+            if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
                 conn_obj.has_post_init_activity = True
                 break
 
-            msgtype = msg_buffer_mem[idx + 4]
+            msg_type = msg_buffer_mem[idx + 4]
 
             # Unpack peer init messages
-            if msgtype in PEER_INIT_MESSAGE_CLASSES:
-                msg_class = PEER_INIT_MESSAGE_CLASSES[msgtype]
+            if msg_type in PEER_INIT_MESSAGE_CLASSES:
+                msg_class = PEER_INIT_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "peer init", conn_obj.sock)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msg_size_total], msg_size - 1, "peer init", conn_obj.sock)
 
                 if msg is not None:
                     if msg_class is PierceFireWall:
@@ -1581,15 +1566,15 @@ class NetworkThread(Thread):
 
             else:
                 log.add_debug("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    "type": msgtype,
-                    "size": msgsize - 1,
-                    "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
+                    "type": msg_type,
+                    "size": msg_size - 1,
+                    "msg_buffer": msg_buffer[idx + 5:idx + msg_size_total]
                 })
                 should_close_connection = True
                 break
 
-            idx += msgsize_total
-            buffer_len -= msgsize_total
+            idx += msg_size_total
+            buffer_len -= msg_size_total
 
         msg_buffer_mem.release()
 
@@ -1657,7 +1642,7 @@ class NetworkThread(Thread):
 
         except OSError as error:
             self._connect_error(error, conn_obj)
-            self._close_socket(sock, shutdown=False)
+            self._close_socket(sock)
 
     def _process_peer_input(self, conn_obj, msg_buffer):
         """We have a "P" connection (p2p exchange), peer has sent us something,
@@ -1667,37 +1652,42 @@ class NetworkThread(Thread):
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
+        should_close_connection = False
         search_result_received = False
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msgsize, msgtype = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
-            msgsize_total = msgsize + 4
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size_total = msg_size + 4
 
-            try:
-                # Send progress to the main thread
-                peer_class = PEER_MESSAGE_CLASSES[msgtype]
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from user %(user)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "user": conn_obj.init.target_user
+                })
+                should_close_connection = True
+                break
 
-                if peer_class is SharedFileListResponse:
-                    events.emit_main_thread(
-                        "shared-file-list-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
+            msg_class = PEER_MESSAGE_CLASSES.get(msg_type)
 
-                elif peer_class is UserInfoResponse:
-                    events.emit_main_thread(
-                        "user-info-progress", conn_obj.init.target_user, buffer_len, msgsize_total)
+            # Send progress to the main thread
+            if msg_class is SharedFileListResponse:
+                events.emit_main_thread(
+                    "shared-file-list-progress", conn_obj.init.target_user, conn_obj.sock, buffer_len, msg_size_total)
 
-            except KeyError:
-                pass
+            elif msg_class is UserInfoResponse:
+                events.emit_main_thread(
+                    "user-info-progress", conn_obj.init.target_user, conn_obj.sock, buffer_len, msg_size_total)
 
-            if msgsize_total > buffer_len or msgsize < 0:
+            if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
                 break
 
             # Unpack peer messages
-            if msgtype in PEER_MESSAGE_CLASSES:
-                msg_class = PEER_MESSAGE_CLASSES[msgtype]
+            if msg_class:
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 8:idx + msg_size_total], msg_size - 4, "peer", conn_obj.init)
 
                 if msg_class is FileSearchResponse:
                     search_result_received = True
@@ -1708,18 +1698,22 @@ class NetworkThread(Thread):
                 host, port = conn_obj.addr
                 log.add_debug(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
                                "from user: %(user)s, %(host)s:%(port)s"), {
-                    "type": msgtype,
-                    "size": msgsize - 4,
-                    "msg_buffer": msg_buffer[idx + 8:idx + msgsize_total],
+                    "type": msg_type,
+                    "size": msg_size - 4,
+                    "msg_buffer": msg_buffer[idx + 8:idx + msg_size_total],
                     "user": conn_obj.init.target_user,
                     "host": host,
                     "port": port
                 })
 
-            idx += msgsize_total
-            buffer_len -= msgsize_total
+            idx += msg_size_total
+            buffer_len -= msg_size_total
 
         msg_buffer_mem.release()
+
+        if should_close_connection:
+            self._close_connection(self._conns, conn_obj.sock)
+            return
 
         if idx:
             del msg_buffer[:idx]
@@ -1776,7 +1770,7 @@ class NetworkThread(Thread):
             return
 
         if not limit_per_transfer and self._total_uploads > 1:
-            limit = limit // self._total_uploads
+            limit //= self._total_uploads
 
         self._upload_limit_split = int(limit)
 
@@ -1797,7 +1791,7 @@ class NetworkThread(Thread):
             return
 
         if self._total_downloads > 1:
-            limit = limit // self._total_downloads
+            limit //= self._total_downloads
 
         self._download_limit_split = int(limit)
 
@@ -1819,7 +1813,7 @@ class NetworkThread(Thread):
 
     def _set_conn_speed_limit(self, sock, limit, limits):
 
-        limit = limit // (self._loops_per_second or 1)
+        limit //= (self._loops_per_second or 1)
 
         if limit > 0:
             limits[sock] = limit
@@ -1841,9 +1835,9 @@ class NetworkThread(Thread):
             # FileDownloadInit message. Do NOT use these messages to determine if the
             # transfer is a download or upload!
 
-            msgsize = idx = 4
+            msg_size = idx = 4
             msg = self._unpack_network_message(
-                FileDownloadInit, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
+                FileDownloadInit, msg_buffer_mem[:msg_size], msg_size, "file", conn_obj.init)
 
             if msg is not None and msg.token is not None:
                 self._emit_network_message_event(msg)
@@ -1887,8 +1881,8 @@ class NetworkThread(Thread):
             added_bytes_mem.release()
 
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
-            msgsize = idx = 8
-            msg = self._unpack_network_message(FileOffset, msg_buffer_mem[:msgsize], msgsize, "file", conn_obj.init)
+            msg_size = idx = 8
+            msg = self._unpack_network_message(FileOffset, msg_buffer_mem[:msg_size], msg_size, "file", conn_obj.init)
 
             if msg is not None and msg.offset is not None:
                 self._emit_network_message_event(msg)
@@ -2104,21 +2098,30 @@ class NetworkThread(Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msgsize = UINT32_UNPACK(msg_buffer_mem, idx)[0]
-            msgsize_total = msgsize + 4
+            msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
+            msg_size_total = msg_size + 4
 
-            if msgsize_total > buffer_len or msgsize < 0:
+            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+                log.add_conn(("Received message larger than maximum size %(max_size)s from user %(user)s. "
+                              "Closing connection."), {
+                    "max_size": self.MAX_INCOMING_MESSAGE_SIZE,
+                    "user": conn_obj.init.target_user
+                })
+                should_close_connection = True
+                break
+
+            if msg_size_total > buffer_len or msg_size < 0:
                 # Invalid message size or buffer is being filled
                 conn_obj.has_post_init_activity = True
                 break
 
-            msgtype = msg_buffer_mem[idx + 4]
+            msg_type = msg_buffer_mem[idx + 4]
 
             # Unpack distributed messages
-            if msgtype in DISTRIBUTED_MESSAGE_CLASSES:
-                msg_class = DISTRIBUTED_MESSAGE_CLASSES[msgtype]
+            if msg_type in DISTRIBUTED_MESSAGE_CLASSES:
+                msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msg_size_total], msg_size - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
                     if msg_class is DistribSearch:
@@ -2192,15 +2195,15 @@ class NetworkThread(Thread):
 
             else:
                 log.add_debug("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown", {
-                    "type": msgtype,
-                    "size": msgsize - 1,
-                    "msg_buffer": msg_buffer[idx + 5:idx + msgsize_total]
+                    "type": msg_type,
+                    "size": msg_size - 1,
+                    "msg_buffer": msg_buffer[idx + 5:idx + msg_size_total]
                 })
                 should_close_connection = True
                 break
 
-            idx += msgsize_total
-            buffer_len -= msgsize_total
+            idx += msg_size_total
+            buffer_len -= msg_size_total
 
         msg_buffer_mem.release()
 
@@ -2381,21 +2384,15 @@ class NetworkThread(Thread):
         conn_obj_in_progress = self._connsinprogress.get(sock)
 
         if conn_obj_in_progress is not None:
-            try:
-                # Connection has been established
-                conn_obj_in_progress.lastactive = current_time
+            # Connection has been established
+            conn_obj_in_progress.lastactive = current_time
 
-                if sock is self._server_socket:
-                    self._establish_outgoing_server_connection(conn_obj_in_progress)
-                else:
-                    self._establish_outgoing_peer_connection(conn_obj_in_progress)
+            if sock is self._server_socket:
+                self._establish_outgoing_server_connection(conn_obj_in_progress)
+            else:
+                self._establish_outgoing_peer_connection(conn_obj_in_progress)
 
-                del self._connsinprogress[sock]
-
-            except OSError as error:
-                self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._connsinprogress, sock, callback=False)
-
+            del self._connsinprogress[sock]
             return
 
         conn_obj_established = self._conns.get(sock)
@@ -2466,7 +2463,7 @@ class NetworkThread(Thread):
             if not self._should_process_queue:
                 return
 
-            msg_type = msg_obj.msgtype
+            msg_type = msg_obj.msg_type
             log.add_msg_contents(msg_obj, is_outgoing=True)
 
             if msg_type == MessageType.INIT:
@@ -2499,7 +2496,7 @@ class NetworkThread(Thread):
         if limit is None:
             # Unlimited download data
             if len(data) >= conn_obj.lastreadlength // 2:
-                conn_obj.lastreadlength = conn_obj.lastreadlength * 2
+                conn_obj.lastreadlength *= 2
         else:
             # Speed Limited Download data (transfers)
             conn_obj.lastreadlength = limit

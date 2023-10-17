@@ -38,6 +38,7 @@ class UserInfo:
             ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("user-info-progress", self._user_info_progress),
             ("user-info-request", self._user_info_request)
         ):
             events.connect(event_name, callback)
@@ -103,6 +104,13 @@ class UserInfo:
                 "error": error
             })
 
+    def _user_info_progress(self, username, sock, _buffer_len, _msg_size_total):
+
+        if username not in self.users:
+            # We've removed the user. Close the connection to stop the user from
+            # sending their response and wasting bandwidth.
+            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+
     def _user_info_request(self, msg):
         """Peer code 15."""
 
@@ -120,11 +128,11 @@ class UserInfo:
         if core.login_username != username:
             log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
-        status, reason = core.network_filter.check_user(username, ip_address)
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
-        if not status:
+        if permission_level == "banned":
             pic = None
-            descr = core.ban_message % reason
+            descr = core.ban_message % reject_reason
             descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 

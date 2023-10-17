@@ -25,6 +25,7 @@ from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -106,7 +107,7 @@ class BaseImplementation:
         self.create_item()
 
         self.create_item(_("Preferences"), self.application.on_preferences)
-        self.create_item(_("Quit"), core.quit)
+        self.create_item(_("Quit"), self.application.on_quit_request)
 
     def update_window_visibility(self):
 
@@ -155,7 +156,7 @@ class BaseImplementation:
         else:
             icon_name = "disconnect"
 
-        icon_name = f"{config.application_id}-{icon_name}"
+        icon_name = f"{pynicotine.__application_id__}-{icon_name}"
         self.set_icon_name(icon_name)
 
     def set_icon_name(self, icon_name):
@@ -486,9 +487,9 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for property_name, signature, value in (
                 ("Category", "s", "Communications"),
-                ("Id", "s", config.application_id),
-                ("Title", "s", config.application_name),
-                ("ToolTip", "(sa(iiay)ss)", ("", [], config.application_name, "")),
+                ("Id", "s", pynicotine.__application_id__),
+                ("Title", "s", pynicotine.__application_name__),
+                ("ToolTip", "(sa(iiay)ss)", ("", [], pynicotine.__application_name__, "")),
                 ("Menu", "o", "/org/ayatana/NotificationItem/Nicotine/Menu"),
                 ("ItemIsMenu", "b", False),
                 ("IconName", "s", ""),
@@ -554,7 +555,7 @@ class StatusNotifierImplementation(BaseImplementation):
         if not icon_path:
             return False
 
-        icon_scheme = f"{config.application_id}-{icon_name}."
+        icon_scheme = f"{pynicotine.__application_id__}-{icon_name}."
 
         try:
             with os.scandir(encode_path(icon_path)) as entries:
@@ -599,7 +600,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if self.custom_icons:
             # Use alternative icon names to enforce custom icons, since system-wide icons take precedence
-            icon_name = icon_name.replace(config.application_id, "nplus-tray")
+            icon_name = icon_name.replace(pynicotine.__application_id__, "nplus-tray")
 
         self.tray_icon.properties["IconName"].value = icon_name
         self.tray_icon.emit_signal("NewIcon")
@@ -846,7 +847,8 @@ class Win32Implementation(BaseImplementation):
 
         # Attempt to load custom icons first
         icon_size = windll.user32.GetSystemMetrics(self.SM_CXSMICON)
-        ico_buffer = self._load_ico_buffer(icon_name.replace(f"{config.application_id}-", "nplus-tray-"), icon_size)
+        ico_buffer = self._load_ico_buffer(
+            icon_name.replace(f"{pynicotine.__application_id__}-", "nplus-tray-"), icon_size)
 
         if not ico_buffer:
             # No custom icons present, fall back to default icons
@@ -904,7 +906,7 @@ class Win32Implementation(BaseImplementation):
                 u_id=0,
                 u_flags=(self.NIF_ICON | self.NIF_MESSAGE | self.NIF_TIP | self.NIF_INFO),
                 u_callback_message=self.WM_TRAYICON,
-                sz_tip=truncate_string_byte(config.application_name, byte_limit=127)
+                sz_tip=truncate_string_byte(pynicotine.__application_name__, byte_limit=127)
             )
             action = self.NIM_ADD
 

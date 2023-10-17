@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -45,7 +46,6 @@ class PrivateChat:
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
             ("start", self._start),
-            ("set-away-mode", self._set_away_mode),
             ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
@@ -57,7 +57,7 @@ class PrivateChat:
 
         for username in config.sections["privatechat"]["users"]:
             if isinstance(username, str) and username not in self.users:
-                self.show_user(username, switch_page=False)
+                self.show_user(username, switch_page=False, remembered=True)
 
         self.update_completions()
 
@@ -79,12 +79,6 @@ class PrivateChat:
         self.away_message_users.clear()
         self.update_completions()
 
-    def _set_away_mode(self, is_away):
-
-        if not is_away:
-            # Reset list of users we've sent away messages to when the away session ends
-            self.away_message_users.clear()
-
     def add_user(self, username):
 
         if username in self.users:
@@ -93,7 +87,7 @@ class PrivateChat:
         self.users.add(username)
 
         if username not in config.sections["privatechat"]["users"]:
-            config.sections["privatechat"]["users"].append(username)
+            config.sections["privatechat"]["users"].insert(0, username)
 
     def remove_user(self, username, is_permanent=True):
 
@@ -107,10 +101,10 @@ class PrivateChat:
         for username in self.users.copy():
             self.remove_user(username, is_permanent)
 
-    def show_user(self, username, switch_page=True):
+    def show_user(self, username, switch_page=True, remembered=False):
 
         self.add_user(username)
-        events.emit("private-chat-show-user", username, switch_page)
+        events.emit("private-chat-show-user", username, switch_page, remembered)
         core.watch_user(username)
 
     def clear_private_messages(self, username):
@@ -208,6 +202,10 @@ class PrivateChat:
     def _user_status(self, msg):
         """Server code 7."""
 
+        if msg.user == core.login_username and msg.status != slskmessages.UserStatus.AWAY:
+            # Reset list of users we've sent away messages to when the away session ends
+            self.away_message_users.clear()
+
         if msg.status == slskmessages.UserStatus.OFFLINE:
             self.private_message_queue.pop(msg.user, None)
 
@@ -265,7 +263,7 @@ class PrivateChat:
         core.pluginhandler.incoming_private_chat_notification(username, msg.msg)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
-            self.send_message(username, f"{config.application_name} {config.version}")
+            self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")
 
         if not msg.newmessage:
             # Message was sent while offline, don't auto-reply

@@ -19,8 +19,6 @@
 from locale import strxfrm
 
 import gi
-from gi.repository import Gio
-from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -111,7 +109,7 @@ class ChatEntry:
         if self.completion and self.completion.selecting_completion:
             return False
 
-        self.chat_view.widget.grab_focus()
+        self.chat_view.grab_focus()
         return True
 
 
@@ -364,12 +362,6 @@ class CompletionEntry:
 
 class ComboBox:
 
-    class ListItem(GObject.Object):
-
-        def __init__(self, label):
-            super().__init__()
-            self.label = label
-
     def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
                  enable_arrow_keys=True, entry=None, visible=True, items=None,
                  item_selected_callback=None):
@@ -397,14 +389,16 @@ class ComboBox:
 
     def _create_combobox_gtk4(self, container, label, has_entry):
 
-        factory = self._create_factory(should_bind=not has_entry)
-        list_factory = self._create_factory(ellipsize=False)
-        self._model = Gio.ListStore(item_type=self.ListItem)
+        button_factory = self._create_factory(should_bind=not has_entry)
+        self._model = Gtk.StringList()
 
         self.dropdown = self._button = Gtk.DropDown(
-            factory=factory, list_factory=list_factory, model=self._model,
-            valign=Gtk.Align.CENTER, visible=True
+            model=self._model, valign=Gtk.Align.CENTER, visible=True
         )
+        default_factory = self.dropdown.get_factory()
+        self.dropdown.set_factory(button_factory)
+        self.dropdown.set_list_factory(default_factory)
+
         self._item_selected_handler = self.dropdown.connect("notify::selected", self._on_item_selected)
 
         if not has_entry:
@@ -488,10 +482,10 @@ class ComboBox:
         if has_entry_completion:
             self._entry_completion = CompletionEntry(self.entry)
 
-    def _create_factory(self, ellipsize=True, should_bind=True):
+    def _create_factory(self, should_bind=True):
 
         factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self._on_factory_setup, ellipsize)
+        factory.connect("setup", self._on_factory_setup)
 
         if should_bind:
             factory.connect("bind", self._on_factory_bind)
@@ -510,10 +504,12 @@ class ComboBox:
         if item is None:
             return
 
-        item_text = item.label
+        item_text = item.get_string()
 
         if self.get_text() != item_text:
             self.set_text(item_text)
+
+        self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
 
     def _update_item_positions(self, start_position, added=False):
 
@@ -543,12 +539,20 @@ class ComboBox:
         if item_id in self._positions:
             return
 
+        last_position = self.get_num_items()
+
         if position == -1:
-            position = self.get_num_items()
+            position = last_position
 
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.insert(position, self.ListItem(item))
+                if last_position == position:
+                    self._model.append(item)
+                else:
+                    num_removals = (last_position - position)
+                    inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
+                    self._model.splice(position, num_removals, inserted_items)
+
                 self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
         else:
             self.dropdown.insert_text(position, item)
@@ -584,7 +588,11 @@ class ComboBox:
         return self._ids.get(self.get_selected_pos())
 
     def get_text(self):
-        return self.entry.get_text()
+
+        if self.entry:
+            return self.entry.get_text()
+
+        return self.get_selected_id()
 
     def set_selected_pos(self, position):
 
@@ -600,7 +608,12 @@ class ComboBox:
         self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
-        self.entry.set_text(text)
+
+        if self.entry:
+            self.entry.set_text(text)
+            return
+
+        self.set_selected_id(text)
 
     def remove_pos(self, position):
 
@@ -639,7 +652,7 @@ class ComboBox:
 
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.remove_all()
+                self._model.splice(position=0, n_removals=self._model.get_n_items())
         else:
             self.dropdown.remove_all()
 
@@ -666,15 +679,13 @@ class ComboBox:
         label = list_item.get_child()
         list_item = list_item.get_item()
 
-        label.set_text(list_item.label)
+        label.set_text(list_item.get_string())
 
-    def _on_factory_setup(self, _factory, list_item, ellipsize):
+    def _on_factory_setup(self, _factory, list_item):
 
         label = Gtk.Label(xalign=0)
-
-        if ellipsize:
-            label.set_ellipsize(Pango.EllipsizeMode.END)
-            label.set_mnemonic_widget(self.widget)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        label.set_mnemonic_widget(self.widget)
 
         list_item.set_child(label)
 

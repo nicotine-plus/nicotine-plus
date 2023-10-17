@@ -121,8 +121,8 @@ class UserInfos(IconNotebook):
         if page is None:
             self.pages[user] = page = UserInfo(self, user)
 
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            self.prepend_page(page.container, user, focus_callback=page.on_focus,
+                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -197,7 +197,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_interests(msg)
 
-    def user_info_progress(self, user, position, total):
+    def user_info_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 
@@ -233,7 +233,6 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
-            self.horizontal_paned,
             self.ignore_unignore_user_label,
             self.info_bar_container,
             self.likes_list_container,
@@ -341,6 +340,7 @@ class UserInfo:
             self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu
         )
 
+        self.load_picture(None)
         self.populate_stats()
         self.update_button_states()
 
@@ -391,12 +391,13 @@ class UserInfo:
 
         if not data:
             if GTK_API_VERSION >= 4:
-                self.picture.set_paintable(None)
+                # Empty paintable to prevent container width from shrinking
+                self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
 
             self.picture_data = None
             self.picture_surface = None
 
-            self.placeholder_picture.set_visible(True)
+            self.picture_container.set_visible_child(self.placeholder_picture)
             return
 
         try:
@@ -408,7 +409,7 @@ class UserInfo:
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            self.picture_view.set_visible(True)
+            self.picture_container.set_visible_child(self.picture_view)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -433,6 +434,7 @@ class UserInfo:
 
         self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
 
         self.refresh_button.set_sensitive(True)
 
@@ -448,6 +450,7 @@ class UserInfo:
 
         self.indeterminate_progress = True
 
+        self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
@@ -668,7 +671,7 @@ class UserInfo:
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.widget.grab_focus()
+        self.description_view.grab_focus()
         return True
 
     def on_close(self, *_args):

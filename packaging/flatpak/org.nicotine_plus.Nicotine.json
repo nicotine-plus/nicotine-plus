@@ -1,7 +1,7 @@
 {
     "id" : "org.nicotine_plus.Nicotine",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "44",
+    "runtime-version" : "45",
     "sdk" : "org.gnome.Sdk",
     "command" : "nicotine",
     "separate-locales" : false,
@@ -21,7 +21,7 @@
             "name" : "nicotine-plus",
             "buildsystem" : "simple",
             "build-commands" : [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} . --no-build-isolation"
+                "pip3 install --no-deps --prefix=${FLATPAK_DEST} ."
             ],
             "sources" : [
                 {

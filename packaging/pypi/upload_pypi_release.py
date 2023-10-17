@@ -20,14 +20,11 @@
 import subprocess
 import sys
 
-""" Script used to create new Nicotine+ releases on PyPi """
-
 
 def create_packages():
     """Prepare source distribution and wheel."""
 
-    for target in ("sdist", "bdist_wheel"):
-        subprocess.check_call([sys.executable, "setup.py", target])
+    subprocess.check_call([sys.executable, "-m", "build", "--sdist", "--wheel"])
 
 
 def upload_packages():

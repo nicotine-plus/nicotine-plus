@@ -5,7 +5,6 @@
 ### Required
 
 - [python3](https://www.python.org/) >= 3.6;
-- [python3-gdbm](https://docs.python.org/3/library/dbm.html#module-dbm.gnu) for scanning shared files.
 - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30 for graphical interface;
 - [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
 
@@ -35,7 +34,7 @@
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi python3-gdbm
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
 ```
 
 - On Redhat/Fedora-based distributions:
@@ -47,7 +46,7 @@ sudo dnf install gspell gtk4 libaadwaita python3-gobject
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python3-gobject python3-dbm
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python3-gobject
 ```
 
 #### Installing Build Dependencies

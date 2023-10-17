@@ -24,7 +24,6 @@
 import operator
 import re
 
-from collections import defaultdict
 from itertools import islice
 
 from gi.repository import GObject
@@ -182,12 +181,16 @@ class Searches(IconNotebook):
     def populate_search_history(self):
 
         if not config.sections["searches"]["enable_history"]:
+            self.search_combobox.clear()
             return
 
         for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
             self.search_combobox.append(str(term))
 
     def add_search_history_item(self, term):
+
+        if not config.sections["searches"]["enable_history"]:
+            return
 
         self.search_combobox.remove_id(term)
         self.search_combobox.prepend(term)
@@ -218,8 +221,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.append_page(page.container, label, focus_callback=page.on_focus,
-                         close_callback=page.on_close, full_text=full_text)
+        self.prepend_page(page.container, label, focus_callback=page.on_focus,
+                          close_callback=page.on_close, full_text=full_text)
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page
@@ -265,7 +268,10 @@ class Searches(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
+        if page.show_page:
+            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
         del self.pages[token]
         page.destroy_widgets()
 
@@ -1020,6 +1026,9 @@ class Search:
         combobox = self.filter_comboboxes[filter_id]
         position = len(self.FILTER_PRESETS.get(filter_id, ()))
 
+        if position == combobox.get_num_items():
+            combobox.append("")  # Separator item
+
         if position:
             position += 1  # Separator item
 
@@ -1505,7 +1514,7 @@ class Search:
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.show()
 
-    def on_download_files(self, *_args, prefix=""):
+    def on_download_files(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
@@ -1513,10 +1522,11 @@ class Search:
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.downloads.get_file(user, file_path, prefix, size=size, file_attributes=file_attributes)
+            core.downloads.get_file(
+                user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected, _data):
-        self.on_download_files(prefix=selected)
+    def on_download_files_to_selected(self, selected_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_folder_path)
 
     def on_download_files_to(self, *_args):
 
@@ -1527,25 +1537,16 @@ class Search:
             initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
-    def on_download_folders(self, *_args, download_location=""):
-
-        if download_location:
-            # Custom download location specified, remember it when peer sends a folder
-            # contents reply
-            requested_folders = core.downloads.requested_folders
-        else:
-            requested_folders = defaultdict(dict)
+    def on_download_folders(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
-            if folder_path in requested_folders[user]:
+            if folder_path in core.downloads.requested_folders[user]:
                 # Ensure we don't send folder content requests for a folder more than once,
-                # e.g. when several selected resuls belong to the same folder
+                # e.g. when several selected results belong to the same folder
                 continue
-
-            requested_folders[user][folder_path] = download_location
 
             visible_files = []
             for row in self.all_data:
@@ -1553,20 +1554,17 @@ class Search:
                 if folder_path != row[16].rsplit("\\", 1)[0]:
                     continue
 
-                # remove_destination is False because we need the destination for the full folder
-                # contents response later
-                destination = core.downloads.get_folder_destination(user, folder_path, remove_destination=False)
-
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
                     _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
-                visible_files.append((file_path, destination, size, file_attributes))
+                visible_files.append((file_path, size, file_attributes))
 
-            core.search.request_folder_download(user, folder_path, visible_files)
+            core.search.request_folder_download(
+                user, folder_path, visible_files, download_folder_path=download_folder_path)
 
-    def on_download_folders_to_selected(self, selected, _data):
-        self.on_download_folders(download_location=selected)
+    def on_download_folders_to_selected(self, selected_folder_path, _data):
+        self.on_download_folders(download_folder_path=selected_folder_path)
 
     def on_download_folders_to(self, *_args):
 
@@ -1636,10 +1634,10 @@ class Search:
         active = self.expand_button.get_active()
 
         if active:
-            icon_name = "go-up-symbolic"
+            icon_name = "view-restore-symbolic"
             self.tree_view.expand_all_rows()
         else:
-            icon_name = "go-down-symbolic"
+            icon_name = "view-fullscreen-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
@@ -1822,11 +1820,10 @@ class Search:
 
     def on_focus(self, *_args):
 
-        if self.window.search_entry.get_text():
-            # Search entry contains text, let it grab focus instead
-            return True
+        if not self.window.search_entry.get_text():
+            # Only focus treeview if we're not entering a new search term
+            self.tree_view.grab_focus()
 
-        self.tree_view.grab_focus()
         return True
 
     def on_close(self, *_args):

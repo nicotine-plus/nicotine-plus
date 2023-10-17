@@ -46,6 +46,7 @@ class Downloads(Transfers):
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "downloads.json"))
 
         self.requested_folders = defaultdict(dict)
+        self.requested_folder_token = 0
 
         self._download_queue_timer_id = None
         self._retry_download_limits_timer_id = None
@@ -68,6 +69,10 @@ class Downloads(Transfers):
     def _start(self):
         super()._start()
         self.update_download_filters()
+
+    def _quit(self):
+        super()._quit()
+        self.requested_folder_token = 0
 
     def _server_login(self, msg):
 
@@ -189,7 +194,7 @@ class Downloads(Transfers):
         username = msg.user
         user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
         download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection timeout", "Remote file error", "Cancelled"}
+                             "User logged off", "Connection closed", "Connection timeout", "Cancelled"}
 
         for download in reversed(self.transfers.copy()):
             if (download.username == username
@@ -232,47 +237,44 @@ class Downloads(Transfers):
             break
 
     def _folder_contents_response(self, msg, check_num_files=True):
-        """Peer code 37.
-
-        When we got a contents of a folder, get all the files in it, but
-        skip the files in subfolders
-        """
+        """Peer code 37."""
 
         username = msg.init.target_user
-        file_list = msg.list
 
-        log.add_transfer("Received response for folder content request from user %s", username)
+        if username not in self.requested_folders:
+            return
 
-        for i in file_list:
-            for folder_path in file_list[i]:
-                if os.path.commonprefix([i, folder_path]) != folder_path:
-                    continue
+        for folder_path, files in msg.list.items():
+            if folder_path not in self.requested_folders[username]:
+                continue
 
-                files = file_list[i][folder_path][:]
-                num_files = len(files)
+            log.add_transfer("Received response for folder content request from user %s", username)
 
-                if check_num_files and num_files > 100:
-                    events.emit("download-large-folder", username, folder_path, num_files, msg)
-                    return
+            num_files = len(files)
 
-                destination = self.get_folder_destination(username, folder_path)
+            if check_num_files and num_files > 100:
+                events.emit("download-large-folder", username, folder_path, num_files, msg)
+                return
 
-                if num_files > 1:
-                    files.sort(key=lambda x: strxfrm(x[1]))
+            destination_folder_path = self.get_folder_destination(username, folder_path)
+            del self.requested_folders[username][folder_path]
 
-                log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
-                                  "Destination path: %(destination)s"), {
-                    "folder": folder_path,
-                    "user": username,
-                    "destination": destination
-                })
+            if num_files > 1:
+                files.sort(key=lambda x: strxfrm(x[1]))
 
-                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
-                    virtual_path = folder_path.rstrip("\\") + "\\" + basename
+            log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
+                              "Destination path: %(destination)s"), {
+                "folder": folder_path,
+                "user": username,
+                "destination": destination_folder_path
+            })
 
-                    self.get_file(
-                        username, virtual_path, folder_path=destination, size=file_size,
-                        file_attributes=file_attributes)
+            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                virtual_path = folder_path.rstrip("\\") + "\\" + basename
+
+                self.get_file(
+                    username, virtual_path, folder_path=destination_folder_path, size=file_size,
+                    file_attributes=file_attributes)
 
     def _transfer_request(self, msg):
         """Peer code 40."""
@@ -345,25 +347,24 @@ class Downloads(Transfers):
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
 
-        # Check if download exists in our default download folder
-        if self.get_complete_download_file_path(username, virtual_path, size):
-            cancel_reason = "Complete"
-            accepted = False
-
-        # If this file is not in your download queue, then it must be
-        # a remotely initiated download and someone is manually uploading to you
         if accepted and self.can_upload(username):
-            parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-            folder_path = os.path.join(
-                os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
+            if self.get_complete_download_file_path(username, virtual_path, size):
+                # Check if download exists in our default download folder
+                cancel_reason = "Complete"
+            else:
+                # If this file is not in your download queue, then it must be
+                # a remotely initiated download and someone is manually uploading to you
+                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+                folder_path = os.path.join(
+                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
 
-            transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path, status="Queued",
-                                size=size, token=token)
-            self.transfers.appendleft(transfer)
-            self.update_download(transfer)
-            core.watch_user(username)
+                transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path,
+                                    status="Queued", size=size, token=token)
+                self.transfers.appendleft(transfer)
+                self.update_download(transfer)
+                core.watch_user(username)
 
-            return slskmessages.TransferResponse(allowed=True, token=token)
+                return slskmessages.TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             "user": username,
@@ -526,7 +527,7 @@ class Downloads(Transfers):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 continue
 
-            if reason in {"File not shared.", "File not shared", "Remote file error"} and not download.legacy_attempt:
+            if reason == "File not shared." and not download.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
@@ -581,7 +582,7 @@ class Downloads(Transfers):
                 break
 
             # Already failed once previously, give up
-            self.abort_download(download, abort_reason="Remote file error")
+            self.abort_download(download, abort_reason="Connection closed")
 
             log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
                 "filename": virtual_path,
@@ -662,10 +663,15 @@ class Downloads(Transfers):
 
     # Transfer Actions #
 
-    def get_folder(self, username, folder):
-        core.send_message_to_peer(username, slskmessages.FolderContentsRequest(directory=folder, token=1))
+    def get_folder(self, username, folder_path, download_folder_path=None):
 
-    def get_file(self, username, virtual_path, folder_path="", transfer=None, size=0, file_attributes=None,
+        self.requested_folders[username][folder_path] = download_folder_path
+        self.requested_folder_token = slskmessages.increment_token(self.requested_folder_token)
+
+        core.send_message_to_peer(
+            username, slskmessages.FolderContentsRequest(directory=folder_path, token=self.requested_folder_token))
+
+    def get_file(self, username, virtual_path, folder_path=None, transfer=None, size=0, file_attributes=None,
                  bypass_filter=False, ui_callback=True):
 
         if folder_path:
@@ -761,7 +767,7 @@ class Downloads(Transfers):
 
         return False
 
-    def get_folder_destination(self, username, folder_path, root_folder_path="", remove_destination=True):
+    def get_folder_destination(self, username, folder_path, root_folder_path=None, download_folder_path=None):
 
         # Remove parent folders of the requested folder from path
         parent_folder_path = root_folder_path if root_folder_path else folder_path
@@ -769,17 +775,15 @@ class Downloads(Transfers):
         target_folders = folder_path.replace(removed_parent_folders, "").lstrip("\\").replace("\\", os.sep)
 
         # Check if a custom download location was specified
-        if (username in self.requested_folders and folder_path in self.requested_folders[username]
-                and self.requested_folders[username][folder_path]):
-            download_location = self.requested_folders[username][folder_path]
-
-            if remove_destination:
-                del self.requested_folders[username][folder_path]
-        else:
-            download_location = self.get_default_download_folder(username)
+        if not download_folder_path:
+            if (username in self.requested_folders and folder_path in self.requested_folders[username]
+                    and self.requested_folders[username][folder_path]):
+                download_folder_path = self.requested_folders[username][folder_path]
+            else:
+                download_folder_path = self.get_default_download_folder(username)
 
         # Merge download path with target folder name
-        return os.path.join(download_location, target_folders)
+        return os.path.join(download_folder_path, target_folders)
 
     def get_default_download_folder(self, username=None):
 
@@ -787,16 +791,7 @@ class Downloads(Transfers):
 
         # Check if username subfolders should be created for downloads
         if username and config.sections["transfers"]["usernamesubfolders"]:
-            try:
-                download_folder_path = os.path.join(download_folder_path, clean_file(username))
-                download_folder_path_encoded = encode_path(download_folder_path)
-
-                if not os.path.isdir(download_folder_path_encoded):
-                    os.makedirs(download_folder_path_encoded)
-
-            except Exception as error:
-                log.add(_("Unable to save download to username subfolder, falling back "
-                          "to default download folder. Error: %s"), error)
+            download_folder_path = os.path.join(download_folder_path, clean_file(username))
 
         return download_folder_path
 
@@ -836,7 +831,7 @@ class Downloads(Transfers):
 
         return corrected_basename
 
-    def get_complete_download_file_path(self, username, virtual_path, size, download_folder_path=""):
+    def get_complete_download_file_path(self, username, virtual_path, size, download_folder_path=None):
         """Returns the download path of a complete download, if available."""
 
         if not download_folder_path:
@@ -1009,7 +1004,7 @@ class Downloads(Transfers):
 
     def check_download_queue(self):
 
-        failed_statuses = {"Connection timeout", "Local file error", "Remote file error"}
+        failed_statuses = {"Connection closed", "Connection timeout", "File read error.", "Local file error"}
 
         for download in reversed(self.transfers):
             if download.status in failed_statuses:

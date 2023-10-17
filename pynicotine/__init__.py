@@ -16,6 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+__application_name__ = "Nicotine+"
+__application_id__ = "org.nicotine_plus.Nicotine"
+__version__ = "3.3.0.dev6"
+__author__ = "Nicotine+ Team"
+__copyright__ = """© 2004–2023 Nicotine+ Contributors
+© 2003–2004 Nicotine Contributors
+© 2001–2003 PySoulSeek Contributors"""
+__website_url__ = "https://nicotine-plus.org"
+__privileges_url__ = "https://www.slsknet.org/qtlogin.php?username=%s"
+__port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
+__issue_tracker_url__ = "https://github.com/nicotine-plus/nicotine-plus/issues"
+__translations_url__ = "https://nicotine-plus.org/doc/TRANSLATIONS"
+
 import argparse
 import io
 import os
@@ -33,7 +46,7 @@ def check_arguments():
 
     parser = argparse.ArgumentParser(
         description=_("Graphical client for the Soulseek peer-to-peer network"),
-        epilog=_("Website: %s") % config.website_url, add_help=False
+        epilog=_("Website: %s") % __website_url__, add_help=False
     )
 
     # Visible arguments
@@ -70,7 +83,7 @@ def check_arguments():
         help=_("start the program in headless mode (no GUI)")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version=f"{config.application_name} {config.version}",
+        "-v", "--version", action="version", version=f"{__application_name__} {__version__}",
         help=_("display version and exit")
     )
 
@@ -81,13 +94,13 @@ def check_arguments():
     multi_instance = False
 
     if args.config:
-        config.config_file_path = args.config
+        config.config_file_path = os.path.abspath(args.config)
 
         # Since a custom config was specified, allow another instance of the application to open
         multi_instance = True
 
     if args.user_data:
-        config.data_folder_path = args.user_data
+        config.data_folder_path = os.path.abspath(args.user_data)
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
@@ -163,10 +176,9 @@ def rename_process(new_name, debug_info=False):
 
 def rescan_shares():
 
-    error = core.shares.rescan_shares(use_thread=False)
     exit_code = 0
 
-    if error:
+    if not core.shares.rescan_shares(use_thread=False):
         log.add("--------------------------------------------------")
         log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
 

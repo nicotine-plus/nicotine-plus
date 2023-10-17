@@ -162,7 +162,7 @@ class CLI:
 
         self._print_log_message(log_message)
 
-    def _quit(self, *_args):
+    def _quit(self):
         """Restores TTY attributes and re-enables echo on quit."""
 
         if self._tty_attributes is None:

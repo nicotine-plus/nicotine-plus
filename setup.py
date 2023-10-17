@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2009-2010 quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2008-2009 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,75 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import glob
+from setuptools import setup  # pylint: disable=import-error
 
-from setuptools import find_packages
-from setuptools import setup
-
-from pynicotine.config import config
-from pynicotine.i18n import LOCALE_PATH
 from pynicotine.i18n import build_translations
 
 
 if __name__ == "__main__":
-
     build_translations()
-    setup(
-        name="nicotine-plus",
-        version=config.version,
-        license="GPLv3+",
-        description="Graphical client for the Soulseek peer-to-peer network",
-        long_description="""Nicotine+ is a graphical client for the Soulseek peer-to-peer
-network.
-
-Nicotine+ aims to be a pleasant, free and open source (FOSS)
-alternative to the official Soulseek client, providing additional
-functionality while keeping current with the Soulseek protocol.""",
-        author=config.author,
-        author_email="nicotine-team@lists.launchpad.net",
-        url=config.website_url,
-        platforms="any",
-        classifiers=[
-            "Development Status :: 5 - Production/Stable",
-            "Environment :: X11 Applications :: GTK",
-            "Intended Audience :: End Users/Desktop",
-            "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-            "Operating System :: OS Independent",
-            "Programming Language :: Python",
-            "Topic :: Communications :: Chat",
-            "Topic :: Communications :: File Sharing",
-            "Topic :: Internet",
-            "Topic :: System :: Networking"
-        ],
-        packages=find_packages(include=["pynicotine", "pynicotine.*"]),
-        package_data={"": ["*.bin", "*.ui", "PLUGININFO"] + glob.glob(LOCALE_PATH + "/**/*.mo", recursive=True)},
-        scripts=["nicotine"],
-        data_files=[
-            ("share/applications", ["data/%s.desktop" % config.application_id]),
-            ("share/metainfo", ["data/%s.appdata.xml" % config.application_id]),
-            ("share/man/man1", ["data/nicotine.1"]),
-            ("share/icons/hicolor/16x16/apps",
-                ["pynicotine/gtkgui/icons/hicolor/16x16/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/24x24/apps",
-                ["pynicotine/gtkgui/icons/hicolor/24x24/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/32x32/apps",
-                ["pynicotine/gtkgui/icons/hicolor/32x32/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/48x48/apps",
-                ["pynicotine/gtkgui/icons/hicolor/48x48/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/64x64/apps",
-                ["pynicotine/gtkgui/icons/hicolor/64x64/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/128x128/apps",
-                ["pynicotine/gtkgui/icons/hicolor/128x128/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/256x256/apps",
-                ["pynicotine/gtkgui/icons/hicolor/256x256/apps/%s.png" % config.application_id]),
-            ("share/icons/hicolor/scalable/apps",
-                ["pynicotine/gtkgui/icons/hicolor/scalable/apps/%s.svg" % config.application_id]),
-            ("share/icons/hicolor/symbolic/apps",
-                ["pynicotine/gtkgui/icons/hicolor/symbolic/apps/%s-symbolic.svg" % config.application_id]),
-            ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
-            ("share/icons/hicolor/scalable/status", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/status/*.svg"))
-        ],
-        python_requires=">=3.6",
-        install_requires=["PyGObject>=3.22"],
-        extras_require={"packaging": ["cx_Freeze"], "test": ["pycodestyle", "pylint"]}
-    )
+    setup()
