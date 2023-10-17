@@ -43,6 +43,7 @@ LANGUAGES = (
     ("nl", "Nederlands"),
     ("pl", "Polski"),
     ("pt_BR", "Português (Brasil)"),
+    ("ro", "Română"),
     ("ru", "Русский"),
     ("sk", "Slovenčina"),
     ("sv", "Svenska"),
