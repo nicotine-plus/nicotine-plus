@@ -273,12 +273,12 @@ class UserBrowse:
 
         core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
 
-    def upload_folder(self, username, requested_folder_path, recurse=False):
+    def upload_folder(self, username, requested_folder_path, local_shares, recurse=False):
 
         if not requested_folder_path or not username:
             return
 
-        for folder_path, files in self.user_shares[username].items():
+        for folder_path, files in local_shares.items():
             if not recurse and requested_folder_path != folder_path:
                 continue
 

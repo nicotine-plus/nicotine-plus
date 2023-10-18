@@ -849,7 +849,8 @@ class UserBrowse:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
-        core.userbrowse.upload_folder(user, self.selected_folder_path, recurse=recurse)
+        core.userbrowse.upload_folder(
+            user, self.selected_folder_path, local_shares=core.userbrowse.user_shares[self.user], recurse=recurse)
 
     def on_upload_folder_to(self, *_args, recurse=False):
 
