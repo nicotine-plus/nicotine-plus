@@ -147,8 +147,12 @@ class Logger:
         try:
             log_file = self._get_log_file(folder_path, basename)
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-            text = f"{timestamp} {text}\n"
+
+            if timestamp_format:
+                timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+                text = f"{timestamp} {text}\n"
+            else:
+                text += "\n"
 
             log_file.handle.write(text.encode("utf-8", "replace"))
             log_file.last_active = time.time()
@@ -260,7 +264,7 @@ class Logger:
                 basename=self.debug_file_name, text=msg)
 
         try:
-            timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
+            timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
             events.emit("log-message", timestamp_format, msg, title, level)
 
         except Exception as error:

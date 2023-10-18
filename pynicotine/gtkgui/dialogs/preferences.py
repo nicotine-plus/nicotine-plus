@@ -1198,6 +1198,7 @@ class ChatsPage:
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.enable_tts_toggle,
+            self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
@@ -1212,6 +1213,12 @@ class ChatsPage:
 
         self.application = application
         self.completion_required = False
+
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -1982,6 +1989,7 @@ class LoggingPage:
             self.chatroom_log_folder_label,
             self.container,
             self.debug_log_folder_label,
+            self.format_codes_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
             self.log_private_chat_toggle,
@@ -1992,6 +2000,12 @@ class LoggingPage:
         ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
+
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,

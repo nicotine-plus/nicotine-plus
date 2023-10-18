@@ -152,8 +152,11 @@ class CLI:
 
     def _log_message(self, timestamp_format, msg, _title, _level):
 
-        timestamp = time.strftime(timestamp_format)
-        log_message = f"[{timestamp}] {msg}"
+        if timestamp_format:
+            timestamp = time.strftime(timestamp_format)
+            log_message = f"[{timestamp}] {msg}"
+        else:
+            log_message = msg
 
         if self._input_processor.has_custom_prompt:
             # Don't print log messages while custom prompt is active
