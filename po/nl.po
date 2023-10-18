@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-16 02:35+0300\n"
-"PO-Revision-Date: 2023-10-06 02:10+0000\n"
+"PO-Revision-Date: 2023-10-17 17:13+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -32,15 +32,14 @@ msgstr ""
 "Nicotine+ is een grafische cliënt voor het Soulseek peer-to-peer netwerk."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ wil een aangename, gratis en open source (FOSS) alternatief zijn "
-"voor de officiële Soulseek-cliënt, die extra functionaliteit biedt en up-to-"
-"date blijft met het Soulseek-protocol."
+"Nicotine+ wil een lichtgewicht aangename, gratis en open source (FOSS) "
+"alternatief zijn voor de officiële Soulseek-cliënt, met een logische set "
+"features."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:769
@@ -387,9 +386,8 @@ msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Geen grafische omgeving beschikbaar, gebruik headless (geen GUI) modus"
 
 #: pynicotine/gtkgui/application.py:297
-#, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
-msgstr "Wil je echt afsluiten?"
+msgstr "Je bent nog aan het uploaden. Wil je echt afsluiten?"
 
 #: pynicotine/gtkgui/application.py:298
 msgid "Wait for uploads to finish"
@@ -1076,7 +1074,7 @@ msgstr "Filters gelukt"
 #: pynicotine/gtkgui/dialogs/preferences.py:612
 #: pynicotine/gtkgui/dialogs/preferences.py:651
 msgid "Public"
-msgstr ""
+msgstr "Openbaar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1087,7 +1085,7 @@ msgstr "Vertrouwde vrienden"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 msgid "Accessible To"
-msgstr ""
+msgstr "Toegankelijk voor"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:620
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1632,28 +1630,24 @@ msgid "_Preferences"
 msgstr "_Voorkeuren"
 
 #: pynicotine/gtkgui/mainwindow.py:512
-#, fuzzy
 msgid "Browse _Public Shares"
-msgstr "_Bekijk publieke shares"
+msgstr "_Bekijk openbare shares"
 
 #: pynicotine/gtkgui/mainwindow.py:513
-#, fuzzy
 msgid "Browse _Buddy Shares"
-msgstr "Bekijk vrienden-shares"
+msgstr "Bekijk shares van vriend"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Bekijk vrienden-shares"
+msgstr "Bekijk share van vetrouwde vriend"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
 msgstr "Shares opnieuw scannen"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Configureer shares"
+msgstr "Configureer _shares"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1680,9 +1674,8 @@ msgid "_About Nicotine+"
 msgstr "_Over Nicotine+"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Verken gedeelde bestanden"
+msgstr "_Verken shares"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1784,9 +1777,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Uploads: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1330
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Gedeelde bestanden aan het scannen"
+msgstr "Shares worden voorbereid"
 
 #: pynicotine/gtkgui/mainwindow.py:1337
 msgid "Scanning Shares"
@@ -2058,9 +2050,8 @@ msgid "Transferring"
 msgstr "Overbrengen"
 
 #: pynicotine/gtkgui/transfers.py:91
-#, fuzzy
 msgid "Connection closed"
-msgstr "Verbinding gesloten door peer"
+msgstr "Verbinding gesloten"
 
 #: pynicotine/gtkgui/transfers.py:92
 msgid "Connection timeout"
@@ -2107,9 +2098,8 @@ msgid "Local file error"
 msgstr "Lokale bestandsfout"
 
 #: pynicotine/gtkgui/transfers.py:107
-#, fuzzy
 msgid "File read error"
-msgstr "Map download fout"
+msgstr "Fout bij het lezen van het bestand"
 
 #: pynicotine/gtkgui/transfers.py:148
 msgid "Queue"
@@ -2619,18 +2609,18 @@ msgid "Group by User"
 msgstr "Groeperen per gebruiker"
 
 #: pynicotine/headless/application.py:73
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Wil je echt afsluiten?"
+msgstr "Wil je echt afsluiten? %s"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "De volgende shares zijn niet beschikbaar:"
 
 #: pynicotine/headless/application.py:98
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Opnieuw scannen? %s"
 
 #: pynicotine/logfacility.py:160
 #, python-format
@@ -3867,14 +3857,14 @@ msgid "Not joined in room %s"
 msgstr "Niet in de kamer %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:385
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Geen share genaamd \"%s\""
+msgstr "Geen chat met gebruiker %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:389
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Privéchat sluiten"
+msgstr "Privéchat met gebruiker %s gesloten"
 
 #: pynicotine/plugins/core_commands/__init__.py:466
 #, python-format
@@ -3899,7 +3889,7 @@ msgstr "Ontnegeer %s"
 #: pynicotine/plugins/core_commands/__init__.py:543
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s shares zichtbaar (%(num_total)s geconfigureerd)"
 
 #: pynicotine/plugins/core_commands/__init__.py:555
 #, python-format
@@ -5842,7 +5832,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Voor iedereen zichtbaar:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
