@@ -541,10 +541,10 @@ class SayChatroom(ServerMessage):
 
     __slots__ = ("room", "msg", "user")
 
-    def __init__(self, room=None, msg=None):
+    def __init__(self, room=None, msg=None, user=None):
         self.room = room
         self.msg = msg
-        self.user = None
+        self.user = user
 
     def make_network_message(self):
         msg = bytearray()

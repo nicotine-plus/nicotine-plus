@@ -112,6 +112,7 @@ class RoomList(Popover):
             ("remove-room", self.remove_room),
             ("room-list", self.room_list),
             ("server-disconnect", self.clear),
+            ("show-room", self.show_room),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room)
         ):
@@ -158,7 +159,12 @@ class RoomList(Popover):
             return
 
         user_count = self.list_view.get_row_value(iterator, "users_data")
-        user_count = (user_count - 1 if decrement else user_count + 1)
+
+        if decrement:
+            if user_count > 0:
+                user_count -= 1
+        else:
+            user_count += 1
 
         if self.list_view.get_row_value(iterator, "is_private_data"):
             h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
@@ -175,11 +181,11 @@ class RoomList(Popover):
         self.add_room(msg.room, is_private=True)
 
     def join_room(self, msg):
-
-        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(True)
-
         self.update_room_user_count(msg.room)
+
+    def show_room(self, room, *_args):
+        if room == core.chatrooms.GLOBAL_ROOM_NAME:
+            self.toggle_public_feed(True)
 
     def remove_room(self, room):
 
@@ -242,7 +248,7 @@ class RoomList(Popover):
             return
 
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_global_room()
+            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
             self.close(use_transition=False)
             return
 
