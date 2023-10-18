@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,63 +19,54 @@
 import os
 import sys
 
-from pynicotine.config import config
 from pynicotine.logfacility import log
 
 
-def check_gtk_version():
+def check_gtk_version(gtk_api_version):
 
     # Require minor version of GTK
-    if os.getenv("NICOTINE_GTK_VERSION", '4') == '4':
-        gtk_version = (4, 6, 6)
+    if gtk_api_version == "4":
+        pygobject_version = (3, 42, 1)
     else:
-        os.environ["NICOTINE_LIBADWAITA"] = '0'
-        gtk_version = (3, 22, 30)
-
-    if os.getenv("NICOTINE_LIBADWAITA") is None:
-        os.environ["NICOTINE_LIBADWAITA"] = str(int(
-            sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
-        ))
-
-    gtk_major_version, *_unused = gtk_version
+        gtk_api_version = "3"
+        pygobject_version = (3, 26, 1)
 
     try:
         import gi
+        gi.check_version(pygobject_version)
 
-    except ImportError:
-        return _("Cannot find %s, please install it.") % ("pygobject",)
+    except (ImportError, ValueError):
+        if gtk_api_version == "4":
+            return check_gtk_version(gtk_api_version="3")
+
+        return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
 
     try:
-        api_version = (gtk_major_version, 0)
-        gi.require_version('Gtk', '.'.join(map(str, api_version)))
+        gi.require_version("Gtk", f"{gtk_api_version}.0")
 
     except ValueError:
-        if gtk_major_version == 4:
-            os.environ["NICOTINE_GTK_VERSION"] = '3'
-            return check_gtk_version()
+        if gtk_api_version == "4":
+            return check_gtk_version(gtk_api_version="3")
 
-        return _("Cannot find %s or newer, please install it.") % ("GTK " + '.'.join(map(str, gtk_version)))
+        return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
 
-    try:
-        from gi.repository import Gtk
+    from gi.repository import Gtk
 
-    except ImportError:
-        return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
+    if sys.platform == "win32":
+        # Ensure all Windows-specific APIs are available
+        gi.require_version("GdkWin32", f"{gtk_api_version}.0")
+        from gi.repository import GdkWin32  # noqa: F401  # pylint:disable=no-name-in-module,unused-import
 
-    if Gtk.check_version(*gtk_version):
-        return _("You are using an unsupported version of GTK %(major_version)s. You should install "
-                 "GTK %(complete_version)s or newer.") % {
-            "major_version": gtk_major_version,
-            "complete_version": '.'.join(map(str, gtk_version))}
+    gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": gtk_version})
 
-    config.gtk_version = f"{gtk_major_version}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
     return None
 
 
 def run(hidden, ci_mode, multi_instance):
-    """ Run Nicotine+ GTK GUI """
+    """Run Nicotine+ GTK GUI."""
 
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
         resources_folder = executable_folder
@@ -91,13 +82,17 @@ def run(hidden, ci_mode, multi_instance):
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
 
     if sys.platform == "win32":
-        # Disable client-side decorations when header bar is disabled
-        os.environ["GTK_CSD"] = "0"
-
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
-    error = check_gtk_version()
+        # Use Cairo renderer for now, GL renderer has memory leaks
+        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
+        os.environ["GSK_RENDERER"] = "cairo"
+
+        # Disable client-side decorations when header bar is disabled
+        os.environ["GTK_CSD"] = "0"
+
+    error = check_gtk_version(gtk_api_version=os.getenv("NICOTINE_GTK_VERSION", "4"))
 
     if error:
         log.add(error)
@@ -108,8 +103,6 @@ def run(hidden, ci_mode, multi_instance):
     if not ci_mode and Gdk.Display.get_default() is None:
         log.add(_("No graphical environment available, using headless (no GUI) mode"))
         return None
-
-    log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
     from pynicotine.gtkgui.application import Application
     return Application(hidden, ci_mode, multi_instance).run()

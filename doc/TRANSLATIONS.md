@@ -66,7 +66,7 @@ Nicotine+ will first try to find your translation files in your project folder, 
 In order to use the updated translations when running Nicotine+ from your project folder, you need to generate `.mo` files by running:
 
 ```sh
-python3 setup.py build
+python3 -m build
 ```
 
 The newly generated files will end up in the `mo/` folder.
@@ -81,4 +81,4 @@ Nicotine+ will try to automatically detect your language based on the system loc
 
 ## Adding Yourself to Translators
 
-If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/master/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/master/pynicotine/gtkgui/dialogs/about.py). Add yourself to the top of matching section and then create a PR (pull request).
+If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/gtkgui/dialogs/about.py). Add yourself to the top of matching section and then create a PR (pull request).

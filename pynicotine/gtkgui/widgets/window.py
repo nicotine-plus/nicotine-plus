@@ -16,114 +16,60 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 from pynicotine.gtkgui.application import GTK_API_VERSION
-
-
-""" Window """
 
 
 class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive
 
-    def __init__(self, window):
-
-        self.window = window
-
-        signal_name = "notify::focus-widget" if GTK_API_VERSION >= 4 else "set-focus"
-        window.connect(signal_name, self.on_focus_widget_changed)
-
-    def connect_signal(self, widget, signal, callback):
-
-        try:
-            widget.handler_block_by_func(callback)
-
-        except TypeError:
-            widget.connect(signal, callback)
-            return
-
-        widget.handler_unblock_by_func(callback)
+    def __init__(self, widget):
+        self.widget = widget
 
     def get_surface(self):
 
         if GTK_API_VERSION >= 4:
-            return self.window.get_surface()
+            return self.widget.get_surface()
 
-        return self.window.get_window()
+        return self.widget.get_window()
 
     def get_width(self):
 
         if GTK_API_VERSION >= 4:
-            return self.window.get_width()
+            return self.widget.get_width()
 
-        width, _height = self.window.get_size()
+        width, _height = self.widget.get_size()
         return width
 
     def get_height(self):
 
         if GTK_API_VERSION >= 4:
-            return self.window.get_height()
+            return self.widget.get_height()
 
-        _width, height = self.window.get_size()
+        _width, height = self.widget.get_size()
         return height
 
+    def get_position(self):
+
+        if GTK_API_VERSION >= 4:
+            return None
+
+        return self.widget.get_position()
+
     def is_active(self):
-        return self.window.is_active()
+        return self.widget.is_active()
+
+    def is_maximized(self):
+        return self.widget.is_maximized()
 
     def is_visible(self):
-        return self.window.get_visible()
+        return self.widget.get_visible()
 
     def set_title(self, title):
-        self.window.set_title(title)
+        self.widget.set_title(title)
 
-    @staticmethod
-    def on_popover_closed(popover):
+    def hide(self):
+        self.widget.set_visible(False)
 
-        focus_widget = popover.get_parent() if GTK_API_VERSION >= 4 else popover.get_relative_to()
-
-        if focus_widget.get_focusable():
-            focus_widget.grab_focus()
-            return
-
-        focus_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
-
-    @staticmethod
-    def on_combobox_popup_shown(combobox, param):
-
-        visible = combobox.get_property(param.name)
-
-        if visible:
-            return
-
-        # Always focus the text entry after the popup is closed
-        if combobox.get_has_entry():
-            entry = combobox.get_child()
-            entry.grab_focus_without_selecting()
-            entry.set_position(-1)
-            return
-
-        # Workaround for GTK 4 issue where wrong widget receives focus after closing popup
-        if GTK_API_VERSION >= 4:
-            combobox.grab_focus()
-
-    def on_focus_widget_changed(self, window, arg):
-
-        widget = window.get_property(arg.name) if GTK_API_VERSION >= 4 else arg
-
-        if widget is None:
-            return
-
-        # Workaround for GTK 4 issue where wrong widget receives focus after closing popover
-        if GTK_API_VERSION >= 4:
-            popover = widget.get_ancestor(Gtk.Popover)
-
-            if popover is not None:
-                self.connect_signal(popover, "closed", self.on_popover_closed)
-                return
-
-        combobox = widget.get_ancestor(Gtk.ComboBoxText)
-
-        if combobox is not None:
-            self.connect_signal(combobox, "notify::popup-shown", self.on_combobox_popup_shown)
+    def close(self, *_args):
+        self.widget.close()

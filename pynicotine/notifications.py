@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -29,38 +29,15 @@ class Notifications:
 
     def __init__(self):
 
-        self.chat_hilites = {
-            "rooms": [],
-            "private": []
-        }
         self.tts = deque()
         self._tts_thread = None
 
         events.connect("quit", self._quit)
 
     def _quit(self):
-        self.chat_hilites.clear()
         self.tts.clear()
 
-    """ Chat Hilites """
-
-    def add_hilite_item(self, location, item):
-
-        if not item or item in self.chat_hilites[location]:
-            return False
-
-        self.chat_hilites[location].append(item)
-        return True
-
-    def remove_hilite_item(self, location, item):
-
-        if item not in self.chat_hilites[location]:
-            return False
-
-        self.chat_hilites[location].remove(item)
-        return True
-
-    """ Notification Messages """
+    # Notification Messages #
 
     def show_notification(self, message, title=None):
         events.emit("show-notification", message, title=title)
@@ -71,13 +48,13 @@ class Notifications:
     def show_download_notification(self, message, title=None, high_priority=False):
         events.emit("show-download-notification", message, title=title, high_priority=high_priority)
 
-    def show_private_chat_notification(self, user, message, title=None):
-        events.emit("show-private-chat-notification", user, message, title=title)
+    def show_private_chat_notification(self, username, message, title=None):
+        events.emit("show-private-chat-notification", username, message, title=title)
 
     def show_search_notification(self, search_token, message, title=None):
         events.emit("show-search-notification", search_token, message, title=title)
 
-    """ TTS """
+    # TTS #
 
     def new_tts(self, message, args=None):
 
@@ -90,7 +67,7 @@ class Notifications:
                                   .replace("(", " ").replace(")", " "))
 
             try:
-                message = message % args
+                message %= args
 
             except Exception as error:
                 log.add(_("Text-to-speech for message failed: %s"), error)

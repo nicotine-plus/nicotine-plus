@@ -6,8 +6,8 @@
 
 # MIT License
 
-# Copyright (c) 2020-2022 Nicotine+ Contributors
-# Copyright (c) 2014-2022 Tom Wallroth
+# Copyright (c) 2014-2023 Tom Wallroth
+# Copyright (c) 2020-2023 Nicotine+ Contributors
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ import io
 import json
 import operator
 import os
+import re
 import struct
 import sys
 
@@ -74,7 +75,17 @@ def _bytes_to_int(b):
 
 
 class TinyTag(object):
-    def __init__(self, filehandler=None, filesize=0, ignore_errors=False):
+    SUPPORTED_FILE_EXTENSIONS = [
+        '.mp1', '.mp2', '.mp3',
+        '.oga', '.ogg', '.opus',
+        '.wav', '.flac', '.wma',
+        '.m4b', '.m4a', '.m4r', '.m4v', '.mp4', '.aax', '.aaxc',
+        '.aiff', '.aifc', '.aif', '.afc'
+    ]
+    _file_extension_mapping = None
+    _magic_bytes_mapping = None
+
+    def __init__(self, filehandler, filesize, ignore_errors=False):
         # This is required for compatibility between python2 and python3
         # in python2 there is a difference between `str` and `unicode`
         # whereas in python3 everything every string is `unicode` by default and
@@ -91,7 +102,6 @@ class TinyTag(object):
         self.audio_offset = None
         self.bitrate = None
         self.channels = None
-        self.is_vbr = False
         self.comment = None
         self.composer = None
         self.disc = None
@@ -105,11 +115,11 @@ class TinyTag(object):
         self.track = None
         self.track_total = None
         self.year = None
+        self.is_vbr = False  # Nicotine+ extension
         self._parse_tags = True
         self._load_image = False
         self._image_data = None
         self._ignore_errors = ignore_errors
-        self._mapping = None
 
     def as_dict(self):
         return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}
@@ -121,30 +131,93 @@ class TinyTag(object):
     def get_image(self):
         return self._image_data
 
-    def get(self, filename, size, tags=True, duration=True, image=False, ignore_errors=False, encoding=None):
-        parser_class = None
-        if self._mapping is None:
-            self._mapping = {
+    @classmethod
+    def _get_parser_for_filename(cls, filename):
+        if cls._file_extension_mapping is None:
+            cls._file_extension_mapping = {
                 (b'.mp1', b'.mp2', b'.mp3'): ID3,
                 (b'.oga', b'.ogg', b'.opus'): Ogg,
                 (b'.wav',): Wave,
                 (b'.flac',): Flac,
                 (b'.wma',): Wma,
-                (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4'): MP4,
-                (b'.aiff', b'.aifc', b'.aif', b'.afc'): Aiff
+                (b'.m4b', b'.m4a', b'.m4r', b'.m4v', b'.mp4', b'.aax', b'.aaxc'): MP4,
+                (b'.aiff', b'.aifc', b'.aif', b'.afc'): Aiff,
             }
-        for ext, tagclass in self._mapping.items():
-            if filename.lower().endswith(ext):
-                parser_class = tagclass
-        if parser_class is None:
-            return None
-        with io.open(filename, 'rb') as af:
-            tag = parser_class(af, size, ignore_errors=ignore_errors)
+        if not isinstance(filename, bytes):  # convert filename to binary
+            try:
+                filename = filename.encode('ASCII', errors='ignore')
+            except AttributeError:
+                filename = bytes(filename)  # pathlib
+        filename = filename.lower()
+        for ext, tagclass in cls._file_extension_mapping.items():
+            if filename.endswith(ext):
+                return tagclass
+
+    @classmethod
+    def _get_parser_for_file_handle(cls, fh):
+        # https://en.wikipedia.org/wiki/List_of_file_signatures
+        if cls._magic_bytes_mapping is None:
+            cls._magic_bytes_mapping = {
+                b'^ID3': ID3,
+                b'^\xff\xfb': ID3,
+                b'^OggS': Ogg,
+                b'^RIFF....WAVE': Wave,
+                b'^fLaC': Flac,
+                b'^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C': Wma,
+                b'....ftypM4A': MP4,  # https://www.file-recovery.com/m4a-signature-format.htm
+                b'....ftypaax': MP4,  # Audible proprietary M4A container
+                b'....ftypaaxc': MP4,  # Audible proprietary M4A container
+                b'\xff\xf1': MP4,  # https://www.garykessler.net/library/file_sigs.html
+                b'^FORM....AIFF': Aiff,
+                b'^FORM....AIFC': Aiff,
+            }
+        header = fh.peek(max(len(sig) for sig in cls._magic_bytes_mapping))
+        for magic, parser in cls._magic_bytes_mapping.items():
+            if re.match(magic, header):
+                return parser
+
+    @classmethod
+    def get_parser_class(cls, filename=None, filehandle=None):
+        if cls != TinyTag:  # if `get` is invoked on TinyTag, find parser by ext
+            return cls  # otherwise use the class on which `get` was invoked
+        if filename:
+            parser_class = cls._get_parser_for_filename(filename)
+            if parser_class is not None:
+                return parser_class
+        # try determining the file type by magic byte header
+        if filehandle:
+            parser_class = cls._get_parser_for_file_handle(filehandle)
+            if parser_class is not None:
+                return parser_class
+        raise TinyTagException('No tag reader found to support filetype! ')
+
+    @classmethod
+    def get(cls, filename=None, tags=True, duration=True, image=False,
+            ignore_errors=False, encoding=None, file_obj=None):
+        should_open_file = (file_obj is None)
+        if should_open_file:
+            try:
+                file_obj = io.open(filename, 'rb')
+            except TypeError:
+                file_obj = io.open(str(filename.absolute()), 'rb')  # Python 3.4/3.5 pathlib support
+        elif isinstance(file_obj, io.BytesIO):
+            file_obj = io.BufferedReader(file_obj)  # buffered reader to support peeking
+        try:
+            file_obj.seek(0, os.SEEK_END)
+            filesize = file_obj.tell()
+            file_obj.seek(0)
+            if filesize <= 0:
+                return TinyTag(None, filesize)
+            parser_class = cls.get_parser_class(filename, file_obj)
+            tag = parser_class(file_obj, filesize, ignore_errors=ignore_errors)
             tag._filename = filename
             tag._default_encoding = encoding
             tag.load(tags=tags, duration=duration, image=image)
             tag.extra = dict(tag.extra)  # turn default dict into dict so that it can throw KeyError
             return tag
+        finally:
+            if should_open_file:
+                file_obj.close()
 
     def __str__(self):
         return json.dumps(OrderedDict(sorted(self.as_dict().items())))
@@ -358,8 +431,7 @@ class MP4(TinyTag):
         # need test-data for this
         # b'cpil':   {b'data': Parser.make_data_atom_parser('extra.compilation')},
         b'\xa9day': {b'data': Parser.make_data_atom_parser('year')},
-        # need test-data for this
-        # b'\xa9des': {b'data': Parser.make_data_atom_parser('description')},
+        b'\xa9des': {b'data': Parser.make_data_atom_parser('extra.description')},
         b'\xa9gen': {b'data': Parser.make_data_atom_parser('genre')},
         b'\xa9lyr': {b'data': Parser.make_data_atom_parser('extra.lyrics')},
         b'\xa9mvn': {b'data': Parser.make_data_atom_parser('movement')},
@@ -367,8 +439,7 @@ class MP4(TinyTag):
         b'\xa9wrt': {b'data': Parser.make_data_atom_parser('composer')},
         b'aART': {b'data': Parser.make_data_atom_parser('albumartist')},
         b'cprt': {b'data': Parser.make_data_atom_parser('extra.copyright')},
-        # need test-data for this
-        # b'desc': {b'data': Parser.make_data_atom_parser('extra.description')},
+        b'desc': {b'data': Parser.make_data_atom_parser('extra.description')},
         b'disk': {b'data': Parser.make_number_parser('disc', 'disc_total')},
         b'gnre': {b'data': Parser.parse_id3v1_genre},
         b'trkn': {b'data': Parser.make_number_parser('track', 'track_total')},
@@ -876,8 +947,10 @@ class Ogg(TinyTag):
             'artist': 'artist',
             'date': 'year',
             'tracknumber': 'track',
+            'tracktotal': 'track_total',
             'totaltracks': 'track_total',
             'discnumber': 'disc',
+            'disctotal': 'disc_total',
             'totaldiscs': 'disc_total',
             'genre': 'genre',
             'description': 'comment',
@@ -1050,7 +1123,7 @@ class Flac(TinyTag):
                 if len(stream_info_header) < 34:  # invalid streaminfo
                     return
                 header = struct.unpack('HH3s3s8B16s', stream_info_header)
-                # From the ciph documentation:
+                # From the xiph documentation:
                 # py | <bits>
                 # ----------------------------------------------
                 # H  | <16>  The minimum block size (in samples)

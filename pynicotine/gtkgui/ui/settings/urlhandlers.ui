@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="spacing">18</property>
+  <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
+    <property name="spacing">18</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">URL Handlers</property>
             <property name="halign">start</property>
-            <property name="selectable">True</property>
-            <property name="xalign">0</property>
-            <property name="wrap">True</property>
+            <property name="label" translatable="yes">URL Handlers</property>
             <property name="mnemonic-widget">protocol_list_container</property>
+            <property name="selectable">True</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
             <style>
               <class name="heading"/>
             </style>
@@ -26,100 +26,48 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
             <property name="label" translatable="yes">Instances of $ are replaced by the URL. Default system applications are used in cases where a protocol has not been configured.</property>
             <property name="selectable">True</property>
+            <property name="visible">True</property>
             <property name="wrap">True</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
+            <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
+              <object class="GtkLabel" id="media_player_label">
                 <property name="label" translatable="yes">Media player command:</property>
+                <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-                <property name="mnemonic-widget">media_player_combobox</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="media_player_combobox">
-                <property name="visible">True</property>
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>amarok -a $</item>
-                  <item>audacious -e $</item>
-                  <item>exaile $</item>
-                  <item>rhythmbox $</item>
-                  <item>xmms2 add -f $</item>
-                </items>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="width-chars">12</property>
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <signal name="icon-press" handler="on_default_media_player"/>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="homogeneous">True</property>
             <property name="spacing">12</property>
+            <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
+              <object class="GtkLabel" id="file_manager_label">
                 <property name="label" translatable="yes">File manager command:</property>
+                <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
-                <property name="mnemonic-widget">file_manager_combobox</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="file_manager_combobox">
-                <property name="visible">True</property>
-                <property name="has-entry">True</property>
-                <property name="valign">center</property>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>explorer $</item>
-                  <item>nautilus $</item>
-                  <item>nemo $</item>
-                  <item>caja $</item>
-                  <item>thunar $</item>
-                  <item>dolphin $</item>
-                  <item>konqueror $</item>
-                  <item>krusader --left $</item>
-                  <item>xterm -e mc $</item>
-                </items>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="width-chars">12</property>
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <signal name="icon-press" handler="on_default_file_manager"/>
-                  </object>
-                </child>
+                <property name="xalign">0</property>
               </object>
             </child>
           </object>
@@ -128,17 +76,17 @@
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="visible">True</property>
         <property name="vexpand">True</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
             <property name="orientation">vertical</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="protocol_list_container">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <property name="visible">True</property>
                 <style>
                   <class name="border-bottom"/>
                 </style>
@@ -146,34 +94,34 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="margin-start">6</property>
-                <property name="margin-end">6</property>
-                <property name="margin-top">6</property>
                 <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
                 <property name="spacing">6</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkButton" id="_add_handler_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Add…</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_add_handler"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">list-add-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Add…</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_add_handler_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>
@@ -185,26 +133,26 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="_edit_handler_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Edit…</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_edit_handler"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">document-edit-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Edit…</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_edit_handler_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>
@@ -216,26 +164,26 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="_remove_handler_button">
-                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Remove</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_remove_handler"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="spacing">6</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
                             <property name="icon-name">list-remove-symbolic</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="ellipsize">end</property>
                             <property name="label" translatable="yes">Remove</property>
-                            <property name="use-underline">True</property>
                             <property name="mnemonic-widget">_remove_handler_button</property>
+                            <property name="use-underline">True</property>
+                            <property name="visible">True</property>
                           </object>
                         </child>
                       </object>

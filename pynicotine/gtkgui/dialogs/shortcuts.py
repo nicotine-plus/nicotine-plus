@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,19 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class Shortcuts(Dialog):
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/shortcuts.ui")
-        self.dialog, self.emoji_shortcut = ui_template.widgets
+        self.dialog, self.emoji_shortcut = ui.load(scope=self, path="dialogs/shortcuts.ui")
 
         super().__init__(
-            dialog=self.dialog,
+            widget=self.dialog,
             parent=application.window,
             close_destroy=False
         )

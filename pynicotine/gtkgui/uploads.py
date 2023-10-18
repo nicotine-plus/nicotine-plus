@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -29,17 +29,17 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
-from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.transfers import Transfers
+from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
-class Uploads(TransferList):
+class Uploads(Transfers):
 
     def __init__(self, window):
 
-        self.path_separator = '\\'
+        self.path_separator = "\\"
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
@@ -52,7 +52,7 @@ class Uploads(TransferList):
         self.expand_icon = window.uploads_expand_icon
         self.grouping_button = window.uploads_grouping_button
 
-        TransferList.__init__(self, window, transfer_type="upload")
+        super().__init__(window, transfer_type="upload")
 
         if GTK_API_VERSION >= 4:
             window.uploads_content.append(self.container)
@@ -88,40 +88,44 @@ class Uploads(TransferList):
         self.upload_speeds = UploadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.transfers.uploads)
+        self.init_transfers(core.uploads.transfers)
+
+    def get_transfer_folder_path(self, transfer):
+        virtual_path = transfer.virtual_path
+        return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
 
     def retry_selected_transfers(self):
-        core.transfers.retry_uploads(self.selected_transfers)
+        core.uploads.retry_uploads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        core.transfers.abort_uploads(self.selected_transfers, denied_message="Cancelled")
+        core.uploads.abort_uploads(self.selected_transfers, denied_message="Cancelled")
 
     def clear_selected_transfers(self):
-        core.transfers.clear_uploads(uploads=self.selected_transfers)
+        core.uploads.clear_uploads(uploads=self.selected_transfers)
 
-    def on_clear_queued_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_uploads(statuses=["Queued"])
+    def on_clear_queued_response(self, *_args):
+        core.uploads.clear_uploads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear Queued Uploads'),
-            message=_('Do you really want to clear all queued uploads?'),
+            title=_("Clear Queued Uploads"),
+            message=_("Do you really want to clear all queued uploads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_queued_response
         ).show()
 
-    def on_clear_all_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.transfers.clear_uploads()
+    def on_clear_all_response(self, *_args):
+        core.uploads.clear_uploads()
 
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
             parent=self.window,
-            title=_('Clear All Uploads'),
-            message=_('Do you really want to clear all uploads?'),
+            title=_("Clear All Uploads"),
+            message=_("Do you really want to clear all uploads?"),
+            destructive_response_id="ok",
             callback=self.on_clear_all_response
         ).show()
 
@@ -131,42 +135,43 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.filename)
-            copy_text(url)
+            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path)
+            clipboard.copy_text(url)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
-            copy_text(url)
+            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+            clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
-        command = config.sections["ui"]["filemanager"]
         transfer = next(iter(self.selected_transfers), None)
 
         if not transfer:
             return
 
-        if "$" in command and len(self.selected_transfers) == 1:
-            # Try to select the file in the manager if configured
-            base_name = str.split(transfer.filename, '\\')[-1]
-            file_path = os.path.join(transfer.path, base_name)
-        else:
-            # Open into a folder without selecting a file
-            file_path = transfer.path
+        command = config.sections["ui"]["filemanager"]
 
-        open_file_path(file_path, command=command)
+        if "$" in command and len(self.selected_transfers) == 1:
+            # Manager is configured, make a single file selection
+            basename = transfer.virtual_path.split("\\")[-1]
+            path = os.path.join(transfer.folder_path, basename)
+        else:
+            # Open containing folder
+            path = transfer.folder_path
+
+        open_file_path(file_path=path, command=command)
 
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            base_name = str.split(transfer.filename, '\\')[-1]
+            basename = transfer.virtual_path.split("\\")[-1]
 
-            open_file_path(file_path=os.path.join(transfer.path, base_name),
+            open_file_path(file_path=os.path.join(transfer.folder_path, basename),
                            command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
@@ -177,43 +182,43 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
+        folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
 
-        core.userbrowse.browse_user(user, path=folder)
+        core.userbrowse.browse_user(user, path=folder_path)
 
     def on_abort_users(self, *_args):
 
         self.select_transfers()
 
         for transfer in self.transfer_list:
-            if transfer.user in self.selected_users and transfer not in self.selected_transfers:
+            if transfer.username in self.selected_users and transfer not in self.selected_transfers:
                 self.selected_transfers[transfer] = None
 
         self.abort_selected_transfers()
 
     def on_ban_users(self, *_args):
         self.select_transfers()
-        core.transfers.ban_users(self.selected_users)
+        core.uploads.ban_users(self.selected_users)
 
     def on_clear_queued(self, *_args):
-        core.transfers.clear_uploads(statuses=["Queued"])
+        core.uploads.clear_uploads(statuses=["Queued"])
 
     def on_clear_finished(self, *_args):
-        core.transfers.clear_uploads(statuses=["Finished"])
+        core.uploads.clear_uploads(statuses=["Finished"])
 
     def on_clear_cancelled(self, *_args):
-        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
+        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
 
     def on_clear_failed(self, *_args):
-        core.transfers.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
+        core.uploads.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
 
     def on_clear_logged_off(self, *_args):
-        core.transfers.clear_uploads(statuses=["User logged off"])
+        core.uploads.clear_uploads(statuses=["User logged off"])
 
     def on_clear_finished_cancelled(self, *_args):
-        core.transfers.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
+        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
-        core.transfers.clear_uploads(
+        core.uploads.clear_uploads(
             statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
                       "Local file error", "Remote file error"])

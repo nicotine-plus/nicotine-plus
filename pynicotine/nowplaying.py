@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 gallows <g4ll0ws@gmail.com>
@@ -30,12 +30,10 @@ from pynicotine.utils import human_length
 
 
 class NowPlaying:
-    """ This class contains code for retrieving information about the song currently
-    playing in a media player """
+    """This class contains code for retrieving information about the song
+    currently playing in a media player."""
 
     def __init__(self):
-
-        self._bus = None
         self.title_clear()
 
     def title_clear(self):
@@ -63,7 +61,7 @@ class NowPlaying:
         if get_player is None:
             player = config.sections["players"]["npplayer"]
 
-            if sys.platform in ("win32", "darwin") and player == "mpris":
+            if sys.platform in {"win32", "darwin"} and player == "mpris":
                 player = "lastfm"
         else:
             player = get_player()
@@ -108,8 +106,8 @@ class NowPlaying:
         title = title.replace("$f", "%(filename)s")
         title = title.replace("$p", "%(program)s")
 
-        title = title % self.title
-        title = ' '.join(x for x in title.replace('\r', '\n').split('\n') if x)
+        title %= self.title
+        title = " ".join(x for x in title.replace("\r", "\n").split("\n") if x)
 
         if title:
             if callback:
@@ -119,11 +117,11 @@ class NowPlaying:
 
         return None
 
-    def lastfm(self, user):
-        """ Function to get the last song played via Last.fm API """
+    def lastfm(self, username):
+        """Function to get the last song played via Last.fm API."""
 
         try:
-            user, apikey = user.split(';')
+            username, apikey = username.split(";")
 
         except ValueError:
             log.add(_("Last.fm: Please provide both your Last.fm username and API key"), title=_("Now Playing Error"))
@@ -131,8 +129,8 @@ class NowPlaying:
 
         try:
             from urllib.request import urlopen
-            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
-                          f"&limit=1&format=json"), timeout=10) as response:
+            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
+                          f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
@@ -155,7 +153,7 @@ class NowPlaying:
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
             self.title["album"] = album = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{_('Last played')}: {artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -165,24 +163,24 @@ class NowPlaying:
         return True
 
     def mpris(self, player):
-        """ Function to get the currently playing song via DBus MPRIS v2 interface """
+        """Function to get the currently playing song via DBus MPRIS v2
+        interface."""
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
         from gi.repository import Gio  # pylint: disable=import-error
-        self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
-        dbus_mpris_service = 'org.mpris.MediaPlayer2.'
-        dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
-        dbus_mpris_path = '/org/mpris/MediaPlayer2'
-        dbus_property = 'org.freedesktop.DBus.Properties'
+        dbus_mpris_service = "org.mpris.MediaPlayer2."
 
         if not player:
-            dbus_proxy = Gio.DBusProxy.new_sync(
-                self._bus, Gio.DBusProxyFlags.NONE, None,
-                'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name="org.freedesktop.DBus",
+                object_path="/org/freedesktop/DBus",
+                interface_name="org.freedesktop.DBus"
             )
-
             names = dbus_proxy.ListNames()
             players = []
 
@@ -197,64 +195,67 @@ class NowPlaying:
             player = players[0]
             if len(players) > 1:
                 log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"),
-                        {'players': players, 'player': player})
+                        {"players": players, "player": player})
             else:
                 log.add(_("Auto-detected MPRIS player: %s"), player)
 
         try:
-            dbus_proxy = Gio.DBusProxy.new_sync(
-                self._bus, Gio.DBusProxyFlags.NONE, None,
-                dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name=dbus_mpris_service + player,
+                object_path="/org/mpris/MediaPlayer2",
+                interface_name="org.freedesktop.DBus.Properties"
             )
-
-            metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
+            metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
 
         except Exception as error:
             log.add(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
-                    {'player': player, 'exception': error}, title=_("Now Playing Error"))
+                    {"player": player, "exception": error}, title=_("Now Playing Error"))
             return None
 
-        self.title['program'] = player
-        list_mapping = [('xesam:artist', 'artist')]
+        self.title["program"] = player
+        list_mapping = [("xesam:artist", "artist")]
 
         for source, dest in list_mapping:
             try:
-                self.title[dest] = '+'.join(metadata[source])
+                self.title[dest] = "+".join(metadata[source])
             except KeyError:
-                self.title[dest] = '?'
+                self.title[dest] = "?"
 
         mapping = [
-            ('xesam:title', 'title'),
-            ('xesam:album', 'album'),
-            ('xesam:contentCreated', 'year'),
-            ('xesam:comment', 'comment'),
-            ('xesam:audioBitrate', 'bitrate'),
-            ('xesam:url', 'filename'),
-            ('xesak:trackNumber', 'track')
+            ("xesam:title", "title"),
+            ("xesam:album", "album"),
+            ("xesam:contentCreated", "year"),
+            ("xesam:comment", "comment"),
+            ("xesam:audioBitrate", "bitrate"),
+            ("xesam:url", "filename"),
+            ("xesak:trackNumber", "track")
         ]
 
         for source, dest in mapping:
             try:
                 self.title[dest] = str(metadata[source])
             except KeyError:
-                self.title[dest] = '?'
+                self.title[dest] = "?"
 
         # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            self.title['length'] = human_length(metadata['mpris:length'] // 1000000)
+            self.title["length"] = human_length(metadata["mpris:length"] // 1000000)
         except KeyError:
-            self.title['length'] = '?'
+            self.title["length"] = "?"
 
-        if self.title['artist'] != "":
-            self.title['nowplaying'] += self.title['artist']
+        if self.title["artist"]:
+            self.title["nowplaying"] += self.title["artist"]
 
-        if self.title['title'] != "":
-            self.title['nowplaying'] += " - " + self.title['title']
+        if self.title["title"]:
+            self.title["nowplaying"] += " - " + self.title["title"]
 
         return True
 
     def listenbrainz(self, username):
-        """ Function to get the currently playing song via ListenBrainz API """
+        """Function to get the currently playing song via ListenBrainz API."""
 
         if not username:
             log.add(_("ListenBrainz: Please provide your ListenBrainz username"), title=_("Now Playing Error"))
@@ -266,30 +267,30 @@ class NowPlaying:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
-            log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error},
+            log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {"error": error},
                     title=_("Now Playing Error"))
             return None
 
         try:
-            json_api = json.loads(response_body)['payload']
+            json_api = json.loads(response_body)["payload"]
 
-            if not json_api['playing_now']:
-                log.add(_("ListenBrainz: You don\'t seem to be listening to anything right now"),
+            if not json_api["playing_now"]:
+                log.add(_("ListenBrainz: You don't seem to be listening to anything right now"),
                         title=_("Now Playing Error"))
                 return None
 
-            track = json_api['listens'][0]['track_metadata']
+            track = json_api["listens"][0]["track_metadata"]
 
-            self.title['artist'] = artist = track['artist_name']
-            self.title['title'] = title = track['track_name']
-            self.title['album'] = album = track['release_name']
-            self.title["nowplaying"] = f"{_('Playing now')}: {artist} - {album} - {title}"
+            self.title["artist"] = artist = track["artist_name"]
+            self.title["title"] = title = track["track_name"]
+            self.title["album"] = album = track["release_name"]
+            self.title["nowplaying"] = f"{artist} - {album} - {title}"
 
             return True
 
         except Exception:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {'error': response_body}, title=_("Now Playing Error"))
+                    {"error": response_body}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):

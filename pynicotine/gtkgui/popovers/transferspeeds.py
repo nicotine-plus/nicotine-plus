@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,11 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.config import config
-from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class TransferSpeeds(Popover):
@@ -30,14 +29,14 @@ class TransferSpeeds(Popover):
 
         self.transfer_type = transfer_type
 
-        ui_template = UserInterface(scope=self, path=f"popovers/{transfer_type}speeds.ui")
         (
             self.alt_speed_spinner,
             self.container,
             self.speed_spinner,
-            self.unlimited_speed_radio,
             self.use_alt_limit_radio,
-            self.use_limit_radio) = ui_template.widgets
+            self.use_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui.load(scope=self, path=f"popovers/{transfer_type}speeds.ui")
 
         super().__init__(
             window=window,
@@ -46,10 +45,14 @@ class TransferSpeeds(Popover):
         )
 
         menu_button = getattr(window, f"{transfer_type}_status_button")
-        menu_button.set_popover(self.popover)
+        self.set_menu_button(menu_button)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=menu_button.get_first_child(), css_class="flat")
+
+    @staticmethod
+    def update_transfer_limits():
+        raise NotImplementedError
 
     def on_active_limit_toggled(self, *_args):
 
@@ -66,8 +69,7 @@ class TransferSpeeds(Popover):
             config.sections["transfers"][use_limit_config_key] = "unlimited"
 
         if prev_active_limit != config.sections["transfers"][use_limit_config_key]:
-            update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-            update_transfer_limits()
+            self.update_transfer_limits()
 
     def on_limit_changed(self, *_args):
 
@@ -77,9 +79,7 @@ class TransferSpeeds(Popover):
             return
 
         config.sections["transfers"][f"{self.transfer_type}limit"] = speed_limit
-
-        update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-        update_transfer_limits()
+        self.update_transfer_limits()
 
     def on_alt_limit_changed(self, *_args):
 
@@ -89,9 +89,7 @@ class TransferSpeeds(Popover):
             return
 
         config.sections["transfers"][f"{self.transfer_type}limitalt"] = alt_speed_limit
-
-        update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-        update_transfer_limits()
+        self.update_transfer_limits()
 
     def on_show(self, *_args):
 
@@ -107,4 +105,4 @@ class TransferSpeeds(Popover):
             self.use_alt_limit_radio.set_active(True)
 
         else:
-            self.unlimited_speed_radio.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)

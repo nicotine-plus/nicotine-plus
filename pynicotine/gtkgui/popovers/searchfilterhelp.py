@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,16 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
-from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
 class SearchFilterHelp(Popover):
 
     def __init__(self, window):
 
-        ui_template = UserInterface(scope=self, path="popovers/searchfilterhelp.ui")
-        (self.container,) = ui_template.widgets
+        (self.container,) = ui.load(scope=self, path="popovers/searchfilterhelp.ui")
 
         super().__init__(
             window=window,

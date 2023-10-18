@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,6 +26,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -34,23 +35,39 @@ from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
-GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
+GTK_MINOR_VERSION = Gtk.get_minor_version()
+GTK_GUI_FOLDER_PATH = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
+LIBADWAITA_API_VERSION = 0
+LIBADWAITA_MINOR_VERSION = 0
+
+if GTK_API_VERSION >= 4:
+    try:
+        if os.getenv("NICOTINE_LIBADWAITA") is None:
+            os.environ["NICOTINE_LIBADWAITA"] = str(int(
+                sys.platform in {"win32", "darwin"} or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
+            ))
+
+        if os.getenv("NICOTINE_LIBADWAITA") == "1":
+            gi.require_version("Adw", "1")
+
+            from gi.repository import Adw  # pylint: disable=ungrouped-imports
+            LIBADWAITA_API_VERSION = Adw.MAJOR_VERSION
+            LIBADWAITA_MINOR_VERSION = Adw.MINOR_VERSION
+
+    except (ImportError, ValueError):
+        pass
 
 
 class Application:
 
     def __init__(self, start_hidden, ci_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=config.application_id)
-        GLib.set_application_name(config.application_name)
-        GLib.set_prgname(config.application_id)
+        self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
+        GLib.set_application_name(pynicotine.__application_name__)
+        GLib.set_prgname(pynicotine.__application_id__)
 
         if multi_instance:
             self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
-
-        # Show errors in the GUI from here on
-        self.init_exception_handler()
-        self.apply_gtk_translations()
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -67,25 +84,19 @@ class Application:
         self.notifications = None
         self.spell_checker = None
 
+        # Show errors in the GUI from here on
+        sys.excepthook = self.on_critical_error
+
         self.connect("activate", self.on_activate)
-        self.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
             ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable),
-            ("thread-event", self.on_thread_event)
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
-
-        try:
-            Gtk.ListStore.insert_with_valuesv
-
-        except AttributeError:
-            # GTK 4 replacement
-            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values  # pylint: disable=no-member
 
     def run(self):
         return self._instance.run()
@@ -123,266 +134,85 @@ class Application:
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
 
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    GLib.idle_add(sys.excepthook, *sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
-
-    def init_spell_checker(self):
-
-        try:
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker()
-
-        except (ImportError, ValueError):
-            self.spell_checker = False
-
-    def apply_gtk_translations(self):
-
-        libintl_path = None
-        executable_folder = os.path.dirname(sys.executable)
-
-        # Load library for translating non-Python content, e.g. GTK ui files
-        if sys.platform == "win32":
-            libintl_path = "libintl-8.dll"
-
-            if getattr(sys, 'frozen', False):
-                libintl_path = os.path.join(executable_folder, "lib", libintl_path)
-
-        elif sys.platform == "darwin":
-            libintl_path = "libintl.8.dylib"
-
-            if getattr(sys, 'frozen', False):
-                libintl_path = os.path.join(executable_folder, libintl_path)
-
-        import locale
-        from pynicotine.i18n import LOCALE_PATH
-        from pynicotine.i18n import TRANSLATION_DOMAIN
-
-        if libintl_path is not None:
-            import ctypes
-            libintl = ctypes.cdll.LoadLibrary(libintl_path)
-
-            # Arguments need to be encoded, otherwise translations fail
-            libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), LOCALE_PATH.encode(sys.getfilesystemencoding()))
-            libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
-
-        elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
-            locale.bindtextdomain(TRANSLATION_DOMAIN, LOCALE_PATH)
-
     def set_up_actions(self):
 
-        # General
+        # Regular actions
 
-        action = Gio.SimpleAction(name="connect")
-        action.connect("activate", self.on_connect)
-        self.add_action(action)
+        for action_name, callback, parameter_type, is_enabled in (
+            # General
+            ("connect", self.on_connect, None, True),
+            ("disconnect", self.on_disconnect, None, False),
+            ("soulseek-privileges", self.on_soulseek_privileges, None, False),
+            ("away", self.on_away, None, False),
+            ("away-accel", self.on_away_accelerator, None, False),
+            ("message-downloading-users", self.on_message_downloading_users, None, False),
+            ("message-buddies", self.on_message_buddies, None, False),
+            ("wishlist", self.on_wishlist, None, True),
+            ("confirm-quit", self.on_confirm_quit_request, None, True),
+            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
+            ("quit", self.on_quit_request, None, True),
 
-        action = Gio.SimpleAction(name="disconnect", enabled=False)
-        action.connect("activate", self.on_disconnect)
-        self.add_action(action)
+            # Shares
+            ("rescan-shares", self.on_rescan_shares, None, True),
+            ("browse-public-shares", self.on_browse_public_shares, None, True),
+            ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
+            ("browse-trusted-shares", self.on_browse_trusted_shares, None, True),
+            ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
-        action = Gio.SimpleAction(name="soulseek-privileges", enabled=False)
-        action.connect("activate", self.on_soulseek_privileges)
-        self.add_action(action)
+            # Configuration
 
-        action = Gio.SimpleAction(name="away-accel", enabled=False)
-        action.cooldown_time = 0  # needed to prevent server ban
-        action.connect("activate", self.on_away_accelerator)
-        self.add_action(action)
+            ("preferences", self.on_preferences, None, True),
+            ("configure-shares", self.on_configure_shares, None, True),
+            ("configure-downloads", self.on_configure_downloads, None, True),
+            ("configure-uploads", self.on_configure_uploads, None, True),
+            ("configure-chats", self.on_configure_chats, None, True),
+            ("configure-searches", self.on_configure_searches, None, True),
+            ("configure-ignored-users", self.on_configure_ignored_users, None, True),
+            ("configure-account", self.on_configure_account, None, True),
+            ("configure-user-profile", self.on_configure_user_profile, None, True),
+            ("personal-profile", self.on_personal_profile, None, False),
 
-        action = Gio.SimpleAction(name="away", enabled=False)
-        action.connect("activate", self.on_away)
-        self.add_action(action)
+            # Notifications
+            ("chatroom-notification-activated", self.on_chatroom_notification_activated, "s", True),
+            ("download-notification-activated", self.on_download_notification_activated, None, True),
+            ("private-chat-notification-activated", self.on_private_chat_notification_activated, "s", True),
+            ("search-notification-activated", self.on_search_notification_activated, "s", True),
 
-        state = config.sections["ui"]["dark_mode"]
-        action = Gio.SimpleAction(name="prefer-dark-mode", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_prefer_dark_mode)
-        self.add_action(action)
+            # Help
+            ("keyboard-shortcuts", self.on_keyboard_shortcuts, None, True),
+            ("setup-assistant", self.on_fast_configure, None, True),
+            ("transfer-statistics", self.on_transfer_statistics, None, True),
+            ("report-bug", self.on_report_bug, None, True),
+            ("improve-translations", self.on_improve_translations, None, True),
+            ("about", self.on_about, None, True)
+        ):
+            if parameter_type:
+                parameter_type = GLib.VariantType(parameter_type)
 
-        action = Gio.SimpleAction(name="message-downloading-users", enabled=False)
-        action.connect("activate", self.on_message_downloading_users)
-        self.add_action(action)
+            action = Gio.SimpleAction(name=action_name, parameter_type=parameter_type, enabled=is_enabled)
+            action.connect("activate", callback)
+            self.add_action(action)
 
-        action = Gio.SimpleAction(name="message-buddies", enabled=False)
-        action.connect("activate", self.on_message_buddies)
-        self.add_action(action)
+        self.lookup_action("away-accel").cooldown_time = 0  # needed to prevent server ban
 
-        action = Gio.SimpleAction(name="wishlist")
-        action.connect("activate", self.on_wishlist)
-        self.add_action(action)
+        # Stateful actions
 
-        action = Gio.SimpleAction(name="force-quit")
-        action.connect("activate", self.on_force_quit)
-        self.add_action(action)
+        enabled_logs = config.sections["logging"]["debugmodes"]
 
-        action = Gio.SimpleAction(name="quit")
-        action.connect("activate", self.on_quit)
-        self.add_action(action)
-
-        # Shares
-
-        action = Gio.SimpleAction(name="rescan-shares")
-        action.connect("activate", self.on_rescan_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="browse-public-shares")
-        action.connect("activate", self.on_browse_public_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="browse-buddy-shares")
-        action.connect("activate", self.on_browse_buddy_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="load-shares-from-disk")
-        action.connect("activate", self.on_load_shares_from_disk)
-        self.add_action(action)
-
-        # Help
-
-        action = Gio.SimpleAction(name="keyboard-shortcuts")
-        action.connect("activate", self.on_keyboard_shortcuts)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="setup-assistant")
-        action.connect("activate", self.on_fast_configure)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="transfer-statistics")
-        action.connect("activate", self.on_transfer_statistics)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="report-bug")
-        action.connect("activate", self.on_report_bug)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="improve-translations")
-        action.connect("activate", self.on_improve_translations)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="check-latest-version")
-        action.connect("activate", self.on_check_latest_version)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="about")
-        action.connect("activate", self.on_about)
-        self.add_action(action)
-
-        # Configuration
-
-        action = Gio.SimpleAction(name="preferences")
-        action.connect("activate", self.on_preferences)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-shares")
-        action.connect("activate", self.on_configure_shares)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-downloads")
-        action.connect("activate", self.on_configure_downloads)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-uploads")
-        action.connect("activate", self.on_configure_uploads)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-chats")
-        action.connect("activate", self.on_configure_chats)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-searches")
-        action.connect("activate", self.on_configure_searches)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="configure-ignored-users")
-        action.connect("activate", self.on_configure_ignored_users)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="update-user-info")
-        action.connect("activate", self.on_update_user_info)
-        self.add_action(action)
-
-        # Notifications
-
-        action = Gio.SimpleAction(name="chatroom-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_chatroom_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="download-notification-activated")
-        action.connect("activate", self.on_download_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="private-chat-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_private_chat_notification_activated)
-        self.add_action(action)
-
-        action = Gio.SimpleAction(name="search-notification-activated", parameter_type=GLib.VariantType("s"))
-        action.connect("activate", self.on_search_notification_activated)
-        self.add_action(action)
-
-        # Logging
-
-        state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-downloads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_downloads)
-        self.add_action(action)
-
-        state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-uploads", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_uploads)
-        self.add_action(action)
-
-        state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-searches", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_searches)
-        self.add_action(action)
-
-        state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-chat", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_chat)
-        self.add_action(action)
-
-        state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-connections", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_connections)
-        self.add_action(action)
-
-        state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-messages", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_messages)
-        self.add_action(action)
-
-        state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-transfers", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_transfers)
-        self.add_action(action)
-
-        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction(name="log-miscellaneous", state=GLib.Variant("b", state))
-        action.connect("change-state", self.on_debug_miscellaneous)
-        self.add_action(action)
+        for action_name, callback, state in (
+            # Logging
+            ("log-downloads", self.on_debug_downloads, ("download" in enabled_logs)),
+            ("log-uploads", self.on_debug_uploads, ("upload" in enabled_logs)),
+            ("log-searches", self.on_debug_searches, ("search" in enabled_logs)),
+            ("log-chat", self.on_debug_chat, ("chat" in enabled_logs)),
+            ("log-connections", self.on_debug_connections, ("connection" in enabled_logs)),
+            ("log-messages", self.on_debug_messages, ("message" in enabled_logs)),
+            ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
+            ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
+        ):
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant("b", state))
+            action.connect("change-state", callback)
+            self.add_action(action)
 
     def set_up_action_accels(self):
 
@@ -392,7 +222,8 @@ class Application:
             ("app.disconnect", ["<Shift><Primary>d"]),
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
-            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.confirm-quit", ["<Primary>q"]),
+            ("app.quit", ["<Primary><Alt>q"]),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -435,78 +266,85 @@ class Application:
                 widget.add_shortcut(
                     Gtk.Shortcut(
                         trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.NamedAction.new(action_name),
+                        action=Gtk.NamedAction(action_name=action_name),
                     )
                 )
 
-    """ Core Events """
+    # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.option.get_active()
+        should_finish_uploads = dialog.get_option_value()
 
-        if response_id == 2:  # 'Quit'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
+        if response_id == "quit":
+            core.quit(should_finish_uploads=should_finish_uploads)
 
+        elif response_id == "run_background":
+            self.window.hide()
+
+    def on_confirm_quit(self, only_on_active_uploads=False):
+
+        has_active_uploads = core.uploads.has_active_uploads()
+
+        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+            # Never show confirmation dialog when main window is hidden
             core.quit()
-
-        elif response_id == 3:  # 'Run in Background'
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
-
-            if self.window.is_visible():
-                self.window.hide()
-
-    def on_confirm_quit(self, remember=True):
+            return
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
+        if has_active_uploads:
+            message = _("You are still uploading files. Do you really want to exit?")
+            option_label = _("Wait for uploads to finish")
+        else:
+            message = _("Do you really want to exit?")
+            option_label = None
+
+        buttons = [
+            ("cancel", _("_No")),
+            ("quit", _("_Quit"))
+        ]
+
+        if not only_on_active_uploads:
+            buttons.append(("run_background", _("_Run in Background")))
+
         OptionDialog(
             parent=self.window,
-            title=_('Quit Nicotine+'),
-            message=_('Do you really want to exit?'),
-            second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.window.is_visible() else None,
-            option_label=_("Remember choice") if remember else None,
+            title=_("Quit Nicotine+"),
+            message=message,
+            buttons=buttons,
+            option_label=option_label,
             callback=self.on_confirm_quit_response
         ).show()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
-
-        if response_id == 2:  # 'Retry'
-            core.shares.rescan_shares()
-
-        elif response_id == 3:  # 'Force Rescan'
-            core.shares.rescan_shares(force=True)
+        core.shares.rescan_shares(force=(response_id == "force_rescan"))
 
     def on_shares_unavailable(self, shares):
+
+        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
         shares_list_message = ""
 
         for virtual_name, folder_path in shares:
-            shares_list_message += f"• \"{virtual_name}\" {folder_path}\n"
+            shares_list_message += f'• "{virtual_name}" {folder_path}\n'
 
-        def create_dialog():
-            from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+        OptionDialog(
+            parent=self.window,
+            title=_("Shares Not Available"),
+            message=_("Verify that external disks are mounted and folder permissions are correct."),
+            long_message=shares_list_message,
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("_Retry")),
+                ("force_rescan", _("_Force Rescan"))
+            ],
+            destructive_response_id="force_rescan",
+            callback=self.on_shares_unavailable_response
+        ).show()
 
-            OptionDialog(
-                parent=self.window,
-                title=_("Shares Not Available"),
-                message=_("Verify that external disks are mounted and folder permissions are correct."),
-                long_message=shares_list_message,
-                first_button=_("_Cancel"),
-                second_button=_("_Retry"),
-                third_button=_("_Force Rescan"),
-                callback=self.on_shares_unavailable_response
-            ).show()
-
-        # Avoid dialog appearing inactive if invoked during rescan on startup
-        GLib.idle_add(create_dialog)
-
-    def on_invalid_password_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            self.on_preferences(page_id="network")
+    def on_invalid_password_response(self, *_args):
+        self.on_preferences(page_id="network")
 
     def on_invalid_password(self):
 
@@ -520,12 +358,14 @@ class Application:
             parent=self.window,
             title=title,
             message=msg,
-            first_button=_("_Cancel"),
-            second_button=_("Change _Login Details"),
+            buttons=[
+                ("cancel", _("_Cancel")),
+                ("ok", _("Change _Login Details"))
+            ],
             callback=self.on_invalid_password_response
         ).show()
 
-    """ Actions """
+    # Actions #
 
     def on_connect(self, *_args):
         core.connect()
@@ -538,7 +378,7 @@ class Application:
         import urllib.parse
 
         login = urllib.parse.quote(core.login_username)
-        open_uri(config.privileges_url % login)
+        open_uri(pynicotine.__privileges_url__ % login)
         core.request_check_privileges()
 
     def on_preferences(self, *_args, page_id="network"):
@@ -635,14 +475,11 @@ class Application:
 
     @staticmethod
     def on_report_bug(*_args):
-        open_uri(config.issue_tracker_url)
+        open_uri(pynicotine.__issue_tracker_url__)
 
     @staticmethod
     def on_improve_translations(*_args):
-        open_uri(config.translations_url)
-
-    def on_check_latest_version(self, *_args):
-        core.update_checker.check()
+        open_uri(pynicotine.__translations_url__)
 
     def on_wishlist(self, *_args):
 
@@ -677,7 +514,8 @@ class Application:
             message=_("Send private message to all users who are downloading from you:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="downloading"
+            callback_data="downloading",
+            show_emoji_icon=True
         ).show()
 
     def on_message_buddies(self, *_args):
@@ -690,21 +528,25 @@ class Application:
             message=_("Send private message to all online buddies:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="buddies"
+            callback_data="buddies",
+            show_emoji_icon=True
         ).show()
 
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
 
     def on_browse_public_shares(self, *_args):
-        core.userbrowse.browse_local_public_shares(new_request=True)
+        core.userbrowse.browse_local_shares(share_type="public", new_request=True)
 
     def on_browse_buddy_shares(self, *_args):
-        core.userbrowse.browse_local_buddy_shares(new_request=True)
+        core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
 
-    def on_load_shares_from_disk_selected(self, selected, _data):
-        for filename in selected:
-            core.userbrowse.load_shares_list_from_disk(filename)
+    def on_browse_trusted_shares(self, *_args):
+        core.userbrowse.browse_local_shares(share_type="trusted", new_request=True)
+
+    def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
+        for file_path in selected_file_paths:
+            core.userbrowse.load_shares_list_from_disk(file_path)
 
     def on_load_shares_from_disk(self, *_args):
 
@@ -733,25 +575,20 @@ class Application:
     def on_configure_uploads(self, *_args):
         self.on_preferences(page_id="uploads")
 
-    def on_update_user_info(self, *_args):
-        self.on_preferences(page_id="user-info")
-
     def on_configure_ignored_users(self, *_args):
         self.on_preferences(page_id="ignored-users")
 
-    @staticmethod
-    def on_prefer_dark_mode(action, *_args):
+    def on_configure_account(self, *_args):
+        self.on_preferences(page_id="network")
 
-        from pynicotine.gtkgui.widgets.theme import set_dark_mode
+    def on_configure_user_profile(self, *_args):
+        self.on_preferences(page_id="user-profile")
 
-        state = config.sections["ui"]["dark_mode"]
-        set_dark_mode(not state)
-        action.set_state(GLib.Variant("b", not state))
-
-        config.sections["ui"]["dark_mode"] = not state
+    def on_personal_profile(self, *_args):
+        core.userinfo.show_user(core.login_username)
 
     def on_away_accelerator(self, action, *_args):
-        """ Ctrl+H: Away/Online toggle """
+        """Ctrl+H: Away/Online toggle."""
 
         current_time = time.time()
 
@@ -761,29 +598,38 @@ class Application:
             action.cooldown_time = current_time
 
     def on_away(self, *_args):
-        """ Away/Online status button """
+        """Away/Online status button."""
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
-    """ Running """
+    # Running #
 
-    def on_critical_error_response(self, _dialog, response_id, data):
+    def _force_quit(self):
+        """Used when the thread event processor fails due to an unhandled
+        exception, to force a shutdown."""
+
+        core.quit()
+        events.emit("quit")
+
+    def _raise_exception(self, exc_value):
+        raise exc_value
+
+    def _show_critical_error_dialog_response(self, _dialog, response_id, data):
 
         loop, error = data
 
-        if response_id == 2:
-            from pynicotine.gtkgui.utils import copy_text
+        if response_id == "copy_report_bug":
+            from pynicotine.gtkgui.widgets import clipboard
 
-            copy_text(error)
-            open_uri(config.issue_tracker_url)
+            clipboard.copy_text(error)
+            open_uri(pynicotine.__issue_tracker_url__)
 
-            self.show_critical_error_dialog(error, loop)
+            self._show_critical_error_dialog(error, loop)
             return
 
         loop.quit()
-        core.quit()
 
-    def show_critical_error_dialog(self, error, loop):
+    def _show_critical_error_dialog(self, error, loop):
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
@@ -793,17 +639,20 @@ class Application:
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:"),
             long_message=error,
-            first_button=_("_Quit Nicotine+"),
-            second_button=_("_Copy & Report Bug"),
-            callback=self.on_critical_error_response,
+            buttons=[
+                ("quit", _("_Quit Nicotine+")),
+                ("copy_report_bug", _("_Copy & Report Bug"))
+            ],
+            callback=self._show_critical_error_dialog_response,
             callback_data=(loop, error)
         ).show()
 
-    def on_critical_error(self, exc_type, exc_value, exc_traceback):
+    def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            core.quit()
-            raise exc_value
+            self._force_quit()
+            self._raise_exception(exc_value)
+            return
 
         from traceback import format_tb
 
@@ -811,16 +660,13 @@ class Application:
         if core.pluginhandler is not None:
             traceback = exc_traceback
 
-            while True:
-                if not traceback.tb_next:
-                    break
-
-                filename = traceback.tb_frame.f_code.co_filename
+            while traceback.tb_next:
+                file_path = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in core.pluginhandler.enabled_plugins:
-                    path = core.pluginhandler.get_plugin_path(plugin_name)
+                    plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
-                    if filename.startswith(path):
+                    if file_path.startswith(plugin_path):
                         core.pluginhandler.show_plugin_error(
                             plugin_name, exc_type, exc_value, exc_traceback)
                         return
@@ -829,35 +675,31 @@ class Application:
 
         # Show critical error dialog
         loop = GLib.MainLoop()
-        error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
-                 f"Python Version: {config.python_version} ({sys.platform})\n\n"
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        error = (f"Nicotine+ Version: {pynicotine.__version__}\nGTK Version: {gtk_version}\n"
+                 f"Python Version: {sys.version.split()[0]} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
-        self.show_critical_error_dialog(error, loop)
+        self._show_critical_error_dialog(error, loop)
 
         # Keep dialog open if error occurs on startup
         loop.run()
-        raise exc_value
 
-    @staticmethod
-    def _on_critical_error_threading(args):
-        raise args.exc_value
+        # Dialog was closed, quit
+        sys.excepthook = None
+        self._force_quit()
+        self._raise_exception(exc_value)
 
-    def on_critical_error_threading(self, args):
-        """ Exception that originated in a thread.
-        Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
 
-        GLib.idle_add(self._on_critical_error_threading, args)
-
-    def _on_thread_event(self, event_name, *args, **kwargs):
-
-        if core.shutdown:
+        if threading.current_thread() is threading.main_thread():
+            self._on_critical_error(_exc_type, exc_value, _exc_traceback)
             return
 
-        events.emit(event_name, *args, **kwargs)
+        # Raise exception in the main thread
+        GLib.idle_add(self._raise_exception, exc_value)
 
-    def on_thread_event(self, event_name, *args, **kwargs):
-        # High priority to ensure there are no delays
-        GLib.idle_add(self._on_thread_event, event_name, *args, **kwargs, priority=GLib.PRIORITY_HIGH_IDLE)
+    def on_process_thread_events(self):
+        return events.process_thread_events()
 
     def on_activate(self, *_args):
 
@@ -868,7 +710,14 @@ class Application:
 
         from pynicotine.gtkgui.mainwindow import MainWindow
         from pynicotine.gtkgui.widgets.notifications import Notifications
+        from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        # Process thread events 10 times per second.
+        # High priority to ensure there are no delays.
+        GLib.timeout_add(100, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
+
+        load_icons()
 
         self.set_up_actions()
         self.set_up_action_accels()
@@ -877,21 +726,24 @@ class Application:
         self.notifications = Notifications(self)
         self.window = MainWindow(self)
 
-        # Check command line option and config option
-        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.show()
-
         core.start()
 
         if config.sections["server"]["auto_connect_startup"]:
             core.connect()
 
-    def on_shutdown(self, *_args):
-        # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.set_visible(False)
+        # Check command line option and config option
+        start_hidden = (self.start_hidden or (self.tray_icon.available
+                                              and config.sections["ui"]["trayicon"]
+                                              and config.sections["ui"]["startup_hidden"]))
 
-    def on_force_quit(self, *_args):
-        core.quit()
+        if not start_hidden:
+            self.window.show()
 
-    def on_quit(self, *_args):
+    def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
+
+    def on_confirm_quit_uploads_request(self, *_args):
+        core.confirm_quit(only_on_active_uploads=True)
+
+    def on_quit_request(self, *_args):
+        core.quit()

@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 29, 2022
+Last updated on October 9, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -64,6 +64,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 |-----------------|----------------------------------------------------------------------------------|
 | INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
 | INVALIDPASS     | Password for existing user is incorrect                                          |
+| INVALIDVERSION  | Client version is outdated                                                       |
 
 ### User Status Codes
 
@@ -91,9 +92,9 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Complete              |                                             |
 | Disallowed extension  | Sent by Soulseek NS for filtered extensions |
 | File not shared.      | Note: Ends with a dot                       |
+| File read error.      | Note: Ends with a dot                       |
 | Pending shutdown.     | Note: Ends with a dot                       |
 | Queued                |                                             |
-| Remote file error     |                                             |
 | Too many files        |                                             |
 | Too many megabytes    |                                             |
 
@@ -103,6 +104,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | ---------------------------------- | ----------------------------------------------------------- |
 | Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
 | File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
 | User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 | User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 
@@ -163,8 +165,8 @@ but it handles the protocol well enough (and can be modified).
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
 | 3    | [Get Peer Address](#server-code-3)                |            |
-| 5    | [Add User](#server-code-5)                        |            |
-| 6    | [Remove User](#server-code-6)                     |            |
+| 5    | [Watch User](#server-code-5)                      |            |
+| 6    | [Unwatch User](#server-code-6)                    |            |
 | 7    | [Get User Status](#server-code-7)                 |            |
 | 13   | [Say in Chat Room](#server-code-13)               |            |
 | 14   | [Join Room](#server-code-14)                      |            |
@@ -177,7 +179,7 @@ but it handles the protocol well enough (and can be modified).
 | 25   | [File Search Room](#server-code-25)               | Obsolete   |
 | 26   | [File Search](#server-code-26)                    |            |
 | 28   | [Set Online Status](#server-code-28)              |            |
-| 32   | [Ping](#server-code-32)                           | Deprecated |
+| 32   | [Ping](#server-code-32)                           |            |
 | 33   | [Send Connect Token](#server-code-33)             | Obsolete   |
 | 34   | [Send Download Speed](#server-code-34)            | Obsolete   |
 | 35   | [Shared Folders & Files](#server-code-35)         |            |
@@ -207,7 +209,7 @@ but it handles the protocol well enough (and can be modified).
 | 86   | [Parent Inactivity Timeout](#server-code-86)      | Obsolete   |
 | 87   | [Search Inactivity Timeout](#server-code-87)      | Obsolete   |
 | 88   | [Minimum Parents In Cache](#server-code-88)       | Obsolete   |
-| 90   | [Distributed Alive Interval](#server-code-90)     | Obsolete   |
+| 90   | [Distributed Ping Interval](#server-code-90)      | Obsolete   |
 | 91   | [Add Privileged User](#server-code-91)            | Obsolete   |
 | 92   | [Check Privileges](#server-code-92)               |            |
 | 93   | [Embedded Message](#server-code-93)               |            |
@@ -250,9 +252,9 @@ but it handles the protocol well enough (and can be modified).
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
 | 148  | [Private Room Owned](#server-code-148)            |            |
 | 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Ask Public Chat](#server-code-150)               | Deprecated |
-| 151  | [Stop Public Chat](#server-code-151)              | Deprecated |
-| 152  | [Public Chat Message](#server-code-152)           | Deprecated |
+| 150  | [Join Global Room](#server-code-150)              | Deprecated |
+| 151  | [Leave Global Room](#server-code-151)             | Deprecated |
+| 152  | [Global Room Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
@@ -296,6 +298,7 @@ We send this to the server right after the connection has been established. Serv
     2.  **string** <ins>greet</ins> *MOTD string*
     3.  **uint32** <ins>Your IP Address</ins>
     4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
+    5.  **bool** <ins>is supporter</ins>  *If we have donated to Soulseek at some point in the past*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> **0**
     2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*
@@ -335,7 +338,7 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 ## Server Code 5
 
-### AddUser
+### WatchUser
 
 Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
 
@@ -357,7 +360,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 ## Server Code 6
 
-### RemoveUser
+### UnwatchUser
 
 Used when we no longer want to be kept updated about a user's stats.
 
@@ -595,16 +598,16 @@ We send our new status to the server. Status is a way to define whether we're av
 
 ### ServerPing
 
-**DEPRECATED**
+We send this to the server at most once per minute to ensure the connection stays alive.
 
-We test if the server responds.
+Nicotine+ uses TCP keepalive instead.
 
 ### Data Order
 
   - Send
       - Empty Message
   - Receive
-      - Empty Message
+      - *No Message*
 
 ## Server Code 33
 
@@ -655,7 +658,7 @@ We send this to server to indicate the number of folder and files that we share.
 
 ### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [AddUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [AddUser](#server-code-5) should be used instead.
+The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [WatchUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [WatchUser](#server-code-5) should be used instead.
 
 ### Data Order
 
@@ -1088,7 +1091,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 87
 
@@ -1101,7 +1104,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 88
 
@@ -1118,7 +1121,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 90
 
-### DistribAliveInterval
+### DistribPingInterval
 
 **OBSOLETE, no longer sent by the server**
 
@@ -1127,7 +1130,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** <ins>seconds</ins>
 
 ## Server Code 91
 
@@ -1419,7 +1422,7 @@ We send this after a finished upload to let the server update the speed statisti
 
 ### UserPrivileged
 
-**DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
+**DEPRECATED, use [WatchUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
 
@@ -1756,7 +1759,7 @@ Sends a broadcast private message to the given list of online users.
 
 ## Server Code 150
 
-### JoinPublicRoom
+### JoinGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1771,7 +1774,7 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 ## Server Code 151
 
-### LeavePublicRoom
+### LeaveGlobalRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -1786,7 +1789,7 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 ## Server Code 152
 
-### PublicRoomMessage
+### GlobalRoomMessage
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
@@ -2008,8 +2011,9 @@ A peer responds with a list of shared files after we've sent a [SharedFileListRe
   - Send
     1.  Iterate through shares database
         1.  **data**
+    2. zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **uint32** <ins>number of directories</ins>
     3.  Iterate <ins>number of directories</ins>
         1.  **string** <ins>directory</ins>
@@ -2090,8 +2094,9 @@ A peer sends this message when it has a file search match. The token is taken fr
         6.  Iterate for <ins>number of attributes</ins>
             1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
             2.  **uint32** <ins>attribute value</ins>
+    11. zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **string** <ins>username</ins>
     3.  **uint32** <ins>token</ins>
     4.  **uint32** <ins>number of results</ins>
@@ -2204,8 +2209,9 @@ A peer responds with the contents of a particular folder (with all subfolders) a
             6.  Iterate for <ins>number of attributes</ins>
                 1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
+    5.  zlib compress
   - Receive
-    1.  decompress
+    1.  zlib decompress
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>folder</ins>
     4.  **uint32** <ins>number of folders</ins>
@@ -2336,7 +2342,7 @@ The peer replies with the upload queue placement of the requested file.
 
 ### UploadFailed
 
-This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file can not be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
+This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file cannot be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
 
 ### Data Order
 
@@ -2469,7 +2475,7 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 | Code | Message                                  | Status     |
 |------|------------------------------------------|------------|
-| 0    | [Ping](#distributed-code-0)              |            |
+| 0    | [Ping](#distributed-code-0)              | Deprecated |
 | 3    | [Search Request](#distributed-code-3)    |            |
 | 4    | [Branch Level](#distributed-code-4)      |            |
 | 5    | [Branch Root](#distributed-code-5)       |            |
@@ -2478,9 +2484,11 @@ Distributed messages are sent to peers over a 'D' connection, and are used for t
 
 ## Distributed Code 0
 
-### DistribAlive
+### DistribPing
 
-Send it every 60 sec.
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+We ping distributed children every 60 seconds.
 
 ### Data Order
 
@@ -2514,6 +2522,8 @@ Search request that arrives through the distributed network. We transmit the sea
 
 We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
+If we receive a branch level of 0 from a parent, we should mark the parent as our branch root, since they won't send a [DistribBranchRoot](#distributed-code-5) message in this case.
+
 ### Data Order
 
   - Send
@@ -2526,6 +2536,8 @@ We tell our distributed children what our position is in our branch (xth generat
 ### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're in on the distributed network.
+
+This message should not be sent when we're the branch root.
 
 ### Data Order
 

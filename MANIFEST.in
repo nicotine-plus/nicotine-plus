@@ -1,16 +1,17 @@
 # This file is responsible for including all necessary files in the source distribution
 # https://packaging.python.org/en/latest/guides/using-manifest-in/
 
+include *.md
 recursive-include data *.in
 recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *
-recursive-include test *
 
-recursive-exclude * *.desktop
+exclude 404.md
 recursive-exclude * *.appdata.xml
+recursive-exclude * *.dbn
+recursive-exclude * *.desktop
 recursive-exclude * *.mo
+recursive-exclude * *.old
 recursive-exclude * *.pyc
-recursive-exclude test *.db
-recursive-exclude test *.old
-recursive-exclude test temp_config*
+recursive-exclude * temp_config*

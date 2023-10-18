@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,7 +23,7 @@ import subprocess
 
 
 def update_pot():
-    """ Update .pot translation template """
+    """Update .pot translation template."""
 
     # Desktop, Python and GtkBuilder files
     files = (sorted(glob.glob("data/**/*.in", recursive=True), key=os.path.abspath)
@@ -37,5 +37,5 @@ def update_pot():
     subprocess.check_call(["xgettext", "--join-existing", "-L", "Python", "-o", "po/nicotine.pot"] + files)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     update_pot()

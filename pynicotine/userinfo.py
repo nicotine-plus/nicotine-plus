@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,7 +23,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -39,54 +38,56 @@ class UserInfo:
             ("quit", self._quit),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("user-info-progress", self._user_info_progress),
             ("user-info-request", self._user_info_request)
         ):
             events.connect(event_name, callback)
 
     def _quit(self):
-        self.users.clear()
+        self.remove_all_users()
 
     def _server_login(self, msg):
 
         if not msg.success:
             return
 
-        for user in self.users:
-            core.watch_user(user)  # Get notified of user status
+        for username in self.users:
+            core.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
 
-    def show_user(self, user, refresh=False, switch_page=True):
+    def show_user(self, username, refresh=False, switch_page=True):
 
-        if user not in self.users:
-            self.users.add(user)
+        if username not in self.users:
+            self.users.add(username)
             refresh = True
 
-        events.emit("user-info-show-user", user=user, refresh=refresh, switch_page=switch_page)
+        events.emit("user-info-show-user", user=username, refresh=refresh, switch_page=switch_page)
 
-        if core.user_status == UserStatus.OFFLINE:
-            events.emit("peer-connection-error", user)
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
+            events.emit("peer-connection-error", username)
             return
 
         if not refresh:
             return
 
         # Request user description, picture and queue information
-        core.send_message_to_peer(user, slskmessages.UserInfoRequest())
+        core.send_message_to_peer(username, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
-        core.watch_user(user, force_update=True)
+        core.watch_user(username)
 
         # Request user interests
-        core.queue.append(slskmessages.UserInterests(user))
+        core.send_message_to_server(slskmessages.UserInterests(username))
 
-        # Set user country
-        events.emit("user-country", user, core.get_user_country(user))
+    def remove_user(self, username):
+        self.users.remove(username)
+        events.emit("user-info-remove-user", username)
 
-    def remove_user(self, user):
-        self.users.remove(user)
-        events.emit("user-info-remove-user", user)
+    def remove_all_users(self):
+        for username in self.users.copy():
+            self.remove_user(username)
 
     @staticmethod
     def save_user_picture(file_path, picture_bytes):
@@ -103,36 +104,41 @@ class UserInfo:
                 "error": error
             })
 
-    def _user_info_request(self, msg):
-        """ Peer code: 15 """
+    def _user_info_progress(self, username, sock, _buffer_len, _msg_size_total):
 
-        user = msg.init.target_user
+        if username not in self.users:
+            # We've removed the user. Close the connection to stop the user from
+            # sending their response and wasting bandwidth.
+            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+
+    def _user_info_request(self, msg):
+        """Peer code 15."""
+
+        username = msg.init.target_user
         ip_address, _port = msg.init.addr
         request_time = time.time()
 
-        if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
+        if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_info_times[user] = request_time
+        self.requested_info_times[username] = request_time
 
-        if core.login_username != user:
-            log.add(_("User %(user)s is reading your user info"), {'user': user})
+        if core.login_username != username:
+            log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
-        status, reason = core.network_filter.check_user(user, ip_address)
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
-        if not status:
+        if permission_level == "banned":
             pic = None
-            descr = core.ban_message % reason
+            descr = core.ban_message % reject_reason
             descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 
         else:
             try:
-                userpic = config.sections["userinfo"]["pic"]
-
-                with open(encode_path(userpic), 'rb') as file_handle:
+                with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
                     pic = file_handle.read()
 
             except Exception:
@@ -140,14 +146,18 @@ class UserInfo:
 
             descr = unescape(config.sections["userinfo"]["descr"])
 
-        totalupl = core.transfers.get_total_uploads_allowed()
-        queuesize = core.transfers.get_upload_queue_size()
-        slotsavail = core.transfers.allow_new_uploads()
+        totalupl = core.uploads.get_total_uploads_allowed()
+        queuesize = core.uploads.get_upload_queue_size()
+        slotsavail = core.uploads.allow_new_uploads()
 
         if config.sections["transfers"]["remotedownloads"]:
             uploadallowed = config.sections["transfers"]["uploadallowed"]
         else:
             uploadallowed = 0
 
-        core.queue.append(
-            slskmessages.UserInfoResponse(msg.init, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+        core.send_message_to_peer(
+            username, slskmessages.UserInfoResponse(
+                descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
+                uploadallowed=uploadallowed
+            )
+        )

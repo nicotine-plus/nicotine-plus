@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -28,12 +28,12 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'replies': ['Test failed.']
+            "replies": ["Test failed."]
         }
         self.metasettings = {
-            'replies': {
-                'description': 'Replies:',
-                'type': 'list string'
+            "replies": {
+                "description": "Replies:",
+                "type": "list string"
             }
         }
 
@@ -41,9 +41,9 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_event(self, room, user, line):
 
-        if line.lower() != 'test':
+        if line.lower() != "test":
             return
 
         if self.throttle.ok_to_respond(room, user, line):
             self.throttle.responded()
-            self.send_public(room, choice(self.settings['replies']).lstrip("!"))
+            self.send_public(room, choice(self.settings["replies"]).lstrip("!"))

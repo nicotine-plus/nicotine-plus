@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,11 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import threading
 import time
 
-from collections import deque
-
+from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -32,15 +30,15 @@ class Application:
 
     def __init__(self):
 
-        self.init_exception_handler()
-        self.thread_events = deque()
+        sys.excepthook = self.on_critical_error
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
-            ("shares-unavailable", self.shares_unavailable),
-            ("thread-event", self.thread_event)
+            ("confirm-quit", self.on_confirm_quit),
+            ("invalid-password", self.on_invalid_password),
+            ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
 
@@ -49,60 +47,54 @@ class Application:
         core.start()
         core.connect()
 
-        # Main loop, process events from threads
-        while not core.shutdown:
-            if self.thread_events:
-                event_list = []
-
-                while self.thread_events:
-                    event_list.append(self.thread_events.popleft())
-
-                for event_name, args, kwargs in event_list:
-                    events.emit(event_name, *args, **kwargs)
-
-            time.sleep(1 / 60)
+        # Main loop, process events from threads 10 times per second
+        while events.process_thread_events():
+            time.sleep(0.1)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
 
-    def thread_event(self, event_name, *args, **kwargs):
-        self.thread_events.append((event_name, args, kwargs))
-
-    def init_exception_handler(self):
-
-        sys.excepthook = self.on_critical_error
-
-        if hasattr(threading, "excepthook"):
-            threading.excepthook = self.on_critical_error_threading
-            return
-
-        # Workaround for Python <= 3.7
-        init_thread = threading.Thread.__init__
-
-        def init_thread_excepthook(self, *args, **kwargs):
-
-            init_thread(self, *args, **kwargs)
-            run_thread = self.run
-
-            def run_with_excepthook(*args2, **kwargs2):
-                try:
-                    run_thread(*args2, **kwargs2)
-                except Exception:
-                    sys.excepthook(*sys.exc_info())
-
-            self.run = run_with_excepthook
-
-        threading.Thread.__init__ = init_thread_excepthook
-
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+
+        sys.excepthook = None
+
         core.quit()
+        events.emit("quit")
+
         raise exc_value
 
-    @staticmethod
-    def on_critical_error_threading(args):
-        raise args.exc_value
+    def on_confirm_quit_response(self, user_input):
+        if user_input.lower().startswith("y"):
+            core.quit()
 
-    def shares_unavailable(self, shares):
+    def on_confirm_quit(self, _only_on_active_uploads):
+        responses = "[y/N] "
+        cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
+
+    def on_invalid_password(self):
+        log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
+                  "if this is your first time logging in."), config.sections["server"]["login"])
+
+    def on_shares_unavailable_response(self, user_input):
+
+        user_input = user_input.lower()
+
+        if not user_input or user_input.startswith("y"):
+            core.shares.rescan_shares()
+
+        elif user_input.startswith("f"):
+            core.shares.rescan_shares(force=True)
+
+    def on_shares_unavailable(self, shares):
+
+        responses = "[Y/n/force] "
+        message = _("The following shares are unavailable:") + "\n\n"
+
         for virtual_name, folder_path in shares:
-            log.add(f"• \"{virtual_name}\" {folder_path}")
+            message += f'• "{virtual_name}" {folder_path}\n'
+
+        message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
+        message += "\n" + _("Retry rescan? %s") % responses
+
+        cli.prompt(message, callback=self.on_shares_unavailable_response)

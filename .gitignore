@@ -12,18 +12,21 @@
 *.po~
 
 # Temporary test files
-test/**/*temp_config*
-test/**/*.db
-test/**/*.json
-test/**/*.old
+pynicotine/tests/**/*temp_config*
+pynicotine/tests/**/*.db
+pynicotine/tests/**/*.dbn
+pynicotine/tests/**/*.json
+pynicotine/tests/**/*.old
 
 # Ignore venv files
 venv/*
 .env/
 
 # Ignore packaging directories and files
+*.json~
 install.txt
 MANIFEST
+.flatpak-builder/
 build/
 dist/
 debian/files

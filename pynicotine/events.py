@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,14 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
 
-EVENT_NAMES = set([
+from collections import deque
+from threading import Thread
+
+
+EVENT_NAMES = {
     # General
     "add-privileged-user",
     "admin-message",
     "change-password",
+    "check-latest-version",
     "check-privileges",
     "cli-command",
+    "cli-prompt-finished",
     "confirm-quit",
     "connect-to-peer",
     "enable-message-queue",
@@ -34,21 +41,21 @@ EVENT_NAMES = set([
     "peer-connection-closed",
     "peer-connection-error",
     "privileged-users",
+    "queue-network-message",
     "quit",
     "remove-privileged-user",
+    "schedule-quit",
     "server-login",
     "server-disconnect",
     "server-timeout",
-    "set-away-mode",
     "set-connection-stats",
-    "set-scan-indeterminate",
-    "set-scan-progress",
     "setup",
-    "show-scan-progress",
+    "shares-preparing",
+    "shares-ready",
+    "shares-scanning",
     "shares-unavailable",
     "start",
     "thread-callback",
-    "thread-event",
     "user-country",
     "user-stats",
     "user-status",
@@ -73,12 +80,12 @@ EVENT_NAMES = set([
     # Chatrooms
     "clear-room-messages",
     "echo-room-message",
+    "global-room-message",
     "join-room",
     "leave-room",
     "private-room-add-operator",
     "private-room-add-user",
     "private-room-added",
-    "private-room-disown",
     "private-room-operator-added",
     "private-room-operator-removed",
     "private-room-owned",
@@ -87,15 +94,14 @@ EVENT_NAMES = set([
     "private-room-removed",
     "private-room-toggle",
     "private-room-users",
-    "public-room-message",
     "remove-room",
-    "room-completion-list",
+    "room-completions",
     "room-list",
     "say-chat-room",
     "show-room",
     "ticker-add",
     "ticker-remove",
-    "ticker-set",
+    "ticker-state",
     "user-joined-room",
     "user-left-room",
 
@@ -120,19 +126,19 @@ EVENT_NAMES = set([
     "clear-private-messages",
     "echo-private-message",
     "message-user",
-    "private-chat-completion-list",
-    "private-chat-show-user",
+    "private-chat-completions",
     "private-chat-remove-user",
+    "private-chat-show-user",
     "send-private-message",
 
     # Search
+    "add-search",
     "add-wish",
-    "distributed-search-request",
-    "do-search",
+    "file-search-request-distributed",
+    "file-search-request-server",
     "file-search-response",
     "remove-search",
     "remove-wish",
-    "server-search-request",
     "set-wishlist-interval",
     "show-search",
 
@@ -189,13 +195,31 @@ EVENT_NAMES = set([
     "user-info-response",
     "user-info-show-user",
     "user-interests",
-])
+}
 
 
 class Events:
 
+    SCHEDULER_MAX_IDLE = 1
+
     def __init__(self):
+
         self._callbacks = {}
+        self._thread_events = deque()
+        self._pending_scheduler_events = deque()
+        self._scheduler_events = {}
+        self._scheduler_event_id = 0
+        self._is_active = False
+
+    def enable(self):
+
+        if self._is_active:
+            return
+
+        self._is_active = True
+
+        self.connect("quit", self._quit)
+        Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
 
@@ -211,11 +235,103 @@ class Events:
         self._callbacks[event_name].remove(function)
 
     def emit(self, event_name, *args, **kwargs):
-        for function in self._callbacks.get(event_name, []):
+
+        callbacks = self._callbacks.get(event_name, [])
+
+        if event_name == "quit":
+            # Event and log modules register callbacks first, but need to quit last
+            callbacks.reverse()
+
+        for function in callbacks:
             function(*args, **kwargs)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
-        self.emit("thread-event", event_name, *args, **kwargs)
+        self._thread_events.append((event_name, args, kwargs))
+
+    def invoke_main_thread(self, callback, *args, **kwargs):
+        self.emit_main_thread("thread-callback", callback, *args, **kwargs)
+
+    def schedule(self, delay, callback, repeat=False):
+
+        self._scheduler_event_id += 1
+        next_time = (time.time() + delay)
+
+        self._pending_scheduler_events.append(
+            (self._scheduler_event_id, (next_time, delay, repeat, callback)))
+
+        return self._scheduler_event_id
+
+    def cancel_scheduled(self, event_id):
+        self._pending_scheduler_events.append((event_id, None))
+
+    def process_thread_events(self):
+        """Called by the main loop 10 times per second to emit thread events in
+        the main thread.
+
+        Return value indicates if the main loop should continue
+        processing events.
+        """
+
+        if not self._thread_events:
+            if not self._is_active:
+                return False
+
+            return True
+
+        event_list = []
+
+        while self._thread_events:
+            event_list.append(self._thread_events.popleft())
+
+        for event_name, args, kwargs in event_list:
+            self.emit(event_name, *args, **kwargs)
+
+        return True
+
+    def _run_scheduler(self):
+
+        while self._is_active:
+            # Scheduled events additions/removals from other threads
+            while self._pending_scheduler_events:
+                event_id, event = self._pending_scheduler_events.popleft()
+
+                if event is not None:
+                    self._scheduler_events[event_id] = event
+                else:
+                    self._scheduler_events.pop(event_id, None)
+
+            # No scheduled events
+            if not self._scheduler_events:
+                time.sleep(self.SCHEDULER_MAX_IDLE)
+                continue
+
+            # Retrieve upcoming event
+            event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
+            event_time, delay, repeat, callback = event_data
+            current_time = time.time()
+            sleep_time = (event_time - current_time)
+
+            if sleep_time <= 0:
+                self.invoke_main_thread(callback)
+
+                if repeat:
+                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback)
+                else:
+                    self._scheduler_events.pop(event_id, None)
+
+                continue
+
+            time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
+
+    def _quit(self):
+
+        # Ensure any remaining events are processed
+        self.process_thread_events()
+
+        self._is_active = False
+        self._callbacks.clear()
+        self._pending_scheduler_events.clear()
+        self._scheduler_events.clear()
 
 
 events = Events()

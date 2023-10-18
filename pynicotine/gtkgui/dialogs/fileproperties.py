@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine import slskmessages
 from pynicotine.core import core
-from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
@@ -34,32 +35,30 @@ class FileProperties(Dialog):
         self.total_length = 0
         self.current_index = 0
 
-        ui_template = UserInterface(scope=self, path="dialogs/fileproperties.ui")
         (
-            self.bitrate_row,
-            self.bitrate_value_label,
             self.container,
             self.country_row,
             self.country_value_label,
             self.download_button,
-            self.filename_value_label,
-            self.filesize_value_label,
             self.folder_value_label,
             self.length_row,
             self.length_value_label,
+            self.name_value_label,
             self.next_button,
             self.path_row,
             self.path_value_label,
             self.previous_button,
+            self.quality_row,
+            self.quality_value_label,
             self.queue_row,
             self.queue_value_label,
+            self.size_value_label,
             self.speed_row,
             self.speed_value_label,
             self.username_value_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
-        Dialog.__init__(
-            self,
+        super().__init__(
             parent=application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
@@ -78,45 +77,45 @@ class FileProperties(Dialog):
 
         if self.total_length:
             self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
-                'num': index, 'total': total_files, 'size': total_size,
-                'length': human_length(self.total_length)
+                "num": index, "total": total_files, "size": total_size,
+                "length": human_length(self.total_length)
             })
             return
 
         self.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
-                       'num': index, 'total': total_files, 'size': total_size})
+                       "num": index, "total": total_files, "size": total_size})
 
     def update_current_file(self):
-        """ Updates the UI with properties for the selected file """
+        """Updates the UI with properties for the selected file."""
 
         properties = self.properties[self.current_index]
 
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
-        h_size = human_size(properties["size"])
-        bytes_size = humanize(properties["size"])
+        size = properties["size"]
+        h_size = human_size(size)
 
-        self.filename_value_label.set_text(str(properties["filename"]))
-        self.folder_value_label.set_text(str(properties["directory"]))
-        self.filesize_value_label.set_text(f"{h_size} ({bytes_size} B)")
-        self.username_value_label.set_text(str(properties["user"]))
+        self.name_value_label.set_text(properties["basename"])
+        self.folder_value_label.set_text(properties["virtual_folder_path"])
+        self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
+        self.username_value_label.set_text(properties["user"])
 
-        path = properties.get("path") or ""
-        bitrate = properties.get("bitrate") or ""
-        length = properties.get("length") or ""
+        real_folder_path = properties.get("real_folder_path") or ""
+        h_quality, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_audio_quality_length(
+            size, properties.get("file_attributes"), always_show_bitrate=True)
         queue_position = properties.get("queue_position") or 0
         speed = properties.get("speed") or 0
         country = properties.get("country") or ""
 
-        self.path_value_label.set_text(str(path))
-        self.path_row.set_visible(bool(path))
+        self.path_value_label.set_text(real_folder_path)
+        self.path_row.set_visible(bool(real_folder_path))
 
-        self.bitrate_value_label.set_text(str(bitrate))
-        self.bitrate_row.set_visible(bool(bitrate))
+        self.quality_value_label.set_text(h_quality)
+        self.quality_row.set_visible(bool(h_quality))
 
-        self.length_value_label.set_text(str(length))
-        self.length_row.set_visible(bool(length))
+        self.length_value_label.set_text(h_length)
+        self.length_row.set_visible(bool(h_length))
 
         self.queue_value_label.set_text(humanize(queue_position))
         self.queue_row.set_visible(bool(queue_position))
@@ -124,7 +123,7 @@ class FileProperties(Dialog):
         self.speed_value_label.set_text(human_speed(speed))
         self.speed_row.set_visible(bool(speed))
 
-        self.country_value_label.set_text(str(country))
+        self.country_value_label.set_text(country)
         self.country_row.set_visible(bool(country))
 
         self.update_title()
@@ -160,7 +159,7 @@ class FileProperties(Dialog):
 
         properties = self.properties[self.current_index]
 
-        core.transfers.get_file(
-            properties["user"], properties["fn"], size=properties["size"],
-            bitrate=properties.get("bitrate"), length=properties.get("length")
+        core.downloads.get_file(
+            properties["user"], properties["file_path"], size=properties["size"],
+            file_attributes=properties.get("file_attributes")
         )

@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   debian:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -15,11 +15,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
+          sudo apt install python3-build
           sudo apt build-dep .
 
       - name: Build Debian package
         run: |
-          python3 setup.py sdist
+          python3 -m build --sdist --no-isolation
           mk-origtargz dist/nicotine-plus-*.tar.gz
           debuild -sa -us -uc
 
@@ -35,34 +36,33 @@ jobs:
           path: build/package/
 
   flatpak:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-43
+      image: bilelmoussaoui/flatpak-github-actions:gnome-45
       options: --privileged
     steps:
     - uses: actions/checkout@v3
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v5
+    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: flatpak-package.flatpak
         manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
-        run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}
 
   windows:
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
-        include: [
-          { msystem: MINGW64, arch: x86_64 },
-          { msystem: MINGW32, arch: i686 },
-        ]
+        include:
+          - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
+          - { msystem: MINGW32, arch: i686, gtk: 4, libadwaita: 1 }
     defaults:
       run:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: 3
-      NICOTINE_LIBADWAITA: 0
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      NICOTINE_LIBADWAITA: ${{ matrix.libadwaita }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -73,18 +73,22 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
+          release: false
           update: true
+          install: >-
+            mingw-w64-${{ matrix.arch }}-gettext
+            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ matrix.arch }}-python-cx-freeze
+            mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-python-pycodestyle
+            mingw-w64-${{ matrix.arch }}-python-pylint
+            mingw-w64-${{ matrix.arch }}-python-gobject
 
-      - name: Install build dependencies
-        run: |
-          sed -i s'/SigLevel.*/SigLevel = Never/'g /etc/pacman.conf
-          pacman --noconfirm -S --needed mingw-w64-$ARCH-python
-          python3 packaging/windows/dependencies_core.py
-          python3 packaging/windows/dependencies_packaging.py
+      - name: Install additional dependencies
+        run: python3 packaging/windows/dependencies.py
 
       - name: Freeze application
-        run: |
-          python3 packaging/windows/setup.py bdist_msi
+        run: python3 packaging/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v3
@@ -99,7 +103,7 @@ jobs:
           path: packaging/windows/build/package
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     env:
       NICOTINE_GTK_VERSION: 4
       NICOTINE_LIBADWAITA: 1
@@ -112,15 +116,18 @@ jobs:
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
       - name: Install build dependencies
-        run: |
-          brew install python
-          python3 packaging/macos/dependencies_core.py
-          python3 packaging/macos/dependencies_packaging.py
+        run: python packaging/macos/dependencies.py
 
       - name: Freeze application
-        run: |
-          python3 packaging/macos/setup.py bdist_dmg
+        run: python packaging/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v3

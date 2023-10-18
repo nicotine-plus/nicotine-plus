@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -20,28 +20,28 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
-    """ File Chooser Example"""
+    """File Chooser Example."""
 
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'file': '/home/example/file.pdf',
-            'folder': '/home/example/folder',
-            'image': '/home/example/image.jpg',
+            "file": "/home/example/file.pdf",
+            "folder": "/home/example/folder",
+            "image": "/home/example/image.jpg",
         }
         self.metasettings = {
-            'file': {
-                'description': 'Select a file',
-                'type': 'file',
-                'chooser': 'file'},
-            'folder': {
-                'description': 'Select a folder',
-                'type': 'file',
-                'chooser': 'folder'},
-            'image': {
-                'description': 'Select an image',
-                'type': 'file',
-                'chooser': 'image'},
+            "file": {
+                "description": "Select a file",
+                "type": "file",
+                "chooser": "file"},
+            "folder": {
+                "description": "Select a folder",
+                "type": "file",
+                "chooser": "folder"},
+            "image": {
+                "description": "Select an image",
+                "type": "file",
+                "chooser": "image"},
         }

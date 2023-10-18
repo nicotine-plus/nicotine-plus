@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,47 +19,66 @@
 import re
 import time
 
+from collections import deque
+
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.widgets import clipboard
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_uri
-
-
-""" Textview """
+from pynicotine.utils import PUNCTUATION
 
 
 class TextView:
 
     if GTK_API_VERSION >= 4:
+        DEFAULT_CURSOR = Gdk.Cursor(name="default")
         POINTER_CURSOR = Gdk.Cursor(name="pointer")
         TEXT_CURSOR = Gdk.Cursor(name="text")
     else:
+        DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
-    def __init__(self, textview, auto_scroll=False, parse_urls=True):
+    def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
+                 horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
-        self.textview = textview
-        self.textbuffer = textview.get_buffer()
-        self.scrollable = textview.get_ancestor(Gtk.ScrolledWindow)
-        self.adjustment = self.scrollable.get_vadjustment()
+        self.widget = Gtk.TextView(
+            accepts_tab=False, editable=editable,
+            left_margin=horizontal_margin, right_margin=horizontal_margin,
+            top_margin=vertical_margin, bottom_margin=vertical_margin,
+            pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
+        )
+
+        if GTK_API_VERSION >= 4:
+            parent.set_child(self.widget)  # pylint: disable=no-member
+        else:
+            parent.add(self.widget)        # pylint: disable=no-member
+
+        self.textbuffer = self.widget.get_buffer()
+        self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
-        self.auto_scroll = self.should_auto_scroll = auto_scroll
+        self.adjustment = self.scrollable.get_vadjustment()
+        self.auto_scroll = auto_scroll
+        self.adjustment_bottom = self.adjustment_value = 0
+        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
+        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
+
+        self.pressed_x = self.pressed_y = 0
+        self.max_num_lines = 50000
         self.parse_urls = parse_urls
         self.tag_urls = {}
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
-
-        self.pressed_x = 0
-        self.pressed_y = 0
-        self.max_num_lines = 50000
-
-        self.adjustment.connect("notify::upper", self.on_adjustment_changed)
-        self.adjustment.connect("notify::value", self.on_adjustment_changed, True)
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -68,18 +87,18 @@ class TextView:
             self.gesture_click_secondary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_secondary)
 
-            self.cursor_window = self.textview
+            self.cursor_window = self.widget
 
             self.motion_controller = Gtk.EventControllerMotion()
             self.motion_controller.connect("motion", self.on_move_cursor)
-            textview.add_controller(self.motion_controller)
+            self.widget.add_controller(self.motion_controller)  # pylint: disable=no-member
         else:
             self.gesture_click_primary = Gtk.GestureMultiPress(widget=scrollable_container)
             self.gesture_click_secondary = Gtk.GestureMultiPress(widget=scrollable_container)
 
             self.cursor_window = None
 
-            textview.connect("motion-notify-event", self.on_move_cursor_event)
+            self.widget.connect("motion-notify-event", self.on_move_cursor_event)
 
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_primary.connect("released", self.on_released_primary)
@@ -88,13 +107,9 @@ class TextView:
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
         self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
 
-    def scroll_bottom(self, *_args):
-
-        if not self.textview.get_realized():
-            # Avoid GTK warnings
-            return
-
-        self.adjustment.set_value(self.adjustment.get_upper() - self.adjustment.get_page_size())
+    def scroll_bottom(self):
+        self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
+        self.adjustment.set_value(self.adjustment_value)
 
     def _insert_text(self, text, tag=None):
 
@@ -171,10 +186,14 @@ class TextView:
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
+    def get_text(self):
+        start_iter, end_iter = self.textbuffer.get_bounds()
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
+
     def get_tags_for_pos(self, pos_x, pos_y):
 
-        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
-        over_text, iterator, _trailing = self.textview.get_iter_at_position(buf_x, buf_y)
+        buf_x, buf_y = self.widget.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, pos_x, pos_y)
+        over_text, iterator, _trailing = self.widget.get_iter_at_position(buf_x, buf_y)
 
         if not over_text:
             # Iterators are returned for whitespace after the last character, avoid accidental URL clicks
@@ -190,15 +209,31 @@ class TextView:
 
         return ""
 
+    def grab_focus(self):
+        self.widget.grab_focus()
+
+    def place_cursor_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        self.textbuffer.place_cursor(iterator)
+
     def update_cursor(self, pos_x, pos_y):
 
         cursor = self.TEXT_CURSOR
 
         if self.cursor_window is None:
-            self.cursor_window = self.textview.get_window(Gtk.TextWindowType.TEXT)
+            self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "url") or hasattr(tag, "username"):
+            if hasattr(tag, "username"):
+                cursor = self.DEFAULT_CURSOR
+                break
+
+            if hasattr(tag, "url"):
                 cursor = self.POINTER_CURSOR
                 break
 
@@ -212,7 +247,7 @@ class TextView:
         self.textbuffer.delete(start_iter, end_iter)
         self.tag_urls.clear()
 
-    """ Text Tags (usernames, URLs) """
+    # Text Tags (Usernames, URLs) #
 
     def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
@@ -223,7 +258,7 @@ class TextView:
             tag.color_id = color_id
 
         if url:
-            if url[:4] == "www.":
+            if url.startswith("www."):
                 url = "http://" + url
 
             tag.url = url
@@ -245,7 +280,7 @@ class TextView:
         for tag in self.tag_urls.values():
             self.update_tag(tag)
 
-    """ Events """
+    # Events #
 
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
@@ -288,31 +323,189 @@ class TextView:
         self.update_cursor(event.x, event.y)
 
     def on_copy_text(self, *_args):
-        self.textview.emit("copy-clipboard")
+        self.widget.emit("copy-clipboard")
 
     def on_copy_link(self, *_args):
-        copy_text(self.get_url_for_current_pos())
+        clipboard.copy_text(self.get_url_for_current_pos())
 
     def on_copy_all_text(self, *_args):
-
-        textbuffer = self.textview.get_buffer()
-        start_iter, end_iter = textbuffer.get_bounds()
-        text = textbuffer.get_text(start_iter, end_iter, True)
-
-        copy_text(text)
+        clipboard.copy_text(self.get_text())
 
     def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_adjustment_changed(self, adjustment, _param, force_scroll=False):
+    def on_adjustment_upper_changed(self, *_args):
 
-        if not self.auto_scroll:
+        new_adjustment_bottom = (self.adjustment.get_upper() - self.adjustment.get_page_size())
+
+        if self.auto_scroll and (self.adjustment_bottom - self.adjustment_value) <= 0:
+            # Scroll to bottom if we were at the bottom previously
+            self.scroll_bottom()
+
+        self.adjustment_bottom = new_adjustment_bottom
+
+    def on_adjustment_value_changed(self, *_args):
+
+        new_value = self.adjustment.get_value()
+
+        if new_value.is_integer() and (0 < new_value < self.adjustment_bottom):
+            # The textview scrolls up on its own sometimes. Ignore these garbage values.
             return
 
-        if force_scroll or not self.should_auto_scroll:
-            # Scroll to bottom if we were at the bottom previously
-            bottom = adjustment.get_upper() - adjustment.get_page_size()
-            self.should_auto_scroll = (bottom - adjustment.get_value() <= 0)
+        self.adjustment_value = new_value
 
-        if self.should_auto_scroll:
-            GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
+
+class ChatView(TextView):
+
+    def __init__(self, *args, chat_entry=None, status_users=None, username_event=None, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.tag_users = self.status_users = {}
+        self.chat_entry = chat_entry
+        self.username_event = username_event
+
+        if status_users:
+            # In chatrooms, we only want to set the online status for users that are
+            # currently in the room, even though we might know their global status
+            self.status_users = status_users
+
+        self.tag_remote = self.create_tag("chatremote")
+        self.tag_local = self.create_tag("chatlocal")
+        self.tag_command = self.create_tag("chatcommand")
+        self.tag_action = self.create_tag("chatme")
+        self.tag_highlight = self.create_tag("chathilite")
+
+        Accelerator("Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
+
+    @staticmethod
+    def find_whole_word(word, text):
+        """Returns start position of a whole word that is not in a subword."""
+
+        if word not in text:
+            return -1
+
+        word_boundaries = [" "] + PUNCTUATION
+        whole = False
+        start = after = 0
+
+        while not whole and start > -1:
+            start = text.find(word, after)
+            after = start + len(word)
+
+            whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+        return start if whole else -1
+
+    def append_log_lines(self, path, num_lines, timestamp_format):
+
+        if not num_lines:
+            return
+
+        try:
+            with open(encode_path(path), "rb") as lines:
+                # Only show as many log lines as specified in config
+                lines = deque(lines, num_lines)
+
+        except OSError:
+            return
+
+        login = config.sections["server"]["login"]
+
+        for line in lines:
+            try:
+                line = line.decode("utf-8")
+
+            except UnicodeDecodeError:
+                line = line.decode("latin-1")
+
+            user = tag = usertag = None
+
+            if " [" in line and "] " in line:
+                start = line.find(" [") + 2
+                end = line.find("] ", start)
+
+                if end > start:
+                    user = line[start:end]
+                    usertag = self.get_user_tag(user)
+
+                    text = line[end + 2:-1]
+                    tag = self.get_line_tag(user, text, login)
+
+            elif "* " in line:
+                tag = self.tag_action
+
+            if user != login:
+                self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
+            else:
+                self.append_line(line, tag=tag, username=user, usertag=usertag)
+
+        if lines:
+            self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+                             timestamp_format=timestamp_format)
+
+    def clear(self):
+        super().clear()
+        self.tag_users.clear()
+
+    def get_line_tag(self, user, text, login=None):
+
+        if text.startswith("/me "):
+            return self.tag_action
+
+        if user == login:
+            return self.tag_local
+
+        if login and self.find_whole_word(login.lower(), text.lower()) > -1:
+            return self.tag_highlight
+
+        return self.tag_remote
+
+    def get_user_tag(self, username):
+
+        if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+            self.update_user_tag(username)
+
+        return self.tag_users[username]
+
+    def update_tags(self):
+
+        super().update_tags()
+        self.update_user_tags()
+
+        for tag in (
+            self.tag_remote,
+            self.tag_local,
+            self.tag_command,
+            self.tag_action,
+            self.tag_highlight
+        ):
+            self.update_tag(tag)
+
+    def update_user_tag(self, username):
+
+        if username not in self.tag_users:
+            return
+
+        status = UserStatus.OFFLINE
+
+        if username in self.status_users:
+            status = core.user_statuses.get(username, UserStatus.OFFLINE)
+
+        color = USER_STATUS_COLORS.get(status)
+        self.update_tag(self.tag_users[username], color)
+
+    def update_user_tags(self):
+        for username in self.tag_users:
+            self.update_user_tag(username)
+
+    def on_page_down_accelerator(self, *_args):
+        """Page_Down, Down: Give focus to text entry if already scrolled at the
+        bottom."""
+
+        if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
+            # Give focus to text entry upon scrolling down to the bottom
+            self.chat_entry.grab_focus_without_selecting()

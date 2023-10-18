@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -27,19 +27,19 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            'users': []
+            "users": []
         }
         self.metasettings = {
-            'users': {
-                'description': 'Username',
-                'type': 'list string'
+            "users": {
+                "description": "Username",
+                "type": "list string"
             }
         }
         self.user_statuses = {}
 
     def user_status_notification(self, user, status, _privileged):
 
-        if user not in self.settings['users']:
+        if user not in self.settings["users"]:
             return
 
         if status == UserStatus.OFFLINE:

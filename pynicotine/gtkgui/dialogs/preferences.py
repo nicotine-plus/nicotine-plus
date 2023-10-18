@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -24,29 +24,33 @@
 
 import os
 import re
-import socket
 import sys
 import time
 
 from operator import itemgetter
 
-import gi
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+import pynicotine
+from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
+from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
+from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
-from pynicotine.gtkgui.widgets.dialogs import PluginSettingsDialog
+from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
@@ -54,39 +58,57 @@ from pynicotine.gtkgui.widgets.theme import load_custom_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.i18n import LANGUAGES
-from pynicotine.slskmessages import UserStatus
+from pynicotine.slskproto import NetworkInterfaces
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
+
+
+PAGE_IDS = [
+    ("network", _("Network"), "network-wireless-symbolic"),
+    ("user-interface", _("User Interface"), "view-grid-symbolic"),
+    ("shares", _("Shares"), "folder-symbolic"),
+    ("downloads", _("Downloads"), "document-save-symbolic"),
+    ("uploads", _("Uploads"), "emblem-shared-symbolic"),
+    ("searches", _("Searches"), "system-search-symbolic"),
+    ("user-profile", _("User Profile"), "avatar-default-symbolic"),
+    ("chats", _("Chats"), "insert-text-symbolic"),
+    ("now-playing", _("Now Playing"), "folder-music-symbolic"),
+    ("logging", _("Logging"), "folder-documents-symbolic"),
+    ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
+    ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+    ("plugins", _("Plugins"), "list-add-symbolic"),
+    ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
 
 
 class NetworkPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/network.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.auto_away_spinner,
             self.auto_connect_startup_toggle,
             self.auto_reply_message_entry,
             self.check_port_status_label,
+            self.container,
             self.current_port_label,
-            self.first_port_spinner,
-            self.last_port_spinner,
-            self.network_interface_combobox,
+            self.listen_port_spinner,
             self.network_interface_label,
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = False
 
         self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
+
+        self.network_interface_combobox = ComboBox(
+            container=self.network_interface_label.get_parent(), has_entry=True,
+            label=self.network_interface_label
+        )
 
         self.options = {
             "server": {
@@ -103,47 +125,41 @@ class NetworkPage:
 
     def set_settings(self):
 
+        # Network interfaces
+        self.network_interface_combobox.clear()
+        self.network_interface_combobox.append("")
+
+        for interface in NetworkInterfaces.get_interface_addresses():
+            self.network_interface_combobox.append(interface)
+
         self.application.preferences.set_widgets_data(self.options)
+        unknown_label = _("Unknown")
 
         # Listening port status
-        first_port, last_port = config.sections["server"]["portrange"]
+        if core.public_port:
+            url = pynicotine.__port_checker_url__ % str(core.public_port)
+            port_status_text = _("Check Port Status")
 
-        self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-            "ip": core.user_ip_address or _("Unknown"),
-            "port": core.protothread.listenport or _("Unknown")
-        })
-
-        url = config.portchecker_url % str(core.protothread.listenport or first_port)
-        port_status_text = _("Check Port Status")
-        self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-
-        # Network interfaces
-        if sys.platform == "win32":
-            for widget in (self.network_interface_combobox, self.network_interface_label):
-                widget.get_parent().set_visible(False)
+            self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
+                "ip": core.public_ip_address or unknown_label,
+                "port": core.public_port or unknown_label
+            })
+            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
+            self.check_port_status_label.set_visible(True)
         else:
-            self.network_interface_combobox.remove_all()
-            self.network_interface_combobox.append_text("")
-
-            try:
-                for _i, interface in socket.if_nameindex():
-                    self.network_interface_combobox.append_text(interface)
-
-            except (AttributeError, OSError):
-                pass
+            self.current_port_label.set_markup(f"<b>{unknown_label}</b>")
+            self.check_port_status_label.set_visible(False)
 
         # Special options
         server_hostname, server_port = config.sections["server"]["server"]
         self.soulseek_server_entry.set_text(f"{server_hostname}:{server_port}")
 
-        self.first_port_spinner.set_value(first_port)
-        self.last_port_spinner.set_value(last_port)
+        listen_port, _unused_port = config.sections["server"]["portrange"]
+        self.listen_port_spinner.set_value(listen_port)
 
         self.portmap_required = False
 
     def get_settings(self):
-
-        self.portmap_required = False
 
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
@@ -153,20 +169,16 @@ class NetworkPage:
         except Exception:
             server_addr = config.defaults["server"]["server"]
 
-        first_port = self.first_port_spinner.get_value_as_int()
-        last_port = self.last_port_spinner.get_value_as_int()
-
-        if first_port > last_port:
-            first_port, last_port = last_port, first_port
+        listen_port = self.listen_port_spinner.get_value_as_int()
 
         return {
             "server": {
                 "server": server_addr,
                 "login": self.username_entry.get_text(),
-                "portrange": (first_port, last_port),
+                "portrange": (listen_port, listen_port),
                 "autoaway": self.auto_away_spinner.get_value_as_int(),
                 "autoreply": self.auto_reply_message_entry.get_text(),
-                "interface": self.network_interface_combobox.get_active_text(),
+                "interface": self.network_interface_combobox.get_text(),
                 "upnp": self.upnp_toggle.get_active(),
                 "auto_connect_startup": self.auto_connect_startup_toggle.get_active()
             }
@@ -188,7 +200,7 @@ class NetworkPage:
             self.on_change_password()
             return
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
@@ -197,7 +209,7 @@ class NetworkPage:
 
     def on_change_password(self, *_args):
 
-        if core.user_status != UserStatus.OFFLINE:
+        if core.user_status != slskmessages.UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -210,6 +222,7 @@ class NetworkPage:
             title=_("Change Password"),
             message=message,
             visibility=False,
+            action_button_label=_("_Change"),
             callback=self.on_change_password_response,
             callback_data=core.user_status
         ).show()
@@ -226,49 +239,105 @@ class DownloadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/downloads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AfterDownload, self.AfterFolder, self.AutoclearFinished,
-         self.DownloadDir, self.DownloadDoubleClick, self.DownloadFilter, self.DownloadReverseOrder,
-         self.DownloadSpeed, self.DownloadSpeedAlternative, self.FilterView, self.IncompleteDir,
-         self.Main, self.RemoteDownloads, self.UnlimitedDownloadSpeed, self.UploadDir, self.UploadsAllowed,
-         self.UseAltDownloadSpeedLimit, self.UseDownloadSpeedLimit,
-         self.UsernameSubfolders, self.VerifiedLabel) = ui_template.widgets
+        (
+            self.accept_sent_files_toggle,
+            self.alt_speed_spinner,
+            self.autoclear_downloads_toggle,
+            self.container,
+            self.download_double_click_label,
+            self.download_folder_label,
+            self.enable_filters_toggle,
+            self.enable_username_subfolders_toggle,
+            self.file_finished_command_entry,
+            self.filter_list_container,
+            self.filter_status_label,
+            self.folder_finished_command_entry,
+            self.incomplete_folder_label,
+            self.received_folder_label,
+            self.sent_files_permission_container,
+            self.speed_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio
+        ) = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
-        self.incomplete_dir = FileChooserButton(self.IncompleteDir, application.preferences, "folder")
-        self.download_dir = FileChooserButton(self.DownloadDir, application.preferences, "folder")
-        self.upload_dir = FileChooserButton(self.UploadDir, application.preferences, "folder")
+        self.sent_files_permission_combobox = ComboBox(
+            container=self.sent_files_permission_container,
+            items=(
+                (_("No one"), None),
+                (_("Everyone"), None),
+                (_("Buddies"), None),
+                (_("Trusted Buddies"), None)
+            )
+        )
 
+        self.download_double_click_combobox = ComboBox(
+            container=self.download_double_click_label.get_parent(), label=self.download_double_click_label,
+            items=(
+                (_("Nothing"), None),
+                (_("Send to Player"), None),
+                (_("Open in File Manager"), None),
+                (_("Search"), None),
+                (_("Pause"), None),
+                (_("Clear"), None),
+                (_("Resume"), None),
+                (_("Browse Folder"), None)
+            )
+        )
+
+        self.download_folder_button = FileChooserButton(
+            self.download_folder_label.get_parent(), window=application.preferences,
+            label=self.download_folder_label, chooser_type="folder"
+        )
+        self.incomplete_folder_button = FileChooserButton(
+            self.incomplete_folder_label.get_parent(), window=application.preferences,
+            label=self.incomplete_folder_label, chooser_type="folder"
+        )
+        self.received_folder_button = FileChooserButton(
+            self.received_folder_label.get_parent(), window=application.preferences,
+            label=self.received_folder_label, chooser_type="folder"
+        )
+
+        self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
+                                           "can be used, otherwise only wildcard * matches are supported.")
         self.filter_list_view = TreeView(
-            application.window, parent=self.FilterView, multi_select=True, activate_row_callback=self.on_edit_filter,
-            columns=[
-                {"column_id": "filter", "column_type": "text", "title": _("Filter"), "sort_column": 0,
-                 "width": 150, "expand_column": True},
-                {"column_id": "escaped", "column_type": "toggle", "title": _("Escaped"), "width": 0,
-                 "sort_column": 1, "toggle_callback": self.on_toggle_escaped}
-            ]
+            application.window, parent=self.filter_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_filter,
+            delete_accelerator_callback=self.on_remove_filter,
+            columns={
+                "filter": {
+                    "column_type": "text",
+                    "title": _("Filter"),
+                    "width": 150,
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                },
+                "regex": {
+                    "column_type": "toggle",
+                    "title": _("Regex"),
+                    "width": 0,
+                    "toggle_callback": self.on_toggle_regex
+                }
+            }
         )
 
         self.options = {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished,
-                "reverseorder": self.DownloadReverseOrder,
-                "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed,
-                "incompletedir": self.incomplete_dir,
-                "downloaddir": self.download_dir,
-                "uploaddir": self.upload_dir,
-                "downloadfilters": self.filter_list_view,
-                "enablefilters": self.DownloadFilter,
-                "downloadlimit": self.DownloadSpeed,
-                "downloadlimitalt": self.DownloadSpeedAlternative,
-                "usernamesubfolders": self.UsernameSubfolders,
-                "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder,
-                "download_doubleclick": self.DownloadDoubleClick
+                "autoclear_downloads": self.autoclear_downloads_toggle,
+                "remotedownloads": self.accept_sent_files_toggle,
+                "uploadallowed": self.sent_files_permission_combobox,
+                "incompletedir": self.incomplete_folder_button,
+                "downloaddir": self.download_folder_button,
+                "uploaddir": self.received_folder_button,
+                "enablefilters": self.enable_filters_toggle,
+                "downloadlimit": self.speed_spinner,
+                "downloadlimitalt": self.alt_speed_spinner,
+                "usernamesubfolders": self.enable_username_subfolders_toggle,
+                "afterfinish": self.file_finished_command_entry,
+                "afterfolder": self.folder_finished_command_entry,
+                "download_doubleclick": self.download_double_click_combobox
             }
         }
 
@@ -280,20 +349,29 @@ class DownloadsPage:
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseDownloadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltDownloadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedDownloadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
+
+        for item in config.sections["transfers"]["downloadfilters"]:
+            if not isinstance(item, list) or len(item) < 2:
+                continue
+
+            dfilter, escaped = item
+            enable_regex = not escaped
+
+            self.filter_list_view.add_row([dfilter, enable_regex], select_row=False)
 
     def get_settings(self):
 
-        if self.UseDownloadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltDownloadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -302,51 +380,48 @@ class DownloadsPage:
         download_filters = []
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
-            download_filters.append([dfilter, int(escaped)])
-
-        download_filters.sort()
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
+            download_filters.append([dfilter, not enable_regex])
 
         return {
             "transfers": {
-                "autoclear_downloads": self.AutoclearFinished.get_active(),
-                "reverseorder": self.DownloadReverseOrder.get_active(),
-                "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": self.UploadsAllowed.get_active(),
-                "incompletedir": self.incomplete_dir.get_path(),
-                "downloaddir": self.download_dir.get_path(),
-                "uploaddir": self.upload_dir.get_path(),
+                "autoclear_downloads": self.autoclear_downloads_toggle.get_active(),
+                "remotedownloads": self.accept_sent_files_toggle.get_active(),
+                "uploadallowed": self.sent_files_permission_combobox.get_selected_pos(),
+                "incompletedir": self.incomplete_folder_button.get_path(),
+                "downloaddir": self.download_folder_button.get_path(),
+                "uploaddir": self.received_folder_button.get_path(),
                 "downloadfilters": download_filters,
-                "enablefilters": self.DownloadFilter.get_active(),
+                "enablefilters": self.enable_filters_toggle.get_active(),
                 "use_download_speed_limit": use_speed_limit,
-                "downloadlimit": self.DownloadSpeed.get_value_as_int(),
-                "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
-                "usernamesubfolders": self.UsernameSubfolders.get_active(),
-                "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text(),
-                "download_doubleclick": self.DownloadDoubleClick.get_active()
+                "downloadlimit": self.speed_spinner.get_value_as_int(),
+                "downloadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "usernamesubfolders": self.enable_username_subfolders_toggle.get_active(),
+                "afterfinish": self.file_finished_command_entry.get_text(),
+                "afterfolder": self.folder_finished_command_entry.get_text(),
+                "download_doubleclick": self.download_double_click_combobox.get_selected_pos()
             }
         }
 
-    def on_toggle_escaped(self, list_view, iterator):
+    def on_toggle_regex(self, list_view, iterator):
 
-        value = list_view.get_row_value(iterator, 1)
-        list_view.set_row_value(iterator, 1, not value)
+        value = list_view.get_row_value(iterator, "regex")
+        list_view.set_row_value(iterator, "regex", not value)
 
         self.on_verify_filter()
 
     def on_add_filter_response(self, dialog, _response_id, _data):
 
         dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
-            self.filter_list_view.set_row_value(iterator, 0, dfilter)
-            self.filter_list_view.set_row_value(iterator, 1, escaped)
+            self.filter_list_view.set_row_value(iterator, "filter", dfilter)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
-            self.filter_list_view.add_row([dfilter, escaped])
+            self.filter_list_view.add_row([dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -355,42 +430,44 @@ class DownloadsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Download Filter"),
-            message=_("Enter a new download filter:"),
+            message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_filter_response,
-            option_value=True,
-            option_label=_("Escape filter"),
+            option_value=False,
+            option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
         ).show()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
         new_dfilter = dialog.get_entry_value()
-        escaped = dialog.get_option_value()
+        enable_regex = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
-            self.filter_list_view.set_row_value(iterator, 0, new_dfilter)
-            self.filter_list_view.set_row_value(iterator, 1, escaped)
+            self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
             self.filter_list_view.remove_row(iterator)
-            self.filter_list_view.add_row([new_dfilter, escaped])
+            self.filter_list_view.add_row([new_dfilter, enable_regex])
 
         self.on_verify_filter()
 
     def on_edit_filter(self, *_args):
 
         for iterator in self.filter_list_view.get_selected_rows():
-            dfilter = self.filter_list_view.get_row_value(iterator, 0)
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Download Filter"),
-                message=_("Modify the following download filter:"),
+                message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_filter_response,
                 callback_data=iterator,
                 default=dfilter,
-                option_value=escaped,
-                option_label=_("Escape filter")
+                option_value=enable_regex,
+                option_label=_("Enable regular expressions")
             ).show()
             return
 
@@ -416,10 +493,10 @@ class DownloadsPage:
         outfilter = "(\\\\("
 
         for dfilter, iterator in self.filter_list_view.iterators.items():
-            dfilter = self.filter_list_view.get_row_value(iterator, 0)
-            escaped = self.filter_list_view.get_row_value(iterator, 1)
+            dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
-            if escaped:
+            if not enable_regex:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
 
@@ -446,55 +523,77 @@ class DownloadsPage:
 
             for dfilter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
-                    'filter': dfilter,
-                    'error': error
+                    "filter": dfilter,
+                    "error": error
                 }
 
             error = _("%(num)d Failed! %(error)s " % {
-                'num': len(failed),
-                'error': errors}
+                "num": len(failed),
+                "error": errors}
             )
 
-            self.VerifiedLabel.set_text(error)
+            self.filter_status_label.set_text(error)
         else:
-            self.VerifiedLabel.set_text(_("Filters Successful"))
+            self.filter_status_label.set_text(_("Filters Successful"))
 
 
 class SharesPage:
 
+    GROUP_NAMES = {
+        _("Public"): "public",
+        _("Buddies"): "buddy",
+        _("Trusted buddies"): "trusted"
+    }
+
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/shares.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
-            self.buddy_shares_trusted_only_toggle,
+            self.container,
             self.rescan_on_startup_toggle,
+            self.reveal_buddy_shares_toggle,
+            self.reveal_trusted_shares_toggle,
             self.shares_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
         self.rescan_required = False
+        self.recompress_shares_required = False
         self.shared_folders = []
         self.buddy_shared_folders = []
+        self.trusted_shared_folders = []
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
-            columns=[
-                {"column_id": "virtual_folder", "column_type": "text", "title": _("Virtual Folder"), "width": 65,
-                 "sort_column": 0, "expand_column": True},
-                {"column_id": "folder", "column_type": "text", "title": _("Folder"), "width": 150,
-                 "sort_column": 1, "expand_column": True},
-                {"column_id": "buddies", "column_type": "toggle", "title": _("Buddy-only"), "width": 0,
-                 "sort_column": 2, "toggle_callback": self.on_toggle_folder_buddy_only},
-            ]
+            delete_accelerator_callback=self.on_remove_shared_folder,
+            columns={
+                "virtual_name": {
+                    "column_type": "text",
+                    "title": _("Virtual Folder"),
+                    "width": 65,
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                },
+                "folder": {
+                    "column_type": "text",
+                    "title": _("Folder"),
+                    "width": 150,
+                    "expand_column": True
+                },
+                "accessible_to": {
+                    "column_type": "text",
+                    "title": _("Accessible To"),
+                    "width": 0
+                }
+            }
         )
 
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
         }
 
@@ -506,16 +605,21 @@ class SharesPage:
 
         self.shared_folders = config.sections["transfers"]["shared"][:]
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
-
-        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
-            is_buddy_only = True
-            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
+        self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
-            is_buddy_only = False
-            self.shares_list_view.add_row([str(virtual_name), str(folder_path), is_buddy_only], select_row=False)
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Public")], select_row=False)
 
-        self.rescan_required = False
+        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Buddies")], select_row=False)
+
+        for virtual_name, folder_path, *_unused in self.trusted_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Trusted")], select_row=False)
+
+        self.rescan_required = self.recompress_shares_required = False
 
     def get_settings(self):
 
@@ -523,52 +627,28 @@ class SharesPage:
             "transfers": {
                 "shared": self.shared_folders[:],
                 "buddyshared": self.buddy_shared_folders[:],
+                "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle.get_active()
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
         }
 
-    def _set_shared_folder_buddy_only(self, iterator, is_buddy_only):
-
-        if is_buddy_only == self.shares_list_view.get_row_value(iterator, 2):
-            return
-
-        self.rescan_required = True
-
-        virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
-        mapping = (virtual_name, folder_path)
-
-        self.shares_list_view.set_row_value(iterator, 2, is_buddy_only)
-
-        if is_buddy_only:
-            self.shared_folders.remove(mapping)
-            self.buddy_shared_folders.append(mapping)
-            return
-
-        self.buddy_shared_folders.remove(mapping)
-        self.shared_folders.append(mapping)
+    def on_reveal_share_changed(self, *_args):
+        self.recompress_shares_required = True
 
     def on_add_shared_folder_selected(self, selected, _data):
 
         for folder_path in selected:
-            if folder_path is None:
-                continue
+            virtual_name = core.shares.add_share(
+                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
+            )
 
-            if folder_path in (x[1] for x in self.shared_folders + self.buddy_shared_folders):
+            if not virtual_name:
                 continue
 
             self.rescan_required = True
-
-            virtual_name = core.shares.get_normalized_virtual_name(
-                os.path.basename(os.path.normpath(folder_path)),
-                shared_folders=(self.shared_folders + self.buddy_shared_folders)
-            )
-            mapping = (virtual_name, folder_path)
-            is_buddy_only = False
-
-            self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
-            self.shared_folders.append(mapping)
+            self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
@@ -581,70 +661,65 @@ class SharesPage:
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
-        virtual_name = dialog.get_entry_value()
-        is_buddy_only = dialog.get_option_value()
+        new_virtual_name = dialog.get_entry_value()
+        new_accessible_to = dialog.get_second_entry_value()
+        new_accessible_to_short = new_accessible_to.replace(_("Trusted buddies"), _("Trusted"))
 
-        if not virtual_name:
+        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        accessible_to = self.shares_list_view.get_row_value(iterator, "accessible_to")
+
+        if new_virtual_name == virtual_name and new_accessible_to_short == accessible_to:
             return
 
         self.rescan_required = True
 
-        virtual_name = core.shares.get_normalized_virtual_name(
-            virtual_name, shared_folders=(self.shared_folders + self.buddy_shared_folders)
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        group_name = self.GROUP_NAMES.get(new_accessible_to)
+
+        core.shares.remove_share(
+            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
         )
-        old_virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-        folder_path = self.shares_list_view.get_row_value(iterator, 1)
+        new_virtual_name = core.shares.add_share(
+            folder_path, group_name=group_name, virtual_name=new_virtual_name,
+            share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders),
+            validate_path=False
+        )
 
-        old_mapping = (old_virtual_name, folder_path)
-        new_mapping = (virtual_name, folder_path)
-
-        if old_mapping in self.buddy_shared_folders:
-            shared_folders = self.buddy_shared_folders
-        else:
-            shared_folders = self.shared_folders
-
-        shared_folders.remove(old_mapping)
-        shared_folders.append(new_mapping)
-
-        self.shares_list_view.set_row_value(iterator, 0, virtual_name)
-        self._set_shared_folder_buddy_only(iterator, is_buddy_only)
+        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.set_row_value(iterator, "accessible_to", new_accessible_to_short)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
-            is_buddy_only = self.shares_list_view.get_row_value(iterator, 2)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+            default_item = self.shares_list_view.get_row_value(iterator, "accessible_to")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder_path},
+                message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
-                option_value=is_buddy_only,
-                option_label=_("Share with buddies only"),
+                second_default=default_item.replace(_("Trusted"), _("Trusted buddies")),
+                second_droplist=list(self.GROUP_NAMES),
+                use_second_entry=True,
+                second_entry_editable=False,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
             return
-
-    def on_toggle_folder_buddy_only(self, list_view, iterator):
-        self._set_shared_folder_buddy_only(iterator, is_buddy_only=not list_view.get_row_value(iterator, 2))
 
     def on_remove_shared_folder(self, *_args):
 
         iterators = reversed(self.shares_list_view.get_selected_rows())
 
         for iterator in iterators:
-            virtual_name = self.shares_list_view.get_row_value(iterator, 0)
-            folder_path = self.shares_list_view.get_row_value(iterator, 1)
-            mapping = (virtual_name, folder_path)
+            virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
-            if mapping in self.buddy_shared_folders:
-                self.buddy_shared_folders.remove(mapping)
-            else:
-                self.shared_folders.remove(mapping)
-
+            core.shares.remove_share(
+                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
+            )
             self.shares_list_view.remove_row(iterator)
 
         if iterators:
@@ -655,32 +730,66 @@ class UploadsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/uploads.ui")
-
-        # pylint: disable=invalid-name
-        (self.AutoclearFinished, self.FirstInFirstOut, self.FriendsNoLimits,
-         self.LimitSpeed, self.LimitSpeedAlternative, self.LimitTotalTransfers, self.Main, self.MaxUserFiles,
-         self.MaxUserQueue, self.PreferFriends, self.QueueBandwidth, self.QueueSlots, self.QueueUseBandwidth,
-         self.QueueUseSlots, self.UnlimitedUploadSpeed, self.UploadDoubleClick, self.UseAltUploadSpeedLimit,
-         self.UseUploadSpeedLimit) = ui_template.widgets
+        (
+            self.alt_speed_spinner,
+            self.autoclear_uploads_toggle,
+            self.container,
+            self.limit_total_transfers_radio,
+            self.max_queued_files_spinner,
+            self.max_queued_size_spinner,
+            self.no_buddy_limits_toggle,
+            self.prioritize_buddies_toggle,
+            self.speed_spinner,
+            self.upload_bandwidth_spinner,
+            self.upload_double_click_label,
+            self.upload_queue_type_label,
+            self.upload_slots_spinner,
+            self.use_alt_speed_limit_radio,
+            self.use_speed_limit_radio,
+            self.use_unlimited_speed_radio,
+            self.use_upload_slots_bandwidth_radio,
+            self.use_upload_slots_fixed_radio
+        ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
+        self.upload_double_click_combobox = ComboBox(
+            container=self.upload_double_click_label.get_parent(), label=self.upload_double_click_label,
+            items=(
+                (_("Nothing"), None),
+                (_("Send to Player"), None),
+                (_("Open in File Manager"), None),
+                (_("Search"), None),
+                (_("Abort"), None),
+                (_("Clear"), None),
+                (_("Retry"), None),
+                (_("Browse Folder"), None)
+            )
+        )
+
+        self.upload_queue_type_combobox = ComboBox(
+            container=self.upload_queue_type_label.get_parent(), label=self.upload_queue_type_label,
+            items=(
+                (_("Round Robin"), None),
+                (_("First In, First Out"), None)
+            )
+        )
+
         self.options = {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished,
-                "uploadbandwidth": self.QueueBandwidth,
-                "useupslots": self.QueueUseSlots,
-                "uploadslots": self.QueueSlots,
-                "uploadlimit": self.LimitSpeed,
-                "uploadlimitalt": self.LimitSpeedAlternative,
-                "fifoqueue": self.FirstInFirstOut,
-                "limitby": self.LimitTotalTransfers,
-                "queuelimit": self.MaxUserQueue,
-                "filelimit": self.MaxUserFiles,
-                "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "upload_doubleclick": self.UploadDoubleClick
+                "autoclear_uploads": self.autoclear_uploads_toggle,
+                "uploadbandwidth": self.upload_bandwidth_spinner,
+                "useupslots": self.use_upload_slots_fixed_radio,
+                "uploadslots": self.upload_slots_spinner,
+                "uploadlimit": self.speed_spinner,
+                "uploadlimitalt": self.alt_speed_spinner,
+                "fifoqueue": self.upload_queue_type_combobox,
+                "limitby": self.limit_total_transfers_radio,
+                "queuelimit": self.max_queued_size_spinner,
+                "filelimit": self.max_queued_files_spinner,
+                "friendsnolimits": self.no_buddy_limits_toggle,
+                "preferfriends": self.prioritize_buddies_toggle,
+                "upload_doubleclick": self.upload_double_click_combobox
             }
         }
 
@@ -691,20 +800,20 @@ class UploadsPage:
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
 
         if use_speed_limit == "primary":
-            self.UseUploadSpeedLimit.set_active(True)
+            self.use_speed_limit_radio.set_active(True)
 
         elif use_speed_limit == "alternative":
-            self.UseAltUploadSpeedLimit.set_active(True)
+            self.use_alt_speed_limit_radio.set_active(True)
 
         else:
-            self.UnlimitedUploadSpeed.set_active(True)
+            self.use_unlimited_speed_radio.set_active(True)
 
     def get_settings(self):
 
-        if self.UseUploadSpeedLimit.get_active():
+        if self.use_speed_limit_radio.get_active():
             use_speed_limit = "primary"
 
-        elif self.UseAltUploadSpeedLimit.get_active():
+        elif self.use_alt_speed_limit_radio.get_active():
             use_speed_limit = "alternative"
 
         else:
@@ -712,57 +821,71 @@ class UploadsPage:
 
         return {
             "transfers": {
-                "autoclear_uploads": self.AutoclearFinished.get_active(),
-                "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
-                "useupslots": self.QueueUseSlots.get_active(),
-                "uploadslots": self.QueueSlots.get_value_as_int(),
+                "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
+                "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
+                "useupslots": self.use_upload_slots_fixed_radio.get_active(),
+                "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
-                "uploadlimit": self.LimitSpeed.get_value_as_int(),
-                "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
-                "fifoqueue": bool(self.FirstInFirstOut.get_active()),
-                "limitby": self.LimitTotalTransfers.get_active(),
-                "queuelimit": self.MaxUserQueue.get_value_as_int(),
-                "filelimit": self.MaxUserFiles.get_value_as_int(),
-                "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "uploadlimit": self.speed_spinner.get_value_as_int(),
+                "uploadlimitalt": self.alt_speed_spinner.get_value_as_int(),
+                "fifoqueue": bool(self.upload_queue_type_combobox.get_selected_pos()),
+                "limitby": self.limit_total_transfers_radio.get_active(),
+                "queuelimit": self.max_queued_size_spinner.get_value_as_int(),
+                "filelimit": self.max_queued_files_spinner.get_value_as_int(),
+                "friendsnolimits": self.no_buddy_limits_toggle.get_active(),
+                "preferfriends": self.prioritize_buddies_toggle.get_active(),
+                "upload_doubleclick": self.upload_double_click_combobox.get_selected_pos()
             }
         }
 
 
-class UserInfoPage:
+class UserProfilePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinfo.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
-            self.description_text_view,
-            self.select_picture_button
-        ) = ui_template.widgets
+            self.container,
+            self.description_view_container,
+            self.reset_picture_button,
+            self.select_picture_label
+        ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
-        self.select_picture_button = FileChooserButton(self.select_picture_button, application.preferences, "image")
+        self.user_profile_required = False
+
+        self.description_view = TextView(self.description_view_container, parse_urls=False)
+        self.select_picture_button = FileChooserButton(
+            self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
+            end_button=self.reset_picture_button, chooser_type="image", is_flat=True
+        )
 
         self.options = {
             "userinfo": {
-                "descr": self.description_text_view,
+                "descr": self.description_view,
                 "pic": self.select_picture_button
             }
         }
 
     def set_settings(self):
+
+        self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
+
+        self.user_profile_required = False
 
     def get_settings(self):
 
-        text_buffer = self.description_text_view.get_buffer()
-        start, end = text_buffer.get_bounds()
+        description = repr(self.description_view.get_text())
+        picture_path = self.select_picture_button.get_path()
+
+        if (description != config.sections["userinfo"]["descr"]
+                or picture_path != config.sections["userinfo"]["pic"]):
+            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": repr(text_buffer.get_text(start, end, True)),
-                "pic": self.select_picture_button.get_path()
+                "descr": description,
+                "pic": picture_path
             }
         }
 
@@ -774,32 +897,45 @@ class IgnoredUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ignore.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
             application.window, parent=self.ignored_users_container, multi_select=True,
-            columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
-            ]
+            delete_accelerator_callback=self.on_remove_ignored_user,
+            columns={
+                "username": {
+                    "column_type": "text",
+                    "title": _("Username"),
+                    "default_sort_type": "ascending"
+                }
+            }
         )
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
             application.window, parent=self.ignored_ips_container, multi_select=True,
-            columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "width": 50, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            delete_accelerator_callback=self.on_remove_ignored_ip,
+            columns={
+                "ip_address": {
+                    "column_type": "text",
+                    "title": _("IP Address"),
+                    "width": 50,
+                    "expand_column": True
+                },
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                }
+            }
         )
 
         self.options = {
@@ -843,13 +979,14 @@ class IgnoredUsersPage:
             parent=self.application.preferences,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_ignored_user_response
         ).show()
 
     def on_remove_ignored_user(self, *_args):
 
         for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
-            user = self.ignored_users_list_view.get_row_value(iterator, 0)
+            user = self.ignored_users_list_view.get_row_value(iterator, "username")
 
             self.ignored_users_list_view.remove_row(iterator)
             self.ignored_users.remove(user)
@@ -858,22 +995,13 @@ class IgnoredUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.ignored_ips:
-            self.ignored_ips[ip_address] = ""
-            self.ignored_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_online_username(ip_address) or ""
+            self.ignored_ips[ip_address] = user
+            self.ignored_ips_list_view.add_row([ip_address, user])
 
     def on_add_ignored_ip(self, *_args):
 
@@ -881,13 +1009,14 @@ class IgnoredUsersPage:
             parent=self.application.preferences,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
+            action_button_label=_("_Add"),
             callback=self.on_add_ignored_ip_response
         ).show()
 
     def on_remove_ignored_ip(self, *_args):
 
         for iterator in reversed(self.ignored_ips_list_view.get_selected_rows()):
-            ip_address = self.ignored_ips_list_view.get_row_value(iterator, 0)
+            ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.ignored_ips_list_view.remove_row(iterator)
             del self.ignored_ips[ip_address]
@@ -897,18 +1026,17 @@ class BannedUsersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/ban.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
             self.ban_message_entry,
             self.ban_message_toggle,
             self.banned_ips_container,
             self.banned_users_container,
+            self.container,
             self.geo_block_country_entry,
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -916,20 +1044,34 @@ class BannedUsersPage:
         self.banned_users = []
         self.banned_users_list_view = TreeView(
             application.window, parent=self.banned_users_container, multi_select=True,
-            columns=[
-                {"column_id": "username", "column_type": "text", "title": _("Username"), "sort_column": 0}
-            ]
+            delete_accelerator_callback=self.on_remove_banned_user,
+            columns={
+                "username": {
+                    "column_type": "text",
+                    "title": _("Username"),
+                    "default_sort_type": "ascending"
+                }
+            }
         )
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
             application.window, parent=self.banned_ips_container, multi_select=True,
-            columns=[
-                {"column_id": "ip_address", "column_type": "text", "title": _("IP Address"), "sort_column": 0,
-                 "width": 50, "expand_column": True},
-                {"column_id": "user", "column_type": "text", "title": _("User"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            delete_accelerator_callback=self.on_remove_banned_ip,
+            columns={
+                "ip_address": {
+                    "column_type": "text",
+                    "title": _("IP Address"),
+                    "width": 50,
+                    "expand_column": True
+                },
+                "user": {
+                    "column_type": "text",
+                    "title": _("User"),
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                }
+            }
         )
 
         self.options = {
@@ -964,8 +1106,6 @@ class BannedUsersPage:
 
     def get_settings(self):
 
-        self.ip_ban_required = False
-
         return {
             "server": {
                 "banlist": self.banned_users[:],
@@ -995,13 +1135,14 @@ class BannedUsersPage:
             parent=self.application.preferences,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_banned_user_response
         ).show()
 
     def on_remove_banned_user(self, *_args):
 
         for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
-            user = self.banned_users_list_view.get_row_value(iterator, 0)
+            user = self.banned_users_list_view.get_row_value(iterator, "username")
 
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
@@ -1010,22 +1151,13 @@ class BannedUsersPage:
 
         ip_address = dialog.get_entry_value()
 
-        if not ip_address or ip_address.count(".") != 3:
+        if not core.network_filter.is_ip_address(ip_address):
             return
 
-        for chars in ip_address.split("."):
-            if chars == "*":
-                continue
-
-            if not chars.isdigit():
-                return
-
-            if int(chars) > 255:
-                return
-
         if ip_address not in self.banned_ips:
-            self.banned_ips[ip_address] = ""
-            self.banned_ips_list_view.add_row([ip_address, ""])
+            user = core.network_filter.get_online_username(ip_address) or ""
+            self.banned_ips[ip_address] = user
+            self.banned_ips_list_view.add_row([ip_address, user])
             self.ip_ban_required = True
 
     def on_add_banned_ip(self, *_args):
@@ -1034,13 +1166,14 @@ class BannedUsersPage:
             parent=self.application.preferences,
             title=_("Ban IP Address"),
             message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
+            action_button_label=_("_Add"),
             callback=self.on_add_banned_ip_response
         ).show()
 
     def on_remove_banned_ip(self, *_args):
 
         for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
-            ip_address = self.banned_ips_list_view.get_row_value(iterator, 0)
+            ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.banned_ips_list_view.remove_row(iterator)
             del self.banned_ips[ip_address]
@@ -1050,40 +1183,96 @@ class ChatsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/chats.ui")
-
-        # pylint: disable=invalid-name
-        (self.CensorCheck, self.CensorList,
-         self.CensorReplaceCombo, self.CharactersCompletion, self.ChatRoomFormat,
-         self.CompleteBuddiesCheck, self.CompleteCommandsCheck, self.CompleteRoomNamesCheck,
-         self.CompleteUsersInRoomsCheck, self.CompletionCycleCheck, self.CompletionDropdownCheck,
-         self.CompletionTabCheck, self.Main, self.OneMatchCheck, self.PrivateChatFormat,
-         self.PrivateLogLines, self.PrivateMessage,
-         self.ReopenPrivateChats, self.ReplaceCheck, self.ReplacementList,
-         self.RoomLogLines, self.RoomMessage, self.SpellCheck,
-         self.TTSCommand, self.TextToSpeech, self.ctcp_toggle) = ui_template.widgets
+        (
+            self.auto_replace_words_toggle,
+            self.censor_list_container,
+            self.censor_replacement_label,
+            self.censor_text_patterns_toggle,
+            self.complete_buddy_names_toggle,
+            self.complete_commands_toggle,
+            self.complete_room_names_toggle,
+            self.complete_room_usernames_toggle,
+            self.container,
+            self.enable_completion_dropdown_toggle,
+            self.enable_ctcp_toggle,
+            self.enable_spell_checker_toggle,
+            self.enable_tab_completion_toggle,
+            self.enable_tts_toggle,
+            self.format_codes_label,
+            self.min_chars_dropdown_spinner,
+            self.recent_private_messages_spinner,
+            self.recent_room_messages_spinner,
+            self.reopen_private_chats_toggle,
+            self.replacement_list_container,
+            self.timestamp_private_chat_entry,
+            self.timestamp_room_entry,
+            self.tts_command_label,
+            self.tts_private_message_entry,
+            self.tts_room_message_entry,
+        ) = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
 
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
+
+        self.tts_command_combobox = ComboBox(
+            container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
+            items=(
+                ("flite -t $", None),
+                ("echo $ | festival --tts", None)
+            )
+        )
+
+        self.censor_replacement_combobox = ComboBox(
+            container=self.censor_replacement_label.get_parent(), label=self.censor_replacement_label,
+            items=(
+                ("#", None),
+                ("$", None),
+                ("!", None),
+                ("", None),
+                ("x", None),
+                ("*", None)
+            )
+        )
+
         self.censored_patterns = []
         self.censor_list_view = TreeView(
-            application.window, parent=self.CensorList, multi_select=True, activate_row_callback=self.on_edit_censored,
-            columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0}
-            ]
+            application.window, parent=self.censor_list_container, multi_select=True,
+            activate_row_callback=self.on_edit_censored,
+            delete_accelerator_callback=self.on_remove_censored,
+            columns={
+                "pattern": {
+                    "column_type": "text",
+                    "title": _("Pattern"),
+                    "default_sort_type": "ascending"
+                }
+            }
         )
 
         self.replacements = {}
         self.replacement_list_view = TreeView(
-            application.window, parent=self.ReplacementList, multi_select=True,
+            application.window, parent=self.replacement_list_container, multi_select=True,
             activate_row_callback=self.on_edit_replacement,
-            columns=[
-                {"column_id": "pattern", "column_type": "text", "title": _("Pattern"), "sort_column": 0,
-                 "width": 100, "expand_column": True},
-                {"column_id": "replacement", "column_type": "text", "title": _("Replacement"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            delete_accelerator_callback=self.on_remove_replacement,
+            columns={
+                "pattern": {
+                    "column_type": "text",
+                    "title": _("Pattern"),
+                    "width": 100,
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
+                },
+                "replacement": {
+                    "column_type": "text",
+                    "title": _("Replacement"),
+                    "expand_column": True
+                }
+            }
         )
 
         self.options = {
@@ -1091,36 +1280,34 @@ class ChatsPage:
                 "ctcpmsgs": None  # Special case in set_settings
             },
             "logging": {
-                "readroomlines": self.RoomLogLines,
-                "readprivatelines": self.PrivateLogLines,
-                "rooms_timestamp": self.ChatRoomFormat,
-                "private_timestamp": self.PrivateChatFormat
+                "readroomlines": self.recent_room_messages_spinner,
+                "readprivatelines": self.recent_private_messages_spinner,
+                "rooms_timestamp": self.timestamp_room_entry,
+                "private_timestamp": self.timestamp_private_chat_entry
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats
+                "store": self.reopen_private_chats_toggle
             },
             "words": {
-                "tab": self.CompletionTabCheck,
-                "cycle": self.CompletionCycleCheck,
-                "dropdown": self.CompletionDropdownCheck,
-                "characters": self.CharactersCompletion,
-                "roomnames": self.CompleteRoomNamesCheck,
-                "buddies": self.CompleteBuddiesCheck,
-                "roomusers": self.CompleteUsersInRoomsCheck,
-                "commands": self.CompleteCommandsCheck,
-                "onematch": self.OneMatchCheck,
+                "tab": self.enable_tab_completion_toggle,
+                "dropdown": self.enable_completion_dropdown_toggle,
+                "characters": self.min_chars_dropdown_spinner,
+                "roomnames": self.complete_room_names_toggle,
+                "buddies": self.complete_buddy_names_toggle,
+                "roomusers": self.complete_room_usernames_toggle,
+                "commands": self.complete_commands_toggle,
                 "censored": self.censor_list_view,
-                "censorwords": self.CensorCheck,
-                "censorfill": self.CensorReplaceCombo,
+                "censorwords": self.censor_text_patterns_toggle,
+                "censorfill": self.censor_replacement_combobox,
                 "autoreplaced": self.replacement_list_view,
-                "replacewords": self.ReplaceCheck
+                "replacewords": self.auto_replace_words_toggle
             },
             "ui": {
-                "spellcheck": self.SpellCheck,
-                "speechenabled": self.TextToSpeech,
-                "speechcommand": self.TTSCommand,
-                "speechrooms": self.RoomMessage,
-                "speechprivate": self.PrivateMessage
+                "spellcheck": self.enable_spell_checker_toggle,
+                "speechenabled": self.enable_tts_toggle,
+                "speechcommand": self.tts_command_combobox,
+                "speechrooms": self.tts_room_message_entry,
+                "speechprivate": self.tts_private_message_entry
             }
         }
 
@@ -1133,14 +1320,8 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        try:
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.SpellCheck.set_visible(False)
-
-        self.ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
+        self.enable_spell_checker_toggle.set_visible(SpellChecker.is_available())
+        self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1149,60 +1330,56 @@ class ChatsPage:
 
     def get_settings(self):
 
-        self.completion_required = False
-
         return {
             "server": {
-                "ctcpmsgs": not self.ctcp_toggle.get_active()
+                "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
             },
             "logging": {
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text()
+                "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
+                "readprivatelines": self.recent_private_messages_spinner.get_value_as_int(),
+                "private_timestamp": self.timestamp_private_chat_entry.get_text(),
+                "rooms_timestamp": self.timestamp_room_entry.get_text()
             },
             "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
+                "store": self.reopen_private_chats_toggle.get_active()
             },
             "words": {
-                "tab": self.CompletionTabCheck.get_active(),
-                "cycle": self.CompletionCycleCheck.get_active(),
-                "dropdown": self.CompletionDropdownCheck.get_active(),
-                "characters": self.CharactersCompletion.get_value_as_int(),
-                "roomnames": self.CompleteRoomNamesCheck.get_active(),
-                "buddies": self.CompleteBuddiesCheck.get_active(),
-                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-                "commands": self.CompleteCommandsCheck.get_active(),
-                "onematch": self.OneMatchCheck.get_active(),
+                "tab": self.enable_tab_completion_toggle.get_active(),
+                "dropdown": self.enable_completion_dropdown_toggle.get_active(),
+                "characters": self.min_chars_dropdown_spinner.get_value_as_int(),
+                "roomnames": self.complete_room_names_toggle.get_active(),
+                "buddies": self.complete_buddy_names_toggle.get_active(),
+                "roomusers": self.complete_room_usernames_toggle.get_active(),
+                "commands": self.complete_commands_toggle.get_active(),
                 "censored": self.censored_patterns[:],
-                "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "censorwords": self.censor_text_patterns_toggle.get_active(),
+                "censorfill": self.censor_replacement_combobox.get_selected_id(),
                 "autoreplaced": self.replacements.copy(),
-                "replacewords": self.ReplaceCheck.get_active()
+                "replacewords": self.auto_replace_words_toggle.get_active()
             },
             "ui": {
-                "spellcheck": self.SpellCheck.get_active(),
-                "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_active_text(),
-                "speechrooms": self.RoomMessage.get_text(),
-                "speechprivate": self.PrivateMessage.get_text()
+                "spellcheck": self.enable_spell_checker_toggle.get_active(),
+                "speechenabled": self.enable_tts_toggle.get_active(),
+                "speechcommand": self.tts_command_combobox.get_text(),
+                "speechrooms": self.tts_room_message_entry.get_text(),
+                "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
 
-    def on_default_private(self, *_args):
-        self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
+    def on_default_tts_private_message(self, *_args):
+        self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
 
-    def on_default_rooms(self, *_args):
-        self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
+    def on_default_tts_room_message(self, *_args):
+        self.tts_room_message_entry.set_text(config.defaults["ui"]["speechrooms"])
 
-    def on_room_default_timestamp(self, *_args):
-        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
+    def on_default_timestamp_room(self, *_args):
+        self.timestamp_room_entry.set_text(config.defaults["logging"]["rooms_timestamp"])
 
-    def on_private_default_timestamp(self, *_args):
-        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
+    def on_default_timestamp_private_chat(self, *_args):
+        self.timestamp_private_chat_entry.set_text(config.defaults["logging"]["private_timestamp"])
 
     def on_add_censored_response(self, dialog, _response_id, _data):
 
@@ -1219,6 +1396,7 @@ class ChatsPage:
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
+            action_button_label=_("_Add"),
             callback=self.on_add_censored_response
         ).show()
 
@@ -1229,22 +1407,23 @@ class ChatsPage:
         if not pattern:
             return
 
-        old_pattern = self.censor_list_view.get_row_value(iterator, 0)
+        old_pattern = self.censor_list_view.get_row_value(iterator, "pattern")
         self.censored_patterns.remove(old_pattern)
 
-        self.censor_list_view.set_row_value(iterator, 0, pattern)
+        self.censor_list_view.set_row_value(iterator, "pattern", pattern)
         self.censored_patterns.append(pattern)
 
     def on_edit_censored(self, *_args):
 
         for iterator in self.censor_list_view.get_selected_rows():
-            pattern = self.censor_list_view.get_row_value(iterator, 0)
+            pattern = self.censor_list_view.get_row_value(iterator, "pattern")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_censored_response,
                 callback_data=iterator,
                 default=pattern
@@ -1254,7 +1433,7 @@ class ChatsPage:
     def on_remove_censored(self, *_args):
 
         for iterator in reversed(self.censor_list_view.get_selected_rows()):
-            censor = self.censor_list_view.get_row_value(iterator, 0)
+            censor = self.censor_list_view.get_row_value(iterator, "pattern")
 
             self.censor_list_view.remove_row(iterator)
             self.censored_patterns.remove(censor)
@@ -1275,7 +1454,8 @@ class ChatsPage:
         EntryDialog(
             parent=self.application.preferences,
             title=_("Add Replacement"),
-            message=_("Enter a text pattern and what to replace it with"),
+            message=_("Enter a text pattern and what to replace it with:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
         ).show()
@@ -1288,23 +1468,24 @@ class ChatsPage:
         if not pattern or not replacement:
             return
 
-        old_pattern = self.replacement_list_view.get_row_value(iterator, 0)
+        old_pattern = self.replacement_list_view.get_row_value(iterator, "pattern")
         del self.replacements[old_pattern]
 
         self.replacements[pattern] = replacement
-        self.replacement_list_view.set_row_value(iterator, 0, pattern)
-        self.replacement_list_view.set_row_value(iterator, 1, replacement)
+        self.replacement_list_view.set_row_value(iterator, "pattern", pattern)
+        self.replacement_list_view.set_row_value(iterator, "replacement", replacement)
 
     def on_edit_replacement(self, *_args):
 
         for iterator in self.replacement_list_view.get_selected_rows():
-            pattern = self.replacement_list_view.get_row_value(iterator, 0)
-            replacement = self.replacement_list_view.get_row_value(iterator, 1)
+            pattern = self.replacement_list_view.get_row_value(iterator, "pattern")
+            replacement = self.replacement_list_view.get_row_value(iterator, "replacement")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_replacement_response,
                 callback_data=iterator,
                 use_second_entry=True,
@@ -1316,7 +1497,7 @@ class ChatsPage:
     def on_remove_replacement(self, *_args):
 
         for iterator in reversed(self.replacement_list_view.get_selected_rows()):
-            replacement = self.replacement_list_view.get_row_value(iterator, 0)
+            replacement = self.replacement_list_view.get_row_value(iterator, "pattern")
 
             self.replacement_list_view.remove_row(iterator)
             del self.replacements[replacement]
@@ -1326,72 +1507,251 @@ class UserInterfacePage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/userinterface.ui")
-
-        # pylint: disable=invalid-name
-        (self.ChatRoomsPosition, self.CloseAction, self.DarkMode,
-         self.DefaultBrowserFont, self.DefaultChatFont, self.DefaultGlobalFont, self.DefaultListFont,
-         self.DefaultSearchFont, self.DefaultTextViewFont, self.DefaultTheme, self.DefaultTransfersFont,
-         self.EnableChatroomsTab, self.EnableDownloadsTab, self.EnableInterestsTab, self.EnablePrivateTab,
-         self.EnableSearchTab, self.EnableUploadsTab, self.EnableUserBrowseTab, self.EnableUserInfoTab,
-         self.EnableUserListTab, self.EntryAway, self.EntryBackground, self.EntryChangedTab, self.EntryCommand,
-         self.EntryHighlight, self.EntryHighlightTab, self.EntryImmediate, self.EntryInput, self.EntryLocal,
-         self.EntryMe, self.EntryOffline, self.EntryOnline, self.EntryQueue, self.EntryRegularTab, self.EntryRemote,
-         self.EntryURL, self.IconView, self.Language, self.Main, self.MainPosition,
-         self.NotificationPopupChatroom, self.NotificationPopupChatroomMention, self.NotificationPopupFile,
-         self.NotificationPopupFolder, self.NotificationPopupPrivateMessage, self.NotificationPopupSound,
-         self.NotificationPopupWish, self.NotificationWindowTitle, self.PickAway,
-         self.PickBackground, self.PickChangedTab, self.PickCommand, self.PickHighlight, self.PickHighlightTab,
-         self.PickImmediate, self.PickInput, self.PickLocal, self.PickMe, self.PickOffline, self.PickOnline,
-         self.PickQueue, self.PickRegularTab, self.PickRemote, self.PickURL, self.PrivateChatPosition,
-         self.ReverseFilePaths, self.SearchPosition, self.SelectBrowserFont, self.SelectChatFont, self.SelectGlobalFont,
-         self.SelectListFont, self.SelectSearchFont, self.SelectTextViewFont, self.SelectTransfersFont,
-         self.StartupHidden, self.TabClosers, self.TabSelectPrevious, self.ThemeDir, self.TraySettings,
-         self.TrayiconCheck, self.UserBrowsePosition, self.UserInfoPosition, self.UsernameStyle) = ui_template.widgets
+        (
+            self.buddy_list_position_label,
+            self.chat_colored_usernames_toggle,
+            self.chat_username_appearance_label,
+            self.close_action_label,
+            self.color_chat_action_button,
+            self.color_chat_action_entry,
+            self.color_chat_command_button,
+            self.color_chat_command_entry,
+            self.color_chat_highlighted_button,
+            self.color_chat_highlighted_entry,
+            self.color_chat_local_button,
+            self.color_chat_local_entry,
+            self.color_chat_remote_button,
+            self.color_chat_remote_entry,
+            self.color_input_background_button,
+            self.color_input_background_entry,
+            self.color_input_text_button,
+            self.color_input_text_entry,
+            self.color_list_text_button,
+            self.color_list_text_entry,
+            self.color_queued_result_text_button,
+            self.color_queued_result_text_entry,
+            self.color_status_away_button,
+            self.color_status_away_entry,
+            self.color_status_offline_button,
+            self.color_status_offline_entry,
+            self.color_status_online_button,
+            self.color_status_online_entry,
+            self.color_tab_button,
+            self.color_tab_changed_button,
+            self.color_tab_changed_entry,
+            self.color_tab_entry,
+            self.color_tab_highlighted_button,
+            self.color_tab_highlighted_entry,
+            self.color_url_button,
+            self.color_url_entry,
+            self.container,
+            self.dark_mode_toggle,
+            self.exact_file_sizes_toggle,
+            self.font_browse_button,
+            self.font_browse_clear_button,
+            self.font_chat_button,
+            self.font_chat_clear_button,
+            self.font_global_button,
+            self.font_global_clear_button,
+            self.font_list_button,
+            self.font_list_clear_button,
+            self.font_search_button,
+            self.font_search_clear_button,
+            self.font_text_view_button,
+            self.font_text_view_clear_button,
+            self.font_transfers_button,
+            self.font_transfers_clear_button,
+            self.header_bar_toggle,
+            self.icon_theme_clear_button,
+            self.icon_theme_label,
+            self.icon_view,
+            self.language_label,
+            self.minimize_tray_startup_toggle,
+            self.notification_chatroom_mention_toggle,
+            self.notification_chatroom_toggle,
+            self.notification_download_file_toggle,
+            self.notification_download_folder_toggle,
+            self.notification_private_message_toggle,
+            self.notification_sounds_toggle,
+            self.notification_window_title_toggle,
+            self.notification_wish_toggle,
+            self.reverse_file_paths_toggle,
+            self.tab_close_buttons_toggle,
+            self.tab_position_browse_label,
+            self.tab_position_chatrooms_label,
+            self.tab_position_main_label,
+            self.tab_position_private_chat_label,
+            self.tab_position_search_label,
+            self.tab_position_userinfo_label,
+            self.tab_restore_startup_toggle,
+            self.tab_visible_browse_toggle,
+            self.tab_visible_chatrooms_toggle,
+            self.tab_visible_downloads_toggle,
+            self.tab_visible_interests_toggle,
+            self.tab_visible_private_chat_toggle,
+            self.tab_visible_search_toggle,
+            self.tab_visible_uploads_toggle,
+            self.tab_visible_userinfo_toggle,
+            self.tab_visible_userlist_toggle,
+            self.tray_icon_toggle,
+            self.tray_options_container
+        ) = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
-        self.theme_required = False
+        self.editing_color = False
+
+        self.language_combobox = ComboBox(
+            container=self.language_label.get_parent(), label=self.language_label,
+            items=(
+                (_("System default"), ""),
+            )
+        )
 
         for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
-            self.Language.append(language_code, language_name)
+            self.language_combobox.append(language_name, item_id=language_code)
 
-        self.theme_dir = FileChooserButton(self.ThemeDir, application.preferences, "folder")
+        self.close_action_combobox = ComboBox(
+            container=self.close_action_label.get_parent(), label=self.close_action_label,
+            items=(
+                (_("Quit program"), None),
+                (_("Show confirmation dialog"), None),
+                (_("Run in the background"), None)
+            )
+        )
 
-        self.tabs = {
-            "search": self.EnableSearchTab,
-            "downloads": self.EnableDownloadsTab,
-            "uploads": self.EnableUploadsTab,
-            "userbrowse": self.EnableUserBrowseTab,
-            "userinfo": self.EnableUserInfoTab,
-            "private": self.EnablePrivateTab,
-            "userlist": self.EnableUserListTab,
-            "chatrooms": self.EnableChatroomsTab,
-            "interests": self.EnableInterestsTab
+        self.chat_username_appearance_combobox = ComboBox(
+            container=self.chat_username_appearance_label.get_parent(),
+            label=self.chat_username_appearance_label,
+            items=(
+                (_("bold"), "bold"),
+                (_("italic"), "italic"),
+                (_("underline"), "underline"),
+                (_("normal"), "normal")
+            )
+        )
+
+        self.buddy_list_position_combobox = ComboBox(
+            container=self.buddy_list_position_label.get_parent(), label=self.buddy_list_position_label,
+            item_selected_callback=self.on_select_buddy_list_position,
+            items=(
+                (_("Separate Buddies tab"), "tab"),
+                (_("Sidebar in Chat Rooms tab"), "chatrooms"),
+                (_("Always visible sidebar"), "always")
+            )
+        )
+
+        position_items = (
+            (_("Top"), "Top"),
+            (_("Bottom"), "Bottom"),
+            (_("Left"), "Left"),
+            (_("Right"), "Right")
+        )
+
+        self.tab_position_main_combobox = ComboBox(
+            container=self.tab_position_main_label.get_parent(), label=self.tab_position_main_label,
+            items=position_items)
+
+        self.tab_position_search_combobox = ComboBox(
+            container=self.tab_position_search_label.get_parent(), label=self.tab_position_search_label,
+            items=position_items)
+
+        self.tab_position_browse_combobox = ComboBox(
+            container=self.tab_position_browse_label.get_parent(), label=self.tab_position_browse_label,
+            items=position_items)
+
+        self.tab_position_private_chat_combobox = ComboBox(
+            container=self.tab_position_private_chat_label.get_parent(), label=self.tab_position_private_chat_label,
+            items=position_items)
+
+        self.tab_position_userinfo_combobox = ComboBox(
+            container=self.tab_position_userinfo_label.get_parent(), label=self.tab_position_userinfo_label,
+            items=position_items)
+
+        self.tab_position_chatrooms_combobox = ComboBox(
+            container=self.tab_position_chatrooms_label.get_parent(), label=self.tab_position_chatrooms_label,
+            items=position_items)
+
+        self.color_buttons = {
+            "chatlocal": self.color_chat_local_button,
+            "chatremote": self.color_chat_remote_button,
+            "chatcommand": self.color_chat_command_button,
+            "chatme": self.color_chat_action_button,
+            "chathilite": self.color_chat_highlighted_button,
+            "textbg": self.color_input_background_button,
+            "inputcolor": self.color_input_text_button,
+            "search": self.color_list_text_button,
+            "searchq": self.color_queued_result_text_button,
+            "useraway": self.color_status_away_button,
+            "useronline": self.color_status_online_button,
+            "useroffline": self.color_status_offline_button,
+            "urlcolor": self.color_url_button,
+            "tab_default": self.color_tab_button,
+            "tab_hilite": self.color_tab_highlighted_button,
+            "tab_changed": self.color_tab_changed_button
         }
 
-        # Tab positions
-        for combobox in (self.MainPosition, self.ChatRoomsPosition, self.PrivateChatPosition,
-                         self.SearchPosition, self.UserInfoPosition, self.UserBrowsePosition):
-            combobox.append("Top", _("Top"))
-            combobox.append("Bottom", _("Bottom"))
-            combobox.append("Left", _("Left"))
-            combobox.append("Right", _("Right"))
+        self.font_buttons = {
+            "globalfont": self.font_global_button,
+            "listfont": self.font_list_button,
+            "textviewfont": self.font_text_view_button,
+            "chatfont": self.font_chat_button,
+            "searchfont": self.font_search_button,
+            "transfersfont": self.font_transfers_button,
+            "browserfont": self.font_browse_button
+        }
 
-        # Icon preview
+        self.tab_position_comboboxes = {
+            "tabmain": self.tab_position_main_combobox,
+            "tabrooms": self.tab_position_chatrooms_combobox,
+            "tabprivate": self.tab_position_private_chat_combobox,
+            "tabsearch": self.tab_position_search_combobox,
+            "tabinfo": self.tab_position_userinfo_combobox,
+            "tabbrowse": self.tab_position_browse_combobox
+        }
+
+        self.tab_visible_toggles = {
+            "search": self.tab_visible_search_toggle,
+            "downloads": self.tab_visible_downloads_toggle,
+            "uploads": self.tab_visible_uploads_toggle,
+            "userbrowse": self.tab_visible_browse_toggle,
+            "userinfo": self.tab_visible_userinfo_toggle,
+            "private": self.tab_visible_private_chat_toggle,
+            "userlist": self.tab_visible_userlist_toggle,
+            "chatrooms": self.tab_visible_chatrooms_toggle,
+            "interests": self.tab_visible_interests_toggle
+        }
+
+        rgba = Gdk.RGBA()
+
+        for button in self.color_buttons.values():
+            button.set_rgba(rgba)
+
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
+            color_dialog = Gtk.ColorDialog()
+            font_dialog = Gtk.FontDialog()
+
+            for button in self.color_buttons.values():
+                button.set_dialog(color_dialog)
+
+            for button in self.font_buttons.values():
+                button.set_dialog(font_dialog)
+                button.set_level(Gtk.FontLevel.FONT)
+
         icon_list = [
-            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE], _("Offline"), 16,
+             ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
-            (config.application_id, _("Window"), 64, ())]
+            (pynicotine.__application_id__, _("Window"), 64, ())]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Online (Tray)"), 16, ()),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16, ()),
-                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, ()),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16, ())]
+                (f"{pynicotine.__application_id__}-connect", _("Online (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-away", _("Away (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-disconnect", _("Offline (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-msg", _("Message (Tray)"), 16, ())]
 
         for icon_name, label, pixel_size, css_classes in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
@@ -1408,284 +1768,260 @@ class UserInterfacePage:
                 box.add(icon)   # pylint: disable=no-member
                 box.add(label)  # pylint: disable=no-member
 
-            self.IconView.insert(box, -1)
+            self.icon_view.insert(box, -1)
+
+        self.icon_theme_button = FileChooserButton(
+            self.icon_theme_label.get_parent(), window=application.preferences,
+            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
+        )
 
         self.options = {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention,
-                "notification_popup_wish": self.NotificationPopupWish
+                "notification_window_title": self.notification_window_title_toggle,
+                "notification_popup_sound": self.notification_sounds_toggle,
+                "notification_popup_file": self.notification_download_file_toggle,
+                "notification_popup_folder": self.notification_download_folder_toggle,
+                "notification_popup_private_message": self.notification_private_message_toggle,
+                "notification_popup_chatroom": self.notification_chatroom_toggle,
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle,
+                "notification_popup_wish": self.notification_wish_toggle
             },
             "ui": {
-                "language": self.Language,
-
-                "globalfont": self.SelectGlobalFont,
-                "listfont": self.SelectListFont,
-                "textviewfont": self.SelectTextViewFont,
-                "chatfont": self.SelectChatFont,
-                "searchfont": self.SelectSearchFont,
-                "transfersfont": self.SelectTransfersFont,
-                "browserfont": self.SelectBrowserFont,
-                "usernamestyle": self.UsernameStyle,
-
-                "reverse_file_paths": self.ReverseFilePaths,
-
-                "tabmain": self.MainPosition,
-                "tabrooms": self.ChatRoomsPosition,
-                "tabprivate": self.PrivateChatPosition,
-                "tabsearch": self.SearchPosition,
-                "tabinfo": self.UserInfoPosition,
-                "tabbrowse": self.UserBrowsePosition,
-                "tab_select_previous": self.TabSelectPrevious,
-                "tabclosers": self.TabClosers,
-
-                "icontheme": self.theme_dir,
-
-                "chatlocal": self.EntryLocal,
-                "chatremote": self.EntryRemote,
-                "chatcommand": self.EntryCommand,
-                "chatme": self.EntryMe,
-                "chathilite": self.EntryHighlight,
-                "textbg": self.EntryBackground,
-                "inputcolor": self.EntryInput,
-                "search": self.EntryImmediate,
-                "searchq": self.EntryQueue,
-                "useraway": self.EntryAway,
-                "useronline": self.EntryOnline,
-                "useroffline": self.EntryOffline,
-                "urlcolor": self.EntryURL,
-                "tab_default": self.EntryRegularTab,
-                "tab_hilite": self.EntryHighlightTab,
-                "tab_changed": self.EntryChangedTab,
-                "dark_mode": self.DarkMode,
-                "exitdialog": self.CloseAction,
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden
+                "dark_mode": self.dark_mode_toggle,
+                "exitdialog": self.close_action_combobox,
+                "trayicon": self.tray_icon_toggle,
+                "startup_hidden": self.minimize_tray_startup_toggle,
+                "language": self.language_combobox,
+                "reverse_file_paths": self.reverse_file_paths_toggle,
+                "file_size_unit": self.exact_file_sizes_toggle,
+                "tab_select_previous": self.tab_restore_startup_toggle,
+                "tabclosers": self.tab_close_buttons_toggle,
+                "icontheme": self.icon_theme_button,
+                "chatlocal": self.color_chat_local_entry,
+                "chatremote": self.color_chat_remote_entry,
+                "chatcommand": self.color_chat_command_entry,
+                "chatme": self.color_chat_action_entry,
+                "chathilite": self.color_chat_highlighted_entry,
+                "textbg": self.color_input_background_entry,
+                "inputcolor": self.color_input_text_entry,
+                "search": self.color_list_text_entry,
+                "searchq": self.color_queued_result_text_entry,
+                "useraway": self.color_status_away_entry,
+                "useronline": self.color_status_online_entry,
+                "useroffline": self.color_status_offline_entry,
+                "urlcolor": self.color_url_entry,
+                "tab_default": self.color_tab_entry,
+                "tab_hilite": self.color_tab_highlighted_entry,
+                "tab_changed": self.color_tab_changed_entry,
+                "usernamestyle": self.chat_username_appearance_combobox,
+                "usernamehotspots": self.chat_colored_usernames_toggle,
+                "buddylistinchatrooms": self.buddy_list_position_combobox,
+                "header_bar": self.header_bar_toggle
             }
         }
 
-        self.colorsd = {
-            "ui": {
-                "chatlocal": self.PickLocal,
-                "chatremote": self.PickRemote,
-                "chatcommand": self.PickCommand,
-                "chatme": self.PickMe,
-                "chathilite": self.PickHighlight,
-                "textbg": self.PickBackground,
-                "inputcolor": self.PickInput,
-                "search": self.PickImmediate,
-                "searchq": self.PickQueue,
-                "useraway": self.PickAway,
-                "useronline": self.PickOnline,
-                "useroffline": self.PickOffline,
-                "urlcolor": self.PickURL,
-                "tab_default": self.PickRegularTab,
-                "tab_hilite": self.PickHighlightTab,
-                "tab_changed": self.PickChangedTab
-            }
-        }
+        for dictionary in (
+            self.font_buttons,
+            self.tab_position_comboboxes
+        ):
+            self.options["ui"].update(dictionary)
 
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
-        self.theme_required = False
 
-        self.TraySettings.set_visible(self.application.tray_icon.available)
+        self.tray_options_container.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
-            widget = self.tabs.get(page_id)
+            widget = self.tab_visible_toggles.get(page_id)
 
             if widget is not None:
                 widget.set_active(enabled)
 
-        self.update_color_buttons()
-
     def get_settings(self):
 
-        self.theme_required = False
         enabled_tabs = {}
 
-        for page_id, widget in self.tabs.items():
+        for page_id, widget in self.tab_visible_toggles.items():
             enabled_tabs[page_id] = widget.get_active()
 
         return {
             "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active(),
-                "notification_popup_wish": self.NotificationPopupWish.get_active()
+                "notification_window_title": self.notification_window_title_toggle.get_active(),
+                "notification_popup_sound": self.notification_sounds_toggle.get_active(),
+                "notification_popup_file": self.notification_download_file_toggle.get_active(),
+                "notification_popup_folder": self.notification_download_folder_toggle.get_active(),
+                "notification_popup_private_message": self.notification_private_message_toggle.get_active(),
+                "notification_popup_chatroom": self.notification_chatroom_toggle.get_active(),
+                "notification_popup_chatroom_mention": self.notification_chatroom_mention_toggle.get_active(),
+                "notification_popup_wish": self.notification_wish_toggle.get_active()
             },
             "ui": {
-                "language": self.Language.get_active_id(),
-
-                "globalfont": self.SelectGlobalFont.get_font(),
-                "listfont": self.SelectListFont.get_font(),
-                "textviewfont": self.SelectTextViewFont.get_font(),
-                "chatfont": self.SelectChatFont.get_font(),
-                "searchfont": self.SelectSearchFont.get_font(),
-                "transfersfont": self.SelectTransfersFont.get_font(),
-                "browserfont": self.SelectBrowserFont.get_font(),
-                "usernamestyle": self.UsernameStyle.get_active_id(),
-
-                "reverse_file_paths": self.ReverseFilePaths.get_active(),
-
-                "tabmain": self.MainPosition.get_active_id(),
-                "tabrooms": self.ChatRoomsPosition.get_active_id(),
-                "tabprivate": self.PrivateChatPosition.get_active_id(),
-                "tabsearch": self.SearchPosition.get_active_id(),
-                "tabinfo": self.UserInfoPosition.get_active_id(),
-                "tabbrowse": self.UserBrowsePosition.get_active_id(),
+                "dark_mode": self.dark_mode_toggle.get_active(),
+                "exitdialog": self.close_action_combobox.get_selected_pos(),
+                "trayicon": self.tray_icon_toggle.get_active(),
+                "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
+                "language": self.language_combobox.get_selected_id(),
+                "globalfont": self.get_font(self.font_global_button),
+                "listfont": self.get_font(self.font_list_button),
+                "textviewfont": self.get_font(self.font_text_view_button),
+                "chatfont": self.get_font(self.font_chat_button),
+                "searchfont": self.get_font(self.font_search_button),
+                "transfersfont": self.get_font(self.font_transfers_button),
+                "browserfont": self.get_font(self.font_browse_button),
+                "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
+                "file_size_unit": "B" if self.exact_file_sizes_toggle.get_active() else "",
+                "tabmain": self.tab_position_main_combobox.get_selected_id(),
+                "tabrooms": self.tab_position_chatrooms_combobox.get_selected_id(),
+                "tabprivate": self.tab_position_private_chat_combobox.get_selected_id(),
+                "tabsearch": self.tab_position_search_combobox.get_selected_id(),
+                "tabinfo": self.tab_position_userinfo_combobox.get_selected_id(),
+                "tabbrowse": self.tab_position_browse_combobox.get_selected_id(),
                 "modes_visible": enabled_tabs,
-                "tab_select_previous": self.TabSelectPrevious.get_active(),
-                "tabclosers": self.TabClosers.get_active(),
-
-                "icontheme": self.theme_dir.get_path(),
-
-                "chatlocal": self.EntryLocal.get_text(),
-                "chatremote": self.EntryRemote.get_text(),
-                "chatcommand": self.EntryCommand.get_text(),
-                "chatme": self.EntryMe.get_text(),
-                "chathilite": self.EntryHighlight.get_text(),
-                "urlcolor": self.EntryURL.get_text(),
-                "textbg": self.EntryBackground.get_text(),
-                "inputcolor": self.EntryInput.get_text(),
-                "search": self.EntryImmediate.get_text(),
-                "searchq": self.EntryQueue.get_text(),
-                "useraway": self.EntryAway.get_text(),
-                "useronline": self.EntryOnline.get_text(),
-                "useroffline": self.EntryOffline.get_text(),
-                "tab_hilite": self.EntryHighlightTab.get_text(),
-                "tab_default": self.EntryRegularTab.get_text(),
-                "tab_changed": self.EntryChangedTab.get_text(),
-                "dark_mode": self.DarkMode.get_active(),
-                "exitdialog": self.CloseAction.get_active(),
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active()
+                "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
+                "tabclosers": self.tab_close_buttons_toggle.get_active(),
+                "icontheme": self.icon_theme_button.get_path(),
+                "chatlocal": self.color_chat_local_entry.get_text(),
+                "chatremote": self.color_chat_remote_entry.get_text(),
+                "chatcommand": self.color_chat_command_entry.get_text(),
+                "chatme": self.color_chat_action_entry.get_text(),
+                "chathilite": self.color_chat_highlighted_entry.get_text(),
+                "urlcolor": self.color_url_entry.get_text(),
+                "textbg": self.color_input_background_entry.get_text(),
+                "inputcolor": self.color_input_text_entry.get_text(),
+                "search": self.color_list_text_entry.get_text(),
+                "searchq": self.color_queued_result_text_entry.get_text(),
+                "useraway": self.color_status_away_entry.get_text(),
+                "useronline": self.color_status_online_entry.get_text(),
+                "useroffline": self.color_status_offline_entry.get_text(),
+                "tab_hilite": self.color_tab_highlighted_entry.get_text(),
+                "tab_default": self.color_tab_entry.get_text(),
+                "tab_changed": self.color_tab_changed_entry.get_text(),
+                "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
+                "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
+                "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id(),
+                "header_bar": self.header_bar_toggle.get_active()
             }
         }
 
-    """ Icons """
+    # Icons #
 
-    def on_default_theme(self, *_args):
-        self.theme_dir.clear()
-        self.theme_required = True
+    def on_clear_icon_theme(self, *_args):
+        self.icon_theme_button.clear()
 
-    """ Fonts """
+    # Fonts #
 
-    def on_default_font(self, widget):
+    def get_font(self, button):
 
-        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
-        font_button.set_font("")
+        if GTK_API_VERSION >= 4:
+            font_desc = button.get_font_desc()
+            return font_desc.to_string() if font_desc.get_family() else ""
 
-        self.theme_required = True
+        return button.get_font()
 
-    """ Colors """
+    def on_clear_font(self, button):
 
-    def on_theme_changed(self, *_args):
-        self.theme_required = True
+        font_button = getattr(self, Gtk.Buildable.get_name(button).replace("clear_button", "button"))
 
-    def update_color_button(self, input_config, color_id):
+        if GTK_API_VERSION >= 4:
+            font_button.set_font_desc(Pango.FontDescription())
+        else:
+            font_button.set_font("")
 
-        for section, value in self.colorsd.items():
-            if color_id in value:
-                color_button = value[color_id]
-                rgba = Gdk.RGBA()
+    # Colors #
 
-                rgba.parse(input_config[section][color_id])
-                color_button.set_rgba(rgba)
-                break
+    def on_color_entry_changed(self, entry):
 
-    def update_color_buttons(self):
+        self.editing_color = True
 
-        for color_ids in self.colorsd.values():
-            for color_id in color_ids:
-                self.update_color_button(config.sections, color_id)
+        rgba = Gdk.RGBA()
+        rgba.parse(entry.get_text())
 
-    def set_default_color(self, section, color_id):
+        color_button = getattr(self, Gtk.Buildable.get_name(entry).replace("entry", "button"))
+        color_button.set_rgba(rgba)
 
-        defaults = config.defaults
-        widget = self.options[section][color_id]
+        self.editing_color = False
 
-        if isinstance(widget, Gtk.Entry):
-            widget.set_text(defaults[section][color_id])
+    def on_color_button_changed(self, button, *_args):
 
-        self.update_color_button(defaults, color_id)
+        if self.editing_color:
+            return
 
-    def on_color_set(self, widget):
+        rgba = button.get_rgba()
 
-        rgba = widget.get_rgba()
-        red_color = round(rgba.red * 255)
-        green_color = round(rgba.green * 255)
-        blue_color = round(rgba.blue * 255)
-        color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
+        if GTK_API_VERSION >= 4 and rgba.is_clear():
+            color_hex = ""
+        else:
+            red_color = round(rgba.red * 255)
+            green_color = round(rgba.green * 255)
+            blue_color = round(rgba.blue * 255)
+            color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
-        entry.set_text(color_hex)
+        entry = getattr(self, Gtk.Buildable.get_name(button).replace("button", "entry"))
 
-    def on_default_color(self, widget, *_args):
+        if entry.get_text() != color_hex:
+            entry.set_text(color_hex)
 
-        entry = getattr(self, Gtk.Buildable.get_name(widget))
+    def on_default_color(self, entry, *_args):
 
-        for section, section_options in self.options.items():
-            for key, value in section_options.items():
-                if value is entry:
-                    self.set_default_color(section, key)
-                    return
+        for color_id, widget in self.options["ui"].items():
+            if widget is entry:
+                entry.set_text(config.defaults["ui"][color_id])
+                return
 
         entry.set_text("")
 
-    def on_colors_changed(self, widget):
+    # Tabs #
 
-        if isinstance(widget, Gtk.Entry):
-            rgba = Gdk.RGBA()
-            rgba.parse(widget.get_text())
+    def on_select_buddy_list_position(self, _combobox, selected_id):
 
-            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
-            color_button.set_rgba(rgba)
+        buddies_tab_active = (selected_id == "tab")
 
-        self.theme_required = True
+        self.tab_visible_userlist_toggle.set_active(buddies_tab_active)
+        self.tab_visible_userlist_toggle.set_sensitive(buddies_tab_active)
 
 
 class LoggingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/log.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
-            self.chatroom_log_folder_button,
-            self.debug_log_folder_button,
+            self.chatroom_log_folder_label,
+            self.container,
+            self.debug_log_folder_label,
+            self.format_codes_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
             self.log_private_chat_toggle,
             self.log_timestamp_format_entry,
             self.log_transfer_toggle,
-            self.private_chat_log_folder_button,
-            self.transfer_log_folder_button
-        ) = ui_template.widgets
+            self.private_chat_log_folder_label,
+            self.transfer_log_folder_label
+        ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
+
         self.private_chat_log_folder_button = FileChooserButton(
-            self.private_chat_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.private_chat_log_folder_label.get_parent(), window=application.preferences,
+            label=self.private_chat_log_folder_label, chooser_type="folder"
         )
         self.chatroom_log_folder_button = FileChooserButton(
-            self.chatroom_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.chatroom_log_folder_label.get_parent(), window=application.preferences,
+            label=self.chatroom_log_folder_label, chooser_type="folder"
         )
         self.transfer_log_folder_button = FileChooserButton(
-            self.transfer_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.transfer_log_folder_label.get_parent(), window=application.preferences,
+            label=self.transfer_log_folder_label, chooser_type="folder"
         )
         self.debug_log_folder_button = FileChooserButton(
-            self.debug_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.debug_log_folder_label.get_parent(), window=application.preferences,
+            label=self.debug_log_folder_label, chooser_type="folder"
         )
 
         self.options = {
@@ -1729,32 +2065,50 @@ class SearchesPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/search.ui")
-
-        # pylint: disable=invalid-name
-        (self.ClearFilterHistorySuccess, self.ClearSearchHistorySuccess, self.EnableFilters, self.EnableSearchHistory,
-         self.FilterBR, self.FilterCC, self.FilterFree, self.FilterIn, self.FilterLength, self.FilterOut,
-         self.FilterSize, self.FilterType, self.Main, self.MaxDisplayedResults, self.MaxResults, self.MinSearchChars,
-         self.RemoveSpecialChars, self.ShowPrivateSearchResults, self.ShowSearchHelp,
-         self.ToggleResults) = ui_template.widgets
+        (
+            self.cleared_filter_history_icon,
+            self.cleared_search_history_icon,
+            self.container,
+            self.enable_default_filters_toggle,
+            self.enable_search_history_toggle,
+            self.filter_bitrate_entry,
+            self.filter_country_entry,
+            self.filter_exclude_entry,
+            self.filter_file_size_entry,
+            self.filter_file_type_entry,
+            self.filter_free_slot_toggle,
+            self.filter_help_button,
+            self.filter_help_label,
+            self.filter_include_entry,
+            self.filter_length_entry,
+            self.max_displayed_results_spinner,
+            self.max_sent_results_spinner,
+            self.min_search_term_length_spinner,
+            self.remove_special_chars_toggle,
+            self.repond_search_requests_toggle,
+            self.show_private_results_toggle
+        ) = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
+        self.filter_help.set_menu_button(self.filter_help_button)
+
+        if GTK_API_VERSION >= 4:
+            self.filter_help_label.set_mnemonic_widget(self.filter_help_button.get_first_child())
 
         self.options = {
             "searches": {
-                "maxresults": self.MaxResults,
-                "enablefilters": self.EnableFilters,
+                "maxresults": self.max_sent_results_spinner,
+                "enablefilters": self.enable_default_filters_toggle,
                 "defilter": None,
-                "search_results": self.ToggleResults,
-                "max_displayed_results": self.MaxDisplayedResults,
-                "min_search_chars": self.MinSearchChars,
-                "remove_special_chars": self.RemoveSpecialChars,
-                "enable_history": self.EnableSearchHistory,
-                "private_search_results": self.ShowPrivateSearchResults
+                "search_results": self.repond_search_requests_toggle,
+                "max_displayed_results": self.max_displayed_results_spinner,
+                "min_search_chars": self.min_search_term_length_spinner,
+                "remove_special_chars": self.remove_special_chars_toggle,
+                "enable_history": self.enable_search_history_toggle,
+                "private_search_results": self.show_private_results_toggle
             }
         }
 
@@ -1768,56 +2122,54 @@ class SearchesPage:
             num_filters = len(searches["defilter"])
 
             if num_filters > 0:
-                self.FilterIn.set_text(str(searches["defilter"][0]))
+                self.filter_include_entry.set_text(str(searches["defilter"][0]))
 
             if num_filters > 1:
-                self.FilterOut.set_text(str(searches["defilter"][1]))
+                self.filter_exclude_entry.set_text(str(searches["defilter"][1]))
 
             if num_filters > 2:
-                self.FilterSize.set_text(str(searches["defilter"][2]))
+                self.filter_file_size_entry.set_text(str(searches["defilter"][2]))
 
             if num_filters > 3:
-                self.FilterBR.set_text(str(searches["defilter"][3]))
+                self.filter_bitrate_entry.set_text(str(searches["defilter"][3]))
 
             if num_filters > 4:
-                self.FilterFree.set_active(searches["defilter"][4])
+                self.filter_free_slot_toggle.set_active(searches["defilter"][4])
 
             if num_filters > 5:
-                self.FilterCC.set_text(str(searches["defilter"][5]))
+                self.filter_country_entry.set_text(str(searches["defilter"][5]))
 
             if num_filters > 6:
-                self.FilterType.set_text(str(searches["defilter"][6]))
+                self.filter_file_type_entry.set_text(str(searches["defilter"][6]))
 
             if num_filters > 7:
-                self.FilterLength.set_text(str(searches["defilter"][7]))
+                self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
-        self.ClearSearchHistorySuccess.set_visible(False)
-        self.ClearFilterHistorySuccess.set_visible(False)
+        self.cleared_search_history_icon.set_visible(False)
+        self.cleared_filter_history_icon.set_visible(False)
 
     def get_settings(self):
 
-        self.search_required = False
-
         return {
             "searches": {
-                "maxresults": self.MaxResults.get_value_as_int(),
-                "enablefilters": self.EnableFilters.get_active(),
+                "maxresults": self.max_sent_results_spinner.get_value_as_int(),
+                "enablefilters": self.enable_default_filters_toggle.get_active(),
                 "defilter": [
-                    self.FilterIn.get_text(),
-                    self.FilterOut.get_text(),
-                    self.FilterSize.get_text(),
-                    self.FilterBR.get_text(),
-                    self.FilterFree.get_active(),
-                    self.FilterCC.get_text(),
-                    self.FilterType.get_text(),
-                    self.FilterLength.get_text()
+                    self.filter_include_entry.get_text(),
+                    self.filter_exclude_entry.get_text(),
+                    self.filter_file_size_entry.get_text(),
+                    self.filter_bitrate_entry.get_text(),
+                    self.filter_free_slot_toggle.get_active(),
+                    self.filter_country_entry.get_text(),
+                    self.filter_file_type_entry.get_text(),
+                    self.filter_length_entry.get_text()
                 ],
-                "search_results": self.ToggleResults.get_active(),
-                "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
-                "min_search_chars": self.MinSearchChars.get_value_as_int(),
-                "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "enable_history": self.EnableSearchHistory.get_active(),
-                "private_search_results": self.ShowPrivateSearchResults.get_active()
+                "search_results": self.repond_search_requests_toggle.get_active(),
+                "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
+                "min_search_chars": self.min_search_term_length_spinner.get_value_as_int(),
+                "remove_special_chars": self.remove_special_chars_toggle.get_active(),
+                "enable_history": self.enable_search_history_toggle.get_active(),
+                "private_search_results": self.show_private_results_toggle.get_active()
             }
         }
 
@@ -1826,26 +2178,55 @@ class SearchesPage:
 
     def on_clear_search_history(self, *_args):
         self.application.window.search.clear_search_history()
-        self.ClearSearchHistorySuccess.set_visible(True)
+        self.cleared_search_history_icon.set_visible(True)
 
     def on_clear_filter_history(self, *_args):
         self.application.window.search.clear_filter_history()
-        self.ClearFilterHistorySuccess.set_visible(True)
+        self.cleared_filter_history_icon.set_visible(True)
 
 
 class UrlHandlersPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/urlhandlers.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
-            self.file_manager_combobox,
-            self.media_player_combobox,
+            self.container,
+            self.file_manager_label,
+            self.media_player_label,
             self.protocol_list_container
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
+
+        self.media_player_combobox = ComboBox(
+            container=self.media_player_label.get_parent(), label=self.media_player_label, has_entry=True,
+            items=(
+                ("", None),
+                ("xdg-open $", None),
+                ("amarok -a $", None),
+                ("audacious -e $", None),
+                ("exaile $", None),
+                ("rhythmbox $", None),
+                ("xmms2 add -f $", None)
+            )
+        )
+
+        self.file_manager_combobox = ComboBox(
+            container=self.file_manager_label.get_parent(), label=self.file_manager_label, has_entry=True,
+            items=(
+                ("", None),
+                ("xdg-open $", None),
+                ("explorer $", None),
+                ("nautilus $", None),
+                ("nemo $", None),
+                ("caja $", None),
+                ("thunar $", None),
+                ("dolphin $", None),
+                ("konqueror $", None),
+                ("krusader --left $", None),
+                ("xterm -e mc $", None)
+            )
+        )
 
         self.options = {
             "urls": {
@@ -1878,19 +2259,29 @@ class UrlHandlersPage:
             "links -g $",
             "dillo $",
             "konqueror $",
-            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
+            '"c:\\Program Files\\Mozilla Firefox\\Firefox.exe" $'
         ]
 
         self.protocols = {}
         self.protocol_list_view = TreeView(
             application.window, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
-            columns=[
-                {"column_id": "protocol", "column_type": "text", "title": _("Protocol"), "sort_column": 0,
-                 "width": 120, "expand_column": True, "iterator_key": True},
-                {"column_id": "command", "column_type": "text", "title": _("Command"), "sort_column": 1,
-                 "expand_column": True}
-            ]
+            delete_accelerator_callback=self.on_remove_handler,
+            columns={
+                "protocol": {
+                    "column_type": "text",
+                    "title": _("Protocol"),
+                    "width": 120,
+                    "expand_column": True,
+                    "iterator_key": True,
+                    "default_sort_type": "ascending"
+                },
+                "command": {
+                    "column_type": "text",
+                    "title": _("Command"),
+                    "expand_column": True
+                }
+            }
         )
 
     def set_settings(self):
@@ -1903,9 +2294,6 @@ class UrlHandlersPage:
         self.protocols = config.sections["urls"]["protocols"].copy()
 
         for protocol, command in self.protocols.items():
-            if command[-1:] == "&":
-                command = command[:-1].rstrip()
-
             self.protocol_list_view.add_row([str(protocol), str(command)], select_row=False)
 
     def get_settings(self):
@@ -1915,10 +2303,10 @@ class UrlHandlersPage:
                 "protocols": self.protocols.copy()
             },
             "ui": {
-                "filemanager": self.file_manager_combobox.get_active_text()
+                "filemanager": self.file_manager_combobox.get_text()
             },
             "players": {
-                "default": self.media_player_combobox.get_active_text()
+                "default": self.media_player_combobox.get_text()
             }
         }
 
@@ -1934,7 +2322,7 @@ class UrlHandlersPage:
         self.protocols[protocol] = command
 
         if iterator:
-            self.protocol_list_view.set_row_value(iterator, 1, command)
+            self.protocol_list_view.set_row_value(iterator, "command", command)
             return
 
         self.protocol_list_view.add_row([protocol, command])
@@ -1945,6 +2333,7 @@ class UrlHandlersPage:
             parent=self.application.preferences,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
+            action_button_label=_("_Add"),
             callback=self.on_add_handler_response,
             use_second_entry=True,
             droplist=self.default_protocols,
@@ -1958,21 +2347,22 @@ class UrlHandlersPage:
         if not command:
             return
 
-        protocol = self.protocol_list_view.get_row_value(iterator, 0)
+        protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
 
         self.protocols[protocol] = command
-        self.protocol_list_view.set_row_value(iterator, 1, command)
+        self.protocol_list_view.set_row_value(iterator, "command", command)
 
     def on_edit_handler(self, *_args):
 
         for iterator in self.protocol_list_view.get_selected_rows():
-            protocol = self.protocol_list_view.get_row_value(iterator, 0)
-            command = self.protocol_list_view.get_row_value(iterator, 1)
+            protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
+            command = self.protocol_list_view.get_row_value(iterator, "command")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_handler_response,
                 callback_data=iterator,
                 droplist=self.default_commands,
@@ -1983,35 +2373,49 @@ class UrlHandlersPage:
     def on_remove_handler(self, *_args):
 
         for iterator in reversed(self.protocol_list_view.get_selected_rows()):
-            protocol = self.protocol_list_view.get_row_value(iterator, 0)
+            protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
 
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
 
     def on_default_media_player(self, *_args):
         default_media_player = config.defaults["players"]["default"]
-        self.media_player_combobox.get_child().set_text(default_media_player)
+        self.media_player_combobox.set_text(default_media_player)
 
     def on_default_file_manager(self, *_args):
         default_file_manager = config.defaults["ui"]["filemanager"]
-        self.file_manager_combobox.get_child().set_text(default_file_manager)
+        self.file_manager_combobox.set_text(default_file_manager)
 
 
 class NowPlayingPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/nowplaying.ui")
-
-        # pylint: disable=invalid-name
-        (self.Example, self.Legend, self.Main, self.NPCommand, self.NPFormat, self.NP_lastfm, self.NP_listenbrainz,
-         self.NP_mpris, self.NP_other, self.player_input, self.test_now_playing) = ui_template.widgets
+        (
+            self.command_entry,
+            self.command_label,
+            self.container,
+            self.format_help_label,
+            self.format_message_label,
+            self.lastfm_radio,
+            self.listenbrainz_radio,
+            self.mpris_radio,
+            self.other_radio,
+            self.output_label,
+            self.test_configuration_button
+        ) = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
+        self.format_message_combobox = ComboBox(
+            container=self.format_message_label.get_parent(), label=self.format_message_label,
+            has_entry=True
+        )
+
         self.options = {
             "players": {
-                "npothercommand": self.NPCommand
+                "npformat": self.format_message_combobox,
+                "npothercommand": self.command_entry
             }
         }
 
@@ -2029,18 +2433,28 @@ class NowPlayingPage:
         self.custom_format_list = []
 
         # Supply the information needed for the Now Playing class to return a song
-        self.test_now_playing.connect(
+        self.test_configuration_button.connect(
             "clicked",
             core.now_playing.display_now_playing,
-            self.set_now_playing_example,  # Callback to update the song displayed
+            self.set_now_playing_output,   # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
             self.get_format                # Callback to retrieve format text
         )
 
-        self.NP_mpris.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in {"win32", "darwin"})
 
     def set_settings(self):
+
+        # Add formats
+        self.format_message_combobox.clear()
+
+        for item in self.default_format_list:
+            self.format_message_combobox.append(str(item))
+
+        if self.custom_format_list:
+            for item in self.custom_format_list:
+                self.format_message_combobox.append(str(item))
 
         self.application.preferences.set_widgets_data(self.options)
 
@@ -2051,78 +2465,65 @@ class NowPlayingPage:
         self.set_player(config.sections["players"]["npplayer"])
         self.update_now_playing_info()
 
-        # Add formats
-        self.NPFormat.remove_all()
-
-        for item in self.default_format_list:
-            self.NPFormat.append_text(str(item))
-
-        if self.custom_format_list:
-            for item in self.custom_format_list:
-                self.NPFormat.append_text(str(item))
-
-        if config.sections["players"]["npformat"] == "":
-            # If there's no default format in the config: set the first of the list
-            self.NPFormat.set_active(0)
-        else:
-            # If there's is a default format in the config: select the right item
-            for i, value in enumerate(self.NPFormat.get_model()):
-                if value[0] == config.sections["players"]["npformat"]:
-                    self.NPFormat.set_active(i)
-
     def get_player(self):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             player = "lastfm"
-        elif self.NP_mpris.get_active():
+
+        elif self.mpris_radio.get_active():
             player = "mpris"
-        elif self.NP_listenbrainz.get_active():
+
+        elif self.listenbrainz_radio.get_active():
             player = "listenbrainz"
-        elif self.NP_other.get_active():
+
+        elif self.other_radio.get_active():
             player = "other"
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         return player
 
     def get_command(self):
-        return self.NPCommand.get_text()
+        return self.command_entry.get_text()
 
     def get_format(self):
-        return self.NPFormat.get_active_text()
+        return self.format_message_combobox.get_text()
 
     def set_player(self, player):
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         if player == "lastfm":
-            self.NP_lastfm.set_active(True)
-        elif player == 'listenbrainz':
-            self.NP_listenbrainz.set_active(True)
+            self.lastfm_radio.set_active(True)
+
+        elif player == "listenbrainz":
+            self.listenbrainz_radio.set_active(True)
+
         elif player == "other":
-            self.NP_other.set_active(True)
+            self.other_radio.set_active(True)
+
         else:
-            self.NP_mpris.set_active(True)
+            self.mpris_radio.set_active(True)
 
     def update_now_playing_info(self, *_args):
 
-        if self.NP_lastfm.get_active():
+        if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username;APIKEY:"))
+            self.command_label.set_text(_("Username;APIKEY:"))
 
-        elif self.NP_mpris.get_active():
+        elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
-            self.player_input.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
+            self.command_label.set_text(_("Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"))
 
-        elif self.NP_listenbrainz.get_active():
+        elif self.listenbrainz_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username:"))
+            self.command_label.set_text(_("Username:"))
 
-        elif self.NP_other.get_active():
+        elif self.other_radio.get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command:"))
+            self.command_label.set_text(_("Command:"))
 
         legend = ""
 
@@ -2132,8 +2533,8 @@ class NowPlayingPage:
             if item == "$t":
                 legend += _("Title")
             elif item == "$n":
-                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
-                    'artist': _("Artist"), 'title': _("Title")}
+                legend += _('Now Playing (typically "%(artist)s - %(title)s")') % {
+                    "artist": _("Artist"), "title": _("Title")}
             elif item == "$l":
                 legend += _("Duration")
             elif item == "$r":
@@ -2155,10 +2556,10 @@ class NowPlayingPage:
 
             legend += "\n"
 
-        self.Legend.set_text(legend[:-1])
+        self.format_help_label.set_text(legend[:-1])
 
-    def set_now_playing_example(self, title):
-        self.Example.set_text(title)
+    def set_now_playing_output(self, title):
+        self.output_label.set_text(title)
 
     def get_settings(self):
 
@@ -2183,20 +2584,18 @@ class PluginsPage:
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="settings/plugin.ui")
         (
-            self.Main,  # pylint: disable=invalid-name
+            self.container,
             self.enable_plugins_toggle,
             self.plugin_authors_label,
-            self.plugin_description_view,
+            self.plugin_description_view_container,
             self.plugin_list_container,
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
-        self.enabled_plugins = []
         self.selected_plugin = None
 
         self.options = {
@@ -2205,47 +2604,52 @@ class PluginsPage:
             }
         }
 
-        self.plugin_description_view = TextView(self.plugin_description_view)
+        self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
+                                                pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
-            columns=[
+            columns={
                 # Visible columns
-                {"column_id": "enabled", "column_type": "toggle", "title": _("Enabled"), "width": 0,
-                 "sort_column": 0, "toggle_callback": self.on_plugin_toggle, "hide_header": True},
-                {"column_id": "plugin", "column_type": "text", "title": _("Plugin"), "sort_column": 1},
+                "enabled": {
+                    "column_type": "toggle",
+                    "title": _("Enabled"),
+                    "width": 0,
+                    "toggle_callback": self.on_plugin_toggle,
+                    "hide_header": True
+                },
+                "plugin": {
+                    "column_type": "text",
+                    "title": _("Plugin"),
+                    "default_sort_type": "ascending"
+                },
 
                 # Hidden data columns
-                {"column_id": "plugin_hidden", "data_type": str}
-            ]
+                "plugin_id": {"data_type": str}
+            }
         )
 
     def set_settings(self):
 
-        self.enabled_plugins.clear()
         self.plugin_list_view.clear()
 
         self.application.preferences.set_widgets_data(self.options)
 
-        for plugin_id in sorted(core.pluginhandler.list_installed_plugins()):
+        for plugin_id in core.pluginhandler.list_installed_plugins():
             try:
                 info = core.pluginhandler.get_plugin_info(plugin_id)
             except OSError:
                 continue
 
-            plugin_name = info.get('Name', plugin_id)
+            plugin_name = info.get("Name", plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
-
-            if enabled:
-                self.enabled_plugins.append(plugin_id)
 
     def get_settings(self):
 
         return {
             "plugins": {
-                "enable": self.enable_plugins_toggle.get_active(),
-                "enabled": self.enabled_plugins[:]
+                "enable": self.enable_plugins_toggle.get_active()
             }
         }
 
@@ -2258,13 +2662,13 @@ class PluginsPage:
             self.selected_plugin = _("No Plugin Selected")
             info = {}
         else:
-            self.selected_plugin = list_view.get_row_value(iterator, 2)
+            self.selected_plugin = list_view.get_row_value(iterator, "plugin_id")
             info = core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         plugin_name = info.get("Name", self.selected_plugin)
-        plugin_version = info.get("Version", '-')
-        plugin_authors = ", ".join(info.get("Authors", '-'))
-        plugin_description = info.get("Description", '').replace(r'\n', '\n')
+        plugin_version = info.get("Version", "-")
+        plugin_authors = ", ".join(info.get("Authors", "-"))
+        plugin_description = info.get("Description", "").replace(r"\n", "\n")
 
         self.plugin_name_label.set_text(plugin_name)
         self.plugin_version_label.set_text(plugin_version)
@@ -2272,29 +2676,25 @@ class PluginsPage:
 
         self.plugin_description_view.clear()
         self.plugin_description_view.append_line(plugin_description)
+        self.plugin_description_view.place_cursor_at_line(0)
 
         self.check_plugin_settings_button(self.selected_plugin)
 
     def on_plugin_toggle(self, list_view, iterator):
 
-        plugin_id = list_view.get_row_value(iterator, 2)
-        value = list_view.get_row_value(iterator, 0)
-        list_view.set_row_value(iterator, 0, not value)
+        plugin_id = list_view.get_row_value(iterator, "plugin_id")
+        enabled = core.pluginhandler.toggle_plugin(plugin_id)
 
-        if not value:
-            core.pluginhandler.enable_plugin(plugin_id)
-            self.enabled_plugins.append(plugin_id)
-        else:
-            core.pluginhandler.disable_plugin(plugin_id)
-            self.enabled_plugins.remove(plugin_id)
-
+        list_view.set_row_value(iterator, "enabled", enabled)
         self.check_plugin_settings_button(plugin_id)
 
     def on_enable_plugins(self, *_args):
 
+        enabled_plugin_ids = config.sections["plugins"]["enabled"].copy()
+
         if self.enable_plugins_toggle.get_active():
             # Enable all selected plugins
-            for plugin_id in self.enabled_plugins:
+            for plugin_id in enabled_plugin_ids:
                 core.pluginhandler.enable_plugin(plugin_id)
 
             self.check_plugin_settings_button(self.selected_plugin)
@@ -2304,6 +2704,7 @@ class PluginsPage:
         for plugin in core.pluginhandler.enabled_plugins.copy():
             core.pluginhandler.disable_plugin(plugin)
 
+        config.sections["plugins"]["enabled"] = enabled_plugin_ids
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
@@ -2314,7 +2715,7 @@ class PluginsPage:
         if self.selected_plugin is None:
             return
 
-        PluginSettingsDialog(
+        PluginSettings(
             self.application,
             plugin_id=self.selected_plugin,
             plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
@@ -2327,7 +2728,6 @@ class Preferences(Dialog):
 
         self.application = application
 
-        ui_template = UserInterface(scope=self, path="dialogs/preferences.ui")
         (
             self.apply_button,
             self.cancel_button,
@@ -2337,7 +2737,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,
@@ -2353,30 +2753,15 @@ class Preferences(Dialog):
             show_title_buttons=False
         )
 
-        add_css_class(self.window, "preferences-border")
+        add_css_class(self.widget, "preferences-border")
 
         if GTK_API_VERSION == 3:
             # Scroll to focused widgets
             self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
 
         self.pages = {}
-        self.page_ids = [
-            ("network", _("Network"), "network-wireless-symbolic"),
-            ("user-interface", _("User Interface"), "view-grid-symbolic"),
-            ("shares", _("Shares"), "folder-symbolic"),
-            ("downloads", _("Downloads"), "document-save-symbolic"),
-            ("uploads", _("Uploads"), "emblem-shared-symbolic"),
-            ("searches", _("Searches"), "system-search-symbolic"),
-            ("user-info", _("User Info"), "avatar-default-symbolic"),
-            ("chats", _("Chats"), "insert-text-symbolic"),
-            ("now-playing", _("Now Playing"), "folder-music-symbolic"),
-            ("logging", _("Logging"), "folder-documents-symbolic"),
-            ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
-            ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-            ("plugins", _("Plugins"), "list-add-symbolic"),
-            ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
 
-        for _page_id, label, icon_name in self.page_ids:
+        for _page_id, label, icon_name in PAGE_IDS:
             box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
@@ -2390,12 +2775,15 @@ class Preferences(Dialog):
 
             self.preferences_list.insert(box, -1)
 
+        Accelerator("Tab", self.preferences_list, self.on_sidebar_tab_accelerator)
+        Accelerator("<Shift>Tab", self.preferences_list, self.on_sidebar_shift_tab_accelerator)
+
     def set_active_page(self, page_id):
 
         if page_id is None:
             return
 
-        for index, (n_page_id, _label, _icon_name) in enumerate(self.page_ids):
+        for index, (n_page_id, _label, _icon_name) in enumerate(PAGE_IDS):
             if n_page_id != page_id:
                 continue
 
@@ -2415,76 +2803,7 @@ class Preferences(Dialog):
                 if widget is None:
                     continue
 
-                if config.sections[section][key] is None:
-                    self.clear_widget(widget)
-                else:
-                    self.set_widget(widget, config.sections[section][key])
-
-    @staticmethod
-    def get_widget_data(widget):
-
-        if isinstance(widget, Gtk.SpinButton):
-            if widget.get_digits() > 0:
-                return widget.get_value()
-
-            return widget.get_value_as_int()
-
-        if isinstance(widget, Gtk.Entry):
-            return widget.get_text()
-
-        if isinstance(widget, Gtk.TextView):
-            text_buffer = widget.get_buffer()
-            start, end = text_buffer.get_bounds()
-
-            return text_buffer.get_text(start, end, True)
-
-        if isinstance(widget, Gtk.CheckButton):
-            try:
-                # Radio button
-                for radio in widget.group_radios:
-                    if radio.get_active():
-                        return widget.group_radios.index(radio)
-
-                return 0
-
-            except (AttributeError, TypeError):
-                # Regular check button
-                return widget.get_active()
-
-        if isinstance(widget, Gtk.ComboBoxText):
-            return widget.get_active_text()
-
-        if isinstance(widget, Gtk.FontButton):
-            return widget.get_font()
-
-        if isinstance(widget, TreeView):
-            return list(widget.iterators)
-
-        if isinstance(widget, FileChooserButton):
-            return widget.get_path()
-
-        return None
-
-    @staticmethod
-    def clear_widget(widget):
-
-        if isinstance(widget, Gtk.SpinButton):
-            widget.set_value(0)
-
-        elif isinstance(widget, Gtk.Entry):
-            widget.set_text("")
-
-        elif isinstance(widget, Gtk.TextView):
-            widget.get_buffer().set_text("")
-
-        elif isinstance(widget, Gtk.CheckButton):
-            widget.set_active(0)
-
-        elif isinstance(widget, Gtk.ComboBoxText):
-            widget.get_child().set_text("")
-
-        elif isinstance(widget, Gtk.FontButton):
-            widget.set_font("")
+                self.set_widget(widget, config.sections[section][key])
 
     @staticmethod
     def set_widget(widget, value):
@@ -2501,9 +2820,9 @@ class Preferences(Dialog):
             if isinstance(value, (str, int)):
                 widget.set_text(value)
 
-        elif isinstance(widget, Gtk.TextView):
-            if isinstance(value, (str, int)):
-                widget.get_buffer().set_text(unescape(value))
+        elif isinstance(widget, TextView):
+            if isinstance(value, str):
+                widget.append_line(unescape(value))
 
         elif isinstance(widget, Gtk.CheckButton):
             try:
@@ -2515,19 +2834,15 @@ class Preferences(Dialog):
                 # Regular check button
                 widget.set_active(value)
 
-        elif isinstance(widget, Gtk.ComboBoxText):
+        elif isinstance(widget, ComboBox):
             if isinstance(value, str):
-                if widget.get_has_entry():
-                    widget.get_child().set_text(value)
+                if widget.entry is not None:
+                    widget.set_text(value)
                 else:
-                    widget.set_active_id(value)
+                    widget.set_selected_id(value)
 
             elif isinstance(value, int):
-                widget.set_active(value)
-
-            # If an invalid value was provided, select first item
-            if not widget.get_has_entry() and widget.get_active() < 0:
-                widget.set_active(0)
+                widget.set_selected_pos(value)
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)
@@ -2548,6 +2863,9 @@ class Preferences(Dialog):
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)
+
+        elif isinstance(widget, Gtk.FontDialogButton):
+            widget.set_font_desc(Pango.FontDescription.from_string(value))
 
     def set_settings(self):
 
@@ -2571,6 +2889,10 @@ class Preferences(Dialog):
             "plugins": {}
         }
 
+        for page in self.pages.values():
+            for key, data in page.get_settings().items():
+                options[key].update(data)
+
         try:
             portmap_required = self.pages["network"].portmap_required
 
@@ -2584,10 +2906,16 @@ class Preferences(Dialog):
             rescan_required = False
 
         try:
-            theme_required = self.pages["user-interface"].theme_required
+            recompress_shares_required = self.pages["shares"].recompress_shares_required
 
         except KeyError:
-            theme_required = False
+            recompress_shares_required = False
+
+        try:
+            user_profile_required = self.pages["user-profile"].user_profile_required
+
+        except KeyError:
+            user_profile_required = False
 
         try:
             completion_required = self.pages["chats"].completion_required
@@ -2607,41 +2935,24 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        for page in self.pages.values():
-            for key, data in page.get_settings().items():
-                options[key].update(data)
-
-        return (portmap_required, rescan_required, theme_required, completion_required,
-                ip_ban_required, search_required, options)
+        return (portmap_required, rescan_required, recompress_shares_required, user_profile_required,
+                completion_required, ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, theme_required, completion_required,
+        (portmap_required, rescan_required, recompress_shares_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
 
         if portmap_required:
-            core.protothread.upnp.add_port_mapping()
+            core.portmapper.add_port_mapping()
         else:
-            core.protothread.upnp.cancel_timer()
+            core.portmapper.remove_port_mapping()
 
-        if theme_required:
-            # Dark mode
-            dark_mode_state = config.sections["ui"]["dark_mode"]
-            set_dark_mode(dark_mode_state)
-            self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
-
-            # Icons
-            load_custom_icons(update=True)
-            self.application.tray_icon.update_icon_theme()
-
-            # Fonts and colors
-            update_custom_css()
-
-            self.application.window.chatrooms.update_tags()
-            self.application.window.privatechat.update_tags()
+        if user_profile_required and core.login_username:
+            core.userinfo.show_user(core.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()
@@ -2653,25 +2964,43 @@ class Preferences(Dialog):
         if search_required:
             self.application.window.search.populate_search_history()
 
-        # Chatrooms
-        self.application.window.chatrooms.toggle_chat_buttons()
-        self.application.window.privatechat.toggle_chat_buttons()
+        if recompress_shares_required and not rescan_required:
+            core.shares.rescan_shares(init=True, rescan=False)
+
+        # Dark mode
+        dark_mode_state = config.sections["ui"]["dark_mode"]
+        set_dark_mode(dark_mode_state)
+
+        # Header bar
+        header_bar_state = config.sections["ui"]["header_bar"]
+        self.application.window.set_use_header_bar(header_bar_state)
+
+        # Icons
+        load_custom_icons(update=True)
+        self.application.tray_icon.update_icon_theme()
+
+        # Fonts and colors
+        update_custom_css()
+
+        # Chats
+        self.application.window.chatrooms.update_widgets()
+        self.application.window.privatechat.update_widgets()
 
         # Transfers
-        core.transfers.update_download_limits()
-        core.transfers.update_download_filters()
-        core.transfers.update_upload_limits()
-        core.transfers.check_upload_queue()
+        core.downloads.update_transfer_limits()
+        core.downloads.update_download_filters()
+        core.uploads.update_transfer_limits()
+        core.uploads.check_upload_queue()
 
         # Tray icon
-        if not config.sections["ui"]["trayicon"] and self.application.tray_icon.is_visible():
-            self.application.tray_icon.set_visible(False)
-
-        elif config.sections["ui"]["trayicon"] and not self.application.tray_icon.is_visible():
+        if not config.sections["ui"]["trayicon"]:
+            self.application.tray_icon.unload()
+        else:
             self.application.tray_icon.load()
 
         # Main notebook
         self.application.window.set_tab_positions()
+        self.application.window.set_buddy_list_position()
         self.application.window.set_main_tabs_visibility()
         self.application.window.notebook.set_tab_text_colors()
 
@@ -2692,16 +3021,16 @@ class Preferences(Dialog):
         if not settings_closed:
             return
 
-        if rescan_required:
-            core.shares.rescan_shares()
-
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
             self.application.window.show()
 
+        if rescan_required:
+            core.shares.rescan_shares()
+
         if config.need_config():
-            GLib.idle_add(self.application.setup)
+            core.setup()
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
@@ -2714,21 +3043,21 @@ class Preferences(Dialog):
         FileChooserSave(
             parent=self,
             callback=self.on_back_up_config_response,
-            initial_folder=os.path.dirname(config.filename),
+            initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
         ).show()
 
     def on_widget_scroll_event(self, _widget, event):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
-        to container (GTK 3) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
+        scroll event to container (GTK 3)"""
 
         self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
-        in the container (GTK 4) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate
+        scrolling in the container (GTK 4)"""
 
         adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
@@ -2743,7 +3072,7 @@ class Preferences(Dialog):
 
     def on_switch_page(self, _listbox, row):
 
-        page_id, _label, _icon_name = self.page_ids[row.get_index()]
+        page_id, _label, _icon_name = PAGE_IDS[row.get_index()]
         old_page = self.viewport.get_child()
 
         if old_page:
@@ -2760,29 +3089,33 @@ class Preferences(Dialog):
             for obj in page.__dict__.values():
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
-                        check_button_label = obj.get_last_child()
+                        try:
+                            check_button_label = obj.get_last_child()
+                            check_button_label.set_wrap(True)   # pylint: disable=no-member
+                        except AttributeError:
+                            pass
                     else:
                         check_button_label = obj.get_child()
+                        check_button_label.set_line_wrap(True)  # pylint: disable=no-member
                         obj.set_receives_default(True)
 
-                    try:
-                        check_button_label.set_property("wrap", True)
-                    except AttributeError:
-                        pass
+                elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
+                    if isinstance(obj, ComboBox):
+                        if GTK_API_VERSION >= 4:
+                            continue
 
-                elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
+                        obj = obj.dropdown
+
                     if GTK_API_VERSION >= 4:
-                        scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
+                        scroll_controller = Gtk.EventControllerScroll()
+                        scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
                         scroll_controller.connect("scroll", self.on_widget_scroll)
                         obj.add_controller(scroll_controller)
                     else:
                         obj.connect("scroll-event", self.on_widget_scroll_event)
 
-                    if isinstance(obj, Gtk.ComboBoxText):
-                        for cell in obj.get_cells():
-                            cell.set_property("ellipsize", Pango.EllipsizeMode.END)
-
-                elif isinstance(obj, Gtk.FontButton):
+                elif (isinstance(obj, Gtk.FontButton)
+                      or ((GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10) and isinstance(obj, Gtk.FontDialogButton))):
                     if GTK_API_VERSION >= 4:
                         font_button_label = obj.get_first_child().get_first_child().get_first_child()
                     else:
@@ -2793,15 +3126,30 @@ class Preferences(Dialog):
                     except AttributeError:
                         pass
 
-            page.Main.set_margin_start(18)
-            page.Main.set_margin_end(18)
-            page.Main.set_margin_top(14)
-            page.Main.set_margin_bottom(18)
+            page.container.set_margin_start(18)
+            page.container.set_margin_end(18)
+            page.container.set_margin_top(14)
+            page.container.set_margin_bottom(18)
 
-        self.viewport.set_property("child", self.pages[page_id].Main)
+        if GTK_API_VERSION >= 4:
+            self.viewport.set_child(self.pages[page_id].container)  # pylint: disable=no-member
+        else:
+            self.viewport.add(self.pages[page_id].container)        # pylint: disable=no-member
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)
+
+    def on_sidebar_tab_accelerator(self, *_args):
+        """Tab - navigate to widget after preferences sidebar."""
+
+        self.content.child_focus(Gtk.DirectionType.TAB_FORWARD)
+        return True
+
+    def on_sidebar_shift_tab_accelerator(self, *_args):
+        """Shift+Tab - navigate to widget before preferences sidebar."""
+
+        self.ok_button.grab_focus()
+        return True
 
     def on_cancel(self, *_args):
         self.close()

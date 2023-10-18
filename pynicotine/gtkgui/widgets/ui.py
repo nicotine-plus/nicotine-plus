@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -21,49 +21,77 @@ import os
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_GUI_DIR
-from pynicotine.i18n import TRANSLATION_DOMAIN
+from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.utils import encode_path
 
 
-""" UI Builder """
+# UI Builder #
 
 
-class UserInterface:
+ui_data = {}
 
-    ui_data = {}
 
-    def __init__(self, scope, path):
+def load(scope, path):
 
-        if path not in self.ui_data:
-            with open(encode_path(os.path.join(GTK_GUI_DIR, "ui", path)), encoding="utf-8") as file_handle:
-                if GTK_API_VERSION >= 4:
-                    self.ui_data[path] = file_handle.read().replace(
-                        "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
-                else:
-                    self.ui_data[path] = file_handle.read()
+    if path not in ui_data:
+        with open(encode_path(os.path.join(GTK_GUI_FOLDER_PATH, "ui", path)), encoding="utf-8") as file_handle:
+            ui_content = file_handle.read()
 
-        if GTK_API_VERSION >= 4:
-            self.builder = Gtk.Builder(scope)
-            self.builder.set_translation_domain(TRANSLATION_DOMAIN)
-            self.builder.add_from_string(self.ui_data[path])
-            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
-        else:
-            self.builder = Gtk.Builder(translation_domain=TRANSLATION_DOMAIN)
-            self.builder.add_from_string(self.ui_data[path])
-            self.builder.connect_signals(scope)                      # pylint: disable=no-member
+            # Translate UI strings using Python's gettext
+            start_tag = ' translatable="yes">'
+            end_tag = "</property>"
+            start_tag_len = len(start_tag)
+            tag_start_pos = ui_content.find(start_tag)
 
-        self.widgets = self.builder.get_objects()
+            while tag_start_pos > -1:
+                string_start_pos = (tag_start_pos + start_tag_len)
+                string_end_pos = ui_content.find(end_tag, string_start_pos)
 
-        for obj in list(self.widgets):
-            try:
-                obj_name = Gtk.Buildable.get_name(obj)
-                if not obj_name.startswith("_"):
-                    continue
+                original_string = ui_content[string_start_pos:string_end_pos]
+                translated_string = _(original_string)
+                ui_content = ui_content.replace(original_string, translated_string)
 
-            except TypeError:
-                pass
+                # Find next translatable string
+                new_string_end_pos = (string_end_pos + (len(translated_string) - len(original_string)))
+                tag_start_pos = ui_content.find(start_tag, new_string_end_pos)
 
-            self.widgets.remove(obj)
+            # GTK 4 replacements
+            if GTK_API_VERSION >= 4:
+                ui_content = (
+                    ui_content
+                    .replace("GtkRadioButton", "GtkCheckButton")
+                    .replace('"can-focus"', '"focusable"'))
 
-        self.widgets.sort(key=Gtk.Buildable.get_name)
+                if GTK_MINOR_VERSION >= 10:
+                    ui_content = (
+                        ui_content
+                        .replace("GtkColorButton", "GtkColorDialogButton")
+                        .replace("GtkFontButton", "GtkFontDialogButton"))
+
+            ui_data[path] = ui_content
+
+    if GTK_API_VERSION >= 4:
+        builder = Gtk.Builder(scope)
+        builder.add_from_string(ui_data[path])
+        Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
+    else:
+        builder = Gtk.Builder()
+        builder.add_from_string(ui_data[path])
+        builder.connect_signals(scope)                      # pylint: disable=no-member
+
+    widgets = builder.get_objects()
+
+    for obj in list(widgets):
+        try:
+            obj_name = Gtk.Buildable.get_name(obj)
+            if not obj_name.startswith("_"):
+                continue
+
+        except TypeError:
+            pass
+
+        widgets.remove(obj)
+
+    widgets.sort(key=Gtk.Buildable.get_name)
+    return widgets

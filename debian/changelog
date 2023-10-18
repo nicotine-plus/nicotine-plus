@@ -1,8 +1,20 @@
-nicotine (3.3.0-dev4) kinetic; urgency=medium
+nicotine (3.3.0-dev6) mantic; urgency=medium
 
   * Development version.
 
- -- Mat <mail@mathias.is>  Thu, 01 Dec 2022 03:33:38 +0300
+ -- Mat <mail@mathias.is>  Mon, 16 Oct 2023 02:03:18 +0300
+
+nicotine (3.2.9-1) kinetic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 05 Mar 2023 19:55:56 +0300
+
+nicotine (3.2.8-1) kinetic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Thu, 05 Jan 2023 19:23:54 +0300
 
 nicotine (3.2.7-1) kinetic; urgency=medium
 

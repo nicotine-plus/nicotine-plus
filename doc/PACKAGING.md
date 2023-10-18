@@ -15,13 +15,13 @@ Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ### Building a Source Distribution
 
-To build source distribution files `.tar.bz2` and `.tar.gz` from the Git repository, run:
+To build a source distribution archive `.tar.gz` from the Git repository, run:
 
 ```sh
-python3 setup.py sdist --formats=bztar,gztar
+python3 -m build --sdist
 ```
 
-The source distribution files will be located in the `dist/` subfolder.
+The source distribution archive will be located in the `dist/` subfolder.
 
 ### Building a Debian Package
 
@@ -36,7 +36,7 @@ sudo apt build-dep .
 Generate the "upstream" tarball:
 
 ```sh
-python3 setup.py sdist
+python3 -m build --sdist
 mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 
@@ -66,11 +66,11 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=3
+export NICOTINE_GTK_VERSION=4
+export NICOTINE_USE_LIBADWAITA=1
 export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
-python3 packaging/windows/dependencies_core.py
-python3 packaging/windows/dependencies_packaging.py
+python3 packaging/windows/dependencies.py
 ```
 
 Build the application:
@@ -108,10 +108,10 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=3
+export NICOTINE_GTK_VERSION=4
+export NICOTINE_USE_LIBADWAITA=1
 brew install python
-python3 packaging/macos/dependencies_core.py
-python3 packaging/macos/dependencies_packaging.py
+python3 packaging/macos/dependencies.py
 ```
 
 Build the application:

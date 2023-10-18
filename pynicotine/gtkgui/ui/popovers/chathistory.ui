@@ -2,32 +2,33 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="container">
-    <property name="visible">True</property>
-    <property name="orientation">vertical</property>
-    <property name="margin-start">18</property>
-    <property name="margin-end">18</property>
-    <property name="margin-top">18</property>
     <property name="margin-bottom">18</property>
+    <property name="margin-end">18</property>
+    <property name="margin-start">18</property>
+    <property name="margin-top">18</property>
+    <property name="orientation">vertical</property>
     <property name="spacing">12</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkSearchEntry" id="search_entry">
-        <property name="visible">True</property>
         <property name="hexpand">True</property>
+        <property name="placeholder-text" translatable="yes">Search chat history…</property>
+        <property name="visible">True</property>
         <property name="width-chars">15</property>
         <signal name="activate" handler="on_show_user"/>
       </object>
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="visible">True</property>
         <property name="vexpand">True</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow" id="list_container">
-                <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="visible">True</property>
               </object>
             </child>
           </object>

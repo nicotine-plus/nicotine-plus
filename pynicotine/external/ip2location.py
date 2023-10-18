@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2021-2022 Nicotine+ Contributors
+# Copyright (c) 2021-2023 Nicotine+ Contributors
 # Copyright (c) 2017 IP2Location.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,7 +30,7 @@ MAX_IPV4_RANGE = 4294967295
 
 
 class IP2Location:
-    """ IP2Location country database """
+    """IP2Location country database."""
 
     def __init__(self, filename):
 
@@ -101,3 +101,5 @@ class IP2Location:
                 high = mid - 1
             else:
                 low = mid + 1
+
+        return None

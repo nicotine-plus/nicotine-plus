@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -21,9 +21,9 @@ import time
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 
@@ -32,7 +32,6 @@ class Statistics(Dialog):
 
     def __init__(self, application):
 
-        ui_template = UserInterface(scope=self, path="dialogs/statistics.ui")
         (
             self.close_button,
             self.completed_downloads_session_label,
@@ -51,7 +50,7 @@ class Statistics(Dialog):
             self.started_uploads_total_label,
             self.uploaded_size_session_label,
             self.uploaded_size_total_label
-        ) = ui_template.widgets
+        ) = ui.load(scope=self, path="dialogs/statistics.ui")
 
         super().__init__(
             parent=application.window,
@@ -73,7 +72,7 @@ class Statistics(Dialog):
 
     def update_stat_value(self, stat_id, session_value, total_value):
 
-        if stat_id in ("downloaded_size", "uploaded_size"):
+        if stat_id in {"downloaded_size", "uploaded_size"}:
             session_value = human_size(session_value)
             total_value = human_size(total_value)
 
@@ -92,16 +91,16 @@ class Statistics(Dialog):
         if total_value is not None:
             getattr(self, f"{stat_id}_total_label").set_text(total_value)
 
-    def on_reset_statistics_response(self, _dialog, response_id, _data):
-        if response_id == 2:
-            core.statistics.reset_stats()
+    def on_reset_statistics_response(self, *_args):
+        core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 
         OptionDialog(
             parent=self,
-            title=_('Reset Transfer Statistics?'),
-            message=_('Do you really want to reset transfer statistics?'),
+            title=_("Reset Transfer Statistics?"),
+            message=_("Do you really want to reset transfer statistics?"),
+            destructive_response_id="ok",
             callback=self.on_reset_statistics_response
         ).show()
 

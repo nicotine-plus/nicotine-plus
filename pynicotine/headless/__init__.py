@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,7 +18,7 @@
 
 
 def run():
-    """ Run application in headless (no GUI) mode """
+    """Run application in headless (no GUI) mode."""
 
     from pynicotine.headless.application import Application
     return Application().run()
