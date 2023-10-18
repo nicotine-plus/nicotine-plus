@@ -3402,7 +3402,7 @@ class UploadFailed(PlaceholdUpload):
 
     This message is sent whenever a file connection of an active upload
     closes. Soulseek NS clients can also send this message when a file
-    can not be read. The recipient either re-queues the upload (download
+    cannot be read. The recipient either re-queues the upload (download
     on their end), or ignores the message if the transfer finished.
     """
 
