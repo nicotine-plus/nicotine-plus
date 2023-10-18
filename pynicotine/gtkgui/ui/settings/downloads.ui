@@ -128,7 +128,6 @@
               <object class="GtkSpinButton" id="speed_spinner">
                 <property name="adjustment">_speed_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -151,7 +150,6 @@
               <object class="GtkSpinButton" id="alt_speed_spinner">
                 <property name="adjustment">_alt_speed_adjustment</property>
                 <property name="numeric">True</property>
-                <property name="tooltip-text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>
@@ -184,19 +182,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="download_folder_label">
                 <property name="label" translatable="yes">Finished downloads:</property>
-                <property name="mnemonic-widget">download_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="download_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -207,19 +198,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="incomplete_folder_label">
                 <property name="label" translatable="yes">Incomplete downloads:</property>
-                <property name="mnemonic-widget">incomplete_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="incomplete_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -230,19 +214,12 @@
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="received_folder_label">
                 <property name="label" translatable="yes">Received files:</property>
-                <property name="mnemonic-widget">received_folder_button</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="received_folder_button">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>

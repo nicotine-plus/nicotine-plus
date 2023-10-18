@@ -19,9 +19,6 @@
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" Window """
-
-
 class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive
@@ -70,3 +67,9 @@ class Window:
 
     def set_title(self, title):
         self.widget.set_title(title)
+
+    def hide(self):
+        self.widget.set_visible(False)
+
+    def close(self, *_args):
+        self.widget.close()

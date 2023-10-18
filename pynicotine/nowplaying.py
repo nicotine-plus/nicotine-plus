@@ -30,8 +30,8 @@ from pynicotine.utils import human_length
 
 
 class NowPlaying:
-    """ This class contains code for retrieving information about the song currently
-    playing in a media player """
+    """This class contains code for retrieving information about the song
+    currently playing in a media player."""
 
     def __init__(self):
         self.title_clear()
@@ -61,7 +61,7 @@ class NowPlaying:
         if get_player is None:
             player = config.sections["players"]["npplayer"]
 
-            if sys.platform in ("win32", "darwin") and player == "mpris":
+            if sys.platform in {"win32", "darwin"} and player == "mpris":
                 player = "lastfm"
         else:
             player = get_player()
@@ -106,7 +106,7 @@ class NowPlaying:
         title = title.replace("$f", "%(filename)s")
         title = title.replace("$p", "%(program)s")
 
-        title = title % self.title
+        title %= self.title
         title = " ".join(x for x in title.replace("\r", "\n").split("\n") if x)
 
         if title:
@@ -117,11 +117,11 @@ class NowPlaying:
 
         return None
 
-    def lastfm(self, user):
-        """ Function to get the last song played via Last.fm API """
+    def lastfm(self, username):
+        """Function to get the last song played via Last.fm API."""
 
         try:
-            user, apikey = user.split(";")
+            username, apikey = username.split(";")
 
         except ValueError:
             log.add(_("Last.fm: Please provide both your Last.fm username and API key"), title=_("Now Playing Error"))
@@ -129,8 +129,8 @@ class NowPlaying:
 
         try:
             from urllib.request import urlopen
-            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={user}&api_key={apikey}"
-                          f"&limit=1&format=json"), timeout=10) as response:
+            with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
+                          f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
                 response_body = response.read().decode("utf-8")
 
         except Exception as error:
@@ -163,7 +163,8 @@ class NowPlaying:
         return True
 
     def mpris(self, player):
-        """ Function to get the currently playing song via DBus MPRIS v2 interface """
+        """Function to get the currently playing song via DBus MPRIS v2
+        interface."""
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
@@ -245,16 +246,16 @@ class NowPlaying:
         except KeyError:
             self.title["length"] = "?"
 
-        if self.title["artist"] != "":
+        if self.title["artist"]:
             self.title["nowplaying"] += self.title["artist"]
 
-        if self.title["title"] != "":
+        if self.title["title"]:
             self.title["nowplaying"] += " - " + self.title["title"]
 
         return True
 
     def listenbrainz(self, username):
-        """ Function to get the currently playing song via ListenBrainz API """
+        """Function to get the currently playing song via ListenBrainz API."""
 
         if not username:
             log.add(_("ListenBrainz: Please provide your ListenBrainz username"), title=_("Now Playing Error"))

@@ -23,7 +23,7 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
-""" Clipboard """
+# Clipboard #
 
 
 if GTK_API_VERSION >= 4:

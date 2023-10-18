@@ -16,10 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from locale import strxfrm
 
+import gi
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -31,11 +30,8 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.slskmessages import UserStatus
 
 
-""" Text Entry-related """
-
-
 class ChatEntry:
-    """ Custom text entry with support for chat commands and completions """
+    """Custom text entry with support for chat commands and completions."""
 
     def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
 
@@ -53,22 +49,6 @@ class ChatEntry:
         Accelerator("Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", widget, self.on_page_up_accelerator)
-
-        # Emoji Picker (disable on Windows and macOS for now until we render emoji properly there)
-        if sys.platform not in ("win32", "darwin"):
-            self.widget.set_property("show-emoji-icon", True)
-
-        # Spell Check
-        if config.sections["ui"]["spellcheck"]:
-            if not self.application.spell_checker:
-                self.application.init_spell_checker()
-
-            if self.application.spell_checker:
-                from gi.repository import Gspell  # pylint:disable=no-name-in-module
-                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(widget.get_buffer())
-                spell_buffer.set_spell_checker(self.application.spell_checker)
-                spell_view = Gspell.Entry.get_from_gtk_entry(widget)
-                spell_view.set_inline_spell_checking(True)
 
     def on_enter(self, *_args):
 
@@ -110,11 +90,12 @@ class ChatEntry:
         self.widget.set_text("")
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
-        """ Tab and Shift+Tab: tab complete chat """
+        """Tab and Shift+Tab - tab complete chat."""
         return self.completion.on_tab_complete_accelerator(widget, state, backwards)
 
     def on_page_down_accelerator(self, *_args):
-        """ Page_Down, Down: Scroll chat view to bottom, and keep input focus in entry widget """
+        """Page_Down, Down - Scroll chat view to bottom, and keep input focus in
+        entry widget."""
 
         if self.completion and self.completion.selecting_completion:
             return False
@@ -123,12 +104,12 @@ class ChatEntry:
         return True
 
     def on_page_up_accelerator(self, *_args):
-        """ Page_Up: Move up into view to begin scrolling message history """
+        """Page_Up - Move up into view to begin scrolling message history."""
 
         if self.completion and self.completion.selecting_completion:
             return False
 
-        self.chat_view.widget.grab_focus()
+        self.chat_view.grab_focus()
         return True
 
 
@@ -279,7 +260,7 @@ class ChatCompletion:
         self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
-        """ Tab and Shift+Tab: tab complete chat """
+        """Tab and Shift+Tab: tab complete chat."""
 
         if not config.sections["words"]["tab"]:
             return False
@@ -398,10 +379,7 @@ class ComboBox:
         self._entry_completion = None
         self._item_selected_handler = None
 
-        self._create_combobox(container, has_entry, has_entry_completion)
-
-        if label:
-            label.set_mnemonic_widget(self.widget)
+        self._create_combobox(container, label, has_entry, has_entry_completion)
 
         if items:
             for item, item_id in items:
@@ -409,27 +387,36 @@ class ComboBox:
 
         self.set_visible(visible)
 
-    def _create_combobox_gtk4(self, container, has_entry):
+    def _create_combobox_gtk4(self, container, label, has_entry):
 
-        factory = self._create_factory(should_bind=not has_entry)
-        list_factory = self._create_factory(ellipsize=False)
+        button_factory = self._create_factory(should_bind=not has_entry)
         self._model = Gtk.StringList()
 
         self.dropdown = self._button = Gtk.DropDown(
-            factory=factory, list_factory=list_factory, model=self._model,
-            valign=Gtk.Align.CENTER, visible=True
+            model=self._model, valign=Gtk.Align.CENTER, visible=True
         )
+        default_factory = self.dropdown.get_factory()
+        self.dropdown.set_factory(button_factory)
+        self.dropdown.set_list_factory(default_factory)
+
         self._item_selected_handler = self.dropdown.connect("notify::selected", self._on_item_selected)
 
         if not has_entry:
             self.widget = self.dropdown
+
+            if label:
+                label.set_mnemonic_widget(self.widget)
+
             container.append(self.widget)
             return
 
-        self.widget = Gtk.Box(visible=True)
+        self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
+
+        if label:
+            label.set_mnemonic_widget(self.entry)
 
         popover = self.dropdown.get_last_child()
         popover.connect("notify::visible", self._on_dropdown_visible)
@@ -448,16 +435,20 @@ class ComboBox:
         add_css_class(self.widget, "linked")
         container.append(self.widget)
 
-    def _create_combobox_gtk3(self, container, has_entry, has_entry_completion):
+    def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
 
         self.dropdown.connect("scroll-event", self._on_button_scroll_event)
+        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
+
+        if label:
+            label.set_mnemonic_widget(self.widget)
 
         if not has_entry:
             for cell in self.dropdown.get_cells():
-                cell.set_property("ellipsize", Pango.EllipsizeMode.END)
+                cell.props.ellipsize = Pango.EllipsizeMode.END
 
             container.add(self.widget)
             return
@@ -466,24 +457,23 @@ class ComboBox:
             add_css_class(self.dropdown, "dropdown-scrollbar")
 
         self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
-        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
 
         if self.entry is None:
             self.entry = self.dropdown.get_child()
             self.entry.set_width_chars(8)
         else:
             self.dropdown.get_child().destroy()
-            self.dropdown.set_property("child", self.entry)
+            self.dropdown.add(self.entry)  # pylint: disable=no-member
 
         self._button = self.entry.get_parent().get_children()[-1]
         container.add(self.widget)
 
-    def _create_combobox(self, container, has_entry, has_entry_completion):
+    def _create_combobox(self, container, label, has_entry, has_entry_completion):
 
         if GTK_API_VERSION >= 4:
-            self._create_combobox_gtk4(container, has_entry)
+            self._create_combobox_gtk4(container, label, has_entry)
         else:
-            self._create_combobox_gtk3(container, has_entry, has_entry_completion)
+            self._create_combobox_gtk3(container, label, has_entry, has_entry_completion)
 
         if has_entry:
             Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
@@ -492,10 +482,10 @@ class ComboBox:
         if has_entry_completion:
             self._entry_completion = CompletionEntry(self.entry)
 
-    def _create_factory(self, ellipsize=True, should_bind=True):
+    def _create_factory(self, should_bind=True):
 
         factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self._on_factory_setup, ellipsize)
+        factory.connect("setup", self._on_factory_setup)
 
         if should_bind:
             factory.connect("bind", self._on_factory_bind)
@@ -503,7 +493,7 @@ class ComboBox:
         return factory
 
     def _update_item_entry_text(self):
-        """ Set text entry text to the same value as selected item """
+        """Set text entry text to the same value as selected item."""
 
         if GTK_API_VERSION == 3:
             # Already supported natively in GTK 3
@@ -519,22 +509,53 @@ class ComboBox:
         if self.get_text() != item_text:
             self.set_text(item_text)
 
-    """ General """
+        self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
 
-    def append(self, item, item_id=None):
+    def _update_item_positions(self, start_position, added=False):
+
+        if added:
+            end_position = self.get_num_items() + 1
+            ids = self._ids.copy()
+        else:
+            end_position = self.get_num_items()
+            ids = self._ids
+
+        for position in range(start_position, end_position):
+            if added:
+                item_id = ids[position - 1]
+            else:
+                item_id = ids.pop(position + 1)
+
+            self._ids[position] = item_id
+            self._positions[item_id] = position
+
+    # General #
+
+    def insert(self, position, item, item_id=None):
 
         if item_id is None:
             item_id = item
 
-        if GTK_API_VERSION >= 4:
-            position = self._model.get_n_items()
+        if item_id in self._positions:
+            return
 
+        last_position = self.get_num_items()
+
+        if position == -1:
+            position = last_position
+
+        if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.append(item)
+                if last_position == position:
+                    self._model.append(item)
+                else:
+                    num_removals = (last_position - position)
+                    inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
+                    self._model.splice(position, num_removals, inserted_items)
+
                 self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
         else:
-            position = self._model.iter_n_children()
-            self.dropdown.append_text(item)
+            self.dropdown.insert_text(position, item)
 
         if self.entry:
             self._button.set_sensitive(True)
@@ -542,8 +563,19 @@ class ComboBox:
         if self._entry_completion:
             self._entry_completion.add_completion(item)
 
+        self._update_item_positions(start_position=(position + 1), added=True)
+
         self._ids[position] = item_id
         self._positions[item_id] = position
+
+    def append(self, item, item_id=None):
+        self.insert(position=-1, item=item, item_id=item_id)
+
+    def prepend(self, item, item_id=None):
+        self.insert(position=0, item=item, item_id=item_id)
+
+    def get_num_items(self):
+        return len(self._positions)
 
     def get_selected_pos(self):
 
@@ -556,7 +588,11 @@ class ComboBox:
         return self._ids.get(self.get_selected_pos())
 
     def get_text(self):
-        return self.entry.get_text()
+
+        if self.entry:
+            return self.entry.get_text()
+
+        return self.get_selected_id()
 
     def set_selected_pos(self, position):
 
@@ -572,9 +608,22 @@ class ComboBox:
         self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
-        self.entry.set_text(text)
+
+        if self.entry:
+            self.entry.set_text(text)
+            return
+
+        self.set_selected_id(text)
 
     def remove_pos(self, position):
+
+        if position == -1:
+            position = (self.get_num_items() - 1)
+
+        item_id = self._ids.pop(position, None)
+
+        if item_id is None:
+            return
 
         if GTK_API_VERSION >= 4:
             with self.dropdown.handler_block(self._item_selected_handler):
@@ -586,19 +635,15 @@ class ComboBox:
             self._button.set_sensitive(False)
 
         if self._entry_completion:
-            self._entry_completion.remove_completion(self._ids[position])
-
-    def remove_id(self, item_id):
-
-        position = self._positions.pop(item_id)
-        self.remove_pos(position)
+            self._entry_completion.remove_completion(item_id)
 
         # Update positions for items after the removed one
-        for pos in range(position, len(self._positions)):
-            next_item_id = self._ids.pop(pos + 1)
+        self._positions.pop(item_id, None)
+        self._update_item_positions(start_position=position)
 
-            self._ids[pos] = next_item_id
-            self._positions[next_item_id] = pos
+    def remove_id(self, item_id):
+        position = self._positions.get(item_id)
+        self.remove_pos(position)
 
     def clear(self):
 
@@ -627,21 +672,20 @@ class ComboBox:
     def set_visible(self, visible):
         self.widget.set_visible(visible)
 
-    """ Callbacks """
+    # Callbacks #
 
     def _on_factory_bind(self, _factory, list_item):
 
         label = list_item.get_child()
-        string_obj = list_item.get_item()
+        list_item = list_item.get_item()
 
-        label.set_text(string_obj.get_string())
+        label.set_text(list_item.get_string())
 
-    def _on_factory_setup(self, _factory, list_item, ellipsize):
+    def _on_factory_setup(self, _factory, list_item):
 
         label = Gtk.Label(xalign=0)
-
-        if ellipsize:
-            label.set_ellipsize(Pango.EllipsizeMode.END)
+        label.set_ellipsize(Pango.EllipsizeMode.END)
+        label.set_mnemonic_widget(self.widget)
 
         list_item.set_child(label)
 
@@ -652,6 +696,10 @@ class ComboBox:
 
         if GTK_API_VERSION == 3:
             # Gtk.ComboBox already supports this functionality
+            return False
+
+        if self._entry_completion and self.entry.get_last_child().get_visible():
+            # Completion popup is visible
             return False
 
         current_position = self.get_selected_pos()
@@ -671,9 +719,9 @@ class ComboBox:
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
-    def _on_dropdown_visible(self, popover, param):
+    def _on_dropdown_visible(self, popover, _param):
 
-        visible = popover.get_property(param.name)
+        visible = popover.get_visible()
 
         if not visible:
             self.entry.grab_focus_without_selecting()
@@ -695,14 +743,12 @@ class ComboBox:
 
     def _on_item_selected(self, *_args):
 
-        if self.entry is None:
-            return
+        if self.entry is not None:
+            # Update text entry with text from the selected item
+            self._update_item_entry_text()
 
-        # Update text entry with text from the selected item
-        self._update_item_entry_text()
-
-        # Cursor is normally placed at the beginning, move to the end
-        self.entry.set_position(-1)
+            # Cursor is normally placed at the beginning, move to the end
+            self.entry.set_position(-1)
 
         if self.item_selected_callback is None:
             return
@@ -711,6 +757,76 @@ class ComboBox:
 
         if selected_id is not None:
             self.item_selected_callback(self, selected_id)
+
+
+class SpellChecker:
+
+    checker = None
+    module = None
+
+    def __init__(self):
+
+        self.buffer = None
+        self.entry = None
+
+    @classmethod
+    def _load_module(cls):
+
+        if GTK_API_VERSION >= 4:
+            # No spell checkers available in GTK 4 yet
+            return
+
+        if SpellChecker.module is not None:
+            return
+
+        try:
+            gi.require_version("Gspell", "1")
+            from gi.repository import Gspell
+            SpellChecker.module = Gspell
+
+        except (ImportError, ValueError):
+            pass
+
+    @classmethod
+    def is_available(cls):
+        cls._load_module()
+        return bool(SpellChecker.module)
+
+    def reset(self):
+
+        if self.buffer:
+            self.buffer.set_spell_checker(None)
+            self.buffer = None
+
+        if self.entry:
+            self.entry.set_inline_spell_checking(False)
+            self.entry = None
+
+        if not config.sections["ui"]["spellcheck"]:
+            SpellChecker.checker = SpellChecker.module = None
+
+    def set_entry(self, entry):
+
+        # Only one active entry at a time
+        self.reset()
+
+        if not config.sections["ui"]["spellcheck"]:
+            return
+
+        # Attempt to load spell check module in case it was recently installed
+        self._load_module()
+
+        if SpellChecker.module is None:
+            return
+
+        if SpellChecker.checker is None:
+            SpellChecker.checker = SpellChecker.module.Checker()
+
+        self.buffer = SpellChecker.module.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+        self.buffer.set_spell_checker(SpellChecker.checker)
+
+        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry)
+        self.entry.set_inline_spell_checking(True)
 
 
 class TextSearchBar:
@@ -795,13 +911,13 @@ class TextSearchBar:
         self.on_search_match(search_type="next")
 
     def on_hide_search_accelerator(self, *_args):
-        """ Escape: hide search bar """
+        """Escape - hide search bar."""
 
         self.set_visible(False)
         return True
 
     def on_show_search_accelerator(self, *_args):
-        """ Ctrl+F: show search bar """
+        """Ctrl+F - show search bar."""
 
         self.set_visible(True)
         return True

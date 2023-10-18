@@ -19,13 +19,10 @@
 
 import os
 import subprocess
-import sys
-
-""" Script used to install dependencies in MinGW """
 
 
 def install_pacman():
-    """ Install dependencies from the main MinGW repos """
+    """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH") or "x86_64"
     prefix = f"mingw-w64-{arch}-"
@@ -35,10 +32,10 @@ def install_pacman():
     packages = [f"{prefix}ca-certificates",
                 f"{prefix}gettext",
                 f"{prefix}gtk{gtk_version}",
-                f"{prefix}python-chardet",
+                f"{prefix}python-build",
                 f"{prefix}python-cx-freeze",
-                f"{prefix}python-flake8",
                 f"{prefix}python-pip",
+                f"{prefix}python-pycodestyle",
                 f"{prefix}python-pylint",
                 f"{prefix}python-gobject"]
 
@@ -48,13 +45,5 @@ def install_pacman():
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
 
-def install_pypi():
-    """ Install dependencies from PyPi """
-
-    packages = ["semidbm"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
 if __name__ == "__main__":
     install_pacman()
-    install_pypi()

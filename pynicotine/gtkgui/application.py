@@ -26,6 +26,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -35,14 +36,15 @@ from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
-GTK_GUI_DIR = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
+GTK_GUI_FOLDER_PATH = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 LIBADWAITA_API_VERSION = 0
+LIBADWAITA_MINOR_VERSION = 0
 
 if GTK_API_VERSION >= 4:
     try:
         if os.getenv("NICOTINE_LIBADWAITA") is None:
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in ("win32", "darwin") or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
+                sys.platform in {"win32", "darwin"} or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
             ))
 
         if os.getenv("NICOTINE_LIBADWAITA") == "1":
@@ -50,6 +52,7 @@ if GTK_API_VERSION >= 4:
 
             from gi.repository import Adw  # pylint: disable=ungrouped-imports
             LIBADWAITA_API_VERSION = Adw.MAJOR_VERSION
+            LIBADWAITA_MINOR_VERSION = Adw.MINOR_VERSION
 
     except (ImportError, ValueError):
         pass
@@ -59,9 +62,9 @@ class Application:
 
     def __init__(self, start_hidden, ci_mode, multi_instance):
 
-        self._instance = Gtk.Application(application_id=config.application_id)
-        GLib.set_application_name(config.application_name)
-        GLib.set_prgname(config.application_id)
+        self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
+        GLib.set_application_name(pynicotine.__application_name__)
+        GLib.set_prgname(pynicotine.__application_id__)
 
         if multi_instance:
             self._instance.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
@@ -89,7 +92,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
-            ("quit", self.on_quit),
+            ("quit", self._instance.quit),
             ("setup", self.on_fast_configure),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -131,16 +134,6 @@ class Application:
     def send_notification(self, event_id, notification):
         self._instance.send_notification(event_id, notification)
 
-    def init_spell_checker(self):
-
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker()
-
-        except (ImportError, ValueError):
-            self.spell_checker = False
-
     def set_up_actions(self):
 
         # Regular actions
@@ -156,12 +149,14 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
+            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
             ("rescan-shares", self.on_rescan_shares, None, True),
             ("browse-public-shares", self.on_browse_public_shares, None, True),
             ("browse-buddy-shares", self.on_browse_buddy_shares, None, True),
+            ("browse-trusted-shares", self.on_browse_trusted_shares, None, True),
             ("load-shares-from-disk", self.on_load_shares_from_disk, None, True),
 
             # Configuration
@@ -189,7 +184,6 @@ class Application:
             ("transfer-statistics", self.on_transfer_statistics, None, True),
             ("report-bug", self.on_report_bug, None, True),
             ("improve-translations", self.on_improve_translations, None, True),
-            ("check-latest-version", self.on_check_latest_version, None, True),
             ("about", self.on_about, None, True)
         ):
             if parameter_type:
@@ -206,9 +200,6 @@ class Application:
         enabled_logs = config.sections["logging"]["debugmodes"]
 
         for action_name, callback, state in (
-            # General
-            ("prefer-dark-mode", self.on_prefer_dark_mode, config.sections["ui"]["dark_mode"]),
-
             # Logging
             ("log-downloads", self.on_debug_downloads, ("download" in enabled_logs)),
             ("log-uploads", self.on_debug_uploads, ("upload" in enabled_logs)),
@@ -231,6 +222,7 @@ class Application:
             ("app.disconnect", ["<Shift><Primary>d"]),
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
+            ("app.confirm-quit", ["<Primary>q"]),
             ("app.quit", ["<Primary><Alt>q"]),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
@@ -278,48 +270,52 @@ class Application:
                     )
                 )
 
-    """ Core Events """
+    # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
 
-        remember = dialog.get_option_value()
+        should_finish_uploads = dialog.get_option_value()
 
         if response_id == "quit":
-            if remember:
-                config.sections["ui"]["exitdialog"] = 0
-
-            core.quit()
+            core.quit(should_finish_uploads=should_finish_uploads)
 
         elif response_id == "run_background":
-            if remember:
-                config.sections["ui"]["exitdialog"] = 2
+            self.window.hide()
 
-            if self.window.is_visible():
-                self.window.hide()
+    def on_confirm_quit(self, only_on_active_uploads=False):
 
-    def on_confirm_quit(self, remember=True):
+        has_active_uploads = core.uploads.has_active_uploads()
+
+        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+            # Never show confirmation dialog when main window is hidden
+            core.quit()
+            return
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+
+        if has_active_uploads:
+            message = _("You are still uploading files. Do you really want to exit?")
+            option_label = _("Wait for uploads to finish")
+        else:
+            message = _("Do you really want to exit?")
+            option_label = None
 
         buttons = [
             ("cancel", _("_No")),
             ("quit", _("_Quit"))
         ]
 
-        if self.window.is_visible():
+        if not only_on_active_uploads:
             buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
             parent=self.window,
             title=_("Quit Nicotine+"),
-            message=_("Do you really want to exit?"),
+            message=message,
             buttons=buttons,
-            option_label=_("Remember choice") if remember else None,
+            option_label=option_label,
             callback=self.on_confirm_quit_response
         ).show()
-
-    def on_quit(self):
-        self._instance.quit()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
         core.shares.rescan_shares(force=(response_id == "force_rescan"))
@@ -369,7 +365,7 @@ class Application:
             callback=self.on_invalid_password_response
         ).show()
 
-    """ Actions """
+    # Actions #
 
     def on_connect(self, *_args):
         core.connect()
@@ -382,7 +378,7 @@ class Application:
         import urllib.parse
 
         login = urllib.parse.quote(core.login_username)
-        open_uri(config.privileges_url % login)
+        open_uri(pynicotine.__privileges_url__ % login)
         core.request_check_privileges()
 
     def on_preferences(self, *_args, page_id="network"):
@@ -479,14 +475,11 @@ class Application:
 
     @staticmethod
     def on_report_bug(*_args):
-        open_uri(config.issue_tracker_url)
+        open_uri(pynicotine.__issue_tracker_url__)
 
     @staticmethod
     def on_improve_translations(*_args):
-        open_uri(config.translations_url)
-
-    def on_check_latest_version(self, *_args):
-        core.update_checker.check()
+        open_uri(pynicotine.__translations_url__)
 
     def on_wishlist(self, *_args):
 
@@ -521,7 +514,8 @@ class Application:
             message=_("Send private message to all users who are downloading from you:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="downloading"
+            callback_data="downloading",
+            show_emoji_icon=True
         ).show()
 
     def on_message_buddies(self, *_args):
@@ -534,7 +528,8 @@ class Application:
             message=_("Send private message to all online buddies:"),
             action_button_label=_("_Send Message"),
             callback=self.on_message_users_response,
-            callback_data="buddies"
+            callback_data="buddies",
+            show_emoji_icon=True
         ).show()
 
     def on_rescan_shares(self, *_args):
@@ -546,9 +541,12 @@ class Application:
     def on_browse_buddy_shares(self, *_args):
         core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
 
-    def on_load_shares_from_disk_selected(self, selected, _data):
-        for filename in selected:
-            core.userbrowse.load_shares_list_from_disk(filename)
+    def on_browse_trusted_shares(self, *_args):
+        core.userbrowse.browse_local_shares(share_type="trusted", new_request=True)
+
+    def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
+        for file_path in selected_file_paths:
+            core.userbrowse.load_shares_list_from_disk(file_path)
 
     def on_load_shares_from_disk(self, *_args):
 
@@ -589,19 +587,8 @@ class Application:
     def on_personal_profile(self, *_args):
         core.userinfo.show_user(core.login_username)
 
-    @staticmethod
-    def on_prefer_dark_mode(action, *_args):
-
-        from pynicotine.gtkgui.widgets.theme import set_dark_mode
-
-        state = config.sections["ui"]["dark_mode"]
-        set_dark_mode(not state)
-        action.set_state(GLib.Variant("b", not state))
-
-        config.sections["ui"]["dark_mode"] = not state
-
     def on_away_accelerator(self, action, *_args):
-        """ Ctrl+H: Away/Online toggle """
+        """Ctrl+H: Away/Online toggle."""
 
         current_time = time.time()
 
@@ -611,16 +598,23 @@ class Application:
             action.cooldown_time = current_time
 
     def on_away(self, *_args):
-        """ Away/Online status button """
+        """Away/Online status button."""
 
         core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
 
-    """ Running """
+    # Running #
 
-    def raise_exception(self, exc_value):
+    def _force_quit(self):
+        """Used when the thread event processor fails due to an unhandled
+        exception, to force a shutdown."""
+
+        core.quit()
+        events.emit("quit")
+
+    def _raise_exception(self, exc_value):
         raise exc_value
 
-    def on_critical_error_response(self, _dialog, response_id, data):
+    def _show_critical_error_dialog_response(self, _dialog, response_id, data):
 
         loop, error = data
 
@@ -628,15 +622,14 @@ class Application:
             from pynicotine.gtkgui.widgets import clipboard
 
             clipboard.copy_text(error)
-            open_uri(config.issue_tracker_url)
+            open_uri(pynicotine.__issue_tracker_url__)
 
-            self.show_critical_error_dialog(error, loop)
+            self._show_critical_error_dialog(error, loop)
             return
 
         loop.quit()
-        core.quit()
 
-    def show_critical_error_dialog(self, error, loop):
+    def _show_critical_error_dialog(self, error, loop):
 
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
@@ -650,15 +643,15 @@ class Application:
                 ("quit", _("_Quit Nicotine+")),
                 ("copy_report_bug", _("_Copy & Report Bug"))
             ],
-            callback=self.on_critical_error_response,
+            callback=self._show_critical_error_dialog_response,
             callback_data=(loop, error)
         ).show()
 
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            core.quit()
-            self.raise_exception(exc_value)
+            self._force_quit()
+            self._raise_exception(exc_value)
             return
 
         from traceback import format_tb
@@ -667,16 +660,13 @@ class Application:
         if core.pluginhandler is not None:
             traceback = exc_traceback
 
-            while True:
-                if not traceback.tb_next:
-                    break
-
-                filename = traceback.tb_frame.f_code.co_filename
+            while traceback.tb_next:
+                file_path = traceback.tb_frame.f_code.co_filename
 
                 for plugin_name in core.pluginhandler.enabled_plugins:
-                    path = core.pluginhandler.get_plugin_path(plugin_name)
+                    plugin_path = core.pluginhandler.get_plugin_path(plugin_name)
 
-                    if filename.startswith(path):
+                    if file_path.startswith(plugin_path):
                         core.pluginhandler.show_plugin_error(
                             plugin_name, exc_type, exc_value, exc_traceback)
                         return
@@ -685,14 +675,19 @@ class Application:
 
         # Show critical error dialog
         loop = GLib.MainLoop()
-        error = (f"Nicotine+ Version: {config.version}\nGTK Version: {config.gtk_version}\n"
-                 f"Python Version: {config.python_version} ({sys.platform})\n\n"
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+        error = (f"Nicotine+ Version: {pynicotine.__version__}\nGTK Version: {gtk_version}\n"
+                 f"Python Version: {sys.version.split()[0]} ({sys.platform})\n\n"
                  f"Type: {exc_type}\nValue: {exc_value}\nTraceback: {''.join(format_tb(exc_traceback))}")
-        self.show_critical_error_dialog(error, loop)
+        self._show_critical_error_dialog(error, loop)
 
         # Keep dialog open if error occurs on startup
         loop.run()
-        self.raise_exception(exc_value)
+
+        # Dialog was closed, quit
+        sys.excepthook = None
+        self._force_quit()
+        self._raise_exception(exc_value)
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
 
@@ -701,7 +696,7 @@ class Application:
             return
 
         # Raise exception in the main thread
-        GLib.idle_add(self.raise_exception, exc_value)
+        GLib.idle_add(self._raise_exception, exc_value)
 
     def on_process_thread_events(self):
         return events.process_thread_events()
@@ -717,6 +712,10 @@ class Application:
         from pynicotine.gtkgui.widgets.notifications import Notifications
         from pynicotine.gtkgui.widgets.theme import load_icons
         from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+
+        # Process thread events 10 times per second.
+        # High priority to ensure there are no delays.
+        GLib.timeout_add(100, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
 
         load_icons()
 
@@ -740,12 +739,11 @@ class Application:
         if not start_hidden:
             self.window.show()
 
-        # Process thread events 20 times per second
-        # High priority to ensure there are no delays
-        GLib.timeout_add(50, self.on_process_thread_events, priority=GLib.PRIORITY_HIGH_IDLE)
-
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
+
+    def on_confirm_quit_uploads_request(self, *_args):
+        core.confirm_quit(only_on_active_uploads=True)
 
     def on_quit_request(self, *_args):
         core.quit()

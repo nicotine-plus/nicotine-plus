@@ -20,6 +20,7 @@ import re
 import socket
 import struct
 import sys
+import time
 
 from threading import Thread
 from urllib.parse import urlsplit
@@ -45,8 +46,10 @@ class BaseImplementation:
 
 
 class NATPMP(BaseImplementation):
-    """ Implementation of the NAT-PMP protocol
-    https://www.rfc-editor.org/rfc/rfc6886 """
+    """Implementation of the NAT-PMP protocol.
+
+    https://www.rfc-editor.org/rfc/rfc6886.
+    """
 
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
@@ -110,14 +113,28 @@ class NATPMP(BaseImplementation):
     @staticmethod
     def _get_gateway_address():
 
+        if sys.platform == "linux":
+            gateway_address = None
+
+            with open("/proc/net/route", encoding="utf-8") as file_handle:
+                next(file_handle)  # Skip header
+
+                for line in file_handle:
+                    routes = line.strip().split()
+                    destination_address = socket.inet_ntoa(struct.pack("<L", int(routes[1], 16)))
+
+                    if destination_address != "0.0.0.0":
+                        continue
+
+                    gateway_address = socket.inet_ntoa(struct.pack("<L", int(routes[2], 16)))
+                    break
+
+            return gateway_address
+
         import subprocess
 
-        if sys.platform == "linux":
-            output = subprocess.check_output(["ip", "route", "list"])
-            return output.rsplit(b"default via", maxsplit=1)[-1].split()[0]
-
         if sys.platform == "win32":
-            gateway_pattern = re.compile(b".*?0.0.0.0[ ]+0.0.0.0[ ]+(.*?)[ ]+?.*?\n")
+            gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
         else:
             gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
 
@@ -172,7 +189,7 @@ class NATPMP(BaseImplementation):
 
 
 class UPnP(BaseImplementation):
-    """ Implementation of the UPnP protocol """
+    """Implementation of the UPnP protocol."""
 
     NAME = "UPnP"
     MULTICAST_HOST = "239.255.255.250"
@@ -187,7 +204,7 @@ class UPnP(BaseImplementation):
             self.control_url = control_url
 
     class SSDPResponse:
-        """ Simple Service Discovery Protocol (SSDP) response """
+        """Simple Service Discovery Protocol (SSDP) response."""
 
         def __init__(self, message):
 
@@ -200,7 +217,7 @@ class UPnP(BaseImplementation):
             return self.message.encode("utf-8")
 
     class SSDPRequest:
-        """ Simple Service Discovery Protocol (SSDP) request """
+        """Simple Service Discovery Protocol (SSDP) request."""
 
         def __init__(self, search_target):
 
@@ -211,10 +228,10 @@ class UPnP(BaseImplementation):
                 "MX": str(UPnP.MX_RESPONSE_DELAY)
             }
 
-        def sendto(self, sock, addr):
+        def send(self, sock):
 
             msg = bytes(self)
-            sock.sendto(msg, addr)
+            sock.send(msg)
 
             log.add_debug("UPnP: SSDP request: %s", msg)
 
@@ -249,9 +266,9 @@ class UPnP(BaseImplementation):
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                    if found_service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                    if found_service_type in {"urn:schemas-upnp-org:service:WANIPConnection:1",
                                               "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANIPConnection:2"):
+                                              "urn:schemas-upnp-org:service:WANIPConnection:2"}:
                         # We found a router with UPnP enabled
                         service_type = found_service_type
                         control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
@@ -311,29 +328,30 @@ class UPnP(BaseImplementation):
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
+                sock.connect((UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
 
                 # Protocol 1
                 wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
                 wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
-                wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
-                wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ppp1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd1.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
                 # Protocol 2
                 wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
                 wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_ip2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
-                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                wan_igd2.send(sock)
                 log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
                 locations = set()
@@ -370,9 +388,10 @@ class UPnP(BaseImplementation):
         return service
 
     def _request_port_mapping(self, public_port, private_ip, private_port, mapping_description, lease_duration):
-        """
-        Function that adds a port mapping to the router.
-        If a port mapping already exists, it is updated with a lease period of 12 hours.
+        """Function that adds a port mapping to the router.
+
+        If a port mapping already exists, it is updated with a lease
+        period of 12 hours.
         """
 
         from urllib.request import Request
@@ -430,14 +449,13 @@ class UPnP(BaseImplementation):
         return error_code, error_description
 
     def add_port_mapping(self, lease_duration):
-        """
-        This function supports creating a Port Mapping via the UPnP
-        IGDv1 and IGDv2 protocol.
+        """This function supports creating a Port Mapping via the UPnP IGDv1
+        and IGDv2 protocol.
 
         Any UPnP port mapping done with IGDv2 will expire after a
-        maximum of 7 days (lease period), according to the protocol.
-        We set the lease period to a shorter 12 hours, and regularly
-        renew the port mapping.
+        maximum of 7 days (lease period), according to the protocol. We
+        set the lease period to a shorter 12 hours, and regularly renew
+        the port mapping.
         """
 
         # Find router
@@ -511,7 +529,7 @@ class UPnP(BaseImplementation):
 
 
 class PortMapper:
-    """ Class that handles Port Mapping """
+    """Class that handles Port Mapping."""
 
     RENEWAL_INTERVAL = 14400  # 4 hours
     LEASE_DURATION = 43200    # 12 hours
@@ -519,16 +537,33 @@ class PortMapper:
     def __init__(self):
 
         self._active_implementation = None
+        self._has_port = False
+        self._is_mapping_port = False
         self._timer = None
         self._natpmp = NATPMP()
         self._upnp = UPnP()
 
     def set_port(self, port, local_ip_address):
+
         self._natpmp.set_port(port, local_ip_address)
         self._upnp.set_port(port, local_ip_address)
 
+        self._has_port = (port is not None)
+
+    def _wait_until_ready(self):
+
+        while self._is_mapping_port:
+            # Port mapping in progress, wait until it's finished
+            time.sleep(0.1)
+
     def _add_port_mapping(self):
 
+        self._wait_until_ready()
+
+        if not config.sections["server"]["upnp"]:
+            return
+
+        self._is_mapping_port = True
         log.add_debug("Creating Port Mapping rule...")
 
         try:
@@ -546,14 +581,16 @@ class PortMapper:
                 log.add_debug("UPnP not available, port forwarding failed: %s", upnp_error)
 
                 log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
-                    "protocol": self._active_implementation.NAME if self._active_implementation else "PortMapper",
-                    "external_port": self._active_implementation.port if self._active_implementation else "",
+                    "protocol": self._active_implementation.NAME,
+                    "external_port": self._active_implementation.port,
                     "error": upnp_error
                 })
 
                 from traceback import format_exc
                 log.add_debug(format_exc())
+
                 self._active_implementation = None
+                self._is_mapping_port = False
                 return
 
         log.add(_("%(protocol)s: External port %(external_port)s successfully forwarded to local "
@@ -563,11 +600,16 @@ class PortMapper:
             "ip_address": self._active_implementation.local_ip_address,
             "local_port": self._active_implementation.port
         })
+        self._is_mapping_port = False
 
     def _remove_port_mapping(self):
 
+        self._wait_until_ready()
+
         if not self._active_implementation:
             return
+
+        self._is_mapping_port = True
 
         try:
             self._active_implementation.remove_port_mapping()
@@ -579,11 +621,15 @@ class PortMapper:
             })
 
         self._active_implementation = None
+        self._is_mapping_port = False
 
     def add_port_mapping(self, blocking=False):
 
         # Check if we want to do a port mapping
         if not config.sections["server"]["upnp"]:
+            return
+
+        if not self._has_port:
             return
 
         # Do the port mapping
@@ -605,8 +651,10 @@ class PortMapper:
         Thread(target=self._remove_port_mapping, name="RemovePortmapping", daemon=True).start()
 
     def _start_timer(self):
-        """ Port mapping entries last 12 hours, we need to regularly renew them.
-        The default interval is 4 hours. """
+        """Port mapping entries last 12 hours, we need to regularly renew them.
+
+        The default interval is 4 hours.
+        """
 
         self._cancel_timer()
         self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)

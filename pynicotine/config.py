@@ -24,10 +24,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains configuration classes for Nicotine.
-"""
-
 import configparser
 import os
 import sys
@@ -43,8 +39,7 @@ from pynicotine.utils import write_file_and_backup
 
 
 class Config:
-    """
-    This class holds configuration information and provides the
+    """This class holds configuration information and provides the
     following methods:
 
     need_config() - returns true if configuration information is incomplete
@@ -58,25 +53,8 @@ class Config:
 
     def __init__(self):
 
-        config_dir, self.data_dir = self.get_user_directories()
-        self.filename = os.path.join(config_dir, "config")
-        self.version = "3.3.0.dev5"
-        self.python_version = sys.version.split()[0]
-        self.gtk_version = ""
-
-        self.application_name = "Nicotine+"
-        self.application_id = "org.nicotine_plus.Nicotine"
-        self.author = "Nicotine+ Team"
-        self.copyright = """© 2004–2023 Nicotine+ Contributors
-© 2003–2004 Nicotine Contributors
-© 2001–2003 PySoulSeek Contributors"""
-
-        self.website_url = "https://nicotine-plus.org"
-        self.privileges_url = "https://www.slsknet.org/qtlogin.php?username=%s"
-        self.portchecker_url = "https://www.slsknet.org/porttest.php?port=%s"
-        self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
-
+        config_folder_path, self.data_folder_path = self.get_user_folders()
+        self.config_file_path = os.path.join(config_folder_path, "config")
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
@@ -84,25 +62,27 @@ class Config:
         self.removed_options = {}
 
     @staticmethod
-    def get_user_directories():
-        """ Returns a tuple:
-        - the config directory
-        - the data directory """
+    def get_user_folders():
+        """Returns a tuple:
+
+        - the config folder
+        - the data folder
+        """
 
         if sys.platform == "win32":
             try:
-                data_dir = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
+                data_folder_path = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
-                data_dir, _filename = os.path.split(sys.argv[0])
+                data_folder_path, _basename = os.path.split(sys.argv[0])
 
-            config_dir = os.path.join(data_dir, "config")
-            return config_dir, data_dir
+            config_folder_path = os.path.join(data_folder_path, "config")
+            return config_folder_path, data_folder_path
 
         home = os.path.expanduser("~")
-        legacy_dir = os.path.join(home, ".nicotine")
+        legacy_folder_path = os.path.join(home, ".nicotine")
 
-        if os.path.isdir(legacy_dir.encode("utf-8")):
-            return legacy_dir, legacy_dir
+        if os.path.isdir(legacy_folder_path.encode("utf-8")):
+            return legacy_folder_path, legacy_folder_path
 
         def xdg_path(xdg, default):
             path = os.environ.get(xdg)
@@ -110,55 +90,55 @@ class Config:
 
             return os.path.join(path, "nicotine")
 
-        config_dir = xdg_path("XDG_CONFIG_HOME", os.path.join(home, ".config"))
-        data_dir = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
+        config_folder_path = xdg_path("XDG_CONFIG_HOME", os.path.join(home, ".config"))
+        data_folder_path = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
 
-        return config_dir, data_dir
+        return config_folder_path, data_folder_path
 
     def create_config_folder(self):
-        """ Create the folder for storing the config file in, if the folder
-        doesn't exist """
+        """Create the folder for storing the config file in, if the folder
+        doesn't exist."""
 
-        path, _filename = os.path.split(self.filename)
+        folder_path, _basename = os.path.split(self.config_file_path)
 
-        if not path:
+        if not folder_path:
             # Only file name specified, use current folder
             return True
 
-        path_encoded = encode_path(path)
+        folder_path_encoded = encode_path(folder_path)
 
         try:
-            if not os.path.isdir(path_encoded):
-                os.makedirs(path_encoded)
+            if not os.path.isdir(folder_path_encoded):
+                os.makedirs(folder_path_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": path, "error": msg})
+                    {"path": folder_path, "error": error})
             return False
 
         return True
 
     def create_data_folder(self):
-        """ Create the folder for storing data in (shared files etc.),
-        if the folder doesn't exist """
+        """Create the folder for storing data in (shared files etc.), if the
+        folder doesn't exist."""
 
-        data_dir_encoded = encode_path(self.data_dir)
+        data_folder_path_encoded = encode_path(self.data_folder_path)
 
         try:
-            if not os.path.isdir(data_dir_encoded):
-                os.makedirs(data_dir_encoded)
+            if not os.path.isdir(data_folder_path_encoded):
+                os.makedirs(data_folder_path_encoded)
 
-        except OSError as msg:
+        except OSError as error:
             from pynicotine.logfacility import log
 
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {"path": self.data_dir, "error": msg})
+                    {"path": self.data_folder_path, "error": error})
 
     def load_config(self):
 
-        log_dir = os.path.join(self.data_dir, "logs")
+        log_folder_path = os.path.join(self.data_folder_path, "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -184,12 +164,13 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join(self.data_dir, "incomplete"),
-                "downloaddir": os.path.join(self.data_dir, "downloads"),
-                "uploaddir": os.path.join(self.data_dir, "received"),
+                "incompletedir": os.path.join(self.data_folder_path, "incomplete"),
+                "downloaddir": os.path.join(self.data_folder_path, "downloads"),
+                "uploaddir": os.path.join(self.data_folder_path, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
+                "trustedshared": [],
                 "uploadbandwidth": 50,
                 "use_upload_speed_limit": "unlimited",
                 "uploadlimit": 1000,
@@ -202,8 +183,6 @@ class Config:
                 "uploadslots": 2,
                 "afterfinish": "",
                 "afterfolder": "",
-                "lock": True,
-                "reverseorder": False,  # TODO: remove in 3.3.0
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -212,7 +191,8 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "buddysharestrustedonly": False,
+                "reveal_buddy_shares": False,
+                "reveal_trusted_shares": False,
                 "friendsnolimits": False,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
@@ -222,7 +202,6 @@ class Config:
                 "uploadallowed": 3,
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
-                "uploadsinsubdirs": True,
                 "rescanonstartup": True,
                 "enablefilters": False,
                 "downloadregexp": "",
@@ -259,31 +238,28 @@ class Config:
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
-                "cycle": False,  # TODO: remove in 3.3.0
                 "dropdown": False,
                 "characters": 3,
                 "roomnames": False,
                 "buddies": True,
                 "roomusers": True,
-                "commands": True,
-                "aliases": True,
-                "onematch": False  # TODO: remove in 3.3.0
+                "commands": True
             },
             "logging": {
                 "debug": False,
                 "debugmodes": [],
-                "debuglogsdir": os.path.join(log_dir, "debug"),
+                "debuglogsdir": os.path.join(log_folder_path, "debug"),
                 "logcollapsed": True,
-                "transferslogsdir": os.path.join(log_dir, "transfers"),
-                "rooms_timestamp": "%H:%M:%S",
-                "private_timestamp": "%Y-%m-%d %H:%M:%S",
-                "log_timestamp": "%Y-%m-%d %H:%M:%S",
+                "transferslogsdir": os.path.join(log_folder_path, "transfers"),
+                "rooms_timestamp": "%X",
+                "private_timestamp": "%x %X",
+                "log_timestamp": "%x %X",
                 "privatechat": True,
                 "chatrooms": True,
                 "transfers": False,
                 "debug_file_output": False,
-                "roomlogsdir": os.path.join(log_dir, "rooms"),
-                "privatelogsdir": os.path.join(log_dir, "private"),
+                "roomlogsdir": os.path.join(log_folder_path, "rooms"),
+                "privatelogsdir": os.path.join(log_folder_path, "private"),
                 "readroomlogs": True,
                 "readroomlines": 200,
                 "readprivatelines": 200,
@@ -355,7 +331,6 @@ class Config:
                 "tabinfo": "Top",
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
-                "tab_status_icons": True,
                 "globalfont": "",
                 "textviewfont": "",
                 "chatfont": "",
@@ -399,7 +374,6 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "file_path_tooltips": True,
                 "reverse_file_paths": True,
                 "file_size_unit": ""
             },
@@ -459,7 +433,11 @@ class Config:
                 "friendsonly",
                 "enabletransferbuttons",
                 "uselimit",
-                "usealtlimits"
+                "usealtlimits",
+                "uploadsinsubdirs",
+                "reverseorder",
+                "lock",
+                "buddysharestrustedonly"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -499,7 +477,8 @@ class Config:
                 "showaway",
                 "decimalsep",
                 "urgencyhint",
-                "exact_file_sizes"  # TODO: remove in 3.3.0 (was only in 3.3.0.dev)
+                "tab_status_icons",
+                "file_path_tooltips"
             ),
             "columns": (
                 "downloads",
@@ -556,13 +535,18 @@ class Config:
             ),
             "notifications": (
                 "notification_tab_icons"
+            ),
+            "words": (
+                "cycle",
+                "onematch",
+                "aliases"
             )
         }
 
         self.create_config_folder()
         self.create_data_folder()
 
-        load_file(self.filename, self.parse_config)
+        load_file(self.config_file_path, self.parse_config)
 
         # Update config values from file
         self.set_config()
@@ -574,50 +558,16 @@ class Config:
 
         from pynicotine.logfacility import log
         log.init_log_levels()
-        log.add_debug("Using configuration: %(file)s", {"file": self.filename})
+        log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
 
         events.connect("quit", self._quit)
 
-    def parse_config(self, filename):
-        """ Parses the config file """
+    def parse_config(self, file_path):
+        """Parses the config file."""
 
-        try:
-            with open(encode_path(filename), "a+", encoding="utf-8") as file_handle:
-                file_handle.seek(0)
-                self.parser.read_file(file_handle)
-
-        except UnicodeDecodeError:
-            self.convert_config()
-            self.parse_config(filename)
-
-    def convert_config(self):
-        """ Converts the config to utf-8.
-        Mainly for upgrading Windows build. (22 July, 2020) """
-
-        try:
-            from chardet import detect
-
-        except ImportError:
-            from pynicotine.logfacility import log
-
-            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start "
-                    "the application again.")
-            sys.exit()
-
-        conv_filename = encode_path(f"{self.filename}.conv")
-        os.replace(self.filename, conv_filename)
-
-        with open(conv_filename, "rb") as file_handle:
-            rawdata = file_handle.read()
-
-        from_encoding = detect(rawdata)["encoding"]
-
-        with open(conv_filename, encoding=from_encoding) as file_read:
-            with open(encode_path(self.filename), "w", encoding="utf-8") as file_write:
-                for line in file_read:
-                    file_write.write(line[:-1] + "\r\n")
-
-        os.remove(conv_filename)
+        with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
+            file_handle.seek(0)
+            self.parser.read_file(file_handle)
 
     def need_config(self):
 
@@ -628,7 +578,7 @@ class Config:
         return False
 
     def set_config(self):
-        """ Set config values parsed from file earlier """
+        """Set config values parsed from file earlier."""
 
         from pynicotine.logfacility import log
 
@@ -646,8 +596,8 @@ class Config:
                                   {"option": j, "section": i})
 
                 else:
-                    """ Attempt to get the default value for a config option. If there's no default
-                    value, it's a custom option from a plugin, so no checks are needed. """
+                    # Attempt to get the default value for a config option. If there's no default
+                    # value, it's a custom option from a plugin, so no checks are needed.
 
                     try:
                         default_val = self.defaults[i][j]
@@ -661,8 +611,8 @@ class Config:
                         self.sections[i][j] = val
                         continue
 
-                    """ Check that the value of a config option is of the same type as the default
-                    value. If that's not the case, reset the value. """
+                    # Check that the value of a config option is of the same type as the default
+                    # value. If that's not the case, reset the value.
 
                     try:
                         if not isinstance(default_val, str):
@@ -676,7 +626,7 @@ class Config:
                         if i != "plugins" and j != "filter":
                             if (isinstance(eval_val, type(default_val))
                                     or (isinstance(default_val, bool)
-                                        and isinstance(eval_val, int) and eval_val in (0, 1))):
+                                        and isinstance(eval_val, int) and eval_val in {0, 1})):
                                 # Value is valid
                                 pass
 
@@ -732,12 +682,6 @@ class Config:
                     self.sections[section][option] = use_speed_limit
                     continue
 
-                # Migrate file size units (TODO: remove as only in 3.3.0.dev)
-                if option == "file_size_unit" and section == "ui":
-                    file_size_unit = "B" if self.sections[section].get("exact_file_sizes", False) else ""
-                    self.sections[section][option] = file_size_unit
-                    continue
-
                 # Set default value
                 self.sections[section][option] = value
 
@@ -749,6 +693,13 @@ class Config:
 
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
+
+        # Migrate old trusted buddy shares to new format
+        if self.sections["transfers"].get("buddysharestrustedonly", False):
+            buddy_shares = self.sections["transfers"]["buddyshared"]
+
+            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
+            buddy_shares.clear()
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]
@@ -764,8 +715,8 @@ class Config:
 
         self.config_loaded = True
 
-    def write_config_callback(self, filename):
-        self.parser.write(filename)
+    def write_config_callback(self, file_path):
+        self.parser.write(file_path)
 
     def write_configuration(self):
 
@@ -796,34 +747,34 @@ class Config:
 
         from pynicotine.logfacility import log
 
-        write_file_and_backup(self.filename, self.write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
+        write_file_and_backup(self.config_file_path, self.write_config_callback, protect=True)
+        log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
 
-    def write_config_backup(self, filename):
+    def write_config_backup(self, file_path):
 
         from pynicotine.logfacility import log
 
-        if not filename.endswith(".tar.bz2"):
-            filename += ".tar.bz2"
+        if not file_path.endswith(".tar.bz2"):
+            file_path += ".tar.bz2"
 
-        filename_encoded = encode_path(filename)
+        file_path_encoded = encode_path(file_path)
 
         try:
-            if os.path.exists(filename_encoded):
-                raise FileExistsError(f"File {filename} exists")
+            if os.path.exists(file_path_encoded):
+                raise FileExistsError(f"File {file_path} exists")
 
             import tarfile
-            with tarfile.open(filename_encoded, "w:bz2") as tar:
-                if not os.path.exists(filename_encoded):
+            with tarfile.open(file_path_encoded, "w:bz2") as tar:
+                if not os.path.exists(file_path_encoded):
                     raise FileNotFoundError("Config file missing")
 
-                tar.add(self.filename)
+                tar.add(self.config_file_path)
 
         except Exception as error:
             log.add(_("Error backing up config: %s"), error)
             return
 
-        log.add(_("Config backed up to: %s"), filename)
+        log.add(_("Config backed up to: %s"), file_path)
 
     def _quit(self):
 

@@ -11,18 +11,24 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ### Ubuntu/Debian
 
-[Daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) are built in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build of Nicotine+, run the following:
+To use [unstable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/unstable) on Ubuntu and Debian, add the *nicotine-team/unstable* PPA repository.
+
+On Ubuntu and distributions based on it (e.g. Linux Mint, elementary OS, Pop!_OS, various Ubuntu flavors), run the following:
 
 ```sh
-sudo apt update
-sudo apt install python3-launchpadlib software-properties-common
-sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu jammy main'
-sudo apt install nicotine
+sudo add-apt-repository ppa:nicotine-team/unstable
+sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+On Debian and distributions based on it (e.g. Devuan, Peppermint OS), run the following:
 
-Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
+```sh
+sudo apt update; sudo apt install python3-launchpadlib software-properties-common
+sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unstable/ubuntu jammy main'
+sudo apt update; sudo apt install nicotine
+```
+
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip). Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
 
 ### Flatpak
 
@@ -42,10 +48,10 @@ Unstable Windows packages are built after every commit to the master branch.
 - [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]
 - [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer)]
 
-Portable packages are also available. They can be run from any folder and do not require installation or administrator privileges.
+Standalone executables are also available. They can be run from any folder and do not require installation or administrator privileges. Configuration files are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
-- [Download Unstable 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]
-- [Download Unstable 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package)]
+- [Download Unstable 64-bit Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]
+- [Download Unstable 32-bit Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package)]
 
 ## macOS
 

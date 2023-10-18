@@ -72,7 +72,7 @@ class Statistics(Dialog):
 
     def update_stat_value(self, stat_id, session_value, total_value):
 
-        if stat_id in ("downloaded_size", "uploaded_size"):
+        if stat_id in {"downloaded_size", "uploaded_size"}:
             session_value = human_size(session_value)
             total_value = human_size(total_value)
 

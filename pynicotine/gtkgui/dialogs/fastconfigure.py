@@ -20,8 +20,12 @@
 
 import os
 
+from gi.repository import Gtk
+
+import pynicotine
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
@@ -39,7 +43,7 @@ class FastConfigure(Dialog):
 
         (
             self.account_page,
-            self.download_folder_button,
+            self.download_folder_container,
             self.listen_port_entry,
             self.main_icon,
             self.next_button,
@@ -73,11 +77,16 @@ class FastConfigure(Dialog):
             close_destroy=False
         )
 
-        self.main_icon.set_property("icon-name", config.application_id)
+        icon_name = pynicotine.__application_id__
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.main_icon.set_from_icon_name(icon_name, *icon_args)
 
         # Page specific, share_page
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, self, "folder", selected_function=self.on_download_folder_selected)
+            self.download_folder_container, window=self, chooser_type="folder",
+            selected_function=self.on_download_folder_selected
+        )
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
@@ -102,7 +111,7 @@ class FastConfigure(Dialog):
         self.reset_completeness()
 
     def reset_completeness(self):
-        """ Turns on the complete flag if everything required is filled in. """
+        """Turns on the complete flag if everything required is filled in."""
 
         page = self.stack.get_visible_child()
         page_complete = (
@@ -277,10 +286,7 @@ class FastConfigure(Dialog):
         self.listen_port_entry.set_value(listen_port)
 
         # share_page
-        if config.sections["transfers"]["downloaddir"]:
-            self.download_folder_button.set_path(
-                config.sections["transfers"]["downloaddir"]
-            )
+        self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
 

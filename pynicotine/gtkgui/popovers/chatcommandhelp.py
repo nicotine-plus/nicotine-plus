@@ -94,7 +94,11 @@ class ChatCommandHelp(Popover):
             for command, aliases, parameters, description in command_data:
                 self._create_command_row(section_container, command, aliases, parameters, description)
 
-        self.scrollable.set_property("child", self.container)
+        if GTK_API_VERSION >= 4:
+            self.scrollable.set_child(self.container)  # pylint: disable=no-member
+        else:
+            self.scrollable.add(self.container)        # pylint: disable=no-member
+
         self.container.child_focus(Gtk.DirectionType.TAB_FORWARD)
 
     def _on_close(self, *_args):

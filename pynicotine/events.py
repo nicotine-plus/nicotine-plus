@@ -27,6 +27,7 @@ EVENT_NAMES = {
     "add-privileged-user",
     "admin-message",
     "change-password",
+    "check-latest-version",
     "check-privileges",
     "cli-command",
     "cli-prompt-finished",
@@ -47,12 +48,11 @@ EVENT_NAMES = {
     "server-login",
     "server-disconnect",
     "server-timeout",
-    "set-away-mode",
     "set-connection-stats",
-    "set-scan-indeterminate",
-    "set-scan-progress",
     "setup",
-    "show-scan-progress",
+    "shares-preparing",
+    "shares-ready",
+    "shares-scanning",
     "shares-unavailable",
     "start",
     "thread-callback",
@@ -200,6 +200,8 @@ EVENT_NAMES = {
 
 class Events:
 
+    SCHEDULER_MAX_IDLE = 1
+
     def __init__(self):
 
         self._callbacks = {}
@@ -263,13 +265,17 @@ class Events:
         self._pending_scheduler_events.append((event_id, None))
 
     def process_thread_events(self):
-        """ Called by the main loop 20 times per second to emit thread events in the main thread.
-        Return value indicates if the main loop should continue processing events. """
+        """Called by the main loop 10 times per second to emit thread events in
+        the main thread.
 
-        if not self._is_active:
-            return False
+        Return value indicates if the main loop should continue
+        processing events.
+        """
 
         if not self._thread_events:
+            if not self._is_active:
+                return False
+
             return True
 
         event_list = []
@@ -296,7 +302,7 @@ class Events:
 
             # No scheduled events
             if not self._scheduler_events:
-                time.sleep(1)
+                time.sleep(self.SCHEDULER_MAX_IDLE)
                 continue
 
             # Retrieve upcoming event
@@ -315,17 +321,17 @@ class Events:
 
                 continue
 
-            time.sleep(min(sleep_time, 1))
-
-        self._scheduler_events.clear()
+            time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
 
     def _quit(self):
 
-        self._callbacks.clear()
-        self._thread_events.clear()
-        self._pending_scheduler_events.clear()
+        # Ensure any remaining events are processed
+        self.process_thread_events()
 
         self._is_active = False
+        self._callbacks.clear()
+        self._pending_scheduler_events.clear()
+        self._scheduler_events.clear()
 
 
 events = Events()

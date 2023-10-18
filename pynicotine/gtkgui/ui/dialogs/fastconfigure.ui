@@ -253,7 +253,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. In order to allow users to connect to you without trouble, an open listening port is crucial.</property>
+                <property name="label" translatable="yes">To connect with other Soulseek peers, a listening port on your router has to be forwarded to your computer.</property>
                 <property name="max-width-chars">60</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -304,11 +304,12 @@
         <property name="spacing">30</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="download_folder_container">
             <property name="halign">center</property>
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
+            <property name="width-request">300</property>
             <child>
               <object class="GtkLabel">
                 <property name="halign">center</property>
@@ -321,12 +322,6 @@
                 <style>
                   <class name="heading"/>
                 </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="download_folder_button">
-                <property name="hexpand">True</property>
-                <property name="visible">True</property>
               </object>
             </child>
           </object>
@@ -352,7 +347,7 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Soulseek users will be able to download from your shares. Contribute to the Soulseek network by sharing your own collection and by resharing what you downloaded from other users.</property>
+                <property name="label" translatable="yes">Soulseek users will be able to download from your shares. Contribute to the Soulseek network by sharing your own files and by resharing what you downloaded from other users.</property>
                 <property name="max-width-chars">60</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -533,6 +528,16 @@
                 <property name="orientation">vertical</property>
                 <property name="spacing">18</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Soulseek is an unencrypted protocol not intended for secure communication.</property>
+                    <property name="max-width-chars">60</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="label" translatable="yes">File transfer speeds depend on users you are downloading from. Certain users will be faster, while others will be slow.</property>

@@ -30,13 +30,13 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
-from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
-class Downloads(TransferList):
+class Downloads(Transfers):
 
     def __init__(self, window):
 
@@ -53,7 +53,7 @@ class Downloads(TransferList):
         self.expand_icon = window.downloads_expand_icon
         self.grouping_button = window.downloads_grouping_button
 
-        TransferList.__init__(self, window, transfer_type="download")
+        super().__init__(window, transfer_type="download")
 
         if GTK_API_VERSION >= 4:
             window.downloads_content.append(self.container)
@@ -89,22 +89,22 @@ class Downloads(TransferList):
         self.download_speeds = DownloadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.transfers.downloads)
+        self.init_transfers(core.downloads.transfers)
 
     def get_transfer_folder_path(self, transfer):
-        return transfer.path
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
-        core.transfers.retry_downloads(self.selected_transfers)
+        core.downloads.retry_downloads(self.selected_transfers)
 
     def abort_selected_transfers(self):
-        core.transfers.abort_downloads(self.selected_transfers)
+        core.downloads.abort_downloads(self.selected_transfers)
 
     def clear_selected_transfers(self):
-        core.transfers.clear_downloads(downloads=self.selected_transfers)
+        core.downloads.clear_downloads(downloads=self.selected_transfers)
 
     def on_clear_queued_response(self, *_args):
-        core.transfers.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses=["Queued"])
 
     def on_try_clear_queued(self, *_args):
 
@@ -117,7 +117,7 @@ class Downloads(TransferList):
         ).show()
 
     def on_clear_all_response(self, *_args):
-        core.transfers.clear_downloads()
+        core.downloads.clear_downloads()
 
     def on_try_clear_all(self, *_args):
 
@@ -148,23 +148,23 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            url = core.userbrowse.get_soulseek_url(transfer.username, transfer.virtual_path)
             clipboard.copy_text(url)
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             url = core.userbrowse.get_soulseek_url(
-                transfer.user, transfer.filename.rsplit("\\", 1)[0] + "\\")
+                transfer.username, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.filename, transfer.path, transfer.size)
+            file_path = core.downloads.get_current_download_file_path(
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
             folder_path = os.path.dirname(file_path)
 
             if transfer.status == "Finished":
@@ -176,40 +176,35 @@ class Downloads(TransferList):
     def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.transfers.get_current_download_file_path(
-                transfer.user, transfer.filename, transfer.path, transfer.size)
+            file_path = core.downloads.get_current_download_file_path(
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
 
             open_file_path(file_path, command=config.sections["players"]["default"])
 
     def on_browse_folder(self, *_args):
 
-        requested_users = set()
-        requested_folders = set()
+        transfer = next(iter(self.selected_transfers), None)
 
-        for transfer in self.selected_transfers:
-            user = transfer.user
-            folder = transfer.filename.rsplit("\\", 1)[0] + "\\"
+        if transfer:
+            user = transfer.username
+            folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder)
-
-                requested_users.add(user)
-                requested_folders.add(folder)
+            core.userbrowse.browse_user(user, path=folder_path)
 
     def on_clear_queued(self, *_args):
-        core.transfers.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses=["Queued"])
 
     def on_clear_finished(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished"])
+        core.downloads.clear_downloads(statuses=["Finished"])
 
     def on_clear_paused(self, *_args):
-        core.transfers.clear_downloads(statuses=["Paused"])
+        core.downloads.clear_downloads(statuses=["Paused"])
 
     def on_clear_finished_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Finished", "Filtered"])
+        core.downloads.clear_downloads(statuses=["Finished", "Filtered"])
 
     def on_clear_filtered(self, *_args):
-        core.transfers.clear_downloads(statuses=["Filtered"])
+        core.downloads.clear_downloads(statuses=["Filtered"])
 
     def on_clear_deleted(self, *_args):
-        core.transfers.clear_downloads(clear_deleted=True)
+        core.downloads.clear_downloads(clear_deleted=True)

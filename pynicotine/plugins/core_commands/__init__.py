@@ -212,7 +212,7 @@ class Plugin(BasePlugin):
                 "callback": self.share_command,
                 "description": _("Add share"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["<public|buddy>", "<folder path>"]
+                "parameters": ["<public|buddy|trusted>", "<folder path>"]
             },
             "unshare": {
                 "callback": self.unshare_command,
@@ -267,7 +267,7 @@ class Plugin(BasePlugin):
             }
         }
 
-    """ Application Commands """
+    # Application Commands #
 
     def help_command(self, args, user=None, room=None):
 
@@ -319,14 +319,14 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, **_unused):
 
-        force = (args.lstrip("- ") in ("force", "f"))
+        force = (args.lstrip("- ") in {"force", "f"})
 
         if force:
             self.core.quit()
         else:
             self.core.confirm_quit()
 
-    """ Chat """
+    # Chat #
 
     def clear_command(self, _args, user=None, room=None):
 
@@ -342,7 +342,7 @@ class Plugin(BasePlugin):
     def now_command(self, _args, **_unused):
         self.core.now_playing.display_now_playing(callback=self.send_message)
 
-    """ Chat Rooms """
+    # Chat Rooms #
 
     def join_command(self, args, **_unused):
         self.core.chatrooms.show_room(args)
@@ -370,7 +370,7 @@ class Plugin(BasePlugin):
         self.send_public(room, text)
         return True
 
-    """ Private Chat """
+    # Private Chat #
 
     def pm_command(self, args, **_unused):
         self.core.privatechat.show_user(args)
@@ -381,11 +381,11 @@ class Plugin(BasePlugin):
             user = args
 
         if user not in self.core.privatechat.users:
-            self.output(f"Not messaging with user {user}")
+            self.output(_("Not messaging with user %s") % user)
             return False
 
-        self.output(f"Closing private chat of user {user}")
         self.core.privatechat.remove_user(user)
+        self.output(_("Closed private chat of user %s") % user)
         return True
 
     def ctcpversion_command(self, args, user=None, **_unused):
@@ -405,7 +405,7 @@ class Plugin(BasePlugin):
         self.send_private(user, text, show_ui=True, switch_page=False)
         return True
 
-    """ Users """
+    # Users #
 
     def add_buddy_command(self, args, user=None, **_unused):
 
@@ -435,7 +435,7 @@ class Plugin(BasePlugin):
 
         self.core.userinfo.show_user(user)
 
-    """ Network Filters """
+    # Network Filters #
 
     def ip_address_command(self, args, user=None, **_unused):
 
@@ -508,7 +508,7 @@ class Plugin(BasePlugin):
 
         self.output(_("Unignored %s") % (" & ".join(unignored_ip_addresses) or user))
 
-    """ Configure Shares """
+    # Configure Shares #
 
     def rescan_command(self, args, **_unused):
 
@@ -519,11 +519,16 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
+        group_names = {
+            0: "public",
+            1: "buddy",
+            2: "trusted"
+        }
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
         for group_index, share_group in enumerate(share_groups):
-            group_name = "buddy" if group_index == 1 else "public"
+            group_name = group_names.get(group_index)
             num_shares = len(share_group)
             num_total += num_shares
 
@@ -537,7 +542,10 @@ class Plugin(BasePlugin):
 
             num_listed += num_shares
 
-        self.output("\n" + f"{num_listed} shares listed ({num_total} configured)")
+        self.output("\n" + _("%(num_listed)s shares listed (%(num_total)s configured)") % {
+            "num_listed": num_listed,
+            "num_total": num_total
+        })
 
     def share_command(self, args, **_unused):
 
@@ -566,7 +574,7 @@ class Plugin(BasePlugin):
         self.output(_("Removed share \"%s\" (rescan required)") % virtual_name_or_folder_path)
         return True
 
-    """ Search Files """
+    # Search Files #
 
     def search_command(self, args, **_unused):
         self.core.search.do_search(args, "global")
@@ -587,7 +595,7 @@ class Plugin(BasePlugin):
         self.core.search.do_search(query, "user", users=[user])
         return True
 
-    """ Plugin Commands """
+    # Plugin Commands #
 
     def plugin_handler_command(self, args, **_unused):
 

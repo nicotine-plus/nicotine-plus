@@ -16,12 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gtk
 
-from pynicotine.config import config
+import pynicotine
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
+from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.utils import open_uri
 
 
@@ -173,8 +179,7 @@ class About(Dialog):
    - Patches for upload bandwidth management, banning, various UI improvements and more""",
 
         """>> <b>Geert Kloosterman</b>
-   - A script for importing Windows Soulseek
-     configuration""",
+   - A script for importing Windows Soulseek configuration""",
 
         """>> <b>Joe Halliwell</b>
    - Submitted a patch for optionally discarding search results after closing a search tab""",
@@ -277,6 +282,9 @@ class About(Dialog):
    - yyyyyyyan (2020)
    - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
+        """>> <b>Romanian</b>
+   - xslendix (2023)""",
+
         """>> <b>Russian</b>
    - SnIPeRSnIPeR (2022–2023)
    - Mehavoid (2021–2023)
@@ -340,6 +348,9 @@ Copyright (c) 2017 IP2Location.com
             self.copyright_label,
             self.license_container,
             self.main_icon,
+            self.status_container,
+            self.status_icon,
+            self.status_label,
             self.translators_container,
             self.version_label,
             self.website_label
@@ -348,24 +359,32 @@ Copyright (c) 2017 IP2Location.com
         super().__init__(
             parent=application.window,
             content_box=self.container,
+            show_callback=self.on_show,
             close_callback=self.on_close,
             title=_("About"),
             width=425,
-            height=500,
+            height=540,
             resizable=False,
             show_title=False,
             close_destroy=False
         )
 
-        self.main_icon.set_property("icon-name", config.application_id)
+        self.is_version_outdated = False
+
+        icon_name = pynicotine.__application_id__
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
+
+        self.main_icon.set_from_icon_name(icon_name, *icon_args)
         self.website_label.connect("activate-link", lambda x, url: open_uri(url))
 
         for label_widget, text in (
-            (self.application_name_label, config.application_name),
-            (self.version_label, (f"{config.version}   •   Python {config.python_version}   •   "
-                                  f"GTK {config.gtk_version}")),
-            (self.website_label, f"<a href='{config.website_url}' title='{config.website_url}'>{_('Website')}</a>"),
-            (self.copyright_label, f"<small>{config.copyright}</small>")
+            (self.application_name_label, pynicotine.__application_name__),
+            (self.version_label, (f"{pynicotine.__version__}   •   Python {sys.version.split()[0]}   •   "
+                                  f"GTK {gtk_version}")),
+            (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
+                                  f"{_('Website')}</a>")),
+            (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
         ):
             label_widget.set_markup(text)
 
@@ -381,6 +400,52 @@ Copyright (c) 2017 IP2Location.com
                     container.append(label)  # pylint: disable=no-member
                 else:
                     container.add(label)     # pylint: disable=no-member
+
+        events.connect("check-latest-version", self.on_check_latest_version)
+
+    def on_check_latest_version(self, latest_version, is_outdated, error):
+
+        if error:
+            icon_name = "emblem-important-symbolic"
+            css_class = "error"
+            message = _("Error checking latest version: %s") % error
+
+        elif is_outdated:
+            icon_name = "dialog-warning-symbolic"
+            css_class = "warning"
+            message = _("New release available: %s") % latest_version
+
+        else:
+            icon_name = "object-select-symbolic"
+            css_class = "success"
+            message = _("Up to date")
+
+        self.is_version_outdated = is_outdated
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.status_label.set_label(message)
+        add_css_class(self.status_container, css_class)
+
+    def on_show(self, *_args):
+
+        if self.is_version_outdated:
+            # No need to check latest version again
+            return
+
+        if not self.is_visible():
+            return
+
+        for css_class in ("error", "warning", "success"):
+            remove_css_class(self.status_container, css_class)
+
+        icon_name = "emblem-synchronizing-symbolic"
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+
+        self.status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.status_label.set_label(_("Checking latest version…"))
+
+        core.update_checker.check()
 
     def on_close(self, *_args):
         self.main_icon.grab_focus()

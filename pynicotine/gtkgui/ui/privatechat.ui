@@ -15,6 +15,7 @@
             <child>
               <object class="GtkSearchEntry" id="search_entry">
                 <property name="max-width-chars">75</property>
+                <property name="placeholder-text" translatable="yes">Search chat log…</property>
                 <property name="visible">True</property>
                 <property name="width-chars">24</property>
               </object>
@@ -48,6 +49,7 @@
               <object class="GtkEntry" id="chat_entry">
                 <property name="hexpand">True</property>
                 <property name="placeholder-text" translatable="yes">Send message…</property>
+                <property name="show-emoji-icon">True</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
               </object>

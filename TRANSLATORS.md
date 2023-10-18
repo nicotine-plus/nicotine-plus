@@ -89,6 +89,9 @@
  - yyyyyyyan (2020)
  - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
 
+## Romanian
+ - xslendix (2023)
+
 ## Russian
  - SnIPeRSnIPeR (2022–2023)
  - Mehavoid (2021–2023)

@@ -26,22 +26,24 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+import pynicotine
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_GUI_DIR
+from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
+from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
-""" Global Style """
+# Global Style #
 
 
 CUSTOM_CSS_PROVIDER = Gtk.CssProvider()
 GTK_SETTINGS = Gtk.Settings.get_default()
-USE_COLOR_SCHEME_PORTAL = (sys.platform not in ("win32", "darwin") and not LIBADWAITA_API_VERSION)
+USE_COLOR_SCHEME_PORTAL = (sys.platform not in {"win32", "darwin"} and not LIBADWAITA_API_VERSION)
 
 if USE_COLOR_SCHEME_PORTAL:
     # GNOME 42+ system-wide dark mode for GTK without libadwaita
@@ -90,7 +92,7 @@ if USE_COLOR_SCHEME_PORTAL:
     except Exception as portal_error:
         log.add_debug("Cannot start color scheme settings portal, falling back to GTK theme preference: %s",
                       portal_error)
-        USE_COLOR_SCHEME_PORTAL = None
+        USE_COLOR_SCHEME_PORTAL = False
 
 
 def set_dark_mode(enabled):
@@ -108,18 +110,18 @@ def set_dark_mode(enabled):
         if color_scheme is not None:
             enabled = (color_scheme == ColorScheme.PREFER_DARK)
 
-    GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
+    GTK_SETTINGS.props.gtk_application_prefer_dark_theme = enabled
 
 
 def set_use_header_bar(enabled):
-    GTK_SETTINGS.set_property("gtk-dialogs-use-header", enabled)
+    GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
 def set_visual_settings():
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
-        GTK_SETTINGS.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+        GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
@@ -127,7 +129,8 @@ def set_visual_settings():
 
 def set_global_css():
 
-    css = b"""
+    css = bytearray()
+    css_default = b"""
     /* Tweaks */
 
     flowbox, flowboxchild {
@@ -158,6 +161,30 @@ def set_global_css():
         padding-right: 1px;
     }
 
+    infobar box {
+        /* Remove unwanted padding from info bars */
+        padding: 0;
+    }
+
+    progressbar.osd trough,
+    progressbar.osd progress {
+        /* Make overlay progress bars slightly more legible */
+        min-height: 4px;
+    }
+
+    treeview button {
+        /* Remove bottom border from column headers */
+        border: 0;
+        padding-bottom: 3px;
+        padding-top: 3px;
+    }
+
+    treeview button:not(:last-child):dir(ltr) > box,
+    treeview button:not(:first-child):dir(rtl) > box {
+        /* Add column header separators */
+        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
+    }
+
     /* Borders */
 
     .border-top,
@@ -175,9 +202,19 @@ def set_global_css():
         box-shadow: -1px 0 0 0 @borders;
     }
 
+    .border-start-dim:dir(ltr),
+    .border-end-dim:dir(rtl) {
+        box-shadow: -1px 0 0 0 alpha(@borders, 0.75);
+    }
+
     .border-end:dir(ltr),
     .border-start:dir(rtl) {
         box-shadow: 1px 0 0 0 @borders;
+    }
+
+    .border-end-dim:dir(ltr),
+    .border-start-dim:dir(rtl) {
+        box-shadow: 1px 0 0 0 alpha(@borders, 0.75);
     }
 
     /* Buttons */
@@ -202,7 +239,7 @@ def set_global_css():
 
     .heading {
         font-weight: bold;
-        font-size: initial;
+        font-size: inherit;
     }
 
     /* Text Formatting */
@@ -276,27 +313,26 @@ def set_global_css():
     }
     """
 
-    css_libadwaita = b"""
-    /* Tweaks (libadwaita) */
+    css_libadwaita_1_4 = b"""
+    /* Tweaks (libadwaita 1.4+) */
 
-    treeview button {
-        border-bottom: 0;
-    }
-
-    treeview button:not(:last-child):dir(ltr) > box,
-    treeview button:not(:first-child):dir(rtl) > box {
-        /* Restore column header separators */
-        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
+    window:not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
+    window:not(.menubar-border) menubar {
+        /* Make title/header bars flat to match other libadwaita apps */
+        background: none;
+        box-shadow: none;
+        color: inherit;
     }
     """
 
     global_css_provider = Gtk.CssProvider()
+    css.extend(css_default)
 
     if GTK_API_VERSION >= 4:
-        css += css_gtk4
+        css.extend(css_gtk4)
 
-        if LIBADWAITA_API_VERSION:
-            css += css_libadwaita
+        if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
+            css.extend(css_libadwaita_1_4)
 
         load_css(global_css_provider, css)
 
@@ -305,7 +341,7 @@ def set_global_css():
         )
 
     else:
-        css += css_gtk3
+        css.extend(css_gtk3)
         load_css(global_css_provider, css)
 
         Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
@@ -319,7 +355,7 @@ def set_global_style():
     update_custom_css()
 
 
-""" Icons """
+# Icons #
 
 
 if GTK_API_VERSION >= 4:
@@ -345,15 +381,15 @@ USER_STATUS_ICON_NAMES = {
 
 
 def load_custom_icons(update=False):
-    """ Load custom icon theme if one is selected """
+    """Load custom icon theme if one is selected."""
 
     if update:
         GTK_SETTINGS.reset_property("gtk-icon-theme-name")
 
-    icon_theme_path = os.path.join(config.data_dir, CUSTOM_ICON_THEME_NAME)
+    icon_theme_path = os.path.join(config.data_folder_path, CUSTOM_ICON_THEME_NAME)
     icon_theme_path_encoded = encode_path(icon_theme_path)
 
-    parent_icon_theme_name = GTK_SETTINGS.get_property("gtk-icon-theme-name")
+    parent_icon_theme_name = GTK_SETTINGS.props.gtk_icon_theme_name
 
     if parent_icon_theme_name == CUSTOM_ICON_THEME_NAME:
         return
@@ -410,54 +446,50 @@ def load_custom_icons(update=False):
         ("hilite", "nplus-tab-highlight"),
         ("hilite3", "nplus-tab-changed"),
         ("trayicon_away", "nplus-tray-away"),
-        ("trayicon_away", f"{config.application_id}-away"),
+        ("trayicon_away", f"{pynicotine.__application_id__}-away"),
         ("trayicon_connect", "nplus-tray-connect"),
-        ("trayicon_connect", f"{config.application_id}-connect"),
+        ("trayicon_connect", f"{pynicotine.__application_id__}-connect"),
         ("trayicon_disconnect", "nplus-tray-disconnect"),
-        ("trayicon_disconnect", f"{config.application_id}-disconnect"),
+        ("trayicon_disconnect", f"{pynicotine.__application_id__}-disconnect"),
         ("trayicon_msg", "nplus-tray-msg"),
-        ("trayicon_msg", f"{config.application_id}-msg"),
-        ("n", config.application_id),
-        ("n", f"{config.application_id}-symbolic")
+        ("trayicon_msg", f"{pynicotine.__application_id__}-msg"),
+        ("n", pynicotine.__application_id__),
+        ("n", f"{pynicotine.__application_id__}-symbolic")
     )
-    extensions = [".jpg", ".jpeg", ".bmp", ".png", ".svg"]
+    extensions = (".png", ".svg", ".jpg", ".jpeg", ".bmp")
 
     # Move custom icons to internal icon theme location
-    for (original_name, replacement_name) in icon_names:
-        path = None
-        exts = extensions[:]
-        loaded = False
+    for original_name, replacement_name in icon_names:
+        for extension in extensions:
+            file_path = os.path.join(user_icon_theme_path, original_name + extension)
+            file_path_encoded = encode_path(file_path)
 
-        while not path or (exts and not loaded):
-            extension = exts.pop()
-            path = os.path.join(user_icon_theme_path, original_name + extension)
+            if not os.path.isfile(file_path_encoded):
+                continue
 
             try:
-                path_encoded = encode_path(path)
+                shutil.copyfile(
+                    file_path_encoded,
+                    encode_path(os.path.join(icon_theme_path, replacement_name + extension))
+                )
+                break
 
-                if os.path.isfile(path_encoded):
-                    shutil.copyfile(
-                        path_encoded,
-                        encode_path(os.path.join(icon_theme_path, replacement_name + extension))
-                    )
-                    loaded = True
-
-            except Exception as error:
+            except OSError as error:
                 log.add(_("Error loading custom icon %(path)s: %(error)s"), {
-                    "path": path,
+                    "path": file_path,
                     "error": error
                 })
 
     # Enable custom icon theme
-    GTK_SETTINGS.set_property("gtk-icon-theme-name", CUSTOM_ICON_THEME_NAME)
+    GTK_SETTINGS.props.gtk_icon_theme_name = CUSTOM_ICON_THEME_NAME
 
 
 def load_icons():
-    """ Load custom icons necessary for the application to function """
+    """Load custom icons necessary for the application to function."""
 
     paths = (
-        config.data_dir,  # Custom internal icon theme
-        os.path.join(GTK_GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
+        config.data_folder_path,  # Custom internal icon theme
+        os.path.join(GTK_GUI_FOLDER_PATH, "icons"),  # Support running from folder, as well as macOS and Windows
         os.path.join(sys.prefix, "share", "icons")  # Support Python venv
     )
 
@@ -478,9 +510,9 @@ def get_flag_icon_name(country_code):
     return f"nplus-flag-{country_code.lower()}"
 
 
-def get_file_type_icon_name(filename):
+def get_file_type_icon_name(basename):
 
-    result = filename.rsplit(".", 1)
+    result = basename.rsplit(".", 1)
 
     if len(result) < 2:
         return "text-x-generic-symbolic"
@@ -515,7 +547,7 @@ def on_icon_theme_changed(*_args):
 ICON_THEME.connect("changed", on_icon_theme_changed)
 
 
-""" Fonts and Colors """
+# Fonts and Colors #
 
 
 PANGO_STYLES = {
@@ -582,10 +614,10 @@ def _get_custom_font_css():
         ("window, popover", config.sections["ui"]["globalfont"]),
         ("treeview", config.sections["ui"]["listfont"]),
         ("textview", config.sections["ui"]["textviewfont"]),
-        (".chat-view", config.sections["ui"]["chatfont"]),
-        (".search-view", config.sections["ui"]["searchfont"]),
-        (".transfers-view", config.sections["ui"]["transfersfont"]),
-        (".userbrowse-view", config.sections["ui"]["browserfont"])
+        (".chat-view textview", config.sections["ui"]["chatfont"]),
+        (".search-view treeview", config.sections["ui"]["searchfont"]),
+        (".transfers-view treeview", config.sections["ui"]["transfersfont"]),
+        (".userbrowse-view treeview", config.sections["ui"]["browserfont"])
     ):
         font_description = Pango.FontDescription.from_string(font)
 
@@ -669,7 +701,7 @@ def _get_custom_color_css():
 
 def update_custom_css():
 
-    using_custom_icon_theme = (GTK_SETTINGS.get_property("gtk-icon-theme-name") == CUSTOM_ICON_THEME_NAME)
+    using_custom_icon_theme = (GTK_SETTINGS.props.gtk_icon_theme_name == CUSTOM_ICON_THEME_NAME)
     css = bytearray(
         f"""
         .colored-icon {{
@@ -695,38 +727,42 @@ def update_custom_css():
 def update_tag_visuals(tag, color_id):
 
     enable_colored_usernames = config.sections["ui"]["usernamehotspots"]
-    is_hotspot_tag = (color_id in ("useraway", "useronline", "useroffline"))
+    is_hotspot_tag = (color_id in {"useraway", "useronline", "useroffline"})
     color_hex = config.sections["ui"].get(color_id)
+    tag_props = tag.props
 
     if is_hotspot_tag and not enable_colored_usernames:
         color_hex = None
 
     if not color_hex:
-        tag.set_property("foreground-set", False)
+        if tag_props.foreground_set:
+            tag_props.foreground_set = False
     else:
-        tag.set_property("foreground", color_hex)
+        current_rgba = tag_props.foreground_rgba
+        new_rgba = Gdk.RGBA()
+        new_rgba.parse(color_hex)
+
+        if current_rgba is None or not new_rgba.equal(current_rgba):
+            tag_props.foreground_rgba = new_rgba
 
     # URLs
-    if color_id == "urlcolor":
-        tag.set_property("underline", Pango.Underline.SINGLE)
+    if color_id == "urlcolor" and tag_props.underline != Pango.Underline.SINGLE:
+        tag_props.underline = Pango.Underline.SINGLE
 
     # Hotspots
     if not is_hotspot_tag:
         return
 
-    usernamestyle = config.sections["ui"]["usernamestyle"]
+    username_style = config.sections["ui"]["usernamestyle"]
 
-    if usernamestyle == "bold":
-        tag.set_property("weight", Pango.Weight.BOLD)
-    else:
-        tag.set_property("weight", Pango.Weight.NORMAL)
+    weight_style = Pango.Weight.BOLD if username_style == "bold" else Pango.Weight.NORMAL
+    if tag_props.weight != weight_style:
+        tag_props.weight = weight_style
 
-    if usernamestyle == "italic":
-        tag.set_property("style", Pango.Style.ITALIC)
-    else:
-        tag.set_property("style", Pango.Style.NORMAL)
+    italic_style = Pango.Style.ITALIC if username_style == "italic" else Pango.Style.NORMAL
+    if tag_props.style != italic_style:
+        tag_props.style = italic_style
 
-    if usernamestyle == "underline":
-        tag.set_property("underline", Pango.Underline.SINGLE)
-    else:
-        tag.set_property("underline", Pango.Underline.NONE)
+    underline_style = Pango.Underline.SINGLE if username_style == "underline" else Pango.Underline.NONE
+    if tag_props.underline != underline_style:
+        tag_props.underline = underline_style

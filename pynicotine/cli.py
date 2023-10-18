@@ -33,6 +33,14 @@ class CLIInputProcessor(Thread):
 
         super().__init__(name="CLIInputProcessor", daemon=True)
 
+        try:
+            # Enable line editing and history
+            import readline  # noqa: F401  # pylint:disable=unused-import
+
+        except ImportError:
+            # Readline is not available on this OS
+            pass
+
         self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
@@ -48,7 +56,7 @@ class CLIInputProcessor(Thread):
                 return
 
             # Small time window to set custom prompt
-            time.sleep(0.75)
+            time.sleep(0.25)
 
     def _handle_prompt_callback(self, user_input, callback):
 
@@ -98,10 +106,23 @@ class CLIInputProcessor(Thread):
 class CLI:
 
     def __init__(self):
+
         self._input_processor = CLIInputProcessor()
         self._log_message_queue = deque(maxlen=1000)
+        self._tty_attributes = None
+
+        events.connect("quit", self._quit)
 
     def enable_prompt(self):
+
+        try:
+            import termios  # pylint: disable=import-error
+            self._tty_attributes = termios.tcgetattr(sys.stdin)
+
+        except Exception:
+            # Not a terminal, or using Windows
+            pass
+
         self._input_processor.start()
 
     def enable_logging(self):
@@ -131,8 +152,11 @@ class CLI:
 
     def _log_message(self, timestamp_format, msg, _title, _level):
 
-        timestamp = time.strftime(timestamp_format)
-        log_message = f"[{timestamp}] {msg}"
+        if timestamp_format:
+            timestamp = time.strftime(timestamp_format)
+            log_message = f"[{timestamp}] {msg}"
+        else:
+            log_message = msg
 
         if self._input_processor.has_custom_prompt:
             # Don't print log messages while custom prompt is active
@@ -140,6 +164,17 @@ class CLI:
             return
 
         self._print_log_message(log_message)
+
+    def _quit(self):
+        """Restores TTY attributes and re-enables echo on quit."""
+
+        if self._tty_attributes is None:
+            return
+
+        import termios  # pylint: disable=import-error
+        termios.tcsetattr(sys.stdin, termios.TCSANOW, self._tty_attributes)
+
+        self._tty_attributes = None
 
 
 cli = CLI()

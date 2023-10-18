@@ -178,7 +178,7 @@ class Plugin(BasePlugin):
         if views != "RESTRICTED":
             views = humanize(int(views))
 
-        if live in ("live", "upcoming"):
+        if live in {"live", "upcoming"}:
             duration = live.upper()
         else:
             duration = self.get_duration(duration)

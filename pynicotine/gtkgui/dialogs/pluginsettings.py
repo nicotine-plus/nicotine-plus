@@ -193,7 +193,7 @@ class PluginSettings(Dialog):
             hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
         container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
-        frame_container = Gtk.Frame(child=container, visible=True)
+        frame_container = Gtk.Frame(child=container, margin_top=6, visible=True)
         add_css_class(scrolled_window, "border-bottom")
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -223,15 +223,16 @@ class PluginSettings(Dialog):
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label_text, mnemonic_widget=button, visible=True)
 
-            button.set_property("child", label_container)
             button.connect("clicked", callback, treeview)
             add_css_class(button, "flat")
 
             if GTK_API_VERSION >= 4:
+                button.set_child(label_container)           # pylint: disable=no-member
                 label_container.append(icon)                # pylint: disable=no-member
                 label_container.append(label)               # pylint: disable=no-member
                 button_container.append(button)             # pylint: disable=no-member
             else:
+                button.add(label_container)                 # pylint: disable=no-member
                 label_container.add(icon)                   # pylint: disable=no-member
                 label_container.add(label)                  # pylint: disable=no-member
                 button_container.add(button)                # pylint: disable=no-member
@@ -249,12 +250,12 @@ class PluginSettings(Dialog):
 
     def _add_file_option(self, option_name, option_value, description, file_chooser_type):
 
-        button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
-        label = self._generate_widget_container(description, button_widget, homogeneous=True)
+        container = Gtk.Box(visible=True)
+        label = self._generate_widget_container(description, container, homogeneous=True)
 
-        self.option_widgets[option_name] = FileChooserButton(button_widget, self.widget, file_chooser_type)
-        label.set_mnemonic_widget(button_widget)
-
+        self.option_widgets[option_name] = FileChooserButton(
+            container, window=self.widget, label=label, chooser_type=file_chooser_type
+        )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
     def _add_options(self):
@@ -268,34 +269,34 @@ class PluginSettings(Dialog):
             description = data.get("description", "")
             option_value = config.sections["plugins"][self.plugin_id.lower()][option_name]
 
-            if option_type in ("integer", "int", "float"):
+            if option_type in {"integer", "int", "float"}:
                 self._add_numerical_option(
                     option_name, option_value, description, minimum=data.get("minimum", 0),
                     maximum=data.get("maximum", 99999), stepsize=data.get("stepsize", 1),
-                    decimals=(0 if option_type in ("integer", "int") else 2)
+                    decimals=(0 if option_type in {"integer", "int"} else 2)
                 )
 
-            elif option_type in ("bool",):
+            elif option_type == "bool":
                 self._add_boolean_option(option_name, option_value, description)
 
-            elif option_type in ("radio",):
+            elif option_type == "radio":
                 self._add_radio_option(
                     option_name, option_value, description, items=data.get("options", []))
 
-            elif option_type in ("dropdown",):
+            elif option_type == "dropdown":
                 self._add_dropdown_option(
                     option_name, option_value, description, items=data.get("options", []))
 
-            elif option_type in ("str", "string"):
+            elif option_type in {"str", "string"}:
                 self._add_entry_option(option_name, option_value, description)
 
-            elif option_type in ("textview",):
+            elif option_type == "textview":
                 self._add_textview_option(option_name, option_value, description)
 
-            elif option_type in ("list string",):
+            elif option_type == "list string":
                 self._add_list_option(option_name, option_value, description)
 
-            elif option_type in ("file",):
+            elif option_type == "file":
                 self._add_file_option(
                     option_name, option_value, description, file_chooser_type=data.get("chooser"))
 
@@ -332,9 +333,7 @@ class PluginSettings(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
-            return [
-                widget.get_row_value(iterator, "description") for iterator in widget.iterators.values()
-            ]
+            return list(widget.iterators)
 
         if isinstance(widget, FileChooserButton):
             return widget.get_path()
@@ -346,6 +345,9 @@ class PluginSettings(Dialog):
         value = window.get_entry_value()
 
         if not value:
+            return
+
+        if value in treeview.iterators:
             return
 
         treeview.add_row([value])
@@ -368,7 +370,9 @@ class PluginSettings(Dialog):
             return
 
         treeview, iterator = data
-        treeview.set_row_value(iterator, "description", value)
+
+        treeview.remove_row(iterator)
+        treeview.add_row([value])
 
     def on_edit(self, _button=None, treeview=None):
 

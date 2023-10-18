@@ -18,7 +18,7 @@
 
 
 def run():
-    """ Run application in headless (no GUI) mode """
+    """Run application in headless (no GUI) mode."""
 
     from pynicotine.headless.application import Application
     return Application().run()

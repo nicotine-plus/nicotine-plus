@@ -28,14 +28,15 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ComboBox
@@ -85,6 +86,17 @@ class UserInfos(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def on_focus(self, *_args):
+
+        if self.get_n_pages():
+            return True
+
+        if self.window.userinfo_entry.is_sensitive():
+            self.window.userinfo_entry.grab_focus()
+            return True
+
+        return False
+
     def on_remove_all_pages(self, *_args):
         core.userinfo.remove_all_users()
 
@@ -102,21 +114,16 @@ class UserInfos(IconNotebook):
         self.window.userinfo_entry.set_text("")
         core.userinfo.show_user(username)
 
-    def show_user(self, user, refresh=False, switch_page=True):
+    def show_user(self, user, switch_page=True, **_unused):
 
         page = self.pages.get(user)
 
         if page is None:
-            refresh = True
             self.pages[user] = page = UserInfo(self, user)
 
-            self.append_page(page.container, user, focus_callback=page.on_focus,
-                             close_callback=page.on_close, user=user)
+            self.prepend_page(page.container, user, focus_callback=page.on_focus,
+                              close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
-
-        if refresh:
-            page.update_button_states()
-            page.set_in_progress()
 
         if switch_page:
             self.set_current_page(page.container)
@@ -132,6 +139,7 @@ class UserInfos(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
+        page.destroy_widgets()
 
     def ban_unban_user(self, user):
 
@@ -189,7 +197,7 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_interests(msg)
 
-    def user_info_progress(self, user, position, total):
+    def user_info_progress(self, user, _sock, position, total):
 
         page = self.pages.get(user)
 
@@ -204,7 +212,9 @@ class UserInfos(IconNotebook):
             page.user_info_response(msg)
 
     def server_disconnect(self, *_args):
+
         for user, page in self.pages.items():
+            page.peer_connection_error()
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
@@ -223,10 +233,8 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
-            self.horizontal_paned,
             self.ignore_unignore_user_label,
-            self.info_bar,
-            self.info_bar_label,
+            self.info_bar_container,
             self.likes_list_container,
             self.picture_container,
             self.picture_view,
@@ -245,13 +253,20 @@ class UserInfo:
         self.userinfos = userinfos
         self.window = userinfos.window
 
+        self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
         self.description_view = TextView(self.description_view_container, editable=False, vertical_margin=5)
         self.user_label.set_text(user)
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, content_fit=Gtk.ContentFit.CONTAIN, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
+
+            if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 8):
+                self.picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+            else:
+                self.picture.set_keep_aspect_ratio(True)
+
         else:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
@@ -264,7 +279,7 @@ class UserInfo:
         self.user = user
         self.picture_data = None
         self.picture_surface = None
-        self.indeterminate_progress = True
+        self.indeterminate_progress = False
 
         # Set up likes list
         self.likes_list_view = TreeView(
@@ -320,7 +335,14 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.popup_menus = (
+            self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
+            self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu
+        )
+
+        self.load_picture(None)
         self.populate_stats()
+        self.update_button_states()
 
     def clear(self):
 
@@ -329,14 +351,21 @@ class UserInfo:
         self.dislikes_list_view.clear()
         self.load_picture(None)
 
-        for menu in (self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
-                     self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
+        self.indeterminate_progress = False  # Stop progress bar timer
 
     def set_label(self, label):
         self.user_popup_menu.set_parent(label)
 
-    """ General """
+    # General #
 
     def populate_stats(self):
 
@@ -362,10 +391,13 @@ class UserInfo:
 
         if not data:
             if GTK_API_VERSION >= 4:
-                self.picture.set_paintable(None)
+                # Empty paintable to prevent container width from shrinking
+                self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
 
             self.picture_data = None
-            self.placeholder_picture.set_visible(True)
+            self.picture_surface = None
+
+            self.picture_container.set_visible_child(self.placeholder_picture)
             return
 
         try:
@@ -377,7 +409,7 @@ class UserInfo:
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            self.picture_view.set_visible(True)
+            self.picture_container.set_visible_child(self.picture_view)
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -390,13 +422,10 @@ class UserInfo:
         if self.refresh_button.get_sensitive():
             return
 
-        self.info_bar_label.set_label(
+        self.info_bar.show_error_message(
             _("Unable to request information from user. Either you both have a closed listening "
               "port, the user is offline, or there's a temporary connectivity issue.")
         )
-        self.info_bar.set_visible(True)
-        self.info_bar.set_reveal_child(True)
-
         self.set_finished()
 
     def set_finished(self):
@@ -405,6 +434,7 @@ class UserInfo:
 
         self.userinfos.request_tab_changed(self.container)
         self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
 
         self.refresh_button.set_sensitive(True)
 
@@ -420,19 +450,19 @@ class UserInfo:
 
         self.indeterminate_progress = True
 
+        self.progress_bar.get_parent().set_reveal_child(True)
         self.progress_bar.pulse()
         GLib.timeout_add(320, self.pulse_progress, False)
         GLib.timeout_add(1000, self.pulse_progress)
 
         self.info_bar.set_visible(False)
-        self.info_bar.set_reveal_child(False)
         self.refresh_button.set_sensitive(False)
 
     def user_info_progress(self, position, total):
 
         self.indeterminate_progress = False
 
-        if total == 0 or position == 0:
+        if total <= 0 or position <= 0:
             fraction = 0.0
         elif position >= total:
             fraction = 1.0
@@ -441,7 +471,7 @@ class UserInfo:
 
         self.progress_bar.set_fraction(fraction)
 
-    """ Button States """
+    # Button States #
 
     def update_edit_button_state(self):
 
@@ -469,7 +499,7 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
 
-    """ Network Messages """
+    # Network Messages #
 
     def user_info_response(self, msg):
 
@@ -488,7 +518,6 @@ class UserInfo:
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
-        self.info_bar.set_reveal_child(False)
         self.set_finished()
 
     def user_stats(self, msg):
@@ -510,8 +539,9 @@ class UserInfo:
         self.country_label.set_text(country_text)
 
         icon_name = get_flag_icon_name(country_code)
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-        self.country_icon.set_property("icon-name", icon_name)
+        self.country_icon.set_from_icon_name(icon_name, *icon_args)
         self.country_icon.set_visible(bool(icon_name))
 
     def user_interests(self, msg):
@@ -525,10 +555,23 @@ class UserInfo:
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
 
-    """ Callbacks """
+    # Callbacks #
+
+    def on_show_progress_bar(self, progress_bar):
+        """Enables indeterminate progress bar mode when tab is active."""
+
+        if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
+            self.set_in_progress()
+
+    def on_hide_progress_bar(self, progress_bar):
+        """Disables indeterminate progress bar mode when switching to another tab."""
+
+        if self.indeterminate_progress:
+            self.indeterminate_progress = False
+            progress_bar.set_fraction(0.0)
 
     def on_draw_picture(self, area, context):
-        """ Draws a centered picture that fills the drawing area """
+        """Draws a centered picture that fills the drawing area."""
 
         area_width = area.get_allocated_width()
         area_height = area.get_allocated_height()
@@ -619,15 +662,17 @@ class UserInfo:
         FileChooserSave(
             parent=self.window,
             callback=self.on_save_picture_response,
-            initial_folder=config.sections["transfers"]["downloaddir"],
+            initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
         ).show()
 
     def on_refresh(self, *_args):
+        self.set_in_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):
-        self.description_view.widget.grab_focus()
+        self.description_view.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.userinfo.remove_user(self.user)

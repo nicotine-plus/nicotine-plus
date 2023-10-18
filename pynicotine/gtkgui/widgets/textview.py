@@ -37,9 +37,6 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import PUNCTUATION
 
 
-""" Textview """
-
-
 class TextView:
 
     if GTK_API_VERSION >= 4:
@@ -55,13 +52,17 @@ class TextView:
                  horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
         self.widget = Gtk.TextView(
-            accepts_tab=False, cursor_visible=editable, editable=editable,
+            accepts_tab=False, editable=editable,
             left_margin=horizontal_margin, right_margin=horizontal_margin,
             top_margin=vertical_margin, bottom_margin=vertical_margin,
             pixels_above_lines=pixels_above_lines, pixels_below_lines=pixels_below_lines,
             wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
         )
-        parent.set_property("child", self.widget)
+
+        if GTK_API_VERSION >= 4:
+            parent.set_child(self.widget)  # pylint: disable=no-member
+        else:
+            parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
@@ -208,6 +209,18 @@ class TextView:
 
         return ""
 
+    def grab_focus(self):
+        self.widget.grab_focus()
+
+    def place_cursor_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        self.textbuffer.place_cursor(iterator)
+
     def update_cursor(self, pos_x, pos_y):
 
         cursor = self.TEXT_CURSOR
@@ -234,7 +247,7 @@ class TextView:
         self.textbuffer.delete(start_iter, end_iter)
         self.tag_urls.clear()
 
-    """ Text Tags (usernames, URLs) """
+    # Text Tags (Usernames, URLs) #
 
     def create_tag(self, color_id=None, callback=None, username=None, url=None):
 
@@ -245,7 +258,7 @@ class TextView:
             tag.color_id = color_id
 
         if url:
-            if url[:4] == "www.":
+            if url.startswith("www."):
                 url = "http://" + url
 
             tag.url = url
@@ -267,7 +280,7 @@ class TextView:
         for tag in self.tag_urls.values():
             self.update_tag(tag)
 
-    """ Events """
+    # Events #
 
     def on_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
@@ -368,7 +381,7 @@ class ChatView(TextView):
 
     @staticmethod
     def find_whole_word(word, text):
-        """ Returns start position of a whole word that is not in a subword """
+        """Returns start position of a whole word that is not in a subword."""
 
         if word not in text:
             return -1
@@ -433,6 +446,10 @@ class ChatView(TextView):
             self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
                              timestamp_format=timestamp_format)
 
+    def clear(self):
+        super().clear()
+        self.tag_users.clear()
+
     def get_line_tag(self, user, text, login=None):
 
         if text.startswith("/me "):
@@ -449,6 +466,7 @@ class ChatView(TextView):
     def get_user_tag(self, username):
 
         if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
             self.update_user_tag(username)
 
         return self.tag_users[username]
@@ -469,10 +487,10 @@ class ChatView(TextView):
 
     def update_user_tag(self, username):
 
-        status = UserStatus.OFFLINE
-
         if username not in self.tag_users:
-            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+            return
+
+        status = UserStatus.OFFLINE
 
         if username in self.status_users:
             status = core.user_statuses.get(username, UserStatus.OFFLINE)
@@ -485,8 +503,9 @@ class ChatView(TextView):
             self.update_user_tag(username)
 
     def on_page_down_accelerator(self, *_args):
-        """ Page_Down, Down: Give focus to text entry if already scrolled at the bottom """
+        """Page_Down, Down: Give focus to text entry if already scrolled at the
+        bottom."""
 
-        if self.adjustment_value >= self.adjustment_bottom:
+        if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
             # Give focus to text entry upon scrolling down to the bottom
             self.chat_entry.grab_focus_without_selecting()

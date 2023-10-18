@@ -132,15 +132,15 @@ class Interests:
         core.send_message_to_server(slskmessages.SimilarUsers())
 
     def _similar_users(self, msg):
-        """ Server code: 110 """
+        """Server code 110."""
 
-        for user in msg.users:
+        for username in msg.users:
             # Request user status, speed and number of shared files
-            core.watch_user(user)
+            core.watch_user(username)
 
     def _item_similar_users(self, msg):
-        """ Server code: 112 """
+        """Server code 112."""
 
-        for user in msg.users:
+        for username in msg.users:
             # Request user status, speed and number of shared files
-            core.watch_user(user)
+            core.watch_user(username)

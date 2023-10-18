@@ -123,14 +123,14 @@ class Interests:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 135,
+                    "width": 120,
                     "expand_column": True,
                     "iterator_key": True
                 },
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
-                    "width": 60,
+                    "width": 90,
                     "sort_column": "speed_data",
                     "expand_column": True
                 },
@@ -186,7 +186,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
 
-        popup = UserPopupMenu(
+        UserPopupMenu(
             self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
             tab_name="interests"
         )
@@ -208,6 +208,12 @@ class Interests:
         ):
             events.connect(event_name, callback)
 
+    def on_focus(self, *_args):
+
+        self.populate_recommendations()
+        self.recommendations_list_view.grab_focus()
+        return True
+
     def server_login(self, msg):
 
         if not msg.success:
@@ -227,7 +233,8 @@ class Interests:
         self.similar_users_button.set_sensitive(False)
 
     def populate_recommendations(self):
-        """ Populates the lists of recommendations and similar users if empty """
+        """Populates the lists of recommendations and similar users if
+        empty."""
 
         if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
             return

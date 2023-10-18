@@ -65,6 +65,7 @@
   </object>
   <object class="GtkBox" id="search_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -242,6 +243,7 @@
   </object>
   <object class="GtkBox" id="downloads_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -275,6 +277,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_download_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -314,6 +317,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_download_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_download_files_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -360,7 +364,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="downloads_expand_icon">
-                                <property name="icon-name">go-down-symbolic</property>
+                                <property name="icon-name">view-fullscreen-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -478,6 +482,7 @@
   </object>
   <object class="GtkBox" id="uploads_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -511,6 +516,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_upload_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -550,6 +556,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="label" bind-source="_upload_files_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">_upload_files_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -596,7 +603,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="uploads_expand_icon">
-                                <property name="icon-name">go-down-symbolic</property>
+                                <property name="icon-name">view-fullscreen-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -724,6 +731,7 @@
   </object>
   <object class="GtkBox" id="userbrowse_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -887,6 +895,7 @@
   </object>
   <object class="GtkBox" id="userinfo_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1039,6 +1048,7 @@
   </object>
   <object class="GtkBox" id="private_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1083,7 +1093,7 @@
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="private_history_label">
                                 <property name="label" translatable="yes">Chat _History</property>
                                 <property name="mnemonic-widget">private_history_button</property>
                                 <property name="use-underline">True</property>
@@ -1199,6 +1209,7 @@
   </object>
   <object class="GtkBox" id="userlist_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox">
         <property name="hexpand">True</property>
@@ -1362,6 +1373,7 @@
   </object>
   <object class="GtkBox" id="chatrooms_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkPaned" id="chatrooms_paned">
         <property name="hexpand">True</property>
@@ -1410,7 +1422,7 @@
                                 <property name="spacing">6</property>
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_list_label">
                                     <property name="label" translatable="yes">_Rooms</property>
                                     <property name="mnemonic-widget">room_list_button</property>
                                     <property name="use-underline">True</property>
@@ -1533,6 +1545,7 @@
   </object>
   <object class="GtkBox" id="interests_page">
     <property name="visible">False</property>
+    <property name="width-request">580</property>
     <child>
       <object class="GtkBox" id="interests_container">
         <property name="orientation">vertical</property>
@@ -1614,6 +1627,7 @@
                     <child>
                       <object class="GtkSearchEntry" id="log_search_entry">
                         <property name="max-width-chars">75</property>
+                        <property name="placeholder-text" translatable="yes">Search log…</property>
                         <property name="visible">True</property>
                         <property name="width-chars">24</property>
                       </object>
@@ -1646,32 +1660,25 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="spacing">6</property>
+        <property name="spacing">18</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkLabel" id="status_label">
             <property name="ellipsize">end</property>
             <property name="hexpand">True</property>
-            <property name="margin-end">12</property>
             <property name="margin-start">12</property>
+            <property name="selectable">True</property>
             <property name="single-line-mode">True</property>
             <property name="visible">True</property>
             <property name="xalign">0</property>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <property name="spacing">18</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkProgressBar" id="scan_progress_bar">
-                <property name="pulse-step">0.8</property>
-                <property name="show-text">True</property>
-                <property name="text" translatable="yes">Scanning Shares</property>
-                <property name="valign">center</property>
-                <property name="visible">False</property>
-              </object>
-            </child>
+          <object class="GtkProgressBar" id="scan_progress_bar">
+            <property name="pulse-step">0.8</property>
+            <property name="show-text">True</property>
+            <property name="valign">center</property>
+            <property name="visible">False</property>
           </object>
         </child>
         <child>
@@ -1694,6 +1701,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">network-wireless-symbolic</property>
+                        <property name="tooltip-text" bind-source="_connections_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1725,6 +1733,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">go-down-symbolic</property>
+                        <property name="tooltip-text" bind-source="download_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1755,6 +1764,7 @@
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">go-up-symbolic</property>
+                        <property name="tooltip-text" bind-source="upload_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                       </object>
                     </child>
@@ -1775,8 +1785,8 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="user_status_button">
-                <property name="action-name">app.away</property>
+              <object class="GtkToggleButton" id="user_status_button">
+                <property name="action-name">win.toggle-status</property>
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkBox">
@@ -1785,6 +1795,7 @@
                     <child>
                       <object class="GtkImage" id="user_status_icon">
                         <property name="icon-name">nplus-status-offline</property>
+                        <property name="tooltip-text" bind-source="user_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
                         <property name="visible">True</property>
                         <style>
                           <class name="colored-icon"/>

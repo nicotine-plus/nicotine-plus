@@ -14,6 +14,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | Operating System                                                                        | Package Name        |
 |-----------------------------------------------------------------------------------------|---------------------|
 | [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`         |
+| [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`          |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
 | [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |
@@ -25,18 +26,24 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 
 ### Ubuntu/Debian
 
-To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository.
+
+On Ubuntu and distributions based on it (e.g. Linux Mint, elementary OS, Pop!_OS, various Ubuntu flavors), run the following:
 
 ```sh
-sudo apt update
-sudo apt install python3-launchpadlib software-properties-common
-sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
-sudo apt install nicotine
+sudo add-apt-repository ppa:nicotine-team/stable
+sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
+On Debian and distributions based on it (e.g. Devuan, Peppermint OS), run the following:
 
-Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
+```sh
+sudo apt update; sudo apt install python3-launchpadlib software-properties-common
+sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stable/ubuntu jammy main'
+sudo apt update; sudo apt install nicotine
+```
+
+If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip). Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
 ### Flatpak (GNU/Linux)
 
@@ -72,10 +79,10 @@ Stable Windows installers for Nicotine+ are available for download. Installing N
 - [Download Nicotine+ 64-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
 
-Portable packages are also available. They can be run from any folder and do not require installation or administrator privileges.
+Standalone executables are also available. They can be run from any folder and do not require installation or administrator privileges. Configuration files are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
-- [Download Nicotine+ 64-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
-- [Download Nicotine+ 32-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
+- [Download Nicotine+ 64-bit Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
+- [Download Nicotine+ 32-bit Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
 
 
 ### Package Managers

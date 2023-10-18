@@ -27,10 +27,10 @@ class Room:
 
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name=None, is_private=False):
+    def __init__(self, name=None):
 
         self.name = name
-        self.is_private = is_private
+        self.is_private = False
         self.users = set()
         self.tickers = {}
 
@@ -102,6 +102,11 @@ class ChatRooms:
                 core.send_message_to_server(slskmessages.JoinRoom(room))
 
     def _server_disconnect(self, _msg):
+
+        for room_obj in self.joined_rooms.values():
+            room_obj.tickers.clear()
+            room_obj.users.clear()
+
         self.server_rooms.clear()
         self.pending_autojoin_rooms.clear()
         self.update_completions()
@@ -248,12 +253,17 @@ class ChatRooms:
         core.send_message_to_server(slskmessages.RoomTickerSet(room, message))
 
     def _join_room(self, msg):
-        """ Server code: 14 """
+        """Server code 14."""
 
-        self.joined_rooms[msg.room] = room_obj = Room(name=msg.room, is_private=msg.private)
+        room_obj = self.joined_rooms.get(msg.room)
+
+        if room_obj is None:
+            self.joined_rooms[msg.room] = room_obj = Room(name=msg.room)
+
+        room_obj.is_private = msg.private
 
         if msg.room not in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].append(msg.room)
+            config.sections["server"]["autojoin"].insert(0, msg.room)
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
@@ -270,13 +280,13 @@ class ChatRooms:
         core.pluginhandler.join_chatroom_notification(msg.room)
 
     def _leave_room(self, msg):
-        """ Server code: 15 """
+        """Server code 15."""
 
         core.pluginhandler.leave_chatroom_notification(msg.room)
         self.remove_room(msg.room)
 
     def _private_room_users(self, msg):
-        """ Server code: 133 """
+        """Server code 133."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -287,7 +297,7 @@ class ChatRooms:
         private_room["joined"] = msg.numusers
 
     def _private_room_add_user(self, msg):
-        """ Server code: 134 """
+        """Server code 134."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -295,7 +305,7 @@ class ChatRooms:
             private_room["users"].append(msg.user)
 
     def _private_room_remove_user(self, msg):
-        """ Server code: 135 """
+        """Server code 135."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -303,25 +313,25 @@ class ChatRooms:
             private_room["users"].remove(msg.user)
 
     def _private_room_added(self, msg):
-        """ Server code: 139 """
+        """Server code 139."""
 
         if msg.room not in self.private_rooms:
             self.create_private_room(msg.room)
             log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
 
     def _private_room_removed(self, msg):
-        """ Server code: 140 """
+        """Server code 140."""
 
         if msg.room in self.private_rooms:
             del self.private_rooms[msg.room]
 
     def _private_room_toggle(self, msg):
-        """ Server code: 141 """
+        """Server code 141."""
 
         config.sections["server"]["private_chatrooms"] = msg.enabled
 
     def _private_room_add_operator(self, msg):
-        """ Server code: 143 """
+        """Server code 143."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -329,7 +339,7 @@ class ChatRooms:
             private_room["operators"].append(msg.user)
 
     def _private_room_remove_operator(self, msg):
-        """ Server code: 144 """
+        """Server code 144."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -337,7 +347,7 @@ class ChatRooms:
             private_room["operators"].remove(msg.user)
 
     def _private_room_operator_added(self, msg):
-        """ Server code: 145 """
+        """Server code 145."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -345,7 +355,7 @@ class ChatRooms:
             private_room["operators"].append(core.login_username)
 
     def _private_room_operator_removed(self, msg):
-        """ Server code: 146 """
+        """Server code 146."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -353,7 +363,7 @@ class ChatRooms:
             private_room["operators"].remove(core.login_username)
 
     def _private_room_owned(self, msg):
-        """ Server code: 148 """
+        """Server code 148."""
 
         private_room = self.private_rooms.get(msg.room)
 
@@ -363,12 +373,12 @@ class ChatRooms:
         private_room["operators"] = msg.operators
 
     def _global_room_message(self, msg):
-        """ Server code: 152 """
+        """Server code 152."""
 
         core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def _room_list(self, msg):
-        """ Server code: 64 """
+        """Server code 64."""
 
         login_username = core.login_username
 
@@ -412,7 +422,7 @@ class ChatRooms:
             core.privatechat.update_completions()
 
     def _say_chat_room(self, msg):
-        """ Server code: 13 """
+        """Server code 13."""
 
         room = msg.room
 
@@ -420,32 +430,32 @@ class ChatRooms:
             msg.room = None
             return
 
-        user = msg.user
+        username = msg.user
 
         log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
-            "user": user,
+            "user": username,
             "room": room,
             "message": msg.msg
         })
 
-        if core.network_filter.is_user_ignored(user):
+        if core.network_filter.is_user_ignored(username):
             msg.room = None
             return
 
-        if core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ip_ignored(username):
             msg.room = None
             return
 
-        event = core.pluginhandler.incoming_public_chat_event(room, user, msg.msg)
+        event = core.pluginhandler.incoming_public_chat_event(room, username, msg.msg)
         if event is None:
             msg.room = None
             return
 
-        _room, _user, msg.msg = event
-        core.pluginhandler.incoming_public_chat_notification(room, user, msg.msg)
+        _room, _username, msg.msg = event
+        core.pluginhandler.incoming_public_chat_notification(room, username, msg.msg)
 
     def _user_joined_room(self, msg):
-        """ Server code: 16 """
+        """Server code 16."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -454,6 +464,12 @@ class ChatRooms:
             return
 
         username = msg.userdata.username
+
+        if username == core.login_username:
+            # Redundant message, we're already present in the list of users
+            msg.room = None
+            return
+
         room_obj.users.add(username)
         core.user_statuses[username] = msg.userdata.status
 
@@ -464,7 +480,7 @@ class ChatRooms:
         core.pluginhandler.user_join_chatroom_notification(msg.room, username)
 
     def _user_left_room(self, msg):
-        """ Server code: 17 """
+        """Server code 17."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -483,7 +499,7 @@ class ChatRooms:
         core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
 
     def _ticker_state(self, msg):
-        """ Server code: 113 """
+        """Server code 113."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -493,16 +509,16 @@ class ChatRooms:
 
         room_obj.tickers.clear()
 
-        for user, message in msg.msgs:
-            if core.network_filter.is_user_ignored(user) or \
-                    core.network_filter.is_user_ip_ignored(user):
+        for username, message in msg.msgs:
+            if core.network_filter.is_user_ignored(username) or \
+                    core.network_filter.is_user_ip_ignored(username):
                 # User ignored, ignore ticker message
                 continue
 
-            room_obj.tickers[user] = message
+            room_obj.tickers[username] = message
 
     def _ticker_add(self, msg):
-        """ Server code: 114 """
+        """Server code 114."""
 
         room_obj = self.joined_rooms.get(msg.room)
 
@@ -510,16 +526,16 @@ class ChatRooms:
             msg.room = None
             return
 
-        user = msg.user
+        username = msg.user
 
-        if core.network_filter.is_user_ignored(user) or core.network_filter.is_user_ip_ignored(user):
+        if core.network_filter.is_user_ignored(username) or core.network_filter.is_user_ip_ignored(username):
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[user] = msg.msg
+        room_obj.tickers[username] = msg.msg
 
     def _ticker_remove(self, msg):
-        """ Server code: 115 """
+        """Server code 115."""
 
         room_obj = self.joined_rooms.get(msg.room)
 

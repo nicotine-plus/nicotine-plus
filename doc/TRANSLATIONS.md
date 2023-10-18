@@ -66,7 +66,7 @@ Nicotine+ will first try to find your translation files in your project folder, 
 In order to use the updated translations when running Nicotine+ from your project folder, you need to generate `.mo` files by running:
 
 ```sh
-python3 setup.py build
+python3 -m build
 ```
 
 The newly generated files will end up in the `mo/` folder.

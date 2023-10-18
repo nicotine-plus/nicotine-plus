@@ -104,7 +104,7 @@ class RoomList(Popover):
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
 
-        window.room_list_button.set_popover(self.widget)
+        self.set_menu_button(window.room_list_button)
 
         for event_name, callback in (
             ("join-room", self.join_room),
@@ -264,7 +264,7 @@ class RoomList(Popover):
         core.chatrooms.request_private_room_toggle(self.private_room_toggle.get_active())
 
     def on_search_accelerator(self, *_args):
-        """ Ctrl+F: Search rooms """
+        """Ctrl+F - Search rooms."""
 
         self.search_entry.grab_focus()
         return True

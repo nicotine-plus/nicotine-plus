@@ -5,23 +5,24 @@
 ### Required
 
 - [python3](https://www.python.org/) >= 3.6;
-- [python3-gdbm](https://docs.python.org/3/library/dbm.html#module-dbm.gnu) for scanning shared files.
-- [gtk3](https://gtk.org/) >= 3.22.30 or [gtk4](https://gtk.org/) >= 4.8 for graphical interface;
+- [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30 for graphical interface;
 - [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
 
 ### Recommended
 
-- [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat.
+- [libadwaita](https://gitlab.gnome.org/GNOME/libadwaita) for Adwaita theme on GNOME (GTK 4).
+- [gspell](https://gitlab.gnome.org/GNOME/gspell) for spell checking in chat (GTK 3).
 
 ## Building
 
+- [build](https://pypa-build.readthedocs.io/) for building;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
 - [setuptools](https://setuptools.pypa.io/) for packaging.
 
 ## Testing
 
-- [flake8](https://flake8.pycqa.org/) for lint checks;
-- [pylint](https://pylint.pycqa.org/) for lint checks.
+- [pycodestyle](https://pycodestyle.pycqa.org/) for code style checks;
+- [pylint](https://pylint.pycqa.org/) for linting.
 
 
 ## Installing Dependencies
@@ -33,19 +34,19 @@
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1 gir1.2-gtk-3.0 python3-gi python3-gdbm
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gspell gtk3 python3-gobject
+sudo dnf install gspell gtk4 libaadwaita python3-gobject
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject python3-dbm
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python3-gobject
 ```
 
 #### Installing Build Dependencies
@@ -53,19 +54,19 @@ sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-3_0 python3-gobject pyt
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gettext python3-setuptools
+sudo apt install gettext python3-build python3-setuptools
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gettext python3-setuptools
+sudo dnf install gettext python3-build python3-setuptools
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install gettext-runtime python3-setuptools
+sudo zypper install gettext-runtime python3-build python3-setuptools
 ```
 
 #### Installing Test Dependencies
@@ -73,19 +74,19 @@ sudo zypper install gettext-runtime python3-setuptools
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install pylint3 python3-flake8
+sudo apt install pylint3 python3-pycodestyle
 ```
 
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install pylint python3-flake8
+sudo dnf install pylint python3-pycodestyle
 ```
 
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install python3-pylint python3-flake8
+sudo zypper install python3-pylint python3-pycodestyle
 ```
 
 ### Windows and macOS

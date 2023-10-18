@@ -24,9 +24,10 @@
 import operator
 import re
 
-from collections import defaultdict
+from itertools import islice
 
 from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -122,6 +123,14 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
 
+    def on_focus(self, *_args):
+
+        if self.window.search_entry.is_sensitive():
+            self.window.search_entry.grab_focus()
+            return True
+
+        return False
+
     def on_restore_removed_page(self, page_args):
         search_term, mode, room, users = page_args
         core.search.do_search(search_term, mode, room=room, users=users)
@@ -138,7 +147,6 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            tab.update_filter_widgets()
             self.window.application.notifications.update_title()
             break
 
@@ -165,20 +173,30 @@ class Searches(IconNotebook):
         mode = self.window.lookup_action("search-mode").get_state().get_string()
         room = self.room_search_combobox.get_text()
         user = self.user_search_combobox.get_text()
+        users = [user] if user else []
 
         self.window.search_entry.set_text("")
-        core.search.do_search(text, mode, room=room, users=[user])
+        core.search.do_search(text, mode, room=room, users=users)
 
     def populate_search_history(self):
 
-        should_enable_history = config.sections["searches"]["enable_history"]
-        self.search_combobox.clear()
-
-        if not should_enable_history:
+        if not config.sections["searches"]["enable_history"]:
+            self.search_combobox.clear()
             return
 
-        for term in config.sections["searches"]["history"]:
+        for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
             self.search_combobox.append(str(term))
+
+    def add_search_history_item(self, term):
+
+        if not config.sections["searches"]["enable_history"]:
+            return
+
+        self.search_combobox.remove_id(term)
+        self.search_combobox.prepend(term)
+
+        while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
+            self.search_combobox.remove_pos(-1)
 
     def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
                     show_page=True):
@@ -203,8 +221,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.append_page(page.container, label, focus_callback=page.on_focus,
-                         close_callback=page.on_close, full_text=full_text)
+        self.prepend_page(page.container, label, focus_callback=page.on_focus,
+                          close_callback=page.on_close, full_text=full_text)
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page
@@ -230,8 +248,7 @@ class Searches(IconNotebook):
         if switch_page:
             self.show_search(token)
 
-        # Repopulate the combo list
-        self.populate_search_history()
+        self.add_search_history_item(search.term)
 
     def show_search(self, token):
 
@@ -251,8 +268,12 @@ class Searches(IconNotebook):
             return
 
         page.clear()
-        self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
+        if page.show_page:
+            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+
         del self.pages[token]
+        page.destroy_widgets()
 
     def clear_search_history(self):
 
@@ -262,6 +283,10 @@ class Searches(IconNotebook):
         config.write_configuration()
 
         self.search_combobox.clear()
+
+    def add_filter_history_item(self, filter_id, value):
+        for page in self.pages.values():
+            page.add_filter_history_item(filter_id, value)
 
     def clear_filter_history(self):
 
@@ -274,7 +299,7 @@ class Searches(IconNotebook):
         # Update filters in search tabs
         for page in self.pages.values():
             page.filters_undo = page.FILTERS_EMPTY
-            page.update_filter_widgets()
+            page.populate_filter_history()
 
     def file_search_response(self, msg):
 
@@ -324,7 +349,7 @@ class Search:
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]
-    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<![!]\s)")    # [pipe, ampersand, comma, semicolon, space]
+    FILTER_SPLIT_TEXT_PATTERN = re.compile(r"(?:[|&,;\s])+(?<!!\s)")      # [pipe, ampersand, comma, semicolon, space]
     FILTERS_EMPTY = {
         "filterin": (None, ""),
         "filterout": (None, ""),
@@ -545,7 +570,7 @@ class Search:
         self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+            ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url)
         )
 
         self.popup_menu = FilePopupMenu(
@@ -557,7 +582,8 @@ class Search:
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
-            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
+            ("#" + _("View User _Profile"), self.on_user_profile),
+            ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             (">" + _("Copy"), self.popup_menu_copy),
@@ -571,6 +597,11 @@ class Search:
             ("#" + _("Clear All Results"), self.on_clear),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
+        )
+
+        self.popup_menus = (
+            self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
+            self.tree_view.column_menu
         )
 
         # Key bindings
@@ -610,6 +641,7 @@ class Search:
             buffer.connect_after("deleted-text", self.on_filter_entry_deleted_text)
 
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
+        self.populate_filter_history()
         self.populate_default_filters()
 
         # Wishlist
@@ -619,9 +651,15 @@ class Search:
 
         self.clear_model(stored_results=True)
 
-        for menu in (self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
-                     self.tree_view.column_menu):
+        for menu in self.popup_menus:
             menu.clear()
+
+    def destroy_widgets(self):
+
+        for menu in self.popup_menus:
+            del menu.parent
+
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
@@ -632,24 +670,6 @@ class Search:
 
     def update_filter_widgets(self):
 
-        for filter_id, widget in self.filter_comboboxes.items():
-            widget.set_row_separator_func(lambda *_args: 0)
-            widget.clear()
-
-            presets = self.FILTER_PRESETS.get(filter_id)
-
-            if presets:
-                for value in presets:
-                    widget.append(value)
-
-                widget.append("")  # Separator
-
-            for value in config.sections["searches"][filter_id]:
-                widget.append(value)
-
-            if presets:
-                widget.set_row_separator_func(self.on_combobox_check_separator)
-
         self.update_filter_counter(self.active_filter_count)
 
         if self.filters_undo == self.FILTERS_EMPTY:
@@ -659,9 +679,34 @@ class Search:
             tooltip_text = _("Restore Filters")
             icon_name = "edit-undo-symbolic"
 
-        if self.clear_undo_filters_button.get_tooltip_text() != tooltip_text:
-            self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
-            self.clear_undo_filters_icon.set_property("icon-name", icon_name)
+        if self.clear_undo_filters_icon.get_icon_name() == icon_name:
+            return
+
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.clear_undo_filters_button.set_tooltip_text(tooltip_text)
+        self.clear_undo_filters_icon.set_from_icon_name(icon_name, *icon_args)
+
+    def populate_filter_history(self):
+
+        for filter_id, widget in self.filter_comboboxes.items():
+            widget.set_row_separator_func(lambda *_args: 0)
+            widget.clear()
+
+            presets = self.FILTER_PRESETS.get(filter_id)
+            filter_history = config.sections["searches"][filter_id]
+
+            if presets:
+                for index, value in enumerate(presets):
+                    widget.append(value, item_id=f"preset_{index}")
+
+                if filter_history:
+                    widget.append("")  # Separator
+
+            for value in islice(filter_history, core.search.RESULT_FILTER_HISTORY_LIMIT):
+                widget.append(value)
+
+            if presets:
+                widget.set_row_separator_func(self.on_combobox_check_separator)
 
     def populate_default_filters(self):
 
@@ -686,7 +731,7 @@ class Search:
         self.set_filters(stored_filters)
 
     def set_filters(self, stored_filters):
-        """ Recall result filter values from a dict """
+        """Recall result filter values from a dict."""
 
         self.populating_filters = True
 
@@ -704,53 +749,55 @@ class Search:
 
     def add_result_list(self, result_list, user, country_code, inqueue, ulspeed, h_speed,
                         h_queue, has_free_slots, private=False):
-        """ Adds a list of search results to the treeview. Lists can either contain publicly or
-        privately shared files. """
+        """Adds a list of search results to the treeview.
+
+        Lists can either contain publicly or privately shared files.
+        """
 
         update_ui = False
 
-        for _code, fullpath, size, _ext, file_attributes, *_unused in result_list:
+        for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
                 self.max_limited = True
                 break
 
-            fullpath_lower = fullpath.lower()
+            file_path_lower = file_path.lower()
 
-            if any(word in fullpath_lower for word in self.searchterm_words_ignore):
+            if any(word in file_path_lower for word in self.searchterm_words_ignore):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
                                'search term "%(query)s"'), {
-                    "filepath": fullpath,
+                    "filepath": file_path,
                     "user": user,
                     "query": self.text
                 })
                 continue
 
-            if not any(word in fullpath_lower for word in self.searchterm_words_include):
+            if not any(word in file_path_lower for word in self.searchterm_words_include):
                 # Certain users may send us wrong results, filter out such ones
                 log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
                                  'search query "%(query)s"'), {
-                    "filepath": fullpath,
+                    "filepath": file_path,
                     "user": user,
                     "query": self.text
                 })
                 continue
 
             self.num_results_found += 1
-            fullpath_split = fullpath.split("\\")
+            file_path_split = file_path.split("\\")
 
             if config.sections["ui"]["reverse_file_paths"]:
                 # Reverse file path, file name is the first item. next() retrieves the name and removes
                 # it from the iterator.
-                fullpath_split = reversed(fullpath_split)
-                name = next(fullpath_split)
+                file_path_split = reversed(file_path_split)
+                name = next(file_path_split)
 
             else:
                 # Regular file path, file name is the last item. Retrieve it and remove it from the list.
-                name = fullpath_split.pop()
+                name = file_path_split.pop()
 
             # Join the resulting items into a folder path
-            folder = "\\".join(fullpath_split)
+            folder_path = "\\".join(file_path_split)
 
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
@@ -764,7 +811,7 @@ class Search:
                     get_flag_icon_name(country_code),
                     h_speed,
                     h_queue,
-                    folder,
+                    folder_path,
                     get_file_type_icon_name(name),
                     name,
                     h_size,
@@ -776,7 +823,7 @@ class Search:
                     size,
                     bitrate,
                     length,
-                    fullpath,
+                    file_path,
                     has_free_slots,
                     file_attributes,
                     self.num_results_found
@@ -857,8 +904,8 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        (user, flag, h_speed, h_queue, folder, _unused, _unused, _unused, _unused,
-            _unused, country_code, speed, queue, _unused, _unused, _unused, fullpath, has_free_slots,
+        (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
+            _unused, country_code, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
             _unused, row_id) = row
 
         expand_user = False
@@ -910,16 +957,16 @@ class Search:
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
-                user_folder = user + folder
+                user_folder_path = user + folder_path
 
-                if user_folder not in self.folders:
+                if user_folder_path not in self.folders:
                     iterator = self.tree_view.add_row(
                         [
                             user,
                             flag,
                             h_speed,
                             h_queue,
-                            folder,
+                            folder_path,
                             empty_str,
                             empty_str,
                             empty_str,
@@ -931,7 +978,7 @@ class Search:
                             empty_int,
                             empty_int,
                             empty_int,
-                            fullpath.rsplit("\\", 1)[0] + "\\",
+                            file_path.rsplit("\\", 1)[0],
                             has_free_slots,
                             empty_dict,
                             row_id
@@ -939,12 +986,12 @@ class Search:
                     )
                     user_child_iterators.append(iterator)
                     expand_folder = self.expand_button.get_active()
-                    self.folders[user_folder] = (iterator, [])
+                    self.folders[user_folder_path] = (iterator, [])
 
                 row = row[:]
                 row[4] = ""  # Folder not visible for file row if "group by folder" is enabled
 
-                user_folder_iterator, user_folder_child_iterators = self.folders[user_folder]
+                user_folder_iterator, user_folder_child_iterators = self.folders[user_folder_path]
                 parent_iterator = user_folder_iterator
 
             else:
@@ -972,11 +1019,56 @@ class Search:
         self.num_results_visible += 1
         return iterator
 
-    """ Result Filters """
+    # Result Filters #
+
+    def add_filter_history_item(self, filter_id, value):
+
+        combobox = self.filter_comboboxes[filter_id]
+        position = len(self.FILTER_PRESETS.get(filter_id, ()))
+
+        if position == combobox.get_num_items():
+            combobox.append("")  # Separator item
+
+        if position:
+            position += 1  # Separator item
+
+        num_items_limit = core.search.RESULT_FILTER_HISTORY_LIMIT + position
+
+        combobox.remove_id(value)
+        combobox.insert(position=position, item=value)
+
+        while combobox.get_num_items() > num_items_limit:
+            combobox.remove_pos(-1)
+
+    def push_history(self, filter_id, value):
+
+        if not value:
+            return
+
+        history = config.sections["searches"].get(filter_id)
+
+        if history is None:
+            # Button filters do not store history
+            return
+
+        if history and history[0] == value:
+            # Most recent item selected, nothing to do
+            return
+
+        if value in history:
+            history.remove(value)
+
+        elif len(history) >= core.search.RESULT_FILTER_HISTORY_LIMIT:
+            del history[-1]
+
+        history.insert(0, value)
+        config.write_configuration()
+
+        self.searches.add_filter_history_item(filter_id, value)
 
     @staticmethod
     def _split_operator(condition):
-        """ Returns: (operation, digit) """
+        """Returns (operation, digit)"""
 
         operators = {
             "<": operator.lt,
@@ -999,7 +1091,7 @@ class Search:
         return operator.ge, condition
 
     def check_digit(self, result_filter, value, file_size=False):
-        """ Check if any conditions in result_filter match value """
+        """Check if any conditions in result_filter match value."""
 
         allowed = blocked = False
 
@@ -1100,7 +1192,7 @@ class Search:
 
     def check_filter(self, row):
 
-        if self.active_filter_count == 0:
+        if self.active_filter_count <= 0:
             return True
 
         for filter_id, (filter_value, _h_filter_value) in self.filters.items():
@@ -1181,17 +1273,20 @@ class Search:
 
     def update_wish_button(self):
 
-        if self.mode not in ("global", "wishlist"):
+        if self.mode not in {"global", "wishlist"}:
             self.add_wish_button.set_visible(False)
             return
 
         if not core.search.is_wish(self.text):
-            self.add_wish_icon.set_property("icon-name", "list-add-symbolic")
-            self.add_wish_label.set_label(_("Add Wi_sh"))
-            return
+            icon_name = "list-add-symbolic"
+            label = _("Add Wi_sh")
+        else:
+            icon_name = "list-remove-symbolic"
+            label = _("Remove Wi_sh")
 
-        self.add_wish_icon.set_property("icon-name", "list-remove-symbolic")
-        self.add_wish_label.set_label(_("Remove Wi_sh"))
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.add_wish_icon.set_from_icon_name(icon_name, *icon_args)
+        self.add_wish_label.set_label(label)
 
     def on_add_wish(self, *_args):
 
@@ -1231,20 +1326,20 @@ class Search:
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_close_filter_bar_accelerator(self, *_args):
-        """ Escape: hide filter bar """
+        """Escape - hide filter bar."""
 
         self.filters_button.set_active(False)
         return True
 
     def on_show_filter_bar_accelerator(self, *_args):
-        """ Ctrl+F: show filter bar """
+        """Ctrl+F - show filter bar."""
 
         self.filters_button.set_active(True)
         self.filter_include_combobox.grab_focus()
         return True
 
     def on_file_properties_accelerator(self, *_args):
-        """ Alt+Return: show file properties dialog """
+        """Alt+Return - show file properties dialog."""
 
         self.on_file_properties()
         return True
@@ -1264,8 +1359,8 @@ class Search:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
-            user_folder = selected_user + self.tree_view.get_row_value(iterator, "folder")
-            user_folder_data = self.folders.get(user_folder)
+            user_folder_path = selected_user + self.tree_view.get_row_value(iterator, "folder")
+            user_folder_data = self.folders.get(user_folder_path)
 
             if not user_folder_data:
                 continue
@@ -1290,11 +1385,11 @@ class Search:
 
     def select_child_results(self, iterator, user):
 
-        folder = self.tree_view.get_row_value(iterator, "folder")
+        folder_path = self.tree_view.get_row_value(iterator, "folder")
 
-        if folder:
-            user_folder = user + folder
-            row_data = self.folders[user_folder]
+        if folder_path:
+            user_folder_path = user + folder_path
+            row_data = self.folders[user_folder_path]
         else:
             row_data = self.users[user]
 
@@ -1324,10 +1419,12 @@ class Search:
                 total = self.num_results_found
 
             self.results_button.set_tooltip_text(_("Total: %s") % total)
-
-        else:  # Hide the tooltip if there are no hidden results
+        else:
             str_plus = ""
-            self.results_button.set_has_tooltip(False)
+            tooltip_text = _("Results")
+
+            if self.results_button.get_tooltip_text() != tooltip_text:
+                self.results_button.set_tooltip_text(tooltip_text)
 
         self.results_label.set_text(humanize(self.num_results_visible) + str_plus)
 
@@ -1338,14 +1435,14 @@ class Search:
 
         self.select_results()
 
-        folder = treeview.get_row_value(iterator, "folder")
-        filename = treeview.get_row_value(iterator, "filename")
+        folder_path = treeview.get_row_value(iterator, "folder")
+        basename = treeview.get_row_value(iterator, "filename")
 
-        if not folder and not filename:
+        if not folder_path and not basename:
             # Don't activate user rows
             return
 
-        if not filename:
+        if not basename:
             self.on_download_folders()
         else:
             self.on_download_files()
@@ -1360,18 +1457,21 @@ class Search:
 
     def on_browse_folder(self, *_args):
 
-        requested_users = set()
-        requested_folders = set()
+        iterator = next(iter(self.selected_results), None)
 
-        for iterator in self.selected_results:
+        if iterator:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder = self.tree_view.get_row_value(iterator, "folder").rsplit("\\", 1)[0] + "\\"
+            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
 
-            if user not in requested_users and folder not in requested_folders:
-                core.userbrowse.browse_user(user, path=folder)
+            core.userbrowse.browse_user(user, path=folder_path)
 
-                requested_users.add(user)
-                requested_folders.add(folder)
+    def on_user_profile(self, *_args):
+
+        iterator = next(iter(self.selected_results), None)
+
+        if iterator:
+            user = self.tree_view.get_row_value(iterator, "user")
+            core.userinfo.show_user(user)
 
     def on_file_properties(self, *_args):
 
@@ -1380,8 +1480,7 @@ class Search:
         selected_length = 0
 
         for iterator in self.selected_results:
-            virtual_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            directory, filename = virtual_path.rsplit("\\", 1)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
             selected_length += self.tree_view.get_row_value(iterator, "length_data")
@@ -1389,11 +1488,18 @@ class Search:
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
+            try:
+                folder_path, basename = file_path.rsplit("\\", 1)
+
+            except ValueError:
+                folder_path = ""
+                basename = file_path
+
             data.append({
                 "user": self.tree_view.get_row_value(iterator, "user"),
-                "fn": virtual_path,
-                "filename": filename,
-                "directory": directory,
+                "file_path": file_path,
+                "basename": basename,
+                "virtual_folder_path": folder_path,
                 "size": file_size,
                 "speed": self.tree_view.get_row_value(iterator, "speed_data"),
                 "queue_position": self.tree_view.get_row_value(iterator, "in_queue_data"),
@@ -1408,18 +1514,19 @@ class Search:
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.show()
 
-    def on_download_files(self, *_args, prefix=""):
+    def on_download_files(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.transfers.get_file(user, filepath, prefix, size=size, file_attributes=file_attributes)
+            core.downloads.get_file(
+                user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected, _data):
-        self.on_download_files(prefix=selected)
+    def on_download_files_to_selected(self, selected_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_folder_path)
 
     def on_download_files_to(self, *_args):
 
@@ -1427,51 +1534,37 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initial_folder=config.sections["transfers"]["downloaddir"]
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
-    def on_download_folders(self, *_args, download_location=""):
-
-        if download_location:
-            """ Custom download location specified, remember it when peer sends a folder
-            contents reply """
-
-            requested_folders = core.transfers.requested_folders
-        else:
-            requested_folders = defaultdict(dict)
+    def on_download_folders(self, *_args, download_folder_path=None):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            folder = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
+            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
 
-            if folder in requested_folders[user]:
-                """ Ensure we don't send folder content requests for a folder more than once,
-                e.g. when several selected resuls belong to the same folder. """
+            if folder_path in core.downloads.requested_folders[user]:
+                # Ensure we don't send folder content requests for a folder more than once,
+                # e.g. when several selected results belong to the same folder
                 continue
-
-            requested_folders[user][folder] = download_location
 
             visible_files = []
             for row in self.all_data:
                 # Find the wanted folder
-                if folder != row[16].rsplit("\\", 1)[0]:
+                if folder_path != row[16].rsplit("\\", 1)[0]:
                     continue
 
-                # remove_destination is False because we need the destination for the full folder
-                # contents response later
-                destination = core.transfers.get_folder_destination(user, folder, remove_destination=False)
-
-                (user, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, _unused, size, _unused, _unused, fullpath, _unused,
+                (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
+                    _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
-                visible_files.append(
-                    (user, fullpath, destination, size, file_attributes))
+                visible_files.append((file_path, size, file_attributes))
 
-            core.search.request_folder_download(user, folder, visible_files)
+            core.search.request_folder_download(
+                user, folder_path, visible_files, download_folder_path=download_folder_path)
 
-    def on_download_folders_to_selected(self, selected, _data):
-        self.on_download_folders(download_location=selected)
+    def on_download_folders_to_selected(self, selected_folder_path, _data):
+        self.on_download_folders(download_folder_path=selected_folder_path)
 
     def on_download_folders_to(self, *_args):
 
@@ -1479,31 +1572,31 @@ class Search:
             parent=self.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
-            initial_folder=config.sections["transfers"]["downloaddir"]
+            initial_folder=core.downloads.get_default_download_folder()
         ).show()
 
     def on_copy_file_path(self, *_args):
 
         for iterator in self.selected_results:
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            clipboard.copy_text(filepath)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            clipboard.copy_text(file_path)
             return
 
     def on_copy_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, filepath)
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            url = core.userbrowse.get_soulseek_url(user, file_path)
             clipboard.copy_text(url)
             return
 
-    def on_copy_dir_url(self, *_args):
+    def on_copy_folder_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
-            filepath = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, filepath.rsplit("\\", 1)[0] + "\\")
+            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+            url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
             clipboard.copy_text(url)
             return
 
@@ -1541,15 +1634,17 @@ class Search:
         active = self.expand_button.get_active()
 
         if active:
+            icon_name = "view-restore-symbolic"
             self.tree_view.expand_all_rows()
-            self.expand_icon.set_property("icon-name", "go-up-symbolic")
         else:
+            icon_name = "view-fullscreen-symbolic"
             self.tree_view.collapse_all_rows()
 
             if self.grouping_mode == "folder_grouping":
                 self.tree_view.expand_root_rows()
 
-            self.expand_icon.set_property("icon-name", "go-down-symbolic")
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        self.expand_icon.set_from_icon_name(icon_name, *icon_args)
 
         config.sections["searches"]["expand_searches"] = active
 
@@ -1567,31 +1662,6 @@ class Search:
 
     def on_copy_search_term(self, *_args):
         clipboard.copy_text(self.text)
-
-    @staticmethod
-    def push_history(filter_id, value):
-
-        if not value:
-            return
-
-        history = config.sections["searches"].get(filter_id)
-
-        if history is None:
-            # Button filters do not store history
-            return
-
-        if history and history[0] == value:
-            # Most recent item selected, nothing to do
-            return
-
-        if value in history:
-            history.remove(value)
-
-        elif len(history) >= 50:
-            del history[-1]
-
-        history.insert(0, value)
-        config.write_configuration()
 
     def on_refilter(self, *_args):
 
@@ -1676,6 +1746,7 @@ class Search:
 
         if self.filters == filters:
             # Filters have not changed, no need to refilter
+            self.refiltering = False
             return
 
         if self.filters and filters == self.FILTERS_EMPTY:
@@ -1704,26 +1775,31 @@ class Search:
         self.refiltering = False
 
     def on_filter_entry_deleted_text(self, buffer, *_args):
-        if not self.refiltering and buffer.get_length() == 0:
+        if not self.refiltering and buffer.get_length() <= 0:
             self.on_refilter()
 
     def on_filter_entry_icon_press(self, entry, *_args):
 
-        history = config.sections["searches"].get(entry.filter_id)
-        recall_text = history[0] if history else ""
-        text = entry.get_text()
+        entry_text = entry.get_text()
+        filter_id = entry.filter_id
+        _filter_value, h_filter_value = self.filters.get(filter_id)
 
-        # Recall last filter entry if box empty
-        if not text:
-            entry.grab_focus_without_selecting()
+        if not entry_text:
+            # Recall last filter
+            history = config.sections["searches"].get(filter_id)
+            recall_text = history[0] if history else ""
+
             entry.set_text(recall_text)
             entry.set_position(-1)
+            entry.grab_focus_without_selecting()
 
-        # Activate new filter entry or Clear Filter
-        if text != recall_text:
-            self.on_refilter()
-        else:
+        elif entry_text == h_filter_value:
+            # Clear Filter
             entry.set_text("")
+            return
+
+        # Activate new, edited or recalled filter
+        self.on_refilter()
 
     def on_clear_undo_filters(self, *_args):
 
@@ -1744,11 +1820,11 @@ class Search:
 
     def on_focus(self, *_args):
 
-        if self.window.search_entry.get_text():
-            # Search entry contains text, let it grab focus instead
-            return
+        if not self.window.search_entry.get_text():
+            # Only focus treeview if we're not entering a new search term
+            self.tree_view.grab_focus()
 
-        self.tree_view.grab_focus()
+        return True
 
     def on_close(self, *_args):
         core.search.remove_search(self.token)

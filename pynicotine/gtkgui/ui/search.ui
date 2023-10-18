@@ -118,6 +118,7 @@
                     <child>
                       <object class="GtkLabel" id="results_label">
                         <property name="label">0</property>
+                        <property name="mnemonic-widget">results_button</property>
                         <property name="visible">True</property>
                         <style>
                           <class name="bold"/>
@@ -200,7 +201,7 @@
                     <signal name="toggled" handler="on_toggle_expand_all"/>
                     <child>
                       <object class="GtkImage" id="expand_icon">
-                        <property name="icon-name">go-down-symbolic</property>
+                        <property name="icon-name">view-fullscreen-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>

@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pynicotine.config import config
-from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.popover import Popover
@@ -46,10 +45,14 @@ class TransferSpeeds(Popover):
         )
 
         menu_button = getattr(window, f"{transfer_type}_status_button")
-        menu_button.set_popover(self.widget)
+        self.set_menu_button(menu_button)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=menu_button.get_first_child(), css_class="flat")
+
+    @staticmethod
+    def update_transfer_limits():
+        raise NotImplementedError
 
     def on_active_limit_toggled(self, *_args):
 
@@ -66,8 +69,7 @@ class TransferSpeeds(Popover):
             config.sections["transfers"][use_limit_config_key] = "unlimited"
 
         if prev_active_limit != config.sections["transfers"][use_limit_config_key]:
-            update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-            update_transfer_limits()
+            self.update_transfer_limits()
 
     def on_limit_changed(self, *_args):
 
@@ -77,9 +79,7 @@ class TransferSpeeds(Popover):
             return
 
         config.sections["transfers"][f"{self.transfer_type}limit"] = speed_limit
-
-        update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-        update_transfer_limits()
+        self.update_transfer_limits()
 
     def on_alt_limit_changed(self, *_args):
 
@@ -89,9 +89,7 @@ class TransferSpeeds(Popover):
             return
 
         config.sections["transfers"][f"{self.transfer_type}limitalt"] = alt_speed_limit
-
-        update_transfer_limits = getattr(core.transfers, f"update_{self.transfer_type}_limits")
-        update_transfer_limits()
+        self.update_transfer_limits()
 
     def on_show(self, *_args):
 

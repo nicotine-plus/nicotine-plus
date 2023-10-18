@@ -33,9 +33,6 @@ from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
-""" Popup/Context Menu """
-
-
 class PopupMenu:
 
     popup_id_counter = 0
@@ -183,8 +180,8 @@ class PopupMenu:
         self.menu_section.append_item(menuitem)
 
     def update_model(self):
-        """ This function is called before a menu model needs to be manipulated
-        (enabling/disabling actions, showing a menu in the GUI) """
+        """This function is called before a menu model needs to be manipulated
+        (enabling/disabling actions, showing a menu in the GUI)"""
 
         if not self.pending_items:
             return
@@ -230,7 +227,10 @@ class PopupMenu:
             rectangle = Gdk.Rectangle()
             rectangle.x = pos_x
             rectangle.y = pos_y
-            rectangle.width = rectangle.height = 1
+
+            # Width/height 4 instead of 1 to work around this GTK bug in most cases:
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5712
+            rectangle.width = rectangle.height = 4
 
             menu.set_pointing_to(rectangle)
             menu.popup()
@@ -246,7 +246,7 @@ class PopupMenu:
 
         menu.popup_at_pointer(event)
 
-    """ Events """
+    # Events #
 
     def _callback(self, controller=None, pos_x=None, pos_y=None):
 
@@ -413,13 +413,15 @@ class UserPopupMenu(PopupMenu):
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
 
-        self.actions[_("Ban User")].set_state(GLib.Variant("b", core.network_filter.is_user_banned(self.username)))
-        self.actions[_("Ignore User")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ignored(self.username)))
-        self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ip_banned(self.username)))
-        self.actions[_("Ignore IP Address")].set_state(
-            GLib.Variant("b", core.network_filter.is_user_ip_ignored(self.username)))
+        for action_id, value in (
+            (_("Ban User"), core.network_filter.is_user_banned(self.username)),
+            (_("Ignore User"), core.network_filter.is_user_ignored(self.username)),
+            (_("Ban IP Address"), core.network_filter.is_user_ip_banned(self.username)),
+            (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
+        ):
+            # Disable menu item if it's our own username and we haven't banned ourselves before
+            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.login_username or value))
+            self.actions[action_id].set_state(GLib.Variant("b", value))
 
         self.editing = False
 
@@ -462,7 +464,7 @@ class UserPopupMenu(PopupMenu):
         super().update_model()
         self.update_username_item()
 
-    """ Events """
+    # Events #
 
     def on_search_user(self, *_args):
 

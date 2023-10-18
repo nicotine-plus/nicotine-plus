@@ -167,7 +167,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="hexpand">True</property>
-                            <property name="label" translatable="yes">Listening port:</property>
+                            <property name="label" translatable="yes">Listening port (requires a restart):</property>
                             <property name="mnemonic-widget">listen_port_spinner</property>
                             <property name="visible">True</property>
                             <property name="wrap">True</property>
@@ -220,7 +220,6 @@
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Minutes of inactivity before going away (0 to disable):</property>
                 <property name="mnemonic-widget">auto_away_spinner</property>
-                <property name="tooltip-text" translatable="yes">Once you interact with the application being away, status will be set to online.</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
@@ -254,6 +253,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="auto_reply_message_entry">
+                <property name="show-emoji-icon">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
@@ -331,7 +331,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="network_interface_label">
-                <property name="label" translatable="yes">Network interface:</property>
+                <property name="label" translatable="yes">Network interface (requires a restart):</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>

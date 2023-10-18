@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9']
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9', 'pypy-3.10']
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -27,16 +27,19 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
-          python -m pip install -e ".[test]"
+          python -m pip install build .[tests]
 
-      - name: Flake8 linter
-        run: python -m flake8
+      - name: PEP 8 style checks
+        run: python -m pycodestyle
 
-      - name: Pylint linter
-        run: python -m pylint pynicotine test
+      - name: Linting
+        run: python -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: xvfb-run python -m unittest -v
+
+      - name: Build
+        run: python -m build
 
   ubuntu-debian:
     strategy:
@@ -83,22 +86,26 @@ jobs:
 
       - name: Install dependencies (Fedora)
         if: matrix.container == 'fedora:rawhide'
-        run: dnf -y install pylint python3-flake8
+        run: dnf -y install pylint python3-build python3-pycodestyle
 
       - name: Install dependencies (Rocky Linux)
         if: matrix.container == 'rockylinux:8'
         run: |
           dnf -y install gcc python3-devel python3-pip
-          python3 -m pip install -e ".[test]"
+          python3 -m pip install --upgrade setuptools
+          python3 -m pip install build .[tests]
 
-      - name: Flake8 linter
-        run: python3 -m flake8
+      - name: PEP 8 style checks
+        run: python3 -m pycodestyle
 
-      - name: Pylint linter
-        run: python3 -m pylint pynicotine test
+      - name: Linting
+        run: python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: xvfb-run python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
 
   windows:
     runs-on: windows-latest
@@ -126,24 +133,27 @@ jobs:
           install: >-
             mingw-w64-${{ env.ARCH }}-gettext
             mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
-            mingw-w64-${{ env.ARCH }}-python-chardet
+            mingw-w64-${{ env.ARCH }}-python-build
             mingw-w64-${{ env.ARCH }}-python-cx-freeze
-            mingw-w64-${{ env.ARCH }}-python-flake8
             mingw-w64-${{ env.ARCH }}-python-pip
+            mingw-w64-${{ env.ARCH }}-python-pycodestyle
             mingw-w64-${{ env.ARCH }}-python-pylint
             mingw-w64-${{ env.ARCH }}-python-gobject
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
 
-      - name: Flake8 linter
-        run: python3 -m flake8
+      - name: PEP 8 style checks
+        run: python3 -m pycodestyle
 
-      - name: Pylint linter
-        run: python3 -m pylint pynicotine test
+      - name: Linting
+        run: python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
 
   macos:
     runs-on: macos-11
@@ -165,18 +175,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           cache: 'pip'
           cache-dependency-path: setup.py
 
       - name: Install dependencies
         run: python packaging/macos/dependencies.py
 
-      - name: Flake8 linter
-        run: python -m flake8
+      - name: PEP 8 style checks
+        run: python -m pycodestyle
 
-      - name: Pylint linter
-        run: python -m pylint pynicotine test
+      - name: Linting
+        run: python -m pylint --recursive=y .
 
       - name: Integration and unit tests
         run: python -m unittest -v
+
+      - name: Build
+        run: python -m build

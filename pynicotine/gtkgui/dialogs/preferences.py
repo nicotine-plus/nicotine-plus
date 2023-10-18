@@ -29,12 +29,11 @@ import time
 
 from operator import itemgetter
 
-import gi
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -51,6 +50,7 @@ from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
@@ -137,7 +137,7 @@ class NetworkPage:
 
         # Listening port status
         if core.public_port:
-            url = config.portchecker_url % str(core.public_port)
+            url = pynicotine.__port_checker_url__ % str(core.public_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
@@ -245,15 +245,15 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.container,
             self.download_double_click_label,
-            self.download_folder_button,
+            self.download_folder_label,
             self.enable_filters_toggle,
             self.enable_username_subfolders_toggle,
             self.file_finished_command_entry,
             self.filter_list_container,
             self.filter_status_label,
             self.folder_finished_command_entry,
-            self.incomplete_folder_button,
-            self.received_folder_button,
+            self.incomplete_folder_label,
+            self.received_folder_label,
             self.sent_files_permission_container,
             self.speed_spinner,
             self.use_alt_speed_limit_radio,
@@ -288,13 +288,16 @@ class DownloadsPage:
         )
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_button, parent=application.preferences, chooser_type="folder"
+            self.download_folder_label.get_parent(), window=application.preferences,
+            label=self.download_folder_label, chooser_type="folder"
         )
         self.incomplete_folder_button = FileChooserButton(
-            self.incomplete_folder_button, parent=application.preferences, chooser_type="folder"
+            self.incomplete_folder_label.get_parent(), window=application.preferences,
+            label=self.incomplete_folder_label, chooser_type="folder"
         )
         self.received_folder_button = FileChooserButton(
-            self.received_folder_button, parent=application.preferences, chooser_type="folder"
+            self.received_folder_label.get_parent(), window=application.preferences,
+            label=self.received_folder_label, chooser_type="folder"
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
@@ -536,20 +539,29 @@ class DownloadsPage:
 
 class SharesPage:
 
+    GROUP_NAMES = {
+        _("Public"): "public",
+        _("Buddies"): "buddy",
+        _("Trusted buddies"): "trusted"
+    }
+
     def __init__(self, application):
 
         (
-            self.buddy_shares_trusted_only_toggle,
             self.container,
             self.rescan_on_startup_toggle,
+            self.reveal_buddy_shares_toggle,
+            self.reveal_trusted_shares_toggle,
             self.shares_list_container
         ) = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
         self.rescan_required = False
+        self.recompress_shares_required = False
         self.shared_folders = []
         self.buddy_shared_folders = []
+        self.trusted_shared_folders = []
 
         self.shares_list_view = TreeView(
             application.window, parent=self.shares_list_container, multi_select=True,
@@ -569,11 +581,10 @@ class SharesPage:
                     "width": 150,
                     "expand_column": True
                 },
-                "buddy_only": {
-                    "column_type": "toggle",
-                    "title": _("Buddy-only"),
-                    "width": 0,
-                    "toggle_callback": self.on_toggle_folder_buddy_only
+                "accessible_to": {
+                    "column_type": "text",
+                    "title": _("Accessible To"),
+                    "width": 0
                 }
             }
         )
@@ -581,7 +592,8 @@ class SharesPage:
         self.options = {
             "transfers": {
                 "rescanonstartup": self.rescan_on_startup_toggle,
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle,
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle
             }
         }
 
@@ -593,18 +605,21 @@ class SharesPage:
 
         self.shared_folders = config.sections["transfers"]["shared"][:]
         self.buddy_shared_folders = config.sections["transfers"]["buddyshared"][:]
-
-        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
-            is_buddy_only = True
-            self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
+        self.trusted_shared_folders = config.sections["transfers"]["trustedshared"][:]
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
-            is_buddy_only = False
             self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), is_buddy_only], select_row=False)
+                [str(virtual_name), os.path.normpath(folder_path), _("Public")], select_row=False)
 
-        self.rescan_required = False
+        for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Buddies")], select_row=False)
+
+        for virtual_name, folder_path, *_unused in self.trusted_shared_folders:
+            self.shares_list_view.add_row(
+                [str(virtual_name), os.path.normpath(folder_path), _("Trusted")], select_row=False)
+
+        self.rescan_required = self.recompress_shares_required = False
 
     def get_settings(self):
 
@@ -612,49 +627,28 @@ class SharesPage:
             "transfers": {
                 "shared": self.shared_folders[:],
                 "buddyshared": self.buddy_shared_folders[:],
+                "trustedshared": self.trusted_shared_folders[:],
                 "rescanonstartup": self.rescan_on_startup_toggle.get_active(),
-                "buddysharestrustedonly": self.buddy_shares_trusted_only_toggle.get_active()
+                "reveal_buddy_shares": self.reveal_buddy_shares_toggle.get_active(),
+                "reveal_trusted_shares": self.reveal_trusted_shares_toggle.get_active()
             }
         }
 
-    def _edit_shared_folder(self, iterator, new_virtual_name, new_is_buddy_only):
-
-        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
-        is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
-
-        if new_virtual_name == virtual_name and new_is_buddy_only == is_buddy_only:
-            return
-
-        self.rescan_required = True
-
-        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-        group_name = "buddy" if new_is_buddy_only else "public"
-
-        core.shares.remove_share(
-            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
-        )
-        new_virtual_name = core.shares.add_share(
-            folder_path, group_name=group_name, virtual_name=new_virtual_name,
-            share_groups=(self.shared_folders, self.buddy_shared_folders), validate_path=False
-        )
-
-        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
-        self.shares_list_view.set_row_value(iterator, "buddy_only", new_is_buddy_only)
+    def on_reveal_share_changed(self, *_args):
+        self.recompress_shares_required = True
 
     def on_add_shared_folder_selected(self, selected, _data):
 
         for folder_path in selected:
             virtual_name = core.shares.add_share(
-                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders)
+                folder_path, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
 
             if not virtual_name:
                 continue
 
             self.rescan_required = True
-            is_buddy_only = False
-
-            self.shares_list_view.add_row([virtual_name, folder_path, is_buddy_only])
+            self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
@@ -668,36 +662,53 @@ class SharesPage:
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
         new_virtual_name = dialog.get_entry_value()
-        new_is_buddy_only = dialog.get_option_value()
+        new_accessible_to = dialog.get_second_entry_value()
+        new_accessible_to_short = new_accessible_to.replace(_("Trusted buddies"), _("Trusted"))
 
-        self._edit_shared_folder(iterator, new_virtual_name, new_is_buddy_only)
+        virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+        accessible_to = self.shares_list_view.get_row_value(iterator, "accessible_to")
+
+        if new_virtual_name == virtual_name and new_accessible_to_short == accessible_to:
+            return
+
+        self.rescan_required = True
+
+        folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        group_name = self.GROUP_NAMES.get(new_accessible_to)
+
+        core.shares.remove_share(
+            virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
+        )
+        new_virtual_name = core.shares.add_share(
+            folder_path, group_name=group_name, virtual_name=new_virtual_name,
+            share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders),
+            validate_path=False
+        )
+
+        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.set_row_value(iterator, "accessible_to", new_accessible_to_short)
 
     def on_edit_shared_folder(self, *_args):
 
         for iterator in self.shares_list_view.get_selected_rows():
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
             folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-            is_buddy_only = self.shares_list_view.get_row_value(iterator, "buddy_only")
+            default_item = self.shares_list_view.get_row_value(iterator, "accessible_to")
 
             EntryDialog(
                 parent=self.application.preferences,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
-                option_value=is_buddy_only,
-                option_label=_("Share with buddies only"),
+                second_default=default_item.replace(_("Trusted"), _("Trusted buddies")),
+                second_droplist=list(self.GROUP_NAMES),
+                use_second_entry=True,
+                second_entry_editable=False,
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
             ).show()
             return
-
-    def on_toggle_folder_buddy_only(self, list_view, iterator):
-
-        virtual_name = list_view.get_row_value(iterator, "virtual_name")
-        is_buddy_only = list_view.get_row_value(iterator, "buddy_only")
-
-        self._edit_shared_folder(iterator, virtual_name, not is_buddy_only)
 
     def on_remove_shared_folder(self, *_args):
 
@@ -707,7 +718,7 @@ class SharesPage:
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
             core.shares.remove_share(
-                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders)
+                virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
             self.shares_list_view.remove_row(iterator)
 
@@ -736,8 +747,8 @@ class UploadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio,
-            self.use_upload_bandwidth_radio,
-            self.use_upload_slots_radio
+            self.use_upload_slots_bandwidth_radio,
+            self.use_upload_slots_fixed_radio
         ) = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
@@ -768,7 +779,7 @@ class UploadsPage:
             "transfers": {
                 "autoclear_uploads": self.autoclear_uploads_toggle,
                 "uploadbandwidth": self.upload_bandwidth_spinner,
-                "useupslots": self.use_upload_slots_radio,
+                "useupslots": self.use_upload_slots_fixed_radio,
                 "uploadslots": self.upload_slots_spinner,
                 "uploadlimit": self.speed_spinner,
                 "uploadlimitalt": self.alt_speed_spinner,
@@ -812,7 +823,7 @@ class UploadsPage:
             "transfers": {
                 "autoclear_uploads": self.autoclear_uploads_toggle.get_active(),
                 "uploadbandwidth": self.upload_bandwidth_spinner.get_value_as_int(),
-                "useupslots": self.use_upload_slots_radio.get_active(),
+                "useupslots": self.use_upload_slots_fixed_radio.get_active(),
                 "uploadslots": self.upload_slots_spinner.get_value_as_int(),
                 "use_upload_speed_limit": use_speed_limit,
                 "uploadlimit": self.speed_spinner.get_value_as_int(),
@@ -835,7 +846,8 @@ class UserProfilePage:
         (
             self.container,
             self.description_view_container,
-            self.select_picture_button
+            self.reset_picture_button,
+            self.select_picture_label
         ) = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
@@ -843,7 +855,9 @@ class UserProfilePage:
 
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
-            self.select_picture_button, parent=application.preferences, chooser_type="image")
+            self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
+            end_button=self.reset_picture_button, chooser_type="image", is_flat=True
+        )
 
         self.options = {
             "userinfo": {
@@ -1184,6 +1198,7 @@ class ChatsPage:
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.enable_tts_toggle,
+            self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
@@ -1198,6 +1213,12 @@ class ChatsPage:
 
         self.application = application
         self.completion_required = False
+
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -1299,13 +1320,7 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        try:
-            gi.require_version("Gspell", "1")
-            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
-
-        except (ImportError, ValueError):
-            self.enable_spell_checker_toggle.set_visible(False)
-
+        self.enable_spell_checker_toggle.set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
@@ -1493,6 +1508,7 @@ class UserInterfacePage:
     def __init__(self, application):
 
         (
+            self.buddy_list_position_label,
             self.chat_colored_usernames_toggle,
             self.chat_username_appearance_label,
             self.close_action_label,
@@ -1545,8 +1561,9 @@ class UserInterfacePage:
             self.font_text_view_clear_button,
             self.font_transfers_button,
             self.font_transfers_clear_button,
-            self.icon_theme_button,
+            self.header_bar_toggle,
             self.icon_theme_clear_button,
+            self.icon_theme_label,
             self.icon_view,
             self.language_label,
             self.minimize_tray_startup_toggle,
@@ -1610,6 +1627,16 @@ class UserInterfacePage:
                 (_("italic"), "italic"),
                 (_("underline"), "underline"),
                 (_("normal"), "normal")
+            )
+        )
+
+        self.buddy_list_position_combobox = ComboBox(
+            container=self.buddy_list_position_label.get_parent(), label=self.buddy_list_position_label,
+            item_selected_callback=self.on_select_buddy_list_position,
+            items=(
+                (_("Separate Buddies tab"), "tab"),
+                (_("Sidebar in Chat Rooms tab"), "chatrooms"),
+                (_("Always visible sidebar"), "always")
             )
         )
 
@@ -1694,6 +1721,11 @@ class UserInterfacePage:
             "interests": self.tab_visible_interests_toggle
         }
 
+        rgba = Gdk.RGBA()
+
+        for button in self.color_buttons.values():
+            button.set_rgba(rgba)
+
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
@@ -1712,14 +1744,14 @@ class UserInterfacePage:
              ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),
-            (config.application_id, _("Window"), 64, ())]
+            (pynicotine.__application_id__, _("Window"), 64, ())]
 
         if application.tray_icon.available:
             icon_list += [
-                (f"{config.application_id}-connect", _("Online (Tray)"), 16, ()),
-                (f"{config.application_id}-away", _("Away (Tray)"), 16, ()),
-                (f"{config.application_id}-disconnect", _("Offline (Tray)"), 16, ()),
-                (f"{config.application_id}-msg", _("Message (Tray)"), 16, ())]
+                (f"{pynicotine.__application_id__}-connect", _("Online (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-away", _("Away (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-disconnect", _("Offline (Tray)"), 16, ()),
+                (f"{pynicotine.__application_id__}-msg", _("Message (Tray)"), 16, ())]
 
         for icon_name, label, pixel_size, css_classes in icon_list:
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER, spacing=6, visible=True)
@@ -1738,7 +1770,10 @@ class UserInterfacePage:
 
             self.icon_view.insert(box, -1)
 
-        self.icon_theme_button = FileChooserButton(self.icon_theme_button, application.preferences, "folder")
+        self.icon_theme_button = FileChooserButton(
+            self.icon_theme_label.get_parent(), window=application.preferences,
+            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
+        )
 
         self.options = {
             "notifications": {
@@ -1757,15 +1792,11 @@ class UserInterfacePage:
                 "trayicon": self.tray_icon_toggle,
                 "startup_hidden": self.minimize_tray_startup_toggle,
                 "language": self.language_combobox,
-
                 "reverse_file_paths": self.reverse_file_paths_toggle,
                 "file_size_unit": self.exact_file_sizes_toggle,
-
                 "tab_select_previous": self.tab_restore_startup_toggle,
                 "tabclosers": self.tab_close_buttons_toggle,
-
                 "icontheme": self.icon_theme_button,
-
                 "chatlocal": self.color_chat_local_entry,
                 "chatremote": self.color_chat_remote_entry,
                 "chatcommand": self.color_chat_command_entry,
@@ -1782,9 +1813,10 @@ class UserInterfacePage:
                 "tab_default": self.color_tab_entry,
                 "tab_hilite": self.color_tab_highlighted_entry,
                 "tab_changed": self.color_tab_changed_entry,
-
                 "usernamestyle": self.chat_username_appearance_combobox,
-                "usernamehotspots": self.chat_colored_usernames_toggle
+                "usernamehotspots": self.chat_colored_usernames_toggle,
+                "buddylistinchatrooms": self.buddy_list_position_combobox,
+                "header_bar": self.header_bar_toggle
             }
         }
 
@@ -1830,7 +1862,6 @@ class UserInterfacePage:
                 "trayicon": self.tray_icon_toggle.get_active(),
                 "startup_hidden": self.minimize_tray_startup_toggle.get_active(),
                 "language": self.language_combobox.get_selected_id(),
-
                 "globalfont": self.get_font(self.font_global_button),
                 "listfont": self.get_font(self.font_list_button),
                 "textviewfont": self.get_font(self.font_text_view_button),
@@ -1838,10 +1869,8 @@ class UserInterfacePage:
                 "searchfont": self.get_font(self.font_search_button),
                 "transfersfont": self.get_font(self.font_transfers_button),
                 "browserfont": self.get_font(self.font_browse_button),
-
                 "reverse_file_paths": self.reverse_file_paths_toggle.get_active(),
                 "file_size_unit": "B" if self.exact_file_sizes_toggle.get_active() else "",
-
                 "tabmain": self.tab_position_main_combobox.get_selected_id(),
                 "tabrooms": self.tab_position_chatrooms_combobox.get_selected_id(),
                 "tabprivate": self.tab_position_private_chat_combobox.get_selected_id(),
@@ -1851,9 +1880,7 @@ class UserInterfacePage:
                 "modes_visible": enabled_tabs,
                 "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
                 "tabclosers": self.tab_close_buttons_toggle.get_active(),
-
                 "icontheme": self.icon_theme_button.get_path(),
-
                 "chatlocal": self.color_chat_local_entry.get_text(),
                 "chatremote": self.color_chat_remote_entry.get_text(),
                 "chatcommand": self.color_chat_command_entry.get_text(),
@@ -1870,18 +1897,19 @@ class UserInterfacePage:
                 "tab_hilite": self.color_tab_highlighted_entry.get_text(),
                 "tab_default": self.color_tab_entry.get_text(),
                 "tab_changed": self.color_tab_changed_entry.get_text(),
-
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
-                "usernamehotspots": self.chat_colored_usernames_toggle.get_active()
+                "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
+                "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id(),
+                "header_bar": self.header_bar_toggle.get_active()
             }
         }
 
-    """ Icons """
+    # Icons #
 
     def on_clear_icon_theme(self, *_args):
         self.icon_theme_button.clear()
 
-    """ Fonts """
+    # Fonts #
 
     def get_font(self, button):
 
@@ -1900,7 +1928,7 @@ class UserInterfacePage:
         else:
             font_button.set_font("")
 
-    """ Colors """
+    # Colors #
 
     def on_color_entry_changed(self, entry):
 
@@ -1943,37 +1971,57 @@ class UserInterfacePage:
 
         entry.set_text("")
 
+    # Tabs #
+
+    def on_select_buddy_list_position(self, _combobox, selected_id):
+
+        buddies_tab_active = (selected_id == "tab")
+
+        self.tab_visible_userlist_toggle.set_active(buddies_tab_active)
+        self.tab_visible_userlist_toggle.set_sensitive(buddies_tab_active)
+
 
 class LoggingPage:
 
     def __init__(self, application):
 
         (
-            self.chatroom_log_folder_button,
+            self.chatroom_log_folder_label,
             self.container,
-            self.debug_log_folder_button,
+            self.debug_log_folder_label,
+            self.format_codes_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
             self.log_private_chat_toggle,
             self.log_timestamp_format_entry,
             self.log_transfer_toggle,
-            self.private_chat_log_folder_button,
-            self.transfer_log_folder_button
+            self.private_chat_log_folder_label,
+            self.transfer_log_folder_label
         ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
+
         self.private_chat_log_folder_button = FileChooserButton(
-            self.private_chat_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.private_chat_log_folder_label.get_parent(), window=application.preferences,
+            label=self.private_chat_log_folder_label, chooser_type="folder"
         )
         self.chatroom_log_folder_button = FileChooserButton(
-            self.chatroom_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.chatroom_log_folder_label.get_parent(), window=application.preferences,
+            label=self.chatroom_log_folder_label, chooser_type="folder"
         )
         self.transfer_log_folder_button = FileChooserButton(
-            self.transfer_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.transfer_log_folder_label.get_parent(), window=application.preferences,
+            label=self.transfer_log_folder_label, chooser_type="folder"
         )
         self.debug_log_folder_button = FileChooserButton(
-            self.debug_log_folder_button, parent=application.preferences, chooser_type="folder"
+            self.debug_log_folder_label.get_parent(), window=application.preferences,
+            label=self.debug_log_folder_label, chooser_type="folder"
         )
 
         self.options = {
@@ -2030,6 +2078,7 @@ class SearchesPage:
             self.filter_file_type_entry,
             self.filter_free_slot_toggle,
             self.filter_help_button,
+            self.filter_help_label,
             self.filter_include_entry,
             self.filter_length_entry,
             self.max_displayed_results_spinner,
@@ -2044,7 +2093,10 @@ class SearchesPage:
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
-        self.filter_help_button.set_popover(self.filter_help.widget)
+        self.filter_help.set_menu_button(self.filter_help_button)
+
+        if GTK_API_VERSION >= 4:
+            self.filter_help_label.set_mnemonic_widget(self.filter_help_button.get_first_child())
 
         self.options = {
             "searches": {
@@ -2242,9 +2294,6 @@ class UrlHandlersPage:
         self.protocols = config.sections["urls"]["protocols"].copy()
 
         for protocol, command in self.protocols.items():
-            if command[-1:] == "&":
-                command = command[:-1].rstrip()
-
             self.protocol_list_view.add_row([str(protocol), str(command)], select_row=False)
 
     def get_settings(self):
@@ -2393,7 +2442,7 @@ class NowPlayingPage:
             self.get_format                # Callback to retrieve format text
         )
 
-        self.mpris_radio.set_visible(sys.platform not in ("win32", "darwin"))
+        self.mpris_radio.set_visible(sys.platform not in {"win32", "darwin"})
 
     def set_settings(self):
 
@@ -2430,7 +2479,7 @@ class NowPlayingPage:
         elif self.other_radio.get_active():
             player = "other"
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         return player
@@ -2443,7 +2492,7 @@ class NowPlayingPage:
 
     def set_player(self, player):
 
-        if sys.platform in ("win32", "darwin") and player == "mpris":
+        if sys.platform in {"win32", "darwin"} and player == "mpris":
             player = "lastfm"
 
         if player == "lastfm":
@@ -2627,6 +2676,7 @@ class PluginsPage:
 
         self.plugin_description_view.clear()
         self.plugin_description_view.append_line(plugin_description)
+        self.plugin_description_view.place_cursor_at_line(0)
 
         self.check_plugin_settings_button(self.selected_plugin)
 
@@ -2856,6 +2906,12 @@ class Preferences(Dialog):
             rescan_required = False
 
         try:
+            recompress_shares_required = self.pages["shares"].recompress_shares_required
+
+        except KeyError:
+            recompress_shares_required = False
+
+        try:
             user_profile_required = self.pages["user-profile"].user_profile_required
 
         except KeyError:
@@ -2879,12 +2935,12 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        return (portmap_required, rescan_required, user_profile_required, completion_required,
-                ip_ban_required, search_required, options)
+        return (portmap_required, rescan_required, recompress_shares_required, user_profile_required,
+                completion_required, ip_ban_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, user_profile_required, completion_required,
+        (portmap_required, rescan_required, recompress_shares_required, user_profile_required, completion_required,
             ip_ban_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
@@ -2908,10 +2964,16 @@ class Preferences(Dialog):
         if search_required:
             self.application.window.search.populate_search_history()
 
+        if recompress_shares_required and not rescan_required:
+            core.shares.rescan_shares(init=True, rescan=False)
+
         # Dark mode
         dark_mode_state = config.sections["ui"]["dark_mode"]
         set_dark_mode(dark_mode_state)
-        self.application.lookup_action("prefer-dark-mode").set_state(GLib.Variant("b", dark_mode_state))
+
+        # Header bar
+        header_bar_state = config.sections["ui"]["header_bar"]
+        self.application.window.set_use_header_bar(header_bar_state)
 
         # Icons
         load_custom_icons(update=True)
@@ -2920,18 +2982,15 @@ class Preferences(Dialog):
         # Fonts and colors
         update_custom_css()
 
-        self.application.window.chatrooms.update_tags()
-        self.application.window.privatechat.update_tags()
-
-        # Chatrooms
-        self.application.window.chatrooms.toggle_chat_buttons()
-        self.application.window.privatechat.toggle_chat_buttons()
+        # Chats
+        self.application.window.chatrooms.update_widgets()
+        self.application.window.privatechat.update_widgets()
 
         # Transfers
-        core.transfers.update_download_limits()
-        core.transfers.update_download_filters()
-        core.transfers.update_upload_limits()
-        core.transfers.check_upload_queue()
+        core.downloads.update_transfer_limits()
+        core.downloads.update_download_filters()
+        core.uploads.update_transfer_limits()
+        core.uploads.check_upload_queue()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"]:
@@ -2941,6 +3000,7 @@ class Preferences(Dialog):
 
         # Main notebook
         self.application.window.set_tab_positions()
+        self.application.window.set_buddy_list_position()
         self.application.window.set_main_tabs_visibility()
         self.application.window.notebook.set_tab_text_colors()
 
@@ -2961,13 +3021,13 @@ class Preferences(Dialog):
         if not settings_closed:
             return
 
-        if rescan_required:
-            core.shares.rescan_shares()
-
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
             self.application.window.show()
+
+        if rescan_required:
+            core.shares.rescan_shares()
 
         if config.need_config():
             core.setup()
@@ -2983,21 +3043,21 @@ class Preferences(Dialog):
         FileChooserSave(
             parent=self,
             callback=self.on_back_up_config_response,
-            initial_folder=os.path.dirname(config.filename),
+            initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
         ).show()
 
     def on_widget_scroll_event(self, _widget, event):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
-        to container (GTK 3) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
+        scroll event to container (GTK 3)"""
 
         self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
-        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
-        in the container (GTK 4) """
+        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate
+        scrolling in the container (GTK 4)"""
 
         adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
@@ -3029,15 +3089,15 @@ class Preferences(Dialog):
             for obj in page.__dict__.values():
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
-                        check_button_label = obj.get_last_child()
+                        try:
+                            check_button_label = obj.get_last_child()
+                            check_button_label.set_wrap(True)   # pylint: disable=no-member
+                        except AttributeError:
+                            pass
                     else:
                         check_button_label = obj.get_child()
+                        check_button_label.set_line_wrap(True)  # pylint: disable=no-member
                         obj.set_receives_default(True)
-
-                    try:
-                        check_button_label.set_property("wrap", True)
-                    except AttributeError:
-                        pass
 
                 elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
                     if isinstance(obj, ComboBox):
@@ -3047,7 +3107,8 @@ class Preferences(Dialog):
                         obj = obj.dropdown
 
                     if GTK_API_VERSION >= 4:
-                        scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
+                        scroll_controller = Gtk.EventControllerScroll()
+                        scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
                         scroll_controller.connect("scroll", self.on_widget_scroll)
                         obj.add_controller(scroll_controller)
                     else:
@@ -3070,19 +3131,22 @@ class Preferences(Dialog):
             page.container.set_margin_top(14)
             page.container.set_margin_bottom(18)
 
-        self.viewport.set_property("child", self.pages[page_id].container)
+        if GTK_API_VERSION >= 4:
+            self.viewport.set_child(self.pages[page_id].container)  # pylint: disable=no-member
+        else:
+            self.viewport.add(self.pages[page_id].container)        # pylint: disable=no-member
 
         # Scroll to the top
         self.content.get_vadjustment().set_value(0)
 
     def on_sidebar_tab_accelerator(self, *_args):
-        """ Tab: navigate to widget after preferences sidebar """
+        """Tab - navigate to widget after preferences sidebar."""
 
         self.content.child_focus(Gtk.DirectionType.TAB_FORWARD)
         return True
 
     def on_sidebar_shift_tab_accelerator(self, *_args):
-        """ Shift+Tab: navigate to widget before preferences sidebar """
+        """Shift+Tab - navigate to widget before preferences sidebar."""
 
         self.ok_button.grab_focus()
         return True

@@ -30,13 +30,14 @@ class Application:
 
     def __init__(self):
 
-        sys.excepthook = self.exception_hook
+        sys.excepthook = self.on_critical_error
 
         for log_level in ("download", "upload"):
             log.add_log_level(log_level, is_permanent=False)
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
+            ("invalid-password", self.on_invalid_password),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
@@ -46,32 +47,54 @@ class Application:
         core.start()
         core.connect()
 
-        # Main loop, process events from threads 20 times per second
+        # Main loop, process events from threads 10 times per second
         while events.process_thread_events():
-            time.sleep(0.05)
+            time.sleep(0.1)
 
         # Shut down with exit code 0 (success)
         config.write_configuration()
         return 0
 
-    def exception_hook(self, _exc_type, exc_value, _exc_traceback):
+    def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
+
+        sys.excepthook = None
+
         core.quit()
+        events.emit("quit")
+
         raise exc_value
 
     def on_confirm_quit_response(self, user_input):
         if user_input.lower().startswith("y"):
             core.quit()
 
-    def on_confirm_quit(self, _remember):
-        cli.prompt("Do you really want to quit Nicotine+ (Y/N)?: ", callback=self.on_confirm_quit_response)
+    def on_confirm_quit(self, _only_on_active_uploads):
+        responses = "[y/N] "
+        cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
+
+    def on_invalid_password(self):
+        log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
+                  "if this is your first time logging in."), config.sections["server"]["login"])
 
     def on_shares_unavailable_response(self, user_input):
 
-        if user_input == "test":
+        user_input = user_input.lower()
+
+        if not user_input or user_input.startswith("y"):
             core.shares.rescan_shares()
-            return
 
-        log.add("no")
+        elif user_input.startswith("f"):
+            core.shares.rescan_shares(force=True)
 
-    def on_shares_unavailable(self, _shares):
-        cli.prompt("Enter some text: ", callback=self.on_shares_unavailable_response)
+    def on_shares_unavailable(self, shares):
+
+        responses = "[Y/n/force] "
+        message = _("The following shares are unavailable:") + "\n\n"
+
+        for virtual_name, folder_path in shares:
+            message += f'• "{virtual_name}" {folder_path}\n'
+
+        message += "\n" + _("Verify that external disks are mounted and folder permissions are correct.")
+        message += "\n" + _("Retry rescan? %s") % responses
+
+        cli.prompt(message, callback=self.on_shares_unavailable_response)

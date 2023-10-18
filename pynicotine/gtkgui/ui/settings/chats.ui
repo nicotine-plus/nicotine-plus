@@ -19,7 +19,7 @@
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
-    <property name="spacing">30</property>
+    <property name="spacing">6</property>
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
@@ -41,7 +41,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="enable_spell_checker_toggle">
-            <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
+            <property name="label" translatable="yes">Enable spell checker</property>
             <property name="visible">True</property>
           </object>
         </child>
@@ -113,6 +113,7 @@
     </child>
     <child>
       <object class="GtkBox">
+        <property name="margin-top">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <property name="visible">True</property>
@@ -286,6 +287,7 @@
     </child>
     <child>
       <object class="GtkBox">
+        <property name="margin-top">24</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <property name="visible">True</property>
@@ -321,7 +323,6 @@
               <object class="GtkEntry" id="timestamp_private_chat_entry">
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
@@ -349,13 +350,20 @@
               <object class="GtkEntry" id="timestamp_room_entry">
                 <property name="secondary-icon-name">edit-undo-symbolic</property>
                 <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
                 <property name="width-chars">8</property>
                 <signal name="icon-press" handler="on_default_timestamp_room"/>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="format_codes_label">
+            <property name="halign">end</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
@@ -458,6 +466,7 @@
       <object class="GtkFlowBox">
         <property name="column-spacing">18</property>
         <property name="homogeneous">True</property>
+        <property name="margin-top">24</property>
         <property name="max-children-per-line">2</property>
         <property name="row-spacing">24</property>
         <property name="selection-mode">none</property>

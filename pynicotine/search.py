@@ -34,7 +34,7 @@ from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
-class Search:
+class SearchRequest:
 
     __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
 
@@ -48,7 +48,10 @@ class Search:
         self.is_ignored = is_ignored
 
 
-class Searches:
+class Search:
+
+    SEARCH_HISTORY_LIMIT = 200
+    RESULT_FILTER_HISTORY_LIMIT = 50
 
     def __init__(self):
 
@@ -60,7 +63,7 @@ class Searches:
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            self.searches[self.token] = Search(token=self.token, term=term, mode="wishlist", is_ignored=True)
+            self.searches[self.token] = SearchRequest(token=self.token, term=term, mode="wishlist", is_ignored=True)
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -79,34 +82,36 @@ class Searches:
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
-    def request_folder_download(self, user, folder, visible_files):
-
-        # First queue the visible search results
-        for file in visible_files:
-            user, fullpath, destination, size, file_attributes = file
-
-            core.transfers.get_file(
-                user, fullpath, destination, size=size, file_attributes=file_attributes)
+    def request_folder_download(self, username, folder_path, visible_files, download_folder_path=None):
 
         # Ask for the rest of the files in the folder
-        core.transfers.get_folder(user, folder)
+        core.downloads.get_folder(username, folder_path, download_folder_path=download_folder_path)
 
-    """ Outgoing search requests """
+        # Queue the visible search results
+        destination_folder_path = core.downloads.get_folder_destination(username, folder_path)
+
+        for file_path, size, file_attributes, *_unused in visible_files:
+            core.downloads.get_file(
+                username, file_path, folder_path=destination_folder_path, size=size, file_attributes=file_attributes)
+
+    # Outgoing Search Requests #
 
     @staticmethod
     def add_allowed_token(token):
-        """ Allow parsing search result messages for a search ID """
+        """Allow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.add(token)
 
     @staticmethod
     def remove_allowed_token(token):
-        """ Disallow parsing search result messages for a search ID """
+        """Disallow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
     def add_search(self, term, mode, room=None, users=None, is_ignored=False):
 
-        self.searches[self.token] = search = Search(token=self.token, term=term, mode=mode, room=room,
-                                                    users=users, is_ignored=is_ignored)
+        self.searches[self.token] = search = SearchRequest(
+            token=self.token, term=term, mode=mode, room=room, users=users,
+            is_ignored=is_ignored
+        )
         self.add_allowed_token(self.token)
         return search
 
@@ -179,10 +184,9 @@ class Searches:
         search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
 
         if config.sections["searches"]["remove_special_chars"]:
-            """
-            Remove special characters from search term
-            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
-            """
+            # Remove special characters from search term
+            # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+
             stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
             # Only modify search term if string also contains non-special characters
@@ -216,7 +220,7 @@ class Searches:
             items.insert(0, search_term)
 
             # Clear old items
-            del items[200:]
+            del items[self.SEARCH_HISTORY_LIMIT:]
             config.write_configuration()
 
         if mode == "global":
@@ -252,12 +256,12 @@ class Searches:
             core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
-        for user in core.userlist.buddies:
-            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
+        for username in core.userlist.buddies:
+            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):
-        for user in users:
-            core.send_message_to_server(slskmessages.UserSearch(user, self.token, text))
+        for username in users:
+            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -323,7 +327,7 @@ class Searches:
         return wish in config.sections["server"]["autosearch"]
 
     def _set_wishlist_interval(self, msg):
-        """ Server code: 104 """
+        """Server code 104."""
 
         self.wishlist_interval = msg.seconds
 
@@ -337,7 +341,7 @@ class Searches:
             log.add(_("Server does not permit performing wishlist searches at this time"))
 
     def _file_search_response(self, msg):
-        """ Peer message: 9 """
+        """Peer code 9."""
 
         if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
             msg.token = None
@@ -360,25 +364,86 @@ class Searches:
             msg.token = None
 
     def _file_search_request_server(self, msg):
-        """ Server code: 26, 42 and 120 """
+        """Server code 26, 42 and 120."""
 
-        self.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
+        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def _file_search_request_distributed(self, msg):
-        """ Distrib code: 3 """
+        """Distrib code 3."""
 
-        self.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
+        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
 
-    """ Incoming search requests """
+    # Incoming Search Requests #
 
     @staticmethod
-    def update_search_results(results, word_indices, exclude_word=False):
-        """ Updates the search result list with indices for a new word """
+    def _create_file_info_list(results, max_results, permission_level):
+        """ Given a list of file indices, retrieve the file information for each index """
+
+        reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
+        reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
+        is_buddy = (permission_level == "buddy")
+        is_trusted = (permission_level == "trusted")
+
+        fileinfos = []
+        private_fileinfos = []
+        num_fileinfos = 0
+
+        public_files = core.shares.share_dbs.get("public_files")
+        buddy_files = core.shares.share_dbs.get("buddy_files")
+        trusted_files = core.shares.share_dbs.get("trusted_files")
+
+        for index in islice(results, min(len(results), max_results)):
+            try:
+                file_path = core.shares.file_path_index[index]
+
+            except IndexError as error:
+                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
+                break
+
+            fileinfo = public_files.get(file_path)
+
+            if fileinfo is not None:
+                fileinfos.append(fileinfo)
+                continue
+
+            if is_buddy or reveal_buddy_shares:
+                fileinfo = buddy_files.get(file_path)
+
+                if fileinfo is not None:
+                    if is_buddy:
+                        fileinfos.append(fileinfo)
+                    else:
+                        private_fileinfos.append(fileinfo)
+                    continue
+
+            if is_trusted or reveal_trusted_shares:
+                fileinfo = trusted_files.get(file_path)
+
+                if fileinfo is not None:
+                    if is_trusted:
+                        fileinfos.append(fileinfo)
+                    else:
+                        private_fileinfos.append(fileinfo)
+
+        results.clear()
+
+        if fileinfos:
+            fileinfos.sort(key=itemgetter(1))
+
+        if private_fileinfos:
+            private_fileinfos.sort(key=itemgetter(1))
+
+        num_fileinfos = len(fileinfos) + len(private_fileinfos)
+        return num_fileinfos, fileinfos, private_fileinfos
+
+    @staticmethod
+    def _update_search_results(results, word_indices, excluded=False):
+        """Updates the search result list with indices for a new word."""
 
         if word_indices is None:
-            if exclude_word:
+            if excluded:
                 # We don't care if an excluded word doesn't exist in our DB
                 return results
 
@@ -386,14 +451,14 @@ class Searches:
             return None
 
         if results is None:
-            if exclude_word:
+            if excluded:
                 # No results yet, but word is excluded. Bail.
                 return set()
 
             # First match for included word, return results
             return set(word_indices)
 
-        if exclude_word:
+        if excluded:
             # Remove results for excluded word
             results.difference_update(word_indices)
         else:
@@ -402,83 +467,120 @@ class Searches:
 
         return results
 
-    def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
-        """ Returns a list of common file indices for each word in a search term """
+    def _create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
+        """Returns a list of common file indices for each word in a search
+        term."""
+
+        results = None
 
         try:
-            words = searchterm.split()
-            num_words = len(words)
-            results = None
+            # Start with the word with the least results to reduce memory usage
+            start_word = min(included_words, key=lambda word: len(word_index[word]), default=None)
 
-            for current_index, word in enumerate(words):
-                exclude_word = False
-
-                if word in excluded_words:
-                    # Excluded search words (e.g. -hello)
-
-                    if results is None and current_index < num_words:
-                        # Re-append the word so we can re-process it once we've found a match
-                        words.append(word)
-                        continue
-
-                    exclude_word = True
-
-                elif word in partial_words:
-                    # Partial search words (e.g. *ello)
-
-                    partial_results = set()
-
-                    for complete_word, indices in wordindex.items():
-                        if complete_word.endswith(word):
-                            partial_results.update(indices)
-
-                    if partial_results:
-                        results = self.update_search_results(results, partial_results)
-                        continue
-
-                results = self.update_search_results(results, wordindex.get(word), exclude_word)
-
-                if results is None:
-                    # No matches found
-                    break
-
+        except KeyError:
+            # No results
             return results
 
-        except ValueError:
-            log.add_debug("Error: DB closed during search, perhaps due to rescanning shares or closing the application")
-            return None
+        has_single_word = (sum(len(words) for words in (included_words, excluded_words, partial_words)) == 1)
+        included_words.discard(start_word)
 
-    def process_search_request(self, searchterm, user, token, direct=False):
-        """ Note: since this section is accessed every time a search request arrives several
-            times per second, please keep it as optimized and memory sparse as possible! """
+        # Partial search words (e.g. *ello)
+        for word in partial_words:
+            partial_results = set()
+            num_partial_results = 0
 
-        if not searchterm:
+            for complete_word in word_index:
+                if complete_word.endswith(word):
+                    indices = word_index[complete_word]
+
+                    if has_single_word:
+                        # Attempt to avoid large memory usage if someone searches for e.g. "*lac"
+                        indices = indices[:max_results - num_partial_results]
+
+                    partial_results.update(indices)
+
+                    if not has_single_word:
+                        continue
+
+                    num_partial_results = len(partial_results)
+
+                    if num_partial_results >= max_results:
+                        break
+
+            if partial_results:
+                results = self._update_search_results(results, partial_results)
+
+        # Included search words (e.g. hello)
+        start_results = word_index.get(start_word)
+
+        if start_results:
+            if has_single_word:
+                # Attempt to avoid large memory usage if someone searches for e.g. "flac"
+                start_results = start_results[:max_results]
+
+            results = self._update_search_results(results, start_results)
+
+            for word in included_words:
+                results = self._update_search_results(results, word_index.get(word))
+
+        # Excluded search words (e.g. -hello)
+        if results:
+            for word in excluded_words:
+                results = self._update_search_results(results, word_index.get(word), excluded=True)
+
+        return results
+
+    def _process_search_request(self, search_term, username, token, direct=False):
+        """This section is accessed every time a search request arrives,
+        several times per second.
+
+        Please keep it as optimized and memory sparse as possible!
+        """
+
+        if not search_term:
             return
 
         if not config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
 
-        if not direct and user == core.login_username:
+        if core.uploads.pending_shutdown:
+            # Don't return results when waiting to quit after finishing uploads
+            return
+
+        if not direct and username == core.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
 
-        maxresults = config.sections["searches"]["maxresults"]
+        max_results = config.sections["searches"]["maxresults"]
 
-        if maxresults == 0:
+        if max_results <= 0:
             return
 
-        # Do all processing in lowercase
-        original_searchterm = searchterm
-        searchterm = searchterm.lower()
+        if len(search_term) < config.sections["searches"]["min_search_chars"]:
+            # Don't send search response if search term contains too few characters
+            return
 
-        # Remember excluded/partial words for later
+        permission_level, _reject_reason = core.network_filter.check_user_permission(username)
+
+        if permission_level == "banned":
+            return
+
+        word_index = core.shares.share_dbs.get("words")
+
+        if word_index is None:
+            return
+
+        original_search_term = search_term
+        search_term = search_term.lower()
+
+        # Extract included/excluded/partial words from search term
         excluded_words = set()
         partial_words = set()
 
-        if "-" in searchterm or "*" in searchterm:
-            for word in searchterm.split():
+        if "-" in search_term or "*" in search_term:
+            for word in search_term.split():
                 if len(word) < 1:
                     continue
 
@@ -491,75 +593,37 @@ class Searches:
                         partial_words.add(subword)
 
         # Strip punctuation
-        searchterm = searchterm.translate(TRANSLATE_PUNCTUATION).strip()
-
-        if len(searchterm) < config.sections["searches"]["min_search_chars"]:
-            # Don't send search response if search term contains too few characters
-            return
-
-        checkuser, _reason = core.network_filter.check_user(user)
-
-        if not checkuser:
-            return
-
-        if checkuser == 2:
-            wordindex = core.shares.share_dbs.get("buddywordindex")
-        else:
-            wordindex = core.shares.share_dbs.get("wordindex")
-
-        if wordindex is None:
-            return
+        search_term = search_term.translate(TRANSLATE_PUNCTUATION).strip()
+        included_words = (set(search_term.split()) - excluded_words - partial_words)
 
         # Find common file matches for each word in search term
-        resultlist = self.create_search_result_list(searchterm, wordindex, excluded_words, partial_words)
+        results = self._create_search_result_list(
+            included_words, excluded_words, partial_words, max_results, word_index)
 
-        if not resultlist:
+        if not results:
             return
 
-        if checkuser == 2:
-            fileindex = core.shares.share_dbs.get("buddyfileindex")
-        else:
-            fileindex = core.shares.share_dbs.get("fileindex")
+        # Get file information for each file index in result list
+        num_results, fileinfos, private_fileinfos = self._create_file_info_list(
+            results, max_results, permission_level)
 
-        if fileindex is None:
+        if not num_results:
             return
 
-        fileinfos = []
-        numresults = min(len(resultlist), maxresults)
-
-        for index in islice(resultlist, numresults):
-            fileinfo = fileindex.get(repr(index))
-
-            if fileinfo is not None:
-                fileinfos.append(fileinfo)
-
-        if numresults != len(fileinfos):
-            log.add_debug(('Error: File index inconsistency while responding to search request "%(query)s". '
-                           "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
-                "query": original_searchterm,
-                "expected_num": numresults,
-                "total_num": len(fileinfos)
-            })
-            numresults = len(fileinfos)
-
-        if not numresults:
-            return
-
-        fileinfos.sort(key=itemgetter(1))
-
-        uploadspeed = core.transfers.upload_speed
-        queuesize = core.transfers.get_upload_queue_size()
-        slotsavail = core.transfers.allow_new_uploads()
+        uploadspeed = core.uploads.upload_speed
+        queuesize = core.uploads.get_upload_queue_size()
+        slotsavail = core.uploads.allow_new_uploads()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResponse(
             None, core.login_username,
-            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
-
-        core.send_message_to_peer(user, message)
+            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue,
+            private_fileinfos
+        )
+        core.send_message_to_peer(username, message)
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
-            "user": user,
-            "query": original_searchterm,
-            "num": numresults
+            "user": username,
+            "query": original_search_term,
+            "num": num_results
         })

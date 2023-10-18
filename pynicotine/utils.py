@@ -21,12 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module contains utility functions.
-"""
-
 import os
-import pickle
 import sys
 
 UINT32_LIMIT = 4294967295
@@ -41,12 +36,12 @@ REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 
 
-def clean_file(filename):
+def clean_file(basename):
 
     for char in ILLEGALFILECHARS:
-        filename = filename.replace(char, REPLACEMENTCHAR)
+        basename = basename.replace(char, REPLACEMENTCHAR)
 
-    return filename
+    return basename
 
 
 def clean_path(path):
@@ -74,8 +69,10 @@ def clean_path(path):
 
 
 def encode_path(path, prefix=True):
-    """ Converts a file path to bytes for processing by the system.
-    On Windows, also append prefix to enable extended-length path. """
+    """Converts a file path to bytes for processing by the system.
+
+    On Windows, also append prefix to enable extended-length path.
+    """
 
     if sys.platform == "win32" and prefix:
         path = path.replace("/", "\\")
@@ -137,29 +134,31 @@ def humanize(number):
 
 
 def factorize(filesize, base=1024):
-    """ Converts filesize string with a given unit into raw integer size,
-        defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+    """Converts filesize string with a given unit into raw integer size,
+    defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB)"""
 
     if not filesize:
         return None, None
 
-    if filesize[-1:].lower() == "b":
+    filesize = filesize.lower()
+
+    if filesize.endswith("b"):
         base = 1000  # Byte suffix detected, prepare to use decimal if necessary
         filesize = filesize[:-1]
 
-    if filesize[-1:].lower() == "i":
+    if filesize.endswith("i"):
         base = 1024  # Binary requested, stop using decimal
         filesize = filesize[:-1]
 
-    if filesize.lower()[-1:] == "g":
+    if filesize.endswith("g"):
         factor = pow(base, 3)
         filesize = filesize[:-1]
 
-    elif filesize.lower()[-1:] == "m":
+    elif filesize.endswith("m"):
         factor = pow(base, 2)
         filesize = filesize[:-1]
 
-    elif filesize.lower()[-1:] == "k":
+    elif filesize.endswith("k"):
         factor = base
         filesize = filesize[:-1]
 
@@ -173,7 +172,7 @@ def factorize(filesize, base=1024):
 
 
 def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
-    """ Truncates a string to fit inside a byte limit """
+    """Truncates a string to fit inside a byte limit."""
 
     string_bytes = string.encode(encoding)
 
@@ -191,7 +190,8 @@ def truncate_string_byte(string, byte_limit, encoding="utf-8", ellipsize=False):
 
 
 def unescape(string):
-    """Removes quotes from the beginning and end of strings, and unescapes it."""
+    """Removes quotes from the beginning and end of strings, and unescapes
+    it."""
 
     string = string.encode("latin-1", "backslashreplace").decode("unicode-escape")
 
@@ -205,7 +205,8 @@ def unescape(string):
 
 
 def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
-    """Executes a string with commands, with partial support for bash-style quoting and pipes.
+    """Executes a string with commands, with partial support for bash-style
+    quoting and pipes.
 
     The different parts of the command should be separated by spaces, a double
     quotation mark can be used to embed spaces in an argument.
@@ -227,11 +228,12 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     Example commands:
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
-    * echo $ | flite -t """
+    * echo $ | flite -t
+    """
 
     # pylint: disable=consider-using-with
 
-    from subprocess import PIPE, Popen, STARTF_USESHOWWINDOW, STARTUPINFO
+    from subprocess import PIPE, Popen
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
@@ -241,6 +243,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     startupinfo = None
 
     if sys.platform == "win32":
+        from subprocess import STARTF_USESHOWWINDOW, STARTUPINFO
         # Hide console window on Windows
         startupinfo = STARTUPINFO()
         startupinfo.dwFlags |= STARTF_USESHOWWINDOW
@@ -274,7 +277,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     current = []
 
     for argument in arguments:
-        if argument in ("|",):
+        if argument == "|":
             subcommands.append(current)
             current = []
         else:
@@ -326,7 +329,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
 def _try_open_uri(uri):
 
-    if sys.platform not in ("darwin", "win32"):
+    if sys.platform not in {"darwin", "win32"}:
         try:
             from gi.repository import Gio  # pylint: disable=import-error
             Gio.AppInfo.launch_default_for_uri(uri)
@@ -343,15 +346,15 @@ def _try_open_uri(uri):
 
 
 def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """ Currently used to either open a folder or play an audio file
-    Tries to run a user-specified command first, and falls back to
-    the system default. """
+    """Currently used to either open a folder or play an audio file Tries to
+    run a user-specified command first, and falls back to the system
+    default."""
 
     if file_path is None:
         return False
 
     try:
-        file_path = os.path.normpath(file_path)
+        file_path = os.path.abspath(file_path)
         file_path_encoded = encode_path(file_path)
 
         if not os.path.exists(file_path_encoded):
@@ -386,8 +389,11 @@ def open_file_path(file_path, command=None, create_folder=False, create_file=Fal
 
 
 def open_uri(uri):
-    """ Open a URI in an external (web) browser. The given argument has
-    to be a properly formed URI including the scheme (fe. HTTP). """
+    """Open a URI in an external (web) browser.
+
+    The given argument has to be a properly formed URI including the
+    scheme (fe. HTTP).
+    """
 
     from pynicotine.config import config
 
@@ -417,33 +423,33 @@ def open_uri(uri):
     return False
 
 
-def load_file(path, load_func, use_old_file=False):
+def load_file(file_path, load_func, use_old_file=False):
 
     try:
         if use_old_file:
-            path = f"{path}.old"
+            file_path = f"{file_path}.old"
 
-        elif os.path.isfile(encode_path(f"{path}.old")):
-            path_encoded = encode_path(path)
+        elif os.path.isfile(encode_path(f"{file_path}.old")):
+            file_path_encoded = encode_path(file_path)
 
-            if not os.path.isfile(path_encoded):
+            if not os.path.isfile(file_path_encoded):
                 raise OSError("*.old file is present but main file is missing")
 
-            if os.path.getsize(path_encoded) == 0:
+            if os.path.getsize(file_path_encoded) <= 0:
                 # Empty files should be considered broken/corrupted
                 raise OSError("*.old file is present but main file is empty")
 
-        return load_func(path)
+        return load_func(file_path)
 
     except Exception as error:
         from pynicotine.logfacility import log
         log.add(_("Something went wrong while reading file %(filename)s: %(error)s"),
-                {"filename": path, "error": error})
+                {"filename": file_path, "error": error})
 
         if not use_old_file:
             # Attempt to load data from .old file
-            log.add(_("Attempting to load backup of file %s"), path)
-            return load_file(path, load_func, use_old_file=True)
+            log.add(_("Attempting to load backup of file %s"), file_path)
+            return load_file(file_path, load_func, use_old_file=True)
 
     return None
 
@@ -503,21 +509,11 @@ def write_file_and_backup(path, callback, protect=False):
         os.umask(oldumask)
 
 
-class RestrictedUnpickler(pickle.Unpickler):
-    """
-    Don't allow code execution from pickles
-    """
-
-    def find_class(self, module, name):
-        # Forbid all globals
-        raise pickle.UnpicklingError(f"global '{module}.{name}' is forbidden")
-
-
-""" Debugging """
+# Debugging #
 
 
 def debug(*args):
-    """ Prints debugging info. """
+    """Prints debugging info."""
 
     from pynicotine.logfacility import log
 
@@ -526,16 +522,16 @@ def debug(*args):
 
 
 def strace(function):
-    """ Decorator for debugging """
+    """Decorator for debugging."""
 
     from itertools import chain
     from pynicotine.logfacility import log
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))})")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))})")
         retvalue = function(*args, **kwargs)
-        log.add(f"{name}({', '.join(map(repr, chain(args, list(kwargs.values()))))}): {repr(retvalue)}")
+        log.add(f"{name}({', '.join(repr(x) for x in chain(args, list(kwargs.values())))}): {repr(retvalue)}")
         return retvalue
 
     return newfunc

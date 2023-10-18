@@ -16,9 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+__application_name__ = "Nicotine+"
+__application_id__ = "org.nicotine_plus.Nicotine"
+__version__ = "3.3.0.dev6"
+__author__ = "Nicotine+ Team"
+__copyright__ = """© 2004–2023 Nicotine+ Contributors
+© 2003–2004 Nicotine Contributors
+© 2001–2003 PySoulSeek Contributors"""
+__website_url__ = "https://nicotine-plus.org"
+__privileges_url__ = "https://www.slsknet.org/qtlogin.php?username=%s"
+__port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
+__issue_tracker_url__ = "https://github.com/nicotine-plus/nicotine-plus/issues"
+__translations_url__ = "https://nicotine-plus.org/doc/TRANSLATIONS"
+
 import argparse
 import io
-import multiprocessing
 import os
 import sys
 
@@ -30,11 +42,11 @@ from pynicotine.logfacility import log
 
 
 def check_arguments():
-    """ Parse command line arguments specified by the user """
+    """Parse command line arguments specified by the user."""
 
     parser = argparse.ArgumentParser(
         description=_("Graphical client for the Soulseek peer-to-peer network"),
-        epilog=_("Website: %s") % config.website_url, add_help=False
+        epilog=_("Website: %s") % __website_url__, add_help=False
     )
 
     # Visible arguments
@@ -71,7 +83,7 @@ def check_arguments():
         help=_("start the program in headless mode (no GUI)")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version=f"{config.application_name} {config.version}",
+        "-v", "--version", action="version", version=f"{__application_name__} {__version__}",
         help=_("display version and exit")
     )
 
@@ -82,13 +94,13 @@ def check_arguments():
     multi_instance = False
 
     if args.config:
-        config.filename = args.config
+        config.config_file_path = os.path.abspath(args.config)
 
         # Since a custom config was specified, allow another instance of the application to open
         multi_instance = True
 
     if args.user_data:
-        config.data_dir = args.user_data
+        config.data_folder_path = os.path.abspath(args.user_data)
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
@@ -104,8 +116,8 @@ def check_python_version():
     if sys.version_info < python_version:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": ".".join(map(str, sys.version_info[:3])),
-            "min_version": ".".join(map(str, python_version))
+            "old_version": ".".join(str(x) for x in sys.version_info[:3]),
+            "min_version": ".".join(str(x) for x in python_version)
         }
 
     return None
@@ -120,14 +132,14 @@ def set_up_python():
         sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
     if is_frozen:
+        import multiprocessing
+
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
         os.environ["SSL_CERT_FILE"] = os.path.join(executable_folder, "lib/cert.pem")
 
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
-
-    multiprocessing.set_start_method("spawn")
 
 
 def rename_process(new_name, debug_info=False):
@@ -164,18 +176,20 @@ def rename_process(new_name, debug_info=False):
 
 def rescan_shares():
 
-    error = core.shares.rescan_shares(use_thread=False)
+    exit_code = 0
 
-    if error:
+    if not core.shares.rescan_shares(use_thread=False):
         log.add("--------------------------------------------------")
         log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
-        return 1
 
-    return 0
+        exit_code = 1
+
+    core.quit()
+    return exit_code
 
 
 def run():
-    """ Run application and return its exit code """
+    """Run application and return its exit code."""
 
     set_up_python()
     rename_process(b"nicotine")
@@ -184,8 +198,10 @@ def run():
     error = check_python_version()
 
     if error:
-        log.add(error)
+        print(error)
         return 1
+
+    core.init_components(enabled_components={"cli", "shares"} if rescan else None)
 
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
@@ -194,8 +210,6 @@ def run():
 
     except Exception as error:
         log.add(f"Faulthandler module could not be enabled. Error: {error}")
-
-    core.init_components()
 
     if not os.path.isdir(LOCALE_PATH):
         log.add("Translation files (.mo) are unavailable, using default English strings")

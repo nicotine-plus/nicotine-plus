@@ -48,7 +48,7 @@ class UserList:
             self.container,
             self.list_container,
             self.toolbar
-        ) = ui.load(scope=self, path="buddylist.ui")
+        ) = ui.load(scope=self, path="userlist.ui")
 
         self.window = window
 
@@ -63,15 +63,15 @@ class UserList:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "sort_column": "status_data",
-                    "hide_header": True
+                    "hide_header": True,
+                    "sort_column": "status_data"
                 },
                 "country": {
                     "column_type": "icon",
                     "title": _("Country"),
                     "width": 30,
-                    "sort_column": "country_data",
-                    "hide_header": True
+                    "hide_header": True,
+                    "sort_column": "country_data"
                 },
                 "user": {
                     "column_type": "text",
@@ -161,9 +161,19 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
+    def on_focus(self, *_args):
+
+        self.update_visible()
+
+        if self.container.get_visible():
+            self.list_view.grab_focus()
+            return True
+
+        return False
+
     def update_visible(self):
 
-        if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
+        if config.sections["ui"]["buddylistinchatrooms"] in {"always", "chatrooms"}:
             return
 
         self.window.userlist_content.set_visible(self.list_view.iterators)
