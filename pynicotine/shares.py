@@ -641,7 +641,6 @@ class Shares:
 
         self.share_dbs = {}
         self.requested_share_times = {}
-        self.pending_network_msgs = []
         self.rescanning = False
         self.compressed_shares = {
             "public": slskmessages.SharedFileListResponse(),
@@ -691,7 +690,6 @@ class Shares:
 
     def _server_disconnect(self, _msg):
         self.requested_share_times.clear()
-        self.pending_network_msgs.clear()
 
     # Shares-related Actions #
 
@@ -1057,11 +1055,6 @@ class Shares:
 
         if successful:
             self.send_num_shared_folders_files()
-
-        # Process any file transfer queue requests that arrived while scanning
-        if self.pending_network_msgs:
-            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
-            self.pending_network_msgs.clear()
 
     # Network Messages #
 
