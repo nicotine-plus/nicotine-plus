@@ -342,7 +342,7 @@ class Downloads(Transfers):
 
             download.token = token
             download.status = "Getting status"
-            self.transfer_request_times[download] = time.time()
+            self.transfer_request_times[download] = time.monotonic()
 
             self.update_download(download)
             return slskmessages.TransferResponse(allowed=True, token=token)
@@ -468,7 +468,7 @@ class Downloads(Transfers):
                 download.file_handle = file_handle
                 download.last_byte_offset = offset
                 download.queue_position = 0
-                download.last_update = time.time()
+                download.last_update = time.monotonic()
                 download.start_time = download.last_update - download.time_elapsed
 
                 core.statistics.append_stat_value("started_downloads", 1)
@@ -601,7 +601,7 @@ class Downloads(Transfers):
             if download in self.transfer_request_times:
                 del self.transfer_request_times[download]
 
-            current_time = time.time()
+            current_time = time.monotonic()
             size = download.size
 
             download.status = "Transferring"

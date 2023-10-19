@@ -22,9 +22,9 @@
 
 import os
 import sys
+import time
 
 from ast import literal_eval
-from time import time
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -308,7 +308,7 @@ class ResponseThrottle:
         self.request = request
 
         willing_to_respond = True
-        current_time = time()
+        current_time = time.monotonic()
 
         if room not in self.plugin_usage:
             self.plugin_usage[room] = {"last_time": 0, "last_request": "", "last_nick": ""}
@@ -359,7 +359,8 @@ class ResponseThrottle:
         return willing_to_respond
 
     def responded(self):
-        self.plugin_usage[self.room] = {"last_time": time(), "last_request": self.request, "last_nick": self.nick}
+        self.plugin_usage[self.room] = {
+            "last_time": time.monotonic(), "last_request": self.request, "last_nick": self.nick}
 
 
 class PluginHandler:

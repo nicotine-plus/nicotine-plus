@@ -33,7 +33,7 @@ class LogFile:
     def __init__(self, path, handle):
         self.path = path
         self.handle = handle
-        self.last_active = time.time()
+        self.last_active = time.monotonic()
 
 
 class LogLevel:
@@ -155,7 +155,7 @@ class Logger:
                 text += "\n"
 
             log_file.handle.write(text.encode("utf-8", "replace"))
-            log_file.last_active = time.time()
+            log_file.last_active = time.monotonic()
 
         except Exception as error:
             # Avoid infinite recursion
@@ -185,7 +185,7 @@ class Logger:
 
     def _close_inactive_log_files(self):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:

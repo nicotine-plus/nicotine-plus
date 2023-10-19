@@ -1062,7 +1062,7 @@ class Shares:
         """Peer code 4."""
 
         username = msg.init.target_user
-        request_time = time.time()
+        request_time = time.monotonic()
 
         if username in self.requested_share_times and request_time < self.requested_share_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the

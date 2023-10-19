@@ -312,7 +312,7 @@ class Transfers:
 
     def _check_transfer_timeouts(self):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if self.transfer_request_times:
             for transfer, start_time in self.transfer_request_times.copy().items():

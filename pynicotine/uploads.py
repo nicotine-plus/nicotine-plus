@@ -540,7 +540,7 @@ class Uploads(Transfers):
         transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
                             status="Getting status", token=token, size=size)
 
-        self.transfer_request_times[transfer] = time.time()
+        self.transfer_request_times[transfer] = time.monotonic()
         self.append_upload(username, virtual_path, transfer)
         self.update_upload(transfer)
 
@@ -681,7 +681,7 @@ class Uploads(Transfers):
             else:
                 upload.file_handle = file_handle
                 upload.queue_position = 0
-                upload.last_update = time.time()
+                upload.last_update = time.monotonic()
                 upload.start_time = upload.last_update - upload.time_elapsed
 
                 core.statistics.append_stat_value("started_uploads", 1)
@@ -725,7 +725,7 @@ class Uploads(Transfers):
             if upload in self.transfer_request_times:
                 del self.transfer_request_times[upload]
 
-            current_time = time.time()
+            current_time = time.monotonic()
             size = upload.size
 
             if not upload.last_byte_offset:
@@ -890,7 +890,7 @@ class Uploads(Transfers):
             self.token = slskmessages.increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
-            self.transfer_request_times[transfer] = time.time()
+            self.transfer_request_times[transfer] = time.monotonic()
 
             log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
                 "filename": virtual_path,
@@ -1042,7 +1042,7 @@ class Uploads(Transfers):
 
     def _check_transfer_timeouts(self):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if self.transfer_request_times:
             for transfer, start_time in self.transfer_request_times.copy().items():

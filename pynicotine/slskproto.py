@@ -107,7 +107,7 @@ class Connection:
         self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
-        self.lastactive = time.time()
+        self.lastactive = time.monotonic()
         self.lastreadlength = 100 * 1024
 
 
@@ -135,7 +135,7 @@ class PeerConnection(Connection):
         self.filedown = None
         self.fileupl = None
         self.has_post_init_activity = False
-        self.lastcallback = time.time()
+        self.lastcallback = time.monotonic()
 
 
 class NetworkInterfaces:
@@ -494,7 +494,7 @@ class NetworkThread(Thread):
 
     def _check_indirect_connection_timeouts(self):
 
-        curtime = time.time()
+        curtime = time.monotonic()
 
         if self._out_indirect_conn_request_times:
             for init, request_time in self._out_indirect_conn_request_times.copy().items():
@@ -816,7 +816,7 @@ class NetworkThread(Thread):
         init.token = self._token
 
         self._token_init_msgs[self._token] = init
-        self._out_indirect_conn_request_times[init] = time.time()
+        self._out_indirect_conn_request_times[init] = time.monotonic()
         self._queue_network_message(ConnectToPeer(self._token, username, conn_type))
 
         log.add_conn("Attempting indirect connection to user %(user)s with token %(token)s", {
@@ -953,7 +953,7 @@ class NetworkThread(Thread):
                 self._total_upload_bandwidth = 0
 
             if callback:
-                timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
+                timed_out = (time.monotonic() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
                     "upload-connection-closed", username=init.target_user, token=conn_obj.fileupl.token,
                     timed_out=timed_out)
@@ -1866,7 +1866,7 @@ class NetworkThread(Thread):
                 self._total_download_bandwidth += added_bytes_len
                 conn_obj.filedown.leftbytes -= added_bytes_len
 
-            current_time = time.time()
+            current_time = time.monotonic()
             finished = (conn_obj.filedown.leftbytes <= 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
@@ -2584,7 +2584,7 @@ class NetworkThread(Thread):
                 time.sleep(0.1)
                 continue
 
-            current_time = time.time()
+            current_time = time.monotonic()
 
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.

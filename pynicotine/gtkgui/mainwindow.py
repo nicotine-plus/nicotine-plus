@@ -1186,7 +1186,7 @@ class MainWindow(Window):
 
     def on_cancel_auto_away(self, *_args):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if (current_time - self.away_cooldown_time) >= 5:
             self.set_auto_away(False)
