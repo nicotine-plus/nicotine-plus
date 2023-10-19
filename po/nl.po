@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-10-17 17:13+0000\n"
+"PO-Revision-Date: 2023-10-19 04:48+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1079,7 +1079,6 @@ msgstr "Openbaar"
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
 #: pynicotine/gtkgui/dialogs/preferences.py:703
-#, fuzzy
 msgid "Trusted buddies"
 msgstr "Vertrouwde vrienden"
 
@@ -1167,7 +1166,7 @@ msgstr "Voer een IP-adres in dat je wilt blokkeren:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
 msgid "Format codes"
-msgstr ""
+msgstr "Formaat codes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -1648,7 +1647,7 @@ msgstr "Bekijk share van vetrouwde vriend"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
-msgstr "Shares opnieuw scannen"
+msgstr "Shares _opnieuw scannen"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
 msgid "Configure _Shares"
@@ -4067,16 +4066,16 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Herscannen voltooid: %(num)s mappen gevonden"
 
 #: pynicotine/shares.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Er is een ernstige fout opgetreden bij het opnieuw scannen van shares. Als "
-"dit probleem zich blijft voordoen, verwijdert je %(dir)s/*.db en probeert je "
-"het opnieuw. Als dat niet helpt, dien dan een bugrapport in met deze "
-"stacktracering: %(trace)s"
+"dit probleem zich blijft voordoen, verwijder %(dir)s/*.db en probeert je het "
+"opnieuw. Als dat niet helpt, dien dan een bug-rapport in met deze stacktrace:"
+" %(trace)s"
 
 #: pynicotine/shares.py:403
 #, python-format
@@ -4382,7 +4381,6 @@ msgstr "Deel mappen"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
@@ -4390,7 +4388,7 @@ msgid ""
 msgstr ""
 "Soulseek-gebruikers kunnen downloaden van jouw shares. Draag bij aan het "
 "Soulseek-netwerk door je eigen verzameling te delen en door opnieuw te delen "
-"wat u van andere gebruikers hebt gedownload."
+"wat je van andere gebruikers hebt gedownload."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
 msgid "You are ready to use Nicotine+!"
@@ -4467,9 +4465,8 @@ msgid "Show Log Pane"
 msgstr "Toon _logvenster"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Account configureren"
+msgstr "Bevestig afsluiten"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -5619,9 +5616,8 @@ msgid "Public IP address:"
 msgstr "Publiek IP-adres:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Taal (herstart vereist):"
+msgstr "Luisterpoort (herstart vereist):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5659,9 +5655,8 @@ msgstr ""
 "wat je doet."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Taal (herstart vereist):"
+msgstr "Netwerkinterface (vereist een herstart):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
@@ -5735,16 +5730,14 @@ msgid "Show privately shared files in search results"
 msgstr "Toon privé gedeelde bestanden in zoekresultaten"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Andere Soulseek-cliënten kunnen de mogelijkheid hebben om shares privé te "
-"delen. Deze bestanden krijgen de '[PRIVATE]' prefix en ze kunnen niet worden "
-"gedownload totdat de uploader uitdrukkelijke toestemming geeft. Vraag het ze "
-"vriendelijk."
+"Privé gedeelde bestanden zijn zichtbaar voor iedereen maar hebben het prefix "
+"'[PRIVÉ]', ze kunnen niet worden gedownload totdat de uploader uitdrukkelijk "
+"toestemming geeft. Vraag het ze vriendelijk."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"
@@ -5840,14 +5833,12 @@ msgid "Visible to everyone:"
 msgstr "Voor iedereen zichtbaar:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Vrienden namen"
+msgstr "Vrienden shares"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Gedeelde bestandenlijst"
+msgstr "Vertrouwde shares"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
