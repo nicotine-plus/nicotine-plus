@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno
+import random
 import selectors
 import socket
 import struct
@@ -1058,9 +1059,12 @@ class NetworkThread(Thread):
     def _set_server_timer(self):
 
         if self._server_timeout_value == -1:
-            self._server_timeout_value = 15
+            # Add jitter to spread out connection attempts from Nicotine+ clients
+            # in case server goes down
+            self._server_timeout_value = random.randint(5, 15)
 
-        elif 0 < self._server_timeout_value < 600:
+        elif 0 < self._server_timeout_value < 300:
+            # Exponential backoff, max 5 minute wait
             self._server_timeout_value *= 2
 
         self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
