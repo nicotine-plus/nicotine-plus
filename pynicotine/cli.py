@@ -21,6 +21,7 @@ import sys
 import time
 
 from collections import deque
+from getpass import getpass
 from threading import Thread
 
 from pynicotine.events import events
@@ -44,19 +45,20 @@ class CLIInputProcessor(Thread):
         self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
+        self.prompt_silent = False
 
     def run(self):
 
         while True:
+            # Small time window to set custom prompt
+            time.sleep(0.25)
+
             try:
                 self._handle_prompt()
 
             except Exception as error:
                 log.add_debug("CLI input prompt is no longer available: %s", error)
                 return
-
-            # Small time window to set custom prompt
-            time.sleep(0.25)
 
     def _handle_prompt_callback(self, user_input, callback):
 
@@ -85,13 +87,15 @@ class CLIInputProcessor(Thread):
     def _handle_prompt(self):
 
         callback = self.prompt_callback
+        input_func = getpass if self.prompt_silent else input
         self.has_custom_prompt = (callback is not None)
 
-        user_input = input(self.prompt_message)
+        user_input = input_func(self.prompt_message)
 
         self.has_custom_prompt = False
         self.prompt_message = ""
         self.prompt_callback = None
+        self.prompt_silent = False
 
         events.emit("cli-prompt-finished")
 
@@ -133,9 +137,11 @@ class CLI:
         ):
             events.connect(event_name, callback)
 
-    def prompt(self, message, callback):
+    def prompt(self, message, callback, is_silent=False):
+
         self._input_processor.prompt_message = message
         self._input_processor.prompt_callback = callback
+        self._input_processor.prompt_silent = is_silent
 
     def _print_log_message(self, log_message):
 
