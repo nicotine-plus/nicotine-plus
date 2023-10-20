@@ -758,11 +758,9 @@ class Shares:
             "buddywordindex", "buddyfileindex", "buddyfiles", "buddymtimes", "buddystreams"
         ):
             file_path = os.path.join(config.data_folder_path, f"{destination}.db")
-            file_path_encoded = encode_path(file_path)
 
             try:
-                if os.path.exists(file_path_encoded):
-                    os.remove(file_path_encoded)
+                self.remove_db_file(file_path)
 
             except OSError as error:
                 log.add_debug("Failed to remove old share database %s: %s", (file_path, error))
