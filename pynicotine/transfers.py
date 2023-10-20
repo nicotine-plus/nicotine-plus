@@ -337,7 +337,11 @@ class Transfers:
         ]
 
     def save_transfers_callback(self, file_handle):
-        file_handle.write(json.dumps(self.get_transfer_rows(), check_circular=False, ensure_ascii=False))
+
+        # We can't use indent=0 to add line breaks, since Python's C-based json encoder doesn't
+        # support this. Add them using replace() instead.
+        file_handle.write(
+            json.dumps(self.get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
 
     def save_transfers(self):
         """Save list of transfers."""
