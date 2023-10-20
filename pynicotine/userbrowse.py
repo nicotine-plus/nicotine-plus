@@ -216,7 +216,7 @@ class UserBrowse:
                     if is_first_item:
                         is_first_item = False
                     else:
-                        file_handle.write(", ")
+                        file_handle.write(",\n")
 
                     file_handle.write(json_encoder.encode(item))
 
