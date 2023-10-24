@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-09-24 20:00+0000\n"
+"PO-Revision-Date: 2023-10-24 19:03+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -31,15 +31,14 @@ msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "A Nicotine+ egy grafikus kliens a Soulseek P2P hálózathoz."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"A Nicotine+ célja, hogy egy kellemes, ingyenes és nyílt forráskódú (FOSS) "
-"alternatívája legyen a hivatalos Soulseek kliensnek, további funkciókat is "
-"biztosít, miközben megtartja a Soulseek protokollt."
+"A Nicotine+ célja, hogy egy könnyű, kellemes, szabad és nyílt forráskódú "
+"(FOSS) alternatívája legyen a hivatalos Soulseek kliensnek, miközben a "
+"funkciók átfogó készletét is biztosítja."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:769
@@ -387,9 +386,8 @@ msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Nem áll rendelkezésre grafikus környezet, fej nélküli mód (nincs GUI)"
 
 #: pynicotine/gtkgui/application.py:297
-#, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
-msgstr "Valóban ki akar lépni?"
+msgstr "Még mindig tölt fel fájlokat. Valóban ki akar lépni?"
 
 #: pynicotine/gtkgui/application.py:298
 msgid "Wait for uploads to finish"
@@ -1018,7 +1016,7 @@ msgid ""
 msgstr ""
 "<b>Szintaxis</b>: nem különbözteti meg a kis- és nagybetűket. Ha "
 "engedélyezve van, a Python reguláris kifejezései használhatók, máskülönben "
-"csak a helyettesítőkarakter (*) támogatott."
+"csak a helyettesítő karakter (*) támogatott."
 
 #: pynicotine/gtkgui/dialogs/preferences.py:312
 msgid "Filter"
@@ -1074,18 +1072,17 @@ msgstr "A szűrők készek"
 #: pynicotine/gtkgui/dialogs/preferences.py:612
 #: pynicotine/gtkgui/dialogs/preferences.py:651
 msgid "Public"
-msgstr ""
+msgstr "Nyilvános"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
 #: pynicotine/gtkgui/dialogs/preferences.py:703
-#, fuzzy
 msgid "Trusted buddies"
 msgstr "Megbízható barátok"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 msgid "Accessible To"
-msgstr ""
+msgstr "Hozzáférhető"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:620
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1142,7 +1139,7 @@ msgstr "Adja meg a mellőzni kívánt IP-címet:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1011
 #: pynicotine/gtkgui/dialogs/preferences.py:1168
 msgid "* is a wildcard"
-msgstr "* a helyettesítőkarakter"
+msgstr "* a helyettesítő karakter"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1136
 #: pynicotine/gtkgui/userinfo.py:488 pynicotine/gtkgui/widgets/popupmenu.py:376
@@ -1167,7 +1164,7 @@ msgstr "Írja be a tiltani kívánt IP-címet:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
 msgid "Format codes"
-msgstr ""
+msgstr "Formátum kódok"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -1576,7 +1573,7 @@ msgstr "Tétel"
 
 #: pynicotine/gtkgui/interests.py:166 pynicotine/gtkgui/interests.py:174
 msgid "Re_commendations for Item"
-msgstr "_Javaslatok a tételhez"
+msgstr "Ja_vaslatok a tételhez"
 
 #: pynicotine/gtkgui/interests.py:167 pynicotine/gtkgui/interests.py:175
 #: pynicotine/gtkgui/interests.py:186 pynicotine/gtkgui/userinfo.py:322
@@ -1636,28 +1633,24 @@ msgid "_Preferences"
 msgstr "_Beállítások"
 
 #: pynicotine/gtkgui/mainwindow.py:512
-#, fuzzy
 msgid "Browse _Public Shares"
-msgstr "Nyilvános megosztások _böngészése"
+msgstr "N_yilvános megosztások böngészése"
 
 #: pynicotine/gtkgui/mainwindow.py:513
-#, fuzzy
 msgid "Browse _Buddy Shares"
-msgstr "Barátok megosztásainak b_öngészése"
+msgstr "Baráti megosztások b_öngészése"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Barátok megosztásainak b_öngészése"
+msgstr "Megbízható megosz_tások böngészése"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
 msgstr "Megosztások _újraolvasása"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Megosztások beállítása"
+msgstr "_Megosztások beállítása"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1684,9 +1677,8 @@ msgid "_About Nicotine+"
 msgstr "_A Nicotine+ névjegye"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Megosztások böngészése"
+msgstr "Megosztások bön_gészése"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1788,9 +1780,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Feltöltések: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1330
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Megosztások beolvasása"
+msgstr "Megosztások előkészítése"
 
 #: pynicotine/gtkgui/mainwindow.py:1337
 msgid "Scanning Shares"
@@ -1991,7 +1982,7 @@ msgstr ""
 #: pynicotine/gtkgui/search.py:806 pynicotine/gtkgui/userbrowse.py:508
 #, python-format
 msgid "[PRIVATE]  %s"
-msgstr "[MAGÁN]  %s"
+msgstr "[PRIVÁT]  %s"
 
 #: pynicotine/gtkgui/search.py:890
 #: pynicotine/gtkgui/widgets/notifications.py:66
@@ -2062,9 +2053,8 @@ msgid "Transferring"
 msgstr "Átvitel"
 
 #: pynicotine/gtkgui/transfers.py:91
-#, fuzzy
 msgid "Connection closed"
-msgstr "A kapcsolatot a peer lezárta"
+msgstr "A kapcsolat lezárva"
 
 #: pynicotine/gtkgui/transfers.py:92
 msgid "Connection timeout"
@@ -2111,9 +2101,8 @@ msgid "Local file error"
 msgstr "Helyi fájl hiba"
 
 #: pynicotine/gtkgui/transfers.py:107
-#, fuzzy
 msgid "File read error"
-msgstr "Fájlátvitelek"
+msgstr "Fájlolvasási hiba"
 
 #: pynicotine/gtkgui/transfers.py:148
 msgid "Queue"
@@ -2628,18 +2617,18 @@ msgid "Group by User"
 msgstr "Csoportosítás felhasználók szerint"
 
 #: pynicotine/headless/application.py:73
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Valóban ki akar lépni?"
+msgstr "Valóban ki akar lépni? %s"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "A következő megosztások nem érhetők el:"
 
 #: pynicotine/headless/application.py:98
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Megpróbálja újra az újrakeresést? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -3876,14 +3865,14 @@ msgid "Not joined in room %s"
 msgstr "Nincs csatlakozva a(z) %s szobához"
 
 #: pynicotine/plugins/core_commands/__init__.py:385
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Nincs megosztás ezzel a névvel „%s”"
+msgstr "Nem küld üzenetet %s felhasználónak"
 
 #: pynicotine/plugins/core_commands/__init__.py:389
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Privát csevegés bezárása"
+msgstr "%s felhasználó privát csevegése lezárva"
 
 #: pynicotine/plugins/core_commands/__init__.py:466
 #, python-format
@@ -3908,7 +3897,7 @@ msgstr "%s mellőzése visszavonva"
 #: pynicotine/plugins/core_commands/__init__.py:543
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s listázot megosztás (%(num_total)s beállított)"
 
 #: pynicotine/plugins/core_commands/__init__.py:555
 #, python-format
@@ -4083,16 +4072,16 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Az újrakeresés befejeződött: %(num)s mappa található"
 
 #: pynicotine/shares.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Súlyos hiba történt a megosztások újraellenőrzése közben. Ha a probléma "
-"továbbra is fennáll törölje a(z) %(dir)s/*.db fájlt és próbálja meg újra. Ha "
-"ez nem segít, kérem küldjön hibajelentést amely tartalmazza a következő "
-"veremnyomkövetőt: %(trace)s"
+"továbbra is fennáll, törölje a(z) %(dir)s/*.dbn fájlt és próbálja meg újra. "
+"Ha ez nem segít, kérem küldjön hibajelentést amely tartalmazza a következő "
+"veremnyomot: %(trace)s"
 
 #: pynicotine/shares.py:403
 #, python-format
@@ -4402,15 +4391,14 @@ msgstr "Mappák megosztása"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"A Soulseek-felhasználók letölthetnek a megosztásaiból. Járuljon hozzá a "
-"Soulseek hálózathoz saját gyűjteményének megosztásával és a más "
-"felhasználóktól letöltött tartalmak újra megosztásával."
+"A Soulseek felhasználók letölthetnek a megosztásaiból. Járuljon hozzá a "
+"Soulseek hálózathoz saját fájljainak megosztásával és a más felhasználóktól "
+"letöltött tartalmak újra megosztásával."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
 msgid "You are ready to use Nicotine+!"
@@ -4462,7 +4450,7 @@ msgstr "Utolsó sebesség"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:11
 msgid "_Export…"
-msgstr "_Exportálás…"
+msgstr "E_xportálás…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:17
 msgid "_Apply"
@@ -4486,9 +4474,8 @@ msgid "Show Log Pane"
 msgstr "Napló ablak megjelenítése"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Fiók beállítása"
+msgstr "Erősítse meg a kilépést"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -5107,26 +5094,27 @@ msgid ""
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Kezdő betűjükkel, b, k, m és g (vagy kib, mib vagy gib) toldalékkal adhatja "
-"meg a bájt, kilóbájt, megabájt vagy gigabájt egységeket:\n"
-"    20 m a 20 MiB(megabájt)-nál nagyobb fájlok megjelenítéséhez."
+"Kezdő betűjükkel, b, k, m és g toldalékkal (használhatja a kib, mib vagy gib "
+"egységeket is) adhatja meg a bájt, kibibájt, mebibájt vagy gibibájt "
+"egységeket:\n"
+"    20 m a 20 MiB(mebibájt)-nál nagyobb fájlok megjelenítéséhez."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:236
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"A pontos egyezés megadásához az érték elé kell tenni az egyenlőségjelet "
-"(=):\n"
-"    =1024 csak az 1KiB (kilobájt) méretű fájlokra illeszkedik."
+"A pontos egyezés megadásához az érték elé kell tenni az egyenlőségjelet (=):"
+"\n"
+"    =1024 csak az 1KiB (kibibájt) méretű fájlokra illeszkedik."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:247
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"! elöl, az adott méretű fájlok kizárásához:\n"
-"    !30,5 m a 30,5 MiB (megabájt) méretű fájlok elrejtéséhez."
+"„!” előtag az adott méretű fájlok kizárásához:\n"
+"    !30,5 m a 30,5 MiB (mebibájt) méretű fájlok elrejtéséhez."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:258
 msgid ""
@@ -5145,7 +5133,7 @@ msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"A kb, mb és gb ismertebb változatai, a kilóbájt, megabájt és gigabájt "
+"A jobban ismert változatok, a kb, mb és gb (kilóbájt, megabájt és gigabájt) "
 "egységek is használhatók."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:297
@@ -5169,7 +5157,7 @@ msgid ""
 msgstr ""
 "A fájlmérethez hasonlóan (fent) használhatók az operátorok =, !, <, >, <= "
 "vagy >= és több feltétel is megadható, például a legalább 256 Kb/s "
-"bitsebességű és 1411 Kb/s maximális bitsebességű fájlok megjelenítése\n"
+"bitsebességű és a maximálisan 1411 Kb/s bitsebességű fájlok megjelenítése\n"
 "    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:346
@@ -5644,9 +5632,8 @@ msgid "Public IP address:"
 msgstr "Nyilvános IP-cím:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Nyelv (újraindítás szükséges):"
+msgstr "Figyelőport (újraindítás szükséges):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5759,14 +5746,13 @@ msgid "Show privately shared files in search results"
 msgstr "Privát módon megosztott fájlok megjelenítése a keresési eredményekben"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Más kliensek lehetőséget kínálnak a magánjellegű fájlmegosztásra. Az ilyen "
-"fájlok előtagja [PRIVATE], és addig nem tölthetők le, amíg a feltöltő erre "
+"A privát megosztás fájljainak, amelyeket mindenki számára láthatóvá tettek, "
+"az előtagja [PRIVÁT], és addig nem tölthetők le, amíg a feltöltő erre "
 "kifejezetten engedélyt nem ad. Kérdezd meg őt kedvesen."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
@@ -5864,17 +5850,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Mindenki számára látható:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Barát nevek"
+msgstr "Baráti megosztások"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Megosztások listája"
+msgstr "Megbízható megosztások"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
