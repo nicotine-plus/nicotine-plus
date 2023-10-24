@@ -55,7 +55,7 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
 ```sh
 py-spy top ./nicotine
 ```
-The console will continuously display a top like view of functions consuming CPU, press `L` to aggregate by line number.
+The console will continuously display a top like view of functions consuming CPU. Press `L` to aggregate by line number, and `R` to reset the view.
 
 
 ## Debug Logging
