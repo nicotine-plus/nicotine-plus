@@ -117,6 +117,7 @@ class Searches(IconNotebook):
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
+            ("server-login", self.on_focus),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -124,6 +125,9 @@ class Searches(IconNotebook):
         self.populate_search_history()
 
     def on_focus(self, *_args):
+
+        if self.window.current_page_id != self.window.search_page.id:
+            return True
 
         if self.window.search_entry.is_sensitive():
             self.window.search_entry.grab_focus()

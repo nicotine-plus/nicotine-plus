@@ -102,6 +102,9 @@ class ChatRooms(IconNotebook):
 
     def on_focus(self, *_args):
 
+        if self.window.current_page_id != self.window.chatrooms_page.id:
+            return True
+
         if self.get_n_pages():
             return True
 

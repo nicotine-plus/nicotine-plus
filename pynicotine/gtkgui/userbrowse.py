@@ -78,6 +78,7 @@ class UserBrowses(IconNotebook):
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.on_focus),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
@@ -87,6 +88,9 @@ class UserBrowses(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
+
+        if self.window.current_page_id != self.window.userbrowse_page.id:
+            return True
 
         if self.get_n_pages():
             return True

@@ -231,6 +231,21 @@ class MainWindow(Window):
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
 
+        # Events
+        for event_name, callback in (
+            ("schedule-quit", self.schedule_quit),
+            ("server-login", self.update_user_status),
+            ("server-disconnect", self.update_user_status),
+            ("set-connection-stats", self.set_connection_stats),
+            ("shares-preparing", self.shares_preparing),
+            ("shares-ready", self.shares_ready),
+            ("shares-scanning", self.shares_scanning),
+            ("update-download-limits", self.update_download_limits),
+            ("update-upload-limits", self.update_upload_limits),
+            ("user-status", self.user_status)
+        ):
+            events.connect(event_name, callback)
+
         # Main notebook
         self.notebook = IconNotebook(
             self,
@@ -263,21 +278,6 @@ class MainWindow(Window):
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
         self.connect_tab_signals()
-
-        # Events
-        for event_name, callback in (
-            ("schedule-quit", self.schedule_quit),
-            ("server-login", self.server_login),
-            ("server-disconnect", self.server_disconnect),
-            ("set-connection-stats", self.set_connection_stats),
-            ("shares-preparing", self.shares_preparing),
-            ("shares-ready", self.shares_ready),
-            ("shares-scanning", self.shares_scanning),
-            ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits),
-            ("user-status", self.user_status)
-        ):
-            events.connect(event_name, callback)
 
         # Apply UI customizations
         set_global_style()
@@ -1045,37 +1045,16 @@ class MainWindow(Window):
 
     # Connection #
 
-    def server_login(self, msg):
-
-        if not msg.success:
-            return
-
-        focus_widget = None
-        self.update_user_status()
-
-        if self.current_page_id == self.userbrowse_page.id:
-            focus_widget = self.userbrowse_entry
-
-        if self.current_page_id == self.userinfo_page.id:
-            focus_widget = self.userinfo_entry
-
-        if self.current_page_id == self.search_page.id:
-            focus_widget = self.search_entry
-
-        if focus_widget is not None:
-            focus_widget.grab_focus()
-
-    def server_disconnect(self, _msg):
-        self.update_user_status()
-
-    def update_user_status(self):
+    def update_user_status(self, *_args):
 
         status = core.user_status
         is_online = (status != UserStatus.OFFLINE)
         is_away = (status == UserStatus.AWAY)
+        toggle_status_action = self.lookup_action("toggle-status")
 
         # Action status
         self.application.lookup_action("connect").set_enabled(not is_online)
+        toggle_status_action.set_enabled(is_online)
 
         for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
                             "message-downloading-users", "message-buddies"):
@@ -1114,12 +1093,9 @@ class MainWindow(Window):
         self.user_status_label.set_text(status_text)
 
         # Disable button toggled state without activating action
-        toggle_status_action = self.lookup_action("toggle-status")
-        toggle_status_action.set_enabled(False)
-
+        toggle_status_action.handler_block_by_func(self.on_toggle_status)
         self.user_status_button.set_active(False)
-
-        toggle_status_action.set_enabled(is_online)
+        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
 
     # Search #
 
