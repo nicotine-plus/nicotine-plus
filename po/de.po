@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-09-21 18:30+0000\n"
+"PO-Revision-Date: 2023-10-22 22:03+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1081,7 +1081,7 @@ msgstr "Filter Erfolgreich"
 #: pynicotine/gtkgui/dialogs/preferences.py:612
 #: pynicotine/gtkgui/dialogs/preferences.py:651
 msgid "Public"
-msgstr ""
+msgstr "Öffentlich"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1092,7 +1092,7 @@ msgstr "Vertrauenswürdige Freunde"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 msgid "Accessible To"
-msgstr ""
+msgstr "Erreichbar für"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:620
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1176,7 +1176,7 @@ msgstr "Gebe die IP-Adresse ein, die du sperren möchtest:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
 msgid "Format codes"
-msgstr ""
+msgstr "Formatkodes"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -2641,7 +2641,7 @@ msgstr "Willst du wirklich aussteigen?"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Die folgenden Shares sind nicht verfügbar:"
 
 #: pynicotine/headless/application.py:98
 #, python-format
@@ -5886,7 +5886,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Für jeden sichtbar:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy

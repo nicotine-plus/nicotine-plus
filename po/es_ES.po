@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-10-17 22:16+0000\n"
+"PO-Revision-Date: 2023-10-21 04:16+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -1173,7 +1173,7 @@ msgstr "Introduzca la dirección IP que deseas bloquear:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
 msgid "Format codes"
-msgstr ""
+msgstr "Códigos del formato"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -5768,16 +5768,14 @@ msgstr ""
 "búsqueda"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Los archivos compartidos de forma privada que se hayan hecho visibles para "
-"todo el mundo llevarán el prefijo '[PRIVADO]', y no podrán descargarse hasta "
-"que la persona que los haya subido dé su permiso explícito. Pídeselo "
-"amablemente."
+"Los archivos compartidos en privado que se hayan hecho visibles para todo el "
+"mundo llevarán el prefijo '[PRIVATE]', y no podrán descargarse hasta que "
+"quien los haya subido dé su permiso explícito. Pídeselo amablemente."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-10-15 23:04+0000\n"
+"PO-Revision-Date: 2023-10-22 22:03+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -31,15 +31,14 @@ msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ é um cliente gráfico para a rede peer-to-peer Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ pretende ser uma alternativa agradável, livre e de código aberto "
-"(FOSS) ao cliente oficial de Soulseek, fornecendo funcionalidade adicional e "
-"mantendo-se atualizado com o protocolo Soulseek."
+"Nicotine+ pretende ser uma alternativa leve, agradável, gratuita e de código "
+"aberto (FOSS) ao cliente oficial Soulseek, ao mesmo tempo que fornece um "
+"conjunto abrangente de recursos."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:769
@@ -389,9 +388,8 @@ msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Nenhum ambiente gráfico disponível, usando o modo headless (sem GUI)"
 
 #: pynicotine/gtkgui/application.py:297
-#, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
-msgstr "Você realmente quer sair da Nicotine+?"
+msgstr "Você ainda está enviando arquivos. Você realmente quer sair?"
 
 #: pynicotine/gtkgui/application.py:298
 msgid "Wait for uploads to finish"
@@ -1080,18 +1078,17 @@ msgstr "Filtros bem-sucedidos"
 #: pynicotine/gtkgui/dialogs/preferences.py:612
 #: pynicotine/gtkgui/dialogs/preferences.py:651
 msgid "Public"
-msgstr ""
+msgstr "Público"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
 #: pynicotine/gtkgui/dialogs/preferences.py:703
-#, fuzzy
 msgid "Trusted buddies"
-msgstr "Amigos de Confiança"
+msgstr "Amigos de confiança"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 msgid "Accessible To"
-msgstr ""
+msgstr "Acessível À"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:620
 #: pynicotine/gtkgui/dialogs/preferences.py:666
@@ -1173,7 +1170,7 @@ msgstr "Digite um endereço IP que você deseja bloquear:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
 msgid "Format codes"
-msgstr ""
+msgstr "Códigos do formato"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -1641,19 +1638,16 @@ msgid "_Preferences"
 msgstr "_Preferências"
 
 #: pynicotine/gtkgui/mainwindow.py:512
-#, fuzzy
 msgid "Browse _Public Shares"
-msgstr "_Procurar compartilhamentos públicos"
+msgstr "Navegar em Compartilhamentos_Públicos"
 
 #: pynicotine/gtkgui/mainwindow.py:513
-#, fuzzy
 msgid "Browse _Buddy Shares"
-msgstr "Nav_egar em Compartilhamentos de Amigos"
+msgstr "Navegar Compartilhamentos de_Amigos"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Nav_egar em Compartilhamentos de Amigos"
+msgstr "Navegar Compartilhamentos _Confiáveis"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
@@ -2636,12 +2630,12 @@ msgstr "Você realmente quer sair da Nicotine+?"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Os seguintes compartilhamentos estão indisponíveis:"
 
 #: pynicotine/headless/application.py:98
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Reescanear novamente? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -4113,7 +4107,7 @@ msgstr "%s não ignorados"
 #: pynicotine/plugins/core_commands/__init__.py:543
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s compartilhamentos listados (%(num_total)s configurado)"
 
 #: pynicotine/plugins/core_commands/__init__.py:555
 #, python-format
@@ -6070,7 +6064,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Visível para todos:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
