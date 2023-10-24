@@ -86,6 +86,7 @@ class ChatRooms(IconNotebook):
             ("echo-room-message", self.echo_room_message),
             ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
+            ("leave-room", self.leave_room),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
             ("say-chat-room", self.say_chat_room),
@@ -205,12 +206,30 @@ class ChatRooms(IconNotebook):
                 self.unhighlight_room(room)
                 break
 
-    def show_room(self, room):
+    def show_room(self, room, is_private=False, switch_page=True, remembered=False):
 
-        page = self.pages.get(room)
+        if room not in self.pages:
+            self.pages[room] = tab = ChatRoom(self, room, is_private=is_private)
+            is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
 
-        if page is not None:
-            self.set_current_page(page.container)
+            if remembered and not is_global:
+                tab_position = -1
+            elif is_global or core.chatrooms.GLOBAL_ROOM_NAME not in self.pages:
+                tab_position = 0
+            else:
+                tab_position = 1
+
+            self.insert_page(
+                tab.container, room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
+                position=tab_position
+            )
+            tab.set_label(self.get_tab_label_inner(tab.container))
+
+            if not is_global:
+                self.window.search.room_search_combobox.append(room)
+
+        if switch_page:
+            self.set_current_page(self.pages[room].container)
             self.window.change_main_page(self.window.chatrooms_page)
 
     def remove_room(self, room):
@@ -249,37 +268,16 @@ class ChatRooms(IconNotebook):
     def join_room(self, msg):
 
         page = self.pages.get(msg.room)
-        is_auto_joined = (msg.room in core.chatrooms.pending_autojoin_rooms)
-
-        if is_auto_joined:
-            core.chatrooms.pending_autojoin_rooms.remove(msg.room)
 
         if page is not None:
             page.join_room(msg)
-            return
 
-        self.pages[msg.room] = tab = ChatRoom(self, msg.room, msg.users, is_private=msg.private)
-        is_global = (msg.room == core.chatrooms.GLOBAL_ROOM_NAME)
+    def leave_room(self, msg):
 
-        if is_auto_joined:
-            tab_position = -1
-        elif is_global or core.chatrooms.GLOBAL_ROOM_NAME not in self.pages:
-            tab_position = 0
-        else:
-            tab_position = 1
+        page = self.pages.get(msg.room)
 
-        self.insert_page(
-            tab.container, msg.room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
-            position=tab_position
-        )
-        tab.set_label(self.get_tab_label_inner(tab.container))
-
-        if not is_auto_joined:
-            # Did not auto-join room, switch to tab
-            core.chatrooms.show_room(msg.room)
-
-        if not is_global:
-            self.window.search.room_search_combobox.append(msg.room)
+        if page is not None:
+            page.leave_room()
 
     def user_stats(self, msg):
         for page in self.pages.values():
@@ -355,7 +353,7 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
-    def __init__(self, chatrooms, room, users, is_private):
+    def __init__(self, chatrooms, room, is_private):
 
         (
             self.activity_container,
@@ -535,7 +533,6 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.populate_room_users(users)
         self.read_room_logs()
 
     def load(self):
@@ -767,7 +764,6 @@ class ChatRoom:
         if is_global:
             line = f"{room} | {line}"
 
-        line = "\n-- ".join(line.split("\n"))
         usertag = self.chat_view.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
@@ -944,6 +940,13 @@ class ChatRoom:
         self.chat_view.update_tags()
 
     def server_disconnect(self):
+        self.leave_room()
+
+    def join_room(self, msg):
+        self.populate_room_users(msg.users)
+        self.chat_entry.set_sensitive(True)
+
+    def leave_room(self):
 
         self.users_list_view.clear()
         self.update_user_count()
@@ -952,9 +955,7 @@ class ChatRoom:
             self.update_room_user_completions()
 
         self.chat_view.update_user_tags()
-
-    def join_room(self, msg):
-        self.populate_room_users(msg.users)
+        self.chat_entry.set_sensitive(False)
 
     def on_focus(self, *_args):
 
