@@ -116,7 +116,7 @@ class SoulseekNetworkTest(TestCase):
             if sys.platform == "win32":
                 self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 8)
 
-            elif sys.platform == "linux":
+            elif hasattr(socket, "TCP_USER_TIMEOUT"):
                 self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
 
             else:
