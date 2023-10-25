@@ -437,10 +437,16 @@ class NetworkThread(Thread):
     def _create_listen_socket(self):
 
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         self._listen_socket.setblocking(False)
+
+        # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
+        # to the same port immediately after reconnecting. This option behaves differently
+        # on Windows, allowing other programs to hijack the port, so don't set it there.
+
+        if sys.platform != "win32":
+            self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         if not self._bind_listen_port():
             self._close_listen_socket()
