@@ -33,6 +33,7 @@ from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class Uploads(Transfers):
@@ -152,15 +153,14 @@ class Uploads(Transfers):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            open_file_path(file_path=transfer.folder_path, command=config.sections["ui"]["filemanager"])
+            open_folder_path(transfer.folder_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
             basename = transfer.virtual_path.split("\\")[-1]
 
-            open_file_path(file_path=os.path.join(transfer.folder_path, basename),
-                           command=config.sections["players"]["default"])
+            open_file_path(os.path.join(transfer.folder_path, basename))
 
     def on_browse_folder(self, *_args):
 

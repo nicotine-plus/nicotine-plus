@@ -540,6 +540,9 @@ class Config:
                 "cycle",
                 "onematch",
                 "aliases"
+            ),
+            "players": (
+                "default"
             )
         }
 
@@ -654,7 +657,7 @@ class Config:
                 if option in self.sections[section]:
                     continue
 
-                # Migrate download speed limit preference
+                # Migrate download speed limit preference (3.3.0)
                 if option == "use_download_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
                         use_speed_limit = "alternative"
@@ -668,7 +671,7 @@ class Config:
                     self.sections[section][option] = use_speed_limit
                     continue
 
-                # Migrate upload speed limit preference
+                # Migrate upload speed limit preference (3.3.0)
                 if option == "use_upload_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
                         use_speed_limit = "alternative"
@@ -694,12 +697,18 @@ class Config:
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
 
-        # Migrate old trusted buddy shares to new format
+        # Migrate old trusted buddy shares to new format (3.3.0)
         if self.sections["transfers"].get("buddysharestrustedonly", False):
             buddy_shares = self.sections["transfers"]["buddyshared"]
 
             self.sections["transfers"]["trustedshared"] = buddy_shares[:]
             buddy_shares.clear()
+
+        # Migrate old media player command to new format (3.3.0)
+        default_player = self.sections["players"].get("default")
+
+        if default_player:
+            self.sections["urls"]["protocols"]["audio"] = default_player
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]
