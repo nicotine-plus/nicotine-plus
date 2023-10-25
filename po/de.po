@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-10-22 22:03+0000\n"
+"PO-Revision-Date: 2023-10-24 20:36+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1\n"
+"X-Generator: Weblate 5.1.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -423,7 +423,7 @@ msgstr "Nicotine+ beenden"
 
 #: pynicotine/gtkgui/application.py:334
 msgid "Shares Not Available"
-msgstr "Teile nicht verfügbar"
+msgstr "Freigaben nicht verfügbar"
 
 #: pynicotine/gtkgui/application.py:335 pynicotine/headless/application.py:97
 msgid ""
@@ -1654,9 +1654,8 @@ msgid "Browse _Buddy Shares"
 msgstr "Freundenfreigaben durchsuchen"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Freundenfreigaben durchsuchen"
+msgstr "Gute Freundenfreigaben durchsuchen"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
@@ -1796,13 +1795,12 @@ msgid "Uploads: %(speed)s"
 msgstr "Uploads: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1330
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Aktualisierung öffentlicher Freigaben begonnen"
+msgstr "Freigaben vorbereiten"
 
 #: pynicotine/gtkgui/mainwindow.py:1337
 msgid "Scanning Shares"
-msgstr "Aktualisierung öffentlicher Freigaben begonnen"
+msgstr "Aktualisierung der Freigaben"
 
 #: pynicotine/gtkgui/mainwindow.py:1388
 msgid "Quitting..."
@@ -2641,12 +2639,12 @@ msgstr "Willst du wirklich aussteigen?"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
-msgstr "Die folgenden Shares sind nicht verfügbar:"
+msgstr "Die folgenden Freigaben sind nicht verfügbar:"
 
 #: pynicotine/headless/application.py:98
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Scannen erneut versuchen? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -3924,7 +3922,7 @@ msgstr "%s nicht mehr ignoriert"
 #: pynicotine/plugins/core_commands/__init__.py:543
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s Freigaben gezeigt (%(num_total)s konfiguriert)"
 
 #: pynicotine/plugins/core_commands/__init__.py:555
 #, python-format
@@ -4090,7 +4088,7 @@ msgstr "Freigaben aktualisieren …"
 
 #: pynicotine/shares.py:262
 msgid "Rescanning shares…"
-msgstr "Freigaben aktualisieren…"
+msgstr "Freigaben aktualisieren …"
 
 #: pynicotine/shares.py:280
 #, python-format
@@ -4098,15 +4096,15 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Erneuter Scan abgeschlossen: %(num)s Ordner gefunden"
 
 #: pynicotine/shares.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Beim erneuten Scannen von Freigaben ist ein schwerwiegender Fehler "
-"aufgetreten. Wenn dieses Problem weiterhin besteht, lösche %(dir)s/*.db und "
-"versuche es erneut. Wenn das nicht hilft, reiche bitte einen Fehlerbericht "
+"aufgetreten. Wenn dieses Problem weiterhin besteht, lösche %(dir)s/*.dbn und "
+"versuche es erneut. Falls das nicht hilft, reiche bitte einen Fehlerbericht "
 "mit diesem Stack-Trace ein: %(trace)s"
 
 #: pynicotine/shares.py:403
@@ -4222,7 +4220,7 @@ msgstr "Kann Verzeichnis „%(folder)s“ nicht erstellen, Fehler: %(error)s"
 #: pynicotine/userbrowse.py:182
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
-msgstr "Laden der Freigaben von der Festplatte schlug fehl: %(error)s"
+msgstr "Laden der Freigaben von der Festplatte fehlgeschlagen: %(error)s"
 
 #: pynicotine/userbrowse.py:225
 #, python-format
@@ -4234,7 +4232,7 @@ msgstr ""
 #: pynicotine/userbrowse.py:229
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Kann Freigaben nicht speichern, %(user)s, Fehler: %(error)s"
+msgstr "Kann Freigaben nicht speichern, '%(user)s', Fehler: %(error)s"
 
 #: pynicotine/userinfo.py:99
 #, python-format
@@ -4418,15 +4416,14 @@ msgstr "Gebe Ordner frei"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Soulseek-Benutzer können von Ihren Freigaben herunterladen. Tragen Sie zum "
-"Soulseek-Netzwerk bei, indem Sie Ihre eigene Sammlung teilen und indem Sie "
-"das, was Sie von anderen Benutzern heruntergeladen haben, erneut teilen."
+"Soulseek-Benützer können von deiner Freigaben herunterladen. Trage zum "
+"Soulseek-Netzwerk bei, mittels deine eigene Sammlung und was du von anderen "
+"Benutzern heruntergeladen hast, zu teilen."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
 msgid "You are ready to use Nicotine+!"
@@ -5861,7 +5858,7 @@ msgid ""
 "shares, search results will be sent to the user."
 msgstr ""
 "Wenn ein Benutzer im Soulseek-Netzwerk nach einer Datei sucht, die in Ihren "
-"Freigaben vorhanden ist, werden die Suchergebnisse an den Benutzer gesendet."
+"Freigaben vorhanden ist, werden die Suchergebnisse dem Benutzer gesendet."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:484
 msgid "Searches shorter than this number of characters will be ignored:"
@@ -5880,23 +5877,21 @@ msgid ""
 "Automatically rescans the contents of your shared folders on startup. If "
 "disabled, your shares are only updated when you manually initiate a rescan."
 msgstr ""
-"Scannt den Inhalt Ihrer gemeinsamen Ordner beim Start automatisch neu. Wenn "
-"diese Funktion deaktiviert ist, werden Ihre Freigaben nur aktualisiert, wenn "
-"Sie manuell eine erneute Überprüfung einleiten."
+"Scannt den Inhalt deiner Freigaben beim Programmstart automatisch. Wenn "
+"diese Funktion deaktiviert ist, werden Ihre Freigaben nur manuell "
+"aktualisiert."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
 msgstr "Für jeden sichtbar:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Freundennamen"
+msgstr "Freundenfreigaben"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Freigaben auflisten"
+msgstr "Gute Freundenfreigaben"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
