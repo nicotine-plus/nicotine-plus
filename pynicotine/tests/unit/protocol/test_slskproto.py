@@ -21,6 +21,7 @@ import os
 import pickle
 import selectors
 import socket
+import sys
 
 from time import sleep
 from unittest import TestCase
@@ -111,24 +112,22 @@ class SoulseekNetworkTest(TestCase):
 
         # pylint: disable=no-member,protected-access
 
-        if hasattr(socket, "TCP_USER_TIMEOUT"):
-            self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 10)
+        if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
+            if sys.platform == "win32":
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 8)
 
-        elif hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
-            self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 9)
+            elif sys.platform == "linux":
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
+
+            else:
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
-            self.assertEqual(
-                core._network_thread._server_socket.ioctl.call_count, 1)
-            self.assertEqual(
-                core._network_thread._server_socket.setsockopt.call_count, 6)
+            self.assertEqual(core._network_thread._server_socket.ioctl.call_count, 1)
+            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 5)
 
-        self.assertEqual(
-            core._network_thread._server_socket.setblocking.call_count, 2)
-        self.assertEqual(
-            core._network_thread._server_socket.connect_ex.call_count, 1)
+        self.assertEqual(core._network_thread._server_socket.setblocking.call_count, 2)
+        self.assertEqual(core._network_thread._server_socket.connect_ex.call_count, 1)
 
     def test_login(self):
 
