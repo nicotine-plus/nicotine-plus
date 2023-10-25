@@ -491,7 +491,7 @@ class NetworkThread(Thread):
             self._listen_port = None
             return False
 
-        self._local_ip_address = ip_address or "127.0.0.1"
+        self._local_ip_address = ip_address
         log.add(_("Listening on port: %i"), self._listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
