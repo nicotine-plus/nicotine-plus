@@ -539,15 +539,17 @@ class PluginHandler:
                     command_list[command] = data
 
             # Legacy commands
-            for command_interface, plugin_commands in (
-                ("chatroom", plugin.__publiccommands__),
-                ("private_chat", plugin.__privatecommands__)
+            for command_interface, attribute_name, plugin_commands in (
+                ("chatroom", "__publiccommands__", plugin.__publiccommands__),
+                ("private_chat", "__privatecommands__", plugin.__privatecommands__)
             ):
                 interface_commands = self.commands.get(command_interface)
 
                 for command, _func in plugin_commands:
                     if command not in interface_commands:
                         interface_commands[command] = None
+                        plugin.log((f"/{command}: {attribute_name} is deprecated, please use the new "
+                                    f"command system. See pynicotine/plugins/ in the Git repository for examples."))
 
             self.update_completions(plugin)
 
