@@ -89,7 +89,7 @@ class Downloads(Transfers):
         self.download_speeds = DownloadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.downloads.transfers)
+        self.init_transfers(core.downloads.transfers.values())
 
     def get_transfer_folder_path(self, transfer):
         return transfer.folder_path
