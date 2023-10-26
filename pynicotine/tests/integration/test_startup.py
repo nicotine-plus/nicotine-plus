@@ -18,7 +18,6 @@
 
 import os
 import subprocess
-import sys
 
 from unittest import skipIf
 from unittest import TestCase
