@@ -51,7 +51,6 @@ class StartupTest(TestCase):
 
             self.assertTrue(is_success)
 
-    @skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
     def test_cli(self):
         """Verify that CLI-exclusive functionality works."""
 
