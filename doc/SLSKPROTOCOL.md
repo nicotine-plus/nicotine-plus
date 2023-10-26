@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on October 9, 2023
+Last updated on October 27, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -23,6 +23,12 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Number |
 |--------|
 | 1 Byte |
+
+### 16-bit Integer
+
+| Number                  |
+|-------------------------|
+| 2 Bytes (little-endian) |
 
 ### 32-bit Integer
 
@@ -314,7 +320,7 @@ If this value is set to zero, or the message is not sent upon login (which defau
 ### Data Order
   - Send
     1.  **uint32** <ins>port</ins>
-    2.  **bool** <ins>use obfuscation</ins>
+    2.  **uint32** <ins>use obfuscation</ins> **0 or 1**
     3.  **uint32** <ins>obfuscated port</ins>
   - Receive
       - *No Message*
@@ -333,8 +339,9 @@ We send this to the server to ask for a peer's address (IP address and port), gi
     1.  **string** <ins>username</ins>
     2.  **ip** <ins>ip</ins>
     3.  **uint32** <ins>port</ins>
-    4.  **bool** <ins>use obfuscation</ins>
-    5.  **uint32** <ins>obfuscated port</ins>
+    4.  **uint32** <ins>use obfuscation</ins>
+    5.  Check contents of <ins>use obfuscation</ins>
+        1.  **uint16** <ins>obfuscated port</ins> *if use obfuscation == 1*
 
 ## Server Code 5
 
@@ -509,8 +516,9 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     4.  **uint32** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token for [PierceFireWall](#peer-init-code-0)*
     6.  **bool** <ins>privileged</ins>
-    7.  **bool** <ins>use obfuscation</ins>
-    8.  **uint32** <ins>obfuscated port</ins>
+    7.  **uint32** <ins>use obfuscation</ins>
+    8.  Check contents of <ins>use obfuscation</ins>
+        1.  **uint32** <ins>obfuscated port</ins> *if use obfuscation == 1*
 
 ## Server Code 22
 
@@ -2150,7 +2158,7 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     2.  Check contents of <ins>picture</ins>
           - If <ins>picture</ins> is not empty
             1.  **bool** <ins>has picture</ins> **1**
-            2.  **string** <ins>picture</ins>
+            2.  **bytes** <ins>picture</ins>
           - If <ins>picture</ins> is empty
             1.  **bool** <ins>has picture</ins> **0**
     3.  **uint32** <ins>totalupl</ins>
@@ -2162,8 +2170,7 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     1.  **string** <ins>description</ins>
     2.  **bool** <ins>has picture</ins>
     3.  Check contents of <ins>has picture</ins>
-        1.  If <ins>has picture</ins> is not empty
-            1.  **string** <ins>picture</ins>
+        1.  **bytes** <ins>picture</ins> *if has picture == 1*
     4.  **uint32** <ins>totalupl</ins>
     5.  **uint32** <ins>queuesize</ins>
     6.  **bool** <ins>slotsfree</ins> *Can immediately download*
