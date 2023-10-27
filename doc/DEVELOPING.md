@@ -48,7 +48,7 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
 
  * Use different data structures and algorithms, e.g. dictionaries and sets for faster membership checks (O(1)) compared to lists (O(n)).
  * Use existing functionality in the Python Standard Library when available. Parts of the standard library are written in C, and perform better than pure-Python counterparts, especially in hot code paths.
- * Look for alternative ways of accomplishing a task, and measure the performance. The [Python documentation](https://docs.python.org) and [Wiki](https://wiki.python.org/moin/PythonSpeed/PerformanceTips) help a lot here.
+ * Look for alternative ways of accomplishing a task, and measure the performance. Search engines help a lot here.
 
 [py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling in real time while [running Nicotine+ directly from a local Git folder](TESTING.md#git) and starting with:
 
