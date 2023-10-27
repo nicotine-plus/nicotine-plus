@@ -518,6 +518,7 @@ class NetworkThread(Thread):
                     events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
 
                     self._token_init_msgs.pop(init.token, None)
+                    self._username_init_msgs.pop(username + conn_type)
                     init.outgoing_msgs.clear()
 
     @staticmethod
@@ -1010,6 +1011,11 @@ class NetworkThread(Thread):
         if connection_list is self._connsinprogress and user_init.sock is not None:
             # Outgoing connection failed, but an indirect connection was already established
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
+            return
+
+        if init in self._out_indirect_conn_request_times:
+            # Indirect connection attempt in progress, remove init message later on timeout
+            log.add_conn("Cannot remove PeerInit message, since an indirect connection attempt is still in progress")
             return
 
         del self._username_init_msgs[init_key]
