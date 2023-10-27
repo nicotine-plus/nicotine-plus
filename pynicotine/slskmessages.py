@@ -436,13 +436,13 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port", "use_obfuscation", "obfuscated_port")
+    __slots__ = ("user", "ip_address", "port", "obfuscated_version", "obfuscated_port")
 
     def __init__(self, user=None):
         self.user = user
         self.ip_address = None
         self.port = None
-        self.use_obfuscation = None
+        self.obfuscated_version = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -457,10 +457,8 @@ class GetPeerAddress(ServerMessage):
             # Soulfind server support
             return
 
-        pos, self.use_obfuscation = self.unpack_uint32(message, pos)
-
-        if self.use_obfuscation:
-            pos, self.obfuscated_port = self.unpack_uint16(message, pos)
+        pos, self.obfuscated_version = self.unpack_uint32(message, pos)
+        pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
 
 class WatchUser(ServerMessage):
@@ -745,7 +743,7 @@ class ConnectToPeer(ServerMessage):
     """
 
     __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged",
-                 "use_obfuscation", "obfuscated_port")
+                 "obfuscated_version", "obfuscated_port")
 
     def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
@@ -754,7 +752,7 @@ class ConnectToPeer(ServerMessage):
         self.ip_address = None
         self.port = None
         self.privileged = None
-        self.use_obfuscation = None
+        self.obfuscated_version = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -782,10 +780,8 @@ class ConnectToPeer(ServerMessage):
             # Soulfind server support
             return
 
-        pos, self.use_obfuscation = self.unpack_uint32(message, pos)
-
-        if self.use_obfuscation:
-            pos, self.obfuscated_port = self.unpack_uint32(message, pos)
+        pos, self.obfuscated_version = self.unpack_uint32(message, pos)
+        pos, self.obfuscated_port = self.unpack_uint32(message, pos)
 
 
 class MessageUser(ServerMessage):
