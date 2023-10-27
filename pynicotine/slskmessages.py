@@ -436,13 +436,13 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port", "obfuscated_version", "obfuscated_port")
+    __slots__ = ("user", "ip_address", "port", "unknown", "obfuscated_port")
 
     def __init__(self, user=None):
         self.user = user
         self.ip_address = None
         self.port = None
-        self.obfuscated_version = None
+        self.unknown = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -457,7 +457,7 @@ class GetPeerAddress(ServerMessage):
             # Soulfind server support
             return
 
-        pos, self.obfuscated_version = self.unpack_uint32(message, pos)
+        pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
 
@@ -742,8 +742,7 @@ class ConnectToPeer(ServerMessage):
     failed).
     """
 
-    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged",
-                 "obfuscated_version", "obfuscated_port")
+    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "unknown", "obfuscated_port")
 
     def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
@@ -752,7 +751,7 @@ class ConnectToPeer(ServerMessage):
         self.ip_address = None
         self.port = None
         self.privileged = None
-        self.obfuscated_version = None
+        self.unknown = None
         self.obfuscated_port = None
 
     def make_network_message(self):
@@ -780,7 +779,7 @@ class ConnectToPeer(ServerMessage):
             # Soulfind server support
             return
 
-        pos, self.obfuscated_version = self.unpack_uint32(message, pos)
+        pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint32(message, pos)
 
 

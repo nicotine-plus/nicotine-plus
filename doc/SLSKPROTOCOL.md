@@ -320,7 +320,7 @@ If this value is set to zero, or the message is not sent upon login (which defau
 ### Data Order
   - Send
     1.  **uint32** <ins>port</ins>
-    2.  **uint32** <ins>obfuscated version</ins> *(SoulseekQt uses value 1)*
+    2.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
     3.  **uint32** <ins>obfuscated port</ins>
   - Receive
       - *No Message*
@@ -339,7 +339,7 @@ We send this to the server to ask for a peer's address (IP address and port), gi
     1.  **string** <ins>username</ins>
     2.  **ip** <ins>ip</ins>
     3.  **uint32** <ins>port</ins>
-    4.  **uint32** <ins>obfuscated version</ins> *(SoulseekQt uses value 1)*
+    4.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
     5.  **uint16** <ins>obfuscated port</ins>
 
 ## Server Code 5
@@ -515,7 +515,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     4.  **uint32** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token for [PierceFireWall](#peer-init-code-0)*
     6.  **bool** <ins>privileged</ins>
-    7.  **uint32** <ins>obfuscated version</ins> *(SoulseekQt uses value 1)*
+    7.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
     8.  **uint32** <ins>obfuscated port</ins>
 
 ## Server Code 22
