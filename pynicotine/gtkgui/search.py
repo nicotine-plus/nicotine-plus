@@ -343,13 +343,14 @@ class Search:
         ("executable", FileTypes.EXECUTABLE),
         ("image", FileTypes.IMAGE),
         ("video", FileTypes.VIDEO),
-        ("text", FileTypes.DOCUMENT_TEXT),
+        ("document", FileTypes.DOCUMENT),
+        ("text", FileTypes.TEXT),
         ("archive", FileTypes.ARCHIVE)
     )
     FILTER_PRESETS = {
         "filterbr": ("!0", "128 <=192", ">192 <320", "=320", ">320"),
         "filtersize": (">50MiB", ">20MiB <=50MiB", ">10MiB <=20MiB", ">5MiB <=10MiB", "<=5MiB"),
-        "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
+        "filtertype": ("audio", "image", "video", "document", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]

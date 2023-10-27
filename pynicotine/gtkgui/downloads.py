@@ -25,7 +25,6 @@
 
 import os
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -34,6 +33,7 @@ from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class Downloads(Transfers):
@@ -171,15 +171,15 @@ class Downloads(Transfers):
                 # Prioritize finished downloads
                 break
 
-        open_file_path(folder_path, command=config.sections["ui"]["filemanager"])
+        open_folder_path(folder_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
             file_path = core.downloads.get_current_download_file_path(
                 transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
 
-            open_file_path(file_path, command=config.sections["players"]["default"])
+            open_file_path(file_path)
 
     def on_browse_folder(self, *_args):
 

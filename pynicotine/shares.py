@@ -69,10 +69,13 @@ class FileTypes:
         "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "jxl", "png", "psd",
         "raw", "svg", "svgz", "tif", "tiff", "webp"
     }
-    DOCUMENT_TEXT = {
-        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "mobi",
-        "nfo", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256",
-        "srt", "txt", "xls", "xlsx", "xps"
+    DOCUMENT = {
+        "doc", "docx", "epub", "mobi", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "rtf", "xls", "xlsx",
+        "xps"
+    }
+    TEXT = {
+        "cue", "csv", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "nfo", "ps", "rst", "sfv",
+        "sha1", "sha256", "srt", "txt"
     }
     VIDEO = {
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",

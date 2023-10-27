@@ -60,7 +60,7 @@ from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
 from pynicotine.slskproto import NetworkInterfaces
-from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
@@ -277,7 +277,7 @@ class DownloadsPage:
             container=self.download_double_click_label.get_parent(), label=self.download_double_click_label,
             items=(
                 (_("Nothing"), None),
-                (_("Send to Player"), None),
+                (_("Open File"), None),
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Pause"), None),
@@ -2192,24 +2192,10 @@ class UrlHandlersPage:
         (
             self.container,
             self.file_manager_label,
-            self.media_player_label,
             self.protocol_list_container
         ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
-
-        self.media_player_combobox = ComboBox(
-            container=self.media_player_label.get_parent(), label=self.media_player_label, has_entry=True,
-            items=(
-                ("", None),
-                ("xdg-open $", None),
-                ("amarok -a $", None),
-                ("audacious -e $", None),
-                ("exaile $", None),
-                ("rhythmbox $", None),
-                ("xmms2 add -f $", None)
-            )
-        )
 
         self.file_manager_combobox = ComboBox(
             container=self.file_manager_label.get_parent(), label=self.file_manager_label, has_entry=True,
@@ -2234,19 +2220,21 @@ class UrlHandlersPage:
             },
             "ui": {
                 "filemanager": self.file_manager_combobox
-            },
-            "players": {
-                "default": self.media_player_combobox
             }
         }
 
         self.default_protocols = [
-            "http",
-            "https",
-            "ftp",
-            "sftp",
-            "news",
-            "irc"
+            "http://",
+            "https://",
+            "audio",
+            "image",
+            "video",
+            "document",
+            "text",
+            "archive",
+            ".mp3",
+            ".jpg",
+            ".pdf"
         ]
 
         self.default_commands = [
@@ -2304,9 +2292,6 @@ class UrlHandlersPage:
             },
             "ui": {
                 "filemanager": self.file_manager_combobox.get_text()
-            },
-            "players": {
-                "default": self.media_player_combobox.get_text()
             }
         }
 
@@ -2317,6 +2302,13 @@ class UrlHandlersPage:
 
         if not protocol or not command:
             return
+
+        if protocol.startswith("."):
+            # Only keep last part of file extension (e.g. .tar.gz -> .gz)
+            protocol = "." + protocol.rsplit(".", 1)[-1]
+
+        elif not protocol.endswith("://") and protocol not in self.default_protocols:
+            protocol += "://"
 
         iterator = self.protocol_list_view.iterators.get(protocol)
         self.protocols[protocol] = command
@@ -2377,10 +2369,6 @@ class UrlHandlersPage:
 
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
-
-    def on_default_media_player(self, *_args):
-        default_media_player = config.defaults["players"]["default"]
-        self.media_player_combobox.set_text(default_media_player)
 
     def on_default_file_manager(self, *_args):
         default_file_manager = config.defaults["ui"]["filemanager"]
@@ -2708,7 +2696,7 @@ class PluginsPage:
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
-        open_file_path(core.pluginhandler.user_plugin_folder, create_folder=True)
+        open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
     def on_plugin_settings(self, *_args):
 

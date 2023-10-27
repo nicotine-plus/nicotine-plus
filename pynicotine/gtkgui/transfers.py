@@ -224,8 +224,8 @@ class Transfers:
             window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
-            ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open in File Manager"), self.on_open_file_manager),
+            ("#" + _("_Open File"), self.on_open_file),
+            ("#" + _("Open in File _Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
@@ -853,8 +853,8 @@ class Transfers:
         self.select_transfers()
         action = config.sections["transfers"][f"{self.type}_doubleclick"]
 
-        if action == 1:    # Send to Player
-            self.on_play_files()
+        if action == 1:    # Open File
+            self.on_open_file()
 
         elif action == 2:  # Open in File Manager
             self.on_open_file_manager()
@@ -988,7 +988,7 @@ class Transfers:
         if transfer:
             clipboard.copy_text(transfer.virtual_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
         # Implemented in subclasses
         raise NotImplementedError
 

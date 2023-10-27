@@ -56,7 +56,7 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
-from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class MainWindow(Window):
@@ -1226,11 +1226,11 @@ class MainWindow(Window):
 
     @staticmethod
     def on_view_debug_logs(*_args):
-        open_file_path(config.sections["logging"]["debuglogsdir"], create_folder=True)
+        open_folder_path(config.sections["logging"]["debuglogsdir"], create_folder=True)
 
     @staticmethod
     def on_view_transfer_logs(*_args):
-        open_file_path(config.sections["logging"]["transferslogsdir"], create_folder=True)
+        open_folder_path(config.sections["logging"]["transferslogsdir"], create_folder=True)
 
     def on_clear_log_view(self, *_args):
         self.log_view.on_clear_all_text()

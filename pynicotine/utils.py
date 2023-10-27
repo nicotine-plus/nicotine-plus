@@ -345,47 +345,97 @@ def _try_open_uri(uri):
         raise webbrowser.Error("No known URI provider available")
 
 
-def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """Currently used to either open a folder or play an audio file Tries to
-    run a user-specified command first, and falls back to the system
-    default."""
+def _open_path(path, is_folder=False, create_folder=False, create_file=False):
+    """Currently used to either open a folder or play an audio file.
 
-    if file_path is None:
+    Tries to run a user-specified command first, and falls back to the system
+    default.
+    """
+
+    if path is None:
         return False
 
     try:
-        file_path = os.path.abspath(file_path)
-        file_path_encoded = encode_path(file_path)
+        from pynicotine.config import config
 
-        if not os.path.exists(file_path_encoded):
+        path = os.path.abspath(path)
+        path_encoded = encode_path(path)
+        result = path.rsplit(".", 1)
+        protocol_command = None
+        protocol_handlers = config.sections["urls"]["protocols"]
+        file_manager_command = config.sections["ui"]["filemanager"]
+
+        if len(result) >= 2:
+            from pynicotine.shares import FileTypes
+
+            extension = result[-1].lower()
+
+            if "." + extension in protocol_handlers:
+                protocol = "." + extension
+
+            elif extension in FileTypes.AUDIO:
+                protocol = "audio"
+
+            elif extension in FileTypes.IMAGE:
+                protocol = "image"
+
+            elif extension in FileTypes.VIDEO:
+                protocol = "video"
+
+            elif extension in FileTypes.DOCUMENT:
+                protocol = "document"
+
+            elif extension in FileTypes.TEXT:
+                protocol = "text"
+
+            elif extension in FileTypes.ARCHIVE:
+                protocol = "archive"
+
+            else:
+                protocol = None
+
+            protocol_command = protocol_handlers.get(protocol)
+
+        if not os.path.exists(path_encoded):
             if create_folder:
-                os.makedirs(file_path_encoded)
+                os.makedirs(path_encoded)
 
             elif create_file:
-                with open(file_path_encoded, "w", encoding="utf-8"):
+                with open(path_encoded, "w", encoding="utf-8"):
                     # Create empty file
                     pass
             else:
                 raise FileNotFoundError("File path does not exist")
 
-        if command and "$" in command:
-            execute_command(command, file_path)
+        if is_folder and "$" in file_manager_command:
+            execute_command(file_manager_command, path)
+
+        elif protocol_command:
+            execute_command(protocol_command, path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path_encoded)  # pylint: disable=no-member
+            os.startfile(path_encoded)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
-            execute_command("open $", file_path)
+            execute_command("open $", path)
 
         else:
-            _try_open_uri("file:///" + file_path)
+            _try_open_uri("file:///" + path)
 
     except Exception as error:
         from pynicotine.logfacility import log
-        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": path, "error": error})
         return False
 
     return True
+
+
+def open_file_path(file_path, create_file=False):
+    return _open_path(path=file_path, create_file=create_file)
+
+
+def open_folder_path(folder_path, create_folder=False):
+    return _open_path(path=folder_path, is_folder=True, create_folder=create_folder)
 
 
 def open_uri(uri):
@@ -400,16 +450,19 @@ def open_uri(uri):
     try:
         # Situation 1, user defined a way of handling the protocol
         protocol = uri[:uri.find(":")]
-        protocol_handlers = config.sections["urls"]["protocols"]
 
-        if protocol in protocol_handlers and protocol_handlers[protocol]:
-            execute_command(protocol_handlers[protocol], uri)
-            return True
+        if not protocol.startswith(".") and protocol not in {"audio", "image", "video", "document", "text", "archive"}:
+            protocol_handlers = config.sections["urls"]["protocols"]
+            protocol_command = protocol_handlers.get(protocol + "://") or protocol_handlers.get(protocol)
 
-        if protocol == "slsk":
-            from pynicotine.core import core
-            core.userbrowse.open_soulseek_url(uri.strip())
-            return True
+            if protocol_command:
+                execute_command(protocol_command, uri)
+                return True
+
+            if protocol == "slsk":
+                from pynicotine.core import core
+                core.userbrowse.open_soulseek_url(uri.strip())
+                return True
 
         # Situation 2, user did not define a way of handling the protocol
         _try_open_uri(uri)
