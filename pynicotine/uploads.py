@@ -20,6 +20,8 @@ import os
 import os.path
 import time
 
+from collections import deque
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -37,6 +39,7 @@ class Uploads(Transfers):
 
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
 
+        self.transfers = deque()
         self.pending_shutdown = False
         self.pending_network_msgs = []
         self.privileged_users = set()
@@ -80,6 +83,7 @@ class Uploads(Transfers):
 
         super()._quit()
 
+        self.transfers.clear()
         self.upload_speed = 0
         self.token = 0
 
@@ -125,7 +129,10 @@ class Uploads(Transfers):
     # Load Transfers #
 
     def load_transfers(self):
-        self.add_stored_transfers(self.transfers_file_path, self.load_transfers_file, load_only_finished=True)
+
+        for transfer in self.get_stored_transfers(
+                self.transfers_file_path, self.load_transfers_file, load_only_finished=True):
+            self.transfers.appendleft(transfer)
 
     # Privileges #
 
@@ -1335,12 +1342,24 @@ class Uploads(Transfers):
 
         if uploads is None:
             # Clear all uploads
-            uploads = self.transfers
+            uploads = self.transfers.copy()
+        else:
+            uploads = uploads.copy()
 
-        for upload in uploads.copy():
+        for upload in uploads:
             if statuses and upload.status not in statuses:
                 continue
 
             self.clear_upload(upload, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
+
+    # Saving #
+
+    def get_transfer_rows(self):
+        """Get a list of transfers to dump to file."""
+        return [
+            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+             transfer.current_byte_offset, transfer.file_attributes]
+            for transfer in reversed(self.transfers)
+        ]

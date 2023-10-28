@@ -22,7 +22,6 @@ import os.path
 import time
 
 from ast import literal_eval
-from collections import deque
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -74,7 +73,6 @@ class Transfers:
 
         self.transfers_file_path = transfers_file_path
         self.allow_saving_transfers = False
-        self.transfers = deque()
         self.transfer_request_times = {}
 
         self._transfer_timeout_timer_id = None
@@ -98,11 +96,8 @@ class Transfers:
         self.update_transfer_limits()
 
     def _quit(self):
-
         self.save_transfers()
         self.allow_saving_transfers = False
-
-        self.transfers.clear()
 
     def _server_login(self, msg):
 
@@ -204,7 +199,7 @@ class Transfers:
 
         return file_attributes
 
-    def add_stored_transfers(self, transfers_file_path, load_func, load_only_finished=False):
+    def get_stored_transfers(self, transfers_file_path, load_func, load_only_finished=False):
 
         transfer_rows = load_file(transfers_file_path, load_func)
 
@@ -273,7 +268,7 @@ class Transfers:
             # File attributes
             file_attributes = self._load_file_attributes(num_attributes, transfer_row)
 
-            self.transfers.appendleft(
+            yield (
                 Transfer(
                     username=username, virtual_path=virtual_path, folder_path=folder_path, status=status, size=size,
                     current_byte_offset=current_byte_offset, file_attributes=file_attributes
@@ -329,12 +324,7 @@ class Transfers:
     # Saving #
 
     def get_transfer_rows(self):
-        """Get a list of transfers to dump to file."""
-        return [
-            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
-             transfer.current_byte_offset, transfer.file_attributes]
-            for transfer in reversed(self.transfers)
-        ]
+        raise NotImplementedError
 
     def save_transfers_callback(self, file_handle):
 
