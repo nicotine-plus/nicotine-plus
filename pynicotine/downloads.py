@@ -46,6 +46,7 @@ class Downloads(Transfers):
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "downloads.json"))
 
         self.transfers = {}
+        self.limited_user_timers = {}
         self.requested_folders = defaultdict(dict)
         self.requested_folder_token = 0
 
@@ -91,16 +92,14 @@ class Downloads(Transfers):
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
         self._download_queue_timer_id = events.schedule(delay=180, callback=self.check_download_queue, repeat=True)
 
-        # Re-queue limited downloads every 12 minutes
-        self._retry_download_limits_timer_id = events.schedule(
-            delay=720, callback=self.retry_download_limits, repeat=True)
-
     def _server_disconnect(self, msg):
 
         super()._server_disconnect(msg)
 
-        for timer_id in (self._download_queue_timer_id, self._retry_download_limits_timer_id):
+        for timer_id in self.limited_user_timers.values():
             events.cancel_scheduled(timer_id)
+
+        events.cancel_scheduled(self._download_queue_timer_id)
 
         need_update = False
         ignored_statuses = {"Finished", "Filtered", "Paused"}
@@ -114,6 +113,7 @@ class Downloads(Transfers):
         if need_update:
             events.emit("update-downloads")
 
+        self.limited_user_timers.clear()
         self.requested_folders.clear()
 
     # Load Transfers #
@@ -545,6 +545,12 @@ class Downloads(Transfers):
             download.legacy_attempt = True
             self.get_file(username, virtual_path, transfer=download)
             return
+
+        if (username not in self.limited_user_timers and
+                (reason in {"Too many files", "Too many megabytes"} or reason.startswith("User limit of"))):
+            # Re-queue limited downloads after 5 minutes
+            self.limited_user_timers[username] = events.schedule(
+                delay=300, callback=lambda: self.retry_limited_downloads(username))
 
         if download.status == "Transferring":
             self.abort_download(download, abort_reason=None)
@@ -1046,21 +1052,26 @@ class Downloads(Transfers):
             bypass_filter = (num_downloads == 1 and download.status == "Filtered")
             self.retry_download(download, bypass_filter)
 
-    def retry_download_limits(self):
+    def retry_limited_downloads(self, username):
 
         limited_statuses = {"Too many files", "Too many megabytes"}
 
         for download in self.transfers.values():
-            if download.status in limited_statuses or download.status.startswith("User limit of"):
-                # Re-queue limited downloads every 12 minutes
+            if download.username != username:
+                continue
 
-                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
-                    "filename": download.virtual_path,
-                    "user": download.username
-                })
+            if download.status not in limited_statuses and not download.status.startswith("User limit of"):
+                continue
 
-                self.abort_download(download, abort_reason=None)
-                self.get_file(download.username, download.virtual_path, transfer=download)
+            log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
+                "filename": download.virtual_path,
+                "user": download.username
+            })
+
+            self.abort_download(download, abort_reason=None)
+            self.get_file(download.username, download.virtual_path, transfer=download)
+
+        del self.limited_user_timers[username]
 
     def abort_download(self, download, abort_reason="Paused", update_parent=True):
 
