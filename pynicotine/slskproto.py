@@ -518,7 +518,7 @@ class NetworkThread(Thread):
                     events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
 
                     self._token_init_msgs.pop(init.token, None)
-                    self._username_init_msgs.pop(username + conn_type)
+                    self._username_init_msgs.pop(username + conn_type, None)
                     init.outgoing_msgs.clear()
 
     @staticmethod
