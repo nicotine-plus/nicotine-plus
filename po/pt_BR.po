@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
 "PO-Revision-Date: 2023-10-29 05:18+0000\n"
-"Last-Translator: César Augusto do Nascimento <wiccaesar@hotmail.com>\n"
+"Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1654,9 +1654,8 @@ msgid "_Rescan Shares"
 msgstr "_Reverificar compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Configurar compartilhamentos"
+msgstr "Configurar_Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1683,9 +1682,8 @@ msgid "_About Nicotine+"
 msgstr "_Sobre Nicotine+"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Navegar em Compartilhamentos"
+msgstr "_Navegar em Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1787,9 +1785,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Envios: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1330
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Verificando compartilhamentos"
+msgstr "Preparando Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:1337
 msgid "Scanning Shares"
@@ -2062,9 +2059,8 @@ msgid "Transferring"
 msgstr "Transferindo"
 
 #: pynicotine/gtkgui/transfers.py:91
-#, fuzzy
 msgid "Connection closed"
-msgstr "Conexão fechada na outra ponta"
+msgstr "Conexão fechada"
 
 #: pynicotine/gtkgui/transfers.py:92
 msgid "Connection timeout"
@@ -2111,9 +2107,8 @@ msgid "Local file error"
 msgstr "Erro no arquivo local"
 
 #: pynicotine/gtkgui/transfers.py:107
-#, fuzzy
 msgid "File read error"
-msgstr "Transferências de Arquivo"
+msgstr "Erro de leitura de arquivo"
 
 #: pynicotine/gtkgui/transfers.py:148
 msgid "Queue"
@@ -2624,9 +2619,9 @@ msgid "Group by User"
 msgstr "Agrupado pelo Usuário"
 
 #: pynicotine/headless/application.py:73
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Você realmente quer sair da Nicotine+?"
+msgstr "Você realmente quer sair? %s"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
@@ -4036,14 +4031,14 @@ msgid "Not joined in room %s"
 msgstr "Não entrou na sala %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:385
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Não compartilhar com nome \"%s\""
+msgstr "Não enviar mensagens para o usuário %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:389
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Fechar bate-papo privado"
+msgstr "Bate-papo privado fechado do usuário %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:466
 #, python-format
@@ -4244,15 +4239,16 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Nova verificação concluída: %(num)s pastas encontradas"
 
 #: pynicotine/shares.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"Ocorreu um erro grave ao redigitalizar os compartilhamentos. Se o problema "
-"persistir, exclua %(dir)s/*.db e tente novamente. Se isso não ajudar, envie "
-"um relatório de bug com este rastreamento de pilha incluído: %(trace)s"
+"Ocorreu um erro grave ao verificar novamente os compartilhamentos. Se o "
+"problema persistir, exclua %(dir)s/*.dbn e tente novamente. Se isso não "
+"ajudar, envie um relatório de bug com este rastreamento de pilha incluído: "
+"%(trace)s"
 
 #: pynicotine/shares.py:403
 #, python-format
@@ -4562,14 +4558,13 @@ msgstr "Compartilhar Pastas"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Os usuários do Soulseek poderão fazer o download de seus compartilhamentos. "
-"Contribua para a rede Soulseek compartilhando sua própria coleção e "
+"Os usuários do Soulseek poderão fazer download de seus compartilhamentos. "
+"Contribua com a rede Soulseek compartilhando seus próprios arquivos e "
 "compartilhando novamente o que você baixou de outros usuários."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
@@ -4647,9 +4642,8 @@ msgid "Show Log Pane"
 msgstr "Mostrar Painel de Registro"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Configurar Conta"
+msgstr "Confirmar Saída"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -5803,9 +5797,8 @@ msgid "Public IP address:"
 msgstr "Endereço de IP público:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Idioma (requer uma reinicialização):"
+msgstr "Porta de escuta (requer reinicialização):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5843,9 +5836,8 @@ msgstr ""
 "está fazendo."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Idioma (requer uma reinicialização):"
+msgstr "Interface de rede (requer reinicialização):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
@@ -5920,16 +5912,14 @@ msgstr ""
 "Mostrar arquivos compartilhados de forma privada nos resultados da pesquisa"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Outros clientes Soulseek podem ter a opção de compartilhar arquivos de forma "
-"privada. Nesse caso, esses arquivos serão prefixados com '[PRIVATE]' e não "
-"poderão ser baixados até que o remetente dê permissão explícita. Pergunte-"
-"lhes gentilmente."
+"Os arquivos compartilhados de forma privada que ficaram visíveis para todos "
+"terão o prefixo '[PRIVATE]' e não poderão ser baixados até que o remetente "
+"conceda permissão explícita. Pergunte a eles gentilmente."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"
@@ -6028,14 +6018,12 @@ msgid "Visible to everyone:"
 msgstr "Visível para todos:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Nomes de amigos"
+msgstr "Compartilhamentos de amigos"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Lista de compartilhamentos"
+msgstr "Compartilhamentos confiáveis"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
