@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-19 04:48+0000\n"
+"PO-Revision-Date: 2023-10-29 20:55+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -967,9 +967,8 @@ msgstr "Niks"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
 #: pynicotine/gtkgui/dialogs/preferences.py:760
-#, fuzzy
 msgid "Open File"
-msgstr "Volgend bestand"
+msgstr "Open bestand"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
 #: pynicotine/gtkgui/dialogs/preferences.py:761
@@ -2124,9 +2123,8 @@ msgid "Time Left"
 msgstr "Resterende tijd"
 
 #: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:353
-#, fuzzy
 msgid "_Open File"
-msgstr "_Open Lijst"
+msgstr "_Open bestand"
 
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
@@ -2527,9 +2525,8 @@ msgid "Video"
 msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:374
-#, fuzzy
 msgid "Document"
-msgstr "Document/Tekst"
+msgstr "Document"
 
 #: pynicotine/gtkgui/widgets/theme.py:375
 msgid "Text"
@@ -2623,22 +2620,19 @@ msgid "Do you really want to exit? %s"
 msgstr "Wil je echt afsluiten? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
 msgstr ""
-"Gebruiker %s bestaat al, en het wachtwoord dat je heeft opgegeven is "
-"ongeldig. Kies een andere gebruikersnaam als dit de eerste keer is dat je "
-"inlogt."
+"Gebruiker %s bestaat al, en het wachtwoord dat je hebt opgegeven is ongeldig."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
-msgstr ""
+msgstr "Type %s om in te loggen met een andere gebruikersnaam of wachtwoord."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Wachtwoord:"
+msgstr "Wachtwoord: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2652,9 +2646,8 @@ msgstr ""
 "inloggegevens in."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Gebruikersnaam:"
+msgstr "Gebruikersnaam: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -3757,14 +3750,12 @@ msgid "List available commands"
 msgstr "Beschikbare commando's"
 
 #: pynicotine/plugins/core_commands/__init__.py:50
-#, fuzzy
 msgid "Connect to the server"
-msgstr "Kan niet verbinden met de server. Reden: %s"
+msgstr "Met de server verbinden"
 
 #: pynicotine/plugins/core_commands/__init__.py:54
-#, fuzzy
 msgid "Disconnect from the server"
-msgstr "Verbinding met server %(host)s:%(port)s verbroken"
+msgstr "Serververbinding verbreken"
 
 #: pynicotine/plugins/core_commands/__init__.py:59
 msgid "Toggle away status"
@@ -5976,6 +5967,8 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Voeg dingen toe die iedereen kan lezen, zoals een korte beschrijving, "
+"behulpzame tips, of richtlijnen voor het downloaden van je shares."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"
