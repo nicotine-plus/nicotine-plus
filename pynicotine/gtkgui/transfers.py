@@ -26,6 +26,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
@@ -236,6 +237,7 @@ class Transfers:
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
+            ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("_Search"), self.on_file_search),
             ("", None),
@@ -971,6 +973,13 @@ class Transfers:
         self.select_transfers()
         self.on_file_properties()
         return True
+
+    def on_user_profile(self, *_args):
+
+        username = next(iter(self.selected_users), None)
+
+        if username:
+            core.userinfo.show_user(username)
 
     def on_file_properties(self, *_args):
 
