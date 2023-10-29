@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-18 15:39+0300\n"
-"PO-Revision-Date: 2023-10-22 22:03+0000\n"
+"PO-Revision-Date: 2023-10-29 05:18+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.1\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1322,7 +1322,7 @@ msgstr "Ausente (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1753
 msgid "Offline (Tray)"
-msgstr "Offline (Bandeja)"
+msgstr "Desconectado (Bandeja)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1754
 msgid "Message (Tray)"
@@ -1654,9 +1654,8 @@ msgid "_Rescan Shares"
 msgstr "_Reverificar compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Configurar compartilhamentos"
+msgstr "Configurar_Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1683,9 +1682,8 @@ msgid "_About Nicotine+"
 msgstr "_Sobre Nicotine+"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Navegar em Compartilhamentos"
+msgstr "_Navegar em Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1787,9 +1785,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Envios: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1330
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Verificando compartilhamentos"
+msgstr "Preparando Compartilhamentos"
 
 #: pynicotine/gtkgui/mainwindow.py:1337
 msgid "Scanning Shares"
@@ -2062,9 +2059,8 @@ msgid "Transferring"
 msgstr "Transferindo"
 
 #: pynicotine/gtkgui/transfers.py:91
-#, fuzzy
 msgid "Connection closed"
-msgstr "Conexão fechada na outra ponta"
+msgstr "Conexão fechada"
 
 #: pynicotine/gtkgui/transfers.py:92
 msgid "Connection timeout"
@@ -2111,9 +2107,8 @@ msgid "Local file error"
 msgstr "Erro no arquivo local"
 
 #: pynicotine/gtkgui/transfers.py:107
-#, fuzzy
 msgid "File read error"
-msgstr "Transferências de Arquivo"
+msgstr "Erro de leitura de arquivo"
 
 #: pynicotine/gtkgui/transfers.py:148
 msgid "Queue"
@@ -2624,9 +2619,9 @@ msgid "Group by User"
 msgstr "Agrupado pelo Usuário"
 
 #: pynicotine/headless/application.py:73
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Você realmente quer sair da Nicotine+?"
+msgstr "Você realmente quer sair? %s"
 
 #: pynicotine/headless/application.py:92
 msgid "The following shares are unavailable:"
@@ -2757,7 +2752,6 @@ msgid "Bermuda"
 msgstr "Bermudas"
 
 #: pynicotine/networkfilter.py:59
-#, fuzzy
 msgid "Brunei Darussalam"
 msgstr "Brunei Darussalam"
 
@@ -2790,7 +2784,6 @@ msgid "Botswana"
 msgstr "Botsuana"
 
 #: pynicotine/networkfilter.py:67
-#, fuzzy
 msgid "Belarus"
 msgstr "Belarus"
 
@@ -2863,7 +2856,6 @@ msgid "Cuba"
 msgstr "Cuba"
 
 #: pynicotine/networkfilter.py:83
-#, fuzzy
 msgid "Cabo Verde"
 msgstr "Cabo Verde"
 
@@ -2902,9 +2894,8 @@ msgid "Denmark"
 msgstr "Dinamarca"
 
 #: pynicotine/networkfilter.py:91
-#, fuzzy
 msgid "Dominica"
-msgstr "Domínica"
+msgstr "Dominica"
 
 #: pynicotine/networkfilter.py:92
 #, fuzzy
@@ -2967,9 +2958,8 @@ msgid "Fiji"
 msgstr "Fiji"
 
 #: pynicotine/networkfilter.py:104
-#, fuzzy
 msgid "Falkland Islands (Malvinas)"
-msgstr "Ilhas Falkland (Malvinas)"
+msgstr "Ilhas Malvinas"
 
 #: pynicotine/networkfilter.py:105
 #, fuzzy
@@ -2977,14 +2967,12 @@ msgid "Micronesia"
 msgstr "Micronésia"
 
 #: pynicotine/networkfilter.py:106
-#, fuzzy
 msgid "Faroe Islands"
-msgstr "Ilhas Faroés"
+msgstr "Ilhas Faroé"
 
 #: pynicotine/networkfilter.py:107
-#, fuzzy
 msgid "France"
-msgstr "Cancelar"
+msgstr "França"
 
 #: pynicotine/networkfilter.py:108
 #, fuzzy
@@ -3012,9 +3000,8 @@ msgid "French Guiana"
 msgstr "Guiana Francesa"
 
 #: pynicotine/networkfilter.py:113
-#, fuzzy
 msgid "Guernsey"
-msgstr "Guernsey"
+msgstr "Guernesey"
 
 #: pynicotine/networkfilter.py:114
 #, fuzzy
@@ -3027,9 +3014,8 @@ msgid "Gibraltar"
 msgstr "Gibraltar"
 
 #: pynicotine/networkfilter.py:116
-#, fuzzy
 msgid "Greenland"
-msgstr "Gronelândia"
+msgstr "Groelândia"
 
 #: pynicotine/networkfilter.py:117
 #, fuzzy
@@ -3057,9 +3043,8 @@ msgid "Greece"
 msgstr "Grécia"
 
 #: pynicotine/networkfilter.py:122
-#, fuzzy
 msgid "South Georgia & South Sandwich Islands"
-msgstr "Ilhas Sanduíche do Sul e Do Sul"
+msgstr "Ilhas Geórgia do Sul e Sanduíche do Sul"
 
 #: pynicotine/networkfilter.py:123
 #, fuzzy
@@ -3127,9 +3112,8 @@ msgid "Israel"
 msgstr "Israel"
 
 #: pynicotine/networkfilter.py:136
-#, fuzzy
 msgid "Isle of Man"
-msgstr "Ilha do Homem"
+msgstr "Ilha de Man"
 
 #: pynicotine/networkfilter.py:137
 #, fuzzy
@@ -3197,9 +3181,8 @@ msgid "Cambodia"
 msgstr "Camboja"
 
 #: pynicotine/networkfilter.py:150
-#, fuzzy
 msgid "Kiribati"
-msgstr "Kiribati"
+msgstr "Quiribáti"
 
 #: pynicotine/networkfilter.py:151
 #, fuzzy
@@ -3207,9 +3190,8 @@ msgid "Comoros"
 msgstr "Comores"
 
 #: pynicotine/networkfilter.py:152
-#, fuzzy
 msgid "Saint Kitts & Nevis"
-msgstr "São Cristóvão & Nevis"
+msgstr "São Cristóvão & Névis"
 
 #: pynicotine/networkfilter.py:153
 #, fuzzy
@@ -3222,9 +3204,8 @@ msgid "South Korea"
 msgstr "Coreia do Sul"
 
 #: pynicotine/networkfilter.py:155
-#, fuzzy
 msgid "Kuwait"
-msgstr "Kuaite"
+msgstr "Kuwait"
 
 #: pynicotine/networkfilter.py:156
 #, fuzzy
@@ -3297,9 +3278,8 @@ msgid "Morocco"
 msgstr "Marrocos"
 
 #: pynicotine/networkfilter.py:170
-#, fuzzy
 msgid "Monaco"
-msgstr "Mónaco"
+msgstr "Mônaco"
 
 #: pynicotine/networkfilter.py:171
 #, fuzzy
@@ -3317,9 +3297,8 @@ msgid "Saint Martin"
 msgstr "São Martinho"
 
 #: pynicotine/networkfilter.py:174
-#, fuzzy
 msgid "Madagascar"
-msgstr "Madagáscar"
+msgstr "Madagascar"
 
 #: pynicotine/networkfilter.py:175
 #, fuzzy
@@ -3337,9 +3316,8 @@ msgid "Mali"
 msgstr "Mali"
 
 #: pynicotine/networkfilter.py:178
-#, fuzzy
 msgid "Myanmar"
-msgstr "Myanmar"
+msgstr "Birmânia"
 
 #: pynicotine/networkfilter.py:179
 #, fuzzy
@@ -3367,9 +3345,8 @@ msgid "Mauritania"
 msgstr "Mauritânia"
 
 #: pynicotine/networkfilter.py:184
-#, fuzzy
 msgid "Montserrat"
-msgstr "Montserrat"
+msgstr "Monserrate"
 
 #: pynicotine/networkfilter.py:185
 #, fuzzy
@@ -3377,9 +3354,8 @@ msgid "Malta"
 msgstr "Malta"
 
 #: pynicotine/networkfilter.py:186
-#, fuzzy
 msgid "Mauritius"
-msgstr "Maurícia"
+msgstr "Maurício"
 
 #: pynicotine/networkfilter.py:187
 #, fuzzy
@@ -3387,9 +3363,8 @@ msgid "Maldives"
 msgstr "Maldivas"
 
 #: pynicotine/networkfilter.py:188
-#, fuzzy
 msgid "Malawi"
-msgstr "Malawi"
+msgstr "Maláui"
 
 #: pynicotine/networkfilter.py:189
 #, fuzzy
@@ -3412,9 +3387,8 @@ msgid "Namibia"
 msgstr "Namíbia"
 
 #: pynicotine/networkfilter.py:193
-#, fuzzy
 msgid "New Caledonia"
-msgstr "Nova Caledónia"
+msgstr "Nova Caledônia"
 
 #: pynicotine/networkfilter.py:194
 #, fuzzy
@@ -3507,14 +3481,12 @@ msgid "Poland"
 msgstr "Polônia"
 
 #: pynicotine/networkfilter.py:212
-#, fuzzy
 msgid "Saint Pierre & Miquelon"
-msgstr "Saint Pierre & Miquelon"
+msgstr "São Pedro e Miquelão"
 
 #: pynicotine/networkfilter.py:213
-#, fuzzy
 msgid "Pitcairn"
-msgstr "Pitcairn"
+msgstr "Ilhas Pitcairn"
 
 #: pynicotine/networkfilter.py:214
 #, fuzzy
@@ -3522,9 +3494,8 @@ msgid "Puerto Rico"
 msgstr "Porto Rico"
 
 #: pynicotine/networkfilter.py:215
-#, fuzzy
 msgid "State of Palestine"
-msgstr "Estado da Palestina"
+msgstr "Palestina"
 
 #: pynicotine/networkfilter.py:216
 #, fuzzy
@@ -3617,9 +3588,8 @@ msgid "Svalbard & Jan Mayen Islands"
 msgstr "Ilhas Svalbard & Jan Mayen"
 
 #: pynicotine/networkfilter.py:234
-#, fuzzy
 msgid "Slovak Republic"
-msgstr "República Eslovaca"
+msgstr "Eslováquia"
 
 #: pynicotine/networkfilter.py:235
 #, fuzzy
@@ -3642,9 +3612,8 @@ msgid "Somalia"
 msgstr "Somália"
 
 #: pynicotine/networkfilter.py:239
-#, fuzzy
 msgid "Suriname"
-msgstr "Nome do Arquivo"
+msgstr "Suriname"
 
 #: pynicotine/networkfilter.py:240
 #, fuzzy
@@ -3652,9 +3621,8 @@ msgid "South Sudan"
 msgstr "Sudão do Sul"
 
 #: pynicotine/networkfilter.py:241
-#, fuzzy
 msgid "Sao Tome & Principe"
-msgstr "São Tomé & Principe"
+msgstr "São Tomé & Príncipe"
 
 #: pynicotine/networkfilter.py:242
 #, fuzzy
@@ -3662,9 +3630,8 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #: pynicotine/networkfilter.py:243
-#, fuzzy
 msgid "Sint Maarten"
-msgstr "Sint Maarten"
+msgstr "São Martinho"
 
 #: pynicotine/networkfilter.py:244
 #, fuzzy
@@ -3672,14 +3639,12 @@ msgid "Syria"
 msgstr "Síria"
 
 #: pynicotine/networkfilter.py:245
-#, fuzzy
 msgid "Eswatini"
-msgstr "Eswatini"
+msgstr "Essuatíni"
 
 #: pynicotine/networkfilter.py:246
-#, fuzzy
 msgid "Turks & Caicos Islands"
-msgstr "Ilhas Turks & Caicos"
+msgstr "Ilhas Turcas e Caicos"
 
 #: pynicotine/networkfilter.py:247
 #, fuzzy
@@ -3687,9 +3652,8 @@ msgid "Chad"
 msgstr "Chade"
 
 #: pynicotine/networkfilter.py:248
-#, fuzzy
 msgid "French Southern Territories"
-msgstr "Territórios do Sul francês"
+msgstr "Terras Austrais e Antárticas Francesas"
 
 #: pynicotine/networkfilter.py:249
 #, fuzzy
@@ -3707,19 +3671,16 @@ msgid "Tajikistan"
 msgstr "Tajiquistão"
 
 #: pynicotine/networkfilter.py:252
-#, fuzzy
 msgid "Tokelau"
-msgstr "Tokelau"
+msgstr "Toquelau"
 
 #: pynicotine/networkfilter.py:253
-#, fuzzy
 msgid "Timor-Leste"
 msgstr "Timor-Leste"
 
 #: pynicotine/networkfilter.py:254
-#, fuzzy
 msgid "Turkmenistan"
-msgstr "Turquemenistão"
+msgstr "Turcomenistão"
 
 #: pynicotine/networkfilter.py:255
 #, fuzzy
@@ -3736,9 +3697,8 @@ msgid "Türkiye"
 msgstr "Turquia"
 
 #: pynicotine/networkfilter.py:258
-#, fuzzy
 msgid "Trinidad & Tobago"
-msgstr "Trinidad & Tobago"
+msgstr "Trindade & Tobago"
 
 #: pynicotine/networkfilter.py:259
 #, fuzzy
@@ -3766,9 +3726,8 @@ msgid "Uganda"
 msgstr "Uganda"
 
 #: pynicotine/networkfilter.py:264
-#, fuzzy
 msgid "U.S. Minor Outlying Islands"
-msgstr "Ilhas Menores Periféis dos EUA"
+msgstr "Ilhas Menores Distantes dos Estados Unidos"
 
 #: pynicotine/networkfilter.py:265
 #, fuzzy
@@ -3786,9 +3745,8 @@ msgid "Uzbekistan"
 msgstr "Uzbequistão"
 
 #: pynicotine/networkfilter.py:268
-#, fuzzy
 msgid "Holy See (Vatican City State)"
-msgstr "Santa Sé (Estado da Cidade do Vaticano)"
+msgstr "Vaticano"
 
 #: pynicotine/networkfilter.py:269
 #, fuzzy
@@ -3806,9 +3764,8 @@ msgid "British Virgin Islands"
 msgstr "Ilhas Virgens Britânicas"
 
 #: pynicotine/networkfilter.py:272
-#, fuzzy
 msgid "U.S. Virgin Islands"
-msgstr "Ilhas Virgens Americanas"
+msgstr "Ilhas Virgens dos Estados Unidos"
 
 #: pynicotine/networkfilter.py:273
 #, fuzzy
@@ -3835,9 +3792,8 @@ msgid "Yemen"
 msgstr "Iêmen"
 
 #: pynicotine/networkfilter.py:278
-#, fuzzy
 msgid "Mayotte"
-msgstr "Mayotte"
+msgstr "Maiote"
 
 #: pynicotine/networkfilter.py:279
 msgid "South Africa"
@@ -4075,14 +4031,14 @@ msgid "Not joined in room %s"
 msgstr "Não entrou na sala %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:385
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Não compartilhar com nome \"%s\""
+msgstr "Não enviar mensagens para o usuário %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:389
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Fechar bate-papo privado"
+msgstr "Bate-papo privado fechado do usuário %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:466
 #, python-format
@@ -4283,15 +4239,16 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Nova verificação concluída: %(num)s pastas encontradas"
 
 #: pynicotine/shares.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"Ocorreu um erro grave ao redigitalizar os compartilhamentos. Se o problema "
-"persistir, exclua %(dir)s/*.db e tente novamente. Se isso não ajudar, envie "
-"um relatório de bug com este rastreamento de pilha incluído: %(trace)s"
+"Ocorreu um erro grave ao verificar novamente os compartilhamentos. Se o "
+"problema persistir, exclua %(dir)s/*.dbn e tente novamente. Se isso não "
+"ajudar, envie um relatório de bug com este rastreamento de pilha incluído: "
+"%(trace)s"
 
 #: pynicotine/shares.py:403
 #, python-format
@@ -4601,14 +4558,13 @@ msgstr "Compartilhar Pastas"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Os usuários do Soulseek poderão fazer o download de seus compartilhamentos. "
-"Contribua para a rede Soulseek compartilhando sua própria coleção e "
+"Os usuários do Soulseek poderão fazer download de seus compartilhamentos. "
+"Contribua com a rede Soulseek compartilhando seus próprios arquivos e "
 "compartilhando novamente o que você baixou de outros usuários."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
@@ -4686,9 +4642,8 @@ msgid "Show Log Pane"
 msgstr "Mostrar Painel de Registro"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Configurar Conta"
+msgstr "Confirmar Saída"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -5842,9 +5797,8 @@ msgid "Public IP address:"
 msgstr "Endereço de IP público:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Idioma (requer uma reinicialização):"
+msgstr "Porta de escuta (requer reinicialização):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5882,9 +5836,8 @@ msgstr ""
 "está fazendo."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Idioma (requer uma reinicialização):"
+msgstr "Interface de rede (requer reinicialização):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
@@ -5959,16 +5912,14 @@ msgstr ""
 "Mostrar arquivos compartilhados de forma privada nos resultados da pesquisa"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Outros clientes Soulseek podem ter a opção de compartilhar arquivos de forma "
-"privada. Nesse caso, esses arquivos serão prefixados com '[PRIVATE]' e não "
-"poderão ser baixados até que o remetente dê permissão explícita. Pergunte-"
-"lhes gentilmente."
+"Os arquivos compartilhados de forma privada que ficaram visíveis para todos "
+"terão o prefixo '[PRIVATE]' e não poderão ser baixados até que o remetente "
+"conceda permissão explícita. Pergunte a eles gentilmente."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"
@@ -6067,14 +6018,12 @@ msgid "Visible to everyone:"
 msgstr "Visível para todos:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Nomes de amigos"
+msgstr "Compartilhamentos de amigos"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Lista de compartilhamentos"
+msgstr "Compartilhamentos confiáveis"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
