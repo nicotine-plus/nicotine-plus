@@ -213,16 +213,26 @@ class PrivateChat:
         """Server code 22."""
 
         username = msg.user
+        message = msg.msg
 
         if not queued_message:
             log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
                 "user": username,
-                "message": msg.msg
+                "message": message
             })
 
             core.send_message_to_server(slskmessages.MessageAcked(msg.msgid))
 
-        if username != "server":
+        if username == "server":
+            start_str = "The room you are trying to enter ("
+
+            if message.startswith(start_str) and ") " in message:
+                # Redirect message to chat room tab if join wasn't successful
+                msg.user = None
+                room = message[len(start_str):message.rfind(") ")]
+                events.emit("say-chat-room", slskmessages.SayChatroom(room=room, msg=message, user=username))
+                return
+        else:
             # Check ignore status for all other users except "server"
             if core.network_filter.is_user_ignored(username):
                 msg.user = None
@@ -244,7 +254,7 @@ class PrivateChat:
                 msg.user = None
                 return
 
-        user_text = core.pluginhandler.incoming_private_chat_event(username, msg.msg)
+        user_text = core.pluginhandler.incoming_private_chat_event(username, message)
         if user_text is None:
             msg.user = None
             return
@@ -252,15 +262,15 @@ class PrivateChat:
         self.show_user(username, switch_page=False)
 
         _username, msg.msg = user_text
-        msg.msg = self.censor_chat(msg.msg)
+        msg.msg = message = self.censor_chat(msg.msg)
 
         # SEND CLIENT VERSION to user if the following string is sent
         ctcpversion = False
-        if msg.msg == self.CTCP_VERSION:
+        if message == self.CTCP_VERSION:
             ctcpversion = True
-            msg.msg = "CTCP VERSION"
+            msg.msg = message = "CTCP VERSION"
 
-        core.pluginhandler.incoming_private_chat_notification(username, msg.msg)
+        core.pluginhandler.incoming_private_chat_notification(username, message)
 
         if ctcpversion and not config.sections["server"]["ctcpmsgs"]:
             self.send_message(username, f"{pynicotine.__application_name__} {pynicotine.__version__}")

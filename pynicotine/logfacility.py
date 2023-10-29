@@ -33,7 +33,7 @@ class LogFile:
     def __init__(self, path, handle):
         self.path = path
         self.handle = handle
-        self.last_active = time.time()
+        self.last_active = time.monotonic()
 
 
 class LogLevel:
@@ -147,11 +147,15 @@ class Logger:
         try:
             log_file = self._get_log_file(folder_path, basename)
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-            text = f"{timestamp} {text}\n"
+
+            if timestamp_format:
+                timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+                text = f"{timestamp} {text}\n"
+            else:
+                text += "\n"
 
             log_file.handle.write(text.encode("utf-8", "replace"))
-            log_file.last_active = time.time()
+            log_file.last_active = time.monotonic()
 
         except Exception as error:
             # Avoid infinite recursion
@@ -181,7 +185,7 @@ class Logger:
 
     def _close_inactive_log_files(self):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
@@ -260,7 +264,7 @@ class Logger:
                 basename=self.debug_file_name, text=msg)
 
         try:
-            timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
+            timestamp_format = config.sections["logging"].get("log_timestamp", "%x %X")
             events.emit("log-message", timestamp_format, msg, title, level)
 
         except Exception as error:

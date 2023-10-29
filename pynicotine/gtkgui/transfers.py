@@ -26,6 +26,8 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
@@ -73,9 +75,12 @@ class Transfers:
         self.transfer_list = []
         self.users = {}
         self.paths = {}
+        self.pending_folder_rows = set()
+        self.pending_user_rows = set()
         self.grouping_mode = None
         self.row_id = 0
         self.file_properties = None
+        self.pending_parent_rows_timer_id = None
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -224,14 +229,15 @@ class Transfers:
             window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
         self.popup_menu.add_items(
-            ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open in File Manager"), self.on_open_file_manager),
+            ("#" + _("_Open File"), self.on_open_file),
+            ("#" + _("Open in File _Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
+            ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("_Search"), self.on_file_search),
             ("", None),
@@ -239,6 +245,11 @@ class Transfers:
             (">" + _("Clear All"), self.popup_menu_clear),
             (">" + _("User Actions"), self.popup_menu_users)
         )
+
+        events.connect("quit", self.quit)
+
+    def quit(self):
+        events.cancel_scheduled(self.pending_parent_rows_timer_id)
 
     def on_focus(self, *_args):
 
@@ -257,6 +268,9 @@ class Transfers:
 
         self.container.get_parent().set_visible(bool(transfer_list))
         self.update_model(select_parent=False)
+
+        self.pending_parent_rows_timer_id = events.schedule(
+            delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
     def select_transfers(self):
 
@@ -342,7 +356,9 @@ class Transfers:
             update_counters = self.update_specific(transfer, select_parent=select_parent)
 
         elif self.transfer_list:
-            for transfer_i in reversed(self.transfer_list):
+            transfer_list = self.transfer_list if self.type == "download" else reversed(self.transfer_list)
+
+            for transfer_i in transfer_list:
                 row_added = self.update_specific(transfer_i, select_parent=select_parent)
 
                 if row_added and not update_counters:
@@ -356,10 +372,27 @@ class Transfers:
 
         self.tree_view.redraw()
 
-    def update_parent_rows(self, transfer=None):
+    def _update_pending_parent_rows(self):
 
-        # Show tab description if necessary
-        self.container.get_parent().set_visible(bool(self.transfer_list))
+        for user_folder_path in self.pending_folder_rows:
+            if user_folder_path not in self.paths:
+                continue
+
+            user_folder_path_iter, user_folder_path_child_transfers = self.paths[user_folder_path]
+            self.update_parent_row(
+                user_folder_path_iter, user_folder_path_child_transfers, user_folder_path=user_folder_path)
+
+        for username in self.pending_user_rows:
+            if username not in self.users:
+                continue
+
+            user_iter, user_child_transfers = self.users[username]
+            self.update_parent_row(user_iter, user_child_transfers, username=username)
+
+        self.pending_folder_rows.clear()
+        self.pending_user_rows.clear()
+
+    def update_parent_rows(self, transfer=None):
 
         if self.grouping_mode == "ungrouped":
             return
@@ -369,12 +402,9 @@ class Transfers:
 
             if self.paths:
                 user_folder_path = username + self.get_transfer_folder_path(transfer)
-                user_folder_path_iter, user_folder_path_child_transfers = self.paths[user_folder_path]
-                self.update_parent_row(
-                    user_folder_path_iter, user_folder_path_child_transfers, user_folder_path=user_folder_path)
+                self.pending_folder_rows.add(user_folder_path)
 
-            user_iter, user_child_transfers = self.users[username]
-            self.update_parent_row(user_iter, user_child_transfers, username=username)
+            self.pending_user_rows.add(username)
 
         else:
             if self.paths:
@@ -678,6 +708,10 @@ class Transfers:
             self.row_id
         ]
 
+        if not self.transfer_list:
+            # Hide tab description
+            self.container.get_parent().set_visible(True)
+
         transfer.iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
@@ -748,9 +782,18 @@ class Transfers:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
+        if not self.transfer_list:
+            # Show tab description
+            self.container.get_parent().set_visible(False)
+
     def clear_transfers(self, *_args):
+
         self.update_parent_rows()
         self.update_num_users_files()
+
+        if not self.transfer_list:
+            # Show tab description
+            self.container.get_parent().set_visible(False)
 
     def add_popup_menu_user(self, popup, user):
 
@@ -853,8 +896,8 @@ class Transfers:
         self.select_transfers()
         action = config.sections["transfers"][f"{self.type}_doubleclick"]
 
-        if action == 1:    # Send to Player
-            self.on_play_files()
+        if action == 1:    # Open File
+            self.on_open_file()
 
         elif action == 2:  # Open in File Manager
             self.on_open_file_manager()
@@ -931,6 +974,13 @@ class Transfers:
         self.on_file_properties()
         return True
 
+    def on_user_profile(self, *_args):
+
+        username = next(iter(self.selected_users), None)
+
+        if username:
+            core.userinfo.show_user(username)
+
     def on_file_properties(self, *_args):
 
         data = []
@@ -988,7 +1038,7 @@ class Transfers:
         if transfer:
             clipboard.copy_text(transfer.virtual_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
         # Implemented in subclasses
         raise NotImplementedError
 

@@ -117,6 +117,7 @@ class Searches(IconNotebook):
             ("file-search-response", self.file_search_response),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
+            ("server-login", self.on_focus),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -124,6 +125,9 @@ class Searches(IconNotebook):
         self.populate_search_history()
 
     def on_focus(self, *_args):
+
+        if self.window.current_page_id != self.window.search_page.id:
+            return True
 
         if self.window.search_entry.is_sensitive():
             self.window.search_entry.grab_focus()
@@ -339,13 +343,14 @@ class Search:
         ("executable", FileTypes.EXECUTABLE),
         ("image", FileTypes.IMAGE),
         ("video", FileTypes.VIDEO),
-        ("text", FileTypes.DOCUMENT_TEXT),
+        ("document", FileTypes.DOCUMENT),
+        ("text", FileTypes.TEXT),
         ("archive", FileTypes.ARCHIVE)
     )
     FILTER_PRESETS = {
         "filterbr": ("!0", "128 <=192", ">192 <320", "=320", ">320"),
         "filtersize": (">50MiB", ">20MiB <=50MiB", ">10MiB <=20MiB", ">5MiB <=10MiB", "<=5MiB"),
-        "filtertype": ("audio", "image", "video", "text", "archive", "!executable", "audio image text"),
+        "filtertype": ("audio", "image", "video", "document", "text", "archive", "!executable", "audio image text"),
         "filterlength": (">15:00", ">8:00 <=15:00", ">5:00 <=8:00", ">2:00 <=5:00", "<=2:00")
     }
     FILTER_SPLIT_DIGIT_PATTERN = re.compile(r"(?:[|&\s])+(?<![<>!=]\s)")  # [pipe, ampersand, space]

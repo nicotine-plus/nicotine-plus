@@ -590,7 +590,7 @@ class Application:
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if (current_time - action.cooldown_time) >= 1:
             # Prevent rapid key-repeat toggling to avoid server ban

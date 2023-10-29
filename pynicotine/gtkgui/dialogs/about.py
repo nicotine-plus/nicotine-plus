@@ -36,287 +36,287 @@ class About(Dialog):
     AUTHORS = [
         "<b>Nicotine+ Team</b>",
 
-        """>> <b>Mat (mathiascode)</b>
-   - Maintainer (2020–present)
-   - Developer""",
+        """<b>Mat (mathiascode)</b>
+ •  Maintainer (2020–present)
+ •  Developer""",
 
-        """>> <b>eLvErDe</b>
-   - Maintainer (2013–2016)
-   - Domain name administrator
-   - Source code migration from SVN to GitHub
-   - Developer""",
+        """<b>eLvErDe</b>
+ •  Maintainer (2013–2016)
+ •  Domain name administrator
+ •  Source code migration from SVN to GitHub
+ •  Developer""",
 
-        """>> <b>Han Boetes</b>
-   - Tester
-   - Documentation
-   - Bug hunting
-   - Translation management""",
+        """<b>Han Boetes</b>
+ •  Tester
+ •  Documentation
+ •  Bug hunting
+ •  Translation management""",
 
-        """>> <b>alekksander</b>
-   - Tester
-   - Redesign of some graphics""",
+        """<b>alekksander</b>
+ •  Tester
+ •  Redesign of some graphics""",
 
-        """>> <b>slook</b>
-   - Tester
-   - Accessibility improvements""",
+        """<b>slook</b>
+ •  Tester
+ •  Accessibility improvements""",
 
 
         "\nInactive",
 
-        """>> <b>daelstorm</b>
-   - Maintainer (2004–2009)
-   - Developer""",
+        """<b>daelstorm</b>
+ •  Maintainer (2004–2009)
+ •  Developer""",
 
-        """>> <b>quinox</b>
-   - Maintainer (2009–2012)
-   - Developer""",
+        """<b>quinox</b>
+ •  Maintainer (2009–2012)
+ •  Developer""",
 
-        """>> <b>Michael Labouebe (gfarmerfr)</b>
-   - Maintainer (2016–2017)
-   - Developer""",
+        """<b>Michael Labouebe (gfarmerfr)</b>
+ •  Maintainer (2016–2017)
+ •  Developer""",
 
-        """>> <b>Kip Warner</b>
-   - Maintainer (2018–2020)
-   - Developer
-   - Debianization""",
+        """<b>Kip Warner</b>
+ •  Maintainer (2018–2020)
+ •  Developer
+ •  Debianization""",
 
-        """>> <b>gallows (aka 'burp O')</b>
-   - Developer
-   - Packager
-   - Submitted Slack.Build file""",
+        """<b>gallows (aka 'burp O')</b>
+ •  Developer
+ •  Packager
+ •  Submitted Slack.Build file""",
 
-        """>> <b>hedonist (formerly known as alexbk)</b>
-   - OS X Nicotine.app maintainer / developer
-   - Author of PySoulSeek, used for Nicotine core""",
+        """<b>hedonist (formerly known as alexbk)</b>
+ •  OS X Nicotine.app maintainer / developer
+ •  Author of PySoulSeek, used for Nicotine core""",
 
-        """>> <b>lee8oi</b>
-   - Bash commander
-   - New and updated /alias""",
+        """<b>lee8oi</b>
+ •  Bash commander
+ •  New and updated /alias""",
 
-        """>> <b>INMCM</b>
-   - Nicotine+ topic maintainer on ubuntuforums.org""",
+        """<b>INMCM</b>
+ •  Nicotine+ topic maintainer on ubuntuforums.org""",
 
-        """>> <b>suser-guru</b>
-   - Suse Linux packager
-   - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1""",
+        """<b>suser-guru</b>
+ •  Suse Linux packager
+ •  Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1""",
 
-        """>> <b>osiris</b>
-   - Handy-man
-   - Documentation
-   - Some GNU/Linux packaging
-   - Nicotine+ on Win32
-   - Author of Nicotine+ guide""",
+        """<b>osiris</b>
+ •  Handy-man
+ •  Documentation
+ •  Some GNU/Linux packaging
+ •  Nicotine+ on Win32
+ •  Author of Nicotine+ guide""",
 
-        """>> <b>Mutnick</b>
-   - Created Nicotine+ GitHub organization
-   - Developer""",
+        """<b>Mutnick</b>
+ •  Created Nicotine+ GitHub organization
+ •  Developer""",
 
-        """>> <b>Lene Preuss</b>
-   - Python 3 migration
-   - Unit and DEP-8 continuous integration testing""",
+        """<b>Lene Preuss</b>
+ •  Python 3 migration
+ •  Unit and DEP-8 continuous integration testing""",
 
 
         "\n<b>Nicotine Team</b>",
 
-        """>> <b>Ingmar K. Steen (Hyriand)</b>
-   - Maintainer (2003–2004)""",
+        """<b>Ingmar K. Steen (Hyriand)</b>
+ •  Maintainer (2003–2004)""",
 
-        """>> <b>daelstorm</b>
-   - Beta tester
-   - Designer of most of the settings
-   - Made the Nicotine icons""",
+        """<b>daelstorm</b>
+ •  Beta tester
+ •  Designer of most of the settings
+ •  Made the Nicotine icons""",
 
-        """>> <b>SmackleFunky</b>
-   - Beta tester""",
+        """<b>SmackleFunky</b>
+ •  Beta tester""",
 
-        """>> <b>Wretched</b>
-   - Beta tester
-   - Bringer of great ideas""",
+        """<b>Wretched</b>
+ •  Beta tester
+ •  Bringer of great ideas""",
 
-        """>> <b>(va)\\*10^3</b>
-   - Beta tester
-   - Designer of Nicotine homepage and artwork (logos)""",
+        """<b>(va)\\*10^3</b>
+ •  Beta tester
+ •  Designer of Nicotine homepage and artwork (logos)""",
 
-        """>> <b>sierracat</b>
-   - MacOSX tester
-   - soulseeX developer""",
+        """<b>sierracat</b>
+ •  MacOSX tester
+ •  soulseeX developer""",
 
-        """>> <b>Gustavo J. A. M. Carneiro</b>
-   - Created the exception dialog""",
+        """<b>Gustavo J. A. M. Carneiro</b>
+ •  Created the exception dialog""",
 
-        """>> <b>SeeSchloss</b>
-   - Developer
-   - Created 1.0.8 Win32 installer
-   - Created Soulfind, open source Soulseek server written in D""",
+        """<b>SeeSchloss</b>
+ •  Developer
+ •  Created 1.0.8 Win32 installer
+ •  Created Soulfind, open source Soulseek server written in D""",
 
-        """>> <b>vasi</b>
-   - Mac developer
-   - Packaged Nicotine on OSX PowerPC""",
+        """<b>vasi</b>
+ •  Mac developer
+ •  Packaged Nicotine on OSX PowerPC""",
 
 
         "\n<b>PySoulSeek Contributors</b>",
 
-        """>> <b>Alexander Kanavin</b>
-   - Maintainer (2001–2003)""",
+        """<b>Alexander Kanavin</b>
+ •  Maintainer (2001–2003)""",
 
-        """>> <b>Nir Arbel</b>
-   - Helped with many protocol questions, and of course he designed and implemented the whole system""",
+        """<b>Nir Arbel</b>
+ •  Helped with many protocol questions, and of course he designed and implemented the whole system""",
 
-        """>> <b>Brett W. Thompson (Zip)</b>
-   - His client code was used to get an initial impression of how the system works
-   - Supplied the patch for logging chat conversations""",
+        """<b>Brett W. Thompson (Zip)</b>
+ •  His client code was used to get an initial impression of how the system works
+ •  Supplied the patch for logging chat conversations""",
 
-        """>> <b>Josselin Mouette</b>
-   - Official Debian package maintainer""",
+        """<b>Josselin Mouette</b>
+ •  Official Debian package maintainer""",
 
-        """>> <b>blueboy</b>
-   - Former unofficial Debian package maintainer""",
+        """<b>blueboy</b>
+ •  Former unofficial Debian package maintainer""",
 
-        """>> <b>Christian Swinehart</b>
-   - Fink package maintainer""",
+        """<b>Christian Swinehart</b>
+ •  Fink package maintainer""",
 
-        """>> <b>Ingmar K. Steen (Hyriand)</b>
-   - Patches for upload bandwidth management, banning, various UI improvements and more""",
+        """<b>Ingmar K. Steen (Hyriand)</b>
+ •  Patches for upload bandwidth management, banning, various UI improvements and more""",
 
-        """>> <b>Geert Kloosterman</b>
-   - A script for importing Windows Soulseek configuration""",
+        """<b>Geert Kloosterman</b>
+ •  A script for importing Windows Soulseek configuration""",
 
-        """>> <b>Joe Halliwell</b>
-   - Submitted a patch for optionally discarding search results after closing a search tab""",
+        """<b>Joe Halliwell</b>
+ •  Submitted a patch for optionally discarding search results after closing a search tab""",
 
-        """>> <b>Alexey Vyskubov</b>
-   - Code cleanups""",
+        """<b>Alexey Vyskubov</b>
+ •  Code cleanups""",
 
-        """>> <b>Jason Green (SmackleFunky)</b>
-   - Ignore list and auto-join checkbox, wishlists"""]
+        """<b>Jason Green (SmackleFunky)</b>
+ •  Ignore list and auto-join checkbox, wishlists"""]
 
     TRANSLATORS = [
         "<b>Nicotine+ Translators</b>",
 
-        """>> <b>Catalan</b>
-   - Maite Guix (2022)""",
+        """<b>Catalan</b>
+ •  Maite Guix (2022)""",
 
-        """>> <b>Chinese (Simplified)</b>
-   - hylau (2023)
-   - hadwin (2022)""",
+        """<b>Chinese (Simplified)</b>
+ •  hylau (2023)
+ •  hadwin (2022)""",
 
-        """>> <b>Czech</b>
-   - burnmail123 (2021)""",
+        """<b>Czech</b>
+ •  burnmail123 (2021)""",
 
-        """>> <b>Danish</b>
-   - mathsped (2003–2004)""",
+        """<b>Danish</b>
+ •  mathsped (2003–2004)""",
 
-        """>> <b>Dutch</b>
-   - Han Boetes (hboetes) (2021–2023)
-   - Kenny Verstraete (2009)
-   - nince78 (2007)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+        """<b>Dutch</b>
+ •  Han Boetes (hboetes) (2021–2023)
+ •  Kenny Verstraete (2009)
+ •  nince78 (2007)
+ •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
-        """>> <b>English</b>
-   - slook (2021–2023)
-   - Han Boetes (hboetes) (2021–2023)
-   - Mat (mathiascode) (2020–2023)
-   - Michael Labouebe (gfarmerfr) (2016)
-   - daelstorm (2004–2009)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+        """<b>English</b>
+ •  slook (2021–2023)
+ •  Han Boetes (hboetes) (2021–2023)
+ •  Mat (mathiascode) (2020–2023)
+ •  Michael Labouebe (gfarmerfr) (2016)
+ •  daelstorm (2004–2009)
+ •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
-        """>> <b>Euskara</b>
-   - Julen (2006–2007)""",
+        """<b>Euskara</b>
+ •  Julen (2006–2007)""",
 
-        """>> <b>Finnish</b>
-   - Kari Viittanen (Kalevi) (2006–2007)""",
+        """<b>Finnish</b>
+ •  Kari Viittanen (Kalevi) (2006–2007)""",
 
-        """>> <b>French</b>
-   - subu_versus (2023)
-   - zniavre (2007–2023)
-   - Lisapple (2021–2022)
-   - melmorabity (2021–2022)
-   - m-balthazar (2020)
-   - Michael Labouebe (gfarmerfr) (2016–2017)
-   - Monsieur Poisson (2009–2010)
-   - ManWell (2007)
-   - systr (2006)
-   - Julien Wajsberg (flashfr) (2003–2004)""",
+        """<b>French</b>
+ •  subu_versus (2023)
+ •  zniavre (2007–2023)
+ •  Lisapple (2021–2022)
+ •  melmorabity (2021–2022)
+ •  m-balthazar (2020)
+ •  Michael Labouebe (gfarmerfr) (2016–2017)
+ •  Monsieur Poisson (2009–2010)
+ •  ManWell (2007)
+ •  systr (2006)
+ •  Julien Wajsberg (flashfr) (2003–2004)""",
 
-        """>> <b>German</b>
-   - Han Boetes (hboetes) (2021–2023)
-   - phelissimo_ (2023)
-   - Meokater (2007)
-   - (._.) (2007)
-   - lippel (2004)
-   - Ingmar K. Steen (Hyriand) (2003–2004)""",
+        """<b>German</b>
+ •  Han Boetes (hboetes) (2021–2023)
+ •  phelissimo_ (2023)
+ •  Meokater (2007)
+ •  (._.) (2007)
+ •  lippel (2004)
+ •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
-        """>> <b>Hungarian</b>
-   - Szia Tomi (2022–2023)
-   - Nils (2009)
-   - David Balazs (djbaloo) (2006–2020)""",
+        """<b>Hungarian</b>
+ •  Szia Tomi (2022–2023)
+ •  Nils (2009)
+ •  David Balazs (djbaloo) (2006–2020)""",
 
-        """>> <b>Italian</b>
-   - Gabboxl (2022–2023)
-   - ms-afk (2023)
-   - Gianluca Boiano (2020–2022)
-   - nicola (2007)
-   - dbazza (2003–2004)""",
+        """<b>Italian</b>
+ •  Gabboxl (2022–2023)
+ •  ms-afk (2023)
+ •  Gianluca Boiano (2020–2022)
+ •  nicola (2007)
+ •  dbazza (2003–2004)""",
 
-        """>> <b>Latvian</b>
-   - Pagal3 (2022–2023)""",
+        """<b>Latvian</b>
+ •  Pagal3 (2022–2023)""",
 
-        """>> <b>Lithuanian</b>
-   - mantas (2020)
-   - Žygimantas Beručka (2006–2009)""",
+        """<b>Lithuanian</b>
+ •  mantas (2020)
+ •  Žygimantas Beručka (2006–2009)""",
 
-        """>> <b>Norwegian Bokmål</b>
-   - Allan Nordhøy (comradekingu) (2021)""",
+        """<b>Norwegian Bokmål</b>
+ •  Allan Nordhøy (comradekingu) (2021)""",
 
-        """>> <b>Polish</b>
-   - mariachini (2017–2023)
-   - Amun-Ra (2007)
-   - thine (2007)
-   - Wojciech Owczarek (owczi) (2003–2004)""",
+        """<b>Polish</b>
+ •  mariachini (2017–2023)
+ •  Amun-Ra (2007)
+ •  thine (2007)
+ •  Wojciech Owczarek (owczi) (2003–2004)""",
 
-        """>> <b>Portuguese (Brazil)</b>
-   - Havokdan (2022–2023)
-   - Guilherme Santos (2022)
-   - b1llso (2022)
-   - Nicolas Abril (2021)
-   - yyyyyyyan (2020)
-   - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
+        """<b>Portuguese (Brazil)</b>
+ •  Havokdan (2022–2023)
+ •  Guilherme Santos (2022)
+ •  b1llso (2022)
+ •  Nicolas Abril (2021)
+ •  yyyyyyyan (2020)
+ •  Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
-        """>> <b>Romanian</b>
-   - xslendix (2023)""",
+        """<b>Romanian</b>
+ •  xslendix (2023)""",
 
-        """>> <b>Russian</b>
-   - SnIPeRSnIPeR (2022–2023)
-   - Mehavoid (2021–2023)
-   - AHOHNMYC (2022)""",
+        """<b>Russian</b>
+ •  SnIPeRSnIPeR (2022–2023)
+ •  Mehavoid (2021–2023)
+ •  AHOHNMYC (2022)""",
 
-        """>> <b>Slovak</b>
-   - Jozef Říha (2006–2008)""",
+        """<b>Slovak</b>
+ •  Jozef Říha (2006–2008)""",
 
-        """>> <b>Spanish (Chile)</b>
-   - MELERIX (2021–2023)
-   - tagomago (2021–2022)
-   - Strange (2021)
-   - Silvio Orta (2007)
-   - Dreslo (2003–2004)""",
+        """<b>Spanish (Chile)</b>
+ •  MELERIX (2021–2023)
+ •  tagomago (2021–2022)
+ •  Strange (2021)
+ •  Silvio Orta (2007)
+ •  Dreslo (2003–2004)""",
 
-        """>> <b>Spanish (Spain)</b>
-   - gallegonovato (2023)
-   - MELERIX (2021–2023)
-   - tagomago (2021–2022)
-   - Strange (2021)
-   - Silvio Orta (2007)
-   - Dreslo (2003–2004)""",
+        """<b>Spanish (Spain)</b>
+ •  gallegonovato (2023)
+ •  MELERIX (2021–2023)
+ •  tagomago (2021–2022)
+ •  Strange (2021)
+ •  Silvio Orta (2007)
+ •  Dreslo (2003–2004)""",
 
-        """>> <b>Swedish</b>
-   - mitramai (2021)
-   - Markus Magnuson (alimony) (2003–2004)""",
+        """<b>Swedish</b>
+ •  mitramai (2021)
+ •  Markus Magnuson (alimony) (2003–2004)""",
 
-        """>> <b>Turkish</b>
-   - Oğuz Ersen (2021–2023)""",
+        """<b>Turkish</b>
+ •  Oğuz Ersen (2021–2023)""",
 
-        """>> <b>Ukrainian</b>
-   - uniss2209 (2022)"""]
+        """<b>Ukrainian</b>
+ •  uniss2209 (2022)"""]
 
     LICENSE = [
         """Nicotine+ is licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">

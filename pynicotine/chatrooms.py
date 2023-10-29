@@ -27,10 +27,10 @@ class Room:
 
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, is_private=False):
 
         self.name = name
-        self.is_private = False
+        self.is_private = is_private
         self.users = set()
         self.tickers = {}
 
@@ -45,7 +45,6 @@ class ChatRooms:
         self.completions = set()
         self.server_rooms = set()
         self.joined_rooms = {}
-        self.pending_autojoin_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
 
         for event_name, callback in (
@@ -68,6 +67,7 @@ class ChatRooms:
             ("say-chat-room", self._say_chat_room),
             ("server-login", self._server_login),
             ("server-disconnect", self._server_disconnect),
+            ("start", self._start),
             ("ticker-add", self._ticker_add),
             ("ticker-remove", self._ticker_remove),
             ("ticker-state", self._ticker_state),
@@ -75,6 +75,12 @@ class ChatRooms:
             ("user-left-room", self._user_left_room)
         ):
             events.connect(event_name, callback)
+
+    def _start(self):
+
+        for room in config.sections["server"]["autojoin"]:
+            if isinstance(room, str):
+                self.show_room(room, is_private=(room in self.private_rooms), switch_page=False, remembered=True)
 
     def _quit(self):
         self.remove_all_rooms(is_permanent=False)
@@ -85,19 +91,9 @@ class ChatRooms:
         if not msg.success:
             return
 
-        join_list = self.joined_rooms
-
-        if not join_list:
-            join_list = config.sections["server"]["autojoin"]
-
-        for room in join_list:
-            if not isinstance(room, str):
-                continue
-
-            self.pending_autojoin_rooms.add(room)
-
+        for room in self.joined_rooms:
             if room == self.GLOBAL_ROOM_NAME:
-                self.show_global_room()
+                core.send_message_to_server(slskmessages.JoinGlobalRoom())
             else:
                 core.send_message_to_server(slskmessages.JoinRoom(room))
 
@@ -108,24 +104,25 @@ class ChatRooms:
             room_obj.users.clear()
 
         self.server_rooms.clear()
-        self.pending_autojoin_rooms.clear()
         self.update_completions()
 
-    def show_global_room(self):
-        # Fake a JoinRoom protocol message
-        events.emit("join-room", slskmessages.JoinRoom(self.GLOBAL_ROOM_NAME))
-        core.send_message_to_server(slskmessages.JoinGlobalRoom())
+    def show_room(self, room, is_private=False, switch_page=True, remembered=False):
 
-    def show_room(self, room, is_private=False):
+        room_obj = self.joined_rooms.get(room)
 
-        if room == self.GLOBAL_ROOM_NAME:
-            self.show_global_room()
+        if room_obj is None:
+            self.joined_rooms[room] = room_obj = Room(name=room, is_private=is_private)
 
-        elif room not in self.joined_rooms:
-            core.send_message_to_server(slskmessages.JoinRoom(room, is_private))
-            return
+            if room not in config.sections["server"]["autojoin"]:
+                config.sections["server"]["autojoin"].insert(0, room)
 
-        events.emit("show-room", room)
+        if not room_obj.users:
+            if room == self.GLOBAL_ROOM_NAME:
+                core.send_message_to_server(slskmessages.JoinGlobalRoom())
+            else:
+                core.send_message_to_server(slskmessages.JoinRoom(room, is_private))
+
+        events.emit("show-room", room, is_private, switch_page, remembered)
 
     def remove_room(self, room, is_permanent=True):
 
@@ -258,12 +255,9 @@ class ChatRooms:
         room_obj = self.joined_rooms.get(msg.room)
 
         if room_obj is None:
-            self.joined_rooms[msg.room] = room_obj = Room(name=msg.room)
-
-        room_obj.is_private = msg.private
-
-        if msg.room not in config.sections["server"]["autojoin"]:
-            config.sections["server"]["autojoin"].insert(0, msg.room)
+            self.show_room(msg.room, is_private=msg.private, switch_page=False)
+        else:
+            room_obj.is_private = msg.private
 
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
@@ -282,8 +276,12 @@ class ChatRooms:
     def _leave_room(self, msg):
         """Server code 15."""
 
+        room_obj = self.joined_rooms.get(msg.room)
+
+        if room_obj is not None:
+            room_obj.users.clear()
+
         core.pluginhandler.leave_chatroom_notification(msg.room)
-        self.remove_room(msg.room)
 
     def _private_room_users(self, msg):
         """Server code 133."""
@@ -315,9 +313,16 @@ class ChatRooms:
     def _private_room_added(self, msg):
         """Server code 139."""
 
-        if msg.room not in self.private_rooms:
-            self.create_private_room(msg.room)
-            log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
+        if msg.room in self.private_rooms:
+            return
+
+        self.create_private_room(msg.room)
+
+        if msg.room in self.joined_rooms:
+            # Room tab previously opened, join room now
+            self.show_room(msg.room, is_private=True, switch_page=False)
+
+        log.add(_("You have been added to a private room: %(room)s"), {"room": msg.room})
 
     def _private_room_removed(self, msg):
         """Server code 140."""
@@ -438,13 +443,14 @@ class ChatRooms:
             "message": msg.msg
         })
 
-        if core.network_filter.is_user_ignored(username):
-            msg.room = None
-            return
+        if username != "server":
+            if core.network_filter.is_user_ignored(username):
+                msg.room = None
+                return
 
-        if core.network_filter.is_user_ip_ignored(username):
-            msg.room = None
-            return
+            if core.network_filter.is_user_ip_ignored(username):
+                msg.room = None
+                return
 
         event = core.pluginhandler.incoming_public_chat_event(room, username, msg.msg)
         if event is None:

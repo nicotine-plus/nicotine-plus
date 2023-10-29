@@ -139,7 +139,7 @@ class TreeView:
         if GTK_API_VERSION != 3 or self._h_adjustment.get_value() <= 0:
             return
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if (current_time - self._last_redraw_time) < 1:
             return

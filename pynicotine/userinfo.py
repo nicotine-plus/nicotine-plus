@@ -116,7 +116,7 @@ class UserInfo:
 
         username = msg.init.target_user
         ip_address, _port = msg.init.addr
-        request_time = time.time()
+        request_time = time.monotonic()
 
         if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the

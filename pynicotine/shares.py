@@ -69,10 +69,13 @@ class FileTypes:
         "apng", "avif", "bmp", "gif", "heic", "heif", "ico", "jfif", "jp2", "jpg", "jpe", "jpeg", "jxl", "png", "psd",
         "raw", "svg", "svgz", "tif", "tiff", "webp"
     }
-    DOCUMENT_TEXT = {
-        "cue", "csv", "doc", "docx", "epub", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "mobi",
-        "nfo", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "ps", "rst", "rtf", "sfv", "sha1", "sha256",
-        "srt", "txt", "xls", "xlsx", "xps"
+    DOCUMENT = {
+        "doc", "docx", "epub", "mobi", "odp", "ods", "odt", "opf", "oxps", "pdf", "ppt", "pptx", "rtf", "xls", "xlsx",
+        "xps"
+    }
+    TEXT = {
+        "cue", "csv", "htm", "html", "m3u", "m3u8", "md5", "log", "lrc", "md", "mks", "nfo", "ps", "rst", "sfv",
+        "sha1", "sha256", "srt", "txt"
     }
     VIDEO = {
         "3gp", "amv", "asf", "avi", "f4v", "flv", "m2ts", "m2v", "m4p", "m4v", "mov", "mp4", "mpe", "mpeg", "mpg",
@@ -641,7 +644,6 @@ class Shares:
 
         self.share_dbs = {}
         self.requested_share_times = {}
-        self.pending_network_msgs = []
         self.rescanning = False
         self.compressed_shares = {
             "public": slskmessages.SharedFileListResponse(),
@@ -691,7 +693,6 @@ class Shares:
 
     def _server_disconnect(self, _msg):
         self.requested_share_times.clear()
-        self.pending_network_msgs.clear()
 
     # Shares-related Actions #
 
@@ -760,11 +761,9 @@ class Shares:
             "buddywordindex", "buddyfileindex", "buddyfiles", "buddymtimes", "buddystreams"
         ):
             file_path = os.path.join(config.data_folder_path, f"{destination}.db")
-            file_path_encoded = encode_path(file_path)
 
             try:
-                if os.path.exists(file_path_encoded):
-                    os.remove(file_path_encoded)
+                self.remove_db_file(file_path)
 
             except OSError as error:
                 log.add_debug("Failed to remove old share database %s: %s", (file_path, error))
@@ -1058,18 +1057,13 @@ class Shares:
         if successful:
             self.send_num_shared_folders_files()
 
-        # Process any file transfer queue requests that arrived while scanning
-        if self.pending_network_msgs:
-            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
-            self.pending_network_msgs.clear()
-
     # Network Messages #
 
     def _shared_file_list_request(self, msg):
         """Peer code 4."""
 
         username = msg.init.target_user
-        request_time = time.time()
+        request_time = time.monotonic()
 
         if username in self.requested_share_times and request_time < self.requested_share_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
