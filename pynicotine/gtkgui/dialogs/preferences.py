@@ -757,7 +757,7 @@ class UploadsPage:
             container=self.upload_double_click_label.get_parent(), label=self.upload_double_click_label,
             items=(
                 (_("Nothing"), None),
-                (_("Send to Player"), None),
+                (_("Open File"), None),
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Abort"), None),
