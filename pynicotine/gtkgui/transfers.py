@@ -711,7 +711,7 @@ class Transfers:
             self.row_id
         ]
 
-        if not self.transfer_list:
+        if self.transfer_list:
             # Hide tab description
             self.container.get_parent().set_visible(True)
 
