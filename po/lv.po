@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-09-21 09:58+0000\n"
+"PO-Revision-Date: 2023-10-30 10:00+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -32,15 +32,14 @@ msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ ir Soulseek peer-to-peer tīkla grafiskais klients."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ mērķis ir būt patīkamai, bezmaksas un atvērtā pirmkoda (FOSS) "
-"alternatīvai oficiālajam Soulseek klientam, nodrošinot papildu "
-"funkcionalitāti, vienlaikus ievērojot Soulseek protokolu."
+"Nicotine+ mērķis ir kļūt par vieglu, patīkamu, bezmaksas un atvērtā pirmkoda "
+"(FOSS) alternatīvu oficiālajam Soulseek klientam, vienlaikus nodrošinot arī "
+"plašu funkciju klāstu."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:769
@@ -386,14 +385,12 @@ msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Nav pieejama grafiskā vide, tiek izmantots bezgalvas (bez GUI) režīms"
 
 #: pynicotine/gtkgui/application.py:297
-#, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
-msgstr "Vai tiešām vēlaties iziet?"
+msgstr "Jūs joprojām augšupielādējat failus. Vai tiešām vēlaties iziet?"
 
 #: pynicotine/gtkgui/application.py:298
-#, fuzzy
 msgid "Wait for uploads to finish"
-msgstr "Gaidiet augšupielādes pabeigšanu"
+msgstr "Gaidīt, kad augšupielādes tiks pabeigtas"
 
 #: pynicotine/gtkgui/application.py:300
 msgid "Do you really want to exit?"
@@ -967,9 +964,8 @@ msgstr "Nekas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
 #: pynicotine/gtkgui/dialogs/preferences.py:760
-#, fuzzy
 msgid "Open File"
-msgstr "Nākamais Fails"
+msgstr "Atvērt Failu"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
 #: pynicotine/gtkgui/dialogs/preferences.py:761
@@ -1075,18 +1071,17 @@ msgstr "Filtri Ir Veiksmīgi"
 #: pynicotine/gtkgui/dialogs/preferences.py:612
 #: pynicotine/gtkgui/dialogs/preferences.py:651
 msgid "Public"
-msgstr ""
+msgstr "Publisks"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:545
 #: pynicotine/gtkgui/dialogs/preferences.py:666
 #: pynicotine/gtkgui/dialogs/preferences.py:703
-#, fuzzy
 msgid "Trusted buddies"
-msgstr "Uzticamie Draugi"
+msgstr "Uzticamie draugi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:586
 msgid "Accessible To"
-msgstr ""
+msgstr "Pieejams"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:620
 #: pynicotine/gtkgui/dialogs/preferences.py:666

@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-29 20:55+0000\n"
-"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2023-10-30 05:47+0000\n"
+"Last-Translator: Mohamed El Morabity <pikachu.2014@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -2661,7 +2661,7 @@ msgstr ""
 
 #: pynicotine/headless/application.py:96
 msgid "Password: "
-msgstr "Mot de passe: "
+msgstr "Mot de passe : "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
