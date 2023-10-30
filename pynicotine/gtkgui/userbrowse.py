@@ -663,18 +663,18 @@ class UserBrowse:
                 add_css_class(button_label, "heading")
 
                 if GTK_API_VERSION >= 4:
-                    button.set_child(button_label)                           # pylint: disable=no-member
-                    button.set_always_show_arrow(True)                       # pylint: disable=no-member
-                    button.set_create_popup_func(self.on_folder_popup_menu)  # pylint: disable=no-member
+                    button.set_child(button_label)                              # pylint: disable=no-member
+                    button.set_always_show_arrow(True)                          # pylint: disable=no-member
+                    button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
 
-                    button_label.set_mnemonic_widget(button.get_first_child())
+                    button_label.set_mnemonic_widget(button.get_first_child())  # pylint: disable=no-member
                 else:
                     box = Gtk.Box(spacing=6, visible=True)
                     arrow_icon = Gtk.Image(icon_name="pan-down-symbolic", visible=True)
-                    box.add(button_label)                                    # pylint: disable=no-member
-                    box.add(arrow_icon)                                      # pylint: disable=no-member
+                    box.add(button_label)                                       # pylint: disable=no-member
+                    box.add(arrow_icon)                                         # pylint: disable=no-member
 
-                    button.add(box)                                          # pylint: disable=no-member
+                    button.add(box)                                             # pylint: disable=no-member
                     button.connect("clicked", self.on_folder_popup_menu)
 
                     button_label.set_mnemonic_widget(button)
