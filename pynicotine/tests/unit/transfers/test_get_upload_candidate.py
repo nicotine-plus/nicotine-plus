@@ -29,40 +29,52 @@ NUM_ALLOWED_NONE = 2
 
 class GetUploadCandidateTest(TestCase):
 
+    # pylint: disable=protected-access
+
     def setUp(self):
+
+        self.token = 0
 
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"uploads", "userlist"})
+        core.init_components(enabled_components={"pluginhandler", "shares", "statistics", "uploads", "userlist"})
+        core.start()
+
+        core.uploads.allow_saving_transfers = False
         core.uploads.privileged_users = {"puser1", "puser2"}
+        core.uploads.transfers.clear()
 
     def tearDown(self):
 
         core.quit()
 
+        self.assertIsNone(core.statistics)
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userlist)
 
-    def add_transfers(self, users, status):
+    def add_transfers(self, users, is_active=False):
 
         transfer_list = []
 
         for username in users:
-            folder_path = f"{username}/{len(core.uploads.transfers)}"
-            transfer = Transfer(username=username, folder_path=folder_path, status=status)
+            virtual_path = f"{username}/{len(core.uploads.transfers)}"
+            transfer = Transfer(username=username, virtual_path=virtual_path)
+
+            if is_active:
+                core.uploads._activate_upload(transfer, self.token)
+                self.token += 1
+            else:
+                core.uploads._enqueue_upload(transfer)
 
             transfer_list.append(transfer)
-            core.uploads.append_upload(username, folder_path, transfer)
-            core.uploads.update_upload(transfer)
+            core.uploads._append_upload(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
-
-        transfer.status = "Finished"
-        core.uploads.update_upload(transfer)
-        core.uploads.transfers.remove(transfer)
+        core.uploads._upload_finished(transfer)
+        core.uploads.clear_upload(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):
         """Call core.uploads.get_upload_candidate until no uploads are left.
@@ -90,7 +102,7 @@ class GetUploadCandidateTest(TestCase):
             if clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
 
-            candidate, _has_active_uploads = core.uploads.get_upload_candidate()
+            candidate, _has_active_uploads = core.uploads._get_upload_candidate()
 
             if not clear_first and in_progress:
                 self.set_finished(in_progress.pop(0))
@@ -102,11 +114,14 @@ class GetUploadCandidateTest(TestCase):
 
             none_count = 0
 
-            candidates.append(candidate)
             queued.remove(candidate)
-            in_progress.append(candidate)
+            core.uploads._dequeue_upload(candidate)
 
-            candidate.status = "Getting status"
+            candidates.append(candidate)
+            in_progress.append(candidate)
+            core.uploads._activate_upload(candidate, self.token)
+
+            self.token += 1
 
         return candidates
 
@@ -114,8 +129,8 @@ class GetUploadCandidateTest(TestCase):
 
         config.sections["transfers"]["fifoqueue"] = not round_robin
 
-        queued_transfers = self.add_transfers(queued, status="Queued")
-        in_progress_transfers = self.add_transfers(in_progress, status="Getting status")
+        queued_transfers = self.add_transfers(queued)
+        in_progress_transfers = self.add_transfers(in_progress, is_active=True)
 
         candidates = self.consume_transfers(queued_transfers, in_progress_transfers, clear_first=clear_first)
         users = [transfer.username if transfer else None for transfer in candidates]

@@ -72,7 +72,7 @@ class Transfers:
             self.clear_all_button.set_has_frame(False)
             self.clear_all_label.set_mnemonic_widget(self.clear_all_button.get_first_child())
 
-        self.transfer_list = []
+        self.transfer_list = {}
         self.users = {}
         self.paths = {}
         self.pending_folder_rows = set()
@@ -359,9 +359,7 @@ class Transfers:
             update_counters = self.update_specific(transfer, select_parent=select_parent)
 
         elif self.transfer_list:
-            transfer_list = self.transfer_list if self.type == "download" else reversed(self.transfer_list)
-
-            for transfer_i in transfer_list:
+            for transfer_i in self.transfer_list:
                 row_added = self.update_specific(transfer_i, select_parent=select_parent)
 
                 if row_added and not update_counters:

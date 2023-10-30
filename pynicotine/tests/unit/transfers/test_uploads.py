@@ -49,10 +49,12 @@ class UploadsTest(TestCase):
     def test_load_uploads(self):
         """Test loading a uploads.json file."""
 
-        # Only finished uploads are loaded, other types should never be stored
-        self.assertEqual(len(core.uploads.transfers), 3)
+        transfers = list(core.uploads.transfers.values())
 
-        transfer = core.uploads.transfers[0]
+        # Only finished uploads are loaded, other types should never be stored
+        self.assertEqual(len(transfers), 3)
+
+        transfer = transfers[2]
 
         self.assertEqual(transfer.username, "user5")
         self.assertEqual(transfer.virtual_path, "Junk\\Song5.mp3")
@@ -61,7 +63,7 @@ class UploadsTest(TestCase):
         self.assertEqual(transfer.current_byte_offset, 11733776)
         self.assertFalse(transfer.file_attributes)
 
-        transfer = core.uploads.transfers[2]
+        transfer = transfers[0]
 
         self.assertEqual(transfer.username, "user3")
         self.assertEqual(transfer.virtual_path, "Junk\\Song3.flac")
@@ -91,7 +93,8 @@ class UploadsTest(TestCase):
 
         core.uploads.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
         core.uploads.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
-        transfer = core.uploads.transfers[1]
+
+        transfer = list(core.uploads.transfers.values())[3]
 
         self.assertEqual(transfer.username, "newuser2")
         self.assertEqual(transfer.virtual_path, "Hello\\Upload\\File.mp3")
