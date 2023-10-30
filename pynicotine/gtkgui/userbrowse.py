@@ -666,6 +666,8 @@ class UserBrowse:
                     button.set_child(button_label)                           # pylint: disable=no-member
                     button.set_always_show_arrow(True)                       # pylint: disable=no-member
                     button.set_create_popup_func(self.on_folder_popup_menu)  # pylint: disable=no-member
+
+                    button_label.set_mnemonic_widget(button.get_first_child())
                 else:
                     box = Gtk.Box(spacing=6, visible=True)
                     arrow_icon = Gtk.Image(icon_name="pan-down-symbolic", visible=True)
@@ -674,10 +676,14 @@ class UserBrowse:
 
                     button.add(box)                                          # pylint: disable=no-member
                     button.connect("clicked", self.on_folder_popup_menu)
+
+                    button_label.set_mnemonic_widget(button)
             else:
                 button = Gtk.Button(child=button_label, visible=True)
                 button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
                 add_css_class(button_label, "normal")
+
+                button_label.set_mnemonic_widget(button)
 
             add_css_class(button, "flat")
             remove_css_class(button, "text-button")
