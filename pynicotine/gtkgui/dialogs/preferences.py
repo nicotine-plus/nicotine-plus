@@ -60,7 +60,7 @@ from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
 from pynicotine.slskproto import NetworkInterfaces
-from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
@@ -277,7 +277,7 @@ class DownloadsPage:
             container=self.download_double_click_label.get_parent(), label=self.download_double_click_label,
             items=(
                 (_("Nothing"), None),
-                (_("Send to Player"), None),
+                (_("Open File"), None),
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Pause"), None),
@@ -757,7 +757,7 @@ class UploadsPage:
             container=self.upload_double_click_label.get_parent(), label=self.upload_double_click_label,
             items=(
                 (_("Nothing"), None),
-                (_("Send to Player"), None),
+                (_("Open File"), None),
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Abort"), None),
@@ -1198,6 +1198,7 @@ class ChatsPage:
             self.enable_spell_checker_toggle,
             self.enable_tab_completion_toggle,
             self.enable_tts_toggle,
+            self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
@@ -1212,6 +1213,12 @@ class ChatsPage:
 
         self.application = application
         self.completion_required = False
+
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -1982,6 +1989,7 @@ class LoggingPage:
             self.chatroom_log_folder_label,
             self.container,
             self.debug_log_folder_label,
+            self.format_codes_label,
             self.log_chatroom_toggle,
             self.log_debug_toggle,
             self.log_private_chat_toggle,
@@ -1992,6 +2000,12 @@ class LoggingPage:
         ) = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
+
+        format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
+        format_codes_label = _("Format codes")
+
+        self.format_codes_label.set_markup(
+            f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
@@ -2178,24 +2192,10 @@ class UrlHandlersPage:
         (
             self.container,
             self.file_manager_label,
-            self.media_player_label,
             self.protocol_list_container
         ) = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
-
-        self.media_player_combobox = ComboBox(
-            container=self.media_player_label.get_parent(), label=self.media_player_label, has_entry=True,
-            items=(
-                ("", None),
-                ("xdg-open $", None),
-                ("amarok -a $", None),
-                ("audacious -e $", None),
-                ("exaile $", None),
-                ("rhythmbox $", None),
-                ("xmms2 add -f $", None)
-            )
-        )
 
         self.file_manager_combobox = ComboBox(
             container=self.file_manager_label.get_parent(), label=self.file_manager_label, has_entry=True,
@@ -2220,19 +2220,21 @@ class UrlHandlersPage:
             },
             "ui": {
                 "filemanager": self.file_manager_combobox
-            },
-            "players": {
-                "default": self.media_player_combobox
             }
         }
 
         self.default_protocols = [
-            "http",
-            "https",
-            "ftp",
-            "sftp",
-            "news",
-            "irc"
+            "http://",
+            "https://",
+            "audio",
+            "image",
+            "video",
+            "document",
+            "text",
+            "archive",
+            ".mp3",
+            ".jpg",
+            ".pdf"
         ]
 
         self.default_commands = [
@@ -2290,9 +2292,6 @@ class UrlHandlersPage:
             },
             "ui": {
                 "filemanager": self.file_manager_combobox.get_text()
-            },
-            "players": {
-                "default": self.media_player_combobox.get_text()
             }
         }
 
@@ -2303,6 +2302,13 @@ class UrlHandlersPage:
 
         if not protocol or not command:
             return
+
+        if protocol.startswith("."):
+            # Only keep last part of file extension (e.g. .tar.gz -> .gz)
+            protocol = "." + protocol.rsplit(".", 1)[-1]
+
+        elif not protocol.endswith("://") and protocol not in self.default_protocols:
+            protocol += "://"
 
         iterator = self.protocol_list_view.iterators.get(protocol)
         self.protocols[protocol] = command
@@ -2363,10 +2369,6 @@ class UrlHandlersPage:
 
             self.protocol_list_view.remove_row(iterator)
             del self.protocols[protocol]
-
-    def on_default_media_player(self, *_args):
-        default_media_player = config.defaults["players"]["default"]
-        self.media_player_combobox.set_text(default_media_player)
 
     def on_default_file_manager(self, *_args):
         default_file_manager = config.defaults["ui"]["filemanager"]
@@ -2694,7 +2696,7 @@ class PluginsPage:
         self.plugin_settings_button.set_sensitive(False)
 
     def on_add_plugins(self, *_args):
-        open_file_path(core.pluginhandler.user_plugin_folder, create_folder=True)
+        open_folder_path(core.pluginhandler.user_plugin_folder, create_folder=True)
 
     def on_plugin_settings(self, *_args):
 

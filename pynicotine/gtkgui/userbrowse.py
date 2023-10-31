@@ -55,6 +55,7 @@ from pynicotine.slskmessages import FileListMessage
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class UserBrowses(IconNotebook):
@@ -78,6 +79,7 @@ class UserBrowses(IconNotebook):
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.on_focus),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
@@ -87,6 +89,9 @@ class UserBrowses(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
+
+        if self.window.current_page_id != self.window.userbrowse_page.id:
+            return True
 
         if self.get_n_pages():
             return True
@@ -345,7 +350,7 @@ class UserBrowse:
                 ("#" + _("Up_load File(s)…"), self.on_upload_files),
                 ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("", None),
-                ("#" + _("Send to _Player"), self.on_play_files),
+                ("#" + _("_Open File"), self.on_open_file),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
@@ -849,7 +854,8 @@ class UserBrowse:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
-        core.userbrowse.upload_folder(user, self.selected_folder_path, recurse=recurse)
+        core.userbrowse.upload_folder(
+            user, self.selected_folder_path, local_shares=core.userbrowse.user_shares[self.user], recurse=recurse)
 
     def on_upload_folder_to(self, *_args, recurse=False):
 
@@ -1064,21 +1070,19 @@ class UserBrowse:
             droplist=sorted(core.userlist.buddies, key=strxfrm)
         ).show()
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
 
         folder_path = core.shares.virtual2real(self.selected_folder_path)
 
         for basename in self.selected_files:
-            open_file_path(file_path=os.path.join(folder_path, basename),
-                           command=config.sections["players"]["default"])
+            open_file_path(os.path.join(folder_path, basename))
 
     def on_file_manager(self, *_args):
 
         if self.selected_folder_path is None:
             return
 
-        open_file_path(file_path=core.shares.virtual2real(self.selected_folder_path),
-                       command=config.sections["ui"]["filemanager"])
+        open_folder_path(core.shares.virtual2real(self.selected_folder_path))
 
     def on_file_properties(self, _action, _state, all_files=False):
 
@@ -1146,7 +1150,7 @@ class UserBrowse:
         self.select_files()
 
         if self.user == config.sections["server"]["login"]:
-            self.on_play_files()
+            self.on_open_file()
         else:
             self.on_download_files()
 
@@ -1212,7 +1216,7 @@ class UserBrowse:
         return True
 
     def on_file_transfer_multi_accelerator(self, *_args):
-        """Shift+Enter - Send to Player, Download Files (multiple)."""
+        """Shift+Enter - Open File, Download Files (multiple)."""
 
         if self.file_list_view.is_empty():
             self.folder_tree_view.grab_focus()  # avoid nav trap
@@ -1221,7 +1225,7 @@ class UserBrowse:
         self.select_files()  # support multi-select with Up/Dn keys
 
         if self.user == config.sections["server"]["login"]:
-            self.on_play_files()
+            self.on_open_file()
         else:
             self.on_download_files()
 

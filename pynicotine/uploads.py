@@ -20,6 +20,8 @@ import os
 import os.path
 import time
 
+from collections import deque
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -37,7 +39,9 @@ class Uploads(Transfers):
 
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
 
+        self.transfers = deque()
         self.pending_shutdown = False
+        self.pending_network_msgs = []
         self.privileged_users = set()
         self.upload_speed = 0
         self.token = 0
@@ -57,6 +61,7 @@ class Uploads(Transfers):
             ("queue-upload", self._queue_upload),
             ("remove-privileged-user", self._remove_from_privileged),
             ("schedule-quit", self._schedule_quit),
+            ("shares-ready", self._shares_ready),
             ("transfer-request", self._transfer_request),
             ("transfer-response", self._transfer_response),
             ("upload-connection-closed", self._upload_connection_closed),
@@ -78,6 +83,7 @@ class Uploads(Transfers):
 
         super()._quit()
 
+        self.transfers.clear()
         self.upload_speed = 0
         self.token = 0
 
@@ -112,6 +118,7 @@ class Uploads(Transfers):
         if need_update:
             events.emit("update-uploads")
 
+        self.pending_network_msgs.clear()
         self.privileged_users.clear()
         self.user_update_counters.clear()
         self.user_update_counter = 0
@@ -122,7 +129,10 @@ class Uploads(Transfers):
     # Load Transfers #
 
     def load_transfers(self):
-        self.add_stored_transfers(self.transfers_file_path, self.load_transfers_file, load_only_finished=True)
+
+        for transfer in self.get_stored_transfers(
+                self.transfers_file_path, self.load_transfers_file, load_only_finished=True):
+            self.transfers.appendleft(transfer)
 
     # Privileges #
 
@@ -318,6 +328,15 @@ class Uploads(Transfers):
         return False
 
     # Events #
+
+    def _shares_ready(self, _successful):
+        """Process any file transfer queue requests that arrived while
+        scanning shares.
+        """
+
+        if self.pending_network_msgs:
+            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
+            self.pending_network_msgs.clear()
 
     def _user_status(self, msg):
         """Server code 7.
@@ -528,7 +547,7 @@ class Uploads(Transfers):
         transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
                             status="Getting status", token=token, size=size)
 
-        self.transfer_request_times[transfer] = time.time()
+        self.transfer_request_times[transfer] = time.monotonic()
         self.append_upload(username, virtual_path, transfer)
         self.update_upload(transfer)
 
@@ -669,7 +688,7 @@ class Uploads(Transfers):
             else:
                 upload.file_handle = file_handle
                 upload.queue_position = 0
-                upload.last_update = time.time()
+                upload.last_update = time.monotonic()
                 upload.start_time = upload.last_update - upload.time_elapsed
 
                 core.statistics.append_stat_value("started_uploads", 1)
@@ -713,7 +732,7 @@ class Uploads(Transfers):
             if upload in self.transfer_request_times:
                 del self.transfer_request_times[upload]
 
-            current_time = time.time()
+            current_time = time.monotonic()
             size = upload.size
 
             if not upload.last_byte_offset:
@@ -878,7 +897,7 @@ class Uploads(Transfers):
             self.token = slskmessages.increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
-            self.transfer_request_times[transfer] = time.time()
+            self.transfer_request_times[transfer] = time.monotonic()
 
             log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
                 "filename": virtual_path,
@@ -1030,7 +1049,7 @@ class Uploads(Transfers):
 
     def _check_transfer_timeouts(self):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if self.transfer_request_times:
             for transfer, start_time in self.transfer_request_times.copy().items():
@@ -1054,7 +1073,7 @@ class Uploads(Transfers):
             return False, reject_reason
 
         if core.shares.rescanning:
-            core.shares.pending_network_msgs.append(msg)
+            self.pending_network_msgs.append(msg)
             return False, None
 
         # Is that file already in the queue?
@@ -1323,12 +1342,24 @@ class Uploads(Transfers):
 
         if uploads is None:
             # Clear all uploads
-            uploads = self.transfers
+            uploads = self.transfers.copy()
+        else:
+            uploads = uploads.copy()
 
-        for upload in uploads.copy():
+        for upload in uploads:
             if statuses and upload.status not in statuses:
                 continue
 
             self.clear_upload(upload, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
+
+    # Saving #
+
+    def get_transfer_rows(self):
+        """Get a list of transfers to dump to file."""
+        return [
+            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+             transfer.current_byte_offset, transfer.file_attributes]
+            for transfer in reversed(self.transfers)
+        ]

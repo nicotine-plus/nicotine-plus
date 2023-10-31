@@ -73,6 +73,7 @@ class UserInfos(IconNotebook):
             ("peer-connection-error", self.peer_connection_error),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.on_focus),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
@@ -87,6 +88,9 @@ class UserInfos(IconNotebook):
             events.connect(event_name, callback)
 
     def on_focus(self, *_args):
+
+        if self.window.current_page_id != self.window.userinfo_page.id:
+            return True
 
         if self.get_n_pages():
             return True

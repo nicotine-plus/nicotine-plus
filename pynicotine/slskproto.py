@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno
+import random
 import selectors
 import socket
 import struct
@@ -106,7 +107,7 @@ class Connection:
         self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
-        self.lastactive = time.time()
+        self.lastactive = time.monotonic()
         self.lastreadlength = 100 * 1024
 
 
@@ -134,7 +135,7 @@ class PeerConnection(Connection):
         self.filedown = None
         self.fileupl = None
         self.has_post_init_activity = False
-        self.lastcallback = time.time()
+        self.lastcallback = time.monotonic()
 
 
 class NetworkInterfaces:
@@ -436,10 +437,16 @@ class NetworkThread(Thread):
     def _create_listen_socket(self):
 
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         self._listen_socket.setblocking(False)
+
+        # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
+        # to the same port immediately after reconnecting. This option behaves differently
+        # on Windows, allowing other programs to hijack the port, so don't set it there.
+
+        if sys.platform != "win32":
+            self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         if not self._bind_listen_port():
             self._close_listen_socket()
@@ -484,7 +491,7 @@ class NetworkThread(Thread):
             self._listen_port = None
             return False
 
-        self._local_ip_address = ip_address or "127.0.0.1"
+        self._local_ip_address = ip_address
         log.add(_("Listening on port: %i"), self._listen_port)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
         return True
@@ -493,7 +500,7 @@ class NetworkThread(Thread):
 
     def _check_indirect_connection_timeouts(self):
 
-        curtime = time.time()
+        curtime = time.monotonic()
 
         if self._out_indirect_conn_request_times:
             for init, request_time in self._out_indirect_conn_request_times.copy().items():
@@ -511,6 +518,7 @@ class NetworkThread(Thread):
                     events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
 
                     self._token_init_msgs.pop(init.token, None)
+                    self._username_init_msgs.pop(username + conn_type, None)
                     init.outgoing_msgs.clear()
 
     @staticmethod
@@ -815,7 +823,7 @@ class NetworkThread(Thread):
         init.token = self._token
 
         self._token_init_msgs[self._token] = init
-        self._out_indirect_conn_request_times[init] = time.time()
+        self._out_indirect_conn_request_times[init] = time.monotonic()
         self._queue_network_message(ConnectToPeer(self._token, username, conn_type))
 
         log.add_conn("Attempting indirect connection to user %(user)s with token %(token)s", {
@@ -952,7 +960,7 @@ class NetworkThread(Thread):
                 self._total_upload_bandwidth = 0
 
             if callback:
-                timed_out = (time.time() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
+                timed_out = (time.monotonic() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
                     "upload-connection-closed", username=init.target_user, token=conn_obj.fileupl.token,
                     timed_out=timed_out)
@@ -1003,6 +1011,11 @@ class NetworkThread(Thread):
         if connection_list is self._connsinprogress and user_init.sock is not None:
             # Outgoing connection failed, but an indirect connection was already established
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
+            return
+
+        if init in self._out_indirect_conn_request_times:
+            # Indirect connection attempt in progress, remove init message later on timeout
+            log.add_conn("Cannot remove PeerInit message, since an indirect connection attempt is still in progress")
             return
 
         del self._username_init_msgs[init_key]
@@ -1058,9 +1071,12 @@ class NetworkThread(Thread):
     def _set_server_timer(self):
 
         if self._server_timeout_value == -1:
-            self._server_timeout_value = 15
+            # Add jitter to spread out connection attempts from Nicotine+ clients
+            # in case server goes down
+            self._server_timeout_value = random.randint(5, 15)
 
-        elif 0 < self._server_timeout_value < 600:
+        elif 0 < self._server_timeout_value < 300:
+            # Exponential backoff, max 5 minute wait
             self._server_timeout_value *= 2
 
         self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
@@ -1862,7 +1878,7 @@ class NetworkThread(Thread):
                 self._total_download_bandwidth += added_bytes_len
                 conn_obj.filedown.leftbytes -= added_bytes_len
 
-            current_time = time.time()
+            current_time = time.monotonic()
             finished = (conn_obj.filedown.leftbytes <= 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
@@ -2580,7 +2596,7 @@ class NetworkThread(Thread):
                 time.sleep(0.1)
                 continue
 
-            current_time = time.time()
+            current_time = time.monotonic()
 
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.

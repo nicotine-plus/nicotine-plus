@@ -45,6 +45,14 @@ class Plugin(BasePlugin):
                 "description": _("List available commands"),
                 "parameters": ["[query]"]
             },
+            "connect": {
+                "callback": self.connect_command,
+                "description": _("Connect to the server"),
+            },
+            "disconnect": {
+                "callback": self.disconnect_command,
+                "description": _("Disconnect from the server"),
+            },
             "away": {
                 "aliases": ["a"],
                 "callback": self.away_command,
@@ -307,6 +315,12 @@ class Plugin(BasePlugin):
             output_text += "\n" + _("Type %(command)s to list available commands") % {"command": "/help"}
 
         self.output(output_text)
+
+    def connect_command(self, _args, **_unused):
+        self.core.connect()
+
+    def disconnect_command(self, _args, **_unused):
+        self.core.disconnect()
 
     def away_command(self, _args, **_unused):
 

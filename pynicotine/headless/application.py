@@ -38,6 +38,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("setup", self.on_setup),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
             events.connect(event_name, callback)
@@ -73,8 +74,31 @@ class Application:
         cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
 
     def on_invalid_password(self):
-        log.add(_("User %s already exists, and the password you entered is invalid. Please choose another username "
-                  "if this is your first time logging in."), config.sections["server"]["login"])
+
+        log.add(_("User %s already exists, and the password you entered is invalid."),
+                config.sections["server"]["login"])
+        log.add(_("Type %s to log in with another username or password."), "/connect")
+
+        config.sections["server"]["passw"] = ""
+
+    def on_setup_password_response(self, user_input):
+
+        config.sections["server"]["passw"] = user_input
+        config.write_configuration()
+
+        core.connect()
+
+    def on_setup_username_response(self, user_input):
+
+        if user_input:
+            config.sections["server"]["login"] = user_input
+
+        cli.prompt(_("Password: "), callback=self.on_setup_password_response, is_silent=True)
+
+    def on_setup(self):
+        log.add(_("To create a new Soulseek account, fill in your desired username and password. If you "
+                  "already have an account, fill in your existing login details."))
+        cli.prompt(_("Username: "), callback=self.on_setup_username_response)
 
     def on_shares_unavailable_response(self, user_input):
 

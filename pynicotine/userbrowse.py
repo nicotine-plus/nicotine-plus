@@ -95,7 +95,11 @@ class UserBrowse:
         if username not in self.user_shares or new_request:
             if not share_type:
                 # Check our own permission level, and show relevant shares for it
-                ip_address, _port = core.user_addresses[username]
+                if username in core.user_addresses:
+                    ip_address, _port = core.user_addresses[username]
+                else:
+                    ip_address = None
+
                 current_share_type, _reason = core.network_filter.check_user_permission(username, ip_address)
             else:
                 current_share_type = share_type
@@ -212,7 +216,7 @@ class UserBrowse:
                     if is_first_item:
                         is_first_item = False
                     else:
-                        file_handle.write(", ")
+                        file_handle.write(",\n")
 
                     file_handle.write(json_encoder.encode(item))
 
@@ -269,12 +273,12 @@ class UserBrowse:
 
         core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
 
-    def upload_folder(self, username, requested_folder_path, recurse=False):
+    def upload_folder(self, username, requested_folder_path, local_shares, recurse=False):
 
         if not requested_folder_path or not username:
             return
 
-        for folder_path, files in self.user_shares[username].items():
+        for folder_path, files in local_shares.items():
             if not recurse and requested_folder_path != folder_path:
                 continue
 

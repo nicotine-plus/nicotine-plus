@@ -45,6 +45,7 @@ class Downloads(Transfers):
 
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "downloads.json"))
 
+        self.transfers = {}
         self.requested_folders = defaultdict(dict)
         self.requested_folder_token = 0
 
@@ -71,7 +72,10 @@ class Downloads(Transfers):
         self.update_download_filters()
 
     def _quit(self):
+
         super()._quit()
+
+        self.transfers.clear()
         self.requested_folder_token = 0
 
     def _server_login(self, msg):
@@ -101,7 +105,7 @@ class Downloads(Transfers):
         need_update = False
         ignored_statuses = {"Finished", "Filtered", "Paused"}
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.status not in ignored_statuses:
                 download.status = "User logged off"
                 self.abort_download(download, abort_reason=None)
@@ -142,7 +146,8 @@ class Downloads(Transfers):
         if transfers_file_path != self.transfers_file_path:
             load_func = self.load_legacy_transfers_file
 
-        self.add_stored_transfers(transfers_file_path, load_func)
+        for transfer in self.get_stored_transfers(transfers_file_path, load_func):
+            self.transfers[transfer.username + transfer.virtual_path] = transfer
 
     def watch_stored_downloads(self):
         """When logging in, we request to watch the status of our downloads."""
@@ -150,7 +155,7 @@ class Downloads(Transfers):
         users = set()
         ignored_statuses = {"Filtered", "Finished"}
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.status in ignored_statuses:
                 continue
 
@@ -196,7 +201,7 @@ class Downloads(Transfers):
         download_statuses = {"Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection closed", "Connection timeout", "Cancelled"}
 
-        for download in reversed(self.transfers.copy()):
+        for download in self.transfers.copy().values():
             if (download.username == username
                     and (download.status in download_statuses or download.status.startswith("User limit of"))):
                 if user_offline:
@@ -223,18 +228,18 @@ class Downloads(Transfers):
     def _cant_connect_queue_file(self, username, virtual_path, is_offline):
         """We can't connect to the user, either way (QueueUpload)."""
 
-        for download in self.transfers:
-            if download.virtual_path != virtual_path or download.username != username:
-                continue
+        download = self.transfers.get(username + virtual_path)
 
-            log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
-                "filename": virtual_path,
-                "user": username
-            })
+        if download is None:
+            return
 
-            self.abort_download(download, abort_reason="User logged off" if is_offline else "Connection timeout")
-            core.watch_user(username)
-            break
+        log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
+            "filename": virtual_path,
+            "user": username
+        })
+
+        self.abort_download(download, abort_reason="User logged off" if is_offline else "Connection timeout")
+        core.watch_user(username)
 
     def _folder_contents_response(self, msg, check_num_files=True):
         """Peer code 37."""
@@ -309,43 +314,40 @@ class Downloads(Transfers):
 
         cancel_reason = "Cancelled"
         accepted = True
+        download = self.transfers.get(username + virtual_path)
 
-        for download in self.transfers:
-            if download.virtual_path != virtual_path or download.username != username:
-                continue
-
+        if download is not None:
             status = download.status
 
             if status == "Finished":
                 # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
                 cancel_reason = "Complete"
                 accepted = False
-                break
 
-            if status in {"Paused", "Filtered"}:
+            elif status in {"Paused", "Filtered"}:
                 accepted = False
-                break
 
-            # Remote peer is signaling a transfer is ready, attempting to download it
+            else:
+                # Remote peer is signaling a transfer is ready, attempting to download it
 
-            # If the file is larger than 2GB, the SoulseekQt client seems to
-            # send a malformed file size (0 bytes) in the TransferRequest response.
-            # In that case, we rely on the cached, correct file size we received when
-            # we initially added the download.
+                # If the file is larger than 2GB, the SoulseekQt client seems to
+                # send a malformed file size (0 bytes) in the TransferRequest response.
+                # In that case, we rely on the cached, correct file size we received when
+                # we initially added the download.
 
-            if size > 0:
-                if download.size != size:
-                    # The remote user's file contents have changed since we queued the download
-                    download.size_changed = True
+                if size > 0:
+                    if download.size != size:
+                        # The remote user's file contents have changed since we queued the download
+                        download.size_changed = True
 
-                download.size = size
+                    download.size = size
 
-            download.token = token
-            download.status = "Getting status"
-            self.transfer_request_times[download] = time.time()
+                download.token = token
+                download.status = "Getting status"
+                self.transfer_request_times[download] = time.monotonic()
 
-            self.update_download(download)
-            return slskmessages.TransferResponse(allowed=True, token=token)
+                self.update_download(download)
+                return slskmessages.TransferResponse(allowed=True, token=token)
 
         if accepted and self.can_upload(username):
             if self.get_complete_download_file_path(username, virtual_path, size):
@@ -360,7 +362,7 @@ class Downloads(Transfers):
 
                 transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=folder_path,
                                     status="Queued", size=size, token=token)
-                self.transfers.appendleft(transfer)
+                self.transfers[username + virtual_path] = transfer
                 self.update_download(transfer)
                 core.watch_user(username)
 
@@ -392,7 +394,7 @@ class Downloads(Transfers):
     def _download_file_error(self, username, token, error):
         """Networking thread encountered a local file error for download."""
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.token != token or download.username != username:
                 continue
 
@@ -406,7 +408,7 @@ class Downloads(Transfers):
         username = msg.init.target_user
         token = msg.token
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.token != token or download.username != username:
                 continue
 
@@ -468,7 +470,7 @@ class Downloads(Transfers):
                 download.file_handle = file_handle
                 download.last_byte_offset = offset
                 download.queue_position = 0
-                download.last_update = time.time()
+                download.last_update = time.monotonic()
                 download.start_time = download.last_update - download.time_elapsed
 
                 core.statistics.append_stat_value("started_downloads", 1)
@@ -519,89 +521,87 @@ class Downloads(Transfers):
             # Don't allow internal statuses as reason
             reason = "Cancelled"
 
-        for download in self.transfers:
-            if download.virtual_path != virtual_path or download.username != username:
-                continue
+        download = self.transfers.get(username + virtual_path)
 
-            if download.status in {"Finished", "Paused"}:
-                # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
-                continue
-
-            if reason == "File not shared." and not download.legacy_attempt:
-                # The peer is possibly using an old client that doesn't support Unicode
-                # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
-
-                log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
-                                 "Attempting to request file as latin-1.", {
-                                     "user": username,
-                                     "reason": reason,
-                                     "filename": virtual_path
-                                 })
-
-                self.abort_download(download, abort_reason=None)
-                download.legacy_attempt = True
-                self.get_file(username, virtual_path, transfer=download)
-                break
-
-            if download.status == "Transferring":
-                self.abort_download(download, abort_reason=None)
-
-            download.status = reason
-            self.update_download(download)
-
-            log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
-                "user": username,
-                "filename": virtual_path,
-                "reason": msg.reason
-            })
+        if download is None:
             return
+
+        if download.status in {"Finished", "Paused"}:
+            # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
+            return
+
+        if reason == "File not shared." and not download.legacy_attempt:
+            # The peer is possibly using an old client that doesn't support Unicode
+            # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
+
+            log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
+                             "Attempting to request file as latin-1.", {
+                                 "user": username,
+                                 "reason": reason,
+                                 "filename": virtual_path
+                             })
+
+            self.abort_download(download, abort_reason=None)
+            download.legacy_attempt = True
+            self.get_file(username, virtual_path, transfer=download)
+            return
+
+        if download.status == "Transferring":
+            self.abort_download(download, abort_reason=None)
+
+        download.status = reason
+        self.update_download(download)
+
+        log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
+            "user": username,
+            "filename": virtual_path,
+            "reason": msg.reason
+        })
 
     def _upload_failed(self, msg):
         """Peer code 46."""
 
         username = msg.init.target_user
         virtual_path = msg.file
+        download = self.transfers.get(username + virtual_path)
 
-        for download in self.transfers:
-            if download.virtual_path != virtual_path or download.username != username:
-                continue
-
-            if download.status in {"Finished", "Paused", "Download folder error", "Local file error",
-                                   "User logged off"}:
-                # Check if there are more transfers with the same virtual path
-                continue
-
-            should_retry = not download.legacy_attempt
-
-            if should_retry:
-                # Attempt to request file name encoded as latin-1 once
-
-                self.abort_download(download, abort_reason=None)
-                download.legacy_attempt = True
-                self.get_file(username, virtual_path, transfer=download)
-                break
-
-            # Already failed once previously, give up
-            self.abort_download(download, abort_reason="Connection closed")
-
-            log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-                "filename": virtual_path,
-                "user": username,
-                "reason": download.status
-            })
+        if download is None:
             return
+
+        if download.status in {"Finished", "Paused", "Download folder error", "Local file error",
+                               "User logged off"}:
+            return
+
+        should_retry = not download.legacy_attempt
+
+        if should_retry:
+            # Attempt to request file name encoded as latin-1 once
+
+            self.abort_download(download, abort_reason=None)
+            download.legacy_attempt = True
+            self.get_file(username, virtual_path, transfer=download)
+            return
+
+        # Already failed once previously, give up
+        self.abort_download(download, abort_reason="Connection closed")
+
+        log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
+            "filename": virtual_path,
+            "user": username,
+            "reason": download.status
+        })
 
     def _file_download_progress(self, username, token, bytes_left):
         """A file download is in progress."""
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.token != token or download.username != username:
                 continue
 
             if download in self.transfer_request_times:
                 del self.transfer_request_times[download]
 
-            current_time = time.time()
+            current_time = time.monotonic()
             size = download.size
 
             download.status = "Transferring"
@@ -627,7 +627,7 @@ class Downloads(Transfers):
     def _download_connection_closed(self, username, token):
         """A file download connection has closed for any reason."""
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.token != token or download.username != username:
                 continue
 
@@ -654,12 +654,16 @@ class Downloads(Transfers):
 
         username = msg.init.target_user
         virtual_path = msg.filename
+        download = self.transfers.get(username + virtual_path)
 
-        for download in self.transfers:
-            if download.virtual_path == virtual_path and download.status == "Queued" and download.username == username:
-                download.queue_position = msg.place
-                self.update_download(download, update_parent=False)
-                return
+        if download is None:
+            return
+
+        if download.status != "Queued":
+            return
+
+        download.queue_position = msg.place
+        self.update_download(download, update_parent=False)
 
     # Transfer Actions #
 
@@ -680,23 +684,24 @@ class Downloads(Transfers):
             folder_path = self.get_default_download_folder(username)
 
         if transfer is None:
-            for download in self.transfers:
-                if (download.virtual_path == virtual_path and download.folder_path == folder_path
-                        and download.username == username):
-                    if download.status == "Finished":
-                        # Duplicate finished download found, verify that it's still present on disk later
-                        transfer = download
-                        break
+            download = self.transfers.get(username + virtual_path)
 
-                    # Duplicate active/cancelled download found, stop here
-                    return
+            if download is not None and download.folder_path != folder_path and download.status == "Finished":
+                # Only one user + virtual path transfer possible at a time, remove the old one
+                self.clear_download(download, update_parent=False)
+                download = None
 
-            else:
+            if download is None:
                 transfer = Transfer(
                     username=username, virtual_path=virtual_path, folder_path=folder_path,
                     status="Queued", size=size, file_attributes=file_attributes
                 )
-                self.transfers.appendleft(transfer)
+                self.transfers[username + virtual_path] = transfer
+
+            else:
+                # Duplicate download found, stop here
+                return
+
         else:
             transfer.virtual_path = virtual_path
             transfer.status = "Queued"
@@ -906,7 +911,7 @@ class Downloads(Transfers):
         # walk through downloads and break if any file in the same folder exists, else execute
         statuses = {"Finished", "Paused", "Filtered"}
 
-        for download in self.transfers:
+        for download in self.transfers.values():
             if download.folder_path == folder_path and download.status not in statuses:
                 return
 
@@ -1006,7 +1011,7 @@ class Downloads(Transfers):
 
         failed_statuses = {"Connection closed", "Connection timeout", "File read error.", "Local file error"}
 
-        for download in reversed(self.transfers):
+        for download in self.transfers.values():
             if download.status in failed_statuses:
                 # Retry failed downloads every 3 minutes
 
@@ -1045,7 +1050,7 @@ class Downloads(Transfers):
 
         limited_statuses = {"Too many files", "Too many megabytes"}
 
-        for download in reversed(self.transfers):
+        for download in self.transfers.values():
             if download.status in limited_statuses or download.status.startswith("User limit of"):
                 # Re-queue limited downloads every 12 minutes
 
@@ -1107,7 +1112,7 @@ class Downloads(Transfers):
     def clear_download(self, download, update_parent=True):
 
         self.abort_download(download, abort_reason=None)
-        self.transfers.remove(download)
+        del self.transfers[download.username + download.virtual_path]
 
         events.emit("clear-download", download, update_parent)
 
@@ -1115,9 +1120,11 @@ class Downloads(Transfers):
 
         if downloads is None:
             # Clear all downloads
-            downloads = self.transfers
+            downloads = self.transfers.copy().values()
+        else:
+            downloads = downloads.copy()
 
-        for download in downloads.copy():
+        for download in downloads:
             if statuses and download.status not in statuses:
                 continue
 
@@ -1182,3 +1189,13 @@ class Downloads(Transfers):
             errors += f"Filter: {dfilter} Error: {error} "
 
         log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})
+
+        # Saving #
+
+    def get_transfer_rows(self):
+        """Get a list of transfers to dump to file."""
+        return [
+            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+             transfer.current_byte_offset, transfer.file_attributes]
+            for transfer in self.transfers.values()
+        ]

@@ -27,7 +27,7 @@ from gi.repository import Pango
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class FileChooser:
@@ -324,7 +324,7 @@ class FileChooserButton:
 
     def on_open_folder(self, *_args):
         folder_path = self.path if self.chooser_type == "folder" else os.path.dirname(self.path)
-        open_file_path(folder_path, create_folder=True)
+        open_folder_path(folder_path, create_folder=True)
 
     def get_path(self):
         return self.path

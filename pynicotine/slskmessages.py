@@ -35,6 +35,7 @@ from pynicotine.utils import human_length
 
 INT32_UNPACK = Struct("<i").unpack_from
 DOUBLE_UINT32_UNPACK = Struct("<II").unpack_from
+UINT16_UNPACK = Struct("<H").unpack_from
 UINT32_UNPACK = Struct("<I").unpack_from
 UINT64_UNPACK = Struct("<Q").unpack_from
 
@@ -323,6 +324,10 @@ class SlskMessage(Message):
         return start + 1, message[start]
 
     @staticmethod
+    def unpack_uint16(message, start=0):
+        return start + 4, UINT16_UNPACK(message, start)[0]
+
+    @staticmethod
     def unpack_int32(message, start=0):
         return start + 4, INT32_UNPACK(message, start)[0]
 
@@ -431,12 +436,14 @@ class GetPeerAddress(ServerMessage):
     and port), given the peer's username.
     """
 
-    __slots__ = ("user", "ip_address", "port")
+    __slots__ = ("user", "ip_address", "port", "unknown", "obfuscated_port")
 
     def __init__(self, user=None):
         self.user = user
         self.ip_address = None
         self.port = None
+        self.unknown = None
+        self.obfuscated_port = None
 
     def make_network_message(self):
         return self.pack_string(self.user)
@@ -445,6 +452,13 @@ class GetPeerAddress(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.ip_address = self.unpack_ip(message, pos)
         pos, self.port = self.unpack_uint32(message, pos)
+
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
+        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
 
 class WatchUser(ServerMessage):
@@ -541,10 +555,10 @@ class SayChatroom(ServerMessage):
 
     __slots__ = ("room", "msg", "user")
 
-    def __init__(self, room=None, msg=None):
+    def __init__(self, room=None, msg=None, user=None):
         self.room = room
         self.msg = msg
-        self.user = None
+        self.user = user
 
     def make_network_message(self):
         msg = bytearray()
@@ -728,7 +742,7 @@ class ConnectToPeer(ServerMessage):
     failed).
     """
 
-    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged")
+    __slots__ = ("token", "user", "conn_type", "ip_address", "port", "privileged", "unknown", "obfuscated_port")
 
     def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
@@ -737,6 +751,8 @@ class ConnectToPeer(ServerMessage):
         self.ip_address = None
         self.port = None
         self.privileged = None
+        self.unknown = None
+        self.obfuscated_port = None
 
     def make_network_message(self):
         msg = bytearray()
@@ -753,9 +769,18 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
 
-        # Soulfind server support
-        if message[pos:]:
-            pos, self.privileged = self.unpack_bool(message, pos)
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
+        pos, self.privileged = self.unpack_bool(message, pos)
+
+        if not message[pos:]:
+            # Soulfind server support
+            return
+
+        pos, self.unknown = self.unpack_uint32(message, pos)
+        pos, self.obfuscated_port = self.unpack_uint32(message, pos)
 
 
 class MessageUser(ServerMessage):
@@ -3402,7 +3427,7 @@ class UploadFailed(PlaceholdUpload):
 
     This message is sent whenever a file connection of an active upload
     closes. Soulseek NS clients can also send this message when a file
-    can not be read. The recipient either re-queues the upload (download
+    cannot be read. The recipient either re-queues the upload (download
     on their end), or ignores the message if the transfer finished.
     """
 

@@ -371,7 +371,8 @@ FILE_TYPE_ICON_LABELS = {
     "package-x-generic-symbolic": _("Archive"),
     "text-x-generic-symbolic": _("Miscellaneous"),
     "video-x-generic-symbolic": _("Video"),
-    "x-office-document-symbolic": _("Document/Text")
+    "x-office-document-symbolic": _("Document"),
+    "emblem-documents-symbolic": _("Text")
 }
 USER_STATUS_ICON_NAMES = {
     UserStatus.ONLINE: "nplus-status-online",
@@ -531,8 +532,11 @@ def get_file_type_icon_name(basename):
     if extension in FileTypes.ARCHIVE:
         return "package-x-generic-symbolic"
 
-    if extension in FileTypes.DOCUMENT_TEXT:
+    if extension in FileTypes.DOCUMENT:
         return "x-office-document-symbolic"
+
+    if extension in FileTypes.TEXT:
+        return "emblem-documents-symbolic"
 
     if extension in FileTypes.EXECUTABLE:
         return "application-x-executable-symbolic"

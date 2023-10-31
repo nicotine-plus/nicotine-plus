@@ -50,7 +50,12 @@ Due to Python's interpreted nature, addressing performance issues can be a chall
  * Use existing functionality in the Python Standard Library when available. Parts of the standard library are written in C, and perform better than pure-Python counterparts, especially in hot code paths.
  * Look for alternative ways of accomplishing a task, and measure the performance. Search engines help a lot here.
 
-[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time.
+[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling in real time while [running Nicotine+ directly from a local Git folder](TESTING.md#git) and starting with:
+
+```sh
+py-spy top ./nicotine
+```
+The console will continuously display a top like view of functions consuming CPU. Press `L` to aggregate by line number, and `R` to reset the view.
 
 
 ## Debug Logging

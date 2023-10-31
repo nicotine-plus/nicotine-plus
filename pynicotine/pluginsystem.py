@@ -22,9 +22,9 @@
 
 import os
 import sys
+import time
 
 from ast import literal_eval
-from time import time
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -308,7 +308,7 @@ class ResponseThrottle:
         self.request = request
 
         willing_to_respond = True
-        current_time = time()
+        current_time = time.monotonic()
 
         if room not in self.plugin_usage:
             self.plugin_usage[room] = {"last_time": 0, "last_request": "", "last_nick": ""}
@@ -359,7 +359,8 @@ class ResponseThrottle:
         return willing_to_respond
 
     def responded(self):
-        self.plugin_usage[self.room] = {"last_time": time(), "last_request": self.request, "last_nick": self.nick}
+        self.plugin_usage[self.room] = {
+            "last_time": time.monotonic(), "last_request": self.request, "last_nick": self.nick}
 
 
 class PluginHandler:
@@ -538,15 +539,17 @@ class PluginHandler:
                     command_list[command] = data
 
             # Legacy commands
-            for command_interface, plugin_commands in (
-                ("chatroom", plugin.__publiccommands__),
-                ("private_chat", plugin.__privatecommands__)
+            for command_interface, attribute_name, plugin_commands in (
+                ("chatroom", "__publiccommands__", plugin.__publiccommands__),
+                ("private_chat", "__privatecommands__", plugin.__privatecommands__)
             ):
                 interface_commands = self.commands.get(command_interface)
 
                 for command, _func in plugin_commands:
                     if command not in interface_commands:
                         interface_commands[command] = None
+                        plugin.log((f"/{command}: {attribute_name} is deprecated, please use the new "
+                                    f"command system. See pynicotine/plugins/ in the Git repository for examples."))
 
             self.update_completions(plugin)
 

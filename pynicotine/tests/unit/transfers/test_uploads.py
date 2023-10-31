@@ -73,6 +73,19 @@ class UploadsTest(TestCase):
             slskmessages.FileAttribute.DURATION: 268
         })
 
+    def test_save_uploads(self):
+        """Verify that the order of the upload list at the end of the session
+        is identical to the one we loaded.
+
+        Ignore the first two unfinished uploads, since only finished uploads are
+        saved to file.
+        """
+
+        old_transfers = core.uploads.load_transfers_file(core.uploads.transfers_file_path)[2:]
+
+        saved_transfers = core.uploads.get_transfer_rows()
+        self.assertEqual(old_transfers, saved_transfers)
+
     def test_push_upload(self):
         """Verify that new uploads are prepended to the list."""
 

@@ -271,6 +271,9 @@ class Core:
 
     def connect(self):
 
+        if self.user_status != slskmessages.UserStatus.OFFLINE:
+            return
+
         if config.need_config():
             log.add(_("You need to specify a username and password before connecting…"))
             self.setup()
@@ -288,7 +291,8 @@ class Core:
         ))
 
     def disconnect(self):
-        self.send_message_to_network_thread(slskmessages.ServerDisconnect())
+        if self.user_status != slskmessages.UserStatus.OFFLINE:
+            self.send_message_to_network_thread(slskmessages.ServerDisconnect())
 
     def send_message_to_network_thread(self, message):
         """Sends message to the networking thread to inform about something."""
