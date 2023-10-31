@@ -3095,8 +3095,9 @@ class Preferences(Dialog):
                         obj = obj.dropdown
 
                     if GTK_API_VERSION >= 4:
-                        scroll_controller = Gtk.EventControllerScroll()
-                        scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
+                        scroll_controller = Gtk.EventControllerScroll(
+                            flags=int(Gtk.EventControllerScrollFlags.VERTICAL)
+                        )
                         scroll_controller.connect("scroll", self.on_widget_scroll)
                         obj.add_controller(scroll_controller)
                     else:

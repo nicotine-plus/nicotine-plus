@@ -249,11 +249,12 @@ class Transfers:
         events.connect("quit", self.quit)
 
     def quit(self):
-        events.cancel_scheduled(self.pending_parent_rows_timer_id)
+        if self.pending_parent_rows_timer_id is not None:
+            events.cancel_scheduled(self.pending_parent_rows_timer_id)
 
     def on_focus(self, *_args):
 
-        self.update_model()
+        self.update_model(select_parent=(self.pending_parent_rows_timer_id is not None))
         self.window.notebook.remove_tab_changed(self.transfer_page)
 
         if self.container.get_visible():
@@ -268,9 +269,6 @@ class Transfers:
 
         self.container.get_parent().set_visible(bool(transfer_list))
         self.update_model(select_parent=False)
-
-        self.pending_parent_rows_timer_id = events.schedule(
-            delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
     def select_transfers(self):
 
@@ -349,6 +347,11 @@ class Transfers:
         if self.window.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
             return
+
+        if self.pending_parent_rows_timer_id is None:
+            # Limit individual parent row updates to once per second
+            self.pending_parent_rows_timer_id = events.schedule(
+                delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
         update_counters = False
 
@@ -708,7 +711,7 @@ class Transfers:
             self.row_id
         ]
 
-        if not self.transfer_list:
+        if self.transfer_list:
             # Hide tab description
             self.container.get_parent().set_visible(True)
 

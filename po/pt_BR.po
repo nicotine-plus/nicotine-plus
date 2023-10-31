@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-29 05:18+0000\n"
+"PO-Revision-Date: 2023-10-30 05:47+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -308,7 +308,7 @@ msgstr "Não é possível salvar o arquivo em %(folder_path)s: %(error)s"
 
 #: pynicotine/downloads.py:466 pynicotine/downloads.py:968
 msgid "Download Folder Error"
-msgstr "Erro na pasta de download"
+msgstr "Erro na Pasta de Download"
 
 #: pynicotine/downloads.py:480
 #, python-format
@@ -971,9 +971,8 @@ msgstr "Nada"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
 #: pynicotine/gtkgui/dialogs/preferences.py:760
-#, fuzzy
 msgid "Open File"
-msgstr "Arquivo seguinte"
+msgstr "Abrir Arquivo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
 #: pynicotine/gtkgui/dialogs/preferences.py:761
@@ -1692,7 +1691,7 @@ msgstr "_Ajuda"
 
 #: pynicotine/gtkgui/mainwindow.py:575
 msgid "_File"
-msgstr "Arquivo"
+msgstr "_Arquivo"
 
 #: pynicotine/gtkgui/mainwindow.py:576
 msgid "_Shares"
@@ -2034,7 +2033,7 @@ msgstr "Resultados"
 
 #: pynicotine/gtkgui/search.py:1540
 msgid "Select Destination Folder for File(s)"
-msgstr "Selecionar Pasta de Destino para Arquivo(s)"
+msgstr "Selecione a Pasta de Destino para os Arquivo(s)"
 
 #: pynicotine/gtkgui/search.py:1578 pynicotine/gtkgui/userbrowse.py:836
 msgid "Select Destination Folder"
@@ -2129,9 +2128,8 @@ msgid "Time Left"
 msgstr "Tempo Restante"
 
 #: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:353
-#, fuzzy
 msgid "_Open File"
-msgstr "_Abrir Lista"
+msgstr "_Abrir Arquivo"
 
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
@@ -2270,7 +2268,7 @@ msgstr "_Enviar"
 
 #: pynicotine/gtkgui/userbrowse.py:1044
 msgid "Select Destination Folder for Files"
-msgstr "Selecionar Pasta de Destino para Arquivo(s)"
+msgstr "Selecione a Pasta de Destino para o(s) Arquivo(s)"
 
 #: pynicotine/gtkgui/userbrowse.py:1066
 msgid "Upload File(s) To User"
@@ -2533,13 +2531,12 @@ msgid "Video"
 msgstr "Vídeo"
 
 #: pynicotine/gtkgui/widgets/theme.py:374
-#, fuzzy
 msgid "Document"
-msgstr "Documento/Texto"
+msgstr "Documento"
 
 #: pynicotine/gtkgui/widgets/theme.py:375
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: pynicotine/gtkgui/widgets/theme.py:479
 #, python-format
@@ -2629,21 +2626,18 @@ msgid "Do you really want to exit? %s"
 msgstr "Você realmente quer sair? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
-msgstr ""
-"O usuário %s já existe e a senha que você digitou é inválida. Por favor, "
-"escolha outro nome de usuário se este for seu primeiro login."
+msgstr "O usuário %s já existe e a senha que você digitou é inválida."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
-msgstr ""
+msgstr "Digite %s para entrar com outro nome de usuário ou senha."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Senha"
+msgstr "Senha: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2657,9 +2651,8 @@ msgstr ""
 "existentes."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Nome de usuário:"
+msgstr "Nome de usuário: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -2826,7 +2819,6 @@ msgid "Belarus"
 msgstr "Belarus"
 
 #: pynicotine/networkfilter.py:68
-#, fuzzy
 msgid "Belize"
 msgstr "Belize"
 
@@ -2859,37 +2851,30 @@ msgid "Ivory Coast"
 msgstr "Costa do Marfim"
 
 #: pynicotine/networkfilter.py:76
-#, fuzzy
 msgid "Cook Islands"
 msgstr "Ilhas Cook"
 
 #: pynicotine/networkfilter.py:77
-#, fuzzy
 msgid "Chile"
 msgstr "Chile"
 
 #: pynicotine/networkfilter.py:78
-#, fuzzy
 msgid "Cameroon"
 msgstr "Camarões"
 
 #: pynicotine/networkfilter.py:79
-#, fuzzy
 msgid "China"
 msgstr "China"
 
 #: pynicotine/networkfilter.py:80
-#, fuzzy
 msgid "Colombia"
 msgstr "Colômbia"
 
 #: pynicotine/networkfilter.py:81
-#, fuzzy
 msgid "Costa Rica"
 msgstr "Costa Rica"
 
 #: pynicotine/networkfilter.py:82
-#, fuzzy
 msgid "Cuba"
 msgstr "Cuba"
 
@@ -2898,17 +2883,14 @@ msgid "Cabo Verde"
 msgstr "Cabo Verde"
 
 #: pynicotine/networkfilter.py:84
-#, fuzzy
 msgid "Curaçao"
 msgstr "Curaçao"
 
 #: pynicotine/networkfilter.py:85
-#, fuzzy
 msgid "Christmas Island"
 msgstr "Ilha Christmas"
 
 #: pynicotine/networkfilter.py:86
-#, fuzzy
 msgid "Cyprus"
 msgstr "Chipre"
 
@@ -2917,17 +2899,14 @@ msgid "Czechia"
 msgstr "Tcheca"
 
 #: pynicotine/networkfilter.py:88
-#, fuzzy
 msgid "Germany"
 msgstr "Alemanha"
 
 #: pynicotine/networkfilter.py:89
-#, fuzzy
 msgid "Djibouti"
 msgstr "Djibuti"
 
 #: pynicotine/networkfilter.py:90
-#, fuzzy
 msgid "Denmark"
 msgstr "Dinamarca"
 
@@ -2936,62 +2915,50 @@ msgid "Dominica"
 msgstr "Dominica"
 
 #: pynicotine/networkfilter.py:92
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "República Dominicana"
 
 #: pynicotine/networkfilter.py:93
-#, fuzzy
 msgid "Algeria"
 msgstr "Argélia"
 
 #: pynicotine/networkfilter.py:94
-#, fuzzy
 msgid "Ecuador"
 msgstr "Equador"
 
 #: pynicotine/networkfilter.py:95
-#, fuzzy
 msgid "Estonia"
 msgstr "Estônia"
 
 #: pynicotine/networkfilter.py:96
-#, fuzzy
 msgid "Egypt"
 msgstr "Egito"
 
 #: pynicotine/networkfilter.py:97
-#, fuzzy
 msgid "Western Sahara"
 msgstr "Saara Ocidental"
 
 #: pynicotine/networkfilter.py:98
-#, fuzzy
 msgid "Eritrea"
 msgstr "Eritreia"
 
 #: pynicotine/networkfilter.py:99
-#, fuzzy
 msgid "Spain"
 msgstr "Espanha"
 
 #: pynicotine/networkfilter.py:100
-#, fuzzy
 msgid "Ethiopia"
 msgstr "Etiópia"
 
 #: pynicotine/networkfilter.py:101
-#, fuzzy
 msgid "Europe"
 msgstr "Europa"
 
 #: pynicotine/networkfilter.py:102
-#, fuzzy
 msgid "Finland"
 msgstr "Finlândia"
 
 #: pynicotine/networkfilter.py:103
-#, fuzzy
 msgid "Fiji"
 msgstr "Fiji"
 
@@ -3000,7 +2967,6 @@ msgid "Falkland Islands (Malvinas)"
 msgstr "Ilhas Malvinas"
 
 #: pynicotine/networkfilter.py:105
-#, fuzzy
 msgid "Micronesia"
 msgstr "Micronésia"
 
@@ -3013,27 +2979,22 @@ msgid "France"
 msgstr "França"
 
 #: pynicotine/networkfilter.py:108
-#, fuzzy
 msgid "Gabon"
 msgstr "Gabão"
 
 #: pynicotine/networkfilter.py:109
-#, fuzzy
 msgid "Great Britain"
 msgstr "Grã-Bretanha"
 
 #: pynicotine/networkfilter.py:110
-#, fuzzy
 msgid "Grenada"
 msgstr "Granada"
 
 #: pynicotine/networkfilter.py:111
-#, fuzzy
 msgid "Georgia"
 msgstr "Geórgia"
 
 #: pynicotine/networkfilter.py:112
-#, fuzzy
 msgid "French Guiana"
 msgstr "Guiana Francesa"
 
@@ -3042,12 +3003,10 @@ msgid "Guernsey"
 msgstr "Guernesey"
 
 #: pynicotine/networkfilter.py:114
-#, fuzzy
 msgid "Ghana"
 msgstr "Gana"
 
 #: pynicotine/networkfilter.py:115
-#, fuzzy
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
@@ -3056,27 +3015,22 @@ msgid "Greenland"
 msgstr "Groelândia"
 
 #: pynicotine/networkfilter.py:117
-#, fuzzy
 msgid "Gambia"
 msgstr "Gâmbia"
 
 #: pynicotine/networkfilter.py:118
-#, fuzzy
 msgid "Guinea"
 msgstr "Guiné"
 
 #: pynicotine/networkfilter.py:119
-#, fuzzy
 msgid "Guadeloupe"
 msgstr "Guadalupe"
 
 #: pynicotine/networkfilter.py:120
-#, fuzzy
 msgid "Equatorial Guinea"
 msgstr "Guiné Equatorial"
 
 #: pynicotine/networkfilter.py:121
-#, fuzzy
 msgid "Greece"
 msgstr "Grécia"
 
@@ -3085,67 +3039,54 @@ msgid "South Georgia & South Sandwich Islands"
 msgstr "Ilhas Geórgia do Sul e Sanduíche do Sul"
 
 #: pynicotine/networkfilter.py:123
-#, fuzzy
 msgid "Guatemala"
 msgstr "Guatemala"
 
 #: pynicotine/networkfilter.py:124
-#, fuzzy
 msgid "Guam"
 msgstr "Guam"
 
 #: pynicotine/networkfilter.py:125
-#, fuzzy
 msgid "Guinea-Bissau"
 msgstr "Guiné-Bissau"
 
 #: pynicotine/networkfilter.py:126
-#, fuzzy
 msgid "Guyana"
 msgstr "Guiana"
 
 #: pynicotine/networkfilter.py:127
-#, fuzzy
 msgid "Hong Kong"
 msgstr "Hong Kong"
 
 #: pynicotine/networkfilter.py:128
-#, fuzzy
 msgid "Heard & McDonald Islands"
 msgstr "Ilhas Heard & McDonald"
 
 #: pynicotine/networkfilter.py:129
-#, fuzzy
 msgid "Honduras"
 msgstr "Honduras"
 
 #: pynicotine/networkfilter.py:130
-#, fuzzy
 msgid "Croatia"
 msgstr "Croácia"
 
 #: pynicotine/networkfilter.py:131
-#, fuzzy
 msgid "Haiti"
 msgstr "Haiti"
 
 #: pynicotine/networkfilter.py:132
-#, fuzzy
 msgid "Hungary"
 msgstr "Hungria"
 
 #: pynicotine/networkfilter.py:133
-#, fuzzy
 msgid "Indonesia"
 msgstr "Indonésia"
 
 #: pynicotine/networkfilter.py:134
-#, fuzzy
 msgid "Ireland"
 msgstr "Irlanda"
 
 #: pynicotine/networkfilter.py:135
-#, fuzzy
 msgid "Israel"
 msgstr "Israel"
 
@@ -3154,67 +3095,54 @@ msgid "Isle of Man"
 msgstr "Ilha de Man"
 
 #: pynicotine/networkfilter.py:137
-#, fuzzy
 msgid "India"
 msgstr "Índia"
 
 #: pynicotine/networkfilter.py:138
-#, fuzzy
 msgid "British Indian Ocean Territory"
 msgstr "Território britânico do Oceano Índico"
 
 #: pynicotine/networkfilter.py:139
-#, fuzzy
 msgid "Iraq"
 msgstr "Iraque"
 
 #: pynicotine/networkfilter.py:140
-#, fuzzy
 msgid "Iran"
 msgstr "Irã"
 
 #: pynicotine/networkfilter.py:141
-#, fuzzy
 msgid "Iceland"
 msgstr "Islândia"
 
 #: pynicotine/networkfilter.py:142
-#, fuzzy
 msgid "Italy"
 msgstr "Itália"
 
 #: pynicotine/networkfilter.py:143
-#, fuzzy
 msgid "Jersey"
 msgstr "Jersey"
 
 #: pynicotine/networkfilter.py:144
-#, fuzzy
 msgid "Jamaica"
 msgstr "Jamaica"
 
 #: pynicotine/networkfilter.py:145
-#, fuzzy
 msgid "Jordan"
 msgstr "Jordânia"
 
 #: pynicotine/networkfilter.py:146
-#, fuzzy
 msgid "Japan"
 msgstr "Japão"
 
 #: pynicotine/networkfilter.py:147
-#, fuzzy
 msgid "Kenya"
 msgstr "Quênia"
 
 #: pynicotine/networkfilter.py:148
-#, fuzzy
 msgid "Kyrgyzstan"
 msgstr "Quirguistão"
 
 #: pynicotine/networkfilter.py:149
-#, fuzzy
 msgid "Cambodia"
 msgstr "Camboja"
 
@@ -3223,7 +3151,6 @@ msgid "Kiribati"
 msgstr "Quiribáti"
 
 #: pynicotine/networkfilter.py:151
-#, fuzzy
 msgid "Comoros"
 msgstr "Comores"
 
@@ -3232,12 +3159,10 @@ msgid "Saint Kitts & Nevis"
 msgstr "São Cristóvão & Névis"
 
 #: pynicotine/networkfilter.py:153
-#, fuzzy
 msgid "North Korea"
 msgstr "Coreia do Norte"
 
 #: pynicotine/networkfilter.py:154
-#, fuzzy
 msgid "South Korea"
 msgstr "Coreia do Sul"
 
@@ -3246,72 +3171,58 @@ msgid "Kuwait"
 msgstr "Kuwait"
 
 #: pynicotine/networkfilter.py:156
-#, fuzzy
 msgid "Cayman Islands"
 msgstr "Ilhas Cayman"
 
 #: pynicotine/networkfilter.py:157
-#, fuzzy
 msgid "Kazakhstan"
 msgstr "Cazaquistão"
 
 #: pynicotine/networkfilter.py:158
-#, fuzzy
 msgid "Laos"
 msgstr "Laos"
 
 #: pynicotine/networkfilter.py:159
-#, fuzzy
 msgid "Lebanon"
 msgstr "Líbano"
 
 #: pynicotine/networkfilter.py:160
-#, fuzzy
 msgid "Saint Lucia"
 msgstr "Santa Lúcia"
 
 #: pynicotine/networkfilter.py:161
-#, fuzzy
 msgid "Liechtenstein"
 msgstr "Liechtenstein"
 
 #: pynicotine/networkfilter.py:162
-#, fuzzy
 msgid "Sri Lanka"
 msgstr "Sri Lanka"
 
 #: pynicotine/networkfilter.py:163
-#, fuzzy
 msgid "Liberia"
 msgstr "Libéria"
 
 #: pynicotine/networkfilter.py:164
-#, fuzzy
 msgid "Lesotho"
 msgstr "Lesoto"
 
 #: pynicotine/networkfilter.py:165
-#, fuzzy
 msgid "Lithuania"
 msgstr "Lituânia"
 
 #: pynicotine/networkfilter.py:166
-#, fuzzy
 msgid "Luxembourg"
 msgstr "Luxemburgo"
 
 #: pynicotine/networkfilter.py:167
-#, fuzzy
 msgid "Latvia"
 msgstr "Letônia"
 
 #: pynicotine/networkfilter.py:168
-#, fuzzy
 msgid "Libya"
 msgstr "Líbia"
 
 #: pynicotine/networkfilter.py:169
-#, fuzzy
 msgid "Morocco"
 msgstr "Marrocos"
 
@@ -3320,17 +3231,14 @@ msgid "Monaco"
 msgstr "Mônaco"
 
 #: pynicotine/networkfilter.py:171
-#, fuzzy
 msgid "Moldova"
 msgstr "Moldávia"
 
 #: pynicotine/networkfilter.py:172
-#, fuzzy
 msgid "Montenegro"
 msgstr "Montenegro"
 
 #: pynicotine/networkfilter.py:173
-#, fuzzy
 msgid "Saint Martin"
 msgstr "São Martinho"
 
@@ -3339,17 +3247,14 @@ msgid "Madagascar"
 msgstr "Madagascar"
 
 #: pynicotine/networkfilter.py:175
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "Ilhas Marshall"
 
 #: pynicotine/networkfilter.py:176
-#, fuzzy
 msgid "North Macedonia"
 msgstr "Macedônia do Norte"
 
 #: pynicotine/networkfilter.py:177
-#, fuzzy
 msgid "Mali"
 msgstr "Mali"
 
@@ -3358,27 +3263,22 @@ msgid "Myanmar"
 msgstr "Birmânia"
 
 #: pynicotine/networkfilter.py:179
-#, fuzzy
 msgid "Mongolia"
 msgstr "Mongólia"
 
 #: pynicotine/networkfilter.py:180
-#, fuzzy
 msgid "Macau"
 msgstr "Macau"
 
 #: pynicotine/networkfilter.py:181
-#, fuzzy
 msgid "Northern Mariana Islands"
 msgstr "Ilhas Marianas do Norte"
 
 #: pynicotine/networkfilter.py:182
-#, fuzzy
 msgid "Martinique"
 msgstr "Martinica"
 
 #: pynicotine/networkfilter.py:183
-#, fuzzy
 msgid "Mauritania"
 msgstr "Mauritânia"
 
@@ -3387,7 +3287,6 @@ msgid "Montserrat"
 msgstr "Monserrate"
 
 #: pynicotine/networkfilter.py:185
-#, fuzzy
 msgid "Malta"
 msgstr "Malta"
 
@@ -3396,7 +3295,6 @@ msgid "Mauritius"
 msgstr "Maurício"
 
 #: pynicotine/networkfilter.py:187
-#, fuzzy
 msgid "Maldives"
 msgstr "Maldivas"
 
@@ -3405,22 +3303,18 @@ msgid "Malawi"
 msgstr "Maláui"
 
 #: pynicotine/networkfilter.py:189
-#, fuzzy
 msgid "Mexico"
 msgstr "México"
 
 #: pynicotine/networkfilter.py:190
-#, fuzzy
 msgid "Malaysia"
 msgstr "Malásia"
 
 #: pynicotine/networkfilter.py:191
-#, fuzzy
 msgid "Mozambique"
 msgstr "Moçambique"
 
 #: pynicotine/networkfilter.py:192
-#, fuzzy
 msgid "Namibia"
 msgstr "Namíbia"
 
@@ -3429,92 +3323,74 @@ msgid "New Caledonia"
 msgstr "Nova Caledônia"
 
 #: pynicotine/networkfilter.py:194
-#, fuzzy
 msgid "Niger"
 msgstr "Níger"
 
 #: pynicotine/networkfilter.py:195
-#, fuzzy
 msgid "Norfolk Island"
 msgstr "Ilha Norfolk"
 
 #: pynicotine/networkfilter.py:196
-#, fuzzy
 msgid "Nigeria"
 msgstr "Nigéria"
 
 #: pynicotine/networkfilter.py:197
-#, fuzzy
 msgid "Nicaragua"
 msgstr "Nicarágua"
 
 #: pynicotine/networkfilter.py:198
-#, fuzzy
 msgid "Netherlands"
 msgstr "Países Baixos"
 
 #: pynicotine/networkfilter.py:199
-#, fuzzy
 msgid "Norway"
 msgstr "Noruega"
 
 #: pynicotine/networkfilter.py:200
-#, fuzzy
 msgid "Nepal"
 msgstr "Nepal"
 
 #: pynicotine/networkfilter.py:201
-#, fuzzy
 msgid "Nauru"
 msgstr "Nauru"
 
 #: pynicotine/networkfilter.py:202
-#, fuzzy
 msgid "Niue"
 msgstr "Niue"
 
 #: pynicotine/networkfilter.py:203
-#, fuzzy
 msgid "New Zealand"
 msgstr "Nova Zelândia"
 
 #: pynicotine/networkfilter.py:204
-#, fuzzy
 msgid "Oman"
 msgstr "Omã"
 
 #: pynicotine/networkfilter.py:205
-#, fuzzy
 msgid "Panama"
 msgstr "Panamá"
 
 #: pynicotine/networkfilter.py:206
-#, fuzzy
 msgid "Peru"
 msgstr "Peru"
 
 #: pynicotine/networkfilter.py:207
-#, fuzzy
 msgid "French Polynesia"
 msgstr "Polinésia Francesa"
 
 #: pynicotine/networkfilter.py:208
-#, fuzzy
 msgid "Papua New Guinea"
 msgstr "Papua-Nova Guiné"
 
 #: pynicotine/networkfilter.py:209
-#, fuzzy
 msgid "Philippines"
 msgstr "Filipinas"
 
 #: pynicotine/networkfilter.py:210
-#, fuzzy
 msgid "Pakistan"
 msgstr "Paquistão"
 
 #: pynicotine/networkfilter.py:211
-#, fuzzy
 msgid "Poland"
 msgstr "Polônia"
 
@@ -3527,7 +3403,6 @@ msgid "Pitcairn"
 msgstr "Ilhas Pitcairn"
 
 #: pynicotine/networkfilter.py:214
-#, fuzzy
 msgid "Puerto Rico"
 msgstr "Porto Rico"
 
@@ -3536,92 +3411,74 @@ msgid "State of Palestine"
 msgstr "Palestina"
 
 #: pynicotine/networkfilter.py:216
-#, fuzzy
 msgid "Portugal"
 msgstr "Portugal"
 
 #: pynicotine/networkfilter.py:217
-#, fuzzy
 msgid "Palau"
 msgstr "Palau"
 
 #: pynicotine/networkfilter.py:218
-#, fuzzy
 msgid "Paraguay"
 msgstr "Paraguai"
 
 #: pynicotine/networkfilter.py:219
-#, fuzzy
 msgid "Qatar"
 msgstr "Catar"
 
 #: pynicotine/networkfilter.py:220
-#, fuzzy
 msgid "Réunion"
 msgstr "Reunião"
 
 #: pynicotine/networkfilter.py:221
-#, fuzzy
 msgid "Romania"
 msgstr "Romênia"
 
 #: pynicotine/networkfilter.py:222
-#, fuzzy
 msgid "Serbia"
 msgstr "Sérvia e Montenegro"
 
 #: pynicotine/networkfilter.py:223
-#, fuzzy
 msgid "Russia"
 msgstr "Rússia"
 
 #: pynicotine/networkfilter.py:224
-#, fuzzy
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #: pynicotine/networkfilter.py:225
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Arábia Saudita"
 
 #: pynicotine/networkfilter.py:226
-#, fuzzy
 msgid "Solomon Islands"
 msgstr "Ilhas Salomão"
 
 #: pynicotine/networkfilter.py:227
-#, fuzzy
 msgid "Seychelles"
 msgstr "Seicheles"
 
 #: pynicotine/networkfilter.py:228
-#, fuzzy
 msgid "Sudan"
 msgstr "Sudão"
 
 #: pynicotine/networkfilter.py:229
-#, fuzzy
 msgid "Sweden"
 msgstr "Suécia"
 
 #: pynicotine/networkfilter.py:230
-#, fuzzy
 msgid "Singapore"
 msgstr "Cingapura"
 
 #: pynicotine/networkfilter.py:231
-#, fuzzy
 msgid "Saint Helena"
 msgstr "Santa Helena"
 
 #: pynicotine/networkfilter.py:232
-#, fuzzy
 msgid "Slovenia"
 msgstr "Eslovênia"
 
 #: pynicotine/networkfilter.py:233
-#, fuzzy
 msgid "Svalbard & Jan Mayen Islands"
 msgstr "Ilhas Svalbard & Jan Mayen"
 
@@ -3630,22 +3487,18 @@ msgid "Slovak Republic"
 msgstr "Eslováquia"
 
 #: pynicotine/networkfilter.py:235
-#, fuzzy
 msgid "Sierra Leone"
 msgstr "Serra Leoa"
 
 #: pynicotine/networkfilter.py:236
-#, fuzzy
 msgid "San Marino"
 msgstr "San Marino"
 
 #: pynicotine/networkfilter.py:237
-#, fuzzy
 msgid "Senegal"
 msgstr "Senegal"
 
 #: pynicotine/networkfilter.py:238
-#, fuzzy
 msgid "Somalia"
 msgstr "Somália"
 
@@ -3654,7 +3507,6 @@ msgid "Suriname"
 msgstr "Suriname"
 
 #: pynicotine/networkfilter.py:240
-#, fuzzy
 msgid "South Sudan"
 msgstr "Sudão do Sul"
 
@@ -3663,7 +3515,6 @@ msgid "Sao Tome & Principe"
 msgstr "São Tomé & Príncipe"
 
 #: pynicotine/networkfilter.py:242
-#, fuzzy
 msgid "El Salvador"
 msgstr "El Salvador"
 
@@ -3672,7 +3523,6 @@ msgid "Sint Maarten"
 msgstr "São Martinho"
 
 #: pynicotine/networkfilter.py:244
-#, fuzzy
 msgid "Syria"
 msgstr "Síria"
 
@@ -3685,7 +3535,6 @@ msgid "Turks & Caicos Islands"
 msgstr "Ilhas Turcas e Caicos"
 
 #: pynicotine/networkfilter.py:247
-#, fuzzy
 msgid "Chad"
 msgstr "Chade"
 
@@ -3694,17 +3543,14 @@ msgid "French Southern Territories"
 msgstr "Terras Austrais e Antárticas Francesas"
 
 #: pynicotine/networkfilter.py:249
-#, fuzzy
 msgid "Togo"
 msgstr "Togo"
 
 #: pynicotine/networkfilter.py:250
-#, fuzzy
 msgid "Thailand"
 msgstr "Tailândia"
 
 #: pynicotine/networkfilter.py:251
-#, fuzzy
 msgid "Tajikistan"
 msgstr "Tajiquistão"
 
@@ -3721,12 +3567,10 @@ msgid "Turkmenistan"
 msgstr "Turcomenistão"
 
 #: pynicotine/networkfilter.py:255
-#, fuzzy
 msgid "Tunisia"
 msgstr "Tunísia"
 
 #: pynicotine/networkfilter.py:256
-#, fuzzy
 msgid "Tonga"
 msgstr "Tonga"
 
@@ -3739,27 +3583,22 @@ msgid "Trinidad & Tobago"
 msgstr "Trindade & Tobago"
 
 #: pynicotine/networkfilter.py:259
-#, fuzzy
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
 #: pynicotine/networkfilter.py:260
-#, fuzzy
 msgid "Taiwan"
 msgstr "Taiwan"
 
 #: pynicotine/networkfilter.py:261
-#, fuzzy
 msgid "Tanzania"
 msgstr "Tanzânia"
 
 #: pynicotine/networkfilter.py:262
-#, fuzzy
 msgid "Ukraine"
 msgstr "Ucrânia"
 
 #: pynicotine/networkfilter.py:263
-#, fuzzy
 msgid "Uganda"
 msgstr "Uganda"
 
@@ -3768,17 +3607,14 @@ msgid "U.S. Minor Outlying Islands"
 msgstr "Ilhas Menores Distantes dos Estados Unidos"
 
 #: pynicotine/networkfilter.py:265
-#, fuzzy
 msgid "United States"
 msgstr "Estados Unidos"
 
 #: pynicotine/networkfilter.py:266
-#, fuzzy
 msgid "Uruguay"
 msgstr "Uruguai"
 
 #: pynicotine/networkfilter.py:267
-#, fuzzy
 msgid "Uzbekistan"
 msgstr "Uzbequistão"
 
@@ -3787,17 +3623,14 @@ msgid "Holy See (Vatican City State)"
 msgstr "Vaticano"
 
 #: pynicotine/networkfilter.py:269
-#, fuzzy
 msgid "Saint Vincent & The Grenadines"
 msgstr "São Vicente & Granadinas"
 
 #: pynicotine/networkfilter.py:270
-#, fuzzy
 msgid "Venezuela"
 msgstr "Venezuela"
 
 #: pynicotine/networkfilter.py:271
-#, fuzzy
 msgid "British Virgin Islands"
 msgstr "Ilhas Virgens Britânicas"
 
@@ -3806,22 +3639,18 @@ msgid "U.S. Virgin Islands"
 msgstr "Ilhas Virgens dos Estados Unidos"
 
 #: pynicotine/networkfilter.py:273
-#, fuzzy
 msgid "Viet Nam"
 msgstr "Vietnã"
 
 #: pynicotine/networkfilter.py:274
-#, fuzzy
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #: pynicotine/networkfilter.py:275
-#, fuzzy
 msgid "Wallis & Futuna"
 msgstr "Wallis & Futuna"
 
 #: pynicotine/networkfilter.py:276
-#, fuzzy
 msgid "Samoa"
 msgstr "Samoa"
 
@@ -3927,14 +3756,12 @@ msgid "List available commands"
 msgstr "Lista de comandos disponíveis"
 
 #: pynicotine/plugins/core_commands/__init__.py:50
-#, fuzzy
 msgid "Connect to the server"
-msgstr "Não foi possível conectar ao servidor. Razão: %s"
+msgstr "Conectar ao servidor"
 
 #: pynicotine/plugins/core_commands/__init__.py:54
-#, fuzzy
 msgid "Disconnect from the server"
-msgstr "Desconectado do servidor %(host)s:%(port)s"
+msgstr "Desconectar do servidor"
 
 #: pynicotine/plugins/core_commands/__init__.py:59
 msgid "Toggle away status"
@@ -6159,6 +5986,8 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Adicione coisas que você deseja que todos vejam, como uma breve descrição, "
+"dicas úteis ou diretrizes para baixar seus compartilhamentos."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"

@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-29 05:18+0000\n"
-"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2023-10-30 05:47+0000\n"
+"Last-Translator: Mohamed El Morabity <pikachu.2014@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -982,9 +982,8 @@ msgstr "Rien"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
 #: pynicotine/gtkgui/dialogs/preferences.py:760
-#, fuzzy
 msgid "Open File"
-msgstr "Fichier suivant"
+msgstr "Ouvrir le fichier"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
 #: pynicotine/gtkgui/dialogs/preferences.py:761
@@ -2145,9 +2144,8 @@ msgid "Time Left"
 msgstr "Temps restant"
 
 #: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:353
-#, fuzzy
 msgid "_Open File"
-msgstr "_Ouvrir une liste de partage"
+msgstr "_Ouvrir le fichier"
 
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
@@ -2550,13 +2548,12 @@ msgid "Video"
 msgstr "Vidéo"
 
 #: pynicotine/gtkgui/widgets/theme.py:374
-#, fuzzy
 msgid "Document"
-msgstr "Document/Texte"
+msgstr "Document"
 
 #: pynicotine/gtkgui/widgets/theme.py:375
 msgid "Text"
-msgstr ""
+msgstr "Texte"
 
 #: pynicotine/gtkgui/widgets/theme.py:479
 #, python-format
@@ -2650,22 +2647,21 @@ msgid "Do you really want to exit? %s"
 msgstr "Voulez-vous vraiment quitter ? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
 msgstr ""
 "L'utilisateur %s existe déjà, et le mot de passe que vous avez entré n'est "
-"pas valide. Choisissez un autre nom d'utilisateur si c'est votre premier "
-"essai."
+"pas valide."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
 msgstr ""
+"Tapez %s pour vous connecter avec un autre nom d'utilisateur ou mot de passe."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Mot de passe"
+msgstr "Mot de passe : "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2679,9 +2675,8 @@ msgstr ""
 "connexion existantes."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Nom d’utilisateur :"
+msgstr "Nom d’utilisateur : "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -3789,14 +3784,12 @@ msgid "List available commands"
 msgstr "Lister les commandes disponibles"
 
 #: pynicotine/plugins/core_commands/__init__.py:50
-#, fuzzy
 msgid "Connect to the server"
-msgstr "Impossible de se connecter au serveur. Raison : %s"
+msgstr "Connexion au serveur"
 
 #: pynicotine/plugins/core_commands/__init__.py:54
-#, fuzzy
 msgid "Disconnect from the server"
-msgstr "Déconnecté du serveur %(host)s :%(port)s"
+msgstr "Déconnexion du serveur"
 
 #: pynicotine/plugins/core_commands/__init__.py:59
 msgid "Toggle away status"
@@ -6044,6 +6037,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Ajoutez des choses que vous voulez que tout le monde voie, comme une "
+"description courte, des conseils utiles ou des lignes directrices pour "
+"télécharger vos fichiers."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"

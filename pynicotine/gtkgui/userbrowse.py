@@ -632,8 +632,10 @@ class UserBrowse:
         for widget in list(self.path_bar):
             self.path_bar.remove(widget)
 
-        for index, folder in enumerate(folder_path.split("\\")):
-            i_folder_path = "\\".join(folder_path.split("\\")[:index + 1])
+        folder_path_split = folder_path.split("\\")
+
+        for index, folder in enumerate(folder_path_split):
+            i_folder_path = "\\".join(folder_path_split[:index + 1])
 
             if index:
                 label = Gtk.Label(label="\\", visible=True)
@@ -654,10 +656,36 @@ class UserBrowse:
                 ellipsize = Pango.EllipsizeMode.NONE
 
             button_label = Gtk.Label(label=folder, ellipsize=ellipsize, width_chars=width_chars, visible=True)
-            button = Gtk.Button(child=button_label, visible=True)
-            button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
 
-            add_css_class(button_label, "normal")
+            if index == len(folder_path_split) - 1:
+                button = Gtk.MenuButton(visible=True)
+                button.set_menu_model(self.folder_popup_menu.model)
+                add_css_class(button_label, "heading")
+
+                if GTK_API_VERSION >= 4:
+                    button.set_child(button_label)                              # pylint: disable=no-member
+                    button.set_always_show_arrow(True)                          # pylint: disable=no-member
+                    button.set_has_frame(False)                                 # pylint: disable=no-member
+                    button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
+
+                    button_label.set_mnemonic_widget(button.get_first_child())  # pylint: disable=no-member
+                else:
+                    box = Gtk.Box(spacing=6, visible=True)
+                    arrow_icon = Gtk.Image(icon_name="pan-down-symbolic", visible=True)
+                    box.add(button_label)                                       # pylint: disable=no-member
+                    box.add(arrow_icon)                                         # pylint: disable=no-member
+
+                    button.add(box)                                             # pylint: disable=no-member
+                    button.connect("clicked", self.on_folder_popup_menu)
+
+                    button_label.set_mnemonic_widget(button)
+            else:
+                button = Gtk.Button(child=button_label, visible=True)
+                button.connect("clicked", self.on_path_bar_clicked, i_folder_path)
+                add_css_class(button_label, "normal")
+
+                button_label.set_mnemonic_widget(button)
+
             add_css_class(button, "flat")
             remove_css_class(button, "text-button")
 
@@ -665,10 +693,6 @@ class UserBrowse:
                 self.path_bar.append(button)  # pylint: disable=no-member
             else:
                 self.path_bar.add(button)     # pylint: disable=no-member
-
-        if folder_path:
-            remove_css_class(button_label, "normal")
-            add_css_class(button_label, "heading")
 
     def set_selected_folder(self, folder_path):
 
@@ -815,6 +839,7 @@ class UserBrowse:
         return treeview.get_row_value(iterator, "folder_path_data")
 
     def on_folder_popup_menu(self, *_args):
+        self.folder_popup_menu.update_model()
         self.user_popup_menu.toggle_user_items()
 
     def on_download_folder(self, *_args):
