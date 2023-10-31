@@ -272,13 +272,13 @@ class IconNotebook:
             self.pages_button = Gtk.MenuButton(
                 has_frame=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True
             )
-            self.pages_button.set_create_popup_func(self.on_pages_button_pressed)
-            self.pages_button_container.append(self.pages_button)  # pylint: disable=no-member
+            self.pages_button.set_create_popup_func(self.on_pages_button_pressed)  # pylint: disable=no-member
+            self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES))
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
-            tab_bar = self.widget.get_first_child()                # pylint: disable=no-member
+            tab_bar = self.widget.get_first_child()                                # pylint: disable=no-member
             tab_bar.add_controller(self.scroll_controller)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
@@ -292,7 +292,7 @@ class IconNotebook:
             self.gesture_click.connect("pressed", self.on_notebook_click_pressed)
             self.gesture_click.connect("released", self.on_notebook_click_released)
 
-            self.widget.add_controller(self.gesture_click)         # pylint: disable=no-member
+            self.widget.add_controller(self.gesture_click)                         # pylint: disable=no-member
 
         else:
             parent.add(self.widget)
