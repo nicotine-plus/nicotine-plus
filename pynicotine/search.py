@@ -338,7 +338,7 @@ class Search:
             self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
         else:
-            log.add(_("Server does not permit performing wishlist searches at this time"))
+            log.add(_("The server is currently too busy to search your wishlist"))
 
     def _file_search_response(self, msg):
         """Peer code 9."""
