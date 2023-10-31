@@ -665,6 +665,7 @@ class UserBrowse:
                 if GTK_API_VERSION >= 4:
                     button.set_child(button_label)                              # pylint: disable=no-member
                     button.set_always_show_arrow(True)                          # pylint: disable=no-member
+                    button.set_has_frame(False)                                 # pylint: disable=no-member
                     button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
 
                     button_label.set_mnemonic_widget(button.get_first_child())  # pylint: disable=no-member

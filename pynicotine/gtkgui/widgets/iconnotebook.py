@@ -269,12 +269,13 @@ class IconNotebook:
                 content_box = parent_page.get_first_child()
                 content_box.connect("show", self.on_show_parent_page)
 
-            self.pages_button = Gtk.MenuButton(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
-            self.pages_button.set_has_frame(False)                 # pylint: disable=no-member
+            self.pages_button = Gtk.MenuButton(
+                has_frame=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True
+            )
+            self.pages_button.set_create_popup_func(self.on_pages_button_pressed)
             self.pages_button_container.append(self.pages_button)  # pylint: disable=no-member
 
-            self.scroll_controller = Gtk.EventControllerScroll()
-            self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
+            self.scroll_controller = Gtk.EventControllerScroll(flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES))
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
             tab_bar = self.widget.get_first_child()                # pylint: disable=no-member
@@ -285,9 +286,9 @@ class IconNotebook:
 
             self.close_button_pressed = False
 
-            self.gesture_click = Gtk.GestureClick()
-            self.gesture_click.set_button(Gdk.BUTTON_PRIMARY)
-            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            self.gesture_click = Gtk.GestureClick(
+                button=Gdk.BUTTON_PRIMARY, propagation_phase=Gtk.PropagationPhase.CAPTURE
+            )
             self.gesture_click.connect("pressed", self.on_notebook_click_pressed)
             self.gesture_click.connect("released", self.on_notebook_click_released)
 
@@ -316,7 +317,6 @@ class IconNotebook:
 
         if GTK_API_VERSION >= 4:
             self.pages_button.set_menu_model(self.popup_menu_pages.model)
-            self.pages_button.get_popover().connect("notify::visible", self.on_pages_button_pressed)
 
     def grab_focus(self):
         self.widget.grab_focus()
