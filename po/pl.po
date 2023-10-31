@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-30 10:00+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"PO-Revision-Date: 2023-10-31 02:57+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -1657,9 +1657,8 @@ msgid "_Rescan Shares"
 msgstr "Przeskanuj udostępnione zasoby"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Konfiguracja udostępnionych zasobów"
+msgstr "Konfiguruj _zasoby"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1686,9 +1685,8 @@ msgid "_About Nicotine+"
 msgstr "O Nicotine+"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Przeglądaj udostępnione zasoby"
+msgstr "_Przeglądaj zasoby"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1764,14 +1762,12 @@ msgid "Copy _All"
 msgstr "Kopiuj wszystko"
 
 #: pynicotine/gtkgui/mainwindow.py:1199
-#, fuzzy
 msgid "View _Debug Logs"
-msgstr "Wyświetl dzienniki debugowania"
+msgstr "Wyświetl _dzienniki debugowania"
 
 #: pynicotine/gtkgui/mainwindow.py:1200
-#, fuzzy
 msgid "View _Transfer Logs"
-msgstr "Wyświetl dziennik transferu"
+msgstr "Wyświetl dziennik _transferu"
 
 #: pynicotine/gtkgui/mainwindow.py:1202
 msgid "_Log Categories"
@@ -1792,9 +1788,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Wysyłane: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1306
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Skanowanie udostępnionych zasobów"
+msgstr "Przygotowywanie zasobów"
 
 #: pynicotine/gtkgui/mainwindow.py:1313
 msgid "Scanning Shares"
@@ -2418,9 +2413,9 @@ msgid "Do you really want to close all tabs?"
 msgstr "Jesteś pewien, że chcesz zamknąć wszystkie karty?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:432
-#, fuzzy, python-format
+#, python-format
 msgid "%i Unread Tab(s)"
-msgstr "Nieprzeczytane karty"
+msgstr "%i nieprzeczytanych kart"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:435
 msgid "All Tabs"
@@ -2428,9 +2423,8 @@ msgstr "Wszystkie karty"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:685
 #: pynicotine/gtkgui/widgets/iconnotebook.py:690
-#, fuzzy
 msgid "Re_open Closed Tab"
-msgstr "_Zamknij kartę"
+msgstr "Ot_wórz ponownie zamkniętą kartę"
 
 #: pynicotine/gtkgui/widgets/notifications.py:121
 #, python-format
@@ -2667,12 +2661,12 @@ msgstr "Użytkownik: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Następujące zasoby nie są dostępne:"
 
 #: pynicotine/headless/application.py:122
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Ponowić próbę skanowania? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -3816,9 +3810,8 @@ msgid "Close private chat"
 msgstr "Zamknij czat prywatny"
 
 #: pynicotine/plugins/core_commands/__init__.py:134
-#, fuzzy
 msgid "Request user's client version"
-msgstr "Pobierz informacje o użytkowniku"
+msgstr "Zapytaj o wersję klienta użytkownika"
 
 #: pynicotine/plugins/core_commands/__init__.py:143
 msgid "Send private message to user"
@@ -4045,9 +4038,9 @@ msgid "Invalid argument, possible choices: %s"
 msgstr "Nieprawidłowy argument, możliwe opcje: %s"
 
 #: pynicotine/pluginsystem.py:881
-#, fuzzy, python-format
+#, python-format
 msgid "Usage: %(command)s %(parameters)s"
-msgstr "Użycie: %(command)s %(args)s"
+msgstr "Użycie: %(command)s %(parameters)s"
 
 #: pynicotine/pluginsystem.py:920
 #, python-format
@@ -4516,9 +4509,8 @@ msgid "Show Log Pane"
 msgstr "Pokaż okno logów"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Konfiguruj konto"
+msgstr "Potwierdź wyjście z programu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -4550,9 +4542,8 @@ msgid "Go to Next Secondary Tab"
 msgstr "Przejdź do następnej karty dodatkowej"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Zamknij kartę dodatkową"
+msgstr "Otwórz ponownie kartę dodatkową"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
 msgid "Close Secondary Tab"
@@ -4929,9 +4920,8 @@ msgstr ""
 "z innymi użytkownikami sieci Soulseek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1580
-#, fuzzy
 msgid "Configure User Profile"
-msgstr "Wyświetl profil użytkownika"
+msgstr "Konfiguruj profil użytkownika"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1630
 #, fuzzy
@@ -4980,9 +4970,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr "Alternatywna prędkość pobierania (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Wyszukiwana fraza…"
+msgstr "Wyszukaj pokoje…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -5882,9 +5871,8 @@ msgstr ""
 "przy manualnym skanowaniu."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
-#, fuzzy
 msgid "Visible to everyone:"
-msgstr "Widoczne sekcje"
+msgstr "Widoczne dla wszystkich:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
@@ -6012,18 +6000,16 @@ msgid "Minimize to tray on startup"
 msgstr "Minimalizuj do zasobnika podczas startu"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:79
-#, fuzzy
 msgid "Use header bar"
-msgstr "Użyj _pasku nagłówka"
+msgstr "Użyj paska nagłówka"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:90
 msgid "Language (requires a restart):"
 msgstr "Język (wymaga ponownego uruchomienia):"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:106
-#, fuzzy
 msgid "When closing window:"
-msgstr "Podczas zamykania Nicotine+:"
+msgstr "Podczas zamykania okna:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:129
 msgid "Notifications"

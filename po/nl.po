@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-29 20:55+0000\n"
+"PO-Revision-Date: 2023-10-31 02:57+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1223,7 +1223,7 @@ msgstr "Bevestigingsdialoog tonen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1618
 msgid "Run in the background"
-msgstr "uitvoeren op de achtergrond"
+msgstr "In de achtergrond verdergaan"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1626
 msgid "bold"
@@ -4076,9 +4076,7 @@ msgstr "Verlanglijstje wachttijd ingesteld op %s seconden"
 
 #: pynicotine/search.py:341
 msgid "Server does not permit performing wishlist searches at this time"
-msgstr ""
-"De server staat het uitvoeren van zoekopdrachten op verlanglijsten op dit "
-"moment niet toe"
+msgstr "De server heeft het te druk om naar verlanglijsten te zoeken"
 
 #: pynicotine/search.py:402 pynicotine/slskmessages.py:2876
 #, python-format
@@ -4671,7 +4669,7 @@ msgid ""
 "Wishlist items are auto-searched at regular intervals, for discovering "
 "uncommon files."
 msgstr ""
-"Verlanglijstitems worden met regelmatige tussenpozen automatisch gezocht om "
+"Verlanglijst-items worden met regelmatige tussenpozen automatisch gezocht om "
 "ongewone bestanden te ontdekken."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:26
