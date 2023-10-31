@@ -1889,7 +1889,7 @@ class NetworkThread(Thread):
                     "file-download-progress", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
                     bytes_left=conn_obj.filedown.leftbytes
                 )
-                conn_obj.lastcallback = current_time
+                conn_obj.lastcallback = self._last_conn_stat_time
 
             if finished:
                 should_close_connection = True
@@ -2575,7 +2575,7 @@ class NetworkThread(Thread):
                         token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
                         bytes_sent=conn_obj.fileupl.sentbytes
                     )
-                    conn_obj.lastcallback = current_time
+                    conn_obj.lastcallback = self._last_conn_stat_time
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
@@ -2605,8 +2605,7 @@ class NetworkThread(Thread):
 
                 events.emit_main_thread(
                     "set-connection-stats", total_conns=num_sockets, download_conns=self._total_downloads,
-                    download_bandwidth=self._total_download_bandwidth, upload_conns=self._total_uploads,
-                    upload_bandwidth=self._total_upload_bandwidth
+                    download_bandwidth=self._total_download_bandwidth, upload_bandwidth=self._total_upload_bandwidth
                 )
 
                 # Close stale outgoing connection attempts

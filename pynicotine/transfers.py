@@ -71,6 +71,7 @@ class Transfers:
 
     def __init__(self, transfers_file_path):
 
+        self.transfers = {}
         self.transfers_file_path = transfers_file_path
         self.allow_saving_transfers = False
         self.transfer_request_times = {}
@@ -96,8 +97,10 @@ class Transfers:
         self.update_transfer_limits()
 
     def _quit(self):
+
         self.save_transfers()
         self.allow_saving_transfers = False
+        self.transfers.clear()
 
     def _server_login(self, msg):
 
@@ -324,7 +327,12 @@ class Transfers:
     # Saving #
 
     def get_transfer_rows(self):
-        raise NotImplementedError
+        """Get a list of transfers to dump to file."""
+        return [
+            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+             transfer.current_byte_offset, transfer.file_attributes]
+            for transfer in self.transfers.values()
+        ]
 
     def save_transfers_callback(self, file_handle):
 

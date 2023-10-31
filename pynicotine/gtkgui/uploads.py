@@ -89,7 +89,7 @@ class Uploads(Transfers):
         self.upload_speeds = UploadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.uploads.transfers)
+        self.init_transfers(core.uploads.transfers.values())
 
     def get_transfer_folder_path(self, transfer):
         virtual_path = transfer.virtual_path
