@@ -77,7 +77,6 @@ class Core:
         self.public_ip_address = None
         self.public_port = None
         self.privileges_left = None
-        self.ban_message = 'You are banned from downloading my shared files. Ban message: "%s"'
 
         self.user_addresses = {}
         self.user_countries = {}

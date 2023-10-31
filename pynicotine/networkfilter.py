@@ -514,9 +514,9 @@ class NetworkFilter:
         if self.is_user_banned(username) or self.is_user_ip_banned(username, ip_address):
             if config.sections["transfers"]["usecustomban"]:
                 ban_message = config.sections["transfers"]["customban"]
-                return "banned", f"Banned ({ban_message})"
+                return "banned", ban_message
 
-            return "banned", "Banned"
+            return "banned", ""
 
         user_data = core.userlist.buddies.get(username)
 
@@ -537,9 +537,9 @@ class NetworkFilter:
         if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if config.sections["transfers"]["usecustomgeoblock"]:
                 ban_message = config.sections["transfers"]["customgeoblock"]
-                return "banned", f"Banned ({ban_message})"
+                return "banned", ban_message
 
-            return "banned", "Banned"
+            return "banned", ""
 
         return "public", ""
 

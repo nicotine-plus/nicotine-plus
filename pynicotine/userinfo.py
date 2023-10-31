@@ -131,11 +131,14 @@ class UserInfo:
         permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
         if permission_level == "banned":
+            # Hide most details from banned users
             pic = None
-            descr = core.ban_message % reject_reason
-            descr += "\n\n----------------------------------------------\n\n"
-            descr += unescape(config.sections["userinfo"]["descr"])
+            descr = "You are banned from downloading my shared files."
+            totalupl = queuesize = uploadallowed = 0
+            slotsavail = False
 
+            if reject_reason:
+                descr += f"\nReason: {reject_reason}"
         else:
             try:
                 with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
@@ -146,14 +149,14 @@ class UserInfo:
 
             descr = unescape(config.sections["userinfo"]["descr"])
 
-        totalupl = core.uploads.get_total_uploads_allowed()
-        queuesize = core.uploads.get_upload_queue_size()
-        slotsavail = core.uploads.allow_new_uploads()
+            totalupl = core.uploads.get_total_uploads_allowed()
+            queuesize = core.uploads.get_upload_queue_size()
+            slotsavail = core.uploads.allow_new_uploads()
 
-        if config.sections["transfers"]["remotedownloads"]:
-            uploadallowed = config.sections["transfers"]["uploadallowed"]
-        else:
-            uploadallowed = 0
+            if config.sections["transfers"]["remotedownloads"]:
+                uploadallowed = config.sections["transfers"]["uploadallowed"]
+            else:
+                uploadallowed = 0
 
         core.send_message_to_peer(
             username, slskmessages.UserInfoResponse(

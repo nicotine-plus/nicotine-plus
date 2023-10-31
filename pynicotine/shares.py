@@ -1075,12 +1075,7 @@ class Shares:
         log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 
         ip_address, _port = msg.init.addr
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
-
-        if permission_level == "banned":
-            message = core.ban_message % reject_reason
-            core.privatechat.send_automatic_message(username, message)
-
+        permission_level, _reject_reason = core.network_filter.check_user_permission(username, ip_address)
         shares_list = self.compressed_shares.get(permission_level)
         core.send_message_to_peer(username, shares_list)
 
@@ -1089,11 +1084,9 @@ class Shares:
 
         ip_address, _port = msg.init.addr
         username = msg.init.target_user
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, _reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
         if permission_level == "banned":
-            message = core.ban_message % reject_reason
-            core.privatechat.send_automatic_message(username, message)
             return
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]

@@ -1070,7 +1070,7 @@ class Uploads(Transfers):
         permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
         if permission_level == "banned":
-            return False, reject_reason
+            return False, f"Banned ({reject_reason})" if reject_reason else "Banned"
 
         if core.shares.rescanning:
             self.pending_network_msgs.append(msg)
