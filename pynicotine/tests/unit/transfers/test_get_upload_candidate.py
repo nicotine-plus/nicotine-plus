@@ -69,12 +69,13 @@ class GetUploadCandidateTest(TestCase):
 
             transfer_list.append(transfer)
             core.uploads._append_transfer(transfer)
+            core.uploads._update_transfer(transfer)
 
         return transfer_list
 
     def set_finished(self, transfer):
-        core.uploads._upload_finished(transfer)
-        core.uploads.clear_upload(transfer)
+        core.uploads._finish_transfer(transfer)
+        core.uploads._clear_transfer(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):
         """Call core.uploads.get_upload_candidate until no uploads are left.

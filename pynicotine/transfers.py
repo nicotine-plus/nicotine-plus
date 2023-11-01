@@ -26,6 +26,7 @@ from collections import defaultdict
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
@@ -76,6 +77,7 @@ class Transfers:
         self.queued_transfers = []
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)
+        self.failed_users = defaultdict(dict)
         self.transfers_file_path = transfers_file_path
         self.allow_saving_transfers = False
         self.transfer_request_times = {}
@@ -104,13 +106,19 @@ class Transfers:
     def _quit(self):
 
         self.save_transfers()
+
         self.allow_saving_transfers = False
         self.transfers.clear()
+        self.failed_users.clear()
 
     def _server_login(self, msg):
 
         if not msg.success:
             return
+
+        # Watch transfers for user status updates
+        for username in self.failed_users:
+            core.watch_user(username)
 
         # Check for transfer timeouts
         self._transfer_timeout_timer_id = events.schedule(delay=1, callback=self._check_transfer_timeouts, repeat=True)
@@ -119,8 +127,12 @@ class Transfers:
 
     def _server_disconnect(self, _msg):
 
-        for timer_id in (self._transfer_timeout_timer_id,):
-            events.cancel_scheduled(timer_id)
+        events.cancel_scheduled(self._transfer_timeout_timer_id)
+
+        for users in (self.queued_users, self.active_users, self.failed_users):
+            for transfers in users.copy().values():
+                for transfer in transfers.copy().values():
+                    self._abort_transfer(transfer, abort_reason="User logged off")
 
         self.queued_transfers.clear()
         self.queued_users.clear()
@@ -290,7 +302,7 @@ class Transfers:
     # File Actions #
 
     @staticmethod
-    def close_file(transfer):
+    def _close_file(transfer):
 
         file_handle = transfer.file_handle
         transfer.file_handle = None
@@ -341,13 +353,25 @@ class Transfers:
     def _remove_transfer(self, transfer):
         del self.transfers[transfer.username + transfer.virtual_path]
 
-    def _auto_clear_transfer(self, transfer):
+    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Cancelled", update_parent=True):
         raise NotImplementedError
 
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
+    def _finish_transfer(self, transfer):
+        raise NotImplementedError
+
+    def _auto_clear_transfer(self, transfer):
+        raise NotImplementedError
+
+    def _clear_transfer(self, transfer):
+        raise NotImplementedError
+
     def _enqueue_transfer(self, transfer):
+
+        self._unfail_transfer(transfer)
+        core.watch_user(transfer.username)
 
         transfer.status = "Queued"
 
@@ -371,6 +395,10 @@ class Transfers:
         transfer.queue_position = 0
 
     def _activate_transfer(self, transfer, token):
+
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+        core.watch_user(transfer.username)
 
         transfer.status = "Getting status"
         transfer.token = token
@@ -400,6 +428,22 @@ class Transfers:
             self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
 
         transfer.token = None
+
+    def _fail_transfer(self, transfer):
+        self.failed_users[transfer.username][transfer.virtual_path] = transfer
+
+    def _unfail_transfer(self, transfer):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        if virtual_path not in self.failed_users.get(username, {}):
+            return
+
+        del self.failed_users[username][virtual_path]
+
+        if not self.failed_users[username]:
+            del self.failed_users[username]
 
     # Saving #
 
