@@ -2604,7 +2604,7 @@ class NetworkThread(Thread):
                 num_sockets = self._numsockets
 
                 events.emit_main_thread(
-                    "set-connection-stats", total_conns=num_sockets, download_conns=self._total_downloads,
+                    "set-connection-stats", total_conns=num_sockets,
                     download_bandwidth=self._total_download_bandwidth, upload_bandwidth=self._total_upload_bandwidth
                 )
 

@@ -22,6 +22,7 @@ import os.path
 import time
 
 from ast import literal_eval
+from collections import defaultdict
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -72,9 +73,13 @@ class Transfers:
     def __init__(self, transfers_file_path):
 
         self.transfers = {}
+        self.queued_transfers = []
+        self.queued_users = defaultdict(dict)
+        self.active_users = defaultdict(dict)
         self.transfers_file_path = transfers_file_path
         self.allow_saving_transfers = False
         self.transfer_request_times = {}
+        self.total_bandwidth = 0
 
         self._transfer_timeout_timer_id = None
 
@@ -117,7 +122,11 @@ class Transfers:
         for timer_id in (self._transfer_timeout_timer_id,):
             events.cancel_scheduled(timer_id)
 
+        self.queued_transfers.clear()
+        self.queued_users.clear()
+        self.active_users.clear()
         self.transfer_request_times.clear()
+        self.total_bandwidth = 0
 
     @staticmethod
     def load_transfers_file(transfers_file):
@@ -323,6 +332,74 @@ class Transfers:
 
                 if (current_time - start_time) >= 45:
                     self._transfer_timeout(transfer)
+
+    # Transfer Actions #
+
+    def _append_transfer(self, transfer):
+        raise NotImplementedError
+
+    def _remove_transfer(self, transfer):
+        del self.transfers[transfer.username + transfer.virtual_path]
+
+    def _auto_clear_transfer(self, transfer):
+        raise NotImplementedError
+
+    def _update_transfer(self, transfer):
+        raise NotImplementedError
+
+    def _enqueue_transfer(self, transfer):
+
+        transfer.status = "Queued"
+
+        self.queued_users[transfer.username][transfer.virtual_path] = transfer
+        self.queued_transfers.append(transfer)
+
+    def _dequeue_transfer(self, transfer):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        if virtual_path not in self.queued_users.get(username, {}):
+            return
+
+        self.queued_transfers.remove(transfer)
+        del self.queued_users[username][virtual_path]
+
+        if not self.queued_users[username]:
+            del self.queued_users[username]
+
+        transfer.queue_position = 0
+
+    def _activate_transfer(self, transfer, token):
+
+        transfer.status = "Getting status"
+        transfer.token = token
+        transfer.speed = None
+        transfer.queue_position = 0
+
+        self.transfer_request_times[transfer] = time.monotonic()
+        self.active_users[transfer.username][token] = transfer
+
+    def _deactivate_transfer(self, transfer):
+
+        username = transfer.username
+        token = transfer.token
+
+        if transfer in self.transfer_request_times:
+            del self.transfer_request_times[transfer]
+
+        if token is None or token not in self.active_users.get(username, {}):
+            return
+
+        del self.active_users[username][token]
+
+        if not self.active_users[username]:
+            del self.active_users[username]
+
+        if transfer.speed:
+            self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
+
+        transfer.token = None
 
     # Saving #
 

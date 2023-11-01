@@ -62,13 +62,13 @@ class GetUploadCandidateTest(TestCase):
             transfer = Transfer(username=username, virtual_path=virtual_path)
 
             if is_active:
-                core.uploads._activate_upload(transfer, self.token)
+                core.uploads._activate_transfer(transfer, self.token)
                 self.token += 1
             else:
-                core.uploads._enqueue_upload(transfer)
+                core.uploads._enqueue_transfer(transfer)
 
             transfer_list.append(transfer)
-            core.uploads._append_upload(transfer)
+            core.uploads._append_transfer(transfer)
 
         return transfer_list
 
@@ -115,11 +115,11 @@ class GetUploadCandidateTest(TestCase):
             none_count = 0
 
             queued.remove(candidate)
-            core.uploads._dequeue_upload(candidate)
+            core.uploads._dequeue_transfer(candidate)
 
             candidates.append(candidate)
             in_progress.append(candidate)
-            core.uploads._activate_upload(candidate, self.token)
+            core.uploads._activate_transfer(candidate, self.token)
 
             self.token += 1
 
