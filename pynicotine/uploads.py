@@ -100,10 +100,10 @@ class Uploads(Transfers):
 
     def _server_disconnect(self, msg):
 
+        super()._server_disconnect(msg)
+
         for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
             events.cancel_scheduled(timer_id)
-
-        super()._server_disconnect(msg)
 
         events.emit("update-uploads")
 
@@ -200,26 +200,11 @@ class Uploads(Transfers):
         file_limit = config.sections["transfers"]["filelimit"]
         queue_size_limit = config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        if not file_limit and not queue_size_limit:
-            return False, None
+        if file_limit and len(self.queued_users.get(username, {})) >= file_limit:
+            return True, "Too many files"
 
-        num_files = 0
-        queue_size = 0
-
-        queued_uploads = self.queued_users.get(username, {})
-
-        for upload in queued_uploads.values():
-            if file_limit:
-                num_files += 1
-
-                if num_files >= file_limit:
-                    return True, "Too many files"
-
-            if queue_size_limit:
-                queue_size += upload.size
-
-                if queue_size >= queue_size_limit:
-                    return True, "Too many megabytes"
+        if queue_size_limit and self.total_queue_size >= queue_size_limit:
+            return True, "Too many megabytes"
 
         return False, None
 
@@ -399,12 +384,6 @@ class Uploads(Transfers):
 
         username = msg.init.target_user
         virtual_path = msg.file
-
-        log.add_transfer("Received upload request for file %(filename)s from user %(user)s", {
-            "user": username,
-            "filename": virtual_path,
-        })
-
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason = self._check_queue_upload_allowed(username, msg.init.addr, virtual_path, real_path, msg)
 
@@ -786,9 +765,16 @@ class Uploads(Transfers):
 
         if old_upload is not None:
             if virtual_path in self.queued_users.get(username, {}):
-                old_upload.folder_path = transfer.folder_path
-                old_upload.size = transfer.size
+                old_size = old_upload.size
+                new_size = transfer.size
 
+                if new_size != old_size:
+                    self.total_queue_size -= old_size
+                    self.total_queue_size += new_size
+
+                    old_upload.size = new_size
+
+                old_upload.folder_path = transfer.folder_path
                 self._update_transfer(old_upload)
                 return
 
@@ -853,15 +839,6 @@ class Uploads(Transfers):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
-        token = transfer.token
-
-        log.add_transfer(('Aborting upload, user "%(user)s", filename "%(filename)s", token "%(token)s", '
-                          'status "%(status)s"'), {
-            "user": username,
-            "filename": virtual_path,
-            "token": token,
-            "status": transfer.status
-        })
 
         if transfer.sock is not None:
             core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
@@ -916,6 +893,7 @@ class Uploads(Transfers):
                 if upload.status != "Connection timeout":
                     continue
 
+                self._unfail_transfer(upload)
                 self._enqueue_transfer(upload)
                 self._update_transfer(upload)
 
@@ -1094,6 +1072,8 @@ class Uploads(Transfers):
             transfer.virtual_path = virtual_path
             transfer.size = size
 
+            self._unfail_transfer(transfer)
+
         log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
             "file": virtual_path,
             "user": username
@@ -1108,6 +1088,7 @@ class Uploads(Transfers):
 
         elif not locally_queued:
             self.token = slskmessages.increment_token(self.token)
+            self._dequeue_transfer(transfer)
             self._activate_transfer(transfer, self.token)
 
             log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
@@ -1194,6 +1175,7 @@ class Uploads(Transfers):
         if active_uploads:
             # User already has an active upload, queue the retry attempt
             if transfer not in self.queued_users.get(username, {}).values():
+                self._unfail_transfer(transfer)
                 self._enqueue_transfer(transfer)
                 self._update_transfer(transfer)
             return

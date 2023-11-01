@@ -105,6 +105,8 @@ class Downloads(Transfers):
 
     def _server_disconnect(self, msg):
 
+        super()._server_disconnect(msg)
+
         for timer_id in (
             self._download_queue_timer_id,
             self._retry_connection_downloads_timer_id,
@@ -112,8 +114,6 @@ class Downloads(Transfers):
             self._retry_limited_downloads_timer_id
         ):
             events.cancel_scheduled(timer_id)
-
-        super()._server_disconnect(msg)
 
         events.emit("update-downloads")
         self.requested_folders.clear()
@@ -375,6 +375,9 @@ class Downloads(Transfers):
                 # send a malformed file size (0 bytes) in the TransferRequest response.
                 # In that case, we rely on the cached, correct file size we received when
                 # we initially added the download.
+
+                self._unfail_transfer(download)
+                self._dequeue_transfer(download)
 
                 if size > 0:
                     if download.size != size:
@@ -799,14 +802,6 @@ class Downloads(Transfers):
         )
 
     def _abort_transfer(self, transfer, denied_message=None, abort_reason="Paused", update_parent=True):
-
-        log.add_transfer(('Aborting download, user "%(user)s", filename "%(filename)s", token "%(token)s", '
-                          'status "%(status)s"'), {
-            "user": transfer.username,
-            "filename": transfer.virtual_path,
-            "token": transfer.token,
-            "status": transfer.status
-        })
 
         transfer.legacy_attempt = False
         transfer.size_changed = False

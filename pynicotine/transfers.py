@@ -74,12 +74,13 @@ class Transfers:
     def __init__(self, transfers_file_path):
 
         self.transfers = {}
-        self.queued_transfers = []
+        self.queued_transfers = {}
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)
         self.failed_users = defaultdict(dict)
         self.transfers_file_path = transfers_file_path
         self.total_bandwidth = 0
+        self.total_queue_size = 0
 
         self._allow_saving_transfers = False
         self._transfer_request_times = {}
@@ -140,6 +141,7 @@ class Transfers:
         self.active_users.clear()
         self._transfer_request_times.clear()
         self.total_bandwidth = 0
+        self.total_queue_size = 0
 
     # Load Transfers #
 
@@ -373,13 +375,13 @@ class Transfers:
 
     def _enqueue_transfer(self, transfer):
 
-        self._unfail_transfer(transfer)
         core.watch_user(transfer.username)
 
         transfer.status = "Queued"
+        self.total_queue_size += transfer.size
 
         self.queued_users[transfer.username][transfer.virtual_path] = transfer
-        self.queued_transfers.append(transfer)
+        self.queued_transfers[transfer] = None
 
     def _dequeue_transfer(self, transfer):
 
@@ -389,7 +391,9 @@ class Transfers:
         if virtual_path not in self.queued_users.get(username, {}):
             return
 
-        self.queued_transfers.remove(transfer)
+        self.total_queue_size -= transfer.size
+
+        del self.queued_transfers[transfer]
         del self.queued_users[username][virtual_path]
 
         if not self.queued_users[username]:
@@ -399,8 +403,6 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        self._dequeue_transfer(transfer)
-        self._unfail_transfer(transfer)
         core.watch_user(transfer.username)
 
         transfer.status = "Getting status"
