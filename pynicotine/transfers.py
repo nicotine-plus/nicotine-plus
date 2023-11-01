@@ -79,9 +79,10 @@ class Transfers:
         self.active_users = defaultdict(dict)
         self.failed_users = defaultdict(dict)
         self.transfers_file_path = transfers_file_path
-        self.allow_saving_transfers = False
-        self.transfer_request_times = {}
         self.total_bandwidth = 0
+
+        self._allow_saving_transfers = False
+        self._transfer_request_times = {}
 
         self._transfer_timeout_timer_id = None
 
@@ -95,19 +96,19 @@ class Transfers:
 
     def _start(self):
 
-        self.load_transfers()
-        self.allow_saving_transfers = True
+        self._load_transfers()
+        self._allow_saving_transfers = True
 
         # Save list of transfers every 3 minutes
-        events.schedule(delay=180, callback=self.save_transfers, repeat=True)
+        events.schedule(delay=180, callback=self._save_transfers, repeat=True)
 
         self.update_transfer_limits()
 
     def _quit(self):
 
-        self.save_transfers()
+        self._save_transfers()
+        self._allow_saving_transfers = False
 
-        self.allow_saving_transfers = False
         self.transfers.clear()
         self.failed_users.clear()
 
@@ -137,11 +138,13 @@ class Transfers:
         self.queued_transfers.clear()
         self.queued_users.clear()
         self.active_users.clear()
-        self.transfer_request_times.clear()
+        self._transfer_request_times.clear()
         self.total_bandwidth = 0
 
+    # Load Transfers #
+
     @staticmethod
-    def load_transfers_file(transfers_file):
+    def _load_transfers_file(transfers_file):
         """Loads a file of transfers in json format."""
 
         transfers_file = encode_path(transfers_file)
@@ -154,7 +157,7 @@ class Transfers:
             return json.load(handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
     @staticmethod
-    def load_legacy_transfers_file(transfers_file):
+    def _load_legacy_transfers_file(transfers_file):
         """Loads a download queue file in pickle format (legacy)"""
 
         transfers_file = encode_path(transfers_file)
@@ -166,7 +169,7 @@ class Transfers:
             from pynicotine.shares import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 
-    def load_transfers(self):
+    def _load_transfers(self):
         raise NotImplementedError
 
     def _load_file_attributes(self, num_attributes, transfer_row):
@@ -223,7 +226,7 @@ class Transfers:
 
         return file_attributes
 
-    def get_stored_transfers(self, transfers_file_path, load_func, load_only_finished=False):
+    def _get_stored_transfers(self, transfers_file_path, load_func, load_only_finished=False):
 
         transfer_rows = load_file(transfers_file_path, load_func)
 
@@ -333,8 +336,8 @@ class Transfers:
 
         current_time = time.monotonic()
 
-        if self.transfer_request_times:
-            for transfer, start_time in self.transfer_request_times.copy().items():
+        if self._transfer_request_times:
+            for transfer, start_time in self._transfer_request_times.copy().items():
                 # When our port is closed, certain clients can take up to ~30 seconds before they
                 # initiate a 'F' connection, since they only send an indirect connection request after
                 # attempting to connect to our port for a certain time period.
@@ -405,7 +408,7 @@ class Transfers:
         transfer.speed = None
         transfer.queue_position = 0
 
-        self.transfer_request_times[transfer] = time.monotonic()
+        self._transfer_request_times[transfer] = time.monotonic()
         self.active_users[transfer.username][token] = transfer
 
     def _deactivate_transfer(self, transfer):
@@ -413,8 +416,8 @@ class Transfers:
         username = transfer.username
         token = transfer.token
 
-        if transfer in self.transfer_request_times:
-            del self.transfer_request_times[transfer]
+        if transfer in self._transfer_request_times:
+            del self._transfer_request_times[transfer]
 
         if token is None or token not in self.active_users.get(username, {}):
             return
@@ -447,7 +450,7 @@ class Transfers:
 
     # Saving #
 
-    def get_transfer_rows(self):
+    def _get_transfer_rows(self):
         """Get a list of transfers to dump to file."""
         return [
             [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
@@ -455,22 +458,22 @@ class Transfers:
             for transfer in self.transfers.values()
         ]
 
-    def save_transfers_callback(self, file_handle):
+    def _save_transfers_callback(self, file_handle):
 
         # We can't use indent=0 to add line breaks, since Python's C-based json encoder doesn't
         # support this. Add them using replace() instead.
         file_handle.write(
-            json.dumps(self.get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
+            json.dumps(self._get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
 
-    def save_transfers(self):
+    def _save_transfers(self):
         """Save list of transfers."""
 
-        if not self.allow_saving_transfers:
+        if not self._allow_saving_transfers:
             # Don't save if transfers didn't load properly!
             return
 
         config.create_data_folder()
-        write_file_and_backup(self.transfers_file_path, self.save_transfers_callback)
+        write_file_and_backup(self.transfers_file_path, self._save_transfers_callback)
 
 
 class Statistics:

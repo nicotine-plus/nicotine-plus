@@ -27,6 +27,8 @@ from pynicotine.core import core
 
 class DownloadsTest(TestCase):
 
+    # pylint: disable=protected-access
+
     def setUp(self):
 
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
@@ -36,7 +38,7 @@ class DownloadsTest(TestCase):
         config.sections["transfers"]["downloaddir"] = config.data_folder_path
 
         core.start()
-        core.downloads.allow_saving_transfers = False
+        core.downloads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -104,9 +106,9 @@ class DownloadsTest(TestCase):
         will be added at the end of the session.
         """
 
-        old_transfers = core.downloads.load_transfers_file(core.downloads.transfers_file_path)[:12]
+        old_transfers = core.downloads._load_transfers_file(core.downloads.transfers_file_path)[:12]
 
-        saved_transfers = core.downloads.get_transfer_rows()[:12]
+        saved_transfers = core.downloads._get_transfer_rows()[:12]
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_queue_download(self):

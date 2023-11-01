@@ -27,6 +27,8 @@ from pynicotine.core import core
 
 class UploadsTest(TestCase):
 
+    # pylint: disable=protected-access
+
     def setUp(self):
 
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
@@ -35,7 +37,7 @@ class UploadsTest(TestCase):
         core.init_components(enabled_components={"shares", "uploads", "userbrowse", "userlist"})
 
         core.start()
-        core.uploads.allow_saving_transfers = False
+        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -83,9 +85,9 @@ class UploadsTest(TestCase):
         saved to file.
         """
 
-        old_transfers = core.uploads.load_transfers_file(core.uploads.transfers_file_path)[2:]
+        old_transfers = core.uploads._load_transfers_file(core.uploads.transfers_file_path)[2:]
 
-        saved_transfers = core.uploads.get_transfer_rows()
+        saved_transfers = core.uploads._get_transfer_rows()
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_push_upload(self):

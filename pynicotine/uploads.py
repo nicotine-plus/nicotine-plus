@@ -38,13 +38,13 @@ class Uploads(Transfers):
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
 
         self.pending_shutdown = False
-        self.pending_network_msgs = []
         self.privileged_users = set()
         self.upload_speed = 0
         self.token = 0
 
-        self.user_update_counter = 0
-        self.user_update_counters = {}
+        self._pending_network_msgs = []
+        self._user_update_counter = 0
+        self._user_update_counters = {}
 
         self._upload_queue_timer_id = None
         self._retry_failed_uploads_timer_id = None
@@ -107,20 +107,20 @@ class Uploads(Transfers):
 
         events.emit("update-uploads")
 
-        self.pending_network_msgs.clear()
         self.privileged_users.clear()
-        self.user_update_counters.clear()
-        self.user_update_counter = 0
+        self._pending_network_msgs.clear()
+        self._user_update_counters.clear()
+        self._user_update_counter = 0
 
         # Quit in case we were waiting for uploads to finish
         self.check_upload_queue()
 
     # Load Transfers #
 
-    def load_transfers(self):
+    def _load_transfers(self):
 
-        for transfer in self.get_stored_transfers(
-                self.transfers_file_path, self.load_transfers_file, load_only_finished=True):
+        for transfer in self._get_stored_transfers(
+                self.transfers_file_path, self._load_transfers_file, load_only_finished=True):
             self._append_transfer(transfer)
 
     # Privileges #
@@ -296,9 +296,9 @@ class Uploads(Transfers):
         scanning shares.
         """
 
-        if self.pending_network_msgs:
-            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self.pending_network_msgs[:]))
-            self.pending_network_msgs.clear()
+        if self._pending_network_msgs:
+            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self._pending_network_msgs[:]))
+            self._pending_network_msgs.clear()
 
     def _user_status(self, msg):
         """Server code 7."""
@@ -544,7 +544,7 @@ class Uploads(Transfers):
 
             self._abort_transfer(upload, abort_reason=reason)
 
-            if reason in {"Complete", "Finished"}:
+            if reason == "Complete":
                 # A complete download of this file already exists on the user's end
                 self._finish_transfer(upload)
 
@@ -664,8 +664,8 @@ class Uploads(Transfers):
         if upload is None:
             return
 
-        if upload in self.transfer_request_times:
-            del self.transfer_request_times[upload]
+        if upload in self._transfer_request_times:
+            del self._transfer_request_times[upload]
 
         current_time = time.monotonic()
         size = upload.size
@@ -751,7 +751,7 @@ class Uploads(Transfers):
                     break
 
         else:
-            num_queued_users = len(self.user_update_counters)
+            num_queued_users = len(self._user_update_counters)
             queued_uploads = self.queued_users.get(username, {})
 
             for upload in queued_uploads.values():
@@ -807,7 +807,7 @@ class Uploads(Transfers):
         username = transfer.username
         events.emit("update-upload", transfer, update_parent)
 
-        if username in self.user_update_counters and transfer.virtual_path in self.queued_users.get(username, {}):
+        if username in self._user_update_counters and transfer.virtual_path in self.queued_users.get(username, {}):
             # Don't update existing user counter for queued uploads
             # We don't want to push the user back in the queue if they enqueued new files
             return
@@ -818,6 +818,81 @@ class Uploads(Transfers):
 
         self._update_user_counter(username)
 
+    def _finish_transfer(self, transfer):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        self._deactivate_transfer(transfer)
+        self._close_file(transfer)
+
+        transfer.status = "Finished"
+        transfer.current_byte_offset = transfer.size
+        transfer.sock = None
+
+        log.add_upload(
+            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                "user": username,
+                "ip": core.user_addresses.get(username),
+                "file": virtual_path
+            }
+        )
+
+        core.statistics.append_stat_value("completed_uploads", 1)
+
+        # Autoclear this upload
+        if not self._auto_clear_transfer(transfer):
+            self._update_transfer(transfer)
+
+        real_path = core.shares.virtual2real(virtual_path)
+        core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
+
+        self.check_upload_queue()
+
+    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Cancelled", update_parent=True):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+        token = transfer.token
+
+        log.add_transfer(('Aborting upload, user "%(user)s", filename "%(filename)s", token "%(token)s", '
+                          'status "%(status)s"'), {
+            "user": username,
+            "filename": virtual_path,
+            "token": token,
+            "status": transfer.status
+        })
+
+        if transfer.sock is not None:
+            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+            transfer.sock = None
+
+        if transfer.file_handle is not None:
+            self._close_file(transfer)
+
+            log.add_upload(
+                _("Upload aborted, user %(user)s file %(file)s"), {
+                    "user": username,
+                    "file": virtual_path
+                }
+            )
+
+        elif denied_message and virtual_path in self.queued_users.get(username, {}):
+            core.send_message_to_peer(
+                username, slskmessages.UploadDenied(file=virtual_path, reason=denied_message))
+
+        self._deactivate_transfer(transfer)
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+
+        if abort_reason:
+            transfer.status = abort_reason
+
+            if abort_reason in {"Connection timeout", "User logged off"}:
+                self._fail_transfer(transfer)
+
+        events.emit("abort-upload", transfer, abort_reason, update_parent)
+
     def _auto_clear_transfer(self, transfer):
 
         if config.sections["transfers"]["autoclear_uploads"]:
@@ -826,6 +901,169 @@ class Uploads(Transfers):
             return True
 
         return False
+
+    def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
+
+        self._abort_transfer(transfer, denied_message=denied_message, abort_reason=None)
+        del self.transfers[transfer.username + transfer.virtual_path]
+
+        events.emit("clear-upload", transfer, update_parent)
+
+    def _retry_failed_uploads(self):
+
+        for failed_uploads in self.failed_users.copy().values():
+            for upload in failed_uploads.copy().values():
+                if upload.status != "Connection timeout":
+                    continue
+
+                self._enqueue_transfer(upload)
+                self._update_transfer(upload)
+
+    def _check_queue_upload_allowed(self, username, addr, virtual_path, real_path, msg):
+
+        # Is user allowed to download?
+        ip_address, _port = addr
+        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
+
+        if permission_level == "banned":
+            return False, f"Banned ({reject_reason})" if reject_reason else "Banned"
+
+        if core.shares.rescanning:
+            self._pending_network_msgs.append(msg)
+            return False, None
+
+        # Is that file already in the queue?
+        if self.file_is_upload_queued(username, virtual_path):
+            return False, "Queued"
+
+        # Are we waiting for existing uploads to finish?
+        if self.pending_shutdown:
+            return False, "Pending shutdown."
+
+        # Has user hit queue limit?
+        enable_limits = True
+
+        if config.sections["transfers"]["friendsnolimits"]:
+            if username in core.userlist.buddies:
+                enable_limits = False
+
+        if enable_limits:
+            limit_reached, reason = self.queue_limit_reached(username)
+
+            if limit_reached:
+                return False, reason
+
+        # Do we actually share that file with the world?
+        if not core.shares.file_is_shared(username, virtual_path, real_path):
+            return False, "File not shared."
+
+        if not self.file_is_readable(virtual_path, real_path):
+            return False, "File read error."
+
+        return True, None
+
+    def _get_upload_candidate(self):
+        """Retrieve a suitable queued transfer for uploading.
+
+        Round Robin: Get the first queued item from the oldest user
+        FIFO: Get the first queued item in the list
+        """
+
+        round_robin_queue = not config.sections["transfers"]["fifoqueue"]
+        privileged_queue = False
+
+        first_queued_transfers = {}
+        queued_users = {}
+
+        for upload in self.queued_transfers:
+            username = upload.username
+
+            if username not in first_queued_transfers and username not in self.active_users:
+                first_queued_transfers[username] = upload
+
+            if username in queued_users:
+                continue
+
+            privileged = self.is_privileged(username)
+            queued_users[username] = privileged
+
+        has_active_uploads = bool(self.active_users)
+        oldest_time = None
+        target_username = None
+
+        for username, privileged in queued_users.items():
+            if privileged and username not in self.active_users:
+                privileged_queue = True
+                break
+
+        if not round_robin_queue:
+            # skip the looping below (except the cleanup) and get the first
+            # user of the highest priority we saw above
+            for username in first_queued_transfers:
+                if privileged_queue and not queued_users[username]:
+                    continue
+
+                target_username = username
+                break
+
+        for username, update_time in self._user_update_counters.copy().items():
+            if username not in queued_users:
+                del self._user_update_counters[username]
+                continue
+
+            if not round_robin_queue or username in self.active_users:
+                continue
+
+            if privileged_queue and not queued_users[username]:
+                continue
+
+            if not oldest_time:
+                oldest_time = update_time + 1
+
+            if update_time < oldest_time:
+                target_username = username
+                oldest_time = update_time
+
+        return first_queued_transfers.get(target_username), has_active_uploads
+
+    def _update_user_counter(self, username):
+        """Called when an upload associated with a user has changed.
+
+        The user update counter is used by the Round Robin queue system
+        to determine which user has waited the longest since their last
+        download.
+        """
+
+        self._user_update_counter += 1
+        self._user_update_counters[username] = self._user_update_counter
+
+    def check_upload_queue(self):
+        """Find next file to upload."""
+
+        if not self.allow_new_uploads():
+            return
+
+        upload_candidate, has_active_uploads = self._get_upload_candidate()
+
+        if upload_candidate is None:
+            if not has_active_uploads and self.pending_shutdown:
+                self.pending_shutdown = False
+                core.quit()
+            return
+
+        username = upload_candidate.username
+
+        log.add_transfer(
+            "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
+                "file": upload_candidate.virtual_path,
+                "user": username
+            }
+        )
+
+        self.push_file(
+            username=username, virtual_path=upload_candidate.virtual_path, size=upload_candidate.size,
+            transfer=upload_candidate
+        )
 
     def push_file(self, username, virtual_path, size, folder_path=None, transfer=None, locally_queued=False):
 
@@ -921,199 +1159,6 @@ class Uploads(Transfers):
     def get_downloading_users(self):
         return set(self.active_users + self.queued_users)
 
-    def _finish_transfer(self, transfer):
-
-        username = transfer.username
-        virtual_path = transfer.virtual_path
-
-        self._deactivate_transfer(transfer)
-        self._close_file(transfer)
-
-        transfer.status = "Finished"
-        transfer.current_byte_offset = transfer.size
-        transfer.sock = None
-
-        log.add_upload(
-            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                "user": username,
-                "ip": core.user_addresses.get(username),
-                "file": virtual_path
-            }
-        )
-
-        core.statistics.append_stat_value("completed_uploads", 1)
-
-        # Autoclear this upload
-        if not self._auto_clear_transfer(transfer):
-            self._update_transfer(transfer)
-
-        real_path = core.shares.virtual2real(virtual_path)
-        core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
-
-        self.check_upload_queue()
-
-    def _check_transfer_timeouts(self):
-
-        current_time = time.monotonic()
-
-        if self.transfer_request_times:
-            for transfer, start_time in self.transfer_request_times.copy().items():
-                # When our port is closed, certain clients can take up to ~30 seconds before they
-                # initiate a 'F' connection, since they only send an indirect connection request after
-                # attempting to connect to our port for a certain time period.
-                # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
-                # To account for potential delays while initializing the connection, add 15 seconds
-                # to the timeout value.
-
-                if (current_time - start_time) >= 45:
-                    self._transfer_timeout(transfer)
-
-    def _check_queue_upload_allowed(self, username, addr, virtual_path, real_path, msg):
-
-        # Is user allowed to download?
-        ip_address, _port = addr
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
-
-        if permission_level == "banned":
-            return False, f"Banned ({reject_reason})" if reject_reason else "Banned"
-
-        if core.shares.rescanning:
-            self.pending_network_msgs.append(msg)
-            return False, None
-
-        # Is that file already in the queue?
-        if self.file_is_upload_queued(username, virtual_path):
-            return False, "Queued"
-
-        # Are we waiting for existing uploads to finish?
-        if self.pending_shutdown:
-            return False, "Pending shutdown."
-
-        # Has user hit queue limit?
-        enable_limits = True
-
-        if config.sections["transfers"]["friendsnolimits"]:
-            if username in core.userlist.buddies:
-                enable_limits = False
-
-        if enable_limits:
-            limit_reached, reason = self.queue_limit_reached(username)
-
-            if limit_reached:
-                return False, reason
-
-        # Do we actually share that file with the world?
-        if not core.shares.file_is_shared(username, virtual_path, real_path):
-            return False, "File not shared."
-
-        if not self.file_is_readable(virtual_path, real_path):
-            return False, "File read error."
-
-        return True, None
-
-    def _get_upload_candidate(self):
-        """Retrieve a suitable queued transfer for uploading.
-
-        Round Robin: Get the first queued item from the oldest user
-        FIFO: Get the first queued item in the list
-        """
-
-        round_robin_queue = not config.sections["transfers"]["fifoqueue"]
-        privileged_queue = False
-
-        first_queued_transfers = {}
-        queued_users = {}
-
-        for upload in self.queued_transfers:
-            username = upload.username
-
-            if username not in first_queued_transfers and username not in self.active_users:
-                first_queued_transfers[username] = upload
-
-            if username in queued_users:
-                continue
-
-            privileged = self.is_privileged(username)
-            queued_users[username] = privileged
-
-        has_active_uploads = bool(self.active_users)
-        oldest_time = None
-        target_username = None
-
-        for username, privileged in queued_users.items():
-            if privileged and username not in self.active_users:
-                privileged_queue = True
-                break
-
-        if not round_robin_queue:
-            # skip the looping below (except the cleanup) and get the first
-            # user of the highest priority we saw above
-            for username in first_queued_transfers:
-                if privileged_queue and not queued_users[username]:
-                    continue
-
-                target_username = username
-                break
-
-        for username, update_time in self.user_update_counters.copy().items():
-            if username not in queued_users:
-                del self.user_update_counters[username]
-                continue
-
-            if not round_robin_queue or username in self.active_users:
-                continue
-
-            if privileged_queue and not queued_users[username]:
-                continue
-
-            if not oldest_time:
-                oldest_time = update_time + 1
-
-            if update_time < oldest_time:
-                target_username = username
-                oldest_time = update_time
-
-        return first_queued_transfers.get(target_username), has_active_uploads
-
-    def check_upload_queue(self):
-        """Find next file to upload."""
-
-        if not self.allow_new_uploads():
-            return
-
-        upload_candidate, has_active_uploads = self._get_upload_candidate()
-
-        if upload_candidate is None:
-            if not has_active_uploads and self.pending_shutdown:
-                self.pending_shutdown = False
-                core.quit()
-            return
-
-        username = upload_candidate.username
-
-        log.add_transfer(
-            "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
-                "file": upload_candidate.virtual_path,
-                "user": username
-            }
-        )
-
-        self.push_file(
-            username=username, virtual_path=upload_candidate.virtual_path, size=upload_candidate.size,
-            transfer=upload_candidate
-        )
-
-    def _update_user_counter(self, username):
-        """Called when an upload associated with a user has changed.
-
-        The user update counter is used by the Round Robin queue system
-        to determine which user has waited the longest since their last
-        download.
-        """
-
-        self.user_update_counter += 1
-        self.user_update_counters[username] = self.user_update_counter
-
     def ban_users(self, users, ban_message=None):
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
         via the transfers, and clear the transfers from the uploads list."""
@@ -1159,60 +1204,6 @@ class Uploads(Transfers):
         for upload in uploads:
             self.retry_upload(upload)
 
-    def _retry_failed_uploads(self):
-
-        for failed_uploads in self.failed_users.copy().values():
-            for upload in failed_uploads.copy().values():
-                if upload.status != "Connection timeout":
-                    continue
-
-                self._enqueue_transfer(upload)
-                self._update_transfer(upload)
-
-    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Cancelled", update_parent=True):
-
-        username = transfer.username
-        virtual_path = transfer.virtual_path
-        token = transfer.token
-
-        log.add_transfer(('Aborting upload, user "%(user)s", filename "%(filename)s", token "%(token)s", '
-                          'status "%(status)s"'), {
-            "user": username,
-            "filename": virtual_path,
-            "token": token,
-            "status": transfer.status
-        })
-
-        if transfer.sock is not None:
-            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
-            transfer.sock = None
-
-        if transfer.file_handle is not None:
-            self._close_file(transfer)
-
-            log.add_upload(
-                _("Upload aborted, user %(user)s file %(file)s"), {
-                    "user": username,
-                    "file": virtual_path
-                }
-            )
-
-        elif denied_message and virtual_path in self.queued_users.get(username, {}):
-            core.send_message_to_peer(
-                username, slskmessages.UploadDenied(file=virtual_path, reason=denied_message))
-
-        self._deactivate_transfer(transfer)
-        self._dequeue_transfer(transfer)
-        self._unfail_transfer(transfer)
-
-        if abort_reason:
-            transfer.status = abort_reason
-
-            if abort_reason in {"Connection timeout", "User logged off"}:
-                self._fail_transfer(transfer)
-
-        events.emit("abort-upload", transfer, abort_reason, update_parent)
-
     def abort_uploads(self, uploads, denied_message=None, abort_reason="Cancelled"):
 
         ignored_statuses = {abort_reason, "Finished"}
@@ -1223,13 +1214,6 @@ class Uploads(Transfers):
                     upload, denied_message=denied_message, abort_reason=abort_reason, update_parent=False)
 
         events.emit("abort-uploads", uploads, abort_reason)
-
-    def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
-
-        self._abort_transfer(transfer, denied_message=denied_message, abort_reason=None)
-        del self.transfers[transfer.username + transfer.virtual_path]
-
-        events.emit("clear-upload", transfer, update_parent)
 
     def clear_uploads(self, uploads=None, statuses=None):
 

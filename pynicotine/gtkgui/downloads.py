@@ -192,19 +192,19 @@ class Downloads(Transfers):
             core.userbrowse.browse_user(user, path=folder_path)
 
     def on_clear_queued(self, *_args):
-        core.downloads.clear_downloads(statuses=["Queued"])
+        core.downloads.clear_downloads(statuses={"Queued"})
 
     def on_clear_finished(self, *_args):
-        core.downloads.clear_downloads(statuses=["Finished"])
+        core.downloads.clear_downloads(statuses={"Finished"})
 
     def on_clear_paused(self, *_args):
-        core.downloads.clear_downloads(statuses=["Paused"])
+        core.downloads.clear_downloads(statuses={"Paused"})
 
     def on_clear_finished_filtered(self, *_args):
-        core.downloads.clear_downloads(statuses=["Finished", "Filtered"])
+        core.downloads.clear_downloads(statuses={"Finished", "Filtered"})
 
     def on_clear_filtered(self, *_args):
-        core.downloads.clear_downloads(statuses=["Filtered"])
+        core.downloads.clear_downloads(statuses={"Filtered"})
 
     def on_clear_deleted(self, *_args):
         core.downloads.clear_downloads(clear_deleted=True)

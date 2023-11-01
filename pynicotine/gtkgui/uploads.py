@@ -189,24 +189,24 @@ class Uploads(Transfers):
         core.uploads.ban_users(self.selected_users)
 
     def on_clear_queued(self, *_args):
-        core.uploads.clear_uploads(statuses=["Queued"])
+        core.uploads.clear_uploads(statuses={"Queued"})
 
     def on_clear_finished(self, *_args):
-        core.uploads.clear_uploads(statuses=["Finished"])
+        core.uploads.clear_uploads(statuses={"Finished"})
 
     def on_clear_cancelled(self, *_args):
-        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
+        core.uploads.clear_uploads(statuses={"Cancelled", "Disallowed extension"})
 
     def on_clear_failed(self, *_args):
-        core.uploads.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
+        core.uploads.clear_uploads(statuses={"Connection timeout", "Local file error", "Remote file error"})
 
     def on_clear_logged_off(self, *_args):
-        core.uploads.clear_uploads(statuses=["User logged off"])
+        core.uploads.clear_uploads(statuses={"User logged off"})
 
     def on_clear_finished_cancelled(self, *_args):
-        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
+        core.uploads.clear_uploads(statuses={"Cancelled", "Disallowed extension", "Finished"})
 
     def on_clear_finished_failed(self, *_args):
         core.uploads.clear_uploads(
-            statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
-                      "Local file error", "Remote file error"])
+            statuses={"Cancelled", "Disallowed extension", "Finished", "Connection timeout",
+                      "Local file error", "Remote file error"})

@@ -120,7 +120,7 @@ class Downloads(Transfers):
 
     # Load Transfers #
 
-    def get_transfer_list_file_path(self):
+    def _get_transfer_list_file_path(self):
 
         downloads_file_1_4_2 = os.path.join(config.data_folder_path, "config.transfers.pickle")
         downloads_file_1_4_1 = os.path.join(config.data_folder_path, "transfers.pickle")
@@ -140,22 +140,70 @@ class Downloads(Transfers):
         # Fall back to new file format
         return self.transfers_file_path
 
-    def load_transfers(self):
+    def _load_transfers(self):
 
-        load_func = self.load_transfers_file
-        transfers_file_path = self.get_transfer_list_file_path()
+        load_func = self._load_transfers_file
+        transfers_file_path = self._get_transfer_list_file_path()
 
         if transfers_file_path != self.transfers_file_path:
-            load_func = self.load_legacy_transfers_file
+            load_func = self._load_legacy_transfers_file
 
-        for transfer in self.get_stored_transfers(transfers_file_path, load_func):
+        for transfer in self._get_stored_transfers(transfers_file_path, load_func):
             if transfer.status == "User logged off":
                 # Mark transfer as failed in order to resume it when connected
                 self._fail_transfer(transfer)
 
             self._append_transfer(transfer)
 
-    # Limits #
+    # Filters/Limits #
+
+    def update_download_filters(self):
+
+        failed = {}
+        outfilter = "(\\\\("
+        download_filters = sorted(config.sections["transfers"]["downloadfilters"])
+        # Get Filters from config file and check their escaped status
+        # Test if they are valid regular expressions and save error messages
+
+        for item in download_filters:
+            dfilter, escaped = item
+            if escaped:
+                dfilter = re.escape(dfilter)
+                dfilter = dfilter.replace("\\*", ".*")
+
+            try:
+                re.compile(f"({dfilter})")
+                outfilter += dfilter
+
+                if item is not download_filters[-1]:
+                    outfilter += "|"
+
+            except re.error as error:
+                failed[dfilter] = error
+
+        outfilter += ")$)"
+
+        try:
+            re.compile(outfilter)
+
+        except re.error as error:
+            # Strange that individual filters _and_ the composite filter both fail
+            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
+            config.sections["transfers"]["downloadregexp"] = ""
+            return
+
+        config.sections["transfers"]["downloadregexp"] = outfilter
+
+        # Send error messages for each failed filter to log window
+        if not failed:
+            return
+
+        errors = ""
+
+        for dfilter, error in failed.items():
+            errors += f"Filter: {dfilter} Error: {error} "
+
+        log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})
 
     def update_transfer_limits(self):
 
@@ -572,8 +620,8 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if download in self.transfer_request_times:
-            del self.transfer_request_times[download]
+        if download in self._transfer_request_times:
+            del self._transfer_request_times[download]
 
         current_time = time.monotonic()
         size = download.size
@@ -642,6 +690,153 @@ class Downloads(Transfers):
     def _update_transfer(self, transfer, update_parent=True):
         events.emit("update-download", transfer, update_parent)
 
+    def _file_downloaded_actions(self, username, file_path):
+
+        if config.sections["notifications"]["notification_popup_file"]:
+            core.notifications.show_download_notification(
+                _("%(file)s downloaded from %(user)s") % {
+                    "user": username,
+                    "file": os.path.basename(file_path)
+                },
+                title=_("File Downloaded")
+            )
+
+        if config.sections["transfers"]["afterfinish"]:
+            try:
+                execute_command(config.sections["transfers"]["afterfinish"], file_path)
+                log.add(_("Executed: %s"), config.sections["transfers"]["afterfinish"])
+
+            except Exception:
+                log.add(_("Trouble executing '%s'"), config.sections["transfers"]["afterfinish"])
+
+    def _folder_downloaded_actions(self, username, folder_path):
+
+        if not folder_path:
+            return
+
+        for downloads in (
+            self.queued_users.get(username, {}),
+            self.active_users.get(username, {}),
+            self.failed_users.get(username, {})
+        ):
+            for download in downloads.values():
+                if download.folder_path == folder_path:
+                    return
+
+        if config.sections["notifications"]["notification_popup_folder"]:
+            core.notifications.show_download_notification(
+                _("%(folder)s downloaded from %(user)s") % {
+                    "user": username,
+                    "folder": folder_path
+                },
+                title=_("Folder Downloaded")
+            )
+
+        if config.sections["transfers"]["afterfolder"]:
+            try:
+                execute_command(config.sections["transfers"]["afterfolder"], folder_path)
+                log.add(_("Executed on folder: %s"), config.sections["transfers"]["afterfolder"])
+
+            except Exception:
+                log.add(_("Trouble executing on folder: %s"), config.sections["transfers"]["afterfolder"])
+
+    def _finish_transfer(self, transfer):
+
+        download_folder_path = transfer.folder_path or self.get_default_download_folder(transfer.username)
+        download_folder_path_encoded = encode_path(download_folder_path)
+
+        download_basename = self.get_download_basename(transfer.virtual_path, download_folder_path, avoid_conflict=True)
+        download_file_path = os.path.join(download_folder_path, download_basename)
+        incomplete_file_path_encoded = transfer.file_handle.name
+
+        self._deactivate_transfer(transfer)
+        self._close_file(transfer)
+
+        try:
+            if not os.path.isdir(download_folder_path_encoded):
+                os.makedirs(download_folder_path_encoded)
+
+            shutil.move(incomplete_file_path_encoded, encode_path(download_file_path))
+
+        except OSError as error:
+            log.add(
+                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
+                    "tempfile": incomplete_file_path_encoded.decode("utf-8", "replace"),
+                    "file": download_file_path,
+                    "error": error
+                }
+            )
+            self._abort_transfer(transfer, abort_reason="Download folder error")
+            core.notifications.show_download_notification(
+                str(error), title=_("Download Folder Error"), high_priority=True
+            )
+            return
+
+        transfer.status = "Finished"
+        transfer.current_byte_offset = transfer.size
+        transfer.sock = None
+
+        core.statistics.append_stat_value("completed_downloads", 1)
+
+        # Attempt to show notification and execute commands
+        self._file_downloaded_actions(transfer.username, download_file_path)
+        self._folder_downloaded_actions(transfer.username, transfer.folder_path)
+
+        finished = True
+        events.emit("download-notification", finished)
+
+        # Attempt to autoclear this download, if configured
+        if not self._auto_clear_transfer(transfer):
+            self._update_transfer(transfer)
+
+        core.pluginhandler.download_finished_notification(transfer.username, transfer.virtual_path, download_file_path)
+
+        log.add_download(
+            _("Download finished: user %(user)s, file %(file)s"), {
+                "user": transfer.username,
+                "file": transfer.virtual_path
+            }
+        )
+
+    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Paused", update_parent=True):
+
+        log.add_transfer(('Aborting download, user "%(user)s", filename "%(filename)s", token "%(token)s", '
+                          'status "%(status)s"'), {
+            "user": transfer.username,
+            "filename": transfer.virtual_path,
+            "token": transfer.token,
+            "status": transfer.status
+        })
+
+        transfer.legacy_attempt = False
+        transfer.size_changed = False
+
+        if transfer.sock is not None:
+            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+            transfer.sock = None
+
+        if transfer.file_handle is not None:
+            self._close_file(transfer)
+
+            log.add_download(
+                _("Download aborted, user %(user)s file %(file)s"), {
+                    "user": transfer.username,
+                    "file": transfer.virtual_path
+                }
+            )
+
+        self._deactivate_transfer(transfer)
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+
+        if abort_reason:
+            transfer.status = abort_reason
+
+            if abort_reason not in {"Finished", "Filtered", "Paused"}:
+                self._fail_transfer(transfer)
+
+        events.emit("abort-download", transfer, abort_reason, update_parent)
+
     def _auto_clear_transfer(self, transfer):
 
         if config.sections["transfers"]["autoclear_downloads"]:
@@ -649,6 +844,62 @@ class Downloads(Transfers):
             return True
 
         return False
+
+    def _clear_transfer(self, transfer, update_parent=True):
+
+        self._abort_transfer(transfer, abort_reason=None)
+        self._remove_transfer(transfer)
+
+        events.emit("clear-download", transfer, update_parent)
+
+    def _check_download_queue(self):
+
+        for download in self.queued_transfers:
+            core.send_message_to_peer(
+                download.username,
+                slskmessages.PlaceInQueueRequest(file=download.virtual_path, legacy_client=download.legacy_attempt)
+            )
+
+    def _retry_failed_connection_downloads(self):
+
+        statuses = {"Connection closed", "Connection timeout", "Pending shutdown."}
+
+        for failed_downloads in self.failed_users.copy().values():
+            for download in failed_downloads.copy().values():
+                if download.status not in statuses:
+                    continue
+
+                self._abort_transfer(download, abort_reason=None)
+                self.get_file(download.username, download.virtual_path, transfer=download)
+
+    def _retry_failed_io_downloads(self):
+
+        statuses = {"Download folder error", "File read error.", "Local file error"}
+
+        for failed_downloads in self.failed_users.copy().values():
+            for download in failed_downloads.copy().values():
+                if download.status not in statuses:
+                    continue
+
+                self._abort_transfer(download, abort_reason=None)
+                self.get_file(download.username, download.virtual_path, transfer=download)
+
+    def _retry_limited_downloads(self):
+
+        statuses = {"Too many files", "Too many megabytes"}
+
+        for failed_downloads in self.failed_users.copy().values():
+            for download in failed_downloads.copy().values():
+                if download.status not in statuses and not download.status.startswith("User limit of"):
+                    continue
+
+                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
+                    "filename": download.virtual_path,
+                    "user": download.username
+                })
+
+                self._abort_transfer(download, abort_reason=None)
+                self.get_file(download.username, download.virtual_path, transfer=download)
 
     def get_folder(self, username, folder_path, download_folder_path=None):
 
@@ -870,122 +1121,6 @@ class Downloads(Transfers):
         return (self.get_complete_download_file_path(username, virtual_path, size, download_folder_path)
                 or self.get_incomplete_download_file_path(username, virtual_path))
 
-    def _file_downloaded_actions(self, username, file_path):
-
-        if config.sections["notifications"]["notification_popup_file"]:
-            core.notifications.show_download_notification(
-                _("%(file)s downloaded from %(user)s") % {
-                    "user": username,
-                    "file": os.path.basename(file_path)
-                },
-                title=_("File Downloaded")
-            )
-
-        if config.sections["transfers"]["afterfinish"]:
-            try:
-                execute_command(config.sections["transfers"]["afterfinish"], file_path)
-                log.add(_("Executed: %s"), config.sections["transfers"]["afterfinish"])
-
-            except Exception:
-                log.add(_("Trouble executing '%s'"), config.sections["transfers"]["afterfinish"])
-
-    def _folder_downloaded_actions(self, username, folder_path):
-
-        if not folder_path:
-            return
-
-        for downloads in (
-            self.queued_users.get(username, {}),
-            self.active_users.get(username, {}),
-            self.failed_users.get(username, {})
-        ):
-            for download in downloads.values():
-                if download.folder_path == folder_path:
-                    return
-
-        if config.sections["notifications"]["notification_popup_folder"]:
-            core.notifications.show_download_notification(
-                _("%(folder)s downloaded from %(user)s") % {
-                    "user": username,
-                    "folder": folder_path
-                },
-                title=_("Folder Downloaded")
-            )
-
-        if config.sections["transfers"]["afterfolder"]:
-            try:
-                execute_command(config.sections["transfers"]["afterfolder"], folder_path)
-                log.add(_("Executed on folder: %s"), config.sections["transfers"]["afterfolder"])
-
-            except Exception:
-                log.add(_("Trouble executing on folder: %s"), config.sections["transfers"]["afterfolder"])
-
-    def _finish_transfer(self, transfer):
-
-        download_folder_path = transfer.folder_path or self.get_default_download_folder(transfer.username)
-        download_folder_path_encoded = encode_path(download_folder_path)
-
-        download_basename = self.get_download_basename(transfer.virtual_path, download_folder_path, avoid_conflict=True)
-        download_file_path = os.path.join(download_folder_path, download_basename)
-        incomplete_file_path_encoded = transfer.file_handle.name
-
-        self._deactivate_transfer(transfer)
-        self._close_file(transfer)
-
-        try:
-            if not os.path.isdir(download_folder_path_encoded):
-                os.makedirs(download_folder_path_encoded)
-
-            shutil.move(incomplete_file_path_encoded, encode_path(download_file_path))
-
-        except OSError as error:
-            log.add(
-                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
-                    "tempfile": incomplete_file_path_encoded.decode("utf-8", "replace"),
-                    "file": download_file_path,
-                    "error": error
-                }
-            )
-            self._abort_transfer(transfer, abort_reason="Download folder error")
-            core.notifications.show_download_notification(
-                str(error), title=_("Download Folder Error"), high_priority=True
-            )
-            return
-
-        transfer.status = "Finished"
-        transfer.current_byte_offset = transfer.size
-        transfer.sock = None
-
-        core.statistics.append_stat_value("completed_downloads", 1)
-
-        # Attempt to show notification and execute commands
-        self._file_downloaded_actions(transfer.username, download_file_path)
-        self._folder_downloaded_actions(transfer.username, transfer.folder_path)
-
-        finished = True
-        events.emit("download-notification", finished)
-
-        # Attempt to autoclear this download, if configured
-        if not self._auto_clear_transfer(transfer):
-            self._update_transfer(transfer)
-
-        core.pluginhandler.download_finished_notification(transfer.username, transfer.virtual_path, download_file_path)
-
-        log.add_download(
-            _("Download finished: user %(user)s, file %(file)s"), {
-                "user": transfer.username,
-                "file": transfer.virtual_path
-            }
-        )
-
-    def _check_download_queue(self):
-
-        for download in self.queued_transfers:
-            core.send_message_to_peer(
-                download.username,
-                slskmessages.PlaceInQueueRequest(file=download.virtual_path, legacy_client=download.legacy_attempt)
-            )
-
     def retry_download(self, transfer, bypass_filter=False):
 
         username = transfer.username
@@ -1010,86 +1145,6 @@ class Downloads(Transfers):
             bypass_filter = (num_downloads == 1 and download.status == "Filtered")
             self.retry_download(download, bypass_filter)
 
-    def _retry_failed_connection_downloads(self):
-
-        statuses = {"Connection closed", "Connection timeout", "Pending shutdown."}
-
-        for failed_downloads in self.failed_users.copy().values():
-            for download in failed_downloads.copy().values():
-                if download.status not in statuses:
-                    continue
-
-                self._abort_transfer(download, abort_reason=None)
-                self.get_file(download.username, download.virtual_path, transfer=download)
-
-    def _retry_failed_io_downloads(self):
-
-        statuses = {"Download folder error", "File read error.", "Local file error"}
-
-        for failed_downloads in self.failed_users.copy().values():
-            for download in failed_downloads.copy().values():
-                if download.status not in statuses:
-                    continue
-
-                self._abort_transfer(download, abort_reason=None)
-                self.get_file(download.username, download.virtual_path, transfer=download)
-
-    def _retry_limited_downloads(self):
-
-        statuses = {"Too many files", "Too many megabytes"}
-
-        for failed_downloads in self.failed_users.copy().values():
-            for download in failed_downloads.copy().values():
-                if download.status not in statuses and not download.status.startswith("User limit of"):
-                    continue
-
-                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
-                    "filename": download.virtual_path,
-                    "user": download.username
-                })
-
-                self._abort_transfer(download, abort_reason=None)
-                self.get_file(download.username, download.virtual_path, transfer=download)
-
-    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Paused", update_parent=True):
-
-        log.add_transfer(('Aborting download, user "%(user)s", filename "%(filename)s", token "%(token)s", '
-                          'status "%(status)s"'), {
-            "user": transfer.username,
-            "filename": transfer.virtual_path,
-            "token": transfer.token,
-            "status": transfer.status
-        })
-
-        transfer.legacy_attempt = False
-        transfer.size_changed = False
-
-        if transfer.sock is not None:
-            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
-            transfer.sock = None
-
-        if transfer.file_handle is not None:
-            self._close_file(transfer)
-
-            log.add_download(
-                _("Download aborted, user %(user)s file %(file)s"), {
-                    "user": transfer.username,
-                    "file": transfer.virtual_path
-                }
-            )
-
-        self._deactivate_transfer(transfer)
-        self._dequeue_transfer(transfer)
-        self._unfail_transfer(transfer)
-
-        if abort_reason:
-            transfer.status = abort_reason
-
-            if abort_reason not in {"Finished", "Filtered", "Paused"}:
-                self._fail_transfer(transfer)
-
-        events.emit("abort-download", transfer, abort_reason, update_parent)
-
     def abort_downloads(self, downloads, abort_reason="Paused"):
 
         ignored_statuses = {abort_reason, "Finished"}
@@ -1099,13 +1154,6 @@ class Downloads(Transfers):
                 self._abort_transfer(download, abort_reason=abort_reason, update_parent=False)
 
         events.emit("abort-downloads", downloads, abort_reason)
-
-    def _clear_transfer(self, transfer, update_parent=True):
-
-        self._abort_transfer(transfer, abort_reason=None)
-        self._remove_transfer(transfer)
-
-        events.emit("clear-download", transfer, update_parent)
 
     def clear_downloads(self, downloads=None, statuses=None, clear_deleted=False):
 
@@ -1130,53 +1178,3 @@ class Downloads(Transfers):
             self._clear_transfer(download, update_parent=False)
 
         events.emit("clear-downloads", downloads, statuses, clear_deleted)
-
-    # Filters #
-
-    def update_download_filters(self):
-
-        failed = {}
-        outfilter = "(\\\\("
-        download_filters = sorted(config.sections["transfers"]["downloadfilters"])
-        # Get Filters from config file and check their escaped status
-        # Test if they are valid regular expressions and save error messages
-
-        for item in download_filters:
-            dfilter, escaped = item
-            if escaped:
-                dfilter = re.escape(dfilter)
-                dfilter = dfilter.replace("\\*", ".*")
-
-            try:
-                re.compile(f"({dfilter})")
-                outfilter += dfilter
-
-                if item is not download_filters[-1]:
-                    outfilter += "|"
-
-            except re.error as error:
-                failed[dfilter] = error
-
-        outfilter += ")$)"
-
-        try:
-            re.compile(outfilter)
-
-        except re.error as error:
-            # Strange that individual filters _and_ the composite filter both fail
-            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
-            config.sections["transfers"]["downloadregexp"] = ""
-            return
-
-        config.sections["transfers"]["downloadregexp"] = outfilter
-
-        # Send error messages for each failed filter to log window
-        if not failed:
-            return
-
-        errors = ""
-
-        for dfilter, error in failed.items():
-            errors += f"Filter: {dfilter} Error: {error} "
-
-        log.add(_("Error: %(num)d Download filters failed! %(error)s "), {"num": len(failed), "error": errors})

@@ -41,9 +41,9 @@ class GetUploadCandidateTest(TestCase):
         core.init_components(enabled_components={"pluginhandler", "shares", "statistics", "uploads", "userlist"})
         core.start()
 
-        core.uploads.allow_saving_transfers = False
         core.uploads.privileged_users = {"puser1", "puser2"}
         core.uploads.transfers.clear()
+        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
