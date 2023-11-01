@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-31 02:57+0000\n"
+"PO-Revision-Date: 2023-11-01 08:31+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -223,7 +223,7 @@ msgstr "Kan niet verbinden met de server. Reden: %s"
 
 #: pynicotine/core.py:446
 msgid "Cannot Connect"
-msgstr "Kan geen verbinding maken"
+msgstr "Kan niet verbinden"
 
 #: pynicotine/core.py:470 pynicotine/gtkgui/dialogs/preferences.py:136
 #: pynicotine/gtkgui/search.py:1493 pynicotine/gtkgui/userinfo.py:540
@@ -2048,7 +2048,7 @@ msgstr "In de wachtrij (bevoorrecht)"
 
 #: pynicotine/gtkgui/transfers.py:94
 msgid "Getting status"
-msgstr "Opvragen van status"
+msgstr "Status opvragen"
 
 #: pynicotine/gtkgui/transfers.py:95
 msgid "Transferring"
@@ -4687,7 +4687,7 @@ msgstr "Wis alle voltooide en gefilterde downloads"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154 pynicotine/gtkgui/ui/uploads.ui:154
 msgid "Clear Finished"
-msgstr "Wissen Voltooid"
+msgstr "Voltooid wissen"
 
 #: pynicotine/gtkgui/ui/downloads.ui:169
 msgid "Clear Specific Downloads"
