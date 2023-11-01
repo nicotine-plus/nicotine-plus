@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-31 02:57+0000\n"
-"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
+"PO-Revision-Date: 2023-11-01 13:23+0000\n"
+"Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -1246,12 +1246,11 @@ msgstr "normalnie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1637
 msgid "Separate Buddies tab"
-msgstr "Oddzielna zakładka znajomych"
+msgstr "Oddzielna karta znajomych"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1638
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Lista znajomych w pokojach rozmów"
+msgstr "Pasek boczny na karcie Pokoje rozmów"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 msgid "Always visible sidebar"
@@ -1643,14 +1642,12 @@ msgid "Browse _Public Shares"
 msgstr "_Przeglądaj publicznie udostępnione zasoby"
 
 #: pynicotine/gtkgui/mainwindow.py:513
-#, fuzzy
 msgid "Browse _Buddy Shares"
-msgstr "Prze_glądaj udostępnione zasoby znajomych"
+msgstr "Przeglądaj udostępnione zasoby znajomych"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Prze_glądaj udostępnione zasoby znajomych"
+msgstr "Przeglądaj udostępnione zasoby zaufanych"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
@@ -2240,7 +2237,6 @@ msgstr ""
 "udostępnia lub robi to prywatnie."
 
 #: pynicotine/gtkgui/userbrowse.py:578
-#, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
 "listening ports are closed on both sides, or there is a temporary "
@@ -2630,16 +2626,15 @@ msgid "Do you really want to exit? %s"
 msgstr "Czy na pewno chcesz wyjść? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
-msgstr ""
-"Użytkownik %s już istnieje, a wprowadzone hasło jest nieprawidłowe. Proszę "
-"wybrać inną nazwę użytkownika, jeśli logujesz się po raz pierwszy."
+msgstr "Użytkownik %s już istnieje, a wprowadzone hasło jest nieprawidłowe."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
 msgstr ""
+"Wpisz %s, aby zalogować się przy użyciu innej nazwy użytkownika lub hasła."
 
 #: pynicotine/headless/application.py:96
 msgid "Password: "
@@ -3785,7 +3780,6 @@ msgid "Say something in the third-person"
 msgstr "Powiedz coś w trzeciej osobie"
 
 #: pynicotine/plugins/core_commands/__init__.py:88
-#, fuzzy
 msgid "Announce the song currently playing"
 msgstr "Ogłoś aktualnie odtwarzany utwór"
 
@@ -3854,14 +3848,12 @@ msgid "Remove user or IP address from ignore lists"
 msgstr "Usuń użytkownika lub adres IP z listy ignorowanych"
 
 #: pynicotine/plugins/core_commands/__init__.py:221
-#, fuzzy
 msgid "Add share"
-msgstr "Dodaj życzenie"
+msgstr "Dodaj zasób"
 
 #: pynicotine/plugins/core_commands/__init__.py:227
-#, fuzzy
 msgid "Remove share"
-msgstr "Usuń życzenie"
+msgstr "Usuń zasób"
 
 #: pynicotine/plugins/core_commands/__init__.py:234
 msgid "List shares"
@@ -3914,14 +3906,14 @@ msgid "Not joined in room %s"
 msgstr "Nie połączony w pokoju %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:399
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Współdziel tylko z przyjaciólmi"
+msgstr "Brak wiadomości z użytkownikiem %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Zamknij czat prywatny"
+msgstr "Zamknięty czat prywatny użytkownika %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:480
 #, python-format
@@ -3959,9 +3951,9 @@ msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
 
 #: pynicotine/plugins/core_commands/__init__.py:583
-#, fuzzy, python-format
+#, python-format
 msgid "No share with name \"%s\""
-msgstr "Współdziel tylko z przyjaciólmi"
+msgstr "Brak współdzielenia z \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:586
 #, python-format
@@ -4118,14 +4110,14 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Ponowne skanowanie zakończone: znaleziono %(num)s foldery/ów"
 
 #: pynicotine/shares.py:292
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
 "Wystąpił poważny błąd podczas ponownego skanowania zasobów. Jeśli problem "
-"będzie się utrzymywać, usuń %(dir)s/*.db i spróbuj ponownie. Jeśli to nie "
+"będzie się utrzymywać, usuń %(dir)s/*.dbn i spróbuj ponownie. Jeśli to nie "
 "pomoże, utwórz plik z raportem błędu z danymi: %(trace)s"
 
 #: pynicotine/shares.py:406
@@ -4188,9 +4180,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nie można połączyć się z serwerem %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1083
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %i seconds"
-msgstr "Automatyczne łączenie z serwerem podczas uruchamiania"
+msgstr "Ponowne połączenie z serwerem za %i sekund"
 
 #: pynicotine/slskproto.py:1154
 #, python-format
@@ -4323,14 +4315,12 @@ msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Nie można przywrócić pliku konfiguracyjnego z %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:27
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Wyszukiwana fraza…"
+msgstr "Przeszukaj dziennik aktywności…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:63 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Wyszukiwana fraza…"
+msgstr "Przeszukaj dziennik czatów…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:96 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4425,7 +4415,6 @@ msgstr "Udostępnianie folderów"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
@@ -4945,9 +4934,8 @@ msgid "Show Log History Pane"
 msgstr "Pokaż okno historii dziennika"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Wyszukiwana fraza…"
+msgstr "Przeszukaj historię czatu…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -4986,13 +4974,12 @@ msgid "_Accept private room invitations"
 msgstr "_Akceptuj zaproszenia do prywatnych pokoi"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:14
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Ściana pokoju pozwala użytkownikom na przeglądanie unikalnych wiadomości "
-"innych członków. Ostatnie wiadomości są pokazywane na górze."
+"Napisz pojedynczą wiadomość, którą inni użytkownicy pokoju będą mogli "
+"przeczytać później. Ostatnie wiadomości są pokazywane na górze."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:45
 msgid "Set wall message…"
@@ -5654,9 +5641,8 @@ msgid "Public IP address:"
 msgstr "Publiczny adres IP:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Język (wymaga ponownego uruchomienia):"
+msgstr "Port nasłuchiwania (wymaga ponownego uruchomienia):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5694,9 +5680,8 @@ msgstr ""
 "robisz."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Język (wymaga ponownego uruchomienia):"
+msgstr "Interfejs sieciowy (wymaga ponownego uruchomienia):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
@@ -5770,16 +5755,15 @@ msgid "Show privately shared files in search results"
 msgstr "Pokaż prywatnie udostępnione pliki w wynikach wyszukiwania"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Inni klienci Soulseek mogą mieć możliwość udostępniania plików prywatnie. "
-"Jeśli tak, pliki te będą poprzedzone prefiksem \"[PRIVATE]\" i nie można ich "
-"pobrać, dopóki przesyłający nie udzieli wyraźnej zgody. Zapytaj ich "
-"uprzejmie."
+"Prywatnie udostępnione pliki, które zostały uwidocznione dla wszystkich, "
+"będą oznaczone przedrostkiem \"[PRIVATE]\" i nie będzie można ich pobrać, "
+"dopóki osoba przesyłająca nie wyrazi na to wyraźnej zgody. Należy go o to "
+"uprzejmie poprosić."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"
@@ -5877,12 +5861,12 @@ msgstr "Widoczne dla wszystkich:"
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
 msgid "Buddy shares"
-msgstr "Imiona znajomych"
+msgstr "Zasoby dla znajomych"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
 #, fuzzy
 msgid "Trusted shares"
-msgstr "Wylistuj udostępnione zasoby"
+msgstr "Zaufane zasoby"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5927,9 +5911,8 @@ msgid "Upload queue type:"
 msgstr "Typ kolejki wysyłania:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr "Kolejkuj wysyłania jeśli łączna prędkość transferów osiągnie (KiB/s):"
+msgstr "Przydzielaj sloty wysyłania, aż całkowita prędkość osiągnie (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
 msgid "Fixed number of upload slots:"
@@ -5944,9 +5927,8 @@ msgid "Queue Limits"
 msgstr "Limity kolejek"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Maksymalna liczba zachowanych wyników na wyszukiwanie:"
+msgstr "Maksymalna liczba plików w kolejce na użytkownika:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
@@ -5982,6 +5964,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Dodaj elementy, które chcesz, aby wszyscy widzieli, takie jak krótki opis, "
+"pomocne wskazówki lub wytyczne dotyczące pobierania udostępnionych "
+"materiałów."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"
@@ -6072,9 +6057,8 @@ msgid "Highlighted tab label color:"
 msgstr "Kolor etykiety podświetlonej karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:459
-#, fuzzy
 msgid "Buddy list position:"
-msgstr "Lista znajomych ukryta"
+msgstr "Pozycja listy znajomych:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:484
 msgid "Visible main tabs:"
