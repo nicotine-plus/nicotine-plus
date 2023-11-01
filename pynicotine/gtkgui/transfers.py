@@ -268,7 +268,7 @@ class Transfers:
         self.transfer_list = transfer_list
 
         self.container.get_parent().set_visible(bool(transfer_list))
-        self.update_model(select_parent=False)
+        self.update_model()
 
     def select_transfers(self):
 
@@ -342,7 +342,7 @@ class Transfers:
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
-    def update_model(self, transfer=None, update_parent=True, select_parent=True):
+    def update_model(self, transfer=None, update_parent=True, select_parent=False):
 
         if self.window.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
