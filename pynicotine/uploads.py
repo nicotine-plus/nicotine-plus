@@ -996,6 +996,9 @@ class Uploads(Transfers):
 
     def _transfer_timeout(self, transfer):
 
+        if transfer.request_timer_id is None:
+            return
+
         log.add_transfer("Upload %(filename)s with token %(token)s for user %(user)s timed out", {
             "filename": transfer.virtual_path,
             "token": transfer.token,
@@ -1093,8 +1096,9 @@ class Uploads(Transfers):
         if upload is None:
             return
 
-        if upload in self._transfer_request_times:
-            del self._transfer_request_times[upload]
+        if upload.request_timer_id is not None:
+            events.cancel_scheduled(upload.request_timer_id)
+            upload.request_timer_id = None
 
         current_time = time.monotonic()
         size = upload.size

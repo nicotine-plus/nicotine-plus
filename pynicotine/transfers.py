@@ -41,7 +41,7 @@ class Transfer:
                  "folder_path", "token", "size", "file_handle", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "file_attributes",
-                 "iterator", "status", "legacy_attempt", "size_changed")
+                 "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
 
     def __init__(self, username=None, virtual_path=None, folder_path=None, status=None, token=None, size=0,
                  current_byte_offset=None, file_attributes=None):
@@ -58,6 +58,7 @@ class Transfer:
         self.file_handle = None
         self.queue_position = 0
         self.modifier = None
+        self.request_timer_id = None
         self.start_time = None
         self.last_update = None
         self.last_byte_offset = None
@@ -83,9 +84,6 @@ class Transfers:
         self.total_queue_size = 0
 
         self._allow_saving_transfers = False
-        self._transfer_request_times = {}
-
-        self._transfer_timeout_timer_id = None
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -122,14 +120,9 @@ class Transfers:
         for username in self.failed_users:
             core.watch_user(username)
 
-        # Check for transfer timeouts
-        self._transfer_timeout_timer_id = events.schedule(delay=1, callback=self._check_transfer_timeouts, repeat=True)
-
         self.update_transfer_limits()
 
     def _server_disconnect(self, _msg):
-
-        events.cancel_scheduled(self._transfer_timeout_timer_id)
 
         for users in (self.queued_users, self.active_users, self.failed_users):
             for transfers in users.copy().values():
@@ -139,7 +132,6 @@ class Transfers:
         self.queued_transfers.clear()
         self.queued_users.clear()
         self.active_users.clear()
-        self._transfer_request_times.clear()
         self.total_bandwidth = 0
         self.total_queue_size = 0
 
@@ -334,22 +326,6 @@ class Transfers:
     def _transfer_timeout(self, transfer):
         raise NotImplementedError
 
-    def _check_transfer_timeouts(self):
-
-        current_time = time.monotonic()
-
-        if self._transfer_request_times:
-            for transfer, start_time in self._transfer_request_times.copy().items():
-                # When our port is closed, certain clients can take up to ~30 seconds before they
-                # initiate a 'F' connection, since they only send an indirect connection request after
-                # attempting to connect to our port for a certain time period.
-                # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
-                # To account for potential delays while initializing the connection, add 15 seconds
-                # to the timeout value.
-
-                if (current_time - start_time) >= 45:
-                    self._transfer_timeout(transfer)
-
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
@@ -410,16 +386,21 @@ class Transfers:
         transfer.speed = None
         transfer.queue_position = 0
 
-        self._transfer_request_times[transfer] = time.monotonic()
+        # When our port is closed, certain clients can take up to ~30 seconds before they
+        # initiate a 'F' connection, since they only send an indirect connection request after
+        # attempting to connect to our port for a certain time period.
+        # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
+        # To account for potential delays while initializing the connection, add 15 seconds
+        # to the timeout value.
+
+        transfer.request_timer_id = events.schedule(delay=45, callback=lambda: self._transfer_timeout(transfer))
+
         self.active_users[transfer.username][token] = transfer
 
     def _deactivate_transfer(self, transfer):
 
         username = transfer.username
         token = transfer.token
-
-        if transfer in self._transfer_request_times:
-            del self._transfer_request_times[transfer]
 
         if token is None or token not in self.active_users.get(username, {}):
             return
@@ -431,6 +412,10 @@ class Transfers:
 
         if transfer.speed:
             self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
+
+        if transfer.request_timer_id is not None:
+            events.cancel_scheduled(transfer.request_timer_id)
+            transfer.request_timer_id = None
 
         transfer.token = None
 
