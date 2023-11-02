@@ -3515,40 +3515,29 @@ class FileMessage(SlskMessage):
     msg_type = MessageType.FILE
 
 
-class FileDownloadInit(FileMessage):
+class FileTransferInit(FileMessage):
     """We receive this from a peer via a 'F' connection when they want to start
     uploading a file to us.
 
-    The token is the same as the one previously included in the
-    TransferRequest peer message.
-    """
-
-    __slots__ = ("init", "token")
-
-    def __init__(self, init=None, token=None):
-        self.init = init
-        self.token = token
-
-    def parse_network_message(self, message):
-        _pos, self.token = self.unpack_uint32(message)
-
-
-class FileUploadInit(FileMessage):
-    """We send this to a peer via a 'F' connection to tell them that we want to
+    We send this to a peer via a 'F' connection to tell them that we want to
     start uploading a file.
 
     The token is the same as the one previously included in the
     TransferRequest peer message.
     """
 
-    __slots__ = ("init", "token")
+    __slots__ = ("init", "token", "is_outgoing")
 
-    def __init__(self, init=None, token=None):
+    def __init__(self, init=None, token=None, is_outgoing=False):
         self.init = init
         self.token = token
+        self.is_outgoing = is_outgoing
 
     def make_network_message(self):
         return self.pack_uint32(self.token)
+
+    def parse_network_message(self, message):
+        _pos, self.token = self.unpack_uint32(message)
 
 
 class FileOffset(FileMessage):
@@ -3737,10 +3726,9 @@ NETWORK_MESSAGE_EVENTS = {
     CheckPrivileges: "check-privileges",
     ConnectToPeer: "connect-to-peer",
     DistribSearch: "file-search-request-distributed",
-    FileDownloadInit: "file-download-init",
     FileSearch: "file-search-request-server",
     FileSearchResponse: "file-search-response",
-    FileUploadInit: "file-upload-init",
+    FileTransferInit: "file-transfer-init",
     FolderContentsRequest: "folder-contents-request",
     FolderContentsResponse: "folder-contents-response",
     GetPeerAddress: "peer-address",

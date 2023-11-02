@@ -56,9 +56,9 @@ class Downloads(Transfers):
         self._retry_limited_downloads_timer_id = None
 
         for event_name, callback in (
-            ("download-connection-closed", self._download_connection_closed),
             ("download-file-error", self._download_file_error),
-            ("file-download-init", self._file_download_init),
+            ("file-connection-closed", self._file_connection_closed),
+            ("file-transfer-init", self._file_transfer_init),
             ("file-download-progress", self._file_download_progress),
             ("folder-contents-response", self._folder_contents_response),
             ("peer-connection-error", self._peer_connection_error),
@@ -826,11 +826,10 @@ class Downloads(Transfers):
     def _transfer_request(self, msg):
         """Peer code 40."""
 
-        username = msg.init.target_user
-
         if msg.direction != slskmessages.TransferDirection.UPLOAD:
             return
 
+        username = msg.init.target_user
         response = self._transfer_request_downloads(msg)
 
         log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
@@ -940,25 +939,24 @@ class Downloads(Transfers):
         self._abort_transfer(download, abort_reason="Local file error")
         log.add(_("Download I/O error: %s"), error)
 
-    def _file_download_init(self, msg):
+    def _file_transfer_init(self, msg):
         """A peer is requesting to start uploading a file to us."""
+
+        if msg.is_outgoing:
+            # Upload init message sent to ourselves, ignore
+            return
 
         username = msg.init.target_user
         token = msg.token
         download = self.active_users.get(username, {}).get(token)
 
-        if download is None:
-            # Support legacy transfer system (clients: old Nicotine+ versions, slskd)
-            # The user who requested the download initiates the file upload connection
-            # in this case, but we always assume an incoming file init message is
-            # FileDownloadInit
-
-            log.add_transfer(("Received unknown file download init message with token %s, checking if peer "
-                              "requested us to upload a file instead"), token)
-            events.emit("file-upload-init", msg)
+        if download is None or download.sock is not None:
             return
 
         virtual_path = download.virtual_path
+        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
+        download.sock = msg.init.sock
+        need_update = True
 
         log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
                           "from user %(user)s"), {
@@ -966,15 +964,6 @@ class Downloads(Transfers):
             "filename": virtual_path,
             "user": username
         })
-
-        if download.sock is not None:
-            log.add_transfer("Download already has an existing file connection, ignoring init message")
-            core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
-            return
-
-        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
-        need_update = True
-        download.sock = msg.init.sock
 
         try:
             incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
@@ -1157,7 +1146,7 @@ class Downloads(Transfers):
 
         self._update_transfer(download)
 
-    def _download_connection_closed(self, username, token):
+    def _file_connection_closed(self, username, token, sock, **_unused):
         """A file download connection has closed for any reason."""
 
         download = self.active_users.get(username, {}).get(token)
@@ -1165,11 +1154,12 @@ class Downloads(Transfers):
         if download is None:
             return
 
+        if download.sock != sock:
+            return
+
         if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
             self._finish_transfer(download)
             return
-
-        status = None
 
         if core.user_statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
             status = "User logged off"

@@ -51,7 +51,8 @@ class Uploads(Transfers):
 
         for event_name, callback in (
             ("add-privileged-user", self._add_to_privileged),
-            ("file-upload-init", self._file_upload_init),
+            ("file-connection-closed", self._file_connection_closed),
+            ("file-transfer-init", self._file_transfer_init),
             ("file-upload-progress", self._file_upload_progress),
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
@@ -62,7 +63,6 @@ class Uploads(Transfers):
             ("shares-ready", self._shares_ready),
             ("transfer-request", self._transfer_request),
             ("transfer-response", self._transfer_response),
-            ("upload-connection-closed", self._upload_connection_closed),
             ("upload-file-error", self._upload_file_error),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status)
@@ -802,12 +802,12 @@ class Uploads(Transfers):
             return
 
         for msg in msgs:
-            if msg.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
+            if msg.__class__ in (slskmessages.TransferRequest, slskmessages.FileTransferInit):
                 self._cant_connect_upload(username, msg.token, is_offline)
 
     def _cant_connect_upload(self, username, token, is_offline):
         """We can't connect to the user, either way (TransferRequest,
-        FileUploadInit)."""
+        FileTransferInit)."""
 
         upload = self.active_users.get(username, {}).get(token)
 
@@ -991,7 +991,7 @@ class Uploads(Transfers):
             self._check_upload_queue()
             return
 
-        core.send_message_to_peer(upload.username, slskmessages.FileUploadInit(None, token=token))
+        core.send_message_to_peer(upload.username, slskmessages.FileTransferInit(token=token, is_outgoing=True))
         self._check_upload_queue()
 
     def _transfer_timeout(self, transfer):
@@ -1018,33 +1018,25 @@ class Uploads(Transfers):
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
 
-    def _file_upload_init(self, msg):
+    def _file_transfer_init(self, msg):
         """We are requesting to start uploading a file to a peer."""
 
         username = msg.init.target_user
         token = msg.token
         upload = self.active_users.get(username, {}).get(token)
 
-        if upload is None:
-            log.add_transfer("Unknown file upload init message with token %s", token)
-            core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
+        if upload is None or upload.sock is not None:
             return
 
         virtual_path = upload.virtual_path
+        upload.sock = msg.init.sock
+        need_update = True
 
         log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
             "token": token,
             "filename": virtual_path,
             "user": username
         })
-
-        if upload.sock is not None:
-            log.add_transfer("Upload already has an existing file connection, ignoring init message")
-            core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
-            return
-
-        need_update = True
-        upload.sock = msg.init.sock
 
         real_path = core.shares.virtual2real(virtual_path)
 
@@ -1129,12 +1121,15 @@ class Uploads(Transfers):
 
         self._update_transfer(upload)
 
-    def _upload_connection_closed(self, username, token, timed_out):
+    def _file_connection_closed(self, username, token, sock, timed_out):
         """A file upload connection has closed for any reason."""
 
         upload = self.active_users.get(username, {}).get(token)
 
         if upload is None:
+            return
+
+        if upload.sock != sock:
             return
 
         if not timed_out and upload.current_byte_offset is not None and upload.current_byte_offset >= upload.size:

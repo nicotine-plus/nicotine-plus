@@ -57,9 +57,8 @@ from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import EmitNetworkMessageEvents
 from pynicotine.slskmessages import FileOffset
-from pynicotine.slskmessages import FileDownloadInit
-from pynicotine.slskmessages import FileUploadInit
 from pynicotine.slskmessages import FileSearchResponse
+from pynicotine.slskmessages import FileTransferInit
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStats
 from pynicotine.slskmessages import GetUserStatus
@@ -941,31 +940,28 @@ class NetworkThread(Thread):
         if sock is self._parent_socket and self._should_process_queue:
             self._send_have_no_parent()
 
-        elif self._is_download(conn_obj):
-            self._total_downloads -= 1
+        elif conn_obj.fileinit is not None:
+            if self._is_transferring_download(conn_obj):
+                self._total_downloads -= 1
 
-            if not self._total_downloads:
-                self._total_download_bandwidth = 0
+                if not self._total_downloads:
+                    self._total_download_bandwidth = 0
 
-            if callback:
-                events.emit_main_thread(
-                    "download-connection-closed", username=init.target_user, token=conn_obj.filedown.token)
+                self._calc_download_limit()
 
-            self._calc_download_limit()
+            elif self._is_transferring_upload(conn_obj):
+                self._total_uploads -= 1
 
-        elif self._is_upload(conn_obj):
-            self._total_uploads -= 1
+                if not self._total_uploads:
+                    self._total_upload_bandwidth = 0
 
-            if not self._total_uploads:
-                self._total_upload_bandwidth = 0
+                self._calc_upload_limit_function()
 
             if callback:
                 timed_out = (time.monotonic() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
-                    "upload-connection-closed", username=init.target_user, token=conn_obj.fileupl.token,
-                    timed_out=timed_out)
-
-            self._calc_upload_limit_function()
+                    "file-connection-closed", username=init.target_user, token=conn_obj.fileinit.token,
+                    sock=sock, timed_out=timed_out)
 
         elif init is not None:
             if callback:
@@ -1769,11 +1765,11 @@ class NetworkThread(Thread):
     # File Connection #
 
     @staticmethod
-    def _is_upload(conn_obj):
+    def _is_transferring_upload(conn_obj):
         return conn_obj.__class__ is PeerConnection and conn_obj.fileupl is not None
 
     @staticmethod
-    def _is_download(conn_obj):
+    def _is_transferring_download(conn_obj):
         return conn_obj.__class__ is PeerConnection and conn_obj.filedown is not None
 
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
@@ -1844,16 +1840,9 @@ class NetworkThread(Thread):
         should_close_connection = False
 
         if conn_obj.fileinit is None:
-            # Note that this would technically be a FileUploadInit message if the remote user
-            # uses the legacy file transfer system, where file upload connections are initiated
-            # by the user that requested a download. We have no easy way of determining this.
-            # Hence, we always assume that any incoming file init message is a
-            # FileDownloadInit message. Do NOT use these messages to determine if the
-            # transfer is a download or upload!
-
             msg_size = idx = 4
             msg = self._unpack_network_message(
-                FileDownloadInit, msg_buffer_mem[:msg_size], msg_size, "file", conn_obj.init)
+                FileTransferInit, msg_buffer_mem[:msg_size], msg_size, "file", conn_obj.init)
 
             if msg is not None and msg.token is not None:
                 self._emit_network_message_event(msg)
@@ -1937,7 +1926,7 @@ class NetworkThread(Thread):
             return
 
         # Pack file messages
-        if msg_class is FileUploadInit:
+        if msg_class is FileTransferInit:
             msg = self._pack_network_message(msg_obj)
 
             if msg is None:
@@ -2375,7 +2364,7 @@ class NetworkThread(Thread):
         conn_obj_established = self._conns.get(sock)
 
         if conn_obj_established is not None:
-            if self._is_download(conn_obj_established):
+            if self._is_transferring_download(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
 
             try:
@@ -2414,7 +2403,7 @@ class NetworkThread(Thread):
         conn_obj_established = self._conns.get(sock)
 
         if conn_obj_established is not None:
-            if self._is_upload(conn_obj_established):
+            if self._is_transferring_upload(conn_obj_established):
                 self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
 
             try:
@@ -2536,7 +2525,7 @@ class NetworkThread(Thread):
 
         del conn_obj.obuf[:bytes_send]
 
-        if self._is_upload(conn_obj) and conn_obj.fileupl.offset is not None:
+        if self._is_transferring_upload(conn_obj) and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
