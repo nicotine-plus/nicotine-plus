@@ -93,8 +93,8 @@ class UploadsTest(TestCase):
     def test_push_upload(self):
         """Verify that new uploads are prepended to the list."""
 
-        core.uploads.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
-        core.uploads.push_file("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
+        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
+        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
 
         transfer = list(core.uploads.transfers.values())[3]
 

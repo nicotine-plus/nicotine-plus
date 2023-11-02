@@ -3285,14 +3285,13 @@ class TransferRequest(PeerMessage):
     QueueUpload message for this purpose today.
     """
 
-    __slots__ = ("init", "direction", "token", "file", "realfile", "filesize")
+    __slots__ = ("init", "direction", "token", "file", "filesize")
 
-    def __init__(self, init=None, direction=None, token=None, file=None, filesize=None, realfile=None):
+    def __init__(self, init=None, direction=None, token=None, file=None, filesize=None):
         self.init = init
         self.direction = direction
         self.token = token
         self.file = file  # virtual file
-        self.realfile = realfile
         self.filesize = filesize
 
     def make_network_message(self):

@@ -1031,53 +1031,67 @@ class Uploads(Transfers):
 
         username = upload_candidate.username
 
+        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
+            # Either we are offline or the user we want to upload to is
+            if self._auto_clear_transfer(upload_candidate):
+                return
+
+            self._abort_transfer(upload_candidate, abort_reason="User logged off")
+            return
+
+        self.token = slskmessages.increment_token(self.token)
+        virtual_path = upload_candidate.virtual_path
+
         log.add_transfer(
-            "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
-                "file": upload_candidate.virtual_path,
+            "Checked upload queue, requesting to upload file %(file)s with token %(token)s to user %(user)s", {
+                "file": virtual_path,
+                "token": self.token,
                 "user": username
             }
         )
 
-        self.push_file(
-            username=username, virtual_path=upload_candidate.virtual_path, size=upload_candidate.size,
-            transfer=upload_candidate
-        )
+        self._dequeue_transfer(upload_candidate)
+        self._unfail_transfer(upload_candidate)
+        self._activate_transfer(upload_candidate, self.token)
 
-    def push_file(self, username, virtual_path, size, folder_path=None, transfer=None, locally_queued=False):
+        core.send_message_to_peer(
+            username, slskmessages.TransferRequest(
+                direction=slskmessages.TransferDirection.UPLOAD, token=self.token, file=virtual_path,
+                filesize=upload_candidate.size))
 
-        old_transfer = transfer or self.transfers.get(username + virtual_path)
+        self._update_transfer(upload_candidate)
+
+    def enqueue_upload(self, username, virtual_path, size, folder_path=None):
+
+        transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
-        size_attempt = self._get_file_size(real_path)
+        new_size = self._get_file_size(real_path)
         is_new_upload = False
 
-        if folder_path:
-            folder_path = os.path.normpath(folder_path)
-
-        if size_attempt > 0:
-            size = size_attempt
-
-        if old_transfer is not None and old_transfer in self.active_users.get(username, {}).values():
-            # Upload already in progress
-            return
+        if new_size > 0:
+            size = new_size
 
         if transfer is None:
             if not folder_path:
                 folder_path = os.path.dirname(real_path)
+            else:
+                folder_path = os.path.normpath(folder_path)
 
             transfer = Transfer(
                 username=username, virtual_path=virtual_path, folder_path=folder_path, size=size
             )
             is_new_upload = True
         else:
-            transfer.virtual_path = virtual_path
-            transfer.size = size
+            if transfer in self.active_users.get(username, {}).values():
+                # Upload already in progress
+                return
+
+            if virtual_path in self.queued_users.get(username, {}):
+                # Upload already queued
+                return
 
             self._unfail_transfer(transfer)
-
-        log.add_transfer("Initializing upload request for file %(file)s to user %(user)s", {
-            "file": virtual_path,
-            "user": username
-        })
+            transfer.size = size
 
         if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
             # Either we are offline or the user we want to upload to is
@@ -1085,22 +1099,6 @@ class Uploads(Transfers):
                 return
 
             self._abort_transfer(transfer, abort_reason="User logged off")
-
-        elif not locally_queued:
-            self.token = slskmessages.increment_token(self.token)
-            self._dequeue_transfer(transfer)
-            self._activate_transfer(transfer, self.token)
-
-            log.add_transfer("Requesting to upload file %(filename)s with token %(token)s to user %(user)s", {
-                "filename": virtual_path,
-                "token": transfer.token,
-                "user": username
-            })
-
-            core.send_message_to_peer(
-                username, slskmessages.TransferRequest(
-                    direction=slskmessages.TransferDirection.UPLOAD, token=transfer.token, file=virtual_path,
-                    filesize=size, realfile=real_path))
         else:
             self._enqueue_transfer(transfer)
 
@@ -1172,15 +1170,14 @@ class Uploads(Transfers):
             # Don't retry active or finished uploads
             return
 
-        if active_uploads:
+        if transfer not in self.queued_users.get(username, {}).values():
             # User already has an active upload, queue the retry attempt
-            if transfer not in self.queued_users.get(username, {}).values():
-                self._unfail_transfer(transfer)
-                self._enqueue_transfer(transfer)
-                self._update_transfer(transfer)
-            return
+            self._unfail_transfer(transfer)
+            self._enqueue_transfer(transfer)
+            self._update_transfer(transfer)
 
-        self.push_file(username, transfer.virtual_path, transfer.size, transfer=transfer)
+        if not active_uploads:
+            self.check_upload_queue()
 
     def retry_uploads(self, uploads):
         for upload in uploads:

@@ -266,12 +266,13 @@ class UserBrowse:
                 # Downloading a single folder, no need to continue
                 return
 
-    def upload_file(self, username, folder_path, file_data, locally_queued=False):
+    def upload_file(self, username, folder_path, file_data):
 
         _code, basename, file_size, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
+        core.uploads.enqueue_upload(username, file_path, size=file_size)
+        core.uploads.check_upload_queue()
 
     def upload_folder(self, username, requested_folder_path, local_shares, recurse=False):
 
@@ -286,18 +287,15 @@ class UserBrowse:
                 # Not a subfolder of the requested folder, skip
                 continue
 
-            if files:
-                locally_queued = False
-
-                for _code, basename, file_size, *_unused in files:
-                    file_path = "\\".join([folder_path, basename])
-
-                    core.uploads.push_file(username, file_path, size=file_size, locally_queued=locally_queued)
-                    locally_queued = True
+            for _code, basename, file_size, *_unused in files:
+                file_path = "\\".join([folder_path, basename])
+                core.uploads.enqueue_upload(username, file_path, size=file_size)
 
             if not recurse:
                 # Uploading a single folder, no need to continue
                 return
+
+        core.uploads.check_upload_queue()
 
     @staticmethod
     def get_soulseek_url(username, path):
