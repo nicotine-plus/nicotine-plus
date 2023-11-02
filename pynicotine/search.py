@@ -610,7 +610,7 @@ class Search:
 
         uploadspeed = core.uploads.upload_speed
         queuesize = core.uploads.get_upload_queue_size()
-        slotsavail = core.uploads.allow_new_uploads()
+        slotsavail = core.uploads.is_new_upload_accepted()
         fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResponse(

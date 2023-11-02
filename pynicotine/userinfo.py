@@ -151,7 +151,7 @@ class UserInfo:
 
             totalupl = core.uploads.get_total_uploads_allowed()
             queuesize = core.uploads.get_upload_queue_size()
-            slotsavail = core.uploads.allow_new_uploads()
+            slotsavail = core.uploads.is_new_upload_accepted()
 
             if config.sections["transfers"]["remotedownloads"]:
                 uploadallowed = config.sections["transfers"]["uploadallowed"]

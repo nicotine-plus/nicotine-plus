@@ -225,466 +225,6 @@ class Downloads(Transfers):
 
         core.send_message_to_network_thread(slskmessages.SetDownloadLimit(speed_limit))
 
-    # Events #
-
-    def _user_status(self, msg):
-        """Server code 7.
-
-        We get a status of a user and if he's online, we request a file
-        from him
-        """
-
-        update = False
-        username = msg.user
-
-        if msg.status == slskmessages.UserStatus.OFFLINE:
-            for users in (self.queued_users, self.failed_users):
-                for download in users.get(username, {}).copy().values():
-                    self._abort_transfer(download, abort_reason="User logged off")
-                    update = True
-
-            for download in self.active_users.get(username, {}).copy().values():
-                if download.status != "Transferring":
-                    self._abort_transfer(download, abort_reason="User logged off")
-                    update = True
-        else:
-            for download in self.failed_users.get(username, {}).copy().values():
-                self.get_file(username, download.virtual_path, transfer=download, ui_callback=False)
-                update = True
-
-        if update:
-            events.emit("update-downloads")
-
-    def _set_connection_stats(self, download_bandwidth=0, **_unused):
-        self.total_bandwidth = download_bandwidth
-
-    def _peer_connection_error(self, username, msgs=None, is_offline=False):
-
-        if msgs is None:
-            return
-
-        for msg in msgs:
-            if msg.__class__ is slskmessages.QueueUpload:
-                self._cant_connect_queue_file(username, msg.file, is_offline)
-
-    def _cant_connect_queue_file(self, username, virtual_path, is_offline):
-        """We can't connect to the user, either way (QueueUpload)."""
-
-        download = self.queued_users.get(username, {}).get(virtual_path)
-
-        if download is None:
-            return
-
-        log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
-            "filename": virtual_path,
-            "user": username
-        })
-
-        self._abort_transfer(download, abort_reason="User logged off" if is_offline else "Connection timeout")
-
-    def _folder_contents_response(self, msg, check_num_files=True):
-        """Peer code 37."""
-
-        username = msg.init.target_user
-
-        if username not in self.requested_folders:
-            return
-
-        for folder_path, files in msg.list.items():
-            if folder_path not in self.requested_folders[username]:
-                continue
-
-            log.add_transfer("Received response for folder content request from user %s", username)
-
-            num_files = len(files)
-
-            if check_num_files and num_files > 100:
-                events.emit("download-large-folder", username, folder_path, num_files, msg)
-                return
-
-            destination_folder_path = self.get_folder_destination(username, folder_path)
-            del self.requested_folders[username][folder_path]
-
-            if num_files > 1:
-                files.sort(key=lambda x: strxfrm(x[1]))
-
-            log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
-                              "Destination path: %(destination)s"), {
-                "folder": folder_path,
-                "user": username,
-                "destination": destination_folder_path
-            })
-
-            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
-                virtual_path = folder_path.rstrip("\\") + "\\" + basename
-
-                self.get_file(
-                    username, virtual_path, folder_path=destination_folder_path, size=file_size,
-                    file_attributes=file_attributes)
-
-    def _transfer_request(self, msg):
-        """Peer code 40."""
-
-        username = msg.init.target_user
-
-        if msg.direction != slskmessages.TransferDirection.UPLOAD:
-            return
-
-        response = self._transfer_request_downloads(msg)
-
-        log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
-                          "from user: %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
-            "token": response.token, "filename": msg.file, "user": username,
-            "allowed": response.allowed, "reason": response.reason
-        })
-
-        core.send_message_to_peer(username, response)
-
-    def _transfer_request_downloads(self, msg):
-
-        username = msg.init.target_user
-        virtual_path = msg.file
-        size = msg.filesize
-        token = msg.token
-
-        log.add_transfer("Received download request with token %(token)s for file %(filename)s from user %(user)s", {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
-
-        cancel_reason = "Cancelled"
-        accepted = True
-        download = self.transfers.get(username + virtual_path)
-
-        if download is not None:
-            status = download.status
-
-            if status == "Finished":
-                # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
-                cancel_reason = "Complete"
-                accepted = False
-
-            elif status in {"Paused", "Filtered"}:
-                accepted = False
-
-            else:
-                # Remote peer is signaling a transfer is ready, attempting to download it
-
-                # If the file is larger than 2GB, the SoulseekQt client seems to
-                # send a malformed file size (0 bytes) in the TransferRequest response.
-                # In that case, we rely on the cached, correct file size we received when
-                # we initially added the download.
-
-                self._unfail_transfer(download)
-                self._dequeue_transfer(download)
-
-                if size > 0:
-                    if download.size != size:
-                        # The remote user's file contents have changed since we queued the download
-                        download.size_changed = True
-
-                    download.size = size
-
-                self._activate_transfer(download, token)
-                self._update_transfer(download)
-
-                return slskmessages.TransferResponse(allowed=True, token=token)
-
-        if accepted and self.can_upload(username):
-            if self.get_complete_download_file_path(username, virtual_path, size):
-                # Check if download exists in our default download folder
-                cancel_reason = "Complete"
-            else:
-                # If this file is not in your download queue, then it must be
-                # a remotely initiated download and someone is manually uploading to you
-                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-                folder_path = os.path.join(
-                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
-
-                transfer = Transfer(
-                    username=username, virtual_path=virtual_path, folder_path=folder_path, size=size)
-
-                self._activate_transfer(transfer, token)
-                self._append_transfer(transfer)
-                self._update_transfer(transfer)
-
-                return slskmessages.TransferResponse(allowed=True, token=token)
-
-        log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
-            "user": username,
-            "msg": msg
-        })
-
-        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
-
-    def _transfer_timeout(self, transfer):
-
-        log.add_transfer("Download %(filename)s with token %(token)s for user %(user)s timed out", {
-            "filename": transfer.virtual_path,
-            "token": transfer.token,
-            "user": transfer.username
-        })
-
-        self._abort_transfer(transfer, abort_reason="Connection timeout")
-
-    def _download_file_error(self, username, token, error):
-        """Networking thread encountered a local file error for download."""
-
-        download = self.active_users.get(username, {}).get(token)
-
-        if download is None:
-            return
-
-        self._abort_transfer(download, abort_reason="Local file error")
-        log.add(_("Download I/O error: %s"), error)
-
-    def _file_download_init(self, msg):
-        """A peer is requesting to start uploading a file to us."""
-
-        username = msg.init.target_user
-        token = msg.token
-        download = self.active_users.get(username, {}).get(token)
-
-        if download is None:
-            # Support legacy transfer system (clients: old Nicotine+ versions, slskd)
-            # The user who requested the download initiates the file upload connection
-            # in this case, but we always assume an incoming file init message is
-            # FileDownloadInit
-
-            log.add_transfer(("Received unknown file download init message with token %s, checking if peer "
-                              "requested us to upload a file instead"), token)
-            events.emit("file-upload-init", msg)
-            return
-
-        virtual_path = download.virtual_path
-
-        log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
-                          "from user %(user)s"), {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
-
-        if download.sock is not None:
-            log.add_transfer("Download already has an existing file connection, ignoring init message")
-            core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
-            return
-
-        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
-        need_update = True
-        download.sock = msg.init.sock
-
-        try:
-            incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
-
-            if not os.path.isdir(incomplete_folder_path_encoded):
-                os.makedirs(incomplete_folder_path_encoded)
-
-            incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
-            file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
-
-            try:
-                import fcntl
-                try:
-                    fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                except OSError as error:
-                    log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
-            except ImportError:
-                pass
-
-            if download.size_changed:
-                # Remote user sent a different file size than we originally requested,
-                # wipe any existing data in the incomplete file to avoid corruption
-                file_handle.truncate(0)
-
-            # Seek to the end of the file for resuming the download
-            offset = file_handle.seek(0, os.SEEK_END)
-
-        except OSError as error:
-            log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
-                "folder_path": incomplete_folder_path,
-                "error": error
-            })
-            self._abort_transfer(download, abort_reason="Download folder error")
-            core.notifications.show_download_notification(
-                str(error), title=_("Download Folder Error"), high_priority=True)
-            need_update = False
-
-        else:
-            download.file_handle = file_handle
-            download.last_byte_offset = offset
-            download.last_update = time.monotonic()
-            download.start_time = download.last_update - download.time_elapsed
-
-            core.statistics.append_stat_value("started_downloads", 1)
-            core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
-
-            log.add_download(
-                _("Download started: user %(user)s, file %(file)s"), {
-                    "user": username,
-                    "file": file_handle.name.decode("utf-8", "replace")
-                }
-            )
-
-            if download.size > offset:
-                download.status = "Transferring"
-                core.send_message_to_network_thread(slskmessages.DownloadFile(
-                    init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
-                ))
-                core.send_message_to_network_thread(slskmessages.FileOffset(init=msg.init, offset=offset))
-
-            else:
-                self._finish_transfer(download)
-                need_update = False
-
-        events.emit("download-notification")
-
-        if need_update:
-            self._update_transfer(download)
-
-    def _upload_denied(self, msg):
-        """Peer code 50."""
-
-        username = msg.init.target_user
-        virtual_path = msg.file
-        reason = msg.reason
-        download = self.queued_users.get(username, {}).get(virtual_path)
-
-        if download is None:
-            return
-
-        if reason in {"Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"}:
-            # Don't allow internal statuses as reason
-            reason = "Cancelled"
-
-        if reason == "File not shared." and not download.legacy_attempt:
-            # The peer is possibly using an old client that doesn't support Unicode
-            # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
-
-            log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
-                             "Attempting to request file as latin-1.", {
-                                 "user": username,
-                                 "reason": reason,
-                                 "filename": virtual_path
-                             })
-
-            self._abort_transfer(download, abort_reason=None)
-            download.legacy_attempt = True
-            self.get_file(username, virtual_path, transfer=download)
-            return
-
-        self._abort_transfer(download, abort_reason=reason)
-        self._update_transfer(download)
-
-        log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
-            "user": username,
-            "filename": virtual_path,
-            "reason": msg.reason
-        })
-
-    def _upload_failed(self, msg):
-        """Peer code 46."""
-
-        username = msg.init.target_user
-        virtual_path = msg.file
-        download = self.transfers.get(username + virtual_path)
-
-        if download is None:
-            return
-
-        if download.token not in self.active_users.get(username, {}):
-            return
-
-        should_retry = not download.legacy_attempt
-
-        if should_retry:
-            # Attempt to request file name encoded as latin-1 once
-
-            self._abort_transfer(download, abort_reason=None)
-            download.legacy_attempt = True
-            self.get_file(username, virtual_path, transfer=download)
-            return
-
-        # Already failed once previously, give up
-        self._abort_transfer(download, abort_reason="Connection closed")
-
-        log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-            "filename": virtual_path,
-            "user": username,
-            "reason": download.status
-        })
-
-    def _file_download_progress(self, username, token, bytes_left):
-        """A file download is in progress."""
-
-        download = self.active_users.get(username, {}).get(token)
-
-        if download is None:
-            return
-
-        if download in self._transfer_request_times:
-            del self._transfer_request_times[download]
-
-        current_time = time.monotonic()
-        size = download.size
-
-        download.status = "Transferring"
-        download.time_elapsed = current_time - download.start_time
-        download.current_byte_offset = current_byte_offset = (size - bytes_left)
-        byte_difference = current_byte_offset - download.last_byte_offset
-
-        if byte_difference:
-            core.statistics.append_stat_value("downloaded_size", byte_difference)
-
-            if size > current_byte_offset or download.speed is None:
-                download.speed = int(max(0, byte_difference // max(0.1, current_time - download.last_update)))
-                download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
-            else:
-                download.time_left = 0
-
-        download.last_byte_offset = current_byte_offset
-        download.last_update = current_time
-
-        self._update_transfer(download)
-
-    def _download_connection_closed(self, username, token):
-        """A file download connection has closed for any reason."""
-
-        download = self.active_users.get(username, {}).get(token)
-
-        if download is None:
-            return
-
-        if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
-            self._finish_transfer(download)
-            return
-
-        status = None
-
-        if core.user_statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
-            status = "User logged off"
-        else:
-            status = "Cancelled"
-
-        self._abort_transfer(download, abort_reason=status)
-
-    def _place_in_queue_response(self, msg):
-        """Peer code 44.
-
-        The peer tells us our place in queue for a particular transfer
-        """
-
-        username = msg.init.target_user
-        virtual_path = msg.filename
-        download = self.queued_users.get(username, {}).get(virtual_path)
-
-        if download is None:
-            return
-
-        download.queue_position = msg.place
-        self._update_transfer(download, update_parent=False)
-
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
@@ -1173,3 +713,463 @@ class Downloads(Transfers):
             self._clear_transfer(download, update_parent=False)
 
         events.emit("clear-downloads", downloads, statuses, clear_deleted)
+
+    # Events #
+
+    def _user_status(self, msg):
+        """Server code 7.
+
+        We get a status of a user and if he's online, we request a file
+        from him
+        """
+
+        update = False
+        username = msg.user
+
+        if msg.status == slskmessages.UserStatus.OFFLINE:
+            for users in (self.queued_users, self.failed_users):
+                for download in users.get(username, {}).copy().values():
+                    self._abort_transfer(download, abort_reason="User logged off")
+                    update = True
+
+            for download in self.active_users.get(username, {}).copy().values():
+                if download.status != "Transferring":
+                    self._abort_transfer(download, abort_reason="User logged off")
+                    update = True
+        else:
+            for download in self.failed_users.get(username, {}).copy().values():
+                self.get_file(username, download.virtual_path, transfer=download, ui_callback=False)
+                update = True
+
+        if update:
+            events.emit("update-downloads")
+
+    def _set_connection_stats(self, download_bandwidth=0, **_unused):
+        self.total_bandwidth = download_bandwidth
+
+    def _peer_connection_error(self, username, msgs=None, is_offline=False):
+
+        if msgs is None:
+            return
+
+        for msg in msgs:
+            if msg.__class__ is slskmessages.QueueUpload:
+                self._cant_connect_queue_file(username, msg.file, is_offline)
+
+    def _cant_connect_queue_file(self, username, virtual_path, is_offline):
+        """We can't connect to the user, either way (QueueUpload)."""
+
+        download = self.queued_users.get(username, {}).get(virtual_path)
+
+        if download is None:
+            return
+
+        log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
+            "filename": virtual_path,
+            "user": username
+        })
+
+        self._abort_transfer(download, abort_reason="User logged off" if is_offline else "Connection timeout")
+
+    def _folder_contents_response(self, msg, check_num_files=True):
+        """Peer code 37."""
+
+        username = msg.init.target_user
+
+        if username not in self.requested_folders:
+            return
+
+        for folder_path, files in msg.list.items():
+            if folder_path not in self.requested_folders[username]:
+                continue
+
+            log.add_transfer("Received response for folder content request from user %s", username)
+
+            num_files = len(files)
+
+            if check_num_files and num_files > 100:
+                events.emit("download-large-folder", username, folder_path, num_files, msg)
+                return
+
+            destination_folder_path = self.get_folder_destination(username, folder_path)
+            del self.requested_folders[username][folder_path]
+
+            if num_files > 1:
+                files.sort(key=lambda x: strxfrm(x[1]))
+
+            log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
+                              "Destination path: %(destination)s"), {
+                "folder": folder_path,
+                "user": username,
+                "destination": destination_folder_path
+            })
+
+            for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                virtual_path = folder_path.rstrip("\\") + "\\" + basename
+
+                self.get_file(
+                    username, virtual_path, folder_path=destination_folder_path, size=file_size,
+                    file_attributes=file_attributes)
+
+    def _transfer_request(self, msg):
+        """Peer code 40."""
+
+        username = msg.init.target_user
+
+        if msg.direction != slskmessages.TransferDirection.UPLOAD:
+            return
+
+        response = self._transfer_request_downloads(msg)
+
+        log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
+                          "from user: %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
+            "token": response.token, "filename": msg.file, "user": username,
+            "allowed": response.allowed, "reason": response.reason
+        })
+
+        core.send_message_to_peer(username, response)
+
+    def _transfer_request_downloads(self, msg):
+
+        username = msg.init.target_user
+        virtual_path = msg.file
+        size = msg.filesize
+        token = msg.token
+
+        log.add_transfer("Received download request with token %(token)s for file %(filename)s from user %(user)s", {
+            "token": token,
+            "filename": virtual_path,
+            "user": username
+        })
+
+        cancel_reason = "Cancelled"
+        accepted = True
+        download = self.transfers.get(username + virtual_path)
+
+        if download is not None:
+            status = download.status
+
+            if status == "Finished":
+                # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
+                cancel_reason = "Complete"
+                accepted = False
+
+            elif status in {"Paused", "Filtered"}:
+                accepted = False
+
+            else:
+                # Remote peer is signaling a transfer is ready, attempting to download it
+
+                # If the file is larger than 2GB, the SoulseekQt client seems to
+                # send a malformed file size (0 bytes) in the TransferRequest response.
+                # In that case, we rely on the cached, correct file size we received when
+                # we initially added the download.
+
+                self._unfail_transfer(download)
+                self._dequeue_transfer(download)
+
+                if size > 0:
+                    if download.size != size:
+                        # The remote user's file contents have changed since we queued the download
+                        download.size_changed = True
+
+                    download.size = size
+
+                self._activate_transfer(download, token)
+                self._update_transfer(download)
+
+                return slskmessages.TransferResponse(allowed=True, token=token)
+
+        if accepted and self.can_upload(username):
+            if self.get_complete_download_file_path(username, virtual_path, size):
+                # Check if download exists in our default download folder
+                cancel_reason = "Complete"
+            else:
+                # If this file is not in your download queue, then it must be
+                # a remotely initiated download and someone is manually uploading to you
+                parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
+                folder_path = os.path.join(
+                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
+
+                transfer = Transfer(
+                    username=username, virtual_path=virtual_path, folder_path=folder_path, size=size)
+
+                self._activate_transfer(transfer, token)
+                self._append_transfer(transfer)
+                self._update_transfer(transfer)
+
+                return slskmessages.TransferResponse(allowed=True, token=token)
+
+        log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
+            "user": username,
+            "msg": msg
+        })
+
+        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
+
+    def _transfer_timeout(self, transfer):
+
+        log.add_transfer("Download %(filename)s with token %(token)s for user %(user)s timed out", {
+            "filename": transfer.virtual_path,
+            "token": transfer.token,
+            "user": transfer.username
+        })
+
+        self._abort_transfer(transfer, abort_reason="Connection timeout")
+
+    def _download_file_error(self, username, token, error):
+        """Networking thread encountered a local file error for download."""
+
+        download = self.active_users.get(username, {}).get(token)
+
+        if download is None:
+            return
+
+        self._abort_transfer(download, abort_reason="Local file error")
+        log.add(_("Download I/O error: %s"), error)
+
+    def _file_download_init(self, msg):
+        """A peer is requesting to start uploading a file to us."""
+
+        username = msg.init.target_user
+        token = msg.token
+        download = self.active_users.get(username, {}).get(token)
+
+        if download is None:
+            # Support legacy transfer system (clients: old Nicotine+ versions, slskd)
+            # The user who requested the download initiates the file upload connection
+            # in this case, but we always assume an incoming file init message is
+            # FileDownloadInit
+
+            log.add_transfer(("Received unknown file download init message with token %s, checking if peer "
+                              "requested us to upload a file instead"), token)
+            events.emit("file-upload-init", msg)
+            return
+
+        virtual_path = download.virtual_path
+
+        log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
+                          "from user %(user)s"), {
+            "token": token,
+            "filename": virtual_path,
+            "user": username
+        })
+
+        if download.sock is not None:
+            log.add_transfer("Download already has an existing file connection, ignoring init message")
+            core.send_message_to_network_thread(slskmessages.CloseConnection(msg.init.sock))
+            return
+
+        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
+        need_update = True
+        download.sock = msg.init.sock
+
+        try:
+            incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
+
+            if not os.path.isdir(incomplete_folder_path_encoded):
+                os.makedirs(incomplete_folder_path_encoded)
+
+            incomplete_file_path = self.get_incomplete_download_file_path(username, virtual_path)
+            file_handle = open(encode_path(incomplete_file_path), "ab+")  # pylint: disable=consider-using-with
+
+            try:
+                import fcntl
+                try:
+                    fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError as error:
+                    log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+            except ImportError:
+                pass
+
+            if download.size_changed:
+                # Remote user sent a different file size than we originally requested,
+                # wipe any existing data in the incomplete file to avoid corruption
+                file_handle.truncate(0)
+
+            # Seek to the end of the file for resuming the download
+            offset = file_handle.seek(0, os.SEEK_END)
+
+        except OSError as error:
+            log.add(_("Cannot save file in %(folder_path)s: %(error)s"), {
+                "folder_path": incomplete_folder_path,
+                "error": error
+            })
+            self._abort_transfer(download, abort_reason="Download folder error")
+            core.notifications.show_download_notification(
+                str(error), title=_("Download Folder Error"), high_priority=True)
+            need_update = False
+
+        else:
+            download.file_handle = file_handle
+            download.last_byte_offset = offset
+            download.last_update = time.monotonic()
+            download.start_time = download.last_update - download.time_elapsed
+
+            core.statistics.append_stat_value("started_downloads", 1)
+            core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
+
+            log.add_download(
+                _("Download started: user %(user)s, file %(file)s"), {
+                    "user": username,
+                    "file": file_handle.name.decode("utf-8", "replace")
+                }
+            )
+
+            if download.size > offset:
+                download.status = "Transferring"
+                core.send_message_to_network_thread(slskmessages.DownloadFile(
+                    init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
+                ))
+                core.send_message_to_network_thread(slskmessages.FileOffset(init=msg.init, offset=offset))
+
+            else:
+                self._finish_transfer(download)
+                need_update = False
+
+        events.emit("download-notification")
+
+        if need_update:
+            self._update_transfer(download)
+
+    def _upload_denied(self, msg):
+        """Peer code 50."""
+
+        username = msg.init.target_user
+        virtual_path = msg.file
+        reason = msg.reason
+        download = self.queued_users.get(username, {}).get(virtual_path)
+
+        if download is None:
+            return
+
+        if reason in {"Getting status", "Transferring", "Paused", "Filtered", "User logged off", "Finished"}:
+            # Don't allow internal statuses as reason
+            reason = "Cancelled"
+
+        if reason == "File not shared." and not download.legacy_attempt:
+            # The peer is possibly using an old client that doesn't support Unicode
+            # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
+
+            log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
+                             "Attempting to request file as latin-1.", {
+                                 "user": username,
+                                 "reason": reason,
+                                 "filename": virtual_path
+                             })
+
+            self._abort_transfer(download, abort_reason=None)
+            download.legacy_attempt = True
+            self.get_file(username, virtual_path, transfer=download)
+            return
+
+        self._abort_transfer(download, abort_reason=reason)
+        self._update_transfer(download)
+
+        log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
+            "user": username,
+            "filename": virtual_path,
+            "reason": msg.reason
+        })
+
+    def _upload_failed(self, msg):
+        """Peer code 46."""
+
+        username = msg.init.target_user
+        virtual_path = msg.file
+        download = self.transfers.get(username + virtual_path)
+
+        if download is None:
+            return
+
+        if download.token not in self.active_users.get(username, {}):
+            return
+
+        should_retry = not download.legacy_attempt
+
+        if should_retry:
+            # Attempt to request file name encoded as latin-1 once
+
+            self._abort_transfer(download, abort_reason=None)
+            download.legacy_attempt = True
+            self.get_file(username, virtual_path, transfer=download)
+            return
+
+        # Already failed once previously, give up
+        self._abort_transfer(download, abort_reason="Connection closed")
+
+        log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
+            "filename": virtual_path,
+            "user": username,
+            "reason": download.status
+        })
+
+    def _file_download_progress(self, username, token, bytes_left):
+        """A file download is in progress."""
+
+        download = self.active_users.get(username, {}).get(token)
+
+        if download is None:
+            return
+
+        if download in self._transfer_request_times:
+            del self._transfer_request_times[download]
+
+        current_time = time.monotonic()
+        size = download.size
+
+        download.status = "Transferring"
+        download.time_elapsed = current_time - download.start_time
+        download.current_byte_offset = current_byte_offset = (size - bytes_left)
+        byte_difference = current_byte_offset - download.last_byte_offset
+
+        if byte_difference:
+            core.statistics.append_stat_value("downloaded_size", byte_difference)
+
+            if size > current_byte_offset or download.speed is None:
+                download.speed = int(max(0, byte_difference // max(0.1, current_time - download.last_update)))
+                download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
+            else:
+                download.time_left = 0
+
+        download.last_byte_offset = current_byte_offset
+        download.last_update = current_time
+
+        self._update_transfer(download)
+
+    def _download_connection_closed(self, username, token):
+        """A file download connection has closed for any reason."""
+
+        download = self.active_users.get(username, {}).get(token)
+
+        if download is None:
+            return
+
+        if download.current_byte_offset is not None and download.current_byte_offset >= download.size:
+            self._finish_transfer(download)
+            return
+
+        status = None
+
+        if core.user_statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
+            status = "User logged off"
+        else:
+            status = "Cancelled"
+
+        self._abort_transfer(download, abort_reason=status)
+
+    def _place_in_queue_response(self, msg):
+        """Peer code 44.
+
+        The peer tells us our place in queue for a particular transfer
+        """
+
+        username = msg.init.target_user
+        virtual_path = msg.filename
+        download = self.queued_users.get(username, {}).get(virtual_path)
+
+        if download is None:
+            return
+
+        download.queue_position = msg.place
+        self._update_transfer(download, update_parent=False)
