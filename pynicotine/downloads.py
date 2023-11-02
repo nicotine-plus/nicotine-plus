@@ -410,11 +410,13 @@ class Downloads(Transfers):
         self._dequeue_transfer(transfer)
         self._unfail_transfer(transfer)
 
-        if abort_reason:
-            transfer.status = abort_reason
+        if not abort_reason:
+            return
 
-            if abort_reason not in {"Finished", "Filtered", "Paused"}:
-                self._fail_transfer(transfer)
+        transfer.status = abort_reason
+
+        if abort_reason not in {"Finished", "Filtered", "Paused"}:
+            self._fail_transfer(transfer)
 
         events.emit("abort-download", transfer, abort_reason, update_parent)
 

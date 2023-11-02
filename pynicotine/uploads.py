@@ -414,11 +414,13 @@ class Uploads(Transfers):
         self._dequeue_transfer(transfer)
         self._unfail_transfer(transfer)
 
-        if abort_reason:
-            transfer.status = abort_reason
+        if not abort_reason:
+            return
 
-            if abort_reason in {"Connection timeout", "User logged off"}:
-                self._fail_transfer(transfer)
+        transfer.status = abort_reason
+
+        if abort_reason in {"Connection timeout", "User logged off"}:
+            self._fail_transfer(transfer)
 
         events.emit("abort-upload", transfer, abort_reason, update_parent)
 
@@ -641,7 +643,6 @@ class Uploads(Transfers):
         transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
         new_size = self._get_file_size(real_path)
-        is_new_upload = False
 
         if new_size > 0:
             size = new_size
@@ -655,7 +656,7 @@ class Uploads(Transfers):
             transfer = Transfer(
                 username=username, virtual_path=virtual_path, folder_path=folder_path, size=size
             )
-            is_new_upload = True
+            self._append_transfer(transfer)
         else:
             if transfer in self.active_users.get(username, {}).values():
                 # Upload already in progress
@@ -674,12 +675,9 @@ class Uploads(Transfers):
                 return
 
             self._abort_transfer(transfer, abort_reason="User logged off")
-        else:
-            self._enqueue_transfer(transfer)
+            return
 
-        if is_new_upload:
-            self._append_transfer(transfer)
-
+        self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
         self._check_upload_queue()
 
