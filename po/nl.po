@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-01 08:31+0000\n"
+"PO-Revision-Date: 2023-11-01 23:15+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -270,7 +270,7 @@ msgid ""
 "will be queued ahead of those of non-privileged users."
 msgstr ""
 "Je hebt geen privileges. Ze zijn niet nodig, maar geven je voorrang in de "
-"download wachtrij."
+"download-wachtrij."
 
 #: pynicotine/core.py:574
 #, python-format
@@ -879,7 +879,7 @@ msgstr "Loggen"
 #: pynicotine/gtkgui/dialogs/preferences.py:79
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
-msgstr "Verbannen gebruikers"
+msgstr "Verbande gebruikers"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:80
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
@@ -1389,7 +1389,7 @@ msgstr "Artiest"
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:181
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:330
 msgid "Duration"
-msgstr "Looptijd"
+msgstr "Duur"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2529
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:281
@@ -1558,11 +1558,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/interests.py:71 pynicotine/gtkgui/userinfo.py:294
 msgid "Likes"
-msgstr "Houdt van"
+msgstr "Leuk"
 
 #: pynicotine/gtkgui/interests.py:83 pynicotine/gtkgui/userinfo.py:306
 msgid "Dislikes"
-msgstr "Houdt niet van"
+msgstr "Niet leuk"
 
 #: pynicotine/gtkgui/interests.py:96
 msgid "Rating"
@@ -2080,7 +2080,7 @@ msgstr "Geannuleerd"
 
 #: pynicotine/gtkgui/transfers.py:105
 msgid "Banned"
-msgstr "Verbannen"
+msgstr "Verband"
 
 #: pynicotine/gtkgui/transfers.py:106
 msgid "Too many files"
@@ -3913,7 +3913,7 @@ msgstr "Privéchat met gebruiker %s gesloten"
 #: pynicotine/plugins/core_commands/__init__.py:480
 #, python-format
 msgid "Banned %s"
-msgstr "Verbannen %s"
+msgstr "Verband %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:494
 #, python-format
@@ -4699,7 +4699,7 @@ msgstr "_Alles wissen…"
 
 #: pynicotine/gtkgui/ui/interests.ui:14
 msgid "Personal Interests"
-msgstr "Persoonlijke interesses"
+msgstr "Interesses"
 
 #: pynicotine/gtkgui/ui/interests.ui:33
 msgid "Add something you like…"
@@ -4707,7 +4707,7 @@ msgstr "Voeg iets toe dat je leuk vindt…"
 
 #: pynicotine/gtkgui/ui/interests.ui:55
 msgid "Personal Dislikes"
-msgstr "Persoonlijke ongenoegens"
+msgstr "Niet leuk"
 
 #: pynicotine/gtkgui/ui/interests.ui:73
 msgid "Add something you dislike…"
@@ -4836,8 +4836,8 @@ msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
-"Voer de naam van een gebruiker in om de beschrijving, informatie en "
-"persoonlijke foto te bekijken"
+"Voer de naam van een gebruiker in om de beschrijving, informatie en foto te "
+"bekijken"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1081
 msgid "Enter the username of the person you want to send a message to"
@@ -5322,7 +5322,7 @@ msgstr "Bitsnelheid, b.v. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:62
 msgid "Duration…"
-msgstr "Looptijd…"
+msgstr "Duur…"
 
 #: pynicotine/gtkgui/ui/search.ui:64
 #: pynicotine/gtkgui/ui/settings/search.ui:320
@@ -5925,7 +5925,7 @@ msgstr "Geef prioriteit aan alle vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:290
 msgid "Queue Limits"
-msgstr "Wachtrijlimieten"
+msgstr "Wachtrij-limieten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
 msgid "Maximum number of queued files per user:"
@@ -6246,7 +6246,7 @@ msgstr "Interesses bewerken"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:671
 msgid "Save _Picture"
-msgstr "Bewaar _Beeld"
+msgstr "Bewaar _foto"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:710
 msgid "_Refresh Profile"
