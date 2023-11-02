@@ -3281,8 +3281,8 @@ class TransferRequest(PeerMessage):
     recipient, either allowing or rejecting the upload attempt.
 
     This message was formerly used to send a download request (direction
-    0) as well, but Nicotine+, Museek+ and the official clients use the
-    QueueUpload message for this purpose today.
+    0) as well, but Nicotine+ >= 3.0.3, Museek+ and the official clients
+    use the QueueUpload message for this purpose today.
     """
 
     __slots__ = ("init", "direction", "token", "file", "filesize")
@@ -3516,14 +3516,12 @@ class FileMessage(SlskMessage):
 
 
 class FileTransferInit(FileMessage):
-    """We receive this from a peer via a 'F' connection when they want to start
-    uploading a file to us.
-
-    We send this to a peer via a 'F' connection to tell them that we want to
-    start uploading a file.
-
-    The token is the same as the one previously included in the
+    """We send this to a peer via a 'F' connection to tell them that we want to
+    start uploading a file. The token is the same as the one previously included in the
     TransferRequest peer message.
+
+    Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send this
+    message when initializing our file upload connection from their end.
     """
 
     __slots__ = ("init", "token", "is_outgoing")
@@ -3542,9 +3540,12 @@ class FileTransferInit(FileMessage):
 
 class FileOffset(FileMessage):
     """We send this to the uploading peer at the beginning of a 'F' connection,
-    to tell them how many bytes of the file we've previously downloaded.
+    to tell them how many bytes of the file we've previously downloaded. If nothing
+    was downloaded, the offset is 0.
 
-    If none, the offset is 0.
+    Note that Soulseek NS fails to read the size of an incomplete download if more
+    than 2 GB of the file has been downloaded, and the download is resumed. In
+    consequence, the client sends an invalid file offset of -1.
     """
 
     __slots__ = ("init", "offset")

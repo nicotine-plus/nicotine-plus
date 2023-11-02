@@ -2239,7 +2239,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
 
 This message is sent by a peer once they are ready to start uploading a file to us. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
 
-This message was formerly used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
+This message was formerly used to send a download request (direction 0) as well, but Nicotine+ >= 3.0.3, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
 
 ### Data Order
 
@@ -2424,11 +2424,9 @@ File messages are sent to peers over a 'F' connection, and do not have messages 
 
 ### FileTransferInit
 
-We receive this from a peer via a 'F' connection when they want to start uploading a file to us.
+We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
-We send this to a peer via a 'F' connection to tell them that we want to start uploading a file.
-
-The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
+Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send this message when initializing our file upload connection from their end.
 
 ### Data Order
 
@@ -2441,9 +2439,9 @@ The token is the same as the one previously included in the [TransferRequest](#p
 
 ### FileOffset
 
-We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If nothing was downloaded, the offset is 0.
 
-Soulseek NS fails to read the size of an incomplete file if more than 2 GB of the file has been downloaded by them, and their download pauses and later resumes. The legacy client then sends us an invalid file offset of -1.
+Note that Soulseek NS fails to read the size of an incomplete download if more than 2 GB of the file has been downloaded, and the download is resumed. In consequence, the client sends an invalid file offset of -1.
 
 ### Data Order
 
