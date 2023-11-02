@@ -85,13 +85,13 @@ class Search:
     def request_folder_download(self, username, folder_path, visible_files, download_folder_path=None):
 
         # Ask for the rest of the files in the folder
-        core.downloads.get_folder(username, folder_path, download_folder_path=download_folder_path)
+        core.downloads.enqueue_folder(username, folder_path, download_folder_path=download_folder_path)
 
         # Queue the visible search results
         destination_folder_path = core.downloads.get_folder_destination(username, folder_path)
 
         for file_path, size, file_attributes, *_unused in visible_files:
-            core.downloads.get_file(
+            core.downloads.enqueue_download(
                 username, file_path, folder_path=destination_folder_path, size=size, file_attributes=file_attributes)
 
     # Outgoing Search Requests #

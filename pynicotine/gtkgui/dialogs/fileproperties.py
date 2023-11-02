@@ -159,7 +159,7 @@ class FileProperties(Dialog):
 
         properties = self.properties[self.current_index]
 
-        core.downloads.get_file(
+        core.downloads.enqueue_download(
             properties["user"], properties["file_path"], size=properties["size"],
             file_attributes=properties.get("file_attributes")
         )

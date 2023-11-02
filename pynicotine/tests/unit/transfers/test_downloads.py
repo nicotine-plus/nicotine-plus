@@ -116,7 +116,7 @@ class DownloadsTest(TestCase):
 
         config.sections["transfers"]["usernamesubfolders"] = False
 
-        core.downloads.get_file("newuser", "Hello\\Path\\File.mp3", "")
+        core.downloads.enqueue_download("newuser", "Hello\\Path\\File.mp3", "")
         transfer = list(core.downloads.transfers.values())[-1]
 
         self.assertEqual(transfer.username, "newuser")

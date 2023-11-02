@@ -233,7 +233,7 @@ class UserBrowse:
         _code, basename, file_size, _ext, file_attributes, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.downloads.get_file(
+        core.downloads.enqueue_download(
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
     def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False):
@@ -258,7 +258,7 @@ class UserBrowse:
                 for _code, basename, file_size, _ext, file_attributes, *_unused in files:
                     file_path = "\\".join([folder_path, basename])
 
-                    core.downloads.get_file(
+                    core.downloads.enqueue_download(
                         username, file_path, folder_path=destination_folder_path, size=file_size,
                         file_attributes=file_attributes)
 

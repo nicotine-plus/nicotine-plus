@@ -1527,7 +1527,7 @@ class Search:
             size = self.tree_view.get_row_value(iterator, "size_data")
             file_attributes = self.tree_view.get_row_value(iterator, "file_attributes_data")
 
-            core.downloads.get_file(
+            core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
     def on_download_files_to_selected(self, selected_folder_path, _data):
