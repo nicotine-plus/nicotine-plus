@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-02 07:19+0000\n"
+"PO-Revision-Date: 2023-11-02 21:20+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -2255,7 +2255,7 @@ msgstr "Map uploaden naar gebruiker"
 
 #: pynicotine/gtkgui/userbrowse.py:873 pynicotine/gtkgui/userbrowse.py:1067
 msgid "Enter the name of the user you want to upload to:"
-msgstr "Voer de naam in van de gebruiker waarnaar je wilt uploaden:"
+msgstr "Voer de naam in van de gebruiker waarnaar je wil uploaden:"
 
 #: pynicotine/gtkgui/userbrowse.py:874 pynicotine/gtkgui/userbrowse.py:1068
 msgid "_Upload"
