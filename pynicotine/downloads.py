@@ -855,45 +855,41 @@ class Downloads(Transfers):
             "user": username
         })
 
-        cancel_reason = "Cancelled"
-        accepted = True
-        download = self.transfers.get(username + virtual_path)
+        download = (self.queued_users.get(username, {}).get(virtual_path)
+                    or self.failed_users.get(username, {}).get(virtual_path))
 
         if download is not None:
-            status = download.status
+            # Remote peer is signaling a transfer is ready, attempting to download it
 
-            if status == "Finished":
+            # If the file is larger than 2GB, the SoulseekQt client seems to
+            # send a malformed file size (0 bytes) in the TransferRequest response.
+            # In that case, we rely on the cached, correct file size we received when
+            # we initially added the download.
+
+            self._unfail_transfer(download)
+            self._dequeue_transfer(download)
+
+            if size > 0:
+                if download.size != size:
+                    # The remote user's file contents have changed since we queued the download
+                    download.size_changed = True
+
+                download.size = size
+
+            self._activate_transfer(download, token)
+            self._update_transfer(download)
+
+            return slskmessages.TransferResponse(allowed=True, token=token)
+
+        download = self.transfers.get(username + virtual_path)
+        cancel_reason = "Cancelled"
+
+        if download is not None:
+            if download.status == "Finished":
                 # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
                 cancel_reason = "Complete"
-                accepted = False
 
-            elif status in {"Paused", "Filtered"}:
-                accepted = False
-
-            else:
-                # Remote peer is signaling a transfer is ready, attempting to download it
-
-                # If the file is larger than 2GB, the SoulseekQt client seems to
-                # send a malformed file size (0 bytes) in the TransferRequest response.
-                # In that case, we rely on the cached, correct file size we received when
-                # we initially added the download.
-
-                self._unfail_transfer(download)
-                self._dequeue_transfer(download)
-
-                if size > 0:
-                    if download.size != size:
-                        # The remote user's file contents have changed since we queued the download
-                        download.size_changed = True
-
-                    download.size = size
-
-                self._activate_transfer(download, token)
-                self._update_transfer(download)
-
-                return slskmessages.TransferResponse(allowed=True, token=token)
-
-        if accepted and self.can_upload(username):
+        elif self.can_upload(username):
             if self.get_complete_download_file_path(username, virtual_path, size):
                 # Check if download exists in our default download folder
                 cancel_reason = "Complete"
