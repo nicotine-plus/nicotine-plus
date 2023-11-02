@@ -53,7 +53,6 @@ class Downloads(Transfers):
         self._download_queue_timer_id = None
         self._retry_connection_downloads_timer_id = None
         self._retry_io_downloads_timer_id = None
-        self._retry_limited_downloads_timer_id = None
 
         for event_name, callback in (
             ("download-file-error", self._download_file_error),
@@ -102,10 +101,6 @@ class Downloads(Transfers):
         self._retry_io_downloads_timer_id = events.schedule(
             delay=900, callback=self._retry_failed_io_downloads, repeat=True)
 
-        # Re-queue limited downloads every 12 minutes
-        self._retry_limited_downloads_timer_id = events.schedule(
-            delay=720, callback=self._retry_limited_downloads, repeat=True)
-
     def _server_disconnect(self, msg):
 
         super()._server_disconnect(msg)
@@ -113,8 +108,7 @@ class Downloads(Transfers):
         for timer_id in (
             self._download_queue_timer_id,
             self._retry_connection_downloads_timer_id,
-            self._retry_io_downloads_timer_id,
-            self._retry_limited_downloads_timer_id
+            self._retry_io_downloads_timer_id
         ):
             events.cancel_scheduled(timer_id)
 
@@ -278,6 +272,31 @@ class Downloads(Transfers):
             super()._enqueue_transfer(transfer)
             core.send_message_to_peer(
                 username, slskmessages.QueueUpload(file=virtual_path, legacy_client=transfer.legacy_attempt))
+
+    def _enqueue_limited_transfers(self, username):
+
+        num_limited_transfers = 0
+        queue_size_limit = self._user_queue_limits.get(username)
+
+        if queue_size_limit is None:
+            return
+
+        for download in self.failed_users.get(username, {}).copy().values():
+            if download.status != "Queued":
+                continue
+
+            if num_limited_transfers >= queue_size_limit:
+                # Only enqueue a small number of downloads at a time
+                return
+
+            self._unfail_transfer(download)
+            self._enqueue_transfer(download)
+            self._update_transfer(download)
+
+            num_limited_transfers += 1
+
+        # No more limited downloads
+        del self._user_queue_limits[username]
 
     def _file_downloaded_actions(self, username, file_path):
 
@@ -464,24 +483,6 @@ class Downloads(Transfers):
             for download in failed_downloads.copy().values():
                 if download.status not in statuses:
                     continue
-
-                self._unfail_transfer(download)
-                self._enqueue_transfer(download)
-                self._update_transfer(download)
-
-    def _retry_limited_downloads(self):
-
-        statuses = {"Too many files", "Too many megabytes"}
-
-        for failed_downloads in self.failed_users.copy().values():
-            for download in failed_downloads.copy().values():
-                if download.status not in statuses and not download.status.startswith("User limit of"):
-                    continue
-
-                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
-                    "filename": download.virtual_path,
-                    "user": download.username
-                })
 
                 self._unfail_transfer(download)
                 self._enqueue_transfer(download)
@@ -1040,7 +1041,8 @@ class Downloads(Transfers):
         username = msg.init.target_user
         virtual_path = msg.file
         reason = msg.reason
-        download = self.queued_users.get(username, {}).get(virtual_path)
+        queued_downloads = self.queued_users.get(username, {})
+        download = queued_downloads.get(virtual_path)
 
         if download is None:
             return
@@ -1068,6 +1070,11 @@ class Downloads(Transfers):
             self._enqueue_transfer(download)
             self._update_transfer(download)
             return
+
+        if reason in {"Too many files", "Too many megabytes"} or reason.startswith("User limit of"):
+            # Make limited downloads appear as queued, and automatically resume them later
+            reason = "Queued"
+            self._user_queue_limits[username] = max(5, len(queued_downloads) - 1)
 
         self._abort_transfer(download, abort_reason=reason)
         self._update_transfer(download)

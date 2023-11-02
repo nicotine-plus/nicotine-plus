@@ -103,8 +103,6 @@ class Transfers:
             "Finished": _("Finished"),
             "Filtered": _("Filtered"),
             "Banned": _("Banned"),
-            "Too many files": _("Too many files"),
-            "Too many megabytes": _("Too many megabytes"),
             "File not shared": _("File not shared"),
             "File not shared.": _("File not shared"),
             "Download folder error": _("Download folder error"),
@@ -752,7 +750,7 @@ class Transfers:
         raise NotImplementedError
 
     def abort_transfer(self, transfer, status_message=None, update_parent=True):
-        if status_message is not None:
+        if status_message is not None and status_message != "Queued":
             self.update_model(transfer, update_parent=update_parent)
 
     def abort_transfers(self, _transfers, _status_message=None):

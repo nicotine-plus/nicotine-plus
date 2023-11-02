@@ -84,6 +84,7 @@ class Transfers:
         self.total_queue_size = 0
 
         self._allow_saving_transfers = False
+        self._user_queue_limits = defaultdict(int)
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -132,6 +133,8 @@ class Transfers:
         self.queued_transfers.clear()
         self.queued_users.clear()
         self.active_users.clear()
+        self._user_queue_limits.clear()
+
         self.total_bandwidth = 0
         self.total_queue_size = 0
 
@@ -359,6 +362,9 @@ class Transfers:
         self.queued_users[transfer.username][transfer.virtual_path] = transfer
         self.queued_transfers[transfer] = None
 
+    def _enqueue_limited_transfers(self, username):
+        raise NotImplementedError
+
     def _dequeue_transfer(self, transfer):
 
         username = transfer.username
@@ -367,15 +373,17 @@ class Transfers:
         if virtual_path not in self.queued_users.get(username, {}):
             return
 
-        self.total_queue_size -= transfer.size
-
         del self.queued_transfers[transfer]
         del self.queued_users[username][virtual_path]
 
         if not self.queued_users[username]:
             del self.queued_users[username]
 
+            # No more queued transfers, resume limited transfers if present
+            self._enqueue_limited_transfers(username)
+
         transfer.queue_position = 0
+        self.total_queue_size -= transfer.size
 
     def _activate_transfer(self, transfer, token):
 

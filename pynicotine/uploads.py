@@ -211,10 +211,10 @@ class Uploads(Transfers):
         file_limit = config.sections["transfers"]["filelimit"]
         queue_size_limit = config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        if file_limit and len(self.queued_users.get(username, {})) >= file_limit:
+        if len(self.queued_users.get(username, {})) >= file_limit >= 1:
             return True, "Too many files"
 
-        if queue_size_limit and self.total_queue_size >= queue_size_limit:
+        if self.total_queue_size >= queue_size_limit >= 1:
             return True, "Too many megabytes"
 
         return False, None
@@ -355,6 +355,10 @@ class Uploads(Transfers):
             return
 
         self._update_user_counter(username)
+
+    def _enqueue_limited_transfers(self, username):
+        # Not used for uploads
+        pass
 
     def _finish_transfer(self, transfer):
 
