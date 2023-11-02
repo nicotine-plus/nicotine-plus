@@ -862,8 +862,8 @@ class Uploads(Transfers):
         transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
                             size=self._get_file_size(real_path))
 
-        self._enqueue_transfer(transfer)
         self._append_transfer(transfer)
+        self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
 
         core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
@@ -929,8 +929,8 @@ class Uploads(Transfers):
                 username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
                 size=self._get_file_size(real_path))
 
-            self._enqueue_transfer(transfer)
             self._append_transfer(transfer)
+            self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
 
             return slskmessages.TransferResponse(allowed=False, reason="Queued", token=token)
@@ -940,8 +940,8 @@ class Uploads(Transfers):
         transfer = Transfer(
             username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path), size=size)
 
-        self._activate_transfer(transfer, token)
         self._append_transfer(transfer)
+        self._activate_transfer(transfer, token)
         self._update_transfer(transfer)
 
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)

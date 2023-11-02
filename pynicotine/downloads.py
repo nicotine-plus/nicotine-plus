@@ -149,11 +149,11 @@ class Downloads(Transfers):
             load_func = self._load_legacy_transfers_file
 
         for transfer in self._get_stored_transfers(transfers_file_path, load_func):
+            self._append_transfer(transfer)
+
             if transfer.status == "User logged off":
                 # Mark transfer as failed in order to resume it when connected
                 self._fail_transfer(transfer)
-
-            self._append_transfer(transfer)
 
     # Filters/Limits #
 
@@ -653,8 +653,8 @@ class Downloads(Transfers):
             size=size, file_attributes=file_attributes
         )
 
-        self._enqueue_transfer(transfer, bypass_filter=bypass_filter)
         self._append_transfer(transfer)
+        self._enqueue_transfer(transfer, bypass_filter=bypass_filter)
         self._update_transfer(transfer)
 
     def retry_download(self, transfer, bypass_filter=False):
@@ -898,8 +898,8 @@ class Downloads(Transfers):
                 transfer = Transfer(
                     username=username, virtual_path=virtual_path, folder_path=folder_path, size=size)
 
-                self._activate_transfer(transfer, token)
                 self._append_transfer(transfer)
+                self._activate_transfer(transfer, token)
                 self._update_transfer(transfer)
 
                 return slskmessages.TransferResponse(allowed=True, token=token)
