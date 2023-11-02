@@ -48,6 +48,8 @@ class Downloads(Transfers):
         self.requested_folders = defaultdict(dict)
         self.requested_folder_token = 0
 
+        self._folder_basename_byte_limits = {}
+
         self._download_queue_timer_id = None
         self._retry_connection_downloads_timer_id = None
         self._retry_io_downloads_timer_id = None
@@ -77,6 +79,7 @@ class Downloads(Transfers):
 
         super()._quit()
 
+        self._folder_basename_byte_limits.clear()
         self.requested_folder_token = 0
 
     def _server_login(self, msg):
@@ -536,11 +539,16 @@ class Downloads(Transfers):
 
     def get_basename_byte_limit(self, folder_path):
 
-        try:
-            max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
+        max_bytes = self._folder_basename_byte_limits.get(folder_path)
 
-        except (AttributeError, OSError):
-            max_bytes = 255
+        if max_bytes is None:
+            try:
+                max_bytes = os.statvfs(encode_path(folder_path)).f_namemax
+
+            except (AttributeError, OSError):
+                max_bytes = 255
+
+            self._folder_basename_byte_limits[folder_path] = max_bytes
 
         return max_bytes
 
