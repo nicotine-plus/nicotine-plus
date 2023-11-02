@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-29 05:18+0000\n"
+"PO-Revision-Date: 2023-11-02 07:05+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -965,9 +965,8 @@ msgstr "Semmi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:280
 #: pynicotine/gtkgui/dialogs/preferences.py:760
-#, fuzzy
 msgid "Open File"
-msgstr "Következő fájl"
+msgstr "Fájl megnyitása"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:281
 #: pynicotine/gtkgui/dialogs/preferences.py:761
@@ -1508,7 +1507,7 @@ msgstr "Befejezett"
 
 #: pynicotine/gtkgui/downloads.py:67 pynicotine/gtkgui/transfers.py:102
 msgid "Paused"
-msgstr "Megállított"
+msgstr "Szüneteltetett"
 
 #: pynicotine/gtkgui/downloads.py:68 pynicotine/gtkgui/transfers.py:104
 msgid "Filtered"
@@ -1593,7 +1592,7 @@ msgstr "Ez tet_szik nekem"
 #: pynicotine/gtkgui/interests.py:183 pynicotine/gtkgui/interests.py:479
 #: pynicotine/gtkgui/userinfo.py:324
 msgid "I _Dislike This"
-msgstr "E_z nem tetszik nekem"
+msgstr "Ez nem tets_zik nekem"
 
 #: pynicotine/gtkgui/interests.py:185
 msgid "_Recommendations for Item"
@@ -2123,9 +2122,8 @@ msgid "Time Left"
 msgstr "Hátralévő idő"
 
 #: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:353
-#, fuzzy
 msgid "_Open File"
-msgstr "_Nyílt lista"
+msgstr "Fá_jl megnyitása"
 
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
@@ -2527,13 +2525,12 @@ msgid "Video"
 msgstr "Videó"
 
 #: pynicotine/gtkgui/widgets/theme.py:374
-#, fuzzy
 msgid "Document"
-msgstr "Dokumentum/Szöveg"
+msgstr "Dokumentum"
 
 #: pynicotine/gtkgui/widgets/theme.py:375
 msgid "Text"
-msgstr ""
+msgstr "Szöveg"
 
 #: pynicotine/gtkgui/widgets/theme.py:479
 #, python-format
@@ -2627,21 +2624,20 @@ msgid "Do you really want to exit? %s"
 msgstr "Valóban ki akar lépni? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
-msgstr ""
-"A(z) %s felhasználó már létezik és a megadott jelszó érvénytelen. Kérem "
-"válasszon másik felhasználónevet ha először jelentkezik be."
+msgstr "A(z) %s felhasználó már létezik, és a megadott jelszó érvénytelen."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
 msgstr ""
+"Ha másik felhasználónévvel vagy jelszóval szeretne bejelentkezni, írja be a "
+"következőt: %s."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Jelszó:"
+msgstr "Jelszó: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2654,9 +2650,8 @@ msgstr ""
 "jelszót. Ha már rendelkezik fiókkal, adja meg a bejelentkezési adatait."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Felhasználónév:"
+msgstr "Felhasználónév: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -3759,14 +3754,12 @@ msgid "List available commands"
 msgstr "Az elérhető parancsok listája"
 
 #: pynicotine/plugins/core_commands/__init__.py:50
-#, fuzzy
 msgid "Connect to the server"
-msgstr "Nem sikerült csatlakozni a kiszolgálóhoz. Az ok: %s"
+msgstr "Csatlakozás a kiszolgálóhoz"
 
 #: pynicotine/plugins/core_commands/__init__.py:54
-#, fuzzy
 msgid "Disconnect from the server"
-msgstr "Lekapcsolódva a szerverről %(host)s:%(port)s"
+msgstr "Lekapcsolódás a kiszolgálóról"
 
 #: pynicotine/plugins/core_commands/__init__.py:59
 msgid "Toggle away status"
@@ -4592,11 +4585,11 @@ msgstr "Találat"
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:211
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:272
 msgid "Find Next Match"
-msgstr "A következő egyezés keresése"
+msgstr "A következő egyező találat"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:218
 msgid "Find Previous Match"
-msgstr "Keresse meg az előző egyezést"
+msgstr "Az előző egyező találat"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:226
 msgid "File Transfers"
@@ -5788,8 +5781,8 @@ msgid ""
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"A privát megosztás fájljainak, amelyeket mindenki számára láthatóvá tettek, "
-"az előtagja [PRIVÁT], és addig nem tölthetők le, amíg a feltöltő erre "
+"A privát megosztás fájljainak - amelyeket mindenki számára láthatóvá tettek -"
+" az előtagja [PRIVÁT], és addig nem tölthetők le amíg a feltöltő erre "
 "kifejezetten engedélyt nem ad. Kérdezd meg őt kedvesen."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
@@ -5995,6 +5988,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Adjon hozzá olyan dolgokat, amelyeket mindenkivek közölni szeretne, például "
+"egy rövid leírást, hasznos tippeket vagy útmutatókat a megosztásai "
+"letöltéséhez."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"

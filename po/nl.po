@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-01 08:31+0000\n"
+"PO-Revision-Date: 2023-11-02 07:19+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -270,7 +270,7 @@ msgid ""
 "will be queued ahead of those of non-privileged users."
 msgstr ""
 "Je hebt geen privileges. Ze zijn niet nodig, maar geven je voorrang in de "
-"download wachtrij."
+"download-wachtrij."
 
 #: pynicotine/core.py:574
 #, python-format
@@ -879,7 +879,7 @@ msgstr "Loggen"
 #: pynicotine/gtkgui/dialogs/preferences.py:79
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
-msgstr "Verbannen gebruikers"
+msgstr "Verbande gebruikers"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:80
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
@@ -1389,7 +1389,7 @@ msgstr "Artiest"
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:181
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:330
 msgid "Duration"
-msgstr "Looptijd"
+msgstr "Duur"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2529
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:281
@@ -1558,11 +1558,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/interests.py:71 pynicotine/gtkgui/userinfo.py:294
 msgid "Likes"
-msgstr "Houdt van"
+msgstr "Leuk"
 
 #: pynicotine/gtkgui/interests.py:83 pynicotine/gtkgui/userinfo.py:306
 msgid "Dislikes"
-msgstr "Houdt niet van"
+msgstr "Niet leuk"
 
 #: pynicotine/gtkgui/interests.py:96
 msgid "Rating"
@@ -2080,7 +2080,7 @@ msgstr "Geannuleerd"
 
 #: pynicotine/gtkgui/transfers.py:105
 msgid "Banned"
-msgstr "Verbannen"
+msgstr "Verband"
 
 #: pynicotine/gtkgui/transfers.py:106
 msgid "Too many files"
@@ -2096,7 +2096,7 @@ msgstr "Bestand niet gedeeld"
 
 #: pynicotine/gtkgui/transfers.py:110
 msgid "Download folder error"
-msgstr "Download map fout"
+msgstr "Fout in downloadmap"
 
 #: pynicotine/gtkgui/transfers.py:111
 msgid "Local file error"
@@ -2129,7 +2129,7 @@ msgstr "_Open bestand"
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
 msgid "Open in File _Manager"
-msgstr "Open in Bestands_Manager"
+msgstr "Open in Bestands_manager"
 
 #: pynicotine/gtkgui/transfers.py:238
 msgid "_Clear"
@@ -2173,7 +2173,7 @@ msgstr "Uploads in wachtrij wissen"
 
 #: pynicotine/gtkgui/uploads.py:115
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Wil je echt alle uploads in de wachtrij wissen?"
+msgstr "Wil je écht alle uploads in de wachtrij wissen?"
 
 #: pynicotine/gtkgui/uploads.py:127
 msgid "Clear All Uploads"
@@ -2181,7 +2181,7 @@ msgstr "Alle uploads wissen"
 
 #: pynicotine/gtkgui/uploads.py:128
 msgid "Do you really want to clear all uploads?"
-msgstr "Wil je echt alle uploads wissen?"
+msgstr "Wil je écht alle uploads wissen?"
 
 #: pynicotine/gtkgui/userbrowse.py:261
 msgid "_Save Shares List to Disk"
@@ -2197,7 +2197,7 @@ msgstr "Upload map en submappen…"
 
 #: pynicotine/gtkgui/userbrowse.py:277 pynicotine/gtkgui/userbrowse.py:291
 msgid "Copy _Folder Path"
-msgstr "Kopieer _Map Pad"
+msgstr "Kopieer pad van _Map"
 
 #: pynicotine/gtkgui/userbrowse.py:284 pynicotine/gtkgui/userbrowse.py:367
 msgid "_Download Folder"
@@ -2271,16 +2271,16 @@ msgstr "Upload bestand(en) naar gebruiker"
 
 #: pynicotine/gtkgui/userinfo.py:338
 msgid "Copy Picture"
-msgstr "Afbeelding kopiëren"
+msgstr "Kopieer afbeelding"
 
 #: pynicotine/gtkgui/userinfo.py:339
 msgid "Save Picture"
-msgstr "Sla de afbeelding op"
+msgstr "Afbeelding opslaan"
 
 #: pynicotine/gtkgui/userinfo.py:419
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "Kan gebruikers afbeelding niet laden %(user)s: %(error)s"
+msgstr "Kan gebruikersafbeelding niet laden %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:430
 msgid ""
@@ -2480,7 +2480,7 @@ msgstr "Vul het aantal dagen in."
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
-"Geef dagen van uw Soulseek-privileges aan gebruiker %(user)s (%(days_left)s):"
+"Geef dagen van je Soulseek-privileges aan gebruiker %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:591
 #, python-format
@@ -3913,7 +3913,7 @@ msgstr "Privéchat met gebruiker %s gesloten"
 #: pynicotine/plugins/core_commands/__init__.py:480
 #, python-format
 msgid "Banned %s"
-msgstr "Verbannen %s"
+msgstr "Verband %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:494
 #, python-format
@@ -4081,9 +4081,7 @@ msgstr "De server heeft het te druk om naar verlanglijsten te zoeken"
 #: pynicotine/search.py:402 pynicotine/slskmessages.py:2876
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
-msgstr ""
-"Kan de share-database niet lezen. Gelieve uw shares opnieuw te scannen. "
-"Fout: %s"
+msgstr "Kan de share-database niet lezen. Herscan van shares nodig. Fout: %s"
 
 #: pynicotine/search.py:625
 #, python-format
@@ -4251,7 +4249,7 @@ msgstr "Kan de afbeelding niet opslaan naar %(filename)s: %(error)s"
 #: pynicotine/userinfo.py:129
 #, python-format
 msgid "User %(user)s is viewing your profile"
-msgstr "Gebruiker %(user)s bekijkt uw profiel"
+msgstr "Gebruiker %(user)s bekijkt je profiel"
 
 #: pynicotine/userlist.py:300
 #, python-format
@@ -4443,9 +4441,8 @@ msgid ""
 "Donating to Soulseek grants you privileges for a certain time period. If you "
 "have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
-"Doneren aan Soulseek geeft je privileges voor een bepaalde periode. Als u "
-"privileges hebt, worden uw downloads in de wachtrij geplaatst voor niet-"
-"geprivilegieerde gebruikers."
+"Doneren aan Soulseek geeft je privileges voor een bepaalde tijd. Zolang je "
+"privileges hebt, krijgen jouw downloads voorrang."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:20
 msgid "Previous File"
@@ -4699,7 +4696,7 @@ msgstr "_Alles wissen…"
 
 #: pynicotine/gtkgui/ui/interests.ui:14
 msgid "Personal Interests"
-msgstr "Persoonlijke interesses"
+msgstr "Interesses"
 
 #: pynicotine/gtkgui/ui/interests.ui:33
 msgid "Add something you like…"
@@ -4707,7 +4704,7 @@ msgstr "Voeg iets toe dat je leuk vindt…"
 
 #: pynicotine/gtkgui/ui/interests.ui:55
 msgid "Personal Dislikes"
-msgstr "Persoonlijke ongenoegens"
+msgstr "Niet leuk"
 
 #: pynicotine/gtkgui/ui/interests.ui:73
 msgid "Add something you dislike…"
@@ -4836,8 +4833,8 @@ msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
-"Voer de naam van een gebruiker in om de beschrijving, informatie en "
-"persoonlijke foto te bekijken"
+"Voer de naam van een gebruiker in om de beschrijving, informatie en foto te "
+"bekijken"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1081
 msgid "Enter the username of the person you want to send a message to"
@@ -5012,9 +5009,9 @@ msgid ""
 "search, it can only narrow it down. To broaden or change your search terms, "
 "perform a new search."
 msgstr ""
-"Zoals de naam al zegt, kan een resultaten-filter uw oorspronkelijke "
-"zoekopdracht niet uitbreiden, maar alleen beperken. Om uw zoektermen uit te "
-"breiden of te wijzigen, voert u een nieuwe zoekopdracht uit."
+"Zoals de naam al zegt, kan een resultaten-filter de oorspronkelijke "
+"zoekopdracht niet uitbreiden, maar alleen beperken. Voer een nieuwe "
+"zoekopdracht in om de zoektermen uit te breiden of te wijzigen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:64
 msgid "Result Filter Usage"
@@ -5079,8 +5076,8 @@ msgid ""
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Het is ook mogelijk om het filter om te keren, door bestandsextensies die u "
-"niet in uw resultaten wilt hebben te specificeren met een uitroepteken. "
+"Het is ook mogelijk om het filter om te keren, door bestandsextensies die je "
+"niet in de resultaten wilt hebben te specificeren met een uitroepteken. "
 "Voorbeeld:\n"
 "    !mp3 !jpg"
 
@@ -5322,7 +5319,7 @@ msgstr "Bitsnelheid, b.v. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:62
 msgid "Duration…"
-msgstr "Looptijd…"
+msgstr "Duur…"
 
 #: pynicotine/gtkgui/ui/search.ui:64
 #: pynicotine/gtkgui/ui/settings/search.ui:320
@@ -5925,7 +5922,7 @@ msgstr "Geef prioriteit aan alle vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:290
 msgid "Queue Limits"
-msgstr "Wachtrijlimieten"
+msgstr "Wachtrij-limieten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
 msgid "Maximum number of queued files per user:"
@@ -6246,7 +6243,7 @@ msgstr "Interesses bewerken"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:671
 msgid "Save _Picture"
-msgstr "Bewaar _Beeld"
+msgstr "Bewaar _foto"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:710
 msgid "_Refresh Profile"
