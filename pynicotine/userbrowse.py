@@ -272,7 +272,6 @@ class UserBrowse:
         file_path = "\\".join([folder_path, basename])
 
         core.uploads.enqueue_upload(username, file_path, size=file_size)
-        core.uploads.check_upload_queue()
 
     def upload_folder(self, username, requested_folder_path, local_shares, recurse=False):
 
@@ -294,8 +293,6 @@ class UserBrowse:
             if not recurse:
                 # Uploading a single folder, no need to continue
                 return
-
-        core.uploads.check_upload_queue()
 
     @staticmethod
     def get_soulseek_url(username, path):

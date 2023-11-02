@@ -2978,7 +2978,6 @@ class Preferences(Dialog):
         core.downloads.update_transfer_limits()
         core.downloads.update_download_filters()
         core.uploads.update_transfer_limits()
-        core.uploads.check_upload_queue()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"]:

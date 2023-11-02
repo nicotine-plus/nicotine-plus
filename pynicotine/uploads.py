@@ -75,7 +75,7 @@ class Uploads(Transfers):
             return
 
         self.pending_shutdown = True
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _quit(self):
 
@@ -92,7 +92,7 @@ class Uploads(Transfers):
         super()._server_login(msg)
 
         # Check if queued uploads can be started every 10 seconds
-        self._upload_queue_timer_id = events.schedule(delay=10, callback=self.check_upload_queue, repeat=True)
+        self._upload_queue_timer_id = events.schedule(delay=10, callback=self._check_upload_queue, repeat=True)
 
         # Re-queue timed out uploads every 3 minutes
         self._retry_failed_uploads_timer_id = events.schedule(
@@ -113,7 +113,7 @@ class Uploads(Transfers):
         self._user_update_counter = 0
 
         # Quit in case we were waiting for uploads to finish
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     # Load Transfers #
 
@@ -194,6 +194,7 @@ class Uploads(Transfers):
             speed_limit = 0
 
         core.send_message_to_network_thread(slskmessages.SetUploadLimit(speed_limit, limit_by))
+        self._check_upload_queue()
 
     def queue_limit_reached(self, username):
 
@@ -371,7 +372,7 @@ class Uploads(Transfers):
         if not upload_cleared:
             self._abort_transfer(upload, abort_reason="User logged off" if is_offline else "Connection timeout")
 
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _queue_upload(self, msg):
         """Peer code 43.
@@ -409,7 +410,7 @@ class Uploads(Transfers):
         self._update_transfer(transfer)
 
         core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _transfer_request(self, msg):
         """Peer code 40."""
@@ -530,11 +531,11 @@ class Uploads(Transfers):
             elif reason in {"Cancelled", "Disallowed extension"}:
                 self._auto_clear_transfer(upload)
 
-            self.check_upload_queue()
+            self._check_upload_queue()
             return
 
         core.send_message_to_peer(upload.username, slskmessages.FileUploadInit(None, token=token))
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _transfer_timeout(self, transfer):
 
@@ -545,7 +546,7 @@ class Uploads(Transfers):
         })
 
         self._abort_transfer(transfer, abort_reason="Connection timeout")
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _upload_file_error(self, username, token, error):
         """Networking thread encountered a local file error for upload."""
@@ -558,7 +559,7 @@ class Uploads(Transfers):
         self._abort_transfer(upload, abort_reason="Local file error")
 
         log.add(_("Upload I/O error: %s"), error)
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _file_upload_init(self, msg):
         """We are requesting to start uploading a file to a peer."""
@@ -592,7 +593,7 @@ class Uploads(Transfers):
 
         if not core.shares.file_is_shared(username, virtual_path, real_path):
             self._abort_transfer(upload, abort_reason="File not shared.")
-            self.check_upload_queue()
+            self._check_upload_queue()
             return
 
         try:
@@ -602,7 +603,7 @@ class Uploads(Transfers):
         except OSError as error:
             log.add(_("Upload I/O error: %s"), error)
             self._abort_transfer(upload, abort_reason="Local file error")
-            self.check_upload_queue()
+            self._check_upload_queue()
 
         else:
             upload.file_handle = file_handle
@@ -708,7 +709,7 @@ class Uploads(Transfers):
         if not self._auto_clear_transfer(upload):
             self._abort_transfer(upload, abort_reason=status)
 
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _place_in_queue_request(self, msg):
         """Peer code 51."""
@@ -833,7 +834,7 @@ class Uploads(Transfers):
         real_path = core.shares.virtual2real(virtual_path)
         core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
 
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def _abort_transfer(self, transfer, denied_message=None, abort_reason="Cancelled", update_parent=True):
 
@@ -1015,7 +1016,7 @@ class Uploads(Transfers):
         self._user_update_counter += 1
         self._user_update_counters[username] = self._user_update_counter
 
-    def check_upload_queue(self):
+    def _check_upload_queue(self):
         """Find next file to upload."""
 
         if not self.allow_new_uploads():
@@ -1106,6 +1107,7 @@ class Uploads(Transfers):
             self._append_transfer(transfer)
 
         self._update_transfer(transfer)
+        self._check_upload_queue()
 
     def get_total_uploads_allowed(self):
 
@@ -1159,7 +1161,7 @@ class Uploads(Transfers):
         for username in users:
             core.network_filter.ban_user(username)
 
-        self.check_upload_queue()
+        self._check_upload_queue()
 
     def retry_upload(self, transfer):
 
@@ -1177,7 +1179,7 @@ class Uploads(Transfers):
             self._update_transfer(transfer)
 
         if not active_uploads:
-            self.check_upload_queue()
+            self._check_upload_queue()
 
     def retry_uploads(self, uploads):
         for upload in uploads:
