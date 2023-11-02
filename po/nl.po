@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-01 23:15+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2023-11-02 07:05+0000\n"
+"Last-Translator: spongy <spongy@dsxx.nl>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -2096,7 +2096,7 @@ msgstr "Bestand niet gedeeld"
 
 #: pynicotine/gtkgui/transfers.py:110
 msgid "Download folder error"
-msgstr "Download map fout"
+msgstr "Fout in downloadmap"
 
 #: pynicotine/gtkgui/transfers.py:111
 msgid "Local file error"
@@ -2129,7 +2129,7 @@ msgstr "_Open bestand"
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
 msgid "Open in File _Manager"
-msgstr "Open in Bestands_Manager"
+msgstr "Open in Bestands_manager"
 
 #: pynicotine/gtkgui/transfers.py:238
 msgid "_Clear"
@@ -2173,7 +2173,7 @@ msgstr "Uploads in wachtrij wissen"
 
 #: pynicotine/gtkgui/uploads.py:115
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Wil je echt alle uploads in de wachtrij wissen?"
+msgstr "Wil je écht alle uploads in de wachtrij wissen?"
 
 #: pynicotine/gtkgui/uploads.py:127
 msgid "Clear All Uploads"
@@ -2181,7 +2181,7 @@ msgstr "Alle uploads wissen"
 
 #: pynicotine/gtkgui/uploads.py:128
 msgid "Do you really want to clear all uploads?"
-msgstr "Wil je echt alle uploads wissen?"
+msgstr "Wil je écht alle uploads wissen?"
 
 #: pynicotine/gtkgui/userbrowse.py:261
 msgid "_Save Shares List to Disk"
@@ -2197,7 +2197,7 @@ msgstr "Upload map en submappen…"
 
 #: pynicotine/gtkgui/userbrowse.py:277 pynicotine/gtkgui/userbrowse.py:291
 msgid "Copy _Folder Path"
-msgstr "Kopieer _Map Pad"
+msgstr "Kopieer pad van _Map"
 
 #: pynicotine/gtkgui/userbrowse.py:284 pynicotine/gtkgui/userbrowse.py:367
 msgid "_Download Folder"
@@ -2271,16 +2271,16 @@ msgstr "Upload bestand(en) naar gebruiker"
 
 #: pynicotine/gtkgui/userinfo.py:338
 msgid "Copy Picture"
-msgstr "Afbeelding kopiëren"
+msgstr "Kopieer afbeelding"
 
 #: pynicotine/gtkgui/userinfo.py:339
 msgid "Save Picture"
-msgstr "Sla de afbeelding op"
+msgstr "Afbeelding opslaan"
 
 #: pynicotine/gtkgui/userinfo.py:419
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "Kan gebruikers afbeelding niet laden %(user)s: %(error)s"
+msgstr "Kan gebruikersafbeelding niet laden %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:430
 msgid ""
