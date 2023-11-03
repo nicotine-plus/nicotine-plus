@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 2, 2023
+Last updated on November 3, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -87,7 +87,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 0    | Download from Peer |
 | 1    | Upload to Peer     |
 
-### Transfer Status Strings
+### Transfer Rejection Reasons
 
 #### In Use
 
@@ -2273,13 +2273,13 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 41 b
 
@@ -2295,12 +2295,12 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 42
 
@@ -2366,10 +2366,10 @@ This message is sent to reject [QueueUpload](#peer-code-43) attempts and previou
 
   - Send
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
+    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
+    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 51
 

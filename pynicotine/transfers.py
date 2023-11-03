@@ -34,6 +34,21 @@ from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 
+class TransferStatus:
+    QUEUED = "Queued"
+    GETTING_STATUS = "Getting status"
+    TRANSFERRING = "Transferring"
+    PAUSED = "Paused"
+    CANCELLED = "Cancelled"
+    FILTERED = "Filtered"
+    FINISHED = "Finished"
+    USER_LOGGED_OFF = "User logged off"
+    CONNECTION_CLOSED = "Connection closed"
+    CONNECTION_TIMEOUT = "Connection timeout"
+    DOWNLOAD_FOLDER_ERROR = "Download folder error"
+    LOCAL_FILE_ERROR = "Local file error"
+
+
 class Transfer:
     """This class holds information about a single transfer."""
 
@@ -128,7 +143,7 @@ class Transfers:
         for users in (self.queued_users, self.active_users, self.failed_users):
             for transfers in users.copy().values():
                 for transfer in transfers.copy().values():
-                    self._abort_transfer(transfer, abort_reason="User logged off")
+                    self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
 
         self.queued_transfers.clear()
         self.queued_users.clear()
@@ -256,22 +271,17 @@ class Transfers:
                 folder_path = os.path.normpath(folder_path)
 
             # Status
-            loaded_status = None
-
             if num_attributes >= 4:
-                loaded_status = str(transfer_row[3])
+                status = str(transfer_row[3])
 
-            if load_only_finished and loaded_status != "Finished":
+            if status == "Aborted":
+                status = TransferStatus.PAUSED
+
+            if load_only_finished and status != TransferStatus.FINISHED:
                 continue
 
-            if loaded_status in {"Aborted", "Paused"}:
-                status = "Paused"
-
-            elif loaded_status in {"Filtered", "Finished"}:
-                status = loaded_status
-
-            else:
-                status = "User logged off"
+            if status not in {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}:
+                status = TransferStatus.USER_LOGGED_OFF
 
             # Size / offset
             size = 0
@@ -337,7 +347,7 @@ class Transfers:
     def _remove_transfer(self, transfer):
         del self.transfers[transfer.username + transfer.virtual_path]
 
-    def _abort_transfer(self, transfer, denied_message=None, abort_reason="Cancelled", update_parent=True):
+    def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
         raise NotImplementedError
 
     def _update_transfer(self, transfer):
@@ -356,7 +366,7 @@ class Transfers:
 
         core.watch_user(transfer.username)
 
-        transfer.status = "Queued"
+        transfer.status = TransferStatus.QUEUED
         self.total_queue_size += transfer.size
 
         self.queued_users[transfer.username][transfer.virtual_path] = transfer
@@ -389,7 +399,7 @@ class Transfers:
 
         core.watch_user(transfer.username)
 
-        transfer.status = "Getting status"
+        transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
         transfer.speed = None
         transfer.queue_position = 0

@@ -42,7 +42,9 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import TransferRejectReason
 from pynicotine.transfers import Transfer
+from pynicotine.transfers import TransferStatus
 from pynicotine.utils import UINT64_LIMIT
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
@@ -51,6 +53,28 @@ from pynicotine.utils import humanize
 
 
 class Transfers:
+
+    STATUSES = {
+        TransferStatus.QUEUED: _("Queued"),
+        f"{TransferStatus.QUEUED} (prioritized)": _("Queued (prioritized)"),
+        f"{TransferStatus.QUEUED} (privileged)": _("Queued (privileged)"),
+        TransferStatus.GETTING_STATUS: _("Getting status"),
+        TransferStatus.TRANSFERRING: _("Transferring"),
+        TransferStatus.CONNECTION_CLOSED: _("Connection closed"),
+        TransferStatus.CONNECTION_TIMEOUT: _("Connection timeout"),
+        TransferStatus.USER_LOGGED_OFF: _("User logged off"),
+        TransferStatus.PAUSED: _("Paused"),
+        TransferStatus.CANCELLED: _("Cancelled"),
+        TransferStatus.FINISHED: _("Finished"),
+        TransferStatus.FILTERED: _("Filtered"),
+        TransferStatus.DOWNLOAD_FOLDER_ERROR: _("Download folder error"),
+        TransferStatus.LOCAL_FILE_ERROR: _("Local file error"),
+        TransferRejectReason.DISALLOWED_EXTENSION: _("Disallowed extension"),
+        TransferRejectReason.BANNED: _("Banned"),
+        TransferRejectReason.FILE_NOT_SHARED: _("File not shared"),
+        TransferRejectReason.PENDING_SHUTDOWN: _("Pending shutdown"),
+        TransferRejectReason.FILE_READ_ERROR: _("File read error")
+    }
 
     path_separator = path_label = retry_label = abort_label = None
     deprioritized_statuses = ()
@@ -85,30 +109,6 @@ class Transfers:
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
         self.selected_transfers = {}
-
-        # Status list
-        self.statuses = {
-            "Queued": _("Queued"),
-            "Queued (prioritized)": _("Queued (prioritized)"),
-            "Queued (privileged)": _("Queued (privileged)"),
-            "Getting status": _("Getting status"),
-            "Transferring": _("Transferring"),
-            "Connection closed": _("Connection closed"),
-            "Connection timeout": _("Connection timeout"),
-            "Pending shutdown.": _("Pending shutdown"),
-            "User logged off": _("User logged off"),
-            "Disallowed extension": _("Disallowed extension"),
-            "Cancelled": _("Cancelled"),
-            "Paused": _("Paused"),
-            "Finished": _("Finished"),
-            "Filtered": _("Filtered"),
-            "Banned": _("Banned"),
-            "File not shared": _("File not shared"),
-            "File not shared.": _("File not shared"),
-            "Download folder error": _("Download folder error"),
-            "Local file error": _("Local file error"),
-            "File read error.": _("File read error")
-        }
 
         self.tree_view = TreeView(
             window, parent=self.tree_container, name=transfer_type,
@@ -329,7 +329,7 @@ class Transfers:
 
     def translate_status(self, status):
 
-        translated_status = self.statuses.get(status)
+        translated_status = self.STATUSES.get(status)
 
         if translated_status:
             return translated_status

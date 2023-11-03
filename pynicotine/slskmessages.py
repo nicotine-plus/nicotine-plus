@@ -96,6 +96,19 @@ class TransferDirection:
     UPLOAD = 1
 
 
+class TransferRejectReason:
+    QUEUED = "Queued"
+    COMPLETE = "Complete"
+    CANCELLED = "Cancelled"
+    FILE_READ_ERROR = "File read error."
+    FILE_NOT_SHARED = "File not shared."
+    BANNED = "Banned"
+    PENDING_SHUTDOWN = "Pending shutdown."
+    TOO_MANY_FILES = "Too many files"
+    TOO_MANY_MEGABYTES = "Too many megabytes"
+    DISALLOWED_EXTENSION = "Disallowed extension"
+
+
 class FileAttribute:
     BITRATE = 0
     DURATION = 1
