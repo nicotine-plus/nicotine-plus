@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-02 21:20+0000\n"
+"PO-Revision-Date: 2023-11-03 04:15+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1436,7 +1436,7 @@ msgstr "Geen plug-in geselecteerd"
 #: pynicotine/gtkgui/widgets/trayicon.py:109
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
 msgid "Preferences"
-msgstr "Voorkeuren"
+msgstr "Instellingen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3036
 msgid "Pick a File Name for Config Backup"
@@ -1631,7 +1631,7 @@ msgstr "Soulseek _Privileges"
 
 #: pynicotine/gtkgui/mainwindow.py:491
 msgid "_Preferences"
-msgstr "_Voorkeuren"
+msgstr "_Instellingen"
 
 #: pynicotine/gtkgui/mainwindow.py:512
 msgid "Browse _Public Shares"
@@ -4394,8 +4394,8 @@ msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
-"Kies hieronder eventueel een andere luisterpoort. Dit kan ook later in de "
-"voorkeuren."
+"Indien nodig kun je een andere luisterpoort instellen. Dit kan ook later in "
+"de instellingen."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:317
 msgid "Download Files to Folder"
