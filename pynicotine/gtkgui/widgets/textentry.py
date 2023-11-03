@@ -173,7 +173,7 @@ class ChatCompletion:
         if not self.is_completion_enabled():
             return
 
-        iterator = self.completions.pop(item)
+        iterator = self.completions.pop(item, None)
 
         if iterator is not None:
             self.model.remove(iterator)
@@ -338,8 +338,11 @@ class CompletionEntry:
             self.completions[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
 
     def remove_completion(self, item):
-        iterator = self.completions.pop(item)
-        self.model.remove(iterator)
+
+        iterator = self.completions.pop(item, None)
+
+        if iterator is not None:
+            self.model.remove(iterator)
 
     def clear(self):
         self.model.clear()
