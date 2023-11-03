@@ -241,7 +241,7 @@ class Uploads(Transfers):
 
     def is_new_upload_accepted(self):
 
-        if core.shares.rescanning:
+        if core.shares is None or core.shares.rescanning:
             return False
 
         if config.sections["transfers"]["useupslots"]:
