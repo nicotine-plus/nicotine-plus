@@ -571,6 +571,10 @@ class Transfers:
         if config.sections["ui"]["reverse_file_paths"]:
             folder_path = self.path_separator.join(reversed(folder_path.split(self.path_separator)))
 
+        if not self.tree_view.iterators:
+            # Hide tab description
+            self.container.get_parent().set_visible(True)
+
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
@@ -705,10 +709,6 @@ class Transfers:
             transfer,
             self.row_id
         ]
-
-        if self.transfer_list:
-            # Hide tab description
-            self.container.get_parent().set_visible(True)
 
         transfer.iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
