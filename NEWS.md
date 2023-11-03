@@ -9,6 +9,7 @@
  * Added generic file type search result filters (audio / image / video / text / archive / executable)
  * Added audio duration search result filter
  * Added path bar when browsing user shares
+ * Added option to make specific shares available to trusted buddies only
  * Added option to wait for active uploads to finish before quitting
  * Added function to send a private message to all online buddies and users in upload queue
  * Added a warning dialog if shared folders are unavailable before rescanning
@@ -19,6 +20,7 @@
  * Added function to clear downloads that no longer exist on disk
  * Added preference to choose user interface language
  * Added wishlist results found notification
+ * Added option to set custom handlers for opening downloaded files
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Added file type icons to file lists
  * Added button to view personal profile
@@ -30,10 +32,14 @@
  * Window title in "File Properties" dialog shows the total size of all selected files
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
+ * Banned users can no longer read self descriptions on user profiles
+ * Chat room tabs are added immediately, and show a message when joining the room is not allowed
  * Completed Soulseek protocol implementation of distributed peers
  * Added new command system for plugins
  * Added keyboard input to headless CLI (type /help for a list of available commands)
  * Windows: Added option to bind Nicotine+ to a specific network interface
+ * Removed command alias system in favor of plugin commands
+ * Removed python3-gdbm dependency
  * Bumped minimum Python version requirement to 3.6
  * Bumped minimum GTK 3 version requirement to 3.22.30
  * Various accessibility improvements
@@ -41,6 +47,8 @@
 
 ### Corrections
 
+ * Major performance improvements when many queued and finished transfers are present
+ * Performance improvements when scanning and accessing shares
  * ..
 
 ### Issues closed on GitHub
