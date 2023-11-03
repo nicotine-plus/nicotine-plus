@@ -632,6 +632,9 @@ class UserBrowse:
         for widget in list(self.path_bar):
             self.path_bar.remove(widget)
 
+        if not folder_path:
+            return
+
         folder_path_split = folder_path.split("\\")
 
         for index, folder in enumerate(folder_path_split):
