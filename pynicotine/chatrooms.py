@@ -256,6 +256,7 @@ class ChatRooms:
 
         if room_obj is None:
             self.show_room(msg.room, is_private=msg.private, switch_page=False)
+            room_obj = self.joined_rooms[msg.room]
         else:
             room_obj.is_private = msg.private
 
