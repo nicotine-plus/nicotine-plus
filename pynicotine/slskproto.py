@@ -1216,11 +1216,12 @@ class NetworkThread(Thread):
 
         self._queue_network_message(SetWaitPort(self._listen_port))
 
-    def _process_server_input(self, msg_buffer):
+    def _process_server_input(self, conn_obj):
         """Server has sent us something, this function retrieves messages from
         the msg_buffer, creates message objects and returns them and the rest
         of the msg_buffer."""
 
+        msg_buffer = conn_obj.ibuf
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
@@ -1400,15 +1401,6 @@ class NetworkThread(Thread):
 
     def _process_server_output(self, msg_obj):
 
-        msg_class = msg_obj.__class__
-
-        if self._server_socket not in self._conns:
-            log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                "type": msg_class,
-                "msg_obj": msg_obj
-            })
-            return
-
         msg = self._pack_network_message(msg_obj)
 
         if msg is None:
@@ -1416,7 +1408,7 @@ class NetworkThread(Thread):
 
         conn_obj = self._conns[self._server_socket]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(SERVER_MESSAGE_CODES[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1492,9 +1484,10 @@ class NetworkThread(Thread):
 
     # Peer Init #
 
-    def _process_peer_init_input(self, conn_obj, msg_buffer):
+    def _process_peer_init_input(self, conn_obj):
 
         init = None
+        msg_buffer = conn_obj.ibuf
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
@@ -1608,15 +1601,6 @@ class NetworkThread(Thread):
 
     def _process_peer_init_output(self, msg_obj):
 
-        msg_class = msg_obj.__class__
-
-        if msg_obj.sock not in self._conns:
-            log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                "type": msg_class,
-                "msg_obj": msg_obj
-            })
-            return
-
         # Pack peer init messages
         conn_obj = self._conns[msg_obj.sock]
         msg = self._pack_network_message(msg_obj)
@@ -1625,7 +1609,7 @@ class NetworkThread(Thread):
             return
 
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-        conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(PEER_INIT_MESSAGE_CODES[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1656,11 +1640,12 @@ class NetworkThread(Thread):
             self._connect_error(error, conn_obj)
             self._close_socket(sock)
 
-    def _process_peer_input(self, conn_obj, msg_buffer):
+    def _process_peer_input(self, conn_obj):
         """We have a "P" connection (p2p exchange), peer has sent us something,
         this function retrieves messages from the msg_buffer, creates message
         objects and returns them and the rest of the msg_buffer."""
 
+        msg_buffer = conn_obj.ibuf
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
@@ -1739,15 +1724,6 @@ class NetworkThread(Thread):
 
     def _process_peer_output(self, msg_obj):
 
-        msg_class = msg_obj.__class__
-
-        if msg_obj.init.sock not in self._conns:
-            log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                "type": msg_class,
-                "msg_obj": msg_obj
-            })
-            return
-
         # Pack peer messages
         msg = self._pack_network_message(msg_obj)
 
@@ -1756,7 +1732,7 @@ class NetworkThread(Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(PEER_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(PEER_MESSAGE_CODES[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         conn_obj.has_post_init_activity = True
@@ -1830,11 +1806,12 @@ class NetworkThread(Thread):
         if limit > 0:
             limits[sock] = limit
 
-    def _process_file_input(self, conn_obj, msg_buffer):
+    def _process_file_input(self, conn_obj):
         """We have a "F" connection (filetransfer), peer has sent us something,
         this function retrieves messages from the msg_buffer, creates message
         objects and returns them and the rest of the msg_buffer."""
 
+        msg_buffer = conn_obj.ibuf
         msg_buffer_mem = memoryview(msg_buffer)
         idx = 0
         should_close_connection = False
@@ -1917,13 +1894,6 @@ class NetworkThread(Thread):
     def _process_file_output(self, msg_obj):
 
         msg_class = msg_obj.__class__
-
-        if msg_obj.init.sock not in self._conns:
-            log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                "type": msg_class,
-                "msg_obj": msg_obj
-            })
-            return
 
         # Pack file messages
         if msg_class is FileTransferInit:
@@ -2090,12 +2060,13 @@ class NetworkThread(Thread):
                           "accepting new connections"), num_child_peers)
             self._queue_network_message(AcceptChildren(False))
 
-    def _process_distrib_input(self, conn_obj, msg_buffer):
+    def _process_distrib_input(self, conn_obj):
         """We have a distributed network connection, parent has sent us
         something, this function retrieves messages from the msg_buffer,
         creates message objects and returns them and the rest of the
         msg_buffer."""
 
+        msg_buffer = conn_obj.ibuf
         msg_buffer_mem = memoryview(msg_buffer)
         buffer_len = len(msg_buffer_mem)
         idx = 0
@@ -2222,15 +2193,6 @@ class NetworkThread(Thread):
 
     def _process_distrib_output(self, msg_obj):
 
-        msg_class = msg_obj.__class__
-
-        if msg_obj.init.sock not in self._conns:
-            log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                "type": msg_class,
-                "msg_obj": msg_obj
-            })
-            return
-
         # Pack distributed messages
         msg = self._pack_network_message(msg_obj)
 
@@ -2239,7 +2201,7 @@ class NetworkThread(Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-        conn_obj.obuf.extend(msg_obj.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg_class]))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         conn_obj.has_post_init_activity = True
@@ -2437,25 +2399,25 @@ class NetworkThread(Thread):
             return
 
         if conn_obj.sock is self._server_socket:
-            self._process_server_input(conn_obj.ibuf)
+            self._process_server_input(conn_obj)
             return
 
         init = conn_obj.init
 
         if init is None:
-            conn_obj.init = init = self._process_peer_init_input(conn_obj, conn_obj.ibuf)
+            conn_obj.init = init = self._process_peer_init_input(conn_obj)
 
             if init is None or not conn_obj.ibuf:
                 return
 
         if init.conn_type == ConnectionType.PEER:
-            self._process_peer_input(conn_obj, conn_obj.ibuf)
+            self._process_peer_input(conn_obj)
 
         elif init.conn_type == ConnectionType.FILE:
-            self._process_file_input(conn_obj, conn_obj.ibuf)
+            self._process_file_input(conn_obj)
 
         elif init.conn_type == ConnectionType.DISTRIBUTED:
-            self._process_distrib_input(conn_obj, conn_obj.ibuf)
+            self._process_distrib_input(conn_obj)
 
     def _process_queue_messages(self):
 
@@ -2472,22 +2434,37 @@ class NetworkThread(Thread):
             log.add_msg_contents(msg_obj, is_outgoing=True)
 
             if msg_type == MessageType.INIT:
-                self._process_peer_init_output(msg_obj)
+                process_func = self._process_peer_init_output
+                sock = msg_obj.sock
 
             elif msg_type == MessageType.INTERNAL:
-                self._process_internal_messages(msg_obj)
+                process_func = self._process_internal_messages
+                sock = None
 
             elif msg_type == MessageType.PEER:
-                self._process_peer_output(msg_obj)
+                process_func = self._process_peer_output
+                sock = msg_obj.init.sock
 
             elif msg_type == MessageType.DISTRIBUTED:
-                self._process_distrib_output(msg_obj)
+                process_func = self._process_distrib_output
+                sock = msg_obj.init.sock
 
             elif msg_type == MessageType.FILE:
-                self._process_file_output(msg_obj)
+                process_func = self._process_file_output
+                sock = msg_obj.init.sock
 
             elif msg_type == MessageType.SERVER:
-                self._process_server_output(msg_obj)
+                process_func = self._process_server_output
+                sock = self._server_socket
+
+            if sock is not None and sock not in self._conns:
+                log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
+                    "type": msg_obj.__class__,
+                    "msg_obj": msg_obj
+                })
+                continue
+
+            process_func(msg_obj)
 
     def _read_data(self, conn_obj, current_time):
 
