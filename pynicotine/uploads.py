@@ -216,7 +216,7 @@ class Uploads(Transfers):
         if len(self.queued_users.get(username, {})) >= file_limit >= 1:
             return True, TransferRejectReason.TOO_MANY_FILES
 
-        if self.total_queue_size >= queue_size_limit >= 1:
+        if self._user_queue_sizes.get(username, 0) >= queue_size_limit >= 1:
             return True, TransferRejectReason.TOO_MANY_MEGABYTES
 
         return False, None
@@ -323,8 +323,8 @@ class Uploads(Transfers):
                 new_size = transfer.size
 
                 if new_size != old_size:
-                    self.total_queue_size -= old_size
-                    self.total_queue_size += new_size
+                    self._user_queue_sizes[username] -= old_size
+                    self._user_queue_sizes[username] += new_size
 
                     old_upload.size = new_size
 

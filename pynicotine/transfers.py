@@ -96,10 +96,10 @@ class Transfers:
         self.failed_users = defaultdict(dict)
         self.transfers_file_path = transfers_file_path
         self.total_bandwidth = 0
-        self.total_queue_size = 0
 
         self._allow_saving_transfers = False
         self._user_queue_limits = defaultdict(int)
+        self._user_queue_sizes = defaultdict(int)
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -149,9 +149,9 @@ class Transfers:
         self.queued_users.clear()
         self.active_users.clear()
         self._user_queue_limits.clear()
+        self._user_queue_sizes.clear()
 
         self.total_bandwidth = 0
-        self.total_queue_size = 0
 
     # Load Transfers #
 
@@ -367,10 +367,10 @@ class Transfers:
         core.watch_user(transfer.username)
 
         transfer.status = TransferStatus.QUEUED
-        self.total_queue_size += transfer.size
 
         self.queued_users[transfer.username][transfer.virtual_path] = transfer
         self.queued_transfers[transfer] = None
+        self._user_queue_sizes[transfer.username] += transfer.size
 
     def _enqueue_limited_transfers(self, username):
         raise NotImplementedError
@@ -383,8 +383,12 @@ class Transfers:
         if virtual_path not in self.queued_users.get(username, {}):
             return
 
+        self._user_queue_sizes[username] -= transfer.size
         del self.queued_transfers[transfer]
         del self.queued_users[username][virtual_path]
+
+        if self._user_queue_sizes[username] <= 0:
+            del self._user_queue_sizes[username]
 
         if not self.queued_users[username]:
             del self.queued_users[username]
@@ -393,7 +397,6 @@ class Transfers:
             self._enqueue_limited_transfers(username)
 
         transfer.queue_position = 0
-        self.total_queue_size -= transfer.size
 
     def _activate_transfer(self, transfer, token):
 
