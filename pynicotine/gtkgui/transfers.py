@@ -442,7 +442,7 @@ class Transfers:
         speed = 0.0
         total_size = current_byte_offset = 0
         elapsed = 0
-        parent_status = "Finished"
+        parent_status = TransferStatus.FINISHED
 
         if not child_transfers:
             # Remove parent row if no children are present anymore
@@ -460,16 +460,16 @@ class Transfers:
         for transfer in child_transfers:
             status = transfer.status
 
-            if status == "Transferring":
+            if status == TransferStatus.TRANSFERRING:
                 # "Transferring" status always has the highest priority
                 parent_status = status
                 speed += transfer.speed or 0
 
-            elif parent_status in self.deprioritized_statuses and status != "Finished":
+            elif parent_status in self.deprioritized_statuses and status != TransferStatus.FINISHED:
                 # "Finished" status always has the lowest priority
                 parent_status = status
 
-            if status == "Filtered" and transfer.virtual_path:
+            if status == TransferStatus.FILTERED and transfer.virtual_path:
                 # We don't want to count filtered files when calculating the progress
                 continue
 
@@ -516,7 +516,7 @@ class Transfers:
         queue_position = transfer.queue_position or 0
         status = transfer.status or ""
 
-        if transfer.modifier and status == "Queued":
+        if transfer.modifier and status == TransferStatus.QUEUED:
             # Priority status
             status += f" ({transfer.modifier})"
 
@@ -750,7 +750,7 @@ class Transfers:
         raise NotImplementedError
 
     def abort_transfer(self, transfer, status_message=None, update_parent=True):
-        if status_message is not None and status_message != "Queued":
+        if status_message is not None and status_message != TransferStatus.QUEUED:
             self.update_model(transfer, update_parent=update_parent)
 
     def abort_transfers(self, _transfers, _status_message=None):

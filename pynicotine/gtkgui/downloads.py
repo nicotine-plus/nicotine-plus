@@ -32,6 +32,7 @@ from pynicotine.gtkgui.popovers.downloadspeeds import DownloadSpeeds
 from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.transfers import TransferStatus
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -44,7 +45,7 @@ class Downloads(Transfers):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.deprioritized_statuses = {"Paused", "Finished", "Filtered"}
+        self.deprioritized_statuses = {TransferStatus.PAUSED, TransferStatus.FINISHED, TransferStatus.FILTERED}
 
         self.transfer_page = window.downloads_page
         self.user_counter = window.download_users_label
@@ -103,9 +104,6 @@ class Downloads(Transfers):
     def clear_selected_transfers(self):
         core.downloads.clear_downloads(downloads=self.selected_transfers)
 
-    def on_clear_queued_response(self, *_args):
-        core.downloads.clear_downloads(statuses=["Queued"])
-
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
@@ -113,7 +111,7 @@ class Downloads(Transfers):
             title=_("Clear Queued Downloads"),
             message=_("Do you really want to clear all queued downloads?"),
             destructive_response_id="ok",
-            callback=self.on_clear_queued_response
+            callback=self.on_clear_queued
         ).show()
 
     def on_clear_all_response(self, *_args):
@@ -167,7 +165,7 @@ class Downloads(Transfers):
                 transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
             folder_path = os.path.dirname(file_path)
 
-            if transfer.status == "Finished":
+            if transfer.status == TransferStatus.FINISHED:
                 # Prioritize finished downloads
                 break
 
@@ -192,19 +190,19 @@ class Downloads(Transfers):
             core.userbrowse.browse_user(user, path=folder_path)
 
     def on_clear_queued(self, *_args):
-        core.downloads.clear_downloads(statuses={"Queued"})
+        core.downloads.clear_downloads(statuses={TransferStatus.QUEUED})
 
     def on_clear_finished(self, *_args):
-        core.downloads.clear_downloads(statuses={"Finished"})
+        core.downloads.clear_downloads(statuses={TransferStatus.FINISHED})
 
     def on_clear_paused(self, *_args):
-        core.downloads.clear_downloads(statuses={"Paused"})
+        core.downloads.clear_downloads(statuses={TransferStatus.PAUSED})
 
     def on_clear_finished_filtered(self, *_args):
-        core.downloads.clear_downloads(statuses={"Finished", "Filtered"})
+        core.downloads.clear_downloads(statuses={TransferStatus.FINISHED, TransferStatus.FILTERED})
 
     def on_clear_filtered(self, *_args):
-        core.downloads.clear_downloads(statuses={"Filtered"})
+        core.downloads.clear_downloads(statuses={TransferStatus.FILTERED})
 
     def on_clear_deleted(self, *_args):
         core.downloads.clear_downloads(clear_deleted=True)

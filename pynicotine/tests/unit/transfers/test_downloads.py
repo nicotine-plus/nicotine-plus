@@ -23,6 +23,7 @@ from unittest import TestCase
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.transfers import TransferStatus
 
 
 class DownloadsTest(TestCase):
@@ -59,7 +60,7 @@ class DownloadsTest(TestCase):
 
         self.assertEqual(transfer.username, "user17")
         self.assertEqual(transfer.virtual_path, "Downloaded\\Song17.mp3")
-        self.assertEqual(transfer.status, "User logged off")
+        self.assertEqual(transfer.status, TransferStatus.USER_LOGGED_OFF)
         self.assertEqual(transfer.size, 0)
         self.assertIsNone(transfer.current_byte_offset)
         self.assertFalse(transfer.file_attributes)
@@ -68,7 +69,7 @@ class DownloadsTest(TestCase):
 
         self.assertEqual(transfer.username, "user1")
         self.assertEqual(transfer.virtual_path, "Downloaded\\Song1.mp3")
-        self.assertEqual(transfer.status, "Paused")
+        self.assertEqual(transfer.status, TransferStatus.PAUSED)
         self.assertEqual(transfer.size, 10093741)
         self.assertEqual(transfer.current_byte_offset, 5000)
         self.assertEqual(transfer.file_attributes, {
