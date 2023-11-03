@@ -175,7 +175,7 @@ class Uploads(Transfers):
         return size
 
     def get_downloading_users(self):
-        return set(self.active_users + self.queued_users)
+        return set(self.active_users).union(self.queued_users)
 
     def get_total_uploads_allowed(self):
 
