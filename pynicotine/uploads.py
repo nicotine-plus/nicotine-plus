@@ -986,7 +986,7 @@ class Uploads(Transfers):
             return
 
         if reason is not None:
-            if reason in TransferStatus.__dict__.values():
+            if reason in TransferStatus.__dict__.values() or reason == TransferRejectReason.DISALLOWED_EXTENSION:
                 # Don't allow internal statuses as reason
                 reason = TransferRejectReason.CANCELLED
 
@@ -996,7 +996,7 @@ class Uploads(Transfers):
                 # A complete download of this file already exists on the user's end
                 self._finish_transfer(upload)
 
-            elif reason in {TransferRejectReason.CANCELLED, TransferRejectReason.DISALLOWED_EXTENSION}:
+            elif reason == TransferRejectReason.CANCELLED:
                 self._auto_clear_transfer(upload)
 
             self._check_upload_queue()

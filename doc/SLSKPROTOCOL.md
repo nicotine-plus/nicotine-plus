@@ -96,7 +96,6 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Banned                | SoulseekQt uses 'File not shared.' instead  |
 | Cancelled             |                                             |
 | Complete              |                                             |
-| Disallowed extension  | Sent by Soulseek NS for filtered extensions |
 | File not shared.      | Note: Ends with a dot                       |
 | File read error.      | Note: Ends with a dot                       |
 | Pending shutdown.     | Note: Ends with a dot                       |
@@ -109,6 +108,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | String                             | Comments                                                    |
 | ---------------------------------- | ----------------------------------------------------------- |
 | Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
+| Disallowed extension               | Sent by Soulseek NS for filtered extensions                 |
 | File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 | Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
 | User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |

@@ -32,7 +32,6 @@ from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
 from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-from pynicotine.slskmessages import TransferRejectReason
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
@@ -194,7 +193,7 @@ class Uploads(Transfers):
         core.uploads.clear_uploads(statuses={TransferStatus.FINISHED})
 
     def on_clear_cancelled(self, *_args):
-        core.uploads.clear_uploads(statuses={TransferStatus.CANCELLED, TransferRejectReason.DISALLOWED_EXTENSION})
+        core.uploads.clear_uploads(statuses={TransferStatus.CANCELLED})
 
     def on_clear_failed(self, *_args):
         core.uploads.clear_uploads(statuses={TransferStatus.CONNECTION_TIMEOUT, TransferStatus.LOCAL_FILE_ERROR})
@@ -203,10 +202,9 @@ class Uploads(Transfers):
         core.uploads.clear_uploads(statuses={TransferStatus.USER_LOGGED_OFF})
 
     def on_clear_finished_cancelled(self, *_args):
-        core.uploads.clear_uploads(
-            statuses={TransferStatus.CANCELLED, TransferRejectReason.DISALLOWED_EXTENSION, TransferStatus.FINISHED})
+        core.uploads.clear_uploads(statuses={TransferStatus.CANCELLED, TransferStatus.FINISHED})
 
     def on_clear_finished_failed(self, *_args):
         core.uploads.clear_uploads(
-            statuses={TransferStatus.CANCELLED, TransferRejectReason.DISALLOWED_EXTENSION, TransferStatus.FINISHED,
-                      TransferStatus.CONNECTION_TIMEOUT, TransferStatus.LOCAL_FILE_ERROR})
+            statuses={TransferStatus.CANCELLED, TransferStatus.FINISHED, TransferStatus.CONNECTION_TIMEOUT,
+                      TransferStatus.LOCAL_FILE_ERROR})

@@ -69,7 +69,6 @@ class Transfers:
         TransferStatus.FILTERED: _("Filtered"),
         TransferStatus.DOWNLOAD_FOLDER_ERROR: _("Download folder error"),
         TransferStatus.LOCAL_FILE_ERROR: _("Local file error"),
-        TransferRejectReason.DISALLOWED_EXTENSION: _("Disallowed extension"),
         TransferRejectReason.BANNED: _("Banned"),
         TransferRejectReason.FILE_NOT_SHARED: _("File not shared"),
         TransferRejectReason.PENDING_SHUTDOWN: _("Pending shutdown"),
