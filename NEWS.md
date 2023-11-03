@@ -14,6 +14,7 @@
  * Added function to send a private message to all online buddies and users in upload queue
  * Added a warning dialog if shared folders are unavailable before rescanning
  * Added Ctrl+Shift+T shortcut to reopen recently closed tabs
+ * Added dropdown menu listing all open tabs
  * Added option to show exact file sizes in bytes
  * Added popovers in the status bar for selecting download and upload speed limits
  * Added option to configure text view font
@@ -21,34 +22,35 @@
  * Added preference to choose user interface language
  * Added wishlist results found notification
  * Added option to set custom handlers for opening downloaded files
- * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Added file type icons to file lists
  * Added button to view personal profile
  * Added buttons in Preferences to open download folder locations in file manager
- * Improved pane and column resizing when shrinking window
- * Removed "Auto-join" check box, joined chat rooms are now remembered between sessions
- * Searching in lists now searches all columns
+ * Added total size of all selected files to window title in the "File Properties" dialog
+ * Added new command system for plugins
+ * Added keyboard input to headless CLI (type /help for a list of available commands)
+ * Windows: Added option to bind Nicotine+ to a specific network interface
+ * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
- * Window title in "File Properties" dialog shows the total size of all selected files
+ * Improved pane and column resizing when shrinking window
+ * Searching in lists now searches all columns
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
  * Banned users can no longer read self descriptions on user profiles
  * Chat room tabs are added immediately, and show a message when joining the room is not allowed
- * Completed Soulseek protocol implementation of distributed peers
- * Added new command system for plugins
- * Added keyboard input to headless CLI (type /help for a list of available commands)
- * Windows: Added option to bind Nicotine+ to a specific network interface
+ * Removed "Auto-join" check box, joined chat rooms are now remembered between sessions
  * Removed command alias system in favor of plugin commands
+ * Removed a few outdated/redundant preferences
  * Removed python3-gdbm dependency
  * Bumped minimum Python version requirement to 3.6
  * Bumped minimum GTK 3 version requirement to 3.22.30
- * Various accessibility improvements
+ * Completed Soulseek protocol implementation of distributed peers
  * ...and too many other refinements, under-the-hood improvements and code rewrites to count
 
 ### Corrections
 
  * Major performance improvements when many queued and finished transfers are present
  * Performance improvements when scanning and accessing shares
+ * Various accessibility improvements
  * ..
 
 ### Issues closed on GitHub
