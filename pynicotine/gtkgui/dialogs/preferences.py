@@ -1727,7 +1727,7 @@ class UserInterfacePage:
             button.set_rgba(rgba)
 
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
-            color_dialog = Gtk.ColorDialog(with_alpha=False)
+            color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
 
             for button in self.color_buttons.values():
@@ -1736,6 +1736,9 @@ class UserInterfacePage:
             for button in self.font_buttons.values():
                 button.set_dialog(font_dialog)
                 button.set_level(Gtk.FontLevel.FONT)
+        else:
+            for button in self.color_buttons.values():
+                button.set_use_alpha(True)
 
         icon_list = [
             (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
@@ -1940,7 +1943,7 @@ class UserInterfacePage:
         if color_hex:
             rgba.parse(color_hex)
         else:
-            rgba.red = rgba.green = rgba.blue = rgba.alpha = 0.0
+            rgba.red = rgba.green = rgba.blue = rgba.alpha = 0
 
         color_button = getattr(self, Gtk.Buildable.get_name(entry).replace("entry", "button"))
         color_button.set_rgba(rgba)
@@ -1954,7 +1957,8 @@ class UserInterfacePage:
 
         rgba = button.get_rgba()
 
-        if GTK_API_VERSION >= 4 and rgba.is_clear():
+        if rgba.alpha <= 0:
+            # Unset color if transparent
             color_hex = ""
         else:
             red_color = round(rgba.red * 255)
