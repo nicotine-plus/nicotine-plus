@@ -1727,7 +1727,7 @@ class UserInterfacePage:
             button.set_rgba(rgba)
 
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
-            color_dialog = Gtk.ColorDialog()
+            color_dialog = Gtk.ColorDialog(with_alpha=False)
             font_dialog = Gtk.FontDialog()
 
             for button in self.color_buttons.values():
@@ -1935,7 +1935,12 @@ class UserInterfacePage:
         self.editing_color = True
 
         rgba = Gdk.RGBA()
-        rgba.parse(entry.get_text())
+        color_hex = entry.get_text()
+
+        if color_hex:
+            rgba.parse(color_hex)
+        else:
+            rgba.red = rgba.green = rgba.blue = rgba.alpha = 0.0
 
         color_button = getattr(self, Gtk.Buildable.get_name(entry).replace("entry", "button"))
         color_button.set_rgba(rgba)
