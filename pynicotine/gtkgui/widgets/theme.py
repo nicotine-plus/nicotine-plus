@@ -292,6 +292,11 @@ def set_global_css():
     css_gtk4 = b"""
     /* Tweaks (GTK 4+) */
 
+    * {
+        /* Unset line height due to it resulting in blurry text */
+        line-height: unset;
+    }
+
     treeview.normal-icons {
         /* Country flag icon size in treeviews */
         -gtk-icon-size: 21px;
