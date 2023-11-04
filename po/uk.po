@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-11-04 10:27+0000\n"
+"Last-Translator: Vladyslav Anisimov <uniss@ua.fm>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
 "Language: uk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -218,9 +218,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Вам потрібно вказати ім’я користувача та пароль перед підключенням…"
 
 #: pynicotine/core.py:392
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Завантаження %(program)s %(version)s"
+msgstr "Вийти %(program)s %(version)s!"
 
 #: pynicotine/core.py:446
 #, python-format
@@ -701,7 +701,7 @@ msgstr "Актуально"
 #: pynicotine/gtkgui/dialogs/about.py:446
 #, fuzzy
 msgid "Checking latest version…"
-msgstr "Перевірити _останню версію"
+msgstr "Перевірити _останню версію…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:72
 msgid "Setup Assistant"
@@ -1083,7 +1083,7 @@ msgstr "Введіть новий фільтр завантаження:"
 #: pynicotine/gtkgui/userlist.py:437
 #, fuzzy
 msgid "_Add"
-msgstr "_Додати…"
+msgstr "_Додати"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:437
 #: pynicotine/gtkgui/dialogs/preferences.py:470
@@ -2572,9 +2572,8 @@ msgid "Add as Operator of %s"
 msgstr "Додати як оператора %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:579
-#, fuzzy
 msgid "Please enter number of days."
-msgstr "Будь ласка, введіть кількість днів!"
+msgstr "Будь ласка, введіть кількість днів."
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:590
 #, python-format
@@ -2728,9 +2727,9 @@ msgid "Group by User"
 msgstr "Групувати за користувачем"
 
 #: pynicotine/headless/application.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Ви дійсно хочете вийти?"
+msgstr "Ви дійсно хочете вийти? %s"
 
 #: pynicotine/headless/application.py:78
 #, fuzzy, python-format
@@ -2747,7 +2746,7 @@ msgstr ""
 #: pynicotine/headless/application.py:96
 #, fuzzy
 msgid "Password: "
-msgstr "Пароль"
+msgstr "Пароль: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2763,7 +2762,7 @@ msgstr ""
 #: pynicotine/headless/application.py:101
 #, fuzzy
 msgid "Username: "
-msgstr "Ім'я користувача:"
+msgstr "Ім'я користувача: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -5758,14 +5757,12 @@ msgid "Folders"
 msgstr "Каталоги"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:186
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Завершено завантаження файлів"
+msgstr "Завершені завантаження:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:202
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Завершено завантаження"
+msgstr "Незавершені завантаження:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:218
 #, fuzzy

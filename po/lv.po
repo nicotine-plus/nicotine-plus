@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-30 10:00+0000\n"
+"PO-Revision-Date: 2023-11-04 10:27+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -1162,8 +1162,9 @@ msgstr "Ievadiet IP adresi, kuru vēlaties bloķēt:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1218
 #: pynicotine/gtkgui/dialogs/preferences.py:2005
+#, fuzzy
 msgid "Format codes"
-msgstr ""
+msgstr "Formatēt kodus"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1251
 #: pynicotine/gtkgui/dialogs/preferences.py:1265
@@ -1242,13 +1243,12 @@ msgid "Separate Buddies tab"
 msgstr "Atdalīt Draugu cilni"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1638
-#, fuzzy
 msgid "Sidebar in Chat Rooms tab"
-msgstr "Draugu Saraksts Tērzēšanas Istabās"
+msgstr "Sānu josla cilnē Tērzēšanas Istabas"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1639
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Vienmēr redzama sānu josla"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1644
 msgid "Top"
@@ -1631,28 +1631,24 @@ msgid "_Preferences"
 msgstr "_Preferences"
 
 #: pynicotine/gtkgui/mainwindow.py:512
-#, fuzzy
 msgid "Browse _Public Shares"
-msgstr "Pārlūkot Pu_bliskos Koplietojumus"
+msgstr "Pārlūkot _Publiskos Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:513
-#, fuzzy
 msgid "Browse _Buddy Shares"
 msgstr "Pārlūkot _Draugu Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:514
-#, fuzzy
 msgid "Browse _Trusted Shares"
-msgstr "Pārlūkot _Draugu Koplietojumus"
+msgstr "Pārlūkot _Uzticamo Draugu Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:521 pynicotine/gtkgui/mainwindow.py:558
 msgid "_Rescan Shares"
 msgstr "Pā_rskenēt Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:522 pynicotine/gtkgui/mainwindow.py:560
-#, fuzzy
 msgid "Configure _Shares"
-msgstr "Konfigurēt Koplietojumus"
+msgstr "Konfigurēt _Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:540
 msgid "_Keyboard Shortcuts"
@@ -1679,9 +1675,8 @@ msgid "_About Nicotine+"
 msgstr "P_ar Nicotine+"
 
 #: pynicotine/gtkgui/mainwindow.py:559
-#, fuzzy
 msgid "_Browse Shares"
-msgstr "Pārlūkot Koplietojumus"
+msgstr "_Pārlūkot Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:562 pynicotine/gtkgui/mainwindow.py:577
 msgid "_Help"
@@ -1757,14 +1752,12 @@ msgid "Copy _All"
 msgstr "Kopēt _visu"
 
 #: pynicotine/gtkgui/mainwindow.py:1199
-#, fuzzy
 msgid "View _Debug Logs"
-msgstr "Skatīt Istabas Žurnālu"
+msgstr "Skatīt _Atkļūdošanas Žurnālus"
 
 #: pynicotine/gtkgui/mainwindow.py:1200
-#, fuzzy
 msgid "View _Transfer Logs"
-msgstr "Atvēr_t Pārsūtījumu Žurnālu"
+msgstr "Skatīt _Pārsūtījumu Žurnālus"
 
 #: pynicotine/gtkgui/mainwindow.py:1202
 msgid "_Log Categories"
@@ -1785,9 +1778,8 @@ msgid "Uploads: %(speed)s"
 msgstr "Augšupielādes: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1306
-#, fuzzy
 msgid "Preparing Shares"
-msgstr "Skenē Koplietojumus"
+msgstr "Sagatavo Koplietojumus"
 
 #: pynicotine/gtkgui/mainwindow.py:1313
 msgid "Scanning Shares"
@@ -1949,9 +1941,8 @@ msgid "View User _Profile"
 msgstr "Skatīt Lietotāja _Profilu"
 
 #: pynicotine/gtkgui/search.py:591 pynicotine/gtkgui/transfers.py:241
-#, fuzzy
 msgid "_Browse Folder"
-msgstr "Pārlūkot Mapi"
+msgstr "_Pārlūkot Mapi"
 
 #: pynicotine/gtkgui/search.py:592 pynicotine/gtkgui/transfers.py:234
 #: pynicotine/gtkgui/userbrowse.py:275 pynicotine/gtkgui/userbrowse.py:289
@@ -2062,9 +2053,8 @@ msgid "Transferring"
 msgstr "Pārsūta"
 
 #: pynicotine/gtkgui/transfers.py:96
-#, fuzzy
 msgid "Connection closed"
-msgstr "Savienojumi"
+msgstr "Savienojums aizvērts"
 
 #: pynicotine/gtkgui/transfers.py:97
 msgid "Connection timeout"
@@ -2111,9 +2101,8 @@ msgid "Local file error"
 msgstr "Lokālā faila kļūda"
 
 #: pynicotine/gtkgui/transfers.py:112
-#, fuzzy
 msgid "File read error"
-msgstr "Failu Pārsūtīšana"
+msgstr "Failu nolasīšanas kļūda"
 
 #: pynicotine/gtkgui/transfers.py:153
 msgid "Queue"
@@ -2132,9 +2121,8 @@ msgid "Time Left"
 msgstr "Atlikušais Laiks"
 
 #: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:353
-#, fuzzy
 msgid "_Open File"
-msgstr "_Atvērt Sarakstu"
+msgstr "_Atvērt Failu"
 
 #: pynicotine/gtkgui/transfers.py:233 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:354
@@ -2536,13 +2524,12 @@ msgid "Video"
 msgstr "Video"
 
 #: pynicotine/gtkgui/widgets/theme.py:374
-#, fuzzy
 msgid "Document"
-msgstr "Dokuments/Teksts"
+msgstr "Dokuments"
 
 #: pynicotine/gtkgui/widgets/theme.py:375
 msgid "Text"
-msgstr ""
+msgstr "Teksts"
 
 #: pynicotine/gtkgui/widgets/theme.py:479
 #, python-format
@@ -2627,26 +2614,23 @@ msgid "Group by User"
 msgstr "Grupēšana pēc lietotāja"
 
 #: pynicotine/headless/application.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Vai tiešām vēlaties iziet?"
+msgstr "Vai tiešām vēlaties iziet? %s"
 
 #: pynicotine/headless/application.py:78
-#, fuzzy, python-format
+#, python-format
 msgid "User %s already exists, and the password you entered is invalid."
-msgstr ""
-"Lietotājs %s jau pastāv, un ievadītā parole nav derīga. Lūdzu, izvēlieties "
-"citu lietotājvārdu, ja pierakstāties pirmo reizi."
+msgstr "Lietotājs %s jau pastāv, un ievadītā parole nav derīga."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
-msgstr ""
+msgstr "Ierakstiet %s, lai pieteiktos ar citu lietotājvārdu vai paroli."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Parole"
+msgstr "Parole: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2659,18 +2643,17 @@ msgstr ""
 "Ja Jums jau ir konts, aizpildiet esošos pierakstīšanās datus."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Lietotājvārds:"
+msgstr "Lietotājvārds: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Tālāk norādītie koplietojumi nav pieejami:"
 
 #: pynicotine/headless/application.py:122
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Mēģināt atkārtotu pārskenēšanu? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -3761,14 +3744,12 @@ msgid "List available commands"
 msgstr "Pieejamo komandu saraksts"
 
 #: pynicotine/plugins/core_commands/__init__.py:50
-#, fuzzy
 msgid "Connect to the server"
-msgstr "Nevar izveidot savienojumu ar serveri. Iemesls: %s"
+msgstr "Savienoties ar serveri"
 
 #: pynicotine/plugins/core_commands/__init__.py:54
-#, fuzzy
 msgid "Disconnect from the server"
-msgstr "Atvienots no servera %(host)s:%(port)s"
+msgstr "Atvienoties no servera"
 
 #: pynicotine/plugins/core_commands/__init__.py:59
 msgid "Toggle away status"
@@ -3913,14 +3894,14 @@ msgid "Not joined in room %s"
 msgstr "Nav pievienojies istabā %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:399
-#, fuzzy, python-format
+#, python-format
 msgid "Not messaging with user %s"
-msgstr "Nav koplietojuma ar nosaukumu \"%s\""
+msgstr "Nav ziņapmaiņas ar lietotāju %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:403
-#, fuzzy, python-format
+#, python-format
 msgid "Closed private chat of user %s"
-msgstr "Aizvērt privāto tērzēšanu"
+msgstr "Aizvērta privātā tērzēšana ar lietotāju %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:480
 #, python-format
@@ -3945,7 +3926,7 @@ msgstr "Neignorēts %s"
 #: pynicotine/plugins/core_commands/__init__.py:557
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "Uzskaitīti %(num_listed)s koplietojumi (%(num_total)s konfigurēti)"
 
 #: pynicotine/plugins/core_commands/__init__.py:569
 #, python-format
@@ -4117,15 +4098,16 @@ msgid "Rescan complete: %(num)s folders found"
 msgstr "Pārskenēšana pabeigta: %(num)s mapes atrastas"
 
 #: pynicotine/shares.py:292
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"Radās nopietna kļūda, pārskenējot kopīgotos failus. Ja šī problēma joprojām "
-"pastāv, izdzēsiet %(dir)s/*.db un mēģiniet vēlreiz. Ja tas nepalīdz, lūdzu, "
-"iesniedziet kļūdas ziņojumu, iekļaujot šo steka trasējumu: %(trace)s"
+"Radusies nopietna kļūda, pārskenējot koplietojumus. Ja šī problēma "
+"saglabājas, izdzēsiet %(dir)s/*.dbn un mēģiniet vēlreiz. Ja tas nepalīdz, "
+"lūdzu, iesniedziet ziņojumu par kļūdu, iekļaujot šo steka trasējumu: "
+"%(trace)s"
 
 #: pynicotine/shares.py:406
 #, python-format
@@ -4322,14 +4304,12 @@ msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Nevar atjaunot iepriekšējo failu %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:27
-#, fuzzy
 msgid "Search activity log…"
-msgstr "Meklēšanas vienums…"
+msgstr "Aktivitātes žurnāla meklēšana…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:63 pynicotine/gtkgui/ui/privatechat.ui:18
-#, fuzzy
 msgid "Search chat log…"
-msgstr "Meklēšanas vienums…"
+msgstr "Tērzēšanas žurnāla meklēšana…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:96 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4423,14 +4403,13 @@ msgstr "Kopīgot Mapes"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:350
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Soulseek lietotāji varēs lejupielādēt no Jūsu koplietojumiem. Veiciniet "
-"Soulseek tīkla attīstību, kopīgojot savu kolekciju, kā arī failus, ko esat "
+"Soulseek lietotāji varēs lejupielādēt no jūsu koplietojumiem. Veiciniet "
+"Soulseek tīkla attīstību, daloties ar saviem failus, kā arī ar to, ko esat "
 "lejupielādējuši no citiem lietotājiem."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
@@ -4440,7 +4419,7 @@ msgstr "Jūs esat gatavs lietot Nicotine+!"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:533
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
-msgstr ""
+msgstr "Soulseek ir nešifrēts protokols, kas nav paredzēts drošai saziņai."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -4505,9 +4484,8 @@ msgid "Show Log Pane"
 msgstr "Rādīt Žurnāla Paneli"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Konfigurēt Kontu"
+msgstr "Apstiprināt Iziešanu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
@@ -4922,9 +4900,8 @@ msgid "Configure User Profile"
 msgstr "Konfigurēt Lietotāja Profilu"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1630
-#, fuzzy
 msgid "Search log…"
-msgstr "Meklēšanas vienums…"
+msgstr "Meklēšana žurnālā…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1695
 msgid "Connections"
@@ -4943,9 +4920,8 @@ msgid "Show Log History Pane"
 msgstr "Rādīt Žurnāla Vēstures Paneli"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:15
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Meklēšanas vienums…"
+msgstr "Meklēšana tērzēšanas vēsturē…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/downloads.ui:97
@@ -4968,9 +4944,8 @@ msgid "Use alternative download speed limit (KiB/s):"
 msgstr "Izmantot alternatīvu lejupielādes ātruma ierobežojumu (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:19
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Meklēšanas vienums…"
+msgstr "Meklēšana istabās…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
@@ -5648,7 +5623,7 @@ msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
-"Pierakstieties esošajā Soulseek kontā vai izveidojiet jaunu kontu. "
+"Pieteicieties esošā Soulseek kontā vai izveidojiet jaunu kontu. "
 "Lietotājvārdi ir reģistrjutīgi un unikāli."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:129
@@ -5656,9 +5631,8 @@ msgid "Public IP address:"
 msgstr "Publiskā IP adrese:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:170
-#, fuzzy
 msgid "Listening port (requires a restart):"
-msgstr "Valoda (nepieciešams restartēt):"
+msgstr "Klausīšanās ports (nepieciešams restartēt):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:204
 msgid "Away Status"
@@ -5696,9 +5670,8 @@ msgstr ""
 "ko darāt."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
-#, fuzzy
 msgid "Network interface (requires a restart):"
-msgstr "Valoda (nepieciešams restartēt):"
+msgstr "Tīkla saskarne (nepieciešams restartēt):"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
@@ -5772,16 +5745,14 @@ msgid "Show privately shared files in search results"
 msgstr "Rādīt privāti koplietotos failus meklēšanas rezultātos"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:61
-#, fuzzy
 msgid ""
 "Privately shared files that have been made visible to everyone will be "
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Citiem Soulseek klientiem var būt iespēja koplietot failus privāti. Tādā "
-"gadījumā, šiem failiem tiks pievienots prefikss “[PRIVATE]”, un tos nevarēs "
-"lejupielādēt, līdz augšupielādētājs nebūs devis skaidru atļauju. Laipni "
-"palūdziet viņam to."
+"Privāti kopīgotiem failiem, kas ir padarīti redzami visiem, tiks pievienots "
+"prefikss '[PRIVATE]', un tos nevarēs lejupielādēt, kamēr augšupielādētājs "
+"nebūs devis skaidru atļauju. Laipni palūdziet to!"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:73
 msgid "Limit number of results per search:"
@@ -5877,17 +5848,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Redzams visiem:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Draugu vārdi"
+msgstr "Draugu koplietojumi"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:72
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Uzskaitīt koplietojumus"
+msgstr "Uzticamo Draugu koplietojumi"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:59
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5931,16 +5900,12 @@ msgid "Upload queue type:"
 msgstr "Augšupielādes rindas tips:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:235
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr ""
-"Ievietot augšupielādes rindā, ja kopējais pārsūtīšanas ātrums sasniedz (KiB/"
-"s):"
+msgstr "Piešķirt augšupielādes slotus, līdz kopējais ātrums sasniedz (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:258
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Ierobežot augšupielādes slotu skaitu līdz:"
+msgstr "Fiksēts augšupielādes slotu skaits:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Prioritize all buddies"
@@ -5951,13 +5916,13 @@ msgid "Queue Limits"
 msgstr "Rindu Ierobežojumi"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:307
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Ierobežot rezultātu skaitu vienai meklēšanai:"
+msgstr "Maksimālais rindā gaidāmo failu skaits vienam lietotājam:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
 msgstr ""
+"Maksimālais rindā gaidāmo failu kopējais izmērs vienam lietotājam (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -5989,6 +5954,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Pievienojiet informāciju, ko vēlaties, lai ikviens redzētu, piemēram, īsu "
+"aprakstu, noderīgus padomus vai norādījumus par jūsu koplietojumu "
+"lejupielādi."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"
@@ -6007,9 +5975,8 @@ msgid "Minimize to tray on startup"
 msgstr "Startēšanas laikā samazināt ikonjoslā"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:79
-#, fuzzy
 msgid "Use header bar"
-msgstr "Izmantot _Galvenes Joslu"
+msgstr "Izmantot _galvenes joslu"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:90
 msgid "Language (requires a restart):"
@@ -6081,7 +6048,7 @@ msgstr "Izceltās cilnes etiķetes krāsa:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:459
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Draugu saraksta pozīcija:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:484
 msgid "Visible main tabs:"
