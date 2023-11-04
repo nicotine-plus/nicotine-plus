@@ -323,7 +323,7 @@ def set_global_css():
 
     treeview > header > button > box {
         /* Use relative font size for column headers */
-        font-size: 0.9em;
+        font-size: 0.92em;
     }
     """
 
