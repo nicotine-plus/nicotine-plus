@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-10-30 19:40+0000\n"
+"PO-Revision-Date: 2023-11-04 10:27+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -4166,7 +4166,7 @@ msgstr "Erneuter Scan wegen nicht verfügbarer Freigaben abgebrochen: %s"
 #: pynicotine/shares.py:1075
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr "Benutzer %(user)s durchsucht Ihre Liste der freigegebenen Dateien"
+msgstr "Benutzer %(user)s durchsucht deiner Liste der freigegebenen Dateien"
 
 #: pynicotine/shares.py:1117
 #, python-format
