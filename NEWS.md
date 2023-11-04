@@ -4,21 +4,22 @@
 
 ### Changes
 
- * Enabled GTK 4 support by default (new visual style on Windows, macOS and GNOME)
+ * Completed Soulseek protocol implementation of distributed peers, bumped protocol version to 160.2
+ * Enabled GTK 4 support by default for new visual style on Windows, macOS and GNOME
  * Added "Chat History" popover to view all previous private chats with users
- * Added generic file type search result filters (audio / image / video / text / archive / executable)
- * Added audio duration search result filter
+ * Added generic file type search result filters (audio | image | video | text | archive | executable)
+ * Added audio duration search result filter (HH:MM:SS | MM:SS | Seconds)
  * Added path bar when browsing user shares
  * Added option to make specific shares available to trusted buddies only
- * Added option to wait for active uploads to finish before quitting
+ * Added option to wait for active uploads to finish before quitting Nicotine+
  * Added function to send a private message to all online buddies and users in upload queue
  * Added a warning dialog if shared folders are unavailable before rescanning
- * Added Ctrl+Shift+T shortcut to reopen recently closed tabs
  * Added dropdown menu listing all open tabs
+ * Added function to reopen closed tab with Ctrl+Shift+T shortcut
  * Added option to show exact file sizes in bytes
  * Added popovers in the status bar for selecting download and upload speed limits
  * Added option to configure text view font
- * Added function to clear downloads that no longer exist on disk
+ * Added function to clear all deleted downloads that no longer exist on disk
  * Added preference to choose user interface language
  * Added wishlist results found notification
  * Added option to set custom handlers for opening downloaded files
@@ -26,31 +27,37 @@
  * Added button to view personal profile
  * Added buttons in Preferences to open download folder locations in file manager
  * Added total size of all selected files to window title in the "File Properties" dialog
- * Added new command system for plugins
- * Added keyboard input to headless CLI (type /help for a list of available commands)
+ * Added new command system for plugins (type /help for a list of available commands)
+ * Added keyboard input with readline command editing and history to headless CLI
  * Windows: Added option to bind Nicotine+ to a specific network interface
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
- * Improved pane and column resizing when shrinking window
- * Searching in lists now searches all columns
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
+ * Performance improvements when scanning and accessing shares
  * Banned users can no longer read self descriptions on user profiles
- * Chat room tabs are added immediately, and show a message when joining the room is not allowed
+ * Moved buddy list position option from view menu to Preferences dialog
+ * Removed View menu, since all options in this menu can be toggled by other means
  * Removed "Auto-join" check box, joined chat rooms are now remembered between sessions
  * Removed command alias system in favor of plugin commands
- * Removed a few outdated/redundant preferences
+ * Removed some redundant user interface options and unified some configuration preferences
  * Removed python3-gdbm dependency
  * Bumped minimum Python version requirement to 3.6
  * Bumped minimum GTK 3 version requirement to 3.22.30
- * Completed Soulseek protocol implementation of distributed peers
- * ...and too many other refinements, under-the-hood improvements and code rewrites to count
 
 ### Corrections
 
- * Major performance improvements when many queued and finished transfers are present
- * Performance improvements when scanning and accessing shares
- * Various accessibility improvements
+ * Avoid performance degredation when many queued transfers are retried or added from a large multi-selection
+ * Don't rely on folder modified times when rescanning modified files to ensure share databases are properly updated
+ * Close peer connection if an in-progress Browse Shares tab is closed, to avoid wasting bandwidth
+ * Immediately show new chat room tab with no delay, then show a message in the activity view when joined the room
+ * Redirect server message into chat room tab if joining a private room wasn't successful
+ * Insert new chat tabs before older ones
+ * Allow tab changed status icon to be overridden if the unread tab is important
+ * Improved pane and column resizing when shrinking window
+ * Finding in tree view lists now searches data in all columns
+ * Enabled caret navigation for chat view screen reading and improved chat entry focusing when paging up and down
+ * Windows: stop using 'portable' term for standalone packages, as application data are still stored in the user folder
  * ..
 
 ### Issues closed on GitHub
@@ -3045,7 +3052,7 @@ Christmas release
  * Updated subtabs are now marked with icons, like the main tabs.
  * It is possible to close/open rooms list, like the user list
  * Further reduced the CPU usage during sending the list of shared files
-   to other peers	
+   to other peers
  * Added "Close and ignore" button to search tabs (it closes a search tab and
    discards further search results)
  * Updated Mac OS X instructions
