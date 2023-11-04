@@ -229,12 +229,12 @@ def set_global_css():
 
     .title-1 {
         font-weight: 800;
-        font-size: 20pt;
+        font-size: 1.83em;
     }
 
     .title-2 {
         font-weight: 800;
-        font-size: 15pt;
+        font-size: 1.35em;
     }
 
     .heading {
@@ -318,6 +318,15 @@ def set_global_css():
     }
     """
 
+    css_libadwaita = b"""
+    /* Tweaks (libadwaita) */
+
+    treeview > header > button > box {
+        /* Use relative font size for column headers */
+        font-size: 0.9em;
+    }
+    """
+
     css_libadwaita_1_4 = b"""
     /* Tweaks (libadwaita 1.4+) */
 
@@ -335,6 +344,9 @@ def set_global_css():
 
     if GTK_API_VERSION >= 4:
         css.extend(css_gtk4)
+
+        if LIBADWAITA_API_VERSION:
+            css.extend(css_libadwaita)
 
         if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
             css.extend(css_libadwaita_1_4)
