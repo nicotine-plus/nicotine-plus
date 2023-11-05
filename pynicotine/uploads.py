@@ -461,15 +461,10 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         ip_address, _port = addr
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, _reject_reason = core.network_filter.check_user_permission(username, ip_address)
 
         if permission_level == "banned":
-            reject_message = TransferRejectReason.BANNED
-
-            if reject_reason:
-                reject_message += f" ({reject_reason})"
-
-            return False, reject_message
+            return False, TransferRejectReason.FILE_NOT_SHARED
 
         if core.shares.rescanning:
             self._pending_network_msgs.append(msg)
@@ -626,17 +621,11 @@ class Uploads(Transfers):
 
         self._update_transfer(upload_candidate)
 
-    def ban_users(self, users, ban_message=None):
-        """Ban a user, cancel all the user's uploads, send a 'Banned' message
-        via the transfers, and clear the transfers from the uploads list."""
+    def ban_users(self, users):
+        """Ban a user, cancel all the user's uploads, send a 'File not shared.'
+        message via the transfers, and clear the transfers from the uploads list."""
 
-        if not ban_message and config.sections["transfers"]["usecustomban"]:
-            ban_message = config.sections["transfers"]["customban"]
-
-        if ban_message:
-            status = f"{TransferRejectReason.BANNED} ({ban_message})"
-        else:
-            status = TransferRejectReason.BANNED
+        status = TransferRejectReason.FILE_NOT_SHARED
 
         for upload in self.transfers.copy().values():
             if upload.username not in users:

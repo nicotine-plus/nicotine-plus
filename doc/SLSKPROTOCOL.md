@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 3, 2023
+Last updated on November 5, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -93,7 +93,6 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | String                | Comments                                    |
 | --------------------- | ------------------------------------------- |
-| Banned                | SoulseekQt uses 'File not shared.' instead  |
 | Cancelled             |                                             |
 | Complete              |                                             |
 | File not shared.      | Note: Ends with a dot                       |
@@ -105,14 +104,15 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 #### Deprecated
 
-| String                             | Comments                                                    |
-| ---------------------------------- | ----------------------------------------------------------- |
-| Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
-| Disallowed extension               | Sent by Soulseek NS for filtered extensions                 |
-| File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
-| Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
-| User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
-| User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| String                             | Comments                                                                     |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| Banned                             | Sent by Soulseek NS and Nicotine+ <= 3.2.9, superseded by *File not shared.* |
+| Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0                  |
+| Disallowed extension               | Sent by Soulseek NS for filtered extensions                                  |
+| File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1                  |
+| Remote file error                  | Sent by Soulseek NS in response to legacy download requests                  |
+| User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1                  |
+| User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1                  |
 
 ### File Attribute Types
 
