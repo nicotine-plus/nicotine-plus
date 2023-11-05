@@ -57,6 +57,8 @@ Standalone executables are also available. They can be run from any folder and d
 
 Unstable installers for macOS Big Sur 11 and later are built after every commit to the master branch.
 
+*NOTE: You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) the first time you open Nicotine+ on macOS.*
+
 - [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
 
 
