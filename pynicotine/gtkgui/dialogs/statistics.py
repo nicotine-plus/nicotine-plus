@@ -42,10 +42,6 @@ class Statistics(Dialog):
             self.downloaded_size_total_label,
             self.reset_button,
             self.since_timestamp_total_label,
-            self.started_downloads_session_label,
-            self.started_downloads_total_label,
-            self.started_uploads_session_label,
-            self.started_uploads_total_label,
             self.uploaded_size_session_label,
             self.uploaded_size_total_label
         ) = ui.load(scope=self, path="dialogs/statistics.ui")
@@ -55,7 +51,7 @@ class Statistics(Dialog):
             content_box=self.container,
             show_callback=self.on_show,
             title=_("Transfer Statistics"),
-            width=450,
+            width=425,
             resizable=False,
             close_destroy=False
         )
@@ -81,10 +77,16 @@ class Statistics(Dialog):
             total_value = humanize(total_value)
 
         if session_value is not None:
-            getattr(self, f"{stat_id}_session_label").set_text(session_value)
+            session_label = getattr(self, f"{stat_id}_session_label", None)
+
+            if session_label is not None:
+                session_label.set_text(session_value)
 
         if total_value is not None:
-            getattr(self, f"{stat_id}_total_label").set_text(total_value)
+            total_label = getattr(self, f"{stat_id}_total_label", None)
+
+            if total_label is not None:
+                total_label.set_text(total_value)
 
     def on_reset_statistics_response(self, *_args):
         core.statistics.reset_stats()
