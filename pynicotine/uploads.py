@@ -932,10 +932,7 @@ class Uploads(Transfers):
         # All checks passed, user can queue file!
         core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
-        # Is user already downloading/negotiating a download?
-        already_downloading = (username in self.active_users)
-
-        if not self.is_new_upload_accepted() or already_downloading:
+        if username in self.active_users or not self.is_new_upload_accepted():
             transfer = Transfer(
                 username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
                 size=self._get_file_size(real_path))
