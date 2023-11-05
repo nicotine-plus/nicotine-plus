@@ -657,6 +657,10 @@ def _get_custom_font_css():
     return css
 
 
+def _is_color_valid(color_hex):
+    return color_hex and Gdk.RGBA().parse(color_hex)
+
+
 def _get_custom_color_css():
 
     css = bytearray()
@@ -666,13 +670,14 @@ def _get_custom_color_css():
     away_color = config.sections["ui"]["useraway"]
     offline_color = config.sections["ui"]["useroffline"]
 
-    css.extend(
-        f"""
-        .user-status {{
-            -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
-        }}
-        """.encode("utf-8")
-    )
+    if _is_color_valid(online_color) and _is_color_valid(away_color) and _is_color_valid(offline_color):
+        css.extend(
+            f"""
+            .user-status {{
+                -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
+            }}
+            """.encode("utf-8")
+        )
 
     # Text colors
     treeview_text_color = config.sections["ui"]["search"]
@@ -685,7 +690,7 @@ def _get_custom_color_css():
         ("treeview", treeview_text_color),
         (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
-        if color:
+        if _is_color_valid(color):
             css.extend(
                 f"""
                 {css_selector} {{
@@ -698,7 +703,7 @@ def _get_custom_color_css():
     for css_selector, color in (
         ("entry", config.sections["ui"]["textbg"]),
     ):
-        if color:
+        if _is_color_valid(color):
             css.extend(
                 f"""
                 {css_selector} {{
