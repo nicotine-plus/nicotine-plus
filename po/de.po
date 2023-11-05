@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-04 10:27+0000\n"
+"PO-Revision-Date: 2023-11-05 10:59+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -5718,9 +5718,9 @@ msgid ""
 "change this value if you know what you are doing."
 msgstr ""
 "Bindet Verbindungen an eine bestimmte Netzwerkschnittstelle, was z. B. "
-"nützlich ist, um sicherzustellen, dass immer ein VPN verwendet wird. Lassen "
-"Sie diesen Wert leer, um jede verfügbare Schnittstelle zu verwenden. Ändern "
-"Sie diesen Wert nur, wenn Sie wissen, was Sie tun."
+"nützlich ist, um sicherzustellen, dass immer ein VPN verwendet wird. Normal "
+"gesprochen, wird dieser Wert leer gelassen, um jede verfügbare Schnittstelle "
+"zu verwenden."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:334
 msgid "Network interface (requires a restart):"
@@ -6262,11 +6262,11 @@ msgstr "Profil bearbeiten"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:126
 msgid "Shared Files"
-msgstr "Freigaben"
+msgstr "Freigegebene Dateien"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:153
 msgid "Shared Folders"
-msgstr "Freigaben"
+msgstr "Freigeben Ordnern"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:207
 msgid "Queued Uploads"
