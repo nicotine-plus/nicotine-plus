@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-05 10:59+0000\n"
+"PO-Revision-Date: 2023-11-05 17:28+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -6266,7 +6266,7 @@ msgstr "Freigegebene Dateien"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:153
 msgid "Shared Folders"
-msgstr "Freigeben Ordnern"
+msgstr "Freigegebene Ordnern"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:207
 msgid "Queued Uploads"
