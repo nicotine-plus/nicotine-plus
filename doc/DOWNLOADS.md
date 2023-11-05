@@ -72,7 +72,7 @@ pip3 install --upgrade nicotine-plus
 
 ### Official Release
 
-Stable Windows installers for Nicotine+ are available for download. Installing Nicotine+ requires administrator privileges.
+Stable installers for Windows 7 and later are available for download. Installing Nicotine+ requires administrator privileges.
 
 *NOTE: The installer format has changed since Nicotine+ 3.2.0. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).*
 
@@ -97,9 +97,9 @@ If you are using any of the package managers listed, you can install Nicotine+ u
 
 ## macOS
 
-### Official Release (Catalina/10.15 and newer)
+### Official Release
 
-A stable macOS installer for Nicotine+ is available on macOS Catalina 10.15 and newer.
+A stable installer is available on macOS Catalina 10.15 and later.
 
 *NOTE: You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) the first time you open Nicotine+ on macOS.*
 

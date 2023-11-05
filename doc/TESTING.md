@@ -43,7 +43,7 @@ See [All Platforms](#all-platforms) for installing the unstable version of Nicot
 
 ## Windows
 
-Unstable Windows packages are built after every commit to the master branch.
+Unstable packages for Windows 10 and later are built after every commit to the master branch.
 
 - [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]
 - [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer)]
@@ -55,7 +55,7 @@ Standalone executables are also available. They can be run from any folder and d
 
 ## macOS
 
-Unstable installers for macOS Big Sur 11 and newer are built after every commit to the master branch.
+Unstable installers for macOS Big Sur 11 and later are built after every commit to the master branch.
 
 - [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
 
