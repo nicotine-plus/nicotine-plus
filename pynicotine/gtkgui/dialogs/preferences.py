@@ -1966,6 +1966,10 @@ class UserInterfacePage:
             blue_color = round(rgba.blue * 255)
             color_hex = f"#{red_color:02X}{green_color:02X}{blue_color:02X}"
 
+            if rgba.alpha < 1 and GTK_API_VERSION >= 4:
+                alpha_value = round(rgba.alpha * 255)
+                color_hex += f"{alpha_value:02X}"
+
         entry = getattr(self, Gtk.Buildable.get_name(button).replace("button", "entry"))
 
         if entry.get_text() != color_hex:
