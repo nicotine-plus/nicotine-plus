@@ -546,9 +546,6 @@ class NetworkThread(Thread):
         requested interface name, cache it for later, and bind to it.
         """
 
-        self._interface_address = (
-            self._interface_address or NetworkInterfaces.get_interface_address(self._interface_name))
-
         if self._interface_address:
             if sock is not self._listen_socket:
                 NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
@@ -1134,7 +1131,9 @@ class NetworkThread(Thread):
             return
 
         self._interface_name = msg_obj.interface_name
-        self._interface_address = msg_obj.interface_address
+        self._interface_address = (
+            msg_obj.interface_address or NetworkInterfaces.get_interface_address(self._interface_name)
+        )
         self._listen_port = msg_obj.listen_port
 
         if not self._create_listen_socket():
