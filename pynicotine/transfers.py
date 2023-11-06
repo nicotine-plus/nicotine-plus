@@ -506,9 +506,6 @@ class Statistics:
         for stat_id in config.defaults["statistics"]:
             self.session_stats[stat_id] = 0 if stat_id != "since_timestamp" else int(time.time())
 
-        for stat_id in config.defaults["statistics"]:
-            self.update_ui(stat_id)
-
     def _quit(self):
         self.session_stats.clear()
 
@@ -516,14 +513,19 @@ class Statistics:
 
         self.session_stats[stat_id] += stat_value
         config.sections["statistics"][stat_id] += stat_value
-        self.update_ui(stat_id)
 
-    def update_ui(self, stat_id):
+        self._update_stat(stat_id)
+
+    def _update_stat(self, stat_id):
 
         session_stat_value = self.session_stats[stat_id]
         total_stat_value = config.sections["statistics"][stat_id]
 
         events.emit("update-stat-value", stat_id, session_stat_value, total_stat_value)
+
+    def update_stats(self):
+        for stat_id in self.session_stats:
+            self._update_stat(stat_id)
 
     def reset_stats(self):
 
@@ -531,4 +533,4 @@ class Statistics:
             stat_value = 0 if stat_id != "since_timestamp" else int(time.time())
             self.session_stats[stat_id] = config.sections["statistics"][stat_id] = stat_value
 
-            self.update_ui(stat_id)
+        self.update_stats()

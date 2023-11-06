@@ -18,7 +18,6 @@
 
 import time
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -58,6 +57,7 @@ class Statistics(Dialog):
             buttons_start=(self.close_button,),
             buttons_end=(self.reset_button,),
             default_button=self.close_button,
+            show_callback=self.on_show,
             title=_("Transfer Statistics"),
             width=450,
             resizable=False,
@@ -67,10 +67,10 @@ class Statistics(Dialog):
 
         events.connect("update-stat-value", self.update_stat_value)
 
-        for stat_id in config.defaults["statistics"]:
-            core.statistics.update_ui(stat_id)
-
     def update_stat_value(self, stat_id, session_value, total_value):
+
+        if not self.widget.get_visible():
+            return
 
         if stat_id in {"downloaded_size", "uploaded_size"}:
             session_value = human_size(session_value)
@@ -106,3 +106,6 @@ class Statistics(Dialog):
 
     def on_close(self, *_args):
         self.close()
+
+    def on_show(self, *_args):
+        core.statistics.update_stats()
