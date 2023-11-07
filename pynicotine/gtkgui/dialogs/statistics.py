@@ -60,9 +60,9 @@ class Statistics(Dialog):
             close_destroy=False
         )
 
-        events.connect("update-stat-value", self.update_stat_value)
+        events.connect("update-stat", self.update_stat)
 
-    def update_stat_value(self, stat_id, session_value, total_value):
+    def update_stat(self, stat_id, session_value, total_value):
 
         if not self.widget.get_visible():
             return

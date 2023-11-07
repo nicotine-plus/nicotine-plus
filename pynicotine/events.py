@@ -143,7 +143,7 @@ EVENT_NAMES = {
     "show-search",
 
     # Statistics
-    "update-stat-value",
+    "update-stat",
 
     # Shares
     "folder-contents-request",

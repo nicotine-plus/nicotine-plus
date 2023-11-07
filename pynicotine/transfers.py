@@ -521,7 +521,7 @@ class Statistics:
         session_stat_value = self.session_stats[stat_id]
         total_stat_value = config.sections["statistics"][stat_id]
 
-        events.emit("update-stat-value", stat_id, session_stat_value, total_stat_value)
+        events.emit("update-stat", stat_id, session_stat_value, total_stat_value)
 
     def update_stats(self):
         for stat_id in self.session_stats:
