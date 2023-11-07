@@ -148,6 +148,10 @@ class Dialog(Window):
                 action_area_end.add(button)           # pylint: disable=no-member
 
     def _on_show(self, *_args):
+
+        self._unselect_focus_label()
+        self._focus_default_button()
+
         if self.show_callback is not None:
             self.show_callback(self)
 
@@ -217,6 +221,15 @@ class Dialog(Window):
 
         self.default_button.grab_focus()
 
+    def _unselect_focus_label(self):
+        """Unselect default focus widget if it's a label."""
+
+        focus_widget = self.widget.get_focus()
+
+        if isinstance(focus_widget, Gtk.Label):
+            focus_widget.select_region(start_offset=0, end_offset=0)
+            self.widget.set_focus(None)
+
     def _finish_show(self):
         self.widget.set_modal(self.modal and self.parent.is_visible())
         self.widget.present()
@@ -228,9 +241,6 @@ class Dialog(Window):
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
-
-        # Focus default button
-        self._focus_default_button()
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after

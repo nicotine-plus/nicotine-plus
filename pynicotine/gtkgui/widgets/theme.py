@@ -330,7 +330,7 @@ def set_global_css():
     css_libadwaita_1_4 = b"""
     /* Tweaks (libadwaita 1.4+) */
 
-    window:not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
+    window:not(.filechooser):not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
     window:not(.menubar-border) menubar {
         /* Make title/header bars flat to match other libadwaita apps */
         background: none;
