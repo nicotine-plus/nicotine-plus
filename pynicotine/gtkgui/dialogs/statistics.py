@@ -33,7 +33,6 @@ class Statistics(Dialog):
     def __init__(self, application):
 
         (
-            self.close_button,
             self.completed_downloads_session_label,
             self.completed_downloads_total_label,
             self.completed_uploads_session_label,
@@ -55,14 +54,10 @@ class Statistics(Dialog):
         super().__init__(
             parent=application.window,
             content_box=self.container,
-            buttons_start=(self.close_button,),
-            buttons_end=(self.reset_button,),
-            default_button=self.close_button,
             title=_("Transfer Statistics"),
             width=450,
             resizable=False,
-            close_destroy=False,
-            show_title_buttons=False
+            close_destroy=False
         )
 
         events.connect("update-stat-value", self.update_stat_value)
