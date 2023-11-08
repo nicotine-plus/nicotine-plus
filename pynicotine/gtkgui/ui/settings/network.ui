@@ -282,23 +282,58 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="upnp_toggle">
-            <property name="label" translatable="yes">Automatically forward listening port (UPnP/NAT-PMP)</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
-            <signal name="toggled" handler="on_toggle_upnp"/>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Automatically forward listening port (UPnP/NAT-PMP)</property>
+                <property name="mnemonic-widget">upnp_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="upnp_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <signal name="notify::active" handler="on_toggle_upnp"/>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="auto_connect_startup_toggle">
-            <property name="label" translatable="yes">Auto-connect to server on startup</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Auto-connect to server on startup</property>
+                <property name="mnemonic-widget">auto_connect_startup_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="auto_connect_startup_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="homogeneous">True</property>
+            <property name="margin-top">6</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>

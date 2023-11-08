@@ -112,15 +112,14 @@ class PluginSettings(Dialog):
 
     def _add_boolean_option(self, option_name, option_value, description):
 
-        self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, receives_default=True,
-                                                                    visible=True)
-        self._generate_widget_container("", button)
-        self.application.preferences.set_widget(button, option_value)
+        self.option_widgets[option_name] = button = Gtk.Switch(
+            receives_default=True, valign=Gtk.Align.CENTER, visible=True
+        )
 
-        if GTK_API_VERSION >= 4:
-            button.get_last_child().set_wrap(True)  # pylint: disable=no-member
-        else:
-            button.get_child().set_line_wrap(True)  # pylint: disable=no-member
+        label = self._generate_widget_container(description, button)
+        label.set_mnemonic_widget(button)
+
+        self.application.preferences.set_widget(button, option_value)
 
     def _add_radio_option(self, option_name, option_value, description, items):
 
@@ -314,6 +313,9 @@ class PluginSettings(Dialog):
 
         if isinstance(widget, TextView):
             return widget.get_text()
+
+        if isinstance(widget, Gtk.Switch):
+            return widget.get_active()
 
         if isinstance(widget, Gtk.CheckButton):
             try:

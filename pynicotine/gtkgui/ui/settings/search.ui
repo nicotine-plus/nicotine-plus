@@ -41,30 +41,94 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="enable_search_history_toggle">
-            <property name="label" translatable="yes">Enable search history</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
-            <signal name="toggled" handler="on_toggle_search_history"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="remove_special_chars_toggle">
-            <property name="label" translatable="yes">Remove special characters from search terms</property>
-            <property name="tooltip-text" translatable="yes">Certain clients don't send search results if special characters are included.</property>
-            <property name="use-underline">True</property>
-            <property name="visible">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="show_private_results_toggle">
-            <property name="label" translatable="yes">Show privately shared files in search results</property>
-            <property name="tooltip-text" translatable="yes">Privately shared files that have been made visible to everyone will be prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
-            <property name="use-underline">True</property>
-            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Enable search history</property>
+                <property name="mnemonic-widget">enable_search_history_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_search_history_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="tooltip-text" translatable="yes">Privately shared files that have been made visible to everyone will be prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Show privately shared files in search results</property>
+                <property name="mnemonic-widget">show_private_results_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">info-symbolic</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="show_private_results_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="tooltip-text" translatable="yes">Certain clients don't send search results if special characters are included.</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Remove special characters from search terms</property>
+                <property name="mnemonic-widget">remove_special_chars_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">info-symbolic</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="remove_special_chars_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="margin-top">6</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
@@ -147,15 +211,33 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="enable_default_filters_toggle">
-            <property name="label" translatable="yes">Enable search result filters by default</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Enable search result filters by default</property>
+                <property name="mnemonic-widget">enable_default_filters_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_default_filters_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="homogeneous">True</property>
+            <property name="margin-top">6</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
@@ -465,24 +547,18 @@
         <child>
           <object class="GtkBox">
             <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkCheckButton" id="repond_search_requests_toggle">
-                <property name="label" translatable="yes">Respond to search requests from other users</property>
+              <object class="GtkBox">
+                <property name="spacing">12</property>
                 <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
                 <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">12</property>
-                <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
+                    <property name="height-request">24</property>
                     <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
-                    <property name="mnemonic-widget">min_search_term_length_spinner</property>
+                    <property name="label" translatable="yes">Respond to search requests from other users</property>
+                    <property name="mnemonic-widget">repond_search_requests_toggle</property>
                     <property name="visible">True</property>
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
@@ -490,9 +566,13 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="min_search_term_length_spinner">
-                    <property name="adjustment">_min_search_term_length_adjustment</property>
-                    <property name="numeric">True</property>
+                  <object class="GtkImage">
+                    <property name="icon-name">info-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="repond_search_requests_toggle">
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -500,26 +580,66 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="spacing">12</property>
+              <object class="GtkRevealer">
+                <property name="reveal-child" bind-source="repond_search_requests_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="transition-type">slide-down</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Maximum search results to send per search request:</property>
-                    <property name="mnemonic-widget">max_sent_results_spinner</property>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
                     <property name="visible">True</property>
-                    <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
-                    <property name="xalign">0</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkSpinButton" id="max_sent_results_spinner">
-                    <property name="adjustment">_max_sent_results_adjustment</property>
-                    <property name="numeric">True</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="margin-top">18</property>
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
+                            <property name="mnemonic-widget">min_search_term_length_spinner</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="min_search_term_length_spinner">
+                            <property name="adjustment">_min_search_term_length_adjustment</property>
+                            <property name="numeric">True</property>
+                            <property name="valign">center</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">12</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Maximum search results to send per search request:</property>
+                            <property name="mnemonic-widget">max_sent_results_spinner</property>
+                            <property name="visible">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="max_sent_results_spinner">
+                            <property name="adjustment">_max_sent_results_adjustment</property>
+                            <property name="numeric">True</property>
+                            <property name="valign">center</property>
+                            <property name="visible">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

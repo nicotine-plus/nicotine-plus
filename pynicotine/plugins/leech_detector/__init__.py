@@ -33,9 +33,9 @@ class Plugin(BasePlugin):
 
         self.settings = {
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
+            "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
-            "open_private_chat": True,
             "detected_leechers": []
         }
         self.metasettings = {
@@ -44,6 +44,10 @@ class Plugin(BasePlugin):
                                 "too many message lines may get you temporarily banned for spam!"),
                 "type": "textview"
             },
+            "open_private_chat": {
+                "description": "Open chat tabs when sending private messages to leechers",
+                "type": "bool"
+            },
             "num_files": {
                 "description": "Require users to have a minimum number of shared files:",
                 "type": "int", "minimum": 0
@@ -51,10 +55,6 @@ class Plugin(BasePlugin):
             "num_folders": {
                 "description": "Require users to have a minimum number of shared folders:",
                 "type": "int", "minimum": 1
-            },
-            "open_private_chat": {
-                "description": "Open chat tabs when sending private messages to leechers",
-                "type": "bool"
             },
             "detected_leechers": {
                 "description": "Detected leechers",

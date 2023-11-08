@@ -1320,7 +1320,7 @@ class ChatsPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        self.enable_spell_checker_toggle.set_visible(SpellChecker.is_available())
+        self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
 
         self.censored_patterns = config.sections["words"]["censored"][:]
@@ -2825,6 +2825,9 @@ class Preferences(Dialog):
             if isinstance(value, str):
                 widget.append_line(unescape(value))
 
+        elif isinstance(widget, Gtk.Switch):
+            widget.set_active(value)
+
         elif isinstance(widget, Gtk.CheckButton):
             try:
                 # Radio button
@@ -3048,6 +3051,9 @@ class Preferences(Dialog):
             title=_("Pick a File Name for Config Backup")
         ).show()
 
+    def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
+        toggle.emit("activate")
+
     def on_widget_scroll_event(self, _widget, event):
         """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
         scroll event to container (GTK 3)"""
@@ -3098,6 +3104,19 @@ class Preferences(Dialog):
                         check_button_label = obj.get_child()
                         check_button_label.set_line_wrap(True)  # pylint: disable=no-member
                         obj.set_receives_default(True)
+
+                elif isinstance(obj, Gtk.Switch):
+                    if GTK_API_VERSION >= 4:
+                        parent = obj.get_parent().get_first_child()
+                        parent.gesture_click = Gtk.GestureClick()
+                        parent.add_controller(parent.gesture_click)
+                    else:
+                        parent = obj.get_parent().get_children()[0]
+                        parent.set_has_window(True)
+                        parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
+
+                    obj.set_receives_default(True)
+                    parent.gesture_click.connect("released", self.on_toggle_label_pressed, obj)
 
                 elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
                     if isinstance(obj, ComboBox):

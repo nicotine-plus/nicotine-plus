@@ -34,17 +34,67 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="autoclear_downloads_toggle">
-            <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
+                <property name="mnemonic-widget">autoclear_downloads_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="autoclear_downloads_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="enable_username_subfolders_toggle">
-            <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
+                <property name="mnemonic-widget">enable_username_subfolders_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_username_subfolders_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="download_double_click_label">
+                <property name="label" translatable="yes">Double-click action for downloads:</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -64,22 +114,6 @@
                 <property name="homogeneous">True</property>
                 <property name="sensitive" bind-source="accept_sent_files_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel" id="download_double_click_label">
-                <property name="label" translatable="yes">Double-click action for downloads:</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
               </object>
             </child>
           </object>
@@ -319,14 +353,32 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="enable_filters_toggle">
-            <property name="label" translatable="yes">Enable download filters</property>
-            <property name="use-underline">True</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Enable download filters</property>
+                <property name="mnemonic-widget">enable_filters_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_filters_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkFrame">
+            <property name="margin-top">6</property>
             <property name="vexpand">True</property>
             <property name="visible">True</property>
             <child>
