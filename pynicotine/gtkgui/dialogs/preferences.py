@@ -1675,6 +1675,25 @@ class UserInterfacePage:
             "tab_changed": self.color_tab_changed_button
         }
 
+        self.color_entries = [
+            self.color_chat_local_entry,
+            self.color_chat_remote_entry,
+            self.color_chat_command_entry,
+            self.color_chat_action_entry,
+            self.color_chat_highlighted_entry,
+            self.color_input_background_entry,
+            self.color_input_text_entry,
+            self.color_list_text_entry,
+            self.color_queued_result_text_entry,
+            self.color_status_away_entry,
+            self.color_status_online_entry,
+            self.color_status_offline_entry,
+            self.color_url_entry,
+            self.color_tab_entry,
+            self.color_tab_highlighted_entry,
+            self.color_tab_changed_entry
+        ]
+
         self.font_buttons = {
             "globalfont": self.font_global_button,
             "listfont": self.font_list_button,
@@ -1707,9 +1726,15 @@ class UserInterfacePage:
         }
 
         rgba = Gdk.RGBA()
+        rgba.red = rgba.green = rgba.blue = rgba.alpha = 0
 
         for button in self.color_buttons.values():
             button.set_rgba(rgba)
+            button.connect("notify::rgba", self.on_color_button_changed)
+
+        for entry in self.color_entries:
+            entry.connect("icon-press", self.on_default_color)
+            entry.connect("changed", self.on_color_entry_changed)
 
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
@@ -2811,7 +2836,7 @@ class Preferences(Dialog):
                 pass
 
         elif isinstance(widget, Gtk.Entry):
-            if isinstance(value, (str, int)):
+            if isinstance(value, (str, int)) and widget.get_text() != value:
                 widget.set_text(value)
 
         elif isinstance(widget, TextView):
