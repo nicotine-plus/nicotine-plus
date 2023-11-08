@@ -185,24 +185,73 @@
         </child>
         <child>
           <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Enable tab-key completion</property>
+                <property name="mnemonic-widget">enable_tab_completion_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="enable_tab_completion_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <signal name="notify::active" handler="on_completion_changed"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
             <property name="orientation">vertical</property>
-            <property name="spacing">24</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkBox">
-                <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
                 <property name="visible">True</property>
                 <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">24</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Enable completion drop-down list</property>
+                    <property name="mnemonic-widget">enable_completion_dropdown_toggle</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="enable_completion_dropdown_toggle">
+                    <property name="valign">center</property>
+                    <property name="visible">True</property>
+                    <signal name="notify::active" handler="on_completion_changed"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkRevealer">
+                <property name="reveal-child" bind-source="enable_completion_dropdown_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
+                <property name="transition-type">slide-down</property>
+                <property name="visible">True</property>
+                <child>
                   <object class="GtkBox">
+                    <property name="margin-top">18</property>
                     <property name="spacing">12</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="height-request">24</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Enable tab-key completion</property>
-                        <property name="mnemonic-widget">enable_tab_completion_toggle</property>
+                        <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
+                        <property name="mnemonic-widget">min_chars_dropdown_spinner</property>
                         <property name="visible">True</property>
                         <property name="wrap">True</property>
                         <property name="wrap-mode">word-char</property>
@@ -210,179 +259,117 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSwitch" id="enable_tab_completion_toggle">
+                      <object class="GtkSpinButton" id="min_chars_dropdown_spinner">
+                        <property name="adjustment">_min_chars_dropdown_adjustment</property>
+                        <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="notify::active" handler="on_completion_changed"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="orientation">vertical</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="spacing">12</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="height-request">24</property>
-                            <property name="hexpand">True</property>
-                            <property name="label" translatable="yes">Enable completion drop-down list</property>
-                            <property name="mnemonic-widget">enable_completion_dropdown_toggle</property>
-                            <property name="visible">True</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">word-char</property>
-                            <property name="xalign">0</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSwitch" id="enable_completion_dropdown_toggle">
-                            <property name="valign">center</property>
-                            <property name="visible">True</property>
-                            <signal name="notify::active" handler="on_completion_changed"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkRevealer">
-                        <property name="reveal-child" bind-source="enable_completion_dropdown_toggle" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                        <property name="transition-type">slide-down</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="margin-top">18</property>
-                            <property name="spacing">12</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
-                                <property name="mnemonic-widget">min_chars_dropdown_spinner</property>
-                                <property name="visible">True</property>
-                                <property name="wrap">True</property>
-                                <property name="wrap-mode">word-char</property>
-                                <property name="xalign">0</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="min_chars_dropdown_spinner">
-                                <property name="adjustment">_min_chars_dropdown_adjustment</property>
-                                <property name="numeric">True</property>
-                                <property name="valign">center</property>
-                                <property name="visible">True</property>
-                                <signal name="changed" handler="on_completion_changed"/>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                        <signal name="changed" handler="on_completion_changed"/>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFrame">
+            <property name="margin-top">12</property>
+            <property name="vexpand">True</property>
+            <property name="visible">True</property>
             <child>
-              <object class="GtkFrame">
-                <property name="vexpand">True</property>
+              <object class="GtkBox">
+                <property name="margin-bottom">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-start">12</property>
+                <property name="margin-top">12</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">18</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="margin-bottom">12</property>
-                    <property name="margin-end">12</property>
-                    <property name="margin-start">12</property>
-                    <property name="margin-top">12</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">18</property>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Allowed chat completions:</property>
+                    <property name="opacity">0.6</property>
+                    <property name="selectable">True</property>
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="xalign">0</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBox">
+                    <property name="column-spacing">18</property>
+                    <property name="homogeneous">True</property>
+                    <property name="max-children-per-line">3</property>
+                    <property name="min-children-per-line">1</property>
+                    <property name="row-spacing">12</property>
+                    <property name="selection-mode">none</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="halign">start</property>
-                        <property name="label" translatable="yes">Allowed chat completions:</property>
-                        <property name="opacity">0.6</property>
-                        <property name="selectable">True</property>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
                         <property name="visible">True</property>
-                        <property name="wrap">True</property>
-                        <property name="wrap-mode">word-char</property>
-                        <property name="xalign">0</property>
-                        <style>
-                          <class name="heading"/>
-                        </style>
+                        <child>
+                          <object class="GtkCheckButton" id="complete_buddy_names_toggle">
+                            <property name="label" translatable="yes">Buddy names</property>
+                            <property name="visible">True</property>
+                            <signal name="toggled" handler="on_completion_changed"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBox">
-                        <property name="column-spacing">18</property>
-                        <property name="homogeneous">True</property>
-                        <property name="max-children-per-line">3</property>
-                        <property name="min-children-per-line">1</property>
-                        <property name="row-spacing">12</property>
-                        <property name="selection-mode">none</property>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkFlowBoxChild">
-                            <property name="can-focus">False</property>
+                          <object class="GtkCheckButton" id="complete_room_usernames_toggle">
+                            <property name="label" translatable="yes">Chat room usernames</property>
                             <property name="visible">True</property>
-                            <child>
-                              <object class="GtkCheckButton" id="complete_buddy_names_toggle">
-                                <property name="label" translatable="yes">Buddy names</property>
-                                <property name="visible">True</property>
-                                <signal name="toggled" handler="on_completion_changed"/>
-                              </object>
-                            </child>
+                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
+                        <property name="visible">True</property>
                         <child>
-                          <object class="GtkFlowBoxChild">
-                            <property name="can-focus">False</property>
+                          <object class="GtkCheckButton" id="complete_room_names_toggle">
+                            <property name="label" translatable="yes">Room names</property>
                             <property name="visible">True</property>
-                            <child>
-                              <object class="GtkCheckButton" id="complete_room_usernames_toggle">
-                                <property name="label" translatable="yes">Chat room usernames</property>
-                                <property name="visible">True</property>
-                                <signal name="toggled" handler="on_completion_changed"/>
-                              </object>
-                            </child>
+                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="can-focus">False</property>
+                        <property name="visible">True</property>
                         <child>
-                          <object class="GtkFlowBoxChild">
-                            <property name="can-focus">False</property>
+                          <object class="GtkCheckButton" id="complete_commands_toggle">
+                            <property name="label" translatable="yes">Commands</property>
                             <property name="visible">True</property>
-                            <child>
-                              <object class="GtkCheckButton" id="complete_room_names_toggle">
-                                <property name="label" translatable="yes">Room names</property>
-                                <property name="visible">True</property>
-                                <signal name="toggled" handler="on_completion_changed"/>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkFlowBoxChild">
-                            <property name="can-focus">False</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkCheckButton" id="complete_commands_toggle">
-                                <property name="label" translatable="yes">Commands</property>
-                                <property name="visible">True</property>
-                                <signal name="toggled" handler="on_completion_changed"/>
-                              </object>
-                            </child>
+                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
                     </child>
                   </object>
                 </child>
-                <style>
-                  <class name="view"/>
-                </style>
               </object>
             </child>
+            <style>
+              <class name="view"/>
+            </style>
           </object>
         </child>
       </object>

@@ -24,20 +24,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Ignore chat messages and search results from users, based on username or IP address.</property>
+            <property name="margin-bottom">12</property>
+            <property name="selectable">True</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Ignore chat messages and search results from users, based on username or IP address.</property>
-                <property name="margin-bottom">12</property>
-                <property name="selectable">True</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
           </object>
         </child>
       </object>
