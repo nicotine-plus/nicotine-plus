@@ -1186,7 +1186,6 @@ class ChatsPage:
         (
             self.auto_replace_words_toggle,
             self.censor_list_container,
-            self.censor_replacement_label,
             self.censor_text_patterns_toggle,
             self.complete_buddy_names_toggle,
             self.complete_commands_toggle,
@@ -1225,18 +1224,6 @@ class ChatsPage:
             items=(
                 ("flite -t $", None),
                 ("echo $ | festival --tts", None)
-            )
-        )
-
-        self.censor_replacement_combobox = ComboBox(
-            container=self.censor_replacement_label.get_parent(), label=self.censor_replacement_label,
-            items=(
-                ("#", None),
-                ("$", None),
-                ("!", None),
-                ("", None),
-                ("x", None),
-                ("*", None)
             )
         )
 
@@ -1298,7 +1285,6 @@ class ChatsPage:
                 "commands": self.complete_commands_toggle,
                 "censored": self.censor_list_view,
                 "censorwords": self.censor_text_patterns_toggle,
-                "censorfill": self.censor_replacement_combobox,
                 "autoreplaced": self.replacement_list_view,
                 "replacewords": self.auto_replace_words_toggle
             },
@@ -1353,7 +1339,6 @@ class ChatsPage:
                 "commands": self.complete_commands_toggle.get_active(),
                 "censored": self.censored_patterns[:],
                 "censorwords": self.censor_text_patterns_toggle.get_active(),
-                "censorfill": self.censor_replacement_combobox.get_selected_id(),
                 "autoreplaced": self.replacements.copy(),
                 "replacewords": self.auto_replace_words_toggle.get_active()
             },

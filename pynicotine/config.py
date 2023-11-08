@@ -234,7 +234,7 @@ class Config:
                     "thier": "their",
                     "tihs": "this"
                 },
-                "censorfill": "*",
+                "censorfill": "*",  # TODO: remove in 3.3.0
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,

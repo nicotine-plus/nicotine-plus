@@ -123,7 +123,7 @@ class PrivateChat:
     def censor_chat(self, message):
 
         if config.sections["words"]["censorwords"]:
-            filler = config.sections["words"]["censorfill"]
+            filler = "*"
             censored = config.sections["words"]["censored"]
 
             for word in censored:
