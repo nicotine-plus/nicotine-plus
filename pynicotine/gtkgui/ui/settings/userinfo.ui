@@ -59,6 +59,7 @@
     </child>
     <child>
       <object class="GtkFrame">
+        <property name="margin-top">6</property>
         <property name="vexpand">True</property>
         <property name="visible">True</property>
         <child>

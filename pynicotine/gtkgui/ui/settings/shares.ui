@@ -29,75 +29,68 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="height-request">24</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Rescan shares on startup</property>
+            <property name="mnemonic-widget">rescan_on_startup_toggle</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">info-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch" id="rescan_on_startup_toggle">
+            <property name="valign">center</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
         <property name="spacing">12</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+          <object class="GtkLabel">
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">Visible to everyone:</property>
+            <property name="mnemonic-widget">reveal_buddy_shares_toggle</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="height-request">24</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Rescan shares on startup</property>
-                <property name="mnemonic-widget">rescan_on_startup_toggle</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkImage">
-                <property name="icon-name">info-symbolic</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="rescan_on_startup_toggle">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="xalign">0</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="spacing">12</property>
+            <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Visible to everyone:</property>
-                <property name="mnemonic-widget">reveal_buddy_shares_toggle</property>
+              <object class="GtkCheckButton" id="reveal_buddy_shares_toggle">
+                <property name="label" translatable="yes">Buddy shares</property>
+                <property name="use-underline">True</property>
                 <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
+                <signal name="toggled" handler="on_reveal_share_changed"/>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="spacing">6</property>
+              <object class="GtkCheckButton" id="reveal_trusted_shares_toggle">
+                <property name="label" translatable="yes">Trusted shares</property>
+                <property name="use-underline">True</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkCheckButton" id="reveal_buddy_shares_toggle">
-                    <property name="label" translatable="yes">Buddy shares</property>
-                    <property name="use-underline">True</property>
-                    <property name="visible">True</property>
-                    <signal name="toggled" handler="on_reveal_share_changed"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="reveal_trusted_shares_toggle">
-                    <property name="label" translatable="yes">Trusted shares</property>
-                    <property name="use-underline">True</property>
-                    <property name="visible">True</property>
-                    <signal name="toggled" handler="on_reveal_share_changed"/>
-                  </object>
-                </child>
+                <signal name="toggled" handler="on_reveal_share_changed"/>
               </object>
             </child>
           </object>
@@ -106,6 +99,7 @@
     </child>
     <child>
       <object class="GtkFrame">
+        <property name="margin-top">6</property>
         <property name="vexpand">True</property>
         <property name="visible">True</property>
         <child>
