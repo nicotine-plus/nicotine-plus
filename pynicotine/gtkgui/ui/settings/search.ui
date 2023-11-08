@@ -452,7 +452,6 @@
             <child>
               <object class="GtkBox">
                 <property name="spacing">12</property>
-                <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel">
@@ -464,12 +463,6 @@
                     <property name="wrap">True</property>
                     <property name="wrap-mode">word-char</property>
                     <property name="xalign">0</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkImage">
-                    <property name="icon-name">dialog-question-symbolic</property>
-                    <property name="visible">True</property>
                   </object>
                 </child>
                 <child>
