@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GObject
+from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
@@ -95,8 +96,20 @@ class RoomList(Popover):
             ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
+        for toggle in (self.public_feed_toggle, self.private_room_toggle):
+            if GTK_API_VERSION >= 4:
+                parent = toggle.get_parent().get_first_child()
+                parent.gesture_click = Gtk.GestureClick()
+                parent.add_controller(parent.gesture_click)
+            else:
+                parent = toggle.get_parent().get_children()[0]
+                parent.set_has_window(True)
+                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
+
+            parent.gesture_click.connect("released", self.on_toggle_label_pressed, toggle)
+
         self.private_room_toggle.set_active(config.sections["server"]["private_chatrooms"])
-        self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
+        self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
         CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
@@ -241,6 +254,9 @@ class RoomList(Popover):
     def on_popup_join(self, *_args):
         core.chatrooms.show_room(self.popup_room)
         self.close(use_transition=False)
+
+    def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
+        toggle.emit("activate")
 
     def on_toggle_public_feed(self, *_args):
 

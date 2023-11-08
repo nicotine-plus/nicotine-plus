@@ -312,6 +312,11 @@ def set_global_css():
         border-spacing: 0;
     }
 
+    .generic-popover * {
+        /* Remove unwanted spacing from popovers */
+        margin: 0;
+    }
+
     .generic-popover contents {
         /* Remove unwanted spacing from popovers */
         padding: 0;
