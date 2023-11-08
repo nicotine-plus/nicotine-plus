@@ -2064,8 +2064,10 @@ class SearchesPage:
     def __init__(self, application):
 
         (
-            self.cleared_filter_history_icon,
-            self.cleared_search_history_icon,
+            self.clear_filter_history_icon,
+            self.clear_filter_history_success_icon,
+            self.clear_search_history_icon,
+            self.clear_search_history_success_icon,
             self.container,
             self.enable_default_filters_toggle,
             self.enable_search_history_toggle,
@@ -2143,8 +2145,8 @@ class SearchesPage:
             if num_filters > 7:
                 self.filter_length_entry.set_text(str(searches["defilter"][7]))
 
-        self.cleared_search_history_icon.set_visible(False)
-        self.cleared_filter_history_icon.set_visible(False)
+        self.clear_search_history_icon.get_parent().set_visible_child(self.clear_search_history_icon)
+        self.clear_filter_history_icon.get_parent().set_visible_child(self.clear_filter_history_icon)
 
     def get_settings(self):
 
@@ -2175,12 +2177,18 @@ class SearchesPage:
         self.search_required = True
 
     def on_clear_search_history(self, *_args):
+
         self.application.window.search.clear_search_history()
-        self.cleared_search_history_icon.set_visible(True)
+
+        stack = self.clear_search_history_success_icon.get_parent()
+        stack.set_visible_child(self.clear_search_history_success_icon)
 
     def on_clear_filter_history(self, *_args):
+
         self.application.window.search.clear_filter_history()
-        self.cleared_filter_history_icon.set_visible(True)
+
+        stack = self.clear_filter_history_success_icon.get_parent()
+        stack.set_visible_child(self.clear_filter_history_success_icon)
 
 
 class UrlHandlersPage:

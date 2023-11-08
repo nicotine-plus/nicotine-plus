@@ -407,6 +407,7 @@
             <style>
               <class name="circular"/>
               <class name="destructive-action"/>
+              <class name="image-text-button"/>
             </style>
           </object>
         </child>

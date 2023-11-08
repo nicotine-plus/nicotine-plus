@@ -152,44 +152,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkButton" id="_clear_search_history_button">
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_search_history"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Clear Search History</property>
-                        <property name="mnemonic-widget">_clear_search_history_button</property>
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkImage" id="cleared_search_history_icon">
-                <property name="icon-name">object-select-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
     <child>
@@ -301,17 +263,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="filter_file_type_entry">
+                <property name="halign">end</property>
+                <property name="max-width-chars">26</property>
+                <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkEntry" id="filter_file_type_entry">
-                    <property name="max-width-chars">26</property>
-                    <property name="tooltip-text" translatable="yes">File type, e.g. flac wav or !mp3 !m4a</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -332,17 +290,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="filter_file_size_entry">
+                <property name="halign">end</property>
+                <property name="max-width-chars">26</property>
+                <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkEntry" id="filter_file_size_entry">
-                    <property name="max-width-chars">26</property>
-                    <property name="tooltip-text" translatable="yes">File size, e.g. &gt;10.5m &lt;1g</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -363,17 +317,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="filter_bitrate_entry">
+                <property name="halign">end</property>
+                <property name="max-width-chars">26</property>
+                <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkEntry" id="filter_bitrate_entry">
-                    <property name="max-width-chars">26</property>
-                    <property name="tooltip-text" translatable="yes">Bitrate, e.g. 256 &lt;1412</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -394,17 +344,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="filter_length_entry">
+                <property name="halign">end</property>
+                <property name="max-width-chars">26</property>
+                <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkEntry" id="filter_length_entry">
-                    <property name="max-width-chars">26</property>
-                    <property name="tooltip-text" translatable="yes">Duration, e.g. &gt;6:00 &lt;12:00 !6:54</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
@@ -425,45 +371,32 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkEntry" id="filter_country_entry">
+                <property name="halign">end</property>
+                <property name="max-width-chars">26</property>
+                <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
+                <property name="valign">center</property>
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkEntry" id="filter_country_entry">
-                    <property name="max-width-chars">26</property>
-                    <property name="tooltip-text" translatable="yes">Country code, e.g. US ES or !DE !GB</property>
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">8</property>
-                  </object>
-                </child>
+                <property name="width-chars">8</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
+            <property name="margin-top">6</property>
+            <property name="spacing">6</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="filter_free_slot_toggle">
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Free Slot</property>
                 <property name="tooltip-text" translatable="yes">Only show results from users with an available upload slot.</property>
                 <property name="use-underline">True</property>
+                <property name="valign">start</property>
                 <property name="visible">True</property>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
             <child>
               <object class="GtkMenuButton" id="filter_help_button">
                 <property name="visible">True</property>
@@ -488,38 +421,6 @@
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="_clear_filter_history_button">
-                <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_filter_history"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">edit-clear-symbolic</property>
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Clear Filter History</property>
-                        <property name="mnemonic-widget">_clear_filter_history_button</property>
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkImage" id="cleared_filter_history_icon">
-                <property name="icon-name">object-select-symbolic</property>
               </object>
             </child>
           </object>
@@ -644,6 +545,110 @@
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="halign">center</property>
+        <property name="homogeneous">True</property>
+        <property name="spacing">6</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkButton" id="_clear_search_history_button">
+            <property name="halign">center</property>
+            <property name="height-request">30</property>
+            <property name="visible">True</property>
+            <signal name="clicked" handler="on_clear_search_history"/>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-end">12</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">6</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkStack">
+                    <property name="transition-type">crossfade</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage" id="clear_search_history_icon">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="clear_search_history_success_icon">
+                        <property name="icon-name">object-select-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="ellipsize">end</property>
+                    <property name="label" translatable="yes">Clear Search History</property>
+                    <property name="mnemonic-widget">_clear_search_history_button</property>
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <style>
+              <class name="circular"/>
+              <class name="destructive-action"/>
+              <class name="image-text-button"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="_clear_filter_history_button">
+            <property name="halign">center</property>
+            <property name="height-request">30</property>
+            <property name="visible">True</property>
+            <signal name="clicked" handler="on_clear_filter_history"/>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-end">12</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">6</property>
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkStack">
+                    <property name="transition-type">crossfade</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImage" id="clear_filter_history_icon">
+                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="clear_filter_history_success_icon">
+                        <property name="icon-name">object-select-symbolic</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="ellipsize">end</property>
+                    <property name="label" translatable="yes">Clear Filter History</property>
+                    <property name="mnemonic-widget">_clear_filter_history_button</property>
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <style>
+              <class name="circular"/>
+              <class name="destructive-action"/>
+              <class name="image-text-button"/>
+            </style>
           </object>
         </child>
       </object>
