@@ -83,7 +83,7 @@
             </child>
             <child>
               <object class="GtkImage">
-                <property name="icon-name">info-symbolic</property>
+                <property name="icon-name">dialog-question-symbolic</property>
                 <property name="visible">True</property>
               </object>
             </child>
@@ -114,7 +114,7 @@
             </child>
             <child>
               <object class="GtkImage">
-                <property name="icon-name">info-symbolic</property>
+                <property name="icon-name">dialog-question-symbolic</property>
                 <property name="visible">True</property>
               </object>
             </child>
@@ -468,7 +468,7 @@
                 </child>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">info-symbolic</property>
+                    <property name="icon-name">dialog-question-symbolic</property>
                     <property name="visible">True</property>
                   </object>
                 </child>
