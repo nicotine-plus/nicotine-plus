@@ -85,19 +85,8 @@ class Plugin(BasePlugin):
         )
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-
-        if user in self.probed_users:
-            # We already have stats for this user.
-            return
-
-        self.probed_users[user] = "requesting"
-
-        if user in self.core.watched_users:
-            self.core.request_user_stats(user)
-        else:
-            self.core.watch_user(user)
-
-        self.log("Getting statistics from the server for new user %s…", user)
+        if user not in self.probed_users:
+            self.probed_users[user] = "requesting_stats"
 
     def user_stats_notification(self, user, stats):
 
@@ -123,25 +112,22 @@ class Plugin(BasePlugin):
             if is_user_accepted:
                 self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
             else:
-                self.log("Buddy %s is only sharing %s files in %s folders. Not complaining.",
+                self.log("Buddy %s is sharing %s files in %s folders. Not complaining.",
                          (user, num_files, num_folders))
             return
 
-        if self.probed_users[user] != "requesting":
+        if not self.probed_users[user].startswith("requesting"):
             # We already messaged this user previously
             return
 
-        if num_files <= 0 and num_folders >= self.settings["num_folders"]:
-            # SoulseekQt seems to only send the number of folders to the server in at least some cases
-            self.log(
-                "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
-                (user, num_folders)
-            )
-            # TODO: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request
+        if (num_files <= 0 or num_folders <= 0) and self.probed_users[user] != "requesting_shares":
+            # SoulseekQt only sends the number of shared files/folders to the server once on startup.
+            # Verify user's actual number of files/folders.
+            self.log("User %s has no shared files according to the server, requesting shares to verify…", user)
 
-        if num_files <= 0 and num_folders <= 0:
-            # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
-            self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
+            self.probed_users[user] = "requesting_shares"
+            self.core.userbrowse.request_user_shares(user)
+            return
 
         if self.settings["message"]:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to message "

@@ -19,6 +19,7 @@
 import json
 import os
 
+from itertools import chain
 from threading import Thread
 
 from pynicotine import slskmessages
@@ -109,6 +110,9 @@ class UserBrowse:
 
         self._show_user(username, path=path)
 
+    def request_user_shares(self, username):
+        core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
+
     def browse_user(self, username, path=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
 
@@ -133,7 +137,7 @@ class UserBrowse:
         core.watch_user(username)
 
         if not user_share or new_request:
-            core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
+            self.request_user_shares(username)
 
     def create_user_shares_folder(self):
 
@@ -323,6 +327,14 @@ class UserBrowse:
     def _shared_file_list_response(self, msg):
 
         username = msg.init.target_user
+        num_folders = len(msg.list) + len(msg.privatelist)
+        num_files = sum(len(files) for folder_path, files in chain(msg.list, msg.privatelist))
 
         if username in self.user_shares:
             self.user_shares[username] = dict(msg.list + msg.privatelist) if msg.privatelist else dict(msg.list)
+
+        core.pluginhandler.user_stats_notification(username, stats={
+            "avgspeed": None,
+            "files": num_files,
+            "dirs": num_folders,
+        })
