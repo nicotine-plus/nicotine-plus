@@ -203,6 +203,7 @@ class UserBrowse:
             self.info_bar_container,
             self.num_folders_label,
             self.path_bar,
+            self.path_bar_container,
             self.progress_bar,
             self.refresh_button,
             self.retry_button,
@@ -231,7 +232,7 @@ class UserBrowse:
         self.search_position = 0
 
         self.info_bar = InfoBar(parent=self.info_bar_container, button=self.retry_button)
-        self.path_bar.get_parent().get_hadjustment().connect("changed", self.on_path_bar_scroll)
+        self.path_bar_container.get_hadjustment().connect("changed", self.on_path_bar_scroll)
 
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
@@ -1303,7 +1304,11 @@ class UserBrowse:
             self.folder_tree_view.grab_focus()
 
     def on_path_bar_scroll(self, adjustment, *_args):
-        adjustment.set_value(adjustment.get_upper())
+
+        adjustment_end = (adjustment.get_upper() - adjustment.get_page_size())
+
+        if adjustment.get_value() < adjustment_end:
+            self.path_bar_container.emit("scroll-child", Gtk.ScrollType.END, True)
 
     def on_expand(self, *_args):
 

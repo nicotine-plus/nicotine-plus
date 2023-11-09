@@ -338,7 +338,7 @@ class TextView:
 
         new_adjustment_bottom = (self.adjustment.get_upper() - self.adjustment.get_page_size())
 
-        if self.auto_scroll and (self.adjustment_bottom - self.adjustment_value) <= 0:
+        if self.auto_scroll and self.adjustment_value >= self.adjustment_bottom:
             # Scroll to bottom if we were at the bottom previously
             self.scroll_bottom()
 

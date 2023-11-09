@@ -121,7 +121,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="path_bar_container">
                     <property name="hexpand">True</property>
                     <property name="hscrollbar-policy">external</property>
                     <property name="visible">True</property>
