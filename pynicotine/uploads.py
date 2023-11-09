@@ -56,6 +56,7 @@ class Uploads(Transfers):
             ("file-connection-closed", self._file_connection_closed),
             ("file-transfer-init", self._file_transfer_init),
             ("file-upload-progress", self._file_upload_progress),
+            ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("queue-upload", self._queue_upload),
@@ -806,16 +807,19 @@ class Uploads(Transfers):
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
         self.total_bandwidth = upload_bandwidth
 
-    def _peer_connection_error(self, username, msgs=None, is_offline=False):
+    def _peer_connection_error(self, username, msgs=None, is_offline=False, is_timeout=True):
 
         if msgs is None:
             return
 
         for msg in msgs:
             if msg.__class__ in (slskmessages.TransferRequest, slskmessages.FileTransferInit):
-                self._cant_connect_upload(username, msg.token, is_offline)
+                self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _cant_connect_upload(self, username, token, is_offline):
+    def _peer_connection_closed(self, username, msgs=None):
+        self._peer_connection_error(username, msgs, is_timeout=False)
+
+    def _cant_connect_upload(self, username, token, is_offline, is_timeout):
         """We can't connect to the user, either way (TransferRequest,
         FileTransferInit)."""
 
@@ -824,21 +828,27 @@ class Uploads(Transfers):
         if upload is None:
             return
 
-        log.add_transfer("Upload attempt for file %(filename)s with token %(token)s to user %(user)s timed out", {
+        if is_offline:
+            status = TransferStatus.USER_LOGGED_OFF
+
+        elif is_timeout:
+            status = TransferStatus.CONNECTION_TIMEOUT
+
+        else:
+            status = TransferStatus.CONNECTION_CLOSED
+
+        log.add_transfer(("Upload attempt for file %(filename)s with token %(token)s to user %(user)s failed "
+                          "with status %(status)s"), {
             "filename": upload.virtual_path,
             "token": token,
-            "user": username
+            "user": username,
+            "status": status
         })
-
-        if upload.sock is not None:
-            log.add_transfer("Existing file connection for upload with token %s already exists?", token)
-            return
 
         upload_cleared = is_offline and self._auto_clear_transfer(upload)
 
         if not upload_cleared:
-            self._abort_transfer(
-                upload, status=TransferStatus.USER_LOGGED_OFF if is_offline else TransferStatus.CONNECTION_TIMEOUT)
+            self._abort_transfer(upload, status=status)
 
         self._check_upload_queue()
 

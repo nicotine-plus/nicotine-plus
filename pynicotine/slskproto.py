@@ -514,7 +514,7 @@ class NetworkThread(Thread):
                         "token": init.token
                     })
 
-                    events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs)
+                    events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
 
                     self._token_init_msgs.pop(init.token, None)
                     self._username_init_msgs.pop(username + conn_type, None)
@@ -962,7 +962,7 @@ class NetworkThread(Thread):
 
         elif init is not None:
             if callback:
-                events.emit_main_thread("peer-connection-closed", init.target_user)
+                events.emit_main_thread("peer-connection-closed", init.target_user, init.outgoing_msgs[:])
 
         else:
             # No peer init message present, nothing to do

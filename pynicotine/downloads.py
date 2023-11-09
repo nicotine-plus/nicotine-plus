@@ -62,6 +62,7 @@ class Downloads(Transfers):
             ("file-transfer-init", self._file_transfer_init),
             ("file-download-progress", self._file_download_progress),
             ("folder-contents-response", self._folder_contents_response),
+            ("peer-connection-closed", self._peer_connection_closed),
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-response", self._place_in_queue_response),
             ("set-connection-stats", self._set_connection_stats),
@@ -766,16 +767,19 @@ class Downloads(Transfers):
     def _set_connection_stats(self, download_bandwidth=0, **_unused):
         self.total_bandwidth = download_bandwidth
 
-    def _peer_connection_error(self, username, msgs=None, is_offline=False):
+    def _peer_connection_error(self, username, msgs=None, is_offline=False, is_timeout=True):
 
         if msgs is None:
             return
 
         for msg in msgs:
             if msg.__class__ is slskmessages.QueueUpload:
-                self._cant_connect_queue_file(username, msg.file, is_offline)
+                self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
 
-    def _cant_connect_queue_file(self, username, virtual_path, is_offline):
+    def _peer_connection_closed(self, username, msgs=None):
+        self._peer_connection_error(username, msgs, is_timeout=False)
+
+    def _cant_connect_queue_file(self, username, virtual_path, is_offline, is_timeout):
         """We can't connect to the user, either way (QueueUpload)."""
 
         download = self.queued_users.get(username, {}).get(virtual_path)
@@ -783,13 +787,22 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        log.add_transfer("Download attempt for file %(filename)s from user %(user)s timed out", {
-            "filename": virtual_path,
-            "user": username
-        })
+        if is_offline:
+            status = TransferStatus.USER_LOGGED_OFF
 
-        self._abort_transfer(
-            download, status=TransferStatus.USER_LOGGED_OFF if is_offline else TransferStatus.CONNECTION_TIMEOUT)
+        elif is_timeout:
+            status = TransferStatus.CONNECTION_TIMEOUT
+
+        else:
+            status = TransferStatus.CONNECTION_CLOSED
+
+        log.add_transfer(("Download attempt for file %(filename)s from user %(user)s failed "
+                          "with status %(status)s"), {
+            "filename": virtual_path,
+            "user": username,
+            "status": status
+        })
+        self._abort_transfer(download, status=status)
 
     def _folder_contents_response(self, msg, check_num_files=True):
         """Peer code 37."""

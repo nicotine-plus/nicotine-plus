@@ -129,7 +129,7 @@ class UserBrowse:
         self._show_user(username, path=path, switch_page=switch_page)
 
         if core.user_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", username)
+            events.emit("peer-connection-error", username, is_offline=True)
             return
 
         core.watch_user(username)
