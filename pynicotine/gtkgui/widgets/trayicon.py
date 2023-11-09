@@ -578,13 +578,12 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
             # Virtual environment
-            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "status")
+            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
             # Git folder
-            local_icon_path = os.path.join(GTK_GUI_FOLDER_PATH, "icons", "hicolor", "scalable", "status")
+            local_icon_path = os.path.join(GTK_GUI_FOLDER_PATH, "icons", "hicolor", "scalable", "apps")
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
-
             # Check if custom icons exist
             if self.check_icon_path(icon_name, custom_icon_path):
                 self.custom_icons = True
