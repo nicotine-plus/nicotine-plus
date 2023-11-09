@@ -133,12 +133,12 @@ class UserInfo:
         if permission_level == "banned":
             # Hide most details from banned users
             pic = None
-            descr = "You are banned from downloading my shared files."
+            descr = ""
             totalupl = queuesize = uploadallowed = 0
             slotsavail = False
 
             if reject_reason:
-                descr += f"\nReason: {reject_reason}"
+                descr = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
         else:
             try:
                 with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
