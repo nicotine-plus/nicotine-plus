@@ -722,9 +722,9 @@ class ComboBox:
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
-    def _on_dropdown_visible(self, popover, _param):
+    def _on_dropdown_visible(self, widget, param):
 
-        visible = popover.get_visible()
+        visible = widget.get_property(param.name)
 
         if not visible:
             self.entry.grab_focus_without_selecting()
