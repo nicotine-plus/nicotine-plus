@@ -2999,7 +2999,6 @@ class Preferences(Dialog):
 
         # Icons
         load_custom_icons(update=True)
-        self.application.tray_icon.update_icon_theme()
 
         # Fonts and colors
         update_custom_css()

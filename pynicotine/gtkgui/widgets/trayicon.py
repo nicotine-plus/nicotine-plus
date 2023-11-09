@@ -51,6 +51,7 @@ class BaseImplementation:
         self.menu_items = {}
         self.menu_item_id = 1
         self.activate_callback = self.on_window_hide_unhide
+        self.is_visible = True
 
         self.create_menu()
 
@@ -546,7 +547,6 @@ class StatusNotifierImplementation(BaseImplementation):
             raise ImplementationUnavailable(f"StatusNotifier implementation not available: {error}") from error
 
         self.update_menu()
-        self.update_icon_theme()
 
     @staticmethod
     def check_icon_path(icon_name, icon_path):
@@ -605,14 +605,21 @@ class StatusNotifierImplementation(BaseImplementation):
         self.tray_icon.properties["IconName"].value = icon_name
         self.tray_icon.emit_signal("NewIcon")
 
+        if not self.is_visible:
+            return
+
+        status = "Active"
+
+        if self.tray_icon.properties["Status"].value != status:
+            self.tray_icon.properties["Status"].value = status
+            self.tray_icon.emit_signal("NewStatus", status)
+
     def update_icon_theme(self):
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
         icon_path = self.get_icon_path()
         self.tray_icon.properties["IconThemePath"].value = icon_path
         self.tray_icon.emit_signal("NewIconThemePath", icon_path)
-
-        self.update_icon()
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
@@ -621,7 +628,16 @@ class StatusNotifierImplementation(BaseImplementation):
         self.tray_icon.menu.set_items(self.menu_items)
 
     def unload(self, is_shutdown=False):
-        if self.tray_icon is not None:
+
+        if self.tray_icon is None:
+            return
+
+        status = "Passive"
+
+        self.tray_icon.properties["Status"].value = status
+        self.tray_icon.emit_signal("NewStatus", status)
+
+        if is_shutdown:
             self.tray_icon.unregister()
 
 
@@ -891,7 +907,7 @@ class Win32Implementation(BaseImplementation):
             self._destroy_h_icon()
             self._h_icon = self._load_h_icon(icon_name)
 
-        if not config.sections["ui"]["trayicon"] and not (title or message):
+        if not self.is_visible and not (title or message):
             # When disabled by user, temporarily show tray icon when displaying a notification
             return
 
@@ -1138,6 +1154,12 @@ class TrayIcon:
 
     def refresh_state(self):
 
+        if not self.implementation:
+            return
+
+        self.implementation.is_visible = True
+
+        self.update_icon_theme()
         self.update_icon()
         self.update_window_visibility()
         self.update_user_status()
@@ -1146,12 +1168,10 @@ class TrayIcon:
 
         if self.implementation:
             self.implementation.unload(is_shutdown=is_shutdown)
+            self.implementation.is_visible = False
 
-        if sys.platform == "win32":
-            # Keep tray icon instance around for notification support
-            return
-
-        self.implementation = None
+        if is_shutdown:
+            self.implementation = None
 
     def quit(self):
         self.unload(is_shutdown=True)
