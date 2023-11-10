@@ -123,7 +123,7 @@ class UserBrowses(IconNotebook):
         else:
             core.userbrowse.browse_user(entry_text)
 
-    def show_user(self, user, path=None, local_share_type=None, switch_page=True):
+    def show_user(self, user, path=None, switch_page=True):
 
         page = self.pages.get(user)
 
@@ -134,9 +134,7 @@ class UserBrowses(IconNotebook):
                               close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
-        page.local_share_type = local_share_type
         page.queued_path = path
-
         page.browse_queued_path()
 
         if switch_page:
@@ -218,7 +216,7 @@ class UserBrowse:
         self.window = userbrowses.window
         self.user = user
         self.indeterminate_progress = False
-        self.local_share_type = None
+        self.local_permission_level = None
         self.queued_path = None
         self.num_folders = 0
         self.share_size = 0
@@ -556,6 +554,8 @@ class UserBrowse:
     def shared_file_list(self, msg):
 
         is_empty = (not msg.list and not msg.privatelist)
+        self.local_permission_level = msg.permission_level
+
         self.make_new_model(msg.list, msg.privatelist)
         self.info_bar.set_visible(False)
 
@@ -1359,8 +1359,10 @@ class UserBrowse:
         self.clear_model()
         self.set_in_progress()
 
-        core.userbrowse.browse_user(
-            self.user, path=file_path, local_share_type=self.local_share_type, new_request=True)
+        if self.local_permission_level:
+            core.userbrowse.browse_local_shares(permission_level=self.local_permission_level, new_request=True)
+        else:
+            core.userbrowse.browse_user(self.user, path=file_path, new_request=True)
 
     def on_focus(self):
 

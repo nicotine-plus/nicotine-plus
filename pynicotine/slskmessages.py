@@ -2850,22 +2850,21 @@ class SharedFileListResponse(FileListMessage):
     SharedFileListRequest.
     """
 
-    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "type", "share_type",
+    __slots__ = ("init", "user", "list", "unknown", "privatelist", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
 
     def __init__(self, init=None, user=None, public_shares=None, buddy_shares=None, trusted_shares=None,
-                 share_type=None):
+                 permission_level=None):
         self.init = init
         self.user = user
         self.public_shares = public_shares
         self.buddy_shares = buddy_shares
         self.trusted_shares = trusted_shares
-        self.share_type = share_type
+        self.permission_level = permission_level
         self.list = []
         self.privatelist = []
         self.unknown = 0
         self.built = None
-        self.type = None
 
     def _make_shares_list(self, share_groups):
 
@@ -2896,17 +2895,19 @@ class SharedFileListResponse(FileListMessage):
         if self.built is not None:
             return self.built
 
+        from pynicotine.shares import PermissionLevel
+
         msg = bytearray()
         share_groups = []
         private_share_groups = []
 
-        if self.share_type:
+        if self.permission_level:
             share_groups.append(self.public_shares)
 
-        if self.share_type in {"buddy", "trusted"} and self.buddy_shares:
+        if self.permission_level in {PermissionLevel.BUDDY, PermissionLevel.TRUSTED} and self.buddy_shares:
             share_groups.append(self.buddy_shares)
 
-        if self.share_type == "trusted" and self.trusted_shares:
+        if self.permission_level == PermissionLevel.TRUSTED and self.trusted_shares:
             share_groups.append(self.trusted_shares)
 
         msg.extend(self._make_shares_list(share_groups))

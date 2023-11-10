@@ -31,6 +31,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import open_uri
 
@@ -536,13 +537,13 @@ class Application:
         core.shares.rescan_shares()
 
     def on_browse_public_shares(self, *_args):
-        core.userbrowse.browse_local_shares(share_type="public", new_request=True)
+        core.userbrowse.browse_local_shares(permission_level=PermissionLevel.PUBLIC, new_request=True)
 
     def on_browse_buddy_shares(self, *_args):
-        core.userbrowse.browse_local_shares(share_type="buddy", new_request=True)
+        core.userbrowse.browse_local_shares(permission_level=PermissionLevel.BUDDY, new_request=True)
 
     def on_browse_trusted_shares(self, *_args):
-        core.userbrowse.browse_local_shares(share_type="trusted", new_request=True)
+        core.userbrowse.browse_local_shares(permission_level=PermissionLevel.TRUSTED, new_request=True)
 
     def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
         for file_path in selected_file_paths:

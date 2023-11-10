@@ -61,14 +61,12 @@ class UserBrowse:
 
         core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
 
-    def _show_user(self, username, path=None, local_share_type=None, switch_page=True):
+    def _show_user(self, username, path=None, switch_page=True):
 
         if username not in self.user_shares:
             self.user_shares[username] = {}
 
-        events.emit(
-            "user-browse-show-user", user=username, path=path, local_share_type=local_share_type,
-            switch_page=switch_page)
+        events.emit("user-browse-show-user", user=username, path=path, switch_page=switch_page)
 
     def remove_user(self, username):
         del self.user_shares[username]
@@ -87,31 +85,31 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, share_type=None, new_request=False):
+    def browse_local_shares(self, path=None, permission_level=None, new_request=False):
         """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
 
         if username not in self.user_shares or new_request:
-            if not share_type:
+            if not permission_level:
                 # Check our own permission level, and show relevant shares for it
                 if username in core.user_addresses:
                     ip_address, _port = core.user_addresses[username]
                 else:
                     ip_address = None
 
-                current_share_type, _reason = core.network_filter.check_user_permission(username, ip_address)
+                current_permission_level, _reason = core.shares.check_user_permission(username, ip_address)
             else:
-                current_share_type = share_type
+                current_permission_level = permission_level
 
-            msg = core.shares.compressed_shares.get(current_share_type)
+            msg = core.shares.compressed_shares.get(current_permission_level)
             Thread(
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path, local_share_type=share_type)
+        self._show_user(username, path=path)
 
-    def browse_user(self, username, path=None, local_share_type=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
 
         if not username:
@@ -123,7 +121,7 @@ class UserBrowse:
             user_share.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            self.browse_local_shares(path, local_share_type, new_request)
+            self.browse_local_shares(path, new_request)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)

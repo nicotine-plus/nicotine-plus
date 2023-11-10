@@ -83,6 +83,13 @@ class FileTypes:
     }
 
 
+class PermissionLevel:
+    PUBLIC = "public"
+    BUDDY = "buddy"
+    TRUSTED = "trusted"
+    BANNED = "banned"
+
+
 class RestrictedUnpickler(Unpickler):
     """Don't allow code execution from pickles."""
 
@@ -269,9 +276,9 @@ class Scanner:
                 self.set_shares(word_index={})
 
                 # Scan shares
-                num_public_folders = self.rescan_dirs("public")
-                num_buddy_folders = self.rescan_dirs("buddy")
-                num_trusted_folders = self.rescan_dirs("trusted")
+                num_public_folders = self.rescan_dirs(PermissionLevel.PUBLIC)
+                num_buddy_folders = self.rescan_dirs(PermissionLevel.BUDDY)
+                num_trusted_folders = self.rescan_dirs(PermissionLevel.TRUSTED)
 
                 self.set_shares(word_index=self.word_index)
                 self.word_index.clear()
@@ -301,7 +308,7 @@ class Scanner:
         finally:
             Shares.close_shares(self.share_dbs)
 
-    def create_compressed_shares_message(self, share_type):
+    def create_compressed_shares_message(self, permission_level):
         """Create a message that will later contain a compressed list of our
         shares."""
 
@@ -309,19 +316,18 @@ class Scanner:
         buddy_streams = self.share_dbs["buddy_streams"]
         trusted_streams = self.share_dbs["trusted_streams"]
 
-        if share_type == "public" and not self.reveal_buddy_shares:
+        if permission_level == PermissionLevel.PUBLIC and not self.reveal_buddy_shares:
             buddy_streams = None
 
-        if share_type in {"public", "buddy"} and not self.reveal_trusted_shares:
+        if permission_level in {PermissionLevel.PUBLIC, PermissionLevel.BUDDY} and not self.reveal_trusted_shares:
             trusted_streams = None
 
         compressed_shares = slskmessages.SharedFileListResponse(
             public_shares=public_streams, buddy_shares=buddy_streams, trusted_shares=trusted_streams,
-            share_type=share_type
+            permission_level=permission_level
         )
         compressed_shares.make_network_message()
         compressed_shares.public_shares = compressed_shares.buddy_shares = compressed_shares.trusted_shares = None
-        compressed_shares.type = share_type
 
         self.queue.put(compressed_shares)
 
@@ -331,8 +337,8 @@ class Scanner:
             self.share_dbs, self.share_db_paths, destinations={"public_streams", "buddy_streams", "trusted_streams"}
         )
 
-        for share_type in ("public", "buddy", "trusted"):
-            self.create_compressed_shares_message(share_type)
+        for permission_level in (PermissionLevel.PUBLIC, PermissionLevel.BUDDY, PermissionLevel.TRUSTED):
+            self.create_compressed_shares_message(permission_level)
 
         Shares.close_shares(self.share_dbs)
 
@@ -378,7 +384,7 @@ class Scanner:
 
         return "__INTERNAL_ERROR__" + path
 
-    def set_shares(self, share_type=None, files=None, streams=None, mtimes=None, word_index=None):
+    def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None):
 
         self.config.create_data_folder()
 
@@ -394,7 +400,7 @@ class Scanner:
                 continue
 
             if destination != "words":
-                destination = f"{share_type}{destination}"
+                destination = f"{permission_level}{destination}"
 
             share_db = None
 
@@ -411,14 +417,14 @@ class Scanner:
                 if share_db is not None:
                     share_db.close()
 
-    def rescan_dirs(self, share_type):
+    def rescan_dirs(self, permission_level):
 
         shared_public_folders, shared_buddy_folders, shared_trusted_folders = self.share_groups
 
-        if share_type == "trusted":
+        if permission_level == PermissionLevel.TRUSTED:
             shared_folder_paths = sorted(shared_trusted_folders)
 
-        elif share_type == "buddy":
+        elif permission_level == PermissionLevel.BUDDY:
             shared_folder_paths = sorted(shared_buddy_folders)
 
         else:
@@ -426,14 +432,15 @@ class Scanner:
 
         try:
             Shares.load_shares(
-                self.share_dbs, self.share_db_paths, destinations={f"{share_type}_files", f"{share_type}_mtimes"})
+                self.share_dbs, self.share_db_paths,
+                destinations={f"{permission_level}_files", f"{permission_level}_mtimes"})
 
         except Exception:
             # No previous share databases, rebuild
             self.rebuild = True
 
-        old_files = self.share_dbs.get(f"{share_type}_files")
-        old_mtimes = self.share_dbs.get(f"{share_type}_mtimes")
+        old_files = self.share_dbs.get(f"{permission_level}_files")
+        old_mtimes = self.share_dbs.get(f"{permission_level}_mtimes")
 
         for virtual_name, folder_path, *_unused in shared_folder_paths:
             if virtual_name in self.processed_share_names:
@@ -455,7 +462,7 @@ class Scanner:
         num_folders = len(self.streams)
 
         Shares.close_shares(self.share_dbs)
-        self.set_shares(share_type, files=self.files, streams=self.streams, mtimes=self.mtimes)
+        self.set_shares(permission_level, files=self.files, streams=self.streams, mtimes=self.mtimes)
 
         for dictionary in (self.files, self.streams, self.mtimes):
             dictionary.clear()
@@ -646,10 +653,10 @@ class Shares:
         self.requested_share_times = {}
         self.rescanning = False
         self.compressed_shares = {
-            "public": slskmessages.SharedFileListResponse(),
-            "buddy": slskmessages.SharedFileListResponse(),
-            "trusted": slskmessages.SharedFileListResponse(),
-            "banned": slskmessages.SharedFileListResponse()
+            PermissionLevel.PUBLIC: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
+            PermissionLevel.BUDDY: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BUDDY),
+            PermissionLevel.TRUSTED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.TRUSTED),
+            PermissionLevel.BANNED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BANNED)
         }
         self.file_path_index = ()
 
@@ -824,6 +831,42 @@ class Shares:
 
         return True
 
+    def check_user_permission(self, username, ip_address=None):
+        """Check if this user is banned, geoip-blocked, and which shares it is
+        allowed to access based on transfer and shares settings."""
+
+        if core.network_filter.is_user_banned(username) or core.network_filter.is_user_ip_banned(username, ip_address):
+            if config.sections["transfers"]["usecustomban"]:
+                ban_message = config.sections["transfers"]["customban"]
+                return PermissionLevel.BANNED, ban_message
+
+            return PermissionLevel.BANNED, ""
+
+        user_data = core.userlist.buddies.get(username)
+
+        if user_data:
+            if user_data.is_trusted:
+                return PermissionLevel.TRUSTED, ""
+
+            return PermissionLevel.BUDDY, ""
+
+        if ip_address is None or not config.sections["transfers"]["geoblock"]:
+            return PermissionLevel.PUBLIC, ""
+
+        country_code = core.network_filter.get_country_code(ip_address)
+
+        # Please note that all country codes are stored in the same string at the first index
+        # of an array, separated by commas (no idea why this decision was made...)
+
+        if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
+            if config.sections["transfers"]["usecustomgeoblock"]:
+                ban_message = config.sections["transfers"]["customgeoblock"]
+                return PermissionLevel.BANNED, ban_message
+
+            return PermissionLevel.BANNED, ""
+
+        return PermissionLevel.PUBLIC, ""
+
     def get_shared_folders(self):
 
         shared_public_folders = config.sections["transfers"]["shared"]
@@ -854,7 +897,8 @@ class Shares:
 
         return new_virtual_name
 
-    def add_share(self, folder_path, group_name="public", virtual_name=None, share_groups=None, validate_path=True):
+    def add_share(self, folder_path, permission_level=PermissionLevel.PUBLIC, virtual_name=None,
+                  share_groups=None, validate_path=True):
 
         if validate_path and not os.access(encode_path(folder_path), os.R_OK):
             return None
@@ -870,12 +914,12 @@ class Shares:
             virtual_name or os.path.basename(folder_path),
             shared_folders=(public_shares + buddy_shares + trusted_shares)
         )
-        share_types = {
-            "public": public_shares,
-            "buddy": buddy_shares,
-            "trusted": trusted_shares
+        permission_level_shares = {
+            PermissionLevel.PUBLIC: public_shares,
+            PermissionLevel.BUDDY: buddy_shares,
+            PermissionLevel.TRUSTED: trusted_shares
         }
-        shares = share_types.get(group_name)
+        shares = permission_level_shares.get(permission_level)
 
         shares.append((virtual_name, os.path.normpath(folder_path)))
         return virtual_name
@@ -969,7 +1013,7 @@ class Shares:
                     log.add(template, msg_args=args, level=log_level)
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
-                    self.compressed_shares[item.type] = item
+                    self.compressed_shares[item.permission_level] = item
 
                 elif isinstance(item, list):
                     self.file_path_index = tuple(item)
@@ -1075,7 +1119,7 @@ class Shares:
         log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 
         ip_address, _port = msg.init.addr
-        permission_level, _reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         shares_list = self.compressed_shares.get(permission_level)
         core.send_message_to_peer(username, shares_list)
 
@@ -1084,9 +1128,9 @@ class Shares:
 
         ip_address, _port = msg.init.addr
         username = msg.init.target_user
-        permission_level, _reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, _reject_reason = self.check_user_permission(username, ip_address)
 
-        if permission_level == "banned":
+        if permission_level == PermissionLevel.BANNED:
             return
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
@@ -1097,10 +1141,10 @@ class Shares:
         folder_data = None
 
         try:
-            if (reveal_trusted_shares or permission_level == "trusted") and msg.dir in trusted_shares:
+            if (reveal_trusted_shares or permission_level == PermissionLevel.TRUSTED) and msg.dir in trusted_shares:
                 folder_data = trusted_shares[msg.dir]
 
-            elif (reveal_buddy_shares or permission_level == "buddy") and msg.dir in buddy_shares:
+            elif (reveal_buddy_shares or permission_level == PermissionLevel.BUDDY) and msg.dir in buddy_shares:
                 folder_data = buddy_shares[msg.dir]
 
             elif msg.dir in public_shares:

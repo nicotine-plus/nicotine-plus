@@ -25,6 +25,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import TransferRejectReason
 from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
@@ -462,9 +463,9 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         ip_address, _port = addr
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, reject_reason = core.shares.check_user_permission(username, ip_address)
 
-        if permission_level == "banned":
+        if permission_level == PermissionLevel.BANNED:
             reject_message = TransferRejectReason.BANNED
 
             if reject_reason:

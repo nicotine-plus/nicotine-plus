@@ -23,6 +23,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.shares import PermissionLevel
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -128,9 +129,9 @@ class UserInfo:
         if core.login_username != username:
             log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
+        permission_level, reject_reason = core.shares.check_user_permission(username, ip_address)
 
-        if permission_level == "banned":
+        if permission_level == PermissionLevel.BANNED:
             # Hide most details from banned users
             pic = None
             descr = ""

@@ -505,44 +505,6 @@ class NetworkFilter:
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
                 core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
-    # Permission Level #
-
-    def check_user_permission(self, username, ip_address=None):
-        """Check if this user is banned, geoip-blocked, and which shares it is
-        allowed to access based on transfer and shares settings."""
-
-        if self.is_user_banned(username) or self.is_user_ip_banned(username, ip_address):
-            if config.sections["transfers"]["usecustomban"]:
-                ban_message = config.sections["transfers"]["customban"]
-                return "banned", ban_message
-
-            return "banned", ""
-
-        user_data = core.userlist.buddies.get(username)
-
-        if user_data:
-            if user_data.is_trusted:
-                return "trusted", ""
-
-            return "buddy", ""
-
-        if ip_address is None or not config.sections["transfers"]["geoblock"]:
-            return "public", ""
-
-        country_code = self.get_country_code(ip_address)
-
-        # Please note that all country codes are stored in the same string at the first index
-        # of an array, separated by commas (no idea why this decision was made...)
-
-        if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
-            if config.sections["transfers"]["usecustomgeoblock"]:
-                ban_message = config.sections["transfers"]["customgeoblock"]
-                return "banned", ban_message
-
-            return "banned", ""
-
-        return "public", ""
-
     # Callbacks #
 
     def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):

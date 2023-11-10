@@ -59,6 +59,7 @@ from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskproto import NetworkInterfaces
 from pynicotine.utils import open_folder_path
 from pynicotine.utils import open_uri
@@ -539,10 +540,10 @@ class DownloadsPage:
 
 class SharesPage:
 
-    GROUP_NAMES = {
-        _("Public"): "public",
-        _("Buddies"): "buddy",
-        _("Trusted buddies"): "trusted"
+    PERMISSION_LEVELS = {
+        _("Public"): PermissionLevel.PUBLIC,
+        _("Buddies"): PermissionLevel.BUDDY,
+        _("Trusted buddies"): PermissionLevel.TRUSTED
     }
 
     def __init__(self, application):
@@ -674,13 +675,13 @@ class SharesPage:
         self.rescan_required = True
 
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
-        group_name = self.GROUP_NAMES.get(new_accessible_to)
+        permission_level = self.PERMISSION_LEVELS.get(new_accessible_to)
 
         core.shares.remove_share(
             virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
         )
         new_virtual_name = core.shares.add_share(
-            folder_path, group_name=group_name, virtual_name=new_virtual_name,
+            folder_path, permission_level=permission_level, virtual_name=new_virtual_name,
             share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders),
             validate_path=False
         )
@@ -701,7 +702,7 @@ class SharesPage:
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
                 second_default=default_item.replace(_("Trusted"), _("Trusted buddies")),
-                second_droplist=list(self.GROUP_NAMES),
+                second_droplist=list(self.PERMISSION_LEVELS),
                 use_second_entry=True,
                 second_entry_editable=False,
                 action_button_label=_("_Edit"),

@@ -19,6 +19,7 @@
 import os
 
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
 
 
@@ -531,23 +532,23 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
-        group_names = {
-            0: "public",
-            1: "buddy",
-            2: "trusted"
+        permission_levels = {
+            0: PermissionLevel.PUBLIC,
+            1: PermissionLevel.BUDDY,
+            2: PermissionLevel.TRUSTED
         }
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
         for group_index, share_group in enumerate(share_groups):
-            group_name = group_names.get(group_index)
+            permission_level = permission_levels.get(group_index)
             num_shares = len(share_group)
             num_total += num_shares
 
-            if not num_shares or args and group_name not in args.lower():
+            if not num_shares or args and permission_level not in args.lower():
                 continue
 
-            self.output("\n" + f"{num_shares} {group_name} shares:")
+            self.output("\n" + f"{num_shares} {permission_level} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
                 self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
@@ -562,15 +563,15 @@ class Plugin(BasePlugin):
     def share_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
-        group_name, folder_path = args_split[0], args_split[1].strip(' "')
-        virtual_name = self.core.shares.add_share(folder_path, group_name=group_name)
+        permission_level, folder_path = args_split[0], args_split[1].strip(' "')
+        virtual_name = self.core.shares.add_share(folder_path, permission_level=permission_level)
 
         if not virtual_name:
             self.output(_("Cannot share inaccessible folder \"%s\"") % folder_path)
             return False
 
         self.output(_("Added %(group_name)s share \"%(virtual_name)s\" (rescan required)") % {
-            "group_name": group_name,
+            "group_name": permission_level,
             "virtual_name": virtual_name
         })
         return True

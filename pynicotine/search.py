@@ -31,6 +31,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.shares import PermissionLevel
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -381,8 +382,8 @@ class Search:
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
         reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
-        is_buddy = (permission_level == "buddy")
-        is_trusted = (permission_level == "trusted")
+        is_buddy = (permission_level == PermissionLevel.BUDDY)
+        is_trusted = (permission_level == PermissionLevel.TRUSTED)
 
         fileinfos = []
         private_fileinfos = []
@@ -560,9 +561,9 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        permission_level, _reject_reason = core.network_filter.check_user_permission(username)
+        permission_level, _reject_reason = core.shares.check_user_permission(username)
 
-        if permission_level == "banned":
+        if permission_level == PermissionLevel.BANNED:
             return
 
         word_index = core.shares.share_dbs.get("words")
