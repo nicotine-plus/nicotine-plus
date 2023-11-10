@@ -69,6 +69,13 @@ class Searches(IconNotebook):
             switch_page_callback=self.on_switch_search_page
         )
 
+        self.page = window.search_page
+        self.page.id = "search"
+        self.toolbar = window.search_toolbar
+        self.toolbar_start_content = window.search_title
+        self.toolbar_end_content = window.search_end
+        self.toolbar_default_widget = window.search_entry
+
         self.modes = {
             "global": _("_Global"),
             "buddies": _("_Buddies"),

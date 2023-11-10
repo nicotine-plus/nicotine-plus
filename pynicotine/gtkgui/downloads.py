@@ -47,7 +47,13 @@ class Downloads(Transfers):
         self.abort_label = _("P_ause")
         self.deprioritized_statuses = {TransferStatus.PAUSED, TransferStatus.FINISHED, TransferStatus.FILTERED}
 
-        self.transfer_page = window.downloads_page
+        self.transfer_page = self.page = window.downloads_page
+        self.page.id = "downloads"
+        self.toolbar = window.downloads_toolbar
+        self.toolbar_start_content = window.downloads_title
+        self.toolbar_end_content = window.downloads_end
+        self.toolbar_default_widget = window.download_users_button
+
         self.user_counter = window.download_users_label
         self.file_counter = window.download_files_label
         self.expand_button = window.downloads_expand_button

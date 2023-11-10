@@ -67,6 +67,14 @@ class UserBrowses(IconNotebook):
             parent=window.userbrowse_content,
             parent_page=window.userbrowse_page
         )
+
+        self.page = window.userbrowse_page
+        self.page.id = "userbrowse"
+        self.toolbar = window.userbrowse_toolbar
+        self.toolbar_start_content = window.userbrowse_title
+        self.toolbar_end_content = window.userbrowse_end
+        self.toolbar_default_widget = window.userbrowse_entry
+
         self.file_properties = None
 
         self.userbrowse_combobox = ComboBox(

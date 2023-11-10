@@ -69,6 +69,13 @@ class ChatRooms(IconNotebook):
             reorder_page_callback=self.on_reordered_page
         )
 
+        self.page = window.chatrooms_page
+        self.page.id = "chatrooms"
+        self.toolbar = window.chatrooms_toolbar
+        self.toolbar_start_content = window.chatrooms_title
+        self.toolbar_end_content = window.chatrooms_end
+        self.toolbar_default_widget = window.chatrooms_entry
+
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.spell_checker = SpellChecker()
@@ -710,12 +717,12 @@ class ChatRoom:
     def toggle_chat_buttons(self):
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
-    def _show_notification(self, login, room, user, text, tag, is_global):
+    def _show_notification(self, login, room, user, text, message_type, is_global):
 
         if user == login:
             return
 
-        mentioned = (tag == self.chat_view.tag_highlight)
+        mentioned = (message_type == "hilite")
         self.chatrooms.request_tab_changed(self.container, is_important=mentioned, is_quiet=is_global)
 
         if is_global and room in core.chatrooms.joined_rooms:
@@ -755,9 +762,9 @@ class ChatRoom:
         login_username = core.login_username
         text = msg.msg
         room = msg.room
-        tag = self.chat_view.get_line_tag(user, text, login_username)
+        message_type = self.chat_view.get_message_type(user, text, login_username)
 
-        if tag == self.chat_view.tag_action:
+        if message_type == "action":
             line = f"* {user} {text[4:]}"
             speech = line[2:]
         else:
@@ -772,7 +779,7 @@ class ChatRoom:
 
         if user != login_username:
             self.chat_view.append_line(
-                core.privatechat.censor_chat(line), tag=tag,
+                core.privatechat.censor_chat(line), message_type=message_type,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
@@ -783,11 +790,11 @@ class ChatRoom:
 
         else:
             self.chat_view.append_line(
-                line, tag=tag,
+                line, message_type=message_type,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self._show_notification(login_username, room, user, speech, tag, is_global)
+        self._show_notification(login_username, room, user, speech, message_type, is_global)
 
         if self.log_toggle.get_active():
             log.write_log_file(
@@ -797,17 +804,12 @@ class ChatRoom:
 
     def echo_room_message(self, text, message_type):
 
-        if hasattr(self, f"tag_{message_type}"):
-            tag = getattr(self.chat_view, f"tag_{message_type}")
-        else:
-            tag = self.chat_view.tag_local
-
         if message_type != "command":
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
+        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
 
     def user_joined_room(self, msg):
 

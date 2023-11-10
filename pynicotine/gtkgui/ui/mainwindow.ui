@@ -75,7 +75,7 @@
           <object class="GtkBox" id="search_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="search_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -253,7 +253,7 @@
           <object class="GtkBox" id="downloads_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="downloads_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -276,8 +276,8 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" bind-source="_download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                            <property name="mnemonic-widget">_download_users_button</property>
+                            <property name="label" bind-source="download_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">download_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -285,14 +285,14 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_download_users_button">
+                          <object class="GtkButton" id="download_users_button">
                             <property name="action-name">app.transfer-statistics</property>
                             <property name="tooltip-text" translatable="yes">Users</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkLabel" id="download_users_label">
                                 <property name="label">0</property>
-                                <property name="mnemonic-widget">_download_users_button</property>
+                                <property name="mnemonic-widget">download_users_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="bold"/>
@@ -492,7 +492,7 @@
           <object class="GtkBox" id="uploads_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="uploads_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -515,8 +515,8 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="label" bind-source="_upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                            <property name="mnemonic-widget">_upload_users_button</property>
+                            <property name="label" bind-source="upload_users_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
+                            <property name="mnemonic-widget">upload_users_button</property>
                             <property name="visible">True</property>
                             <style>
                               <class name="heading"/>
@@ -524,14 +524,14 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="_upload_users_button">
+                          <object class="GtkButton" id="upload_users_button">
                             <property name="action-name">app.transfer-statistics</property>
                             <property name="tooltip-text" translatable="yes">Users</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkLabel" id="upload_users_label">
                                 <property name="label">0</property>
-                                <property name="mnemonic-widget">_upload_users_button</property>
+                                <property name="mnemonic-widget">upload_users_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="bold"/>
@@ -741,7 +741,7 @@
           <object class="GtkBox" id="userbrowse_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="userbrowse_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -905,7 +905,7 @@
           <object class="GtkBox" id="userinfo_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="userinfo_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -1058,7 +1058,7 @@
           <object class="GtkBox" id="private_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="private_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -1219,7 +1219,7 @@
           <object class="GtkBox" id="userlist_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="userlist_toolbar_content">
+              <object class="GtkBox">
                 <property name="hexpand">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-end">6</property>
@@ -1386,7 +1386,7 @@
               <object class="GtkBox" id="chatrooms_toolbar">
                 <property name="visible">False</property>
                 <child>
-                  <object class="GtkBox" id="chatrooms_toolbar_content">
+                  <object class="GtkBox">
                     <property name="hexpand">True</property>
                     <property name="margin-bottom">6</property>
                     <property name="margin-end">6</property>
@@ -1554,7 +1554,7 @@
           <object class="GtkBox" id="interests_toolbar">
             <property name="visible">False</property>
             <child>
-              <object class="GtkBox" id="interests_toolbar_content">
+              <object class="GtkBox">
                 <property name="visible">False</property>
                 <child>
                   <object class="GtkBox" id="interests_title">

@@ -47,7 +47,13 @@ class Uploads(Transfers):
         self.abort_label = _("_Abort")
         self.deprioritized_statuses = {TransferStatus.CANCELLED, TransferStatus.FINISHED}
 
-        self.transfer_page = window.uploads_page
+        self.transfer_page = self.page = window.uploads_page
+        self.page.id = "uploads"
+        self.toolbar = window.uploads_toolbar
+        self.toolbar_start_content = window.uploads_title
+        self.toolbar_end_content = window.uploads_end
+        self.toolbar_default_widget = window.upload_users_button
+
         self.user_counter = window.upload_users_label
         self.file_counter = window.upload_files_label
         self.expand_button = window.uploads_expand_button

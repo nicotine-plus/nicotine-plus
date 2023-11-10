@@ -44,8 +44,9 @@ class TransferSpeeds(Popover):
             show_callback=self.on_show
         )
 
-        menu_button = getattr(window, f"{transfer_type}_status_button")
-        self.set_menu_button(menu_button)
+    def set_menu_button(self, menu_button):
+
+        super().set_menu_button(menu_button)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=menu_button.get_first_child(), css_class="flat")

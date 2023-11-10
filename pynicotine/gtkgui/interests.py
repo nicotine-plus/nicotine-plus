@@ -59,6 +59,13 @@ class Interests:
             window.interests_container.add(self.container)
 
         self.window = window
+        self.page = window.interests_page
+        self.page.id = "interests"
+        self.toolbar = window.interests_toolbar
+        self.toolbar_start_content = window.interests_title
+        self.toolbar_end_content = window.interests_end
+        self.toolbar_default_widget = None
+
         self.populated_recommends = False
 
         # Columns
