@@ -129,7 +129,6 @@ EVENT_NAMES = {
     "private-chat-completions",
     "private-chat-remove-user",
     "private-chat-show-user",
-    "send-private-message",
 
     # Search
     "add-search",

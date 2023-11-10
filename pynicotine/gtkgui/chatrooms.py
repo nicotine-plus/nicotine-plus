@@ -219,8 +219,8 @@ class ChatRooms(IconNotebook):
     def show_room(self, room, is_private=False, switch_page=True, remembered=False):
 
         if room not in self.pages:
-            self.pages[room] = tab = ChatRoom(self, room, is_private=is_private)
             is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
+            self.pages[room] = tab = ChatRoom(self, room, is_private=is_private, is_global=is_global)
 
             if remembered and not is_global:
                 tab_position = -1
@@ -334,7 +334,7 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(core.chatrooms.GLOBAL_ROOM_NAME)
 
         if page is not None:
-            page.say_chat_room(msg, is_global=True)
+            page.global_room_message(msg)
 
     def update_completions(self, completions):
 
@@ -363,7 +363,7 @@ class ChatRooms(IconNotebook):
 
 class ChatRoom:
 
-    def __init__(self, chatrooms, room, is_private):
+    def __init__(self, chatrooms, room, is_private, is_global):
 
         (
             self.activity_container,
@@ -392,6 +392,7 @@ class ChatRoom:
         self.window = chatrooms.window
         self.room = room
         self.is_private = is_private
+        self.is_global = is_global
 
         if GTK_API_VERSION >= 4:
             self.chat_paned.set_shrink_end_child(False)
@@ -407,7 +408,7 @@ class ChatRoom:
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-                                  status_users=core.chatrooms.joined_rooms[self.room].users,
+                                  status_users=core.chatrooms.joined_rooms[room].users,
                                   username_event=self.username_event)
 
         # Event Text Search
@@ -422,10 +423,7 @@ class ChatRoom:
         ChatEntry(self.window.application, self.chat_entry, self.chat_view, chatrooms.completion, room,
                   core.chatrooms.send_message, is_chatroom=True)
 
-        self.log_toggle.set_active(config.sections["logging"]["chatrooms"])
-        if not self.log_toggle.get_active():
-            self.log_toggle.set_active(self.room in config.sections["logging"]["rooms"])
-
+        self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
 
         self.users_list_view = TreeView(
@@ -570,7 +568,7 @@ class ChatRoom:
 
     def setup_public_feed(self):
 
-        if self.room != core.chatrooms.GLOBAL_ROOM_NAME:
+        if not self.is_global:
             return
 
         for widget in (self.activity_container, self.users_container, self.chat_entry, self.help_button):
@@ -715,21 +713,18 @@ class ChatRoom:
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def toggle_chat_buttons(self):
+        self.log_toggle.set_visible(not config.sections["logging"]["chatrooms"])
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
 
-    def _show_notification(self, login, room, user, text, message_type, is_global):
+    def _show_notification(self, room, user, text, is_mentioned):
 
-        if user == login:
-            return
+        self.chatrooms.request_tab_changed(self.container, is_important=is_mentioned, is_quiet=self.is_global)
 
-        mentioned = (message_type == "hilite")
-        self.chatrooms.request_tab_changed(self.container, is_important=mentioned, is_quiet=is_global)
-
-        if is_global and room in core.chatrooms.joined_rooms:
+        if self.is_global and room in core.chatrooms.joined_rooms:
             # Don't show notifications about the Public feed that's duplicated in an open tab
             return
 
-        if mentioned:
+        if is_mentioned:
             log.add(_("%(user)s mentioned you in room %(room)s") % {"user": user, "room": room})
 
             if config.sections["notifications"]["notification_popup_chatroom_mention"]:
@@ -744,63 +739,43 @@ class ChatRoom:
             # Don't show notifications if the chat is open and the window is in use
             return
 
-        if mentioned:
+        if is_mentioned:
             # We were mentioned, update tray icon and show urgency hint
             self.chatrooms.highlight_room(room, user)
             return
 
-        if not is_global and config.sections["notifications"]["notification_popup_chatroom"]:
+        if not self.is_global and config.sections["notifications"]["notification_popup_chatroom"]:
             # Don't show notifications for public feed room, they're too noisy
             core.notifications.show_chatroom_notification(
                 room, text,
                 title=_("Message by %(user)s in Room %(room)s") % {"user": user, "room": room}
             )
 
-    def say_chat_room(self, msg, is_global=False):
+    def say_chat_room(self, msg):
 
-        user = msg.user
-        login_username = core.login_username
-        text = msg.msg
+        username = msg.user
         room = msg.room
-        message_type = self.chat_view.get_message_type(user, text, login_username)
+        message = msg.message
+        formatted_message = msg.formatted_message
+        message_type = msg.message_type
+        usertag = self.chat_view.get_user_tag(username)
 
-        if message_type == "action":
-            line = f"* {user} {text[4:]}"
-            speech = line[2:]
-        else:
-            line = f"[{user}] {text}"
-            speech = text
-
-        if is_global:
-            line = f"{room} | {line}"
-
-        usertag = self.chat_view.get_user_tag(user)
-        timestamp_format = config.sections["logging"]["rooms_timestamp"]
-
-        if user != login_username:
-            self.chat_view.append_line(
-                core.privatechat.censor_chat(line), message_type=message_type,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
-            )
-
+        if message_type != "local":
             if self.speech_toggle.get_active():
                 core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": room, "user": user, "message": speech}
+                    config.sections["ui"]["speechrooms"], {"room": room, "user": username, "message": message}
                 )
 
-        else:
-            self.chat_view.append_line(
-                line, message_type=message_type,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
-            )
+            self._show_notification(
+                room, username, message, is_mentioned=(message_type == "hilite"))
 
-        self._show_notification(login_username, room, user, speech, message_type, is_global)
+        self.chat_view.append_line(
+            formatted_message, message_type=message_type, username=username, usertag=usertag,
+            timestamp_format=config.sections["logging"]["rooms_timestamp"]
+        )
 
-        if self.log_toggle.get_active():
-            log.write_log_file(
-                folder_path=config.sections["logging"]["roomlogsdir"],
-                basename=f"{clean_file(self.room)}.log", text=line
-            )
+    def global_room_message(self, msg):
+        self.say_chat_room(msg)
 
     def echo_room_message(self, text, message_type):
 

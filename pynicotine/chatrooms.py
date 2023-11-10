@@ -21,6 +21,9 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
+from pynicotine.utils import censor_text
+from pynicotine.utils import find_whole_word
 
 
 class Room:
@@ -171,7 +174,10 @@ class ChatRooms:
             return
 
         room, message = event
-        message = core.privatechat.auto_replace(message)
+
+        if config.sections["words"]["replacewords"]:
+            for word, replacement in config.sections["words"]["autoreplaced"].items():
+                message = message.replace(str(word), str(replacement))
 
         core.send_message_to_server(slskmessages.SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
@@ -381,7 +387,7 @@ class ChatRooms:
     def _global_room_message(self, msg):
         """Server code 152."""
 
-        core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
+        self._say_chat_room(msg, is_global=True)
 
     def _room_list(self, msg):
         """Server code 64."""
@@ -427,39 +433,82 @@ class ChatRooms:
             self.update_completions()
             core.privatechat.update_completions()
 
-    def _say_chat_room(self, msg):
+    def get_message_type(self, user, text):
+
+        if text.startswith("/me "):
+            return "action"
+
+        if user == core.login_username:
+            return "local"
+
+        if core.login_username and find_whole_word(core.login_username.lower(), text.lower()) > -1:
+            return "hilite"
+
+        return "remote"
+
+    def _say_chat_room(self, msg, is_global=False):
         """Server code 13."""
 
         room = msg.room
-
-        if room not in self.joined_rooms:
-            msg.room = None
-            return
-
         username = msg.user
 
-        log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
-            "user": username,
-            "room": room,
-            "message": msg.msg
-        })
-
-        if username != "server":
-            if core.network_filter.is_user_ignored(username):
+        if not is_global:
+            if room not in self.joined_rooms:
                 msg.room = None
                 return
 
-            if core.network_filter.is_user_ip_ignored(username):
+            log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
+                "user": username,
+                "room": room,
+                "message": msg.message
+            })
+
+            if username != "server":
+                if core.network_filter.is_user_ignored(username):
+                    msg.room = None
+                    return
+
+                if core.network_filter.is_user_ip_ignored(username):
+                    msg.room = None
+                    return
+
+            event = core.pluginhandler.incoming_public_chat_event(room, username, msg.message)
+            if event is None:
                 msg.room = None
                 return
 
-        event = core.pluginhandler.incoming_public_chat_event(room, username, msg.msg)
-        if event is None:
-            msg.room = None
-            return
+            _room, _username, msg.message = event
+        else:
+            room = self.GLOBAL_ROOM_NAME
 
-        _room, _username, msg.msg = event
-        core.pluginhandler.incoming_public_chat_notification(room, username, msg.msg)
+        message = msg.message
+        msg.message_type = self.get_message_type(username, message)
+        is_action_message = (msg.message_type == "action")
+
+        if is_action_message:
+            message = message[4:]
+
+        if config.sections["words"]["censorwords"] and username != core.login_username:
+            message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
+
+        if is_action_message:
+            msg.formatted_message = msg.message = f"* {username} {message}"
+        else:
+            msg.formatted_message = f"[{username}] {message}"
+
+        if is_global:
+            msg.formatted_message = f"{msg.room} | {msg.formatted_message}"
+
+        if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
+            log.write_log_file(
+                folder_path=config.sections["logging"]["roomlogsdir"],
+                basename=f"{clean_file(room)}.log", text=msg.formatted_message
+            )
+
+        if is_global:
+            core.pluginhandler.public_room_message_notification(msg.room, username, msg.message)
+        else:
+            core.pluginhandler.incoming_public_chat_notification(room, username, msg.message)
 
     def _user_joined_room(self, msg):
         """Server code 16."""

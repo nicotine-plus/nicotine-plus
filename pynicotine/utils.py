@@ -204,6 +204,35 @@ def unescape(string):
     return string
 
 
+def find_whole_word(word, text):
+    """Returns start position of a whole word that is not in a subword."""
+
+    if word not in text:
+        return -1
+
+    word_boundaries = [" "] + PUNCTUATION
+    whole = False
+    start = after = 0
+
+    while not whole and start > -1:
+        start = text.find(word, after)
+        after = start + len(word)
+
+        whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                 and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+    return start if whole else -1
+
+
+def censor_text(text, censored_patterns, filler="*"):
+
+    for word in censored_patterns:
+        word = str(word)
+        text = text.replace(word, filler * len(word))
+
+    return text
+
+
 def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
     """Executes a string with commands, with partial support for bash-style
     quoting and pipes.
