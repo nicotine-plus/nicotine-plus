@@ -46,6 +46,28 @@ class Statistics(Dialog):
             self.uploaded_size_total_label
         ) = ui.load(scope=self, path="dialogs/statistics.ui")
 
+        self.stat_id_labels = {
+            "completed_downloads": {
+                "session": self.completed_downloads_session_label,
+                "total": self.completed_downloads_total_label
+            },
+            "completed_uploads": {
+                "session": self.completed_uploads_session_label,
+                "total": self.completed_uploads_total_label
+            },
+            "downloaded_size": {
+                "session": self.downloaded_size_session_label,
+                "total": self.downloaded_size_total_label
+            },
+            "uploaded_size": {
+                "session": self.uploaded_size_session_label,
+                "total": self.uploaded_size_total_label
+            },
+            "since_timestamp": {
+                "total": self.since_timestamp_total_label
+            }
+        }
+
         super().__init__(
             parent=application.window,
             content_box=self.container,
@@ -59,6 +81,11 @@ class Statistics(Dialog):
         events.connect("update-stat", self.update_stat)
 
     def update_stat(self, stat_id, session_value, total_value):
+
+        current_stat_id_labels = self.stat_id_labels.get(stat_id)
+
+        if not current_stat_id_labels:
+            return
 
         if not self.widget.get_visible():
             return
@@ -77,15 +104,15 @@ class Statistics(Dialog):
             total_value = humanize(total_value)
 
         if session_value is not None:
-            session_label = getattr(self, f"{stat_id}_session_label", None)
+            session_label = current_stat_id_labels["session"]
 
-            if session_label is not None:
+            if session_label.get_text() != session_value:
                 session_label.set_text(session_value)
 
         if total_value is not None:
-            total_label = getattr(self, f"{stat_id}_total_label", None)
+            total_label = current_stat_id_labels["total"]
 
-            if total_label is not None:
+            if total_label.get_text() != total_value:
                 total_label.set_text(total_value)
 
     def on_reset_statistics_response(self, *_args):
