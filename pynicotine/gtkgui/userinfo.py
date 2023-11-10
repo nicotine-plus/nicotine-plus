@@ -59,6 +59,13 @@ class UserInfos(IconNotebook):
             parent_page=window.userinfo_page
         )
 
+        self.page = window.userinfo_page
+        self.page.id = "userinfo"
+        self.toolbar = window.userinfo_toolbar
+        self.toolbar_start_content = window.userinfo_title
+        self.toolbar_end_content = window.userinfo_end
+        self.toolbar_default_widget = window.userinfo_entry
+
         self.userinfo_combobox = ComboBox(
             container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
             entry=self.window.userinfo_entry

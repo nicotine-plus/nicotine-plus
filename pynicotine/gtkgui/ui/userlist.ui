@@ -6,7 +6,7 @@
     <property name="orientation">vertical</property>
     <property name="visible">True</property>
     <child>
-      <object class="GtkBox" id="toolbar">
+      <object class="GtkBox" id="side_toolbar">
         <property name="margin-bottom">6</property>
         <property name="margin-end">6</property>
         <property name="margin-start">6</property>

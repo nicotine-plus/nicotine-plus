@@ -1632,7 +1632,6 @@
                   <object class="GtkButton" id="font_global_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1678,7 +1677,6 @@
                   <object class="GtkButton" id="font_list_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1724,7 +1722,6 @@
                   <object class="GtkButton" id="font_text_view_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1770,7 +1767,6 @@
                   <object class="GtkButton" id="font_chat_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1816,7 +1812,6 @@
                   <object class="GtkButton" id="font_transfers_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1862,7 +1857,6 @@
                   <object class="GtkButton" id="font_search_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>
@@ -1908,7 +1902,6 @@
                   <object class="GtkButton" id="font_browse_clear_button">
                     <property name="tooltip-text" translatable="yes">Clear</property>
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_clear_font"/>
                     <child>
                       <object class="GtkImage">
                         <property name="icon-name">edit-clear-symbolic</property>

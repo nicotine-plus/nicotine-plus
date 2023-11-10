@@ -66,23 +66,6 @@ from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
 
 
-PAGE_IDS = [
-    ("network", _("Network"), "network-wireless-symbolic"),
-    ("user-interface", _("User Interface"), "view-grid-symbolic"),
-    ("shares", _("Shares"), "folder-symbolic"),
-    ("downloads", _("Downloads"), "document-save-symbolic"),
-    ("uploads", _("Uploads"), "emblem-shared-symbolic"),
-    ("searches", _("Searches"), "system-search-symbolic"),
-    ("user-profile", _("User Profile"), "avatar-default-symbolic"),
-    ("chats", _("Chats"), "insert-text-symbolic"),
-    ("now-playing", _("Now Playing"), "folder-music-symbolic"),
-    ("logging", _("Logging"), "folder-documents-symbolic"),
-    ("banned-users", _("Banned Users"), "action-unavailable-symbolic"),
-    ("ignored-users", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-    ("plugins", _("Plugins"), "list-add-symbolic"),
-    ("url-handlers", _("URL Handlers"), "insert-link-symbolic")]
-
-
 class NetworkPage:
 
     def __init__(self, application):
@@ -1676,24 +1659,24 @@ class UserInterfacePage:
             "tab_changed": self.color_tab_changed_button
         }
 
-        self.color_entries = [
-            self.color_chat_local_entry,
-            self.color_chat_remote_entry,
-            self.color_chat_command_entry,
-            self.color_chat_action_entry,
-            self.color_chat_highlighted_entry,
-            self.color_input_background_entry,
-            self.color_input_text_entry,
-            self.color_list_text_entry,
-            self.color_queued_result_text_entry,
-            self.color_status_away_entry,
-            self.color_status_online_entry,
-            self.color_status_offline_entry,
-            self.color_url_entry,
-            self.color_tab_entry,
-            self.color_tab_highlighted_entry,
-            self.color_tab_changed_entry
-        ]
+        self.color_entries = {
+            "chatlocal": self.color_chat_local_entry,
+            "chatremote": self.color_chat_remote_entry,
+            "chatcommand": self.color_chat_command_entry,
+            "chatme": self.color_chat_action_entry,
+            "chathilite": self.color_chat_highlighted_entry,
+            "textbg": self.color_input_background_entry,
+            "inputcolor": self.color_input_text_entry,
+            "search": self.color_list_text_entry,
+            "searchq": self.color_queued_result_text_entry,
+            "useraway": self.color_status_away_entry,
+            "useronline": self.color_status_online_entry,
+            "useroffline": self.color_status_offline_entry,
+            "urlcolor": self.color_url_entry,
+            "tab_default": self.color_tab_entry,
+            "tab_hilite": self.color_tab_highlighted_entry,
+            "tab_changed": self.color_tab_changed_entry
+        }
 
         self.font_buttons = {
             "globalfont": self.font_global_button,
@@ -1703,6 +1686,16 @@ class UserInterfacePage:
             "searchfont": self.font_search_button,
             "transfersfont": self.font_transfers_button,
             "browserfont": self.font_browse_button
+        }
+
+        self.font_clear_buttons = {
+            "globalfont": self.font_global_clear_button,
+            "listfont": self.font_list_clear_button,
+            "textviewfont": self.font_text_view_clear_button,
+            "chatfont": self.font_chat_clear_button,
+            "searchfont": self.font_search_clear_button,
+            "transfersfont": self.font_transfers_clear_button,
+            "browserfont": self.font_browse_clear_button
         }
 
         self.tab_position_comboboxes = {
@@ -1729,13 +1722,16 @@ class UserInterfacePage:
         rgba = Gdk.RGBA()
         rgba.red = rgba.green = rgba.blue = rgba.alpha = 0
 
-        for button in self.color_buttons.values():
+        for color_id, button in self.color_buttons.items():
             button.set_rgba(rgba)
-            button.connect("notify::rgba", self.on_color_button_changed)
+            button.connect("notify::rgba", self.on_color_button_changed, color_id)
 
-        for entry in self.color_entries:
-            entry.connect("icon-press", self.on_default_color)
-            entry.connect("changed", self.on_color_entry_changed)
+        for color_id, entry in self.color_entries.items():
+            entry.connect("icon-press", self.on_default_color, color_id)
+            entry.connect("changed", self.on_color_entry_changed, color_id)
+
+        for font_id, button in self.font_clear_buttons.items():
+            button.connect("clicked", self.on_clear_font, font_id)
 
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
@@ -1933,9 +1929,9 @@ class UserInterfacePage:
 
         return button.get_font()
 
-    def on_clear_font(self, button):
+    def on_clear_font(self, _button, font_id):
 
-        font_button = getattr(self, Gtk.Buildable.get_name(button).replace("clear_button", "button"))
+        font_button = self.font_buttons[font_id]
 
         if GTK_API_VERSION >= 4:
             font_button.set_font_desc(Pango.FontDescription())
@@ -1944,7 +1940,7 @@ class UserInterfacePage:
 
     # Colors #
 
-    def on_color_entry_changed(self, entry):
+    def on_color_entry_changed(self, entry, color_id):
 
         self.editing_color = True
 
@@ -1956,12 +1952,12 @@ class UserInterfacePage:
         else:
             rgba.red = rgba.green = rgba.blue = rgba.alpha = 0
 
-        color_button = getattr(self, Gtk.Buildable.get_name(entry).replace("entry", "button"))
+        color_button = self.color_buttons[color_id]
         color_button.set_rgba(rgba)
 
         self.editing_color = False
 
-    def on_color_button_changed(self, button, *_args):
+    def on_color_button_changed(self, button, _param, color_id):
 
         if self.editing_color:
             return
@@ -1981,19 +1977,19 @@ class UserInterfacePage:
                 alpha_value = round(rgba.alpha * 255)
                 color_hex += f"{alpha_value:02X}"
 
-        entry = getattr(self, Gtk.Buildable.get_name(button).replace("button", "entry"))
+        entry = self.color_entries[color_id]
 
         if entry.get_text() != color_hex:
             entry.set_text(color_hex)
 
-    def on_default_color(self, entry, *_args):
+    def on_default_color(self, entry, *args):
 
-        for color_id, widget in self.options["ui"].items():
-            if widget is entry:
-                entry.set_text(config.defaults["ui"][color_id])
-                return
+        if GTK_API_VERSION >= 4:
+            _icon_pos, color_id = args
+        else:
+            _icon_pos, _event, color_id = args
 
-        entry.set_text("")
+        entry.set_text(config.defaults["ui"][color_id])
 
     # Tabs #
 
@@ -2744,6 +2740,23 @@ class PluginsPage:
 
 class Preferences(Dialog):
 
+    PAGE_IDS = [
+        ("network", NetworkPage, _("Network"), "network-wireless-symbolic"),
+        ("user-interface", UserInterfacePage, _("User Interface"), "view-grid-symbolic"),
+        ("shares", SharesPage, _("Shares"), "folder-symbolic"),
+        ("downloads", DownloadsPage, _("Downloads"), "document-save-symbolic"),
+        ("uploads", UploadsPage, _("Uploads"), "emblem-shared-symbolic"),
+        ("searches", SearchesPage, _("Searches"), "system-search-symbolic"),
+        ("user-profile", UserProfilePage, _("User Profile"), "avatar-default-symbolic"),
+        ("chats", ChatsPage, _("Chats"), "insert-text-symbolic"),
+        ("now-playing", NowPlayingPage, _("Now Playing"), "folder-music-symbolic"),
+        ("logging", LoggingPage, _("Logging"), "folder-documents-symbolic"),
+        ("banned-users", BannedUsersPage, _("Banned Users"), "action-unavailable-symbolic"),
+        ("ignored-users", IgnoredUsersPage, _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+        ("plugins", PluginsPage, _("Plugins"), "list-add-symbolic"),
+        ("url-handlers", UrlHandlersPage, _("URL Handlers"), "insert-link-symbolic")
+    ]
+
     def __init__(self, application):
 
         self.application = application
@@ -2781,7 +2794,7 @@ class Preferences(Dialog):
 
         self.pages = {}
 
-        for _page_id, label, icon_name in PAGE_IDS:
+        for _page_id, _page_class, label, icon_name in self.PAGE_IDS:
             box = Gtk.Box(margin_top=8, margin_bottom=8, margin_start=12, margin_end=12, spacing=12, visible=True)
             icon = Gtk.Image(icon_name=icon_name, visible=True)
             label = Gtk.Label(label=label, xalign=0, visible=True)
@@ -2803,7 +2816,7 @@ class Preferences(Dialog):
         if page_id is None:
             return
 
-        for index, (n_page_id, _label, _icon_name) in enumerate(PAGE_IDS):
+        for index, (n_page_id, _page_class, _label, _icon_name) in enumerate(self.PAGE_IDS):
             if n_page_id != page_id:
                 continue
 
@@ -3096,7 +3109,7 @@ class Preferences(Dialog):
 
     def on_switch_page(self, _listbox, row):
 
-        page_id, _label, _icon_name = PAGE_IDS[row.get_index()]
+        page_id, page_class, _label, _icon_name = self.PAGE_IDS[row.get_index()]
         old_page = self.viewport.get_child()
 
         if old_page:
@@ -3106,8 +3119,7 @@ class Preferences(Dialog):
                 self.viewport.remove(old_page)
 
         if page_id not in self.pages:
-            class_name = page_id.title().replace("-", "") + "Page"
-            self.pages[page_id] = page = getattr(sys.modules[__name__], class_name)(self.application)
+            self.pages[page_id] = page = page_class(self.application)
             page.set_settings()
 
             for obj in page.__dict__.values():

@@ -76,8 +76,9 @@ class TextView:
 
         self.pressed_x = self.pressed_y = 0
         self.max_num_lines = 50000
+        self.default_tags = {}
         self.parse_urls = parse_urls
-        self.tag_urls = {}
+        self.url_tags = {}
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         if GTK_API_VERSION >= 4:
@@ -138,11 +139,13 @@ class TextView:
         if GTK_API_VERSION >= 4:
             _position_found, end_iter = end_iter
 
-        self.tag_urls.pop(end_iter, None)
+        self.url_tags.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-    def append_line(self, line, tag=None, timestamp=None, timestamp_format=None, username=None, usertag=None):
+    def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
+                    username=None, usertag=None):
 
+        tag = self.default_tags.get(message_type)
         num_lines = self.textbuffer.get_line_count()
         line = str(line).strip("\n")
 
@@ -171,7 +174,7 @@ class TextView:
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self.tag_urls[self.textbuffer.get_end_iter()] = urltag
+                self.url_tags[self.textbuffer.get_end_iter()] = urltag
                 self._insert_text(url, urltag)
 
                 # Match remaining url
@@ -245,7 +248,7 @@ class TextView:
         start_iter, end_iter = self.textbuffer.get_bounds()
 
         self.textbuffer.delete(start_iter, end_iter)
-        self.tag_urls.clear()
+        self.url_tags.clear()
 
     # Text Tags (Usernames, URLs) #
 
@@ -277,7 +280,11 @@ class TextView:
         update_tag_visuals(tag, color_id=tag.color_id)
 
     def update_tags(self):
-        for tag in self.tag_urls.values():
+
+        for tag in self.url_tags.values():
+            self.update_tag(tag)
+
+        for tag in self.default_tags.values():
             self.update_tag(tag)
 
     # Events #
@@ -361,7 +368,7 @@ class ChatView(TextView):
 
         super().__init__(*args, **kwargs)
 
-        self.tag_users = self.status_users = {}
+        self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
         self.username_event = username_event
 
@@ -370,11 +377,13 @@ class ChatView(TextView):
             # currently in the room, even though we might know their global status
             self.status_users = status_users
 
-        self.tag_remote = self.create_tag("chatremote")
-        self.tag_local = self.create_tag("chatlocal")
-        self.tag_command = self.create_tag("chatcommand")
-        self.tag_action = self.create_tag("chatme")
-        self.tag_highlight = self.create_tag("chathilite")
+        self.default_tags = {
+            "remote": self.create_tag("chatremote"),
+            "local": self.create_tag("chatlocal"),
+            "command": self.create_tag("chatcommand"),
+            "action": self.create_tag("chatme"),
+            "hilite": self.create_tag("chathilite")
+        }
 
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
@@ -421,7 +430,7 @@ class ChatView(TextView):
             except UnicodeDecodeError:
                 line = line.decode("latin-1")
 
-            user = tag = usertag = None
+            user = message_type = usertag = None
 
             if " [" in line and "] " in line:
                 start = line.find(" [") + 2
@@ -432,62 +441,54 @@ class ChatView(TextView):
                     usertag = self.get_user_tag(user)
 
                     text = line[end + 2:-1]
-                    tag = self.get_line_tag(user, text, login)
+                    message_type = self.get_message_type(user, text, login)
 
             elif "* " in line:
-                tag = self.tag_action
+                message_type = "action"
 
             if user != login:
-                self.append_line(core.privatechat.censor_chat(line), tag=tag, username=user, usertag=usertag)
+                self.append_line(
+                    core.privatechat.censor_chat(line), message_type=message_type, username=user, usertag=usertag
+                )
             else:
-                self.append_line(line, tag=tag, username=user, usertag=usertag)
+                self.append_line(line, message_type=message_type, username=user, usertag=usertag)
 
         if lines:
-            self.append_line(_("--- old messages above ---"), tag=self.tag_highlight,
+            self.append_line(_("--- old messages above ---"), message_type="hilite",
                              timestamp_format=timestamp_format)
 
     def clear(self):
         super().clear()
-        self.tag_users.clear()
+        self.user_tags.clear()
 
-    def get_line_tag(self, user, text, login=None):
+    def get_message_type(self, user, text, login=None):
 
         if text.startswith("/me "):
-            return self.tag_action
+            return "action"
 
         if user == login:
-            return self.tag_local
+            return "local"
 
         if login and self.find_whole_word(login.lower(), text.lower()) > -1:
-            return self.tag_highlight
+            return "hilite"
 
-        return self.tag_remote
+        return "remote"
 
     def get_user_tag(self, username):
 
-        if username not in self.tag_users:
-            self.tag_users[username] = self.create_tag(callback=self.username_event, username=username)
+        if username not in self.user_tags:
+            self.user_tags[username] = self.create_tag(callback=self.username_event, username=username)
             self.update_user_tag(username)
 
-        return self.tag_users[username]
+        return self.user_tags[username]
 
     def update_tags(self):
-
         super().update_tags()
         self.update_user_tags()
 
-        for tag in (
-            self.tag_remote,
-            self.tag_local,
-            self.tag_command,
-            self.tag_action,
-            self.tag_highlight
-        ):
-            self.update_tag(tag)
-
     def update_user_tag(self, username):
 
-        if username not in self.tag_users:
+        if username not in self.user_tags:
             return
 
         status = UserStatus.OFFLINE
@@ -496,10 +497,10 @@ class ChatView(TextView):
             status = core.user_statuses.get(username, UserStatus.OFFLINE)
 
         color = USER_STATUS_COLORS.get(status)
-        self.update_tag(self.tag_users[username], color)
+        self.update_tag(self.user_tags[username], color)
 
     def update_user_tags(self):
-        for username in self.tag_users:
+        for username in self.user_tags:
             self.update_user_tag(username)
 
     def on_page_down_accelerator(self, *_args):

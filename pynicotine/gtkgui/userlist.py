@@ -47,10 +47,16 @@ class UserList:
         (
             self.container,
             self.list_container,
-            self.toolbar
+            self.side_toolbar
         ) = ui.load(scope=self, path="userlist.ui")
 
         self.window = window
+        self.page = window.userlist_page
+        self.page.id = "userlist"
+        self.toolbar = window.userlist_toolbar
+        self.toolbar_start_content = window.userlist_title
+        self.toolbar_end_content = window.userlist_end
+        self.toolbar_default_widget = window.add_buddy_entry
 
         # Columns
         self.list_view = TreeView(
