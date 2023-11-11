@@ -543,8 +543,7 @@ class Core:
             })
 
         self.pluginhandler.user_stats_notification(msg.user, stats={
-            "avgspeed": msg.avgspeed,
-            "uploadnum": upload_speed,
+            "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
         })
