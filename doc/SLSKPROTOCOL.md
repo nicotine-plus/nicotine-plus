@@ -941,6 +941,7 @@ We send this to search for an exact file name and folder, to find other sources.
     3.  **string** <ins>path</ins>
     4.  **uint64** <ins>filesize</ins>
     5.  **uint32** <ins>checksum</ins>
+    6.  **uint8** <ins>unknown</ins>
   - Receive
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>

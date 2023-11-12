@@ -1389,14 +1389,15 @@ class ExactFileSearch(ServerMessage):
     OBSOLETE, no results even with official client
     """
 
-    __slots__ = ("token", "file", "folder", "size", "checksum", "user")
+    __slots__ = ("token", "file", "folder", "size", "checksum", "user", "unknown")
 
-    def __init__(self, token=None, file=None, folder=None, size=None, checksum=None):
+    def __init__(self, token=None, file=None, folder=None, size=None, checksum=None, unknown=None):
         self.token = token
         self.file = file
         self.folder = folder
         self.size = size
         self.checksum = checksum
+        self.unknown = unknown
         self.user = None
 
     def make_network_message(self):
@@ -1406,6 +1407,7 @@ class ExactFileSearch(ServerMessage):
         msg.extend(self.pack_string(self.folder))
         msg.extend(self.pack_uint64(self.size))
         msg.extend(self.pack_uint32(self.checksum))
+        msg.extend(self.pack_uint8(self.unknown))
 
         return msg
 
