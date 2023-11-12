@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 3, 2023
+Last updated on November 12, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -820,7 +820,7 @@ We ask the server for a user's liked and hated interests. The server responds wi
 
 ### AdminCommand
 
-**OBSOLETE, no longer used since Soulseek stopped supporting third-party servers in 2002**
+**OBSOLETE**
 
 We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
 
