@@ -1081,10 +1081,7 @@ class Downloads(Transfers):
                              })
 
             self._dequeue_transfer(download)
-
             download.legacy_attempt = True
-            download.virtual_path = virtual_path
-
             self._enqueue_transfer(download)
             self._update_transfer(download)
             return
@@ -1123,10 +1120,7 @@ class Downloads(Transfers):
             # Attempt to request file name encoded as latin-1 once
 
             self._dequeue_transfer(download)
-
             download.legacy_attempt = True
-            download.virtual_path = virtual_path
-
             self._enqueue_transfer(download)
             self._update_transfer(download)
             return
