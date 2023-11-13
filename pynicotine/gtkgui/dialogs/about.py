@@ -197,6 +197,7 @@ class About(Dialog):
  •  Maite Guix (2022)""",
 
         """<b>Chinese (Simplified)</b>
+ •  Bonislaw (2023)
  •  hylau (2023)
  •  hadwin (2022)""",
 
@@ -227,6 +228,7 @@ class About(Dialog):
  •  Kari Viittanen (Kalevi) (2006–2007)""",
 
         """<b>French</b>
+ •  Saumon (2023)
  •  subu_versus (2023)
  •  zniavre (2007–2023)
  •  Lisapple (2021–2022)
@@ -269,6 +271,7 @@ class About(Dialog):
  •  Allan Nordhøy (comradekingu) (2021)""",
 
         """<b>Polish</b>
+ •  Mariusz (2023)
  •  mariachini (2017–2023)
  •  Amun-Ra (2007)
  •  thine (2007)
@@ -282,10 +285,14 @@ class About(Dialog):
  •  yyyyyyyan (2020)
  •  Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
+        """<b>Portuguese</b>
+ •  Vinícius Soares (2023)""",
+
         """<b>Romanian</b>
  •  xslendix (2023)""",
 
         """<b>Russian</b>
+ •  Kirill Feoktistov (2023)
  •  SnIPeRSnIPeR (2022–2023)
  •  Mehavoid (2021–2023)
  •  AHOHNMYC (2022)""",

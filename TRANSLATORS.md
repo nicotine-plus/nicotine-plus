@@ -4,6 +4,7 @@
  - Maite Guix (2022)
 
 ## Chinese (Simplified)
+ - Bonislaw (2023)
  - hylau (2023)
  - hadwin (2022)
 
@@ -34,6 +35,7 @@
  - Kari Viittanen (Kalevi) (2006–2007)
 
 ## French
+ - Saumon (2023)
  - subu_versus (2023)
  - zniavre (2007–2023)
  - Lisapple (2021–2022)
@@ -76,10 +78,14 @@
  - Allan Nordhøy (comradekingu) (2021)
 
 ## Polish
+ - Mariusz (2023)
  - mariachini (2017–2023)
  - Amun-Ra (2007)
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
+
+## Portuguese
+ - Vinícius Soares (2023)
 
 ## Portuguese (Brazil)
  - Havokdan (2022–2023)
@@ -93,6 +99,7 @@
  - xslendix (2023)
 
 ## Russian
+ - Kirill Feoktistov (2023)
  - SnIPeRSnIPeR (2022–2023)
  - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
