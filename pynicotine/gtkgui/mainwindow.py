@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import time
 
 from gi.repository import Gio
@@ -313,7 +314,7 @@ class MainWindow(Window):
                 self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
-        if config.sections["ui"]["maximized"]:
+        if sys.platform != "darwin" and config.sections["ui"]["maximized"]:
             self.widget.maximize()
 
         # Auto-away mode
