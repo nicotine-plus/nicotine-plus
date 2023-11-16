@@ -748,6 +748,9 @@ class ComboBox:
 
         selected_id = self.get_selected_id()
 
+        if selected_id is None:
+            return
+
         if self.entry is not None:
             # Update text entry with text from the selected item
             self._update_item_entry_text()
@@ -758,8 +761,7 @@ class ComboBox:
         if self.item_selected_callback is None:
             return
 
-        if selected_id is not None:
-            self.item_selected_callback(self, selected_id)
+        self.item_selected_callback(self, selected_id)
 
 
 class SpellChecker:
