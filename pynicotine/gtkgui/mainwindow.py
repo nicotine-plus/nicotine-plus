@@ -378,6 +378,9 @@ class MainWindow(Window):
         width = self.get_width()
         height = self.get_height()
 
+        if width <= 0 or height <= 0:
+            return
+
         config.sections["ui"]["width"] = width
         config.sections["ui"]["height"] = height
 
