@@ -651,7 +651,7 @@ def _get_custom_font_css():
             css.extend(
                 f"""
                 {css_selector} {{
-                    font-family: {font_description.get_family()};
+                    font-family: '{font_description.get_family()}';
                     font-size: {font_description.get_size() // 1024}pt;
                     font-style: {PANGO_STYLES.get(font_description.get_style(), "normal")};
                     font-weight: {PANGO_WEIGHTS.get(font_description.get_weight(), "normal")};
