@@ -263,6 +263,7 @@ class Config:
                 "readroomlogs": True,
                 "readroomlines": 200,
                 "readprivatelines": 200,
+                "private_chats": [],
                 "rooms": []
             },
             "privatechat": {

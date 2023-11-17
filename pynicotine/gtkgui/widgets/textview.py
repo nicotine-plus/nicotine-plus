@@ -33,8 +33,8 @@ from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
+from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
-from pynicotine.utils import PUNCTUATION
 
 
 class TextView:
@@ -388,26 +388,6 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
-    @staticmethod
-    def find_whole_word(word, text):
-        """Returns start position of a whole word that is not in a subword."""
-
-        if word not in text:
-            return -1
-
-        word_boundaries = [" "] + PUNCTUATION
-        whole = False
-        start = after = 0
-
-        while not whole and start > -1:
-            start = text.find(word, after)
-            after = start + len(word)
-
-            whole = ((text[after] if after < len(text) else " ") in word_boundaries
-                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
-
-        return start if whole else -1
-
     def append_log_lines(self, path, num_lines, timestamp_format):
 
         if not num_lines:
@@ -441,17 +421,20 @@ class ChatView(TextView):
                     usertag = self.get_user_tag(user)
 
                     text = line[end + 2:-1]
-                    message_type = self.get_message_type(user, text, login)
+
+                    if user == login:
+                        message_type = "local"
+
+                    elif login and find_whole_word(login.lower(), text.lower()) > -1:
+                        message_type = "hilite"
+
+                    else:
+                        message_type = "remote"
 
             elif "* " in line:
                 message_type = "action"
 
-            if user != login:
-                self.append_line(
-                    core.privatechat.censor_chat(line), message_type=message_type, username=user, usertag=usertag
-                )
-            else:
-                self.append_line(line, message_type=message_type, username=user, usertag=usertag)
+            self.append_line(line, message_type=message_type, username=user, usertag=usertag)
 
         if lines:
             self.append_line(_("--- old messages above ---"), message_type="hilite",
@@ -460,19 +443,6 @@ class ChatView(TextView):
     def clear(self):
         super().clear()
         self.user_tags.clear()
-
-    def get_message_type(self, user, text, login=None):
-
-        if text.startswith("/me "):
-            return "action"
-
-        if user == login:
-            return "local"
-
-        if login and self.find_whole_word(login.lower(), text.lower()) > -1:
-            return "hilite"
-
-        return "remote"
 
     def get_user_tag(self, username):
 

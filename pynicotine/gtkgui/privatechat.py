@@ -77,7 +77,6 @@ class PrivateChats(IconNotebook):
             ("private-chat-completions", self.update_completions),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
-            ("send-private-message", self.send_message),
             ("server-disconnect", self.server_disconnect),
             ("user-status", self.user_status)
         ):
@@ -235,13 +234,6 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.echo_private_message(text, message_type)
 
-    def send_message(self, user, text):
-
-        page = self.pages.get(user)
-
-        if page is not None:
-            page.send_message(text)
-
     def message_user(self, msg, **_unused):
 
         page = self.pages.get(msg.user)
@@ -310,8 +302,7 @@ class PrivateChat:
         ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion, user,
                   core.privatechat.send_message)
 
-        self.log_toggle.set_active(config.sections["logging"]["privatechat"])
-
+        self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
 
         self.popup_menu_user_chat = UserPopupMenu(
@@ -406,7 +397,18 @@ class PrivateChat:
         self.popup_menu_user_tab.toggle_user_items()
 
     def toggle_chat_buttons(self):
+        self.log_toggle.set_visible(not config.sections["logging"]["privatechat"])
         self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
+
+    def on_log_toggled(self, *_args):
+
+        if not self.log_toggle.get_active():
+            if self.user in config.sections["logging"]["private_chats"]:
+                config.sections["logging"]["private_chats"].remove(self.user)
+            return
+
+        if self.user not in config.sections["logging"]["private_chats"]:
+            config.sections["logging"]["private_chats"].append(self.user)
 
     def on_find_chat_log(self, *_args):
         self.search_bar.set_visible(True)
@@ -430,10 +432,11 @@ class PrivateChat:
             callback=self.on_delete_chat_log_response
         ).show()
 
-    def _show_notification(self, text, message_type, is_buddy):
+    def _show_notification(self, text, is_mentioned=False):
 
-        mentioned = (message_type == "hilite")
-        self.chats.request_tab_changed(self.container, is_important=is_buddy or mentioned)
+        is_buddy = (self.user in core.userlist.buddies)
+
+        self.chats.request_tab_changed(self.container, is_important=is_buddy or is_mentioned)
 
         if (self.chats.get_current_page() == self.container
                 and self.window.current_page_id == self.window.private_page.id and self.window.is_active()):
@@ -451,25 +454,22 @@ class PrivateChat:
 
     def message_user(self, msg):
 
-        text = msg.msg
-        newmessage = msg.newmessage
-        timestamp = msg.timestamp if not newmessage else None
-        is_buddy = (self.user in core.userlist.buddies)
-        usertag = self.chat_view.get_user_tag(self.user)
-        message_type = self.chat_view.get_message_type(self.user, text, core.login_username)
-
-        self._show_notification(text, message_type, is_buddy)
-
-        if message_type == "action":
-            line = f"* {self.user} {text[4:]}"
-            speech = line[2:]
-        else:
-            line = f"[{self.user}] {text}"
-            speech = text
-
+        username = msg.user
+        message = msg.message
+        formatted_message = msg.formatted_message
+        message_type = msg.message_type
+        is_new_message = msg.is_new_message
+        is_outgoing_message = (msg.message_id is None)
+        timestamp = msg.timestamp if not is_new_message else None
         timestamp_format = config.sections["logging"]["private_timestamp"]
+        usertag = self.chat_view.get_user_tag(username)
 
-        if not newmessage:
+        if not is_outgoing_message:
+            self._show_notification(message, is_mentioned=(message_type == "hilite"))
+        else:
+            username = core.login_username
+
+        if not is_outgoing_message and not is_new_message:
             if not self.offline_message:
                 self.chat_view.append_line(
                     _("* Messages sent while you were offline"), message_type="hilite",
@@ -481,21 +481,19 @@ class PrivateChat:
             self.offline_message = False
 
         self.chat_view.append_line(
-            line, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
-            username=self.user, usertag=usertag
+            formatted_message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
+            username=username, usertag=usertag
         )
+
+        if is_outgoing_message:
+            return
 
         if self.speech_toggle.get_active():
             core.notifications.new_tts(
-                config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
+                config.sections["ui"]["speechprivate"], {"user": username, "message": message}
             )
 
-        if self.log_toggle.get_active():
-            log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"], basename=f"{clean_file(self.user)}.log",
-                text=line, timestamp=timestamp
-            )
-            self.chats.history.update_user(self.user, line)
+        self.chats.history.update_user(username, formatted_message)
 
     def echo_private_message(self, text, message_type):
 
@@ -505,28 +503,6 @@ class PrivateChat:
             timestamp_format = None
 
         self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
-
-    def send_message(self, text):
-
-        my_username = core.login_username
-        message_type = self.chat_view.get_message_type(my_username, text)
-
-        if message_type == "action":
-            line = f"* {my_username} {text[4:]}"
-        else:
-            line = f"[{my_username}] {text}"
-
-        self.chat_view.append_line(
-            line, message_type=message_type, timestamp_format=config.sections["logging"]["private_timestamp"],
-            username=my_username, usertag=self.chat_view.get_user_tag(my_username)
-        )
-
-        if self.log_toggle.get_active():
-            log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"],
-                basename=f"{clean_file(self.user)}.log", text=line
-            )
-            self.chats.history.update_user(self.user, line)
 
     def username_event(self, pos_x, pos_y, user):
 

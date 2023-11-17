@@ -566,24 +566,26 @@ class SayChatroom(ServerMessage):
     did.
     """
 
-    __slots__ = ("room", "msg", "user")
+    __slots__ = ("room", "message", "user", "formatted_message", "message_type")
 
-    def __init__(self, room=None, msg=None, user=None):
+    def __init__(self, room=None, message=None, user=None):
         self.room = room
-        self.msg = msg
+        self.message = message
         self.user = user
+        self.formatted_message = None
+        self.message_type = None
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_string(self.room))
-        msg.extend(self.pack_string(self.msg))
+        msg.extend(self.pack_string(self.message))
 
         return msg
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
         pos, self.user = self.unpack_string(message, pos)
-        pos, self.msg = self.unpack_string(message, pos)
+        pos, self.message = self.unpack_string(message, pos)
 
 
 class UsersMessage(ServerMessage):
@@ -802,32 +804,33 @@ class MessageUser(ServerMessage):
     Chat phrase sent to someone or received by us in private.
     """
 
-    __slots__ = ("user", "msg", "msgid", "timestamp", "newmessage")
+    __slots__ = ("user", "message", "message_id", "timestamp", "is_new_message", "formatted_message",
+                 "message_type")
 
-    def __init__(self, user=None, msg=None):
+    def __init__(self, user=None, message=None):
         self.user = user
-        self.msg = msg
-        self.msgid = None
+        self.message = message
+        self.message_id = None
         self.timestamp = None
-        self.newmessage = None
+        self.is_new_message = True
+        self.formatted_message = None
+        self.message_type = None
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_string(self.user))
-        msg.extend(self.pack_string(self.msg))
+        msg.extend(self.pack_string(self.message))
 
         return msg
 
     def parse_network_message(self, message):
-        pos, self.msgid = self.unpack_uint32(message)
+        pos, self.message_id = self.unpack_uint32(message)
         pos, self.timestamp = self.unpack_uint32(message, pos)
         pos, self.user = self.unpack_string(message, pos)
-        pos, self.msg = self.unpack_string(message, pos)
+        pos, self.message = self.unpack_string(message, pos)
 
         if message[pos:]:
-            pos, self.newmessage = self.unpack_bool(message, pos)
-        else:
-            self.newmessage = True
+            pos, self.is_new_message = self.unpack_bool(message, pos)
 
 
 class MessageAcked(ServerMessage):
@@ -2475,17 +2478,19 @@ class GlobalRoomMessage(ServerMessage):
     DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ("room", "user", "msg")
+    __slots__ = ("room", "user", "message", "formatted_message", "message_type")
 
     def __init__(self):
         self.room = None
         self.user = None
-        self.msg = None
+        self.message = None
+        self.formatted_message = None
+        self.message_type = None
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
         pos, self.user = self.unpack_string(message, pos)
-        pos, self.msg = self.unpack_string(message, pos)
+        pos, self.message = self.unpack_string(message, pos)
 
 
 class RelatedSearch(ServerMessage):

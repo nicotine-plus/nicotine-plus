@@ -270,7 +270,7 @@ class SayChatroomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = SayChatroom(room="room1", msg="Wassup?")
+        obj = SayChatroom(room="room1", message="Wassup?")
 
         # Act
         message = obj.make_network_message()
