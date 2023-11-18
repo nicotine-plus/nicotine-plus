@@ -152,7 +152,7 @@ class NowPlaying:
 
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
-            self.title["album"] = album = lastplayed["album"]["#text"]
+            self.title["album"] = lastplayed["album"]["#text"]
             self.title["nowplaying"] = f"{artist} - {title}"
 
         except Exception:
@@ -283,7 +283,7 @@ class NowPlaying:
 
             self.title["artist"] = artist = track["artist_name"]
             self.title["title"] = title = track["track_name"]
-            self.title["album"] = album = track["release_name"]
+            self.title["album"] = track["release_name"]
             self.title["nowplaying"] = f"{artist} - {title}"
 
             return True
