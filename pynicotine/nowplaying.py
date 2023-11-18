@@ -153,7 +153,7 @@ class NowPlaying:
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
             self.title["album"] = album = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {title}"
 
         except Exception:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
@@ -284,7 +284,7 @@ class NowPlaying:
             self.title["artist"] = artist = track["artist_name"]
             self.title["title"] = title = track["track_name"]
             self.title["album"] = album = track["release_name"]
-            self.title["nowplaying"] = f"{artist} - {album} - {title}"
+            self.title["nowplaying"] = f"{artist} - {title}"
 
             return True
 
