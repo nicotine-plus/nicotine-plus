@@ -205,10 +205,12 @@ class PrivateChat:
     def _message_user(self, msg, queued_message=False):
         """Server code 22."""
 
+        is_outgoing_message = (msg.message_id is None)
+
         username = msg.user
+        tag_username = (core.login_username if is_outgoing_message else username)
         message = msg.message
         timestamp = msg.timestamp if not msg.is_new_message else None
-        is_outgoing_message = (msg.message_id is None)
 
         if not is_outgoing_message:
             if not queued_message:
@@ -275,9 +277,9 @@ class PrivateChat:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if is_action_message:
-            msg.formatted_message = msg.message = f"* {username} {message}"
+            msg.formatted_message = msg.message = f"* {tag_username} {message}"
         else:
-            msg.formatted_message = f"[{username}] {message}"
+            msg.formatted_message = f"[{tag_username}] {message}"
 
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             log.write_log_file(
