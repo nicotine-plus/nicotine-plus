@@ -271,8 +271,7 @@ class About(Dialog):
  •  Allan Nordhøy (comradekingu) (2021)""",
 
         """<b>Polish</b>
- •  Mariusz (2023)
- •  mariachini (2017–2023)
+ •  Mariusz (mariachini) (2017–2023)
  •  Amun-Ra (2007)
  •  thine (2007)
  •  Wojciech Owczarek (owczi) (2003–2004)""",
@@ -292,8 +291,7 @@ class About(Dialog):
  •  xslendix (2023)""",
 
         """<b>Russian</b>
- •  Kirill Feoktistov (2023)
- •  SnIPeRSnIPeR (2022–2023)
+ •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2023)
  •  Mehavoid (2021–2023)
  •  AHOHNMYC (2022)""",
 
