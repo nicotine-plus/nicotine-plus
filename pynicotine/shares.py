@@ -651,6 +651,7 @@ class Shares:
 
         self.share_dbs = {}
         self.requested_share_times = {}
+        self.initialized = False
         self.rescanning = False
         self.compressed_shares = {
             PermissionLevel.PUBLIC: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
@@ -694,6 +695,7 @@ class Shares:
 
     def _quit(self):
         self.close_shares(self.share_dbs)
+        self.initialized = False
 
     def _server_login(self, _msg):
         self.send_num_shared_folders_files()
@@ -1096,6 +1098,7 @@ class Shares:
         except Exception:
             self.file_path_index = ()
 
+        self.initialized = True
         self.rescanning = False
 
         if successful:

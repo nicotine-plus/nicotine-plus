@@ -51,6 +51,7 @@ class Downloads(Transfers):
         self.requested_folder_token = 0
 
         self._folder_basename_byte_limits = {}
+        self._pending_queue_messages = {}
 
         self._download_queue_timer_id = None
         self._retry_connection_downloads_timer_id = None
@@ -66,6 +67,7 @@ class Downloads(Transfers):
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-response", self._place_in_queue_response),
             ("set-connection-stats", self._set_connection_stats),
+            ("shares-ready", self._shares_ready),
             ("transfer-request", self._transfer_request),
             ("upload-denied", self._upload_denied),
             ("upload-failed", self._upload_failed),
@@ -267,14 +269,22 @@ class Downloads(Transfers):
             transfer.size = transfer.current_byte_offset = size
 
             log.add_transfer("File %s is already downloaded", download_path)
+            return
+
+        log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
+            "filename": virtual_path,
+            "user": username
+        })
+        super()._enqueue_transfer(transfer)
+
+        msg = slskmessages.QueueUpload(file=virtual_path, legacy_client=transfer.legacy_attempt)
+
+        if not core.shares.initialized:
+            # Remain queued locally until our shares have initialized, to prevent invalid
+            # messages about not sharing any files
+            self._pending_queue_messages[transfer] = msg
         else:
-            log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
-                "filename": virtual_path,
-                "user": username
-            })
-            super()._enqueue_transfer(transfer)
-            core.send_message_to_peer(
-                username, slskmessages.QueueUpload(file=virtual_path, legacy_client=transfer.legacy_attempt))
+            core.send_message_to_peer(username, msg)
 
     def _enqueue_limited_transfers(self, username):
 
@@ -300,6 +310,13 @@ class Downloads(Transfers):
 
         # No more limited downloads
         del self._user_queue_limits[username]
+
+    def _dequeue_transfer(self, transfer):
+
+        super()._dequeue_transfer(transfer)
+
+        if transfer in self._pending_queue_messages:
+            del self._pending_queue_messages[transfer]
 
     def _file_downloaded_actions(self, username, file_path):
 
@@ -735,12 +752,18 @@ class Downloads(Transfers):
 
     # Events #
 
-    def _user_status(self, msg):
-        """Server code 7.
-
-        We get a status of a user and if he's online, we request a file
-        from him
+    def _shares_ready(self, _successful):
+        """Send any QueueUpload messages we delayed while our shares were
+        initializing.
         """
+
+        for transfer, msg in self._pending_queue_messages.items():
+            core.send_message_to_peer(transfer.username, msg)
+
+        self._pending_queue_messages.clear()
+
+    def _user_status(self, msg):
+        """Server code 7."""
 
         update = False
         username = msg.user
