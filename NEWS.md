@@ -4,11 +4,10 @@
 
 ### Changes
 
- * Completed Soulseek protocol implementation of distributed peers, bumped protocol version to 160.2
  * Enabled GTK 4 support by default for new visual style on Windows, macOS and GNOME
  * Added "Chat History" popover to view all previous private chats with users
- * Added generic file type search result filters (audio | image | video | text | archive | executable)
- * Added audio duration search result filter (HH:MM:SS | MM:SS | Seconds)
+ * Added generic file type search result filters (audio \| image \| video \| text \| archive \| executable)
+ * Added audio duration search result filter (HH:MM:SS \| MM:SS \| Seconds)
  * Added path bar when browsing user shares
  * Added option to make specific shares available to trusted buddies only
  * Added option to wait for active uploads to finish before quitting Nicotine+
@@ -44,6 +43,7 @@
  * Removed python3-gdbm dependency
  * Bumped minimum Python version requirement to 3.6
  * Bumped minimum GTK 3 version requirement to 3.22.30
+ * Completed Soulseek protocol implementation of distributed peers, bumped protocol version to 160.2
 
 ### Corrections
 
