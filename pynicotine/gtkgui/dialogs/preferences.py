@@ -2441,6 +2441,7 @@ class NowPlayingPage:
         self.default_format_list = [
             "$n",
             "$n ($f)",
+            "/me np: $n",
             "$a - $t",
             "[$a] $t",
             "$a - $b - $t",
