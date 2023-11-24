@@ -151,17 +151,17 @@ class Uploads(Transfers):
         if not username:
             return False
 
-        user_data = core.userlist.buddies.get(username)
+        if username not in core.userlist.buddies:
+            return False
 
-        if user_data:
-            # All users
-            if config.sections["transfers"]["preferfriends"]:
-                return True
+        user_data = core.userlist.buddies[username]
 
-            # Only explicitly prioritized users
-            return bool(user_data.is_prioritized)
+        # All users
+        if config.sections["transfers"]["preferfriends"]:
+            return True
 
-        return False
+        # Only explicitly prioritized users
+        return bool(user_data.is_prioritized)
 
     # Stats/Limits #
 
@@ -1179,39 +1179,44 @@ class Uploads(Transfers):
 
         username = msg.init.target_user
         virtual_path = msg.file
-        privileged_user = self.is_privileged(username)
+        upload = self.queued_users.get(username, {}).get(virtual_path)
+
+        if upload is None:
+            return
+
+        is_fifo_queue = config.sections["transfers"]["fifoqueue"]
+        is_privileged_queue = self.is_privileged(username)
+        privileged_queued_users = {k: v for k, v in self.queued_users.items() if self.is_privileged(k)}
         queue_position = 0
-        transfer = None
 
-        if config.sections["transfers"]["fifoqueue"]:
-            for upload in self.queued_transfers:
-                if not privileged_user or self.is_privileged(upload.username):
-                    queue_position += 1
+        if is_fifo_queue:
+            num_non_privileged = 0
 
-                # Stop counting on the matching file
-                if upload.virtual_path == virtual_path and upload.username == username:
-                    transfer = upload
+            for position, i_upload in enumerate(self.queued_transfers, start=1):
+                if is_privileged_queue and i_upload.username not in privileged_queued_users:
+                    num_non_privileged += 1
+
+                if i_upload == upload:
+                    queue_position += position - num_non_privileged
                     break
-
         else:
-            num_queued_users = len(self._user_update_counters)
-            queued_uploads = self.queued_users.get(username, {})
+            for position, i_upload in enumerate(self.queued_users.get(username, {}).values(), start=1):
+                if i_upload == upload:
+                    if is_privileged_queue:
+                        num_queued_users = len(privileged_queued_users)
+                    else:
+                        # Cycling through privileged users first
+                        queue_position += sum(
+                            len(queued_uploads) for queued_uploads in privileged_queued_users.values())
+                        num_queued_users = len(self.queued_users)
 
-            for upload in queued_uploads.values():
-                queue_position += num_queued_users
-
-                # Stop counting on the matching file
-                if upload.virtual_path == virtual_path:
-                    transfer = upload
+                    queue_position += position * num_queued_users
                     break
 
         if queue_position > 0:
             core.send_message_to_peer(
                 username, slskmessages.PlaceInQueueResponse(filename=virtual_path, place=queue_position))
 
-        if transfer is None:
-            return
-
         # Update queue position in our list of uploads
-        transfer.queue_position = queue_position
-        self._update_transfer(transfer, update_parent=False)
+        upload.queue_position = queue_position
+        self._update_transfer(upload, update_parent=False)
