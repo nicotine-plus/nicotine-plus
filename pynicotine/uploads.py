@@ -344,21 +344,30 @@ class Uploads(Transfers):
 
         self.transfers[username + virtual_path] = transfer
 
+    def _dequeue_transfer(self, transfer):
+
+        username = transfer.username
+
+        super()._dequeue_transfer(transfer)
+
+        if username not in self.queued_users:
+            self._user_update_counters.pop(username, None)
+
+    def _activate_transfer(self, transfer, token):
+        super()._activate_transfer(transfer, token)
+        self._user_update_counters.pop(transfer.username, None)
+
     def _update_transfer(self, transfer, update_parent=True):
 
         username = transfer.username
+
+        # Don't update existing user counter for queued uploads
+        # We don't want to push the user back in the queue if they enqueued new files
+        if (username not in self._user_update_counters
+                or transfer.virtual_path not in self.queued_users.get(username, {})):
+            self._update_user_counter(username)
+
         events.emit("update-upload", transfer, update_parent)
-
-        if username in self._user_update_counters and transfer.virtual_path in self.queued_users.get(username, {}):
-            # Don't update existing user counter for queued uploads
-            # We don't want to push the user back in the queue if they enqueued new files
-            return
-
-        if transfer.token is not None and transfer.token in self.active_users.get(username, {}):
-            # Avoid unnecessary updates while transferring
-            return
-
-        self._update_user_counter(username)
 
     def _enqueue_limited_transfers(self, username):
         # Not used for uploads
@@ -421,6 +430,7 @@ class Uploads(Transfers):
         self._deactivate_transfer(transfer)
         self._dequeue_transfer(transfer)
         self._unfail_transfer(transfer)
+        self._update_user_counter(username)
 
         if not status:
             return
@@ -435,7 +445,6 @@ class Uploads(Transfers):
     def _auto_clear_transfer(self, transfer):
 
         if config.sections["transfers"]["autoclear_uploads"]:
-            self._update_user_counter(transfer.username)
             self._clear_transfer(transfer)
             return True
 
@@ -514,62 +523,45 @@ class Uploads(Transfers):
         FIFO: Get the first queued item in the list
         """
 
-        round_robin_queue = not config.sections["transfers"]["fifoqueue"]
-        privileged_queue = False
-
-        first_queued_transfers = {}
-        queued_users = {}
-
-        for upload in self.queued_transfers:
-            username = upload.username
-
-            if username not in first_queued_transfers and username not in self.active_users:
-                first_queued_transfers[username] = upload
-
-            if username in queued_users:
-                continue
-
-            privileged = self.is_privileged(username)
-            queued_users[username] = privileged
-
+        is_fifo_queue = config.sections["transfers"]["fifoqueue"]
         has_active_uploads = bool(self.active_users)
         oldest_time = None
         target_username = None
+        upload_candidate = None
+        privileged_users = set()
 
-        for username, privileged in queued_users.items():
-            if privileged and username not in self.active_users:
-                privileged_queue = True
-                break
+        for username in self._user_update_counters:
+            if self.is_privileged(username):
+                privileged_users.add(username)
 
-        if not round_robin_queue:
-            # skip the looping below (except the cleanup) and get the first
-            # user of the highest priority we saw above
-            for username in first_queued_transfers:
-                if privileged_queue and not queued_users[username]:
+        if is_fifo_queue:
+            for upload in self.queued_transfers:
+                username = upload.username
+
+                if privileged_users and username not in privileged_users:
+                    continue
+
+                if username not in self._user_update_counters:
                     continue
 
                 target_username = username
                 break
+        else:
+            for username, update_time in self._user_update_counters.items():
+                if privileged_users and username not in privileged_users:
+                    continue
 
-        for username, update_time in self._user_update_counters.copy().items():
-            if username not in queued_users:
-                del self._user_update_counters[username]
-                continue
+                if not oldest_time:
+                    oldest_time = update_time + 1
 
-            if not round_robin_queue or username in self.active_users:
-                continue
+                if update_time < oldest_time:
+                    target_username = username
+                    oldest_time = update_time
 
-            if privileged_queue and not queued_users[username]:
-                continue
+        if target_username is not None:
+            upload_candidate = next(iter(self.queued_users[target_username].values()), None)
 
-            if not oldest_time:
-                oldest_time = update_time + 1
-
-            if update_time < oldest_time:
-                target_username = username
-                oldest_time = update_time
-
-        return first_queued_transfers.get(target_username), has_active_uploads
+        return upload_candidate, has_active_uploads
 
     def _update_user_counter(self, username):
         """Called when an upload associated with a user has changed.
@@ -579,8 +571,9 @@ class Uploads(Transfers):
         download.
         """
 
-        self._user_update_counter += 1
-        self._user_update_counters[username] = self._user_update_counter
+        if username in self.queued_users and username not in self.active_users:
+            self._user_update_counter += 1
+            self._user_update_counters[username] = self._user_update_counter
 
     def _check_upload_queue(self):
         """Find next file to upload."""
