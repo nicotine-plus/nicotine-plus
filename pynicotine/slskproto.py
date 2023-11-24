@@ -531,15 +531,6 @@ class NetworkThread(Thread):
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
-    def _has_existing_user_socket(self, username, conn_type):
-
-        prev_init = self._username_init_msgs.get(username + conn_type)
-
-        if prev_init is not None and prev_init.sock is not None:
-            return True
-
-        return False
-
     def _bind_socket_interface(self, sock):
         """Attempt to bind socket to an IP address, if provided with the
         --bindip CLI argument. Otherwise retrieve the IP address of the
@@ -577,9 +568,15 @@ class NetworkThread(Thread):
 
         if conn_type == ConnectionType.FILE:
             # File transfer connections are not unique or reused later
-            return
+            return True
 
-        self._username_init_msgs[init.target_user + conn_type] = init
+        init_key = init.target_user + conn_type
+
+        if init_key not in self._username_init_msgs:
+            self._username_init_msgs[init_key] = init
+            return True
+
+        return False
 
     @staticmethod
     def _pack_network_message(msg_obj):
@@ -754,7 +751,7 @@ class NetworkThread(Thread):
         if not self._verify_peer_connection_type(conn_type):
             return
 
-        if self._has_existing_user_socket(username, conn_type):
+        if not self._add_init_message(init):
             log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
                           "but existing connection already exists"), {
                 "type": conn_type,
@@ -767,7 +764,6 @@ class NetworkThread(Thread):
             # Also request indirect connection in case the user's port is closed
             self._connect_to_peer_indirect(init)
 
-        self._add_init_message(init)
         self._queue_network_message(InitPeerConnection(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
@@ -880,7 +876,12 @@ class NetworkThread(Thread):
         username = init.target_user
         conn_type = init.conn_type
 
-        if username == self._server_username or not self._has_existing_user_socket(username, conn_type):
+        if username == self._server_username:
+            return
+
+        prev_init = self._username_init_msgs.get(username + conn_type)
+
+        if prev_init is None or prev_init.sock is None:
             return
 
         log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
@@ -888,7 +889,6 @@ class NetworkThread(Thread):
             "user": username
         })
 
-        prev_init = self._username_init_msgs[username + conn_type]
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
 
