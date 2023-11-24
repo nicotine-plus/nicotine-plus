@@ -610,13 +610,12 @@ class Search:
             return
 
         uploadspeed = core.uploads.upload_speed
-        queuesize = core.uploads.get_upload_queue_size()
+        queuesize = core.uploads.get_upload_queue_size(username)
         slotsavail = core.uploads.is_new_upload_accepted()
-        fifoqueue = config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResponse(
             None, core.login_username,
-            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue,
+            token, fileinfos, slotsavail, uploadspeed, queuesize,
             private_fileinfos
         )
         core.send_message_to_peer(username, message)

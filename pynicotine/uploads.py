@@ -194,16 +194,13 @@ class Uploads(Transfers):
 
         return upload_slots
 
-    def get_upload_queue_size(self, username=None):
+    def get_upload_queue_size(self, username):
 
         if self.is_privileged(username):
-            queue_size = 0
-
-            for upload in self.queued_transfers:
-                if self.is_privileged(upload.username):
-                    queue_size += 1
-
-            return queue_size
+            return sum(
+                len(queued_uploads)
+                for username, queued_uploads in self.queued_users.items() if self.is_privileged(username)
+            )
 
         return len(self.queued_transfers)
 

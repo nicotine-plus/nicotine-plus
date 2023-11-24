@@ -3016,10 +3016,10 @@ class FileSearchResponse(FileListMessage):
     """
 
     __slots__ = ("init", "user", "token", "list", "privatelist", "freeulslots",
-                 "ulspeed", "inqueue", "fifoqueue", "unknown")
+                 "ulspeed", "inqueue", "unknown")
 
     def __init__(self, init=None, user=None, token=None, shares=None, freeulslots=None,
-                 ulspeed=None, inqueue=None, fifoqueue=None, private_shares=None):
+                 ulspeed=None, inqueue=None, private_shares=None):
         self.init = init
         self.user = user
         self.token = token
@@ -3028,7 +3028,6 @@ class FileSearchResponse(FileListMessage):
         self.freeulslots = freeulslots
         self.ulspeed = ulspeed
         self.inqueue = inqueue
-        self.fifoqueue = fifoqueue
         self.unknown = 0
 
     def make_network_message(self):

@@ -151,7 +151,7 @@ class UserInfo:
             descr = unescape(config.sections["userinfo"]["descr"])
 
             totalupl = core.uploads.get_total_uploads_allowed()
-            queuesize = core.uploads.get_upload_queue_size()
+            queuesize = core.uploads.get_upload_queue_size(username)
             slotsavail = core.uploads.is_new_upload_accepted()
 
             if config.sections["transfers"]["remotedownloads"]:
