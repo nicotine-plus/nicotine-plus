@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-05 20:44+0000\n"
+"PO-Revision-Date: 2023-11-25 20:36+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.2.1-rc\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2152,7 +2152,7 @@ msgstr "Alles löschen"
 
 #: pynicotine/gtkgui/transfers.py:802
 msgid "Select User's Transfers"
-msgstr "Transfers des Benutzers markieren"
+msgstr "Übertragungen des Benutzers markieren"
 
 #: pynicotine/gtkgui/uploads.py:46
 msgid "_Abort"

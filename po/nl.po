@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-03 04:15+0000\n"
+"PO-Revision-Date: 2023-11-25 20:36+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.2.1-rc\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -2145,7 +2145,7 @@ msgstr "Wis alles"
 
 #: pynicotine/gtkgui/transfers.py:802
 msgid "Select User's Transfers"
-msgstr "Selecteer de overdrachten van deze gebruiker"
+msgstr "Selecteer de gebruikers overdrachten"
 
 #: pynicotine/gtkgui/uploads.py:46
 msgid "_Abort"
@@ -5598,7 +5598,7 @@ msgstr "Sla privé-gesprekken standaard op in logboek"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:42
 msgid "Log transfers to file"
-msgstr "Logboekoverdrachten naar bestand"
+msgstr "Log overdracht naar bestand"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:49
 msgid "Log debug messages to file"
