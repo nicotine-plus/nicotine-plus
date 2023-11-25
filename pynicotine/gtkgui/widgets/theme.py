@@ -372,7 +372,7 @@ def set_global_css():
         if LIBADWAITA_API_VERSION:
             css.extend(css_libadwaita)
 
-            if sys.platform in ("win32", "darwin"):
+            if sys.platform in {"win32", "darwin"}:
                 css.extend(css_libadwaita_win32_darwin)
 
         if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
