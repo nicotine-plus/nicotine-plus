@@ -312,7 +312,7 @@ def set_global_css():
         border-spacing: 0;
     }
 
-    .generic-popover * {
+    .generic-popover *:not(image) {
         /* Remove unwanted spacing from popovers */
         margin: 0;
     }
