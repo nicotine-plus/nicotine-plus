@@ -332,6 +332,25 @@ def set_global_css():
     }
     """
 
+    css_libadwaita_win32_darwin = b"""
+    /* Tweaks (libadwaita on Windows and macOS) */
+
+    window.csd {
+        /* Smaller window shadows to mitigate GTK bug where shadows are clickable */
+        box-shadow: 0 1px 3px 3px transparent,
+                    0 2px 8px 2px rgba(0, 0, 0, 0.13),
+                    0 4px 12px 6px rgba(0, 0, 0, 0.06),
+                    0 0 0 1px rgba(0, 0, 0, 0.02);
+    }
+
+    window.csd:backdrop {
+        box-shadow: 0 1px 3px 3px rgba(0, 0, 0, 0.07),
+                    0 2px 10px 4px rgba(0, 0, 0, 0.03),
+                    0 4px 12px 6px transparent,
+                    0 0 0 1px rgba(0, 0, 0, 0.02);
+    }
+    """
+
     css_libadwaita_1_4 = b"""
     /* Tweaks (libadwaita 1.4+) */
 
@@ -352,6 +371,9 @@ def set_global_css():
 
         if LIBADWAITA_API_VERSION:
             css.extend(css_libadwaita)
+
+            if sys.platform in ("win32", "darwin"):
+                css.extend(css_libadwaita_win32_darwin)
 
         if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
             css.extend(css_libadwaita_1_4)
