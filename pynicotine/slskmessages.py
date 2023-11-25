@@ -25,7 +25,6 @@ from socket import inet_ntoa
 from struct import Struct
 
 from pynicotine.utils import UINT32_LIMIT
-from pynicotine.utils import debug
 from pynicotine.utils import human_length
 
 # This module contains message classes, that networking and UI thread
@@ -126,8 +125,8 @@ class InternalMessage:
     msg_type = MessageType.INTERNAL
 
     def __str__(self):
-        attrs = {s: getattr(self, s) for s in self.__slots__ if hasattr(self, s)}
-        return f"{self.__class__} {attrs}"
+        attrs = {s: self.__getattribute__(s) for s in self.__slots__}
+        return f"<{self.__class__.__name__}> {attrs}"
 
 
 class CloseConnection(InternalMessage):
@@ -348,12 +347,9 @@ class SlskMessage:
     def unpack_uint64(message, start=0):
         return start + 8, UINT64_UNPACK(message, start)[0]
 
-    def debug(self, message=None):
-        debug(type(self).__name__, self.__dict__, repr(message))
-
     def __str__(self):
-        attrs = {s: getattr(self, s) for s in self.__slots__ if hasattr(self, s)}
-        return f"{self.__class__} {attrs}"
+        attrs = {s: self.__getattribute__(s) for s in self.__slots__}
+        return f"<{self.__class__.__name__}> {attrs}"
 
 
 class FileListMessage(SlskMessage):
