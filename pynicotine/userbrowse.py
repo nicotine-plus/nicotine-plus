@@ -82,7 +82,7 @@ class UserBrowse:
 
         built = msg.make_network_message()
         msg.parse_network_message(built)
-        msg.init = slskmessages.PeerInit(target_user=username)
+        msg.username = username
 
         events.emit_main_thread("shared-file-list-response", msg)
 
@@ -192,7 +192,8 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse(init=slskmessages.PeerInit(target_user=username))
+        msg = slskmessages.SharedFileListResponse()
+        msg.username = username
         msg.list = shares_list
 
         events.emit("shared-file-list-response", msg)
@@ -326,7 +327,7 @@ class UserBrowse:
 
     def _shared_file_list_response(self, msg):
 
-        username = msg.init.target_user
+        username = msg.username
         num_folders = len(msg.list) + len(msg.privatelist)
         num_files = sum(len(files) for folder_path, files in chain(msg.list, msg.privatelist))
 

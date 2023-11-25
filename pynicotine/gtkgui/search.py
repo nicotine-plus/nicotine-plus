@@ -849,12 +849,12 @@ class Search:
 
     def file_search_response(self, msg):
 
-        user = msg.init.target_user
+        user = msg.username
 
         if user in self.users:
             return
 
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.addr
         country_code = core.network_filter.get_country_code(ip_address)
         has_free_slots = msg.freeulslots
 

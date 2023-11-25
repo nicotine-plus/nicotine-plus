@@ -852,10 +852,10 @@ class Uploads(Transfers):
         file later.
         """
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason = self._check_queue_upload_allowed(username, msg.init.addr, virtual_path, real_path, msg)
+        allowed, reason = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
 
         log.add_transfer(("Upload request for file %(filename)s from user: %(user)s, "
                           "allowed: %(allowed)s, reason: %(reason)s"), {
@@ -884,7 +884,7 @@ class Uploads(Transfers):
     def _transfer_request(self, msg):
         """Peer code 40."""
 
-        username = msg.init.target_user
+        username = msg.username
 
         if msg.direction != slskmessages.TransferDirection.DOWNLOAD:
             return
@@ -910,7 +910,7 @@ class Uploads(Transfers):
         of requesting a download in most clients.
         """
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         token = msg.token
 
@@ -922,7 +922,7 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason = self._check_queue_upload_allowed(username, msg.init.addr, virtual_path, real_path, msg)
+        allowed, reason = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
 
         if not allowed:
             if reason:
@@ -961,7 +961,7 @@ class Uploads(Transfers):
         Received a response to the file request from the peer
         """
 
-        username = msg.init.target_user
+        username = msg.username
         token = msg.token
         reason = msg.reason
 
@@ -1033,7 +1033,7 @@ class Uploads(Transfers):
     def _file_transfer_init(self, msg):
         """We are requesting to start uploading a file to a peer."""
 
-        username = msg.init.target_user
+        username = msg.username
         token = msg.token
         upload = self.active_users.get(username, {}).get(token)
 
@@ -1041,7 +1041,7 @@ class Uploads(Transfers):
             return
 
         virtual_path = upload.virtual_path
-        upload.sock = msg.init.sock
+        sock = upload.sock = msg.sock
         need_update = True
 
         log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
@@ -1085,7 +1085,7 @@ class Uploads(Transfers):
             if upload.size > 0:
                 upload.status = TransferStatus.TRANSFERRING
                 core.send_message_to_network_thread(slskmessages.UploadFile(
-                    init=msg.init, token=token, file=file_handle, size=upload.size
+                    sock=sock, token=token, file=file_handle, size=upload.size
                 ))
 
             else:
@@ -1174,7 +1174,7 @@ class Uploads(Transfers):
     def _place_in_queue_request(self, msg):
         """Peer code 51."""
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         upload = self.queued_users.get(username, {}).get(virtual_path)
 

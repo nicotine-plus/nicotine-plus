@@ -217,7 +217,7 @@ class UserInfos(IconNotebook):
 
     def user_info_response(self, msg):
 
-        page = self.pages.get(msg.init.target_user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.user_info_response(msg)

@@ -1109,7 +1109,7 @@ class Shares:
     def _shared_file_list_request(self, msg):
         """Peer code 4."""
 
-        username = msg.init.target_user
+        username = msg.username
         request_time = time.monotonic()
 
         if username in self.requested_share_times and request_time < self.requested_share_times[username] + 0.4:
@@ -1121,7 +1121,7 @@ class Shares:
 
         log.add(_("User %(user)s is browsing your list of shared files"), {"user": username})
 
-        ip_address, _port = msg.init.addr
+        ip_address, _port = msg.addr
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         shares_list = self.compressed_shares.get(permission_level)
         core.send_message_to_peer(username, shares_list)
@@ -1129,8 +1129,8 @@ class Shares:
     def _folder_contents_request(self, msg):
         """Peer code 36."""
 
-        ip_address, _port = msg.init.addr
-        username = msg.init.target_user
+        ip_address, _port = msg.addr
+        username = msg.username
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
 
         if permission_level == PermissionLevel.BANNED:

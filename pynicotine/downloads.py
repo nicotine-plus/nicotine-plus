@@ -830,7 +830,7 @@ class Downloads(Transfers):
     def _folder_contents_response(self, msg, check_num_files=True):
         """Peer code 37."""
 
-        username = msg.init.target_user
+        username = msg.username
 
         if username not in self.requested_folders:
             return
@@ -873,7 +873,7 @@ class Downloads(Transfers):
         if msg.direction != slskmessages.TransferDirection.UPLOAD:
             return
 
-        username = msg.init.target_user
+        username = msg.username
         response = self._transfer_request_downloads(msg)
 
         log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
@@ -886,7 +886,7 @@ class Downloads(Transfers):
 
     def _transfer_request_downloads(self, msg):
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         size = msg.filesize
         token = msg.token
@@ -989,7 +989,7 @@ class Downloads(Transfers):
             # Upload init message sent to ourselves, ignore
             return
 
-        username = msg.init.target_user
+        username = msg.username
         token = msg.token
         download = self.active_users.get(username, {}).get(token)
 
@@ -998,7 +998,7 @@ class Downloads(Transfers):
 
         virtual_path = download.virtual_path
         incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
-        download.sock = msg.init.sock
+        sock = download.sock = msg.sock
         need_update = True
 
         log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
@@ -1063,9 +1063,9 @@ class Downloads(Transfers):
             if download.size > offset:
                 download.status = TransferStatus.TRANSFERRING
                 core.send_message_to_network_thread(slskmessages.DownloadFile(
-                    init=msg.init, token=token, file=file_handle, leftbytes=(download.size - offset)
+                    sock=sock, token=token, file=file_handle, leftbytes=(download.size - offset)
                 ))
-                core.send_message_to_network_thread(slskmessages.FileOffset(init=msg.init, offset=offset))
+                core.send_message_to_peer(username, slskmessages.FileOffset(sock, offset))
 
             else:
                 self._finish_transfer(download)
@@ -1079,7 +1079,7 @@ class Downloads(Transfers):
     def _upload_denied(self, msg):
         """Peer code 50."""
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         reason = msg.reason
         queued_downloads = self.queued_users.get(username, {})
@@ -1127,7 +1127,7 @@ class Downloads(Transfers):
     def _upload_failed(self, msg):
         """Peer code 46."""
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.file
         download = self.transfers.get(username + virtual_path)
 
@@ -1219,7 +1219,7 @@ class Downloads(Transfers):
         The peer tells us our place in queue for a particular transfer
         """
 
-        username = msg.init.target_user
+        username = msg.username
         virtual_path = msg.filename
         download = self.queued_users.get(username, {}).get(virtual_path)
 

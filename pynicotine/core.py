@@ -303,7 +303,9 @@ class Core:
 
     def send_message_to_peer(self, username, message):
         """Sends message to a peer."""
-        events.emit("queue-network-message", slskmessages.SendNetworkMessage(username, message))
+
+        message.username = username
+        events.emit("queue-network-message", message)
 
     def set_away_mode(self, is_away, save_state=False):
 

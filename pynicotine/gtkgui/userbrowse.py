@@ -184,7 +184,7 @@ class UserBrowses(IconNotebook):
 
     def shared_file_list(self, msg):
 
-        page = self.pages.get(msg.init.target_user)
+        page = self.pages.get(msg.username)
 
         if page is not None:
             page.shared_file_list(msg)

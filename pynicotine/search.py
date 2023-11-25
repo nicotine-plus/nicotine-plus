@@ -352,8 +352,8 @@ class Search:
             msg.token = None
             return
 
-        username = msg.init.target_user
-        ip_address = msg.init.addr[0]
+        username = msg.username
+        ip_address, _port = msg.addr
 
         if core.network_filter.is_user_ignored(username):
             msg.token = None
@@ -365,14 +365,14 @@ class Search:
     def _file_search_request_server(self, msg):
         """Server code 26, 42 and 120."""
 
-        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
-        core.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
+        self._process_search_request(msg.searchterm, msg.search_username, msg.token, direct=True)
+        core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
 
     def _file_search_request_distributed(self, msg):
         """Distrib code 3."""
 
-        self._process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
-        core.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
+        self._process_search_request(msg.searchterm, msg.search_username, msg.token, direct=False)
+        core.pluginhandler.distrib_search_notification(msg.searchterm, msg.search_username, msg.token)
 
     # Incoming Search Requests #
 
@@ -609,16 +609,15 @@ class Search:
         if not num_results:
             return
 
-        uploadspeed = core.uploads.upload_speed
-        queuesize = core.uploads.get_upload_queue_size(username)
-        slotsavail = core.uploads.is_new_upload_accepted()
-
-        message = slskmessages.FileSearchResponse(
-            None, core.login_username,
-            token, fileinfos, slotsavail, uploadspeed, queuesize,
-            private_fileinfos
-        )
-        core.send_message_to_peer(username, message)
+        core.send_message_to_peer(username, slskmessages.FileSearchResponse(
+            search_username=core.login_username,
+            token=token,
+            shares=fileinfos,
+            freeulslots=core.uploads.is_new_upload_accepted(),
+            ulspeed=core.uploads.upload_speed,
+            inqueue=core.uploads.get_upload_queue_size(username),
+            private_shares=private_fileinfos
+        ))
 
         log.add_search(_('User %(user)s is searching for "%(query)s", found %(num)i results'), {
             "user": username,

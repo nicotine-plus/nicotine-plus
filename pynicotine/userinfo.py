@@ -115,8 +115,8 @@ class UserInfo:
     def _user_info_request(self, msg):
         """Peer code 15."""
 
-        username = msg.init.target_user
-        ip_address, _port = msg.init.addr
+        username = msg.username
+        ip_address, _port = msg.addr
         request_time = time.monotonic()
 
         if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
