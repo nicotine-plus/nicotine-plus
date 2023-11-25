@@ -338,16 +338,16 @@ def set_global_css():
     window.csd {
         /* Smaller window shadows to mitigate GTK bug where shadows are clickable */
         box-shadow: 0 1px 3px 3px transparent,
-                    0 2px 8px 2px rgba(0, 0, 0, 0.13),
-                    0 4px 12px 6px rgba(0, 0, 0, 0.06),
-                    0 0 0 1px rgba(0, 0, 0, 0.02);
+                    0 2px 6px 3px rgba(0, 0, 0, 0.10),
+                    0 4px 7px 3px rgba(0, 0, 0, 0.04),
+                    0 0 0 1px rgba(0, 0, 0, 0.08);
     }
 
     window.csd:backdrop {
-        box-shadow: 0 1px 3px 3px rgba(0, 0, 0, 0.07),
-                    0 2px 10px 4px rgba(0, 0, 0, 0.03),
-                    0 4px 12px 6px transparent,
-                    0 0 0 1px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 1px 3px 3px rgba(0, 0, 0, 0.05),
+                    0 2px 4px 3px rgba(0, 0, 0, 0.01),
+                    0 4px 7px 3px transparent,
+                    0 0 0 1px rgba(0, 0, 0, 0.06);
     }
     """
 
