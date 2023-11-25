@@ -118,23 +118,16 @@ class FileAttribute:
     BIT_DEPTH = 5
 
 
-# Messages #
+# Internal Messages #
 
 
-class Message:
+class InternalMessage:
     __slots__ = ()
+    msg_type = MessageType.INTERNAL
 
     def __str__(self):
         attrs = {s: getattr(self, s) for s in self.__slots__ if hasattr(self, s)}
         return f"{self.__class__} {attrs}"
-
-
-# Internal Messages #
-
-
-class InternalMessage(Message):
-    __slots__ = ()
-    msg_type = MessageType.INTERNAL
 
 
 class CloseConnection(InternalMessage):
@@ -256,7 +249,10 @@ class SetDownloadLimit(InternalMessage):
         self.limit = limit
 
 
-class SlskMessage(Message):
+# Network Messages #
+
+
+class SlskMessage:
     """This is a parent class for all protocol messages."""
 
     __slots__ = ()
@@ -354,6 +350,281 @@ class SlskMessage(Message):
 
     def debug(self, message=None):
         debug(type(self).__name__, self.__dict__, repr(message))
+
+    def __str__(self):
+        attrs = {s: getattr(self, s) for s in self.__slots__ if hasattr(self, s)}
+        return f"{self.__class__} {attrs}"
+
+
+class FileListMessage(SlskMessage):
+    __slots__ = ()
+
+    VALID_FILE_ATTRIBUTES = {
+        FileAttribute.BITRATE,
+        FileAttribute.DURATION,
+        FileAttribute.VBR,
+        FileAttribute.SAMPLE_RATE,
+        FileAttribute.BIT_DEPTH
+    }
+
+    @classmethod
+    def pack_file_info(cls, fileinfo):
+
+        msg = bytearray()
+        msg.extend(cls.pack_uint8(1))
+        msg.extend(cls.pack_string(fileinfo[0]))
+        msg.extend(cls.pack_uint64(fileinfo[1]))
+        msg.extend(cls.pack_string(""))
+
+        if fileinfo[2] is None or fileinfo[3] is None:
+            # No metadata
+            msg.extend(cls.pack_uint32(0))
+        else:
+            # NumAttributes
+            msg.extend(cls.pack_uint32(3))
+
+            audio_info = fileinfo[2]
+            bitdepth = len(audio_info) > 3 and audio_info[3]
+
+            # Lossless audio file
+            if bitdepth:
+                # Duration
+                msg.extend(cls.pack_uint32(1))
+                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
+
+                # Sample rate
+                msg.extend(cls.pack_uint32(4))
+                msg.extend(cls.pack_uint32(audio_info[2] or 0))
+
+                # Bit depth
+                msg.extend(cls.pack_uint32(5))
+                msg.extend(cls.pack_uint32(bitdepth or 0))
+
+            # Lossy audio file
+            else:
+                # Bitrate
+                msg.extend(cls.pack_uint32(0))
+                msg.extend(cls.pack_uint32(audio_info[0] or 0))
+
+                # Duration
+                msg.extend(cls.pack_uint32(1))
+                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
+
+                # VBR
+                msg.extend(cls.pack_uint32(2))
+                msg.extend(cls.pack_uint32(audio_info[1] or 0))
+
+        return msg
+
+    @classmethod
+    def parse_file_size(cls, message, pos):
+
+        if message[pos + 7] == 255:
+            # Soulseek NS bug: >2 GiB files show up as ~16 EiB when unpacking the size
+            # as uint64 (8 bytes), due to the first 4 bytes containing the size, and the
+            # last 4 bytes containing garbage (a value of 4294967295 bytes, integer limit).
+            # Only unpack the first 4 bytes to work around this issue.
+
+            pos, size = cls.unpack_uint32(message, pos)
+            pos, _garbage = cls.unpack_uint32(message, pos)
+
+        else:
+            # Everything looks fine, parse size as usual
+            pos, size = cls.unpack_uint64(message, pos)
+
+        return pos, size
+
+    @classmethod
+    def unpack_file_attributes(cls, message, pos):
+
+        attrs = {}
+        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
+
+        pos, numattr = cls.unpack_uint32(message, pos)
+
+        for _ in range(numattr):
+            pos, attrnum = cls.unpack_uint32(message, pos)
+
+            if attrnum not in valid_file_attributes:
+                continue
+
+            pos, attr = cls.unpack_uint32(message, pos)
+            attrs[attrnum] = attr
+
+        return pos, attrs
+
+    @staticmethod
+    def parse_file_attributes(attributes):
+
+        try:
+            bitrate = attributes.get(FileAttribute.BITRATE)
+            length = attributes.get(FileAttribute.DURATION)
+            vbr = attributes.get(FileAttribute.VBR)
+            sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
+            bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
+
+        except AttributeError:
+            # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
+            bitrate = length = vbr = sample_rate = bit_depth = None
+
+            if len(attributes) == 3:
+                attribute1, attribute2, attribute3 = attributes
+
+                if attribute3 in {0, 1}:
+                    bitrate = attribute1
+                    length = attribute2
+                    vbr = attribute3
+
+                elif attribute3 > 1:
+                    length = attribute1
+                    sample_rate = attribute2
+                    bit_depth = attribute3
+
+            elif len(attributes) == 2:
+                attribute1, attribute2 = attributes
+
+                if attribute2 in {0, 1}:
+                    bitrate = attribute1
+                    vbr = attribute2
+
+                elif attribute1 >= 8000 and attribute2 <= 64:
+                    sample_rate = attribute1
+                    bit_depth = attribute2
+
+                else:
+                    bitrate = attribute1
+                    length = attribute2
+
+        return bitrate, length, vbr, sample_rate, bit_depth
+
+    @classmethod
+    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
+
+        bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
+
+        if bitrate is None:
+            if sample_rate and bit_depth:
+                # Bitrate = sample rate (Hz) * word length (bits) * channel count
+                # Bitrate = 44100 * 16 * 2
+                bitrate = (sample_rate * bit_depth * 2) // 1000
+            else:
+                bitrate = -1
+
+        if length is None:
+            if bitrate > 0:
+                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+                length = filesize // (bitrate * 125)
+            else:
+                length = -1
+
+        # Ignore invalid values
+        if bitrate <= 0 or bitrate > UINT32_LIMIT:
+            bitrate = 0
+            h_quality = ""
+
+        elif sample_rate and bit_depth:
+            h_quality = f"{sample_rate / 1000:.3g} kHz / {bit_depth} bit"
+
+            if always_show_bitrate:
+                h_quality += f" / {bitrate} kbps"
+        else:
+            h_quality = f"{bitrate} kbps"
+
+            if vbr == 1:
+                h_quality += " (vbr)"
+
+        if length < 0 or length > UINT32_LIMIT:
+            length = 0
+            h_length = ""
+        else:
+            h_length = human_length(length)
+
+        return h_quality, bitrate, h_length, length
+
+
+class RecommendationsMessage(SlskMessage):
+    __slots__ = ()
+
+    @classmethod
+    def parse_recommendations(cls, message, pos=0):
+        recommendations = []
+        unrecommendations = []
+
+        pos, num = cls.unpack_uint32(message, pos)
+
+        for _ in range(num):
+            pos, key = cls.unpack_string(message, pos)
+            pos, rating = cls.unpack_int32(message, pos)
+
+            # The server also includes unrecommendations here for some reason, don't add them
+            if rating >= 0:
+                recommendations.append((key, rating))
+
+        if message[pos:]:
+            pos, num2 = cls.unpack_uint32(message, pos)
+
+            for _ in range(num2):
+                pos, key = cls.unpack_string(message, pos)
+                pos, rating = cls.unpack_int32(message, pos)
+
+                # The server also includes recommendations here for some reason, don't add them
+                if rating < 0:
+                    unrecommendations.append((key, rating))
+
+        return pos, recommendations, unrecommendations
+
+
+class UserData:
+    """When we join a room, the server sends us a bunch of these for each
+    user."""
+
+    __slots__ = ("username", "status", "avgspeed", "uploadnum", "files", "dirs", "slotsfull", "country")
+
+    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, files=None, dirs=None,
+                 slotsfull=None, country=None):
+        self.username = username
+        self.status = status
+        self.avgspeed = avgspeed
+        self.uploadnum = uploadnum
+        self.files = files
+        self.dirs = dirs
+        self.slotsfull = slotsfull
+        self.country = country
+
+
+class UsersMessage(SlskMessage):
+    __slots__ = ()
+
+    @classmethod
+    def parse_users(cls, message, pos=0):
+        pos, numusers = cls.unpack_uint32(message, pos)
+
+        users = []
+        for i in range(numusers):
+            users.append(UserData())
+            pos, users[i].username = cls.unpack_string(message, pos)
+
+        pos, statuslen = cls.unpack_uint32(message, pos)
+        for i in range(statuslen):
+            pos, users[i].status = cls.unpack_uint32(message, pos)
+
+        pos, statslen = cls.unpack_uint32(message, pos)
+        for i in range(statslen):
+            pos, users[i].avgspeed = cls.unpack_uint32(message, pos)
+            pos, users[i].uploadnum = cls.unpack_uint64(message, pos)
+            pos, users[i].files = cls.unpack_uint32(message, pos)
+            pos, users[i].dirs = cls.unpack_uint32(message, pos)
+
+        pos, slotslen = cls.unpack_uint32(message, pos)
+        for i in range(slotslen):
+            pos, users[i].slotsfull = cls.unpack_uint32(message, pos)
+
+        if message[pos:]:
+            pos, countrylen = cls.unpack_uint32(message, pos)
+            for i in range(countrylen):
+                pos, users[i].country = cls.unpack_string(message, pos)
+
+        return pos, users
 
 
 # Server Messages #
@@ -588,59 +859,7 @@ class SayChatroom(ServerMessage):
         pos, self.message = self.unpack_string(message, pos)
 
 
-class UsersMessage(ServerMessage):
-    __slots__ = ()
-
-    def parse_users(self, message, pos=0):
-        pos, numusers = self.unpack_uint32(message, pos)
-
-        users = []
-        for i in range(numusers):
-            users.append(UserData())
-            pos, users[i].username = self.unpack_string(message, pos)
-
-        pos, statuslen = self.unpack_uint32(message, pos)
-        for i in range(statuslen):
-            pos, users[i].status = self.unpack_uint32(message, pos)
-
-        pos, statslen = self.unpack_uint32(message, pos)
-        for i in range(statslen):
-            pos, users[i].avgspeed = self.unpack_uint32(message, pos)
-            pos, users[i].uploadnum = self.unpack_uint64(message, pos)
-            pos, users[i].files = self.unpack_uint32(message, pos)
-            pos, users[i].dirs = self.unpack_uint32(message, pos)
-
-        pos, slotslen = self.unpack_uint32(message, pos)
-        for i in range(slotslen):
-            pos, users[i].slotsfull = self.unpack_uint32(message, pos)
-
-        if message[pos:]:
-            pos, countrylen = self.unpack_uint32(message, pos)
-            for i in range(countrylen):
-                pos, users[i].country = self.unpack_string(message, pos)
-
-        return pos, users
-
-
-class UserData:
-    """When we join a room, the server sends us a bunch of these for each
-    user."""
-
-    __slots__ = ("username", "status", "avgspeed", "uploadnum", "files", "dirs", "slotsfull", "country")
-
-    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, files=None, dirs=None,
-                 slotsfull=None, country=None):
-        self.username = username
-        self.status = status
-        self.avgspeed = avgspeed
-        self.uploadnum = uploadnum
-        self.files = files
-        self.dirs = dirs
-        self.slotsfull = slotsfull
-        self.country = country
-
-
-class JoinRoom(UsersMessage):
+class JoinRoom(ServerMessage):
     """Server code 14.
 
     We send this message to the server when we want to join a room. If
@@ -668,7 +887,7 @@ class JoinRoom(UsersMessage):
 
     def parse_network_message(self, message):
         pos, self.room = self.unpack_string(message)
-        pos, self.users = self.parse_users(message, pos)
+        pos, self.users = UsersMessage.parse_users(message, pos)
 
         if message[pos:]:
             self.private = True
@@ -1157,34 +1376,10 @@ class Recommendations(ServerMessage):
         return b""
 
     def parse_network_message(self, message):
-        self.parse_recommendations(message)
-
-    def parse_recommendations(self, message, pos=0):
-        pos, num = self.unpack_uint32(message, pos)
-
-        for _ in range(num):
-            pos, key = self.unpack_string(message, pos)
-            pos, rating = self.unpack_int32(message, pos)
-
-            # The server also includes unrecommendations here for some reason, don't add them
-            if rating >= 0:
-                self.recommendations.append((key, rating))
-
-        if not message[pos:]:
-            return
-
-        pos, num2 = self.unpack_uint32(message, pos)
-
-        for _ in range(num2):
-            pos, key = self.unpack_string(message, pos)
-            pos, rating = self.unpack_int32(message, pos)
-
-            # The server also includes recommendations here for some reason, don't add them
-            if rating < 0:
-                self.unrecommendations.append((key, rating))
+        _pos, self.recommendations, self.unrecommendations = RecommendationsMessage.parse_recommendations(message)
 
 
-class GlobalRecommendations(Recommendations):
+class GlobalRecommendations(ServerMessage):
     """Server code 56.
 
     The server sends us a list of global recommendations and a number
@@ -1193,7 +1388,17 @@ class GlobalRecommendations(Recommendations):
     DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ()
+    __slots__ = ("recommendations", "unrecommendations")
+
+    def __init__(self):
+        self.recommendations = []
+        self.unrecommendations = []
+
+    def make_network_message(self):
+        return b""
+
+    def parse_network_message(self, message):
+        _pos, self.recommendations, self.unrecommendations = RecommendationsMessage.parse_recommendations(message)
 
 
 class UserInterests(ServerMessage):
@@ -1438,7 +1643,7 @@ class AdminMessage(ServerMessage):
         _pos, self.msg = self.unpack_string(message)
 
 
-class GlobalUserList(UsersMessage):
+class GlobalUserList(ServerMessage):
     """Server code 67.
 
     We send this to get a global list of all users online.
@@ -1455,7 +1660,7 @@ class GlobalUserList(UsersMessage):
         return b""
 
     def parse_network_message(self, message):
-        _pos, self.users = self.parse_users(message)
+        _pos, self.users = UsersMessage.parse_users(message)
 
 
 class TunneledMessage(ServerMessage):
@@ -1800,7 +2005,7 @@ class SimilarUsers(ServerMessage):
             self.users[user] = rating
 
 
-class ItemRecommendations(Recommendations):
+class ItemRecommendations(ServerMessage):
     """Server code 111.
 
     The server sends us a list of recommendations related to a specific
@@ -1810,18 +2015,19 @@ class ItemRecommendations(Recommendations):
     DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ("thing",)
+    __slots__ = ("thing", "recommendations", "unrecommendations")
 
     def __init__(self, thing=None):
-        super().__init__()
         self.thing = thing
+        self.recommendations = []
+        self.unrecommendations = []
 
     def make_network_message(self):
         return self.pack_string(self.thing)
 
     def parse_network_message(self, message):
         pos, self.thing = self.unpack_string(message)
-        self.parse_recommendations(message, pos)
+        pos, self.recommendations, self.unrecommendations = RecommendationsMessage.parse_recommendations(message, pos)
 
 
 class ItemSimilarUsers(ServerMessage):
@@ -1946,7 +2152,7 @@ class RoomTickerSet(ServerMessage):
         return msg
 
 
-class AddThingIHate(AddThingILike):
+class AddThingIHate(ServerMessage):
     """Server code 117.
 
     We send this to the server when we add an item to our hate list.
@@ -1954,10 +2160,16 @@ class AddThingIHate(AddThingILike):
     DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ()
+    __slots__ = ("thing",)
+
+    def __init__(self, thing=None):
+        self.thing = thing
+
+    def make_network_message(self):
+        return self.pack_string(self.thing)
 
 
-class RemoveThingIHate(RemoveThingILike):
+class RemoveThingIHate(ServerMessage):
     """Server code 118.
 
     We send this to the server when we remove an item from our hate
@@ -1966,7 +2178,13 @@ class RemoveThingIHate(RemoveThingILike):
     DEPRECATED, used in Soulseek NS but not SoulseekQt
     """
 
-    __slots__ = ()
+    __slots__ = ("thing",)
+
+    def __init__(self, thing=None):
+        self.thing = thing
+
+    def make_network_message(self):
+        return self.pack_string(self.thing)
 
 
 class RoomSearch(ServerMessage):
@@ -2213,14 +2431,29 @@ class PrivateRoomAddUser(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomRemoveUser(PrivateRoomAddUser):
+class PrivateRoomRemoveUser(ServerMessage):
     """Server code 135.
 
     We send this to inform the server that we've removed a user from a
     private room.
     """
 
-    __slots__ = ()
+    __slots__ = ("room", "user")
+
+    def __init__(self, room=None, user=None):
+        self.room = room
+        self.user = user
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_string(self.room))
+        msg.extend(self.pack_string(self.user))
+
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.room = self.unpack_string(message)
+        pos, self.user = self.unpack_string(message, pos)
 
 
 class PrivateRoomDismember(ServerMessage):
@@ -2288,14 +2521,20 @@ class PrivateRoomAdded(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomRemoved(PrivateRoomAdded):
+class PrivateRoomRemoved(ServerMessage):
     """Server code 140.
 
     The server sends us this message when we are removed from a private
     room.
     """
 
-    __slots__ = ()
+    __slots__ = ("room",)
+
+    def __init__(self, room=None):
+        self.room = room
+
+    def parse_network_message(self, message):
+        _pos, self.room = self.unpack_string(message)
 
 
 class PrivateRoomToggle(ServerMessage):
@@ -2337,24 +2576,54 @@ class ChangePassword(ServerMessage):
         _pos, self.password = self.unpack_string(message)
 
 
-class PrivateRoomAddOperator(PrivateRoomAddUser):
+class PrivateRoomAddOperator(ServerMessage):
     """Server code 143.
 
     We send this to the server to add private room operator abilities to
     a user.
     """
 
-    __slots__ = ()
+    __slots__ = ("room", "user")
+
+    def __init__(self, room=None, user=None):
+        self.room = room
+        self.user = user
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_string(self.room))
+        msg.extend(self.pack_string(self.user))
+
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.room = self.unpack_string(message)
+        pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomRemoveOperator(PrivateRoomAddUser):
+class PrivateRoomRemoveOperator(ServerMessage):
     """Server code 144.
 
     We send this to the server to remove private room operator abilities
     from a user.
     """
 
-    __slots__ = ()
+    __slots__ = ("room", "user")
+
+    def __init__(self, room=None, user=None):
+        self.room = room
+        self.user = user
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_string(self.room))
+        msg.extend(self.pack_string(self.user))
+
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.room = self.unpack_string(message)
+        pos, self.user = self.unpack_string(message, pos)
 
 
 class PrivateRoomOperatorAdded(ServerMessage):
@@ -2645,191 +2914,6 @@ class PeerMessage(SlskMessage):
     __slots__ = ()
     msg_type = MessageType.PEER
 
-    def parse_file_size(self, message, pos):
-
-        if message[pos + 7] == 255:
-            # Soulseek NS bug: >2 GiB files show up as ~16 EiB when unpacking the size
-            # as uint64 (8 bytes), due to the first 4 bytes containing the size, and the
-            # last 4 bytes containing garbage (a value of 4294967295 bytes, integer limit).
-            # Only unpack the first 4 bytes to work around this issue.
-
-            pos, size = self.unpack_uint32(message, pos)
-            pos, _garbage = self.unpack_uint32(message, pos)
-
-        else:
-            # Everything looks fine, parse size as usual
-            pos, size = self.unpack_uint64(message, pos)
-
-        return pos, size
-
-
-class FileListMessage(PeerMessage):
-    __slots__ = ()
-
-    VALID_FILE_ATTRIBUTES = {
-        FileAttribute.BITRATE,
-        FileAttribute.DURATION,
-        FileAttribute.VBR,
-        FileAttribute.SAMPLE_RATE,
-        FileAttribute.BIT_DEPTH
-    }
-
-    @classmethod
-    def pack_file_info(cls, fileinfo):
-
-        msg = bytearray()
-        msg.extend(cls.pack_uint8(1))
-        msg.extend(cls.pack_string(fileinfo[0]))
-        msg.extend(cls.pack_uint64(fileinfo[1]))
-        msg.extend(cls.pack_string(""))
-
-        if fileinfo[2] is None or fileinfo[3] is None:
-            # No metadata
-            msg.extend(cls.pack_uint32(0))
-        else:
-            # NumAttributes
-            msg.extend(cls.pack_uint32(3))
-
-            audio_info = fileinfo[2]
-            bitdepth = len(audio_info) > 3 and audio_info[3]
-
-            # Lossless audio file
-            if bitdepth:
-                # Duration
-                msg.extend(cls.pack_uint32(1))
-                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
-
-                # Sample rate
-                msg.extend(cls.pack_uint32(4))
-                msg.extend(cls.pack_uint32(audio_info[2] or 0))
-
-                # Bit depth
-                msg.extend(cls.pack_uint32(5))
-                msg.extend(cls.pack_uint32(bitdepth or 0))
-
-            # Lossy audio file
-            else:
-                # Bitrate
-                msg.extend(cls.pack_uint32(0))
-                msg.extend(cls.pack_uint32(audio_info[0] or 0))
-
-                # Duration
-                msg.extend(cls.pack_uint32(1))
-                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
-
-                # VBR
-                msg.extend(cls.pack_uint32(2))
-                msg.extend(cls.pack_uint32(audio_info[1] or 0))
-
-        return msg
-
-    @classmethod
-    def unpack_file_attributes(cls, message, pos):
-
-        attrs = {}
-        valid_file_attributes = cls.VALID_FILE_ATTRIBUTES
-
-        pos, numattr = cls.unpack_uint32(message, pos)
-
-        for _ in range(numattr):
-            pos, attrnum = cls.unpack_uint32(message, pos)
-
-            if attrnum not in valid_file_attributes:
-                continue
-
-            pos, attr = cls.unpack_uint32(message, pos)
-            attrs[attrnum] = attr
-
-        return pos, attrs
-
-    @staticmethod
-    def parse_file_attributes(attributes):
-
-        try:
-            bitrate = attributes.get(FileAttribute.BITRATE)
-            length = attributes.get(FileAttribute.DURATION)
-            vbr = attributes.get(FileAttribute.VBR)
-            sample_rate = attributes.get(FileAttribute.SAMPLE_RATE)
-            bit_depth = attributes.get(FileAttribute.BIT_DEPTH)
-
-        except AttributeError:
-            # Legacy attribute list format used for shares lists saved in Nicotine+ 3.2.2 and earlier
-            bitrate = length = vbr = sample_rate = bit_depth = None
-
-            if len(attributes) == 3:
-                attribute1, attribute2, attribute3 = attributes
-
-                if attribute3 in {0, 1}:
-                    bitrate = attribute1
-                    length = attribute2
-                    vbr = attribute3
-
-                elif attribute3 > 1:
-                    length = attribute1
-                    sample_rate = attribute2
-                    bit_depth = attribute3
-
-            elif len(attributes) == 2:
-                attribute1, attribute2 = attributes
-
-                if attribute2 in {0, 1}:
-                    bitrate = attribute1
-                    vbr = attribute2
-
-                elif attribute1 >= 8000 and attribute2 <= 64:
-                    sample_rate = attribute1
-                    bit_depth = attribute2
-
-                else:
-                    bitrate = attribute1
-                    length = attribute2
-
-        return bitrate, length, vbr, sample_rate, bit_depth
-
-    @classmethod
-    def parse_audio_quality_length(cls, filesize, attributes, always_show_bitrate=False):
-
-        bitrate, length, vbr, sample_rate, bit_depth = cls.parse_file_attributes(attributes)
-
-        if bitrate is None:
-            if sample_rate and bit_depth:
-                # Bitrate = sample rate (Hz) * word length (bits) * channel count
-                # Bitrate = 44100 * 16 * 2
-                bitrate = (sample_rate * bit_depth * 2) // 1000
-            else:
-                bitrate = -1
-
-        if length is None:
-            if bitrate > 0:
-                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize // (bitrate * 125)
-            else:
-                length = -1
-
-        # Ignore invalid values
-        if bitrate <= 0 or bitrate > UINT32_LIMIT:
-            bitrate = 0
-            h_quality = ""
-
-        elif sample_rate and bit_depth:
-            h_quality = f"{sample_rate / 1000:.3g} kHz / {bit_depth} bit"
-
-            if always_show_bitrate:
-                h_quality += f" / {bitrate} kbps"
-        else:
-            h_quality = f"{bitrate} kbps"
-
-            if vbr == 1:
-                h_quality += " (vbr)"
-
-        if length < 0 or length > UINT32_LIMIT:
-            length = 0
-            h_length = ""
-        else:
-            h_length = human_length(length)
-
-        return h_quality, bitrate, h_length, length
-
 
 class SharedFileListRequest(PeerMessage):
     """Peer code 4.
@@ -2850,7 +2934,7 @@ class SharedFileListRequest(PeerMessage):
         pass
 
 
-class SharedFileListResponse(FileListMessage):
+class SharedFileListResponse(PeerMessage):
     """Peer code 5.
 
     A peer responds with a list of shared files when we've sent a
@@ -2952,9 +3036,9 @@ class SharedFileListResponse(FileListMessage):
             for _ in range(nfiles):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
-                pos, size = self.parse_file_size(message, pos)
+                pos, size = FileListMessage.parse_file_size(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, attrs = self.unpack_file_attributes(message, pos)
+                pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -3007,7 +3091,7 @@ class FileSearchRequest(PeerMessage):
         pos, self.searchterm = self.unpack_string(message, pos)
 
 
-class FileSearchResponse(FileListMessage):
+class FileSearchResponse(PeerMessage):
     """Peer code 9.
 
     A peer sends this message when it has a file search match. The token
@@ -3037,7 +3121,7 @@ class FileSearchResponse(FileListMessage):
         msg.extend(self.pack_uint32(len(self.list)))
 
         for fileinfo in self.list:
-            msg.extend(self.pack_file_info(fileinfo))
+            msg.extend(FileListMessage.pack_file_info(fileinfo))
 
         msg.extend(self.pack_bool(self.freeulslots))
         msg.extend(self.pack_uint32(self.ulspeed))
@@ -3048,7 +3132,7 @@ class FileSearchResponse(FileListMessage):
             msg.extend(self.pack_uint32(len(self.privatelist)))
 
             for fileinfo in self.privatelist:
-                msg.extend(self.pack_file_info(fileinfo))
+                msg.extend(FileListMessage.pack_file_info(fileinfo))
 
         return zlib.compress(msg)
 
@@ -3065,9 +3149,9 @@ class FileSearchResponse(FileListMessage):
         for _ in range(nfiles):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
-            pos, size = self.parse_file_size(message, pos)
+            pos, size = FileListMessage.parse_file_size(message, pos)
             pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-            pos, attrs = self.unpack_file_attributes(message, pos)
+            pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -3230,7 +3314,7 @@ class FolderContentsRequest(PeerMessage):
         pos, self.dir = self.unpack_string(message, pos)
 
 
-class FolderContentsResponse(FileListMessage):
+class FolderContentsResponse(PeerMessage):
     """Peer code 37.
 
     A peer responds with the contents of a particular folder (with all
@@ -3269,7 +3353,7 @@ class FolderContentsResponse(FileListMessage):
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
                 pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, attrs = self.unpack_file_attributes(message, pos)
+                pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
 
                 folders[directory].append((code, name, size, ext, attrs))
 
@@ -3441,7 +3525,7 @@ class PlaceInQueueResponse(PeerMessage):
         pos, self.place = self.unpack_uint32(message, pos)
 
 
-class UploadFailed(PlaceholdUpload):
+class UploadFailed(PeerMessage):
     """Peer code 46.
 
     This message is sent whenever a file connection of an active upload
@@ -3450,7 +3534,17 @@ class UploadFailed(PlaceholdUpload):
     on their end), or ignores the message if the transfer finished.
     """
 
-    __slots__ = ()
+    __slots__ = ("init", "file")
+
+    def __init__(self, init=None, file=None):
+        self.init = init
+        self.file = file
+
+    def make_network_message(self):
+        return self.pack_string(self.file)
+
+    def parse_network_message(self, message):
+        _pos, self.file = self.unpack_string(message)
 
 
 class UploadDenied(PeerMessage):
@@ -3480,14 +3574,25 @@ class UploadDenied(PeerMessage):
         pos, self.reason = self.unpack_string(message, pos)
 
 
-class PlaceInQueueRequest(QueueUpload):
+class PlaceInQueueRequest(PeerMessage):
     """Peer code 51.
 
     This message is sent when asking for the upload queue placement of a
     file.
     """
 
-    __slots__ = ()
+    __slots__ = ("init", "file", "legacy_client")
+
+    def __init__(self, init=None, file=None, legacy_client=False):
+        self.init = init
+        self.file = file
+        self.legacy_client = legacy_client
+
+    def make_network_message(self):
+        return self.pack_string(self.file, is_legacy=self.legacy_client)
+
+    def parse_network_message(self, message):
+        _pos, self.file = self.unpack_string(message)
 
 
 class UploadQueueNotification(PeerMessage):
