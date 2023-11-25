@@ -50,7 +50,7 @@ class TreeView:
                  select_row_callback=None, delete_accelerator_callback=None, search_entry=None):
 
         self.window = window
-        self.widget = Gtk.TreeView(enable_tree_lines=True, fixed_height_mode=True, has_tooltip=True, visible=True)
+        self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
         self.model = None
         self.iterators = {}
         self.has_tree = has_tree
