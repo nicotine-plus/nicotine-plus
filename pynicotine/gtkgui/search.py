@@ -1551,11 +1551,14 @@ class Search:
 
     def on_download_folders(self, *_args, download_folder_path=None):
 
+        requested_folders = set()
+
         for iterator in self.selected_results:
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
+            user_folder_key = user + folder_path
 
-            if folder_path in core.downloads.requested_folders[user]:
+            if user_folder_key in requested_folders:
                 # Ensure we don't send folder content requests for a folder more than once,
                 # e.g. when several selected results belong to the same folder
                 continue
@@ -1573,7 +1576,9 @@ class Search:
                 visible_files.append((file_path, size, file_attributes))
 
             core.search.request_folder_download(
-                user, folder_path, visible_files, download_folder_path=download_folder_path)
+                user, folder_path, visible_files, download_folder_path=download_folder_path
+            )
+            requested_folders.add(user_folder_key)
 
     def on_download_folders_to_selected(self, selected_folder_path, _data):
         self.on_download_folders(download_folder_path=selected_folder_path)
