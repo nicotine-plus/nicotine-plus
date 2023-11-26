@@ -78,6 +78,7 @@ class PrivateChats(IconNotebook):
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
@@ -261,6 +262,19 @@ class PrivateChats(IconNotebook):
             tab.toggle_chat_buttons()
             tab.update_tags()
 
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        page = self.get_current_page()
+
+        for tab in self.pages.values():
+            tab.server_login()
+
+            if tab.container == page:
+                tab.on_focus()
+
     def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
@@ -302,6 +316,7 @@ class PrivateChat:
         ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion, user,
                   core.privatechat.send_message)
 
+        self.chat_entry.set_sensitive(core.user_status != UserStatus.OFFLINE)
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
 
@@ -364,9 +379,15 @@ class PrivateChat:
             file_path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
         )
 
+    def server_login(self):
+        self.chat_entry.set_sensitive(True)
+
     def server_disconnect(self):
+
         self.offline_message = False
+
         self.chat_view.update_user_tags()
+        self.chat_entry.set_sensitive(False)
 
     def clear(self):
 
@@ -512,7 +533,10 @@ class PrivateChat:
         self.chat_view.update_tags()
 
     def on_focus(self, *_args):
-        self.chat_entry.grab_focus()
+
+        if self.window.current_page_id == self.window.private_page.id:
+            self.chat_entry.grab_focus()
+
         return True
 
     def on_close(self, *_args):
