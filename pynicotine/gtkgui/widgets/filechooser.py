@@ -247,30 +247,30 @@ class FileChooserButton:
         self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=3,
                                mnemonic_widget=self.chooser_button, xalign=0, visible=True)
 
-        open_folder_button = Gtk.Button(
-            tooltip_text=_("Open in File Manager"), valign=Gtk.Align.CENTER, visible=True)
+        self.open_folder_button = Gtk.Button(
+            tooltip_text=_("Open in File Manager"), valign=Gtk.Align.CENTER, visible=False)
 
         if GTK_API_VERSION >= 4:
             container.append(widget)                        # pylint: disable=no-member
             widget.append(self.chooser_button)              # pylint: disable=no-member
-            widget.append(open_folder_button)               # pylint: disable=no-member
+            widget.append(self.open_folder_button)          # pylint: disable=no-member
             label_container.append(self.icon)               # pylint: disable=no-member
             label_container.append(self.label)              # pylint: disable=no-member
             self.chooser_button.set_child(label_container)  # pylint: disable=no-member
 
-            open_folder_button.set_icon_name("folder-open-symbolic")  # pylint: disable=no-member
+            self.open_folder_button.set_icon_name("folder-open-symbolic")  # pylint: disable=no-member
 
             if end_button:
                 widget.append(end_button)                   # pylint: disable=no-member
         else:
             container.add(widget)                           # pylint: disable=no-member
             widget.add(self.chooser_button)                 # pylint: disable=no-member
-            widget.add(open_folder_button)                  # pylint: disable=no-member
+            widget.add(self.open_folder_button)             # pylint: disable=no-member
             label_container.add(self.icon)                  # pylint: disable=no-member
             label_container.add(self.label)                 # pylint: disable=no-member
             self.chooser_button.add(label_container)        # pylint: disable=no-member
 
-            open_folder_button.set_image(Gtk.Image(icon_name="folder-open-symbolic"))  # pylint: disable=no-member
+            self.open_folder_button.set_image(Gtk.Image(icon_name="folder-open-symbolic"))  # pylint: disable=no-member
 
             if end_button:
                 widget.add(end_button)                      # pylint: disable=no-member
@@ -278,12 +278,12 @@ class FileChooserButton:
         if is_flat:
             widget.set_spacing(6)
 
-            for button in (self.chooser_button, open_folder_button):
+            for button in (self.chooser_button, self.open_folder_button):
                 add_css_class(button, "flat")
         else:
             add_css_class(widget, "linked")
 
-        open_folder_button.connect("clicked", self.on_open_folder)
+        self.open_folder_button.connect("clicked", self.on_open_folder)
 
     def on_open_file_chooser_response(self, selected, _data):
 
@@ -335,11 +335,15 @@ class FileChooserButton:
             return
 
         self.path = path = os.path.normpath(path)
+
         self.chooser_button.set_tooltip_text(path)
         self.label.set_label(os.path.basename(path))
+        self.open_folder_button.set_visible(True)
 
     def clear(self):
 
         self.path = ""
+
         self.chooser_button.set_tooltip_text(None)
         self.label.set_label(_("(None)"))
+        self.open_folder_button.set_visible(False)
