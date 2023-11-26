@@ -422,16 +422,17 @@ class Core:
 
         if msg.success:
             self.user_status = slskmessages.UserStatus.ONLINE
-            self.login_username = msg.username
+            self.login_username = username = msg.username
             _local_ip_address, self.public_port = msg.local_address
-            self.user_addresses[self.login_username] = msg.local_address
+            self.user_addresses[username] = msg.local_address
 
             self.set_away_mode(config.sections["server"]["away"])
-            self.watch_user(msg.username)
+            self.watch_user(username)
 
             if msg.ip_address is not None:
                 self.public_ip_address = msg.ip_address
-                self.user_countries[msg.username] = self.network_filter.get_country_code(msg.ip_address)
+                self.user_countries[username] = country_code = self.network_filter.get_country_code(msg.ip_address)
+                events.emit("user-country", username, country_code)
 
             if msg.banner:
                 log.add(msg.banner)
