@@ -44,7 +44,7 @@ if GTK_API_VERSION >= 4:
     try:
         if os.getenv("NICOTINE_LIBADWAITA") is None:
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in {"win32", "darwin"} or os.environ.get("XDG_SESSION_DESKTOP") == "gnome"
+                sys.platform in {"win32", "darwin"} or "gnome" in os.getenv("XDG_CURRENT_DESKTOP", "").lower()
             ))
 
         if os.getenv("NICOTINE_LIBADWAITA") == "1":
