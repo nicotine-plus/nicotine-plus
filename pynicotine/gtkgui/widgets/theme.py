@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
-from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
@@ -326,6 +325,14 @@ def set_global_css():
     css_libadwaita = b"""
     /* Tweaks (libadwaita) */
 
+    window:not(.filechooser):not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
+    window:not(.menubar-border) menubar {
+        /* Make title/header bars flat to match other libadwaita apps */
+        background: none;
+        box-shadow: none;
+        color: inherit;
+    }
+
     treeview > header > button > box {
         /* Use relative font size for column headers */
         font-size: 0.92em;
@@ -351,18 +358,6 @@ def set_global_css():
     }
     """
 
-    css_libadwaita_1_4 = b"""
-    /* Tweaks (libadwaita 1.4+) */
-
-    window:not(.filechooser):not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
-    window:not(.menubar-border) menubar {
-        /* Make title/header bars flat to match other libadwaita apps */
-        background: none;
-        box-shadow: none;
-        color: inherit;
-    }
-    """
-
     global_css_provider = Gtk.CssProvider()
     css.extend(css_default)
 
@@ -374,9 +369,6 @@ def set_global_css():
 
             if sys.platform in {"win32", "darwin"}:
                 css.extend(css_libadwaita_win32_darwin)
-
-        if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
-            css.extend(css_libadwaita_1_4)
 
         load_css(global_css_provider, css)
 

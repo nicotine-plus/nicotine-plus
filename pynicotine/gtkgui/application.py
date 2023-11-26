@@ -39,7 +39,6 @@ GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
 GTK_GUI_FOLDER_PATH = os.path.normpath(os.path.dirname(os.path.realpath(__file__)))
 LIBADWAITA_API_VERSION = 0
-LIBADWAITA_MINOR_VERSION = 0
 
 if GTK_API_VERSION >= 4:
     try:
@@ -53,7 +52,6 @@ if GTK_API_VERSION >= 4:
 
             from gi.repository import Adw  # pylint: disable=ungrouped-imports
             LIBADWAITA_API_VERSION = Adw.MAJOR_VERSION
-            LIBADWAITA_MINOR_VERSION = Adw.MINOR_VERSION
 
     except (ImportError, ValueError):
         pass
