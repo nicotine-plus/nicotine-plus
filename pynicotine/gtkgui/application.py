@@ -42,12 +42,12 @@ LIBADWAITA_API_VERSION = 0
 
 if GTK_API_VERSION >= 4:
     try:
-        if os.getenv("NICOTINE_LIBADWAITA") is None:
+        if "NICOTINE_LIBADWAITA" not in os.environ:
             os.environ["NICOTINE_LIBADWAITA"] = str(int(
-                sys.platform in {"win32", "darwin"} or "gnome" in os.getenv("XDG_CURRENT_DESKTOP", "").lower()
+                sys.platform in {"win32", "darwin"} or "gnome" in os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
             ))
 
-        if os.getenv("NICOTINE_LIBADWAITA") == "1":
+        if os.environ.get("NICOTINE_LIBADWAITA") == "1":
             gi.require_version("Adw", "1")
 
             from gi.repository import Adw  # pylint: disable=ungrouped-imports

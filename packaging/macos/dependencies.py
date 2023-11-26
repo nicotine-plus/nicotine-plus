@@ -25,7 +25,7 @@ import sys
 def install_brew():
     """Install dependencies from the main Homebrew repos."""
 
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or "3"
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION", "3")
     use_libadwaita = gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
     packages = ["adwaita-icon-theme",

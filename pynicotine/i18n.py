@@ -58,7 +58,7 @@ def _set_system_language(language=None):
     don't set the 'LANGUAGE' environment variable by default (Windows,
     macOS)"""
 
-    if not language and os.getenv("LANGUAGE") is None:
+    if not language and "LANGUAGE" not in os.environ:
         if sys.platform == "win32":
             import ctypes
             windll = ctypes.windll.kernel32

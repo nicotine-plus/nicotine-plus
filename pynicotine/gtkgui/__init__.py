@@ -92,7 +92,7 @@ def run(hidden, ci_mode, multi_instance):
         # Disable client-side decorations when header bar is disabled
         os.environ["GTK_CSD"] = "0"
 
-    error = check_gtk_version(gtk_api_version=os.getenv("NICOTINE_GTK_VERSION", "4"))
+    error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", "4"))
 
     if error:
         log.add(error)

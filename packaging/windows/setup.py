@@ -61,7 +61,7 @@ import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-pos
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
-GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or "4"
+GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 # Include (almost) all standard library modules for plugins
