@@ -101,12 +101,12 @@ class FileProperties(Dialog):
         self.size_value_label.set_text(f"{h_size} ({size} B)")  # Don't humanize exact size for easier use in filter
         self.username_value_label.set_text(properties["user"])
 
-        real_folder_path = properties.get("real_folder_path") or ""
+        real_folder_path = properties.get("real_folder_path", "")
         h_quality, _bitrate, h_length, _length = slskmessages.FileListMessage.parse_audio_quality_length(
             size, properties.get("file_attributes"), always_show_bitrate=True)
-        queue_position = properties.get("queue_position") or 0
-        speed = properties.get("speed") or 0
-        country = properties.get("country") or ""
+        queue_position = properties.get("queue_position", 0)
+        speed = properties.get("speed", 0)
+        country = properties.get("country", "")
 
         self.path_value_label.set_text(real_folder_path)
         self.path_row.set_visible(bool(real_folder_path))
