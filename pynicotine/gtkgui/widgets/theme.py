@@ -128,247 +128,27 @@ def set_visual_settings():
 
 def set_global_css():
 
-    css = bytearray()
-    css_default = b"""
-    /* Tweaks */
-
-    flowbox, flowboxchild {
-        /* GTK adds unwanted padding to flowbox children by default */
-        border: 0;
-        background: inherit;
-        padding: 0;
-    }
-
-    scrollbar {
-        /* Workaround for themes breaking scrollbar hitbox with margins */
-        margin: 0;
-    }
-
-    .search-view treeview:disabled {
-        /* Search results with no free slots have no style by default */
-        color: unset;
-    }
-
-    treeview button > box {
-        /* Column header padding to match rows */
-        padding-right: 11px;
-    }
-
-    treeview button {
-        /* Column header padding to match rows */
-        padding-left: 11px;
-        padding-right: 1px;
-    }
-
-    infobar box {
-        /* Remove unwanted padding from info bars */
-        padding: 0;
-    }
-
-    progressbar.osd trough,
-    progressbar.osd progress {
-        /* Make overlay progress bars slightly more legible */
-        min-height: 4px;
-    }
-
-    treeview button {
-        /* Remove bottom border from column headers */
-        border: 0;
-        padding-bottom: 3px;
-        padding-top: 3px;
-    }
-
-    treeview button:not(:last-child):dir(ltr) > box,
-    treeview button:not(:first-child):dir(rtl) > box {
-        /* Add column header separators */
-        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
-    }
-
-    /* Borders */
-
-    .border-top,
-    .preferences-border .action-area {
-        border-top: 1px solid @borders;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid @borders;
-    }
-
-    .border-start:dir(ltr),
-    .border-end:dir(rtl) {
-        /* Use box-shadow to avoid double window border in narrow flowbox */
-        box-shadow: -1px 0 0 0 @borders;
-    }
-
-    .border-start-dim:dir(ltr),
-    .border-end-dim:dir(rtl) {
-        box-shadow: -1px 0 0 0 alpha(@borders, 0.75);
-    }
-
-    .border-end:dir(ltr),
-    .border-start:dir(rtl) {
-        box-shadow: 1px 0 0 0 @borders;
-    }
-
-    .border-end-dim:dir(ltr),
-    .border-start-dim:dir(rtl) {
-        box-shadow: 1px 0 0 0 alpha(@borders, 0.75);
-    }
-
-    /* Buttons */
-
-    .count {
-        min-width: 12px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    /* Headings */
-
-    .title-1 {
-        font-weight: 800;
-        font-size: 1.83em;
-    }
-
-    .title-2 {
-        font-weight: 800;
-        font-size: 1.35em;
-    }
-
-    .heading {
-        font-weight: bold;
-        font-size: inherit;
-    }
-
-    /* Text Formatting */
-
-    .bold {
-        font-weight: bold;
-    }
-
-    .italic {
-        font-style: italic;
-    }
-
-    .normal {
-        font-weight: normal;
-    }
-
-    .underline {
-        text-decoration-line: underline;
-    }
-    """
-
-    css_gtk3 = b"""
-    /* Tweaks (GTK 3) */
-
-    treeview {
-        /* Set spacing for dropdown menu/entry completion items */
-        -GtkTreeView-horizontal-separator: 12;
-        -GtkTreeView-vertical-separator: 5;
-    }
-
-    filechooser treeview,
-    fontchooser treeview {
-        /* Restore default item spacing in GTK choosers */
-        -GtkTreeView-horizontal-separator: 2;
-        -GtkTreeView-vertical-separator: 2;
-    }
-
-    .treeview-spacing {
-        /* Disable GTK's built-in item spacing in custom treeviews */
-        -GtkTreeView-horizontal-separator: 0;
-        -GtkTreeView-vertical-separator: 0;
-    }
-
-    .dropdown-scrollbar {
-        /* Enable dropdown list with a scrollbar */
-        -GtkComboBox-appears-as-list: 1;
-    }
-    """
-
-    css_gtk4 = b"""
-    /* Tweaks (GTK 4+) */
-
-    * {
-        /* Unset line height due to it resulting in blurry text */
-        line-height: unset;
-    }
-
-    treeview.normal-icons {
-        /* Country flag icon size in treeviews */
-        -gtk-icon-size: 21px;
-    }
-
-    window.dialog:not(.message) .dialog-action-area {
-        /* Add missing spacing to dialog action buttons */
-        border-spacing: 6px;
-    }
-
-    .image-text-button box {
-        /* Remove unwanted spacing from buttons */
-        border-spacing: 0;
-    }
-
-    .generic-popover *:not(image) {
-        /* Remove unwanted spacing from popovers */
-        margin: 0;
-    }
-
-    .generic-popover contents {
-        /* Remove unwanted spacing from popovers */
-        padding: 0;
-    }
-    """
-
-    css_libadwaita = b"""
-    /* Tweaks (libadwaita) */
-
-    window:not(.filechooser):not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
-    window:not(.menubar-border) menubar {
-        /* Make title/header bars flat to match other libadwaita apps */
-        background: none;
-        box-shadow: none;
-        color: inherit;
-    }
-
-    treeview > header > button > box {
-        /* Use relative font size for column headers */
-        font-size: 0.92em;
-    }
-    """
-
-    css_libadwaita_win32_darwin = b"""
-    /* Tweaks (libadwaita on Windows and macOS) */
-
-    window.csd {
-        /* Smaller window shadows to mitigate GTK bug where shadows are clickable */
-        box-shadow: 0 1px 3px 3px transparent,
-                    0 2px 6px 3px rgba(0, 0, 0, 0.10),
-                    0 4px 7px 3px rgba(0, 0, 0, 0.04),
-                    0 0 0 1px rgba(0, 0, 0, 0.08);
-    }
-
-    window.csd:backdrop {
-        box-shadow: 0 1px 3px 3px rgba(0, 0, 0, 0.05),
-                    0 2px 4px 3px rgba(0, 0, 0, 0.01),
-                    0 4px 7px 3px transparent,
-                    0 0 0 1px rgba(0, 0, 0, 0.06);
-    }
-    """
-
     global_css_provider = Gtk.CssProvider()
-    css.extend(css_default)
+    css_folder_path = os.path.join(GTK_GUI_FOLDER_PATH, "css")
+    css = bytearray()
+
+    with open(encode_path(os.path.join(css_folder_path, "style.css")), "rb") as file_handle:
+        css.extend(file_handle.read())
 
     if GTK_API_VERSION >= 4:
-        css.extend(css_gtk4)
+        add_provider_func = Gtk.StyleContext.add_provider_for_display  # pylint: disable=no-member
+        display = Gdk.Display.get_default()
+
+        with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
+            css.extend(file_handle.read())
 
         if LIBADWAITA_API_VERSION:
-            css.extend(css_libadwaita)
+            with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
 
             if sys.platform in {"win32", "darwin"}:
-                css.extend(css_libadwaita_win32_darwin)
+                with open(encode_path(os.path.join(css_folder_path, "style_libadwaita_csd.css")), "rb") as file_handle:
+                    css.extend(file_handle.read())
 
         load_css(global_css_provider, css)
 
@@ -377,12 +157,15 @@ def set_global_css():
         )
 
     else:
-        css.extend(css_gtk3)
+        add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
+        display = Gdk.Screen.get_default()
+
+        with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
+            css.extend(file_handle.read())
+
         load_css(global_css_provider, css)
 
-        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
-            Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+    add_provider_func(display, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
 def set_global_style():
