@@ -385,11 +385,11 @@ class NetworkThread(Thread):
         self._max_distrib_children = 0
         self._upload_speed = 0
 
-        self._numsockets = 1
+        self._num_sockets = 1
         self._last_conn_stat_time = 0
 
         self._conns = {}
-        self._connsinprogress = {}
+        self._conns_in_progress = {}
         self._out_indirect_conn_request_times = {}
         self._token = 0
 
@@ -522,8 +522,13 @@ class NetworkThread(Thread):
 
             timed_out_requests.add(init)
 
+        if not timed_out_requests:
+            return
+
         for init in timed_out_requests:
             del self._out_indirect_conn_request_times[init]
+
+        timed_out_requests.clear()
 
     @staticmethod
     def _is_connection_still_active(conn_obj):
@@ -935,7 +940,7 @@ class NetworkThread(Thread):
 
         self._selector.unregister(sock)
         self._close_socket(sock)
-        self._numsockets -= 1
+        self._num_sockets -= 1
 
         conn_obj.ibuf.clear()
         conn_obj.obuf.clear()
@@ -1014,7 +1019,7 @@ class NetworkThread(Thread):
             log.add_conn("Cannot remove PeerInit message, since the connection has been superseded")
             return
 
-        if connection_list is self._connsinprogress and user_init.sock is not None:
+        if connection_list is self._conns_in_progress and user_init.sock is not None:
             # Outgoing connection failed, but an indirect connection was already established
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
@@ -1026,22 +1031,14 @@ class NetworkThread(Thread):
 
         del self._username_init_msgs[init_key]
 
-    def _close_conn_in_progress_if_stale(self, conn_obj, sock, current_time):
-
-        if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
-            # Connection failed
-            self._connect_error("Timed out", conn_obj)
-            self._close_connection(self._connsinprogress, sock, callback=False)
-
-    def _close_connection_if_inactive(self, conn_obj, sock, current_time, num_sockets):
+    def _is_connection_inactive(self, conn_obj, sock, current_time, num_sockets):
 
         if sock is self._server_socket:
-            return
+            return False
 
         if num_sockets >= self.MAX_SOCKETS and not self._is_connection_still_active(conn_obj):
             # Connection limit reached, close connection if inactive
-            self._close_connection(self._conns, sock)
-            return
+            return True
 
         time_diff = (current_time - conn_obj.lastactive)
 
@@ -1051,11 +1048,47 @@ class NetworkThread(Thread):
             # succeeds afterwrds. Since the peer already sent a search result message, this connection
             # idles without any messages ever being sent beyond PeerInit. Close it sooner than regular
             # idling connections to prevent connections from piling up.
+            return True
+
+        if time_diff > self.CONNECTION_MAX_IDLE:
+            # No recent activity, peer connection is stale
+            return True
+
+        return False
+
+    def _close_stale_in_progress_conns(self, current_time):
+
+        stale_sockets = set()
+
+        for sock, conn_obj in self._conns_in_progress.items():
+            if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
+                stale_sockets.add(sock)
+
+        if not stale_sockets:
+            return
+
+        for sock in stale_sockets:
+            self._connect_error("Timed out", self._conns_in_progress[sock])
+            self._close_connection(self._conns_in_progress, sock, callback=False)
+
+        stale_sockets.clear()
+
+    def _close_inactive_connections(self, current_time):
+
+        num_sockets = self._num_sockets
+        inactive_sockets = set()
+
+        for sock, conn_obj in self._conns.items():
+            if self._is_connection_inactive(conn_obj, sock, current_time, num_sockets):
+                inactive_sockets.add(sock)
+
+        if not inactive_sockets:
+            return
+
+        for sock in inactive_sockets:
             self._close_connection(self._conns, sock)
 
-        elif time_diff > self.CONNECTION_MAX_IDLE:
-            # No recent activity, peer connection is stale
-            self._close_connection(self._conns, sock)
+        inactive_sockets.clear()
 
     def _close_connection_by_ip(self, ip_address):
 
@@ -1182,8 +1215,8 @@ class NetworkThread(Thread):
             server_socket.connect_ex(msg_obj.addr)
 
             self._selector.register(server_socket, selector_events)
-            self._connsinprogress[server_socket] = conn_obj
-            self._numsockets += 1
+            self._conns_in_progress[server_socket] = conn_obj
+            self._num_sockets += 1
 
         except OSError as error:
             self._connect_error(error, conn_obj)
@@ -1447,8 +1480,8 @@ class NetworkThread(Thread):
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock, callback=False)
 
-        for sock in self._connsinprogress.copy():
-            self._close_connection(self._connsinprogress, sock, callback=False)
+        for sock in self._conns_in_progress.copy():
+            self._close_connection(self._conns_in_progress, sock, callback=False)
 
         self._queue.clear()
         self._pending_init_msgs.clear()
@@ -1635,8 +1668,8 @@ class NetworkThread(Thread):
             sock.connect_ex(msg_obj.addr)
 
             self._selector.register(sock, selector_events)
-            self._connsinprogress[sock] = conn_obj
-            self._numsockets += 1
+            self._conns_in_progress[sock] = conn_obj
+            self._num_sockets += 1
 
         except OSError as error:
             self._connect_error(error, conn_obj)
@@ -2220,7 +2253,7 @@ class NetworkThread(Thread):
         msg_class = msg_obj.__class__
 
         if msg_class is InitPeerConnection:
-            if self._numsockets < self.MAX_SOCKETS:
+            if self._num_sockets < self.MAX_SOCKETS:
                 self._init_peer_connection(msg_obj)
             else:
                 # Connection limit reached, re-queue
@@ -2286,7 +2319,7 @@ class NetworkThread(Thread):
 
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
-            while self._numsockets < self.MAX_SOCKETS:
+            while self._num_sockets < self.MAX_SOCKETS:
                 try:
                     incoming_sock, incoming_addr = sock.accept()
 
@@ -2304,7 +2337,7 @@ class NetworkThread(Thread):
                 self._conns[incoming_sock] = PeerConnection(
                     sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
                 )
-                self._numsockets += 1
+                self._num_sockets += 1
                 log.add_conn("Incoming connection from %s", str(incoming_addr))
 
                 # Event flags are modified to include 'write' in subsequent loops, if necessary.
@@ -2313,7 +2346,7 @@ class NetworkThread(Thread):
 
             return
 
-        conn_obj_in_progress = self._connsinprogress.get(sock)
+        conn_obj_in_progress = self._conns_in_progress.get(sock)
 
         if conn_obj_in_progress is not None:
             try:
@@ -2322,7 +2355,7 @@ class NetworkThread(Thread):
 
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._connsinprogress, sock, callback=False)
+                self._close_connection(self._conns_in_progress, sock, callback=False)
 
             return
 
@@ -2351,7 +2384,7 @@ class NetworkThread(Thread):
 
     def _process_ready_output_socket(self, sock, current_time):
 
-        conn_obj_in_progress = self._connsinprogress.get(sock)
+        conn_obj_in_progress = self._conns_in_progress.get(sock)
 
         if conn_obj_in_progress is not None:
             # Connection has been established
@@ -2362,7 +2395,7 @@ class NetworkThread(Thread):
             else:
                 self._establish_outgoing_peer_connection(conn_obj_in_progress)
 
-            del self._connsinprogress[sock]
+            del self._conns_in_progress[sock]
             return
 
         conn_obj_established = self._conns.get(sock)
@@ -2582,22 +2615,14 @@ class NetworkThread(Thread):
             # Send updated connection count to core. Avoid sending too many
             # updates at once, if there are a lot of connections.
             if (current_time - self._last_conn_stat_time) >= 1:
-                num_sockets = self._numsockets
-
                 events.emit_main_thread(
-                    "set-connection-stats", total_conns=num_sockets,
+                    "set-connection-stats", total_conns=self._num_sockets,
                     download_bandwidth=self._total_download_bandwidth, upload_bandwidth=self._total_upload_bandwidth
                 )
 
-                # Close stale outgoing connection attempts
-                for sock, conn_obj in self._connsinprogress.copy().items():
-                    self._close_conn_in_progress_if_stale(conn_obj, sock, current_time)
-
-                # Close inactive connections
-                for sock, conn_obj in self._conns.copy().items():
-                    self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets)
-
                 self._check_indirect_connection_timeouts(current_time)
+                self._close_stale_in_progress_conns(current_time)
+                self._close_inactive_connections(current_time)
 
                 self._total_download_bandwidth = 0
                 self._total_upload_bandwidth = 0
