@@ -88,8 +88,7 @@ class Downloads(Transfers):
             ("download-large-folder", self.download_large_folder),
             ("download-notification", self.new_transfer_notification),
             ("start", self.start),
-            ("update-download", self.update_model),
-            ("update-downloads", self.update_model)
+            ("update-download", self.update_model)
         ):
             events.connect(event_name, callback)
 

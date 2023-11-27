@@ -117,7 +117,6 @@ class Downloads(Transfers):
         ):
             events.cancel_scheduled(timer_id)
 
-        events.emit("update-downloads")
         self.requested_folders.clear()
 
     # Load Transfers #
@@ -765,27 +764,22 @@ class Downloads(Transfers):
     def _user_status(self, msg):
         """Server code 7."""
 
-        update = False
         username = msg.user
 
         if msg.status == slskmessages.UserStatus.OFFLINE:
             for users in (self.queued_users, self.failed_users):
                 for download in users.get(username, {}).copy().values():
                     self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
-                    update = True
 
             for download in self.active_users.get(username, {}).copy().values():
                 if download.status != TransferStatus.TRANSFERRING:
                     self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
-                    update = True
-        else:
+
+        elif username not in self.queued_users:
             for download in self.failed_users.get(username, {}).copy().values():
                 self._unfail_transfer(download)
                 self._enqueue_transfer(download)
-                update = True
-
-        if update:
-            events.emit("update-downloads")
+                self._update_transfer(download)
 
     def _set_connection_stats(self, download_bandwidth=0, **_unused):
         self.total_bandwidth = download_bandwidth

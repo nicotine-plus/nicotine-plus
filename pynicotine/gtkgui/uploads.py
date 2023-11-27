@@ -88,7 +88,6 @@ class Uploads(Transfers):
             ("clear-uploads", self.clear_transfers),
             ("start", self.start),
             ("update-upload", self.update_model),
-            ("update-uploads", self.update_model),
             ("upload-notification", self.new_transfer_notification)
         ):
             events.connect(event_name, callback)

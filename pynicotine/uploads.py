@@ -109,8 +109,6 @@ class Uploads(Transfers):
         for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
             events.cancel_scheduled(timer_id)
 
-        events.emit("update-uploads")
-
         self.privileged_users.clear()
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
@@ -747,10 +745,8 @@ class Uploads(Transfers):
     def _user_status(self, msg):
         """Server code 7."""
 
-        update = False
         username = msg.user
         privileged = msg.privileged
-        is_user_offline = (msg.status == slskmessages.UserStatus.OFFLINE)
 
         if privileged is not None:
             if privileged:
@@ -758,7 +754,7 @@ class Uploads(Transfers):
             else:
                 events.emit("remove-privileged-user", username)
 
-        if is_user_offline:
+        if msg.status == slskmessages.UserStatus.OFFLINE:
             for upload in self.active_users.get(username, {}).copy().values():
                 if upload.status == TransferStatus.TRANSFERRING:
                     continue
@@ -766,17 +762,14 @@ class Uploads(Transfers):
                 if not self._auto_clear_transfer(upload):
                     self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
 
-                update = True
+            for upload in self.failed_users.get(username, {}).copy().values():
+                self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
+
+            return
 
         for upload in self.failed_users.get(username, {}).copy().values():
-            if not self._auto_clear_transfer(upload):
-                self._abort_transfer(
-                    upload, status=TransferStatus.USER_LOGGED_OFF if is_user_offline else TransferStatus.CANCELLED)
-
-            update = True
-
-        if update:
-            events.emit("update-uploads")
+            if upload.status == TransferStatus.USER_LOGGED_OFF:
+                self._abort_transfer(upload, status=TransferStatus.CANCELLED)
 
     def _connect_to_peer(self, msg):
         """Server code 18."""
