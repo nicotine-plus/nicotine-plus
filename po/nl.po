@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-25 20:36+0000\n"
+"PO-Revision-Date: 2023-11-27 20:33+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2.1-rc\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -242,8 +242,8 @@ msgstr "Onbekend"
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
-"Kan het IP-adres van gebruiker %s niet ophalen, omdat deze gebruiker offline "
-"is"
+"Kan het IP-adres van gebruiker %s niet opvragen, omdat deze gebruiker "
+"offline is"
 
 #: pynicotine/core.py:479
 #, python-format
@@ -452,7 +452,7 @@ msgid ""
 "choose another username if this is your first time logging in."
 msgstr ""
 "Gebruiker %s bestaat al, en het wachtwoord dat je heeft opgegeven is "
-"ongeldig. Kies een andere gebruikersnaam als dit de eerste keer is dat je "
+"ongeldig. Kies een andere gebruikersnaam, als dit de eerste keer is dat je "
 "inlogt."
 
 #: pynicotine/gtkgui/application.py:363
@@ -2228,8 +2228,8 @@ msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
 msgstr ""
-"De lijst met gedeelde bestanden van de gebruiker is leeg. Ofwel deelt de "
-"gebruiker niets, ofwel hij deelt de bestanden alleen privé."
+"De gebruikers lijst met gedeelde bestanden is leeg. Deze gebruiker deelt "
+"niets, of deelt bestanden alleen privé."
 
 #: pynicotine/gtkgui/userbrowse.py:578
 msgid ""
@@ -2237,8 +2237,8 @@ msgid ""
 "listening ports are closed on both sides, or there is a temporary "
 "connectivity issue."
 msgstr ""
-"Kan geen gedeelde bestanden opvragen bij de gebruiker. Ofwel is de gebruiker "
-"offline, de luisterpoorten zijn aan beide kanten gesloten, of er is een "
+"Kan geen gedeelde bestanden opvragen bij de gebruiker. De gebruiker is "
+"offline, of de luisterpoorten zijn aan beide kanten gesloten, of er is een "
 "tijdelijk verbindingsprobleem."
 
 #: pynicotine/gtkgui/userbrowse.py:834
@@ -2288,8 +2288,8 @@ msgid ""
 "listening port, the user is offline, or there's a temporary connectivity "
 "issue."
 msgstr ""
-"Kan geen informatie van gebruiker opvragen. Ofwel hebben jullie allebei een "
-"gesloten luisterpoort, is de gebruiker offline of is er een tijdelijk "
+"Kan geen informatie van gebruiker opvragen. Jullie hebben allebei een "
+"gesloten luisterpoort, of de gebruiker is offline, of is er een tijdelijk "
 "verbindingsprobleem."
 
 #: pynicotine/gtkgui/userinfo.py:488
@@ -3675,7 +3675,7 @@ msgstr "Tekst-naar-spraak voor bericht mislukt: %s"
 
 #: pynicotine/nowplaying.py:127
 msgid "Last.fm: Please provide both your Last.fm username and API key"
-msgstr "Last.fm: Geef zowel je Last.fm gebruikersnaam als API sleutel op"
+msgstr "Last.fm: Geef zowel je Last.fm gebruikersnaam als API-sleutel op"
 
 #: pynicotine/nowplaying.py:127 pynicotine/nowplaying.py:138
 #: pynicotine/nowplaying.py:160 pynicotine/nowplaying.py:192
@@ -3718,7 +3718,7 @@ msgstr ""
 
 #: pynicotine/nowplaying.py:261
 msgid "ListenBrainz: Please provide your ListenBrainz username"
-msgstr "ListenBrainz: vul je ListenBrainz-gebruikersnaam in"
+msgstr "ListenBrainz: vul je ListenBrainz gebruikersnaam in"
 
 #: pynicotine/nowplaying.py:270
 #, python-format
