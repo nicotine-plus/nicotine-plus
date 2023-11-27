@@ -396,8 +396,7 @@ class Core:
         })
 
     def _server_timeout(self):
-        if not config.need_config():
-            self.connect()
+        self.connect()
 
     def _server_disconnect(self, manual_disconnect=False):
 

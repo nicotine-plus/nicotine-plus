@@ -369,7 +369,7 @@ class NetworkThread(Thread):
         self._server_socket = None
         self._server_address = None
         self._server_username = None
-        self._server_timer = None
+        self._server_timeout_time = None
         self._server_timeout_value = -1
         self._manual_server_disconnect = False
         self._server_relogged = False
@@ -391,7 +391,6 @@ class NetworkThread(Thread):
         self._conns = {}
         self._connsinprogress = {}
         self._out_indirect_conn_request_times = {}
-        self._conn_timeouts_timer_id = None
         self._token = 0
 
         self._calc_upload_limit_function = self._calc_upload_limit_none
@@ -494,28 +493,37 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _check_indirect_connection_timeouts(self):
+    def _check_indirect_connection_timeouts(self, current_time):
 
-        curtime = time.monotonic()
+        if not self._out_indirect_conn_request_times:
+            return
 
-        if self._out_indirect_conn_request_times:
-            for init, request_time in self._out_indirect_conn_request_times.copy().items():
-                username = init.target_user
-                conn_type = init.conn_type
+        timed_out_requests = set()
 
-                if (curtime - request_time) >= 20 and self._out_indirect_conn_request_times.pop(init, None):
-                    log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
-                                  "token %(token)s expired, giving up"), {
-                        "type": conn_type,
-                        "user": username,
-                        "token": init.token
-                    })
+        for init, request_time in self._out_indirect_conn_request_times.items():
+            username = init.target_user
+            conn_type = init.conn_type
 
-                    events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
+            if (current_time - request_time) < 20:
+                continue
 
-                    self._token_init_msgs.pop(init.token, None)
-                    self._username_init_msgs.pop(username + conn_type, None)
-                    init.outgoing_msgs.clear()
+            log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
+                          "token %(token)s expired, giving up"), {
+                "type": conn_type,
+                "user": username,
+                "token": init.token
+            })
+
+            events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
+
+            self._token_init_msgs.pop(init.token, None)
+            self._username_init_msgs.pop(username + conn_type, None)
+            init.outgoing_msgs.clear()
+
+            timed_out_requests.add(init)
+
+        for init in timed_out_requests:
+            del self._out_indirect_conn_request_times[init]
 
     @staticmethod
     def _is_connection_still_active(conn_obj):
@@ -1077,7 +1085,7 @@ class NetworkThread(Thread):
             # Exponential backoff, max 5 minute wait
             self._server_timeout_value *= 2
 
-        self._server_timer = events.schedule(delay=self._server_timeout_value, callback=self._server_timeout)
+        self._server_timeout_time = time.monotonic() + self._server_timeout_value
         log.add(_("Reconnecting to server in %i seconds"), self._server_timeout_value)
 
     @staticmethod
@@ -1148,7 +1156,7 @@ class NetworkThread(Thread):
         self._portmapper = msg_obj.portmapper
 
         self._manual_server_disconnect = False
-        events.cancel_scheduled(self._server_timer)
+        self._server_timeout_time = None
 
         ip_address, port = msg_obj.addr
         log.add(_("Connecting to %(host)s:%(port)s"), {"host": ip_address, "port": port})
@@ -1266,11 +1274,6 @@ class NetworkThread(Thread):
                             local_ip_address, port = msg.local_address
                             self._portmapper.set_port(port, local_ip_address)
                             self._portmapper.add_port_mapping(blocking=True)
-
-                            # Check for indirect connection timeouts
-                            self._conn_timeouts_timer_id = events.schedule(
-                                delay=1, callback=self._check_indirect_connection_timeouts, repeat=True
-                            )
 
                             msg.username = self._server_username
                             self._send_message_to_server(CheckPrivileges())
@@ -1451,8 +1454,6 @@ class NetworkThread(Thread):
         self._pending_init_msgs.clear()
         self._token_init_msgs.clear()
         self._username_init_msgs.clear()
-
-        events.cancel_scheduled(self._conn_timeouts_timer_id)
         self._out_indirect_conn_request_times.clear()
 
         # Reset connection stats
@@ -1483,10 +1484,6 @@ class NetworkThread(Thread):
 
     def _send_message_to_server(self, message):
         self._queue_network_message(message)
-
-    def _server_timeout(self):
-        if self._server_timeout_value > 0:
-            events.emit_main_thread("server-timeout")
 
     # Peer Init #
 
@@ -2573,6 +2570,10 @@ class NetworkThread(Thread):
 
         while not self._want_abort:
             if not self._should_process_queue:
+                if self._server_timeout_time and (self._server_timeout_time - time.monotonic()) <= 0:
+                    self._server_timeout_time = None
+                    events.emit_main_thread("server-timeout")
+
                 time.sleep(0.1)
                 continue
 
@@ -2595,6 +2596,8 @@ class NetworkThread(Thread):
                 # Close inactive connections
                 for sock, conn_obj in self._conns.copy().items():
                     self._close_connection_if_inactive(conn_obj, sock, current_time, num_sockets)
+
+                self._check_indirect_connection_timeouts(current_time)
 
                 self._total_download_bandwidth = 0
                 self._total_upload_bandwidth = 0
