@@ -58,7 +58,7 @@ class Transfer:
                  "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
 
-    def __init__(self, username, virtual_path, folder_path, size, file_attributes=None,
+    def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
         self.username = username
         self.virtual_path = virtual_path

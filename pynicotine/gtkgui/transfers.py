@@ -604,7 +604,7 @@ class Transfers:
                         empty_int,
                         empty_int,
                         empty_int,
-                        Transfer(username=user),  # Dummy Transfer object
+                        Transfer(user),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -626,7 +626,7 @@ class Transfers:
                 user_folder_path = user + original_folder_path
 
                 if user_folder_path not in self.paths:
-                    path_transfer = Transfer(username=user, folder_path=original_folder_path)  # Dummy Transfer object
+                    path_transfer = Transfer(user, folder_path=original_folder_path)  # Dummy Transfer object
                     iterator = self.tree_view.add_row(
                         [
                             user,
