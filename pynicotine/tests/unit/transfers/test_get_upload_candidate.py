@@ -59,7 +59,7 @@ class GetUploadCandidateTest(TestCase):
 
         for username in users:
             virtual_path = f"{username}/{len(core.uploads.transfers)}"
-            transfer = Transfer(username=username, virtual_path=virtual_path)
+            transfer = Transfer(username, virtual_path, folder_path=None, size=0)
 
             if is_active:
                 core.uploads._activate_transfer(transfer, self.token)

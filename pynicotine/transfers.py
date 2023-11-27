@@ -59,18 +59,18 @@ class Transfer:
                  "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
 
     def __init__(self, username, virtual_path, folder_path, size, file_attributes=None,
-                 status=None, token=None, current_byte_offset=None):
+                 status=None, current_byte_offset=None):
         self.username = username
         self.virtual_path = virtual_path
         self.folder_path = folder_path
         self.size = size
         self.status = status
-        self.token = token
         self.current_byte_offset = current_byte_offset
-        self.file_attributes = file_attributes or {}
+        self.file_attributes = file_attributes
 
         self.sock = None
         self.file_handle = None
+        self.token = None
         self.queue_position = 0
         self.modifier = None
         self.request_timer_id = None
@@ -83,6 +83,9 @@ class Transfer:
         self.iterator = None
         self.legacy_attempt = False
         self.size_changed = False
+
+        if file_attributes is None:
+            self.file_attributes = {}
 
 
 class Transfers:
@@ -245,6 +248,8 @@ class Transfers:
         if not transfer_rows:
             return
 
+        allowed_statuses = {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}
+
         for transfer_row in transfer_rows:
             num_attributes = len(transfer_row)
 
@@ -267,12 +272,9 @@ class Transfers:
             if not isinstance(folder_path, str):
                 continue
 
-            if folder_path:
-                folder_path = os.path.normpath(folder_path)
-
             # Status
             if num_attributes >= 4:
-                status = str(transfer_row[3])
+                status = transfer_row[3]
 
             if status == "Aborted":
                 status = TransferStatus.PAUSED
@@ -280,7 +282,7 @@ class Transfers:
             if load_only_finished and status != TransferStatus.FINISHED:
                 continue
 
-            if status not in {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}:
+            if status not in allowed_statuses:
                 status = TransferStatus.USER_LOGGED_OFF
 
             # Size / offset
@@ -291,21 +293,21 @@ class Transfers:
                 loaded_size = transfer_row[4]
 
                 if loaded_size and isinstance(loaded_size, (int, float)):
-                    size = int(loaded_size)
+                    size = loaded_size // 1
 
             if num_attributes >= 6:
                 loaded_byte_offset = transfer_row[5]
 
                 if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
-                    current_byte_offset = int(loaded_byte_offset)
+                    current_byte_offset = loaded_byte_offset // 1
 
             # File attributes
             file_attributes = self._load_file_attributes(num_attributes, transfer_row)
 
             yield (
                 Transfer(
-                    username, virtual_path, folder_path, size, file_attributes, status=status,
-                    current_byte_offset=current_byte_offset
+                    username, virtual_path, folder_path, size, file_attributes, status,
+                    current_byte_offset
                 )
             )
 
@@ -343,9 +345,6 @@ class Transfers:
 
     def _append_transfer(self, transfer):
         raise NotImplementedError
-
-    def _remove_transfer(self, transfer):
-        del self.transfers[transfer.username + transfer.virtual_path]
 
     def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
         raise NotImplementedError

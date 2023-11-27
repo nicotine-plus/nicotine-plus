@@ -469,7 +469,7 @@ class Downloads(Transfers):
     def _clear_transfer(self, transfer, update_parent=True):
 
         self._abort_transfer(transfer)
-        self._remove_transfer(transfer)
+        del self.transfers[transfer.username + transfer.virtual_path]
 
         events.emit("clear-download", transfer, update_parent)
 
