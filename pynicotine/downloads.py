@@ -276,7 +276,7 @@ class Downloads(Transfers):
         })
         super()._enqueue_transfer(transfer)
 
-        msg = slskmessages.QueueUpload(file=virtual_path, legacy_client=transfer.legacy_attempt)
+        msg = slskmessages.QueueUpload(virtual_path, transfer.legacy_attempt)
 
         if not core.shares.initialized:
             # Remain queued locally until our shares have initialized, to prevent invalid
@@ -478,7 +478,7 @@ class Downloads(Transfers):
         for download in self.queued_transfers:
             core.send_message_to_peer(
                 download.username,
-                slskmessages.PlaceInQueueRequest(file=download.virtual_path, legacy_client=download.legacy_attempt)
+                slskmessages.PlaceInQueueRequest(download.virtual_path, download.legacy_attempt)
             )
 
     def _retry_failed_connection_downloads(self):
@@ -659,7 +659,7 @@ class Downloads(Transfers):
         self.requested_folder_token = slskmessages.increment_token(self.requested_folder_token)
 
         core.send_message_to_peer(
-            username, slskmessages.FolderContentsRequest(directory=folder_path, token=self.requested_folder_token))
+            username, slskmessages.FolderContentsRequest(folder_path, self.requested_folder_token))
 
     def enqueue_download(self, username, virtual_path, folder_path=None, size=0, file_attributes=None,
                          bypass_filter=False):
@@ -680,10 +680,7 @@ class Downloads(Transfers):
             # Duplicate download found, stop here
             return
 
-        transfer = Transfer(
-            username=username, virtual_path=virtual_path, folder_path=folder_path,
-            size=size, file_attributes=file_attributes
-        )
+        transfer = Transfer(username, virtual_path, folder_path, size, file_attributes)
 
         self._append_transfer(transfer)
         self._enqueue_transfer(transfer, bypass_filter=bypass_filter)
@@ -936,8 +933,7 @@ class Downloads(Transfers):
                 folder_path = os.path.join(
                     os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
 
-                transfer = Transfer(
-                    username=username, virtual_path=virtual_path, folder_path=folder_path, size=size)
+                transfer = Transfer(username, virtual_path, folder_path, size)
 
                 self._append_transfer(transfer)
                 self._activate_transfer(transfer, token)

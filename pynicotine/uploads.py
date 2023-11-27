@@ -420,7 +420,7 @@ class Uploads(Transfers):
 
         elif denied_message and virtual_path in self.queued_users.get(username, {}):
             core.send_message_to_peer(
-                username, slskmessages.UploadDenied(file=virtual_path, reason=denied_message))
+                username, slskmessages.UploadDenied(virtual_path, denied_message))
 
         self._deactivate_transfer(transfer)
         self._dequeue_transfer(transfer)
@@ -654,9 +654,7 @@ class Uploads(Transfers):
             else:
                 folder_path = os.path.normpath(folder_path)
 
-            transfer = Transfer(
-                username=username, virtual_path=virtual_path, folder_path=folder_path, size=size
-            )
+            transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
         else:
             if transfer in self.active_users.get(username, {}).values():
@@ -860,12 +858,11 @@ class Uploads(Transfers):
 
         if not allowed:
             if reason and reason != TransferRejectReason.QUEUED:
-                core.send_message_to_peer(username, slskmessages.UploadDenied(file=virtual_path, reason=reason))
+                core.send_message_to_peer(username, slskmessages.UploadDenied(virtual_path, reason))
 
             return
 
-        transfer = Transfer(username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
-                            size=self._get_file_size(real_path))
+        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
         self._append_transfer(transfer)
         self._enqueue_transfer(transfer)
@@ -928,8 +925,7 @@ class Uploads(Transfers):
 
         if not self.is_new_upload_accepted() or username in self.active_users:
             transfer = Transfer(
-                username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path),
-                size=self._get_file_size(real_path))
+                username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
             self._append_transfer(transfer)
             self._enqueue_transfer(transfer)
@@ -939,8 +935,7 @@ class Uploads(Transfers):
 
         # All checks passed, starting a new upload.
         size = self._get_file_size(real_path)
-        transfer = Transfer(
-            username=username, virtual_path=virtual_path, folder_path=os.path.dirname(real_path), size=size)
+        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
         self._activate_transfer(transfer, token)
@@ -1157,7 +1152,7 @@ class Uploads(Transfers):
 
             # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
             # intentionally cancelled, the peer should ignore this message.
-            core.send_message_to_peer(upload.username, slskmessages.UploadFailed(file=upload.virtual_path))
+            core.send_message_to_peer(upload.username, slskmessages.UploadFailed(upload.virtual_path))
 
         if not self._auto_clear_transfer(upload):
             self._abort_transfer(upload, status=status)
@@ -1205,7 +1200,7 @@ class Uploads(Transfers):
 
         if queue_position > 0:
             core.send_message_to_peer(
-                username, slskmessages.PlaceInQueueResponse(filename=virtual_path, place=queue_position))
+                username, slskmessages.PlaceInQueueResponse(virtual_path, queue_position))
 
         # Update queue position in our list of uploads
         upload.queue_position = queue_position

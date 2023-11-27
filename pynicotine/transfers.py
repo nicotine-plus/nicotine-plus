@@ -58,8 +58,8 @@ class Transfer:
                  "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
 
-    def __init__(self, username=None, virtual_path=None, folder_path=None, status=None, token=None, size=0,
-                 current_byte_offset=None, file_attributes=None):
+    def __init__(self, username, virtual_path, folder_path, size, file_attributes=None,
+                 status=None, token=None, current_byte_offset=None):
         self.username = username
         self.virtual_path = virtual_path
         self.folder_path = folder_path
@@ -304,8 +304,8 @@ class Transfers:
 
             yield (
                 Transfer(
-                    username=username, virtual_path=virtual_path, folder_path=folder_path, status=status, size=size,
-                    current_byte_offset=current_byte_offset, file_attributes=file_attributes
+                    username, virtual_path, folder_path, size, file_attributes, status=status,
+                    current_byte_offset=current_byte_offset
                 )
             )
 
