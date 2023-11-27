@@ -435,7 +435,11 @@ class Transfers:
 
     @staticmethod
     def get_percent(current_byte_offset, size):
-        return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
+
+        if current_byte_offset > size or size <= 0:
+            return 100
+
+        return (100 * current_byte_offset) // size
 
     def update_parent_row(self, iterator, child_transfers, username=None, user_folder_path=None):
 
@@ -480,6 +484,7 @@ class Transfers:
         transfer = self.tree_view.get_row_value(iterator, "transfer_data")
         total_size = min(total_size, UINT64_LIMIT)
         current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
+        should_update_size = False
 
         if transfer.status != parent_status:
             self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
@@ -499,16 +504,18 @@ class Transfers:
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_byte_offset:
-            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
             self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
             transfer.current_byte_offset = current_byte_offset
+            should_update_size = True
 
         if transfer.size != total_size:
-            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
             self.tree_view.set_row_value(iterator, "size_data", total_size)
             transfer.size = total_size
+            should_update_size = True
+
+        if should_update_size:
+            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
+            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
 
     def update_specific(self, transfer, select_parent=False):
 
@@ -529,6 +536,7 @@ class Transfers:
         # Modify old transfer
         if iterator is not None:
             translated_status = self.translate_status(status)
+            should_update_size = False
 
             if self.tree_view.get_row_value(iterator, "status") != translated_status:
                 self.tree_view.set_row_value(iterator, "status", translated_status)
@@ -544,18 +552,20 @@ class Transfers:
                 self.tree_view.set_row_value(iterator, "time_left_data", left)
 
             if self.tree_view.get_row_value(iterator, "current_bytes_data") != current_byte_offset:
-                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
                 self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
+                should_update_size = True
 
-            elif self.tree_view.get_row_value(iterator, "size_data") != size:
-                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
+            if self.tree_view.get_row_value(iterator, "size_data") != size:
                 self.tree_view.set_row_value(iterator, "size_data", size)
+                should_update_size = True
 
             if self.tree_view.get_row_value(iterator, "queue_position_data") != queue_position:
                 self.tree_view.set_row_value(iterator, "queue_position", self.get_hqueue_position(queue_position))
                 self.tree_view.set_row_value(iterator, "queue_position_data", queue_position)
+
+            if should_update_size:
+                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
+                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
 
             return False
 
