@@ -359,7 +359,8 @@ class Transfers:
             for transfer_i in self.transfer_list:
                 row_added = self.update_specific(transfer_i, select_parent=select_parent)
 
-                if row_added and not update_counters:
+                if row_added:
+                    select_parent = False
                     update_counters = True
 
         if update_parent:
