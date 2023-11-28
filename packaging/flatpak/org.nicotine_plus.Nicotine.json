@@ -11,8 +11,11 @@
         "--share=ipc",
         "--share=network",
         "--device=dri",
-        "--filesystem=host",
+        "--filesystem=home",
         "--filesystem=xdg-run/gvfs",
+        "--filesystem=/media",
+        "--filesystem=/mnt",
+        "--filesystem=/run/media",
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
