@@ -25,6 +25,10 @@ parts:
     plugin: cmake
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/
+    build-packages:
+      - on amd64:
+        - gcc-multilib
+        - g++-multilib
   nicotine:
     plugin: python
     source: .
