@@ -4,6 +4,7 @@ license: GPL-3.0+
 
 base: core22
 confinement: strict
+compression: lzo
 
 apps:
   nicotine:
