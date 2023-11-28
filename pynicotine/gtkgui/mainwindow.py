@@ -70,7 +70,6 @@ class MainWindow(Window):
         self.away_timer_id = None
         self.away_cooldown_time = 0
         self.gesture_click = None
-        self.scan_progress_indeterminate = False
 
         # Load UI
 
@@ -128,7 +127,9 @@ class MainWindow(Window):
             self.room_list_button,
             self.room_list_label,
             self.room_search_entry,
-            self.scan_progress_bar,
+            self.scan_progress_container,
+            self.scan_progress_label,
+            self.scan_progress_spinner,
             self.search_content,
             self.search_end,
             self.search_entry,
@@ -1300,34 +1301,20 @@ class MainWindow(Window):
 
     def shares_preparing(self):
 
-        if self.scan_progress_indeterminate:
-            return
-
-        self.scan_progress_indeterminate = True
-
-        self.scan_progress_bar.set_text(_("Preparing Shares"))
-        self.scan_progress_bar.set_visible(True)
-        self.scan_progress_bar.pulse()
-
-        GLib.timeout_add(500, self.pulse_scan_progress)
+        self.scan_progress_label.set_label(_("Preparing Shares"))
+        self.scan_progress_container.set_visible(True)
+        self.scan_progress_spinner.start()
 
     def shares_scanning(self):
-        self.scan_progress_bar.set_text(_("Scanning Shares"))
 
-    def pulse_scan_progress(self):
-
-        if not self.scan_progress_indeterminate:
-            return False
-
-        self.scan_progress_bar.pulse()
-        return True
+        self.scan_progress_label.set_label(_("Scanning Shares"))
+        self.scan_progress_container.set_visible(True)
+        self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
 
-        self.scan_progress_indeterminate = False
-
-        self.scan_progress_bar.set_fraction(0.0)  # Ensure we stop pulse mode
-        self.scan_progress_bar.set_visible(False)
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
 

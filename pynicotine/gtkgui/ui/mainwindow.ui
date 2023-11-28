@@ -1674,11 +1674,27 @@
           </object>
         </child>
         <child>
-          <object class="GtkProgressBar" id="scan_progress_bar">
-            <property name="pulse-step">0.8</property>
-            <property name="show-text">True</property>
-            <property name="valign">center</property>
+          <object class="GtkBox" id="scan_progress_container">
+            <property name="spacing">6</property>
+            <property name="tooltip-text" bind-source="scan_progress_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
             <property name="visible">False</property>
+            <child>
+              <object class="GtkLabel" id="scan_progress_label">
+                <property name="ellipsize">end</property>
+                <property name="selectable">True</property>
+                <property name="visible">True</property>
+                <style>
+                  <class name="caption"/>
+                  <class name="dim-label"/>
+                  <class name="normal"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinner" id="scan_progress_spinner">
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
