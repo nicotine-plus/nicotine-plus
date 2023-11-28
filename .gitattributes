@@ -1,2 +1,5 @@
 # Classify man pages as documentation
 *.1 linguist-documentation
+
+# Include UI files in language stats
+*.ui linguist-detectable
