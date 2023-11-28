@@ -24,7 +24,15 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
 | [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`         |
 
-### Ubuntu/Debian
+### Universal Packages (GNU/Linux)
+
+Packages listed below can be installed on different GNU/Linux distributions.
+
+| Format                                                                           | Package Name                 |
+|----------------------------------------------------------------------------------|------------------------------|
+| [Flatpak (Flathub)](https://flathub.org/apps/details/org.nicotine_plus.Nicotine) | `org.nicotine_plus.Nicotine` |
+
+### PPA (Ubuntu/Debian)
 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository.
 
@@ -44,12 +52,6 @@ sudo apt update; sudo apt install nicotine
 ```
 
 If you prefer to install a .deb package directly, you can [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip). Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
-
-### Flatpak (GNU/Linux)
-
-If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install Nicotine+ from Flathub.
-
-- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
 ### PyPi (GNU/Linux, *BSD, Solaris)
 

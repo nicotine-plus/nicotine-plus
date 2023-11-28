@@ -9,7 +9,7 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ## GNU/Linux
 
-### Ubuntu/Debian
+### PPA (Ubuntu/Debian)
 
 To use [unstable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/unstable) on Ubuntu and Debian, add the *nicotine-team/unstable* PPA repository.
 
