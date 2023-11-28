@@ -37,16 +37,48 @@ jobs:
 
   flatpak:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64]
     container:
       image: bilelmoussaoui/flatpak-github-actions:gnome-45
       options: --privileged
     steps:
-    - uses: actions/checkout@v3
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-      with:
-        bundle: flatpak-package.flatpak
-        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
-        cache-key: flatpak-builder-${{ github.sha }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build Flatpak package
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: flatpak-package.flatpak
+          manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
+          cache-key: flatpak-builder-${{ github.sha }}
+
+  snap:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build Snap package
+        uses: snapcore/action-build@v1
+        id: build-snap
+
+      - name: Install Snap package
+        run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: snap-${{ matrix.arch }}-package
+          path: ${{ steps.build-snap.outputs.snap }}
 
   windows:
     runs-on: windows-latest
