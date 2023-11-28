@@ -7,7 +7,9 @@ confinement: strict
 
 apps:
   nicotine:
-    command: bin/nicotine
+    environment:
+      SNAPCRAFT_PRELOAD_REDIRECT_ONLY_SHM: 1
+    command: bin/snapcraft-preload python3 -m pynicotine
     common-id: org.nicotine_plus.Nicotine
     desktop: share/applications/org.nicotine_plus.Nicotine.desktop
     extensions: [gnome]
@@ -17,6 +19,11 @@ apps:
       - removable-media
 
 parts:
+  snapcraft-preload:
+    source: https://github.com/sergiusens/snapcraft-preload.git
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/
   nicotine:
     plugin: python
     source: .
