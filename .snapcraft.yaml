@@ -1,4 +1,5 @@
 name: nicotine
+version: git
 adopt-info: nicotine
 license: GPL-3.0+
 
