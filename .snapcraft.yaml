@@ -1,5 +1,4 @@
 name: nicotine
-version: git
 adopt-info: nicotine
 license: GPL-3.0+
 
@@ -8,9 +7,9 @@ confinement: strict
 
 apps:
   nicotine:
-    command: usr/bin/nicotine
+    command: bin/nicotine
     common-id: org.nicotine_plus.Nicotine
-    desktop: usr/share/applications/org.nicotine_plus.Nicotine.desktop
+    desktop: share/applications/org.nicotine_plus.Nicotine.desktop
     extensions: [gnome]
     plugs:
       - home
@@ -20,7 +19,7 @@ parts:
   nicotine:
     plugin: python
     source: .
-    parse-info: [usr/share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
+    parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
 
 slots:
   nicotine:
