@@ -33,6 +33,16 @@ parts:
     plugin: python
     source: .
     parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
+    override-pull: |
+      craftctl default
+      sed -E 's|Icon=.*|Icon=snap.$CRAFT_PROJECT_NAME.org.nicotine_plus.Nicotine|' -i data/org.nicotine_plus.Nicotine.desktop.in
+    override-build: |
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/meta/gui/
+      cp -r $CRAFT_PART_INSTALL/share/icons $CRAFT_PART_INSTALL/meta/gui/
+      for i in `find $CRAFT_PART_INSTALL/meta/gui/icons -name "*.svg" -o -name "*.png"`; do
+        mv $i "`dirname $i`/snap.$CRAFT_PROJECT_NAME.`basename $i`"
+      done
 
 slots:
   nicotine:
