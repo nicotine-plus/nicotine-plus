@@ -638,12 +638,10 @@ class ChatRoom:
 
     def read_room_logs(self):
 
-        numlines = config.sections["logging"]["readroomlines"]
-        basename = f"{clean_file(self.room)}.log"
-        file_path = os.path.join(config.sections["logging"]["roomlogsdir"], basename)
-
         self.chat_view.append_log_lines(
-            file_path, numlines, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+            path=os.path.join(log.room_folder_path, f"{clean_file(self.room)}.log"),
+            num_lines=config.sections["logging"]["readroomlines"],
+            timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def populate_room_users(self, users):
@@ -964,11 +962,11 @@ class ChatRoom:
             config.sections["logging"]["rooms"].append(self.room)
 
     def on_view_room_log(self, *_args):
-        log.open_log(config.sections["logging"]["roomlogsdir"], self.room)
+        log.open_log(log.room_folder_path, self.room)
 
     def on_delete_room_log_response(self, *_args):
 
-        log.delete_log(config.sections["logging"]["roomlogsdir"], self.room)
+        log.delete_log(log.room_folder_path, self.room)
         self.activity_view.clear()
         self.chat_view.clear()
 

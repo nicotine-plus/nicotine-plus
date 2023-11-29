@@ -20,6 +20,9 @@ import os
 import sys
 import time
 
+from os.path import expandvars
+from os.path import normpath
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
@@ -76,6 +79,11 @@ class Logger:
         self.debug_file_name = f"debug_{current_date_time}.log"
         self.downloads_file_name = f"downloads_{current_date_time}.log"
         self.uploads_file_name = f"uploads_{current_date_time}.log"
+
+        self.debug_folder_path = None
+        self.transfer_folder_path = None
+        self.room_folder_path = None
+        self.private_chat_folder_path = None
 
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
@@ -159,7 +167,7 @@ class Logger:
 
         except Exception as error:
             # Avoid infinite recursion
-            should_log_file = (folder_path != os.path.normpath(config.sections["logging"]["debuglogsdir"]))
+            should_log_file = (folder_path != self.debug_folder_path)
 
             self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
                 "filename": os.path.join(folder_path, basename),
@@ -190,6 +198,16 @@ class Logger:
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
                 self._close_log_file(log_file)
+
+    def _normalize_folder_path(self, folder_path):
+        return normpath(expandvars(folder_path))
+
+    def update_folder_paths(self):
+
+        self.debug_folder_path = self._normalize_folder_path(config.sections["logging"]["debuglogsdir"])
+        self.transfer_folder_path = self._normalize_folder_path(config.sections["logging"]["transferslogsdir"])
+        self.room_folder_path = self._normalize_folder_path(config.sections["logging"]["roomlogsdir"])
+        self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
     def open_log(self, folder_path, basename):
         self._handle_log(folder_path, basename, self.open_log_callback)
@@ -225,8 +243,7 @@ class Logger:
         if msg_args:
             msg %= msg_args
 
-        self.write_log_file(
-            folder_path=config.sections["logging"]["transferslogsdir"], basename=basename, text=msg)
+        self.write_log_file(folder_path=self.transfer_folder_path, basename=basename, text=msg)
 
     # Log Messages #
 
@@ -260,7 +277,7 @@ class Logger:
 
         if should_log_file and config.sections["logging"].get("debug_file_output", False):
             events.invoke_main_thread(
-                self.write_log_file, folder_path=config.sections["logging"]["debuglogsdir"],
+                self.write_log_file, folder_path=self.debug_folder_path,
                 basename=self.debug_file_name, text=msg)
 
         try:

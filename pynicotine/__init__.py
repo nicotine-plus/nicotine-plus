@@ -94,13 +94,13 @@ def check_arguments():
     multi_instance = False
 
     if args.config:
-        config.config_file_path = os.path.abspath(args.config)
+        config.set_config_file(args.config)
 
         # Since a custom config was specified, allow another instance of the application to open
         multi_instance = True
 
     if args.user_data:
-        config.data_folder_path = os.path.abspath(args.user_data)
+        config.set_data_folder(args.user_data)
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port

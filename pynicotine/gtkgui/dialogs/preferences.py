@@ -59,6 +59,7 @@ from pynicotine.gtkgui.widgets.theme import set_dark_mode
 from pynicotine.gtkgui.widgets.theme import update_custom_css
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
+from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskproto import NetworkInterfaces
 from pynicotine.utils import open_folder_path
@@ -3026,6 +3027,9 @@ class Preferences(Dialog):
         core.downloads.update_transfer_limits()
         core.downloads.update_download_filters()
         core.uploads.update_transfer_limits()
+
+        # Logging
+        log.update_folder_paths()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"]:

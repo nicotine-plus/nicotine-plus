@@ -283,7 +283,7 @@ class PrivateChat:
 
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             log.write_log_file(
-                folder_path=config.sections["logging"]["privatelogsdir"],
+                folder_path=log.private_chat_folder_path,
                 basename=f"{clean_file(username)}.log", text=msg.formatted_message, timestamp=timestamp
             )
 

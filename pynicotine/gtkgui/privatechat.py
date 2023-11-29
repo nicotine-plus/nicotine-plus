@@ -371,12 +371,10 @@ class PrivateChat:
 
     def read_private_log(self):
 
-        numlines = config.sections["logging"]["readprivatelines"]
-        basename = f"{clean_file(self.user)}.log"
-        file_path = os.path.join(config.sections["logging"]["privatelogsdir"], basename)
-
         self.chat_view.append_log_lines(
-            file_path, numlines, timestamp_format=config.sections["logging"]["private_timestamp"]
+            path=os.path.join(log.private_chat_folder_path, f"{clean_file(self.user)}.log"),
+            num_lines=config.sections["logging"]["readprivatelines"],
+            timestamp_format=config.sections["logging"]["private_timestamp"]
         )
 
     def server_login(self):
@@ -435,11 +433,11 @@ class PrivateChat:
         self.search_bar.set_visible(True)
 
     def on_view_chat_log(self, *_args):
-        log.open_log(config.sections["logging"]["privatelogsdir"], self.user)
+        log.open_log(log.private_chat_folder_path, self.user)
 
     def on_delete_chat_log_response(self, *_args):
 
-        log.delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+        log.delete_log(log.private_chat_folder_path, self.user)
         self.chats.history.remove_user(self.user)
         self.chat_view.clear()
 

@@ -501,7 +501,7 @@ class ChatRooms:
 
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
             log.write_log_file(
-                folder_path=config.sections["logging"]["roomlogsdir"],
+                folder_path=log.room_folder_path,
                 basename=f"{clean_file(room)}.log", text=msg.formatted_message
             )
 

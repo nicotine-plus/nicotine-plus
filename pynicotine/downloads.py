@@ -553,13 +553,16 @@ class Downloads(Transfers):
 
     def get_default_download_folder(self, username=None):
 
-        download_folder_path = os.path.normpath(config.sections["transfers"]["downloaddir"])
+        download_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["downloaddir"]))
 
         # Check if username subfolders should be created for downloads
         if username and config.sections["transfers"]["usernamesubfolders"]:
             download_folder_path = os.path.join(download_folder_path, clean_file(username))
 
         return download_folder_path
+
+    def get_incomplete_download_folder(self):
+        return os.path.normpath(os.path.expandvars(config.sections["transfers"]["incompletedir"]))
 
     def get_basename_byte_limit(self, folder_path):
 
@@ -634,7 +637,7 @@ class Downloads(Transfers):
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
-        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
+        incomplete_folder_path = self.get_incomplete_download_folder()
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
         basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
@@ -930,8 +933,8 @@ class Downloads(Transfers):
                 # If this file is not in your download queue, then it must be
                 # a remotely initiated download and someone is manually uploading to you
                 parent_folder_path = virtual_path.replace("/", "\\").split("\\")[-2]
-                folder_path = os.path.join(
-                    os.path.normpath(config.sections["transfers"]["uploaddir"]), username, parent_folder_path)
+                received_folder_path = os.path.normpath(os.path.expandvars(config.sections["transfers"]["uploaddir"]))
+                folder_path = os.path.join(received_folder_path, username, parent_folder_path)
 
                 transfer = Transfer(username, virtual_path, folder_path, size)
 
@@ -987,7 +990,7 @@ class Downloads(Transfers):
             return
 
         virtual_path = download.virtual_path
-        incomplete_folder_path = os.path.normpath(config.sections["transfers"]["incompletedir"])
+        incomplete_folder_path = self.get_incomplete_download_folder()
         sock = download.sock = msg.sock
         need_update = True
 

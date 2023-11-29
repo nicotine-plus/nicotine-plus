@@ -53,8 +53,10 @@ class Config:
 
     def __init__(self):
 
-        config_folder_path, self.data_folder_path = self.get_user_folders()
-        self.config_file_path = os.path.join(config_folder_path, "config")
+        config_folder_path, data_folder_path = self.get_user_folders()
+        self.set_config_file(os.path.join(config_folder_path, "config"))
+        self.set_data_folder(data_folder_path)
+
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
@@ -94,6 +96,12 @@ class Config:
         data_folder_path = xdg_path("XDG_DATA_HOME", os.path.join(home, ".local", "share"))
 
         return config_folder_path, data_folder_path
+
+    def set_config_file(self, file_path):
+        self.config_file_path = os.path.abspath(file_path)
+
+    def set_data_folder(self, folder_path):
+        self.data_folder_path = os.environ["NICOTINE_DATA_HOME"] = os.path.abspath(folder_path)
 
     def create_config_folder(self):
         """Create the folder for storing the config file in, if the folder
@@ -138,7 +146,7 @@ class Config:
 
     def load_config(self):
 
-        log_folder_path = os.path.join(self.data_folder_path, "logs")
+        log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -164,9 +172,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join(self.data_folder_path, "incomplete"),
-                "downloaddir": os.path.join(self.data_folder_path, "downloads"),
-                "uploaddir": os.path.join(self.data_folder_path, "received"),
+                "incompletedir": os.path.join("${NICOTINE_DATA_HOME}", "incomplete"),
+                "downloaddir": os.path.join("${NICOTINE_DATA_HOME}", "downloads"),
+                "uploaddir": os.path.join("${NICOTINE_DATA_HOME}", "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -562,6 +570,7 @@ class Config:
 
         from pynicotine.logfacility import log
         log.init_log_levels()
+        log.update_folder_paths()
         log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
 
         events.connect("quit", self._quit)

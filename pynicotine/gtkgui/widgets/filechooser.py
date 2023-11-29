@@ -334,7 +334,7 @@ class FileChooserButton:
         if not path:
             return
 
-        self.path = path = os.path.normpath(path)
+        self.path = path = os.path.normpath(os.path.expandvars(path))
 
         self.chooser_button.set_tooltip_text(path)
         self.label.set_label(os.path.basename(path))

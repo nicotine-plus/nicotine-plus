@@ -33,6 +33,7 @@ from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 
 
@@ -146,7 +147,7 @@ class ChatHistory(Popover):
 
     def load_users(self):
 
-        log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
+        log_path = os.path.join(log.private_chat_folder_path, "*.log")
         user_logs = glob.glob(encode_path(log_path))
 
         for file_path in user_logs:
