@@ -356,6 +356,7 @@ Copyright (c) 2017 IP2Location.com
             self.status_container,
             self.status_icon,
             self.status_label,
+            self.status_spinner,
             self.translators_container,
             self.version_label,
             self.website_label
@@ -428,8 +429,12 @@ Copyright (c) 2017 IP2Location.com
         self.is_version_outdated = is_outdated
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
-        self.status_icon.set_from_icon_name(icon_name, *icon_args)
         self.status_label.set_label(message)
+
+        self.status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.status_spinner.set_visible(False)
+        self.status_spinner.stop()
+
         add_css_class(self.status_container, css_class)
 
     def on_show(self, *_args):
@@ -444,14 +449,14 @@ Copyright (c) 2017 IP2Location.com
         for css_class in ("error", "warning", "success"):
             remove_css_class(self.status_container, css_class)
 
-        icon_name = "emblem-synchronizing-symbolic"
-        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-
-        self.status_icon.set_from_icon_name(icon_name, *icon_args)
         self.status_label.set_label(_("Checking latest version…"))
+        self.status_spinner.set_visible(True)
+        self.status_spinner.start()
 
         core.update_checker.check()
 
     def on_close(self, *_args):
+
         self.main_icon.grab_focus()
+        self.status_spinner.stop()
         self.container.get_vadjustment().set_value(0)

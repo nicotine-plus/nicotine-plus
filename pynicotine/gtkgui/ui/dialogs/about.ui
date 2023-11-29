@@ -71,6 +71,11 @@
                     </child>
                     <child>
                       <object class="GtkImage" id="status_icon">
+                        <property name="visible" bind-source="status_spinner" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSpinner" id="status_spinner">
                         <property name="visible">True</property>
                       </object>
                     </child>
