@@ -104,6 +104,10 @@ class Notifications:
             notification.set_body(message)
             notification.set_priority(priority)
 
+            # Fix notification icon in Snap package
+            if os.environ.get("SNAP_NAME") == "nicotine":
+                notification.set_icon(Gio.ThemedIcon(name=f"snap.nicotine.{pynicotine.__application_id__}"))
+
             # Unity doesn't support default click actions, and replaces the notification with a dialog.
             # Disable actions to prevent this from happening.
             if action and os.environ.get("XDG_SESSION_DESKTOP") != "unity":
