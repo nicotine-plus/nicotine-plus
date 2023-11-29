@@ -11,6 +11,42 @@
     <property name="step-increment">10</property>
     <property name="upper">1000000</property>
   </object>
+  <object class="GtkButton" id="download_folder_default_button">
+    <property name="tooltip-text" translatable="yes">Default</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_default_download_folder"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">edit-undo-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkButton" id="incomplete_folder_default_button">
+    <property name="tooltip-text" translatable="yes">Default</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_default_incomplete_folder"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">edit-undo-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkButton" id="received_folder_default_button">
+    <property name="tooltip-text" translatable="yes">Default</property>
+    <property name="valign">center</property>
+    <property name="visible">True</property>
+    <signal name="clicked" handler="on_default_received_folder"/>
+    <child>
+      <object class="GtkImage">
+        <property name="icon-name">edit-undo-symbolic</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
     <property name="spacing">30</property>

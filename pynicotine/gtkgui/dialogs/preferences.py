@@ -230,6 +230,7 @@ class DownloadsPage:
             self.autoclear_downloads_toggle,
             self.container,
             self.download_double_click_label,
+            self.download_folder_default_button,
             self.download_folder_label,
             self.enable_filters_toggle,
             self.enable_username_subfolders_toggle,
@@ -237,7 +238,9 @@ class DownloadsPage:
             self.filter_list_container,
             self.filter_status_label,
             self.folder_finished_command_entry,
+            self.incomplete_folder_default_button,
             self.incomplete_folder_label,
+            self.received_folder_default_button,
             self.received_folder_label,
             self.sent_files_permission_container,
             self.speed_spinner,
@@ -274,15 +277,15 @@ class DownloadsPage:
 
         self.download_folder_button = FileChooserButton(
             self.download_folder_label.get_parent(), window=application.preferences,
-            label=self.download_folder_label, chooser_type="folder"
+            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder"
         )
         self.incomplete_folder_button = FileChooserButton(
             self.incomplete_folder_label.get_parent(), window=application.preferences,
-            label=self.incomplete_folder_label, chooser_type="folder"
+            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder"
         )
         self.received_folder_button = FileChooserButton(
             self.received_folder_label.get_parent(), window=application.preferences,
-            label=self.received_folder_label, chooser_type="folder"
+            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder"
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
@@ -387,6 +390,15 @@ class DownloadsPage:
                 "download_doubleclick": self.download_double_click_combobox.get_selected_pos()
             }
         }
+
+    def on_default_download_folder(self, *_args):
+        self.download_folder_button.set_path(config.defaults["transfers"]["downloaddir"])
+
+    def on_default_incomplete_folder(self, *_args):
+        self.incomplete_folder_button.set_path(config.defaults["transfers"]["incompletedir"])
+
+    def on_default_received_folder(self, *_args):
+        self.received_folder_button.set_path(config.defaults["transfers"]["uploaddir"])
 
     def on_toggle_regex(self, list_view, iterator):
 
@@ -2007,8 +2019,10 @@ class LoggingPage:
     def __init__(self, application):
 
         (
+            self.chatroom_log_folder_default_button,
             self.chatroom_log_folder_label,
             self.container,
+            self.debug_log_folder_default_button,
             self.debug_log_folder_label,
             self.format_codes_label,
             self.log_chatroom_toggle,
@@ -2016,7 +2030,9 @@ class LoggingPage:
             self.log_private_chat_toggle,
             self.log_timestamp_format_entry,
             self.log_transfer_toggle,
+            self.private_chat_log_folder_default_button,
             self.private_chat_log_folder_label,
+            self.transfer_log_folder_default_button,
             self.transfer_log_folder_label
         ) = ui.load(scope=self, path="settings/log.ui")
 
@@ -2030,19 +2046,23 @@ class LoggingPage:
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
-            label=self.private_chat_log_folder_label, chooser_type="folder"
+            label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
+            chooser_type="folder"
         )
         self.chatroom_log_folder_button = FileChooserButton(
             self.chatroom_log_folder_label.get_parent(), window=application.preferences,
-            label=self.chatroom_log_folder_label, chooser_type="folder"
+            label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
+            chooser_type="folder"
         )
         self.transfer_log_folder_button = FileChooserButton(
             self.transfer_log_folder_label.get_parent(), window=application.preferences,
-            label=self.transfer_log_folder_label, chooser_type="folder"
+            label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
+            chooser_type="folder"
         )
         self.debug_log_folder_button = FileChooserButton(
             self.debug_log_folder_label.get_parent(), window=application.preferences,
-            label=self.debug_log_folder_label, chooser_type="folder"
+            label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
+            chooser_type="folder"
         )
 
         self.options = {
@@ -2080,6 +2100,18 @@ class LoggingPage:
 
     def on_default_timestamp(self, *_args):
         self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
+
+    def on_default_private_chat_log_folder(self, *_args):
+        self.private_chat_log_folder_button.set_path(config.defaults["logging"]["privatelogsdir"])
+
+    def on_default_chatroom_log_folder(self, *_args):
+        self.chatroom_log_folder_button.set_path(config.defaults["logging"]["roomlogsdir"])
+
+    def on_default_transfer_log_folder(self, *_args):
+        self.transfer_log_folder_button.set_path(config.defaults["logging"]["transferslogsdir"])
+
+    def on_default_debug_log_folder(self, *_args):
+        self.debug_log_folder_button.set_path(config.defaults["logging"]["debuglogsdir"])
 
 
 class SearchesPage:
