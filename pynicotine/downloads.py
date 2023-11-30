@@ -333,8 +333,8 @@ class Downloads(Transfers):
                 execute_command(config.sections["transfers"]["afterfinish"], file_path)
                 log.add(_("Executed: %s"), config.sections["transfers"]["afterfinish"])
 
-            except Exception:
-                log.add(_("Trouble executing '%s'"), config.sections["transfers"]["afterfinish"])
+            except Exception as error:
+                log.add(error)
 
     def _folder_downloaded_actions(self, username, folder_path):
 
@@ -364,8 +364,8 @@ class Downloads(Transfers):
                 execute_command(config.sections["transfers"]["afterfolder"], folder_path)
                 log.add(_("Executed on folder: %s"), config.sections["transfers"]["afterfolder"])
 
-            except Exception:
-                log.add(_("Trouble executing on folder: %s"), config.sections["transfers"]["afterfolder"])
+            except Exception as error:
+                log.add(error)
 
     def _finish_transfer(self, transfer):
 
