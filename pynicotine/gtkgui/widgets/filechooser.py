@@ -27,6 +27,7 @@ from gi.repository import Pango
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_folder_path
 
 
@@ -41,6 +42,14 @@ class FileChooser:
             initial_folder = os.path.expanduser("~")
         else:
             initial_folder = os.path.normpath(initial_folder)
+            initial_folder_encoded = encode_path(initial_folder)
+
+            try:
+                if not os.path.exists(initial_folder_encoded):
+                    os.makedirs(initial_folder_encoded)
+
+            except OSError:
+                pass
 
         self.parent = parent
         self.callback = callback
