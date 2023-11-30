@@ -271,7 +271,7 @@ class PrivateChat:
             msg.message = message = "CTCP VERSION"
 
         if is_action_message:
-            message = message[4:]
+            message = message.replace("/me ", "", 1)
 
         if not is_outgoing_message and config.sections["words"]["censorwords"]:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])

@@ -486,7 +486,7 @@ class ChatRooms:
         is_action_message = (msg.message_type == "action")
 
         if is_action_message:
-            message = message[4:]
+            message = message.replace("/me ", "", 1)
 
         if config.sections["words"]["censorwords"] and username != core.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])

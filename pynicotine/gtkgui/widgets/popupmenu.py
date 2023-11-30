@@ -134,7 +134,7 @@ class PopupMenu:
         else:
             normalized_label = "-".join(label.translate(TRANSLATE_PUNCTUATION).lower().split())
             action_id = f"app.menu-{normalized_label}-{self.popup_id}"
-            action = self._create_action(action_id[4:], (boolean or choice))
+            action = self._create_action(action_id.replace("app.", "", 1), (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
             # Choice target name
