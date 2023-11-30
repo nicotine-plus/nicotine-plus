@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import time
 
 from pynicotine import slskmessages
@@ -142,7 +143,7 @@ class UserInfo:
                 descr = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
         else:
             try:
-                with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
+                with open(encode_path(os.path.expandvars(config.sections["userinfo"]["pic"])), "rb") as file_handle:
                     pic = file_handle.read()
 
             except Exception:

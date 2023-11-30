@@ -25,6 +25,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.utils import encode_path
@@ -41,7 +42,7 @@ class FileChooser:
         if not initial_folder:
             initial_folder = os.path.expanduser("~")
         else:
-            initial_folder = os.path.normpath(initial_folder)
+            initial_folder = os.path.normpath(os.path.expandvars(initial_folder))
             initial_folder_encoded = encode_path(initial_folder)
 
             try:
@@ -296,6 +297,10 @@ class FileChooserButton:
 
     def on_open_file_chooser_response(self, selected, _data):
 
+        if selected.startswith(config.data_folder_path):
+            # Use a dynamic path that can be expanded with os.path.expandvars()
+            selected = selected.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+
         self.set_path(selected)
 
         try:
@@ -343,9 +348,9 @@ class FileChooserButton:
         if not path:
             return
 
-        self.path = path = os.path.normpath(os.path.expandvars(path))
+        self.path = path = os.path.normpath(path)
 
-        self.chooser_button.set_tooltip_text(path)
+        self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
         self.label.set_label(os.path.basename(path))
         self.open_folder_button.set_visible(True)
 

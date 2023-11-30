@@ -20,9 +20,6 @@ import os
 import sys
 import time
 
-from os.path import expandvars
-from os.path import normpath
-
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
@@ -200,7 +197,7 @@ class Logger:
                 self._close_log_file(log_file)
 
     def _normalize_folder_path(self, folder_path):
-        return normpath(expandvars(folder_path))
+        return os.path.normpath(os.path.expandvars(folder_path))
 
     def update_folder_paths(self):
 
