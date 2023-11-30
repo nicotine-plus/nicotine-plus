@@ -328,13 +328,18 @@ class Downloads(Transfers):
                 title=_("File Downloaded")
             )
 
-        if config.sections["transfers"]["afterfinish"]:
+        command = config.sections["transfers"]["afterfinish"]
+
+        if command:
             try:
-                execute_command(config.sections["transfers"]["afterfinish"], file_path)
-                log.add(_("Executed: %s"), config.sections["transfers"]["afterfinish"])
+                execute_command(command, file_path)
+                log.add(_("Executed: %s"), command)
 
             except Exception as error:
-                log.add(error)
+                log.add(_("Executing '%(command)s' failed: %(error)s"), {
+                    "command": command,
+                    "error": error
+                })
 
     def _folder_downloaded_actions(self, username, folder_path):
 
@@ -359,13 +364,18 @@ class Downloads(Transfers):
                 title=_("Folder Downloaded")
             )
 
-        if config.sections["transfers"]["afterfolder"]:
+        command = config.sections["transfers"]["afterfolder"]
+
+        if command:
             try:
-                execute_command(config.sections["transfers"]["afterfolder"], folder_path)
-                log.add(_("Executed on folder: %s"), config.sections["transfers"]["afterfolder"])
+                execute_command(command, folder_path)
+                log.add(_("Executed on folder: %s"), command)
 
             except Exception as error:
-                log.add(error)
+                log.add(_("Executing '%(command)s' failed: %(error)s"), {
+                    "command": command,
+                    "error": error
+                })
 
     def _finish_transfer(self, transfer):
 
