@@ -1,5 +1,5 @@
-name: nicotine
-adopt-info: nicotine
+name: nicotine-plus
+adopt-info: nicotine-plus
 license: GPL-3.0+
 
 base: core22
@@ -7,7 +7,7 @@ confinement: strict
 compression: lzo
 
 apps:
-  nicotine:
+  nicotine-plus:
     environment:
       SNAPCRAFT_PRELOAD_REDIRECT_ONLY_SHM: 1
     command: bin/snapcraft-preload python3 -m pynicotine
@@ -30,7 +30,7 @@ parts:
       - on amd64:
         - gcc-multilib
         - g++-multilib
-  nicotine:
+  nicotine-plus:
     plugin: python
     source: .
     parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
@@ -46,7 +46,7 @@ parts:
       done
 
 slots:
-  nicotine:
+  nicotine-plus:
     interface: dbus
     bus: session
     name: org.nicotine_plus.Nicotine
