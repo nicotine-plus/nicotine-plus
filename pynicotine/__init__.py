@@ -45,7 +45,7 @@ def check_arguments():
     """Parse command line arguments specified by the user."""
 
     parser = argparse.ArgumentParser(
-        description=_("Graphical client for the Soulseek peer-to-peer network"),
+        prog="nicotine", description=_("Graphical client for the Soulseek peer-to-peer network"),
         epilog=_("Website: %s") % __website_url__, add_help=False
     )
 
