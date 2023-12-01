@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-12-01 21:04+0000\n"
+"Last-Translator: Sigrid Davis <lizardlays@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
 "Language: da\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -33,16 +33,14 @@ msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ er en grafisk klient til Soulseek peer-to-peer-netværket."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ har til formål at være et behageligt, gratis og open source (FOSS) "
-"alternativ til den officielle Soulseek-klient, hvilket giver yderligere "
-"funktionalitet, samtidig med at den holder sig opdateret med Soulseek-"
-"protokollen."
+"Nicotine+ sigter sig mod at være et letvægts, behageligt, gratis og open "
+"source (FOSS) alternativ til den officielle Soulseek-klient, samtidig med at "
+"den giver et omfattende sæt funktioner."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:769
@@ -51,9 +49,8 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:511
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:695
 #: pynicotine/gtkgui/ui/userbrowse.ui:144
-#, fuzzy
 msgid "Search Files"
-msgstr "_Søg filer"
+msgstr "Søg filer"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:33
 #: pynicotine/gtkgui/dialogs/preferences.py:72
@@ -73,14 +70,12 @@ msgstr "Downloads"
 #: pynicotine/gtkgui/ui/mainwindow.ui:855
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:547
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:717
-#, fuzzy
 msgid "Browse Shares"
-msgstr "Bro_wse Buddy-aktier"
+msgstr "Søg delinger"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:57
-#, fuzzy
 msgid "Nicotine+ Team"
-msgstr "Nicotine+"
+msgstr "Nicotine+-holdet"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 #, fuzzy
@@ -94,9 +89,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafisk klient til Soulseek peer-to-peer-netværket"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek; Nicotine;deling;musik; P2P;peer-to-peer; GTK;"
+msgstr "Soulseek;Nicotine;deling;chat;musik;P2P;peer-to-peer;GTK;"
 
 #: pynicotine/__init__.py:49
 #, fuzzy, python-format
@@ -159,14 +153,12 @@ msgid "rescan shared files"
 msgstr "Omindexere delede filer"
 
 #: pynicotine/__init__.py:83
-#, fuzzy
 msgid "start the program in headless mode (no GUI)"
-msgstr "starte programmet i hovedløs tilstand (ingen GUI)"
+msgstr "start programmet i en hovedløs tilstand (ingen GUI)"
 
 #: pynicotine/__init__.py:87
-#, fuzzy
 msgid "display version and exit"
-msgstr "vise version og afslutte"
+msgstr "vis version og afslut"
 
 #: pynicotine/__init__.py:117
 #, fuzzy, python-format
@@ -200,25 +192,25 @@ msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Kunne ikke skape biblioteket '%(path)s', rapporteret fejl: %(error)s"
 
 #: pynicotine/config.py:783
-#, fuzzy, python-format
+#, python-format
 msgid "Error backing up config: %s"
-msgstr "Der opstod en fejl under sikkerhedskopiering af konfigurationen: %s"
+msgstr "Fejl ved sikkerhedskopiering af konfiguration: %s"
 
 #: pynicotine/config.py:786
-#, fuzzy, python-format
+#, python-format
 msgid "Config backed up to: %s"
-msgstr "Config sikkerhedskopieres til: %s"
+msgstr "Konfigurationen sikkerhedskopieret til: %s"
 
 #: pynicotine/core.py:132 pynicotine/core.py:136
 #: pynicotine/gtkgui/__init__.py:61
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Afslutter Nicotine+ %(version)s, %(status)s…"
+msgstr "Indlæser %(program)s %(version)s"
 
 #: pynicotine/core.py:263
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Afslutter Nicotine+ %(version)s, %(status)s…"
+msgstr "Afslutter %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/core.py:266
 #, fuzzy
@@ -226,20 +218,18 @@ msgid "terminating"
 msgstr "Afslutning"
 
 #: pynicotine/core.py:266
-#, fuzzy
 msgid "application closing"
-msgstr "lukning af program"
+msgstr "programmet lukker"
 
 #: pynicotine/core.py:278
-#, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
-"Du skal angive et brugernavn og en adgangskode, før du opretter forbindelse…"
+"Du skal angive et brugernavn og en adgangskode, før du skaber en forbindelse…"
 
 #: pynicotine/core.py:392
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Afslutter Nicotine+ %(version)s, %(status)s…"
+msgstr "Afslut %(program)s %(version)s!"
 
 #: pynicotine/core.py:446
 #, fuzzy, python-format
