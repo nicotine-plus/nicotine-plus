@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import os
 import sys
 
 from pynicotine.config import config
@@ -61,7 +62,7 @@ class NowPlaying:
         if get_player is None:
             player = config.sections["players"]["npplayer"]
 
-            if sys.platform in {"win32", "darwin"} and player == "mpris":
+            if player == "mpris" and (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ):
                 player = "lastfm"
         else:
             player = get_player()
