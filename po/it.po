@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-27 21:05+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2023-12-01 21:04+0000\n"
+"Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -136,7 +136,7 @@ msgstr "ascolta sulla porta assegnata"
 
 #: pynicotine/__init__.py:79
 msgid "rescan shared files"
-msgstr "aggiorna file condivisi"
+msgstr "Indicizza file condivisi"
 
 #: pynicotine/__init__.py:83
 msgid "start the program in headless mode (no GUI)"
@@ -212,9 +212,9 @@ msgid "You need to specify a username and password before connecting…"
 msgstr "Devi specificare un nome utente ed una password prima di connetterti…"
 
 #: pynicotine/core.py:392
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Caricamento %(program)s %(version)s"
+msgstr "Esci da %(program)s %(version)s!"
 
 #: pynicotine/core.py:446
 #, python-format
@@ -440,7 +440,7 @@ msgstr "_Riprova"
 
 #: pynicotine/gtkgui/application.py:340
 msgid "_Force Rescan"
-msgstr "_Forza Ripetizione Della Scansione"
+msgstr "_Forza Indicizzazione"
 
 #: pynicotine/gtkgui/application.py:353
 msgid "Invalid Password"
@@ -674,9 +674,8 @@ msgid "Up to date"
 msgstr "Aggiornata"
 
 #: pynicotine/gtkgui/dialogs/about.py:446
-#, fuzzy
 msgid "Checking latest version…"
-msgstr "Controlla U_ltima Versione"
+msgstr "Controlla ultima versione…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:72
 msgid "Setup Assistant"
@@ -2642,9 +2641,9 @@ msgid "Group by User"
 msgstr "Raggruppa per Utente"
 
 #: pynicotine/headless/application.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to exit? %s"
-msgstr "Vuoi davvero uscire?"
+msgstr "Vuoi davvero uscire? %s"
 
 #: pynicotine/headless/application.py:78
 #, fuzzy, python-format
@@ -2659,9 +2658,8 @@ msgid "Type %s to log in with another username or password."
 msgstr "Digitare %s per accedere con un altro nome utente o password."
 
 #: pynicotine/headless/application.py:96
-#, fuzzy
 msgid "Password: "
-msgstr "Password"
+msgstr "Password: "
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:131
@@ -2674,9 +2672,8 @@ msgstr ""
 "che desideri. Se hai già un account, inserisci i dettagli di accesso."
 
 #: pynicotine/headless/application.py:101
-#, fuzzy
 msgid "Username: "
-msgstr "Nome utente:"
+msgstr "Nome utente: "
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
@@ -2685,7 +2682,7 @@ msgstr "Le seguenti azioni non sono disponibili:"
 #: pynicotine/headless/application.py:122
 #, python-format
 msgid "Retry rescan? %s"
-msgstr "Riprovare la scansione? %s"
+msgstr "Riprovare l'indicizzazione? %s"
 
 #: pynicotine/logfacility.py:164
 #, python-format
@@ -3892,7 +3889,7 @@ msgstr "Elenca condivisioni"
 
 #: pynicotine/plugins/core_commands/__init__.py:240
 msgid "Rescan shares"
-msgstr "Aggiorna condivisi"
+msgstr "Indicizza condivisi"
 
 #: pynicotine/plugins/core_commands/__init__.py:247
 msgid "Start global file search"
@@ -3975,7 +3972,7 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:569
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Impossibile condividere la cartella inaccessibile \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:572
 #, python-format
@@ -3985,12 +3982,12 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:583
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Nessun condiviso con nome \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:586
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Condiviso \"%s\" rimosso (richiede indicizzazione)"
 
 #: pynicotine/pluginsystem.py:400
 msgid "Loading plugin system"
@@ -4122,7 +4119,7 @@ msgstr ""
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"Impossibile leggere database dei condivisi. Scansiona di nuovo i tuoi "
+"Impossibile leggere database dei condivisi. Indicizza di nuovo i tuoi "
 "condivisi. Errore: %s"
 
 #: pynicotine/search.py:625
@@ -4178,7 +4175,7 @@ msgstr "Errore durante l'esame dei metadati per il file %(path)s: %(error)s"
 #: pynicotine/shares.py:1006
 #, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
-msgstr "Nuova scansione interrotta a causa di condivisioni non disponibili: %s"
+msgstr "Indicizzazione interrotta a causa di condivisi non disponibili: %s"
 
 #: pynicotine/shares.py:1075
 #, python-format
@@ -4424,6 +4421,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Per connetterti con altri peer Soulseek, una porta di ascolto sul tuo router "
+"deve essere inoltrata al tuo computer."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4469,6 +4468,8 @@ msgstr "Sei pronto ad usare Nicotine+!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek è un protocollo non crittografato non destinato alla comunicazione "
+"sicura."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -5894,7 +5895,7 @@ msgstr "Numero massimo di risultati da inviare per richiesta di ricerca:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:37
 msgid "Rescan shares on startup"
-msgstr "Aggiorna condivisi all'avvio"
+msgstr "Indicizza condivisi all'avvio"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid ""
@@ -5906,9 +5907,8 @@ msgstr ""
 "manualmente una nuova indicizzazione."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:50
-#, fuzzy
 msgid "Visible to everyone:"
-msgstr "Modalità Visibilità"
+msgstr "Visibile a tutti:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:64
 #, fuzzy
@@ -5986,7 +5986,7 @@ msgstr "Limita il numero di risultati per ricerca:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:332
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Dimensione totale massima dei file in coda per utente (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:353
 msgid "Limits do not apply to buddies"
@@ -6019,6 +6019,8 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Aggiungi elementi che vuoi che tutti vedano, ad esempio una breve "
+"descrizione, suggerimenti utili o linee guida per scaricare i tuoi condivisi."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:88
 msgid "Picture:"
@@ -6112,7 +6114,7 @@ msgstr "Colore scheda evidenziata:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:459
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Posizione lista amici:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:484
 msgid "Visible main tabs:"
