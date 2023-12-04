@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 13:23+0200\n"
-"PO-Revision-Date: 2023-11-27 20:33+0000\n"
+"PO-Revision-Date: 2023-12-04 19:23+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4640,7 +4640,7 @@ msgstr "Voltooide downloads"
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:101
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:278
 msgid "Downloaded Size"
-msgstr "Gedownloade Grootte"
+msgstr "Gedownloade grootte"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:132
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:309
