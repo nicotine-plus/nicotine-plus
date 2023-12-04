@@ -101,7 +101,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Use | (or pipes) to seperate several exact phrases. Example:
-Remix|Dub Mix|Instrumental</property>
+    Remix|Dub Mix|Instrumental</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -156,7 +156,7 @@ Remix|Dub Mix|Instrumental</property>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will reveal more from the list of results. Example:
-flac wav ape</property>
+    flac wav ape</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
@@ -167,7 +167,7 @@ flac wav ape</property>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results with an exclamation mark! Example:
-!mp3 !jpg</property>
+    !mp3 !jpg</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
@@ -214,7 +214,7 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
-20m to show files larger than 20 MiB (mebibytes).</property>
+    20m to show files larger than 20 MiB (mebibytes).</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -225,7 +225,7 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
-=1024 matches files that are exactly 1 KiB (kibibyte).</property>
+    =1024 matches files that are exactly 1 KiB (kibibyte).</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -236,7 +236,7 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Prepend ! to a value to exclude files of a specific size:
-!30.5m to hide files that are 30.5 MiB (mebibytes).</property>
+    !30.5m to hide files that are 30.5 MiB (mebibytes).</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -247,7 +247,7 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Prepend &lt; or &gt; to find files smaller/larger than the given value. Use a space between each condition to include a range:
-&gt;10.5m &lt;1g to show files larger than 10.5 MiB, but smaller than 1 GiB.</property>
+    &gt;10.5m &lt;1g to show files larger than 10.5 MiB, but smaller than 1 GiB.</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -306,7 +306,7 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Like File Size (above), operators =, !, &lt;, &gt;, &lt;= or &gt;= can be used, and multiple conditions can be specified, for example to show files with a bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:
-256 &lt;=1411</property>
+    256 &lt;=1411</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -355,9 +355,9 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:
-=53 shows files that are around 53 seconds long.
-&gt;5:30 to show files more than 5 and a half minutes long.
-&lt;5:30:00 shows files less than 5 and a half hours long.</property>
+    =53 shows files that are around 53 seconds long.
+    &gt;5:30 to show files more than 5 and a half minutes long.
+    &lt;5:30:00 shows files less than 5 and a half hours long.</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -368,9 +368,9 @@ flac wav ape</property>
             <child>
               <object class="GtkLabel">
                 <property name="label" translatable="yes">Multiple conditions can be specified:
-&gt;6:00 &lt;12:00 to show files between 6 and 12 minutes long.
-!9:54 !8:43 !7:32 to hide some specific files from the results.
-=5:34 =4:23 =3:05 to include files with specific durations.</property>
+    &gt;6:00 &lt;12:00 to show files between 6 and 12 minutes long.
+    !9:54 !8:43 !7:32 to hide some specific files from the results.
+    =5:34 =4:23 =3:05 to include files with specific durations.</property>
                 <property name="margin-start">12</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
@@ -394,8 +394,8 @@ flac wav ape</property>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Filters files based upon users' geographical location according to country codes defined by ISO 3166-2:
-US will only show results from users with IP addresses in the United States.
-!GB will hide results that come from users in Great Britain.</property>
+    US will only show results from users with IP addresses in the United States.
+    !GB will hide results that come from users in Great Britain.</property>
             <property name="margin-start">12</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
