@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-11-25 20:36+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2023-12-04 21:41+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2.1-rc\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -5028,7 +5028,6 @@ msgstr ""
 "wichtig: 'Instrumental Remix' zeigt kein 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:103
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
@@ -5053,7 +5052,6 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtert Dateien auf der Grundlage ihrer Dateierweiterung."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:158
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
@@ -5064,7 +5062,6 @@ msgstr ""
 "    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:169
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
@@ -5090,7 +5087,6 @@ msgstr ""
 "oder gleich (>=) dem Wert sind, werden abgeglichen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:216
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -5101,7 +5097,6 @@ msgstr ""
 "    20m, um Dateien anzuzeigen, die größer als 20 MiB (Mebibytes) sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:227
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
@@ -5110,7 +5105,6 @@ msgstr ""
 "    =1024 entspricht nur Dateien, die 1 KiB (kibibyte) sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:238
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
@@ -5120,7 +5114,6 @@ msgstr ""
 "auszuschließen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
@@ -5153,7 +5146,6 @@ msgstr ""
 "(Kilobit pro Sekunde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:308
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
@@ -5180,7 +5172,6 @@ msgstr ""
 ">) verwendet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:357
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
@@ -5194,7 +5185,6 @@ msgstr ""
 "    <5:30:00 zeigt Dateien, die weniger als 5,5 Stunden lang sind."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
@@ -5202,14 +5192,13 @@ msgid ""
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
 "Mehrere Bedingungen können angegeben werden:\n"
-"    >6:00 <12:00 Uhr, um Dateien zwischen 6 und 12 Minuten Länge "
-"anzuzeigen.\n"
+"    >6:00 <12:00 Uhr, um Dateien zwischen 6 und 12 Minuten Länge anzuzeigen."
+"\n"
 "    !9:54 ! 8:43 ! 7:32, um einige bestimmte Dateien aus den Ergebnissen "
 "auszublenden.\n"
 "    =5:34 =4:23 =3:05, um Dateien mit bestimmter Dauer einzuschließen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:396
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"

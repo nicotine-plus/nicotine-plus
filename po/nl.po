@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-04 19:23+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2023-12-04 21:41+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -4991,7 +4991,6 @@ msgstr ""
 "'Instrumental Remix' zal geen 'Remix Instrumental' laten zien"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:103
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
@@ -5017,7 +5016,6 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtert bestanden op basis van hun bestandsextensie."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:158
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
@@ -5028,7 +5026,6 @@ msgstr ""
 "flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:169
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
@@ -5056,7 +5053,6 @@ msgstr ""
 "gelijk aan (>=) de waarde worden gematcht."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:216
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -5067,7 +5063,6 @@ msgstr ""
 "    20m om bestanden groter dan 20 MiB (mebibytes) weer te geven."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:227
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
@@ -5076,7 +5071,6 @@ msgstr ""
 "    =1024 komt alleen overeen met bestanden van 1 KiB (kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:238
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
@@ -5086,7 +5080,6 @@ msgstr ""
 "    !30.5m om bestanden te verbergen die 30.5 MiB (mebibytes) groot zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
@@ -5118,7 +5111,6 @@ msgstr ""
 "altijd Kb/s (Kilobits per seconde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:308
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
@@ -5144,21 +5136,19 @@ msgstr ""
 "vergeleken, tenzij een operator (=, !, < of >) wordt gebruikt."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:357
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
 "    >5:30 to show files more than 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Voer een ruwe waarde in seconden in of gebruik de tijdformaten MM:SS en HH:"
-"MM:SS:\n"
+"Voer een ruwe waarde in seconden in of gebruik de tijdformaten MM:SS en "
+"HH:MM:SS:\n"
 "    =53 toont bestanden die ongeveer 53 seconden lang zijn.\n"
 "    >5:30 toont bestanden die meer dan 5 en een halve minuut lang zijn.\n"
 "    <5:30:00 toont bestanden die minder dan 5 en een half uur lang zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
@@ -5172,7 +5162,6 @@ msgstr ""
 "    =5:34 =4:23 =3:05 om bestanden met een specifieke duur op te nemen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:396
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"

@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-04 17:06+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2023-12-04 21:41+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -4983,13 +4983,12 @@ msgstr ""
 "'Instrumental Remix” nerādīs nevienu 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:103
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Izmantojiet | (vai caurules), lai atdalītu vairākas precīzas frāzes. "
-"Piemērs:\n"
+"Izmantojiet | (vai caurules), lai atdalītu vairākas precīzas frāzes. Piemērs:"
+"\n"
 "    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:116
@@ -5009,7 +5008,6 @@ msgid "Filters files based upon their file extension."
 msgstr "Filtrē failus, pamatojoties uz to faila paplašinājumu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:158
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
@@ -5020,7 +5018,6 @@ msgstr ""
 "    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:169
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
@@ -5047,7 +5044,6 @@ msgstr ""
 "ir lielāki vai vienādi ar (>=) šo vērtību."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:216
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
@@ -5058,7 +5054,6 @@ msgstr ""
 "    20m, lai parādītu failus, kas lielāki par 20 MiB (mebibibitiem)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:227
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
@@ -5067,7 +5062,6 @@ msgstr ""
 "    =1024 atbilst failiem, kas ir tieši 1 KiB (kibibaits)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:238
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
@@ -5076,7 +5070,6 @@ msgstr ""
 "    !30.5m, lai paslēptu failus, kuru izmērs ir 30.5 MiB (megabaiti)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
@@ -5109,7 +5102,6 @@ msgstr ""
 "sekundē)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:308
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
@@ -5135,7 +5127,6 @@ msgstr ""
 "ievadīto ilgumu, ja vien nav izmantots kāds operators (=, !, <=, < vai >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:357
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
@@ -5149,7 +5140,6 @@ msgstr ""
 "    <5:30:00 parāda failus, kas ir īsāki par piecarpus stundām."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
@@ -5162,7 +5152,6 @@ msgstr ""
 "    =5:34 =4:23 =3:05, lai iekļautu failus ar konkrētu ilgumu."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:396
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
