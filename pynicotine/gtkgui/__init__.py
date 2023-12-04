@@ -22,6 +22,27 @@ import sys
 from pynicotine.logfacility import log
 
 
+def get_default_gtk_version():
+
+    if sys.platform in {"win32", "darwin"}:
+        return "4"
+
+    from gi.repository import Gio
+
+    dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+        bus_type=Gio.BusType.SESSION,
+        flags=Gio.DBusProxyFlags.NONE,
+        info=None,
+        name="org.a11y.Bus",
+        object_path="/org/a11y/bus",
+        interface_name="org.freedesktop.DBus.Properties"
+    )
+
+    # If screen reader is enabled, use GTK 3 until treeviews have been ported to
+    # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
+    return "3" if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled") else "4"
+
+
 def check_gtk_version(gtk_api_version):
 
     # Require minor version of GTK
@@ -92,7 +113,7 @@ def run(hidden, ci_mode, multi_instance):
         # Disable client-side decorations when header bar is disabled
         os.environ["GTK_CSD"] = "0"
 
-    error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", "4"))
+    error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
     if error:
         log.add(error)
