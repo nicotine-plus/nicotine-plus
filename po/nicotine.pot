@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 23:07+0200\n"
+"POT-Creation-Date: 2023-12-04 23:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4862,7 +4862,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:103
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
-"Remix|Dub Mix|Instrumental"
+"    Remix|Dub Mix|Instrumental"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:116
@@ -4883,14 +4883,14 @@ msgstr ""
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
-"flac wav ape"
+"    flac wav ape"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:169
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
-"!mp3 !jpg"
+"    !mp3 !jpg"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:180
@@ -4911,26 +4911,26 @@ msgstr ""
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
-"20m to show files larger than 20 MiB (mebibytes)."
+"    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:227
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
-"=1024 matches files that are exactly 1 KiB (kibibyte)."
+"    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:238
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
-"!30.5m to hide files that are 30.5 MiB (mebibytes)."
+"    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
-">10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
+"    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:260
@@ -4954,7 +4954,7 @@ msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
-"256 <=1411"
+"    256 <=1411"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:337
@@ -4970,26 +4970,26 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:357
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
-"=53 shows files that are around 53 seconds long.\n"
-">5:30 to show files more than 5 and a half minutes long.\n"
-"<5:30:00 shows files less than 5 and a half hours long."
+"    =53 shows files that are around 53 seconds long.\n"
+"    >5:30 to show files more than 5 and a half minutes long.\n"
+"    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
 msgid ""
 "Multiple conditions can be specified:\n"
-">6:00 <12:00 to show files between 6 and 12 minutes long.\n"
-"!9:54 !8:43 !7:32 to hide some specific files from the results.\n"
-"=5:34 =4:23 =3:05 to include files with specific durations."
+"    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
+"    !9:54 !8:43 !7:32 to hide some specific files from the results.\n"
+"    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:396
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
-"US will only show results from users with IP addresses in the United "
+"    US will only show results from users with IP addresses in the United "
 "States.\n"
-"!GB will hide results that come from users in Great Britain."
+"    !GB will hide results that come from users in Great Britain."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:408
