@@ -28,9 +28,11 @@
  * Added total size of all selected files to window title in the "File Properties" dialog
  * Added new command system for plugins (type /help for a list of available commands)
  * Added keyboard input with readline command editing and history to headless CLI
+ * Added support for NAT-PMP port forwarding
  * Windows: Added option to bind Nicotine+ to a specific network interface
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
+ * Insert new tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
  * Performance improvements when scanning and accessing shares
@@ -47,18 +49,26 @@
 
 ### Corrections
 
- * Avoid performance degredation when many queued transfers are retried or added from a large multi-selection
- * Don't rely on folder modified times when rescanning modified files to ensure share databases are properly updated
- * Close peer connection if an in-progress Browse Shares tab is closed, to avoid wasting bandwidth
- * Immediately show new chat room tab with no delay, then show a message in the activity view when joined the room
- * Redirect server message into chat room tab if joining a private room wasn't successful
- * Insert new chat tabs before older ones
- * Allow tab changed status icon to be overridden if the unread tab is important
- * Improved pane and column resizing when shrinking window
+ * Fixed a crash when downloading filenames containing special characters on some systems
+ * Fixed a crash when clicking a slsk:// root folder URL without a trailing slash
+ * Fixed an issue where enabling/disabling chat completions did not update them properly in some cases
+ * Fixed an issue where the global room feed was not restored on startup
+ * Fixed an issue where important tabs (e.g. chat highlights) were not always marked as such
+ * Fixed an issue where search results were not sent in rare cases
+ * Improved performance when many queued transfers are added or retried
+ * Check file modified times instead of folder when rescanning to ensure shares are properly updated
+ * Stop loading a user's shares after closing the tab, to avoid wasting bandwidth
+ * Immediately show new chat room tab with no delay
+ * Show message in chat room tab if joining a private room is not successful
+ * Automatically resize panes and certain columns when window size changes
  * Finding in tree view lists now searches data in all columns
  * Enabled caret navigation for chat view screen reading and improved chat entry focusing when paging up and down
- * Windows: stop using 'portable' term for standalone packages, as application data are still stored in the user folder
- * ..
+ * Only open the listening port when connecting to the server
+ * Several fixes related to inconsistent behavior when banning or ignoring users/IP addresses
+ * Several fixes related to accessibility
+ * Windows/macOS: Fixed chat emoji rendering
+ * Windows: Stop using 'portable' term for standalone packages
+ * macOS: Fixed laggy list scrolling and window resizing
 
 ### Issues closed on GitHub
 
@@ -166,6 +176,12 @@
  * \[3.3.0.dev6\] Nicotine crashing ([#2713](https://github.com/nicotine-plus/nicotine-plus/issues/2713))
  * \[3.3.0.dev6\] Some 3.3.0.dev6 issues ([#2714](https://github.com/nicotine-plus/nicotine-plus/issues/2714))
  * \[3.3.0.dev6\] Clicking "Clear Finished" crashes (sometimes) ([#2729](https://github.com/nicotine-plus/nicotine-plus/issues/2729))
+ * \[3.3.0.dev6\] Crash on master updating completion from "user_left_room" ([#2733](https://github.com/nicotine-plus/nicotine-plus/issues/2733))
+ * \[3.3.0.dev6\] Private chat: messages showing with wrong sender ([#2755](https://github.com/nicotine-plus/nicotine-plus/issues/2755))
+ * UI/UX improvement: move the buddies only option out of the edit subwindow to the share window ([#2763](https://github.com/nicotine-plus/nicotine-plus/issues/2763))
+ * "Invisible Border" Around Program? ([#2768](https://github.com/nicotine-plus/nicotine-plus/issues/2768))
+ * Launching 25-NOV Build Causes Frequent & Prolonged Freezing Of Win10 OS+Frequent Disconnects ([#2770](https://github.com/nicotine-plus/nicotine-plus/issues/2770))
+ * No handler for class \<class 'pynicotine.slskmessages.UserLeftRoom'\> ([#2771](https://github.com/nicotine-plus/nicotine-plus/issues/2771))
 
 
 ## Version 3.2.9 (March 5, 2023)
