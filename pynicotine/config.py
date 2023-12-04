@@ -242,7 +242,6 @@ class Config:
                     "thier": "their",
                     "tihs": "this"
                 },
-                "censorfill": "*",  # TODO: remove in 3.3.0
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
@@ -548,7 +547,8 @@ class Config:
             "words": (
                 "cycle",
                 "onematch",
-                "aliases"
+                "aliases",
+                "censorfill"
             ),
             "players": (
                 "default"
