@@ -27,20 +27,29 @@ def get_default_gtk_version():
     if sys.platform in {"win32", "darwin"}:
         return "4"
 
+    from gi.repository import GLib
     from gi.repository import Gio
 
-    dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
-        bus_type=Gio.BusType.SESSION,
-        flags=Gio.DBusProxyFlags.NONE,
-        info=None,
-        name="org.a11y.Bus",
-        object_path="/org/a11y/bus",
-        interface_name="org.freedesktop.DBus.Properties"
-    )
+    try:
+        dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+            bus_type=Gio.BusType.SESSION,
+            flags=Gio.DBusProxyFlags.NONE,
+            info=None,
+            name="org.a11y.Bus",
+            object_path="/org/a11y/bus",
+            interface_name="org.freedesktop.DBus.Properties"
+        )
 
-    # If screen reader is enabled, use GTK 3 until treeviews have been ported to
-    # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
-    return "3" if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled") else "4"
+        # If screen reader is enabled, use GTK 3 until treeviews have been ported to
+        # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
+        if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
+            return "3"
+
+    except GLib.Error:
+        # Service not available
+        pass
+
+    return "4"
 
 
 def check_gtk_version(gtk_api_version):
