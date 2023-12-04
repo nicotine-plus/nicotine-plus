@@ -35,6 +35,7 @@
  * Insert new tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
+ * Retry downloads limited due to maximum queue/file sizes more frequently
  * Performance improvements when scanning and accessing shares
  * Banned users can no longer read self descriptions on user profiles
  * Moved buddy list position option from view menu to Preferences dialog
@@ -55,9 +56,11 @@
  * Fixed an issue where the global room feed was not restored on startup
  * Fixed an issue where important tabs (e.g. chat highlights) were not always marked as such
  * Fixed an issue where search results were not sent in rare cases
+ * Fixed an issue where sharing a lot of files could result in messages about not sharing
  * Improved performance when many queued transfers are added or retried
  * Check file modified times instead of folder when rescanning to ensure shares are properly updated
  * Stop loading a user's shares after closing the tab, to avoid wasting bandwidth
+ * Leech Detector plugin no longer sends message to sharing users with incorrect file/folder counts
  * Immediately show new chat room tab with no delay
  * Show message in chat room tab if joining a private room is not successful
  * Automatically resize panes and certain columns when window size changes
@@ -81,6 +84,7 @@
  * Anyone willing to maintain an official Nicotine+ Debian package? ([#1448](https://github.com/nicotine-plus/nicotine-plus/issues/1448))
  * Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
  * List of GTK 4 regressions ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
+ * Leech Detector is bugging people who have folders shared already. ([#1565](https://github.com/nicotine-plus/nicotine-plus/issues/1565))
  * Get date in transfer total up/dl statistic ([#1598](https://github.com/nicotine-plus/nicotine-plus/issues/1598))
  * Determine the size etc of a folder / selected files ([#1628](https://github.com/nicotine-plus/nicotine-plus/issues/1628))
  * Warning if no files are shared ([#1698](https://github.com/nicotine-plus/nicotine-plus/issues/1698))
@@ -166,6 +170,7 @@
  * \[3.3.0.dev5\] When typing in "Include text" box and hitting enter, Nicotine runs into a critical error ([#2628](https://github.com/nicotine-plus/nicotine-plus/issues/2628))
  * \[3.3.0.dev5\] Nicotine+ App won't open ([#2638](https://github.com/nicotine-plus/nicotine-plus/issues/2638))
  * Read-only editfields aren't read by Orca screen-reader correctly ([#2647](https://github.com/nicotine-plus/nicotine-plus/issues/2647))
+ * Enable GTK3 while running Orca by default ([#2652](https://github.com/nicotine-plus/nicotine-plus/issues/2652))
  * \[3.3.0.dev5\] Crash on the Upload window ([#2663](https://github.com/nicotine-plus/nicotine-plus/issues/2663))
  * Download folder for remote user keeps appearing ([#2667](https://github.com/nicotine-plus/nicotine-plus/issues/2667))
  * Can you swap "close" and "reset" buttons? ([#2678](https://github.com/nicotine-plus/nicotine-plus/issues/2678))
