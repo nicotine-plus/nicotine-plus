@@ -1124,6 +1124,8 @@ class Shares:
         ip_address, _port = msg.addr
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
         shares_list = self.compressed_shares.get(permission_level)
+        shares_list.username = shares_list.sock = None  # Reset previous connection
+
         core.send_message_to_peer(username, shares_list)
 
     def _folder_contents_request(self, msg):
