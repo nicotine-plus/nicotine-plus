@@ -897,7 +897,7 @@ class NetworkThread(Thread):
         if username == self._server_username:
             return
 
-        prev_init = self._username_init_msgs.get(username + conn_type)
+        prev_init = self._username_init_msgs.pop(username + conn_type, None)
 
         if prev_init is None or prev_init.sock is None:
             return
