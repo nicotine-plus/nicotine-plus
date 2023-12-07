@@ -2324,7 +2324,7 @@ class NetworkThread(Thread):
                     incoming_sock, incoming_addr = sock.accept()
 
                 except OSError as error:
-                    if error.errno == errno.EAGAIN:
+                    if error.errno == errno.EWOULDBLOCK:
                         # No more incoming connections
                         break
 
