@@ -57,6 +57,7 @@
  * Fixed an issue where important tabs (e.g. chat highlights) were not always marked as such
  * Fixed an issue where search results were not sent in rare cases
  * Fixed an issue where sharing a lot of files could result in messages about not sharing
+ * Fixed an issue where finished downloads were not always automatically cleared
  * Improved performance when many queued transfers are added or retried
  * Check file modified times instead of folder when rescanning to ensure shares are properly updated
  * Stop loading a user's shares after closing the tab, to avoid wasting bandwidth

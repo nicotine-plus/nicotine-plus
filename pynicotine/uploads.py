@@ -378,7 +378,6 @@ class Uploads(Transfers):
 
         transfer.status = TransferStatus.FINISHED
         transfer.current_byte_offset = transfer.size
-        transfer.sock = None
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -406,7 +405,6 @@ class Uploads(Transfers):
 
         if transfer.sock is not None:
             core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
-            transfer.sock = None
 
         if transfer.file_handle is not None:
             self._close_file(transfer)
@@ -670,10 +668,9 @@ class Uploads(Transfers):
 
         if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
             # Either we are offline or the user we want to upload to is
-            if self._auto_clear_transfer(transfer):
-                return
+            if not self._auto_clear_transfer(transfer):
+                self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
 
-            self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return
 
         self._enqueue_transfer(transfer)

@@ -437,6 +437,7 @@ class Transfers:
             events.cancel_scheduled(transfer.request_timer_id)
             transfer.request_timer_id = None
 
+        transfer.sock = None
         transfer.token = None
 
     def _fail_transfer(self, transfer):
