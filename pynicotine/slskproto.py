@@ -792,7 +792,7 @@ class NetworkThread(Thread):
 
     def _connect_error(self, error, conn_obj):
 
-        if conn_obj.sock is self._server_socket:
+        if conn_obj.__class__ is ServerConnection:
             server_address, port = conn_obj.addr
 
             log.add(
@@ -1198,30 +1198,32 @@ class NetworkThread(Thread):
 
     def _init_server_conn(self, msg_obj):
 
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        conn_obj = ServerConnection(
+            sock=server_socket, addr=msg_obj.addr, selector_events=selector_events, login=msg_obj.login)
+
+        server_socket.setblocking(False)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+
+        # Detect if our connection to the server is still alive
+        self._set_server_socket_keepalive(server_socket)
+        self._bind_socket_interface(server_socket)
+
         try:
-            self._server_socket = server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
-            conn_obj = ServerConnection(
-                sock=server_socket, addr=msg_obj.addr, selector_events=selector_events, login=msg_obj.login)
-
-            server_socket.setblocking(False)
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-
-            # Detect if our connection to the server is still alive
-            self._set_server_socket_keepalive(server_socket)
-            self._bind_socket_interface(server_socket)
-
             server_socket.connect_ex(msg_obj.addr)
-
-            self._selector.register(server_socket, selector_events)
-            self._conns_in_progress[server_socket] = conn_obj
-            self._num_sockets += 1
 
         except OSError as error:
             self._connect_error(error, conn_obj)
             self._close_socket(server_socket)
             self._server_disconnect()
+            return
+
+        self._server_socket = server_socket
+        self._conns_in_progress[server_socket] = conn_obj
+        self._selector.register(server_socket, selector_events)
+        self._num_sockets += 1
 
     def _establish_outgoing_server_connection(self, conn_obj):
 
@@ -1653,27 +1655,26 @@ class NetworkThread(Thread):
 
     def _init_peer_connection(self, msg_obj):
 
-        conn_obj = None
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, selector_events=selector_events, init=msg_obj.init)
+
+        sock.setblocking(False)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+        self._bind_socket_interface(sock)
 
         try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
-            conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, selector_events=selector_events, init=msg_obj.init)
-
-            sock.setblocking(False)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-            self._bind_socket_interface(sock)
-
             sock.connect_ex(msg_obj.addr)
-
-            self._selector.register(sock, selector_events)
-            self._conns_in_progress[sock] = conn_obj
-            self._num_sockets += 1
 
         except OSError as error:
             self._connect_error(error, conn_obj)
             self._close_socket(sock)
+            return
+
+        self._conns_in_progress[sock] = conn_obj
+        self._selector.register(sock, selector_events)
+        self._num_sockets += 1
 
     def _process_peer_input(self, conn_obj):
         """We have a "P" connection (p2p exchange), peer has sent us something,
