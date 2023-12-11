@@ -1038,11 +1038,12 @@ class Search:
         combobox = self.filter_comboboxes[filter_id]
         position = len(self.FILTER_PRESETS.get(filter_id, ()))
 
-        if position == combobox.get_num_items():
-            combobox.append("")  # Separator item
-
         if position:
-            position += 1  # Separator item
+            # Separator item
+            if position == combobox.get_num_items():
+                combobox.append("")
+
+            position += 1
 
         num_items_limit = core.search.RESULT_FILTER_HISTORY_LIMIT + position
 
