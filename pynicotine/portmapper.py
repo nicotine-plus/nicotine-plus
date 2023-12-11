@@ -530,7 +530,7 @@ class UPnP(BaseImplementation):
 class PortMapper:
     """Class that handles Port Mapping."""
 
-    RENEWAL_INTERVAL = 14400  # 4 hours
+    RENEWAL_INTERVAL = 7200   # 2 hours
     LEASE_DURATION = 43200    # 12 hours
 
     def __init__(self):
@@ -541,13 +541,6 @@ class PortMapper:
         self._timer = None
         self._natpmp = NATPMP()
         self._upnp = UPnP()
-
-    def set_port(self, port, local_ip_address):
-
-        self._natpmp.set_port(port, local_ip_address)
-        self._upnp.set_port(port, local_ip_address)
-
-        self._has_port = (port is not None)
 
     def _wait_until_ready(self):
 
@@ -622,6 +615,20 @@ class PortMapper:
         self._active_implementation = None
         self._is_mapping_port = False
 
+    def _start_renewal_timer(self):
+        self._cancel_renewal_timer()
+        self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)
+
+    def _cancel_renewal_timer(self):
+        events.cancel_scheduled(self._timer)
+
+    def set_port(self, port, local_ip_address):
+
+        self._natpmp.set_port(port, local_ip_address)
+        self._upnp.set_port(port, local_ip_address)
+
+        self._has_port = (port is not None)
+
     def add_port_mapping(self, blocking=False):
 
         # Check if we want to do a port mapping
@@ -637,26 +644,15 @@ class PortMapper:
         else:
             Thread(target=self._add_port_mapping, name="AddPortmapping", daemon=True).start()
 
-        self._start_timer()
+        # Renew port mapping entry regularly
+        self._start_renewal_timer()
 
     def remove_port_mapping(self, blocking=False):
 
-        self._cancel_timer()
+        self._cancel_renewal_timer()
 
         if blocking:
             self._remove_port_mapping()
             return
 
         Thread(target=self._remove_port_mapping, name="RemovePortmapping", daemon=True).start()
-
-    def _start_timer(self):
-        """Port mapping entries last 12 hours, we need to regularly renew them.
-
-        The default interval is 4 hours.
-        """
-
-        self._cancel_timer()
-        self._timer = events.schedule(delay=self.RENEWAL_INTERVAL, callback=self.add_port_mapping)
-
-    def _cancel_timer(self):
-        events.cancel_scheduled(self._timer)
