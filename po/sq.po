@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-10-13 22:31+0000\n"
+"PO-Revision-Date: 2023-12-11 19:06+0000\n"
 "Last-Translator: W L <wl@mailhole.de>\n"
 "Language-Team: Albanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sq/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -834,7 +834,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/network.ui:77
 #: pynicotine/gtkgui/ui/settings/network.ui:93
 msgid "Change Password"
-msgstr ""
+msgstr "Ndrysho Fjalekalimin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:210
 msgid "_Change"
@@ -842,7 +842,7 @@ msgstr "_Shendrro"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:257
 msgid "No one"
-msgstr ""
+msgstr "Askush"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:258
 msgid "Everyone"
@@ -860,7 +860,7 @@ msgstr "Shokët"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:260
 msgid "Trusted Buddies"
-msgstr ""
+msgstr "Shoket e besuar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:267
 #: pynicotine/gtkgui/dialogs/preferences.py:756
@@ -973,7 +973,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:609
 #: pynicotine/gtkgui/dialogs/preferences.py:648
 msgid "Public"
-msgstr ""
+msgstr "Publik"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:542
 #: pynicotine/gtkgui/dialogs/preferences.py:663
@@ -990,7 +990,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:700
 #: pynicotine/gtkgui/userlist.py:103
 msgid "Trusted"
-msgstr ""
+msgstr "Besuar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:760
 #: pynicotine/gtkgui/ui/uploads.ui:56
@@ -1021,7 +1021,7 @@ msgstr "Perdoruesi"
 #: pynicotine/gtkgui/userinfo.py:503 pynicotine/gtkgui/widgets/popupmenu.py:377
 #: pynicotine/gtkgui/widgets/popupmenu.py:418
 msgid "Ignore User"
-msgstr ""
+msgstr "Injoro perdoruesion"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:978
 msgid "Enter the name of the user you want to ignore:"
@@ -1046,7 +1046,7 @@ msgstr ""
 #: pynicotine/gtkgui/userinfo.py:499 pynicotine/gtkgui/widgets/popupmenu.py:376
 #: pynicotine/gtkgui/widgets/popupmenu.py:417
 msgid "Ban User"
-msgstr ""
+msgstr "Blloko perdoruesin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1134
 msgid "Enter the name of the user you want to ban:"
@@ -1094,7 +1094,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1438
 msgid "Add Replacement"
-msgstr ""
+msgstr "Shto nje zevendesim"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1439
 #: pynicotine/gtkgui/dialogs/preferences.py:1469
@@ -1103,7 +1103,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1468
 msgid "Edit Replacement"
-msgstr ""
+msgstr "Ndrysho nje zevendesim"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1588
 msgid "System default"
@@ -1111,7 +1111,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1598
 msgid "Quit program"
-msgstr ""
+msgstr "Ndalo programin"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1599
 msgid "Show confirmation dialog"
@@ -1257,7 +1257,7 @@ msgstr ""
 #: pynicotine/gtkgui/dialogs/preferences.py:2573
 #: pynicotine/gtkgui/ui/settings/network.ui:54
 msgid "Username:"
-msgstr ""
+msgstr "Perdoruesi:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2577
 msgid "Command:"
@@ -1489,7 +1489,7 @@ msgstr "Rradhitur…"
 
 #: pynicotine/gtkgui/downloads.py:79 pynicotine/gtkgui/uploads.py:80
 msgid "Everything…"
-msgstr ""
+msgstr "Gjithcka…"
 
 #: pynicotine/gtkgui/downloads.py:116
 msgid "Clear Queued Downloads"
@@ -1771,7 +1771,7 @@ msgstr "Dhoma"
 #: pynicotine/gtkgui/ui/settings/ban.ui:123
 #: pynicotine/gtkgui/ui/settings/ignore.ui:59
 msgid "Users"
-msgstr ""
+msgstr "Perdoruesit"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:92
 #: pynicotine/gtkgui/popovers/roomlist.py:248
@@ -1833,11 +1833,11 @@ msgstr "_Global"
 
 #: pynicotine/gtkgui/search.py:81
 msgid "_Buddies"
-msgstr ""
+msgstr "_Shoket"
 
 #: pynicotine/gtkgui/search.py:82 pynicotine/gtkgui/ui/mainwindow.ui:1426
 msgid "_Rooms"
-msgstr ""
+msgstr "_Dhomat"
 
 #: pynicotine/gtkgui/search.py:83
 msgid "_User"
@@ -1998,7 +1998,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/transfers.py:58
 msgid "Queued"
-msgstr ""
+msgstr "Rradhitur"
 
 #: pynicotine/gtkgui/transfers.py:59
 msgid "Queued (prioritized)"
@@ -2014,7 +2014,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/transfers.py:62
 msgid "Transferring"
-msgstr ""
+msgstr "Transferohet"
 
 #: pynicotine/gtkgui/transfers.py:63
 msgid "Connection closed"
@@ -2042,7 +2042,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/transfers.py:72
 msgid "Banned"
-msgstr ""
+msgstr "Bllokuar"
 
 #: pynicotine/gtkgui/transfers.py:73
 msgid "File not shared"
@@ -2111,7 +2111,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/uploads.py:76
 msgid "Failed"
-msgstr ""
+msgstr "Deshtuar"
 
 #: pynicotine/gtkgui/uploads.py:77
 msgid "User Logged Off"
@@ -2264,7 +2264,7 @@ msgstr "Njofto"
 
 #: pynicotine/gtkgui/userlist.py:115
 msgid "Prioritized"
-msgstr ""
+msgstr "Besuar"
 
 #: pynicotine/gtkgui/userlist.py:121
 msgid "Last Seen"
@@ -2445,11 +2445,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/widgets/theme.py:188
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: pynicotine/gtkgui/widgets/theme.py:189
 msgid "Image"
-msgstr ""
+msgstr "Imazhi"
 
 #: pynicotine/gtkgui/widgets/theme.py:190
 msgid "Archive"
@@ -2458,7 +2458,7 @@ msgstr "Arkivë"
 #: pynicotine/gtkgui/widgets/theme.py:191 pynicotine/pluginsystem.py:790
 #: pynicotine/gtkgui/ui/settings/network.ui:254
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Tjera"
 
 #: pynicotine/gtkgui/widgets/theme.py:192
 #, fuzzy
@@ -2504,7 +2504,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/trayicon.py:129
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:26
 msgid "Disconnect"
-msgstr ""
+msgstr "Shkyqur"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:129
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:19
@@ -2774,11 +2774,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:73
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #: pynicotine/networkfilter.py:74
 msgid "Switzerland"
-msgstr ""
+msgstr "Swicerr"
 
 #: pynicotine/networkfilter.py:75
 msgid "Ivory Coast"
@@ -2790,19 +2790,19 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:77
 msgid "Chile"
-msgstr ""
+msgstr "Kili"
 
 #: pynicotine/networkfilter.py:78
 msgid "Cameroon"
-msgstr ""
+msgstr "Kameru"
 
 #: pynicotine/networkfilter.py:79
 msgid "China"
-msgstr ""
+msgstr "Kia"
 
 #: pynicotine/networkfilter.py:80
 msgid "Colombia"
-msgstr ""
+msgstr "Kolombia"
 
 #: pynicotine/networkfilter.py:81
 msgid "Costa Rica"
@@ -2810,7 +2810,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:82
 msgid "Cuba"
-msgstr ""
+msgstr "Kuba"
 
 #: pynicotine/networkfilter.py:83
 msgid "Cabo Verde"
@@ -2826,15 +2826,15 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:86
 msgid "Cyprus"
-msgstr ""
+msgstr "Qipro"
 
 #: pynicotine/networkfilter.py:87
 msgid "Czechia"
-msgstr ""
+msgstr "Qekia"
 
 #: pynicotine/networkfilter.py:88
 msgid "Germany"
-msgstr ""
+msgstr "Gjermani"
 
 #: pynicotine/networkfilter.py:89
 msgid "Djibouti"
@@ -2842,11 +2842,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:90
 msgid "Denmark"
-msgstr ""
+msgstr "Danimarka"
 
 #: pynicotine/networkfilter.py:91
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #: pynicotine/networkfilter.py:92
 msgid "Dominican Republic"
@@ -2854,19 +2854,19 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:93
 msgid "Algeria"
-msgstr ""
+msgstr "Algjeria"
 
 #: pynicotine/networkfilter.py:94
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekuador"
 
 #: pynicotine/networkfilter.py:95
 msgid "Estonia"
-msgstr ""
+msgstr "Estonia"
 
 #: pynicotine/networkfilter.py:96
 msgid "Egypt"
-msgstr ""
+msgstr "Egjipti"
 
 #: pynicotine/networkfilter.py:97
 msgid "Western Sahara"
@@ -2874,27 +2874,27 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:98
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #: pynicotine/networkfilter.py:99
 msgid "Spain"
-msgstr ""
+msgstr "Spanja"
 
 #: pynicotine/networkfilter.py:100
 msgid "Ethiopia"
-msgstr ""
+msgstr "Ethiopia"
 
 #: pynicotine/networkfilter.py:101
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 #: pynicotine/networkfilter.py:102
 msgid "Finland"
-msgstr ""
+msgstr "Finlanda"
 
 #: pynicotine/networkfilter.py:103
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: pynicotine/networkfilter.py:104
 msgid "Falkland Islands (Malvinas)"
@@ -2910,11 +2910,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:107
 msgid "France"
-msgstr ""
+msgstr "Franca"
 
 #: pynicotine/networkfilter.py:108
 msgid "Gabon"
-msgstr ""
+msgstr "Gaboni"
 
 #: pynicotine/networkfilter.py:109
 msgid "Great Britain"
@@ -2938,11 +2938,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:114
 msgid "Ghana"
-msgstr ""
+msgstr "Gana"
 
 #: pynicotine/networkfilter.py:115
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gjibraltari"
 
 #: pynicotine/networkfilter.py:116
 msgid "Greenland"
@@ -2950,11 +2950,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:117
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #: pynicotine/networkfilter.py:118
 msgid "Guinea"
-msgstr ""
+msgstr "Guinea"
 
 #: pynicotine/networkfilter.py:119
 msgid "Guadeloupe"
@@ -2966,7 +2966,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:121
 msgid "Greece"
-msgstr ""
+msgstr "Greqia"
 
 #: pynicotine/networkfilter.py:122
 msgid "South Georgia & South Sandwich Islands"
@@ -3002,23 +3002,23 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:130
 msgid "Croatia"
-msgstr ""
+msgstr "Kroacia"
 
 #: pynicotine/networkfilter.py:131
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #: pynicotine/networkfilter.py:132
 msgid "Hungary"
-msgstr ""
+msgstr "Hungaria"
 
 #: pynicotine/networkfilter.py:133
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonezia"
 
 #: pynicotine/networkfilter.py:134
 msgid "Ireland"
-msgstr ""
+msgstr "Irlanda"
 
 #: pynicotine/networkfilter.py:135
 msgid "Israel"
@@ -3030,7 +3030,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:137
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #: pynicotine/networkfilter.py:138
 msgid "British Indian Ocean Territory"
@@ -3046,11 +3046,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:141
 msgid "Iceland"
-msgstr ""
+msgstr "Island"
 
 #: pynicotine/networkfilter.py:142
 msgid "Italy"
-msgstr ""
+msgstr "Italia"
 
 #: pynicotine/networkfilter.py:143
 msgid "Jersey"
@@ -3058,19 +3058,19 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:144
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaika"
 
 #: pynicotine/networkfilter.py:145
 msgid "Jordan"
-msgstr ""
+msgstr "Jordani"
 
 #: pynicotine/networkfilter.py:146
 msgid "Japan"
-msgstr ""
+msgstr "Japonia"
 
 #: pynicotine/networkfilter.py:147
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #: pynicotine/networkfilter.py:148
 msgid "Kyrgyzstan"
@@ -3102,7 +3102,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:155
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuvajti"
 
 #: pynicotine/networkfilter.py:156
 msgid "Cayman Islands"
@@ -3114,11 +3114,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:158
 msgid "Laos"
-msgstr ""
+msgstr "Laosi"
 
 #: pynicotine/networkfilter.py:159
 msgid "Lebanon"
-msgstr ""
+msgstr "Libanoni"
 
 #: pynicotine/networkfilter.py:160
 msgid "Saint Lucia"
@@ -3134,7 +3134,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:163
 msgid "Liberia"
-msgstr ""
+msgstr "Liberia"
 
 #: pynicotine/networkfilter.py:164
 msgid "Lesotho"
@@ -3190,7 +3190,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:177
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: pynicotine/networkfilter.py:178
 msgid "Myanmar"
@@ -3198,7 +3198,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:179
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #: pynicotine/networkfilter.py:180
 msgid "Macau"
@@ -4254,11 +4254,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:201
 msgid "License"
-msgstr ""
+msgstr "Lizenze"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:5
 msgid "_Previous"
-msgstr ""
+msgstr "_Kaluar"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:57
 msgid "Welcome to Nicotine+"
@@ -4275,7 +4275,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:203
 msgid "Password"
-msgstr ""
+msgstr "Fjalekalimi"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:256
 msgid ""
@@ -4340,7 +4340,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:77
 msgid "Name"
-msgstr ""
+msgstr "Emri"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:281
 msgid "Last Speed"
@@ -4348,11 +4348,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:11
 msgid "_Export…"
-msgstr ""
+msgstr "_Exporto…"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:17
 msgid "_Apply"
-msgstr ""
+msgstr "_Vendos"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:54
@@ -4361,7 +4361,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:14
 msgid "General"
-msgstr ""
+msgstr "Gjenerale"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
 msgid "Rescan Shares"
@@ -4377,7 +4377,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
-msgstr ""
+msgstr "Menyt"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:88
 msgid "Open Main Menu"
@@ -4415,7 +4415,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:144
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:917
 msgid "Lists"
-msgstr ""
+msgstr "Listat"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:149
 msgid "Copy Selected Cell"
@@ -4427,15 +4427,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:164
 msgid "Editing"
-msgstr ""
+msgstr "Po ndryshon"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Cut"
-msgstr ""
+msgstr "Kput"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:183
 msgid "Paste"
-msgstr ""
+msgstr "Vendos"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:190
 msgid "Insert Emoji"
@@ -4447,7 +4447,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:204
 msgid "Find"
-msgstr ""
+msgstr "Gjej"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:211
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:272
@@ -4480,7 +4480,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:279
 msgid "Refresh"
-msgstr ""
+msgstr "Rifresko"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:286
 #: pynicotine/gtkgui/ui/mainwindow.ui:363
@@ -4527,11 +4527,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:142
 msgid "Total"
-msgstr ""
+msgstr "Totali"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:281
 msgid "_Reset…"
-msgstr ""
+msgstr "_Reseto.…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:16
 msgid ""
@@ -4594,7 +4594,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:43
 msgid "Room…"
-msgstr ""
+msgstr "Dhoma…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:724
 #: pynicotine/gtkgui/ui/mainwindow.ui:888
@@ -4760,7 +4760,7 @@ msgstr "Kërko log…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1711
 msgid "Connections"
-msgstr ""
+msgstr "Lidhjet"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1743
 msgid "Downloading (Speed / Active Users)"
@@ -5190,7 +5190,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:359
 msgid "Commands"
-msgstr ""
+msgstr "Resultatet"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:386
 msgid "Timestamps"
@@ -5230,7 +5230,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1537
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1576
 msgid "Default"
-msgstr ""
+msgstr "Standarte"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:430
 msgid "Chat room format:"
@@ -5533,7 +5533,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:284
 msgid "Size:"
-msgstr ""
+msgstr "Madhesia:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:311
 msgid "Bitrate:"
@@ -5541,7 +5541,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:338
 msgid "Duration:"
-msgstr ""
+msgstr "Zgjatja:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:365
 msgid "Country Code:"
@@ -5693,7 +5693,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 msgid "Picture:"
-msgstr ""
+msgstr "Piktura:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:46
 msgid "Prefer dark mode"
@@ -5721,7 +5721,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:191
 msgid "Notifications"
-msgstr ""
+msgstr "Njoftimet"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "Enable sound for notifications"
@@ -5873,7 +5873,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1595
 msgid "Fonts"
-msgstr ""
+msgstr "Fontet"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1612
 msgid "Global font:"
