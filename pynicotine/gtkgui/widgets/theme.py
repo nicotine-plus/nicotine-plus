@@ -152,10 +152,6 @@ def set_global_css():
 
         load_css(global_css_provider, css)
 
-        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
-            Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-
     else:
         add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
         display = Gdk.Screen.get_default()
@@ -166,6 +162,7 @@ def set_global_css():
         load_css(global_css_provider, css)
 
     add_provider_func(display, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    add_provider_func(display, CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
 def set_global_style():
@@ -541,15 +538,6 @@ def update_custom_css():
     css.extend(_get_custom_color_css())
 
     load_css(CUSTOM_CSS_PROVIDER, css)
-
-    if GTK_API_VERSION >= 4:
-        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
-            Gdk.Display.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-    else:
-        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
-            Gdk.Screen.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
 
 
 def update_tag_visuals(tag, color_id):
