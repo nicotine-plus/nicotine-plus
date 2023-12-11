@@ -368,7 +368,7 @@ class Uploads(Transfers):
         # Not used for uploads
         pass
 
-    def _finish_transfer(self, transfer):
+    def _finish_transfer(self, transfer, already_exists=False):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
@@ -379,22 +379,22 @@ class Uploads(Transfers):
         transfer.status = TransferStatus.FINISHED
         transfer.current_byte_offset = transfer.size
 
-        log.add_upload(
-            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                "user": username,
-                "ip": core.user_addresses.get(username),
-                "file": virtual_path
-            }
-        )
-
-        core.statistics.append_stat_value("completed_uploads", 1)
-
-        # Autoclear this upload
         if not self._auto_clear_transfer(transfer):
             self._update_transfer(transfer)
 
-        real_path = core.shares.virtual2real(virtual_path)
-        core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
+        if not already_exists:
+            core.statistics.append_stat_value("completed_uploads", 1)
+
+            real_path = core.shares.virtual2real(virtual_path)
+            core.pluginhandler.upload_finished_notification(username, virtual_path, real_path)
+
+            log.add_upload(
+                _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                    "user": username,
+                    "ip": core.user_addresses.get(username),
+                    "file": virtual_path
+                }
+            )
 
         self._check_upload_queue()
 
@@ -977,7 +977,7 @@ class Uploads(Transfers):
 
             if reason == TransferRejectReason.COMPLETE:
                 # A complete download of this file already exists on the user's end
-                self._finish_transfer(upload)
+                self._finish_transfer(upload, already_exists=True)
 
             elif reason == TransferRejectReason.CANCELLED:
                 self._auto_clear_transfer(upload)
