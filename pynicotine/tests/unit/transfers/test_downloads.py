@@ -245,6 +245,10 @@ class DownloadsTest(TestCase):
             ]),
             ("share\\Soulseek\\folder2\\sub2", [
                 (1, "file6.mp3", 8000000, "", {})
+            ]),
+            ("share\\SoulseekSecond", [
+                (1, "file7.mp3", 9000000, "", {}),
+                (1, "file8.mp3", 10000000, "", {})
             ])
         ])
 
@@ -255,8 +259,10 @@ class DownloadsTest(TestCase):
         core.userbrowse.download_folder(username, target_folder_path, download_folder_path="test", recurse=True)
 
         transfers = list(core.downloads.transfers.values())
-        self.assertEqual(len(transfers), 9)
+        self.assertEqual(len(transfers), 11)
 
+        self.assertEqual(transfers[10].folder_path, os.path.join("test", "share", "SoulseekSecond"))
+        self.assertEqual(transfers[9].folder_path, os.path.join("test", "share", "SoulseekSecond"))
         self.assertEqual(transfers[8].folder_path, os.path.join("test", "share", "Soulseek", "folder2", "sub2"))
         self.assertEqual(transfers[7].folder_path, os.path.join("test", "share", "Soulseek", "folder2"))
         self.assertEqual(transfers[6].folder_path, os.path.join("test", "share", "Soulseek", "folder1", "sub1"))
