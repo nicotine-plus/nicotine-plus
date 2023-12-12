@@ -551,8 +551,8 @@ def update_tag_visuals(tag, color_id):
         color_hex = None
 
     if not color_hex:
-        if tag_props.foreground_set:
-            tag_props.foreground_set = False
+        if tag_props.foreground_rgba:
+            tag_props.foreground_rgba = None
     else:
         current_rgba = tag_props.foreground_rgba
         new_rgba = Gdk.RGBA()
