@@ -422,13 +422,13 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage" id="placeholder_picture">
-                        <property name="hexpand">True</property>
+                        <property name="halign">center</property>
                         <property name="icon-name">avatar-default-symbolic</property>
                         <property name="margin-bottom">6</property>
                         <property name="margin-start">6</property>
                         <property name="margin-top">6</property>
                         <property name="pixel-size">128</property>
-                        <property name="vexpand">True</property>
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <style>
                           <class name="dim-label"/>
