@@ -50,6 +50,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="margin-bottom">6</property>
                                 <property name="margin-top">6</property>
+                                <property name="selectable">True</property>
                                 <property name="single-line-mode">True</property>
                                 <property name="tooltip-text" bind-source="user_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                 <property name="visible">True</property>
@@ -61,6 +62,7 @@
                             </child>
                             <child>
                               <object class="GtkImage" id="country_icon">
+                                <property name="can-focus">True</property>
                                 <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                 <property name="visible">False</property>
                               </object>
@@ -449,7 +451,7 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="margin-bottom">8</property>
+                    <property name="margin-bottom">6</property>
                     <property name="margin-end">6</property>
                     <property name="margin-start">6</property>
                     <property name="margin-top">6</property>
