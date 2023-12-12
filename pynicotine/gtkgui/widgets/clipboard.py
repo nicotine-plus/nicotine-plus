@@ -35,7 +35,7 @@ else:
 def copy_text(text):
 
     if GTK_API_VERSION >= 4:
-        _clipboard.set(text)
+        _clipboard.set(GObject.Value(str, text))
     else:
         _clipboard.set_text(text, -1)
 
@@ -43,8 +43,6 @@ def copy_text(text):
 def copy_image(image_data):
 
     if GTK_API_VERSION >= 4:
-        value = GObject.Value(Gdk.Texture, image_data)
-        content = Gdk.ContentProvider.new_for_value(value)
-        _clipboard.set_content(content)
+        _clipboard.set(GObject.Value(Gdk.Texture, image_data))
     else:
         _clipboard.set_image(image_data)

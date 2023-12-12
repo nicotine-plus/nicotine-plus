@@ -761,12 +761,12 @@ class TreeView:
             return False
 
         iterator = self.model.get_iter(path)
-        cell_value = self.model.get_value(iterator, column.get_sort_column_id())
+        cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
         if not cell_value:
             return False
 
-        clipboard.copy_text(str(cell_value))
+        clipboard.copy_text(cell_value)
         return True
 
 
