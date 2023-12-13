@@ -245,11 +245,8 @@ class UserBrowse:
             return
 
         for folder_path, files in self.user_shares[username].items():
-            if not recurse and requested_folder_path != folder_path:
-                continue
-
-            if requested_folder_path not in folder_path:
-                # Not a subfolder of the requested folder, skip
+            if (requested_folder_path != folder_path
+                    and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
                 continue
 
             # Get final download destination
@@ -282,11 +279,8 @@ class UserBrowse:
             return
 
         for folder_path, files in local_shares.items():
-            if not recurse and requested_folder_path != folder_path:
-                continue
-
-            if requested_folder_path not in folder_path:
-                # Not a subfolder of the requested folder, skip
+            if (requested_folder_path != folder_path
+                    and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
                 continue
 
             for _code, basename, file_size, *_unused in files:
