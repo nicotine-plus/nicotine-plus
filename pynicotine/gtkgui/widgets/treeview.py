@@ -38,9 +38,8 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import FILE_TYPE_ICON_LABELS
-from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_LABELS
 from pynicotine.gtkgui.widgets.theme import add_css_class
-from pynicotine.slskmessages import UserStatus
 
 
 class TreeView:
@@ -592,26 +591,20 @@ class TreeView:
         self.widget.set_model(self.model)
 
     @staticmethod
-    def get_user_status_tooltip_text(icon_name):
+    def get_icon_label(column, icon_name):
 
-        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.AWAY]:
-            return _("Away")
+        if column.id == "country":
+            country_code = icon_name[-2:].upper()
+            country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
+            return f"{country_name} ({country_code})"
 
-        if icon_name == USER_STATUS_ICON_NAMES[UserStatus.ONLINE]:
-            return _("Online")
+        if column.id == "status":
+            return USER_STATUS_ICON_LABELS[icon_name]
 
-        return _("Offline")
+        if column.id == "file_type":
+            return FILE_TYPE_ICON_LABELS[icon_name]
 
-    @staticmethod
-    def get_country_tooltip_text(icon_name):
-
-        country_code = icon_name[-2:].upper()
-        country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
-        return f"{country_name} ({country_code})"
-
-    @staticmethod
-    def get_file_type_tooltip_text(icon_name):
-        return FILE_TYPE_ICON_LABELS.get(icon_name, _("Unknown"))
+        return icon_name
 
     def on_toggle(self, _widget, path, callback):
         callback(self, self.model.get_iter(path))
@@ -722,13 +715,12 @@ class TreeView:
         if is_blank:
             return False
 
-        column_id = column.id
         iterator = self.model.get_iter(path)
 
         if column.tooltip_callback:
             value = column.tooltip_callback(self, iterator)
         else:
-            value = self.get_row_value(iterator, column_id)
+            value = self.get_row_value(iterator, column.id)
 
         if not value:
             return False
@@ -737,14 +729,7 @@ class TreeView:
             return False
 
         if column.type == "icon":
-            if column_id == "country":
-                value = self.get_country_tooltip_text(value)
-
-            elif column_id == "status":
-                value = self.get_user_status_tooltip_text(value)
-
-            elif column_id == "file_type":
-                value = self.get_file_type_tooltip_text(value)
+            value = self.get_icon_label(column, value)
 
         # Update tooltip position
         self.widget.set_tooltip_cell(tooltip, path, column)
@@ -761,12 +746,15 @@ class TreeView:
             return False
 
         iterator = self.model.get_iter(path)
-        cell_value = str(self.model.get_value(iterator, column.get_sort_column_id()))
+        value = str(self.model.get_value(iterator, column.get_sort_column_id()))
 
-        if not cell_value:
+        if not value:
             return False
 
-        clipboard.copy_text(cell_value)
+        if column.type == "icon":
+            value = self.get_icon_label(column, value)
+
+        clipboard.copy_text(value)
         return True
 
 

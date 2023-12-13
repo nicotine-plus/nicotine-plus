@@ -190,8 +190,13 @@ FILE_TYPE_ICON_LABELS = {
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
+USER_STATUS_ICON_LABELS = {
+    "nplus-status-available": _("Online"),
+    "nplus-status-away": _("Away"),
+    "nplus-status-offline": _("Offline")
+}
 USER_STATUS_ICON_NAMES = {
-    UserStatus.ONLINE: "nplus-status-online",
+    UserStatus.ONLINE: "nplus-status-available",
     UserStatus.AWAY: "nplus-status-away",
     UserStatus.OFFLINE: "nplus-status-offline"
 }

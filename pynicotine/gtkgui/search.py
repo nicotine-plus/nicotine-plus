@@ -495,8 +495,7 @@ class Search:
                     "column_type": "icon",
                     "title": _("Country"),
                     "width": 30,
-                    "hide_header": True,
-                    "sort_column": "country_data"
+                    "hide_header": True
                 },
                 "speed": {
                     "column_type": "number",
@@ -558,7 +557,6 @@ class Search:
                 },
 
                 # Hidden data columns
-                "country_data": {"data_type": str},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "in_queue_data": {"data_type": GObject.TYPE_UINT},
                 "size_data": {"data_type": GObject.TYPE_UINT64},
@@ -829,7 +827,6 @@ class Search:
                     h_size,
                     h_quality,
                     h_length,
-                    country_code,
                     ulspeed,
                     inqueue,
                     size,
@@ -917,7 +914,7 @@ class Search:
 
     def add_row_to_model(self, row):
         (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
-            _unused, country_code, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
+            _unused, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
             _unused, row_id) = row
 
         expand_user = False
@@ -944,7 +941,6 @@ class Search:
                         empty_str,
                         empty_str,
                         empty_str,
-                        country_code,
                         speed,
                         queue,
                         empty_int,
@@ -984,7 +980,6 @@ class Search:
                             empty_str,
                             empty_str,
                             empty_str,
-                            country_code,
                             speed,
                             queue,
                             empty_int,
@@ -1215,25 +1210,25 @@ class Search:
             if filter_id == "filtertype" and not self.check_file_type(filter_value, row[16].lower()):
                 return False
 
-            if filter_id == "filtercc" and not self.check_country(filter_value, row[10].upper()):
+            if filter_id == "filtercc" and not self.check_country(filter_value, row[1][-2:].upper()):
                 return False
 
-            if filter_id == "filterin" and not filter_value.search(row[16]) and not filter_value.fullmatch(row[0]):
+            if filter_id == "filterin" and not filter_value.search(row[15]) and not filter_value.fullmatch(row[0]):
                 return False
 
-            if filter_id == "filterout" and (filter_value.search(row[16]) or filter_value.fullmatch(row[0])):
+            if filter_id == "filterout" and (filter_value.search(row[15]) or filter_value.fullmatch(row[0])):
                 return False
 
-            if filter_id == "filterslot" and row[12] > 0:
+            if filter_id == "filterslot" and row[11] > 0:
                 return False
 
-            if filter_id == "filtersize" and not self.check_digit(filter_value, row[13], file_size=True):
+            if filter_id == "filtersize" and not self.check_digit(filter_value, row[12], file_size=True):
                 return False
 
-            if filter_id == "filterbr" and not self.check_digit(filter_value, row[14]):
+            if filter_id == "filterbr" and not self.check_digit(filter_value, row[13]):
                 return False
 
-            if filter_id == "filterlength" and not self.check_digit(filter_value, row[15]):
+            if filter_id == "filterlength" and not self.check_digit(filter_value, row[14]):
                 return False
 
         return True
@@ -1497,7 +1492,7 @@ class Search:
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
             selected_length += self.tree_view.get_row_value(iterator, "length_data")
-            country_code = self.tree_view.get_row_value(iterator, "country_data")
+            country_code = self.tree_view.get_row_value(iterator, "country")[-2:].upper()
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
 
@@ -1567,7 +1562,7 @@ class Search:
             visible_files = []
             for row in self.all_data:
                 # Find the wanted folder
-                if folder_path != row[16].rsplit("\\", 1)[0]:
+                if folder_path != row[15].rsplit("\\", 1)[0]:
                     continue
 
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,

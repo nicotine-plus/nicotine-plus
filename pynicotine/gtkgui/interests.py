@@ -124,7 +124,6 @@ class Interests:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "sort_column": "status_data",
                     "hide_header": True
                 },
                 "user": {
@@ -149,7 +148,6 @@ class Interests:
                 },
 
                 # Hidden data columns
-                "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "rating_data": {
@@ -427,7 +425,6 @@ class Interests:
                 user,
                 h_speed,
                 h_files,
-                status,
                 speed,
                 files,
                 rating
@@ -447,14 +444,12 @@ class Interests:
         if iterator is None:
             return
 
-        status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
 
-        if not status_icon_name:
+        if not status_icon_name or status_icon_name == self.similar_users_list_view.get_row_value(iterator, "status"):
             return
 
         self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
-        self.similar_users_list_view.set_row_value(iterator, "status_data", status)
 
     def user_stats(self, msg):
 

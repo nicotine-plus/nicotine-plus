@@ -69,15 +69,13 @@ class UserList:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "hide_header": True,
-                    "sort_column": "status_data"
+                    "hide_header": True
                 },
                 "country": {
                     "column_type": "icon",
                     "title": _("Country"),
                     "width": 30,
-                    "hide_header": True,
-                    "sort_column": "country_data"
+                    "hide_header": True
                 },
                 "user": {
                     "column_type": "text",
@@ -129,11 +127,9 @@ class UserList:
                 },
 
                 # Hidden data columns
-                "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
-                "last_seen_data": {"data_type": GObject.TYPE_UINT64},
-                "country_data": {"data_type": str}
+                "last_seen_data": {"data_type": GObject.TYPE_UINT64}
             }
         )
 
@@ -224,14 +220,10 @@ class UserList:
         status = msg.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status)
 
-        if not status_icon_name:
-            return
-
-        if status == self.list_view.get_row_value(iterator, "status_data"):
+        if not status_icon_name or status_icon_name == self.list_view.get_row_value(iterator, "status"):
             return
 
         self.list_view.set_row_value(iterator, "status", status_icon_name)
-        self.list_view.set_row_value(iterator, "status_data", status)
 
     def user_stats(self, msg):
 
@@ -284,11 +276,9 @@ class UserList:
             bool(user_data.is_prioritized),
             str(h_last_seen),
             str(user_data.note),
-            status,
             speed,
             files or 0,
-            last_seen,
-            str(country_code)
+            last_seen
         ], select_row=core.userlist.allow_saving_buddies)
 
         for combobox in (
@@ -375,7 +365,6 @@ class UserList:
             return
 
         self.list_view.set_row_value(iterator, "country", flag_icon_name)
-        self.list_view.set_row_value(iterator, "country_data", country_code)
 
     def on_add_buddy(self, *_args):
 
@@ -452,6 +441,5 @@ class UserList:
             self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
             self.list_view.set_row_value(iterator, "speed", "")
             self.list_view.set_row_value(iterator, "files", "")
-            self.list_view.set_row_value(iterator, "status_data", 0)
             self.list_view.set_row_value(iterator, "speed_data", 0)
             self.list_view.set_row_value(iterator, "files_data", 0)

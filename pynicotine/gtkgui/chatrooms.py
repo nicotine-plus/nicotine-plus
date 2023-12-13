@@ -440,14 +440,12 @@ class ChatRoom:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "sort_column": "status_data",
                     "hide_header": True
                 },
                 "country": {
                     "column_type": "icon",
                     "title": _("Country"),
                     "width": 30,
-                    "sort_column": "country_data",
                     "hide_header": True
                 },
                 "user": {
@@ -475,10 +473,8 @@ class ChatRoom:
                 },
 
                 # Hidden data columns
-                "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
-                "country_data": {"data_type": str},
                 "username_weight_data": {"data_type": Pango.Weight},
                 "username_underline_data": {"data_type": Pango.Underline}
             }
@@ -617,10 +613,8 @@ class ChatRoom:
             username,
             h_speed,
             h_files,
-            status,
             avgspeed,
             files,
-            country_code,
             weight,
             underline
         ], select_row=False)
@@ -867,10 +861,7 @@ class ChatRoom:
         status = msg.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status)
 
-        if not status_icon_name:
-            return
-
-        if status == self.users_list_view.get_row_value(iterator, "status_data"):
+        if not status_icon_name or status_icon_name == self.users_list_view.get_row_value(iterator, "status"):
             return
 
         if status == UserStatus.AWAY:
@@ -889,7 +880,6 @@ class ChatRoom:
                 action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
-        self.users_list_view.set_row_value(iterator, "status_data", status)
 
         self.chat_view.update_user_tag(user)
 
@@ -900,17 +890,13 @@ class ChatRoom:
         if iterator is None:
             return
 
-        if self.users_list_view.get_row_value(iterator, "country_data") == country_code:
+        flag_icon_name = get_flag_icon_name(country_code)
+
+        if not flag_icon_name or flag_icon_name == self.users_list_view.get_row_value(iterator, "country"):
             # Country didn't change, no need to update
             return
 
-        flag_icon_name = get_flag_icon_name(country_code)
-
-        if not flag_icon_name:
-            return
-
         self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
-        self.users_list_view.set_row_value(iterator, "country_data", country_code)
 
     def username_event(self, pos_x, pos_y, user):
 
