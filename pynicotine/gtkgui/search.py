@@ -1566,7 +1566,7 @@ class Search:
                     continue
 
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
+                    _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
                     file_attributes, _unused) = row
 
                 visible_files.append((file_path, size, file_attributes))
