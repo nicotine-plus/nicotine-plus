@@ -254,9 +254,9 @@ class Application:
         # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
         for widget in (Gtk.Text, Gtk.TextView):
             for action_name, accelerator in (
-                ("cut-clipboard", "<Meta>x"),
-                ("copy-clipboard", "<Meta>c"),
-                ("paste-clipboard", "<Meta>v"),
+                ("clipboard.cut", "<Meta>x"),
+                ("clipboard.copy", "<Meta>c"),
+                ("clipboard.paste", "<Meta>v"),
                 ("selection.select-all", "<Meta>a"),
                 ("misc.insert-emoji", "<Meta>period"),
                 ("text.undo", "<Meta>z"),
