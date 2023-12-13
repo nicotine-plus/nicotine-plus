@@ -174,7 +174,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew uninstall python@3.11
+          brew uninstall --ignore-dependencies python@3.11
           brew install --overwrite python@3.11
           python3 packaging/macos/dependencies.py
 
