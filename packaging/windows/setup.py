@@ -171,7 +171,8 @@ def add_typelibs():
         ]
     else:
         required_typelibs += [
-            "Atk-"
+            "Atk-",
+            "Gspell-"
         ]
 
     if USE_LIBADWAITA:
