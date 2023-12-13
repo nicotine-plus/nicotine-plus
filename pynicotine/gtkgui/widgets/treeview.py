@@ -591,10 +591,14 @@ class TreeView:
         self.widget.set_model(self.model)
 
     @staticmethod
-    def get_icon_label(column, icon_name):
+    def get_icon_label(column, icon_name, is_short_country_label=False):
 
         if column.id == "country":
             country_code = icon_name[-2:].upper()
+
+            if is_short_country_label:
+                return country_code
+
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             return f"{country_name} ({country_code})"
 
@@ -752,7 +756,7 @@ class TreeView:
             return False
 
         if column.type == "icon":
-            value = self.get_icon_label(column, value)
+            value = self.get_icon_label(column, value, is_short_country_label=True)
 
         clipboard.copy_text(value)
         return True
