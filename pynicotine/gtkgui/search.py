@@ -1207,7 +1207,7 @@ class Search:
             if not filter_value:
                 continue
 
-            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[16].lower()):
+            if filter_id == "filtertype" and not self.check_file_type(filter_value, row[15].lower()):
                 return False
 
             if filter_id == "filtercc" and not self.check_country(filter_value, row[1][-2:].upper()):
