@@ -58,6 +58,7 @@
  * Fixed an issue where search results were not sent in rare cases
  * Fixed an issue where sharing a lot of files could result in messages about not sharing
  * Fixed an issue where finished downloads were not always automatically cleared
+ * Fixed an issue where recursively downloading a folder would include unwanted folders in some cases
  * Improved performance when many queued transfers are added or retried
  * Check file modified times instead of folder when rescanning to ensure shares are properly updated
  * Stop loading a user's shares after closing the tab, to avoid wasting bandwidth
@@ -85,6 +86,7 @@
  * Anyone willing to maintain an official Nicotine+ Debian package? ([#1448](https://github.com/nicotine-plus/nicotine-plus/issues/1448))
  * Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
  * List of GTK 4 regressions ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
+ * Crashes when sending emoji ([#1556](https://github.com/nicotine-plus/nicotine-plus/issues/1556))
  * Leech Detector is bugging people who have folders shared already. ([#1565](https://github.com/nicotine-plus/nicotine-plus/issues/1565))
  * Get date in transfer total up/dl statistic ([#1598](https://github.com/nicotine-plus/nicotine-plus/issues/1598))
  * Determine the size etc of a folder / selected files ([#1628](https://github.com/nicotine-plus/nicotine-plus/issues/1628))
@@ -183,11 +185,15 @@
  * \[3.3.0.dev6\] Some 3.3.0.dev6 issues ([#2714](https://github.com/nicotine-plus/nicotine-plus/issues/2714))
  * \[3.3.0.dev6\] Clicking "Clear Finished" crashes (sometimes) ([#2729](https://github.com/nicotine-plus/nicotine-plus/issues/2729))
  * \[3.3.0.dev6\] Crash on master updating completion from "user_left_room" ([#2733](https://github.com/nicotine-plus/nicotine-plus/issues/2733))
+ * \[3.3.0.dev6\] Crash on DL tab CLEAR files right-click option ([#2745](https://github.com/nicotine-plus/nicotine-plus/issues/2745))
  * \[3.3.0.dev6\] Private chat: messages showing with wrong sender ([#2755](https://github.com/nicotine-plus/nicotine-plus/issues/2755))
  * UI/UX improvement: move the buddies only option out of the edit subwindow to the share window ([#2763](https://github.com/nicotine-plus/nicotine-plus/issues/2763))
  * "Invisible Border" Around Program? ([#2768](https://github.com/nicotine-plus/nicotine-plus/issues/2768))
  * Launching 25-NOV Build Causes Frequent & Prolonged Freezing Of Win10 OS+Frequent Disconnects ([#2770](https://github.com/nicotine-plus/nicotine-plus/issues/2770))
  * No handler for class \<class 'pynicotine.slskmessages.UserLeftRoom'\> ([#2771](https://github.com/nicotine-plus/nicotine-plus/issues/2771))
+ * \[3.3.0.dev6\] Network connectivity lost until a server reconnect ([#2778](https://github.com/nicotine-plus/nicotine-plus/issues/2778))
+ * \[3.3.0.dev6\] Copying search result filenames causes crash ([#2781](https://github.com/nicotine-plus/nicotine-plus/issues/2781))
+ * Recursive folder download matches extra siblings starting with the same name ([#2782](https://github.com/nicotine-plus/nicotine-plus/issues/2782))
 
 
 ## Version 3.2.9 (March 5, 2023)
