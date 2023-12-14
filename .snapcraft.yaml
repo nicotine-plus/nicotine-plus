@@ -5,6 +5,7 @@ license: GPL-3.0+
 base: core22
 confinement: strict
 compression: lzo
+grade: stable
 
 apps:
   nicotine-plus:
