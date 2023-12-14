@@ -510,8 +510,12 @@ class EntryDialog(OptionDialog):
             entry.set_visibility(visibility)
 
         if items is not None:
+            combobox.freeze()
+
             for item in items:
                 combobox.append(item)
+
+            combobox.unfreeze()
 
         if activates_default:
             self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)

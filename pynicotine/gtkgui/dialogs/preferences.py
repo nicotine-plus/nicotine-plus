@@ -111,11 +111,14 @@ class NetworkPage:
     def set_settings(self):
 
         # Network interfaces
+        self.network_interface_combobox.freeze()
         self.network_interface_combobox.clear()
         self.network_interface_combobox.append("")
 
         for interface in NetworkInterfaces.get_interface_addresses():
             self.network_interface_combobox.append(interface)
+
+        self.network_interface_combobox.unfreeze()
 
         self.application.preferences.set_widgets_data(self.options)
         unknown_label = _("Unknown")
@@ -1582,15 +1585,15 @@ class UserInterfacePage:
         self.application = application
         self.editing_color = False
 
+        languages = [(_("System default"), "")]
+        languages.extend([
+            (language_name, language_code) for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1))
+        ])
+
         self.language_combobox = ComboBox(
             container=self.language_label.get_parent(), label=self.language_label,
-            items=(
-                (_("System default"), ""),
-            )
+            items=languages
         )
-
-        for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1)):
-            self.language_combobox.append(language_name, item_id=language_code)
 
         self.close_action_combobox = ComboBox(
             container=self.close_action_label.get_parent(), label=self.close_action_label,
@@ -2498,6 +2501,7 @@ class NowPlayingPage:
     def set_settings(self):
 
         # Add formats
+        self.format_message_combobox.freeze()
         self.format_message_combobox.clear()
 
         for item in self.default_format_list:
@@ -2506,6 +2510,8 @@ class NowPlayingPage:
         if self.custom_format_list:
             for item in self.custom_format_list:
                 self.format_message_combobox.append(str(item))
+
+        self.format_message_combobox.unfreeze()
 
         self.application.preferences.set_widgets_data(self.options)
 

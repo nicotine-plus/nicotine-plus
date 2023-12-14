@@ -380,13 +380,17 @@ class ComboBox:
         self._model = None
         self._button = None
         self._entry_completion = None
-        self._item_selected_handler = None
+        self._is_modifying = False
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
 
         if items:
+            self.freeze()
+
             for item, item_id in items:
                 self.append(item, item_id)
+
+            self.unfreeze()
 
         self.set_visible(visible)
 
@@ -402,7 +406,7 @@ class ComboBox:
         self.dropdown.set_factory(button_factory)
         self.dropdown.set_list_factory(default_factory)
 
-        self._item_selected_handler = self.dropdown.connect("notify::selected", self._on_item_selected)
+        self.dropdown.connect("notify::selected", self._on_item_selected)
 
         if not has_entry:
             self.widget = self.dropdown
@@ -444,7 +448,7 @@ class ComboBox:
         self._model = self.dropdown.get_model()
 
         self.dropdown.connect("scroll-event", self._on_button_scroll_event)
-        self._item_selected_handler = self.dropdown.connect("notify::active", self._on_item_selected)
+        self.dropdown.connect("notify::active", self._on_item_selected)
 
         if label:
             label.set_mnemonic_widget(self.widget)
@@ -518,21 +522,42 @@ class ComboBox:
 
         if added:
             end_position = self.get_num_items() + 1
-            ids = self._ids.copy()
         else:
             end_position = self.get_num_items()
-            ids = self._ids
+
+        new_ids = {}
 
         for position in range(start_position, end_position):
             if added:
-                item_id = ids[position - 1]
+                item_id = self._ids[position - 1]
             else:
-                item_id = ids.pop(position + 1)
+                item_id = self._ids.pop(position + 1)
 
-            self._ids[position] = item_id
+            new_ids[position] = item_id
             self._positions[item_id] = position
 
+        self._ids.update(new_ids)
+
     # General #
+
+    def freeze(self):
+        """Called before inserting/deleting items, to avoid redundant UI updates."""
+
+        if GTK_API_VERSION >= 4:
+            self.dropdown.set_model(None)
+
+    def unfreeze(self):
+        """Called after items have been inserted/deleted, to enable UI updates."""
+
+        if GTK_API_VERSION == 3:
+            return
+
+        self._is_modifying = True
+
+        self.dropdown.set_model(self._model)
+        self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+
+        self._is_modifying = False
 
     def insert(self, position, item, item_id=None):
 
@@ -548,19 +573,20 @@ class ComboBox:
             position = last_position
 
         if GTK_API_VERSION >= 4:
-            with self.dropdown.handler_block(self._item_selected_handler):
-                if last_position == position:
-                    self._model.append(item)
-                else:
-                    num_removals = (last_position - position)
-                    inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
-                    self._model.splice(position, num_removals, inserted_items)
+            self._is_modifying = True
 
-                self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+            if last_position == position:
+                self._model.append(item)
+            else:
+                num_removals = (last_position - position)
+                inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
+                self._model.splice(position, num_removals, inserted_items)
+
+            self._is_modifying = False
         else:
             self.dropdown.insert_text(position, item)
 
-        if self.entry:
+        if self.entry and not self._positions:
             self._button.set_sensitive(True)
 
         if self._entry_completion:
@@ -602,6 +628,9 @@ class ComboBox:
         if position is None:
             return
 
+        if self.get_selected_pos() == position:
+            return
+
         if GTK_API_VERSION >= 4:
             self.dropdown.set_selected(position)
         else:
@@ -629,8 +658,9 @@ class ComboBox:
             return
 
         if GTK_API_VERSION >= 4:
-            with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.remove(position)
+            self._is_modifying = True
+            self._model.remove(position)
+            self._is_modifying = False
         else:
             self.dropdown.remove(position)
 
@@ -654,8 +684,9 @@ class ComboBox:
         self._positions.clear()
 
         if GTK_API_VERSION >= 4:
-            with self.dropdown.handler_block(self._item_selected_handler):
-                self._model.splice(position=0, n_removals=self._model.get_n_items())
+            self._is_modifying = True
+            self._model.splice(position=0, n_removals=self._model.get_n_items())
+            self._is_modifying = False
         else:
             self.dropdown.remove_all()
 
@@ -745,6 +776,9 @@ class ComboBox:
         scrolled_window.set_size_request(container_width, height=-1)
 
     def _on_item_selected(self, *_args):
+
+        if self._is_modifying:
+            return
 
         selected_id = self.get_selected_id()
 

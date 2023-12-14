@@ -286,7 +286,9 @@ class UserList:
             self.window.userbrowse.userbrowse_combobox,
             self.window.userinfo.userinfo_combobox
         ):
+            combobox.freeze()
             combobox.append(str(user))
+            combobox.unfreeze()
 
         self.update_visible()
 
@@ -305,7 +307,9 @@ class UserList:
             self.window.userbrowse.userbrowse_combobox,
             self.window.userinfo.userinfo_combobox
         ):
+            combobox.freeze()
             combobox.remove_id(user)
+            combobox.unfreeze()
 
     def buddy_note(self, user, note):
 

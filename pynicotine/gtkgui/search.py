@@ -191,23 +191,30 @@ class Searches(IconNotebook):
 
     def populate_search_history(self):
 
+        self.search_combobox.freeze()
+
         if not config.sections["searches"]["enable_history"]:
             self.search_combobox.clear()
-            return
+        else:
+            for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
+                self.search_combobox.append(str(term))
 
-        for term in islice(config.sections["searches"]["history"], core.search.SEARCH_HISTORY_LIMIT):
-            self.search_combobox.append(str(term))
+        self.search_combobox.unfreeze()
 
     def add_search_history_item(self, term):
 
         if not config.sections["searches"]["enable_history"]:
             return
 
+        self.search_combobox.freeze()
+
         self.search_combobox.remove_id(term)
         self.search_combobox.prepend(term)
 
         while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
             self.search_combobox.remove_pos(-1)
+
+        self.search_combobox.unfreeze()
 
     def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
                     show_page=True):
@@ -288,12 +295,14 @@ class Searches(IconNotebook):
 
     def clear_search_history(self):
 
+        self.search_combobox.freeze()
         self.window.search_entry.set_text("")
 
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
         self.search_combobox.clear()
+        self.search_combobox.unfreeze()
 
     def add_filter_history_item(self, filter_id, value):
         for page in self.pages.values():
@@ -699,6 +708,8 @@ class Search:
     def populate_filter_history(self):
 
         for filter_id, widget in self.filter_comboboxes.items():
+            widget.freeze()
+
             widget.set_row_separator_func(lambda *_args: 0)
             widget.clear()
 
@@ -717,6 +728,8 @@ class Search:
 
             if presets:
                 widget.set_row_separator_func(self.on_combobox_check_separator)
+
+            widget.unfreeze()
 
     def populate_default_filters(self):
 
@@ -1033,6 +1046,8 @@ class Search:
         combobox = self.filter_comboboxes[filter_id]
         position = len(self.FILTER_PRESETS.get(filter_id, ()))
 
+        combobox.freeze()
+
         if position:
             # Separator item
             if position == combobox.get_num_items():
@@ -1047,6 +1062,8 @@ class Search:
 
         while combobox.get_num_items() > num_items_limit:
             combobox.remove_pos(-1)
+
+        combobox.unfreeze()
 
     def push_history(self, filter_id, value):
 

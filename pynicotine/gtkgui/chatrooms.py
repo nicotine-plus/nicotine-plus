@@ -236,7 +236,11 @@ class ChatRooms(IconNotebook):
             tab.set_label(self.get_tab_label_inner(tab.container))
 
             if not is_global:
-                self.window.search.room_search_combobox.append(room)
+                combobox = self.window.search.room_search_combobox
+
+                combobox.freeze()
+                combobox.append(room)
+                combobox.unfreeze()
 
         if switch_page:
             self.set_current_page(self.pages[room].container)
@@ -255,7 +259,11 @@ class ChatRooms(IconNotebook):
         page.destroy_widgets()
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
-            self.window.search.room_search_combobox.remove_id(room)
+            combobox = self.window.search.room_search_combobox
+
+            combobox.freeze()
+            combobox.remove_id(room)
+            combobox.unfreeze()
 
     def highlight_room(self, room, user):
 
