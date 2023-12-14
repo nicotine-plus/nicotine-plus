@@ -98,9 +98,14 @@ treeview button > box {
 }
 
 treeview button {
+    /* Remove bottom border from column headers */
+    border: 0;
+
     /* Column header padding to match rows */
     padding-left: 11px;
     padding-right: 1px;
+    padding-bottom: 3px;
+    padding-top: 3px;
 }
 
 infobar box {
@@ -112,13 +117,6 @@ progressbar.osd trough,
 progressbar.osd progress {
     /* Make overlay progress bars slightly more legible */
     min-height: 4px;
-}
-
-treeview button {
-    /* Remove bottom border from column headers */
-    border: 0;
-    padding-bottom: 3px;
-    padding-top: 3px;
 }
 
 treeview button:not(:last-child):dir(ltr) > box,
