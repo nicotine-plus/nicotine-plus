@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2023-12-16 07:54+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.3\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -5695,9 +5695,9 @@ msgid ""
 "prefixed with '[PRIVATE]', and cannot be downloaded until the uploader gives "
 "explicit permission. Ask them kindly."
 msgstr ""
-"Privé gedeelde bestanden zijn zichtbaar voor iedereen maar hebben het prefix "
-"'[PRIVÉ]', ze kunnen niet worden gedownload totdat de uploader uitdrukkelijk "
-"toestemming geeft. Vraag het ze vriendelijk."
+"Privé gedeelde bestanden zijn zichtbaar voor iedereen, maar hebben het "
+"prefix '[PRIVÉ]', ze kunnen niet worden gedownload totdat de uploader "
+"uitdrukkelijk toestemming geeft. Vraag het ze vriendelijk."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:76
 msgid "Show privately shared files in search results"
@@ -5831,7 +5831,7 @@ msgstr "Totaal aantal overdrachten"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:217
 #: pynicotine/gtkgui/ui/userinfo.ui:180
 msgid "Upload Slots"
-msgstr "Uploaden Plekken"
+msgstr "Upload Plekken"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:231
 msgid ""
@@ -5850,13 +5850,11 @@ msgstr "Upload wachtrij type:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:253
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr ""
-"Zet uploads in de wachtrij tot de totale overdrachtssnelheid (kB/s) bereikt "
-"is:"
+msgstr "Uploads toelaten tot de totale overdrachtssnelheid (kB/s) bereikt is:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Fixed number of upload slots:"
-msgstr "Beperkt aantal upload slots:"
+msgstr "Vast aantal upload-plekken:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:294
 msgid "Prioritize all buddies"
@@ -6173,7 +6171,7 @@ msgstr "Uploads in wachtrij"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:234
 msgid "Free Upload Slots"
-msgstr "Vrije upload-plekken"
+msgstr "Vrij aantal upload-plekken"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:261
 msgid "Upload Speed"
