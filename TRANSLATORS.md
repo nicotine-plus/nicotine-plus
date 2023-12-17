@@ -84,6 +84,7 @@
  - Wojciech Owczarek (owczi) (2003–2004)
 
 ## Portuguese
+ - ssantos (2023)
  - Vinícius Soares (2023)
 
 ## Portuguese (Brazil)
