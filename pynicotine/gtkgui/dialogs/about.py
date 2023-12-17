@@ -276,6 +276,10 @@ class About(Dialog):
  •  thine (2007)
  •  Wojciech Owczarek (owczi) (2003–2004)""",
 
+        """<b>Portuguese</b>
+ •  ssantos (2023)
+ •  Vinícius Soares (2023)""",
+
         """<b>Portuguese (Brazil)</b>
  •  Havokdan (2022–2023)
  •  Guilherme Santos (2022)
@@ -283,9 +287,6 @@ class About(Dialog):
  •  Nicolas Abril (2021)
  •  yyyyyyyan (2020)
  •  Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
-
-        """<b>Portuguese</b>
- •  Vinícius Soares (2023)""",
 
         """<b>Romanian</b>
  •  xslendix (2023)""",
