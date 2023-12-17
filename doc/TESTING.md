@@ -36,6 +36,14 @@ Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after ever
 
 - [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package-x86_64.zip)
 
+### Snap
+
+Unstable [Snap](https://snapcraft.io/docs/installing-snapd) packages are published in the Snap Store, and can be installed by running the following:
+
+```sh
+sudo snap install nicotine-plus --edge
+```
+
 ### Other
 
 See [All Platforms](#all-platforms) for installing the unstable version of Nicotine+ on other distributions.
