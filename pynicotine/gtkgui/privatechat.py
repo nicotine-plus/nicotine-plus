@@ -484,7 +484,6 @@ class PrivateChat:
         timestamp = msg.timestamp if not is_new_message else None
         timestamp_format = config.sections["logging"]["private_timestamp"]
         message = msg.message
-        formatted_message = msg.formatted_message
 
         if not is_outgoing_message:
             self._show_notification(message, is_mentioned=(message_type == "hilite"))
@@ -506,10 +505,10 @@ class PrivateChat:
             self.offline_message = False
 
         self.chat_view.append_line(
-            formatted_message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
+            message, message_type=message_type, timestamp=timestamp, timestamp_format=timestamp_format,
             username=tag_username, usertag=usertag
         )
-        self.chats.history.update_user(username, formatted_message)
+        self.chats.history.update_user(username, message, timestamp)
 
     def echo_private_message(self, text, message_type):
 

@@ -142,35 +142,38 @@ class TextView:
         self.url_tags.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
-    def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
-                    username=None, usertag=None):
+    def append_line(self, message, message_type=None, timestamp=None, timestamp_format=None,
+                    username=None, usertag=None, roomname=None):
 
         tag = self.default_tags.get(message_type)
         num_lines = self.textbuffer.get_line_count()
-        line = str(line).strip("\n")
-
-        if timestamp_format:
-            line = time.strftime(timestamp_format, time.localtime(timestamp)) + " " + line
 
         if self.textbuffer.get_char_count() > 0:
-            line = "\n" + line
+            self._insert_text("\n")
+
+        if timestamp_format:
+            self._insert_text(time.strftime(timestamp_format, time.localtime(timestamp)) + " ", tag)
+
+        elif timestamp:
+            self._insert_text(timestamp + " ", tag)
+
+        if roomname:
+            self._insert_text(roomname, tag)
+            self._insert_text(" | ", tag)
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username and username in line:
-            start = line.find(username)
-
-            self._insert_text(line[:start], tag)
+        if username:
+            self._insert_text("[", tag)
             self._insert_text(username, usertag)
-
-            line = line[start + len(username):]
+            self._insert_text("] ", tag)
 
         # Highlight urls, if found and tag them
-        if self.parse_urls and ("://" in line or "www." in line or "mailto:" in line):
+        if self.parse_urls and ("://" in message or "www." in message or "mailto:" in message):
             # Match first url
-            match = self.url_regex.search(line)
+            match = self.url_regex.search(message)
 
             while match:
-                self._insert_text(line[:match.start()], tag)
+                self._insert_text(message[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
@@ -178,10 +181,10 @@ class TextView:
                 self._insert_text(url, urltag)
 
                 # Match remaining url
-                line = line[match.end():]
-                match = self.url_regex.search(line)
+                message = message[match.end():]
+                match = self.url_regex.search(message)
 
-        self._insert_text(line, tag)
+        self._insert_text(message, tag)
         self._remove_old_lines(num_lines)
 
         return num_lines
@@ -410,22 +413,22 @@ class ChatView(TextView):
             except UnicodeDecodeError:
                 line = line.decode("latin-1")
 
-            user = message_type = usertag = None
+            timestamp = username = usertag = message = message_type = None
 
             if " [" in line and "] " in line:
                 start = line.find(" [") + 2
                 end = line.find("] ", start)
 
                 if end > start:
-                    user = line[start:end]
-                    usertag = self.get_user_tag(user)
+                    timestamp = line[:start - 2]
+                    username = line[start:end]
+                    usertag = self.get_user_tag(username)
+                    message = line[end + 2:-1]
 
-                    text = line[end + 2:-1]
-
-                    if user == login:
+                    if username == login:
                         message_type = "local"
 
-                    elif login and find_whole_word(login.lower(), text.lower()) > -1:
+                    elif login and find_whole_word(login.lower(), message.lower()) > -1:
                         message_type = "hilite"
 
                     else:
@@ -434,7 +437,10 @@ class ChatView(TextView):
             elif "* " in line:
                 message_type = "action"
 
-            self.append_line(line, message_type=message_type, username=user, usertag=usertag)
+            message = (message or line).rstrip("\n")
+
+            self.append_line(
+                message, message_type=message_type, timestamp=timestamp, username=username, usertag=usertag)
 
         if lines:
             self.append_line(_("--- old messages above ---"), message_type="hilite",

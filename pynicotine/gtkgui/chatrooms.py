@@ -761,7 +761,6 @@ class ChatRoom:
         username = msg.user
         room = msg.room
         message = msg.message
-        formatted_message = msg.formatted_message
         message_type = msg.message_type
         usertag = self.chat_view.get_user_tag(username)
 
@@ -775,7 +774,11 @@ class ChatRoom:
                 room, username, message, is_mentioned=(message_type == "hilite"))
 
         self.chat_view.append_line(
-            formatted_message, message_type=message_type, username=username, usertag=usertag,
+            message,
+            message_type=message_type,
+            username=username,
+            usertag=usertag,
+            roomname=(room if self.is_global else None),
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 

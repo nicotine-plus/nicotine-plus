@@ -491,18 +491,18 @@ class ChatRooms:
         if config.sections["words"]["censorwords"] and username != core.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
-        if is_action_message:
-            msg.formatted_message = msg.message = f"* {username} {message}"
-        else:
-            msg.formatted_message = f"[{username}] {message}"
-
-        if is_global:
-            msg.formatted_message = f"{msg.room} | {msg.formatted_message}"
-
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
+            if is_action_message:
+                formatted_message = msg.message = f"* {username} {message}"
+            else:
+                formatted_message = f"[{username}] {message}"
+
+            if is_global:
+                formatted_message = f"{msg.room} | {formatted_message}"
+
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=f"{clean_file(room)}.log", text=msg.formatted_message
+                basename=f"{clean_file(room)}.log", text=formatted_message
             )
 
         if is_global:
