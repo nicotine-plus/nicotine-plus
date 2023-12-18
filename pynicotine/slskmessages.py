@@ -2982,7 +2982,7 @@ class SharedFileListResponse(PeerMessage):
         share_groups = []
         private_share_groups = []
 
-        if self.permission_level:
+        if self.permission_level and self.public_shares:
             share_groups.append(self.public_shares)
 
         if self.permission_level in {PermissionLevel.BUDDY, PermissionLevel.TRUSTED} and self.buddy_shares:
