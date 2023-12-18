@@ -63,7 +63,6 @@ class Plugin(BasePlugin):
         }
 
         self.probed_users = {}
-        self.detected_leechers = set()
 
     def loaded_notification(self):
 
@@ -75,9 +74,6 @@ class Plugin(BasePlugin):
 
         if self.settings["num_folders"] < min_num_folders:
             self.settings["num_folders"] = min_num_folders
-
-        # Separate leechers set for faster membership checks
-        self.detected_leechers = set(self.settings["detected_leechers"])
 
         self.log(
             "Require users have a minimum of %d files in %d shared public folders.",
@@ -103,8 +99,7 @@ class Plugin(BasePlugin):
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
 
         if is_user_accepted or user in self.core.userlist.buddies:
-            if user in self.detected_leechers:
-                self.detected_leechers.remove(user)
+            if user in self.settings["detected_leechers"]:
                 self.settings["detected_leechers"].remove(user)
 
             self.probed_users[user] = "okay"
@@ -160,7 +155,5 @@ class Plugin(BasePlugin):
 
             self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
 
-        self.detected_leechers.add(user)
         self.settings["detected_leechers"].append(user)
-
         self.log("Leecher %s doesn't share enough files. Message sent.", user)
