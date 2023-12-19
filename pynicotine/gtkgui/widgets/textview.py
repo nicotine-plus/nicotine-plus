@@ -48,6 +48,9 @@ class TextView:
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
+    MAX_NUM_LINES = 50000
+    URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
+
     def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
                  horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
@@ -75,11 +78,8 @@ class TextView:
         self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.max_num_lines = 50000
         self.default_tags = {}
         self.parse_urls = parse_urls
-        self.url_tags = {}
-        self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -130,16 +130,15 @@ class TextView:
 
     def _remove_old_lines(self, num_lines):
 
-        if num_lines < self.max_num_lines:
+        if num_lines < self.MAX_NUM_LINES:
             return
 
         start_iter = self.textbuffer.get_start_iter()
-        end_iter = self.textbuffer.get_iter_at_line(num_lines - self.max_num_lines)
+        end_iter = self.textbuffer.get_iter_at_line(num_lines - self.MAX_NUM_LINES)
 
         if GTK_API_VERSION >= 4:
             _position_found, end_iter = end_iter
 
-        self.url_tags.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
 
     def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
@@ -167,19 +166,18 @@ class TextView:
         # Highlight urls, if found and tag them
         if self.parse_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
-            match = self.url_regex.search(line)
+            match = self.URL_REGEX.search(line)
 
             while match:
                 self._insert_text(line[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self.url_tags[self.textbuffer.get_end_iter()] = urltag
                 self._insert_text(url, urltag)
 
                 # Match remaining url
                 line = line[match.end():]
-                match = self.url_regex.search(line)
+                match = self.URL_REGEX.search(line)
 
         self._insert_text(line, tag)
         self._remove_old_lines(num_lines)
@@ -244,11 +242,8 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-
         start_iter, end_iter = self.textbuffer.get_bounds()
-
         self.textbuffer.delete(start_iter, end_iter)
-        self.url_tags.clear()
 
     # Text Tags (Usernames, URLs) #
 
@@ -280,12 +275,7 @@ class TextView:
         update_tag_visuals(tag, color_id=tag.color_id)
 
     def update_tags(self):
-
-        for tag in self.url_tags.values():
-            self.update_tag(tag)
-
-        for tag in self.default_tags.values():
-            self.update_tag(tag)
+        self.textbuffer.get_tag_table().foreach(self.update_tag)
 
     # Events #
 
@@ -451,10 +441,6 @@ class ChatView(TextView):
             self.update_user_tag(username)
 
         return self.user_tags[username]
-
-    def update_tags(self):
-        super().update_tags()
-        self.update_user_tags()
 
     def update_user_tag(self, username):
 
