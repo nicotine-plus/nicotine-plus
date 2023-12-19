@@ -152,7 +152,9 @@ class TextView:
             line = time.strftime(timestamp_format, time.localtime(timestamp)) + " " + line
 
         if self.textbuffer.get_char_count() > 0:
-            line = "\n" + line
+            # No tag applied on line breaks to prevent visual glitch where text on the
+            # next line has the wrong color
+            self._insert_text("\n")
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
         if username and username in line:
