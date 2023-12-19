@@ -158,6 +158,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Rejoin rooms in order ([#2490](https://github.com/nicotine-plus/nicotine-plus/issues/2490))
  * Turn off display of automatic chat messages ([#2510](https://github.com/nicotine-plus/nicotine-plus/issues/2510))
  * Unable to Connect to SoulSeek Server when Dual Network Interface Is Configured ([#2518](https://github.com/nicotine-plus/nicotine-plus/issues/2518))
+ * Search filter: username ([#2537](https://github.com/nicotine-plus/nicotine-plus/issues/2537))
  * Wishlist results - sound alert and flashing icon when minimized ([#2551](https://github.com/nicotine-plus/nicotine-plus/issues/2551))
  * Default image viewer ([#2552](https://github.com/nicotine-plus/nicotine-plus/issues/2552))
  * Auto resume/retry ([#2555](https://github.com/nicotine-plus/nicotine-plus/issues/2555))
