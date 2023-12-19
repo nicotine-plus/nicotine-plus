@@ -68,6 +68,7 @@ class TextView:
             parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
+        self.end_iter = self.textbuffer.get_end_iter()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
@@ -117,16 +118,14 @@ class TextView:
         if not text:
             return
 
-        iterator = self.textbuffer.get_end_iter()
-
         if tag is not None:
-            start_offset = iterator.get_offset()
+            start_offset = self.end_iter.get_offset()
 
-        self.textbuffer.insert(iterator, text)
+        self.textbuffer.insert(self.end_iter, text)
 
         if tag is not None:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
-            self.textbuffer.apply_tag(tag, start_iter, iterator)
+            self.textbuffer.apply_tag(tag, start_iter, self.end_iter)
 
     def _remove_old_lines(self, num_lines):
 
@@ -140,6 +139,7 @@ class TextView:
             _position_found, end_iter = end_iter
 
         self.textbuffer.delete(start_iter, end_iter)
+        self.end_iter = self.textbuffer.get_end_iter()
 
     def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
                     username=None, usertag=None):
@@ -188,8 +188,8 @@ class TextView:
         return self.textbuffer.get_has_selection()
 
     def get_text(self):
-        start_iter, end_iter = self.textbuffer.get_bounds()
-        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
+        start_iter = self.textbuffer.get_start_iter()
+        return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -242,8 +242,8 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-        start_iter, end_iter = self.textbuffer.get_bounds()
-        self.textbuffer.delete(start_iter, end_iter)
+        self.textbuffer.set_text("")
+        self.end_iter = self.textbuffer.get_end_iter()
 
     # Text Tags (Usernames, URLs) #
 
