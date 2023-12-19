@@ -134,11 +134,7 @@ class TextView:
 
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
-        end_line = (num_lines - self.MAX_NUM_LINES - 1000)
-
-        if end_line < 0:
-            end_line = num_lines
-
+        end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
         end_iter = self.textbuffer.get_iter_at_line(end_line)
 
         if GTK_API_VERSION >= 4:
