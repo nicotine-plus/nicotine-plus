@@ -526,7 +526,7 @@ class IconNotebook:
     def _append_unread_page(self, page, is_important=False):
 
         # Remove existing page and move it to the end of the dict
-        is_currently_important = self.unread_pages.pop(page, False)
+        is_currently_important = self.unread_pages.pop(page, None)
 
         if is_currently_important and not is_important:
             # Important pages are persistent
