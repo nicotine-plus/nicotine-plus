@@ -587,6 +587,7 @@ class ChatRoom:
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
         self.chat_entry_row.set_halign(Gtk.Align.END)
+        self.chat_entry_row.set_visible(self.log_toggle.get_visible() or self.speech_toggle.get_visible())
 
     def add_user_row(self, userdata):
 
@@ -719,8 +720,13 @@ class ChatRoom:
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def toggle_chat_buttons(self):
-        self.log_toggle.set_visible(not config.sections["logging"]["chatrooms"])
-        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
+
+        is_log_toggle_visible = not config.sections["logging"]["chatrooms"]
+        is_speech_toggle_visible = config.sections["ui"]["speechenabled"]
+
+        self.log_toggle.set_visible(is_log_toggle_visible)
+        self.speech_toggle.set_visible(is_speech_toggle_visible)
+        self.chat_entry_row.set_visible(is_log_toggle_visible or is_speech_toggle_visible)
 
     def _show_notification(self, room, user, text, is_mentioned):
 
