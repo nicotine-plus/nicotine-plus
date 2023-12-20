@@ -288,7 +288,13 @@ class Searches(IconNotebook):
         page.clear()
 
         if page.show_page:
-            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+            mode = page.mode
+
+            if mode == "wishlist":
+                # For simplicity's sake, turn wishlist tabs into regular ones when restored
+                mode = "global"
+
+            self.remove_page(page.container, page_args=(page.text, mode, page.room, page.searched_users))
 
         del self.pages[token]
         page.destroy()
