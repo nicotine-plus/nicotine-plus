@@ -150,7 +150,7 @@ class UserInfos(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
-        page.destroy_widgets()
+        page.destroy()
 
     def ban_unban_user(self, user):
 
@@ -348,7 +348,7 @@ class UserInfo:
 
         self.popup_menus = (
             self.user_popup_menu, self.likes_popup_menu, self.dislikes_popup_menu,
-            self.likes_list_view.column_menu, self.dislikes_list_view.column_menu, self.picture_popup_menu
+            self.picture_popup_menu
         )
 
         self.load_picture(None)
@@ -362,15 +362,17 @@ class UserInfo:
         self.dislikes_list_view.clear()
         self.load_picture(None)
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        self.info_bar.destroy()
+        self.description_view.destroy()
+        self.likes_list_view.destroy()
+        self.dislikes_list_view.destroy()
         self.__dict__.clear()
+
         self.indeterminate_progress = False  # Stop progress bar timer
 
     def set_label(self, label):

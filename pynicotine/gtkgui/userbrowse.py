@@ -159,7 +159,7 @@ class UserBrowses(IconNotebook):
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
-        page.destroy_widgets()
+        page.destroy()
 
     def peer_connection_error(self, user, *_args, **_kwargs):
 
@@ -423,25 +423,24 @@ class UserBrowse:
         Accelerator("<Primary>s", self.container, self.on_save_accelerator)  # Save Shares List
 
         self.popup_menus = (
-            self.user_popup_menu, self.folder_popup_menu, self.file_popup_menu,
-            self.folder_tree_view.column_menu, self.file_list_view.column_menu
+            self.folder_popup_menu, self.file_popup_menu, self.user_popup_menu
         )
 
         self.expand_button.set_active(config.sections["userbrowse"]["expand_folders"])
 
     def clear(self):
-
         self.clear_model()
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        self.info_bar.destroy()
+        self.folder_tree_view.destroy()
+        self.file_list_view.destroy()
         self.__dict__.clear()
+
         self.indeterminate_progress = False  # Stop progress bar timer
 
     def set_label(self, label):

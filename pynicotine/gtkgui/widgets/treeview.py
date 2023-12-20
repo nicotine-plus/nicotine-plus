@@ -80,7 +80,7 @@ class TreeView:
         self.initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.column_menu = self.widget.column_menu = PopupMenu(
+        self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
         if multi_select:
@@ -114,6 +114,10 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
+
+    def destroy(self):
+        self._column_menu.destroy()
+        self.__dict__.clear()
 
     def create_model(self):
 
@@ -183,9 +187,9 @@ class TreeView:
                 # Invalid value
                 pass
 
-    def _set_last_column_autosize(self, *_args):
+    def _set_last_column_autosize(self, tree_view, *_args):
 
-        columns = self.widget.get_columns()
+        columns = tree_view.get_columns()
         resizable_set = False
 
         for column in reversed(columns):

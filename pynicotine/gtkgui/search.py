@@ -291,7 +291,7 @@ class Searches(IconNotebook):
             self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
 
         del self.pages[token]
-        page.destroy_widgets()
+        page.destroy()
 
     def clear_search_history(self):
 
@@ -619,8 +619,7 @@ class Search:
         )
 
         self.popup_menus = (
-            self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
-            self.tree_view.column_menu
+            self.popup_menu, self.popup_menu_users, self.popup_menu_copy, self.tab_menu
         )
 
         # Key bindings
@@ -667,17 +666,17 @@ class Search:
         self.update_wish_button()
 
     def clear(self):
-
         self.clear_model(stored_results=True)
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        for combobox in self.filter_comboboxes.values():
+            combobox.destroy()
+
+        self.tree_view.destroy()
         self.__dict__.clear()
 
     def set_label(self, label):

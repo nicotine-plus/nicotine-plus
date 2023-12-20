@@ -50,6 +50,21 @@ class ChatEntry:
         Accelerator("Page_Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", widget, self.on_page_up_accelerator)
 
+    def destroy(self):
+        self.__dict__.clear()
+
+    def grab_focus(self):
+        self.widget.grab_focus()
+
+    def get_sensitive(self):
+        return self.widget.get_sensitive()
+
+    def set_sensitive(self, sensitive):
+        self.widget.set_sensitive(sensitive)
+
+    def set_visible(self, visible):
+        self.widget.set_visible(visible)
+
     def on_enter(self, *_args):
 
         if core.user_status == UserStatus.OFFLINE:
@@ -140,15 +155,15 @@ class ChatCompletion:
     def set_entry(self, entry):
 
         if self.entry is not None:
-            self.entry.set_completion(None)
-            self.entry.disconnect(self.entry_changed_handler)
+            self.entry.widget.set_completion(None)
+            self.entry.widget.disconnect(self.entry_changed_handler)
 
         # Reusing an existing GtkEntryCompletion object after unsetting it doesn't work well
         self.create_entry_completion()
-        entry.set_completion(self.entry_completion)
+        entry.widget.set_completion(self.entry_completion)
 
         self.entry = entry
-        self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
+        self.entry_changed_handler = entry.widget.connect("changed", self.on_entry_changed)
 
     def is_completion_enabled(self):
         return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
@@ -393,6 +408,9 @@ class ComboBox:
             self.unfreeze()
 
         self.set_visible(visible)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def _create_combobox_gtk4(self, container, label, has_entry):
 
@@ -687,7 +705,7 @@ class ComboBox:
         else:
             self.dropdown.remove_all()
 
-        if self.entry:
+        if self.entry and self._button:
             self._button.set_sensitive(False)
 
         if self._entry_completion:
@@ -883,6 +901,9 @@ class TextSearchBar:
         Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
         Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
         Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def on_search_match(self, search_type, restarted=False):
 
