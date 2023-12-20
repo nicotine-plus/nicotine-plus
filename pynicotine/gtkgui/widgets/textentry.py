@@ -396,13 +396,20 @@ class ComboBox:
 
     def _create_combobox_gtk4(self, container, label, has_entry):
 
-        button_factory = self._create_factory(should_bind=not has_entry)
         self._model = Gtk.StringList()
-
         self.dropdown = self._button = Gtk.DropDown(
             model=self._model, valign=Gtk.Align.CENTER, visible=True
         )
+
         default_factory = self.dropdown.get_factory()
+        button_factory = None
+
+        if not has_entry:
+            button_factory = Gtk.SignalListItemFactory()
+
+            button_factory.connect("setup", self._on_factory_setup)
+            button_factory.connect("bind", self._on_factory_bind)
+
         self.dropdown.set_factory(button_factory)
         self.dropdown.set_list_factory(default_factory)
 
@@ -488,16 +495,6 @@ class ComboBox:
 
         if has_entry_completion:
             self._entry_completion = CompletionEntry(self.entry)
-
-    def _create_factory(self, should_bind=True):
-
-        factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self._on_factory_setup)
-
-        if should_bind:
-            factory.connect("bind", self._on_factory_bind)
-
-        return factory
 
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
@@ -709,19 +706,12 @@ class ComboBox:
     # Callbacks #
 
     def _on_factory_bind(self, _factory, list_item):
-
         label = list_item.get_child()
-        list_item = list_item.get_item()
-
-        label.set_text(list_item.get_string())
+        label.set_text(list_item.get_item().get_string())
 
     def _on_factory_setup(self, _factory, list_item):
-
-        label = Gtk.Label(xalign=0)
-        label.set_ellipsize(Pango.EllipsizeMode.END)
-        label.set_mnemonic_widget(self.widget)
-
-        list_item.set_child(label)
+        list_item.set_child(
+            Gtk.Label(ellipsize=Pango.EllipsizeMode.END, mnemonic_widget=self.widget, xalign=0))
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
