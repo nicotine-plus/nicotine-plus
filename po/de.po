@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-20 21:09+0000\n"
+"PO-Revision-Date: 2023-12-21 22:21+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -176,7 +176,8 @@ msgstr "Chat-Nachricht von Benutzer '%(user)s' im Raum '%(room)s': %(message)s"
 #: pynicotine/config.py:125 pynicotine/config.py:144
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "Kann Verzeichnis „%(path)s“ nicht erstellen, Fehler: %(error)s"
+msgstr ""
+"Kann Verzeichnis '%(path)s' nicht erstellen, gemeldeter Fehler: %(error)s"
 
 #: pynicotine/config.py:793
 #, python-format
@@ -857,7 +858,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:203
 msgid "Enter password to use when logging in:"
-msgstr "Gebe das Passwort für die Anmeldung ein:"
+msgstr "Gib das Passwort ein, das beim Anmelden verwendet werden soll:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:207
 #: pynicotine/gtkgui/ui/settings/network.ui:77
@@ -1094,7 +1095,7 @@ msgstr "IP-Adresse sperren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1165
 msgid "Enter an IP address you want to ban:"
-msgstr "Gebe die IP-Adresse ein, die du sperren möchtest:"
+msgstr "Gib eine IP-Adresse ein, die du sperren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1214
 #: pynicotine/gtkgui/dialogs/preferences.py:2042
@@ -1443,7 +1444,7 @@ msgstr "Präferenzen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3120
 msgid "Pick a File Name for Config Backup"
-msgstr "Wähle einen Dateinamen für die Konfigurationssicherung"
+msgstr "Wähle einen Dateinamen für das Konfigurations-Backup"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:75
 msgid "Transfer Statistics"
@@ -2657,8 +2658,7 @@ msgstr "Scannen erneut versuchen? %s"
 #, python-format
 msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr ""
-"Es konnte nicht in die Protokolldatei \"%(filename)s\" geschrieben werden: "
-"%(error)s"
+"Konnte nicht in die Protokolldatei \"%(filename)s\" schreiben: %(error)s"
 
 #: pynicotine/logfacility.py:227
 #, python-format
@@ -3688,8 +3688,7 @@ msgstr "Jetzt spielendes Fehler"
 #, python-format
 msgid "Last.fm: Could not connect to Audioscrobbler: %(error)s"
 msgstr ""
-"Last.fm: Verbindung zum Audioscrobbler konnte nicht hergestellt werden: "
-"%(error)s"
+"Last.fm: Konnte keine Verbindung zu Audioscrobbler herstellen: %(error)s"
 
 #: pynicotine/nowplaying.py:160
 #, python-format
@@ -3704,7 +3703,7 @@ msgstr "MPRIS: Konnte keinen passenden MPRIS-Mediaspieler finden"
 #: pynicotine/nowplaying.py:198
 #, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
-msgstr "Mehrere MPRIS-Spieler gefunden: %(players)s. Benutzt: %(player)s"
+msgstr "Mehrere MPRIS-Spieler gefunden: %(players)s. Verwendet wird: %(player)s"
 
 #: pynicotine/nowplaying.py:201
 #, python-format
@@ -3828,7 +3827,7 @@ msgstr "Verbindungen von Benutzer oder IP-Adresse blockieren"
 
 #: pynicotine/plugins/core_commands/__init__.py:199
 msgid "Remove user or IP address from ban lists"
-msgstr "Benutzer oder IP-Adresse aus Banliste entfernen"
+msgstr "Benutzer oder IP-Adresse aus der Sperrliste entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:206
 msgid "Silence messages from user or IP address"
@@ -3836,7 +3835,7 @@ msgstr "Nachrichten vom Benutzer oder der IP-Adresse stummschalten"
 
 #: pynicotine/plugins/core_commands/__init__.py:214
 msgid "Remove user or IP address from ignore lists"
-msgstr "Benutzer oder IP-Adresse aus Ignorierliste entfernen"
+msgstr "Benutzer oder IP-Adresse von Ignorierlisten entfernen"
 
 #: pynicotine/plugins/core_commands/__init__.py:222
 msgid "Add share"
@@ -4048,8 +4047,8 @@ msgstr "Keine UPnP-Geräte gefunden"
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
-"%(protocol)s: Weiterleitung des externen Ports %(external_port)s "
-"fehlgeschlagen : %(error)s"
+"%(protocol)s: Weiterleitung des externen Ports fehlgeschlagen "
+"%(external_port)s: %(error)s"
 
 #: pynicotine/portmapper.py:595
 #, python-format
@@ -4221,7 +4220,8 @@ msgstr "Upload gestartet: Benutzer %(user)s, IP-Adresse %(ip)s, Datei %(file)s"
 #: pynicotine/userbrowse.py:152
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "Kann Verzeichnis „%(folder)s“ nicht erstellen, Fehler: %(error)s"
+msgstr ""
+"Kann Verzeichnis '%(folder)s' nicht erstellen, gemeldeter Fehler: %(error)s"
 
 #: pynicotine/userbrowse.py:184
 #, python-format
@@ -4238,7 +4238,8 @@ msgstr ""
 #: pynicotine/userbrowse.py:232
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Kann Freigaben nicht speichern, '%(user)s', Fehler: %(error)s"
+msgstr ""
+"Kann Freigaben nicht speichern, '%(user)s', gemeldeter Fehler: %(error)s"
 
 #: pynicotine/userinfo.py:101
 #, python-format
@@ -4293,12 +4294,12 @@ msgstr ""
 #: pynicotine/utils.py:533
 #, python-format
 msgid "Attempting to load backup of file %s"
-msgstr "Versuch, ein Backup der Datei %s zu laden"
+msgstr "Versuch, das Backup der Datei %s zu laden"
 
 #: pynicotine/utils.py:554
 #, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
-msgstr "Die Datei %(path)s kann nicht gesichert werden: %(error)s"
+msgstr "Datei %(path)s konnte nicht gesichert werden: %(error)s"
 
 #: pynicotine/utils.py:574
 #, python-format
@@ -4309,7 +4310,7 @@ msgstr "Datei kann nicht gespeichert werden %(path)s: %(error)s"
 #, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr ""
-"Die vorherige Datei kann nicht wiederhergestellt werden %(path)s: %(error)s"
+"Vorherige Datei %(path)s konnte nicht wiederhergestellt werden: %(error)s"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:27
 msgid "Search activity log…"
@@ -4955,7 +4956,7 @@ msgstr "Räume aktualisieren"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:70
 msgid "_Show feed of public chat room messages"
-msgstr "_Feed der öffentlichen Chatraumnachrichten anzeigen"
+msgstr "_Zeige den Feed der Nachrichten aus öffentlichen Chaträumen"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:97
 msgid "_Accept private room invitations"
@@ -5348,7 +5349,7 @@ msgstr "Zu sperrende Ländercodes (getrennt durch Kommata):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:50
 msgid "Codes must be in ISO 3166-2 format."
-msgstr "Codes müssen im ISO 3166-2-Format vorliegen."
+msgstr "Die Codes müssen im ISO 3166-2-Format sein."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:65
 msgid "Use custom geo block message:"
@@ -5369,20 +5370,19 @@ msgstr "Rechtschreibprüfung aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:74
 msgid "Restore previously open private chats on startup"
-msgstr "Zuvor geöffnete private Chats beim Start wiederherstellen"
+msgstr "Stelle beim Start zuvor geöffnete private Chats wieder her"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:98
 msgid "Enable CTCP-like private message responses (client version)"
-msgstr "Aktiviere CTCP-ähnliche PN-Antworten (Client-Version)"
+msgstr "Aktiviere CTCP-ähnliche private Nachrichtenantworten (Client-Version)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:122
 msgid "Number of recent private chat messages to show:"
-msgstr ""
-"Anzahl der letzten privaten Chatnachrichten, die angezeigt werden sollen:"
+msgstr "Anzahl der kürzlich angezeigten privaten Chat-Nachrichten:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:147
 msgid "Number of recent chat room messages to show:"
-msgstr "Anzahl der letzten anzuzeigenden Chatroom-Nachrichten:"
+msgstr "Anzahl der anzuzeigenden neuesten Chatraumnachrichten:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:176
 msgid "Chat Completion"
@@ -5809,7 +5809,7 @@ msgstr "Netzwerksuchen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:460
 msgid "Respond to search requests from other users"
-msgstr "Reagiere auf Suchanfragen von anderen Nutzern"
+msgstr "Auf Suchanfragen anderer Nutzer antworten"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:494
 msgid "Searches shorter than this number of characters will be ignored:"
@@ -5895,7 +5895,8 @@ msgstr "Typ der Upload-Warteschlange:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:253
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr "Upload-Slots zuweisen, bis die Gesamtgeschwindigkeit (KiB/s) erreicht:"
+msgstr ""
+"Upload-Slots zuweisen, bis die Gesamtgeschwindigkeit (KiB/s) erreicht ist:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
 msgid "Fixed number of upload slots:"
