@@ -190,30 +190,29 @@ class Search:
 
         # Remove words starting with "-", results containing these are excluded by us later
         search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
+        search_term_sanitized = search_term
 
-        if config.sections["searches"]["remove_special_chars"]:
-            # Remove special characters from search term
-            # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+        # Remove special characters from search term
+        # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+        stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
 
-            stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
-
-            # Only modify search term if string also contains non-special characters
-            if stripped_search_term:
-                search_term_without_special = stripped_search_term
+        # Only modify search term if string also contains non-special characters
+        if stripped_search_term:
+            search_term_without_special = stripped_search_term
 
         # Remove trailing whitespace
-        search_term = search_term_without_special.strip()
+        search_term_sanitized = search_term_without_special.strip()
 
         # Append excluded words
         for word in search_term_words_special:
-            search_term += " " + word
+            search_term_sanitized += " " + word
 
-        return search_term, search_term_without_special, room, users
+        return search_term, search_term_sanitized, search_term_without_special, room, users
 
     def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
 
         # Validate search term and run it through plugins
-        search_term, _search_term_without_special, room, users = self.process_search_term(
+        search_term, search_term_sanitized, _search_term_without_special, room, users = self.process_search_term(
             search_term, mode, room, users)
 
         # Get a new search token
@@ -232,16 +231,16 @@ class Search:
             config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(search_term)
+            self.do_global_search(search_term_sanitized)
 
         elif mode == "rooms":
-            self.do_rooms_search(search_term, room)
+            self.do_rooms_search(search_term_sanitized, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(search_term)
+            self.do_buddies_search(search_term_sanitized)
 
         elif mode == "user":
-            self.do_peer_search(search_term, users)
+            self.do_peer_search(search_term_sanitized, users)
 
         search = self.add_search(search_term, mode, room, users)
         events.emit("add-search", search.token, search, switch_page)
@@ -273,15 +272,16 @@ class Search:
 
     def do_wishlist_search(self, token, text):
 
-        text, _text_without_special, _room, _users = self.process_search_term(text.strip(), mode="wishlist")
+        text, text_sanitized, _text_without_special, _room, _users = self.process_search_term(
+            text.strip(), mode="wishlist")
 
-        if not text:
+        if not text_sanitized:
             return
 
         log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
-        core.send_message_to_server(slskmessages.WishlistSearch(token, text))
+        core.send_message_to_server(slskmessages.WishlistSearch(token, text_sanitized))
 
     def do_wishlist_search_interval(self):
 
