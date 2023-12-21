@@ -141,6 +141,10 @@ class BasePlugin:
         # Override method in plugin
         pass
 
+    def outgoing_wishlist_search_event(self, text):
+        # Override method in plugin
+        pass
+
     def user_resolve_notification(self, user, ip_address, port, country):
         # Override method in plugin
         pass
@@ -1017,6 +1021,9 @@ class PluginHandler:
 
     def outgoing_user_search_event(self, users, text):
         return self._trigger_event("outgoing_user_search_event", (users, text))
+
+    def outgoing_wishlist_search_event(self, text):
+        return self._trigger_event("outgoing_wishlist_search_event", (text,))
 
     def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.

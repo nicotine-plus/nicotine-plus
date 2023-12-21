@@ -174,6 +174,13 @@ class Search:
                 if feedback is not None:
                     users, search_term = feedback
 
+        elif mode == "wishlist":
+            if core:
+                feedback = core.pluginhandler.outgoing_wishlist_search_event(search_term)
+
+                if feedback is not None:
+                    search_term = feedback[0]
+
         else:
             log.add("Unknown search mode, not using plugin system. Fix me!")
 
@@ -266,7 +273,7 @@ class Search:
 
     def do_wishlist_search(self, token, text):
 
-        text = text.strip()
+        text, _text_without_special, _room, _users = self.process_search_term(text.strip(), mode="wishlist")
 
         if not text:
             return
