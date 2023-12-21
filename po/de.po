@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-19 17:40+0000\n"
+"PO-Revision-Date: 2023-12-20 21:09+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -140,7 +140,8 @@ msgstr "Freigaben aktualisieren"
 
 #: pynicotine/__init__.py:83
 msgid "start the program in headless mode (no GUI)"
-msgstr "Im Headless-Modus starten (keine grafische Benutzeroberfläche)"
+msgstr ""
+"Starte das Programm im Headless-Modus (keine grafische Benutzeroberfläche)"
 
 #: pynicotine/__init__.py:87
 msgid "display version and exit"
@@ -220,7 +221,7 @@ msgstr "Beenden von %(program)s %(version)s!"
 #: pynicotine/core.py:447
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
-msgstr "Es kann keine Verbindung zum Server hergestellt werden. Grund: %s"
+msgstr "Verbindung zum Server nicht möglich. Grund: %s"
 
 #: pynicotine/core.py:447
 msgid "Cannot Connect"
@@ -842,7 +843,7 @@ msgstr "Passwortänderung abgelehnt"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:198
 msgid "Enter a new password for your Soulseek account:"
-msgstr "Gebe ein neues Passwort für das Soulseek-Konto ein:"
+msgstr "Gib ein neues Passwort für dein Soulseek-Konto ein:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:200
 msgid ""
@@ -1068,7 +1069,7 @@ msgstr "IP-Adresse ignorieren"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1008
 msgid "Enter an IP address you want to ignore:"
-msgstr "Geben eine IP-Adresse ein, die du ignorieren möchtest:"
+msgstr "Gib eine IP-Adresse ein, die du ignorieren möchtest:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1008
 #: pynicotine/gtkgui/dialogs/preferences.py:1165
@@ -1459,7 +1460,7 @@ msgstr "Übertragungsstatistik zurücksetzen?"
 
 #: pynicotine/gtkgui/dialogs/statistics.py:126
 msgid "Do you really want to reset transfer statistics?"
-msgstr "Übertragungsstatistik wirklich zurücksetzen?"
+msgstr "Willst du wirklich die Übertragungsstatistiken zurücksetzen?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:46
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:320
@@ -1485,7 +1486,7 @@ msgstr "Wunschliste löschen?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:147
 msgid "Do you really want to clear your wishlist?"
-msgstr "Wunschliste wirklich löschen?"
+msgstr "Möchtest du wirklich deine Wunschliste löschen?"
 
 #: pynicotine/gtkgui/downloads.py:45
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:152
@@ -1543,7 +1544,7 @@ msgstr "Alle Downloads löschen"
 
 #: pynicotine/gtkgui/downloads.py:130
 msgid "Do you really want to clear all downloads?"
-msgstr "Wirklich alle Downloads löschen?"
+msgstr "Willst du wirklich alle Downloads löschen?"
 
 #: pynicotine/gtkgui/downloads.py:142
 #, python-format
@@ -2173,7 +2174,7 @@ msgstr "Alle Uploads löschen"
 
 #: pynicotine/gtkgui/uploads.py:131
 msgid "Do you really want to clear all uploads?"
-msgstr "Wirklich alle Uploads löschen?"
+msgstr "Willst du wirklich alle Uploads löschen?"
 
 #: pynicotine/gtkgui/userbrowse.py:268
 msgid "_Save Shares List to Disk"
@@ -2272,7 +2273,7 @@ msgstr "Bild speichern"
 #: pynicotine/gtkgui/userinfo.py:426
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "Das Bild für Benutzer %(user)s konnte nicht geladen werden: %(error)s"
+msgstr "Fehler beim Laden des Bildes für Benutzer %(user)s: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:437
 msgid ""
@@ -2392,7 +2393,7 @@ msgstr "Alle Tabs schließen?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:411
 msgid "Do you really want to close all tabs?"
-msgstr "Wirklich alle Registerkarten schließen?"
+msgstr "Willst du wirklich alle Tabs schließen?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:432
 #, python-format
@@ -3698,7 +3699,7 @@ msgstr ""
 
 #: pynicotine/nowplaying.py:193
 msgid "MPRIS: Could not find a suitable MPRIS player"
-msgstr "MPRIS: Konnte keinen geeigneten MPRIS-Spieler finden"
+msgstr "MPRIS: Konnte keinen passenden MPRIS-Mediaspieler finden"
 
 #: pynicotine/nowplaying.py:198
 #, python-format
@@ -3714,8 +3715,7 @@ msgstr "Automatisch erkannter MPRIS-Spieler: %s"
 #, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr ""
-"MPRIS: Bei der Abfrage von %(player)s ist ein Fehler aufgetreten: "
-"%(exception)s"
+"MPRIS: Beim Abfragen von %(player)s ist ein Fehler aufgetreten: %(exception)s"
 
 #: pynicotine/nowplaying.py:262
 msgid "ListenBrainz: Please provide your ListenBrainz username"
@@ -4195,8 +4195,7 @@ msgstr "Getrennt von Server %(host)s:%(port)s"
 
 #: pynicotine/slskproto.py:1508
 msgid "Someone logged in to your Soulseek account elsewhere"
-msgstr ""
-"Jemand hat sich an eine andere Stelle bei deinem Soulseek-Konto angemeldet"
+msgstr "Jemand hat sich anderswo in deinem Soulseek-Konto eingeloggt"
 
 #: pynicotine/uploads.py:384
 #, python-format
@@ -5818,7 +5817,7 @@ msgstr "Suchanfragen mit weniger Zeichen als diese Zahl werden ignoriert:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:519
 msgid "Maximum search results to send per search request:"
-msgstr "Maximal zu sendende Suchergebnisse pro Suchanfrage:"
+msgstr "Maximale Anzahl an Suchergebnissen pro Suchanfrage:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:584
 msgid "Clear Search History"
@@ -5916,7 +5915,9 @@ msgstr "Maximale Anzahl an Dateien in der Warteschlange pro Benutzer:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr "Maximale Gesamtgröße der ausgewählten Dateien pro Benutzer (MiB):"
+msgstr ""
+"Maximale Gesamtgröße der in der Warteschlange stehenden Dateien pro Benutzer "
+"(MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
 msgid "Limits do not apply to buddies"
@@ -6022,7 +6023,7 @@ msgstr "Wunschzettelergebnisse gefunden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:395
 msgid "Restore the previously active main tab at startup"
-msgstr "Wiederherstellen der zuvor aktiven Hauptregisterkarte beim Start"
+msgstr "Stelle beim Start den zuvor aktiven Haupt-Tab wieder her"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:419
 msgid "Close-buttons on secondary tabs"
