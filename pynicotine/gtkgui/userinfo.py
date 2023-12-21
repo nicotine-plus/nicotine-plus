@@ -254,6 +254,7 @@ class UserInfo:
             self.queued_uploads_label,
             self.refresh_button,
             self.retry_button,
+            self.save_picture_button,
             self.shared_files_label,
             self.shared_folders_label,
             self.upload_slots_label,
@@ -351,7 +352,7 @@ class UserInfo:
             self.picture_popup_menu
         )
 
-        self.load_picture(None)
+        self.remove_picture()
         self.populate_stats()
         self.update_button_states()
 
@@ -360,7 +361,7 @@ class UserInfo:
         self.description_view.clear()
         self.likes_list_view.clear()
         self.dislikes_list_view.clear()
-        self.load_picture(None)
+        self.remove_picture()
 
     def destroy(self):
 
@@ -400,17 +401,22 @@ class UserInfo:
         if country_code:
             self.user_country(country_code)
 
+    def remove_picture(self):
+
+        if GTK_API_VERSION >= 4:
+            # Empty paintable to prevent container width from shrinking
+            self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
+
+        self.picture_data = None
+        self.picture_surface = None
+
+        self.picture_container.set_visible_child(self.placeholder_picture)
+        self.save_picture_button.set_sensitive(False)
+
     def load_picture(self, data):
 
         if not data:
-            if GTK_API_VERSION >= 4:
-                # Empty paintable to prevent container width from shrinking
-                self.picture.set_paintable(Gdk.Paintable.new_empty(intrinsic_width=1, intrinsic_height=1))
-
-            self.picture_data = None
-            self.picture_surface = None
-
-            self.picture_container.set_visible_child(self.placeholder_picture)
+            self.remove_picture()
             return
 
         try:
@@ -422,13 +428,16 @@ class UserInfo:
                 self.picture_data = GdkPixbuf.Pixbuf.new_from_stream(data_stream, cancellable=None)
                 self.picture_surface = Gdk.cairo_surface_create_from_pixbuf(self.picture_data, scale=1, for_window=None)
 
-            self.picture_container.set_visible_child(self.picture_view)
-
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
                 "user": self.user,
                 "error": error
             })
+            self.remove_picture()
+            return
+
+        self.picture_container.set_visible_child(self.picture_view)
+        self.save_picture_button.set_sensitive(True)
 
     def peer_connection_error(self):
 

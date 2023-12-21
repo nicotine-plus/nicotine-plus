@@ -653,8 +653,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_save_picture_button">
-                        <property name="sensitive" bind-source="picture_view" bind-property="visible" bind-flags="sync-create"/>
+                      <object class="GtkButton" id="save_picture_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_save_picture"/>
                         <child>
@@ -671,7 +670,7 @@
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Save _Picture</property>
-                                <property name="mnemonic-widget">_save_picture_button</property>
+                                <property name="mnemonic-widget">save_picture_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                                 <style>
