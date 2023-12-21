@@ -815,7 +815,7 @@ class Search:
                 })
                 continue
 
-            if not any(word in file_path_lower for word in self.searchterm_words_include):
+            if not all(word in file_path_lower for word in self.searchterm_words_include):
                 # Certain users may send us wrong results, filter out such ones
                 continue
 
