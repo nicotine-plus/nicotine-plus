@@ -205,6 +205,13 @@ class PrivateChats(IconNotebook):
         if page is None:
             return
 
+        if page.container == self.get_current_page():
+            self.spell_checker.set_entry(None)
+            self.completion.set_entry(None)
+
+            if self.command_help is not None:
+                self.command_help.set_menu_button(None)
+
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
