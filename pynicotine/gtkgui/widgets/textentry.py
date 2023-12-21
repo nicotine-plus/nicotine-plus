@@ -56,11 +56,29 @@ class ChatEntry:
     def grab_focus(self):
         self.widget.grab_focus()
 
+    def get_position(self):
+        return self.widget.get_position()
+
     def get_sensitive(self):
         return self.widget.get_sensitive()
 
+    def get_text(self):
+        return self.widget.get_text()
+
+    def insert_text(self, new_text, position):
+        self.widget.insert_text(new_text, position)
+
+    def delete_text(self, start_pos, end_pos):
+        self.widget.delete_text(start_pos, end_pos)
+
+    def set_position(self, position):
+        self.widget.set_position(position)
+
     def set_sensitive(self, sensitive):
         self.widget.set_sensitive(sensitive)
+
+    def set_text(self, text):
+        self.widget.set_text(text)
 
     def set_visible(self, visible):
         self.widget.set_visible(visible)
@@ -137,6 +155,7 @@ class ChatCompletion:
         self.completion_index = 0
         self.midway_completion = False  # True if the user just used tab completion
         self.selecting_completion = False  # True if the list box is open with suggestions
+        self.is_inserting_completion = False
 
         self.entry = None
         self.entry_changed_handler = None
@@ -275,8 +294,10 @@ class ChatCompletion:
         return True
 
     def on_entry_changed(self, *_args):
-        # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midway_completion = self.selecting_completion = False
+
+        # If the entry was modified, and we don't block entry_changed_handler, we're no longer completing
+        if not self.is_inserting_completion:
+            self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """Tab and Shift+Tab: tab complete chat."""
@@ -320,16 +341,17 @@ class ChatCompletion:
             current_word = self.current_completions[self.completion_index]
 
         if self.midway_completion:
-            # We're still completing, block handler to avoid modifying midway_completion value
-            with self.entry.handler_block(self.entry_changed_handler):
-                self.entry.delete_text(i - len(current_word), i)
+            # We're still completing, block entry_changed_handler to avoid modifying midway_completion value
+            self.is_inserting_completion = True
+            self.entry.delete_text(i - len(current_word), i)
 
-                direction = -1 if backwards else 1
-                self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
+            direction = -1 if backwards else 1
+            self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
 
-                new_word = self.current_completions[self.completion_index]
-                self.entry.insert_text(new_word, preix)
-                self.entry.set_position(preix + len(new_word))
+            new_word = self.current_completions[self.completion_index]
+            self.entry.insert_text(new_word, preix)
+            self.entry.set_position(preix + len(new_word))
+            self.is_inserting_completion = False
 
         return True
 
