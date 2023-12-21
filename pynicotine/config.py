@@ -515,7 +515,8 @@ class Config:
                 "distrib_ignore",
                 "reopen_tabs",
                 "max_stored_results",
-                "re_filter"
+                "re_filter",
+                "remove_special_chars"
             ),
             "userinfo": (
                 "descrutf8"
