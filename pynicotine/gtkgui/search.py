@@ -26,6 +26,7 @@ import re
 
 from itertools import islice
 
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -1102,7 +1103,11 @@ class Search:
         history.insert(0, value)
         config.write_configuration()
 
-        self.searches.add_filter_history_item(filter_id, value)
+        # If called after selecting a filter history item from the dropdown, GTK 4 crashes
+        # when resetting the dropdown model (in freeze() and unfreeze()). Add a slight delay
+        # to allow the selected item signal to complete before we add an item.
+
+        GLib.idle_add(self.searches.add_filter_history_item, filter_id, value)
 
     @staticmethod
     def _split_operator(condition):
