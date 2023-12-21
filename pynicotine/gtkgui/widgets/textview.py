@@ -75,8 +75,8 @@ class TextView:
         self.adjustment = self.scrollable.get_vadjustment()
         self.auto_scroll = auto_scroll
         self.adjustment_bottom = self.adjustment_value = 0
-        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
-        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
+        self.notify_upper_handler = self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
+        self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
         self.default_tags = {}
@@ -110,6 +110,11 @@ class TextView:
         self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
 
     def destroy(self):
+
+        # Prevent updates while destroying widget
+        self.adjustment.disconnect(self.notify_upper_handler)
+        self.adjustment.disconnect(self.notify_value_handler)
+
         self.__dict__.clear()
 
     def scroll_bottom(self):
