@@ -749,7 +749,7 @@ class Search:
 
     def populate_included_excluded_words(self):
 
-        search_term = self.text
+        search_term = self.text.lower()
 
         # Add exact phrases first, e.g. "this is a string"
         self.searchterm_words_include = re.findall(r'"([^"]*)"', search_term)
@@ -760,7 +760,7 @@ class Search:
         # Then handle remaining words
         search_term = " ".join(search_term.translate(TRANSLATE_PUNCTUATION).split())
 
-        for word in search_term.lower().split():
+        for word in search_term.split():
             if word.startswith("*"):
                 if len(word) > 1:
                     self.searchterm_words_include.append(word[1:])
