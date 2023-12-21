@@ -346,7 +346,10 @@ class FileChooserButton:
         ).show()
 
     def on_open_folder(self, *_args):
-        folder_path = self.path if self.chooser_type == "folder" else os.path.dirname(self.path)
+
+        path = os.path.expandvars(self.path)
+        folder_path = os.path.expandvars(path if self.chooser_type == "folder" else os.path.dirname(path))
+
         open_folder_path(folder_path, create_folder=True)
 
     def get_path(self):
