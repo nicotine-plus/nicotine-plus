@@ -726,7 +726,9 @@ class ChatRoom:
 
         self.log_toggle.set_visible(is_log_toggle_visible)
         self.speech_toggle.set_visible(is_speech_toggle_visible)
-        self.chat_entry_row.set_visible(is_log_toggle_visible or is_speech_toggle_visible)
+
+        if self.is_global:
+            self.chat_entry_row.set_visible(is_log_toggle_visible or is_speech_toggle_visible)
 
     def _show_notification(self, room, user, text, is_mentioned):
 
