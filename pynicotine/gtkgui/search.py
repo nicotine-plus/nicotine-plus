@@ -52,6 +52,7 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -429,19 +430,6 @@ class Search:
         self.text = text
         self.searchterm_words_include = []
         self.searchterm_words_ignore = []
-
-        for word in text.lower().split():
-            if word.startswith("*"):
-                if len(word) > 1:
-                    self.searchterm_words_include.append(word[1:])
-
-            elif word.startswith("-"):
-                if len(word) > 1:
-                    self.searchterm_words_ignore.append(word[1:])
-
-            else:
-                self.searchterm_words_include.append(word)
-
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
@@ -667,6 +655,7 @@ class Search:
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filter_history()
         self.populate_default_filters()
+        self.populate_included_excluded_words()
 
         # Wishlist
         self.update_wish_button()
@@ -758,6 +747,31 @@ class Search:
 
         self.set_filters(stored_filters)
 
+    def populate_included_excluded_words(self):
+
+        search_term = self.text
+
+        # Add exact phrases first, e.g. "this is a string"
+        self.searchterm_words_include = re.findall(r'"([^"]*)"', search_term)
+
+        for string in self.searchterm_words_include:
+            search_term = search_term.replace(f'"{string}"', "")
+
+        # Then handle remaining words
+        search_term = " ".join(search_term.translate(TRANSLATE_PUNCTUATION).split())
+
+        for word in search_term.lower().split():
+            if word.startswith("*"):
+                if len(word) > 1:
+                    self.searchterm_words_include.append(word[1:])
+
+            elif word.startswith("-"):
+                if len(word) > 1:
+                    self.searchterm_words_ignore.append(word[1:])
+
+            else:
+                self.searchterm_words_include.append(word)
+
     def set_filters(self, stored_filters):
         """Recall result filter values from a dict."""
 
@@ -803,12 +817,6 @@ class Search:
 
             if not any(word in file_path_lower for word in self.searchterm_words_include):
                 # Certain users may send us wrong results, filter out such ones
-                log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
-                                 'search query "%(query)s"'), {
-                    "filepath": file_path,
-                    "user": user,
-                    "query": self.text
-                })
                 continue
 
             self.num_results_found += 1

@@ -13,6 +13,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added "Chat History" popover to view all previous private chats with users
  * Added generic file type search result filters (audio \| image \| video \| text \| archive \| executable)
  * Added audio duration search result filter (HH:MM:SS \| MM:SS \| Seconds)
+ * Added support for phrase searching using quotation marks
  * Added path bar when browsing user shares
  * Added option to make specific shares available to trusted buddies only
  * Added option to wait for active uploads to finish before quitting Nicotine+
