@@ -158,11 +158,15 @@ class ChatCompletion:
             self.entry.widget.set_completion(None)
             self.entry.widget.disconnect(self.entry_changed_handler)
 
+        self.entry = entry
+
+        if entry is None:
+            return
+
         # Reusing an existing GtkEntryCompletion object after unsetting it doesn't work well
         self.create_entry_completion()
         entry.widget.set_completion(self.entry_completion)
 
-        self.entry = entry
         self.entry_changed_handler = entry.widget.connect("changed", self.on_entry_changed)
 
     def is_completion_enabled(self):
@@ -857,7 +861,7 @@ class SpellChecker:
         # Only one active entry at a time
         self.reset()
 
-        if not config.sections["ui"]["spellcheck"]:
+        if entry is None or not config.sections["ui"]["spellcheck"]:
             return
 
         # Attempt to load spell check module in case it was recently installed
