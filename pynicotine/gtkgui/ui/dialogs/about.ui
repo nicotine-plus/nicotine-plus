@@ -35,7 +35,7 @@
                 <property name="spacing">18</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel" id="application_name_label">
+                  <object class="GtkLabel" id="application_version_label">
                     <property name="halign">center</property>
                     <property name="justify">center</property>
                     <property name="selectable">True</property>
@@ -47,7 +47,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="version_label">
+                  <object class="GtkLabel" id="dependency_versions_label">
                     <property name="halign">center</property>
                     <property name="justify">center</property>
                     <property name="selectable">True</property>

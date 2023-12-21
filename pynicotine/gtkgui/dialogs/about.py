@@ -348,10 +348,11 @@ Copyright (c) 2017 IP2Location.com
     def __init__(self, application):
 
         (
-            self.application_name_label,
+            self.application_version_label,
             self.authors_container,
             self.container,
             self.copyright_label,
+            self.dependency_versions_label,
             self.license_container,
             self.main_icon,
             self.status_container,
@@ -359,7 +360,6 @@ Copyright (c) 2017 IP2Location.com
             self.status_label,
             self.status_spinner,
             self.translators_container,
-            self.version_label,
             self.website_label
         ) = ui.load(scope=self, path="dialogs/about.ui")
 
@@ -386,9 +386,8 @@ Copyright (c) 2017 IP2Location.com
         self.website_label.connect("activate-link", lambda x, url: open_uri(url))
 
         for label_widget, text in (
-            (self.application_name_label, pynicotine.__application_name__),
-            (self.version_label, (f"{pynicotine.__version__}   •   Python {sys.version.split()[0]}   •   "
-                                  f"GTK {gtk_version}")),
+            (self.application_version_label, f"{pynicotine.__application_name__} {pynicotine.__version__}"),
+            (self.dependency_versions_label, (f"GTK {gtk_version}   •   Python {sys.version.split()[0]}")),
             (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
                                   f"{_('Website')}</a>")),
             (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
