@@ -587,7 +587,6 @@ class ChatRoom:
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.chat_entry.set_sensitive(False)
         self.chat_entry_row.set_halign(Gtk.Align.END)
-        self.chat_entry_row.set_visible(self.log_toggle.get_visible() or self.speech_toggle.get_visible())
 
     def add_user_row(self, userdata):
 
