@@ -132,6 +132,17 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
 
+    def destroy(self):
+
+        self.room_search_combobox.destroy()
+        self.user_search_combobox.destroy()
+        self.search_combobox.destroy()
+
+        if self.file_properties is not None:
+            self.file_properties.destroy()
+
+        super().destroy()
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id != self.window.search_page.id:

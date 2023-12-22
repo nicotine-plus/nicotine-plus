@@ -167,6 +167,9 @@ class ChatCompletion:
 
         self.column_numbers = list(range(self.model.get_n_columns()))
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def create_entry_completion(self):
 
         self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
@@ -376,6 +379,9 @@ class CompletionEntry:
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
         widget.set_completion(completion)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def add_completion(self, item):
         if item not in self.completions:
@@ -867,6 +873,9 @@ class SpellChecker:
     def is_available(cls):
         cls._load_module()
         return bool(SpellChecker.module)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def reset(self):
 

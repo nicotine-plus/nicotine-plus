@@ -80,6 +80,9 @@ class TabLabel:
 
         self._pack_children()
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def _remove_tab_label(self):
 
         if self.eventbox.get_parent() is None:
@@ -325,6 +328,9 @@ class IconNotebook:
         if GTK_API_VERSION >= 4:
             self.pages_button.set_menu_model(self.popup_menu_pages.model)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def grab_focus(self):
         self.widget.grab_focus()
 
@@ -398,7 +404,8 @@ class IconNotebook:
         if hasattr(page, "focus_callback"):
             del page.focus_callback
 
-        del self.tab_labels[page]
+        tab_label = self.tab_labels.pop(page)
+        tab_label.destroy()
 
         if page_args:
             # Allow for restoring page after closing it

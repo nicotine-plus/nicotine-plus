@@ -111,7 +111,7 @@ class TreeView:
         if search_entry:
             self.widget.set_search_entry(search_entry)
 
-        self.widget.connect("query-tooltip", self.on_tooltip)
+        self._query_tooltip_handler = self.widget.connect("query-tooltip", self.on_tooltip)
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
@@ -120,6 +120,7 @@ class TreeView:
 
         # Prevent updates while destroying widget
         self.widget.disconnect(self._columns_changed_handler)
+        self.widget.disconnect(self._query_tooltip_handler)
 
         self._column_menu.destroy()
         self.__dict__.clear()

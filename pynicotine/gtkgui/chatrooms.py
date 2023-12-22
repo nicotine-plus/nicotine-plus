@@ -107,6 +107,20 @@ class ChatRooms(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+
+        self.completion.destroy()
+        self.spell_checker.destroy()
+        self.room_list.destroy()
+
+        if self.command_help is not None:
+            self.command_help.destroy()
+
+        if self.room_wall is not None:
+            self.room_wall.destroy()
+
+        super().destroy()
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id != self.window.chatrooms_page.id:

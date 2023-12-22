@@ -304,6 +304,9 @@ class FileChooserButton:
 
         self.open_folder_button.connect("clicked", self.on_open_folder)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def on_open_file_chooser_response(self, selected, _data):
 
         if selected.startswith(config.data_folder_path):

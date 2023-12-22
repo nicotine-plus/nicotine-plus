@@ -96,6 +96,15 @@ class UserBrowses(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+
+        self.userbrowse_combobox.destroy()
+
+        if self.file_properties is not None:
+            self.file_properties.destroy()
+
+        super().destroy()
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id != self.window.userbrowse_page.id:

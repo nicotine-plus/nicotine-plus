@@ -97,6 +97,10 @@ class Uploads(Transfers):
     def start(self):
         self.init_transfers(core.uploads.transfers.values())
 
+    def destroy(self):
+        self.upload_speeds.destroy()
+        super().destroy()
+
     def get_transfer_folder_path(self, transfer):
         virtual_path = transfer.virtual_path
         return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path

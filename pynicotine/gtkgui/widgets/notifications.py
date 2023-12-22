@@ -44,6 +44,9 @@ class Notifications:
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def update_title(self):
 
         notification_text = ""

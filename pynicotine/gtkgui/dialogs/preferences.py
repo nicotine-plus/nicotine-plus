@@ -108,6 +108,10 @@ class NetworkPage:
             }
         }
 
+    def destroy(self):
+        self.network_interface_combobox.destroy()
+        self.__dict__.clear()
+
     def set_settings(self):
 
         # Network interfaces
@@ -331,6 +335,15 @@ class DownloadsPage:
                 "download_doubleclick": self.download_double_click_combobox
             }
         }
+
+    def destroy(self):
+
+        self.download_folder_button.destroy()
+        self.incomplete_folder_button.destroy()
+        self.received_folder_button.destroy()
+        self.filter_list_view.destroy()
+
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -597,6 +610,10 @@ class SharesPage:
             }
         }
 
+    def destroy(self):
+        self.shares_list_view.destroy()
+        self.__dict__.clear()
+
     def set_settings(self):
 
         self.shares_list_view.clear()
@@ -793,6 +810,13 @@ class UploadsPage:
             }
         }
 
+    def destroy(self):
+
+        self.upload_double_click_combobox.destroy()
+        self.upload_queue_type_combobox.destroy()
+
+        self.__dict__.clear()
+
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
@@ -865,6 +889,13 @@ class UserProfilePage:
                 "pic": self.select_picture_button
             }
         }
+
+    def destroy(self):
+
+        self.description_view.destroy()
+        self.select_picture_button.destroy()
+
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -944,6 +975,13 @@ class IgnoredUsersPage:
                 "ipignorelist": self.ignored_ips_list_view
             }
         }
+
+    def destroy(self):
+
+        self.ignored_users_list_view.destroy()
+        self.ignored_ips_list_view.destroy()
+
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -1088,6 +1126,13 @@ class BannedUsersPage:
                 "customgeoblock": self.geo_block_message_entry
             }
         }
+
+    def destroy(self):
+
+        self.banned_users_list_view.destroy()
+        self.banned_ips_list_view.destroy()
+
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -1296,6 +1341,14 @@ class ChatsPage:
                 "speechprivate": self.tts_private_message_entry
             }
         }
+
+    def destroy(self):
+
+        self.tts_command_combobox.destroy()
+        self.censor_list_view.destroy()
+        self.replacement_list_view.destroy()
+
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -1852,6 +1905,19 @@ class UserInterfacePage:
         ):
             self.options["ui"].update(dictionary)
 
+    def destroy(self):
+
+        self.language_combobox.destroy()
+        self.close_action_combobox.destroy()
+        self.chat_username_appearance_combobox.destroy()
+        self.buddy_list_position_combobox.destroy()
+        self.icon_theme_button.destroy()
+
+        for combobox in self.tab_position_comboboxes.values():
+            combobox.destroy()
+
+        self.__dict__.clear()
+
     def set_settings(self):
 
         self.application.preferences.set_widgets_data(self.options)
@@ -2082,6 +2148,15 @@ class LoggingPage:
             }
         }
 
+    def destroy(self):
+
+        self.private_chat_log_folder_button.destroy()
+        self.chatroom_log_folder_button.destroy()
+        self.transfer_log_folder_button.destroy()
+        self.debug_log_folder_button.destroy()
+
+        self.__dict__.clear()
+
     def set_settings(self):
         self.application.preferences.set_widgets_data(self.options)
 
@@ -2167,6 +2242,10 @@ class SearchesPage:
                 "private_search_results": self.show_private_results_toggle
             }
         }
+
+    def destroy(self):
+        self.filter_help.destroy()
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -2333,6 +2412,13 @@ class UrlHandlersPage:
             }
         )
 
+    def destroy(self):
+
+        self.file_manager_combobox.destroy()
+        self.protocol_list_view.destroy()
+
+        self.__dict__.clear()
+
     def set_settings(self):
 
         self.protocol_list_view.clear()
@@ -2494,6 +2580,10 @@ class NowPlayingPage:
 
         self.mpris_radio.set_visible(
             sys.platform not in {"win32", "darwin"} and "SNAP_NAME" not in os.environ)
+
+    def destroy(self):
+        self.format_message_combobox.destroy()
+        self.__dict__.clear()
 
     def set_settings(self):
 
@@ -2683,6 +2773,13 @@ class PluginsPage:
             }
         )
 
+    def destroy(self):
+
+        self.plugin_description_view.destroy()
+        self.plugin_list_view.destroy()
+
+        self.__dict__.clear()
+
     def set_settings(self):
 
         self.plugin_list_view.clear()
@@ -2848,6 +2945,13 @@ class Preferences(Dialog):
 
         Accelerator("Tab", self.preferences_list, self.on_sidebar_tab_accelerator)
         Accelerator("<Shift>Tab", self.preferences_list, self.on_sidebar_shift_tab_accelerator)
+
+    def destroy(self):
+
+        for page in self.pages.values():
+            page.destroy()
+
+        super().destroy()
 
     def set_active_page(self, page_id):
 

@@ -92,3 +92,7 @@ class Popover:
             return
 
         self.widget.set_visible(False)
+
+    def destroy(self):
+        self.set_menu_button(None)
+        self.__dict__.clear()

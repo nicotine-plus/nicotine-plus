@@ -163,6 +163,14 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.popup_menu.destroy()
+        self.popup_menu_private_rooms.destroy()
+
+        self.__dict__.clear()
+
     def on_focus(self, *_args):
 
         self.update_visible()

@@ -66,7 +66,7 @@ class WishList(Dialog):
             wish = str(wish)
             self.list_view.add_row([wish], select_row=False)
 
-        CompletionEntry(self.wish_entry, self.list_view.model)
+        self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
         for event_name, callback in (
@@ -74,6 +74,13 @@ class WishList(Dialog):
             ("remove-wish", self.remove_wish)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.completion_entry.destroy()
+
+        super().destroy()
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()

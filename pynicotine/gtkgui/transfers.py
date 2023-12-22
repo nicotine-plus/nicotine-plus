@@ -243,11 +243,18 @@ class Transfers:
             (">" + _("User Actions"), self.popup_menu_users)
         )
 
-        events.connect("quit", self.quit)
+    def destroy(self):
 
-    def quit(self):
+        self.tree_view.destroy()
+        self.popup_menu.destroy()
+        self.popup_menu_users.destroy()
+        self.popup_menu_clear.destroy()
+        self.popup_menu_copy.destroy()
+
         if self.pending_parent_rows_timer_id is not None:
             events.cancel_scheduled(self.pending_parent_rows_timer_id)
+
+        self.__dict__.clear()
 
     def on_focus(self, *_args):
 

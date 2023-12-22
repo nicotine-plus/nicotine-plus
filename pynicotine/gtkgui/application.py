@@ -87,6 +87,7 @@ class Application:
         sys.excepthook = self.on_critical_error
 
         self.connect("activate", self.on_activate)
+        self.connect("shutdown", self.on_shutdown)
 
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
@@ -746,3 +747,40 @@ class Application:
 
     def on_quit_request(self, *_args):
         core.quit()
+
+    def on_shutdown(self, *_args):
+
+        if self.about is not None:
+            self.about.destroy()
+
+        if self.fast_configure is not None:
+            self.fast_configure.destroy()
+
+        if self.preferences is not None:
+            self.preferences.destroy()
+
+        if self.file_properties is not None:
+            self.file_properties.destroy()
+
+        if self.shortcuts is not None:
+            self.shortcuts.destroy()
+
+        if self.statistics is not None:
+            self.statistics.destroy()
+
+        if self.wishlist is not None:
+            self.wishlist.destroy()
+
+        if self.tray_icon is not None:
+            self.tray_icon.destroy()
+
+        if self.notifications is not None:
+            self.notifications.destroy()
+
+        if self.spell_checker is not None:
+            self.spell_checker.destroy()
+
+        if self.window is not None:
+            self.window.destroy()
+
+        self.__dict__.clear()

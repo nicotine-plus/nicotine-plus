@@ -83,6 +83,17 @@ class PrivateChats(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+
+        self.completion.destroy()
+        self.spell_checker.destroy()
+        self.history.destroy()
+
+        if self.command_help is not None:
+            self.command_help.destroy()
+
+        super().destroy()
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id != self.window.private_page.id:

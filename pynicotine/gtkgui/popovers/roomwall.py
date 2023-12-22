@@ -46,6 +46,10 @@ class RoomWall(Popover):
         self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
                                      pixels_above_lines=3, pixels_below_lines=3)
 
+    def destroy(self):
+        self.message_view.destroy()
+        super().destroy()
+
     def _update_message_list(self):
 
         tickers = core.chatrooms.joined_rooms[self.room].tickers

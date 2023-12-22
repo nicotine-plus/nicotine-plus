@@ -77,13 +77,20 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        CompletionEntry(window.private_entry, self.list_view.model, column=0)
+        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
             add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
 
         self.set_menu_button(window.private_history_button)
         self.load_users()
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.completion_entry.destroy()
+
+        super().destroy()
 
     def load_user(self, file_path):
         """Reads the username and latest message from a given log file path.

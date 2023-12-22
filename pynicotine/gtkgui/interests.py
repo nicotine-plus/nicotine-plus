@@ -213,6 +213,15 @@ class Interests:
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+
+        self.likes_list_view.destroy()
+        self.dislikes_list_view.destroy()
+        self.recommendations_list_view.destroy()
+        self.similar_users_list_view.destroy()
+
+        self.__dict__.clear()
+
     def on_focus(self, *_args):
 
         self.populate_recommendations()

@@ -1371,3 +1371,17 @@ class MainWindow(Window):
 
         # Hide window
         super().hide()
+
+    def destroy(self):
+
+        self.chatrooms.destroy()
+        self.interests.destroy()
+        self.private.destroy()
+        self.search.destroy()
+        self.userbrowse.destroy()
+        self.userinfo.destroy()
+        self.userlist.destroy()
+        self.downloads.destroy()
+        self.uploads.destroy()
+
+        super().destroy()

@@ -1083,8 +1083,6 @@ class TrayIcon:
         self.watch_availability()
         self.load()
 
-        events.connect("quit", self.quit)
-
     def watch_availability(self):
 
         if sys.platform in {"win32", "darwin"}:
@@ -1172,5 +1170,6 @@ class TrayIcon:
         if is_shutdown:
             self.implementation = None
 
-    def quit(self):
+    def destroy(self):
         self.unload(is_shutdown=True)
+        self.__dict__.clear()

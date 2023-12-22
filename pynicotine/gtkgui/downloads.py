@@ -97,6 +97,10 @@ class Downloads(Transfers):
     def start(self):
         self.init_transfers(core.downloads.transfers.values())
 
+    def destroy(self):
+        self.download_speeds.destroy()
+        super().destroy()
+
     def get_transfer_folder_path(self, transfer):
         return transfer.folder_path
 

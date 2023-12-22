@@ -94,6 +94,10 @@ class UserInfos(IconNotebook):
         ):
             events.connect(event_name, callback)
 
+    def destroy(self):
+        self.userinfo_combobox.destroy()
+        super().destroy()
+
     def on_focus(self, *_args):
 
         if self.window.current_page_id != self.window.userinfo_page.id:
