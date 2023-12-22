@@ -56,6 +56,9 @@ class ChatEntry:
     def grab_focus(self):
         self.widget.grab_focus()
 
+    def get_buffer(self):
+        return self.widget.get_buffer()
+
     def get_position(self):
         return self.widget.get_position()
 
@@ -898,7 +901,7 @@ class SpellChecker:
         self.buffer = SpellChecker.module.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
         self.buffer.set_spell_checker(SpellChecker.checker)
 
-        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry)
+        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry.widget)
         self.entry.set_inline_spell_checking(True)
 
 
