@@ -200,8 +200,11 @@ class TextView:
         return self.textbuffer.get_has_selection()
 
     def get_text(self):
+
         start_iter = self.textbuffer.get_start_iter()
-        return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
+        end_iter = self.textbuffer.get_end_iter()
+
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
