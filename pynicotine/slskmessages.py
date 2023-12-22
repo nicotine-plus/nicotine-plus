@@ -3282,17 +3282,18 @@ class FolderContentsRequest(PeerMessage):
     We ask the peer to send us the contents of a single folder.
     """
 
-    __slots__ = ("dir", "token")
+    __slots__ = ("dir", "token", "legacy_client")
 
-    def __init__(self, directory=None, token=None):
+    def __init__(self, directory=None, token=None, legacy_client=False):
         PeerMessage.__init__(self)
         self.dir = directory
         self.token = token
+        self.legacy_client = legacy_client
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
-        msg.extend(self.pack_string(self.dir, is_legacy=True))
+        msg.extend(self.pack_string(self.dir, is_legacy=self.legacy_client))
 
         return msg
 

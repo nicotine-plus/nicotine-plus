@@ -41,14 +41,28 @@ from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
 
 
+class RequestedFolder:
+
+    __slots__ = ("username", "folder_path", "download_folder_path", "request_timer_id", "has_retried",
+                 "legacy_attempt")
+
+    def __init__(self, username, folder_path, download_folder_path):
+        self.username = username
+        self.folder_path = folder_path
+        self.download_folder_path = download_folder_path
+        self.request_timer_id = None
+        self.has_retried = False
+        self.legacy_attempt = False
+
+
 class Downloads(Transfers):
 
     def __init__(self):
 
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "downloads.json"))
 
-        self.requested_folders = defaultdict(dict)
-        self.requested_folder_token = 0
+        self._requested_folders = defaultdict(dict)
+        self._requested_folder_token = 0
 
         self._folder_basename_byte_limits = {}
         self._pending_queue_messages = {}
@@ -84,7 +98,7 @@ class Downloads(Transfers):
         super()._quit()
 
         self._folder_basename_byte_limits.clear()
-        self.requested_folder_token = 0
+        self._requested_folder_token = 0
 
     def _server_login(self, msg):
 
@@ -92,8 +106,6 @@ class Downloads(Transfers):
             return
 
         super()._server_login(msg)
-
-        self.requested_folders.clear()
 
         # Request queue position of queued downloads and retry failed downloads every 3 minutes
         self._download_queue_timer_id = events.schedule(delay=180, callback=self._check_download_queue, repeat=True)
@@ -117,7 +129,15 @@ class Downloads(Transfers):
         ):
             events.cancel_scheduled(timer_id)
 
-        self.requested_folders.clear()
+        for user_requested_folders in self._requested_folders.values():
+            for requested_folder in user_requested_folders.values():
+                if requested_folder.request_timer_id is None:
+                    continue
+
+                events.cancel_scheduled(requested_folder.request_timer_id)
+                requested_folder.request_timer_id = None
+
+        self._requested_folders.clear()
 
     # Load Transfers #
 
@@ -569,9 +589,10 @@ class Downloads(Transfers):
 
         # Check if a custom download location was specified
         if not download_folder_path:
-            if (username in self.requested_folders and folder_path in self.requested_folders[username]
-                    and self.requested_folders[username][folder_path]):
-                download_folder_path = self.requested_folders[username][folder_path]
+            requested_folder = self._requested_folders.get(username, {}).get(folder_path)
+
+            if requested_folder is not None and requested_folder.download_folder_path:
+                download_folder_path = requested_folder.download_folder_path
             else:
                 download_folder_path = self.get_default_download_folder(username)
 
@@ -685,11 +706,40 @@ class Downloads(Transfers):
 
     def enqueue_folder(self, username, folder_path, download_folder_path=None):
 
-        self.requested_folders[username][folder_path] = download_folder_path
-        self.requested_folder_token = slskmessages.increment_token(self.requested_folder_token)
+        if core.user_status == slskmessages.UserStatus.OFFLINE:
+            return
+
+        requested_folder = self._requested_folders.get(username, {}).get(folder_path)
+
+        if requested_folder is None:
+            self._requested_folders[username][folder_path] = requested_folder = RequestedFolder(
+                username, folder_path, download_folder_path
+            )
+
+        # First timeout is shorter to get a response sooner in case the first request
+        # failed. Second timeout is longer in case the response is delayed.
+        timeout = 60 if requested_folder.has_retried else 15
+
+        if requested_folder.request_timer_id is not None:
+            events.cancel_scheduled(requested_folder.request_timer_id)
+            requested_folder.request_timer_id = None
+
+        requested_folder.request_timer_id = events.schedule(
+            delay=timeout, callback=lambda: self._requested_folder_timeout(requested_folder)
+        )
+
+        log.add_transfer("Requesting contents of folder %(path)s from user %(user)s", {
+            "path": folder_path,
+            "user": username
+        })
+
+        self._requested_folder_token = slskmessages.increment_token(self._requested_folder_token)
 
         core.send_message_to_peer(
-            username, slskmessages.FolderContentsRequest(folder_path, self.requested_folder_token))
+            username, slskmessages.FolderContentsRequest(
+                folder_path, self._requested_folder_token, legacy_client=requested_folder.legacy_attempt
+            )
+        )
 
     def enqueue_download(self, username, virtual_path, folder_path=None, size=0, file_attributes=None,
                          bypass_filter=False):
@@ -851,28 +901,70 @@ class Downloads(Transfers):
         })
         self._abort_transfer(download, status=status)
 
+    def _requested_folder_timeout(self, requested_folder):
+
+        if requested_folder.request_timer_id is None:
+            return
+
+        requested_folder.request_timer_id = None
+        username = requested_folder.username
+        folder_path = requested_folder.folder_path
+
+        if requested_folder.has_retried:
+            log.add_transfer(("Folder content request for folder %(path)s from user %(user)s timed out, "
+                              "giving up"), {
+                "path": folder_path,
+                "user": username
+            })
+            del self._requested_folders[username][folder_path]
+            return
+
+        log.add_transfer(("Folder content request for folder %(path)s from user %(user)s timed out, "
+                          "retrying"), {
+            "path": folder_path,
+            "user": username
+        })
+
+        requested_folder.has_retried = True
+        self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
+
     def _folder_contents_response(self, msg, check_num_files=True):
         """Peer code 37."""
 
         username = msg.username
 
-        if username not in self.requested_folders:
+        if username not in self._requested_folders:
             return
 
         for folder_path, files in msg.list.items():
-            if folder_path not in self.requested_folders[username]:
+            if folder_path not in self._requested_folders[username]:
                 continue
 
-            log.add_transfer("Received response for folder content request from user %s", username)
+            log.add_transfer(("Received response for folder content request for folder %(path)s "
+                              "from user %(user)s"), {
+                "path": folder_path,
+                "user": username
+            })
 
             num_files = len(files)
+            requested_folder = self._requested_folders[username][folder_path]
+
+            if requested_folder.request_timer_id is not None:
+                events.cancel_scheduled(requested_folder.request_timer_id)
+                requested_folder.request_timer_id = None
 
             if check_num_files and num_files > 100:
                 events.emit("download-large-folder", username, folder_path, num_files, msg)
                 return
 
+            if not files and not requested_folder.legacy_attempt:
+                log.add_transfer("Folder content response is empty. Trying legacy latin-1 request.")
+                requested_folder.legacy_attempt = requested_folder.has_retried = True
+                self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
+                return
+
             destination_folder_path = self.get_folder_destination(username, folder_path)
-            del self.requested_folders[username][folder_path]
+            del self._requested_folders[username][folder_path]
 
             if num_files > 1:
                 files.sort(key=lambda x: strxfrm(x[1]))

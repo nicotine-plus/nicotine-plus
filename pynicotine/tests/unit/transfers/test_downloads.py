@@ -195,9 +195,9 @@ class DownloadsTest(TestCase):
         config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.downloads.get_folder_destination(username, folder_path)
 
-        core.downloads.requested_folders[username][folder_path] = "test"
+        core.downloads._requested_folders[username][folder_path] = "test"
         destination_custom = core.downloads.get_folder_destination(username, folder_path)
-        core.downloads.requested_folders.clear()
+        core.downloads._requested_folders.clear()
 
         destination_custom_second = core.downloads.get_folder_destination(
             username, folder_path, download_folder_path="test2")
