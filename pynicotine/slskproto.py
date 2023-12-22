@@ -1414,7 +1414,7 @@ class NetworkThread(Thread):
                         if self._parent_socket is not None:
                             self._close_connection(self._conns, self._parent_socket)
 
-                        for child_conn_obj in self._child_peers.values():
+                        for child_conn_obj in self._child_peers.copy().values():
                             self._close_connection(self._conns, child_conn_obj.sock)
 
                         self._send_have_no_parent()
