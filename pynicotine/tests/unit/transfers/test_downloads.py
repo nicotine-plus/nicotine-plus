@@ -23,6 +23,7 @@ from unittest import TestCase
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.downloads import RequestedFolder
 from pynicotine.transfers import TransferStatus
 
 
@@ -195,7 +196,9 @@ class DownloadsTest(TestCase):
         config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.downloads.get_folder_destination(username, folder_path)
 
-        core.downloads._requested_folders[username][folder_path] = "test"
+        core.downloads._requested_folders[username][folder_path] = RequestedFolder(
+            username=username, folder_path=folder_path, download_folder_path="test"
+        )
         destination_custom = core.downloads.get_folder_destination(username, folder_path)
         core.downloads._requested_folders.clear()
 
