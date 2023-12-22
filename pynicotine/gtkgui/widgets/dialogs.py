@@ -421,7 +421,9 @@ class MessageDialog(Window):
         if self.callback and response_type != "cancel":
             self.callback(self, response_type, self.callback_data)
 
-        self.close()
+        # Check if the dialog was already closed in the callback
+        if self in Window.active_dialogs:
+            self.close()
 
     def _finish_show(self):
         self.widget.set_modal(self.parent and self.parent.is_visible())
