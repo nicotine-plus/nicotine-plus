@@ -172,18 +172,18 @@ class Search:
         for index, word in enumerate(search_term_words):
             if word.startswith("*") and len(word) > 1:
                 # Partial word (*erm)
-                included_words.append(word[1:])
+                included_words.append(word[1:].lower())
 
             elif word.startswith("-") and len(word) > 1:
                 # Excluded word (-word)
-                excluded_words.append(word[1:])
+                excluded_words.append(word[1:].lower())
 
             elif word.startswith('"') and word.endswith('"'):
                 # Phrase "some words here"
                 word = word[1:-1]
 
                 if word:
-                    included_words.append(word)
+                    included_words.append(word.lower())
 
                 for inner_word in word.translate(TRANSLATE_PUNCTUATION).strip().split():
                     search_term_words_no_quotes.append(inner_word)
@@ -196,7 +196,7 @@ class Search:
                 if not word:
                     continue
 
-                included_words.append(word)
+                included_words.append(word.lower())
 
             search_term_words_no_quotes.append(word)
 
