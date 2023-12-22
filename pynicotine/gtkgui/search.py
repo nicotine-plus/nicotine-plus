@@ -53,7 +53,6 @@ from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import FileListMessage
-from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
@@ -429,8 +428,6 @@ class Search:
         self.window = searches.window
 
         self.text = text
-        self.searchterm_words_include = []
-        self.searchterm_words_ignore = []
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
@@ -656,7 +653,6 @@ class Search:
         self.filters_button.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filter_history()
         self.populate_default_filters()
-        self.populate_included_excluded_words()
 
         # Wishlist
         self.update_wish_button()
@@ -748,31 +744,6 @@ class Search:
 
         self.set_filters(stored_filters)
 
-    def populate_included_excluded_words(self):
-
-        search_term = self.text.lower()
-
-        # Add exact phrases first, e.g. "this is a string"
-        self.searchterm_words_include = re.findall(r'"([^"]*)"', search_term)
-
-        for string in self.searchterm_words_include:
-            search_term = search_term.replace(f'"{string}"', "")
-
-        # Then handle remaining words
-        search_term = " ".join(search_term.translate(TRANSLATE_PUNCTUATION).split())
-
-        for word in search_term.split():
-            if word.startswith("*"):
-                if len(word) > 1:
-                    self.searchterm_words_include.append(word[1:])
-
-            elif word.startswith("-"):
-                if len(word) > 1:
-                    self.searchterm_words_ignore.append(word[1:])
-
-            else:
-                self.searchterm_words_include.append(word)
-
     def set_filters(self, stored_filters):
         """Recall result filter values from a dict."""
 
@@ -798,6 +769,7 @@ class Search:
         """
 
         update_ui = False
+        search = core.search.searches[self.token]
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
@@ -806,7 +778,7 @@ class Search:
 
             file_path_lower = file_path.lower()
 
-            if any(word in file_path_lower for word in self.searchterm_words_ignore):
+            if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
                                'search term "%(query)s"'), {
@@ -816,7 +788,7 @@ class Search:
                 })
                 continue
 
-            if not all(word in file_path_lower for word in self.searchterm_words_include):
+            if not all(word in file_path_lower for word in search.included_words):
                 # Certain users may send us wrong results, filter out such ones
                 continue
 

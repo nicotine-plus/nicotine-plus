@@ -24,7 +24,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
-SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
+SEARCH_TEXT = '70 gwen "test" -mp3 "what\'s up" -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
 SEARCH_MODE = "global"
 
 
@@ -49,15 +49,12 @@ class SearchTest(TestCase):
         search history."""
 
         old_token = core.search.token
-        search_term, search_term_sanitized, search_term_without_special, *_unused = core.search.process_search_term(
-            SEARCH_TEXT, SEARCH_MODE
-        )
+        search_term, search_term_no_quotes, *_unused = core.search.sanitize_search_term(SEARCH_TEXT)
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
         self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(search_term, '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes')
-        self.assertEqual(search_term_sanitized, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
-        self.assertEqual(search_term_without_special, "70 gwen test a b c d auto yes")
+        self.assertEqual(search_term, '70 gwen "test" -mp3 "what\'s up" -nothanks a b c d *ello auto -no yes')
+        self.assertEqual(search_term_no_quotes, '70 gwen test -mp3 what s up -nothanks a b c d *ello auto -no yes')
         self.assertEqual(config.sections["searches"]["history"][0], search_term)
 
     def test_search_token_increment(self):
