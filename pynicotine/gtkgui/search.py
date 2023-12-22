@@ -26,6 +26,7 @@ import re
 
 from itertools import islice
 
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -288,10 +289,16 @@ class Searches(IconNotebook):
         page.clear()
 
         if page.show_page:
-            self.remove_page(page.container, page_args=(page.text, page.mode, page.room, page.searched_users))
+            mode = page.mode
+
+            if mode == "wishlist":
+                # For simplicity's sake, turn wishlist tabs into regular ones when restored
+                mode = "global"
+
+            self.remove_page(page.container, page_args=(page.text, mode, page.room, page.searched_users))
 
         del self.pages[token]
-        page.destroy_widgets()
+        page.destroy()
 
     def clear_search_history(self):
 
@@ -421,21 +428,6 @@ class Search:
         self.window = searches.window
 
         self.text = text
-        self.searchterm_words_include = []
-        self.searchterm_words_ignore = []
-
-        for word in text.lower().split():
-            if word.startswith("*"):
-                if len(word) > 1:
-                    self.searchterm_words_include.append(word[1:])
-
-            elif word.startswith("-"):
-                if len(word) > 1:
-                    self.searchterm_words_ignore.append(word[1:])
-
-            else:
-                self.searchterm_words_include.append(word)
-
         self.token = token
         self.mode = mode
         self.mode_label = mode_label
@@ -619,8 +611,7 @@ class Search:
         )
 
         self.popup_menus = (
-            self.popup_menu_users, self.popup_menu_copy, self.popup_menu, self.tab_menu,
-            self.tree_view.column_menu
+            self.popup_menu, self.popup_menu_users, self.popup_menu_copy, self.tab_menu
         )
 
         # Key bindings
@@ -667,17 +658,17 @@ class Search:
         self.update_wish_button()
 
     def clear(self):
-
         self.clear_model(stored_results=True)
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        for combobox in self.filter_comboboxes.values():
+            combobox.destroy()
+
+        self.tree_view.destroy()
         self.__dict__.clear()
 
     def set_label(self, label):
@@ -778,6 +769,7 @@ class Search:
         """
 
         update_ui = False
+        search = core.search.searches[self.token]
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
@@ -786,7 +778,7 @@ class Search:
 
             file_path_lower = file_path.lower()
 
-            if any(word in file_path_lower for word in self.searchterm_words_ignore):
+            if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
                 log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
                                'search term "%(query)s"'), {
@@ -796,14 +788,8 @@ class Search:
                 })
                 continue
 
-            if not any(word in file_path_lower for word in self.searchterm_words_include):
+            if not all(word in file_path_lower for word in search.included_words):
                 # Certain users may send us wrong results, filter out such ones
-                log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
-                                 'search query "%(query)s"'), {
-                    "filepath": file_path,
-                    "user": user,
-                    "query": self.text
-                })
                 continue
 
             self.num_results_found += 1
@@ -1089,7 +1075,11 @@ class Search:
         history.insert(0, value)
         config.write_configuration()
 
-        self.searches.add_filter_history_item(filter_id, value)
+        # If called after selecting a filter history item from the dropdown, GTK 4 crashes
+        # when resetting the dropdown model (in freeze() and unfreeze()). Add a slight delay
+        # to allow the selected item signal to complete before we add an item.
+
+        GLib.idle_add(self.searches.add_filter_history_item, filter_id, value)
 
     @staticmethod
     def _split_operator(condition):

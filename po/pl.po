@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2023-12-18 00:34+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.3\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3916,7 +3916,7 @@ msgstr "Nieignorowany %s"
 #: pynicotine/plugins/core_commands/__init__.py:558
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s udostępnione pliki (%(num_total)s skonfigurowane)"
 
 #: pynicotine/plugins/core_commands/__init__.py:570
 #, python-format
@@ -3927,6 +3927,8 @@ msgstr "Nie można udostępnić niedostępnego folderu „%s”"
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Dodano %(group_name)s udostępnij \"%(virtual_name)s\" (wymagane ponowne "
+"skanowanie)"
 
 #: pynicotine/plugins/core_commands/__init__.py:584
 #, python-format
@@ -4869,9 +4871,8 @@ msgid "Configure User Profile"
 msgstr "Konfiguruj profil użytkownika"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1630
-#, fuzzy
 msgid "Search log…"
-msgstr "Wyszukiwana fraza…"
+msgstr "Szukaj w logach…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1711
 msgid "Connections"
@@ -5802,14 +5803,12 @@ msgid "Visible to everyone:"
 msgstr "Widoczne dla wszystkich:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
-#, fuzzy
 msgid "Buddy shares"
-msgstr "Zasoby dla znajomych"
+msgstr "Kumpel udostępnia"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:90
-#, fuzzy
 msgid "Trusted shares"
-msgstr "Zaufane zasoby"
+msgstr "Zaufane udziały"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:65
 msgid "Autoclear finished/cancelled uploads from transfer list"

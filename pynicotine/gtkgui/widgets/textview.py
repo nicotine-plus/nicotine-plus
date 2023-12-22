@@ -48,6 +48,9 @@ class TextView:
         POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
         TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
 
+    MAX_NUM_LINES = 50000
+    URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
+
     def __init__(self, parent, auto_scroll=False, parse_urls=True, editable=True,
                  horizontal_margin=12, vertical_margin=8, pixels_above_lines=1, pixels_below_lines=1):
 
@@ -65,21 +68,19 @@ class TextView:
             parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
+        self.end_iter = self.textbuffer.get_end_iter()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
         self.adjustment = self.scrollable.get_vadjustment()
         self.auto_scroll = auto_scroll
         self.adjustment_bottom = self.adjustment_value = 0
-        self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
-        self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
+        self.notify_upper_handler = self.adjustment.connect("notify::upper", self.on_adjustment_upper_changed)
+        self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.max_num_lines = 50000
         self.default_tags = {}
         self.parse_urls = parse_urls
-        self.url_tags = {}
-        self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         if GTK_API_VERSION >= 4:
             self.gesture_click_primary = Gtk.GestureClick()
@@ -108,6 +109,14 @@ class TextView:
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
         self.gesture_click_secondary.connect("pressed", self.on_pressed_secondary)
 
+    def destroy(self):
+
+        # Prevent updates while destroying widget
+        self.adjustment.disconnect(self.notify_upper_handler)
+        self.adjustment.disconnect(self.notify_value_handler)
+
+        self.__dict__.clear()
+
     def scroll_bottom(self):
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
@@ -117,30 +126,30 @@ class TextView:
         if not text:
             return
 
-        iterator = self.textbuffer.get_end_iter()
-
         if tag is not None:
-            start_offset = iterator.get_offset()
+            start_offset = self.end_iter.get_offset()
 
-        self.textbuffer.insert(iterator, text)
+        self.textbuffer.insert(self.end_iter, text)
 
         if tag is not None:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
-            self.textbuffer.apply_tag(tag, start_iter, iterator)
+            self.textbuffer.apply_tag(tag, start_iter, self.end_iter)
 
     def _remove_old_lines(self, num_lines):
 
-        if num_lines < self.max_num_lines:
+        if num_lines < self.MAX_NUM_LINES:
             return
 
+        # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
-        end_iter = self.textbuffer.get_iter_at_line(num_lines - self.max_num_lines)
+        end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
+        end_iter = self.textbuffer.get_iter_at_line(end_line)
 
         if GTK_API_VERSION >= 4:
             _position_found, end_iter = end_iter
 
-        self.url_tags.pop(end_iter, None)
         self.textbuffer.delete(start_iter, end_iter)
+        self.end_iter = self.textbuffer.get_end_iter()
 
     def append_line(self, message, message_type=None, timestamp=None, timestamp_format=None,
                     username=None, usertag=None, roomname=None):
@@ -149,6 +158,8 @@ class TextView:
         num_lines = self.textbuffer.get_line_count()
 
         if self.textbuffer.get_char_count() > 0:
+            # No tag applied on line breaks to prevent visual glitch where text on the
+            # next line has the wrong color
             self._insert_text("\n")
 
         if timestamp_format:
@@ -170,19 +181,18 @@ class TextView:
         # Highlight urls, if found and tag them
         if self.parse_urls and ("://" in message or "www." in message or "mailto:" in message):
             # Match first url
-            match = self.url_regex.search(message)
+            match = self.URL_REGEX.search(message)
 
             while match:
                 self._insert_text(message[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self.url_tags[self.textbuffer.get_end_iter()] = urltag
                 self._insert_text(url, urltag)
 
                 # Match remaining url
                 message = message[match.end():]
-                match = self.url_regex.search(message)
+                match = self.URL_REGEX.search(message)
 
         self._insert_text(message, tag)
         self._remove_old_lines(num_lines)
@@ -193,8 +203,8 @@ class TextView:
         return self.textbuffer.get_has_selection()
 
     def get_text(self):
-        start_iter, end_iter = self.textbuffer.get_bounds()
-        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
+        start_iter = self.textbuffer.get_start_iter()
+        return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -247,11 +257,8 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-
-        start_iter, end_iter = self.textbuffer.get_bounds()
-
-        self.textbuffer.delete(start_iter, end_iter)
-        self.url_tags.clear()
+        self.textbuffer.set_text("")
+        self.end_iter = self.textbuffer.get_end_iter()
 
     # Text Tags (Usernames, URLs) #
 
@@ -283,12 +290,7 @@ class TextView:
         update_tag_visuals(tag, color_id=tag.color_id)
 
     def update_tags(self):
-
-        for tag in self.url_tags.values():
-            self.update_tag(tag)
-
-        for tag in self.default_tags.values():
-            self.update_tag(tag)
+        self.textbuffer.get_tag_table().foreach(self.update_tag)
 
     # Events #
 
@@ -457,10 +459,6 @@ class ChatView(TextView):
             self.update_user_tag(username)
 
         return self.user_tags[username]
-
-    def update_tags(self):
-        super().update_tags()
-        self.update_user_tags()
 
     def update_user_tag(self, username):
 

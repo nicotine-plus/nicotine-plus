@@ -73,3 +73,6 @@ class Window:
 
     def close(self, *_args):
         self.widget.close()
+
+    def destroy(self):
+        self.__dict__.clear()

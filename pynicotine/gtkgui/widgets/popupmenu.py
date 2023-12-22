@@ -63,6 +63,10 @@ class PopupMenu:
         PopupMenu.popup_id_counter += 1
         self.popup_id = PopupMenu.popup_id_counter
 
+    def destroy(self):
+        self.clear()
+        self.__dict__.clear()
+
     def set_parent(self, parent):
 
         if parent:

@@ -1,6 +1,11 @@
 # Release Notes
 
-## Version 3.3.0 (Unreleased)
+The current stable version of Nicotine+ is 3.2.9, see [DOWNLOADS.md](doc/DOWNLOADS.md).
+
+You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
+
+
+## Version 3.3.0rc1 (Release Candidate 1)
 
 ### Changes
 
@@ -8,6 +13,7 @@
  * Added "Chat History" popover to view all previous private chats with users
  * Added generic file type search result filters (audio \| image \| video \| text \| archive \| executable)
  * Added audio duration search result filter (HH:MM:SS \| MM:SS \| Seconds)
+ * Added support for phrase searching using quotation marks
  * Added path bar when browsing user shares
  * Added option to make specific shares available to trusted buddies only
  * Added option to wait for active uploads to finish before quitting Nicotine+
@@ -153,6 +159,7 @@
  * Rejoin rooms in order ([#2490](https://github.com/nicotine-plus/nicotine-plus/issues/2490))
  * Turn off display of automatic chat messages ([#2510](https://github.com/nicotine-plus/nicotine-plus/issues/2510))
  * Unable to Connect to SoulSeek Server when Dual Network Interface Is Configured ([#2518](https://github.com/nicotine-plus/nicotine-plus/issues/2518))
+ * Search filter: username ([#2537](https://github.com/nicotine-plus/nicotine-plus/issues/2537))
  * Wishlist results - sound alert and flashing icon when minimized ([#2551](https://github.com/nicotine-plus/nicotine-plus/issues/2551))
  * Default image viewer ([#2552](https://github.com/nicotine-plus/nicotine-plus/issues/2552))
  * Auto resume/retry ([#2555](https://github.com/nicotine-plus/nicotine-plus/issues/2555))
@@ -162,6 +169,7 @@
  * UnicodeEncodeError ([#2569](https://github.com/nicotine-plus/nicotine-plus/issues/2569))
  * \[3.3.0.dev5\] Crash (maybe before network reconnect, not sure) ([#2573](https://github.com/nicotine-plus/nicotine-plus/issues/2573))
  * \[3.3.0.dev5\] Couldn't remember the password for one of my usernames, crashed when i tried to change login ([#2582](https://github.com/nicotine-plus/nicotine-plus/issues/2582))
+ * Its not possible to set download folders when they are already set to invalid drive ([#2586](https://github.com/nicotine-plus/nicotine-plus/issues/2586))
  * \[3.3.0.dev5\] N+ crashes on startup on macos 13.4.1 ([#2587](https://github.com/nicotine-plus/nicotine-plus/issues/2587))
  * Nicotine+ Low FPS/Stuttering on Mac OS ([#2589](https://github.com/nicotine-plus/nicotine-plus/issues/2589))
  * Log function not working ([#2591](https://github.com/nicotine-plus/nicotine-plus/issues/2591))
@@ -178,6 +186,7 @@
  * Download folder for remote user keeps appearing ([#2667](https://github.com/nicotine-plus/nicotine-plus/issues/2667))
  * Can you swap "close" and "reset" buttons? ([#2678](https://github.com/nicotine-plus/nicotine-plus/issues/2678))
  * \[3.3.0.dev6\] Crashing when uploading folders to user ([#2690](https://github.com/nicotine-plus/nicotine-plus/issues/2690))
+ * PORT Issue! ([#2694](https://github.com/nicotine-plus/nicotine-plus/issues/2694))
  * Show total folder size on search tab ([#2697](https://github.com/nicotine-plus/nicotine-plus/issues/2697))
  * Remove "Send To Player" from main right-click menu ([#2705](https://github.com/nicotine-plus/nicotine-plus/issues/2705))
  * Make banning user stop them from viewing profile ([#2710](https://github.com/nicotine-plus/nicotine-plus/issues/2710))

@@ -525,16 +525,19 @@ class IconNotebook:
 
     def _append_unread_page(self, page, is_important=False):
 
-        is_currently_important = self.unread_pages.get(page)
+        # Remove existing page and move it to the end of the dict
+        is_currently_important = self.unread_pages.pop(page, None)
 
         if is_currently_important and not is_important:
             # Important pages are persistent
+            self.unread_pages[page] = is_currently_important
             return False
+
+        self.unread_pages[page] = is_important
 
         if is_currently_important == is_important:
             return False
 
-        self.unread_pages[page] = is_important
         self.update_pages_menu_button()
         return True
 
@@ -664,8 +667,8 @@ class IconNotebook:
 
         self.popup_menu_pages.clear()
 
-        # Unread pages
-        for page in self.unread_pages:
+        # Unread pages (most recently changed first)
+        for page in reversed(list(self.unread_pages)):
             tab_label = self.get_tab_label(page)
             self.popup_menu_pages.add_items(
                 ("#*  " + tab_label.get_text(), self.on_show_page, page)

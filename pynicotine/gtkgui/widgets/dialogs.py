@@ -166,6 +166,7 @@ class Dialog(Window):
             self.close_callback(self)
 
         if self.close_destroy:
+            self.destroy()
             return False
 
         # Hide the dialog
@@ -409,8 +410,11 @@ class MessageDialog(Window):
         self.container.set_visible(True)
 
     def _on_close_request(self, *_args):
+
         if self in Window.active_dialogs:
             Window.active_dialogs.remove(self)
+
+        self.destroy()
 
     def _on_button_pressed(self, _button, response_type):
 

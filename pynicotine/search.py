@@ -22,6 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+import shlex
 
 from itertools import islice
 from operator import itemgetter
@@ -37,12 +38,15 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class SearchRequest:
 
-    __slots__ = ("token", "term", "mode", "room", "users", "is_ignored")
+    __slots__ = ("token", "term", "included_words", "excluded_words", "mode", "room", "users", "is_ignored")
 
-    def __init__(self, token=None, term=None, mode="global", room=None, users=None, is_ignored=False):
+    def __init__(self, token=None, term=None, included_words=None, excluded_words=None, mode="global",
+                 room=None, users=None, is_ignored=False):
 
         self.token = token
         self.term = term
+        self.included_words = included_words
+        self.excluded_words = excluded_words
         self.mode = mode
         self.room = room
         self.users = users
@@ -64,7 +68,12 @@ class Search:
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            self.searches[self.token] = SearchRequest(token=self.token, term=term, mode="wishlist", is_ignored=True)
+            term, _term_no_quotes, included_words, excluded_words = self.sanitize_search_term(term)
+
+            self.searches[self.token] = SearchRequest(
+                token=self.token, term=term, included_words=included_words,
+                excluded_words=excluded_words, mode="wishlist", is_ignored=True
+            )
 
         for event_name, callback in (
             ("file-search-request-distributed", self._file_search_request_distributed),
@@ -107,10 +116,11 @@ class Search:
         """Disallow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, term, mode, room=None, users=None, is_ignored=False):
+    def add_search(self, term, included_words, excluded_words, mode, room=None, users=None, is_ignored=False):
 
         self.searches[self.token] = search = SearchRequest(
-            token=self.token, term=term, mode=mode, room=room, users=users,
+            token=self.token, term=term, included_words=included_words,
+            excluded_words=excluded_words, mode=mode, room=room, users=users,
             is_ignored=is_ignored
         )
         self.add_allowed_token(self.token)
@@ -138,76 +148,117 @@ class Search:
     def show_search(self, token):
         events.emit("show-search", token)
 
+    def sanitize_search_term(self, search_term):
+
+        included_words = []
+        excluded_words = []
+        search_term = search_term_no_quotes = search_term.strip()
+
+        try:
+            lex = shlex.shlex(search_term)
+            lex.quotes = '"'
+            lex.whitespace_split = True
+            lex.commenters = ""
+
+            search_term_words = list(lex)
+
+        except ValueError:
+            search_term_words = search_term.split()
+
+        # Remove special characters from search term
+        # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+        search_term_words_no_quotes = []
+
+        for index, word in enumerate(search_term_words):
+            if word.startswith("*") and len(word) > 1:
+                # Partial word (*erm)
+                included_words.append(word[1:].lower())
+
+            elif word.startswith("-") and len(word) > 1:
+                # Excluded word (-word)
+                excluded_words.append(word[1:].lower())
+
+            elif word.startswith('"') and word.endswith('"'):
+                # Phrase "some words here"
+                word = word[1:-1]
+
+                if word:
+                    included_words.append(word.lower())
+
+                for inner_word in word.translate(TRANSLATE_PUNCTUATION).strip().split():
+                    search_term_words_no_quotes.append(inner_word)
+
+                continue
+
+            else:
+                word = search_term_words[index] = word.translate(TRANSLATE_PUNCTUATION).strip()
+
+                if not word:
+                    continue
+
+                included_words.append(word.lower())
+
+            search_term_words_no_quotes.append(word)
+
+        sanitized_search_term_no_quotes = " ".join(x for x in search_term_words_no_quotes).strip()
+
+        # Only modify search term if string also contains non-special characters
+        if sanitized_search_term_no_quotes:
+            search_term = " ".join(x for x in search_term_words if x).strip()
+            search_term_no_quotes = sanitized_search_term_no_quotes
+
+        return search_term, search_term_no_quotes, included_words, excluded_words
+
     def process_search_term(self, search_term, mode, room=None, users=None):
 
-        if mode == "global":
-            if core:
-                feedback = core.pluginhandler.outgoing_global_search_event(search_term)
+        search_term = search_term.strip()
 
-                if feedback is not None:
-                    search_term = feedback[0]
+        if mode == "global":
+            feedback = core.pluginhandler.outgoing_global_search_event(search_term)
+
+            if feedback is not None:
+                search_term = feedback[0]
 
         elif mode == "rooms":
             if not room:
                 room = core.chatrooms.JOINED_ROOMS_NAME
 
-            if core:
-                feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
+            feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
 
-                if feedback is not None:
-                    room, search_term = feedback
+            if feedback is not None:
+                room, search_term = feedback
 
         elif mode == "buddies":
-            if core:
-                feedback = core.pluginhandler.outgoing_buddy_search_event(search_term)
+            feedback = core.pluginhandler.outgoing_buddy_search_event(search_term)
 
-                if feedback is not None:
-                    search_term = feedback[0]
+            if feedback is not None:
+                search_term = feedback[0]
 
         elif mode == "user":
-            if core:
-                if not users:
-                    users = [core.login_username]
+            if not users:
+                users = [core.login_username]
 
-                feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
+            feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
-                if feedback is not None:
-                    users, search_term = feedback
+            if feedback is not None:
+                users, search_term = feedback
+
+        elif mode == "wishlist":
+            feedback = core.pluginhandler.outgoing_wishlist_search_event(search_term)
+
+            if feedback is not None:
+                search_term = feedback[0]
 
         else:
             log.add("Unknown search mode, not using plugin system. Fix me!")
 
-        # Get excluded words (starting with "-")
-        search_term_words = search_term.split()
-        search_term_words_special = [p for p in search_term_words if p.startswith(("-", "*")) and len(p) > 1]
-
-        # Remove words starting with "-", results containing these are excluded by us later
-        search_term_without_special = " ".join(p for p in search_term_words if p not in search_term_words_special)
-
-        if config.sections["searches"]["remove_special_chars"]:
-            # Remove special characters from search term
-            # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
-
-            stripped_search_term = " ".join(search_term_without_special.translate(TRANSLATE_PUNCTUATION).split())
-
-            # Only modify search term if string also contains non-special characters
-            if stripped_search_term:
-                search_term_without_special = stripped_search_term
-
-        # Remove trailing whitespace
-        search_term = search_term_without_special.strip()
-
-        # Append excluded words
-        for word in search_term_words_special:
-            search_term += " " + word
-
-        return search_term, search_term_without_special, room, users
+        return search_term, room, users
 
     def do_search(self, search_term, mode, room=None, users=None, switch_page=True):
 
         # Validate search term and run it through plugins
-        search_term, _search_term_without_special, room, users = self.process_search_term(
-            search_term, mode, room, users)
+        search_term, room, users = self.process_search_term(search_term, mode, room, users)
+        search_term, search_term_no_quotes, included_words, excluded_words = self.sanitize_search_term(search_term)
 
         # Get a new search token
         self.token = slskmessages.increment_token(self.token)
@@ -225,18 +276,18 @@ class Search:
             config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(search_term)
+            self.do_global_search(search_term_no_quotes)
 
         elif mode == "rooms":
-            self.do_rooms_search(search_term, room)
+            self.do_rooms_search(search_term_no_quotes, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(search_term)
+            self.do_buddies_search(search_term_no_quotes)
 
         elif mode == "user":
-            self.do_peer_search(search_term, users)
+            self.do_peer_search(search_term_no_quotes, users)
 
-        search = self.add_search(search_term, mode, room, users)
+        search = self.add_search(search_term, included_words, excluded_words, mode, room, users)
         events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
@@ -266,7 +317,7 @@ class Search:
 
     def do_wishlist_search(self, token, text):
 
-        text = text.strip()
+        text, _room, _users = self.process_search_term(text, mode="wishlist")
 
         if not text:
             return
@@ -290,10 +341,12 @@ class Search:
         term = searches.pop()
         searches.insert(0, term)
 
+        term, term_no_quotes, _included_words, _excluded_words = self.sanitize_search_term(term)
+
         for search in self.searches.values():
             if search.term == term and search.mode == "wishlist":
                 search.is_ignored = False
-                self.do_wishlist_search(search.token, term)
+                self.do_wishlist_search(search.token, term_no_quotes)
                 break
 
     def add_wish(self, wish):
@@ -303,22 +356,25 @@ class Search:
 
         # Get a new search token
         self.token = slskmessages.increment_token(self.token)
+        wish_sanitized, _wish_no_quotes, included_words, excluded_words = self.sanitize_search_term(wish)
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish, "wishlist", is_ignored=True)
+        self.add_search(wish_sanitized, included_words, excluded_words, mode="wishlist", is_ignored=True)
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
 
         if wish in config.sections["server"]["autosearch"]:
+            wish_sanitized, _wish_no_quotes, _included_words, _excluded_words = self.sanitize_search_term(wish)
+
             config.sections["server"]["autosearch"].remove(wish)
             config.write_configuration()
 
             for search in self.searches.values():
-                if search.term == wish and search.mode == "wishlist":
+                if search.term == wish_sanitized and search.mode == "wishlist":
                     del search
                     break
 

@@ -253,10 +253,21 @@ class ChatRooms(IconNotebook):
         if page is None:
             return
 
+        if page.container == self.get_current_page():
+            self.spell_checker.set_entry(None)
+            self.completion.set_entry(None)
+
+            if self.command_help is not None:
+                self.command_help.set_menu_button(None)
+
+            if self.room_wall is not None:
+                self.room_wall.set_menu_button(None)
+                self.room_wall.room = None
+
         page.clear()
         self.remove_page(page.container, page_args=(room, page.is_private))
         del self.pages[room]
-        page.destroy_widgets()
+        page.destroy()
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
@@ -433,8 +444,8 @@ class ChatRoom:
                                              controller_widget=self.chat_container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, self.chat_view, chatrooms.completion, room,
-                  core.chatrooms.send_message, is_chatroom=True)
+        self.chat_entry = ChatEntry(self.window.application, self.chat_entry, self.chat_view, chatrooms.completion,
+                                    room, core.chatrooms.send_message, is_chatroom=True)
 
         self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
@@ -544,8 +555,8 @@ class ChatRoom:
         )
 
         self.popup_menus = (
+            self.popup_menu_user_chat, self.popup_menu_user_list,
             self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
-            self.popup_menu_user_chat, self.popup_menu_user_list, self.users_list_view.column_menu,
             self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu
         )
 
@@ -562,14 +573,15 @@ class ChatRoom:
         self.chat_view.clear()
         self.users_list_view.clear()
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        self.activity_view.destroy()
+        self.chat_view.destroy()
+        self.chat_entry.destroy()
+        self.users_list_view.destroy()
         self.__dict__.clear()
 
     def set_label(self, label):
@@ -718,8 +730,15 @@ class ChatRoom:
         menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_current_pos()))
 
     def toggle_chat_buttons(self):
-        self.log_toggle.set_visible(not config.sections["logging"]["chatrooms"])
-        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
+
+        is_log_toggle_visible = not config.sections["logging"]["chatrooms"]
+        is_speech_toggle_visible = config.sections["ui"]["speechenabled"]
+
+        self.log_toggle.set_visible(is_log_toggle_visible)
+        self.speech_toggle.set_visible(is_speech_toggle_visible)
+
+        if self.is_global:
+            self.chat_entry_row.set_visible(is_log_toggle_visible or is_speech_toggle_visible)
 
     def _show_notification(self, room, user, text, is_mentioned):
 

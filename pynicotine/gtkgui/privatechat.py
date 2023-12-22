@@ -205,10 +205,17 @@ class PrivateChats(IconNotebook):
         if page is None:
             return
 
+        if page.container == self.get_current_page():
+            self.spell_checker.set_entry(None)
+            self.completion.set_entry(None)
+
+            if self.command_help is not None:
+                self.command_help.set_menu_button(None)
+
         page.clear()
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
-        page.destroy_widgets()
+        page.destroy()
 
     def highlight_user(self, user):
 
@@ -313,8 +320,8 @@ class PrivateChat:
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
-        ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion, user,
-                  core.privatechat.send_message)
+        self.chat_entry = ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion,
+                                    user, core.privatechat.send_message)
 
         self.chat_entry.set_sensitive(core.user_status != UserStatus.OFFLINE)
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
@@ -352,7 +359,7 @@ class PrivateChat:
             (">" + _("User"), self.popup_menu_user_tab),
         )
 
-        self.popup_menus = (self.popup_menu_user_chat, self.popup_menu_user_tab, self.popup_menu)
+        self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
 
         self.read_private_log()
 
@@ -388,18 +395,17 @@ class PrivateChat:
         self.chat_entry.set_sensitive(False)
 
     def clear(self):
-
         self.chat_view.clear()
         self.chats.unhighlight_user(self.user)
 
-        for menu in self.popup_menus:
-            menu.clear()
-
-    def destroy_widgets(self):
+    def destroy(self):
 
         for menu in self.popup_menus:
-            del menu.parent
+            menu.destroy()
 
+        self.chat_entry.destroy()
+        self.chat_view.destroy()
+        self.search_bar.destroy()
         self.__dict__.clear()
 
     def set_label(self, label):

@@ -50,6 +50,42 @@ class ChatEntry:
         Accelerator("Page_Down", widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", widget, self.on_page_up_accelerator)
 
+    def destroy(self):
+        self.__dict__.clear()
+
+    def grab_focus(self):
+        self.widget.grab_focus()
+
+    def get_buffer(self):
+        return self.widget.get_buffer()
+
+    def get_position(self):
+        return self.widget.get_position()
+
+    def get_sensitive(self):
+        return self.widget.get_sensitive()
+
+    def get_text(self):
+        return self.widget.get_text()
+
+    def insert_text(self, new_text, position):
+        self.widget.insert_text(new_text, position)
+
+    def delete_text(self, start_pos, end_pos):
+        self.widget.delete_text(start_pos, end_pos)
+
+    def set_position(self, position):
+        self.widget.set_position(position)
+
+    def set_sensitive(self, sensitive):
+        self.widget.set_sensitive(sensitive)
+
+    def set_text(self, text):
+        self.widget.set_text(text)
+
+    def set_visible(self, visible):
+        self.widget.set_visible(visible)
+
     def on_enter(self, *_args):
 
         if core.user_status == UserStatus.OFFLINE:
@@ -122,6 +158,7 @@ class ChatCompletion:
         self.completion_index = 0
         self.midway_completion = False  # True if the user just used tab completion
         self.selecting_completion = False  # True if the list box is open with suggestions
+        self.is_inserting_completion = False
 
         self.entry = None
         self.entry_changed_handler = None
@@ -140,15 +177,19 @@ class ChatCompletion:
     def set_entry(self, entry):
 
         if self.entry is not None:
-            self.entry.set_completion(None)
-            self.entry.disconnect(self.entry_changed_handler)
+            self.entry.widget.set_completion(None)
+            self.entry.widget.disconnect(self.entry_changed_handler)
+
+        self.entry = entry
+
+        if entry is None:
+            return
 
         # Reusing an existing GtkEntryCompletion object after unsetting it doesn't work well
         self.create_entry_completion()
-        entry.set_completion(self.entry_completion)
+        entry.widget.set_completion(self.entry_completion)
 
-        self.entry = entry
-        self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
+        self.entry_changed_handler = entry.widget.connect("changed", self.on_entry_changed)
 
     def is_completion_enabled(self):
         return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
@@ -256,8 +297,10 @@ class ChatCompletion:
         return True
 
     def on_entry_changed(self, *_args):
-        # If the entry was modified, and we don't block the handler, we're no longer completing
-        self.midway_completion = self.selecting_completion = False
+
+        # If the entry was modified, and we don't block entry_changed_handler, we're no longer completing
+        if not self.is_inserting_completion:
+            self.midway_completion = self.selecting_completion = False
 
     def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """Tab and Shift+Tab: tab complete chat."""
@@ -301,16 +344,17 @@ class ChatCompletion:
             current_word = self.current_completions[self.completion_index]
 
         if self.midway_completion:
-            # We're still completing, block handler to avoid modifying midway_completion value
-            with self.entry.handler_block(self.entry_changed_handler):
-                self.entry.delete_text(i - len(current_word), i)
+            # We're still completing, block entry_changed_handler to avoid modifying midway_completion value
+            self.is_inserting_completion = True
+            self.entry.delete_text(i - len(current_word), i)
 
-                direction = -1 if backwards else 1
-                self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
+            direction = -1 if backwards else 1
+            self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
 
-                new_word = self.current_completions[self.completion_index]
-                self.entry.insert_text(new_word, preix)
-                self.entry.set_position(preix + len(new_word))
+            new_word = self.current_completions[self.completion_index]
+            self.entry.insert_text(new_word, preix)
+            self.entry.set_position(preix + len(new_word))
+            self.is_inserting_completion = False
 
         return True
 
@@ -394,15 +438,25 @@ class ComboBox:
 
         self.set_visible(visible)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def _create_combobox_gtk4(self, container, label, has_entry):
 
-        button_factory = self._create_factory(should_bind=not has_entry)
         self._model = Gtk.StringList()
-
         self.dropdown = self._button = Gtk.DropDown(
             model=self._model, valign=Gtk.Align.CENTER, visible=True
         )
+
         default_factory = self.dropdown.get_factory()
+        button_factory = None
+
+        if not has_entry:
+            button_factory = Gtk.SignalListItemFactory()
+
+            button_factory.connect("setup", self._on_factory_setup)
+            button_factory.connect("bind", self._on_factory_bind)
+
         self.dropdown.set_factory(button_factory)
         self.dropdown.set_list_factory(default_factory)
 
@@ -488,16 +542,6 @@ class ComboBox:
 
         if has_entry_completion:
             self._entry_completion = CompletionEntry(self.entry)
-
-    def _create_factory(self, should_bind=True):
-
-        factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self._on_factory_setup)
-
-        if should_bind:
-            factory.connect("bind", self._on_factory_bind)
-
-        return factory
 
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
@@ -690,7 +734,7 @@ class ComboBox:
         else:
             self.dropdown.remove_all()
 
-        if self.entry:
+        if self.entry and self._button:
             self._button.set_sensitive(False)
 
         if self._entry_completion:
@@ -709,19 +753,12 @@ class ComboBox:
     # Callbacks #
 
     def _on_factory_bind(self, _factory, list_item):
-
         label = list_item.get_child()
-        list_item = list_item.get_item()
-
-        label.set_text(list_item.get_string())
+        label.set_text(list_item.get_item().get_string())
 
     def _on_factory_setup(self, _factory, list_item):
-
-        label = Gtk.Label(xalign=0)
-        label.set_ellipsize(Pango.EllipsizeMode.END)
-        label.set_mnemonic_widget(self.widget)
-
-        list_item.set_child(label)
+        list_item.set_child(
+            Gtk.Label(ellipsize=Pango.EllipsizeMode.END, mnemonic_widget=self.widget, xalign=0))
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
@@ -849,7 +886,7 @@ class SpellChecker:
         # Only one active entry at a time
         self.reset()
 
-        if not config.sections["ui"]["spellcheck"]:
+        if entry is None or not config.sections["ui"]["spellcheck"]:
             return
 
         # Attempt to load spell check module in case it was recently installed
@@ -864,7 +901,7 @@ class SpellChecker:
         self.buffer = SpellChecker.module.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
         self.buffer.set_spell_checker(SpellChecker.checker)
 
-        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry)
+        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry.widget)
         self.entry.set_inline_spell_checking(True)
 
 
@@ -893,6 +930,9 @@ class TextSearchBar:
         Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
         Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
         Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def on_search_match(self, search_type, restarted=False):
 

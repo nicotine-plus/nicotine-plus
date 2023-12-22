@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2023-12-19 17:40+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.3\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3943,9 +3943,9 @@ msgid "Unignored %s"
 msgstr "Rimosso dagli ignorati %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:558
-#, python-format
+#, fuzzy, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s condivisioni elencate (%(num_total)s configurate)"
 
 #: pynicotine/plugins/core_commands/__init__.py:570
 #, python-format
@@ -3953,9 +3953,11 @@ msgid "Cannot share inaccessible folder \"%s\""
 msgstr "Impossibile condividere la cartella inaccessibile \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:573
-#, python-format
+#, fuzzy, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Aggiunto %(group_name)s condividi \"%(virtual_name)s\" (necessaria nuova "
+"scansione)"
 
 #: pynicotine/plugins/core_commands/__init__.py:584
 #, python-format

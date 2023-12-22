@@ -68,6 +68,7 @@ class TreeView:
         self._sort_column = None
         self._sort_type = None
         self._clicked_column_reset_sort = None
+        self._columns_changed_handler = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
         self._h_adjustment = parent.get_hadjustment()
@@ -77,10 +78,10 @@ class TreeView:
         else:
             parent.add(self.widget)        # pylint: disable=no-member
 
-        self.initialise_columns(columns)
+        self._initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        self.column_menu = self.widget.column_menu = PopupMenu(
+        self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
         if multi_select:
@@ -114,6 +115,14 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
+
+    def destroy(self):
+
+        # Prevent updates while destroying widget
+        self.widget.disconnect(self._columns_changed_handler)
+
+        self._column_menu.destroy()
+        self.__dict__.clear()
 
     def create_model(self):
 
@@ -204,7 +213,7 @@ class TreeView:
             column.set_resizable(True)
             break
 
-    def initialise_columns(self, columns):
+    def _initialise_columns(self, columns):
 
         self._data_types = data_types = []
 
@@ -386,7 +395,7 @@ class TreeView:
         self._append_columns(column_widgets, column_config)
         self._hide_columns(column_widgets, column_config)
 
-        self.widget.connect("columns-changed", self._set_last_column_autosize)
+        self._columns_changed_handler = self.widget.connect("columns-changed", self._set_last_column_autosize)
         self.widget.emit("columns-changed")
 
     def save_columns(self):

@@ -65,6 +65,9 @@ class InfoBar:
 
         self.set_visible(False)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def _show_message(self, message, message_type):
 
         previous_message_type = self.message_type

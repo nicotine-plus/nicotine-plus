@@ -100,6 +100,7 @@ class FileChooser:
 
         except GLib.GError:
             # Nothing was selected
+            self.destroy()
             return
 
         if self.select_multiple:
@@ -110,12 +111,15 @@ class FileChooser:
         if selected:
             self.callback(selected, self.callback_data)
 
+        self.destroy()
+
     def on_response(self, _dialog, response_id):
 
         FileChooser.active_chooser = None
         self.file_chooser.destroy()
 
         if response_id != Gtk.ResponseType.ACCEPT:
+            self.destroy()
             return
 
         if self.select_multiple:
@@ -127,6 +131,8 @@ class FileChooser:
         if selected:
             self.callback(selected, self.callback_data)
 
+        self.destroy()
+
     def show(self):
 
         FileChooser.active_chooser = self
@@ -136,6 +142,9 @@ class FileChooser:
             return
 
         self.select_method(parent=self.parent.widget, callback=self.on_finish)
+
+    def destroy(self):
+        self.__dict__.clear()
 
 
 class FolderChooser(FileChooser):
@@ -337,7 +346,10 @@ class FileChooserButton:
         ).show()
 
     def on_open_folder(self, *_args):
-        folder_path = self.path if self.chooser_type == "folder" else os.path.dirname(self.path)
+
+        path = os.path.expandvars(self.path)
+        folder_path = os.path.expandvars(path if self.chooser_type == "folder" else os.path.dirname(path))
+
         open_folder_path(folder_path, create_folder=True)
 
     def get_path(self):

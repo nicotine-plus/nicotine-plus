@@ -304,7 +304,6 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "remove_special_chars": True,
                 "private_search_results": True
             },
             "ui": {
@@ -516,7 +515,8 @@ class Config:
                 "distrib_ignore",
                 "reopen_tabs",
                 "max_stored_results",
-                "re_filter"
+                "re_filter",
+                "remove_special_chars"
             ),
             "userinfo": (
                 "descrutf8"

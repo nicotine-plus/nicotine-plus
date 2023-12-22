@@ -24,7 +24,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
-SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
+SEARCH_TEXT = '70 - * Gwen "test" -mp3 "what\'s up" -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -No yes'
 SEARCH_MODE = "global"
 
 
@@ -49,29 +49,19 @@ class SearchTest(TestCase):
         search history."""
 
         old_token = core.search.token
-
-        # Try a search with special characters removed
-
-        config.sections["searches"]["remove_special_chars"] = True
-        search_term, search_term_without_special, *_unused = core.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
+        search_term, search_term_no_quotes, included_words, excluded_words = core.search.sanitize_search_term(
+            SEARCH_TEXT
+        )
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
         self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(search_term, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
-        self.assertEqual(search_term_without_special, "70 gwen test a b c d auto yes")
+        self.assertEqual(search_term, '70 Gwen "test" -mp3 "what\'s up" -nothanks a b c d *ello auto -No yes')
+        self.assertEqual(search_term_no_quotes, '70 Gwen test -mp3 what s up -nothanks a b c d *ello auto -No yes')
         self.assertEqual(config.sections["searches"]["history"][0], search_term)
-
-        # Try a search without special characters removed
-
-        config.sections["searches"]["remove_special_chars"] = False
-        search_term, search_term_without_special, *_unused = core.search.process_search_term(SEARCH_TEXT, SEARCH_MODE)
-        core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
-
-        self.assertEqual(search_term, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
-        self.assertEqual(search_term_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
-        self.assertEqual(config.sections["searches"]["history"][0], search_term)
-        self.assertEqual(config.sections["searches"]["history"][1],
-                         "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
+        self.assertIn("ello", included_words)
+        self.assertIn("gwen", included_words)
+        self.assertIn("no", excluded_words)
+        self.assertIn("mp3", excluded_words)
 
     def test_search_token_increment(self):
         """Test that search token increments work properly."""
