@@ -24,7 +24,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
-SEARCH_TEXT = '70 gwen "test" -mp3 "what\'s up" -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
+SEARCH_TEXT = '70 - * gwen "test" -mp3 "what\'s up" -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
 SEARCH_MODE = "global"
 
 

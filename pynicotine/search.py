@@ -170,33 +170,37 @@ class Search:
         search_term_words_no_quotes = []
 
         for index, word in enumerate(search_term_words):
-            if word.startswith("*"):
+            if word.startswith("*") and len(word) > 1:
                 # Partial word (*erm)
-                if len(word) > 1:
-                    included_words.append(word[1:])
+                included_words.append(word[1:])
 
-                search_term_words_no_quotes.append(word)
-
-            elif word.startswith("-"):
+            elif word.startswith("-") and len(word) > 1:
                 # Excluded word (-word)
-                if len(word) > 1:
-                    excluded_words.append(word[1:])
-
-                search_term_words_no_quotes.append(word)
+                excluded_words.append(word[1:])
 
             elif word.startswith('"') and word.endswith('"'):
                 # Phrase "some words here"
-                included_words.append(word[1:-1])
+                word = word[1:-1]
+
+                if word:
+                    included_words.append(word)
 
                 for inner_word in word.translate(TRANSLATE_PUNCTUATION).strip().split():
                     search_term_words_no_quotes.append(inner_word)
 
+                continue
+
             else:
                 word = search_term_words[index] = word.translate(TRANSLATE_PUNCTUATION).strip()
-                included_words.append(word)
-                search_term_words_no_quotes.append(word)
 
-        sanitized_search_term_no_quotes = " ".join(x for x in search_term_words_no_quotes if x).strip()
+                if not word:
+                    continue
+
+                included_words.append(word)
+
+            search_term_words_no_quotes.append(word)
+
+        sanitized_search_term_no_quotes = " ".join(x for x in search_term_words_no_quotes).strip()
 
         # Only modify search term if string also contains non-special characters
         if sanitized_search_term_no_quotes:
