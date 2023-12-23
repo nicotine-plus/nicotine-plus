@@ -185,6 +185,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev5\] Crash on the Upload window ([#2663](https://github.com/nicotine-plus/nicotine-plus/issues/2663))
  * Download folder for remote user keeps appearing ([#2667](https://github.com/nicotine-plus/nicotine-plus/issues/2667))
  * Can you swap "close" and "reset" buttons? ([#2678](https://github.com/nicotine-plus/nicotine-plus/issues/2678))
+ * "download folder" sometimes only selects 1 file ([#2686](https://github.com/nicotine-plus/nicotine-plus/issues/2686))
  * \[3.3.0.dev6\] Crashing when uploading folders to user ([#2690](https://github.com/nicotine-plus/nicotine-plus/issues/2690))
  * PORT Issue! ([#2694](https://github.com/nicotine-plus/nicotine-plus/issues/2694))
  * Show total folder size on search tab ([#2697](https://github.com/nicotine-plus/nicotine-plus/issues/2697))
@@ -203,6 +204,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev6\] Network connectivity lost until a server reconnect ([#2778](https://github.com/nicotine-plus/nicotine-plus/issues/2778))
  * \[3.3.0.dev6\] Copying search result filenames causes crash ([#2781](https://github.com/nicotine-plus/nicotine-plus/issues/2781))
  * Recursive folder download matches extra siblings starting with the same name ([#2782](https://github.com/nicotine-plus/nicotine-plus/issues/2782))
+ * \[3.3.0.rc1\] "Unknown search mode" Reopening a whishlist search tab ([#2798](https://github.com/nicotine-plus/nicotine-plus/issues/2798))
 
 
 ## Version 3.2.9 (March 5, 2023)
