@@ -249,7 +249,7 @@ class UserBrowse:
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
             self.window, parent=self.folder_tree_container, has_tree=True, always_select=True,
-            activate_row_callback=self.on_folder_row_activated,
+            multi_select=True, activate_row_callback=self.on_folder_row_activated,
             select_row_callback=self.on_select_folder,
             columns={
                 # Visible columns
@@ -854,15 +854,20 @@ class UserBrowse:
         self.user_popup_menu.toggle_user_items()
 
     def on_download_folder(self, *_args):
-        if self.selected_folder_path is not None:
-            core.userbrowse.download_folder(self.user, self.selected_folder_path)
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            core.userbrowse.download_folder(self.user, folder_path)
 
     def on_download_folder_recursive(self, *_args):
-        core.userbrowse.download_folder(self.user, self.selected_folder_path, recurse=True)
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            core.userbrowse.download_folder(self.user, folder_path, recurse=True)
 
-    def on_download_folder_to_selected(self, selected_folder_path, recurse):
-        core.userbrowse.download_folder(
-            self.user, self.selected_folder_path, download_folder_path=selected_folder_path, recurse=recurse)
+    def on_download_folder_to_selected(self, selected_download_folder_path, recurse):
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            core.userbrowse.download_folder(
+                self.user, folder_path, download_folder_path=selected_download_folder_path, recurse=recurse)
 
     def on_download_folder_to(self, *_args, recurse=False):
 
@@ -890,8 +895,10 @@ class UserBrowse:
             return
 
         core.userbrowse.send_upload_attempt_notification(user)
-        core.userbrowse.upload_folder(
-            user, self.selected_folder_path, local_shares=core.userbrowse.user_shares[self.user], recurse=recurse)
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            core.userbrowse.upload_folder(
+                user, folder_path, local_shares=core.userbrowse.user_shares[self.user], recurse=recurse)
 
     def on_upload_folder_to(self, *_args, recurse=False):
 
@@ -1070,8 +1077,8 @@ class UserBrowse:
             core.userbrowse.download_file(
                 self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
-    def on_download_files_to_selected(self, selected_folder_path, _data):
-        self.on_download_files(download_folder_path=selected_folder_path)
+    def on_download_files_to_selected(self, selected_download_folder_path, _data):
+        self.on_download_files(download_folder_path=selected_download_folder_path)
 
     def on_download_files_to(self, *_args):
 
