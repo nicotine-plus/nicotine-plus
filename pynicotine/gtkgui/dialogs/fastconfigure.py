@@ -73,8 +73,7 @@ class FastConfigure(Dialog):
             width=720,
             height=450,
             resizable=False,
-            show_title=False,
-            close_destroy=False
+            show_title=False
         )
 
         icon_name = pynicotine.__application_id__

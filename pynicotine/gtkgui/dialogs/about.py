@@ -372,8 +372,7 @@ Copyright (c) 2017 IP2Location.com
             width=425,
             height=540,
             resizable=False,
-            show_title=False,
-            close_destroy=False
+            show_title=False
         )
 
         self.is_version_outdated = False

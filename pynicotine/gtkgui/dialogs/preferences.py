@@ -2741,6 +2741,7 @@ class PluginsPage:
 
         self.application = application
         self.selected_plugin = None
+        self.plugin_settings = None
 
         self.options = {
             "plugins": {
@@ -2777,6 +2778,9 @@ class PluginsPage:
 
         self.plugin_description_view.destroy()
         self.plugin_list_view.destroy()
+
+        if self.plugin_settings is not None:
+            self.plugin_settings.destroy()
 
         self.__dict__.clear()
 
@@ -2866,11 +2870,14 @@ class PluginsPage:
         if self.selected_plugin is None:
             return
 
-        PluginSettings(
-            self.application,
+        if self.plugin_settings is None:
+            self.plugin_settings = PluginSettings(self.application)
+
+        self.plugin_settings.update_settings(
             plugin_id=self.selected_plugin,
             plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
-        ).show()
+        )
+        self.plugin_settings.show()
 
 
 class Preferences(Dialog):
@@ -2917,7 +2924,6 @@ class Preferences(Dialog):
             title=_("Preferences"),
             width=960,
             height=650,
-            close_destroy=False,
             show_title_buttons=False
         )
 

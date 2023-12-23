@@ -33,14 +33,13 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, close_destroy=True, show_title=True, show_title_buttons=True):
+                 modal=True, resizable=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
         self.default_width = width
         self.default_height = height
         self.default_button = default_button
-        self.close_destroy = close_destroy
 
         self.show_callback = show_callback
         self.close_callback = close_callback
@@ -164,10 +163,6 @@ class Dialog(Window):
 
         if self.close_callback is not None:
             self.close_callback(self)
-
-        if self.close_destroy:
-            self.destroy()
-            return False
 
         # Hide the dialog
         self.widget.set_visible(False)

@@ -65,8 +65,7 @@ class FileProperties(Dialog):
             buttons_end=(self.download_button,) if download_button else (),
             default_button=self.next_button,
             title=_("File Properties"),
-            width=600,
-            close_destroy=False
+            width=600
         )
 
     def update_title(self):

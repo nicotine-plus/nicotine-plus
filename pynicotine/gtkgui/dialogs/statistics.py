@@ -74,8 +74,7 @@ class Statistics(Dialog):
             show_callback=self.on_show,
             title=_("Transfer Statistics"),
             width=425,
-            resizable=False,
-            close_destroy=False
+            resizable=False
         )
 
         events.connect("update-stat", self.update_stat)

@@ -45,8 +45,7 @@ class WishList(Dialog):
             show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600,
-            close_destroy=False
+            height=600
         )
 
         self.application = application
