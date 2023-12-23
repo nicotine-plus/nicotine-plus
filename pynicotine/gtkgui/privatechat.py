@@ -550,7 +550,8 @@ class PrivateChat:
     def on_focus(self, *_args):
 
         if self.window.current_page_id == self.window.private_page.id:
-            self.chat_entry.grab_focus()
+            widget = self.chat_entry if self.chat_entry.get_sensitive() else self.chat_view
+            widget.grab_focus()
 
         return True
 
