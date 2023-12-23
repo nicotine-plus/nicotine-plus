@@ -487,8 +487,13 @@ class NetworkThread(Thread):
             return False
 
         self._local_ip_address = ip_address
-        log.add(_("Listening on port: %i"), self._listen_port)
+
+        if self._interface_name:
+            log.add_debug("Network interface: %s", self._interface_name)
+
+        log.add_debug("Local IP address: %s", ip_address)
         log.add_debug("Maximum number of concurrent connections (sockets): %i", self.MAX_SOCKETS)
+        log.add(_("Listening on port: %i"), self._listen_port)
         return True
 
     # Connections #
