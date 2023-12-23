@@ -688,7 +688,8 @@ class UserBrowse:
                     button.set_has_frame(False)                                 # pylint: disable=no-member
                     button.set_create_popup_func(self.on_folder_popup_menu)     # pylint: disable=no-member
 
-                    button_label.set_mnemonic_widget(button.get_first_child())  # pylint: disable=no-member
+                    inner_button = next(iter(button))
+                    button_label.set_mnemonic_widget(inner_button)
                 else:
                     box = Gtk.Box(spacing=6, visible=True)
                     arrow_icon = Gtk.Image(icon_name="pan-down-symbolic", visible=True)

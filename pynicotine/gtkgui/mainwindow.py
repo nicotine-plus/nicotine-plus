@@ -202,7 +202,8 @@ class MainWindow(Window):
                 (self.download_status_label, self.download_status_button),
                 (self.upload_status_label, self.upload_status_button)
             ):
-                label.set_mnemonic_widget(button.get_first_child())
+                inner_button = next(iter(button))
+                label.set_mnemonic_widget(inner_button)
         else:
             self.header_bar.set_has_subtitle(False)
             self.header_bar.set_show_close_button(True)
@@ -657,13 +658,12 @@ class MainWindow(Window):
         self.header_end_container.remove(end_widget)
 
         toolbar = self.tabs[self.current_page_id].toolbar
+        toolbar_content = next(iter(toolbar))
 
         if GTK_API_VERSION >= 4:
-            toolbar_content = toolbar.get_first_child()
             toolbar_content.append(title_widget)
             toolbar_content.append(end_widget)
         else:
-            toolbar_content = toolbar.get_children()[0]
             toolbar_content.add(title_widget)
             toolbar_content.add(end_widget)
 
@@ -759,10 +759,8 @@ class MainWindow(Window):
                     return
             else:
                 # No notebook present, attempt to focus the main content widget
-                if GTK_API_VERSION >= 4:
-                    content_widget = tab.page.get_first_child().get_last_child()
-                else:
-                    content_widget = tab.page.get_children()[0].get_children[-1]
+                page_container = next(iter(tab.page))
+                content_widget = list(page_container)[-1]
 
                 if content_widget.child_focus(Gtk.DirectionType.TAB_FORWARD):
                     # Found a focusable widget

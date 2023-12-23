@@ -435,8 +435,9 @@ class ChatRoom:
         if GTK_API_VERSION >= 4:
             self.chat_paned.set_shrink_end_child(False)
 
+            inner_button = next(iter(self.room_wall_button))
             self.room_wall_button.set_has_frame(False)
-            self.room_wall_label.set_mnemonic_widget(self.room_wall_button.get_first_child())
+            self.room_wall_label.set_mnemonic_widget(inner_button)
         else:
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 

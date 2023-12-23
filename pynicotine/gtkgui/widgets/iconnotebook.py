@@ -273,12 +273,12 @@ class IconNotebook:
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
+        if parent_page is not None:
+            content_box = next(iter(parent_page))
+            content_box.connect("show", self.on_show_parent_page)
+
         if GTK_API_VERSION >= 4:
             parent.append(self.widget)
-
-            if parent_page is not None:
-                content_box = parent_page.get_first_child()
-                content_box.connect("show", self.on_show_parent_page)
 
             self.pages_button = Gtk.MenuButton(
                 has_frame=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True
@@ -289,7 +289,7 @@ class IconNotebook:
             self.scroll_controller = Gtk.EventControllerScroll(flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES))
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
-            tab_bar = self.widget.get_first_child()                                # pylint: disable=no-member
+            tab_bar = next(iter(self.widget))
             tab_bar.add_controller(self.scroll_controller)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
@@ -307,10 +307,6 @@ class IconNotebook:
 
         else:
             parent.add(self.widget)
-
-            if parent_page is not None:
-                content_box = parent_page.get_children()[0]
-                content_box.connect("show", self.on_show_parent_page)
 
             self.pages_button = Gtk.Button(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
             self.pages_button.connect("clicked", self.on_pages_button_pressed)
@@ -372,10 +368,8 @@ class IconNotebook:
         if focus_callback:
             page.focus_callback = focus_callback
 
-        if GTK_API_VERSION >= 4:
-            page.get_first_child().set_visible(False)
-        else:
-            page.get_children()[0].set_visible(False)
+        first_child = next(iter(page))
+        first_child.set_visible(False)
 
         if position is None:
             # Open new tab adjacent to current tab
@@ -643,13 +637,11 @@ class IconNotebook:
 
         # Hide container widget on previous page for a performance boost
         current_page = self.get_current_page()
+        current_first_child = next(iter(current_page))
+        new_first_child = next(iter(new_page))
 
-        if GTK_API_VERSION >= 4:
-            current_page.get_first_child().set_visible(False)
-            new_page.get_first_child().set_visible(True)
-        else:
-            current_page.get_children()[0].set_visible(False)
-            new_page.get_children()[0].set_visible(True)
+        current_first_child.set_visible(False)
+        new_first_child.set_visible(True)
 
         # Focus the default widget on the page
         if self.parent_page is None or self.window.current_page_id == self.parent_page.id:

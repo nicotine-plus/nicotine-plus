@@ -346,12 +346,8 @@ class TreeView:
             column_header = column.get_button()
             column_header.connect("clicked", self.on_column_header_pressed, column)
 
-            if GTK_API_VERSION >= 4:
-                title_container = column_header.get_first_child()
-                title_widget = title_container.get_first_child() if xalign < 1 else title_container.get_last_child()
-            else:
-                title_container = column_header.get_children()[0]
-                title_widget = title_container.get_children()[0] if xalign < 1 else title_container.get_children()[-1]
+            title_container = next(iter(column_header))
+            title_widget = next(iter(title_container)) if xalign < 1 else list(title_container)[-1]
 
             if column_data.get("hide_header"):
                 title_widget.set_visible(False)

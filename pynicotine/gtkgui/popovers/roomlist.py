@@ -97,12 +97,12 @@ class RoomList(Popover):
         )
 
         for toggle in (self.public_feed_toggle, self.private_room_toggle):
+            parent = next(iter(toggle.get_parent()))
+
             if GTK_API_VERSION >= 4:
-                parent = toggle.get_parent().get_first_child()
                 parent.gesture_click = Gtk.GestureClick()
                 parent.add_controller(parent.gesture_click)
             else:
-                parent = toggle.get_parent().get_children()[0]
                 parent.set_has_window(True)
                 parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
 
@@ -115,7 +115,8 @@ class RoomList(Popover):
         self.completion_entry = CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
+            inner_button = next(iter(window.room_list_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
         self.set_menu_button(window.room_list_button)
 

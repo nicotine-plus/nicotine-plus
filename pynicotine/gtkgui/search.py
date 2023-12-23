@@ -96,7 +96,8 @@ class Searches(IconNotebook):
         window.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
-            add_css_class(window.search_mode_button.get_first_child(), "arrow-button")
+            inner_button = next(iter(window.search_mode_button))
+            add_css_class(inner_button, "arrow-button")
 
         self.room_search_combobox = ComboBox(
             container=self.window.search_title, has_entry=True, has_entry_completion=True,

@@ -80,7 +80,8 @@ class ChatHistory(Popover):
         self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
+            inner_button = next(iter(window.private_history_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
         self.set_menu_button(window.private_history_button)
         self.load_users()

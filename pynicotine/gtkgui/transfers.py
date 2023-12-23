@@ -92,8 +92,9 @@ class Transfers:
         self.type = transfer_type
 
         if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.clear_all_button))
             self.clear_all_button.set_has_frame(False)
-            self.clear_all_label.set_mnemonic_widget(self.clear_all_button.get_first_child())
+            self.clear_all_label.set_mnemonic_widget(inner_button)
 
         self.transfer_list = {}
         self.users = {}
@@ -206,7 +207,8 @@ class Transfers:
         self.grouping_button.set_menu_model(menu)
 
         if GTK_API_VERSION >= 4:
-            add_css_class(widget=self.grouping_button.get_first_child(), css_class="image-button")
+            inner_button = next(iter(self.grouping_button))
+            add_css_class(widget=inner_button, css_class="image-button")
 
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"][f"{transfer_type}sexpanded"])

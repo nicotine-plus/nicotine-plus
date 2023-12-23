@@ -485,12 +485,17 @@ class ComboBox:
         if label:
             label.set_mnemonic_widget(self.entry)
 
-        popover = self.dropdown.get_last_child()
+        popover = list(self.dropdown)[-1]
         popover.connect("notify::visible", self._on_dropdown_visible)
 
         try:
             # Hide Gtk.DropDown label
-            self.dropdown.get_first_child().get_first_child().get_first_child().set_visible(False)
+            inner_button = next(iter(self.dropdown))
+            button_container = next(iter(inner_button))
+            button_stack = next(iter(button_container))
+
+            button_stack.set_visible(False)
+
         except AttributeError:
             pass
 
@@ -532,7 +537,7 @@ class ComboBox:
             self.dropdown.get_child().destroy()
             self.dropdown.add(self.entry)  # pylint: disable=no-member
 
-        self._button = self.entry.get_parent().get_children()[-1]
+        self._button = list(self.entry.get_parent())[-1]
         container.add(self.widget)
 
     def _create_combobox(self, container, label, has_entry, has_entry_completion):
@@ -775,9 +780,12 @@ class ComboBox:
             # Gtk.ComboBox already supports this functionality
             return False
 
-        if self._entry_completion and self.entry.get_last_child().get_visible():
-            # Completion popup is visible
-            return False
+        if self._entry_completion:
+            completion_popover = list(self.entry)[-1]
+
+            if completion_popover.get_visible():
+                # Completion popup takes precedence
+                return False
 
         current_position = self.get_selected_pos()
 
@@ -810,7 +818,7 @@ class ComboBox:
             return
 
         # Align dropdown with entry and button
-        popover = self.dropdown.get_last_child()
+        popover = list(self.dropdown)[-1]
         scrolled_window = popover.get_child()
         container_width = self.entry.get_parent().get_width()
         button_width = self._button.get_width()

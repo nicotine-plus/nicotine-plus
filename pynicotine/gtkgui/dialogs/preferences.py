@@ -2228,7 +2228,8 @@ class SearchesPage:
         self.filter_help.set_menu_button(self.filter_help_button)
 
         if GTK_API_VERSION >= 4:
-            self.filter_help_label.set_mnemonic_widget(self.filter_help_button.get_first_child())
+            inner_button = next(iter(self.filter_help_button))
+            self.filter_help_label.set_mnemonic_widget(inner_button)
 
         self.options = {
             "searches": {
@@ -3277,7 +3278,7 @@ class Preferences(Dialog):
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
                         try:
-                            check_button_label = obj.get_last_child()
+                            check_button_label = list(obj)[-1]
                             check_button_label.set_wrap(True)   # pylint: disable=no-member
                         except AttributeError:
                             pass
@@ -3287,17 +3288,18 @@ class Preferences(Dialog):
                         obj.set_receives_default(True)
 
                 elif isinstance(obj, Gtk.Switch):
+                    switch_container = obj.get_parent()
+                    switch_label = next(iter(switch_container))
+
                     if GTK_API_VERSION >= 4:
-                        parent = obj.get_parent().get_first_child()
-                        parent.gesture_click = Gtk.GestureClick()
-                        parent.add_controller(parent.gesture_click)
+                        switch_label.gesture_click = Gtk.GestureClick()
+                        switch_label.add_controller(switch_label.gesture_click)
                     else:
-                        parent = obj.get_parent().get_children()[0]
-                        parent.set_has_window(True)
-                        parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
+                        switch_label.set_has_window(True)
+                        switch_label.gesture_click = Gtk.GestureMultiPress(widget=switch_label)
 
                     obj.set_receives_default(True)
-                    parent.gesture_click.connect("released", self.on_toggle_label_pressed, obj)
+                    switch_label.gesture_click.connect("released", self.on_toggle_label_pressed, obj)
 
                 elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
                     if isinstance(obj, ComboBox):
@@ -3318,9 +3320,12 @@ class Preferences(Dialog):
                 elif (isinstance(obj, Gtk.FontButton)
                       or ((GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10) and isinstance(obj, Gtk.FontDialogButton))):
                     if GTK_API_VERSION >= 4:
-                        font_button_label = obj.get_first_child().get_first_child().get_first_child()
+                        inner_button = next(iter(obj))
+                        font_button_container = next(iter(inner_button))
+                        font_button_label = next(iter(font_button_container))
                     else:
-                        font_button_label = obj.get_child().get_children()[0]
+                        font_button_container = obj.get_child()
+                        font_button_label = next(iter(font_button_container))
 
                     try:
                         font_button_label.set_ellipsize(Pango.EllipsizeMode.END)
