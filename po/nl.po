@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-04 23:23+0200\n"
-"PO-Revision-Date: 2023-12-18 00:34+0000\n"
+"PO-Revision-Date: 2023-12-27 08:27+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -124,7 +124,7 @@ msgstr "ip"
 
 #: pynicotine/__init__.py:71
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "bind sockets aan het gegeven IP (nuttig voor VPN)"
+msgstr "Verbind sockets aan het opgegeven IP (nuttig voor VPN)"
 
 #: pynicotine/__init__.py:74
 msgid "port"
@@ -140,7 +140,7 @@ msgstr "Shares opnieuw scannen"
 
 #: pynicotine/__init__.py:83
 msgid "start the program in headless mode (no GUI)"
-msgstr "start het programma in headless mode (zonder GUI)"
+msgstr "start het programma in headless modus (geen GUI)"
 
 #: pynicotine/__init__.py:87
 msgid "display version and exit"
@@ -208,8 +208,7 @@ msgstr "toepassing sluit"
 
 #: pynicotine/core.py:277
 msgid "You need to specify a username and password before connecting…"
-msgstr ""
-"Je moet een gebruikersnaam en wachtwoord opgeven voordat je verbinding maakt…"
+msgstr "Je moet een gebruikersnaam en wachtwoord opgeven voordat je verbindt…"
 
 #: pynicotine/core.py:393
 #, python-format
@@ -219,7 +218,7 @@ msgstr "Stop %(program)s %(version)s!"
 #: pynicotine/core.py:447
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
-msgstr "Kan niet verbinden met de server. Reden: %s"
+msgstr "Kan geen verbinding maken met de server. Reden: %s"
 
 #: pynicotine/core.py:447
 msgid "Cannot Connect"
@@ -242,8 +241,7 @@ msgstr "Onbekend"
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
-"Kan het IP-adres van gebruiker %s niet opvragen, omdat deze gebruiker "
-"offline is"
+"Kan het IP van gebruiker %s niet opvragen, omdat deze gebruiker offline is"
 
 #: pynicotine/core.py:480
 #, python-format
@@ -269,8 +267,8 @@ msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"Je hebt geen privileges. Ze zijn niet nodig, maar geven je voorrang in de "
-"download-wachtrij."
+"Je hebt geen Soulseek-privileges. Zolang privileges actief zijn, worden je "
+"downloads voorrang gegeven boven die van niet-geprivilegieerde gebruikers."
 
 #: pynicotine/core.py:578
 #, python-format
@@ -278,8 +276,8 @@ msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "Soulseek privileges left"
 msgstr ""
-"%(days)i dagen, %(hours)i uren, %(minutes)i minuten, %(seconds)i seconden "
-"download privileges over"
+"%(days)i dagen, %(hours)i uur, %(minutes)i minuten, %(seconds)i seconden "
+"Soulseek-privileges resterend"
 
 #: pynicotine/core.py:596
 msgid "Your password has been changed"
@@ -292,7 +290,7 @@ msgstr "Wachtwoord gewijzigd"
 #: pynicotine/downloads.py:192
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
-msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
+msgstr "Fout: Downloadfilter mislukt! Controleer je filters. Reden: %s"
 
 #: pynicotine/downloads.py:207
 #, python-format
@@ -360,7 +358,7 @@ msgstr "Download I/O fout: %s"
 #: pynicotine/downloads.py:1028
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr "Kan geen exclusieve vergrendeling op bestand verkrijgen - I/O fout: %s"
+msgstr "Kan geen exclusief slot op bestand krijgen - I/O-fout: %s"
 
 #: pynicotine/downloads.py:1041
 #, python-format
@@ -379,7 +377,8 @@ msgstr "Kan %s niet vinden, installeer het aub."
 
 #: pynicotine/gtkgui/__init__.py:134
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr "Geen grafische omgeving beschikbaar, gebruik headless (geen GUI) modus"
+msgstr ""
+"Geen grafische omgeving beschikbaar, headless modus (geen GUI) wordt gebruikt"
 
 #: pynicotine/gtkgui/application.py:296
 msgid "You are still uploading files. Do you really want to exit?"
@@ -419,8 +418,8 @@ msgstr "Delen niet beschikbaar"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Controleer of de externe schijven aangekoppeld zijn en de map-rechten "
-"kloppen."
+"Controleer of externe schijven zijn aangesloten en of de maprechten correct "
+"zijn."
 
 #: pynicotine/gtkgui/application.py:337 pynicotine/gtkgui/application.py:361
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:43
@@ -447,7 +446,7 @@ msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
 msgstr ""
-"Gebruiker %s bestaat al, en het wachtwoord dat je heeft opgegeven is "
+"Gebruiker %s bestaat al, en het wachtwoord dat je hebt ingevoerd is "
 "ongeldig. Kies een andere gebruikersnaam, als dit de eerste keer is dat je "
 "inlogt."
 
@@ -488,8 +487,8 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nicotine+ heeft een kritieke fout aangetroffen en moet worden afgesloten. "
-"Kopieer de volgende foutmelding en neem deze op in een bugrapport:"
+"Nicotine+ is op een kritieke fout gestuit en moet worden afgesloten. Kopieer "
+"het volgende bericht en voeg het toe aan een bugrapport:"
 
 #: pynicotine/gtkgui/application.py:642
 msgid "_Quit Nicotine+"
@@ -506,7 +505,7 @@ msgstr "Nieuwe ruimte creëren?"
 #: pynicotine/gtkgui/chatrooms.py:187
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
-msgstr "Wil je echt een nieuwe kamer \"%s\" maken?"
+msgstr "Wil je echt een nieuwe kamer \"%s\" aanmaken?"
 
 #: pynicotine/gtkgui/chatrooms.py:188
 msgid "Make room private"
@@ -838,7 +837,7 @@ msgstr "Wachtwoordwijziging afgewezen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:198
 msgid "Enter a new password for your Soulseek account:"
-msgstr "Voer een nieuw wachtwoord in voor jouw Soulseek-account:"
+msgstr "Voer een nieuw wachtwoord in voor je Soulseek-account:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:200
 msgid ""
@@ -1129,7 +1128,7 @@ msgstr "Vervanging toevoegen"
 #: pynicotine/gtkgui/dialogs/preferences.py:1439
 #: pynicotine/gtkgui/dialogs/preferences.py:1469
 msgid "Enter a text pattern and what to replace it with:"
-msgstr "Voer een tekstpatroon in en waar het door vervangen moet worden:"
+msgstr "Voer een tekstpatroon in en waarmee je het wilt vervangen:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1468
 msgid "Edit Replacement"
@@ -1264,7 +1263,7 @@ msgstr "URL-programma opgeven"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2388
 msgid "Enter the protocol and the command for the URL handler:"
-msgstr "Voer het protocol en het commando voor de URL-handler in:"
+msgstr "Voer het protocol en de opdracht in voor de URL-handler:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2416
 msgid "Edit Command"
@@ -1283,7 +1282,7 @@ msgstr "Gebruikersnaam;APIKEY:"
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
-"Mediaspeler (b.v. amarok, audacious, exaile); leeg laten om automatisch te "
+"Mediaspeler (bijv. amarok, audacious, exaile); laat leeg om automatisch te "
 "detecteren:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2573
@@ -1303,7 +1302,7 @@ msgstr "Titel"
 #: pynicotine/gtkgui/dialogs/preferences.py:2587
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
-msgstr "Nu aan het afspelen (typically \"%(artist)s - %(title)s\")"
+msgstr "Nu aan het afspelen (standaard \"%(artist)s - %(title)s\")"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2588
 #: pynicotine/gtkgui/dialogs/preferences.py:2596
@@ -2076,7 +2075,7 @@ msgstr "Lokale bestandsfout"
 
 #: pynicotine/gtkgui/transfers.py:72
 msgid "Banned"
-msgstr "Verband"
+msgstr "Verbannen"
 
 #: pynicotine/gtkgui/transfers.py:73
 msgid "File not shared"
@@ -2157,7 +2156,7 @@ msgstr "Uploads in wachtrij wissen"
 
 #: pynicotine/gtkgui/uploads.py:118
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Wil je écht alle uploads in de wachtrij wissen?"
+msgstr "Wil je echt alle geplande uploads wissen?"
 
 #: pynicotine/gtkgui/uploads.py:130
 msgid "Clear All Uploads"
@@ -2212,8 +2211,8 @@ msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
 "anything, or they are sharing files privately."
 msgstr ""
-"De gebruikers lijst met gedeelde bestanden is leeg. Deze gebruiker deelt "
-"niets, of deelt bestanden alleen privé."
+"De lijst met gedeelde bestanden van de gebruiker is leeg. Of de gebruiker "
+"deelt niets, of ze delen bestanden privé."
 
 #: pynicotine/gtkgui/userbrowse.py:587
 msgid ""
@@ -2239,7 +2238,7 @@ msgstr "Map uploaden naar gebruiker"
 
 #: pynicotine/gtkgui/userbrowse.py:910 pynicotine/gtkgui/userbrowse.py:1104
 msgid "Enter the name of the user you want to upload to:"
-msgstr "Voer de naam in van de gebruiker waarnaar je wil uploaden:"
+msgstr "Voer de naam in van de gebruiker waarnaar je wilt uploaden:"
 
 #: pynicotine/gtkgui/userbrowse.py:911 pynicotine/gtkgui/userbrowse.py:1105
 msgid "_Upload"
@@ -2264,7 +2263,7 @@ msgstr "Afbeelding opslaan"
 #: pynicotine/gtkgui/userinfo.py:426
 #, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
-msgstr "Kan gebruikersafbeelding niet laden %(user)s: %(error)s"
+msgstr "Kan afbeelding voor gebruiker %(user)s niet laden: %(error)s"
 
 #: pynicotine/gtkgui/userinfo.py:437
 msgid ""
@@ -2463,7 +2462,8 @@ msgstr "Vul het aantal dagen in."
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
-"Geef dagen van je Soulseek-privileges aan gebruiker %(user)s (%(days_left)s):"
+"Geef dagen van je Soulseek-privileges cadeau aan gebruiker %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:591
 #, python-format
@@ -2566,7 +2566,7 @@ msgstr "_Bericht"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:251
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr "Voer de naam in van de gebruiker wiens gegevens je wilt zien:"
+msgstr "Voer de naam in van de gebruiker wiens profiel je wilt zien:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:252
 msgid "_View Profile"
@@ -2606,12 +2606,12 @@ msgstr "Wil je echt afsluiten? %s"
 #, python-format
 msgid "User %s already exists, and the password you entered is invalid."
 msgstr ""
-"Gebruiker %s bestaat al, en het wachtwoord dat je hebt opgegeven is ongeldig."
+"Gebruiker %s bestaat al, en het wachtwoord dat je hebt ingevoerd is ongeldig."
 
 #: pynicotine/headless/application.py:80
 #, python-format
 msgid "Type %s to log in with another username or password."
-msgstr "Type %s om in te loggen met een andere gebruikersnaam of wachtwoord."
+msgstr "Typ %s om in te loggen met een andere gebruikersnaam of wachtwoord."
 
 #: pynicotine/headless/application.py:96
 msgid "Password: "
@@ -3696,8 +3696,7 @@ msgstr "Automatisch gedetecteerde MPRIS-speler: %s"
 #, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr ""
-"MPRIS: Er is iets misgegaan tijdens het opvragen van %(player)s: "
-"%(exception)s"
+"MPRIS: Er is iets misgegaan bij het opvragen van %(player)s: %(exception)s"
 
 #: pynicotine/nowplaying.py:262
 msgid "ListenBrainz: Please provide your ListenBrainz username"
@@ -3710,14 +3709,13 @@ msgstr "ListenBrainz: Kan geen verbinding maken met ListenBrainz: %(error)s"
 
 #: pynicotine/nowplaying.py:279
 msgid "ListenBrainz: You don't seem to be listening to anything right now"
-msgstr "ListenBrainz: Je lijkt nu nergens naar te luisteren"
+msgstr "ListenBrainz: Het lijkt erop dat je nu niets aan het luisteren bent"
 
 #: pynicotine/nowplaying.py:293
 #, python-format
 msgid "ListenBrainz: Could not get current track from ListenBrainz: %(error)s"
 msgstr ""
-"ListenBrainz: Kon het huidige nummer niet van ListenBrainz opvragen: "
-"%(error)s"
+"ListenBrainz: Kon het huidige nummer niet ophalen van ListenBrainz: %(error)s"
 
 #: pynicotine/plugins/core_commands/__init__.py:30
 msgid "Network Filters"
@@ -3943,8 +3941,8 @@ msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
 "characters: %(characters)s"
 msgstr ""
-"Kan plug-in %(name)s niet laden. De mapnaam van de plug-in bevat ongeldige "
-"tekens: %(characters)s"
+"Kan plugin %(name)s niet laden. Mapnaam van de plugin bevat ongeldige tekens:"
+" %(characters)s"
 
 #: pynicotine/pluginsystem.py:536
 #, python-format
@@ -3985,8 +3983,8 @@ msgid ""
 "Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
 "Trace: %(trace)s"
 msgstr ""
-"Plugin %(module)s mislukt met fout %(errortype)s: %(error)s.\n"
-"Spoor: %(trace)s"
+"Plugin %(module)s is mislukt met fout %(errortype)s: %(error)s\n"
+"Trace: %(trace)s."
 
 #: pynicotine/pluginsystem.py:789
 msgid "No description"
@@ -4013,8 +4011,8 @@ msgid ""
 "Unknown command: %(command)s. Type %(help_command)s to list available "
 "commands."
 msgstr ""
-"Onbekende opdracht: %(command)s. Typ %(help_command)s voor een lijst met "
-"beschikbare commando's."
+"Onbekend commando: %(command)s. Typ %(help_command)s om de beschikbare "
+"commando's te zien."
 
 #: pynicotine/portmapper.py:464
 msgid "No UPnP devices found"
@@ -4055,12 +4053,13 @@ msgstr "Verlanglijstje wachttijd ingesteld op %s seconden"
 #: pynicotine/search.py:401 pynicotine/slskmessages.py:2969
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
-msgstr "Kan de share-database niet lezen. Herscan van shares nodig. Fout: %s"
+msgstr "Kan de shares-database niet lezen. Scan je shares opnieuw. Fout: %s"
 
 #: pynicotine/search.py:622
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr "Gebruiker %(user)s zoekt naar \"%(query)s\", vond %(num)i resultaten"
+msgstr ""
+"Gebruiker %(user)s zoekt naar \"%(query)s\", %(num)i resultaten gevonden"
 
 #: pynicotine/shares.py:272
 msgid "Rebuilding shares…"
@@ -4104,7 +4103,7 @@ msgstr "Fout tijdens het scannen van map %(path)s: %(error)s"
 #: pynicotine/shares.py:598
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
-msgstr "Fout bij het scannen van metadata voor bestand %(path)s: %(error)s"
+msgstr "Fout tijdens het scannen van metadata voor bestand %(path)s: %(error)s"
 
 #: pynicotine/shares.py:1052
 #, python-format
@@ -4114,7 +4113,7 @@ msgstr "Opnieuw scannen afgebroken vanwege niet-beschikbare shares: %s"
 #: pynicotine/shares.py:1122
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr "Gebruiker %(user)s doorzoekt je lijst met gedeelde bestanden"
+msgstr "Gebruiker %(user)s bekijkt jouw lijst van gedeelde bestanden"
 
 #: pynicotine/shares.py:1157
 #, python-format
@@ -4132,8 +4131,8 @@ msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
 "choose a different port. Error: %(error)s"
 msgstr ""
-"Kan niet luisteren op poort %(port)s. Zorg ervoor dat er geen andere "
-"applicatie gebruik van maakt, of kies een andere poort. Fout: %(error)s"
+"Kan niet luisteren op poort %(port)s. Zorg ervoor dat geen andere applicatie "
+"het gebruikt, of kies een andere poort. Fout: %(error)s"
 
 #: pynicotine/slskproto.py:490
 #, python-format
@@ -4167,7 +4166,7 @@ msgstr "Verbinding met server %(host)s:%(port)s verbroken"
 
 #: pynicotine/slskproto.py:1508
 msgid "Someone logged in to your Soulseek account elsewhere"
-msgstr "Iemand heeft ergens anders ingelogd op je Soulseek-account"
+msgstr "Iemand heeft elders ingelogd op je Soulseek-account"
 
 #: pynicotine/uploads.py:384
 #, python-format
@@ -4202,7 +4201,9 @@ msgstr "Lezen gedeelde mappen van schijf mislukt: %(error)s"
 #: pynicotine/userbrowse.py:228
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
-msgstr "Shares lijst voor gebruiker '%(user)s' opgeslagen naar %(dir)s"
+msgstr ""
+"Opgeslagen lijst van gedeelde bestanden voor gebruiker '%(user)s' naar "
+"%(dir)s"
 
 #: pynicotine/userbrowse.py:232
 #, python-format
@@ -4256,8 +4257,7 @@ msgstr "Kan URL %(url)s niet openen: %(error)s"
 #: pynicotine/utils.py:528
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
-msgstr ""
-"Er is iets misgegaan tijdens het lezen van bestand %(filename)s: %(error)s"
+msgstr "Er is iets misgegaan bij het lezen van bestand %(filename)s: %(error)s"
 
 #: pynicotine/utils.py:533
 #, python-format
@@ -4351,24 +4351,24 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
-"Om te verbinden met andere Soulseek gebruikers, moet een luisterpoort van je "
-"router naar je computer worden gestuurd."
+"Om verbinding te maken met andere Soulseek-peers, moet een luisterpoort op "
+"je router doorgestuurd worden naar je computer."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
 "If your listening port is closed, you will only be able to connect to users "
 "whose listening ports are open."
 msgstr ""
-"Als jouw luisterpoort gesloten is, zult je alleen verbinding kunnen maken "
-"met gebruikers waarvan de luisterpoort open is."
+"Als je luisterpoort gesloten is, kun je alleen verbinden met gebruikers "
+"wiens luisterpoorten open zijn."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:276
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
-"Indien nodig kun je een andere luisterpoort instellen. Dit kan ook later in "
-"de instellingen."
+"Kies indien nodig een andere luisterpoort. Dit kun je ook later in de "
+"instellingen doen."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:317
 msgid "Download Files to Folder"
@@ -4397,7 +4397,7 @@ msgstr "Nicotine+ is klaar voor gebruik!"
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
-"Soulseek is een onversleuteld protocol, niet bedoeld voor beveiligde "
+"Soulseek is een ongecodeerd protocol dat niet bedoeld is voor veilige "
 "communicatie."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
@@ -4620,8 +4620,8 @@ msgid ""
 "Wishlist items are auto-searched at regular intervals, for discovering "
 "uncommon files."
 msgstr ""
-"Verlanglijst-items worden met regelmatige tussenpozen automatisch gezocht om "
-"ongewone bestanden te ontdekken."
+"Wishlist-items worden automatisch met regelmatige tussenpozen gezocht om "
+"ongebruikelijke bestanden te ontdekken."
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:26
 msgid "Add Wish…"
@@ -4732,8 +4732,8 @@ msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
-"Bestanden die je van andere gebruikers downloadt, worden hier in een "
-"wachtrij geplaatst, en kunnen op verzoek worden gepauzeerd en hervat"
+"Bestanden die je van andere gebruikers downloadt, worden hier in de wachtrij "
+"gezet en kunnen naar wens worden gepauzeerd en hervat"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:635
 msgid "Configure Uploads"
@@ -4744,7 +4744,7 @@ msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
 "Aanvragen van gebruikers om jouw gedeelde bestanden te downloaden worden "
-"hier in een wachtrij geplaatst en beheerd"
+"hier in de wachtrij gezet en beheerd"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:726
 msgid "Enter the username of the person whose files you want to see"
@@ -4756,7 +4756,9 @@ msgstr "_Open Lijst"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:784
 msgid "Opens a local list of shared files that was previously saved to disk"
-msgstr "Opent een lokaal opgeslagen lijst van gedeelde bestanden"
+msgstr ""
+"Opent een lokale lijst van gedeelde bestanden die eerder op schijf is "
+"opgeslagen"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:799
 msgid "Configure Shares"
@@ -4787,8 +4789,8 @@ msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
-"Voer de naam van een gebruiker in om de beschrijving, informatie en foto te "
-"bekijken"
+"Voer de naam van een gebruiker in om hun gebruikersbeschrijving, informatie "
+"en persoonlijke foto te bekijken"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1081
 msgid "Enter the username of the person you want to send a message to"
@@ -4806,7 +4808,8 @@ msgstr "Chats configureren"
 #: pynicotine/gtkgui/ui/mainwindow.ui:1190
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
-msgstr "Voer de naam van een gebruiker voor een privégesprek"
+msgstr ""
+"Voer de naam van een gebruiker in om een privégesprek met hen te starten"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1239 pynicotine/gtkgui/ui/userlist.ui:31
 msgid "Add buddy…"
@@ -4832,7 +4835,7 @@ msgid ""
 "notifications when they are online"
 msgstr ""
 "Voeg gebruikers toe als vrienden om specifieke mappen met hen te delen en "
-"meldingen te ontvangen wanneer ze online zijn"
+"ontvang meldingen wanneer ze online zijn"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1408
 msgid "Join or create room…"
@@ -4843,16 +4846,16 @@ msgid ""
 "Enter the name of a room you want to join. If the room doesn't exist, it "
 "will be created."
 msgstr ""
-"Geef de naam in van een ruimte waaraan je wilt deelnemen. Als de kamer nog "
-"niet bestaat, wordt deze gemaakt."
+"Voer de naam van een kamer in die je wilt betreden. Als de kamer niet "
+"bestaat, zal deze worden aangemaakt."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1519
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
 "the Soulseek network"
 msgstr ""
-"Betreed een bestaande chatkamer of maak een nieuwe kamer aan om te chatten "
-"met andere gebruikers op het Soulseek-netwerk"
+"Betreed een bestaande chatkamer, of maak een nieuwe kamer om te chatten met "
+"andere gebruikers op het Soulseek-netwerk"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1580
 msgid "Configure User Profile"
@@ -4923,8 +4926,8 @@ msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Schrijf een bericht dat andere kamergebruikers later kunnen lezen. Recente "
-"berichten worden aan de top getoond."
+"Schrijf een enkel bericht dat andere kamergebruikers later kunnen lezen. "
+"Recente berichten worden bovenaan getoond."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:42
 msgid "Set wall message…"
@@ -5020,9 +5023,9 @@ msgid ""
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
-"Meerdere bestandsextensies kunnen worden opgegeven, waardoor de lijst met "
-"resultaten wordt uitgebreid. Voorbeeld:\n"
-"flac wav ape"
+"Meerdere bestandsextensies kunnen worden opgegeven, wat op zijn beurt meer "
+"zal onthullen uit de lijst met resultaten. Voorbeeld:\n"
+"    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:169
 msgid ""
@@ -5048,8 +5051,8 @@ msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"De standaard gebruikte eenheid is bytes (B) en bestanden groter dan of "
-"gelijk aan (>=) de waarde worden gematcht."
+"Standaard is de gebruikte eenheid bytes (B) en bestanden groter dan of "
+"gelijk aan (>=) de waarde zullen overeenkomen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:216
 msgid ""
@@ -5066,17 +5069,17 @@ msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"Zeg = voor een waarde om een exacte overeenkomst te specificeren:\n"
-"    =1024 komt alleen overeen met bestanden van 1 KiB (kibibyte)."
+"Voeg = toe aan een waarde om een exacte overeenkomst te specificeren:\n"
+"    =1024 komt overeen met bestanden die precies 1 KiB (kibibyte) zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:238
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"Voeg ! toe voor een waarde om bestanden van een bepaalde grootte uit te "
-"sluiten:\n"
-"    !30.5m om bestanden te verbergen die 30.5 MiB (mebibytes) groot zijn."
+"Voeg ! toe aan een waarde om bestanden van een specifieke grootte te "
+"verbergen:\n"
+"    !30.5m om bestanden die 30.5 MiB (mebibytes) zijn te verbergen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
 msgid ""
@@ -5095,8 +5098,8 @@ msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor "
-"kilobyte-, megabyte- en gigabyte-eenheden."
+"De beter bekende varianten kb, mb en gb kunnen ook gebruikt worden voor "
+"kilobyte, megabyte en gigabyte eenheden."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:288
 msgid "Filters files based upon their bitrate."
@@ -5192,8 +5195,8 @@ msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are available immediately."
 msgstr ""
-"Toon alleen de resultaten van gebruikers die minstens één upload slot vrij "
-"hebben, d.w.z. bestanden die onmiddellijk beschikbaar zijn."
+"Toon alleen resultaten van gebruikers die ten minste één uploadslot vrij "
+"hebben, oftewel bestanden die direct beschikbaar zijn."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:25
 #: pynicotine/gtkgui/ui/settings/uploads.ui:106
@@ -5229,9 +5232,9 @@ msgid ""
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
-"Filter in resultaten waarvan de bestandspaden de gespecificeerde tekst "
-"bevatten. Meerdere zinnen en woorden kunnen worden gespecificeerd, b.v. "
-"exacte zin|muziek|term|exacte zin twee"
+"Filter resultaten waarvan de bestandspaden de opgegeven tekst bevatten. "
+"Meerdere zinnen en woorden kunnen worden opgegeven, bijvoorbeeld exacte "
+"zin|muziek|term|exacte zin twee"
 
 #: pynicotine/gtkgui/ui/search.ui:18
 msgid "Exclude text…"
@@ -5244,9 +5247,9 @@ msgid ""
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
-"Filter resultaten uit waarvan de bestandspaden de gespecificeerde tekst "
-"bevatten. Meerdere zinnen en woorden kunnen worden gespecificeerd, b.v. "
-"exacte zin|muziek|term|exacte zin twee"
+"Filter resultaten waarvan de bestandspaden de opgegeven tekst bevatten. "
+"Meerdere zinnen en woorden kunnen worden opgegeven, bijvoorbeeld exacte "
+"zin|muziek|term|exacte zin twee"
 
 #: pynicotine/gtkgui/ui/search.ui:29
 msgid "File type…"
@@ -5500,14 +5503,14 @@ msgstr "Gebeurtenissen"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:324
 msgid "Run command after file download finishes ($ for file path):"
 msgstr ""
-"Voer het commando uit nadat het downloaden van het bestand is voltooid ($ "
-"voor het bestandspad):"
+"Voer commando uit nadat het downloaden van het bestand is voltooid ($ voor "
+"bestandspad):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:348
 msgid "Run command after folder download finishes ($ for folder path):"
 msgstr ""
-"Voer de opdracht uit nadat het downloaden van de map is voltooid ($ voor het "
-"mappad):"
+"Voer commando uit nadat het downloaden van de map is voltooid ($ voor map "
+"pad):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:375
 msgid "Download Filters"
@@ -5587,7 +5590,7 @@ msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
-"Log in op een bestaande Soulseek account of maak een nieuwe aan. "
+"Log in op een bestaand Soulseek-account of maak een nieuw account aan. "
 "Gebruikersnamen zijn hoofdlettergevoelig en uniek."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:115
@@ -5604,7 +5607,8 @@ msgstr "Afwezigheidsstatus"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:201
 msgid "Minutes of inactivity before going away (0 to disable):"
-msgstr "Minuten van inactiviteit voor weg te gaan (0 tot uitschakelen):"
+msgstr ""
+"Minuten van inactiviteit voordat je afwezig bent (0 om uit te schakelen):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:226
 msgid "Auto-reply message when away:"
@@ -5755,7 +5759,7 @@ msgstr "Landcode:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:394
 msgid "Only show results from users with an available upload slot."
-msgstr "Toon alleen resultaten van gebruikers met een beschikbare upload slot."
+msgstr "Toon alleen resultaten van gebruikers met een beschikbare uploadplek."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:416
 msgid "Result Filter Help"
@@ -5775,7 +5779,7 @@ msgstr "Zoekopdrachten korter dan dit aantal tekens worden genegeerd:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:519
 msgid "Maximum search results to send per search request:"
-msgstr "Maximaal aantal te verzenden zoekresultaten per zoekopdracht:"
+msgstr "Maximaal aantal zoekresultaten om per zoekopdracht te versturen:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:584
 msgid "Clear Search History"
@@ -5874,7 +5878,9 @@ msgstr "Maximaal aantal bestanden in de wachtrij per gebruiker:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr "Maximale totaal aantal MiB in de wachtrij per gebruiker:"
+msgstr ""
+"Maximale totale grootte van in de wachtrij staande bestanden per gebruiker "
+"(MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
 msgid "Limits do not apply to buddies"
@@ -5885,8 +5891,8 @@ msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"De plaats van $ wordt vervangen door de URL. Standaard systeemtoepassingen "
-"worden gebruikt in gevallen waarin een protocol niet is geconfigureerd."
+"Instanties van $ worden vervangen door de URL. Standaard systeemapplicaties "
+"worden gebruikt in gevallen waar een protocol niet is geconfigureerd."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:38
 msgid "File manager command:"
@@ -5906,8 +5912,8 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
-"Voeg dingen toe die iedereen kan lezen, zoals een korte beschrijving, "
-"behulpzame tips, of richtlijnen voor het downloaden van je shares."
+"Voeg dingen toe die je wilt dat iedereen ziet, zoals een korte beschrijving, "
+"handige tips of richtlijnen voor het downloaden van je shares."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 msgid "Picture:"
@@ -5947,7 +5953,8 @@ msgstr "Geluid inschakelen voor meldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 msgid "Show notification for private chats and mentions in the window title"
-msgstr "Toon melding voor privéchat en vermeldingen in venstertitel"
+msgstr ""
+"Toon meldingen voor privéchats en vermeldingen in de titel van het venster"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:265
 msgid "Show notifications for:"
