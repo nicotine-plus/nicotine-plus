@@ -324,7 +324,7 @@ class UPnP(BaseImplementation):
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(private_ip))
-                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, UPnP.MULTICAST_TTL)
+                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
