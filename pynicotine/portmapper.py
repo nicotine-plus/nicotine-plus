@@ -28,6 +28,7 @@ from urllib.parse import urlsplit
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.utils import execute_command
 
 
 class PortmapError(Exception):
@@ -131,14 +132,12 @@ class NATPMP(BaseImplementation):
 
             return gateway_address
 
-        import subprocess
-
         if sys.platform == "win32":
             gateway_pattern = re.compile(b".*?0.0.0.0 +0.0.0.0 +(.*?) +?[^\n]*\n")
         else:
             gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
 
-        output = subprocess.check_output(["netstat", "-rn"], shell=True)
+        output = execute_command("netstat -rn", returnoutput=True)
         return gateway_pattern.search(output).group(1)
 
     def _request_port_mapping(self, public_port, private_port, lease_duration):
