@@ -37,6 +37,7 @@ import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
@@ -108,9 +109,33 @@ class NetworkPage:
             }
         }
 
+        for event_name, callback in (
+            ("server-disconnect", self.update_port_label),
+            ("server-login", self.update_port_label)
+        ):
+            events.connect(event_name, callback)
+
     def destroy(self):
         self.network_interface_combobox.destroy()
         self.__dict__.clear()
+
+    def update_port_label(self, *_args):
+
+        unknown_label = _("Unknown")
+
+        if core.public_port:
+            url = pynicotine.__port_checker_url__ % str(core.public_port)
+            port_status_text = _("Check Port Status")
+
+            self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
+                "ip": core.public_ip_address or unknown_label,
+                "port": core.public_port or unknown_label
+            })
+            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
+            self.check_port_status_label.set_visible(True)
+        else:
+            self.current_port_label.set_markup(f"<b>{unknown_label}</b>")
+            self.check_port_status_label.set_visible(False)
 
     def set_settings(self):
 
@@ -125,22 +150,9 @@ class NetworkPage:
         self.network_interface_combobox.unfreeze()
 
         self.application.preferences.set_widgets_data(self.options)
-        unknown_label = _("Unknown")
 
         # Listening port status
-        if core.public_port:
-            url = pynicotine.__port_checker_url__ % str(core.public_port)
-            port_status_text = _("Check Port Status")
-
-            self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-                "ip": core.public_ip_address or unknown_label,
-                "port": core.public_port or unknown_label
-            })
-            self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-            self.check_port_status_label.set_visible(True)
-        else:
-            self.current_port_label.set_markup(f"<b>{unknown_label}</b>")
-            self.check_port_status_label.set_visible(False)
+        self.update_port_label()
 
         # Special options
         server_hostname, server_port = config.sections["server"]["server"]
