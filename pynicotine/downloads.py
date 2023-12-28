@@ -856,6 +856,11 @@ class Downloads(Transfers):
 
         elif username not in self.queued_users:
             for download in self.failed_users.get(username, {}).copy().values():
+                if download.status != TransferStatus.USER_LOGGED_OFF:
+                    # Only a online/away status update, no transfers to resume
+                    break
+
+                # User logged in, resume "User logged off" transfers
                 self._unfail_transfer(download)
 
                 if self._enqueue_transfer(download):
