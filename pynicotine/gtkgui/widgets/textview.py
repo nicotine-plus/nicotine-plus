@@ -83,6 +83,8 @@ class TextView:
         self.parse_urls = parse_urls
 
         if GTK_API_VERSION >= 4:
+            self.textbuffer.set_enable_undo(editable)
+
             self.gesture_click_primary = Gtk.GestureClick()
             scrollable_container.add_controller(self.gesture_click_primary)
 
@@ -237,6 +239,12 @@ class TextView:
 
         self.textbuffer.place_cursor(iterator)
 
+    def set_text(self, text):
+        """Sets text without any additional processing, and clears the undo stack."""
+
+        self.textbuffer.set_text(text)
+        self.end_iter = self.textbuffer.get_end_iter()
+
     def update_cursor(self, pos_x, pos_y):
 
         cursor = self.TEXT_CURSOR
@@ -257,8 +265,7 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-        self.textbuffer.set_text("")
-        self.end_iter = self.textbuffer.get_end_iter()
+        self.set_text("")
 
     # Text Tags (Usernames, URLs) #
 

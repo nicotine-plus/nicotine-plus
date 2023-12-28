@@ -3016,7 +3016,7 @@ class Preferences(Dialog):
 
         elif isinstance(widget, TextView):
             if isinstance(value, str):
-                widget.append_line(unescape(value))
+                widget.set_text(unescape(value))
 
         elif isinstance(widget, Gtk.Switch):
             widget.set_active(value)
