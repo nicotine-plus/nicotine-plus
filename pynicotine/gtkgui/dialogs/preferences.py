@@ -276,7 +276,7 @@ class DownloadsPage:
                 (_("No one"), None),
                 (_("Everyone"), None),
                 (_("Buddies"), None),
-                (_("Trusted Buddies"), None)
+                (_("Trusted buddies"), None)
             )
         )
 
