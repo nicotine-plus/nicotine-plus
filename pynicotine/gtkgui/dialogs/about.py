@@ -224,10 +224,10 @@ class About(Dialog):
  •  daelstorm (2004–2009)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
-         """<b>Esperanto</b>
+        """<b>Esperanto</b>
  •  phlostically (2021)""",
 
-         """<b>Estonian</b>
+        """<b>Estonian</b>
  •  PriitUring (2023)""",
 
         """<b>Euskara</b>
