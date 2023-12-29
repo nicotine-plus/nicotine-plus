@@ -1663,7 +1663,7 @@ class UserInterfacePage:
         self.close_action_combobox = ComboBox(
             container=self.close_action_label.get_parent(), label=self.close_action_label,
             items=(
-                (_("Quit program"), None),
+                (_("Quit Nicotine+"), None),
                 (_("Show confirmation dialog"), None),
                 (_("Run in the background"), None)
             )

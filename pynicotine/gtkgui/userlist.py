@@ -144,7 +144,7 @@ class UserList:
             ("", None),
             ("#" + _("Add User _Note…"), self.on_add_note),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("_Remove"), self.on_remove_buddy)
+            ("#" + _("Remove"), self.on_remove_buddy)
         )
 
         # Events

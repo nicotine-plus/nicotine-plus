@@ -168,18 +168,18 @@ class Interests:
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view, "likes"),
+            ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.likes_list_view, "likes"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view, "likes"),
             ("", None),
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
+            ("#" + _("Remove"), self.on_remove_thing_i_like)
         )
 
         popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view, "dislikes"),
+            ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.dislikes_list_view, "dislikes"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view, "dislikes"),
             ("", None),
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
+            ("#" + _("Remove"), self.on_remove_thing_i_dislike)
         )
 
         popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)

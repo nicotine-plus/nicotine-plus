@@ -366,7 +366,7 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("#" + _("View User _Profile"), self.on_user_profile))
 
         if self.tab_name != "privatechat":
-            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
+            self.add_items(("#" + _("_Send Message"), self.on_send_message))
 
         if self.tab_name != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
