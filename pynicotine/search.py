@@ -178,12 +178,10 @@ class Search:
                 # Excluded word (-word)
                 excluded_words.append(word[1:].lower())
 
-            elif word.startswith('"') and word.endswith('"'):
+            elif word.startswith('"') and word.endswith('"') and len(word) > 2:
                 # Phrase "some words here"
                 word = word[1:-1]
-
-                if word:
-                    included_words.append(word.lower())
+                included_words.append(word.lower())
 
                 for inner_word in word.translate(TRANSLATE_PUNCTUATION).strip().split():
                     search_term_words_no_quotes.append(inner_word)
