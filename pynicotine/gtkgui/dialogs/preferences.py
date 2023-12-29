@@ -2676,7 +2676,7 @@ class NowPlayingPage:
 
         elif self.listenbrainz_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.command_label.set_text(_("Username:"))
+            self.command_label.set_text(_("Username: "))
 
         elif self.other_radio.get_active():
             self.player_replacers = ["$n"]

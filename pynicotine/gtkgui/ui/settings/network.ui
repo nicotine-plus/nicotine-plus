@@ -51,7 +51,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Username:</property>
+                <property name="label" translatable="yes">Username: </property>
                 <property name="mnemonic-widget">username_entry</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>

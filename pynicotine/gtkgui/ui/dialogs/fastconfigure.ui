@@ -167,7 +167,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Username</property>
+                        <property name="label" translatable="yes">Username: </property>
                         <property name="mnemonic-widget">username_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
@@ -200,7 +200,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Password</property>
+                        <property name="label" translatable="yes">Password: </property>
                         <property name="mnemonic-widget">password_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
