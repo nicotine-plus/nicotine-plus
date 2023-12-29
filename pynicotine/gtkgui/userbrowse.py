@@ -235,11 +235,8 @@ class UserBrowse:
         self.indeterminate_progress = False
         self.local_permission_level = None
         self.queued_path = None
-        self.num_folders = 0
-        self.share_size = 0
 
         self.selected_folder_path = None
-        self.selected_folder_size = 0
         self.selected_files = {}
 
         self.search_list = []
@@ -480,11 +477,8 @@ class UserBrowse:
         if private_shares:
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
 
-        self.share_size = size + private_size
-        self.num_folders = num_folders + num_private_folders
-
-        self.num_folders_label.set_text(humanize(self.num_folders))
-        self.share_size_label.set_text(human_size(self.share_size))
+        self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
+        self.share_size_label.set_text(human_size(size + private_size))
 
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
@@ -732,10 +726,7 @@ class UserBrowse:
         # Temporarily disable sorting for increased performance
         self.file_list_view.disable_sorting()
 
-        selected_folder_size = 0
-
         for _code, basename, size, _ext, file_attributes, *_unused in files:
-            selected_folder_size += size
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
             h_quality, bitrate, h_length, length = FileListMessage.parse_audio_quality_length(size, file_attributes)
 
@@ -751,7 +742,6 @@ class UserBrowse:
                 file_attributes
             ], select_row=False)
 
-        self.selected_folder_size = selected_folder_size
         self.file_list_view.enable_sorting()
 
     def select_files(self):
