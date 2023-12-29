@@ -388,6 +388,7 @@ Copyright (c) 2017 IP2Location.com
 
         icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        website_text = _('Website')
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
@@ -397,7 +398,7 @@ Copyright (c) 2017 IP2Location.com
             (self.application_version_label, f"{pynicotine.__application_name__} {pynicotine.__version__}"),
             (self.dependency_versions_label, (f"GTK {gtk_version}   •   Python {sys.version.split()[0]}")),
             (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
-                                  f"{_('Website')}</a>")),
+                                  f"{website_text}</a>")),
             (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
         ):
             label_widget.set_markup(text)

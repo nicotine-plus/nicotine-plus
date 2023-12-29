@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-29 19:26+0200\n"
+"POT-Creation-Date: 2023-12-29 20:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -623,21 +623,25 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:425
+#: pynicotine/gtkgui/dialogs/about.py:391
+msgid "Website"
+msgstr ""
+
+#: pynicotine/gtkgui/dialogs/about.py:426
 #, python-format
 msgid "Error checking latest version: %s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:430
+#: pynicotine/gtkgui/dialogs/about.py:431
 #, python-format
 msgid "New release available: %s"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:435
+#: pynicotine/gtkgui/dialogs/about.py:436
 msgid "Up to date"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/about.py:460
+#: pynicotine/gtkgui/dialogs/about.py:461
 msgid "Checking latest version…"
 msgstr ""
 
