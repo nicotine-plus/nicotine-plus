@@ -31,6 +31,9 @@
  - daelstorm (2004–2009)
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
+## Esperanto
+ - phlostically (2021)
+
 ## Estonian
  - PriitUring (2023)
 
