@@ -130,7 +130,7 @@
                     <property name="selectable">True</property>
                     <property name="visible">True</property>
                     <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
+                    <property name="wrap-mode">word</property>
                     <property name="xalign">0</property>
                   </object>
                 </child>
