@@ -193,6 +193,9 @@ class About(Dialog):
     TRANSLATORS = [
         "<b>Nicotine+ Translators</b>",
 
+        """<b>Albanian</b>
+ •  W L (2023)""",
+
         """<b>Catalan</b>
  •  Maite Guix (2022)""",
 
@@ -202,7 +205,7 @@ class About(Dialog):
  •  hadwin (2022)""",
 
         """<b>Czech</b>
- •  burnmail123 (2021)""",
+ •  burnmail123 (2021-2023)""",
 
         """<b>Danish</b>
  •  mathsped (2003–2004)""",
@@ -220,6 +223,9 @@ class About(Dialog):
  •  Michael Labouebe (gfarmerfr) (2016)
  •  daelstorm (2004–2009)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
+
+         """<b>Estonian</b>
+ •  PriitUring (2023)""",
 
         """<b>Euskara</b>
  •  Julen (2006–2007)""",

@@ -1,5 +1,8 @@
 # Nicotine+ Translators
 
+## Albanian
+ - W L (2023)
+
 ## Catalan
  - Maite Guix (2022)
 
@@ -9,7 +12,7 @@
  - hadwin (2022)
 
 ## Czech
- - burnmail123 (2021)
+ - burnmail123 (2021-2023)
 
 ## Danish
  - mathsped (2003–2004)
@@ -27,6 +30,9 @@
  - Michael Labouebe (gfarmerfr) (2016)
  - daelstorm (2004–2009)
  - Ingmar K. Steen (Hyriand) (2003–2004)
+
+## Estonian
+ - PriitUring (2023)
 
 ## Euskara
  - Julen (2006–2007)
