@@ -434,8 +434,8 @@ class MainWindow(Window):
         # View
 
         state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
-        action = Gio.SimpleAction(name="show-log-history", state=state)
-        action.connect("change-state", self.on_show_log_history)
+        action = Gio.SimpleAction(name="show-log-pane", state=state)
+        action.connect("change-state", self.on_show_log_pane)
         self.add_action(action)
 
         # Search
@@ -474,7 +474,7 @@ class MainWindow(Window):
             ("win.main-menu", ["F10"]),
             ("win.context-menu", ["<Shift>F10"]),
             ("win.change-focus-view", ["F6"]),
-            ("win.show-log-history", ["<Primary>l"]),
+            ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
             ("win.cycle-tabs", ["<Primary>Tab"]),
@@ -1239,7 +1239,7 @@ class MainWindow(Window):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
-    def on_show_log_history(self, action, state):
+    def on_show_log_pane(self, action, state):
 
         action.set_state(state)
         visible = state.get_boolean()

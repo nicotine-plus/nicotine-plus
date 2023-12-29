@@ -69,8 +69,8 @@ Verbose logging can be enabled to ease debugging. The following log categories a
 
 In order to enable debug logging:
 
- * Click the ellipsis icon in the bottom right corner of the main window to show the log history pane
- * Right-click the log history pane to show the context menu. Enable the log categories you need in the `Log Categories` submenu.
+ * Click the ellipsis icon in the bottom right corner of the main window to show the log pane
+ * Right-click the log pane to show the context menu. Enable the log categories you need in the `Log Categories` submenu.
 
 If you want to log debug messages to file, `Menu -> Preferences -> Logging -> Log debug messages to file`. Remember to disable debug logging when you no longer need it, since it impacts performance.
 
