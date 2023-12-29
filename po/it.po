@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-12-29 07:13+0000\n"
+"PO-Revision-Date: 2023-12-29 19:55+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
@@ -647,9 +647,8 @@ msgid "About"
 msgstr "Riguardo al programma"
 
 #: pynicotine/gtkgui/dialogs/about.py:391
-#, fuzzy
 msgid "Website"
-msgstr "Sito web: %s"
+msgstr "Sito web"
 
 #: pynicotine/gtkgui/dialogs/about.py:426
 #, python-format
