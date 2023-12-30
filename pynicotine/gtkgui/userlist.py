@@ -445,7 +445,7 @@ class UserList:
             callback=self.on_add_note_response,
             callback_data=user,
             default=note
-        ).show()
+        ).present()
 
     def server_disconnect(self, *_args):
 

@@ -133,7 +133,7 @@ class FileChooser:
 
         self.destroy()
 
-    def show(self):
+    def present(self):
 
         FileChooser.active_chooser = self
 
@@ -329,7 +329,7 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=self.path
-            ).show()
+            ).present()
             return
 
         folder_path = os.path.dirname(self.path) if self.path else None
@@ -339,14 +339,14 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=folder_path
-            ).show()
+            ).present()
             return
 
         FileChooser(
             parent=self.window,
             callback=self.on_open_file_chooser_response,
             initial_folder=folder_path
-        ).show()
+        ).present()
 
     def on_open_folder(self, *_args):
 

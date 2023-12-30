@@ -1039,7 +1039,7 @@ class Transfers:
                 self.file_properties = FileProperties(self.window.application, download_button=False)
 
             self.file_properties.update_properties(data, selected_size, selected_length)
-            self.file_properties.show()
+            self.file_properties.present()
 
     def on_copy_url(self, *_args):
         # Implemented in subclasses

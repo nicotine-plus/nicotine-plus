@@ -170,7 +170,7 @@ class FastConfigure(Dialog):
             title=_("Add a Shared Folder"),
             callback=self.on_add_shared_folder_selected,
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
@@ -204,7 +204,7 @@ class FastConfigure(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
-            ).show()
+            ).present()
             return
 
     def on_remove_shared_folder(self, *_args):

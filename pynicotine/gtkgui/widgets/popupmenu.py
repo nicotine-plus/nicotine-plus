@@ -603,4 +603,4 @@ class UserPopupMenu(PopupMenu):
             message=message,
             action_button_label=_("_Give Privileges"),
             callback=self.on_give_privileges_response
-        ).show()
+        ).present()

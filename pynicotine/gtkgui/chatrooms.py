@@ -202,7 +202,7 @@ class ChatRooms(IconNotebook):
                 option_label=_("Make room private"),
                 callback=self.on_create_room_response,
                 callback_data=room
-            ).show()
+            ).present()
 
         else:
             core.chatrooms.show_room(room)
@@ -1006,7 +1006,7 @@ class ChatRoom:
             message=_("Do you really want to permanently delete all logged messages for this room?"),
             destructive_response_id="ok",
             callback=self.on_delete_room_log_response
-        ).show()
+        ).present()
 
     def update_room_user_completions(self):
         self.update_completions(core.chatrooms.completions.copy())

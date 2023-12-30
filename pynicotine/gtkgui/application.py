@@ -315,7 +315,7 @@ class Application:
             buttons=buttons,
             option_label=option_label,
             callback=self.on_confirm_quit_response
-        ).show()
+        ).present()
 
     def on_shares_unavailable_response(self, _dialog, response_id, _data):
         core.shares.rescan_shares(force=(response_id == "force_rescan"))
@@ -341,7 +341,7 @@ class Application:
             ],
             destructive_response_id="force_rescan",
             callback=self.on_shares_unavailable_response
-        ).show()
+        ).present()
 
     def on_invalid_password_response(self, *_args):
         self.on_preferences(page_id="network")
@@ -363,7 +363,7 @@ class Application:
                 ("ok", _("Change _Login Details"))
             ],
             callback=self.on_invalid_password_response
-        ).show()
+        ).present()
 
     # Actions #
 
@@ -389,32 +389,32 @@ class Application:
 
         self.preferences.set_settings()
         self.preferences.set_active_page(page_id)
-        self.preferences.show()
+        self.preferences.present()
 
     def on_chatroom_notification_activated(self, _action, room_variant):
 
         room = room_variant.get_string()
         core.chatrooms.show_room(room)
 
-        self.window.show()
+        self.window.present()
 
     def on_download_notification_activated(self, *_args):
         self.window.change_main_page(self.window.downloads_page)
-        self.window.show()
+        self.window.present()
 
     def on_private_chat_notification_activated(self, _action, user_variant):
 
         user = user_variant.get_string()
         core.privatechat.show_user(user)
 
-        self.window.show()
+        self.window.present()
 
     def on_search_notification_activated(self, _action, search_token_variant):
 
         search_token = int(search_token_variant.get_string())
         core.search.show_search(search_token)
 
-        self.window.show()
+        self.window.present()
 
     def on_set_debug_level(self, action, state, level):
 
@@ -455,7 +455,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
-        self.fast_configure.show()
+        self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):
 
@@ -463,7 +463,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
             self.shortcuts = Shortcuts(self)
 
-        self.shortcuts.show()
+        self.shortcuts.present()
 
     def on_transfer_statistics(self, *_args):
 
@@ -471,7 +471,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.statistics import Statistics
             self.statistics = Statistics(self)
 
-        self.statistics.show()
+        self.statistics.present()
 
     @staticmethod
     def on_report_bug(*_args):
@@ -487,7 +487,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.wishlist import WishList
             self.wishlist = WishList(self)
 
-        self.wishlist.show()
+        self.wishlist.present()
 
     def on_about(self, *_args):
 
@@ -495,7 +495,7 @@ class Application:
             from pynicotine.gtkgui.dialogs.about import About
             self.about = About(self)
 
-        self.about.show()
+        self.about.present()
 
     def on_message_users_response(self, dialog, _response_id, target):
 
@@ -516,7 +516,7 @@ class Application:
             callback=self.on_message_users_response,
             callback_data="downloading",
             show_emoji_icon=True
-        ).show()
+        ).present()
 
     def on_message_buddies(self, *_args):
 
@@ -530,7 +530,7 @@ class Application:
             callback=self.on_message_users_response,
             callback_data="buddies",
             show_emoji_icon=True
-        ).show()
+        ).present()
 
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
@@ -558,7 +558,7 @@ class Application:
             callback=self.on_load_shares_from_disk_selected,
             initial_folder=core.userbrowse.create_user_shares_folder(),
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_configure_shares(self, *_args):
         self.on_preferences(page_id="shares")
@@ -645,7 +645,7 @@ class Application:
             ],
             callback=self._show_critical_error_dialog_response,
             callback_data=(loop, error)
-        ).show()
+        ).present()
 
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -705,7 +705,7 @@ class Application:
 
         if self.window:
             # Show the window of the running application instance
-            self.window.show()
+            self.window.present()
             return
 
         from pynicotine.gtkgui.mainwindow import MainWindow
@@ -737,7 +737,7 @@ class Application:
                                               and config.sections["ui"]["startup_hidden"]))
 
         if not start_hidden:
-            self.window.show()
+            self.window.present()
 
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()

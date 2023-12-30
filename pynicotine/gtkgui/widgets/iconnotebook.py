@@ -424,7 +424,7 @@ class IconNotebook:
             message=_("Do you really want to close all tabs?"),
             destructive_response_id="ok",
             callback=self._on_remove_all_pages
-        ).show()
+        ).present()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
 

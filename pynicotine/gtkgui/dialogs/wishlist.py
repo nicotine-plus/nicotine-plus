@@ -126,7 +126,7 @@ class WishList(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            ).show()
+            ).present()
             return
 
     def on_remove_wish(self, *_args):
@@ -153,7 +153,7 @@ class WishList(Dialog):
             message=_("Do you really want to clear your wishlist?"),
             destructive_response_id="ok",
             callback=self.clear_wishlist_response
-        ).show()
+        ).present()
 
     def add_wish(self, wish):
         if wish not in self.list_view.iterators:

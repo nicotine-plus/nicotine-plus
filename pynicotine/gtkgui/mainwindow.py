@@ -704,7 +704,7 @@ class MainWindow(Window):
 
     def _show_dialogs(self, dialogs):
         for dialog in dialogs:
-            dialog.show()
+            dialog.present()
 
     def set_use_header_bar(self, enabled):
 
@@ -1205,7 +1205,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).show()
+            MessageDialog(parent=self, title=title, message=msg).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:

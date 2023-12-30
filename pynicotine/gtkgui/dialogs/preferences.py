@@ -197,7 +197,7 @@ class NetworkPage:
                 parent=self.application.preferences,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
-            ).show()
+            ).present()
             return
 
         if not password:
@@ -229,7 +229,7 @@ class NetworkPage:
             action_button_label=_("_Change"),
             callback=self.on_change_password_response,
             callback_data=core.user_status
-        ).show()
+        ).present()
 
     def on_toggle_upnp(self, *_args):
         self.portmap_required = self.upnp_toggle.get_active()
@@ -461,7 +461,7 @@ class DownloadsPage:
             option_value=False,
             option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
-        ).show()
+        ).present()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
@@ -493,7 +493,7 @@ class DownloadsPage:
                 default=dfilter,
                 option_value=enable_regex,
                 option_label=_("Enable regular expressions")
-            ).show()
+            ).present()
             return
 
     def on_remove_filter(self, *_args):
@@ -686,7 +686,7 @@ class SharesPage:
             callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
@@ -736,7 +736,7 @@ class SharesPage:
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
-            ).show()
+            ).present()
             return
 
     def on_remove_shared_folder(self, *_args):
@@ -1031,7 +1031,7 @@ class IgnoredUsersPage:
             message=_("Enter the name of the user you want to ignore:"),
             action_button_label=_("_Add"),
             callback=self.on_add_ignored_user_response
-        ).show()
+        ).present()
 
     def on_remove_ignored_user(self, *_args):
 
@@ -1061,7 +1061,7 @@ class IgnoredUsersPage:
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
             callback=self.on_add_ignored_ip_response
-        ).show()
+        ).present()
 
     def on_remove_ignored_ip(self, *_args):
 
@@ -1194,7 +1194,7 @@ class BannedUsersPage:
             message=_("Enter the name of the user you want to ban:"),
             action_button_label=_("_Add"),
             callback=self.on_add_banned_user_response
-        ).show()
+        ).present()
 
     def on_remove_banned_user(self, *_args):
 
@@ -1225,7 +1225,7 @@ class BannedUsersPage:
             message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
             callback=self.on_add_banned_ip_response
-        ).show()
+        ).present()
 
     def on_remove_banned_ip(self, *_args):
 
@@ -1448,7 +1448,7 @@ class ChatsPage:
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             action_button_label=_("_Add"),
             callback=self.on_add_censored_response
-        ).show()
+        ).present()
 
     def on_edit_censored_response(self, dialog, _response_id, iterator):
 
@@ -1477,7 +1477,7 @@ class ChatsPage:
                 callback=self.on_edit_censored_response,
                 callback_data=iterator,
                 default=pattern
-            ).show()
+            ).present()
             return
 
     def on_remove_censored(self, *_args):
@@ -1508,7 +1508,7 @@ class ChatsPage:
             action_button_label=_("_Add"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
-        ).show()
+        ).present()
 
     def on_edit_replacement_response(self, dialog, _response_id, iterator):
 
@@ -1541,7 +1541,7 @@ class ChatsPage:
                 use_second_entry=True,
                 default=pattern,
                 second_default=replacement
-            ).show()
+            ).present()
             return
 
     def on_remove_replacement(self, *_args):
@@ -2490,7 +2490,7 @@ class UrlHandlersPage:
             use_second_entry=True,
             droplist=self.default_protocols,
             second_droplist=self.default_commands
-        ).show()
+        ).present()
 
     def on_edit_handler_response(self, dialog, _response_id, iterator):
 
@@ -2519,7 +2519,7 @@ class UrlHandlersPage:
                 callback_data=iterator,
                 droplist=self.default_commands,
                 default=command
-            ).show()
+            ).present()
             return
 
     def on_remove_handler(self, *_args):
@@ -2890,7 +2890,7 @@ class PluginsPage:
             plugin_id=self.selected_plugin,
             plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
-        self.plugin_settings.show()
+        self.plugin_settings.present()
 
 
 class Preferences(Dialog):
@@ -3222,7 +3222,7 @@ class Preferences(Dialog):
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
-            self.application.window.show()
+            self.application.window.present()
 
         if rescan_required:
             core.shares.rescan_shares()
@@ -3244,7 +3244,7 @@ class Preferences(Dialog):
             initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
-        ).show()
+        ).present()
 
     def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
         toggle.emit("activate")

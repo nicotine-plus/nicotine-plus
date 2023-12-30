@@ -195,7 +195,7 @@ class BaseImplementation:
             self.application.window.hide()
             return
 
-        self.application.window.show()
+        self.application.window.present()
 
     def on_connect_disconnect(self, *_args):
 
@@ -207,11 +207,11 @@ class BaseImplementation:
 
     def on_downloads(self, *_args):
         self.application.window.change_main_page(self.application.window.downloads_page)
-        self.application.window.show()
+        self.application.window.present()
 
     def on_uploads(self, *_args):
         self.application.window.change_main_page(self.application.window.uploads_page)
-        self.application.window.show()
+        self.application.window.present()
 
     def on_open_private_chat_response(self, dialog, _response_id, _data):
 
@@ -221,7 +221,7 @@ class BaseImplementation:
             return
 
         core.privatechat.show_user(user)
-        self.application.window.show()
+        self.application.window.present()
 
     def on_open_private_chat(self, *_args):
 
@@ -232,7 +232,7 @@ class BaseImplementation:
             action_button_label=_("_Message"),
             callback=self.on_open_private_chat_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
+        ).present()
 
     def on_get_a_users_info_response(self, dialog, _response_id, _data):
 
@@ -242,7 +242,7 @@ class BaseImplementation:
             return
 
         core.userinfo.show_user(user)
-        self.application.window.show()
+        self.application.window.present()
 
     def on_get_a_users_info(self, *_args):
 
@@ -253,7 +253,7 @@ class BaseImplementation:
             action_button_label=_("_View Profile"),
             callback=self.on_get_a_users_info_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
+        ).present()
 
     def on_get_a_users_shares_response(self, dialog, _response_id, _data):
 
@@ -263,7 +263,7 @@ class BaseImplementation:
             return
 
         core.userbrowse.browse_user(user)
-        self.application.window.show()
+        self.application.window.present()
 
     def on_get_a_users_shares(self, *_args):
 
@@ -274,7 +274,7 @@ class BaseImplementation:
             action_button_label=_("_Browse"),
             callback=self.on_get_a_users_shares_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
+        ).present()
 
 
 class StatusNotifierImplementation(BaseImplementation):

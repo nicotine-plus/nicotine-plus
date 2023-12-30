@@ -374,7 +374,7 @@ class PluginSettings(Dialog):
             message=treeview.description,
             callback=self.on_add_response,
             callback_data=treeview
-        ).show()
+        ).present()
 
     def on_edit_response(self, window, _response_id, data):
 
@@ -400,7 +400,7 @@ class PluginSettings(Dialog):
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
-            ).show()
+            ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):

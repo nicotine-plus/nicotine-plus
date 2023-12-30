@@ -877,7 +877,7 @@ class UserBrowse:
             callback=self.on_download_folder_to_selected,
             callback_data=recurse,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_download_folder_recursive_to(self, *_args):
         self.on_download_folder_to(recurse=True)
@@ -911,7 +911,7 @@ class UserBrowse:
             callback=self.on_upload_folder_to_response,
             callback_data=recurse,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
+        ).present()
 
     def on_upload_folder_recursive_to(self, *_args):
         self.on_upload_folder_to(recurse=True)
@@ -1080,7 +1080,7 @@ class UserBrowse:
             title=_("Select Destination Folder for Files"),
             callback=self.on_download_files_to_selected,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_upload_files_response(self, dialog, _response_id, _data):
 
@@ -1104,7 +1104,7 @@ class UserBrowse:
             action_button_label=_("_Upload"),
             callback=self.on_upload_files_response,
             droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
+        ).present()
 
     def on_open_file(self, *_args):
 
@@ -1168,7 +1168,7 @@ class UserBrowse:
                 self.userbrowses.file_properties = FileProperties(self.window.application, core)
 
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
-            self.userbrowses.file_properties.show()
+            self.userbrowses.file_properties.present()
 
     def on_copy_file_path(self, *_args):
         file_path = self.get_selected_file_path()

@@ -1539,7 +1539,7 @@ class Search:
                 self.searches.file_properties = FileProperties(self.window.application, core)
 
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
-            self.searches.file_properties.show()
+            self.searches.file_properties.present()
 
     def on_download_files(self, *_args, download_folder_path=None):
 
@@ -1562,7 +1562,7 @@ class Search:
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_download_folders(self, *_args, download_folder_path=None):
 
@@ -1605,7 +1605,7 @@ class Search:
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_copy_file_path(self, *_args):
 

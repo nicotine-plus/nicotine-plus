@@ -466,7 +466,7 @@ class PrivateChat:
             message=_("Do you really want to permanently delete all logged messages for this user?"),
             destructive_response_id="ok",
             callback=self.on_delete_chat_log_response
-        ).show()
+        ).present()
 
     def _show_notification(self, text, is_mentioned=False):
 

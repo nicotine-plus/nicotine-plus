@@ -122,7 +122,7 @@ class Uploads(Transfers):
             message=_("Do you really want to clear all queued uploads?"),
             destructive_response_id="ok",
             callback=self.on_clear_queued
-        ).show()
+        ).present()
 
     def on_clear_all_response(self, *_args):
         core.uploads.clear_uploads()
@@ -135,7 +135,7 @@ class Uploads(Transfers):
             message=_("Do you really want to clear all uploads?"),
             destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
     def on_copy_url(self, *_args):
 

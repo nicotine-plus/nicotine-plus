@@ -121,7 +121,7 @@ class Downloads(Transfers):
             message=_("Do you really want to clear all queued downloads?"),
             destructive_response_id="ok",
             callback=self.on_clear_queued
-        ).show()
+        ).present()
 
     def on_clear_all_response(self, *_args):
         core.downloads.clear_downloads()
@@ -134,7 +134,7 @@ class Downloads(Transfers):
             message=_("Do you really want to clear all downloads?"),
             destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
     def folder_download_response(self, _dialog, _response_id, msg):
         events.emit("folder-contents-response", msg, check_num_files=False)
@@ -148,7 +148,7 @@ class Downloads(Transfers):
                 "num": numfiles, "user": username, "folder": folder},
             callback=self.folder_download_response,
             callback_data=msg
-        ).show()
+        ).present()
 
     def on_copy_url(self, *_args):
 

@@ -69,7 +69,7 @@ class Window:
     def set_title(self, title):
         self.widget.set_title(title)
 
-    def show(self):
+    def present(self):
 
         if self.activation_token is not None:
             # Set XDG activation token if provided by tray icon
