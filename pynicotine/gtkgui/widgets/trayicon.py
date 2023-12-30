@@ -101,14 +101,14 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.send_message_item = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_info_item = self.create_item(_("View User Profile"), self.on_get_a_users_info)
-        self.lookup_shares_item = self.create_item(_("Browse Shares"), self.on_get_a_users_shares)
+        self.send_message_item = self.create_item(_("_Send Message"), self.on_open_private_chat)
+        self.lookup_info_item = self.create_item(_("View User _Profile"), self.on_get_a_users_info)
+        self.lookup_shares_item = self.create_item(_("_Browse Shares"), self.on_get_a_users_shares)
 
         self.create_item()
 
         self.create_item(_("Preferences"), self.application.on_preferences)
-        self.create_item(_("Quit"), self.application.on_quit_request)
+        self.create_item(_("_Quit"), self.application.on_quit_request)
 
     def update_window_visibility(self):
 
@@ -126,7 +126,7 @@ class BaseImplementation:
     def update_user_status(self):
 
         sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
-        label = _("Disconnect") if sensitive else _("Connect")
+        label = _("_Disconnect") if sensitive else _("_Connect")
 
         for item in (self.away_item, self.send_message_item,
                      self.lookup_info_item, self.lookup_shares_item):
@@ -964,7 +964,7 @@ class Win32Implementation(BaseImplementation):
 
         if text is not None:
             item_info.f_mask |= self.MIIM_STRING
-            item_info.dw_type_data = text
+            item_info.dw_type_data = text.replace("_", "&")  # Mnemonics use &
         else:
             item_info.f_type |= self.MFT_SEPARATOR
 
