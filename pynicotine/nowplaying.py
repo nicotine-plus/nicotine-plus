@@ -156,9 +156,9 @@ class NowPlaying:
             self.title["album"] = lastplayed["album"]["#text"]
             self.title["nowplaying"] = f"{artist} - {title}"
 
-        except Exception:
+        except Exception as error:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -282,16 +282,16 @@ class NowPlaying:
 
             track = json_api["listens"][0]["track_metadata"]
 
-            self.title["artist"] = artist = track["artist_name"]
-            self.title["title"] = title = track["track_name"]
-            self.title["album"] = track["release_name"]
+            self.title["artist"] = artist = track.get("artist_name", "?")
+            self.title["title"] = title = track.get("track_name", "?")
+            self.title["album"] = track.get("release_name", "?")
             self.title["nowplaying"] = f"{artist} - {title}"
 
             return True
 
-        except Exception:
+        except Exception as error:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):
