@@ -281,7 +281,6 @@ class UserBrowse:
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
-                ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("#" + _("Upload Folder & Subfolders…"), self.on_upload_folder_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
@@ -294,8 +293,6 @@ class UserBrowse:
             )
         else:
             self.folder_popup_menu.add_items(
-                ("#" + _("_Download Folder"), self.on_download_folder),
-                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
                 ("#" + _("Download Folder & Subfolders"), self.on_download_folder_recursive),
                 ("#" + _("Download Folder & Subfolders To…"), self.on_download_folder_recursive_to),
                 ("", None),
@@ -1123,33 +1120,36 @@ class UserBrowse:
     def on_file_properties(self, _action, _state, all_files=False):
 
         data = []
-        folder_path = self.selected_folder_path
+        selected_folder_path = self.selected_folder_path
         selected_size = 0
         selected_length = 0
 
         if all_files:
-            for file_data in core.userbrowse.user_shares[self.user].get(folder_path, ()):
-                _code, basename, file_size, _ext, file_attributes, *_unused = file_data
-                _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
-                file_path = "\\".join([folder_path, basename])
-                selected_size += file_size
+            for folder_path, files in core.userbrowse.iter_matching_folders(
+                selected_folder_path, shares=core.userbrowse.user_shares[self.user], recurse=True
+            ):
+                for file_data in files:
+                    _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+                    _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
+                    file_path = "\\".join([folder_path, basename])
+                    selected_size += file_size
 
-                if length:
-                    selected_length += length
+                    if length:
+                        selected_length += length
 
-                data.append({
-                    "user": self.user,
-                    "file_path": file_path,
-                    "basename": basename,
-                    "virtual_folder_path": folder_path,
-                    "size": file_size,
-                    "file_attributes": file_attributes
-                })
+                    data.append({
+                        "user": self.user,
+                        "file_path": file_path,
+                        "basename": basename,
+                        "virtual_folder_path": folder_path,
+                        "size": file_size,
+                        "file_attributes": file_attributes
+                    })
 
         else:
             for iterator in self.file_list_view.get_selected_rows():
                 basename = self.file_list_view.get_row_value(iterator, "filename")
-                file_path = "\\".join([folder_path, basename])
+                file_path = "\\".join([selected_folder_path, basename])
                 file_size = self.file_list_view.get_row_value(iterator, "size_data")
                 selected_size += file_size
                 selected_length += self.file_list_view.get_row_value(iterator, "length_data")
@@ -1158,7 +1158,7 @@ class UserBrowse:
                     "user": self.user,
                     "file_path": file_path,
                     "basename": basename,
-                    "virtual_folder_path": folder_path,
+                    "virtual_folder_path": selected_folder_path,
                     "size": file_size,
                     "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })

@@ -239,16 +239,45 @@ class UserBrowse:
         core.downloads.enqueue_download(
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False):
+    def iter_matching_folders(self, requested_folder_path, shares, recurse=False):
 
-        if requested_folder_path is None:
-            return
-
-        for folder_path, files in self.user_shares[username].items():
+        for folder_path, files in shares.items():
             if (requested_folder_path != folder_path
                     and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
                 continue
 
+            yield folder_path, files
+
+            if not recurse:
+                return
+
+    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False,
+                        check_num_files=True):
+
+        if requested_folder_path is None:
+            return
+
+        num_files = 0
+        large_folder_limit = 1000
+
+        for folder_path, files in self.iter_matching_folders(
+            requested_folder_path, shares=self.user_shares[username], recurse=recurse
+        ):
+            num_files += len(files)
+
+        if check_num_files and num_files > large_folder_limit:
+            # Large folder, ask user for confirmation before downloading
+            events.emit(
+                "download-large-folder", username, requested_folder_path, num_files,
+                lambda: self.download_folder(
+                    username, requested_folder_path, download_folder_path, recurse, check_num_files=False
+                )
+            )
+            return
+
+        for folder_path, files in self.iter_matching_folders(
+            requested_folder_path, shares=self.user_shares[username], recurse=recurse
+        ):
             # Get final download destination
             destination_folder_path = core.downloads.get_folder_destination(
                 username, folder_path, root_folder_path=requested_folder_path,
@@ -262,10 +291,6 @@ class UserBrowse:
                         username, file_path, folder_path=destination_folder_path, size=file_size,
                         file_attributes=file_attributes)
 
-            if not recurse:
-                # Downloading a single folder, no need to continue
-                return
-
     def upload_file(self, username, folder_path, file_data):
 
         _code, basename, file_size, *_unused = file_data
@@ -278,18 +303,12 @@ class UserBrowse:
         if not requested_folder_path or not username:
             return
 
-        for folder_path, files in local_shares.items():
-            if (requested_folder_path != folder_path
-                    and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
-                continue
-
+        for folder_path, files in self.iter_matching_folders(
+            requested_folder_path, shares=local_shares, recurse=recurse
+        ):
             for _code, basename, file_size, *_unused in files:
                 file_path = "\\".join([folder_path, basename])
                 core.uploads.enqueue_upload(username, file_path, size=file_size)
-
-            if not recurse:
-                # Uploading a single folder, no need to continue
-                return
 
     @staticmethod
     def get_soulseek_url(username, path):
