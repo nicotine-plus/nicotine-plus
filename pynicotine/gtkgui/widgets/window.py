@@ -22,6 +22,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive
+    activation_token = None
 
     def __init__(self, widget):
         self.widget = widget
@@ -67,6 +68,14 @@ class Window:
 
     def set_title(self, title):
         self.widget.set_title(title)
+
+    def show(self):
+
+        if self.activation_token is not None:
+            # Set XDG activation token if provided by tray icon
+            self.widget.set_startup_id(self.activation_token)
+
+        self.widget.present()
 
     def hide(self):
         self.widget.set_visible(False)

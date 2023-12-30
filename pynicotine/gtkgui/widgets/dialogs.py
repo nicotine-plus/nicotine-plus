@@ -226,9 +226,9 @@ class Dialog(Window):
             focus_widget.select_region(start_offset=0, end_offset=0)
             self.widget.set_focus(None)
 
-    def _finish_show(self):
+    def _finish_show(self, show_callback):
         self.widget.set_modal(self.modal and self.parent.is_visible())
-        self.widget.present()
+        show_callback()
 
     def show(self):
 
@@ -240,7 +240,7 @@ class Dialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_show, super().show)
 
 
 class MessageDialog(Window):
@@ -420,9 +420,9 @@ class MessageDialog(Window):
         if self in Window.active_dialogs:
             self.close()
 
-    def _finish_show(self):
+    def _finish_show(self, show_callback):
         self.widget.set_modal(self.parent and self.parent.is_visible())
-        self.widget.present()
+        show_callback()
 
     def show(self):
 
@@ -434,7 +434,7 @@ class MessageDialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_show, super().show)
 
 
 class OptionDialog(MessageDialog):

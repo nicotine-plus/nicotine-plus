@@ -34,6 +34,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
+from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
@@ -501,6 +502,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
+                ("ProvideXdgActivationToken", ("s",), (), self.provide_activation_token)
             ):
                 self.add_method(method_name, in_args, out_args, callback)
 
@@ -510,6 +512,9 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("NewStatus", ("s",))
             ):
                 self.add_signal(signal_name, value)
+
+        def provide_activation_token(self, token):
+            Window.activation_token = token
 
         def register(self):
             self.menu.register()

@@ -397,14 +397,6 @@ class MainWindow(Window):
         config.sections["ui"]["xposition"] = x_pos
         config.sections["ui"]["yposition"] = y_pos
 
-    def show(self):
-
-        self.widget.present()
-
-        if GTK_API_VERSION == 3:
-            # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.widget.deiconify()
-
     # Actions #
 
     def add_action(self, action):
