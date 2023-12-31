@@ -29,7 +29,6 @@ import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
@@ -1050,7 +1049,7 @@ class Win32Implementation(BaseImplementation):
             # Menu item pressed
             menu_item_id = w_param & 0xFFFF
             menu_item_callback = self.menu_items[menu_item_id]["callback"]
-            events.invoke_main_thread(menu_item_callback)
+            menu_item_callback()
 
         elif msg == self._wm_taskbarcreated:
             # Taskbar process restarted, create new icon
