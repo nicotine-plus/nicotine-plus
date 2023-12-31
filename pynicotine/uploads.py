@@ -1,4 +1,12 @@
 # COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
