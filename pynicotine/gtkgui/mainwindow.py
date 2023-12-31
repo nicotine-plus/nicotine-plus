@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -258,7 +258,7 @@ class MainWindow(Window):
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
         self.userlist = UserList(self)
-        self.privatechat = self.private = PrivateChats(self)
+        self.privatechat = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
@@ -266,7 +266,7 @@ class MainWindow(Window):
             "chatrooms": self.chatrooms,
             "downloads": self.downloads,
             "interests": self.interests,
-            "private": self.private,
+            "private": self.privatechat,
             "search": self.search,
             "uploads": self.uploads,
             "userbrowse": self.userbrowse,
@@ -1364,14 +1364,7 @@ class MainWindow(Window):
 
     def destroy(self):
 
-        self.chatrooms.destroy()
-        self.interests.destroy()
-        self.private.destroy()
-        self.search.destroy()
-        self.userbrowse.destroy()
-        self.userinfo.destroy()
-        self.userlist.destroy()
-        self.downloads.destroy()
-        self.uploads.destroy()
+        for tab in self.tabs.values():
+            tab.destroy()
 
         super().destroy()
