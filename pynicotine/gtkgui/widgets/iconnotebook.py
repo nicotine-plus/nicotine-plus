@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gc
 import sys
 
 from collections import deque
@@ -411,10 +410,6 @@ class IconNotebook:
                 self.window.notebook.grab_focus()
 
             self.parent.set_visible(False)
-
-        # Release memory sooner by performing garbage collection.
-        # Helps when pages are larger, e.g. Browse Shares.
-        gc.collect()
 
     def remove_all_pages(self, *_args):
 
