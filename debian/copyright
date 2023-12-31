@@ -4,7 +4,7 @@ Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2023 Nicotine+ Contributors
+Copyright: 2001-2024 Nicotine+ Contributors
            2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
            2002 Joe Halliwell
            2003 Brett W. Thompson (Zip)
@@ -34,7 +34,7 @@ Copyright: 2001-2023 Nicotine+ Contributors
                 alekksander
            2020-2021 toofar
            2020-2023 Han Boetes (hboetes)
-           2020-2023 Mat (mathiascode)
+           2020-2024 Mat (mathiascode)
            2021 redactedscribe
                 Mendelson Gusmão (mendelgusmao)
                 Inso-m-niaC
