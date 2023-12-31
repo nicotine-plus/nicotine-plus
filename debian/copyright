@@ -43,7 +43,7 @@ Copyright: 2001-2023 Nicotine+ Contributors
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
-Copyright: 2020-2023 Mat (mathiascode)
+Copyright: 2020-2023 Nicotine+ Contributors
 License: CC0-1.0
 
 Files: po/*.po
@@ -53,7 +53,7 @@ Comment: see TRANSLATORS.md for more information.
 
 Files: pynicotine/external/ip2location.py
 Copyright: 2017 IP2Location.com
-           2021-2023 Mat (mathiascode)
+           2021-2023 Nicotine+ Contributors
 License: Expat
 
 Files: pynicotine/external/ipcountrydb.bin
@@ -66,7 +66,7 @@ License: Expat
 
 Files: pynicotine/external/tinytag.py
 Copyright: 2014-2022 Tom Wallroth
-           2020-2023 Mat (mathiascode)
+           2021-2023 Mat (mathiascode)
 License: Expat
 
 License: GPL-3+
