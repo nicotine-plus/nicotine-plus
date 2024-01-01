@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2020-2023 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
@@ -38,6 +38,7 @@ from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import UINT32_LIMIT
+from pynicotine.utils import open_uri
 
 
 class Core:
@@ -77,6 +78,7 @@ class Core:
         self.public_ip_address = None
         self.public_port = None
         self.privileges_left = None
+        self._should_open_privileges_url = False
 
         self.user_addresses = {}
         self.user_countries = {}
@@ -319,10 +321,24 @@ class Core:
         # disable away mode
         events.emit("user-status", slskmessages.GetUserStatus(core.login_username, self.user_status))
 
+    def open_privileges_url(self):
+
+        import urllib.parse
+
+        login = urllib.parse.quote(self.login_username)
+        open_uri(pynicotine.__privileges_url__ % login)
+
+    def open_issue_tracker_url(self):
+        open_uri(pynicotine.__issue_tracker_url__)
+
+    def open_translations_url(self):
+        open_uri(pynicotine.__translations_url__)
+
     def request_change_password(self, password):
         self.send_message_to_server(slskmessages.ChangePassword(password))
 
-    def request_check_privileges(self):
+    def request_check_privileges(self, should_open_url=False):
+        self._should_open_privileges_url = should_open_url
         self.send_message_to_server(slskmessages.CheckPrivileges())
 
     def request_give_privileges(self, username, days):
@@ -415,6 +431,8 @@ class Core:
         self.login_username = None
         self.public_ip_address = None
         self.public_port = None
+        self.privileges_left = None
+        self._should_open_privileges_url = False
 
     def _server_login(self, msg):
         """Server code 1."""
@@ -574,6 +592,9 @@ class Core:
         if msg.seconds <= 0:
             log.add(_("You have no Soulseek privileges. While privileges are active, your downloads "
                       "will be queued ahead of those of non-privileged users."))
+
+            if self._should_open_privileges_url:
+                self.open_privileges_url()
         else:
             log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
                       "Soulseek privileges left"), {
@@ -584,6 +605,7 @@ class Core:
             })
 
         self.privileges_left = msg.seconds
+        self._should_open_privileges_url = False
 
     @staticmethod
     def _change_password(msg):

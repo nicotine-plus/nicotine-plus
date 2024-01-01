@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -33,7 +33,6 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
@@ -374,12 +373,7 @@ class Application:
         core.disconnect()
 
     def on_soulseek_privileges(self, *_args):
-
-        import urllib.parse
-
-        login = urllib.parse.quote(core.login_username)
-        open_uri(pynicotine.__privileges_url__ % login)
-        core.request_check_privileges()
+        core.request_check_privileges(should_open_url=True)
 
     def on_preferences(self, *_args, page_id="network"):
 
@@ -475,11 +469,11 @@ class Application:
 
     @staticmethod
     def on_report_bug(*_args):
-        open_uri(pynicotine.__issue_tracker_url__)
+        core.open_issue_tracker_url()
 
     @staticmethod
     def on_improve_translations(*_args):
-        open_uri(pynicotine.__translations_url__)
+        core.open_translations_url()
 
     def on_wishlist(self, *_args):
 
@@ -622,7 +616,7 @@ class Application:
             from pynicotine.gtkgui.widgets import clipboard
 
             clipboard.copy_text(error)
-            open_uri(pynicotine.__issue_tracker_url__)
+            core.open_issue_tracker_url()
 
             self._show_critical_error_dialog(error, loop)
             return
