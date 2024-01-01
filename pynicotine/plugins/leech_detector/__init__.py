@@ -81,8 +81,16 @@ class Plugin(BasePlugin):
         )
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        if user not in self.probed_users:
-            self.probed_users[user] = "requesting_stats"
+
+        if user in self.probed_users:
+            return
+
+        self.probed_users[user] = "requesting_stats"
+
+        # If we didn't watch the user before, the transfer manager will request the stats.
+        # If we're already watching them, we need to explicitly request stats.
+        if user in self.core.watched_users:
+            self.core.request_user_stats(user)
 
     def user_stats_notification(self, user, stats):
 

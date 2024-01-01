@@ -870,10 +870,10 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
         self._append_transfer(transfer)
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
-
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
         self._check_upload_queue()
 
     def _transfer_request(self, msg):
@@ -926,13 +926,13 @@ class Uploads(Transfers):
             return None
 
         # All checks passed, user can queue file!
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
         if not self.is_new_upload_accepted() or username in self.active_users:
             transfer = Transfer(
                 username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
             self._append_transfer(transfer)
+            core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
             self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
 
@@ -943,6 +943,8 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
         self._activate_transfer(transfer, token)
         self._update_transfer(transfer)
 
