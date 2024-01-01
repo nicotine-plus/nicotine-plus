@@ -80,19 +80,7 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def upload_queued_notification(self, user, virtual_path, real_path):
-
-        if user in self.probed_users:
-            return
-
-        self.probed_users[user] = "requesting_stats"
-
-        # If we didn't watch the user before, the transfer manager will request the stats.
-        # If we're already watching them, we need to explicitly request stats.
-        if user in self.core.watched_users:
-            self.core.request_user_stats(user)
-
-    def user_stats_notification(self, user, stats):
+    def check_user(self, user, num_files, num_folders):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -102,8 +90,6 @@ class Plugin(BasePlugin):
             # User was already accepted previously, nothing to do
             return
 
-        num_files = stats["files"]
-        num_folders = stats["dirs"]
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
 
         if is_user_accepted or user in self.core.userlist.buddies:
@@ -141,6 +127,24 @@ class Plugin(BasePlugin):
 
         self.probed_users[user] = "leecher"
         self.log(log_message, (user, num_files, num_folders))
+
+    def upload_queued_notification(self, user, virtual_path, real_path):
+
+        if user in self.probed_users:
+            return
+
+        self.probed_users[user] = "requesting_stats"
+        stats = self.core.watched_users.get(user)
+
+        if stats is None:
+            # Transfer manager will request the stats from the server shortly
+            return
+
+        if stats.files is not None and stats.folders is not None:
+            self.check_user(user, num_files=stats.files, num_folders=stats.folders)
+
+    def user_stats_notification(self, user, stats):
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
 
     def upload_finished_notification(self, user, *_):
 

@@ -387,11 +387,16 @@ class UserInfo:
 
     def populate_stats(self):
 
-        user_stats = core.watched_users.get(self.user, {})
-        speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files")
-        folders = user_stats.get("folders")
         country_code = core.user_countries.get(self.user)
+        stats = core.watched_users.get(self.user)
+
+        if stats is not None:
+            speed = stats.upload_speed or 0
+            files = stats.files
+            folders = stats.folders
+        else:
+            speed = 0
+            files = folders = None
 
         if speed > 0:
             self.upload_speed_label.set_text(human_speed(speed))

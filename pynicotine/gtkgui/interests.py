@@ -420,13 +420,17 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user, rating in users.items():
-            user_stats = core.watched_users.get(user, {})
-
             status = core.user_statuses.get(user, UserStatus.OFFLINE)
-            speed = user_stats.get("upload_speed", 0)
-            files = user_stats.get("files", 0)
+            stats = core.watched_users.get(user)
 
-            h_files = humanize(files)
+            if stats is not None:
+                speed = stats.upload_speed or 0
+                files = stats.files
+            else:
+                speed = 0
+                files = None
+
+            h_files = humanize(files) if files is not None else ""
             h_speed = human_speed(speed) if speed > 0 else ""
 
             self.similar_users_list_view.add_row([
@@ -435,7 +439,7 @@ class Interests:
                 h_speed,
                 h_files,
                 speed,
-                files,
+                files or 0,
                 rating
             ], select_row=False)
 

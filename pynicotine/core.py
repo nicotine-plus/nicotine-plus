@@ -41,6 +41,18 @@ from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import open_uri
 
 
+class WatchedUser:
+
+    __slots__ = ("username", "upload_speed", "files", "folders")
+
+    def __init__(self, username):
+
+        self.username = username
+        self.upload_speed = None
+        self.files = None
+        self.folders = None
+
+
 class Core:
     """Core contains handlers for various messages from (mainly) the networking
     thread.
@@ -372,7 +384,7 @@ class Core:
         self.send_message_to_server(slskmessages.WatchUser(username))
         self.send_message_to_server(slskmessages.GetUserStatus(username))  # Get privilege status
 
-        self.watched_users[username] = {}
+        self.watched_users[username] = WatchedUser(username)
 
     # Message Callbacks #
 
@@ -555,12 +567,12 @@ class Core:
         files = msg.files
         folders = msg.dirs
 
-        if username in self.watched_users:
-            self.watched_users[username].update({
-                "upload_speed": upload_speed,
-                "files": files,
-                "folders": folders
-            })
+        stats = self.watched_users.get(username)
+
+        if stats is not None:
+            stats.upload_speed = upload_speed
+            stats.files = files
+            stats.folders = folders
 
         self.pluginhandler.user_stats_notification(msg.user, stats={
             "avgspeed": upload_speed,

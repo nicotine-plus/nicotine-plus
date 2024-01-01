@@ -254,12 +254,16 @@ class UserList:
 
     def add_buddy(self, user, user_data):
 
-        user_stats = core.watched_users.get(user, {})
-
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
-        speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files")
+        stats = core.watched_users.get(user)
+
+        if stats is not None:
+            speed = stats.upload_speed or 0
+            files = stats.files
+        else:
+            speed = 0
+            files = None
 
         h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files) if files is not None else ""
