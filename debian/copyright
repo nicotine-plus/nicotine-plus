@@ -43,11 +43,11 @@ Copyright: 2001-2024 Nicotine+ Contributors
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
-Copyright: 2020-2023 Nicotine+ Contributors
+Copyright: 2020-2024 Nicotine+ Contributors
 License: CC0-1.0
 
 Files: po/*.po
-Copyright: 2003-2023 Nicotine+ Translators
+Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
