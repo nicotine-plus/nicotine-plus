@@ -86,7 +86,12 @@ class Core:
 
         config.load_config()
         events.enable()
-        events.connect("quit", self._quit)
+
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("server-reconnect", self.connect)
+        ):
+            events.connect(event_name, callback)
 
         script_folder_path = os.path.dirname(__file__)
 

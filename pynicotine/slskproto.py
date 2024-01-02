@@ -2611,7 +2611,7 @@ class NetworkThread(Thread):
             if not self._should_process_queue:
                 if self._server_timeout_time and (self._server_timeout_time - time.monotonic()) <= 0:
                     self._server_timeout_time = None
-                    events.emit_main_thread("server-timeout")
+                    events.emit_main_thread("server-reconnect")
 
                 time.sleep(0.1)
                 continue

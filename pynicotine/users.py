@@ -65,7 +65,6 @@ class Users:
             ("privileged-users", self._privileged_users),
             ("server-disconnect", self._server_disconnect),
             ("server-login", self._server_login),
-            ("server-timeout", self._server_timeout),
             ("user-stats", self._user_stats),
             ("user-status", self._user_status),
             ("watch-user", self._watch_user)
@@ -130,9 +129,6 @@ class Users:
         core.send_message_to_server(slskmessages.GetUserStatus(username))  # Get privilege status
 
         self.watched[username] = WatchedUser(username)
-
-    def _server_timeout(self):
-        core.connect()
 
     def _server_disconnect(self, manual_disconnect=False):
 
