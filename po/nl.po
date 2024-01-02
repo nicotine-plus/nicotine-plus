@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-12-31 13:07+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2024-01-02 12:11+0000\n"
+"Last-Translator: Toine Rademacher <hi@toine.zip>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -19,12 +19,12 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
-msgstr "Soulseek cliënt"
+msgstr "Soulseek Client"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafische cliënt voor het Soulseek peer-to-peer netwerk"
+msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
@@ -37,7 +37,7 @@ msgstr "Grafische client voor het Soulseek-netwerk"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr ""
-"Nicotine+ is een grafische cliënt voor het Soulseek peer-to-peer netwerk."
+"Nicotine+ is een grafische client voor het Soulseek peer-to-peer netwerk."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
 msgid ""
@@ -46,7 +46,7 @@ msgid ""
 "comprehensive set of features."
 msgstr ""
 "Nicotine+ wil een lichtgewicht aangename, gratis en open source (FOSS) "
-"alternatief zijn voor de officiële Soulseek-cliënt, met een logische set "
+"alternatief zijn voor de officiële Soulseek-client, met een logische set "
 "features."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
@@ -3764,7 +3764,7 @@ msgstr "Privéchat sluiten"
 
 #: pynicotine/plugins/core_commands/__init__.py:135
 msgid "Request user's client version"
-msgstr "De cliëntversie van de gebruiker aanvragen"
+msgstr "De clientversie van de gebruiker opvragen"
 
 #: pynicotine/plugins/core_commands/__init__.py:144
 msgid "Send private message to user"
