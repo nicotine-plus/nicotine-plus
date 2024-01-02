@@ -51,9 +51,9 @@ I stumbled across [this quote](http://www.bash.org/?10159):
 
 Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
-Soulseek is an unencrypted protocol not intended for secure communication.
-
 When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
+
+Soulseek is an unencrypted protocol not intended for secure communication.
 
 
 ## Authors
