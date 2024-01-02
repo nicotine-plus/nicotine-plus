@@ -160,6 +160,7 @@ class Users:
             _local_ip_address, self.public_port = msg.local_address
             self.addresses[username] = msg.local_address
 
+            core.send_message_to_server(slskmessages.CheckPrivileges())
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(username)
 

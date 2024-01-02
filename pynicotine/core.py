@@ -245,15 +245,15 @@ class Core:
     def _quit(self):
 
         self._network_thread = None
+        self.shares = None
+        self.users = None
         self.portmapper = None
         self.notifications = None
-        self.users = None
         self.network_filter = None
         self.now_playing = None
         self.statistics = None
         self.update_checker = None
 
-        self.shares = None
         self.search = None
         self.downloads = None
         self.uploads = None

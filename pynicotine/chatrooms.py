@@ -94,6 +94,11 @@ class ChatRooms:
         if not msg.success:
             return
 
+        # Request a complete room list. A limited room list not including blacklisted rooms and
+        # rooms with few users is automatically sent when logging in, but subsequent room list
+        # requests contain all rooms.
+        core.send_message_to_server(slskmessages.RoomList())
+
         core.send_message_to_server(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
 
         for room in self.joined_rooms:

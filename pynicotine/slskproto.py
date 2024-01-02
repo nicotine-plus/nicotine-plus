@@ -44,7 +44,6 @@ from pynicotine.slskmessages import UINT32_UNPACK
 from pynicotine.slskmessages import AcceptChildren
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
-from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import CloseConnection
 from pynicotine.slskmessages import CloseConnectionIP
 from pynicotine.slskmessages import ConnectionType
@@ -73,7 +72,6 @@ from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import ResetDistributed
-from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
 from pynicotine.slskmessages import SetDownloadLimit
@@ -1316,16 +1314,9 @@ class NetworkThread(Thread):
                             self._portmapper.add_port_mapping(blocking=True)
 
                             msg.username = self._server_username
-                            self._send_message_to_server(CheckPrivileges())
 
                             # Ask for a list of parents to connect to (distributed network)
                             self._send_have_no_parent()
-
-                            # Request a complete room list. A limited room list not including blacklisted rooms and
-                            # rooms with few users is automatically sent when logging in, but subsequent room list
-                            # requests contain all rooms.
-                            self._send_message_to_server(RoomList())
-
                         else:
                             self._send_message_to_server(ServerDisconnect())
 
