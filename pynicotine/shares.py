@@ -697,8 +697,9 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.initialized = False
 
-    def _server_login(self, _msg):
-        self.send_num_shared_folders_files()
+    def _server_login(self, msg):
+        if msg.success:
+            self.send_num_shared_folders_files()
 
     def _server_disconnect(self, _msg):
         self.requested_share_times.clear()

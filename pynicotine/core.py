@@ -37,10 +37,10 @@ class Core:
 
     def __init__(self):
 
+        self.shares = None
         self.users = None
         self.network_filter = None
         self.statistics = None
-        self.shares = None
         self.search = None
         self.downloads = None
         self.uploads = None
@@ -67,9 +67,9 @@ class Core:
         # Enable all components by default
         if enabled_components is None:
             enabled_components = {
-                "error_handler", "signal_handler", "cli", "portmapper", "network_thread", "users",
+                "error_handler", "signal_handler", "cli", "portmapper", "network_thread", "shares", "users",
                 "notifications", "network_filter", "now_playing", "statistics", "update_checker",
-                "shares", "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "buddies",
+                "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "buddies",
                 "chatrooms", "privatechat", "pluginhandler"
             }
 
@@ -112,6 +112,12 @@ class Core:
         else:
             events.connect("schedule-quit", self._schedule_quit)
 
+        if "shares" in enabled_components:
+            # Initialized before "users" component in order to send share stats to server
+            # before watching our username, otherwise we get outdated stats back.
+            from pynicotine.shares import Shares
+            self.shares = Shares()
+
         if "users" in enabled_components:
             from pynicotine.users import Users
             self.users = Users()
@@ -134,10 +140,6 @@ class Core:
 
         if "update_checker" in enabled_components:
             self.update_checker = UpdateChecker()
-
-        if "shares" in enabled_components:
-            from pynicotine.shares import Shares
-            self.shares = Shares()
 
         if "search" in enabled_components:
             from pynicotine.search import Search
