@@ -15,14 +15,14 @@
 
 ## Building
 
-- [build](https://pypa-build.readthedocs.io/) for building;
+- [build](https://build.pypa.io/) for building;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
 - [setuptools](https://setuptools.pypa.io/) for packaging.
 
 ## Testing
 
 - [pycodestyle](https://pycodestyle.pycqa.org/) for code style checks;
-- [pylint](https://pylint.pycqa.org/) for linting.
+- [pylint](https://pylint.readthedocs.io/) for linting.
 
 
 ## Installing Dependencies
