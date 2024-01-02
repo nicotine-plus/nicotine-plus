@@ -512,7 +512,7 @@ class UserInfo:
             widget.set_visible(is_personal_profile)
 
     def update_buddy_button_state(self):
-        label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
+        label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
 
     def update_ban_button_state(self):
@@ -644,11 +644,11 @@ class UserInfo:
 
     def on_add_remove_buddy(self, *_args):
 
-        if self.user in core.userlist.buddies:
-            core.userlist.remove_buddy(self.user)
+        if self.user in core.buddies.users:
+            core.buddies.remove_buddy(self.user)
             return
 
-        core.userlist.add_buddy(self.user)
+        core.buddies.add_buddy(self.user)
 
     def on_ban_unban_user(self, *_args):
 

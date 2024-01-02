@@ -856,7 +856,7 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if self.chatrooms.completion.entry == self.chat_entry and username not in core.userlist.buddies:
+        if self.chatrooms.completion.entry == self.chat_entry and username not in core.buddies.users:
             self.chatrooms.completion.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \

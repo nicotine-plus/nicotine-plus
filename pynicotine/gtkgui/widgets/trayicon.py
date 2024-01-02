@@ -230,7 +230,7 @@ class BaseImplementation:
             message=_("Enter the name of the user whom you want to send a message:"),
             action_button_label=_("_Message"),
             callback=self.on_open_private_chat_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
+            droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
     def on_get_a_users_info_response(self, dialog, _response_id, _data):
@@ -251,7 +251,7 @@ class BaseImplementation:
             message=_("Enter the name of the user whose profile you want to see:"),
             action_button_label=_("_View Profile"),
             callback=self.on_get_a_users_info_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
+            droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
     def on_get_a_users_shares_response(self, dialog, _response_id, _data):
@@ -272,7 +272,7 @@ class BaseImplementation:
             message=_("Enter the name of the user whose shares you want to see:"),
             action_button_label=_("_Browse"),
             callback=self.on_get_a_users_shares_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
+            droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
 

@@ -47,7 +47,7 @@ class Core:
         self.interests = None
         self.userbrowse = None
         self.userinfo = None
-        self.userlist = None
+        self.buddies = None
         self.privatechat = None
         self.chatrooms = None
         self.pluginhandler = None
@@ -69,7 +69,7 @@ class Core:
             enabled_components = {
                 "error_handler", "signal_handler", "cli", "portmapper", "network_thread", "users",
                 "notifications", "network_filter", "now_playing", "statistics", "update_checker",
-                "shares", "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "userlist",
+                "shares", "search", "downloads", "uploads", "interests", "userbrowse", "userinfo", "buddies",
                 "chatrooms", "privatechat", "pluginhandler"
             }
 
@@ -158,9 +158,9 @@ class Core:
             from pynicotine.userinfo import UserInfo
             self.userinfo = UserInfo()
 
-        if "userlist" in enabled_components:
-            from pynicotine.userlist import UserList
-            self.userlist = UserList()
+        if "buddies" in enabled_components:
+            from pynicotine.buddies import Buddies
+            self.buddies = Buddies()
 
         if "chatrooms" in enabled_components:
             from pynicotine.chatrooms import ChatRooms
@@ -253,7 +253,7 @@ class Core:
         self.interests = None
         self.userbrowse = None
         self.userinfo = None
-        self.userlist = None
+        self.buddies = None
         self.chatrooms = None
         self.privatechat = None
         self.pluginhandler = None

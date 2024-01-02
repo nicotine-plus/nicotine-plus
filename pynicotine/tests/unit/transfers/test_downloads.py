@@ -36,7 +36,7 @@ class DownloadsTest(TestCase):
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"users", "shares", "downloads", "userbrowse", "userlist"})
+        core.init_components(enabled_components={"users", "shares", "downloads", "userbrowse", "buddies"})
         config.sections["transfers"]["downloaddir"] = config.data_folder_path
 
         core.start()
@@ -50,7 +50,7 @@ class DownloadsTest(TestCase):
         self.assertIsNone(core.shares)
         self.assertIsNone(core.downloads)
         self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
 
     def test_load_downloads(self):
         """Test loading a downloads.json file."""

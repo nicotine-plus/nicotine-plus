@@ -427,14 +427,14 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userlist.add_buddy(user)
+        self.core.buddies.add_buddy(user)
 
     def remove_buddy_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.userlist.remove_buddy(user)
+        self.core.buddies.remove_buddy(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 

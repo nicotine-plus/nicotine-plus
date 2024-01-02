@@ -40,7 +40,7 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class UserList:
+class Buddies:
 
     def __init__(self, window):
 
@@ -48,7 +48,7 @@ class UserList:
             self.container,
             self.list_container,
             self.side_toolbar
-        ) = ui.load(scope=self, path="userlist.ui")
+        ) = ui.load(scope=self, path="buddies.ui")
 
         self.window = window
         self.page = window.userlist_page
@@ -291,7 +291,7 @@ class UserList:
             speed,
             files or 0,
             last_seen
-        ], select_row=core.userlist.allow_saving_buddies)
+        ], select_row=core.buddies.allow_saving_buddies)
 
         for combobox in (
             self.window.search.user_search_combobox,
@@ -390,32 +390,32 @@ class UserList:
             return
 
         self.window.add_buddy_entry.set_text("")
-        core.userlist.add_buddy(username)
+        core.buddies.add_buddy(username)
         self.list_view.grab_focus()
 
     def on_remove_buddy(self, *_args):
-        core.userlist.remove_buddy(self.get_selected_username())
+        core.buddies.remove_buddy(self.get_selected_username())
 
     def on_trusted(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "trusted")
 
-        core.userlist.set_buddy_trusted(user, not value)
+        core.buddies.set_buddy_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "notify")
 
-        core.userlist.set_buddy_notify(user, not value)
+        core.buddies.set_buddy_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "privileged")
 
-        core.userlist.set_buddy_prioritized(user, not value)
+        core.buddies.set_buddy_prioritized(user, not value)
 
     def on_add_note_response(self, dialog, _response_id, user):
 
@@ -429,7 +429,7 @@ class UserList:
         if note is None:
             return
 
-        core.userlist.set_buddy_note(user, note)
+        core.buddies.set_buddy_note(user, note)
 
     def on_add_note(self, *_args):
 

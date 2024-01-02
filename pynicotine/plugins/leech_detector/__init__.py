@@ -92,7 +92,7 @@ class Plugin(BasePlugin):
 
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
 
-        if is_user_accepted or user in self.core.userlist.buddies:
+        if is_user_accepted or user in self.core.buddies.users:
             if user in self.settings["detected_leechers"]:
                 self.settings["detected_leechers"].remove(user)
 

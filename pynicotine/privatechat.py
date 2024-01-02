@@ -154,7 +154,7 @@ class PrivateChat:
         users = None
 
         if target == "buddies":
-            users = set(core.userlist.buddies)
+            users = set(core.buddies.users)
 
         elif target == "downloading":
             users = core.uploads.get_downloading_users()
@@ -315,7 +315,7 @@ class PrivateChat:
             self.completions.update(core.chatrooms.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completions.update(core.userlist.buddies)
+            self.completions.update(core.buddies.users)
 
         if config.sections["words"]["commands"]:
             self.completions.update(core.pluginhandler.get_command_list("private_chat"))

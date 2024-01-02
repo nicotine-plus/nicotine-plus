@@ -813,12 +813,12 @@ class Shares:
             if public_shared_files is not None and realfilename in public_shared_files:
                 file_is_shared = True
 
-            elif (buddy_shared_files is not None and username in core.userlist.buddies
+            elif (buddy_shared_files is not None and username in core.buddies.users
                     and realfilename in buddy_shared_files):
                 file_is_shared = True
 
             elif trusted_shared_files is not None:
-                user_data = core.userlist.buddies.get(username)
+                user_data = core.buddies.users.get(username)
 
                 if user_data and user_data.is_trusted and realfilename in trusted_shared_files:
                     file_is_shared = True
@@ -844,7 +844,7 @@ class Shares:
 
             return PermissionLevel.BANNED, ""
 
-        user_data = core.userlist.buddies.get(username)
+        user_data = core.buddies.users.get(username)
 
         if user_data:
             if user_data.is_trusted:

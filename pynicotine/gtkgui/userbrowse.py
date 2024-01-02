@@ -910,7 +910,7 @@ class UserBrowse:
             action_button_label=_("_Upload"),
             callback=self.on_upload_folder_to_response,
             callback_data=recurse,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
+            droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
     def on_upload_folder_recursive_to(self, *_args):
@@ -1103,7 +1103,7 @@ class UserBrowse:
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
             callback=self.on_upload_files_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
+            droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
     def on_open_file(self, *_args):

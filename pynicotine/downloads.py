@@ -572,13 +572,13 @@ class Downloads(Transfers):
             # Everyone
             return True
 
-        if transfers["uploadallowed"] == 2 and username in core.userlist.buddies:
+        if transfers["uploadallowed"] == 2 and username in core.buddies.users:
             # Buddies
             return True
 
         if transfers["uploadallowed"] == 3:
             # Trusted buddies
-            user_data = core.userlist.buddies.get(username)
+            user_data = core.buddies.users.get(username)
 
             if user_data and user_data.is_trusted:
                 return True

@@ -146,10 +146,10 @@ class Uploads(Transfers):
         if not username:
             return False
 
-        if username not in core.userlist.buddies:
+        if username not in core.buddies.users:
             return False
 
-        user_data = core.userlist.buddies[username]
+        user_data = core.buddies.users[username]
 
         # All users
         if config.sections["transfers"]["preferfriends"]:
@@ -485,7 +485,7 @@ class Uploads(Transfers):
         enable_limits = True
 
         if config.sections["transfers"]["friendsnolimits"]:
-            if username in core.userlist.buddies:
+            if username in core.buddies.users:
                 enable_limits = False
 
         if enable_limits:

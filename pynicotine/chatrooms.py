@@ -612,7 +612,7 @@ class ChatRooms:
             self.completions.update(self.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completions.update(core.userlist.buddies)
+            self.completions.update(core.buddies.users)
 
         if config.sections["words"]["commands"]:
             self.completions.update(core.pluginhandler.get_command_list("chatroom"))

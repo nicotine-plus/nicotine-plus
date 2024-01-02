@@ -35,7 +35,7 @@ class UploadsTest(TestCase):
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "userlist"})
+        core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "buddies"})
 
         core.start()
         core.uploads._allow_saving_transfers = False
@@ -48,7 +48,7 @@ class UploadsTest(TestCase):
         self.assertIsNone(core.shares)
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
 
     def test_load_uploads(self):
         """Test loading a uploads.json file."""

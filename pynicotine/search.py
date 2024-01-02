@@ -306,7 +306,7 @@ class Search:
             core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
-        for username in core.userlist.buddies:
+        for username in core.buddies.users:
             core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):

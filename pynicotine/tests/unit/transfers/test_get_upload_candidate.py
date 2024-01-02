@@ -39,7 +39,7 @@ class GetUploadCandidateTest(TestCase):
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
         core.init_components(enabled_components={
-            "users", "pluginhandler", "shares", "statistics", "uploads", "userlist"}
+            "users", "pluginhandler", "shares", "statistics", "uploads", "buddies"}
         )
         core.start()
 
@@ -56,7 +56,7 @@ class GetUploadCandidateTest(TestCase):
         self.assertIsNone(core.shares)
         self.assertIsNone(core.statistics)
         self.assertIsNone(core.uploads)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
 
     def add_transfers(self, users, is_active=False):
 

@@ -34,6 +34,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.buddies import Buddies
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
@@ -42,7 +43,6 @@ from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
-from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -257,7 +257,7 @@ class MainWindow(Window):
         self.search = Searches(self)
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
-        self.userlist = UserList(self)
+        self.buddies = Buddies(self)
         self.privatechat = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
@@ -271,7 +271,7 @@ class MainWindow(Window):
             "uploads": self.uploads,
             "userbrowse": self.userbrowse,
             "userinfo": self.userinfo,
-            "userlist": self.userlist
+            "userlist": self.buddies
         }
 
         # Actions and menu
@@ -984,7 +984,7 @@ class MainWindow(Window):
 
     def set_buddy_list_position(self):
 
-        parent_container = self.userlist.container.get_parent()
+        parent_container = self.buddies.container.get_parent()
         mode = config.sections["ui"]["buddylistinchatrooms"]
 
         if mode not in {"tab", "chatrooms", "always"}:
@@ -994,49 +994,49 @@ class MainWindow(Window):
             if mode == "always":
                 return
 
-            self.buddy_list_container.remove(self.userlist.container)
+            self.buddy_list_container.remove(self.buddies.container)
             self.buddy_list_container.set_visible(False)
 
         elif parent_container == self.chatrooms_buddy_list_container:
             if mode == "chatrooms":
                 return
 
-            self.chatrooms_buddy_list_container.remove(self.userlist.container)
+            self.chatrooms_buddy_list_container.remove(self.buddies.container)
             self.chatrooms_buddy_list_container.set_visible(False)
 
         elif parent_container == self.userlist_content:
             if mode == "tab":
                 return
 
-            self.userlist_content.remove(self.userlist.container)
+            self.userlist_content.remove(self.buddies.container)
 
         if mode == "always":
             if GTK_API_VERSION >= 4:
-                self.buddy_list_container.append(self.userlist.container)
+                self.buddy_list_container.append(self.buddies.container)
             else:
-                self.buddy_list_container.add(self.userlist.container)
+                self.buddy_list_container.add(self.buddies.container)
 
-            self.userlist.side_toolbar.set_visible(True)
+            self.buddies.side_toolbar.set_visible(True)
             self.buddy_list_container.set_visible(True)
             return
 
         if mode == "chatrooms":
             if GTK_API_VERSION >= 4:
-                self.chatrooms_buddy_list_container.append(self.userlist.container)
+                self.chatrooms_buddy_list_container.append(self.buddies.container)
             else:
-                self.chatrooms_buddy_list_container.add(self.userlist.container)
+                self.chatrooms_buddy_list_container.add(self.buddies.container)
 
-            self.userlist.side_toolbar.set_visible(True)
+            self.buddies.side_toolbar.set_visible(True)
             self.chatrooms_buddy_list_container.set_visible(True)
             return
 
         if mode == "tab":
-            self.userlist.side_toolbar.set_visible(False)
+            self.buddies.side_toolbar.set_visible(False)
 
             if GTK_API_VERSION >= 4:
-                self.userlist_content.append(self.userlist.container)
+                self.userlist_content.append(self.buddies.container)
             else:
-                self.userlist_content.add(self.userlist.container)
+                self.userlist_content.add(self.buddies.container)
 
     # Connection #
 
@@ -1166,7 +1166,7 @@ class MainWindow(Window):
     # User Actions #
 
     def on_add_buddy(self, *_args):
-        self.userlist.on_add_buddy()
+        self.buddies.on_add_buddy()
 
     # Log Pane #
 

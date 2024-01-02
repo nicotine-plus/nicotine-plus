@@ -415,7 +415,7 @@ class UserPopupMenu(PopupMenu):
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
+            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -511,9 +511,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_buddy(self.username)
+            core.buddies.add_buddy(self.username)
         else:
-            core.userlist.remove_buddy(self.username)
+            core.buddies.remove_buddy(self.username)
 
         action.set_state(state)
 

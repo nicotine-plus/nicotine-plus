@@ -470,7 +470,7 @@ class PrivateChat:
 
     def _show_notification(self, text, is_mentioned=False):
 
-        is_buddy = (self.user in core.userlist.buddies)
+        is_buddy = (self.user in core.buddies.users)
 
         self.chats.request_tab_changed(self.container, is_important=is_buddy or is_mentioned)
 
