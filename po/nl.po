@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
 "PO-Revision-Date: 2024-01-02 12:11+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"Last-Translator: Toine Rademacher <hi@toine.zip>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -19,12 +19,12 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
-msgstr "Soulseek cliënt"
+msgstr "Soulseek Client"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafische cliënt voor het Soulseek peer-to-peer netwerk"
+msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
