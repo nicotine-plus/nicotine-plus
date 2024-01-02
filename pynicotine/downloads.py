@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -238,9 +238,6 @@ class Downloads(Transfers):
 
         events.emit("update-download-limits")
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            return
-
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
@@ -283,7 +280,7 @@ class Downloads(Transfers):
             except re.error:
                 pass
 
-        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
+        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to download from is
             self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return False
@@ -714,7 +711,7 @@ class Downloads(Transfers):
 
     def enqueue_folder(self, username, folder_path, download_folder_path=None):
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             return
 
         requested_folder = self._requested_folders.get(username, {}).get(folder_path)
@@ -1338,7 +1335,7 @@ class Downloads(Transfers):
             self._finish_transfer(download)
             return
 
-        if core.user_statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
+        if core.users.statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
             status = TransferStatus.USER_LOGGED_OFF
         else:
             status = TransferStatus.CANCELLED

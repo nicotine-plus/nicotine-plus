@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
@@ -215,7 +215,7 @@ class UserList:
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and username != core.login_username)
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and username != core.users.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def user_status(self, msg):
@@ -256,7 +256,7 @@ class UserList:
 
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
-        stats = core.watched_users.get(user)
+        stats = core.users.watched.get(user)
 
         if stats is not None:
             speed = stats.upload_speed or 0

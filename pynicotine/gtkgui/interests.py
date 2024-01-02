@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
@@ -250,7 +250,7 @@ class Interests:
         """Populates the lists of recommendations and similar users if
         empty."""
 
-        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
+        if self.populated_recommends or core.users.login_status == UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
@@ -420,8 +420,8 @@ class Interests:
         self.similar_users_list_view.clear()
 
         for user, rating in users.items():
-            status = core.user_statuses.get(user, UserStatus.OFFLINE)
-            stats = core.watched_users.get(user)
+            status = core.users.statuses.get(user, UserStatus.OFFLINE)
+            stats = core.users.watched.get(user)
 
             if stats is not None:
                 speed = stats.upload_speed or 0

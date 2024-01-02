@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -618,7 +618,7 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country_code = core.user_countries.get(username) or userdata.country or ""
+        country_code = core.users.countries.get(username) or userdata.country or ""
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
@@ -700,7 +700,7 @@ class ChatRoom:
             self.update_room_user_completions()
 
         self.activity_view.append_line(
-            _("%s joined the room") % core.login_username,
+            _("%s joined the room") % core.users.login_username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
@@ -710,7 +710,7 @@ class ChatRoom:
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items and user != core.login_username)
+        private_rooms_enabled = (menu_private_rooms.items and user != core.users.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -123,13 +123,13 @@ class NetworkPage:
 
         unknown_label = _("Unknown")
 
-        if core.public_port:
-            url = pynicotine.__port_checker_url__ % str(core.public_port)
+        if core.users.public_port:
+            url = pynicotine.__port_checker_url__ % str(core.users.public_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-                "ip": core.public_ip_address or unknown_label,
-                "port": core.public_port or unknown_label
+                "ip": core.users.public_ip_address or unknown_label,
+                "port": core.users.public_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -192,7 +192,7 @@ class NetworkPage:
 
         password = dialog.get_entry_value()
 
-        if user_status != core.user_status:
+        if user_status != core.users.login_status:
             MessageDialog(
                 parent=self.application.preferences,
                 title=_("Password Change Rejected"),
@@ -204,16 +204,16 @@ class NetworkPage:
             self.on_change_password()
             return
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
 
-        core.request_change_password(password)
+        core.users.request_change_password(password)
 
     def on_change_password(self, *_args):
 
-        if core.user_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -228,7 +228,7 @@ class NetworkPage:
             visibility=False,
             action_button_label=_("_Change"),
             callback=self.on_change_password_response,
-            callback_data=core.user_status
+            callback_data=core.users.login_status
         ).present()
 
     def on_toggle_upnp(self, *_args):
@@ -3148,8 +3148,8 @@ class Preferences(Dialog):
         else:
             core.portmapper.remove_port_mapping()
 
-        if user_profile_required and core.login_username:
-            core.userinfo.show_user(core.login_username, refresh=True)
+        if user_profile_required and core.users.login_username:
+            core.userinfo.show_user(core.users.login_username, refresh=True)
 
         if completion_required:
             core.chatrooms.update_completions()

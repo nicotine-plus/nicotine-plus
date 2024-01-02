@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -472,7 +472,7 @@ class ChatView(TextView):
         status = UserStatus.OFFLINE
 
         if username in self.status_users:
-            status = core.user_statuses.get(username, UserStatus.OFFLINE)
+            status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
         color = USER_STATUS_COLORS.get(status)
         self.update_tag(self.user_tags[username], color)

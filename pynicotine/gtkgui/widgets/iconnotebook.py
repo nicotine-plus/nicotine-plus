@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -379,7 +379,7 @@ class IconNotebook:
         self.parent.set_visible(True)
 
         if user is not None:
-            status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
+            status = core.users.statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):

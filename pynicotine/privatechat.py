@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -74,7 +74,7 @@ class PrivateChat:
             return
 
         for username in self.users:
-            core.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
 
@@ -108,7 +108,7 @@ class PrivateChat:
 
         self.add_user(username)
         events.emit("private-chat-show-user", username, switch_page, remembered)
-        core.watch_user(username)
+        core.users.watch_user(username)
 
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)
@@ -182,7 +182,7 @@ class PrivateChat:
     def _user_status(self, msg):
         """Server code 7."""
 
-        if msg.user == core.login_username and msg.status != slskmessages.UserStatus.AWAY:
+        if msg.user == core.users.login_username and msg.status != slskmessages.UserStatus.AWAY:
             # Reset list of users we've sent away messages to when the away session ends
             self.away_message_users.clear()
 
@@ -197,7 +197,7 @@ class PrivateChat:
         if is_outgoing_message:
             return "local"
 
-        if core.login_username and find_whole_word(core.login_username.lower(), text.lower()) > -1:
+        if core.users.login_username and find_whole_word(core.users.login_username.lower(), text.lower()) > -1:
             return "hilite"
 
         return "remote"
@@ -208,7 +208,7 @@ class PrivateChat:
         is_outgoing_message = (msg.message_id is None)
 
         username = msg.user
-        tag_username = (core.login_username if is_outgoing_message else username)
+        tag_username = (core.users.login_username if is_outgoing_message else username)
         message = msg.message
         timestamp = msg.timestamp if not msg.is_new_message else None
 
@@ -236,7 +236,7 @@ class PrivateChat:
                     msg.user = None
                     return
 
-                user_address = core.user_addresses.get(username)
+                user_address = core.users.addresses.get(username)
 
                 if user_address is not None:
                     if core.network_filter.is_user_ip_ignored(username):
@@ -246,7 +246,7 @@ class PrivateChat:
                 elif not queued_message:
                     # Ask for user's IP address and queue the private message until we receive the address
                     if username not in self.private_message_queue:
-                        core.request_ip_address(username)
+                        core.users.request_ip_address(username)
 
                     self.private_message_queue_add(msg)
                     msg.user = None
@@ -301,7 +301,8 @@ class PrivateChat:
 
         autoreply = config.sections["server"]["autoreply"]
 
-        if autoreply and core.user_status == slskmessages.UserStatus.AWAY and username not in self.away_message_users:
+        if (autoreply and core.users.login_status == slskmessages.UserStatus.AWAY
+                and username not in self.away_message_users):
             self.send_automatic_message(username, autoreply)
             self.away_message_users.add(username)
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -125,7 +125,7 @@ class BaseImplementation:
 
     def update_user_status(self):
 
-        sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
+        sensitive = core.users.login_status != slskmessages.UserStatus.OFFLINE
         label = _("_Disconnect") if sensitive else _("_Connect")
 
         for item in (self.away_item, self.send_message_item,
@@ -135,7 +135,7 @@ class BaseImplementation:
             self.set_item_sensitive(item, sensitive)
 
         self.set_item_text(self.connect_disconnect_item, label)
-        self.set_item_toggled(self.away_item, core.user_status == slskmessages.UserStatus.AWAY)
+        self.set_item_toggled(self.away_item, core.users.login_status == slskmessages.UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
@@ -148,10 +148,10 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.user_status == slskmessages.UserStatus.ONLINE:
+        elif core.users.login_status == slskmessages.UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.user_status == slskmessages.UserStatus.AWAY:
+        elif core.users.login_status == slskmessages.UserStatus.AWAY:
             icon_name = "away"
 
         else:
@@ -198,7 +198,7 @@ class BaseImplementation:
 
     def on_connect_disconnect(self, *_args):
 
-        if core.user_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
             self.application.on_disconnect()
             return
 

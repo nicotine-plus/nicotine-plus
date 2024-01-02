@@ -33,6 +33,7 @@ from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import open_uri
 
 GTK_API_VERSION = Gtk.get_major_version()
 GTK_MINOR_VERSION = Gtk.get_minor_version()
@@ -367,13 +368,15 @@ class Application:
     # Actions #
 
     def on_connect(self, *_args):
-        core.connect()
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
 
     def on_disconnect(self, *_args):
-        core.disconnect()
+        if core.users.login_status != UserStatus.OFFLINE:
+            core.disconnect()
 
     def on_soulseek_privileges(self, *_args):
-        core.request_check_privileges(should_open_url=True)
+        core.users.request_check_privileges(should_open_url=True)
 
     def on_preferences(self, *_args, page_id="network"):
 
@@ -469,11 +472,11 @@ class Application:
 
     @staticmethod
     def on_report_bug(*_args):
-        core.open_issue_tracker_url()
+        open_uri(pynicotine.__issue_tracker_url__)
 
     @staticmethod
     def on_improve_translations(*_args):
-        core.open_translations_url()
+        open_uri(pynicotine.__translations_url__)
 
     def on_wishlist(self, *_args):
 
@@ -579,7 +582,7 @@ class Application:
         self.on_preferences(page_id="user-profile")
 
     def on_personal_profile(self, *_args):
-        core.userinfo.show_user(core.login_username)
+        core.userinfo.show_user(core.users.login_username)
 
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
@@ -594,7 +597,7 @@ class Application:
     def on_away(self, *_args):
         """Away/Online status button."""
 
-        core.set_away_mode(core.user_status != UserStatus.AWAY, save_state=True)
+        core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 
     # Running #
 
@@ -616,7 +619,7 @@ class Application:
             from pynicotine.gtkgui.widgets import clipboard
 
             clipboard.copy_text(error)
-            core.open_issue_tracker_url()
+            open_uri(pynicotine.__issue_tracker_url__)
 
             self._show_critical_error_dialog(error, loop)
             return

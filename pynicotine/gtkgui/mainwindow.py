@@ -1042,7 +1042,7 @@ class MainWindow(Window):
 
     def update_user_status(self, *_args):
 
-        status = core.user_status
+        status = core.users.login_status
         is_online = (status != UserStatus.OFFLINE)
         is_away = (status == UserStatus.AWAY)
         toggle_status_action = self.lookup_action("toggle-status")
@@ -1067,7 +1067,7 @@ class MainWindow(Window):
         if core.uploads.pending_shutdown:
             return
 
-        username = core.login_username
+        username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
@@ -1118,7 +1118,7 @@ class MainWindow(Window):
     # Away Mode #
 
     def user_status(self, msg):
-        if msg.user == core.login_username:
+        if msg.user == core.users.login_username:
             self.update_user_status()
 
     def set_auto_away(self, active=True):
@@ -1127,16 +1127,16 @@ class MainWindow(Window):
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != UserStatus.AWAY:
-                core.set_away_mode(True)
+            if core.users.login_status != UserStatus.AWAY:
+                core.users.set_away_mode(True)
 
             return
 
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == UserStatus.AWAY:
-                core.set_away_mode(False)
+            if core.users.login_status == UserStatus.AWAY:
+                core.users.set_away_mode(False)
 
         # Reset away timer
         self.remove_away_timer()
@@ -1144,7 +1144,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != UserStatus.ONLINE:
+        if core.users.login_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]

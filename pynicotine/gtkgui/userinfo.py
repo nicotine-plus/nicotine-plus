@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -387,8 +387,8 @@ class UserInfo:
 
     def populate_stats(self):
 
-        country_code = core.user_countries.get(self.user)
-        stats = core.watched_users.get(self.user)
+        country_code = core.users.countries.get(self.user)
+        stats = core.users.watched.get(self.user)
 
         if stats is not None:
             speed = stats.upload_speed or 0
@@ -506,7 +506,7 @@ class UserInfo:
 
     def update_edit_button_state(self):
 
-        is_personal_profile = (self.user == core.login_username)
+        is_personal_profile = (self.user == core.users.login_username)
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
             widget.set_visible(is_personal_profile)
@@ -637,7 +637,7 @@ class UserInfo:
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user, notify=True)
+        core.users.request_ip_address(self.user, notify=True)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -953,9 +953,6 @@ class Shares:
 
     def send_num_shared_folders_files(self):
         """Send number publicly shared files to the server."""
-
-        if not (core and core.user_status != slskmessages.UserStatus.OFFLINE):
-            return
 
         if self.rescanning:
             return

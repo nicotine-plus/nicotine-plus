@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
@@ -145,7 +145,7 @@ class Transfers:
 
         # Watch transfers for user status updates
         for username in self.failed_users:
-            core.watch_user(username)
+            core.users.watch_user(username)
 
         self.update_transfer_limits()
 
@@ -371,7 +371,7 @@ class Transfers:
 
     def _enqueue_transfer(self, transfer):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.QUEUED
 
@@ -407,7 +407,7 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token

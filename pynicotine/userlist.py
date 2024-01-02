@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -125,7 +125,7 @@ class UserList:
             return
 
         for username in self.buddies:
-            core.watch_user(username)
+            core.users.watch_user(username)
 
     def _server_disconnect(self, _msg):
 
@@ -141,11 +141,11 @@ class UserList:
             return
 
         note = ""
-        country_code = core.user_countries.get(username)
+        country_code = core.users.countries.get(username)
         country = f"flag_{country_code}" if country_code else ""
         is_trusted = notify_status = is_prioritized = False
         last_seen = "Never seen"
-        status = core.user_statuses.get(username, UserStatus.OFFLINE)
+        status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
         self.buddies[username] = user_data = Buddy(
             username=username,
@@ -165,15 +165,15 @@ class UserList:
         self.save_buddy_list()
         events.emit("add-buddy", username, user_data)
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.users.login_username == UserStatus.OFFLINE:
             return
 
         # Request user status, speed and number of shared files
-        core.watch_user(username)
+        core.users.watch_user(username)
 
         # Request user country
         if country_code is None:
-            core.request_ip_address(username)
+            core.users.request_ip_address(username)
 
     def remove_buddy(self, username):
 

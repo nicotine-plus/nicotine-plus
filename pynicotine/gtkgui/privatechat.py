@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 gallows <g4ll0ws@gmail.com>
@@ -188,7 +188,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.container, msg.user, msg.status)
             page.chat_view.update_user_tag(msg.user)
 
-        if msg.user == core.login_username:
+        if msg.user == core.users.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.chat_view.update_user_tag(msg.user)
@@ -334,7 +334,7 @@ class PrivateChat:
         self.chat_entry = ChatEntry(self.window.application, self.chat_entry, self.chat_view, chats.completion,
                                     user, core.privatechat.send_message)
 
-        self.chat_entry.set_sensitive(core.user_status != UserStatus.OFFLINE)
+        self.chat_entry.set_sensitive(core.users.login_status != UserStatus.OFFLINE)
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
 
@@ -495,7 +495,7 @@ class PrivateChat:
         message_type = msg.message_type
 
         username = msg.user
-        tag_username = (core.login_username if is_outgoing_message else username)
+        tag_username = (core.users.login_username if is_outgoing_message else username)
         usertag = self.chat_view.get_user_tag(tag_username)
 
         timestamp = msg.timestamp if not is_new_message else None

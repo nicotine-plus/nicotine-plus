@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -136,11 +136,11 @@ class Interests:
 
         for username in msg.users:
             # Request user status, speed and number of shared files
-            core.watch_user(username)
+            core.users.watch_user(username)
 
     def _item_similar_users(self, msg):
         """Server code 112."""
 
         for username in msg.users:
             # Request user status, speed and number of shared files
-            core.watch_user(username)
+            core.users.watch_user(username)

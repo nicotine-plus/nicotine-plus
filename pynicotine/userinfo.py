@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -54,7 +54,7 @@ class UserInfo:
             return
 
         for username in self.users:
-            core.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
@@ -67,7 +67,7 @@ class UserInfo:
 
         events.emit("user-info-show-user", user=username, refresh=refresh, switch_page=switch_page)
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", username, is_offline=True)
             return
 
@@ -78,7 +78,7 @@ class UserInfo:
         core.send_message_to_peer(username, slskmessages.UserInfoRequest())
 
         # Request user status, speed and number of shared files
-        core.watch_user(username)
+        core.users.watch_user(username)
 
         # Request user interests
         core.send_message_to_server(slskmessages.UserInterests(username))
@@ -127,7 +127,7 @@ class UserInfo:
 
         self.requested_info_times[username] = request_time
 
-        if core.login_username != username:
+        if core.users.login_username != username:
             log.add(_("User %(user)s is viewing your profile"), {"user": username})
 
         permission_level, reject_reason = core.shares.check_user_permission(username, ip_address)

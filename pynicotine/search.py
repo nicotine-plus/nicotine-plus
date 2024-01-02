@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -234,7 +234,7 @@ class Search:
 
         elif mode == "user":
             if not users:
-                users = [core.login_username]
+                users = [core.users.login_username]
 
             feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
@@ -326,9 +326,6 @@ class Search:
         core.send_message_to_server(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
-
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            return
 
         searches = config.sections["server"]["autosearch"]
 
@@ -601,7 +598,7 @@ class Search:
             # Don't return results when waiting to quit after finishing uploads
             return
 
-        if not direct and username == core.login_username:
+        if not direct and username == core.users.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -664,7 +661,7 @@ class Search:
             return
 
         core.send_message_to_peer(username, slskmessages.FileSearchResponse(
-            search_username=core.login_username,
+            search_username=core.users.login_username,
             token=token,
             shares=fileinfos,
             freeulslots=core.uploads.is_new_upload_accepted(),

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -54,7 +54,7 @@ class UserBrowse:
             return
 
         for username in self.user_shares:
-            core.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username)  # Get notified of user status
 
     def send_upload_attempt_notification(self, username):
         """Send notification to user when attempting to initiate upload from
@@ -94,8 +94,8 @@ class UserBrowse:
         if username not in self.user_shares or new_request:
             if not permission_level:
                 # Check our own permission level, and show relevant shares for it
-                if username in core.user_addresses:
-                    ip_address, _port = core.user_addresses[username]
+                if username in core.users.addresses:
+                    ip_address, _port = core.users.addresses[username]
                 else:
                     ip_address = None
 
@@ -130,11 +130,11 @@ class UserBrowse:
 
         self._show_user(username, path=path, switch_page=switch_page)
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             events.emit("peer-connection-error", username, is_offline=True)
             return
 
-        core.watch_user(username)
+        core.users.watch_user(username)
 
         if not user_share or new_request:
             self.request_user_shares(username)

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -322,7 +322,7 @@ class ResponseThrottle:
         last_request = self.plugin_usage[room]["last_request"]
 
         try:
-            _ip_address, port = self.core.user_addresses[nick]
+            _ip_address, port = self.core.users.addresses[nick]
         except Exception:
             port = True
 
@@ -979,7 +979,7 @@ class PluginHandler:
         self._trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != core.login_username:
+        if user != core.users.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self._trigger_event("incoming_private_chat_event", (user, line))
 

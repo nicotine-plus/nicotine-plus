@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -24,38 +24,31 @@ from threading import Thread
 
 EVENT_NAMES = {
     # General
-    "add-privileged-user",
-    "admin-message",
-    "change-password",
     "check-latest-version",
-    "check-privileges",
     "cli-command",
     "cli-prompt-finished",
     "confirm-quit",
-    "connect-to-peer",
     "enable-message-queue",
-    "hide-scan-progress",
-    "invalid-password",
     "log-message",
-    "peer-address",
-    "peer-connection-closed",
-    "peer-connection-error",
-    "privileged-users",
     "queue-network-message",
     "quit",
-    "remove-privileged-user",
     "schedule-quit",
+    "set-connection-stats",
+    "setup",
+    "start",
+    "thread-callback",
+
+    # Users
+    "admin-message",
+    "change-password",
+    "check-privileges",
+    "connect-to-peer",
+    "invalid-password",
+    "peer-address",
+    "privileged-users",
     "server-login",
     "server-disconnect",
     "server-timeout",
-    "set-connection-stats",
-    "setup",
-    "shares-preparing",
-    "shares-ready",
-    "shares-scanning",
-    "shares-unavailable",
-    "start",
-    "thread-callback",
     "user-country",
     "user-stats",
     "user-status",
@@ -149,6 +142,10 @@ EVENT_NAMES = {
     "shared-file-list-progress",
     "shared-file-list-request",
     "shared-file-list-response",
+    "shares-preparing",
+    "shares-ready",
+    "shares-scanning",
+    "shares-unavailable",
     "user-browse-remove-user",
     "user-browse-show-user",
 
@@ -170,6 +167,8 @@ EVENT_NAMES = {
     "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
+    "peer-connection-closed",
+    "peer-connection-error",
     "place-in-queue-request",
     "place-in-queue-response",
     "queue-upload",
@@ -214,7 +213,12 @@ class Events:
 
         self._is_active = True
 
-        self.connect("quit", self._quit)
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("thread-callback", self._thread_callback)
+        ):
+            self.connect(event_name, callback)
+
         Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
@@ -318,6 +322,9 @@ class Events:
                 continue
 
             time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
+
+    def _thread_callback(self, callback, *args, **kwargs):
+        callback(*args, **kwargs)
 
     def _quit(self):
 

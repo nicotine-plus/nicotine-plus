@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -38,10 +38,12 @@ class GetUploadCandidateTest(TestCase):
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"pluginhandler", "shares", "statistics", "uploads", "userlist"})
+        core.init_components(enabled_components={
+            "users", "pluginhandler", "shares", "statistics", "uploads", "userlist"}
+        )
         core.start()
 
-        core.uploads.privileged_users = {"puser1", "puser2"}
+        core.users.privileged = {"puser1", "puser2"}
         core.uploads.transfers.clear()
         core.uploads._allow_saving_transfers = False
 
@@ -49,6 +51,9 @@ class GetUploadCandidateTest(TestCase):
 
         core.quit()
 
+        self.assertIsNone(core.users)
+        self.assertIsNone(core.pluginhandler)
+        self.assertIsNone(core.shares)
         self.assertIsNone(core.statistics)
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userlist)

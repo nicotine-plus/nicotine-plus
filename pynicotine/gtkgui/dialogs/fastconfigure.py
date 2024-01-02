@@ -32,6 +32,7 @@ from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
 
 
 class FastConfigure(Dialog):
@@ -270,7 +271,9 @@ class FastConfigure(Dialog):
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        core.connect()
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+
         return True
 
     def on_show(self, *_args):

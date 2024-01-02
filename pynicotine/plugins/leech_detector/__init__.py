@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -134,7 +134,7 @@ class Plugin(BasePlugin):
             return
 
         self.probed_users[user] = "requesting_stats"
-        stats = self.core.watched_users.get(user)
+        stats = self.core.users.watched.get(user)
 
         if stats is None:
             # Transfer manager will request the stats from the server shortly

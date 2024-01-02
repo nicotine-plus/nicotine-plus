@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -88,7 +88,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if core.user_status == UserStatus.OFFLINE:
+        if core.users.login_status == UserStatus.OFFLINE:
             return
 
         text = self.widget.get_text()
