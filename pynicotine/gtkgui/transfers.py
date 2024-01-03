@@ -413,14 +413,14 @@ class Transfers:
                 self.pending_folder_rows.add(user_folder_path)
 
             self.pending_user_rows.add(username)
+            return
 
-        else:
-            if self.paths:
-                for user_folder_path, (user_folder_path_iter, child_transfers) in self.paths.copy().items():
-                    self.update_parent_row(user_folder_path_iter, child_transfers, user_folder_path=user_folder_path)
+        if self.paths:
+            for user_folder_path, (user_folder_path_iter, child_transfers) in self.paths.copy().items():
+                self.update_parent_row(user_folder_path_iter, child_transfers, user_folder_path=user_folder_path)
 
-            for username, (user_iter, child_transfers) in self.users.copy().items():
-                self.update_parent_row(user_iter, child_transfers, username=username)
+        for username, (user_iter, child_transfers) in self.users.copy().items():
+            self.update_parent_row(user_iter, child_transfers, username=username)
 
     @staticmethod
     def get_hqueue_position(queue_position):
@@ -468,6 +468,12 @@ class Transfers:
                 del self.users[username]
 
             self.tree_view.remove_row(iterator)
+
+            if not self.tree_view.iterators:
+                # Show tab description
+                self.container.get_parent().set_visible(False)
+
+            self.update_num_users_files()
             return
 
         for transfer in child_transfers:
@@ -801,18 +807,12 @@ class Transfers:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
-        if not self.transfer_list:
+        if not self.tree_view.iterators:
             # Show tab description
             self.container.get_parent().set_visible(False)
 
     def clear_transfers(self, *_args):
-
         self.update_parent_rows()
-        self.update_num_users_files()
-
-        if not self.transfer_list:
-            # Show tab description
-            self.container.get_parent().set_visible(False)
 
     def add_popup_menu_user(self, popup, user):
 

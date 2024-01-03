@@ -620,11 +620,10 @@ class Uploads(Transfers):
         else:
             status = TransferRejectReason.BANNED
 
-        for upload in self.transfers.copy().values():
-            if upload.username not in users:
-                continue
-
-            self._clear_transfer(upload, denied_message=status)
+        self.clear_uploads(
+            uploads=[upload for upload in self.transfers.copy().values() if upload.username in users],
+            denied_message=status
+        )
 
         for username in users:
             core.network_filter.ban_user(username)
@@ -704,7 +703,7 @@ class Uploads(Transfers):
 
         events.emit("abort-uploads", uploads, status)
 
-    def clear_uploads(self, uploads=None, statuses=None):
+    def clear_uploads(self, uploads=None, statuses=None, denied_message=None):
 
         if uploads is None:
             # Clear all uploads
@@ -716,7 +715,7 @@ class Uploads(Transfers):
             if statuses and upload.status not in statuses:
                 continue
 
-            self._clear_transfer(upload, update_parent=False)
+            self._clear_transfer(upload, denied_message=denied_message, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
 
