@@ -344,9 +344,6 @@ class PluginSettings(Dialog):
 
     def update_settings(self, plugin_id, plugin_settings):
 
-        if plugin_id == self.plugin_id:
-            return
-
         self.plugin_id = plugin_id
         self.plugin_settings = plugin_settings
         plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
