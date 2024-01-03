@@ -358,9 +358,6 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        if value in treeview.iterators:
-            return
-
         treeview.add_row([value])
 
     def on_add(self, _button, treeview):

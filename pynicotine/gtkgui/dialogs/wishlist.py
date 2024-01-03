@@ -156,8 +156,7 @@ class WishList(Dialog):
         ).present()
 
     def add_wish(self, wish):
-        if wish not in self.list_view.iterators:
-            self.list_view.add_row([wish])
+        self.list_view.add_row([wish])
 
     def remove_wish(self, wish):
 

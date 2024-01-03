@@ -454,6 +454,9 @@ class TreeView:
         values = values[:]
         key = values[self._iterator_key_column]
 
+        if key in self.iterators:
+            return None
+
         for i, value in enumerate(values):
             if isinstance(value, (float, int)) and value > 2147483647:
                 # Need gvalue conversion for large integers

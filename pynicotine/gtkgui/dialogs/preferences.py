@@ -2783,7 +2783,7 @@ class PluginsPage:
                 },
 
                 # Hidden data columns
-                "plugin_id": {"data_type": str}
+                "plugin_id": {"data_type": str, "iterator_key": True}
             }
         )
 
