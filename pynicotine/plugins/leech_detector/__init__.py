@@ -106,7 +106,12 @@ class Plugin(BasePlugin):
             return
 
         if not self.probed_users[user].startswith("requesting"):
-            # We already messaged this user previously
+            # We already dealt with the user this session
+            return
+
+        if user in self.settings["detected_leechers"]:
+            # We already messaged the user in a previous session
+            self.probed_users[user] = "processed_leecher"
             return
 
         if (num_files <= 0 or num_folders <= 0) and self.probed_users[user] != "requesting_shares":
@@ -125,7 +130,7 @@ class Plugin(BasePlugin):
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to log "
                            "leecher after transfer…")
 
-        self.probed_users[user] = "leecher"
+        self.probed_users[user] = "pending_leecher"
         self.log(log_message, (user, num_files, num_folders))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
@@ -151,10 +156,10 @@ class Plugin(BasePlugin):
         if user not in self.probed_users:
             return
 
-        if self.probed_users[user] != "leecher":
+        if self.probed_users[user] != "pending_leecher":
             return
 
-        self.probed_users[user] = "processed"
+        self.probed_users[user] = "processed_leecher"
 
         if not self.settings["message"]:
             self.log("Leecher %s doesn't share enough files. No message is specified in plugin settings.", user)
@@ -167,5 +172,7 @@ class Plugin(BasePlugin):
 
             self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
 
-        self.settings["detected_leechers"].append(user)
+        if user not in self.settings["detected_leechers"]:
+            self.settings["detected_leechers"].append(user)
+
         self.log("Leecher %s doesn't share enough files. Message sent.", user)
