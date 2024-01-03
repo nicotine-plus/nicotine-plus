@@ -1412,7 +1412,11 @@ class Search:
             self.selected_users[user] = None
 
         if self.tree_view.get_row_value(iterator, "filename"):
-            self.selected_results[iterator] = None
+            row_id = self.tree_view.get_row_value(iterator, "id_data")
+
+            if row_id not in self.selected_results:
+                self.selected_results[row_id] = iterator
+
             return
 
         self.select_child_results(iterator, user)
@@ -1491,21 +1495,25 @@ class Search:
 
     def on_browse_folder(self, *_args):
 
-        iterator = next(iter(self.selected_results), None)
+        iterator = next(iter(self.selected_results.values()), None)
 
-        if iterator:
-            user = self.tree_view.get_row_value(iterator, "user")
-            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+        if iterator is None:
+            return
 
-            core.userbrowse.browse_user(user, path=folder_path)
+        user = self.tree_view.get_row_value(iterator, "user")
+        folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+
+        core.userbrowse.browse_user(user, path=folder_path)
 
     def on_user_profile(self, *_args):
 
-        iterator = next(iter(self.selected_results), None)
+        iterator = next(iter(self.selected_results.values()), None)
 
-        if iterator:
-            user = self.tree_view.get_row_value(iterator, "user")
-            core.userinfo.show_user(user)
+        if iterator is None:
+            return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        core.userinfo.show_user(user)
 
     def on_file_properties(self, *_args):
 
@@ -1513,7 +1521,7 @@ class Search:
         selected_size = 0
         selected_length = 0
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
@@ -1550,7 +1558,7 @@ class Search:
 
     def on_download_files(self, *_args, download_folder_path=None):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.tree_view.get_row_value(iterator, "user")
             file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             size = self.tree_view.get_row_value(iterator, "size_data")
@@ -1575,7 +1583,7 @@ class Search:
 
         requested_folders = set()
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
             user_folder_key = user + folder_path
@@ -1616,28 +1624,37 @@ class Search:
 
     def on_copy_file_path(self, *_args):
 
-        for iterator in self.selected_results:
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            clipboard.copy_text(file_path)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        clipboard.copy_text(file_path)
 
     def on_copy_url(self, *_args):
 
-        for iterator in self.selected_results:
-            user = self.tree_view.get_row_value(iterator, "user")
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, file_path)
-            clipboard.copy_text(url)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        url = core.userbrowse.get_soulseek_url(user, file_path)
+        clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
 
-        for iterator in self.selected_results:
-            user = self.tree_view.get_row_value(iterator, "user")
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
-            clipboard.copy_text(url)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
+        clipboard.copy_text(url)
 
     def on_counter_button(self, *_args):
 
