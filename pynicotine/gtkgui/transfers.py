@@ -748,6 +748,7 @@ class Transfers:
         self.selected_transfers.clear()
         self.selected_users.clear()
         self.tree_view.clear()
+        self.row_id = 0
 
         for transfer in self.transfer_list:
             transfer.iterator = None

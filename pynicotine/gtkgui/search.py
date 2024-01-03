@@ -450,6 +450,7 @@ class Search:
         self.folders = {}
         self.all_data = []
         self.grouping_mode = None
+        self.row_id = 0
         self.filters = {}
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
@@ -782,6 +783,7 @@ class Search:
 
         update_ui = False
         search = core.search.searches[self.token]
+        row_id = 0
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
@@ -846,7 +848,7 @@ class Search:
                     file_path,
                     has_free_slots,
                     file_attributes,
-                    self.num_results_found
+                    row_id
                 ]
             )
 
@@ -926,7 +928,7 @@ class Search:
     def add_row_to_model(self, row):
         (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
             _unused, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
-            _unused, row_id) = row
+            _unused, _unused) = row
 
         expand_user = False
         expand_folder = False
@@ -960,7 +962,7 @@ class Search:
                         empty_str,
                         has_free_slots,
                         empty_dict,
-                        row_id
+                        self.row_id
                     ], select_row=False
                 )
 
@@ -969,6 +971,7 @@ class Search:
                 else:
                     expand_user = self.expand_button.get_active()
 
+                self.row_id += 1
                 self.users[user] = (iterator, [])
 
             user_iterator, user_child_iterators = self.users[user]
@@ -999,11 +1002,12 @@ class Search:
                             file_path.rsplit("\\", 1)[0],
                             has_free_slots,
                             empty_dict,
-                            row_id
+                            self.row_id
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_iterators.append(iterator)
                     expand_folder = self.expand_button.get_active()
+                    self.row_id += 1
                     self.folders[user_folder_path] = (iterator, [])
 
                 row = row[:]
@@ -1021,7 +1025,9 @@ class Search:
 
             user_iterator, user_child_iterators = self.users[user]
 
+        row[18] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
+        self.row_id += 1
 
         if self.grouping_mode == "folder_grouping":
             user_folder_child_iterators.append(iterator)
@@ -1272,6 +1278,7 @@ class Search:
         self.users.clear()
         self.folders.clear()
         self.tree_view.clear()
+        self.row_id = 0
         self.num_results_visible = 0
 
     def update_model(self):
