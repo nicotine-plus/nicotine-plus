@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2024-01-08 18:27+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sv/>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -411,8 +411,9 @@ msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Vill du verkligen sluta med Nicotine+?"
 
 #: pynicotine/gtkgui/application.py:298
+#, fuzzy
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Vänta på att uploads ska avslutas"
 
 #: pynicotine/gtkgui/application.py:300
 #, fuzzy
@@ -726,9 +727,9 @@ msgid "Error checking latest version: %s"
 msgstr "Fel vid hämtning av senaste versionen"
 
 #: pynicotine/gtkgui/dialogs/about.py:431
-#, python-format
+#, fuzzy, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Ny version tillgänglig: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:436
 #, fuzzy
@@ -1108,8 +1109,9 @@ msgstr "Filter Framgångsrikt"
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 #: pynicotine/gtkgui/dialogs/preferences.py:641
 #: pynicotine/gtkgui/dialogs/preferences.py:680
+#, fuzzy
 msgid "Public"
-msgstr ""
+msgstr "Offentlig"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:570
 #: pynicotine/gtkgui/dialogs/preferences.py:695
@@ -1119,8 +1121,9 @@ msgid "Trusted buddies"
 msgstr "Förtroendevalda kompisar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:611
+#, fuzzy
 msgid "Accessible To"
-msgstr ""
+msgstr "Tillgänglig för"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
 #: pynicotine/gtkgui/dialogs/preferences.py:695
@@ -1215,8 +1218,9 @@ msgstr "Ange en IP-adress som du vill blockera:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1274
 #: pynicotine/gtkgui/dialogs/preferences.py:2123
+#, fuzzy
 msgid "Format codes"
-msgstr ""
+msgstr "Formatkoder"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1295
 #: pynicotine/gtkgui/dialogs/preferences.py:1309
@@ -1318,8 +1322,9 @@ msgid "Sidebar in Chat Rooms tab"
 msgstr "Kompislista i chattrum"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1689
+#, fuzzy
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Alltid synlig sidopanel"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1694
 #, fuzzy
@@ -2029,8 +2034,9 @@ msgid "Scanning Shares"
 msgstr "Indexering påbörjad"
 
 #: pynicotine/gtkgui/mainwindow.py:1356
+#, fuzzy
 msgid "Quitting..."
-msgstr ""
+msgstr "Avslutar..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:68
 #, fuzzy
@@ -2885,8 +2891,9 @@ msgid "Document"
 msgstr "Dokument/text"
 
 #: pynicotine/gtkgui/widgets/theme.py:191
+#, fuzzy
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: pynicotine/gtkgui/widgets/theme.py:300
 #, fuzzy, python-format
@@ -3000,9 +3007,9 @@ msgstr ""
 "ett annat användarnamn om det är första gången du loggar in."
 
 #: pynicotine/headless/application.py:80
-#, python-format
+#, fuzzy, python-format
 msgid "Type %s to log in with another username or password."
-msgstr ""
+msgstr "Skriv %s för att logga in med ett annat användarnamn eller lösenord."
 
 #: pynicotine/headless/application.py:96
 #, fuzzy
@@ -3027,13 +3034,14 @@ msgid "Username: "
 msgstr "Användarnamn:"
 
 #: pynicotine/headless/application.py:116
+#, fuzzy
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Följande shares är inte tillgängliga:"
 
 #: pynicotine/headless/application.py:122
-#, python-format
+#, fuzzy, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Försök med omskanning? %s"
 
 #: pynicotine/logfacility.py:169
 #, fuzzy, python-format
@@ -4559,9 +4567,9 @@ msgid "Not joined in room %s"
 msgstr "%s anslöt till rummet"
 
 #: pynicotine/plugins/core_commands/__init__.py:400
-#, python-format
+#, fuzzy, python-format
 msgid "Not messaging with user %s"
-msgstr ""
+msgstr "Inte i meddelandeutbyte med användare %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:404
 #, fuzzy, python-format
@@ -4589,29 +4597,29 @@ msgid "Unignored %s"
 msgstr "Ignorera användare"
 
 #: pynicotine/plugins/core_commands/__init__.py:558
-#, python-format
+#, fuzzy, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s shares listade (%(num_total)s konfigurerade)"
 
 #: pynicotine/plugins/core_commands/__init__.py:570
-#, python-format
+#, fuzzy, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Kan inte dela otillgänglig mapp \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:573
-#, python-format
+#, fuzzy, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
-msgstr ""
+msgstr "Lade till %(group_name)s share \"%(virtual_name)s\" (omskanning krävs)"
 
 #: pynicotine/plugins/core_commands/__init__.py:584
-#, python-format
+#, fuzzy, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Ingen share med namnet \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:587
-#, python-format
+#, fuzzy, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Tog bort share \"%s\" (omskanning krävs)"
 
 #: pynicotine/pluginsystem.py:404
 #, fuzzy
@@ -5053,10 +5061,13 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:256
+#, fuzzy
 msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"För att ansluta till andra Soulseek-peers måste en lyssningsport på din "
+"router vidarebefordras till din dator."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 #, fuzzy
@@ -5104,9 +5115,12 @@ msgid "You are ready to use Nicotine+!"
 msgstr "Du är redo att använda Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:533
+#, fuzzy
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek är ett okrypterat protokoll som inte är avsett för säker "
+"kommunikation."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 #, fuzzy
@@ -6741,8 +6755,9 @@ msgid "Rescan shares on startup"
 msgstr "Indexera om dina dela filer vid programstart"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:68
+#, fuzzy
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Synlig för alla:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
 #, fuzzy
@@ -6827,8 +6842,9 @@ msgid "Maximum number of queued files per user:"
 msgstr "Begränsa antalet resultat per sökning:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
+#, fuzzy
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Maximal total storlek på köade filer per användare (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
 #, fuzzy
@@ -6861,10 +6877,13 @@ msgid "Self Description"
 msgstr "Självbeskrivning"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:53
+#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Lägg till saker du vill att alla ska se, som en kort beskrivning, hjälpsamma "
+"tips eller riktlinjer för att ladda ner dina shares."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 #, fuzzy
@@ -6977,8 +6996,9 @@ msgid "Highlighted tab label color:"
 msgstr "Färg på etiketten för markerade flikar:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:561
+#, fuzzy
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Position i kompislistan:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:587
 #, fuzzy
