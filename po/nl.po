@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2024-01-02 12:11+0000\n"
-"Last-Translator: Toine Rademacher <hi@toine.zip>\n"
+"PO-Revision-Date: 2024-01-08 22:33+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -1973,7 +1973,7 @@ msgstr "[PRIVÉ] %s"
 #: pynicotine/gtkgui/search.py:910
 #: pynicotine/gtkgui/widgets/notifications.py:69
 msgid "Wishlist Results Found"
-msgstr "Verlanglijst-item gevonden"
+msgstr "Verlanglijst Resultaten Gevonden"
 
 #: pynicotine/gtkgui/search.py:1258
 #, python-format
@@ -3234,7 +3234,7 @@ msgstr "Mongolië"
 
 #: pynicotine/networkfilter.py:180
 msgid "Macau"
-msgstr "Macau"
+msgstr "Macao"
 
 #: pynicotine/networkfilter.py:181
 msgid "Northern Mariana Islands"
@@ -3973,7 +3973,7 @@ msgid ""
 "Trace: %(trace)s"
 msgstr ""
 "Plugin %(module)s is mislukt met fout %(errortype)s: %(error)s\n"
-"Trace: %(trace)s."
+"Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:793
 msgid "No description"
@@ -5960,7 +5960,7 @@ msgstr "Chatroom vermeldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:352
 msgid "Wishlist results found"
-msgstr "Verlanglijst-item gevonden"
+msgstr "Verlanglijst resultaten gevonden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:395
 msgid "Restore the previously active main tab at startup"

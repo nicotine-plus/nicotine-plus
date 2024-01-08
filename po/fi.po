@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2024-01-08 17:06+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2024-01-08 18:27+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
 "Language: fi\n"
@@ -74,7 +74,7 @@ msgstr "Etsi tiedostoja"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:62
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:626
 msgid "Downloads"
-msgstr "Tulevat"
+msgstr "Lataukset"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:37
 #: pynicotine/gtkgui/mainwindow.py:781
@@ -2023,7 +2023,7 @@ msgstr "Downloads: %(speed)s"
 #: pynicotine/gtkgui/mainwindow.py:1276
 #, fuzzy, python-format
 msgid "Uploads: %(speed)s"
-msgstr "Uploads: %(speed)s"
+msgstr "Lataukset: %(speed)s"
 
 #: pynicotine/gtkgui/mainwindow.py:1303
 #, fuzzy
@@ -2461,12 +2461,12 @@ msgstr "Tyhjennä jonossa olevat lähetykset"
 #: pynicotine/gtkgui/uploads.py:122
 #, fuzzy
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Haluatko varmasti tyhjentää kaikki jonossa olevat Uploadsit?"
+msgstr "Haluatko varmasti tyhjentää kaikki jonossa olevat Uploads?"
 
 #: pynicotine/gtkgui/uploads.py:134
 #, fuzzy
 msgid "Clear All Uploads"
-msgstr "Tyhjennä kaikki Uploadsit"
+msgstr "Tyhjennä kaikki Uploads"
 
 #: pynicotine/gtkgui/uploads.py:135
 #, fuzzy
