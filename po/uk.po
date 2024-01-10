@@ -6,17 +6,17 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-11-04 10:27+0000\n"
-"Last-Translator: Vladyslav Anisimov <uniss@ua.fm>\n"
+"PO-Revision-Date: 2024-01-08 19:33+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -28,9 +28,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Графічний клієнт для однорангової мережі Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nicotine;обмін;музика;P2P;однорангова мережа;GTK;"
+msgstr "Soulseek;Nicotine;обмін;чат;повідомлення;P2P;одноранговий;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:9
 msgid "Graphical client for the Soulseek network"
@@ -41,15 +40,14 @@ msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr "Nicotine+ - це графічний клієнт для однорангової мережі Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) "
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ має на меті бути приємною, безкоштовною альтернативою офіційному "
-"клієнту Soulseek. Альтернативою з відкритим вихідним кодом (FOSS), що "
-"забезпечує додаткову функціональність та сумісність з протоколом Soulseek."
+"Nicotine+ прагне бути легковажною, приємною, безкоштовною та відкритою "
+"(FOSS) альтернативою офіційному клієнту Soulseek, одночасно надаючи повний "
+"набір функцій."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
 #: pynicotine/gtkgui/mainwindow.py:778
@@ -87,9 +85,9 @@ msgid "Nicotine+ Team"
 msgstr "Команда Nicotine+"
 
 #: pynicotine/__init__.py:49
-#, fuzzy, python-format
+#, python-format
 msgid "Website: %s"
-msgstr "Виконано: %s"
+msgstr "Вебсайт: %s"
 
 #: pynicotine/__init__.py:55
 msgid "show this help message and exit"
@@ -108,9 +106,8 @@ msgid "dir"
 msgstr "каталог"
 
 #: pynicotine/__init__.py:63
-#, fuzzy
 msgid "alternative directory for user data and plugins"
-msgstr "використовувати користувацький каталог для плагінів"
+msgstr "альтернативна директорія для даних користувача та плагінів"
 
 #: pynicotine/__init__.py:67
 msgid "start the program without showing window"
@@ -223,9 +220,8 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Не вдається підключитися до сервера. Причина: %s"
 
 #: pynicotine/core.py:447
-#, fuzzy
 msgid "Cannot Connect"
-msgstr "Не вдається з'єднатися"
+msgstr "Не вдається підключитися"
 
 #: pynicotine/core.py:471 pynicotine/gtkgui/dialogs/preferences.py:124
 #: pynicotine/gtkgui/search.py:1515 pynicotine/gtkgui/userinfo.py:562
@@ -247,9 +243,9 @@ msgstr ""
 "мережі"
 
 #: pynicotine/core.py:480
-#, fuzzy, python-format
+#, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
-msgstr "IP-адреса користувача %(user)s — %(ip)s, порт %(port)i%(country)s"
+msgstr "IP-адреса користувача %(user)s: %(ip)s, порт %(port)i%(country)s"
 
 #: pynicotine/core.py:485 pynicotine/gtkgui/dialogs/preferences.py:971
 #: pynicotine/gtkgui/dialogs/preferences.py:1114
@@ -259,7 +255,7 @@ msgstr "IP-адреса"
 #: pynicotine/core.py:557
 #, fuzzy
 msgid "Soulseek Announcement"
-msgstr "Клієнт Soulseek"
+msgstr "Оголошення Soulseek"
 
 #: pynicotine/core.py:565
 #, python-format
@@ -400,8 +396,9 @@ msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Ви дійсно хочете вийти?"
 
 #: pynicotine/gtkgui/application.py:298
+#, fuzzy
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Чекати завершення відвантажень"
 
 #: pynicotine/gtkgui/application.py:300
 msgid "Do you really want to exit?"
@@ -684,9 +681,9 @@ msgid "Error checking latest version: %s"
 msgstr "Помилка отримання останньої версії"
 
 #: pynicotine/gtkgui/dialogs/about.py:431
-#, python-format
+#, fuzzy, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Нова версія доступна: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:436
 #, fuzzy
@@ -1035,8 +1032,9 @@ msgstr "Фільтри успішно застосовані"
 #: pynicotine/gtkgui/dialogs/preferences.py:568
 #: pynicotine/gtkgui/dialogs/preferences.py:641
 #: pynicotine/gtkgui/dialogs/preferences.py:680
+#, fuzzy
 msgid "Public"
-msgstr ""
+msgstr "Публічний"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:570
 #: pynicotine/gtkgui/dialogs/preferences.py:695
@@ -1046,8 +1044,9 @@ msgid "Trusted buddies"
 msgstr "Довірені друзі"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:611
+#, fuzzy
 msgid "Accessible To"
-msgstr ""
+msgstr "Доступно для"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:649
 #: pynicotine/gtkgui/dialogs/preferences.py:695
@@ -1129,8 +1128,9 @@ msgstr "Введіть IP-адресу, яку хочете заблокуват
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1274
 #: pynicotine/gtkgui/dialogs/preferences.py:2123
+#, fuzzy
 msgid "Format codes"
-msgstr ""
+msgstr "Формат кодів"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1295
 #: pynicotine/gtkgui/dialogs/preferences.py:1309
@@ -1221,8 +1221,9 @@ msgid "Sidebar in Chat Rooms tab"
 msgstr "Список друзів у чатах"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1689
+#, fuzzy
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Бічна панель завжди видима"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1694
 msgid "Top"
@@ -1850,8 +1851,9 @@ msgid "Scanning Shares"
 msgstr "Сканування спільних каталогів"
 
 #: pynicotine/gtkgui/mainwindow.py:1356
+#, fuzzy
 msgid "Quitting..."
-msgstr ""
+msgstr "Завершення..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:68
 msgid "Latest Message"
@@ -2609,8 +2611,9 @@ msgid "Document"
 msgstr "Документ/Текст"
 
 #: pynicotine/gtkgui/widgets/theme.py:191
+#, fuzzy
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 #: pynicotine/gtkgui/widgets/theme.py:300
 #, python-format
@@ -2712,9 +2715,9 @@ msgstr ""
 "інше ім’я користувача, якщо це ваш перший вхід."
 
 #: pynicotine/headless/application.py:80
-#, python-format
+#, fuzzy, python-format
 msgid "Type %s to log in with another username or password."
-msgstr ""
+msgstr "[X0X] обмінів вказано ([X30X] налаштовано)"
 
 #: pynicotine/headless/application.py:96
 #, fuzzy
@@ -2738,13 +2741,14 @@ msgid "Username: "
 msgstr "Ім'я користувача: "
 
 #: pynicotine/headless/application.py:116
+#, fuzzy
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Наступні обміні недоступні:"
 
 #: pynicotine/headless/application.py:122
-#, python-format
+#, fuzzy, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Повторити повторне сканування? %s"
 
 #: pynicotine/logfacility.py:169
 #, python-format
@@ -4016,9 +4020,9 @@ msgid "Not joined in room %s"
 msgstr "%s приєднався до кімнати"
 
 #: pynicotine/plugins/core_commands/__init__.py:400
-#, python-format
+#, fuzzy, python-format
 msgid "Not messaging with user %s"
-msgstr ""
+msgstr "Не ведеться листування з користувачем %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:404
 #, fuzzy, python-format
@@ -4046,29 +4050,31 @@ msgid "Unignored %s"
 msgstr "Ігнорувати користувача"
 
 #: pynicotine/plugins/core_commands/__init__.py:558
-#, python-format
+#, fuzzy, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s обмінів в списку (%(num_total)s налаштовано)"
 
 #: pynicotine/plugins/core_commands/__init__.py:570
-#, python-format
+#, fuzzy, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Не можу обмінятися недоступною папкою \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:573
-#, python-format
+#, fuzzy, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
+"Додано %(group_name)s обмін \"%(virtual_name)s\" (потрібне повторне "
+"сканування)"
 
 #: pynicotine/plugins/core_commands/__init__.py:584
-#, python-format
+#, fuzzy, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Немає обміну з назвою \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:587
-#, python-format
+#, fuzzy, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Видалено обмін \"%s\" (потрібне повторне сканування)"
 
 #: pynicotine/pluginsystem.py:404
 msgid "Loading plugin system"
@@ -4502,10 +4508,13 @@ msgid "Password"
 msgstr "Пароль"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:256
+#, fuzzy
 msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
+"Щоб підключитися до інших користувачів Soulseek, на вашому роутері потрібно "
+"налаштувати перенаправлення порту на ваш комп'ютер."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -4549,9 +4558,12 @@ msgid "You are ready to use Nicotine+!"
 msgstr "Ви готові до використання Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:533
+#, fuzzy
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
 msgstr ""
+"Soulseek - це незашифрований протокол, який не призначений для захищеного "
+"спілкування."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:543
 msgid ""
@@ -5038,7 +5050,7 @@ msgstr "Переглянути профіль користувача"
 #: pynicotine/gtkgui/ui/mainwindow.ui:1630
 #, fuzzy
 msgid "Search log…"
-msgstr "Пошуковий термін…"
+msgstr "Журнал пошуку…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1711
 msgid "Connections"
@@ -5276,15 +5288,14 @@ msgstr ""
 "    =1024 відповідає лише файлам розміром 1024 байти (тобто 1 кібібайт)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:249
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Додайте < або >, щоб знайти файли, менші/більші за задане значення:\n"
-"    >10,5 м|<1 г для відображення файлів розміром понад 10,5 МБ (мебібайт),\n"
-"    але менше ніж 1 ГіБ (гібібайт), використовуйте | між умовами."
+"Додайте < або > перед значенням, щоб знайти файли менші/більші за вказане "
+"значення. Використовуйте пробіл між умовами, щоб включити діапазон:\n"
+"    >10.5m <1g щоб показати файли більші за 10.5 МіБ, але менші за 1 ГіБ."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:260
 #, fuzzy
@@ -5309,17 +5320,16 @@ msgstr ""
 "секунду)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:308
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"Подібно до розміру файлу (вище), можна використовувати оператори =, !, < і "
-">, а за допомогою | труби:\n"
-"    >256|<1411 для показу файлів із бітрейтом не менше 256 Кбіт/с\n"
-"    з максимальним бітрейтом 1411 Кб/с."
+"Як і Розмір файлу (вище), можна використовувати оператори =, !, <, >, <= або "
+">=, та вказувати кілька умов, наприклад, щоб показати файли з бітрейтом "
+"щонайменше 256 Кб/с із максимальним бітрейтом 1411 Кб/с:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:337
 #, fuzzy
@@ -5337,17 +5347,17 @@ msgstr ""
 ">)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:357
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
 "    >5:30 to show files more than 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Введіть необроблене значення в секундах або використовуйте формати часу MM:"
-"SS і HH:MM:SS:\n"
-"    >5:30 для показу файлів тривалістю принаймні 5 з половиною хвилин.\n"
-"    <5:30:00 показує файли тривалістю менше 5 з половиною годин."
+"Введіть значення у секундах або використовуйте формати часу MM:SS та HH:MM:"
+"SS:\n"
+"    =53 показує файли, тривалість яких приблизно 53 секунди.\n"
+"    >5:30, щоб показати файли тривалістю понад 5 з половиною хвилин.\n"
+"    <5:30:00 показує файли, які тривають менше ніж 5 з половиною годин."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
 #, fuzzy
@@ -5363,7 +5373,6 @@ msgstr ""
 "    =5:34|=4:23|=3:05, щоб включити файли з певною тривалістю."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:396
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -5371,10 +5380,12 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
-"Використовує коди країн, визначені ISO 3166-2 (див. Вікіпедію):\n"
-"    \"US\" повертатиме файли лише від користувачів, підключених через "
-"Сполучені Штати. Аналогічно, 'GB' повертає файли від користувачів із IP-"
-"адресами у Великобританії."
+"Фільтрує файли на основі географічного розташування користувачів згідно з "
+"кодами країн, визначеними ISO 3166-2:\n"
+"    US покаже результати тільки від користувачів з ip-адресами у Сполучених "
+"Штатах.\n"
+"    !GB приховає результати, які надходять від користувачів у Великій "
+"Британії."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:408
 #, fuzzy
@@ -6018,8 +6029,9 @@ msgid "Rescan shares on startup"
 msgstr "Пересканувати спільні ресурси під час запуску"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:68
+#, fuzzy
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Видимо для всіх:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
 #, fuzzy
@@ -6097,8 +6109,9 @@ msgid "Maximum number of queued files per user:"
 msgstr "Обмежити кількість результатів на пошук:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
+#, fuzzy
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Максимальний загальний розмір файлів в черзі на користувача (МіБ):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
 #, fuzzy
@@ -6127,10 +6140,13 @@ msgid "Self Description"
 msgstr "Самоопис"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:53
+#, fuzzy
 msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Додайте речі, які ви хочете, щоб всі бачили, наприклад короткий опис, "
+"корисні поради або правила для завантаження ваших обмінів."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 msgid "Picture:"
@@ -6225,8 +6241,9 @@ msgid "Highlighted tab label color:"
 msgstr "Колір мітки виділеної вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:561
+#, fuzzy
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Позиція списку друзів:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:587
 msgid "Visible main tabs:"
