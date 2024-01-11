@@ -83,17 +83,14 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
+        arch: [x86_64]
     defaults:
       run:
         shell: msys2 {0}
     env:
-      ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
-      NICOTINE_LIBADWAITA: ${{ matrix.libadwaita }}
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -103,11 +100,11 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.msystem }}
+          msystem: MINGW64
           release: false
           install: >-
             mingw-w64-${{ matrix.arch }}-gettext
-            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
             mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-pycodestyle
