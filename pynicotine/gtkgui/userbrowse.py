@@ -1135,15 +1135,15 @@ class UserBrowse:
     def on_file_properties(self, _action, _state, all_files=False):
 
         data = []
-        folder_path = self.selected_folder_path
+        selected_folder_path = self.selected_folder_path
         selected_size = 0
         selected_length = 0
 
         if all_files:
-            browsed_user = core.userbrowse.users[self.user]
-
-            for folders in (browsed_user.public_folders, browsed_user.private_folders):
-                for file_data in folders.get(folder_path, ()):
+            for folder_path, files in core.userbrowse.iter_matching_folders(
+                selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
+            ):
+                for file_data in files:
                     _code, basename, file_size, _ext, file_attributes, *_unused = file_data
                     _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
                     file_path = "\\".join([folder_path, basename])
@@ -1164,7 +1164,7 @@ class UserBrowse:
         else:
             for iterator in self.file_list_view.get_selected_rows():
                 basename = self.file_list_view.get_row_value(iterator, "filename")
-                file_path = "\\".join([folder_path, basename])
+                file_path = "\\".join([selected_folder_path, basename])
                 file_size = self.file_list_view.get_row_value(iterator, "size_data")
                 selected_size += file_size
                 selected_length += self.file_list_view.get_row_value(iterator, "length_data")
@@ -1173,7 +1173,7 @@ class UserBrowse:
                     "user": self.user,
                     "file_path": file_path,
                     "basename": basename,
-                    "virtual_folder_path": folder_path,
+                    "virtual_folder_path": selected_folder_path,
                     "size": file_size,
                     "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
