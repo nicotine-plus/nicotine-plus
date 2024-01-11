@@ -25,6 +25,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.downloads import RequestedFolder
 from pynicotine.transfers import TransferStatus
+from pynicotine.userbrowse import BrowsedUser
 
 
 class DownloadsTest(TestCase):
@@ -226,7 +227,8 @@ class DownloadsTest(TestCase):
         """Verify that subfolders are downloaded to the correct location."""
 
         username = "random"
-        core.userbrowse.user_shares[username] = dict([
+        browsed_user = core.userbrowse.users[username] = BrowsedUser(username)
+        browsed_user.public_folders = dict([
             ("share", [
                 (1, "root1.mp3", 1000, "", {})
             ]),

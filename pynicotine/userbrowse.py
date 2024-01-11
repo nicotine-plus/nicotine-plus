@@ -31,11 +31,22 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 
 
+class BrowsedUser:
+
+    __slots__ = ("username", "public_folders", "private_folders")
+
+    def __init__(self, username):
+
+        self.username = username
+        self.public_folders = {}
+        self.private_folders = {}
+
+
 class UserBrowse:
 
     def __init__(self):
 
-        self.user_shares = {}
+        self.users = {}
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -53,7 +64,7 @@ class UserBrowse:
         if not msg.success:
             return
 
-        for username in self.user_shares:
+        for username in self.users:
             core.users.watch_user(username)  # Get notified of user status
 
     def send_upload_attempt_notification(self, username):
@@ -64,17 +75,17 @@ class UserBrowse:
 
     def _show_user(self, username, path=None, switch_page=True):
 
-        if username not in self.user_shares:
-            self.user_shares[username] = {}
+        if username not in self.users:
+            self.users[username] = BrowsedUser(username)
 
         events.emit("user-browse-show-user", user=username, path=path, switch_page=switch_page)
 
     def remove_user(self, username):
-        del self.user_shares[username]
+        del self.users[username]
         events.emit("user-browse-remove-user", username)
 
     def remove_all_users(self):
-        for username in self.user_shares.copy():
+        for username in self.users.copy():
             self.remove_user(username)
 
     def _parse_local_shares(self, username, msg):
@@ -91,7 +102,7 @@ class UserBrowse:
 
         username = config.sections["server"]["login"] or "Default"
 
-        if username not in self.user_shares or new_request:
+        if username not in self.users or new_request:
             if not permission_level:
                 # Check our own permission level, and show relevant shares for it
                 if username in core.users.addresses:
@@ -119,10 +130,11 @@ class UserBrowse:
         if not username:
             return
 
-        user_share = self.user_shares.get(username)
+        browsed_user = self.users.get(username)
 
-        if user_share and new_request:
-            user_share.clear()
+        if browsed_user is not None and new_request:
+            for folders in (browsed_user.public_folders, browsed_user.private_folders):
+                folders.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
             self.browse_local_shares(path, new_request)
@@ -136,7 +148,7 @@ class UserBrowse:
 
         core.users.watch_user(username)
 
-        if not user_share or new_request:
+        if browsed_user is None or new_request:
             self.request_user_shares(username)
 
     def create_user_shares_folder(self):
@@ -185,10 +197,11 @@ class UserBrowse:
             return
 
         username = os.path.basename(file_path)
-        user_share = self.user_shares.get(username)
+        browsed_user = self.users.get(username)
 
-        if user_share:
-            user_share.clear()
+        if browsed_user is not None:
+            for folders in (browsed_user.public_folders, browsed_user.private_folders):
+                folders.clear()
 
         self._show_user(username)
 
@@ -207,6 +220,7 @@ class UserBrowse:
 
         try:
             file_path = os.path.join(folder_path, clean_file(username))
+            browsed_user = self.users[username]
 
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
                 # Dump every folder to the file individually to avoid large memory usage
@@ -215,13 +229,14 @@ class UserBrowse:
 
                 file_handle.write("[")
 
-                for item in self.user_shares[username].items():
-                    if is_first_item:
-                        is_first_item = False
-                    else:
-                        file_handle.write(",\n")
+                for folders in (browsed_user.public_folders, browsed_user.private_folders):
+                    for item in folders.items():
+                        if is_first_item:
+                            is_first_item = False
+                        else:
+                            file_handle.write(",\n")
 
-                    file_handle.write(json_encoder.encode(item))
+                        file_handle.write(json_encoder.encode(item))
 
                 file_handle.write("]")
 
@@ -244,27 +259,30 @@ class UserBrowse:
         if requested_folder_path is None:
             return
 
-        for folder_path, files in self.user_shares[username].items():
-            if (requested_folder_path != folder_path
-                    and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
-                continue
+        browsed_user = self.users[username]
 
-            # Get final download destination
-            destination_folder_path = core.downloads.get_folder_destination(
-                username, folder_path, root_folder_path=requested_folder_path,
-                download_folder_path=download_folder_path)
+        for folders in (browsed_user.public_folders, browsed_user.private_folders):
+            for folder_path, files in folders.items():
+                if (requested_folder_path != folder_path
+                        and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
+                    continue
 
-            if files:
-                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
-                    file_path = "\\".join([folder_path, basename])
+                # Get final download destination
+                destination_folder_path = core.downloads.get_folder_destination(
+                    username, folder_path, root_folder_path=requested_folder_path,
+                    download_folder_path=download_folder_path)
 
-                    core.downloads.enqueue_download(
-                        username, file_path, folder_path=destination_folder_path, size=file_size,
-                        file_attributes=file_attributes)
+                if files:
+                    for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                        file_path = "\\".join([folder_path, basename])
 
-            if not recurse:
-                # Downloading a single folder, no need to continue
-                return
+                        core.downloads.enqueue_download(
+                            username, file_path, folder_path=destination_folder_path, size=file_size,
+                            file_attributes=file_attributes)
+
+                if not recurse:
+                    # Downloading a single folder, no need to continue
+                    return
 
     def upload_file(self, username, folder_path, file_data):
 
@@ -273,23 +291,24 @@ class UserBrowse:
 
         core.uploads.enqueue_upload(username, file_path, size=file_size)
 
-    def upload_folder(self, username, requested_folder_path, local_shares, recurse=False):
+    def upload_folder(self, username, requested_folder_path, local_browsed_user, recurse=False):
 
         if not requested_folder_path or not username:
             return
 
-        for folder_path, files in local_shares.items():
-            if (requested_folder_path != folder_path
-                    and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
-                continue
+        for folders in (local_browsed_user.public_folders, local_browsed_user.private_folders):
+            for folder_path, files in folders.items():
+                if (requested_folder_path != folder_path
+                        and not (recurse and folder_path.startswith(f"{requested_folder_path}\\"))):
+                    continue
 
-            for _code, basename, file_size, *_unused in files:
-                file_path = "\\".join([folder_path, basename])
-                core.uploads.enqueue_upload(username, file_path, size=file_size)
+                for _code, basename, file_size, *_unused in files:
+                    file_path = "\\".join([folder_path, basename])
+                    core.uploads.enqueue_upload(username, file_path, size=file_size)
 
-            if not recurse:
-                # Uploading a single folder, no need to continue
-                return
+                if not recurse:
+                    # Uploading a single folder, no need to continue
+                    return
 
     @staticmethod
     def get_soulseek_url(username, path):
@@ -314,7 +333,7 @@ class UserBrowse:
 
     def _shared_file_list_progress(self, username, sock, _buffer_len, _msg_size_total):
 
-        if username not in self.user_shares:
+        if username not in self.users:
             # We've removed the user. Close the connection to stop the user from
             # sending their response and wasting bandwidth.
             core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
@@ -322,11 +341,13 @@ class UserBrowse:
     def _shared_file_list_response(self, msg):
 
         username = msg.username
+        browsed_user = self.users.get(username)
         num_folders = len(msg.list) + len(msg.privatelist)
         num_files = sum(len(files) for folder_path, files in chain(msg.list, msg.privatelist))
 
-        if username in self.user_shares:
-            self.user_shares[username] = dict(msg.list + msg.privatelist) if msg.privatelist else dict(msg.list)
+        if browsed_user is not None:
+            browsed_user.public_folders = dict(msg.list)
+            browsed_user.private_folders = dict(msg.privatelist)
 
         core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": None,

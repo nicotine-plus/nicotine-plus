@@ -239,7 +239,7 @@ class UserBrowse:
         self.selected_folder_path = None
         self.selected_files = {}
 
-        self.search_list = []
+        self.search_folder_paths = []
         self.query = None
         self.search_position = 0
 
@@ -456,8 +456,8 @@ class UserBrowse:
 
     def clear_model(self):
 
-        self.query = None
-        self.search_list.clear()
+        self.search_position = 0
+        self.search_folder_paths.clear()
 
         self.selected_folder_path = None
         self.populate_path_bar()
@@ -466,16 +466,18 @@ class UserBrowse:
         self.folder_tree_view.clear()
         self.file_list_view.clear()
 
-    def make_new_model(self, shares, private_shares=None):
+    def rebuild_model(self):
 
         self.clear_model()
+
         private_size = num_private_folders = 0
+        browsed_user = core.userbrowse.users[self.user]
 
         # Generate the folder tree and select first folder
-        size, num_folders = self.create_folder_tree(shares)
+        size, num_folders = self.create_folder_tree(browsed_user.public_folders)
 
-        if private_shares:
-            private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
+        if browsed_user.private_folders:
+            private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
 
         self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
         self.share_size_label.set_text(human_size(size + private_size))
@@ -485,23 +487,31 @@ class UserBrowse:
         else:
             self.folder_tree_view.expand_root_rows()
 
-        # Select first row
-        self.folder_tree_view.select_row()
-        self.set_finished()
+        self.select_search_match_folder()
 
-    def create_folder_tree(self, shares, private=False):
+    def create_folder_tree(self, folders, private=False):
 
         total_size = 0
+        num_folders = len(folders)
 
-        if not shares:
-            num_folders = 0
+        if not folders:
             return total_size, num_folders
 
-        for folder, files in shares:
+        for folder_path, files in folders.items():
             current_path = None
             root_processed = False
+            skip_folder = (self.query and self.query not in folder_path.lower())
 
-            for subfolder in folder.split("\\"):
+            for filedata in files:
+                if skip_folder and self.query in filedata[1].lower():
+                    skip_folder = False
+
+                total_size += filedata[2]
+
+            if skip_folder:
+                continue
+
+            for subfolder in folder_path.split("\\"):
                 parent = self.folder_tree_view.iterators.get(current_path)
 
                 if not root_processed:
@@ -525,10 +535,10 @@ class UserBrowse:
                     [subfolder, current_path], select_row=False, parent_iterator=parent
                 )
 
-            for filedata in files:
-                total_size += filedata[2]
+            if self.query:
+                self.search_folder_paths.append(folder_path)
 
-        return total_size, len(shares)
+        return total_size, num_folders
 
     def browse_queued_path(self):
 
@@ -566,7 +576,7 @@ class UserBrowse:
         is_empty = (not msg.list and not msg.privatelist)
         self.local_permission_level = msg.permission_level
 
-        self.make_new_model(msg.list, msg.privatelist)
+        self.rebuild_model()
         self.info_bar.set_visible(False)
 
         if is_empty:
@@ -718,10 +728,14 @@ class UserBrowse:
         self.file_list_view.clear()
 
         self.selected_folder_path = folder_path
-        files = core.userbrowse.user_shares[self.user].get(folder_path)
+        browsed_user = core.userbrowse.users[self.user]
+        files = browsed_user.public_folders.get(folder_path)
 
         if not files:
-            return
+            files = browsed_user.private_folders.get(folder_path)
+
+            if not files:
+                return
 
         # Temporarily disable sorting for increased performance
         self.file_list_view.disable_sorting()
@@ -743,6 +757,7 @@ class UserBrowse:
             ], select_row=False)
 
         self.file_list_view.enable_sorting()
+        self.select_search_match_files()
 
     def select_files(self):
 
@@ -764,30 +779,20 @@ class UserBrowse:
 
     # Search #
 
-    def rebuild_search_matches(self):
-
-        self.search_list.clear()
-        temp_list = set()
-
-        for folder_path, files in core.userbrowse.user_shares[self.user].items():
-            if self.query in folder_path.lower():
-                temp_list.add(folder_path)
-                continue
-
-            for _code, basename, *_unused in files:
-                if self.query in basename.lower():
-                    temp_list.add(folder_path)
-
-        self.search_list = sorted(temp_list, key=strxfrm)
-
     def select_search_match_folder(self):
 
-        folder_path = self.search_list[self.search_position]
-        iterator = self.folder_tree_view.iterators[folder_path]
+        iterator = None
+
+        if self.search_folder_paths:
+            folder_path = self.search_folder_paths[self.search_position]
+            iterator = self.folder_tree_view.iterators[folder_path]
 
         self.folder_tree_view.select_row(iterator)
 
     def select_search_match_files(self):
+
+        if not self.query:
+            return
 
         result_files = []
         found_first_match = False
@@ -805,28 +810,28 @@ class UserBrowse:
 
     def find_search_matches(self, reverse=False):
 
-        query = self.search_entry.get_text().lower()
-
-        if not query:
-            return False
+        query = self.search_entry.get_text().lower() or None
 
         if self.query != query:
             # New search query, rebuild result list
-            self.search_position = 0
+            self.clear_model()
             self.query = query
+            self.rebuild_model()
 
-            self.rebuild_search_matches()
-        else:
+            if not self.search_folder_paths:
+                return False
+
+        elif query:
             # Increment/decrement search position
             self.search_position += -1 if reverse else 1
 
-        if not self.search_list:
+        else:
             return False
 
         if self.search_position < 0:
-            self.search_position = len(self.search_list) - 1
+            self.search_position = len(self.search_folder_paths) - 1
 
-        elif self.search_position >= len(self.search_list):
+        elif self.search_position >= len(self.search_folder_paths):
             self.search_position = 0
 
         # Set active folder
@@ -891,7 +896,9 @@ class UserBrowse:
 
         core.userbrowse.send_upload_attempt_notification(user)
         core.userbrowse.upload_folder(
-            user, self.selected_folder_path, local_shares=core.userbrowse.user_shares[self.user], recurse=recurse)
+            user, self.selected_folder_path, local_browsed_user=core.userbrowse.users[self.user],
+            recurse=recurse
+        )
 
     def on_upload_folder_to(self, *_args, recurse=False):
 
@@ -1055,10 +1062,15 @@ class UserBrowse:
     def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.selected_folder_path
-        files = core.userbrowse.user_shares[self.user].get(folder_path)
+        browsed_user = core.userbrowse.users[self.user]
+
+        files = browsed_user.public_folders.get(folder_path)
 
         if not files:
-            return
+            files = browsed_user.private_folders.get(folder_path)
+
+            if not files:
+                return
 
         for file_data in files:
             _code, basename, *_unused = file_data
@@ -1128,23 +1140,26 @@ class UserBrowse:
         selected_length = 0
 
         if all_files:
-            for file_data in core.userbrowse.user_shares[self.user].get(folder_path, ()):
-                _code, basename, file_size, _ext, file_attributes, *_unused = file_data
-                _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
-                file_path = "\\".join([folder_path, basename])
-                selected_size += file_size
+            browsed_user = core.userbrowse.users[self.user]
 
-                if length:
-                    selected_length += length
+            for folders in (browsed_user.public_folders, browsed_user.private_folders):
+                for file_data in folders.get(folder_path, ()):
+                    _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+                    _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
+                    file_path = "\\".join([folder_path, basename])
+                    selected_size += file_size
 
-                data.append({
-                    "user": self.user,
-                    "file_path": file_path,
-                    "basename": basename,
-                    "virtual_folder_path": folder_path,
-                    "size": file_size,
-                    "file_attributes": file_attributes
-                })
+                    if length:
+                        selected_length += length
+
+                    data.append({
+                        "user": self.user,
+                        "file_path": file_path,
+                        "basename": basename,
+                        "virtual_folder_path": folder_path,
+                        "size": file_size,
+                        "file_attributes": file_attributes
+                    })
 
         else:
             for iterator in self.file_list_view.get_selected_rows():
@@ -1349,6 +1364,10 @@ class UserBrowse:
 
     def on_search(self, *_args):
         self.find_search_matches()
+
+    def on_search_entry_changed(self, *_args):
+        if len(self.search_entry.get_text()) <= 0:
+            self.find_search_matches()
 
     def on_save(self, *_args):
         core.userbrowse.save_shares_list_to_disk(self.user)
