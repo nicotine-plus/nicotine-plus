@@ -38,6 +38,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Windows: Added option to bind Nicotine+ to a specific network interface
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
+ * Restore initial list order when pressing the column header of a sorted column
+ * Filter out irrelevant folders when searching a user's shares
  * Insert new tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
@@ -205,6 +207,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev6\] Network connectivity lost until a server reconnect ([#2778](https://github.com/nicotine-plus/nicotine-plus/issues/2778))
  * \[3.3.0.dev6\] Copying search result filenames causes crash ([#2781](https://github.com/nicotine-plus/nicotine-plus/issues/2781))
  * Recursive folder download matches extra siblings starting with the same name ([#2782](https://github.com/nicotine-plus/nicotine-plus/issues/2782))
+ * Critical 'TypeError' on macOS Monterey, N+ won't launch ([#2785](https://github.com/nicotine-plus/nicotine-plus/issues/2785))
  * \[3.3.0.rc1\] "Unknown search mode" Reopening a whishlist search tab ([#2798](https://github.com/nicotine-plus/nicotine-plus/issues/2798))
 
 
