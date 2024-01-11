@@ -1,0 +1,4 @@
+Version = "2024-01-11r00"
+Authors = ["Nicotine+"]
+Name = "AUTOBAHN"
+Description = "Detects when leechers are downloading, and bans them. Auto-unban feature implemented when they start sharing."
