@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -101,15 +101,19 @@ def run(hidden, ci_mode, multi_instance):
         executable_folder = os.path.dirname(sys.executable)
         resources_folder = executable_folder
 
-        if sys.platform == "darwin":
+        if sys.platform == "win32":
+            import ctypes
+            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
+
+        elif sys.platform == "darwin":
             resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
 
         os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share/fonts/fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share/fonts")
-        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
-        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
-        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share", "fonts")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
+        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
+        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
 
     if sys.platform == "win32":
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
