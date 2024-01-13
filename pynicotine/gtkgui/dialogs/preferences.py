@@ -3149,7 +3149,7 @@ class Preferences(Dialog):
             core.portmapper.remove_port_mapping()
 
         if user_profile_required and core.users.login_username:
-            core.userinfo.show_user(core.users.login_username, refresh=True)
+            core.userinfo.show_user(core.users.login_username, refresh=True, switch_page=False)
 
         if completion_required:
             core.chatrooms.update_completions()
