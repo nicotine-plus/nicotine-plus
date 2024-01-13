@@ -1676,11 +1676,11 @@
         <child>
           <object class="GtkBox" id="scan_progress_container">
             <property name="spacing">6</property>
-            <property name="tooltip-text" bind-source="scan_progress_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
             <property name="visible">False</property>
             <child>
-              <object class="GtkLabel" id="scan_progress_label">
+              <object class="GtkLabel">
                 <property name="ellipsize">end</property>
+                <property name="label" bind-source="scan_progress_container" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>"
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
                 <style>
@@ -1812,7 +1812,7 @@
                       <object class="GtkImage" id="user_status_icon">
                         <property name="icon-name">nplus-status-offline</property>
                         <property name="tooltip-text" bind-source="user_status_button" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>
-                        <property name="visible">True</property>
+                        <property name="visible" bind-source="user_status_button" bind-property="visible" bind-flags="bidirectional|sync-create"/>
                         <style>
                           <class name="colored-icon"/>
                           <class name="user-status"/>

@@ -129,7 +129,6 @@ class MainWindow(Window):
             self.room_list_label,
             self.room_search_entry,
             self.scan_progress_container,
-            self.scan_progress_label,
             self.scan_progress_spinner,
             self.search_content,
             self.search_end,
@@ -1082,15 +1081,20 @@ class MainWindow(Window):
             status_text = _("Offline")
 
         if self.user_status_button.get_tooltip_text() != username:
+            # Hide widget to keep tooltips for other widgets visible
+            self.user_status_button.set_visible(False)
             self.user_status_button.set_tooltip_text(username)
+            self.user_status_button.set_visible(True)
 
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(status_text)
+        if self.user_status_label.get_text() != status_text:
+            self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
+            self.user_status_label.set_text(status_text)
 
-        # Disable button toggled state without activating action
-        toggle_status_action.handler_block_by_func(self.on_toggle_status)
-        self.user_status_button.set_active(False)
-        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
+        if self.user_status_button.get_active():
+            # Disable button toggled state without activating action
+            toggle_status_action.handler_block_by_func(self.on_toggle_status)
+            self.user_status_button.set_active(False)
+            toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
 
     # Search #
 
@@ -1245,8 +1249,12 @@ class MainWindow(Window):
     # Status Bar #
 
     def set_status_text(self, msg):
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.status_label.set_visible(False)
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
+        self.status_label.set_visible(True)
 
     def set_connection_stats(self, total_conns=0, download_bandwidth=0, upload_bandwidth=0):
 
@@ -1292,13 +1300,17 @@ class MainWindow(Window):
 
     def shares_preparing(self):
 
-        self.scan_progress_label.set_label(_("Preparing Shares"))
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(_("Preparing Shares"))
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
 
     def shares_scanning(self):
 
-        self.scan_progress_label.set_label(_("Scanning Shares"))
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(_("Scanning Shares"))
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
 

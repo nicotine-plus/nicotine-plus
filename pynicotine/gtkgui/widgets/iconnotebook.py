@@ -236,7 +236,16 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text.strip() if text else None)
+
+        text = text.strip() if text else None
+
+        if self.container.get_tooltip_text() == text:
+            return
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.container.set_visible(False)
+        self.container.set_tooltip_text(text)
+        self.container.set_visible(True)
 
     def set_text(self, text):
         self.label.set_text(text.strip())
@@ -431,7 +440,10 @@ class IconNotebook:
         else:
             self.pages_button.set_image(Gtk.Image(icon_name=icon_name))  # pylint: disable=no-member
 
+        # Hide widget to keep tooltips for other widgets visible
+        self.pages_button.set_visible(False)
         self.pages_button.set_tooltip_text(tooltip_text)
+        self.pages_button.set_visible(True)
 
     def update_pages_menu_button(self):
 
