@@ -3148,8 +3148,8 @@ class Preferences(Dialog):
         else:
             core.portmapper.remove_port_mapping()
 
-        if user_profile_required and core.users.login_username:
-            core.userinfo.show_user(core.users.login_username, refresh=True, switch_page=False)
+        if user_profile_required:
+            core.userinfo.show_user(refresh=True, switch_page=False)
 
         if completion_required:
             core.chatrooms.update_completions()

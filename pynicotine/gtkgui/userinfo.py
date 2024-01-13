@@ -28,6 +28,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -506,7 +507,7 @@ class UserInfo:
 
     def update_edit_button_state(self):
 
-        is_personal_profile = (self.user == core.users.login_username)
+        is_personal_profile = (self.user == core.users.login_username or config.sections["server"]["login"])
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
             widget.set_visible(is_personal_profile)

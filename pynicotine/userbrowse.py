@@ -104,7 +104,11 @@ class UserBrowse:
     def browse_local_shares(self, path=None, permission_level=None, new_request=False, switch_page=True):
         """Browse your own shares."""
 
-        username = config.sections["server"]["login"] or "Default"
+        username = core.users.login_username or config.sections["server"]["login"]
+
+        if not username:
+            core.setup()
+            return
 
         if username not in self.users or new_request:
             if not permission_level:
@@ -135,11 +139,12 @@ class UserBrowse:
             return
 
         browsed_user = self.users.get(username)
+        local_username = core.users.login_username or config.sections["server"]["login"]
 
         if browsed_user is not None and new_request:
             browsed_user.clear()
 
-        if username == (config.sections["server"]["login"] or "Default"):
+        if username == local_username:
             self.browse_local_shares(path, new_request, switch_page=switch_page)
             return
 

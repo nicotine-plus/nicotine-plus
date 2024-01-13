@@ -173,7 +173,7 @@ class Application:
             ("configure-ignored-users", self.on_configure_ignored_users, None, True),
             ("configure-account", self.on_configure_account, None, True),
             ("configure-user-profile", self.on_configure_user_profile, None, True),
-            ("personal-profile", self.on_personal_profile, None, False),
+            ("personal-profile", self.on_personal_profile, None, True),
 
             # Notifications
             ("chatroom-notification-activated", self.on_chatroom_notification_activated, "s", True),
@@ -280,7 +280,7 @@ class Application:
 
         self.lookup_action("connect").set_enabled(not is_online)
 
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
@@ -602,7 +602,7 @@ class Application:
         self.on_preferences(page_id="user-profile")
 
     def on_personal_profile(self, *_args):
-        core.userinfo.show_user(core.users.login_username)
+        core.userinfo.show_user()
 
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
