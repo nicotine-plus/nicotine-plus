@@ -101,7 +101,7 @@ class UserBrowse:
 
         events.emit_main_thread("shared-file-list-response", msg)
 
-    def browse_local_shares(self, path=None, permission_level=None, new_request=False):
+    def browse_local_shares(self, path=None, permission_level=None, new_request=False, switch_page=True):
         """Browse your own shares."""
 
         username = config.sections["server"]["login"] or "Default"
@@ -123,7 +123,7 @@ class UserBrowse:
                 target=self._parse_local_shares, args=(username, msg), name="LocalShareParser", daemon=True
             ).start()
 
-        self._show_user(username, path=path)
+        self._show_user(username, path=path, switch_page=switch_page)
 
     def request_user_shares(self, username):
         core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
@@ -140,7 +140,7 @@ class UserBrowse:
             browsed_user.clear()
 
         if username == (config.sections["server"]["login"] or "Default"):
-            self.browse_local_shares(path, new_request)
+            self.browse_local_shares(path, new_request, switch_page=switch_page)
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
