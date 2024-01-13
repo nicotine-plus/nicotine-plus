@@ -1047,14 +1047,7 @@ class MainWindow(Window):
         toggle_status_action = self.lookup_action("toggle-status")
 
         # Action status
-        self.application.lookup_action("connect").set_enabled(not is_online)
         toggle_status_action.set_enabled(is_online)
-
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
-                            "message-downloading-users", "message-buddies"):
-            self.application.lookup_action(action_name).set_enabled(is_online)
-
-        self.application.tray_icon.update_user_status()
 
         # Away mode
         if not is_away:

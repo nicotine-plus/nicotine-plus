@@ -93,8 +93,11 @@ class Application:
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
             ("quit", self._instance.quit),
+            ("server-login", self.update_user_status),
+            ("server-disconnect", self.update_user_status),
             ("setup", self.on_fast_configure),
-            ("shares-unavailable", self.on_shares_unavailable)
+            ("shares-unavailable", self.on_shares_unavailable),
+            ("user-status", self.on_user_status)
         ):
             events.connect(event_name, callback)
 
@@ -270,6 +273,19 @@ class Application:
                     )
                 )
 
+    def update_user_status(self, *_args):
+
+        status = core.users.login_status
+        is_online = (status != UserStatus.OFFLINE)
+
+        self.lookup_action("connect").set_enabled(not is_online)
+
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
+                            "message-downloading-users", "message-buddies"):
+            self.lookup_action(action_name).set_enabled(is_online)
+
+        self.tray_icon.update_user_status()
+
     # Core Events #
 
     def on_confirm_quit_response(self, dialog, response_id, _data):
@@ -364,6 +380,10 @@ class Application:
             ],
             callback=self.on_invalid_password_response
         ).present()
+
+    def on_user_status(self, msg):
+        if msg.user == core.users.login_username:
+            self.update_user_status()
 
     # Actions #
 
