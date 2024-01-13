@@ -516,7 +516,8 @@ class Search:
                     "title": _("Speed"),
                     "width": 120,
                     "sort_column": "speed_data",
-                    "sensitive_column": "free_slot_data"
+                    "sensitive_column": "free_slot_data",
+                    "default_sort_type": "descending"
                 },
                 "in_queue": {
                     "column_type": "number",
@@ -581,7 +582,6 @@ class Search:
                 "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_UINT64,
-                    "default_sort_type": "ascending",
                     "iterator_key": True
                 }
             }

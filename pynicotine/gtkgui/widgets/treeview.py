@@ -45,8 +45,9 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class TreeView:
 
     def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
-                 name=None, secondary_name=None, activate_row_callback=None, focus_in_callback=None,
-                 select_row_callback=None, delete_accelerator_callback=None, search_entry=None):
+                 persistent_sort=False, name=None, secondary_name=None, activate_row_callback=None,
+                 focus_in_callback=None, select_row_callback=None, delete_accelerator_callback=None,
+                 search_entry=None):
 
         self.window = window
         self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
@@ -67,11 +68,16 @@ class TreeView:
         self._default_sort_type = Gtk.SortType.ASCENDING
         self._sort_column = None
         self._sort_type = None
+        self._persistent_sort = persistent_sort
         self._clicked_column_reset_sort = None
         self._columns_changed_handler = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
         self._h_adjustment = parent.get_hadjustment()
+        self._v_adjustment = parent.get_vadjustment()
+        self._v_adjustment_upper = 0
+        self._v_adjustment_value = 0
+        self.notify_value_handler = self._v_adjustment.connect("notify::value", self.on_v_adjustment_value)
 
         if GTK_API_VERSION >= 4:
             parent.set_child(self.widget)  # pylint: disable=no-member
@@ -121,6 +127,7 @@ class TreeView:
         # Prevent updates while destroying widget
         self.widget.disconnect(self._columns_changed_handler)
         self.widget.disconnect(self._query_tooltip_handler)
+        self._v_adjustment.disconnect(self.notify_value_handler)
 
         self._column_menu.destroy()
         self.__dict__.clear()
@@ -136,6 +143,9 @@ class TreeView:
 
         self.model = model_class()
         self.model.set_column_types(self._data_types)
+
+        if self._sort_column is not None and self._sort_type is not None:
+            self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
         self.widget.set_model(self.model)
         return self.model
@@ -214,9 +224,9 @@ class TreeView:
             column.set_resizable(True)
             break
 
-    def _initialise_columns(self, columns):
+    def _initialise_column_ids(self, columns):
 
-        self._data_types = data_types = []
+        self._data_types = []
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             data_type = column_data.get("data_type")
@@ -235,12 +245,17 @@ class TreeView:
 
             gvalue = GObject.Value(data_type)
 
-            data_types.append(data_type)
+            self._data_types.append(data_type)
             self._column_gvalues.append(gvalue)
+
             self._column_ids[column_id] = column_index
 
-        self.model = self.create_model()
         self._column_numbers = list(self._column_ids.values())
+
+    def _initialise_columns(self, columns):
+
+        self._initialise_column_ids(columns)
+        self.model = self.create_model()
 
         progress_padding = 1
         height_padding = 4
@@ -265,7 +280,12 @@ class TreeView:
                 self._default_sort_column = self._column_ids[sort_data_column]
                 self._default_sort_type = (Gtk.SortType.DESCENDING if default_sort_type == "descending"
                                            else Gtk.SortType.ASCENDING)
-                self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+
+                if self._sort_column is None and self._sort_type is None:
+                    self._sort_column = self._default_sort_column
+                    self._sort_type = self._default_sort_type
+
+                    self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
             if title is None:
                 # Hidden data column
@@ -290,6 +310,19 @@ class TreeView:
                     except Exception:
                         # Invalid value
                         pass
+
+                column_sort_type = column_config.get(column_id, {}).get("sort")
+
+                if column_sort_type and self._persistent_sort:
+                    # Sort treeview by values in this column by default
+                    self._sort_column = self._column_ids[sort_data_column]
+                    self._sort_type = (Gtk.SortType.DESCENDING if column_sort_type == "descending"
+                                       else Gtk.SortType.ASCENDING)
+                    self.model.set_sort_column_id(self._sort_column, self._sort_type)
+
+                    if self._sort_type == Gtk.SortType.DESCENDING:
+                        # If this column is clicked again, we reset to the default sorted state of treeview
+                        self._clicked_column_reset_sort = column_id
 
             if not isinstance(width, int):
                 width = None
@@ -401,11 +434,13 @@ class TreeView:
 
         saved_columns = {}
         column_config = config.sections["columns"]
+        self._sort_column, self._sort_type = self.model.get_sort_column_id()
 
         for column in self.widget.get_columns():
             title = column.id
             width = column.get_width()
             visible = column.get_visible()
+            sort_column_id = column.get_sort_column_id()
 
             # A column width of zero should not be saved to the config.
             # When a column is hidden, the correct width will be remembered during the
@@ -425,7 +460,13 @@ class TreeView:
                 # No previously saved width, going with zero
                 pass
 
-            saved_columns[title] = {"visible": visible, "width": width}
+            saved_columns[title] = columns = {"visible": visible, "width": width}
+
+            if not self._persistent_sort:
+                continue
+
+            if sort_column_id == self._sort_column and sort_column_id != self._default_sort_column:
+                columns["sort"] = "descending" if self._sort_type == Gtk.SortType.DESCENDING else "ascending"
 
         if self._secondary_name is not None:
             try:
@@ -438,7 +479,6 @@ class TreeView:
             column_config[self._widget_name] = saved_columns
 
     def disable_sorting(self):
-        self._sort_column, self._sort_type = self.model.get_sort_column_id()
         self.model.set_sort_column_id(Gtk.TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
     def enable_sorting(self):
@@ -644,16 +684,18 @@ class TreeView:
     def on_column_header_pressed(self, _treeview, column):
         """Reset sorting when column header has been pressed three times."""
 
+        self.save_columns()
+
         if self._default_sort_column is None:
             # No default sort column for treeview, keep standard GTK behavior
             return
 
         if column.get_sort_order() == Gtk.SortType.DESCENDING:
             # If this column is clicked again, we reset to the default sorted state of treeview
-            self._clicked_column_reset_sort = column
+            self._clicked_column_reset_sort = column.id
             return
 
-        if column == self._clicked_column_reset_sort:
+        if column.id == self._clicked_column_reset_sort:
             # Reset treeview to default state
             self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
 
@@ -699,6 +741,21 @@ class TreeView:
 
         self._column_offsets[column_id] = offset
         self.save_columns()
+
+    def on_v_adjustment_value(self, *_args):
+
+        upper = self._v_adjustment.get_upper()
+
+        if upper != self._v_adjustment_upper and self._v_adjustment_value <= 0:
+            # When new rows are added while sorting is enabled, treeviews
+            # auto-scroll to the new position of the currently visible row.
+            # Disable this behavior while we're at the top to prevent jumping
+            # to random positions as rows are populated.
+            self._v_adjustment.set_value(0)
+        else:
+            self._v_adjustment_value = self._v_adjustment.get_value()
+
+        self._v_adjustment_upper = upper
 
     def on_search_match(self, model, _column, search_term, iterator):
 
