@@ -62,7 +62,7 @@ class Buddies:
         # Columns
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
-            activate_row_callback=self.on_row_activated,
+            persistent_sort=True, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_remove_buddy,
             columns={
                 # Visible columns
