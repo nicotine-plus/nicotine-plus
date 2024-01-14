@@ -40,7 +40,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Allow search result filters to be restored after clicking the "Clear Filters" button
  * Restore initial list order when pressing the column header of a sorted column
  * Filter out irrelevant folders when searching a user's shares
- * Insert new tabs before older ones
+ * Insert new private chat tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
  * Retry downloads limited due to maximum queue/file sizes more frequently

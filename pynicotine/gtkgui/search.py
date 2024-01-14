@@ -252,8 +252,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.prepend_page(page.container, label, focus_callback=page.on_focus,
-                          close_callback=page.on_close, full_text=full_text)
+        self.append_page(page.container, label, focus_callback=page.on_focus,
+                         close_callback=page.on_close, full_text=full_text)
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page

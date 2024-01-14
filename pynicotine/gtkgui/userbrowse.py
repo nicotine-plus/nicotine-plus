@@ -147,8 +147,8 @@ class UserBrowses(IconNotebook):
         if page is None:
             self.pages[user] = page = UserBrowse(self, user)
 
-            self.prepend_page(page.container, user, focus_callback=page.on_focus,
-                              close_callback=page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         page.queued_path = path
