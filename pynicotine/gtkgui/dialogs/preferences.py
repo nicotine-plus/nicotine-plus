@@ -3202,18 +3202,15 @@ class Preferences(Dialog):
         # Main notebook
         self.application.window.set_tab_positions()
         self.application.window.set_main_tabs_visibility()
-        self.application.window.notebook.set_tab_text_colors()
 
-        for i in range(self.application.window.notebook.get_n_pages()):
-            page = self.application.window.notebook.get_nth_page(i)
-            self.application.window.set_tab_expand(page)
+        for tab in self.application.window.tabs.values():
+            self.application.window.set_tab_expand(tab.page)
 
         # Other notebooks
         for notebook in (self.application.window.chatrooms, self.application.window.privatechat,
                          self.application.window.userinfo, self.application.window.userbrowse,
                          self.application.window.search):
             notebook.set_tab_closers()
-            notebook.set_tab_text_colors()
 
         # Update configuration
         config.write_configuration()

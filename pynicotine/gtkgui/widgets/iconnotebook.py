@@ -354,13 +354,6 @@ class IconNotebook:
             tab_label = self.get_tab_label(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
-    def set_tab_text_colors(self):
-
-        for i in range(self.get_n_pages()):
-            page = self.get_nth_page(i)
-            tab_label = self.get_tab_label(page)
-            tab_label.set_text(tab_label.get_text())
-
     def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
         self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
 
