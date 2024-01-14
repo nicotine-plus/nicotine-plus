@@ -616,6 +616,7 @@ class Search:
 
         self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
+            ("#" + _("Edit…"), self.on_edit_search),
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
@@ -1718,6 +1719,24 @@ class Search:
 
     def on_copy_search_term(self, *_args):
         clipboard.copy_text(self.text)
+
+    def on_edit_search(self, *_args):
+
+        if self.mode == "wishlist":
+            self.window.application.lookup_action("wishlist").activate()
+            return
+
+        self.window.lookup_action("search-mode").change_state(GLib.Variant("s", self.mode))
+
+        if self.mode == "room":
+            self.window.room_search_entry.set_text(self.room)
+
+        elif self.mode == "user":
+            self.window.user_search_entry.set_text(self.searched_users[0])
+
+        self.window.search_entry.set_text(self.text)
+        self.window.search_entry.set_position(-1)
+        self.window.search_entry.grab_focus_without_selecting()
 
     def on_refilter(self, *_args):
 
