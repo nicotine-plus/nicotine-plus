@@ -189,12 +189,14 @@ class Search:
                 continue
 
             else:
-                word = search_term_words[index] = word.translate(TRANSLATE_PUNCTUATION).strip()
+                subwords = word.translate(TRANSLATE_PUNCTUATION).strip().split()
+                word = search_term_words[index] = " ".join(x for x in subwords if x)
 
-                if not word:
+                if not subwords:
                     continue
 
-                included_words.append(word.lower())
+                for subword in subwords:
+                    included_words.append(subword.lower())
 
             search_term_words_no_quotes.append(word)
 

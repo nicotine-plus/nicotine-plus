@@ -24,7 +24,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.slskmessages import increment_token
 
-SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -No yes'
+SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
 SEARCH_MODE = "global"
 
 
@@ -55,11 +55,16 @@ class SearchTest(TestCase):
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
         self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(search_term, '70 Gwen "test" -mp3 "what\'s up" -nothanks a b c d *ello auto -No yes')
-        self.assertEqual(search_term_no_quotes, '70 Gwen test -mp3 what s up -nothanks a b c d *ello auto -No yes')
+        self.assertEqual(search_term, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes')
+        self.assertEqual(
+            search_term_no_quotes, '70 Gwen test -mp3 what s up don t -nothanks a b c d *ello auto -No yes'
+        )
         self.assertEqual(config.sections["searches"]["history"][0], search_term)
         self.assertIn("ello", included_words)
         self.assertIn("gwen", included_words)
+        self.assertIn("what's up", included_words)
+        self.assertIn("don", included_words)
+        self.assertIn("t", included_words)
         self.assertIn("no", excluded_words)
         self.assertIn("mp3", excluded_words)
 
