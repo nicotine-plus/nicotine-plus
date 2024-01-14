@@ -545,15 +545,17 @@ class RecommendationsMessage(SlskMessage):
             lst = recommendations if rating >= 0 else unrecommendations
             lst.append((key, rating))
 
+        return pos
+
     @classmethod
     def parse_recommendations(cls, message, pos=0):
         recommendations = []
         unrecommendations = []
 
-        cls.populate_recommendations(recommendations, unrecommendations, message, pos)
+        pos = cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         if message[pos:]:
-            cls.populate_recommendations(recommendations, unrecommendations, message, pos)
+            pos = cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         return pos, recommendations, unrecommendations
 
