@@ -107,7 +107,8 @@ class Interests:
                 },
                 "item": {
                     "column_type": "text",
-                    "title": _("Item")
+                    "title": _("Item"),
+                    "iterator_key": True
                 },
 
                 # Hidden data columns

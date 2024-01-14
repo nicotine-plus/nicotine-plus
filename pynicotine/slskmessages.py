@@ -535,30 +535,25 @@ class RecommendationsMessage(SlskMessage):
     __slots__ = ()
 
     @classmethod
-    def parse_recommendations(cls, message, pos=0):
-        recommendations = []
-        unrecommendations = []
-
+    def populate_recommendations(cls, recommendations, unrecommendations, message, pos=0):
         pos, num = cls.unpack_uint32(message, pos)
 
         for _ in range(num):
             pos, key = cls.unpack_string(message, pos)
             pos, rating = cls.unpack_int32(message, pos)
 
-            # The server also includes unrecommendations here for some reason, don't add them
-            if rating >= 0:
-                recommendations.append((key, rating))
+            lst = recommendations if rating >= 0 else unrecommendations
+            lst.append((key, rating))
+
+    @classmethod
+    def parse_recommendations(cls, message, pos=0):
+        recommendations = []
+        unrecommendations = []
+
+        cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         if message[pos:]:
-            pos, num2 = cls.unpack_uint32(message, pos)
-
-            for _ in range(num2):
-                pos, key = cls.unpack_string(message, pos)
-                pos, rating = cls.unpack_int32(message, pos)
-
-                # The server also includes recommendations here for some reason, don't add them
-                if rating < 0:
-                    unrecommendations.append((key, rating))
+            cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         return pos, recommendations, unrecommendations
 
