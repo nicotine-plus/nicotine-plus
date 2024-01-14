@@ -543,7 +543,10 @@ class RecommendationsMessage(SlskMessage):
             pos, rating = cls.unpack_int32(message, pos)
 
             lst = recommendations if rating >= 0 else unrecommendations
-            lst.append((key, rating))
+            item = (key, rating)
+
+            if item not in lst:
+                lst.append(item)
 
         return pos
 
