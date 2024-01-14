@@ -267,6 +267,8 @@ class Scanner:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
 
+                self.queue.put("initialized")
+
             if self.rescan:
                 self.queue.put("rescanning")
                 self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
@@ -1021,6 +1023,9 @@ class Shares:
                 elif item == "rescanning":
                     emit_event("shares-scanning")
 
+                elif item == "initialized":
+                    self.initialized = True
+
         return True
 
     def check_shares_available(self):
@@ -1096,7 +1101,6 @@ class Shares:
         except Exception:
             self.file_path_index = ()
 
-        self.initialized = True
         self.rescanning = False
 
         if successful:
