@@ -280,7 +280,6 @@ class MainWindow(Window):
         # Tab visibility/order
         self.append_main_tabs()
         self.set_tab_positions()
-        self.set_buddy_list_position()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
@@ -896,62 +895,6 @@ class MainWindow(Window):
         self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
         self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
 
-    def set_buddy_list_position(self):
-
-        parent_container = self.buddies.container.get_parent()
-        mode = config.sections["ui"]["buddylistinchatrooms"]
-
-        if mode not in {"tab", "chatrooms", "always"}:
-            mode = "tab"
-
-        if parent_container == self.buddy_list_container:
-            if mode == "always":
-                return
-
-            self.buddy_list_container.remove(self.buddies.container)
-            self.buddy_list_container.set_visible(False)
-
-        elif parent_container == self.chatrooms_buddy_list_container:
-            if mode == "chatrooms":
-                return
-
-            self.chatrooms_buddy_list_container.remove(self.buddies.container)
-            self.chatrooms_buddy_list_container.set_visible(False)
-
-        elif parent_container == self.userlist_content:
-            if mode == "tab":
-                return
-
-            self.userlist_content.remove(self.buddies.container)
-
-        if mode == "always":
-            if GTK_API_VERSION >= 4:
-                self.buddy_list_container.append(self.buddies.container)
-            else:
-                self.buddy_list_container.add(self.buddies.container)
-
-            self.buddies.side_toolbar.set_visible(True)
-            self.buddy_list_container.set_visible(True)
-            return
-
-        if mode == "chatrooms":
-            if GTK_API_VERSION >= 4:
-                self.chatrooms_buddy_list_container.append(self.buddies.container)
-            else:
-                self.chatrooms_buddy_list_container.add(self.buddies.container)
-
-            self.buddies.side_toolbar.set_visible(True)
-            self.chatrooms_buddy_list_container.set_visible(True)
-            return
-
-        if mode == "tab":
-            self.buddies.side_toolbar.set_visible(False)
-
-            if GTK_API_VERSION >= 4:
-                self.userlist_content.append(self.buddies.container)
-            else:
-                self.userlist_content.add(self.buddies.container)
-
     # Connection #
 
     def update_user_status(self, *_args):
@@ -1004,6 +947,10 @@ class MainWindow(Window):
             self.user_status_button.set_active(False)
             toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
 
+    def user_status(self, msg):
+        if msg.user == core.users.login_username:
+            self.update_user_status()
+
     # Search #
 
     def on_search(self, *_args):
@@ -1028,10 +975,6 @@ class MainWindow(Window):
         self.chatrooms.on_create_room()
 
     # Away Mode #
-
-    def user_status(self, msg):
-        if msg.user == core.users.login_username:
-            self.update_user_status()
 
     def set_auto_away(self, active=True):
 

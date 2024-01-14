@@ -28,6 +28,7 @@ from gi.repository import GObject
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -163,6 +164,8 @@ class Buddies:
         ):
             events.connect(event_name, callback)
 
+        self.set_buddy_list_position()
+
     def destroy(self):
 
         self.list_view.destroy()
@@ -181,12 +184,68 @@ class Buddies:
 
         return False
 
+    def set_buddy_list_position(self):
+
+        parent_container = self.container.get_parent()
+        mode = config.sections["ui"]["buddylistinchatrooms"]
+
+        if mode not in {"tab", "chatrooms", "always"}:
+            mode = "tab"
+
+        if parent_container == self.window.buddy_list_container:
+            if mode == "always":
+                return
+
+            self.window.buddy_list_container.remove(self.container)
+            self.window.buddy_list_container.set_visible(False)
+
+        elif parent_container == self.window.chatrooms_buddy_list_container:
+            if mode == "chatrooms":
+                return
+
+            self.window.chatrooms_buddy_list_container.remove(self.container)
+            self.window.chatrooms_buddy_list_container.set_visible(False)
+
+        elif parent_container == self.window.userlist_content:
+            if mode == "tab":
+                return
+
+            self.window.userlist_content.remove(self.container)
+
+        if mode == "always":
+            if GTK_API_VERSION >= 4:
+                self.window.buddy_list_container.append(self.container)
+            else:
+                self.window.buddy_list_container.add(self.container)
+
+            self.side_toolbar.set_visible(True)
+            self.window.buddy_list_container.set_visible(True)
+            return
+
+        if mode == "chatrooms":
+            if GTK_API_VERSION >= 4:
+                self.window.chatrooms_buddy_list_container.append(self.container)
+            else:
+                self.window.chatrooms_buddy_list_container.add(self.container)
+
+            self.side_toolbar.set_visible(True)
+            self.window.chatrooms_buddy_list_container.set_visible(True)
+            return
+
+        if mode == "tab":
+            self.side_toolbar.set_visible(False)
+
+            if GTK_API_VERSION >= 4:
+                self.window.userlist_content.append(self.container)
+            else:
+                self.window.userlist_content.add(self.container)
+
     def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in {"always", "chatrooms"}:
             return
 
-        self.window.userlist_content.set_visible(self.list_view.iterators)
+        self.window.userlist_content.set_visible(bool(self.list_view.iterators))
 
     def get_selected_username(self):
 

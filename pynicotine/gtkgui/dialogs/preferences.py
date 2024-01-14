@@ -3182,6 +3182,9 @@ class Preferences(Dialog):
         self.application.window.chatrooms.update_widgets()
         self.application.window.privatechat.update_widgets()
 
+        # Buddies
+        self.application.window.buddies.set_buddy_list_position()
+
         # Transfers
         core.downloads.update_transfer_limits()
         core.downloads.update_download_filters()
@@ -3198,7 +3201,6 @@ class Preferences(Dialog):
 
         # Main notebook
         self.application.window.set_tab_positions()
-        self.application.window.set_buddy_list_position()
         self.application.window.set_main_tabs_visibility()
         self.application.window.notebook.set_tab_text_colors()
 
