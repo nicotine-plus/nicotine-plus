@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2024-01-04 21:09+0000\n"
+"PO-Revision-Date: 2024-01-14 17:06+0000\n"
 "Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -2469,7 +2469,7 @@ msgstr "_Dot Privilēģijas"
 
 #: pynicotine/gtkgui/widgets/textview.py:452
 msgid "--- old messages above ---"
-msgstr "--- vecās ziņas augstāk ---"
+msgstr "--- iepriekšējās ziņas augstāk ---"
 
 #: pynicotine/gtkgui/widgets/theme.py:184
 msgid "Executable"
@@ -2547,7 +2547,7 @@ msgstr "Sākt Ziņapmaiņu"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:230
 msgid "Enter the name of the user whom you want to send a message:"
-msgstr "Ievadiet tā lietotāja vārdu, kuram vēlaties nosūtīt ziņu:"
+msgstr "Ievadiet lietotāja vārdu, kuram vēlaties nosūtīt ziņu:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:231
 msgid "_Message"
@@ -2555,7 +2555,7 @@ msgstr "_Ziņa"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:251
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr "Ievadiet tā lietotāja vārdu, kura profilu vēlaties skatīt:"
+msgstr "Ievadiet lietotāja vārdu, kura profilu vēlaties apskatīt:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:252
 msgid "_View Profile"
@@ -2563,7 +2563,7 @@ msgstr "_Skatīt Profilu"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:272
 msgid "Enter the name of the user whose shares you want to see:"
-msgstr "Ievadiet tā lietotāja vārdu, kura kopīgoto saturu vēlaties redzēt:"
+msgstr "Ievadiet lietotāja vārdu, kura koplietojumus vēlaties redzēt:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:273
 msgid "_Browse"
@@ -2580,11 +2580,11 @@ msgstr "Negrupēts"
 
 #: pynicotine/gtkgui/widgets/treeview.py:801
 msgid "Group by Folder"
-msgstr "Grupēšana pēc mapes"
+msgstr "Grupēšana pēc Mapes"
 
 #: pynicotine/gtkgui/widgets/treeview.py:804
 msgid "Group by User"
-msgstr "Grupēšana pēc lietotāja"
+msgstr "Grupēšana pēc Lietotāja"
 
 #: pynicotine/headless/application.py:74
 #, python-format
