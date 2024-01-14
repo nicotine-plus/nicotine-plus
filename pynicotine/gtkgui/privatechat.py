@@ -234,7 +234,7 @@ class PrivateChats(IconNotebook):
             return
 
         self.highlighted_users.append(user)
-        self.window.application.notifications.update_title()
+        self.window.update_title()
         self.window.application.tray_icon.update_icon()
 
     def unhighlight_user(self, user):
@@ -243,7 +243,7 @@ class PrivateChats(IconNotebook):
             return
 
         self.highlighted_users.remove(user)
-        self.window.application.notifications.update_title()
+        self.window.update_title()
         self.window.application.tray_icon.update_icon()
 
     def echo_private_message(self, user, text, message_type):

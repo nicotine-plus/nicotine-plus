@@ -275,7 +275,6 @@ class MainWindow(Window):
 
         # Actions and menu
         self.set_up_actions()
-        self.set_up_action_accels()
         self.set_up_menu()
 
         # Tab visibility/order
@@ -365,10 +364,51 @@ class MainWindow(Window):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        self.application.notifications.set_urgency_hint(False)
+        self.set_urgency_hint(False)
 
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
+
+    def update_title(self):
+
+        notification_text = ""
+
+        if not config.sections["notifications"]["notification_window_title"]:
+            # Reset Title
+            pass
+
+        elif self.privatechat.highlighted_users:
+            # Private Chats have a higher priority
+            user = self.privatechat.highlighted_users[-1]
+            notification_text = _("Private Message from %(user)s") % {"user": user}
+
+        elif self.chatrooms.highlighted_rooms:
+            # Allow for the possibility the username is not available
+            room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+
+        elif any(is_important for is_important in self.search.unread_pages.values()):
+            notification_text = _("Wishlist Results Found")
+
+        self.set_urgency_hint(bool(notification_text))
+
+        if not notification_text:
+            self.set_title(pynicotine.__application_name__)
+            return
+
+        self.set_title(f"{pynicotine.__application_name__} - {notification_text}")
+
+    def set_urgency_hint(self, enabled):
+
+        surface = self.get_surface()
+        is_active = self.is_active()
+
+        try:
+            surface.set_urgency_hint(enabled and not is_active)
+
+        except AttributeError:
+            # No support for urgency hints
+            pass
 
     def save_window_state(self):
 
@@ -459,137 +499,12 @@ class MainWindow(Window):
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
 
-    def set_up_action_accels(self):
-
-        for action_name, accelerators in (
-            ("win.main-menu", ["F10"]),
-            ("win.context-menu", ["<Shift>F10"]),
-            ("win.change-focus-view", ["F6"]),
-            ("win.show-log-pane", ["<Primary>l"]),
-            ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
-        ):
-            self.application.set_accels_for_action(action_name, accelerators)
-
-        for num in range(1, 10):
-            self.application.set_accels_for_action(f"win.primary-tab-{num}",
-                                                   [f"<Primary>{num}", f"<Alt>{num}"])
-
     # Primary Menus #
-
-    @staticmethod
-    def add_connection_section(menu):
-
-        menu.add_items(
-            ("=" + _("_Connect"), "app.connect"),
-            ("=" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("Soulseek _Privileges"), "app.soulseek-privileges"),
-            ("", None)
-        )
-
-    @staticmethod
-    def add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
-
-    def add_quit_item(self, menu):
-
-        menu.add_items(
-            ("", None),
-            ("#" + _("_Quit"), "app.confirm-quit-uploads")
-        )
-
-    def create_file_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        return menu
-
-    def add_browse_shares_section(self, menu):
-
-        menu.add_items(
-            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
-            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
-            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
-        )
-
-    def create_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None)
-        )
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_browse_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_help_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
-            ("#" + _("_Setup Assistant"), "app.setup-assistant"),
-            ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
-            ("", None),
-            ("#" + _("Report a _Bug"), "app.report-bug"),
-            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("", None),
-            ("#" + _("_About Nicotine+"), "app.about")
-        )
-
-        return menu
-
-    def create_hamburger_menu(self):
-        """Menu button menu (header bar enabled)"""
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            (">" + _("_Browse Shares"), self.create_browse_shares_menu()),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        menu.update_model()
-        return menu
-
-    def create_menu_bar(self):
-        """Classic menu bar (header bar disabled)"""
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            (">" + _("_File"), self.create_file_menu()),
-            (">" + _("_Shares"), self.create_shares_menu()),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-
-        menu.update_model()
-        return menu
 
     def set_up_menu(self):
 
-        menu_bar = self.create_menu_bar()
-        self.application.set_menubar(menu_bar.model)
-
-        hamburger_menu = self.create_hamburger_menu()
-        self.header_menu.set_menu_model(hamburger_menu.model)
+        menu = self.application.create_hamburger_menu()
+        self.header_menu.set_menu_model(menu.model)
 
         if GTK_API_VERSION == 3:
             return

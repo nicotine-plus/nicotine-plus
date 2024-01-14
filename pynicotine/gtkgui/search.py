@@ -171,7 +171,7 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            self.window.application.notifications.update_title()
+            self.window.update_title()
             break
 
     def on_search_mode(self, action, state):
@@ -904,7 +904,7 @@ class Search:
             tab_changed = self.searches.request_tab_changed(self.container, is_important=is_wish)
 
             if tab_changed and is_wish:
-                self.window.application.notifications.update_title()
+                self.window.update_title()
 
                 if config.sections["notifications"]["notification_popup_wish"]:
                     core.notifications.show_search_notification(

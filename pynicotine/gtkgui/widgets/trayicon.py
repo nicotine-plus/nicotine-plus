@@ -19,8 +19,6 @@
 import os
 import sys
 
-from locale import strxfrm
-
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
@@ -31,7 +29,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
-from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
@@ -50,7 +47,7 @@ class BaseImplementation:
         self.application = application
         self.menu_items = {}
         self.menu_item_id = 1
-        self.activate_callback = self.on_window_hide_unhide
+        self.activate_callback = application.on_window_hide_unhide
         self.is_visible = True
 
         self.create_menu()
@@ -87,23 +84,23 @@ class BaseImplementation:
 
     def create_menu(self):
 
-        self.show_hide_item = self.create_item("default", self.on_window_hide_unhide)
+        self.show_hide_item = self.create_item("default", self.application.on_window_hide_unhide)
 
         self.create_item()
 
-        self.downloads_item = self.create_item(_("Downloads"), self.on_downloads)
-        self.uploads_item = self.create_item(_("Uploads"), self.on_uploads)
+        self.downloads_item = self.create_item(_("Downloads"), self.application.on_downloads)
+        self.uploads_item = self.create_item(_("Uploads"), self.application.on_uploads)
 
         self.create_item()
 
-        self.connect_disconnect_item = self.create_item("default", self.on_connect_disconnect)
+        self.connect_disconnect_item = self.create_item("default", self.application.on_connect_disconnect)
         self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
 
         self.create_item()
 
-        self.send_message_item = self.create_item(_("_Send Message"), self.on_open_private_chat)
-        self.lookup_info_item = self.create_item(_("View User _Profile"), self.on_get_a_users_info)
-        self.lookup_shares_item = self.create_item(_("_Browse Shares"), self.on_get_a_users_shares)
+        self.send_message_item = self.create_item(_("_Send Message"), self.application.on_message_user)
+        self.lookup_info_item = self.create_item(_("View User _Profile"), self.application.on_view_user_profile)
+        self.lookup_shares_item = self.create_item(_("_Browse Shares"), self.application.on_browse_user_shares)
 
         self.create_item()
 
@@ -187,93 +184,6 @@ class BaseImplementation:
     def unload(self, is_shutdown=False):
         # Implemented in subclasses
         pass
-
-    def on_window_hide_unhide(self, *_args):
-
-        if self.application.window.is_visible():
-            self.application.window.hide()
-            return
-
-        self.application.window.present()
-
-    def on_connect_disconnect(self, *_args):
-
-        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
-            self.application.on_disconnect()
-            return
-
-        self.application.on_connect()
-
-    def on_downloads(self, *_args):
-        self.application.window.change_main_page(self.application.window.downloads_page)
-        self.application.window.present()
-
-    def on_uploads(self, *_args):
-        self.application.window.change_main_page(self.application.window.uploads_page)
-        self.application.window.present()
-
-    def on_open_private_chat_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.privatechat.show_user(user)
-        self.application.window.present()
-
-    def on_open_private_chat(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Start Messaging"),
-            message=_("Enter the name of the user whom you want to send a message:"),
-            action_button_label=_("_Message"),
-            callback=self.on_open_private_chat_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
-
-    def on_get_a_users_info_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userinfo.show_user(user)
-        self.application.window.present()
-
-    def on_get_a_users_info(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("View User Profile"),
-            message=_("Enter the name of the user whose profile you want to see:"),
-            action_button_label=_("_View Profile"),
-            callback=self.on_get_a_users_info_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
-
-    def on_get_a_users_shares_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userbrowse.browse_user(user)
-        self.application.window.present()
-
-    def on_get_a_users_shares(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Browse Shares"),
-            message=_("Enter the name of the user whose shares you want to see:"),
-            action_button_label=_("_Browse"),
-            callback=self.on_get_a_users_shares_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
 
 
 class StatusNotifierImplementation(BaseImplementation):
