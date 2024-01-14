@@ -507,10 +507,10 @@ class UserInfo:
 
     def update_edit_button_state(self):
 
-        is_personal_profile = (self.user == core.users.login_username or config.sections["server"]["login"])
+        local_username = core.users.login_username or config.sections["server"]["login"]
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
-            widget.set_visible(is_personal_profile)
+            widget.set_visible(self.user == local_username)
 
     def update_buddy_button_state(self):
         label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
