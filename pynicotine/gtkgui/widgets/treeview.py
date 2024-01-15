@@ -207,6 +207,12 @@ class TreeView:
             column.set_resizable(True)
             break
 
+        # Set first non-icon column as the expander column
+        for column in columns:
+            if column.type != "icon" and column.get_visible():
+                self.widget.set_expander_column(column)
+                break
+
     def _initialise_column_ids(self, columns):
 
         self._data_types = []
