@@ -63,13 +63,13 @@ class TreeView:
         self._column_ids = {}
         self._column_offsets = {}
         self._column_gvalues = []
+        self._column_gesture_controllers = []
         self._column_numbers = None
         self._default_sort_column = None
         self._default_sort_type = Gtk.SortType.ASCENDING
         self._sort_column = None
         self._sort_type = None
         self._persistent_sort = persistent_sort
-        self._clicked_column_reset_sort = None
         self._columns_changed_handler = None
         self._last_redraw_time = 0
         self._selection = self.widget.get_selection()
@@ -320,10 +320,6 @@ class TreeView:
                                        else Gtk.SortType.ASCENDING)
                     self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
-                    if self._sort_type == Gtk.SortType.DESCENDING:
-                        # If this column is clicked again, we reset to the default sorted state of treeview
-                        self._clicked_column_reset_sort = column_id
-
             if not isinstance(width, int):
                 width = None
 
@@ -352,8 +348,10 @@ class TreeView:
                 column.set_alignment(xalign)
 
             elif column_type == "progress":
+                xalign = 1
                 renderer = Gtk.CellRendererProgress(mode=mode, ypad=progress_padding)
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, value=column_index)
+                column.set_alignment(xalign)
 
             elif column_type == "toggle":
                 xalign = 0.5
@@ -377,7 +375,16 @@ class TreeView:
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, icon_name=column_index)
 
             column_header = column.get_button()
-            column_header.connect("clicked", self.on_column_header_pressed, column)
+
+            if GTK_API_VERSION >= 4:
+                gesture_click = Gtk.GestureClick()
+                column_header.add_controller(gesture_click)  # pylint: disable=no-member
+            else:
+                gesture_click = Gtk.GestureMultiPress(widget=column_header)
+
+            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            gesture_click.connect("released", self.on_column_header_pressed, column)
+            self._column_gesture_controllers.append(gesture_click)
 
             title_container = next(iter(column_header))
             title_widget = next(iter(title_container)) if xalign < 1 else list(title_container)[-1]
@@ -432,9 +439,13 @@ class TreeView:
         """Save a treeview's column widths and visibilities for the next
         session."""
 
+        self._sort_column, self._sort_type = self.model.get_sort_column_id()
+
+        if not self._widget_name:
+            return
+
         saved_columns = {}
         column_config = config.sections["columns"]
-        self._sort_column, self._sort_type = self.model.get_sort_column_id()
 
         for column in self.widget.get_columns():
             title = column.id
@@ -681,25 +692,40 @@ class TreeView:
     def on_delete_accelerator(self, _treeview, _state, callback):
         callback(self)
 
-    def on_column_header_pressed(self, _treeview, column):
+    def on_column_header_pressed(self, controller, _num_p, _pos_x, _pos_y, column):
         """Reset sorting when column header has been pressed three times."""
 
         self.save_columns()
 
         if self._default_sort_column is None:
             # No default sort column for treeview, keep standard GTK behavior
-            return
+            return False
 
-        if column.get_sort_order() == Gtk.SortType.DESCENDING:
-            # If this column is clicked again, we reset to the default sorted state of treeview
-            self._clicked_column_reset_sort = column.id
-            return
+        sort_column_id = column.get_sort_column_id()
 
-        if column.id == self._clicked_column_reset_sort:
+        if self._data_types[sort_column_id] == str:
+            # String value: ascending sort by default
+            first_sort_type = Gtk.SortType.ASCENDING
+            second_sort_type = Gtk.SortType.DESCENDING
+        else:
+            # Numerical value: descending sort by default
+            first_sort_type = Gtk.SortType.DESCENDING
+            second_sort_type = Gtk.SortType.ASCENDING
+
+        if self._sort_column != sort_column_id:
+            sort_type = first_sort_type
+
+        elif self._sort_type == first_sort_type:
+            sort_type = second_sort_type
+
+        elif self._sort_type == second_sort_type:
             # Reset treeview to default state
-            self.model.set_sort_column_id(self._default_sort_column, self._default_sort_type)
+            sort_column_id = self._default_sort_column
+            sort_type = self._default_sort_type
 
-        self._clicked_column_reset_sort = None
+        self.model.set_sort_column_id(sort_column_id, sort_type)
+        controller.set_state(Gtk.EventSequenceState.CLAIMED)
+        return True
 
     def on_column_header_toggled(self, _action, _state, columns, index):
 
