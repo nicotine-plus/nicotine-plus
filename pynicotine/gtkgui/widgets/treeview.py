@@ -168,19 +168,12 @@ class TreeView:
 
     def _append_columns(self, cols, column_config):
 
-        if not column_config:
-            for column in cols.values():
-                self.widget.append_column(column)
-            return
-
         # Restore column order from config
         for column_id in column_config:
             column = cols.get(column_id)
 
-            if column is None:
-                continue
-
-            self.widget.append_column(column)
+            if column is not None:
+                self.widget.append_column(column)
 
         added_columns = self.widget.get_columns()
 
@@ -189,21 +182,11 @@ class TreeView:
             if column not in added_columns:
                 self.widget.insert_column(column, index)
 
-    @staticmethod
-    def _hide_columns(cols, column_config):
-
+        # Read Show / Hide column settings from last session
         for column_id, column in cols.items():
-            # Read Show / Hide column settings from last session
-            if not column_config:
-                continue
+            column.set_visible(bool(column_config.get(column_id, {}).get("visible", True)))
 
-            try:
-                column.set_visible(column_config[column_id]["visible"])
-            except Exception:
-                # Invalid value
-                pass
-
-    def _set_last_column_autosize(self, *_args):
+    def _update_column_properties(self, *_args):
 
         columns = self.widget.get_columns()
         resizable_set = False
@@ -262,7 +245,7 @@ class TreeView:
         width_padding = 10 if GTK_API_VERSION >= 4 else 12
 
         column_widgets = {}
-        column_config = None
+        column_config = {}
         has_visible_column_header = False
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
@@ -302,16 +285,13 @@ class TreeView:
                 except KeyError:
                     column_config = config.sections["columns"][self._widget_name]
 
+                column_properties = column_config.get(column_id, {})
+                column_sort_type = column_properties.get("sort")
+
                 # Restore saved column width if the column size is fixed. For expandable
                 # columns, the width becomes the minimum width, so use the default value in those cases.
                 if not should_expand_column and column_type != "icon":
-                    try:
-                        width = column_config[column_id]["width"]
-                    except Exception:
-                        # Invalid value
-                        pass
-
-                column_sort_type = column_config.get(column_id, {}).get("sort")
+                    width = column_properties.get("width")
 
                 if column_sort_type and self._persistent_sort:
                     # Sort treeview by values in this column by default
@@ -319,9 +299,6 @@ class TreeView:
                     self._sort_type = (Gtk.SortType.DESCENDING if column_sort_type == "descending"
                                        else Gtk.SortType.ASCENDING)
                     self.model.set_sort_column_id(self._sort_column, self._sort_type)
-
-            if not isinstance(width, int):
-                width = None
 
             # Allow individual cells to receive visual focus
             mode = Gtk.CellRendererMode.ACTIVATABLE if len(columns) > 1 else Gtk.CellRendererMode.INERT
@@ -397,7 +374,7 @@ class TreeView:
             # Required for fixed height mode
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
-            if width is not None:
+            if isinstance(width, int):
                 column.set_resizable(column_type != "icon")
 
                 if width > 0:
@@ -430,9 +407,8 @@ class TreeView:
         self.widget.set_headers_visible(has_visible_column_header)
 
         self._append_columns(column_widgets, column_config)
-        self._hide_columns(column_widgets, column_config)
 
-        self._columns_changed_handler = self.widget.connect("columns-changed", self._set_last_column_autosize)
+        self._columns_changed_handler = self.widget.connect("columns-changed", self._update_column_properties)
         self.widget.emit("columns-changed")
 
     def save_columns(self):
@@ -727,11 +703,9 @@ class TreeView:
         controller.set_state(Gtk.EventSequenceState.CLAIMED)
         return True
 
-    def on_column_header_toggled(self, _action, _state, columns, index):
-
-        column = columns[index]
+    def on_column_header_toggled(self, _action, _state, column):
         column.set_visible(not column.get_visible())
-        self._set_last_column_autosize()
+        self._update_column_properties()
 
     def on_column_header_menu(self, menu, _treeview):
 
@@ -754,7 +728,7 @@ class TreeView:
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-            menu.actions[title].connect("activate", self.on_column_header_toggled, columns, column_num - 1)
+            menu.actions[title].connect("activate", self.on_column_header_toggled, column)
 
     def on_column_position_changed(self, column, _param):
         """Save column position and width to config."""
