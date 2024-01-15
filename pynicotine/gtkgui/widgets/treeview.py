@@ -421,8 +421,6 @@ class TreeView:
         """Save a treeview's column widths and visibilities for the next
         session."""
 
-        self._sort_column, self._sort_type = self.model.get_sort_column_id()
-
         if not self._widget_name:
             return
 
@@ -677,10 +675,11 @@ class TreeView:
     def on_column_header_pressed(self, controller, _num_p, _pos_x, _pos_y, column):
         """Reset sorting when column header has been pressed three times."""
 
-        self.save_columns()
+        self._sort_column, self._sort_type = self.model.get_sort_column_id()
 
         if self._default_sort_column is None:
             # No default sort column for treeview, keep standard GTK behavior
+            self.save_columns()
             return False
 
         sort_column_id = column.get_sort_column_id()
@@ -695,17 +694,20 @@ class TreeView:
             second_sort_type = Gtk.SortType.ASCENDING
 
         if self._sort_column != sort_column_id:
-            sort_type = first_sort_type
+            self._sort_column = sort_column_id
+            self._sort_type = first_sort_type
 
         elif self._sort_type == first_sort_type:
-            sort_type = second_sort_type
+            self._sort_type = second_sort_type
 
         elif self._sort_type == second_sort_type:
             # Reset treeview to default state
-            sort_column_id = self._default_sort_column
-            sort_type = self._default_sort_type
+            self._sort_column = self._default_sort_column
+            self._sort_type = self._default_sort_type
 
-        self.model.set_sort_column_id(sort_column_id, sort_type)
+        self.model.set_sort_column_id(self._sort_column, self._sort_type)
+        self.save_columns()
+
         controller.set_state(Gtk.EventSequenceState.CLAIMED)
         return True
 
