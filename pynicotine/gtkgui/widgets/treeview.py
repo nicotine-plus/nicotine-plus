@@ -703,8 +703,8 @@ class TreeView:
 
         sort_column_id = column.get_sort_column_id()
 
-        if self._data_types[sort_column_id] == str:
-            # String value: ascending sort by default
+        if self._data_types[sort_column_id] == str or column.id in {"in_queue", "queue_position"}:
+            # String value (or queue position column): ascending sort by default
             first_sort_type = Gtk.SortType.ASCENDING
             second_sort_type = Gtk.SortType.DESCENDING
         else:
