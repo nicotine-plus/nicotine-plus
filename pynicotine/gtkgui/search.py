@@ -495,7 +495,7 @@ class Search:
             entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
-            self.window, parent=self.tree_container, name="file_search",
+            self.window, parent=self.tree_container, name="file_search", persistent_sort=True,
             multi_select=True, activate_row_callback=self.on_row_activated, focus_in_callback=self.on_refilter,
             columns={
                 # Visible columns
@@ -516,8 +516,7 @@ class Search:
                     "title": _("Speed"),
                     "width": 120,
                     "sort_column": "speed_data",
-                    "sensitive_column": "free_slot_data",
-                    "default_sort_type": "descending"
+                    "sensitive_column": "free_slot_data"
                 },
                 "in_queue": {
                     "column_type": "number",
@@ -582,6 +581,7 @@ class Search:
                 "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_UINT64,
+                    "default_sort_type": "ascending",
                     "iterator_key": True
                 }
             }
