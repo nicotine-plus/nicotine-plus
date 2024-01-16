@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.events import events
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.slskmessages import UserStatus
 
@@ -35,20 +36,26 @@ class Plugin(BasePlugin):
                 "type": "list string"
             }
         }
-        self.user_statuses = {}
+        self.processed_users = set()
+
+    def browse_user(self, user):
+        if user in self.processed_users:
+            self.core.userbrowse.browse_user(user, switch_page=False)
 
     def user_status_notification(self, user, status, _privileged):
+
+        if status == UserStatus.OFFLINE:
+            self.processed_users.discard(user)
+            return
 
         if user not in self.settings["users"]:
             return
 
-        if status == UserStatus.OFFLINE:
-            self.user_statuses[user] = status
-            return
+        if user not in self.processed_users:
+            # Wait 30 seconds before browsing shares to ensure they are ready
+            # and the server doesn't send an invalid port for the user
+            self.processed_users.add(user)
+            events.schedule(delay=30, callback=lambda: self.browse_user(user))
 
-        previous_status = self.user_statuses.get(user, UserStatus.OFFLINE)
-
-        if previous_status == UserStatus.OFFLINE:
-            # User was previously offline
-            self.user_statuses[user] = status
-            self.core.userbrowse.browse_user(user, switch_page=False)
+    def server_disconnect_notification(self, userchoice):
+        self.processed_users.clear()
