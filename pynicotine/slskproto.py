@@ -948,6 +948,7 @@ class NetworkThread(Thread):
         self._close_socket(sock)
         self._num_sockets -= 1
 
+        conn_obj.sock = None
         conn_obj.ibuf.clear()
         conn_obj.obuf.clear()
 
@@ -1593,7 +1594,7 @@ class NetworkThread(Thread):
                         else:
                             # We already have a direct connection, but some clients may send a message over
                             # the indirect connection. Keep it open.
-                            log.add_conn("Direct connection was already established, keeping as primary connection")
+                            log.add_conn("Direct connection was already established, keeping it as primary connection")
 
                         if is_direct_conn_in_progress:
                             log.add_conn("Stopping direct connection attempt to user %s", init.target_user)
@@ -2470,6 +2471,14 @@ class NetworkThread(Thread):
 
         elif init.conn_type == ConnectionType.DISTRIBUTED:
             self._process_distrib_input(conn_obj)
+
+        if conn_obj.sock is not None and init.sock != conn_obj.sock:
+            init.sock = conn_obj.sock
+            log.add_conn(("Received message on secondary connection of type %(type)s to user %(user)s, "
+                          "promoting to primary connection"), {
+                "type": init.conn_type,
+                "user": init.target_user
+            })
 
     def _process_queue_messages(self):
 
