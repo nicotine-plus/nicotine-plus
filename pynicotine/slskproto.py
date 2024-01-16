@@ -781,9 +781,20 @@ class NetworkThread(Thread):
             })
             return
 
+        _ip_address, port = addr
+
         if not init.indirect:
             # Also request indirect connection in case the user's port is closed
             self._connect_to_peer_indirect(init)
+
+        if port <= 0:
+            log.add_conn(("Skipping direct connection attempt of type %(type)s to user %(user)s "
+                          "due to invalid address %(addr)s"), {
+                "type": conn_type,
+                "user": username,
+                "addr": addr
+            })
+            return
 
         self._queue_network_message(InitPeerConnection(addr, init))
 
@@ -1359,7 +1370,7 @@ class NetworkThread(Thread):
 
                         for init in pending_init_msgs:
                             # We now have the IP address for a user we previously didn't know,
-                            # attempt a direct connection to the peer/user
+                            # attempt a connection with the peer/user
                             if user_offline:
                                 events.emit_main_thread(
                                     "peer-connection-error", username, init.outgoing_msgs[:], is_offline=True)
@@ -1367,7 +1378,7 @@ class NetworkThread(Thread):
                                 self._connect_to_peer(username, addr, init)
 
                         # We already store a local IP address for our username
-                        if username != self._server_username and not user_offline:
+                        if username != self._server_username and msg.port > 0:
                             self._user_addresses[username] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
