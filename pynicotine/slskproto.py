@@ -1002,6 +1002,9 @@ class NetworkThread(Thread):
             "addr": conn_obj.addr
         })
 
+        if init.sock == sock:
+            init.sock = None
+
         if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(username, None):
             if len(self._child_peers) == self._max_distrib_children - 1:
                 log.add_conn("Available to accept a new distributed child peer")
@@ -1033,7 +1036,6 @@ class NetworkThread(Thread):
 
         if init in self._out_indirect_conn_request_times:
             # Indirect connection attempt in progress, remove init message later on timeout
-            user_init.sock = None
             log.add_conn("Cannot remove PeerInit message, since an indirect connection attempt is still in progress")
             return
 
@@ -2473,12 +2475,12 @@ class NetworkThread(Thread):
             self._process_distrib_input(conn_obj)
 
         if conn_obj.sock is not None and init.sock != conn_obj.sock:
-            init.sock = conn_obj.sock
             log.add_conn(("Received message on secondary connection of type %(type)s to user %(user)s, "
                           "promoting to primary connection"), {
                 "type": init.conn_type,
                 "user": init.target_user
             })
+            init.sock = conn_obj.sock
 
     def _process_queue_messages(self):
 
