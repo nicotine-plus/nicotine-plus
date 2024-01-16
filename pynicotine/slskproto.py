@@ -511,18 +511,19 @@ class NetworkThread(Thread):
                 continue
 
             log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
-                          "token %(token)s expired, giving up"), {
+                          "token %(token)s expired"), {
                 "type": conn_type,
                 "user": username,
                 "token": init.token
             })
 
-            events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
+            if init.sock is None:
+                # No direct connection was established, give up
+                events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
+                init.outgoing_msgs.clear()
+                self._username_init_msgs.pop(username + conn_type, None)
 
             self._token_init_msgs.pop(init.token, None)
-            self._username_init_msgs.pop(username + conn_type, None)
-            init.outgoing_msgs.clear()
-
             timed_out_requests.add(init)
 
         if not timed_out_requests:
@@ -891,16 +892,6 @@ class NetworkThread(Thread):
             })
             self._queue_network_message(init)
 
-            # Direct and indirect connections are attempted at the same time, clean up
-            self._token_init_msgs.pop(token, None)
-
-            if self._out_indirect_conn_request_times.pop(init, None):
-                log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
-                              "%(user)s"), {
-                    "type": conn_type,
-                    "user": username
-                })
-
         self._process_conn_messages(init)
 
     def _replace_existing_connection(self, init):
@@ -994,7 +985,7 @@ class NetworkThread(Thread):
                     sock=sock, timed_out=timed_out)
 
         elif init is not None:
-            if callback:
+            if callback and init.sock == sock:
                 events.emit_main_thread("peer-connection-closed", init.target_user, init.outgoing_msgs[:])
 
         else:
@@ -1041,6 +1032,7 @@ class NetworkThread(Thread):
 
         if init in self._out_indirect_conn_request_times:
             # Indirect connection attempt in progress, remove init message later on timeout
+            user_init.sock = None
             log.add_conn("Cannot remove PeerInit message, since an indirect connection attempt is still in progress")
             return
 
@@ -1585,8 +1577,9 @@ class NetworkThread(Thread):
                             should_close_connection = True
                             break
 
-                        sock_in_progress = init.sock
-                        init.sock = conn_obj.sock
+                        previous_sock = init.sock
+                        is_direct_conn_in_progress = (
+                            previous_sock is not None and previous_sock in self._conns_in_progress)
                         self._out_indirect_conn_request_times.pop(init, None)
 
                         log.add_conn("Indirect connection to user %(user)s with token %(token)s established", {
@@ -1594,9 +1587,17 @@ class NetworkThread(Thread):
                             "token": msg.token
                         })
 
-                        if sock_in_progress is not None:
+                        if previous_sock is None or is_direct_conn_in_progress:
+                            init.sock = conn_obj.sock
+                            log.add_conn("Using as primary connection, since no direct connection is established")
+                        else:
+                            # We already have a direct connection, but some clients may send a message over
+                            # the indirect connection. Keep it open.
+                            log.add_conn("Direct connection was already established, keeping as primary connection")
+
+                        if is_direct_conn_in_progress:
                             log.add_conn("Stopping direct connection attempt to user %s", init.target_user)
-                            self._close_connection(self._conns_in_progress, sock_in_progress, callback=False)
+                            self._close_connection(self._conns_in_progress, previous_sock, callback=False)
 
                     elif msg_class is PeerInit:
                         username = msg.target_user
