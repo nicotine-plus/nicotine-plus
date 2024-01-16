@@ -261,7 +261,6 @@ class Transfers:
     def on_focus(self, *_args):
 
         self.update_model(select_parent=(self.pending_parent_rows_timer_id is not None))
-        self.window.notebook.remove_tab_changed(self.transfer_page)
 
         if self.container.get_visible():
             self.tree_view.grab_focus()
@@ -314,10 +313,6 @@ class Transfers:
             self.selected_users[transfer.username] = None
 
         self.select_child_transfers(transfer)
-
-    def new_transfer_notification(self, finished=False):
-        if self.window.current_page_id != self.transfer_page.id:
-            self.window.notebook.request_tab_changed(self.transfer_page, is_important=finished)
 
     def on_file_search(self, *_args):
 

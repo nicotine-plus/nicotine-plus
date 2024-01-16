@@ -465,8 +465,6 @@ class Downloads(Transfers):
         self._file_downloaded_actions(username, download_file_path)
         self._folder_downloaded_actions(username, transfer.folder_path)
 
-        finished = True
-        events.emit("download-notification", finished)
         core.pluginhandler.download_finished_notification(username, virtual_path, download_file_path)
 
         log.add_download(
@@ -1195,8 +1193,6 @@ class Downloads(Transfers):
             else:
                 self._finish_transfer(download)
                 need_update = False
-
-        events.emit("download-notification")
 
         if need_update:
             self._update_transfer(download)

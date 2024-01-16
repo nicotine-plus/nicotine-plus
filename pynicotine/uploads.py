@@ -1054,8 +1054,6 @@ class Uploads(Transfers):
                 self._finish_transfer(upload)
                 need_update = False
 
-        events.emit("upload-notification")
-
         if need_update:
             self._update_transfer(upload)
 

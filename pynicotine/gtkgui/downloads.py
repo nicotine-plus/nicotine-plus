@@ -86,7 +86,6 @@ class Downloads(Transfers):
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
-            ("download-notification", self.new_transfer_notification),
             ("start", self.start),
             ("update-download", self.update_model)
         ):

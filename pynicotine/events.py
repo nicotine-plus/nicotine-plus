@@ -161,7 +161,6 @@ EVENT_NAMES = {
     "download-connection-closed",
     "download-file-error",
     "download-large-folder",
-    "download-notification",
     "file-connection-closed",
     "file-download-progress",
     "file-transfer-init",
@@ -181,7 +180,6 @@ EVENT_NAMES = {
     "upload-denied",
     "upload-failed",
     "upload-file-error",
-    "upload-notification",
 
     # User info
     "user-info-progress",
