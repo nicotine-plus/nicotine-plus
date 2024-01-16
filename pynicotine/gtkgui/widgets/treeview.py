@@ -77,6 +77,7 @@ class TreeView:
         self._v_adjustment = parent.get_vadjustment()
         self._v_adjustment_upper = 0
         self._v_adjustment_value = 0
+        self._is_scrolling_to_row = False
         self.notify_value_handler = self._v_adjustment.connect("notify::value", self.on_v_adjustment_value)
 
         if GTK_API_VERSION >= 4:
@@ -564,6 +565,7 @@ class TreeView:
             if expand_rows:
                 self.widget.expand_to_path(path)
 
+            self._is_scrolling_to_row = True
             self.widget.set_cursor(path)
             self.widget.scroll_to_cell(path, column=None, use_align=True, row_align=0.5, col_align=0.5)
             return
@@ -754,7 +756,7 @@ class TreeView:
 
         upper = self._v_adjustment.get_upper()
 
-        if upper != self._v_adjustment_upper and self._v_adjustment_value <= 0:
+        if not self._is_scrolling_to_row and upper != self._v_adjustment_upper and self._v_adjustment_value <= 0:
             # When new rows are added while sorting is enabled, treeviews
             # auto-scroll to the new position of the currently visible row.
             # Disable this behavior while we're at the top to prevent jumping
@@ -764,6 +766,7 @@ class TreeView:
             self._v_adjustment_value = self._v_adjustment.get_value()
 
         self._v_adjustment_upper = upper
+        self._is_scrolling_to_row = False
 
     def on_search_match(self, model, _column, search_term, iterator):
 
