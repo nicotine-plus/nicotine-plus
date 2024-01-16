@@ -723,7 +723,7 @@ class NetworkThread(Thread):
 
             init.outgoing_msgs.append(message)
 
-            if init.sock is not None:
+            if init.sock is not None and init.sock in self._conns:
                 # We have initiated a connection previously, and it's ready
                 self._process_conn_messages(init)
 
@@ -925,6 +925,7 @@ class NetworkThread(Thread):
         prev_init.outgoing_msgs = []
 
         self._close_connection(self._conns, prev_init.sock, callback=False)
+        self._close_connection(self._conns_in_progress, prev_init.sock, callback=False)
 
     @staticmethod
     def _close_socket(sock):
@@ -1033,7 +1034,7 @@ class NetworkThread(Thread):
             log.add_conn("Cannot remove PeerInit message, since the connection has been superseded")
             return
 
-        if connection_list is self._conns_in_progress and user_init.sock is not None:
+        if connection_list is self._conns_in_progress and user_init.sock != sock:
             # Outgoing connection failed, but an indirect connection was already established
             log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
@@ -1584,6 +1585,7 @@ class NetworkThread(Thread):
                             should_close_connection = True
                             break
 
+                        sock_in_progress = init.sock
                         init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(init, None)
 
@@ -1591,6 +1593,10 @@ class NetworkThread(Thread):
                             "user": init.target_user,
                             "token": msg.token
                         })
+
+                        if sock_in_progress is not None:
+                            log.add_conn("Stopping direct connection attempt to user %s", init.target_user)
+                            self._close_connection(self._conns_in_progress, sock_in_progress, callback=False)
 
                     elif msg_class is PeerInit:
                         username = msg.target_user
@@ -1679,6 +1685,7 @@ class NetworkThread(Thread):
             self._close_socket(sock)
             return
 
+        msg_obj.init.sock = sock
         self._conns_in_progress[sock] = conn_obj
         self._selector.register(sock, selector_events)
         self._num_sockets += 1
