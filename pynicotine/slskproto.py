@@ -782,28 +782,12 @@ class NetworkThread(Thread):
             })
             return
 
-        _ip_address, port = addr
-
-        if not init.indirect:
-            # Also request indirect connection in case the user's port is closed
-            self._connect_to_peer_indirect(init)
-
-        if port <= 0:
-            log.add_conn(("Skipping direct connection attempt of type %(type)s to user %(user)s "
-                          "due to invalid address %(addr)s"), {
-                "type": conn_type,
-                "user": username,
-                "addr": addr
-            })
-            return
-
-        self._queue_network_message(InitPeerConnection(addr, init))
-
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             "type": conn_type,
             "user": username,
             "addr": addr
         })
+        self._init_peer_connection(InitPeerConnection(addr, init))
 
     def _connect_error(self, error, conn_obj):
 
@@ -1672,9 +1656,31 @@ class NetworkThread(Thread):
 
     def _init_peer_connection(self, msg_obj):
 
+        if self._num_sockets >= self.MAX_SOCKETS:
+            # Connection limit reached, re-queue
+            self._queue_network_message(msg_obj)
+            return
+
+        init = msg_obj.init
+        addr = msg_obj.addr
+        _ip_address, port = addr
+
+        if not init.indirect:
+            # Also request indirect connection in case the user's port is closed
+            self._connect_to_peer_indirect(init)
+
+        if port <= 0:
+            log.add_conn(("Skipping direct connection attempt of type %(type)s to user %(user)s "
+                          "due to invalid address %(addr)s"), {
+                "type": init.conn_type,
+                "user": init.target_user,
+                "addr": addr
+            })
+            return
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, selector_events=selector_events, init=msg_obj.init)
+        conn_obj = PeerConnection(sock=sock, addr=addr, selector_events=selector_events, init=init)
 
         sock.setblocking(False)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
@@ -1682,14 +1688,14 @@ class NetworkThread(Thread):
         self._bind_socket_interface(sock)
 
         try:
-            sock.connect_ex(msg_obj.addr)
+            sock.connect_ex(addr)
 
         except OSError as error:
             self._connect_error(error, conn_obj)
             self._close_socket(sock)
             return
 
-        msg_obj.init.sock = sock
+        init.sock = sock
         self._conns_in_progress[sock] = conn_obj
         self._selector.register(sock, selector_events)
         self._num_sockets += 1
@@ -2272,11 +2278,7 @@ class NetworkThread(Thread):
         msg_class = msg_obj.__class__
 
         if msg_class is InitPeerConnection:
-            if self._num_sockets < self.MAX_SOCKETS:
-                self._init_peer_connection(msg_obj)
-            else:
-                # Connection limit reached, re-queue
-                self._queue_network_message(msg_obj)
+            self._init_peer_connection(msg_obj)
 
         elif msg_class is CloseConnection and msg_obj.sock in self._conns:
             sock = msg_obj.sock
