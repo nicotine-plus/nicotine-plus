@@ -942,6 +942,7 @@ class NetworkThread(Thread):
             return
 
         init = conn_obj.init
+        is_connection_replaced = (init is not None and init.sock != sock)
 
         if sock is self._parent_socket and self._should_process_queue:
             self._send_have_no_parent()
@@ -970,7 +971,7 @@ class NetworkThread(Thread):
                     sock=sock, timed_out=timed_out)
 
         elif init is not None:
-            if callback and init.sock == sock:
+            if callback and not is_connection_replaced:
                 events.emit_main_thread("peer-connection-closed", init.target_user, init.outgoing_msgs[:])
 
         else:
@@ -986,7 +987,7 @@ class NetworkThread(Thread):
             "addr": conn_obj.addr
         })
 
-        if init.sock == sock:
+        if not is_connection_replaced:
             init.sock = None
 
         if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(username, None):
@@ -1008,14 +1009,9 @@ class NetworkThread(Thread):
             "addr": conn_obj.addr
         })
 
-        if init is not user_init:
+        if is_connection_replaced or init is not user_init:
             # Don't remove init message if connection has been superseded
             log.add_conn("Cannot remove PeerInit message, since the connection has been superseded")
-            return
-
-        if connection_list is self._conns_in_progress and user_init.sock != sock:
-            # Outgoing connection failed, but an indirect connection was already established
-            log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
 
         if init in self._out_indirect_conn_request_times:
