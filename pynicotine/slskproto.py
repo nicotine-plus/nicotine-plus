@@ -899,8 +899,8 @@ class NetworkThread(Thread):
         init.outgoing_msgs = prev_init.outgoing_msgs
         prev_init.outgoing_msgs = []
 
-        self._close_connection(self._conns, prev_init.sock, callback=False)
-        self._close_connection(self._conns_in_progress, prev_init.sock, callback=False)
+        self._close_connection(self._conns, prev_init.sock)
+        self._close_connection(self._conns_in_progress, prev_init.sock)
 
     @staticmethod
     def _close_socket(sock):
@@ -920,7 +920,7 @@ class NetworkThread(Thread):
         log.add_conn("Closing socket %s", sock)
         sock.close()
 
-    def _close_connection(self, connection_list, sock, callback=True):
+    def _close_connection(self, connection_list, sock):
 
         conn_obj = connection_list.pop(sock, None)
 
@@ -942,10 +942,35 @@ class NetworkThread(Thread):
             return
 
         init = conn_obj.init
-        is_connection_replaced = (init is not None and init.sock != sock)
 
-        if sock is self._parent_socket and self._should_process_queue:
-            self._send_have_no_parent()
+        if init is None:
+            # No peer init message present, nothing to do
+            return
+
+        conn_type = init.conn_type
+        username = init.target_user
+        is_connection_replaced = (init.sock != sock)
+
+        log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
+            "type": conn_type,
+            "user": username,
+            "addr": conn_obj.addr
+        })
+
+        if not is_connection_replaced:
+            init.sock = None
+
+        if conn_type == ConnectionType.PEER:
+            if (not is_connection_replaced and connection_list is not self._conns_in_progress
+                    and self._should_process_queue):
+                events.emit_main_thread("peer-connection-closed", username, init.outgoing_msgs[:])
+
+        elif conn_type == ConnectionType.DISTRIBUTED:
+            if username in self._child_peers:
+                self._remove_child_peer_connection(username)
+
+            elif sock is self._parent_socket:
+                self._send_have_no_parent()
 
         elif conn_obj.fileinit is not None:
             if self._is_transferring_download(conn_obj):
@@ -964,38 +989,11 @@ class NetworkThread(Thread):
 
                 self._calc_upload_limit_function()
 
-            if callback:
+            if self._should_process_queue:
                 timed_out = (time.monotonic() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
-                    "file-connection-closed", username=init.target_user, token=conn_obj.fileinit.token,
+                    "file-connection-closed", username=username, token=conn_obj.fileinit.token,
                     sock=sock, timed_out=timed_out)
-
-        elif init is not None:
-            if callback and not is_connection_replaced:
-                events.emit_main_thread("peer-connection-closed", init.target_user, init.outgoing_msgs[:])
-
-        else:
-            # No peer init message present, nothing to do
-            return
-
-        conn_type = init.conn_type
-        username = init.target_user
-
-        log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
-            "type": conn_type,
-            "user": username,
-            "addr": conn_obj.addr
-        })
-
-        if not is_connection_replaced:
-            init.sock = None
-
-        if conn_type == ConnectionType.DISTRIBUTED and self._child_peers.pop(username, None):
-            if len(self._child_peers) == self._max_distrib_children - 1:
-                log.add_conn("Available to accept a new distributed child peer")
-                self._send_message_to_server(AcceptChildren(True))
-
-            log.add_conn("List of current child peers: %s", str(list(self._child_peers.keys())))
 
         init_key = username + conn_type
         user_init = self._username_init_msgs.get(init_key)
@@ -1059,7 +1057,7 @@ class NetworkThread(Thread):
 
         for sock in stale_sockets:
             self._connect_error("Timed out", self._conns_in_progress[sock])
-            self._close_connection(self._conns_in_progress, sock, callback=False)
+            self._close_connection(self._conns_in_progress, sock)
 
         stale_sockets.clear()
 
@@ -1463,10 +1461,10 @@ class NetworkThread(Thread):
         self._user_addresses.clear()
 
         for sock in self._conns.copy():
-            self._close_connection(self._conns, sock, callback=False)
+            self._close_connection(self._conns, sock)
 
         for sock in self._conns_in_progress.copy():
-            self._close_connection(self._conns_in_progress, sock, callback=False)
+            self._close_connection(self._conns_in_progress, sock)
 
         self._queue.clear()
         self._pending_init_msgs.clear()
@@ -1580,7 +1578,7 @@ class NetworkThread(Thread):
 
                         if is_direct_conn_in_progress:
                             log.add_conn("Stopping direct connection attempt to user %s", init.target_user)
-                            self._close_connection(self._conns_in_progress, previous_sock, callback=False)
+                            self._close_connection(self._conns_in_progress, previous_sock)
 
                     elif msg_class is PeerInit:
                         username = msg.target_user
@@ -2026,6 +2024,19 @@ class NetworkThread(Thread):
                           "no longer accepting new connections"), self._max_distrib_children)
             self._send_message_to_server(AcceptChildren(False))
 
+    def _remove_child_peer_connection(self, username):
+
+        self._child_peers.pop(username, None)
+
+        if not self._should_process_queue:
+            return
+
+        if len(self._child_peers) == self._max_distrib_children - 1:
+            log.add_conn("Available to accept a new distributed child peer")
+            self._send_message_to_server(AcceptChildren(True))
+
+        log.add_conn("List of current child peers: %s", str(list(self._child_peers.keys())))
+
     def _send_message_to_child_peers(self, msg):
 
         msg_class = msg.__class__
@@ -2076,6 +2087,9 @@ class NetworkThread(Thread):
         The server should either send us a PossibleParents message, or
         start sending us search requests.
         """
+
+        if not self._should_process_queue:
+            return
 
         self._parent_socket = None
         self._branch_level = 0
@@ -2276,9 +2290,8 @@ class NetworkThread(Thread):
         if msg_class is InitPeerConnection:
             self._init_peer_connection(msg_obj)
 
-        elif msg_class is CloseConnection and msg_obj.sock in self._conns:
-            sock = msg_obj.sock
-            self._close_connection(self._conns, sock)
+        elif msg_class is CloseConnection:
+            self._close_connection(self._conns, msg_obj.sock)
 
         elif msg_class is CloseConnectionIP:
             self._close_connection_by_ip(msg_obj.addr)
@@ -2372,7 +2385,7 @@ class NetworkThread(Thread):
 
             except OSError as error:
                 self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._conns_in_progress, sock, callback=False)
+                self._close_connection(self._conns_in_progress, sock)
 
             return
 
