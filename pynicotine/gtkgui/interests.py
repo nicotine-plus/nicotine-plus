@@ -48,7 +48,6 @@ class Interests:
             self.recommendations_button,
             self.recommendations_label,
             self.recommendations_list_container,
-            self.similar_users_button,
             self.similar_users_label,
             self.similar_users_list_container
         ) = ui.load(scope=self, path="interests.ui")
@@ -235,7 +234,6 @@ class Interests:
             return
 
         self.recommendations_button.set_sensitive(True)
-        self.similar_users_button.set_sensitive(True)
 
         if self.window.current_page_id != self.window.interests_page.id:
             # Only populate recommendations if the tab is open on login
@@ -244,8 +242,13 @@ class Interests:
         self.populate_recommendations()
 
     def server_disconnect(self, *_args):
+
         self.recommendations_button.set_sensitive(False)
-        self.similar_users_button.set_sensitive(False)
+
+        for iterator in self.similar_users_list_view.iterators.values():
+            self.similar_users_list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
+
+        self.populated_recommends = False
 
     def populate_recommendations(self):
         """Populates the lists of recommendations and similar users if
@@ -255,7 +258,6 @@ class Interests:
             return
 
         self.on_recommendations_clicked()
-        self.on_similar_users_clicked()
 
         self.populated_recommends = True
 
@@ -381,13 +383,17 @@ class Interests:
 
     def on_recommendations_clicked(self, *_args):
 
+        self.recommendations_label.set_label(_("Recommendations"))
+        self.similar_users_label.set_label(_("Similar Users"))
+
+        self.recommendations_list_view.clear()
+        self.similar_users_list_view.clear()
+
         if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
             core.interests.request_global_recommendations()
-            return
+        else:
+            core.interests.request_recommendations()
 
-        core.interests.request_recommendations()
-
-    def on_similar_users_clicked(self, *_args):
         core.interests.request_similar_users()
 
     def set_recommendations(self, recommendations, item=None):
