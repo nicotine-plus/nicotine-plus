@@ -2869,11 +2869,12 @@ class PeerInit(PeerInitMessage):
 
     __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect", "token", "outgoing_msgs")
 
-    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, indirect=False, token=0):
+    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, indirect=False, token=None):
         self.sock = sock
         self.init_user = init_user      # username of peer who initiated the message
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
+
         self.indirect = indirect
         self.token = token
         self.outgoing_msgs = []
@@ -2882,7 +2883,7 @@ class PeerInit(PeerInitMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.init_user))
         msg.extend(self.pack_string(self.conn_type))
-        msg.extend(self.pack_uint32(self.token))
+        msg.extend(self.pack_uint32(0))
 
         return msg
 
