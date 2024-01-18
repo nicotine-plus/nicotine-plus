@@ -121,3 +121,11 @@ class SearchTest(TestCase):
         results = core.search._create_search_result_list(  # pylint: disable=protected-access
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, set())
+
+        included_words = {"iso"}
+        excluded_words = {"system"}
+        partial_words = {"ibberish"}
+
+        results = core.search._create_search_result_list(  # pylint: disable=protected-access
+            included_words, excluded_words, partial_words, max_results, word_index)
+        self.assertEqual(results, set())

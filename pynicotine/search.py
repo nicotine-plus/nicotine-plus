@@ -494,13 +494,13 @@ class Search:
     def _update_search_results(results, word_indices, excluded=False):
         """Updates the search result list with indices for a new word."""
 
-        if word_indices is None:
+        if not word_indices:
             if excluded:
                 # We don't care if an excluded word doesn't exist in our DB
                 return results
 
             # Included word does not exist in our DB, no results
-            return None
+            return set()
 
         if results is None:
             if excluded:
@@ -559,8 +559,7 @@ class Search:
                     if num_partial_results >= max_results:
                         break
 
-            if partial_results:
-                results = self._update_search_results(results, partial_results)
+            results = self._update_search_results(results, partial_results)
 
         # Included search words (e.g. hello)
         start_results = word_index.get(start_word)
