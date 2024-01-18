@@ -298,7 +298,7 @@ class TreeView:
                 # Restore saved column width if the column size is fixed. For expandable
                 # columns, the width becomes the minimum width, so use the default value in those cases.
                 if not should_expand_column and column_type != "icon":
-                    width = column_properties.get("width")
+                    width = column_properties.get("width", width)
 
                 if column_sort_type and self._persistent_sort:
                     # Sort treeview by values in this column by default
@@ -381,11 +381,11 @@ class TreeView:
             # Required for fixed height mode
             column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
 
-            if isinstance(width, int):
+            if width is not None:
                 column.set_resizable(column_type != "icon")
 
-                if width > 0:
-                    column.set_fixed_width(width)
+            if isinstance(width, int) and width > 0:
+                column.set_fixed_width(width)
 
             column.set_reorderable(True)
             column.set_min_width(24)
