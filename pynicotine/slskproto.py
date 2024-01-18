@@ -534,13 +534,13 @@ class NetworkThread(Thread):
 
         timed_out_requests.clear()
 
-    @staticmethod
-    def _is_connection_still_active(conn_obj):
+    def _is_connection_still_active(self, conn_obj):
 
         init = conn_obj.init
 
-        if init is not None and init.conn_type != "P":
-            # Distributed and file connections are critical, always assume they are active
+        if init is not None and (init.conn_type != "P" or init.target_user == self._server_username):
+            # Distributed and file connections, as well as connections to ourselves,
+            # are critical. Always assume they are active.
             return True
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
