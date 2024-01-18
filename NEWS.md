@@ -25,6 +25,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added popovers in the status bar for selecting download and upload speed limits
  * Added option to configure text view font
  * Added function to clear all deleted downloads that no longer exist on disk
+ * Added function to re-enter search when right-clicking search tabs
  * Added preference to choose user interface language
  * Added wishlist results found notification
  * Added option to set custom handlers for opening downloaded files
@@ -39,6 +40,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
  * Restore initial list order when pressing the column header of a sorted column
+ * Remember last sorted column after restarting
  * Filter out irrelevant folders when searching a user's shares
  * Insert new private chat tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
@@ -86,6 +88,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Issues closed on GitHub
 
+ * Sort by speed ([#373](https://github.com/nicotine-plus/nicotine-plus/issues/373))
  * Bind Nicotine+ to specified network adapter ([#871](https://github.com/nicotine-plus/nicotine-plus/issues/871))
  * Finish running transfers and quit ([#885](https://github.com/nicotine-plus/nicotine-plus/issues/885))
  * Implement search request delivery to child peers ([#994](https://github.com/nicotine-plus/nicotine-plus/issues/994))
@@ -131,6 +134,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Bitrate filter does not work as expected ([#2141](https://github.com/nicotine-plus/nicotine-plus/issues/2141))
  * Random hanging + zombie process on MacOS with VPN and Little Snitch ([#2154](https://github.com/nicotine-plus/nicotine-plus/issues/2154))
  * Chat emoji scaling issue ([#2169](https://github.com/nicotine-plus/nicotine-plus/issues/2169))
+ * Remember last sorted column for each tab (Downloads, Uploads, Search Files, etc) ([#2170](https://github.com/nicotine-plus/nicotine-plus/issues/2170))
  * Window resizing glitchy on MacOS 12.1 ([#2178](https://github.com/nicotine-plus/nicotine-plus/issues/2178))
  * \[3.3.0.dev3\] Unstable Windows builds fail to start due to missing .dll ([#2218](https://github.com/nicotine-plus/nicotine-plus/issues/2218))
  * Notifications for wish list results ([#2221](https://github.com/nicotine-plus/nicotine-plus/issues/2221))
@@ -200,6 +204,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev6\] Crash on master updating completion from "user_left_room" ([#2733](https://github.com/nicotine-plus/nicotine-plus/issues/2733))
  * \[3.3.0.dev6\] Crash on DL tab CLEAR files right-click option ([#2745](https://github.com/nicotine-plus/nicotine-plus/issues/2745))
  * \[3.3.0.dev6\] Private chat: messages showing with wrong sender ([#2755](https://github.com/nicotine-plus/nicotine-plus/issues/2755))
+ * Ability to set default Buddies tab list sort ([#2758](https://github.com/nicotine-plus/nicotine-plus/issues/2758))
  * UI/UX improvement: move the buddies only option out of the edit subwindow to the share window ([#2763](https://github.com/nicotine-plus/nicotine-plus/issues/2763))
  * "Invisible Border" Around Program? ([#2768](https://github.com/nicotine-plus/nicotine-plus/issues/2768))
  * Launching 25-NOV Build Causes Frequent & Prolonged Freezing Of Win10 OS+Frequent Disconnects ([#2770](https://github.com/nicotine-plus/nicotine-plus/issues/2770))
@@ -208,7 +213,11 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev6\] Copying search result filenames causes crash ([#2781](https://github.com/nicotine-plus/nicotine-plus/issues/2781))
  * Recursive folder download matches extra siblings starting with the same name ([#2782](https://github.com/nicotine-plus/nicotine-plus/issues/2782))
  * Critical 'TypeError' on macOS Monterey, N+ won't launch ([#2785](https://github.com/nicotine-plus/nicotine-plus/issues/2785))
- * \[3.3.0.rc1\] "Unknown search mode" Reopening a whishlist search tab ([#2798](https://github.com/nicotine-plus/nicotine-plus/issues/2798))
+ * \[3.3.0rc1\] "Unknown search mode" Reopening a whishlist search tab ([#2798](https://github.com/nicotine-plus/nicotine-plus/issues/2798))
+ * Change search share behavior to classic Soulseek ([#2819](https://github.com/nicotine-plus/nicotine-plus/issues/2819))
+ * Classic Soulseek re-enter search function ([#2826](https://github.com/nicotine-plus/nicotine-plus/issues/2826))
+ * N+ 3.3.0 transfers not working ([#2827](https://github.com/nicotine-plus/nicotine-plus/issues/2827))
+ * \[3.3.0rc2\] Disable sorting in search ([#2830](https://github.com/nicotine-plus/nicotine-plus/issues/2830))
 
 
 ## Version 3.2.9 (March 5, 2023)
