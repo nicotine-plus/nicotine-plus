@@ -102,6 +102,7 @@ jobs:
         with:
           msystem: MINGW64
           release: false
+          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-gettext
             mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
