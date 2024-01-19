@@ -30,6 +30,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -126,6 +127,12 @@ class Interests:
                     "width": 25,
                     "hide_header": True
                 },
+                "country": {
+                    "column_type": "icon",
+                    "title": _("Country"),
+                    "width": 30,
+                    "hide_header": True
+                },
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
@@ -208,6 +215,7 @@ class Interests:
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("similar-users", self.similar_users),
+            ("user-country", self.user_country),
             ("user-stats", self.user_stats),
             ("user-status", self.user_status)
         ):
@@ -428,6 +436,7 @@ class Interests:
 
         for index, (user, rating) in enumerate(users.items()):
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
+            country_code = core.users.countries.get(user, "")
             stats = core.users.watched.get(user)
             rating = index + (1000 * rating)  # Preserve default sort order
 
@@ -443,6 +452,7 @@ class Interests:
 
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[status],
+                get_flag_icon_name(country_code),
                 user,
                 h_speed,
                 h_files,
@@ -457,6 +467,20 @@ class Interests:
     def item_similar_users(self, msg):
         rating = 0
         self.set_similar_users({user: rating for user in msg.users}, msg.thing)
+
+    def user_country(self, user, country_code):
+
+        iterator = self.similar_users_list_view.iterators.get(user)
+
+        if iterator is None:
+            return
+
+        flag_icon_name = get_flag_icon_name(country_code)
+
+        if not flag_icon_name:
+            return
+
+        self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
     def user_status(self, msg):
 

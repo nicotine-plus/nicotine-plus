@@ -27,7 +27,7 @@ class Interests:
     def __init__(self):
 
         for event_name, callback in (
-            ("item-similar-users", self._item_similar_users),
+            ("item-similar-users", self._similar_users),
             ("server-login", self._server_login),
             ("similar-users", self._similar_users)
         ):
@@ -132,15 +132,12 @@ class Interests:
         core.send_message_to_server(slskmessages.SimilarUsers())
 
     def _similar_users(self, msg):
-        """Server code 110."""
+        """Server code 110 and 112."""
 
         for username in msg.users:
             # Request user status, speed and number of shared files
             core.users.watch_user(username)
 
-    def _item_similar_users(self, msg):
-        """Server code 112."""
-
-        for username in msg.users:
-            # Request user status, speed and number of shared files
-            core.users.watch_user(username)
+            # Request IP address for user country
+            if username not in core.users.addresses:
+                core.users.request_ip_address(username)
