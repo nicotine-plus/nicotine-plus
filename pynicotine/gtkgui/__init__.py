@@ -27,26 +27,30 @@ def get_default_gtk_version():
     if sys.platform in {"win32", "darwin"}:
         return "4"
 
-    from gi.repository import GLib
-    from gi.repository import Gio
-
     try:
-        dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
-            bus_type=Gio.BusType.SESSION,
-            flags=Gio.DBusProxyFlags.NONE,
-            info=None,
-            name="org.a11y.Bus",
-            object_path="/org/a11y/bus",
-            interface_name="org.freedesktop.DBus.Properties"
-        )
+        from gi.repository import GLib
+        from gi.repository import Gio
 
-        # If screen reader is enabled, use GTK 3 until treeviews have been ported to
-        # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
-        if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
-            return "3"
+        try:
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name="org.a11y.Bus",
+                object_path="/org/a11y/bus",
+                interface_name="org.freedesktop.DBus.Properties"
+            )
 
-    except GLib.Error:
-        # Service not available
+            # If screen reader is enabled, use GTK 3 until treeviews have been ported to
+            # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
+            if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
+                return "3"
+
+        except GLib.Error:
+            # Service not available
+            pass
+
+    except ModuleNotFoundError:
         pass
 
     return "4"
