@@ -461,13 +461,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
-
-        if not online_ip_address:
-            self.core.users.request_ip_address(user)
-            return
-
-        self.output(online_ip_address)
+        self.core.users.request_ip_address(user, notify=True)
 
     def ban_command(self, args, user=None, **_unused):
 

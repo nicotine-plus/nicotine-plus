@@ -137,7 +137,3 @@ class Interests:
         for username in msg.users:
             # Request user status, speed and number of shared files
             core.users.watch_user(username)
-
-            # Request IP address for user country
-            if username not in core.users.addresses:
-                core.users.request_ip_address(username)

@@ -171,10 +171,6 @@ class Buddies:
         # Request user status, speed and number of shared files
         core.users.watch_user(username)
 
-        # Request user country
-        if country_code is None:
-            core.users.request_ip_address(username)
-
     def remove_buddy(self, username):
 
         if username in self.users:

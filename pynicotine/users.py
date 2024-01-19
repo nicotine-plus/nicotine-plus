@@ -257,17 +257,27 @@ class Users:
             msg.user = None
             return
 
+        is_watched = (username in self.watched)
+
         # User went offline, reset stored IP address and country
         if status == slskmessages.UserStatus.OFFLINE:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        # Previously watched user logged in again. Server will not send user stats, so request them.
-        elif self.statuses.get(username) == slskmessages.UserStatus.OFFLINE:
-            self.request_user_stats(username)
+        elif is_watched:
+            user_status = self.statuses.get(username)
+
+            # Online user seen for the first time, request IP address and country
+            if user_status is None:
+                self.request_ip_address(username)
+
+            # Previously watched user logged in again. Server will not send user stats, so request them.
+            elif user_status == slskmessages.UserStatus.OFFLINE:
+                self.request_user_stats(username)
+                self.request_ip_address(username)
 
         # Store statuses for watched users, update statuses of room members
-        if username in self.watched or username in self.statuses:
+        if is_watched or username in self.statuses:
             self.statuses[username] = status
 
         core.pluginhandler.user_status_notification(username, status, msg.privileged)

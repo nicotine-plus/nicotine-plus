@@ -132,11 +132,11 @@ class UserInfo:
             return
 
         else:
-            # Request user description, picture and queue information
-            core.send_message_to_peer(username, slskmessages.UserInfoRequest())
-
             # Request user status, speed and number of shared files
             core.users.watch_user(username)
+
+            # Request user description, picture and queue information
+            core.send_message_to_peer(username, slskmessages.UserInfoRequest())
 
         # Request user interests
         core.send_message_to_server(slskmessages.UserInterests(username))
