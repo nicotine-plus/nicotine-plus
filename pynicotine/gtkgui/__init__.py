@@ -123,10 +123,6 @@ def run(hidden, ci_mode, multi_instance):
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
 
-        # Use Cairo renderer for now, GL renderer has memory leaks
-        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
-        os.environ["GSK_RENDERER"] = "cairo"
-
         # Disable client-side decorations when header bar is disabled
         os.environ["GTK_CSD"] = "0"
 
