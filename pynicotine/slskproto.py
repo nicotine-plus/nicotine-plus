@@ -25,6 +25,7 @@ import struct
 import sys
 import time
 
+from collections import defaultdict
 from collections import deque
 from threading import Thread
 
@@ -384,28 +385,24 @@ class NetworkThread(Thread):
         self._upload_speed = 0
 
         self._num_sockets = 1
-        self._last_conn_stat_time = 0
+        self._last_cycle_time = 0
 
         self._conns = {}
         self._conns_in_progress = {}
         self._out_indirect_conn_request_times = {}
         self._token = 0
 
+        self._conns_downloaded = defaultdict(int)
+        self._conns_uploaded = defaultdict(int)
         self._calc_upload_limit_function = self._calc_upload_limit_none
         self._upload_limit = 0
         self._download_limit = 0
         self._upload_limit_split = 0
         self._download_limit_split = 0
-        self._ulimits = {}
-        self._dlimits = {}
         self._total_uploads = 0
         self._total_downloads = 0
         self._total_download_bandwidth = 0
         self._total_upload_bandwidth = 0
-        self._last_cycle_time = 0
-        self._current_cycle_loop_count = 0
-        self._last_cycle_loop_count = 0
-        self._loops_per_second = 0
 
         for event_name, callback in (
             ("enable-message-queue", self._enable_message_queue),
@@ -1846,29 +1843,6 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _calc_loops_per_second(self, current_time):
-        """Calculate number of loops per second.
-
-        This value is used to split the per-second transfer speed limit
-        evenly for each loop.
-        """
-
-        if current_time - self._last_cycle_time >= 1:
-            self._loops_per_second = (self._last_cycle_loop_count + self._current_cycle_loop_count) // 2
-
-            self._last_cycle_loop_count = self._current_cycle_loop_count
-            self._last_cycle_time = current_time
-            self._current_cycle_loop_count = 0
-        else:
-            self._current_cycle_loop_count += 1
-
-    def _set_conn_speed_limit(self, sock, limit, limits):
-
-        limit //= (self._loops_per_second or 1)
-
-        if limit > 0:
-            limits[sock] = limit
-
     def _process_file_input(self, conn_obj):
         """We have a "F" connection (filetransfer), peer has sent us something,
         this function retrieves messages from the msg_buffer, creates message
@@ -1919,7 +1893,7 @@ class NetworkThread(Thread):
                     "file-download-progress", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
                     bytes_left=conn_obj.filedown.leftbytes
                 )
-                conn_obj.lastcallback = self._last_conn_stat_time
+                conn_obj.lastcallback = self._last_cycle_time
 
             if finished:
                 should_close_connection = True
@@ -2397,8 +2371,9 @@ class NetworkThread(Thread):
         conn_obj_established = self._conns.get(sock)
 
         if conn_obj_established is not None:
-            if self._is_transferring_download(conn_obj_established):
-                self._set_conn_speed_limit(sock, self._download_limit_split, self._dlimits)
+            if (self._download_limit_split
+                    and self._conns_downloaded.get(conn_obj_established, 0) >= self._download_limit_split):
+                return
 
             try:
                 if not self._read_data(conn_obj_established, current_time):
@@ -2436,8 +2411,9 @@ class NetworkThread(Thread):
         conn_obj_established = self._conns.get(sock)
 
         if conn_obj_established is not None:
-            if self._is_transferring_upload(conn_obj_established):
-                self._set_conn_speed_limit(sock, self._upload_limit_split, self._ulimits)
+            if (self._upload_limit_split
+                    and self._conns_uploaded.get(conn_obj_established, 0) >= self._upload_limit_split):
+                return
 
             try:
                 self._write_data(conn_obj_established, current_time)
@@ -2561,19 +2537,23 @@ class NetworkThread(Thread):
     def _read_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        limit = self._dlimits.get(sock)
         conn_obj.lastactive = current_time
+        use_download_limit = (self._download_limit_split and self._is_transferring_download(conn_obj))
 
-        data = sock.recv(conn_obj.lastreadlength)
+        if use_download_limit:
+            limit = (self._download_limit_split - self._conns_downloaded[conn_obj])
+        else:
+            limit = conn_obj.lastreadlength
+
+        data = sock.recv(limit)
+        data_length = len(data)
         conn_obj.ibuf.extend(data)
 
-        if limit is None:
-            # Unlimited download data
-            if len(data) >= conn_obj.lastreadlength // 2:
-                conn_obj.lastreadlength *= 2
-        else:
-            # Speed Limited Download data (transfers)
-            conn_obj.lastreadlength = limit
+        if use_download_limit:
+            self._conns_downloaded[conn_obj] += data_length
+
+        if data_length >= conn_obj.lastreadlength // 2:
+            conn_obj.lastreadlength *= 2
 
         if not data:
             return False
@@ -2583,14 +2563,15 @@ class NetworkThread(Thread):
     def _write_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        limit = self._ulimits.get(sock)
         prev_active = conn_obj.lastactive
         conn_obj.lastactive = current_time
 
-        if limit is None:
-            bytes_send = sock.send(conn_obj.obuf)
-        else:
+        if self._upload_limit_split and self._is_transferring_upload(conn_obj):
+            limit = (self._upload_limit_split - self._conns_uploaded[conn_obj])
             bytes_send = sock.send(memoryview(conn_obj.obuf)[:limit])
+            self._conns_uploaded[conn_obj] += bytes_send
+        else:
+            bytes_send = sock.send(conn_obj.obuf)
 
         del conn_obj.obuf[:bytes_send]
 
@@ -2633,7 +2614,7 @@ class NetworkThread(Thread):
                         token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
                         bytes_sent=conn_obj.fileupl.sentbytes
                     )
-                    conn_obj.lastcallback = self._last_conn_stat_time
+                    conn_obj.lastcallback = self._last_cycle_time
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
@@ -2660,9 +2641,7 @@ class NetworkThread(Thread):
 
             current_time = time.monotonic()
 
-            # Send updated connection count to core. Avoid sending too many
-            # updates at once, if there are a lot of connections.
-            if (current_time - self._last_conn_stat_time) >= 1:
+            if (current_time - self._last_cycle_time) >= 1:
                 events.emit_main_thread(
                     "set-connection-stats", total_conns=self._num_sockets,
                     download_bandwidth=self._total_download_bandwidth, upload_bandwidth=self._total_upload_bandwidth
@@ -2673,21 +2652,19 @@ class NetworkThread(Thread):
                 self._close_inactive_connections(current_time)
                 self._init_pending_peer_connections()
 
+                self._conns_downloaded.clear()
+                self._conns_uploaded.clear()
+
                 self._total_download_bandwidth = 0
                 self._total_upload_bandwidth = 0
-                self._last_conn_stat_time = current_time
+
+                self._last_cycle_time = current_time
 
             # Process queue messages
             self._process_queue_messages()
 
             # Check which connections are ready to send/receive data
             self._process_ready_sockets(current_time)
-
-            # Reset transfer speed limits
-            self._ulimits = {}
-            self._dlimits = {}
-
-            self._calc_loops_per_second(current_time)
 
             # Don't exhaust the CPU
             time.sleep(self.SLEEP_MIN_IDLE)
