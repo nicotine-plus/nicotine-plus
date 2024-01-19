@@ -170,14 +170,6 @@ class ServerDisconnect(InternalMessage):
         self.manual_disconnect = manual_disconnect
 
 
-class InitPeerConnection(InternalMessage):
-    __slots__ = ("addr", "init")
-
-    def __init__(self, addr=None, init=None):
-        self.addr = addr
-        self.init = init
-
-
 class EmitNetworkMessageEvents(InternalMessage):
     """Sent to the networking thread to tell it to emit events for list of
     network messages.
