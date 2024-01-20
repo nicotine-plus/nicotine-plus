@@ -136,18 +136,23 @@ class Downloads(Transfers):
             callback=self.on_clear_all_response
         ).present()
 
-    def folder_download_response(self, _dialog, _response_id, msg):
-        events.emit("folder-contents-response", msg, check_num_files=False)
+    def folder_download_response(self, _dialog, _response_id, data):
+        download_callback, callback_args = data
+        download_callback(*callback_args)
 
-    def download_large_folder(self, username, folder, numfiles, msg):
+    def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
             title=_("Download %(num)i files?") % {"num": numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 "num": numfiles, "user": username, "folder": folder},
+            buttons=[
+                ("cancel", _("_No")),
+                ("download", _("_Yes"))
+            ],
             callback=self.folder_download_response,
-            callback_data=msg
+            callback_data=(download_callback, callback_args)
         ).present()
 
     def on_copy_url(self, *_args):

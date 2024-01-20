@@ -964,7 +964,11 @@ class Downloads(Transfers):
                 requested_folder.request_timer_id = None
 
             if check_num_files and num_files > 100:
-                events.emit("download-large-folder", username, folder_path, num_files, msg)
+                check_num_files = False
+                events.emit(
+                    "download-large-folder", username, folder_path, num_files,
+                    self._folder_contents_response, (msg, check_num_files)
+                )
                 return
 
             if not files and not requested_folder.legacy_attempt:

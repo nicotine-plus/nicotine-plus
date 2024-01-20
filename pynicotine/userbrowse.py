@@ -274,9 +274,28 @@ class UserBrowse:
         core.downloads.enqueue_download(
             username, file_path, folder_path=download_folder_path, size=file_size, file_attributes=file_attributes)
 
-    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False):
+    def download_folder(self, username, requested_folder_path, download_folder_path=None, recurse=False,
+                        check_num_files=True):
 
         if requested_folder_path is None:
+            return
+
+        num_files = 0
+
+        for folder_path, files in self.iter_matching_folders(
+            requested_folder_path, browsed_user=self.users[username], recurse=recurse
+        ):
+            num_files += len(files)
+
+        if check_num_files and num_files > 1000:
+            # Large folder, ask user for confirmation before downloading
+            check_num_files = False
+            events.emit(
+                "download-large-folder", username, requested_folder_path, num_files,
+                self.download_folder, (
+                    username, requested_folder_path, download_folder_path, recurse, check_num_files
+                )
+            )
             return
 
         for folder_path, files in self.iter_matching_folders(
