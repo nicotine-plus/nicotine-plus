@@ -93,14 +93,14 @@ class BaseImplementation:
 
         self.create_item()
 
-        self.connect_disconnect_item = self.create_item("default", self.application.on_connect_disconnect)
-        self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
+        self.create_item(_("Private Chat"), self.application.on_private_chat)
+        self.create_item(_("Chat Rooms"), self.application.on_chat_rooms)
+        self.create_item(_("Searches"), self.application.on_searches)
 
         self.create_item()
 
-        self.send_message_item = self.create_item(_("_Send Message"), self.application.on_message_user)
-        self.lookup_info_item = self.create_item(_("View User _Profile"), self.application.on_view_user_profile)
-        self.lookup_shares_item = self.create_item(_("_Browse Shares"), self.application.on_browse_user_shares)
+        self.connect_disconnect_item = self.create_item("default", self.application.on_connect_disconnect)
+        self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
 
         self.create_item()
 
@@ -125,11 +125,7 @@ class BaseImplementation:
         sensitive = core.users.login_status != slskmessages.UserStatus.OFFLINE
         label = _("_Disconnect") if sensitive else _("_Connect")
 
-        for item in (self.away_item, self.send_message_item,
-                     self.lookup_info_item, self.lookup_shares_item):
-
-            # Disable menu items when disconnected from server
-            self.set_item_sensitive(item, sensitive)
+        self.set_item_sensitive(self.away_item, sensitive)
 
         self.set_item_text(self.connect_disconnect_item, label)
         self.set_item_toggled(self.away_item, core.users.login_status == slskmessages.UserStatus.AWAY)

@@ -21,8 +21,6 @@ import sys
 import threading
 import time
 
-from locale import strxfrm
-
 import gi
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -703,6 +701,18 @@ class Application:
         self.window.change_main_page(self.window.uploads_page)
         self.window.present()
 
+    def on_private_chat(self, *_args):
+        self.window.change_main_page(self.window.private_page)
+        self.window.present()
+
+    def on_chat_rooms(self, *_args):
+        self.window.change_main_page(self.window.chatrooms_page)
+        self.window.present()
+
+    def on_searches(self, *_args):
+        self.window.change_main_page(self.window.search_page)
+        self.window.present()
+
     def on_message_users_response(self, dialog, _response_id, target):
 
         message = dialog.get_entry_value()
@@ -738,29 +748,6 @@ class Application:
             show_emoji_icon=True
         ).present()
 
-    def on_message_user_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.privatechat.show_user(user)
-        self.window.present()
-
-    def on_message_user(self, *_args):
-
-        from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-
-        EntryDialog(
-            parent=self.window,
-            title=_("Start Messaging"),
-            message=_("Enter the name of the user whom you want to send a message:"),
-            action_button_label=_("_Message"),
-            callback=self.on_message_user_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
-
     def on_rescan_shares(self, *_args):
         core.shares.rescan_shares()
 
@@ -772,29 +759,6 @@ class Application:
 
     def on_browse_trusted_shares(self, *_args):
         core.userbrowse.browse_local_shares(permission_level=PermissionLevel.TRUSTED, new_request=True)
-
-    def on_browse_user_shares_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userbrowse.browse_user(user)
-        self.window.present()
-
-    def on_browse_user_shares(self, *_args):
-
-        from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-
-        EntryDialog(
-            parent=self.window,
-            title=_("Browse Shares"),
-            message=_("Enter the name of the user whose shares you want to see:"),
-            action_button_label=_("_Browse"),
-            callback=self.on_browse_user_shares_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
 
     def on_load_shares_from_disk_selected(self, selected_file_paths, _data):
         for file_path in selected_file_paths:
@@ -814,29 +778,6 @@ class Application:
 
     def on_personal_profile(self, *_args):
         core.userinfo.show_user()
-
-    def on_view_user_profile_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userinfo.show_user(user)
-        self.window.present()
-
-    def on_view_user_profile(self, *_args):
-
-        from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-
-        EntryDialog(
-            parent=self.window,
-            title=_("View User Profile"),
-            message=_("Enter the name of the user whose profile you want to see:"),
-            action_button_label=_("_View Profile"),
-            callback=self.on_view_user_profile_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
-        ).present()
 
     def on_configure_shares(self, *_args):
         self.on_preferences(page_id="shares")
