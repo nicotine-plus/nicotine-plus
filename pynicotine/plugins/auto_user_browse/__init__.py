@@ -55,7 +55,7 @@ class Plugin(BasePlugin):
             # Wait 30 seconds before browsing shares to ensure they are ready
             # and the server doesn't send an invalid port for the user
             self.processed_users.add(user)
-            events.schedule(delay=30, callback=lambda: self.browse_user(user))
+            events.schedule(delay=30, callback=self.browse_user, callback_args=(user,))
 
     def server_disconnect_notification(self, userchoice):
         self.processed_users.clear()

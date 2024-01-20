@@ -730,7 +730,7 @@ class Downloads(Transfers):
             requested_folder.request_timer_id = None
 
         requested_folder.request_timer_id = events.schedule(
-            delay=timeout, callback=lambda: self._requested_folder_timeout(requested_folder)
+            delay=timeout, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
         )
 
         log.add_transfer("Requesting contents of folder %(path)s from user %(user)s", {

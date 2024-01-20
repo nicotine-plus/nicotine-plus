@@ -251,13 +251,16 @@ class Events:
     def invoke_main_thread(self, callback, *args, **kwargs):
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay, callback, repeat=False):
+    def schedule(self, delay, callback, callback_args=None, repeat=False):
 
         self._scheduler_event_id += 1
         next_time = (time.monotonic() + delay)
 
+        if callback_args is None:
+            callback_args = ()
+
         self._pending_scheduler_events.append(
-            (self._scheduler_event_id, (next_time, delay, repeat, callback)))
+            (self._scheduler_event_id, (next_time, delay, repeat, callback, callback_args)))
 
         return self._scheduler_event_id
 
@@ -307,15 +310,15 @@ class Events:
 
             # Retrieve upcoming event
             event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
-            event_time, delay, repeat, callback = event_data
+            event_time, delay, repeat, callback, callback_args = event_data
             current_time = time.monotonic()
             sleep_time = (event_time - current_time)
 
             if sleep_time <= 0:
-                self.invoke_main_thread(callback)
+                self.invoke_main_thread(callback, *callback_args)
 
                 if repeat:
-                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback)
+                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback, callback_args)
                 else:
                     self._scheduler_events.pop(event_id, None)
 

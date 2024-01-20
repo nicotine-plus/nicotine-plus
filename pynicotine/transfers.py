@@ -421,7 +421,8 @@ class Transfers:
         # To account for potential delays while initializing the connection, add 15 seconds
         # to the timeout value.
 
-        transfer.request_timer_id = events.schedule(delay=45, callback=lambda: self._transfer_timeout(transfer))
+        transfer.request_timer_id = events.schedule(
+            delay=45, callback=self._transfer_timeout, callback_args=(transfer,))
 
         self.active_users[transfer.username][token] = transfer
 
