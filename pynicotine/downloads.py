@@ -31,7 +31,6 @@ import shutil
 import time
 
 from collections import defaultdict
-from locale import strxfrm
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -979,9 +978,6 @@ class Downloads(Transfers):
 
             destination_folder_path = self.get_folder_destination(username, folder_path)
             del self._requested_folders[username][folder_path]
-
-            if num_files > 1:
-                files.sort(key=lambda x: strxfrm(x[1]))
 
             log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                               "Destination path: %(destination)s"), {

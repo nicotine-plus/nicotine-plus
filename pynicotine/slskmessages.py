@@ -3338,6 +3338,9 @@ class FolderContentsResponse(PeerMessage):
 
                 folders[directory].append((code, name, size, ext, attrs))
 
+            if nfiles > 1:
+                folders[directory].sort(key=lambda x: strxfrm(x[1]))
+
         self.list = folders
 
     def make_network_message(self):
