@@ -281,7 +281,6 @@ class UserBrowse:
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.add_items(
-                ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("#" + _("Upload Folder & Subfolders…"), self.on_upload_folder_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
@@ -294,8 +293,6 @@ class UserBrowse:
             )
         else:
             self.folder_popup_menu.add_items(
-                ("#" + _("_Download Folder"), self.on_download_folder),
-                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
                 ("#" + _("Download Folder & Subfolders"), self.on_download_folder_recursive),
                 ("#" + _("Download Folder & Subfolders To…"), self.on_download_folder_recursive_to),
                 ("", None),
@@ -360,7 +357,7 @@ class UserBrowse:
         )
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(
-                ("#" + _("Up_load File(s)…"), self.on_upload_files),
+                ("#" + _("Up_load File(s)…"), self.on_upload_files_to),
                 ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("", None),
                 ("#" + _("_Open File"), self.on_open_file),
@@ -1015,13 +1012,9 @@ class UserBrowse:
         """Ctrl+Enter - Upload Folder To, Download Folder Into."""
 
         if self.user == config.sections["server"]["login"]:
-            if not self.file_list_view.is_empty():
-                self.on_upload_folder_to()
-            else:
-                self.on_upload_folder_recursive_to()
-
-        elif not self.file_list_view.is_empty():
-            self.on_download_folder_to()
+            self.on_upload_folder_recursive_to()
+        else:
+            self.on_download_folder_recursive_to()
 
         return True
 
@@ -1029,16 +1022,10 @@ class UserBrowse:
         """Shift+Ctrl+Enter - Upload Folder Recursive To, Download Folder (without prompt)."""
 
         if self.user == config.sections["server"]["login"]:
-            self.on_folder_expand_sub_accelerator()
             self.on_upload_folder_recursive_to()
-            return True
+        else:
+            self.on_download_folder_recursive()  # without prompt
 
-        if self.file_list_view.is_empty():
-            # don't risk accidental recursive download
-            self.on_folder_expand_sub_accelerator()
-            return True
-
-        self.on_download_folder()  # without prompt
         return True
 
     def on_folder_open_manager_accelerator(self, *_args):
@@ -1094,7 +1081,7 @@ class UserBrowse:
             initial_folder=core.downloads.get_default_download_folder()
         ).present()
 
-    def on_upload_files_response(self, dialog, _response_id, _data):
+    def on_upload_files_to_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value()
         folder_path = self.selected_folder_path
@@ -1107,14 +1094,14 @@ class UserBrowse:
         for basename, size in self.selected_files.items():
             core.userbrowse.upload_file(user, folder_path, (None, basename, size))
 
-    def on_upload_files(self, *_args):
+    def on_upload_files_to(self, *_args):
 
         EntryDialog(
             parent=self.window,
             title=_("Upload File(s) To User"),
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
-            callback=self.on_upload_files_response,
+            callback=self.on_upload_files_to_response,
             droplist=sorted(core.buddies.users, key=strxfrm)
         ).present()
 
@@ -1229,17 +1216,21 @@ class UserBrowse:
             self.folder_tree_view.grab_focus()
             return True
 
-        if self.file_list_view.is_selection_empty():  # do folder instead
-            self.on_folder_transfer_to_accelerator()
-            return True
-
         self.select_files()
 
         if self.user == config.sections["server"]["login"]:
-            self.on_upload_files()
+            if self.file_list_view.is_selection_empty():
+                self.on_upload_folder_to()
+            else:
+                self.on_upload_files_to()
+
             return True
 
-        self.on_download_files_to()  # (with prompt, Single or Multi-selection)
+        if self.file_list_view.is_selection_empty():
+            self.on_download_folder_to()
+        else:
+            self.on_download_files_to()  # (with prompt, Single or Multi-selection)
+
         return True
 
     def on_file_transfer_accelerator(self, *_args):
@@ -1252,17 +1243,17 @@ class UserBrowse:
         self.select_files()
 
         if self.user == config.sections["server"]["login"]:
-            if not self.file_list_view.is_selection_empty():
-                self.on_upload_files()
-            else:
+            if self.file_list_view.is_selection_empty():
                 self.on_upload_folder_to()
+            else:
+                self.on_upload_files_to()
 
             return True
 
-        if not self.file_list_view.is_selection_empty():
-            self.on_download_files()  # (no prompt, Single or Multi-selection)
-        else:
+        if self.file_list_view.is_selection_empty():
             self.on_download_folder()  # (without prompt, No-selection=All)
+        else:
+            self.on_download_files()  # (no prompt, Single or Multi-selection)
 
         return True
 
