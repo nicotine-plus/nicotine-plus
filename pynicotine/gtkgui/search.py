@@ -603,6 +603,7 @@ class Search:
         self.popup_menu.add_items(
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
+            ("", None),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
