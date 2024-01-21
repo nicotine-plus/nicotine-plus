@@ -243,7 +243,6 @@ def add_icon_packs():
 
     required_icon_packs = (
         "Adwaita",
-        "hicolor"
     )
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
@@ -339,6 +338,7 @@ setup(
             "applications_shortcut": True
         }
     },
+    data_files=[],
     packages=[],
     executables=[
         Executable(
