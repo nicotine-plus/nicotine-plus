@@ -318,7 +318,11 @@ class NetworkThread(Thread):
     MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
     SOCKET_READ_BUFFER_SIZE = 1048576
     SOCKET_WRITE_BUFFER_SIZE = 1048576
-    SLEEP_MIN_IDLE = 0.016                 # ~60 times per second
+
+    # Looping max ~60 times per second (SLEEP_MIN_IDLE) on high activity
+    # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
+    SLEEP_MAX_IDLE = 0.0333
+    SLEEP_MIN_IDLE = 0.0166
 
     try:
         import resource
@@ -2431,7 +2435,7 @@ class NetworkThread(Thread):
             # We can't call select() when no sockets are registered (WinError 10022)
             return
 
-        for selector_key, selector_events in self._selector.select(timeout=-1):
+        for selector_key, selector_events in self._selector.select(timeout=self.SLEEP_MAX_IDLE):
             sock = selector_key.fileobj
 
             if selector_events & selectors.EVENT_READ:
@@ -2636,7 +2640,7 @@ class NetworkThread(Thread):
                     self._server_timeout_time = None
                     events.emit_main_thread("server-reconnect")
 
-                time.sleep(0.1)
+                time.sleep(self.SLEEP_MAX_IDLE)
                 continue
 
             current_time = time.monotonic()
