@@ -69,7 +69,7 @@ class UserInfos(IconNotebook):
 
         self.userinfo_combobox = ComboBox(
             container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
-            entry=self.window.userinfo_entry
+            entry=self.window.userinfo_entry, item_selected_callback=self.on_show_user_profile
         )
 
         # Events
