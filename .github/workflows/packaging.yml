@@ -104,8 +104,11 @@ jobs:
           release: false
           update: true
           install: >-
+            mingw-w64-${{ matrix.arch }}-angleproject
+            mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext
             mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
+            mingw-w64-${{ matrix.arch }}-python-build
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
             mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-pycodestyle

@@ -29,7 +29,8 @@ def install_pacman():
     gtk_version = os.environ.get("NICOTINE_GTK_VERSION", "4")
     use_libadwaita = (gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1")
 
-    packages = [f"{prefix}ca-certificates",
+    packages = [f"{prefix}angleproject",
+                f"{prefix}ca-certificates",
                 f"{prefix}gettext",
                 f"{prefix}gtk{gtk_version}",
                 f"{prefix}python-build",
