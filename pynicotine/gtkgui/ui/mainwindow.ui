@@ -723,7 +723,6 @@
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_get_shares"/>
@@ -887,7 +886,6 @@
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
-    <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
     <property name="visible">True</property>
     <property name="width-chars">5</property>
     <signal name="activate" handler="on_show_user_profile"/>
@@ -1078,7 +1076,6 @@
                         <property name="max-width-chars">40</property>
                         <property name="placeholder-text" translatable="yes">Username…</property>
                         <property name="primary-icon-name">avatar-default-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
                         <property name="visible">True</property>
                         <property name="width-chars">5</property>
                         <signal name="activate" handler="on_get_private_chat"/>
@@ -1238,7 +1235,6 @@
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
                         <property name="primary-icon-name">contact-new-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
                         <property name="visible">True</property>
                         <property name="width-chars">5</property>
                         <signal name="activate" handler="on_add_buddy"/>
@@ -1407,7 +1403,6 @@
                             <property name="max-width-chars">40</property>
                             <property name="placeholder-text" translatable="yes">Join or create room…</property>
                             <property name="primary-icon-name">user-available-symbolic</property>
-                            <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
                             <property name="visible">True</property>
                             <property name="width-chars">5</property>
                             <signal name="activate" handler="on_create_room"/>
