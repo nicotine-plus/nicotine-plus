@@ -122,10 +122,11 @@ class FileAttribute:
 
 class InternalMessage:
     __slots__ = ()
+    __excluded_attrs__ = {}
     msg_type = MessageType.INTERNAL
 
     def __str__(self):
-        attrs = {s: self.__getattribute__(s) for s in self.__slots__}
+        attrs = {s: self.__getattribute__(s) for s in self.__slots__ if s not in self.__excluded_attrs__}
         return f"<{self.msg_type} - {self.__class__.__name__}> {attrs}"
 
 
@@ -152,6 +153,7 @@ class ServerConnect(InternalMessage):
 
     __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port",
                  "portmapper")
+    __excluded_attrs__ = {"login"}
 
     def __init__(self, addr=None, login=None, interface_name=None, interface_address=None,
                  listen_port=None, portmapper=None):
@@ -239,6 +241,7 @@ class SlskMessage:
     """This is a parent class for all protocol messages."""
 
     __slots__ = ()
+    __excluded_attrs__ = {}
     msg_type = None
 
     @staticmethod
@@ -333,7 +336,7 @@ class SlskMessage:
         return start + 8, UINT64_UNPACK(message, start)[0]
 
     def __str__(self):
-        attrs = {s: self.__getattribute__(s) for s in self.__slots__}
+        attrs = {s: self.__getattribute__(s) for s in self.__slots__ if s not in self.__excluded_attrs__}
         return f"<{self.msg_type} - {self.__class__.__name__}> {attrs}"
 
 
@@ -624,7 +627,8 @@ class Login(ServerMessage):
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "checksum", "is_supporter")
+                 "banner", "ip_address", "local_address", "is_supporter")
+    __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
@@ -636,7 +640,6 @@ class Login(ServerMessage):
         self.banner = None
         self.ip_address = None
         self.local_address = None
-        self.checksum = None
         self.is_supporter = None
 
     def make_network_message(self):
@@ -669,7 +672,7 @@ class Login(ServerMessage):
             # Soulfind server support
             return
 
-        pos, self.checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
+        pos, _checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
 
         if not message[pos:]:
             # Soulfind server support
@@ -2546,6 +2549,7 @@ class ChangePassword(ServerMessage):
     """
 
     __slots__ = ("password",)
+    __excluded_attrs__ = {"password"}
 
     def __init__(self, password=None):
         self.password = password
@@ -2554,7 +2558,7 @@ class ChangePassword(ServerMessage):
         return self.pack_string(self.password)
 
     def parse_network_message(self, message):
-        _pos, self.password = self.unpack_string(message)
+        _pos, _password = self.unpack_string(message)
 
 
 class PrivateRoomAddOperator(ServerMessage):
