@@ -170,14 +170,6 @@ class ServerDisconnect(InternalMessage):
         self.manual_disconnect = manual_disconnect
 
 
-class InitPeerConnection(InternalMessage):
-    __slots__ = ("addr", "init")
-
-    def __init__(self, addr=None, init=None):
-        self.addr = addr
-        self.init = init
-
-
 class EmitNetworkMessageEvents(InternalMessage):
     """Sent to the networking thread to tell it to emit events for list of
     network messages.
@@ -535,30 +527,30 @@ class RecommendationsMessage(SlskMessage):
     __slots__ = ()
 
     @classmethod
-    def parse_recommendations(cls, message, pos=0):
-        recommendations = []
-        unrecommendations = []
-
+    def populate_recommendations(cls, recommendations, unrecommendations, message, pos=0):
         pos, num = cls.unpack_uint32(message, pos)
 
         for _ in range(num):
             pos, key = cls.unpack_string(message, pos)
             pos, rating = cls.unpack_int32(message, pos)
 
-            # The server also includes unrecommendations here for some reason, don't add them
-            if rating >= 0:
-                recommendations.append((key, rating))
+            lst = recommendations if rating >= 0 else unrecommendations
+            item = (key, rating)
+
+            if item not in lst:
+                lst.append(item)
+
+        return pos
+
+    @classmethod
+    def parse_recommendations(cls, message, pos=0):
+        recommendations = []
+        unrecommendations = []
+
+        pos = cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         if message[pos:]:
-            pos, num2 = cls.unpack_uint32(message, pos)
-
-            for _ in range(num2):
-                pos, key = cls.unpack_string(message, pos)
-                pos, rating = cls.unpack_int32(message, pos)
-
-                # The server also includes recommendations here for some reason, don't add them
-                if rating < 0:
-                    unrecommendations.append((key, rating))
+            pos = cls.populate_recommendations(recommendations, unrecommendations, message, pos)
 
         return pos, recommendations, unrecommendations
 
@@ -2869,11 +2861,12 @@ class PeerInit(PeerInitMessage):
 
     __slots__ = ("sock", "init_user", "target_user", "conn_type", "indirect", "token", "outgoing_msgs")
 
-    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, indirect=False, token=0):
+    def __init__(self, sock=None, init_user=None, target_user=None, conn_type=None, indirect=False, token=None):
         self.sock = sock
         self.init_user = init_user      # username of peer who initiated the message
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
+
         self.indirect = indirect
         self.token = token
         self.outgoing_msgs = []
@@ -2882,7 +2875,7 @@ class PeerInit(PeerInitMessage):
         msg = bytearray()
         msg.extend(self.pack_string(self.init_user))
         msg.extend(self.pack_string(self.conn_type))
-        msg.extend(self.pack_uint32(self.token))
+        msg.extend(self.pack_uint32(0))
 
         return msg
 
@@ -3344,6 +3337,9 @@ class FolderContentsResponse(PeerMessage):
                 pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
 
                 folders[directory].append((code, name, size, ext, attrs))
+
+            if nfiles > 1:
+                folders[directory].sort(key=lambda x: strxfrm(x[1]))
 
         self.list = folders
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -310,7 +310,7 @@ class NetworkFilter:
         if username not in request_list:
             request_list[username] = action
 
-        core.request_ip_address(username)
+        core.users.request_ip_address(username)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """Add the current IP address and username of a user to a list."""
@@ -365,20 +365,6 @@ class NetworkFilter:
 
         return ip_addresses
 
-    @staticmethod
-    def get_online_user_ip_address(username):
-        """Try to lookup an address from watched known connections, for
-        updating an IP list item if the address is unspecified."""
-
-        user_address = core.user_addresses.get(username)
-
-        if not user_address:
-            # User is offline
-            return None
-
-        user_ip_address, _user_port = user_address
-        return user_ip_address
-
     def _get_user_ip_addresses(self, username, ip_list, request_action):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
@@ -386,9 +372,10 @@ class NetworkFilter:
 
         if request_action == "add":
             # Get current IP for user, if known
-            online_ip_address = self.get_online_user_ip_address(username)
+            online_address = core.users.addresses.get(username)
 
-            if online_ip_address:
+            if online_address:
+                online_ip_address, _port = online_address
                 ip_addresses.add(online_ip_address)
 
         elif request_action == "remove":
@@ -412,7 +399,7 @@ class NetworkFilter:
         """Try to match a username from watched and known connections, for
         updating an IP list item if the username is unspecified."""
 
-        for username, user_address in core.user_addresses.items():
+        for username, user_address in core.users.addresses.items():
             if ip_address == user_address[0]:
                 return username
 
@@ -460,11 +447,13 @@ class NetworkFilter:
             return True
 
         if not ip_address:
-            ip_address = self.get_online_user_ip_address(username)
+            address = core.users.addresses.get(username)
 
-            if not ip_address:
+            if not address:
                 # Username not listed and is offline, so we can't filter it
                 return False
+
+            ip_address, _port = address
 
         if ip_address in ip_list:
             # IP filtered
@@ -529,7 +518,7 @@ class NetworkFilter:
 
         username = msg.user
 
-        if username not in core.user_addresses:
+        if username not in core.users.addresses:
             # User is offline
             return
 

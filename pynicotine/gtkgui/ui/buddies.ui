@@ -30,7 +30,6 @@
             <property name="hexpand">True</property>
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
             <property name="primary-icon-name">contact-new-symbolic</property>
-            <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_add_buddy"/>

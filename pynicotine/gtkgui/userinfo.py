@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -28,6 +28,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -68,7 +69,7 @@ class UserInfos(IconNotebook):
 
         self.userinfo_combobox = ComboBox(
             container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
-            entry=self.window.userinfo_entry
+            entry=self.window.userinfo_entry, item_selected_callback=self.on_show_user_profile
         )
 
         # Events
@@ -136,8 +137,8 @@ class UserInfos(IconNotebook):
         if page is None:
             self.pages[user] = page = UserInfo(self, user)
 
-            self.prepend_page(page.container, user, focus_callback=page.on_focus,
-                              close_callback=page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -387,11 +388,16 @@ class UserInfo:
 
     def populate_stats(self):
 
-        user_stats = core.watched_users.get(self.user, {})
-        speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files")
-        folders = user_stats.get("folders")
-        country_code = core.user_countries.get(self.user)
+        country_code = core.users.countries.get(self.user)
+        stats = core.users.watched.get(self.user)
+
+        if stats is not None:
+            speed = stats.upload_speed or 0
+            files = stats.files
+            folders = stats.folders
+        else:
+            speed = 0
+            files = folders = None
 
         if speed > 0:
             self.upload_speed_label.set_text(human_speed(speed))
@@ -501,13 +507,13 @@ class UserInfo:
 
     def update_edit_button_state(self):
 
-        is_personal_profile = (self.user == core.login_username)
+        local_username = core.users.login_username or config.sections["server"]["login"]
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
-            widget.set_visible(is_personal_profile)
+            widget.set_visible(self.user == local_username)
 
     def update_buddy_button_state(self):
-        label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
+        label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
 
     def update_ban_button_state(self):
@@ -632,18 +638,18 @@ class UserInfo:
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user, notify=True)
+        core.users.request_ip_address(self.user, notify=True)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)
 
     def on_add_remove_buddy(self, *_args):
 
-        if self.user in core.userlist.buddies:
-            core.userlist.remove_buddy(self.user)
+        if self.user in core.buddies.users:
+            core.buddies.remove_buddy(self.user)
             return
 
-        core.userlist.add_buddy(self.user)
+        core.buddies.add_buddy(self.user)
 
     def on_ban_unban_user(self, *_args):
 
@@ -690,7 +696,7 @@ class UserInfo:
             callback=self.on_save_picture_response,
             initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
-        ).show()
+        ).present()
 
     def on_refresh(self, *_args):
         self.set_in_progress()

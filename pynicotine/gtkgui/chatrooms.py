@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -202,7 +202,7 @@ class ChatRooms(IconNotebook):
                 option_label=_("Make room private"),
                 callback=self.on_create_room_response,
                 callback_data=room
-            ).show()
+            ).present()
 
         else:
             core.chatrooms.show_room(room)
@@ -236,12 +236,10 @@ class ChatRooms(IconNotebook):
             is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
             self.pages[room] = tab = ChatRoom(self, room, is_private=is_private, is_global=is_global)
 
-            if remembered and not is_global:
-                tab_position = -1
-            elif is_global or core.chatrooms.GLOBAL_ROOM_NAME not in self.pages:
+            if is_global and not remembered:
                 tab_position = 0
             else:
-                tab_position = 1
+                tab_position = -1
 
             self.insert_page(
                 tab.container, room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,
@@ -296,7 +294,7 @@ class ChatRooms(IconNotebook):
             return
 
         self.highlighted_rooms[room] = user
-        self.window.application.notifications.update_title()
+        self.window.update_title()
         self.window.application.tray_icon.update_icon()
 
     def unhighlight_room(self, room):
@@ -305,7 +303,7 @@ class ChatRooms(IconNotebook):
             return
 
         del self.highlighted_rooms[room]
-        self.window.application.notifications.update_title()
+        self.window.update_title()
         self.window.application.tray_icon.update_icon()
 
     def join_room(self, msg):
@@ -467,7 +465,7 @@ class ChatRoom:
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
-            activate_row_callback=self.on_row_activated,
+            persistent_sort=True, activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
                 "status": {
@@ -618,7 +616,7 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country_code = core.user_countries.get(username) or userdata.country or ""
+        country_code = core.users.countries.get(username) or userdata.country or ""
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
@@ -700,7 +698,7 @@ class ChatRoom:
             self.update_room_user_completions()
 
         self.activity_view.append_line(
-            _("%s joined the room") % core.login_username,
+            _("%s joined the room") % core.users.login_username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
@@ -710,7 +708,7 @@ class ChatRoom:
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items and user != core.login_username)
+        private_rooms_enabled = (menu_private_rooms.items and user != core.users.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
@@ -856,7 +854,7 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if self.chatrooms.completion.entry == self.chat_entry and username not in core.userlist.buddies:
+        if self.chatrooms.completion.entry == self.chat_entry and username not in core.buddies.users:
             self.chatrooms.completion.remove_completion(username)
 
         if not core.network_filter.is_user_ignored(username) and \
@@ -1006,7 +1004,7 @@ class ChatRoom:
             message=_("Do you really want to permanently delete all logged messages for this room?"),
             destructive_response_id="ok",
             callback=self.on_delete_room_log_response
-        ).show()
+        ).present()
 
     def update_room_user_completions(self):
         self.update_completions(core.chatrooms.completions.copy())

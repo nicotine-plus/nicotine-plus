@@ -82,7 +82,7 @@ class Popover:
 
         self.menu_button = menu_button
 
-    def show(self):
+    def present(self):
         self.widget.popup()
 
     def close(self, use_transition=True):

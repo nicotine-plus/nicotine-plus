@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-01-14 17:06+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -25,7 +25,7 @@ msgstr "Soulseek Klients"
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafiskais klients Soulseek peer-to-peer tīklam"
+msgstr "Grafiskais klients Soulseek vienādranga tīklam"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
@@ -38,7 +38,7 @@ msgstr "Grafiskais klients Soulseek tīklam"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotine+ ir Soulseek peer-to-peer tīkla grafiskais klients."
+msgstr "Nicotine+ ir Soulseek vienādranga tīkla grafiskais klients."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
 msgid ""
@@ -120,7 +120,7 @@ msgstr "ip"
 
 #: pynicotine/__init__.py:71
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "saistīt ligzdas ar norādīto IP adresi (noderīgi priekš VPN)"
+msgstr "piesaistīt ligzdas norādītajai IP (noderīgi VPN)"
 
 #: pynicotine/__init__.py:74
 msgid "port"
@@ -128,7 +128,7 @@ msgstr "ports"
 
 #: pynicotine/__init__.py:75
 msgid "listen on the given port"
-msgstr "klausīties dotajā portā"
+msgstr "klausīties uz norādīto portu"
 
 #: pynicotine/__init__.py:79
 msgid "rescan shared files"
@@ -136,7 +136,7 @@ msgstr "pārskenēt koplietotos failus"
 
 #: pynicotine/__init__.py:83
 msgid "start the program in headless mode (no GUI)"
-msgstr "palaist programmu bezgalvas režīmā (bez GUI)"
+msgstr "palaist programmu bezgalvas režīmā (bez grafiskās lietotāja saskarnes)"
 
 #: pynicotine/__init__.py:87
 msgid "display version and exit"
@@ -155,23 +155,23 @@ msgstr ""
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Neizdevās skenēt kopīgotos failus. Lūdzu, aizveriet citus Nicotine+ "
-"gadījumus un mēģiniet vēlreiz."
+"Neizdevās skenēt kopīgotos failus. Lūdzu, aizveriet citas Nicotine+ "
+"instances un mēģiniet vēlreiz."
 
 #: pynicotine/chatrooms.py:332
 #, python-format
 msgid "You have been added to a private room: %(room)s"
-msgstr "Jūs esat pievienots privātai telpai: %(room)s"
+msgstr "Jūs esat pievienots privātai istabai: %(room)s"
 
 #: pynicotine/chatrooms.py:460
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
-msgstr "Tērzēšanas ziņa no lietotāja “%(user)s” istabā “%(room)s”: %(message)s"
+msgstr "Tērzēšanas ziņa no lietotāja '%(user)s' istabā '%(room)s': %(message)s"
 
 #: pynicotine/config.py:125 pynicotine/config.py:144
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "Nevar izveidot direktoriju “%(path)s”, ziņotā kļūda: %(error)s"
+msgstr "Nevar izveidot direktoriju '%(path)s', ziņotā kļūda: %(error)s"
 
 #: pynicotine/config.py:793
 #, python-format
@@ -181,18 +181,18 @@ msgstr "Dublējot konfigurāciju, radās kļūda: %s"
 #: pynicotine/config.py:796
 #, python-format
 msgid "Config backed up to: %s"
-msgstr "Konfigurācijas dublējums saglabāts : %s"
+msgstr "Konfigurācijas dublējums saglabāts: %s"
 
 #: pynicotine/core.py:131 pynicotine/core.py:135
 #: pynicotine/gtkgui/__init__.py:91
 #, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Notiek ielāde %(program)s %(version)s"
+msgstr "Ielādē %(program)s %(version)s"
 
 #: pynicotine/core.py:262
 #, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Notiek iziešana no %(program)s %(version)s, %(status)s…"
+msgstr "Iziet no %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/core.py:265
 msgid "terminating"
@@ -200,7 +200,7 @@ msgstr "pārtrauc"
 
 #: pynicotine/core.py:265
 msgid "application closing"
-msgstr "aplikācijas aizvēršana"
+msgstr "lietotnes aizvēršana"
 
 #: pynicotine/core.py:277
 msgid "You need to specify a username and password before connecting…"
@@ -209,7 +209,7 @@ msgstr "Pirms savienojuma izveides ir jānorāda lietotājvārds un parole…"
 #: pynicotine/core.py:393
 #, python-format
 msgid "Quit %(program)s %(version)s!"
-msgstr "Iziet %(program)s %(version)s!"
+msgstr "Iziet no %(program)s %(version)s!"
 
 #: pynicotine/core.py:447
 #, python-format
@@ -261,8 +261,8 @@ msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"Jums nav Soulseek privilēģiju. Privilēģijas nav nepieciešamas, bet tās ļauj "
-"Jūsu lejupielādēm būt rindā pirms lietotājiem, kuriem nav privilēģiju."
+"Jums nav Soulseek privilēģiju. Kamēr privilēģijas ir aktīvas, jūsu "
+"lejupielādes tiks rindotas pirms neprivilēģēto lietotāju lejupielādēm."
 
 #: pynicotine/core.py:578
 #, python-format
@@ -285,12 +285,12 @@ msgstr "Parole Nomainīta"
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
-"Kļūda: Neizdevās Lejupielādēt Filtru! Pārbaudiet Savus Filtrus. Iemesls: %s"
+"Kļūda: Lejupielādes Filtrs neizdevās! Pārbaudiet savus filtrus. Iemesls: %s"
 
 #: pynicotine/downloads.py:227
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
-msgstr "Kļūda: %(num)d Neizdevās lejupielādēt filtrus! %(error)s "
+msgstr "Kļūda: %(num)d Lejupielādes filtri neizdevās! %(error)s "
 
 #: pynicotine/downloads.py:344
 #, python-format
@@ -310,12 +310,12 @@ msgstr "Izpildīts: %s"
 #: pynicotine/nowplaying.py:308
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
-msgstr "Izpildīt “%(command)s” neizdevās: %(error)s"
+msgstr "Izpildīt '%(command)s' neizdevās: %(error)s"
 
 #: pynicotine/downloads.py:380
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr "%(folder)s lejupielādēts(-i) no %(user)s"
+msgstr "%(folder)s lejupielādēta(-s) no %(user)s"
 
 #: pynicotine/downloads.py:384
 msgid "Folder Downloaded"
@@ -329,7 +329,7 @@ msgstr "Izpildīts mapē: %s"
 #: pynicotine/downloads.py:419
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
-msgstr "Nevarēja pārvietot “%(tempfile)s” uz “%(file)s”: %(error)s"
+msgstr "Nevarēja pārvietot '%(tempfile)s' uz '%(file)s': %(error)s"
 
 #: pynicotine/downloads.py:427 pynicotine/downloads.py:1164
 msgid "Download Folder Error"
@@ -353,7 +353,7 @@ msgstr "Lejupielādes I/O kļūda: %s"
 #: pynicotine/downloads.py:1145
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr "Nevar iegūt ekskluzīvu faila noslēgumu - I/O kļūda: %s"
+msgstr "Nevar iegūt ekskluzīvu piekļuvi failam - I/O kļūda: %s"
 
 #: pynicotine/downloads.py:1158
 #, python-format
@@ -372,7 +372,9 @@ msgstr "Nevar atrast %s, lūdzu, instalējiet to."
 
 #: pynicotine/gtkgui/__init__.py:134
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr "Nav pieejama grafiskā vide, tiek izmantots bezgalvas (bez GUI) režīms"
+msgstr ""
+"Nav pieejama grafiskā vide, tiek izmantots bezgalvas (bez grafiskās "
+"lietotāja saskarnes) režīms"
 
 #: pynicotine/gtkgui/application.py:297
 msgid "You are still uploading files. Do you really want to exit?"
@@ -380,7 +382,7 @@ msgstr "Jūs joprojām augšupielādējat failus. Vai tiešām vēlaties iziet?"
 
 #: pynicotine/gtkgui/application.py:298
 msgid "Wait for uploads to finish"
-msgstr "Gaidīt, kad augšupielādes tiks pabeigtas"
+msgstr "Gaidīt, līdz augšupielādes tiks pabeigtas"
 
 #: pynicotine/gtkgui/application.py:300
 msgid "Do you really want to exit?"
@@ -412,7 +414,7 @@ msgstr "Koplietojumi Nav Pieejami"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Pārbaudiet, vai ārējie diski ir uzstādīti un mapju atļaujas ir pareizas."
+"Pārbaudiet, vai ārējie diski ir pievienoti un vai mapju atļaujas ir pareizas."
 
 #: pynicotine/gtkgui/application.py:338 pynicotine/gtkgui/application.py:362
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:41
@@ -448,11 +450,11 @@ msgstr "Mainīt _Pierakstīšanās Informāciju"
 
 #: pynicotine/gtkgui/application.py:513
 msgid "Message Downloading Users"
-msgstr "Sūtīt Ziņu Lejupielādējošajiem Lietotājiem"
+msgstr "Ziņa Lejupielādētājiem"
 
 #: pynicotine/gtkgui/application.py:514
 msgid "Send private message to all users who are downloading from you:"
-msgstr "Nosūtiet privātu ziņu visiem lietotājiem, kas no Jums lejupielādē:"
+msgstr "Nosūtīt privātu ziņu visiem lietotājiem, kuri lejupielādē no jums:"
 
 #: pynicotine/gtkgui/application.py:515 pynicotine/gtkgui/application.py:529
 msgid "_Send Message"
@@ -464,7 +466,7 @@ msgstr "Sūtīt Ziņu Draugiem"
 
 #: pynicotine/gtkgui/application.py:528
 msgid "Send private message to all online buddies:"
-msgstr "Sūtīt privātu ziņu visiem tiešsaistes draugiem:"
+msgstr "Nosūtīt privātu ziņu visiem draugiem, kas ir tiešsaistē:"
 
 #: pynicotine/gtkgui/application.py:557
 msgid "Select a Saved Shares List File"
@@ -479,8 +481,8 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nicotine+ ir saskāries ar kritisku kļūdu, un tam ir jāiziet. Lūdzu, "
-"nokopējiet sekojošo ziņu un iekļaujiet to kļūdu ziņojumā:"
+"Nicotine+ saskārās ar kritisku kļūdu, un ir jāiziet. Lūdzu, nokopējiet "
+"sekojošo ziņu un iekļaujiet to kļūdu ziņojumā:"
 
 #: pynicotine/gtkgui/application.py:643
 msgid "_Quit Nicotine+"
@@ -542,7 +544,7 @@ msgstr "Faili"
 
 #: pynicotine/gtkgui/chatrooms.py:535
 msgid "Sear_ch User's Files"
-msgstr "_Meklēt lietotāja failus"
+msgstr "_Meklēt Lietotāja Failus"
 
 #: pynicotine/gtkgui/chatrooms.py:536 pynicotine/gtkgui/chatrooms.py:714
 #: pynicotine/gtkgui/userlist.py:146 pynicotine/gtkgui/userlist.py:219
@@ -2467,7 +2469,7 @@ msgstr "_Dot Privilēģijas"
 
 #: pynicotine/gtkgui/widgets/textview.py:452
 msgid "--- old messages above ---"
-msgstr "--- vecās ziņas augstāk ---"
+msgstr "--- iepriekšējās ziņas augstāk ---"
 
 #: pynicotine/gtkgui/widgets/theme.py:184
 msgid "Executable"
@@ -2545,7 +2547,7 @@ msgstr "Sākt Ziņapmaiņu"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:230
 msgid "Enter the name of the user whom you want to send a message:"
-msgstr "Ievadiet tā lietotāja vārdu, kuram vēlaties nosūtīt ziņu:"
+msgstr "Ievadiet lietotāja vārdu, kuram vēlaties nosūtīt ziņu:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:231
 msgid "_Message"
@@ -2553,7 +2555,7 @@ msgstr "_Ziņa"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:251
 msgid "Enter the name of the user whose profile you want to see:"
-msgstr "Ievadiet tā lietotāja vārdu, kura profilu vēlaties skatīt:"
+msgstr "Ievadiet lietotāja vārdu, kura profilu vēlaties apskatīt:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:252
 msgid "_View Profile"
@@ -2561,7 +2563,7 @@ msgstr "_Skatīt Profilu"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:272
 msgid "Enter the name of the user whose shares you want to see:"
-msgstr "Ievadiet tā lietotāja vārdu, kura kopīgoto saturu vēlaties redzēt:"
+msgstr "Ievadiet lietotāja vārdu, kura koplietojumus vēlaties redzēt:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:273
 msgid "_Browse"
@@ -2578,11 +2580,11 @@ msgstr "Negrupēts"
 
 #: pynicotine/gtkgui/widgets/treeview.py:801
 msgid "Group by Folder"
-msgstr "Grupēšana pēc mapes"
+msgstr "Grupēšana pēc Mapes"
 
 #: pynicotine/gtkgui/widgets/treeview.py:804
 msgid "Group by User"
-msgstr "Grupēšana pēc lietotāja"
+msgstr "Grupēšana pēc Lietotāja"
 
 #: pynicotine/headless/application.py:74
 #, python-format
@@ -4118,7 +4120,7 @@ msgid ""
 "choose a different port. Error: %(error)s"
 msgstr ""
 "Nevar klausīties portā %(port)s. Pārliecinieties, ka to neizmanto neviena "
-"cita lietojumprogramma, vai izvēlieties citu portu. Kļūda: %(error)s"
+"cita lietotne, vai izvēlieties citu portu. Kļūda: %(error)s"
 
 #: pynicotine/slskproto.py:496
 #, python-format
@@ -4336,8 +4338,8 @@ msgid ""
 "To connect with other Soulseek peers, a listening port on your router has to "
 "be forwarded to your computer."
 msgstr ""
-"Lai izveidotu savienojumu ar citiem Soulseek lietotājiem, maršrutētāja "
-"klausīšanās ports ir jāpārsūta uz jūsu datoru."
+"Lai savienotos ar citiem Soulseek lietotājiem, klausīšanās ports jūsu "
+"maršrutētājā ir jānovirza uz jūsu datoru."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:266
 msgid ""
@@ -5039,8 +5041,8 @@ msgid ""
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
 "Pievienojiet b, k, m vai g (alternatīvi kib, mib vai gib), lai norādītu "
-"baita, kibibita, mebibaita vai gibibita vienības:\n"
-"    20m, lai parādītu failus, kas lielāki par 20 MiB (mebibibitiem)."
+"baita, kibibaita, mebibaita vai gibibaita vienības:\n"
+"    20m, lai parādītu failus, kas lielāki par 20 MiB (mebibaitiem)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:227
 msgid ""
@@ -5853,8 +5855,8 @@ msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"$ gadījumi tiek aizstāti ar URL. Noklusējuma sistēmas lietojumprogrammas "
-"tiek izmantotas gadījumos, kad protokols nav konfigurēts."
+"$ gadījumi tiek aizstāti ar URL. Noklusējuma sistēmas lietotnes tiek "
+"izmantotas gadījumos, kad protokols nav konfigurēts."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:38
 msgid "File manager command:"

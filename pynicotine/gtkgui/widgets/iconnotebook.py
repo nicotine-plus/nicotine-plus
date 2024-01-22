@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gc
 import sys
 
 from collections import deque
@@ -237,7 +236,16 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text.strip() if text else None)
+
+        text = text.strip() if text else None
+
+        if self.container.get_tooltip_text() == text:
+            return
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.container.set_visible(False)
+        self.container.set_tooltip_text(text)
+        self.container.set_visible(True)
 
     def set_text(self, text):
         self.label.set_text(text.strip())
@@ -346,13 +354,6 @@ class IconNotebook:
             tab_label = self.get_tab_label(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
-    def set_tab_text_colors(self):
-
-        for i in range(self.get_n_pages()):
-            page = self.get_nth_page(i)
-            tab_label = self.get_tab_label(page)
-            tab_label.set_text(tab_label.get_text())
-
     def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
         self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
 
@@ -380,7 +381,7 @@ class IconNotebook:
         self.parent.set_visible(True)
 
         if user is not None:
-            status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
+            status = core.users.statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
@@ -412,10 +413,6 @@ class IconNotebook:
 
             self.parent.set_visible(False)
 
-        # Release memory sooner by performing garbage collection.
-        # Helps when pages are larger, e.g. Browse Shares.
-        gc.collect()
-
     def remove_all_pages(self, *_args):
 
         OptionDialog(
@@ -424,7 +421,7 @@ class IconNotebook:
             message=_("Do you really want to close all tabs?"),
             destructive_response_id="ok",
             callback=self._on_remove_all_pages
-        ).show()
+        ).present()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
 
@@ -436,7 +433,10 @@ class IconNotebook:
         else:
             self.pages_button.set_image(Gtk.Image(icon_name=icon_name))  # pylint: disable=no-member
 
+        # Hide widget to keep tooltips for other widgets visible
+        self.pages_button.set_visible(False)
         self.pages_button.set_tooltip_text(tooltip_text)
+        self.pages_button.set_visible(True)
 
     def update_pages_menu_button(self):
 

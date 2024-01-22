@@ -125,7 +125,7 @@ class Statistics(Dialog):
             message=_("Do you really want to reset transfer statistics?"),
             destructive_response_id="ok",
             callback=self.on_reset_statistics_response
-        ).show()
+        ).present()
 
     def on_close(self, *_args):
         self.close()

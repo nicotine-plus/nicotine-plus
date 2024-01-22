@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 12, 2023
+Last updated on December 31, 2023
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -79,6 +79,15 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 0    | Offline |
 | 1    | Away    |
 | 2    | Online  |
+
+### Upload Permissions
+
+| Code | Status          |
+|------|-----------------|
+| 0    | No One          |
+| 1    | Everyone        |
+| 2    | Users in List   |
+[ 3    | Permitted Users |
 
 ### Transfer Directions
 
@@ -2163,8 +2172,8 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     3.  **uint32** <ins>totalupl</ins>
     4.  **uint32** <ins>queuesize</ins>
     5.  **bool** <ins>slotsfree</ins> *Can immediately upload*
-    6.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to us?*
-        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
+    6.  Optional (not sent by SoulseekQt)
+        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to us? See [Upload Permissions](#upload-permissions).*
   - Receive
     1.  **string** <ins>description</ins>
     2.  **bool** <ins>has picture</ins>
@@ -2173,8 +2182,8 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     4.  **uint32** <ins>totalupl</ins>
     5.  **uint32** <ins>queuesize</ins>
     6.  **bool** <ins>slotsfree</ins> *Can immediately download*
-    7.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to this user (not sent by SoulseekQt)?*
-        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
+    7.  Optional (not sent by SoulseekQt)
+        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to this user? See [Upload Permissions](#upload-permissions).*
 
 ## Peer Code 36
 

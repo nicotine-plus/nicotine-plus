@@ -344,9 +344,6 @@ class PluginSettings(Dialog):
 
     def update_settings(self, plugin_id, plugin_settings):
 
-        if plugin_id == self.plugin_id:
-            return
-
         self.plugin_id = plugin_id
         self.plugin_settings = plugin_settings
         plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
@@ -361,9 +358,6 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        if value in treeview.iterators:
-            return
-
         treeview.add_row([value])
 
     def on_add(self, _button, treeview):
@@ -374,7 +368,7 @@ class PluginSettings(Dialog):
             message=treeview.description,
             callback=self.on_add_response,
             callback_data=treeview
-        ).show()
+        ).present()
 
     def on_edit_response(self, window, _response_id, data):
 
@@ -400,7 +394,7 @@ class PluginSettings(Dialog):
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
-            ).show()
+            ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):

@@ -20,7 +20,7 @@ window.dialog:not(.message) .dialog-action-area {
     border-spacing: 0;
 }
 
-.generic-popover *:not(image) {
+.generic-popover *:not(image):not(separator) {
     /* Remove unwanted spacing from popovers */
     margin: 0;
 }

@@ -37,8 +37,8 @@ If you feel like contributing to Nicotine+, there are several ways to get involv
 
 ## Where did the name Nicotine come from?
 
-> I was in a geeky mood and was browsing [http://www.bash.org](http://www.bash.org)'s QDB.  
-I stumbled across [this quote](http://www.bash.org/?10159):  
+> I was in a geeky mood and was browsing http://www.bash.org's QDB.  
+I stumbled across this quote:  
 >> **\<etc>** so tempting to release a product called 'nicotine' and wait for the patches.  
 >> **\<etc>** then i would have a reason to only apply one patch a day. otherwise, i'm going against medical advise.  
 >
@@ -51,11 +51,11 @@ I stumbled across [this quote](http://www.bash.org/?10159):
 
 Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
-Soulseek is an unencrypted protocol not intended for secure communication.
-
 When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
+
+Soulseek is an unencrypted protocol not intended for secure communication.
 
 
 ## Authors
 
-Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. Nicotine+ exists thanks to its [core contributors](AUTHORS.md), [translators](TRANSLATORS.md) and [other contributions](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors).
+Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. Nicotine+ exists thanks to its [core team](AUTHORS.md), [translators](TRANSLATORS.md) and [contributors](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors).

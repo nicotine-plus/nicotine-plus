@@ -1,4 +1,12 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -41,7 +49,6 @@ class Uploads(Transfers):
         super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
 
         self.pending_shutdown = False
-        self.privileged_users = set()
         self.upload_speed = 0
         self.token = 0
 
@@ -53,7 +60,6 @@ class Uploads(Transfers):
         self._retry_failed_uploads_timer_id = None
 
         for event_name, callback in (
-            ("add-privileged-user", self._add_to_privileged),
             ("file-connection-closed", self._file_connection_closed),
             ("file-transfer-init", self._file_transfer_init),
             ("file-upload-progress", self._file_upload_progress),
@@ -61,7 +67,6 @@ class Uploads(Transfers):
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("queue-upload", self._queue_upload),
-            ("remove-privileged-user", self._remove_from_privileged),
             ("schedule-quit", self._schedule_quit),
             ("set-connection-stats", self._set_connection_stats),
             ("shares-ready", self._shares_ready),
@@ -109,7 +114,6 @@ class Uploads(Transfers):
         for timer_id in (self._upload_queue_timer_id, self._retry_failed_uploads_timer_id):
             events.cancel_scheduled(timer_id)
 
-        self.privileged_users.clear()
         self._pending_network_msgs.clear()
         self._user_update_counters.clear()
         self._user_update_counter = 0
@@ -127,19 +131,12 @@ class Uploads(Transfers):
 
     # Privileges #
 
-    def _add_to_privileged(self, username):
-        self.privileged_users.add(username)
-
-    def _remove_from_privileged(self, username):
-        if username in self.privileged_users:
-            self.privileged_users.remove(username)
-
     def is_privileged(self, username):
 
         if not username:
             return False
 
-        if username in self.privileged_users:
+        if username in core.users.privileged:
             return True
 
         return self.is_buddy_prioritized(username)
@@ -149,10 +146,10 @@ class Uploads(Transfers):
         if not username:
             return False
 
-        if username not in core.userlist.buddies:
+        if username not in core.buddies.users:
             return False
 
-        user_data = core.userlist.buddies[username]
+        user_data = core.buddies.users[username]
 
         # All users
         if config.sections["transfers"]["preferfriends"]:
@@ -285,9 +282,6 @@ class Uploads(Transfers):
 
         events.emit("update-upload-limits")
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            return
-
         use_speed_limit = config.sections["transfers"]["use_upload_speed_limit"]
         limit_by = config.sections["transfers"]["limitby"]
 
@@ -312,7 +306,7 @@ class Uploads(Transfers):
         old_upload = self.transfers.get(username + virtual_path)
 
         if self.is_privileged(username):
-            transfer.modifier = "privileged" if username in self.privileged_users else "prioritized"
+            transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
 
         if old_upload is not None:
             if virtual_path in self.queued_users.get(username, {}):
@@ -391,7 +385,7 @@ class Uploads(Transfers):
             log.add_upload(
                 _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
                     "user": username,
-                    "ip": core.user_addresses.get(username),
+                    "ip": core.users.addresses.get(username),
                     "file": virtual_path
                 }
             )
@@ -491,7 +485,7 @@ class Uploads(Transfers):
         enable_limits = True
 
         if config.sections["transfers"]["friendsnolimits"]:
-            if username in core.userlist.buddies:
+            if username in core.buddies.users:
                 enable_limits = False
 
         if enable_limits:
@@ -584,7 +578,7 @@ class Uploads(Transfers):
 
         username = upload_candidate.username
 
-        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
+        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to upload to is
             if self._auto_clear_transfer(upload_candidate):
                 return
@@ -626,11 +620,10 @@ class Uploads(Transfers):
         else:
             status = TransferRejectReason.BANNED
 
-        for upload in self.transfers.copy().values():
-            if upload.username not in users:
-                continue
-
-            self._clear_transfer(upload, denied_message=status)
+        self.clear_uploads(
+            uploads=[upload for upload in self.transfers.copy().values() if upload.username in users],
+            denied_message=status
+        )
 
         for username in users:
             core.network_filter.ban_user(username)
@@ -666,7 +659,7 @@ class Uploads(Transfers):
             self._unfail_transfer(transfer)
             transfer.size = size
 
-        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
+        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to upload to is
             if not self._auto_clear_transfer(transfer):
                 self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
@@ -710,7 +703,7 @@ class Uploads(Transfers):
 
         events.emit("abort-uploads", uploads, status)
 
-    def clear_uploads(self, uploads=None, statuses=None):
+    def clear_uploads(self, uploads=None, statuses=None, denied_message=None):
 
         if uploads is None:
             # Clear all uploads
@@ -722,7 +715,7 @@ class Uploads(Transfers):
             if statuses and upload.status not in statuses:
                 continue
 
-            self._clear_transfer(upload, update_parent=False)
+            self._clear_transfer(upload, denied_message=denied_message, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
 
@@ -741,13 +734,6 @@ class Uploads(Transfers):
         """Server code 7."""
 
         username = msg.user
-        privileged = msg.privileged
-
-        if privileged is not None:
-            if privileged:
-                events.emit("add-privileged-user", username)
-            else:
-                events.emit("remove-privileged-user", username)
 
         if msg.status == slskmessages.UserStatus.OFFLINE:
             for upload in self.active_users.get(username, {}).copy().values():
@@ -766,21 +752,10 @@ class Uploads(Transfers):
             if upload.status == TransferStatus.USER_LOGGED_OFF:
                 self._abort_transfer(upload, status=TransferStatus.CANCELLED)
 
-    def _connect_to_peer(self, msg):
-        """Server code 18."""
-
-        if msg.privileged is None:
-            return
-
-        if msg.privileged:
-            events.emit("add-privileged-user", msg.user)
-        else:
-            events.emit("remove-privileged-user", msg.user)
-
     def _user_stats(self, msg):
         """Server code 36."""
 
-        if msg.user == core.login_username:
+        if msg.user == core.users.login_username:
             self.upload_speed = msg.avgspeed
 
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
@@ -862,10 +837,10 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
         self._append_transfer(transfer)
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
-
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
         self._check_upload_queue()
 
     def _transfer_request(self, msg):
@@ -918,13 +893,13 @@ class Uploads(Transfers):
             return None
 
         # All checks passed, user can queue file!
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
         if not self.is_new_upload_accepted() or username in self.active_users:
             transfer = Transfer(
                 username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
             self._append_transfer(transfer)
+            core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
             self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
 
@@ -935,6 +910,8 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
         self._activate_transfer(transfer, token)
         self._update_transfer(transfer)
 
@@ -1062,7 +1039,7 @@ class Uploads(Transfers):
             log.add_upload(
                 _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
                     "user": username,
-                    "ip": core.user_addresses.get(username),
+                    "ip": core.users.addresses.get(username),
                     "file": virtual_path
                 }
             )
@@ -1076,8 +1053,6 @@ class Uploads(Transfers):
             else:
                 self._finish_transfer(upload)
                 need_update = False
-
-        events.emit("upload-notification")
 
         if need_update:
             self._update_transfer(upload)
@@ -1142,7 +1117,7 @@ class Uploads(Transfers):
             self._finish_transfer(upload)
             return
 
-        if core.user_statuses.get(upload.username) == slskmessages.UserStatus.OFFLINE:
+        if core.users.statuses.get(upload.username) == slskmessages.UserStatus.OFFLINE:
             status = TransferStatus.USER_LOGGED_OFF
         else:
             status = TransferStatus.CANCELLED

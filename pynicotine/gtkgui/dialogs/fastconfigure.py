@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
 #
@@ -32,6 +32,7 @@ from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
 
 
 class FastConfigure(Dialog):
@@ -170,7 +171,7 @@ class FastConfigure(Dialog):
             title=_("Add a Shared Folder"),
             callback=self.on_add_shared_folder_selected,
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
@@ -204,7 +205,7 @@ class FastConfigure(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
-            ).show()
+            ).present()
             return
 
     def on_remove_shared_folder(self, *_args):
@@ -270,7 +271,9 @@ class FastConfigure(Dialog):
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        core.connect()
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+
         return True
 
     def on_show(self, *_args):

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -410,12 +410,12 @@ class UserPopupMenu(PopupMenu):
     def toggle_user_items(self):
 
         self.editing = True
-        self.actions[_("_Gift Privileges…")].set_enabled(bool(core.privileges_left))
+        self.actions[_("_Gift Privileges…")].set_enabled(bool(core.users.privileges_left))
 
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
+            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -424,7 +424,7 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.login_username or value))
+            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.users.login_username or value))
             self.actions[action_id].set_state(GLib.Variant("b", value))
 
         self.editing = False
@@ -481,7 +481,7 @@ class UserPopupMenu(PopupMenu):
         core.privatechat.show_user(self.username)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.username, notify=True)
+        core.users.request_ip_address(self.username, notify=True)
 
     def on_user_profile(self, *_args):
         core.userinfo.show_user(self.username)
@@ -511,9 +511,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_buddy(self.username)
+            core.buddies.add_buddy(self.username)
         else:
-            core.userlist.remove_buddy(self.username)
+            core.buddies.remove_buddy(self.username)
 
         action.set_state(state)
 
@@ -577,19 +577,19 @@ class UserPopupMenu(PopupMenu):
 
         try:
             days = int(days)
-            core.request_give_privileges(self.username, days)
+            core.users.request_give_privileges(self.username, days)
 
         except ValueError:
             self.on_give_privileges(error=_("Please enter number of days."))
 
     def on_give_privileges(self, *_args, error=None):
 
-        core.request_check_privileges()
+        core.users.request_check_privileges()
 
-        if core.privileges_left is None:
+        if core.users.privileges_left is None:
             days = _("Unknown")
         else:
-            days = core.privileges_left // 60 // 60 // 24
+            days = core.users.privileges_left // 60 // 60 // 24
 
         message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
                    {"user": self.username, "days_left": _("%(days)s days left") % {"days": days}})
@@ -603,4 +603,4 @@ class UserPopupMenu(PopupMenu):
             message=message,
             action_button_label=_("_Give Privileges"),
             callback=self.on_give_privileges_response
-        ).show()
+        ).present()

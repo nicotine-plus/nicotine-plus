@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2023-12-31 13:07+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -1106,7 +1106,7 @@ msgstr "Patrón"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1316
 msgid "Replacement"
-msgstr "Sustitución"
+msgstr "Recambio"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1446
 msgid "Censor Pattern"
@@ -1325,7 +1325,7 @@ msgstr "Duración"
 #: pynicotine/gtkgui/dialogs/preferences.py:2698
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 msgid "Bitrate"
-msgstr "Tasa de bits"
+msgstr "Bitrate"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2700
 msgid "Comment"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2023-12-28 13:01+0000\n"
+"PO-Revision-Date: 2024-01-08 22:33+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -19,12 +19,12 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
-msgstr "Soulseek cliënt"
+msgstr "Soulseek Client"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafische cliënt voor het Soulseek peer-to-peer netwerk"
+msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
@@ -37,7 +37,7 @@ msgstr "Grafische client voor het Soulseek-netwerk"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr ""
-"Nicotine+ is een grafische cliënt voor het Soulseek peer-to-peer netwerk."
+"Nicotine+ is een grafische client voor het Soulseek peer-to-peer netwerk."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:15
 msgid ""
@@ -46,7 +46,7 @@ msgid ""
 "comprehensive set of features."
 msgstr ""
 "Nicotine+ wil een lichtgewicht aangename, gratis en open source (FOSS) "
-"alternatief zijn voor de officiële Soulseek-cliënt, met een logische set "
+"alternatief zijn voor de officiële Soulseek-client, met een logische set "
 "features."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:29
@@ -1973,7 +1973,7 @@ msgstr "[PRIVÉ] %s"
 #: pynicotine/gtkgui/search.py:910
 #: pynicotine/gtkgui/widgets/notifications.py:69
 msgid "Wishlist Results Found"
-msgstr "Verlanglijst-item gevonden"
+msgstr "Verlanglijst Resultaten Gevonden"
 
 #: pynicotine/gtkgui/search.py:1258
 #, python-format
@@ -3234,7 +3234,7 @@ msgstr "Mongolië"
 
 #: pynicotine/networkfilter.py:180
 msgid "Macau"
-msgstr "Macau"
+msgstr "Macao"
 
 #: pynicotine/networkfilter.py:181
 msgid "Northern Mariana Islands"
@@ -3764,7 +3764,7 @@ msgstr "Privéchat sluiten"
 
 #: pynicotine/plugins/core_commands/__init__.py:135
 msgid "Request user's client version"
-msgstr "De cliëntversie van de gebruiker aanvragen"
+msgstr "De clientversie van de gebruiker opvragen"
 
 #: pynicotine/plugins/core_commands/__init__.py:144
 msgid "Send private message to user"
@@ -3973,7 +3973,7 @@ msgid ""
 "Trace: %(trace)s"
 msgstr ""
 "Plugin %(module)s is mislukt met fout %(errortype)s: %(error)s\n"
-"Trace: %(trace)s."
+"Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:793
 msgid "No description"
@@ -4943,10 +4943,10 @@ msgid ""
 "those yet to arrive."
 msgstr ""
 "Elke lijst met zoekresultaten heeft zijn eigen filter die zichtbaar gemaakt "
-"kan worden door op de knop Resultaatfilters te klikken. Een filter bestaat "
-"uit meerdere velden, die allemaal worden toegepast wanneer je Enter drukt in "
-"een van de velden. Het filteren wordt direct toegepast op de al ontvangen "
-"resultaten, en ook op de resultaten die nog moeten binnenkomen."
+"kan worden door op de knop zoekresultaatfilters te klikken. Een filter "
+"bestaat uit meerdere velden, die allemaal worden toegepast wanneer je Enter "
+"drukt in een van de velden. Het filteren wordt direct toegepast op de al "
+"ontvangen resultaten, en ook op de resultaten die nog moeten binnenkomen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:46
 msgid ""
@@ -5960,7 +5960,7 @@ msgstr "Chatroom vermeldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:352
 msgid "Wishlist results found"
-msgstr "Verlanglijst-item gevonden"
+msgstr "Verlanglijst resultaten gevonden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:395
 msgid "Restore the previously active main tab at startup"

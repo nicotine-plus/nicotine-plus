@@ -1,4 +1,12 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -137,7 +145,7 @@ class Transfers:
 
         # Watch transfers for user status updates
         for username in self.failed_users:
-            core.watch_user(username)
+            core.users.watch_user(username)
 
         self.update_transfer_limits()
 
@@ -363,7 +371,7 @@ class Transfers:
 
     def _enqueue_transfer(self, transfer):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.QUEUED
 
@@ -399,7 +407,7 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
@@ -413,7 +421,8 @@ class Transfers:
         # To account for potential delays while initializing the connection, add 15 seconds
         # to the timeout value.
 
-        transfer.request_timer_id = events.schedule(delay=45, callback=lambda: self._transfer_timeout(transfer))
+        transfer.request_timer_id = events.schedule(
+            delay=45, callback=self._transfer_timeout, callback_args=(transfer,))
 
         self.active_users[transfer.username][token] = transfer
 

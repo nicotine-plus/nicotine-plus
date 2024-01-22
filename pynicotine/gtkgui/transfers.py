@@ -112,7 +112,7 @@ class Transfers:
 
         self.tree_view = TreeView(
             window, parent=self.tree_container, name=transfer_type,
-            multi_select=True, activate_row_callback=self.on_row_activated,
+            multi_select=True, persistent_sort=True, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_clear_transfers_accelerator,
             columns={
                 # Visible columns
@@ -315,10 +315,6 @@ class Transfers:
 
         self.select_child_transfers(transfer)
 
-    def new_transfer_notification(self, finished=False):
-        if self.window.current_page_id != self.transfer_page.id:
-            self.window.notebook.request_tab_changed(self.transfer_page, is_important=finished)
-
     def on_file_search(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
@@ -351,6 +347,9 @@ class Transfers:
     def update_model(self, transfer=None, update_parent=True, select_parent=False):
 
         if self.window.current_page_id != self.transfer_page.id:
+            if transfer is not None and transfer.iterator is None:
+                self.window.notebook.request_tab_changed(self.transfer_page)
+
             # No need to do unnecessary work if transfers are not visible
             return
 
@@ -413,14 +412,14 @@ class Transfers:
                 self.pending_folder_rows.add(user_folder_path)
 
             self.pending_user_rows.add(username)
+            return
 
-        else:
-            if self.paths:
-                for user_folder_path, (user_folder_path_iter, child_transfers) in self.paths.copy().items():
-                    self.update_parent_row(user_folder_path_iter, child_transfers, user_folder_path=user_folder_path)
+        if self.paths:
+            for user_folder_path, (user_folder_path_iter, child_transfers) in self.paths.copy().items():
+                self.update_parent_row(user_folder_path_iter, child_transfers, user_folder_path=user_folder_path)
 
-            for username, (user_iter, child_transfers) in self.users.copy().items():
-                self.update_parent_row(user_iter, child_transfers, username=username)
+        for username, (user_iter, child_transfers) in self.users.copy().items():
+            self.update_parent_row(user_iter, child_transfers, username=username)
 
     @staticmethod
     def get_hqueue_position(queue_position):
@@ -468,6 +467,12 @@ class Transfers:
                 del self.users[username]
 
             self.tree_view.remove_row(iterator)
+
+            if not self.tree_view.iterators:
+                # Show tab description
+                self.container.get_parent().set_visible(False)
+
+            self.update_num_users_files()
             return
 
         for transfer in child_transfers:
@@ -748,6 +753,7 @@ class Transfers:
         self.selected_transfers.clear()
         self.selected_users.clear()
         self.tree_view.clear()
+        self.row_id = 0
 
         for transfer in self.transfer_list:
             transfer.iterator = None
@@ -800,18 +806,12 @@ class Transfers:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
-        if not self.transfer_list:
+        if not self.tree_view.iterators:
             # Show tab description
             self.container.get_parent().set_visible(False)
 
     def clear_transfers(self, *_args):
-
         self.update_parent_rows()
-        self.update_num_users_files()
-
-        if not self.transfer_list:
-            # Show tab description
-            self.container.get_parent().set_visible(False)
 
     def add_popup_menu_user(self, popup, user):
 
@@ -1039,7 +1039,7 @@ class Transfers:
                 self.file_properties = FileProperties(self.window.application, download_button=False)
 
             self.file_properties.update_properties(data, selected_size, selected_length)
-            self.file_properties.show()
+            self.file_properties.present()
 
     def on_copy_url(self, *_args):
         # Implemented in subclasses

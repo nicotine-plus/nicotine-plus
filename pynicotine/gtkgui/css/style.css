@@ -117,6 +117,7 @@ progressbar.osd trough,
 progressbar.osd progress {
     /* Make overlay progress bars slightly more legible */
     min-height: 4px;
+    min-width: 4px;
 }
 
 treeview button:not(:last-child):dir(ltr) > box,

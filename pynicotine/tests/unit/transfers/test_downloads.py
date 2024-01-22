@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,6 +25,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.downloads import RequestedFolder
 from pynicotine.transfers import TransferStatus
+from pynicotine.userbrowse import BrowsedUser
 
 
 class DownloadsTest(TestCase):
@@ -36,7 +37,7 @@ class DownloadsTest(TestCase):
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"shares", "downloads", "userbrowse", "userlist"})
+        core.init_components(enabled_components={"users", "shares", "downloads", "userbrowse", "buddies"})
         config.sections["transfers"]["downloaddir"] = config.data_folder_path
 
         core.start()
@@ -46,10 +47,11 @@ class DownloadsTest(TestCase):
 
         core.quit()
 
+        self.assertIsNone(core.users)
         self.assertIsNone(core.shares)
         self.assertIsNone(core.downloads)
         self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
 
     def test_load_downloads(self):
         """Test loading a downloads.json file."""
@@ -225,7 +227,8 @@ class DownloadsTest(TestCase):
         """Verify that subfolders are downloaded to the correct location."""
 
         username = "random"
-        core.userbrowse.user_shares[username] = dict([
+        browsed_user = core.userbrowse.users[username] = BrowsedUser(username)
+        browsed_user.public_folders = dict([
             ("share", [
                 (1, "root1.mp3", 1000, "", {})
             ]),

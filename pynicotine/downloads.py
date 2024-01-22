@@ -1,4 +1,12 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,7 +31,6 @@ import shutil
 import time
 
 from collections import defaultdict
-from locale import strxfrm
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -230,9 +237,6 @@ class Downloads(Transfers):
 
         events.emit("update-download-limits")
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            return
-
         use_speed_limit = config.sections["transfers"]["use_download_speed_limit"]
 
         if use_speed_limit == "primary":
@@ -275,7 +279,7 @@ class Downloads(Transfers):
             except re.error:
                 pass
 
-        if slskmessages.UserStatus.OFFLINE in (core.user_status, core.user_statuses.get(username)):
+        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to download from is
             self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return False
@@ -375,6 +379,8 @@ class Downloads(Transfers):
                 if download.folder_path == folder_path:
                     return
 
+        events.emit("folder-download-finished", folder_path)
+
         if config.sections["notifications"]["notification_popup_folder"]:
             core.notifications.show_download_notification(
                 _("%(folder)s downloaded from %(user)s") % {
@@ -460,8 +466,6 @@ class Downloads(Transfers):
         self._file_downloaded_actions(username, download_file_path)
         self._folder_downloaded_actions(username, transfer.folder_path)
 
-        finished = True
-        events.emit("download-notification", finished)
         core.pluginhandler.download_finished_notification(username, virtual_path, download_file_path)
 
         log.add_download(
@@ -567,13 +571,13 @@ class Downloads(Transfers):
             # Everyone
             return True
 
-        if transfers["uploadallowed"] == 2 and username in core.userlist.buddies:
+        if transfers["uploadallowed"] == 2 and username in core.buddies.users:
             # Buddies
             return True
 
         if transfers["uploadallowed"] == 3:
             # Trusted buddies
-            user_data = core.userlist.buddies.get(username)
+            user_data = core.buddies.users.get(username)
 
             if user_data and user_data.is_trusted:
                 return True
@@ -706,7 +710,7 @@ class Downloads(Transfers):
 
     def enqueue_folder(self, username, folder_path, download_folder_path=None):
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             return
 
         requested_folder = self._requested_folders.get(username, {}).get(folder_path)
@@ -725,7 +729,7 @@ class Downloads(Transfers):
             requested_folder.request_timer_id = None
 
         requested_folder.request_timer_id = events.schedule(
-            delay=timeout, callback=lambda: self._requested_folder_timeout(requested_folder)
+            delay=timeout, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
         )
 
         log.add_transfer("Requesting contents of folder %(path)s from user %(user)s", {
@@ -959,7 +963,11 @@ class Downloads(Transfers):
                 requested_folder.request_timer_id = None
 
             if check_num_files and num_files > 100:
-                events.emit("download-large-folder", username, folder_path, num_files, msg)
+                check_num_files = False
+                events.emit(
+                    "download-large-folder", username, folder_path, num_files,
+                    self._folder_contents_response, (msg, check_num_files)
+                )
                 return
 
             if not files and not requested_folder.legacy_attempt:
@@ -970,9 +978,6 @@ class Downloads(Transfers):
 
             destination_folder_path = self.get_folder_destination(username, folder_path)
             del self._requested_folders[username][folder_path]
-
-            if num_files > 1:
-                files.sort(key=lambda x: strxfrm(x[1]))
 
             log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                               "Destination path: %(destination)s"), {
@@ -1330,7 +1335,7 @@ class Downloads(Transfers):
             self._finish_transfer(download)
             return
 
-        if core.user_statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
+        if core.users.statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
             status = TransferStatus.USER_LOGGED_OFF
         else:
             status = TransferStatus.CANCELLED

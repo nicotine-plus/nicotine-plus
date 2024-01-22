@@ -86,7 +86,7 @@ class Downloads(Transfers):
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
-            ("download-notification", self.new_transfer_notification),
+            ("folder-download-finished", self.folder_download_finished),
             ("start", self.start),
             ("update-download", self.update_model)
         ):
@@ -121,7 +121,7 @@ class Downloads(Transfers):
             message=_("Do you really want to clear all queued downloads?"),
             destructive_response_id="ok",
             callback=self.on_clear_queued
-        ).show()
+        ).present()
 
     def on_clear_all_response(self, *_args):
         core.downloads.clear_downloads()
@@ -134,21 +134,30 @@ class Downloads(Transfers):
             message=_("Do you really want to clear all downloads?"),
             destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
-    def folder_download_response(self, _dialog, _response_id, msg):
-        events.emit("folder-contents-response", msg, check_num_files=False)
+    def folder_download_response(self, _dialog, _response_id, data):
+        download_callback, callback_args = data
+        download_callback(*callback_args)
 
-    def download_large_folder(self, username, folder, numfiles, msg):
+    def folder_download_finished(self, _folder_path):
+        if self.window.current_page_id != self.transfer_page.id:
+            self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
+
+    def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
 
         OptionDialog(
             parent=self.window,
             title=_("Download %(num)i files?") % {"num": numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 "num": numfiles, "user": username, "folder": folder},
+            buttons=[
+                ("cancel", _("_No")),
+                ("download", _("_Yes"))
+            ],
             callback=self.folder_download_response,
-            callback_data=msg
-        ).show()
+            callback_data=(download_callback, callback_args)
+        ).present()
 
     def on_copy_url(self, *_args):
 

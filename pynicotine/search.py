@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -189,12 +189,14 @@ class Search:
                 continue
 
             else:
-                word = search_term_words[index] = word.translate(TRANSLATE_PUNCTUATION).strip()
+                subwords = word.translate(TRANSLATE_PUNCTUATION).strip().split()
+                word = search_term_words[index] = " ".join(x for x in subwords if x)
 
-                if not word:
+                if not subwords:
                     continue
 
-                included_words.append(word.lower())
+                for subword in subwords:
+                    included_words.append(subword.lower())
 
             search_term_words_no_quotes.append(word)
 
@@ -234,7 +236,7 @@ class Search:
 
         elif mode == "user":
             if not users:
-                users = [core.login_username]
+                users = [core.users.login_username]
 
             feedback = core.pluginhandler.outgoing_user_search_event(users, search_term)
 
@@ -306,7 +308,7 @@ class Search:
             core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
 
     def do_buddies_search(self, text):
-        for username in core.userlist.buddies:
+        for username in core.buddies.users:
             core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):
@@ -326,9 +328,6 @@ class Search:
         core.send_message_to_server(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
-
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            return
 
         searches = config.sections["server"]["autosearch"]
 
@@ -495,13 +494,13 @@ class Search:
     def _update_search_results(results, word_indices, excluded=False):
         """Updates the search result list with indices for a new word."""
 
-        if word_indices is None:
+        if not word_indices:
             if excluded:
                 # We don't care if an excluded word doesn't exist in our DB
                 return results
 
             # Included word does not exist in our DB, no results
-            return None
+            return set()
 
         if results is None:
             if excluded:
@@ -560,8 +559,7 @@ class Search:
                     if num_partial_results >= max_results:
                         break
 
-            if partial_results:
-                results = self._update_search_results(results, partial_results)
+            results = self._update_search_results(results, partial_results)
 
         # Included search words (e.g. hello)
         start_results = word_index.get(start_word)
@@ -601,7 +599,7 @@ class Search:
             # Don't return results when waiting to quit after finishing uploads
             return
 
-        if not direct and username == core.login_username:
+        if not direct and username == core.users.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -664,7 +662,7 @@ class Search:
             return
 
         core.send_message_to_peer(username, slskmessages.FileSearchResponse(
-            search_username=core.login_username,
+            search_username=core.users.login_username,
             token=token,
             shares=fileinfos,
             freeulslots=core.uploads.is_new_upload_accepted(),

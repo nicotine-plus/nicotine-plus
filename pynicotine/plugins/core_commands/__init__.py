@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -318,19 +318,21 @@ class Plugin(BasePlugin):
         self.output(output_text)
 
     def connect_command(self, _args, **_unused):
-        self.core.connect()
+        if self.core.users.login_status == UserStatus.OFFLINE:
+            self.core.connect()
 
     def disconnect_command(self, _args, **_unused):
-        self.core.disconnect()
+        if self.core.users.login_status != UserStatus.OFFLINE:
+            self.core.disconnect()
 
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if self.core.users.login_status == UserStatus.OFFLINE:
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
+        self.core.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.users.login_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 
@@ -425,14 +427,14 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userlist.add_buddy(user)
+        self.core.buddies.add_buddy(user)
 
     def remove_buddy_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.userlist.remove_buddy(user)
+        self.core.buddies.remove_buddy(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 
@@ -459,13 +461,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
-
-        if not online_ip_address:
-            self.core.request_ip_address(user)
-            return
-
-        self.output(online_ip_address)
+        self.core.users.request_ip_address(user, notify=True)
 
     def ban_command(self, args, user=None, **_unused):
 

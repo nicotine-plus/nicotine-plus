@@ -163,7 +163,8 @@
 # Third-Party Attributions
 
  - tinytag licensed under the MIT License.  
-   Copyright (c) 2014–2022 Tom Wallroth  
+   Copyright (c) 2014–2023 Tom Wallroth  
+   Copyright (c) 2021-2023 Mat (mathiascode)  
    https://github.com/devsnd/tinytag
 
  - Country flags licensed under the MIT License.  

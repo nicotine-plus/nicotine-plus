@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -266,6 +266,8 @@ class Scanner:
                 except Exception:
                     # Failed to load shares or version is invalid, rebuild
                     self.rescan = self.rebuild = True
+
+                self.queue.put("initialized")
 
             if self.rescan:
                 self.queue.put("rescanning")
@@ -697,8 +699,9 @@ class Shares:
         self.close_shares(self.share_dbs)
         self.initialized = False
 
-    def _server_login(self, _msg):
-        self.send_num_shared_folders_files()
+    def _server_login(self, msg):
+        if msg.success:
+            self.send_num_shared_folders_files()
 
     def _server_disconnect(self, _msg):
         self.requested_share_times.clear()
@@ -813,12 +816,12 @@ class Shares:
             if public_shared_files is not None and realfilename in public_shared_files:
                 file_is_shared = True
 
-            elif (buddy_shared_files is not None and username in core.userlist.buddies
+            elif (buddy_shared_files is not None and username in core.buddies.users
                     and realfilename in buddy_shared_files):
                 file_is_shared = True
 
             elif trusted_shared_files is not None:
-                user_data = core.userlist.buddies.get(username)
+                user_data = core.buddies.users.get(username)
 
                 if user_data and user_data.is_trusted and realfilename in trusted_shared_files:
                     file_is_shared = True
@@ -844,7 +847,7 @@ class Shares:
 
             return PermissionLevel.BANNED, ""
 
-        user_data = core.userlist.buddies.get(username)
+        user_data = core.buddies.users.get(username)
 
         if user_data:
             if user_data.is_trusted:
@@ -954,9 +957,6 @@ class Shares:
     def send_num_shared_folders_files(self):
         """Send number publicly shared files to the server."""
 
-        if not (core and core.user_status != slskmessages.UserStatus.OFFLINE):
-            return
-
         if self.rescanning:
             return
 
@@ -1022,6 +1022,9 @@ class Shares:
 
                 elif item == "rescanning":
                     emit_event("shares-scanning")
+
+                elif item == "initialized":
+                    self.initialized = True
 
         return True
 
@@ -1098,7 +1101,6 @@ class Shares:
         except Exception:
             self.file_path_index = ()
 
-        self.initialized = True
         self.rescanning = False
 
         if successful:

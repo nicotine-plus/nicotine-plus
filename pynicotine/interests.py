@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -27,7 +27,7 @@ class Interests:
     def __init__(self):
 
         for event_name, callback in (
-            ("item-similar-users", self._item_similar_users),
+            ("item-similar-users", self._similar_users),
             ("server-login", self._server_login),
             ("similar-users", self._similar_users)
         ):
@@ -132,15 +132,8 @@ class Interests:
         core.send_message_to_server(slskmessages.SimilarUsers())
 
     def _similar_users(self, msg):
-        """Server code 110."""
+        """Server code 110 and 112."""
 
         for username in msg.users:
             # Request user status, speed and number of shared files
-            core.watch_user(username)
-
-    def _item_similar_users(self, msg):
-        """Server code 112."""
-
-        for username in msg.users:
-            # Request user status, speed and number of shared files
-            core.watch_user(username)
+            core.users.watch_user(username)

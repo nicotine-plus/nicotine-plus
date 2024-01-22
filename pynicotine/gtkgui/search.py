@@ -171,7 +171,7 @@ class Searches(IconNotebook):
             if tab.container != page:
                 continue
 
-            self.window.application.notifications.update_title()
+            self.window.update_title()
             break
 
     def on_search_mode(self, action, state):
@@ -252,8 +252,8 @@ class Searches(IconNotebook):
             length = 20
 
         label = full_text[:length]
-        self.prepend_page(page.container, label, focus_callback=page.on_focus,
-                          close_callback=page.on_close, full_text=full_text)
+        self.append_page(page.container, label, focus_callback=page.on_focus,
+                         close_callback=page.on_close, full_text=full_text)
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page
@@ -450,6 +450,7 @@ class Search:
         self.folders = {}
         self.all_data = []
         self.grouping_mode = None
+        self.row_id = 0
         self.filters = {}
         self.filters_undo = self.FILTERS_EMPTY
         self.populating_filters = False
@@ -494,7 +495,7 @@ class Search:
             entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
-            self.window, parent=self.tree_container, name="file_search",
+            self.window, parent=self.tree_container, name="file_search", persistent_sort=True,
             multi_select=True, activate_row_callback=self.on_row_activated, focus_in_callback=self.on_refilter,
             columns={
                 # Visible columns
@@ -602,6 +603,7 @@ class Search:
         self.popup_menu.add_items(
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To…"), self.on_download_files_to),
+            ("", None),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
@@ -615,6 +617,7 @@ class Search:
 
         self.tab_menu = PopupMenu(self.window.application)
         self.tab_menu.add_items(
+            ("#" + _("Edit…"), self.on_edit_search),
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
@@ -782,6 +785,7 @@ class Search:
 
         update_ui = False
         search = core.search.searches[self.token]
+        row_id = 0
 
         for _code, file_path, size, _ext, file_attributes, *_unused in result_list:
             if self.num_results_found >= self.max_limit:
@@ -846,7 +850,7 @@ class Search:
                     file_path,
                     has_free_slots,
                     file_attributes,
-                    self.num_results_found
+                    row_id
                 ]
             )
 
@@ -902,7 +906,7 @@ class Search:
             tab_changed = self.searches.request_tab_changed(self.container, is_important=is_wish)
 
             if tab_changed and is_wish:
-                self.window.application.notifications.update_title()
+                self.window.update_title()
 
                 if config.sections["notifications"]["notification_popup_wish"]:
                     core.notifications.show_search_notification(
@@ -926,7 +930,7 @@ class Search:
     def add_row_to_model(self, row):
         (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
             _unused, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
-            _unused, row_id) = row
+            _unused, _unused) = row
 
         expand_user = False
         expand_folder = False
@@ -960,7 +964,7 @@ class Search:
                         empty_str,
                         has_free_slots,
                         empty_dict,
-                        row_id
+                        self.row_id
                     ], select_row=False
                 )
 
@@ -969,6 +973,7 @@ class Search:
                 else:
                     expand_user = self.expand_button.get_active()
 
+                self.row_id += 1
                 self.users[user] = (iterator, [])
 
             user_iterator, user_child_iterators = self.users[user]
@@ -999,11 +1004,12 @@ class Search:
                             file_path.rsplit("\\", 1)[0],
                             has_free_slots,
                             empty_dict,
-                            row_id
+                            self.row_id
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_iterators.append(iterator)
                     expand_folder = self.expand_button.get_active()
+                    self.row_id += 1
                     self.folders[user_folder_path] = (iterator, [])
 
                 row = row[:]
@@ -1021,7 +1027,9 @@ class Search:
 
             user_iterator, user_child_iterators = self.users[user]
 
+        row[18] = self.row_id
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
+        self.row_id += 1
 
         if self.grouping_mode == "folder_grouping":
             user_folder_child_iterators.append(iterator)
@@ -1272,6 +1280,7 @@ class Search:
         self.users.clear()
         self.folders.clear()
         self.tree_view.clear()
+        self.row_id = 0
         self.num_results_visible = 0
 
     def update_model(self):
@@ -1405,7 +1414,11 @@ class Search:
             self.selected_users[user] = None
 
         if self.tree_view.get_row_value(iterator, "filename"):
-            self.selected_results[iterator] = None
+            row_id = self.tree_view.get_row_value(iterator, "id_data")
+
+            if row_id not in self.selected_results:
+                self.selected_results[row_id] = iterator
+
             return
 
         self.select_child_results(iterator, user)
@@ -1484,21 +1497,25 @@ class Search:
 
     def on_browse_folder(self, *_args):
 
-        iterator = next(iter(self.selected_results), None)
+        iterator = next(iter(self.selected_results.values()), None)
 
-        if iterator:
-            user = self.tree_view.get_row_value(iterator, "user")
-            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+        if iterator is None:
+            return
 
-            core.userbrowse.browse_user(user, path=folder_path)
+        user = self.tree_view.get_row_value(iterator, "user")
+        folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+
+        core.userbrowse.browse_user(user, path=folder_path)
 
     def on_user_profile(self, *_args):
 
-        iterator = next(iter(self.selected_results), None)
+        iterator = next(iter(self.selected_results.values()), None)
 
-        if iterator:
-            user = self.tree_view.get_row_value(iterator, "user")
-            core.userinfo.show_user(user)
+        if iterator is None:
+            return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        core.userinfo.show_user(user)
 
     def on_file_properties(self, *_args):
 
@@ -1506,7 +1523,7 @@ class Search:
         selected_size = 0
         selected_length = 0
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             file_size = self.tree_view.get_row_value(iterator, "size_data")
             selected_size += file_size
@@ -1539,11 +1556,11 @@ class Search:
                 self.searches.file_properties = FileProperties(self.window.application, core)
 
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
-            self.searches.file_properties.show()
+            self.searches.file_properties.present()
 
     def on_download_files(self, *_args, download_folder_path=None):
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.tree_view.get_row_value(iterator, "user")
             file_path = self.tree_view.get_row_value(iterator, "file_path_data")
             size = self.tree_view.get_row_value(iterator, "size_data")
@@ -1562,13 +1579,13 @@ class Search:
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_download_folders(self, *_args, download_folder_path=None):
 
         requested_folders = set()
 
-        for iterator in self.selected_results:
+        for iterator in self.selected_results.values():
             user = self.tree_view.get_row_value(iterator, "user")
             folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
             user_folder_key = user + folder_path
@@ -1605,32 +1622,41 @@ class Search:
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initial_folder=core.downloads.get_default_download_folder()
-        ).show()
+        ).present()
 
     def on_copy_file_path(self, *_args):
 
-        for iterator in self.selected_results:
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            clipboard.copy_text(file_path)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        clipboard.copy_text(file_path)
 
     def on_copy_url(self, *_args):
 
-        for iterator in self.selected_results:
-            user = self.tree_view.get_row_value(iterator, "user")
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, file_path)
-            clipboard.copy_text(url)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        url = core.userbrowse.get_soulseek_url(user, file_path)
+        clipboard.copy_text(url)
 
     def on_copy_folder_url(self, *_args):
 
-        for iterator in self.selected_results:
-            user = self.tree_view.get_row_value(iterator, "user")
-            file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-            url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
-            clipboard.copy_text(url)
+        iterator = next(iter(self.selected_results.values()), None)
+
+        if iterator is None:
             return
+
+        user = self.tree_view.get_row_value(iterator, "user")
+        file_path = self.tree_view.get_row_value(iterator, "file_path_data")
+        url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
+        clipboard.copy_text(url)
 
     def on_counter_button(self, *_args):
 
@@ -1694,6 +1720,24 @@ class Search:
 
     def on_copy_search_term(self, *_args):
         clipboard.copy_text(self.text)
+
+    def on_edit_search(self, *_args):
+
+        if self.mode == "wishlist":
+            self.window.application.lookup_action("wishlist").activate()
+            return
+
+        self.window.lookup_action("search-mode").change_state(GLib.Variant("s", self.mode))
+
+        if self.mode == "room":
+            self.window.room_search_entry.set_text(self.room)
+
+        elif self.mode == "user":
+            self.window.user_search_entry.set_text(self.searched_users[0])
+
+        self.window.search_entry.set_text(self.text)
+        self.window.search_entry.set_position(-1)
+        self.window.search_entry.grab_focus_without_selecting()
 
     def on_refilter(self, *_args):
 

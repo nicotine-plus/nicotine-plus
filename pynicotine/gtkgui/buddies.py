@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 quinox <quinox@users.sf.net>
@@ -28,6 +28,7 @@ from gi.repository import GObject
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
@@ -40,7 +41,7 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class UserList:
+class Buddies:
 
     def __init__(self, window):
 
@@ -48,7 +49,7 @@ class UserList:
             self.container,
             self.list_container,
             self.side_toolbar
-        ) = ui.load(scope=self, path="userlist.ui")
+        ) = ui.load(scope=self, path="buddies.ui")
 
         self.window = window
         self.page = window.userlist_page
@@ -61,7 +62,7 @@ class UserList:
         # Columns
         self.list_view = TreeView(
             window, parent=self.list_container, name="buddy_list",
-            activate_row_callback=self.on_row_activated,
+            persistent_sort=True, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_remove_buddy,
             columns={
                 # Visible columns
@@ -163,6 +164,8 @@ class UserList:
         ):
             events.connect(event_name, callback)
 
+        self.set_buddy_list_position()
+
     def destroy(self):
 
         self.list_view.destroy()
@@ -181,12 +184,68 @@ class UserList:
 
         return False
 
+    def set_buddy_list_position(self):
+
+        parent_container = self.container.get_parent()
+        mode = config.sections["ui"]["buddylistinchatrooms"]
+
+        if mode not in {"tab", "chatrooms", "always"}:
+            mode = "tab"
+
+        if parent_container == self.window.buddy_list_container:
+            if mode == "always":
+                return
+
+            self.window.buddy_list_container.remove(self.container)
+            self.window.buddy_list_container.set_visible(False)
+
+        elif parent_container == self.window.chatrooms_buddy_list_container:
+            if mode == "chatrooms":
+                return
+
+            self.window.chatrooms_buddy_list_container.remove(self.container)
+            self.window.chatrooms_buddy_list_container.set_visible(False)
+
+        elif parent_container == self.window.userlist_content:
+            if mode == "tab":
+                return
+
+            self.window.userlist_content.remove(self.container)
+
+        if mode == "always":
+            if GTK_API_VERSION >= 4:
+                self.window.buddy_list_container.append(self.container)
+            else:
+                self.window.buddy_list_container.add(self.container)
+
+            self.side_toolbar.set_visible(True)
+            self.window.buddy_list_container.set_visible(True)
+            return
+
+        if mode == "chatrooms":
+            if GTK_API_VERSION >= 4:
+                self.window.chatrooms_buddy_list_container.append(self.container)
+            else:
+                self.window.chatrooms_buddy_list_container.add(self.container)
+
+            self.side_toolbar.set_visible(True)
+            self.window.chatrooms_buddy_list_container.set_visible(True)
+            return
+
+        if mode == "tab":
+            self.side_toolbar.set_visible(False)
+
+            if GTK_API_VERSION >= 4:
+                self.window.userlist_content.append(self.container)
+            else:
+                self.window.userlist_content.add(self.container)
+
     def update_visible(self):
 
         if config.sections["ui"]["buddylistinchatrooms"] in {"always", "chatrooms"}:
             return
 
-        self.window.userlist_content.set_visible(self.list_view.iterators)
+        self.window.userlist_content.set_visible(bool(self.list_view.iterators))
 
     def get_selected_username(self):
 
@@ -215,7 +274,7 @@ class UserList:
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and username != core.login_username)
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and username != core.users.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def user_status(self, msg):
@@ -254,12 +313,16 @@ class UserList:
 
     def add_buddy(self, user, user_data):
 
-        user_stats = core.watched_users.get(user, {})
-
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
-        speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files")
+        stats = core.users.watched.get(user)
+
+        if stats is not None:
+            speed = stats.upload_speed or 0
+            files = stats.files
+        else:
+            speed = 0
+            files = None
 
         h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files) if files is not None else ""
@@ -287,7 +350,7 @@ class UserList:
             speed,
             files or 0,
             last_seen
-        ], select_row=core.userlist.allow_saving_buddies)
+        ], select_row=core.buddies.allow_saving_buddies)
 
         for combobox in (
             self.window.search.user_search_combobox,
@@ -386,32 +449,32 @@ class UserList:
             return
 
         self.window.add_buddy_entry.set_text("")
-        core.userlist.add_buddy(username)
+        core.buddies.add_buddy(username)
         self.list_view.grab_focus()
 
     def on_remove_buddy(self, *_args):
-        core.userlist.remove_buddy(self.get_selected_username())
+        core.buddies.remove_buddy(self.get_selected_username())
 
     def on_trusted(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "trusted")
 
-        core.userlist.set_buddy_trusted(user, not value)
+        core.buddies.set_buddy_trusted(user, not value)
 
     def on_notify(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "notify")
 
-        core.userlist.set_buddy_notify(user, not value)
+        core.buddies.set_buddy_notify(user, not value)
 
     def on_prioritized(self, list_view, iterator):
 
         user = list_view.get_row_value(iterator, "user")
         value = list_view.get_row_value(iterator, "privileged")
 
-        core.userlist.set_buddy_prioritized(user, not value)
+        core.buddies.set_buddy_prioritized(user, not value)
 
     def on_add_note_response(self, dialog, _response_id, user):
 
@@ -425,7 +488,7 @@ class UserList:
         if note is None:
             return
 
-        core.userlist.set_buddy_note(user, note)
+        core.buddies.set_buddy_note(user, note)
 
     def on_add_note(self, *_args):
 
@@ -445,7 +508,7 @@ class UserList:
             callback=self.on_add_note_response,
             callback_data=user,
             default=note
-        ).show()
+        ).present()
 
     def server_disconnect(self, *_args):
 

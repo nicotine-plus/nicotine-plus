@@ -338,7 +338,8 @@ class About(Dialog):
 GNU General Public License v3.0 or later</a>, with the following exceptions:""",
 
         """<b>tinytag licensed under the MIT License.</b>
-Copyright (c) 2014–2022 Tom Wallroth
+Copyright (c) 2014–2023 Tom Wallroth
+Copyright (c) 2021-2023 Mat (mathiascode)
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country flags licensed under the MIT License.</b>

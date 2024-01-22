@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -123,13 +123,13 @@ class NetworkPage:
 
         unknown_label = _("Unknown")
 
-        if core.public_port:
-            url = pynicotine.__port_checker_url__ % str(core.public_port)
+        if core.users.public_port:
+            url = pynicotine.__port_checker_url__ % str(core.users.public_port)
             port_status_text = _("Check Port Status")
 
             self.current_port_label.set_markup(_("<b>%(ip)s</b>, port %(port)s") % {
-                "ip": core.public_ip_address or unknown_label,
-                "port": core.public_port or unknown_label
+                "ip": core.users.public_ip_address or unknown_label,
+                "port": core.users.public_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
@@ -192,28 +192,28 @@ class NetworkPage:
 
         password = dialog.get_entry_value()
 
-        if user_status != core.user_status:
+        if user_status != core.users.login_status:
             MessageDialog(
                 parent=self.application.preferences,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
-            ).show()
+            ).present()
             return
 
         if not password:
             self.on_change_password()
             return
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
 
-        core.request_change_password(password)
+        core.users.request_change_password(password)
 
     def on_change_password(self, *_args):
 
-        if core.user_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -228,8 +228,8 @@ class NetworkPage:
             visibility=False,
             action_button_label=_("_Change"),
             callback=self.on_change_password_response,
-            callback_data=core.user_status
-        ).show()
+            callback_data=core.users.login_status
+        ).present()
 
     def on_toggle_upnp(self, *_args):
         self.portmap_required = self.upnp_toggle.get_active()
@@ -461,7 +461,7 @@ class DownloadsPage:
             option_value=False,
             option_label=_("Enable regular expressions"),
             droplist=self.filter_list_view.iterators
-        ).show()
+        ).present()
 
     def on_edit_filter_response(self, dialog, _response_id, iterator):
 
@@ -493,7 +493,7 @@ class DownloadsPage:
                 default=dfilter,
                 option_value=enable_regex,
                 option_label=_("Enable regular expressions")
-            ).show()
+            ).present()
             return
 
     def on_remove_filter(self, *_args):
@@ -686,7 +686,7 @@ class SharesPage:
             callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
@@ -736,7 +736,7 @@ class SharesPage:
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
-            ).show()
+            ).present()
             return
 
     def on_remove_shared_folder(self, *_args):
@@ -1031,7 +1031,7 @@ class IgnoredUsersPage:
             message=_("Enter the name of the user you want to ignore:"),
             action_button_label=_("_Add"),
             callback=self.on_add_ignored_user_response
-        ).show()
+        ).present()
 
     def on_remove_ignored_user(self, *_args):
 
@@ -1061,7 +1061,7 @@ class IgnoredUsersPage:
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
             callback=self.on_add_ignored_ip_response
-        ).show()
+        ).present()
 
     def on_remove_ignored_ip(self, *_args):
 
@@ -1194,7 +1194,7 @@ class BannedUsersPage:
             message=_("Enter the name of the user you want to ban:"),
             action_button_label=_("_Add"),
             callback=self.on_add_banned_user_response
-        ).show()
+        ).present()
 
     def on_remove_banned_user(self, *_args):
 
@@ -1225,7 +1225,7 @@ class BannedUsersPage:
             message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
             callback=self.on_add_banned_ip_response
-        ).show()
+        ).present()
 
     def on_remove_banned_ip(self, *_args):
 
@@ -1448,7 +1448,7 @@ class ChatsPage:
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             action_button_label=_("_Add"),
             callback=self.on_add_censored_response
-        ).show()
+        ).present()
 
     def on_edit_censored_response(self, dialog, _response_id, iterator):
 
@@ -1477,7 +1477,7 @@ class ChatsPage:
                 callback=self.on_edit_censored_response,
                 callback_data=iterator,
                 default=pattern
-            ).show()
+            ).present()
             return
 
     def on_remove_censored(self, *_args):
@@ -1508,7 +1508,7 @@ class ChatsPage:
             action_button_label=_("_Add"),
             callback=self.on_add_replacement_response,
             use_second_entry=True
-        ).show()
+        ).present()
 
     def on_edit_replacement_response(self, dialog, _response_id, iterator):
 
@@ -1541,7 +1541,7 @@ class ChatsPage:
                 use_second_entry=True,
                 default=pattern,
                 second_default=replacement
-            ).show()
+            ).present()
             return
 
     def on_remove_replacement(self, *_args):
@@ -2490,7 +2490,7 @@ class UrlHandlersPage:
             use_second_entry=True,
             droplist=self.default_protocols,
             second_droplist=self.default_commands
-        ).show()
+        ).present()
 
     def on_edit_handler_response(self, dialog, _response_id, iterator):
 
@@ -2519,7 +2519,7 @@ class UrlHandlersPage:
                 callback_data=iterator,
                 droplist=self.default_commands,
                 default=command
-            ).show()
+            ).present()
             return
 
     def on_remove_handler(self, *_args):
@@ -2783,7 +2783,7 @@ class PluginsPage:
                 },
 
                 # Hidden data columns
-                "plugin_id": {"data_type": str}
+                "plugin_id": {"data_type": str, "iterator_key": True}
             }
         )
 
@@ -2890,7 +2890,7 @@ class PluginsPage:
             plugin_id=self.selected_plugin,
             plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
-        self.plugin_settings.show()
+        self.plugin_settings.present()
 
 
 class Preferences(Dialog):
@@ -3148,8 +3148,8 @@ class Preferences(Dialog):
         else:
             core.portmapper.remove_port_mapping()
 
-        if user_profile_required and core.login_username:
-            core.userinfo.show_user(core.login_username, refresh=True)
+        if user_profile_required:
+            core.userinfo.show_user(refresh=True, switch_page=False)
 
         if completion_required:
             core.chatrooms.update_completions()
@@ -3182,6 +3182,9 @@ class Preferences(Dialog):
         self.application.window.chatrooms.update_widgets()
         self.application.window.privatechat.update_widgets()
 
+        # Buddies
+        self.application.window.buddies.set_buddy_list_position()
+
         # Transfers
         core.downloads.update_transfer_limits()
         core.downloads.update_download_filters()
@@ -3198,20 +3201,16 @@ class Preferences(Dialog):
 
         # Main notebook
         self.application.window.set_tab_positions()
-        self.application.window.set_buddy_list_position()
         self.application.window.set_main_tabs_visibility()
-        self.application.window.notebook.set_tab_text_colors()
 
-        for i in range(self.application.window.notebook.get_n_pages()):
-            page = self.application.window.notebook.get_nth_page(i)
-            self.application.window.set_tab_expand(page)
+        for tab in self.application.window.tabs.values():
+            self.application.window.set_tab_expand(tab.page)
 
         # Other notebooks
         for notebook in (self.application.window.chatrooms, self.application.window.privatechat,
                          self.application.window.userinfo, self.application.window.userbrowse,
                          self.application.window.search):
             notebook.set_tab_closers()
-            notebook.set_tab_text_colors()
 
         # Update configuration
         config.write_configuration()
@@ -3222,7 +3221,7 @@ class Preferences(Dialog):
         self.close()
 
         if not config.sections["ui"]["trayicon"]:
-            self.application.window.show()
+            self.application.window.present()
 
         if rescan_required:
             core.shares.rescan_shares()
@@ -3244,7 +3243,7 @@ class Preferences(Dialog):
             initial_folder=os.path.dirname(config.config_file_path),
             initial_file=f"config_backup_{current_date_time}.tar.bz2",
             title=_("Pick a File Name for Config Backup")
-        ).show()
+        ).present()
 
     def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
         toggle.emit("activate")

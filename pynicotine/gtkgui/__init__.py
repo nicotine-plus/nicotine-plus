@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -27,26 +27,30 @@ def get_default_gtk_version():
     if sys.platform in {"win32", "darwin"}:
         return "4"
 
-    from gi.repository import GLib
-    from gi.repository import Gio
-
     try:
-        dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
-            bus_type=Gio.BusType.SESSION,
-            flags=Gio.DBusProxyFlags.NONE,
-            info=None,
-            name="org.a11y.Bus",
-            object_path="/org/a11y/bus",
-            interface_name="org.freedesktop.DBus.Properties"
-        )
+        from gi.repository import GLib
+        from gi.repository import Gio
 
-        # If screen reader is enabled, use GTK 3 until treeviews have been ported to
-        # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
-        if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
-            return "3"
+        try:
+            dbus_proxy = Gio.DBusProxy.new_for_bus_sync(
+                bus_type=Gio.BusType.SESSION,
+                flags=Gio.DBusProxyFlags.NONE,
+                info=None,
+                name="org.a11y.Bus",
+                object_path="/org/a11y/bus",
+                interface_name="org.freedesktop.DBus.Properties"
+            )
 
-    except GLib.Error:
-        # Service not available
+            # If screen reader is enabled, use GTK 3 until treeviews have been ported to
+            # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
+            if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
+                return "3"
+
+        except GLib.Error:
+            # Service not available
+            pass
+
+    except ModuleNotFoundError:
         pass
 
     return "4"
@@ -101,23 +105,23 @@ def run(hidden, ci_mode, multi_instance):
         executable_folder = os.path.dirname(sys.executable)
         resources_folder = executable_folder
 
-        if sys.platform == "darwin":
+        if sys.platform == "win32":
+            import ctypes
+            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
+
+        elif sys.platform == "darwin":
             resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
 
         os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share/fonts/fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share/fonts")
-        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib/pixbuf-loaders.cache")
-        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib/typelibs")
-        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib/schemas")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share", "fonts")
+        os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
+        os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
+        os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
 
     if sys.platform == "win32":
         # 'win32' PangoCairo backend on Windows is too slow, use 'fontconfig' instead
         os.environ["PANGOCAIRO_BACKEND"] = "fontconfig"
-
-        # Use Cairo renderer for now, GL renderer has memory leaks
-        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4307
-        os.environ["GSK_RENDERER"] = "cairo"
 
         # Disable client-side decorations when header bar is disabled
         os.environ["GTK_CSD"] = "0"
