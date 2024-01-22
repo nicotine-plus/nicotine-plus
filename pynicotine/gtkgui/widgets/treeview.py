@@ -52,6 +52,7 @@ class TreeView:
         self.window = window
         self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
         self.model = None
+        self.multi_select = multi_select
         self.iterators = {}
         self.has_tree = has_tree
         self._widget_name = name
@@ -668,7 +669,16 @@ class TreeView:
         callback(self)
 
     def on_select_row(self, selection, callback):
-        _model, iterator = selection.get_selected()
+        iterator = None
+
+        if self.multi_select:
+            # We use the bottom selection here.
+            iterators = self.get_selected_rows()
+            if len(iterators):
+                iterator = iterators[-1]
+        else:
+            _model, iterator = selection.get_selected()
+
         callback(self, iterator)
 
     def on_delete_accelerator(self, _treeview, _state, callback):
