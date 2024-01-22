@@ -379,6 +379,8 @@ class Downloads(Transfers):
                 if download.folder_path == folder_path:
                     return
 
+        events.emit("folder-download-finished", folder_path)
+
         if config.sections["notifications"]["notification_popup_folder"]:
             core.notifications.show_download_notification(
                 _("%(folder)s downloaded from %(user)s") % {
@@ -464,8 +466,6 @@ class Downloads(Transfers):
         self._file_downloaded_actions(username, download_file_path)
         self._folder_downloaded_actions(username, transfer.folder_path)
 
-        finished = True
-        events.emit("download-notification", finished)
         core.pluginhandler.download_finished_notification(username, virtual_path, download_file_path)
 
         log.add_download(

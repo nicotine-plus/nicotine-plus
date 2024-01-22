@@ -86,7 +86,7 @@ class Downloads(Transfers):
             ("clear-download", self.clear_transfer),
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
-            ("download-notification", self.new_transfer_notification),
+            ("folder-download-finished", self.folder_download_finished),
             ("start", self.start),
             ("update-download", self.update_model)
         ):
@@ -139,6 +139,10 @@ class Downloads(Transfers):
     def folder_download_response(self, _dialog, _response_id, data):
         download_callback, callback_args = data
         download_callback(*callback_args)
+
+    def folder_download_finished(self, _folder_path):
+        if self.window.current_page_id != self.transfer_page.id:
+            self.window.notebook.request_tab_changed(self.transfer_page, is_important=True)
 
     def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
 

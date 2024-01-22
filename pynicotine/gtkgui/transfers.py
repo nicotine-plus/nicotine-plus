@@ -315,10 +315,6 @@ class Transfers:
 
         self.select_child_transfers(transfer)
 
-    def new_transfer_notification(self, finished=False):
-        if self.window.current_page_id != self.transfer_page.id:
-            self.window.notebook.request_tab_changed(self.transfer_page, is_important=finished)
-
     def on_file_search(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
@@ -351,6 +347,9 @@ class Transfers:
     def update_model(self, transfer=None, update_parent=True, select_parent=False):
 
         if self.window.current_page_id != self.transfer_page.id:
+            if transfer is not None and transfer.iterator is None:
+                self.window.notebook.request_tab_changed(self.transfer_page)
+
             # No need to do unnecessary work if transfers are not visible
             return
 
