@@ -28,7 +28,7 @@ from pynicotine.utils import humanize
 
 class FileProperties(Dialog):
 
-    def __init__(self, application, download_button=True):
+    def __init__(self, application):
 
         self.properties = {}
         self.total_size = 0
@@ -39,7 +39,6 @@ class FileProperties(Dialog):
             self.container,
             self.country_row,
             self.country_value_label,
-            self.download_button,
             self.folder_value_label,
             self.length_row,
             self.length_value_label,
@@ -62,7 +61,6 @@ class FileProperties(Dialog):
             parent=application.window,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
-            buttons_end=(self.download_button,) if download_button else (),
             default_button=self.next_button,
             title=_("File Properties"),
             width=600
@@ -153,12 +151,3 @@ class FileProperties(Dialog):
             self.current_index = 0
 
         self.update_current_file()
-
-    def on_download_item(self, *_args):
-
-        properties = self.properties[self.current_index]
-
-        core.downloads.enqueue_download(
-            properties["user"], properties["file_path"], size=properties["size"],
-            file_attributes=properties.get("file_attributes")
-        )

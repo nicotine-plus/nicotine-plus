@@ -1216,7 +1216,7 @@ class UserBrowse:
 
         if data:
             if self.userbrowses.file_properties is None:
-                self.userbrowses.file_properties = FileProperties(self.window.application, core)
+                self.userbrowses.file_properties = FileProperties(self.window.application)
 
             self.userbrowses.file_properties.update_properties(data, selected_size, selected_length)
             self.userbrowses.file_properties.present()

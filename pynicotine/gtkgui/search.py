@@ -1553,7 +1553,7 @@ class Search:
 
         if data:
             if self.searches.file_properties is None:
-                self.searches.file_properties = FileProperties(self.window.application, core)
+                self.searches.file_properties = FileProperties(self.window.application)
 
             self.searches.file_properties.update_properties(data, selected_size, selected_length)
             self.searches.file_properties.present()

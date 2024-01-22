@@ -1036,7 +1036,7 @@ class Transfers:
 
         if data:
             if self.file_properties is None:
-                self.file_properties = FileProperties(self.window.application, download_button=False)
+                self.file_properties = FileProperties(self.window.application)
 
             self.file_properties.update_properties(data, selected_size, selected_length)
             self.file_properties.present()
