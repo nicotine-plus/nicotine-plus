@@ -718,13 +718,17 @@ class UserBrowse:
 
     def set_active_folder(self, folder_path):
 
-        if folder_path is None or self.active_folder_path == folder_path:
+        if self.active_folder_path == folder_path:
             return
 
         self.populate_path_bar(folder_path)
         self.file_list_view.clear()
 
         self.active_folder_path = folder_path
+
+        if not folder_path:
+            return
+
         browsed_user = core.userbrowse.users[self.user]
         files = browsed_user.public_folders.get(folder_path)
 
@@ -766,11 +770,16 @@ class UserBrowse:
 
             self.selected_files[basename] = filesize
 
-    def get_active_folder_path(self):
-        return f'{self.active_folder_path or ""}\\'
+    def get_selected_folder_path(self):
+
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            return f'{folder_path or ""}\\'
+
+        return None
 
     def get_selected_file_path(self):
-        selected_folder = self.get_active_folder_path()
+        selected_folder = self.get_selected_folder_path()
         selected_file = next(iter(self.selected_files), "")
         return f"{selected_folder}{selected_file}"
 
@@ -846,14 +855,14 @@ class UserBrowse:
             return
 
         iterators = tree_view.get_selected_rows()
+
         if len(iterators) > 1:
             # Multiple folders selected. Avoid any confusion by clearing the path bar and file list view.
-            self.active_folder_path = None
-            self.populate_path_bar()
-            self.file_list_view.clear()
+            folder_path = None
         else:
             folder_path = tree_view.get_row_value(iterator, "folder_path_data")
-            self.set_active_folder(folder_path)
+
+        self.set_active_folder(folder_path)
 
     def on_folder_path_tooltip(self, treeview, iterator):
         return treeview.get_row_value(iterator, "folder_path_data")
@@ -862,21 +871,27 @@ class UserBrowse:
         self.folder_popup_menu.update_model()
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_folder(self, *_args):
+    def on_download_folder(self, *_args, download_folder_path=None, recurse=False):
+
+        prev_folder_path = None
+
         for iterator in self.folder_tree_view.get_selected_rows():
             folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
-            core.userbrowse.download_folder(self.user, folder_path)
+
+            if recurse and prev_folder_path and prev_folder_path in folder_path:
+                # Already recursing, avoid redundant request for subfolder
+                continue
+
+            core.userbrowse.download_folder(
+                self.user, folder_path, download_folder_path=download_folder_path, recurse=recurse)
+
+            prev_folder_path = folder_path
 
     def on_download_folder_recursive(self, *_args):
-        for iterator in self.folder_tree_view.get_selected_rows():
-            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
-            core.userbrowse.download_folder(self.user, folder_path, recurse=True)
+        self.on_download_folder(recurse=True)
 
     def on_download_folder_to_selected(self, selected_download_folder_path, recurse):
-        for iterator in self.folder_tree_view.get_selected_rows():
-            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
-            core.userbrowse.download_folder(
-                self.user, folder_path, download_folder_path=selected_download_folder_path, recurse=recurse)
+        self.on_download_folder(download_folder_path=selected_download_folder_path, recurse=recurse)
 
     def on_download_folder_to(self, *_args, recurse=False):
 
@@ -900,20 +915,29 @@ class UserBrowse:
 
         user = dialog.get_entry_value()
 
-        if not user or self.active_folder_path is None:
+        if not user:
             return
 
-        core.userbrowse.send_upload_attempt_notification(user)
+        prev_folder_path = None
+        sent_upload_notification = False
 
         for iterator in self.folder_tree_view.get_selected_rows():
             folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+
+            if recurse and prev_folder_path and prev_folder_path in folder_path:
+                # Already recursing, avoid redundant request for subfolder
+                continue
+
+            if not sent_upload_notification:
+                core.userbrowse.send_upload_attempt_notification(user)
+                sent_upload_notification = True
+
             core.userbrowse.upload_folder(
                 user, folder_path, local_browsed_user=core.userbrowse.users[self.user], recurse=recurse)
 
-    def on_upload_folder_to(self, *_args, recurse=False):
+            prev_folder_path = folder_path
 
-        if self.active_folder_path is None:
-            return
+    def on_upload_folder_to(self, *_args, recurse=False):
 
         if recurse:
             str_title = _("Upload Folder (with Subfolders) To User")
@@ -934,11 +958,11 @@ class UserBrowse:
         self.on_upload_folder_to(recurse=True)
 
     def on_copy_folder_path(self, *_args):
-        folder_path = self.get_active_folder_path()
+        folder_path = self.get_selected_folder_path()
         clipboard.copy_text(folder_path)
 
     def on_copy_folder_url(self, *_args):
-        folder_path = self.get_active_folder_path()
+        folder_path = self.get_selected_folder_path()
         folder_url = core.userbrowse.get_soulseek_url(self.user, folder_path)
         clipboard.copy_text(folder_url)
 
@@ -1127,41 +1151,53 @@ class UserBrowse:
 
     def on_file_manager(self, *_args):
 
-        if self.active_folder_path is None:
+        for iterator in self.folder_tree_view.get_selected_rows():
+            folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+            open_folder_path(core.shares.virtual2real(folder_path))
             return
-
-        open_folder_path(core.shares.virtual2real(self.active_folder_path))
 
     def on_file_properties(self, _action, _state, all_files=False):
 
         data = []
-        selected_folder_path = self.active_folder_path
         selected_size = 0
         selected_length = 0
 
         if all_files:
-            for folder_path, files in core.userbrowse.iter_matching_folders(
-                selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
-            ):
-                for file_data in files:
-                    _code, basename, file_size, _ext, file_attributes, *_unused = file_data
-                    _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
-                    file_path = "\\".join([folder_path, basename])
-                    selected_size += file_size
+            prev_folder_path = None
 
-                    if length:
-                        selected_length += length
+            for iterator in self.folder_tree_view.get_selected_rows():
+                selected_folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
 
-                    data.append({
-                        "user": self.user,
-                        "file_path": file_path,
-                        "basename": basename,
-                        "virtual_folder_path": folder_path,
-                        "size": file_size,
-                        "file_attributes": file_attributes
-                    })
+                if prev_folder_path and prev_folder_path in selected_folder_path:
+                    # Already recursing, avoid duplicates
+                    continue
+
+                for folder_path, files in core.userbrowse.iter_matching_folders(
+                    selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
+                ):
+                    for file_data in files:
+                        _code, basename, file_size, _ext, file_attributes, *_unused = file_data
+                        _bitrate, length, *_unused = FileListMessage.parse_file_attributes(file_attributes)
+                        file_path = "\\".join([folder_path, basename])
+                        selected_size += file_size
+
+                        if length:
+                            selected_length += length
+
+                        data.append({
+                            "user": self.user,
+                            "file_path": file_path,
+                            "basename": basename,
+                            "virtual_folder_path": folder_path,
+                            "size": file_size,
+                            "file_attributes": file_attributes
+                        })
+
+                prev_folder_path = selected_folder_path
 
         else:
+            selected_folder_path = self.active_folder_path
+
             for iterator in self.file_list_view.get_selected_rows():
                 basename = self.file_list_view.get_row_value(iterator, "filename")
                 file_path = "\\".join([selected_folder_path, basename])
