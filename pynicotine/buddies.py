@@ -165,9 +165,6 @@ class Buddies:
         self.save_buddy_list()
         events.emit("add-buddy", username, user_data)
 
-        if core.users.login_username == UserStatus.OFFLINE:
-            return
-
         # Request user status, speed and number of shared files
         core.users.watch_user(username)
 
