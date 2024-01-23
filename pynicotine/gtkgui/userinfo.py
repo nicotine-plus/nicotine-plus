@@ -259,7 +259,6 @@ class UserInfo:
             self.queued_uploads_label,
             self.refresh_button,
             self.retry_button,
-            self.save_picture_button,
             self.shared_files_label,
             self.shared_folders_label,
             self.upload_slots_label,
@@ -276,7 +275,7 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, focusable=True, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
 
             if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 8):
@@ -288,7 +287,7 @@ class UserInfo:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.EventBox(hexpand=True, vexpand=True, visible=True)
+            self.picture = Gtk.EventBox(can_focus=True, hexpand=True, vexpand=True, visible=True)
             self.picture.connect("draw", self.on_draw_picture)
 
             self.picture_view.add(self.picture)    # pylint: disable=no-member
@@ -421,7 +420,6 @@ class UserInfo:
         self.picture_surface = None
 
         self.picture_container.set_visible_child(self.placeholder_picture)
-        self.save_picture_button.set_sensitive(False)
 
     def load_picture(self, data):
 
@@ -447,7 +445,6 @@ class UserInfo:
             return
 
         self.picture_container.set_visible_child(self.picture_view)
-        self.save_picture_button.set_sensitive(True)
 
     def peer_connection_error(self):
 
