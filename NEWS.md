@@ -42,6 +42,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Restore initial list order when pressing the column header of a sorted column
  * Remember last sorted column after restarting
  * Filter out irrelevant folders when searching a user's shares
+ * Allow selecting multiple folders in a user's shares
  * Insert new private chat tabs before older ones
  * Resuming a single filtered download allows for bypassing download filter
  * Transfer log files are now split into per-session download and upload logs
@@ -215,6 +216,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Recursive folder download matches extra siblings starting with the same name ([#2782](https://github.com/nicotine-plus/nicotine-plus/issues/2782))
  * Critical 'TypeError' on macOS Monterey, N+ won't launch ([#2785](https://github.com/nicotine-plus/nicotine-plus/issues/2785))
  * \[3.3.0rc1\] "Unknown search mode" Reopening a whishlist search tab ([#2798](https://github.com/nicotine-plus/nicotine-plus/issues/2798))
+ * Browse Shares: folder downloads should always be recursive ([#2812](https://github.com/nicotine-plus/nicotine-plus/issues/2812))
+ * \[3.3.0rc2\] Some event causes text copied to clipboard outside Nicotine+ to be ignored ([#2815](https://github.com/nicotine-plus/nicotine-plus/issues/2815))
  * Change search share behavior to classic Soulseek ([#2819](https://github.com/nicotine-plus/nicotine-plus/issues/2819))
  * Classic Soulseek re-enter search function ([#2826](https://github.com/nicotine-plus/nicotine-plus/issues/2826))
  * N+ 3.3.0 transfers not working ([#2827](https://github.com/nicotine-plus/nicotine-plus/issues/2827))
