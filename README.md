@@ -14,7 +14,7 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 ## Download
 
-The current stable version of Nicotine+ is 3.2.9, released on March 5, 2023. See the [release notes](NEWS.md).
+The current stable version of Nicotine+ is 3.3.0, released on February 1, 2024. See the [release notes](NEWS.md).
 
 Downloads are available for:
 
