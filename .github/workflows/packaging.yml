@@ -149,9 +149,9 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          brew update
           brew uninstall --ignore-dependencies python@3.11
           brew install --overwrite python@3.11
+          brew update
           python3 packaging/macos/dependencies.py
 
       - name: Freeze application
