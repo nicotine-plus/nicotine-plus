@@ -178,7 +178,7 @@ The following is a step-by-step guide detailing what a Nicotine+ maintainer shou
  1. Ensure that Nicotine+ launches and works well on at least these operating systems:
     * Windows
     * macOS
-    * Rocky Linux 8 (oldest supported GTK 3 and Python 3 versions)
+    * Ubuntu 18.04 (oldest supported GTK 3 and Python 3 versions)
     * Ubuntu 22.04 (oldest supported GTK 4 version)
     * Latest Ubuntu/Fedora release
 
