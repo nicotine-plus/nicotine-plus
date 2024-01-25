@@ -54,7 +54,7 @@ class RoomWall(Popover):
 
         tickers = core.chatrooms.joined_rooms[self.room].tickers
         newline = "\n"
-        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(tickers.items())]
+        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(list(tickers.items()))]
 
         self.message_view.append_line("\n".join(messages))
         self.message_view.place_cursor_at_line(0)
