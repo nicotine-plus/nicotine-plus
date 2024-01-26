@@ -116,12 +116,29 @@ def set_use_header_bar(enabled):
     GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
+def set_default_font_size():
+
+    if sys.platform != "win32":
+        return
+
+    font = GTK_SETTINGS.props.gtk_font_name
+
+    if not font:
+        return
+
+    # Increase default font size to match newer Windows apps
+    font_name, font_size = font.rsplit(" ", 1)
+    font_size = str(int(font_size) + 1)
+    GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
+
+
 def set_visual_settings():
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
+    set_default_font_size()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
