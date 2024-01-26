@@ -118,7 +118,7 @@ def set_use_header_bar(enabled):
 
 def set_default_font_size():
 
-    if sys.platform != "win32":
+    if sys.platform not in {"darwin", "win32"}:
         return
 
     font = GTK_SETTINGS.props.gtk_font_name
@@ -126,7 +126,7 @@ def set_default_font_size():
     if not font:
         return
 
-    # Increase default font size to match newer Windows apps
+    # Increase default font size to match newer apps on Windows and macOS
     font_name, font_size = font.rsplit(" ", 1)
     font_size = str(int(font_size) + 1)
     GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
