@@ -126,7 +126,15 @@ jobs:
           path: packaging/windows/build/package
 
   macos:
-    runs-on: macos-12
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            image: macos-12
+          - arch: arm64
+            image: flyci-macos-large-latest-m1
+    runs-on: ${{ matrix.image }}
+    if: github.event_name != 'pull_request'
     env:
       NICOTINE_GTK_VERSION: 4
       NICOTINE_LIBADWAITA: 1
@@ -150,5 +158,5 @@ jobs:
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: macos-installer
+          name: macos-${{ matrix.arch }}-installer
           path: packaging/macos/build/*.dmg
