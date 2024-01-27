@@ -275,6 +275,7 @@ class IconNotebook:
         self.tab_labels = {}
         self.unread_pages = {}
         self.recently_removed_pages = deque(maxlen=5)  # Low limit to prevent excessive server traffic
+        self.scroll_x = self.scroll_y = 0
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
@@ -294,7 +295,9 @@ class IconNotebook:
             self.pages_button.set_create_popup_func(self.on_pages_button_pressed)  # pylint: disable=no-member
             self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
-            self.scroll_controller = Gtk.EventControllerScroll(flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES))
+            self.scroll_controller = Gtk.EventControllerScroll(
+                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES | Gtk.EventControllerScrollFlags.DISCRETE)
+            )
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
             tab_bar = next(iter(self.widget))
@@ -729,11 +732,17 @@ class IconNotebook:
 
     def on_tab_scroll(self, _controller=None, scroll_x=0, scroll_y=0):
 
-        if scroll_x > 0 or scroll_y > 0:
-            self.next_page()
+        # Simulate discrete scrolling with touchpad in GTK 3
+        self.scroll_x += scroll_x
+        self.scroll_y += scroll_y
 
-        elif scroll_x < 0 or scroll_y < 0:
+        if self.scroll_x >= 1 or self.scroll_y >= 1:
+            self.next_page()
+            self.scroll_x = self.scroll_y = 0
+
+        elif self.scroll_x <= -1 or self.scroll_y <= -1:
             self.prev_page()
+            self.scroll_x = self.scroll_y = 0
 
         return True
 
