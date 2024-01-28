@@ -328,7 +328,6 @@ setup(
             ],
             "codesign_identity": "-",
             "codesign_deep": True,
-            "codesign_entitlements": os.path.join(CURRENT_PATH, "codesign-entitlements.plist"),
             "codesign_options": "runtime",
             "codesign_strict": "all",
             "codesign_timestamp": True,
