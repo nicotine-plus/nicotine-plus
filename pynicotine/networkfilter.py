@@ -517,12 +517,11 @@ class NetworkFilter:
         """Server code 3."""
 
         username = msg.user
+        ip_address = msg.ip_address
 
-        if username not in core.users.addresses:
+        if ip_address == "0.0.0.0":
             # User is offline
             return
-
-        ip_address = msg.ip_address
 
         # If the IP address changed, make sure our IP ban/ignore list reflects this
         self._update_saved_user_ip_addresses(config.sections["server"]["ipblocklist"], username, ip_address)

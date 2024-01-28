@@ -1341,7 +1341,7 @@ class NetworkThread(Thread):
                             )
 
                         addr = (msg.ip_address, msg.port)
-                        user_offline = (addr == ("0.0.0.0", 0))
+                        user_offline = (msg.ip_address == "0.0.0.0")
 
                         for init in pending_init_msgs:
                             # We now have the IP address for a user we previously didn't know,
@@ -1353,8 +1353,11 @@ class NetworkThread(Thread):
                                 self._connect_to_peer(username, addr, init)
 
                         # We already store a local IP address for our username
-                        if username != self._server_username and msg.port > 0:
-                            self._user_addresses[username] = addr
+                        if username != self._server_username:
+                            if user_offline or not msg.port:
+                                self._user_addresses.pop(username, None)
+                            else:
+                                self._user_addresses[username] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
                         if msg.user == self._server_username and msg.avgspeed is not None:

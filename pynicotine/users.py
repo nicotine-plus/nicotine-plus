@@ -186,31 +186,36 @@ class Users:
 
         username = msg.user
         notify = self._ip_requested.pop(username, None)
-        addr = (msg.ip_address, msg.port)
-        user_offline = (addr == ("0.0.0.0", 0))
+        ip_address = msg.ip_address
+        user_offline = (ip_address == "0.0.0.0")
+        country_code = core.network_filter.get_country_code(ip_address)
 
-        # We already store a local IP address for our username
-        if username != self.login_username and not user_offline:
-            self.addresses[username] = addr
+        if user_offline:
+            self.addresses.pop(username, None)
+            self.countries.pop(username, None)
+        else:
+            # We already store a local IP address for our username
+            if username != self.login_username:
+                self.addresses[username] = (ip_address, msg.port)
 
-        self.countries[username] = country_code = core.network_filter.get_country_code(msg.ip_address)
-        events.emit("user-country", username, country_code)
+            self.countries[username] = country_code
+            events.emit("user-country", username, country_code)
 
         if not notify:
-            core.pluginhandler.user_resolve_notification(username, msg.ip_address, msg.port)
+            core.pluginhandler.user_resolve_notification(username, ip_address, msg.port)
             return
 
-        core.pluginhandler.user_resolve_notification(username, msg.ip_address, msg.port, country_code)
+        core.pluginhandler.user_resolve_notification(username, ip_address, msg.port, country_code)
+
+        if user_offline:
+            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), username)
+            return
 
         if country_code:
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f" ({country_code} / {country_name})"
         else:
             country = ""
-
-        if msg.ip_address == "0.0.0.0":
-            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), username)
-            return
 
         log.add(_("IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"), {
             "user": username,

@@ -113,12 +113,7 @@ class UserBrowse:
         if username not in self.users or new_request:
             if not permission_level:
                 # Check our own permission level, and show relevant shares for it
-                if username in core.users.addresses:
-                    ip_address, _port = core.users.addresses[username]
-                else:
-                    ip_address = None
-
-                current_permission_level, _reason = core.shares.check_user_permission(username, ip_address)
+                current_permission_level, _reason = core.shares.check_user_permission(username)
             else:
                 current_permission_level = permission_level
 
