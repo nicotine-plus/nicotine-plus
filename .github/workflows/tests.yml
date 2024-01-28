@@ -112,7 +112,6 @@ jobs:
             mingw-w64-${{ matrix.arch }}-libadwaita
             mingw-w64-${{ matrix.arch }}-python-build
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-pycodestyle
             mingw-w64-${{ matrix.arch }}-python-pylint
             mingw-w64-${{ matrix.arch }}-python-gobject
