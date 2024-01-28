@@ -134,6 +134,7 @@ jobs:
           - arch: arm64
             image: flyci-macos-large-latest-m1
     runs-on: ${{ matrix.image }}
+    timeout-minutes: 10
     if: github.event_name != 'pull_request'
     env:
       NICOTINE_GTK_VERSION: 4
