@@ -1325,9 +1325,9 @@ class NetworkThread(Thread):
                         self._connect_to_peer(username, addr, init)
 
                     elif msg_class is GetUserStatus:
-                        if msg.status == UserStatus.OFFLINE:
+                        if msg.status == UserStatus.OFFLINE and msg.user in self._user_addresses:
                             # User went offline, reset stored IP address
-                            self._user_addresses.pop(msg.user, None)
+                            self._user_addresses[msg.user] = None
 
                     elif msg_class is GetPeerAddress:
                         username = msg.user
@@ -1354,7 +1354,7 @@ class NetworkThread(Thread):
 
                         # We already store a local IP address for our username
                         if username != self._server_username and username in self._user_addresses:
-                            if not msg.port:
+                            if user_offline or not msg.port:
                                 addr = None
 
                             self._user_addresses[username] = addr
