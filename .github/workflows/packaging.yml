@@ -129,10 +129,10 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            image: macos-12
+            platform: macos-12
           - arch: arm64
-            image: flyci-macos-large-latest-m1
-    runs-on: ${{ matrix.image }}
+            platform: flyci-macos-large-latest-m1
+    runs-on: ${{ matrix.platform }}
     timeout-minutes: 10
     if: github.event_name != 'pull_request'
     env:
