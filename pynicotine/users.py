@@ -193,8 +193,13 @@ class Users:
         if user_offline:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
-        else:
-            # We already store a local IP address for our username
+
+        elif username in self.watched or username in self.statuses:
+            # Only cache IP address of watched users, otherwise we won't know if
+            # a user reconnects and changes their IP address.
+            # Don't update our own IP address, since we already store a local IP
+            # address.
+
             if username != self.login_username:
                 self.addresses[username] = (ip_address, msg.port)
 

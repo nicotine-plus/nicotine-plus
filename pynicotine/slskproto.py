@@ -1353,17 +1353,20 @@ class NetworkThread(Thread):
                                 self._connect_to_peer(username, addr, init)
 
                         # We already store a local IP address for our username
-                        if username != self._server_username:
-                            if user_offline or not msg.port:
-                                self._user_addresses.pop(username, None)
-                            else:
-                                self._user_addresses[username] = addr
+                        if username != self._server_username and username in self._user_addresses:
+                            if not msg.port:
+                                addr = None
+
+                            self._user_addresses[username] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
                         if msg.user == self._server_username and msg.avgspeed is not None:
                             self._upload_speed = msg.avgspeed
                             log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
                             self._update_maximum_distributed_children()
+
+                        if msg_class is WatchUser and not msg.userexists:
+                            self._user_addresses.pop(msg.user, None)
 
                     elif msg_class is Relogged:
                         self._manual_server_disconnect = True
@@ -1431,6 +1434,13 @@ class NetworkThread(Thread):
 
         if msg is None:
             return
+
+        msg_class = msg_obj.__class__
+
+        if msg_class is WatchUser:
+            # Only cache IP address of watched users, otherwise we won't know if
+            # a user reconnects and changes their IP address.
+            self._user_addresses[msg_obj.user] = None
 
         conn_obj = self._conns[self._server_socket]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
