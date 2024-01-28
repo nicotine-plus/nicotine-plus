@@ -240,6 +240,7 @@ class UserInfo:
 
         (
             self.add_remove_buddy_label,
+            self.ban_unban_user_button,
             self.ban_unban_user_label,
             self.container,
             self.country_icon,
@@ -249,6 +250,7 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
+            self.ignore_unignore_user_button,
             self.ignore_unignore_user_label,
             self.info_bar_container,
             self.likes_list_container,
@@ -502,12 +504,15 @@ class UserInfo:
 
     # Button States #
 
-    def update_edit_button_state(self):
+    def update_local_buttons_state(self):
 
         local_username = core.users.login_username or config.sections["server"]["login"]
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
             widget.set_visible(self.user == local_username)
+
+        for widget in (self.ban_unban_user_button, self.ignore_unignore_user_button):
+            widget.set_visible(self.user != local_username)
 
     def update_buddy_button_state(self):
         label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
@@ -523,7 +528,7 @@ class UserInfo:
 
     def update_button_states(self):
 
-        self.update_edit_button_state()
+        self.update_local_buttons_state()
         self.update_buddy_button_state()
         self.update_ban_button_state()
         self.update_ignore_button_state()

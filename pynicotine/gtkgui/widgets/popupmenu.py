@@ -25,6 +25,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
@@ -412,6 +413,7 @@ class UserPopupMenu(PopupMenu):
         self.editing = True
         self.actions[_("_Gift Privileges…")].set_enabled(bool(core.users.privileges_left))
 
+        local_username = core.users.login_username or config.sections["server"]["login"]
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
@@ -424,7 +426,7 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.users.login_username or value))
+            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != local_username or value))
             self.actions[action_id].set_state(GLib.Variant("b", value))
 
         self.editing = False

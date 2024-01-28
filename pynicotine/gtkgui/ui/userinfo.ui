@@ -558,7 +558,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ban_unban_user_button">
+                      <object class="GtkButton" id="ban_unban_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ban_unban_user"/>
                         <child>
@@ -574,7 +574,7 @@
                             <child>
                               <object class="GtkLabel" id="ban_unban_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ban_unban_user_button</property>
+                                <property name="mnemonic-widget">ban_unban_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
@@ -589,7 +589,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ignore_unignore_user_button">
+                      <object class="GtkButton" id="ignore_unignore_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ignore_unignore_user"/>
                         <child>
@@ -605,7 +605,7 @@
                             <child>
                               <object class="GtkLabel" id="ignore_unignore_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ignore_unignore_user_button</property>
+                                <property name="mnemonic-widget">ignore_unignore_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
