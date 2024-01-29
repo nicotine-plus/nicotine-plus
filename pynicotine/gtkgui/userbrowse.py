@@ -542,6 +542,10 @@ class UserBrowse:
         if not self.queued_path:
             return
 
+        # Reset search to show all folders
+        self.search_entry.set_text("")
+        self.search_button.set_active(False)
+
         try:
             folder_path, basename = self.queued_path.rsplit("\\", 1)
 
