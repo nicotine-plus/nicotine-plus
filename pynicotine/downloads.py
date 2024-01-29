@@ -114,7 +114,7 @@ class Downloads(Transfers):
 
         super()._server_login(msg)
 
-        # Request queue position of queued downloads and retry failed downloads every 3 minutes
+        # Request queue position of queued downloads every 3 minutes
         self._download_queue_timer_id = events.schedule(delay=180, callback=self._check_download_queue, repeat=True)
 
         # Retry downloads failed due to connection issues every 3 minutes

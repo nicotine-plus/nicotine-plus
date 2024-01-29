@@ -431,7 +431,7 @@ class Search:
 
     @staticmethod
     def _create_file_info_list(results, max_results, permission_level):
-        """ Given a list of file indices, retrieve the file information for each index """
+        """Given a list of file indices, retrieve the file information for each index."""
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
         reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]

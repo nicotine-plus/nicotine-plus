@@ -680,12 +680,12 @@ class Uploads(Transfers):
             return
 
         if transfer not in self.queued_users.get(username, {}).values():
-            # User already has an active upload, queue the retry attempt
             self._unfail_transfer(transfer)
             self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
 
         if not active_uploads:
+            # No active upload, transfer a queued upload immediately
             self._check_upload_queue()
 
     def retry_uploads(self, uploads):
