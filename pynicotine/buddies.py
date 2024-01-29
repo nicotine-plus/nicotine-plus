@@ -144,8 +144,8 @@ class Buddies:
         country_code = core.users.countries.get(username)
         country = f"flag_{country_code}" if country_code else ""
         is_trusted = notify_status = is_prioritized = False
-        last_seen = "Never seen"
         status = core.users.statuses.get(username, UserStatus.OFFLINE)
+        last_seen = "Never seen" if status == UserStatus.OFFLINE else ""
 
         self.users[username] = user_data = Buddy(
             username=username,

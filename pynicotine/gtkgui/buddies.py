@@ -326,15 +326,18 @@ class Buddies:
 
         h_speed = human_speed(speed) if speed > 0 else ""
         h_files = humanize(files) if files is not None else ""
+        last_seen = UINT64_LIMIT
+        h_last_seen = ""
 
-        try:
-            last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
-            last_seen = time.mktime(last_seen_time)
-            h_last_seen = time.strftime("%x %X", last_seen_time)
+        if user_data.last_seen:
+            try:
+                last_seen_time = time.strptime(user_data.last_seen, "%m/%d/%Y %H:%M:%S")
+                last_seen = time.mktime(last_seen_time)
+                h_last_seen = time.strftime("%x %X", last_seen_time)
 
-        except ValueError:
-            last_seen = 0
-            h_last_seen = _("Never seen")
+            except ValueError:
+                last_seen = 0
+                h_last_seen = _("Never seen")
 
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES.get(status, ""),
