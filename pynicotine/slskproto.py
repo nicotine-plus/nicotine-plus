@@ -1360,12 +1360,13 @@ class NetworkThread(Thread):
                             self._user_addresses[username] = addr
 
                     elif msg_class in (WatchUser, GetUserStats):
-                        if msg.user == self._server_username and msg.avgspeed is not None:
-                            self._upload_speed = msg.avgspeed
-                            log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
-                            self._update_maximum_distributed_children()
+                        if msg.user == self._server_username:
+                            if msg.avgspeed is not None:
+                                self._upload_speed = msg.avgspeed
+                                log.add_conn("Server reported our upload speed as %s", human_speed(msg.avgspeed))
+                                self._update_maximum_distributed_children()
 
-                        if msg_class is WatchUser and not msg.userexists:
+                        elif msg_class is WatchUser and not msg.userexists:
                             self._user_addresses.pop(msg.user, None)
 
                     elif msg_class is Relogged:
@@ -1437,7 +1438,7 @@ class NetworkThread(Thread):
 
         msg_class = msg_obj.__class__
 
-        if msg_class is WatchUser:
+        if msg_class is WatchUser and msg_obj.user not in self._user_addresses:
             # Only cache IP address of watched users, otherwise we won't know if
             # a user reconnects and changes their IP address.
             self._user_addresses[msg_obj.user] = None
