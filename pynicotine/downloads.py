@@ -1125,6 +1125,7 @@ class Downloads(Transfers):
         incomplete_folder_path = self.get_incomplete_download_folder()
         sock = download.sock = msg.sock
         need_update = True
+        download_started = False
 
         log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
                           "from user %(user)s"), {
@@ -1176,7 +1177,7 @@ class Downloads(Transfers):
             download.start_time = download.last_update - download.time_elapsed
 
             core.statistics.append_stat_value("started_downloads", 1)
-            core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
+            download_started = True
 
             log.add_download(
                 _("Download started: user %(user)s, file %(file)s"), {
@@ -1196,10 +1197,12 @@ class Downloads(Transfers):
                 self._finish_transfer(download)
                 need_update = False
 
-        events.emit("download-notification")
-
         if need_update:
             self._update_transfer(download)
+
+        if download_started:
+            # Must be emitted after the final update to prevent inconsistent state
+            core.pluginhandler.download_started_notification(username, virtual_path, incomplete_file_path)
 
     def _upload_denied(self, msg):
         """Peer code 50."""

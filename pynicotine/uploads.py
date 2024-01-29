@@ -837,10 +837,12 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
         self._append_transfer(transfer)
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
+
+        # Must be emitted after the final update to prevent inconsistent state
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
+
         self._check_upload_queue()
 
     def _transfer_request(self, msg):
@@ -898,10 +900,11 @@ class Uploads(Transfers):
                 username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
 
             self._append_transfer(transfer)
-            core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
             self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
+
+            # Must be emitted after the final update to prevent inconsistent state
+            core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
             return slskmessages.TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
@@ -910,10 +913,11 @@ class Uploads(Transfers):
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
-        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
-
         self._activate_transfer(transfer, token)
         self._update_transfer(transfer)
+
+        # Must be emitted after the final update to prevent inconsistent state
+        core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
         return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
 
@@ -1005,6 +1009,7 @@ class Uploads(Transfers):
         virtual_path = upload.virtual_path
         sock = upload.sock = msg.sock
         need_update = True
+        upload_started = False
 
         log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
             "token": token,
@@ -1034,7 +1039,7 @@ class Uploads(Transfers):
             upload.start_time = upload.last_update - upload.time_elapsed
 
             core.statistics.append_stat_value("started_uploads", 1)
-            core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
+            upload_started = True
 
             log.add_upload(
                 _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -1056,6 +1061,10 @@ class Uploads(Transfers):
 
         if need_update:
             self._update_transfer(upload)
+
+        if upload_started:
+            # Must be be emitted after the final update to prevent inconsistent state
+            core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
     def _file_upload_progress(self, username, token, offset, bytes_sent):
         """A file upload is in progress."""
