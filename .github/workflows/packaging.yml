@@ -133,7 +133,7 @@ jobs:
           - arch: arm64
             platform: flyci-macos-large-latest-m1
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     if: github.event_name != 'pull_request'
     env:
       NICOTINE_GTK_VERSION: 4
