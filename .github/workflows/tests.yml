@@ -132,10 +132,14 @@ jobs:
         run: python3 -m build
 
   macos:
-    runs-on: macos-12
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            platform: macos-12
+          - arch: arm64
+            platform: macos-14
+    runs-on: ${{ matrix.platform }}
     env:
       NICOTINE_GTK_VERSION: 4
       NICOTINE_LIBADWAITA: 1
