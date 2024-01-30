@@ -481,7 +481,7 @@ class Scanner:
         if filename is None:
             last_folder = os.path.basename(folder)
 
-            if last_folder.startswith(".") or last_folder == ["@eaDir", "#recycle", "#snapshot"]:
+            if last_folder.startswith(".") or last_folder in ["@eaDir", "#recycle", "#snapshot"]:
                 return True
 
         # If we're asked to check a file we exclude it if it start with a dot
