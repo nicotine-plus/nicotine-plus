@@ -43,7 +43,9 @@ def get_default_gtk_version():
 
             # If screen reader is enabled, use GTK 3 until treeviews have been ported to
             # Gtk.ColumnView. Gtk.TreeView doesn't support screen readers in GTK 4.
-            if dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled"):
+            if (dbus_proxy.Get("(ss)", "org.a11y.Status", "IsEnabled")
+                    and dbus_proxy.Get("(ss)", "org.a11y.Status", "ScreenReaderEnabled")):
+                log.add_debug("Screen reader enabled, using GTK 3 for improved accessibility")
                 return "3"
 
         except GLib.Error:
