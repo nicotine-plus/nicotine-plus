@@ -39,14 +39,19 @@ from pynicotine.utils import open_uri
 
 class TextView:
 
-    if GTK_API_VERSION >= 4:
-        DEFAULT_CURSOR = Gdk.Cursor(name="default")
-        POINTER_CURSOR = Gdk.Cursor(name="pointer")
-        TEXT_CURSOR = Gdk.Cursor(name="text")
-    else:
-        DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
-        POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
-        TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+    try:
+        if GTK_API_VERSION >= 4:
+            DEFAULT_CURSOR = Gdk.Cursor(name="default")
+            POINTER_CURSOR = Gdk.Cursor(name="pointer")
+            TEXT_CURSOR = Gdk.Cursor(name="text")
+        else:
+            DEFAULT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "default")
+            POINTER_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "pointer")
+            TEXT_CURSOR = Gdk.Cursor.new_from_name(Gdk.Display.get_default(), "text")
+
+    except TypeError:
+        # Broken cursor theme, but what can we do...
+        DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
     URL_REGEX = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
