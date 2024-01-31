@@ -478,13 +478,15 @@ class Scanner:
 
         # If the last folder in the path starts with a dot, or is a Synology extended
         # attribute, snapshot or recycle bin folder, we exclude it
+        HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
+        
         if filename is None:
             last_folder = os.path.basename(folder)
-
-            if last_folder.startswith(".") or last_folder in ["@eaDir", "#recycle", "#snapshot"]:
+            
+            if last_folder.startswith(".") or last_folder in self.HIDDEN_FOLDER_NAMES:
                 return True
 
-        # If we're asked to check a file we exclude it if it start with a dot
+        # If we're asked to check a file, we exclude it if it starts with a dot
         if filename is not None and filename.startswith("."):
             return True
 
