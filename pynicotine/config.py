@@ -715,10 +715,14 @@ class Config:
             buddy_shares.clear()
 
         # Migrate old media player command to new format (3.3.0)
-        default_player = self.sections["players"].get("default")
+        old_default_player = self.sections["players"].get("default", None)
 
-        if default_player:
-            self.sections["urls"]["protocols"]["audio"] = default_player
+        if old_default_player:
+            self.sections["urls"]["protocols"]["audio"] = old_default_player
+
+        # Enable previously disabled header bar on macOS (3.3.0)
+        if sys.platform == "darwin" and old_default_player is not None:
+            self.sections["ui"]["header_bar"] = True
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]
