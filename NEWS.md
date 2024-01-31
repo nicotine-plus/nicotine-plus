@@ -57,7 +57,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Removed python3-gdbm dependency
  * Bumped minimum Python version requirement to 3.6
  * Bumped minimum GTK 3 version requirement to 3.22.30
- * Windows: Removed support for 32-bit systems
+ * Windows: Removed support for Windows 7, 8 and 8.1, as well as 32-bit systems
+ * macOS: Removed support for macOS 10.15 and 11
  * Completed Soulseek protocol implementation of distributed peers, bumped protocol version to 160.2
 
 ### Corrections
