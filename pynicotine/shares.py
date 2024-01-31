@@ -480,7 +480,9 @@ class Scanner:
         # attribute, snapshot or recycle bin folder, we exclude it
         if filename is None:
             last_folder = os.path.basename(folder)
+            
             HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
+            
             if last_folder.startswith(".") or last_folder in self.HIDDEN_FOLDER_NAMES:
                 return True
 
