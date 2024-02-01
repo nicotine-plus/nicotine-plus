@@ -3,6 +3,9 @@
 ## Albanian
  - W L (2023)
 
+## Arabic
+ - ButterflyOfFire (2024)
+
 ## Catalan
  - Maite Guix (2022)
 
