@@ -37,6 +37,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added keyboard input with readline command editing and history to headless CLI
  * Added support for NAT-PMP port forwarding
  * Windows: Added option to bind Nicotine+ to a specific network interface
+ * macOS: Added native support for Apple Silicon
  * Changed "Bitrate" column to "Quality" for displaying sample rate of uncompressed files
  * Allow search result filters to be restored after clicking the "Clear Filters" button
  * Restore initial list order when pressing the column header of a sorted column
@@ -99,6 +100,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Force download a filtered file ([#1419](https://github.com/nicotine-plus/nicotine-plus/issues/1419))
  * Reopen closed tabs ([#1424](https://github.com/nicotine-plus/nicotine-plus/issues/1424))
  * Anyone willing to maintain an official Nicotine+ Debian package? ([#1448](https://github.com/nicotine-plus/nicotine-plus/issues/1448))
+ * M1 Mac support? ([#1475](https://github.com/nicotine-plus/nicotine-plus/issues/1475))
  * Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
  * List of GTK 4 regressions ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
  * Crashes when sending emoji ([#1556](https://github.com/nicotine-plus/nicotine-plus/issues/1556))
@@ -146,6 +148,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * \[3.3.0.dev3\] Removing a second user from the buddy list makes nicotine crash ([#2252](https://github.com/nicotine-plus/nicotine-plus/issues/2252))
  * \[3.3.0.dev3\] Tray icon changing while nicotine minimized causing crashes ([#2258](https://github.com/nicotine-plus/nicotine-plus/issues/2258))
  * Nicotine+ split-tunneling connection to server issue ([#2285](https://github.com/nicotine-plus/nicotine-plus/issues/2285))
+ * Error launching ([#2290](https://github.com/nicotine-plus/nicotine-plus/issues/2290))
  * Add sortable audio properties/quality column ([#2296](https://github.com/nicotine-plus/nicotine-plus/issues/2296))
  * \[3.3.0.dev4\] macOS: jumpy window with straight corners and unresizable ([#2298](https://github.com/nicotine-plus/nicotine-plus/issues/2298))
  * Add dates to statistics dialog ([#2316](https://github.com/nicotine-plus/nicotine-plus/issues/2316))
@@ -229,7 +232,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * N+ 3.3.0 transfers not working ([#2827](https://github.com/nicotine-plus/nicotine-plus/issues/2827))
  * "Browse Files" doesn't always work on the first try ([#2829](https://github.com/nicotine-plus/nicotine-plus/issues/2829))
  * \[3.3.0rc2\] Disable sorting in search ([#2830](https://github.com/nicotine-plus/nicotine-plus/issues/2830))
+ * Notification on new results from wishlist ([#2840](https://github.com/nicotine-plus/nicotine-plus/issues/2840))
+ * \[3.3.0rc3\] SVG icons not shown ([#2841](https://github.com/nicotine-plus/nicotine-plus/issues/2841))
  * \[3.3.0rc3\] Instant crash with Nicotine+ 3.3.0-rc3 with Apple Silicon image ([#2842](https://github.com/nicotine-plus/nicotine-plus/issues/2842))
+ * \[3.3.0rc3\] Styling of contextual menu in higlighted tabs ([#2845](https://github.com/nicotine-plus/nicotine-plus/issues/2845))
 
 
 ## Version 3.2.9 (March 5, 2023)
