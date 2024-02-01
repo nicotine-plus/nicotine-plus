@@ -374,11 +374,8 @@ class StatusNotifierImplementation(BaseImplementation):
             return self._revision, (0, {}, serialized_items)
 
         def on_event(self, idx, event_id, _data, _timestamp):
-
-            if event_id != "clicked":
-                return
-
-            self._items[idx]["callback"]()
+            if event_id == "clicked":
+                self._items[idx]["callback"]()
 
     class StatusNotifierItemService(DBusService):
 
@@ -407,7 +404,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
-                ("ProvideXdgActivationToken", ("s",), (), self.provide_activation_token)
+                ("ProvideXdgActivationToken", ("s",), (), self.on_provide_activation_token)
             ):
                 self.add_method(method_name, in_args, out_args, callback)
 
@@ -418,9 +415,6 @@ class StatusNotifierImplementation(BaseImplementation):
             ):
                 self.add_signal(signal_name, value)
 
-        def provide_activation_token(self, token):
-            Window.activation_token = token
-
         def register(self):
             self.menu.register()
             super().register()
@@ -428,6 +422,9 @@ class StatusNotifierImplementation(BaseImplementation):
         def unregister(self):
             super().unregister()
             self.menu.unregister()
+
+        def on_provide_activation_token(self, token):
+            Window.activation_token = token
 
     def __init__(self, application):
 
