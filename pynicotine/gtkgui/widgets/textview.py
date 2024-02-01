@@ -31,6 +31,7 @@ from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import find_whole_word
@@ -51,6 +52,7 @@ class TextView:
 
     except TypeError:
         # Broken cursor theme, but what can we do...
+        log.add_debug("Cannot load cursors from theme, falling back to default cursor")
         DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
