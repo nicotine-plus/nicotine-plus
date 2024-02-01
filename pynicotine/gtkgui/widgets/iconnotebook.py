@@ -185,13 +185,13 @@ class TabLabel:
             return
 
         if self.is_important:
-            remove_css_class(self.container, "notebook-tab-changed")
-            add_css_class(self.container, "notebook-tab-highlight")
+            remove_css_class(self.box, "notebook-tab-changed")
+            add_css_class(self.box, "notebook-tab-highlight")
         else:
-            remove_css_class(self.container, "notebook-tab-highlight")
-            add_css_class(self.container, "notebook-tab-changed")
+            remove_css_class(self.box, "notebook-tab-highlight")
+            add_css_class(self.box, "notebook-tab-changed")
 
-        add_css_class(self.container, "bold")
+        add_css_class(self.label, "bold")
 
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
@@ -206,9 +206,9 @@ class TabLabel:
 
         self.is_important = False
 
-        remove_css_class(self.container, "notebook-tab-changed")
-        remove_css_class(self.container, "notebook-tab-highlight")
-        remove_css_class(self.container, "bold")
+        remove_css_class(self.box, "notebook-tab-changed")
+        remove_css_class(self.box, "notebook-tab-highlight")
+        remove_css_class(self.label, "bold")
 
         icon_name = None
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
