@@ -230,7 +230,9 @@ class Scanner:
     It handles scanning of folders and files, as well as building
     databases and writing them to disk.
     """
-
+    
+    HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
+    
     def __init__(self, config_obj, queue, share_groups, share_db_paths, init=False, rescan=True,
                  rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False):
 
@@ -472,17 +474,16 @@ class Scanner:
         gc.collect()
         return num_folders
 
-    @staticmethod
-    def is_hidden(folder, filename=None, entry=None):
+    @classmethod
+    def is_hidden(cls, folder, filename=None, entry=None):
         """Stop sharing any dot/hidden folders/files."""
 
-        # If the last folder in the path starts with a dot, or is a Synology extended
-        # attribute, snapshot or recycle bin folder, we exclude it
+        # If the last folder in the path starts with a dot, or uses
+        # the same name as well-known hidden folders, we exclude it
         if filename is None:
             last_folder = os.path.basename(folder)
 
-            HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
-            if last_folder.startswith(".") or last_folder in self.HIDDEN_FOLDER_NAMES:
+            if last_folder.startswith(".") or last_folder in cls.HIDDEN_FOLDER_NAMES:
                 return True
 
         # If we're asked to check a file, we exclude it if it starts with a dot
