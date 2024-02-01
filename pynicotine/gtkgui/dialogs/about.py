@@ -347,7 +347,7 @@ Copyright (c) 2016–2021 Bowtie AB
 <a href="https://github.com/madebybowtie/FlagKit">https://github.com/madebybowtie/FlagKit</a>""",
 
         """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
-Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
+Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.
 This program includes IP2Location LITE data available from:
 <a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
 

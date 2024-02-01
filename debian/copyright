@@ -57,7 +57,7 @@ Copyright: 2017 IP2Location.com
 License: Expat
 
 Files: pynicotine/external/ipcountrydb.bin
-Copyright: 2001-2023 Hexasoft Development Sdn. Bhd.
+Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
