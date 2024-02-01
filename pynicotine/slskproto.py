@@ -1886,8 +1886,12 @@ class NetworkThread(Thread):
             added_bytes_mem = msg_buffer_mem[:idx]
 
             if added_bytes_mem:
+                added_bytes_len = len(added_bytes_mem)
+                self._total_download_bandwidth += added_bytes_len
+
                 try:
                     conn_obj.filedown.file.write(added_bytes_mem)
+                    conn_obj.filedown.leftbytes -= added_bytes_len
 
                 except (OSError, ValueError) as error:
                     events.emit_main_thread(
@@ -1895,10 +1899,6 @@ class NetworkThread(Thread):
                         error=error
                     )
                     should_close_connection = True
-
-                added_bytes_len = len(added_bytes_mem)
-                self._total_download_bandwidth += added_bytes_len
-                conn_obj.filedown.leftbytes -= added_bytes_len
 
             current_time = time.monotonic()
             finished = (conn_obj.filedown.leftbytes <= 0)
