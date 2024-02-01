@@ -230,9 +230,10 @@ class Scanner:
     It handles scanning of folders and files, as well as building
     databases and writing them to disk.
     """
-    
+
+    # Add foldernames that need to be excluded from shares
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
-    
+
     def __init__(self, config_obj, queue, share_groups, share_db_paths, init=False, rescan=True,
                  rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False):
 
