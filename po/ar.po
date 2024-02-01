@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-29 20:08+0200\n"
-"PO-Revision-Date: 2024-01-18 15:55+0000\n"
-"Last-Translator: ButterflyOfFire <boffire@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2024-01-27 20:20+0000\n"
+"Last-Translator: Bryan Orlando <bryan.benavidesrodriguez@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ar/>\n"
 "Language: ar\n"
@@ -66,7 +66,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/downloads.ui:62
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:626
 msgid "Downloads"
-msgstr "التنزيلات"
+msgstr "التنزيلاتShkarkimet"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:37
 #: pynicotine/gtkgui/mainwindow.py:781
@@ -81,12 +81,12 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:57
 msgid "Nicotine+ Team"
-msgstr "فريق نيكوتين+"
+msgstr "فريق نيكوتين+Ekipi Nicotine +"
 
 #: pynicotine/__init__.py:49
 #, python-format
 msgid "Website: %s"
-msgstr "موقع الويب: %s"
+msgstr "Faqja e internetit: %s"
 
 #: pynicotine/__init__.py:55
 msgid "show this help message and exit"
