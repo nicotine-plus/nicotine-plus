@@ -75,6 +75,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed an issue where recursively downloading a folder would include unwanted folders in some cases
  * Fixed an issue where recommendations with a negative rating did not appear
  * Improved performance when many queued transfers are added or retried
+ * Implemented monotonic timers to ensure that transfers are unaffected by system clock adjustments
  * Check file modified times instead of folder when rescanning to ensure shares are properly updated
  * Stop loading a user's shares after closing the tab, to avoid wasting bandwidth
  * Leech Detector plugin no longer sends message to sharing users with incorrect file/folder counts
