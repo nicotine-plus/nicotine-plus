@@ -229,6 +229,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * N+ 3.3.0 transfers not working ([#2827](https://github.com/nicotine-plus/nicotine-plus/issues/2827))
  * "Browse Files" doesn't always work on the first try ([#2829](https://github.com/nicotine-plus/nicotine-plus/issues/2829))
  * \[3.3.0rc2\] Disable sorting in search ([#2830](https://github.com/nicotine-plus/nicotine-plus/issues/2830))
+ * \[3.3.0rc3\] Instant crash with Nicotine+ 3.3.0-rc3 with Apple Silicon image ([#2842](https://github.com/nicotine-plus/nicotine-plus/issues/2842))
 
 
 ## Version 3.2.9 (March 5, 2023)
