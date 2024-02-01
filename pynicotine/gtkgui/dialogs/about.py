@@ -196,7 +196,7 @@ class About(Dialog):
         """<b>Albanian</b>
  •  W L (2023)""",
 
-         """<b>Arabic</b>
+        """<b>Arabic</b>
  •  ButterflyOfFire (2024)""",
 
         """<b>Catalan</b>
