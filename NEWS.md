@@ -1,6 +1,6 @@
 # Release Notes
 
-The current stable version of Nicotine+ is 3.2.9, see [DOWNLOADS.md](doc/DOWNLOADS.md).
+The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNLOADS.md).
 
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
