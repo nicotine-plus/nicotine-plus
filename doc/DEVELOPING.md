@@ -116,7 +116,7 @@ autopkgtest --shell-fail --apt-upgrade . -- \
 
 ### Creating Tests
 
-Tests are defined in the [test/](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/test/) folder, and should be expanded to cover larger parts of the client when possible.
+Tests are defined in the [pynicotine/tests/](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/tests/) folder, and should be expanded to cover larger parts of the client when possible.
 
 
 ## Translations
