@@ -1,3 +1,9 @@
+nicotine (3.3.1-dev1) mantic; urgency=medium
+
+  * Development version.
+
+ -- Mat <mail@mathias.is>  Fri, 02 Feb 2024 03:29:32 +0200
+
 nicotine (3.3.0-1) mantic; urgency=medium
 
   * Latest upstream.
