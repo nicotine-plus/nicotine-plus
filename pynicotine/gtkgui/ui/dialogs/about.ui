@@ -59,7 +59,7 @@
                   <object class="GtkBox" id="status_container">
                     <property name="halign">center</property>
                     <property name="spacing">6</property>
-                    <property name="visible">True</property>
+                    <property name="visible">False</property>
                     <child>
                       <object class="GtkLabel" id="status_label">
                         <property name="justify">center</property>

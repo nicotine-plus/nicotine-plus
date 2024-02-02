@@ -452,6 +452,10 @@ Copyright (c) 2017 IP2Location.com
 
     def on_show(self, *_args):
 
+        if core.update_checker is None:
+            # Update checker is not loaded
+            return
+
         if self.is_version_outdated:
             # No need to check latest version again
             return
@@ -465,6 +469,7 @@ Copyright (c) 2017 IP2Location.com
         self.status_label.set_label(_("Checking latest version…"))
         self.status_spinner.set_visible(True)
         self.status_spinner.start()
+        self.status_container.set_visible(True)
 
         core.update_checker.check()
 
