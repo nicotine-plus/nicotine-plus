@@ -231,7 +231,6 @@ class Scanner:
     databases and writing them to disk.
     """
 
-    # Add foldernames that need to be excluded from shares
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
     def __init__(self, config_obj, queue, share_groups, share_db_paths, init=False, rescan=True,
@@ -479,8 +478,6 @@ class Scanner:
     def is_hidden(cls, folder, filename=None, entry=None):
         """Stop sharing any dot/hidden folders/files."""
 
-        # If the last folder in the path starts with a dot, or uses
-        # the same name as well-known hidden folders, we exclude it
         if filename is None:
             last_folder = os.path.basename(folder)
 
