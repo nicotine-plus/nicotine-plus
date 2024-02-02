@@ -40,7 +40,7 @@ sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gspell gtk4 libaadwaita python3-gobject
+sudo dnf install gspell gtk4 libadwaita python3-gobject
 ```
 
 - On SUSE-based distributions:

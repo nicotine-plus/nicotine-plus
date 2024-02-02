@@ -42,7 +42,7 @@ The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPEND
 
 ## Profiling
 
-Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses fewer system resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as small servers.
+Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses fewer system resources. Our goal is to develop a lightweight client that runs well on older hardware, as well as small servers.
 
 Due to Python's interpreted nature, addressing performance issues can be a challenge. There is no straightforward way of solving every performance issue, but these points generally help:
 
