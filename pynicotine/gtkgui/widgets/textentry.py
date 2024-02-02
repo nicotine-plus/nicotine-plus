@@ -780,6 +780,9 @@ class ComboBox:
             # Gtk.ComboBox already supports this functionality
             return False
 
+        if not self._positions:
+            return False
+
         if self._entry_completion:
             completion_popover = list(self.entry)[-1]
 
@@ -787,10 +790,7 @@ class ComboBox:
                 # Completion popup takes precedence
                 return False
 
-        current_position = self.get_selected_pos()
-
-        if current_position == Gtk.INVALID_LIST_POSITION:
-            current_position = -1
+        current_position = self._positions.get(self.get_text(), -1)
 
         if direction == "up":
             new_position = max(0, current_position - 1)
