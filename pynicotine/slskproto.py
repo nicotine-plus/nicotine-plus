@@ -1304,7 +1304,7 @@ class NetworkThread(Thread):
                             # Ask for a list of parents to connect to (distributed network)
                             self._send_have_no_parent()
                         else:
-                            self._send_message_to_server(ServerDisconnect())
+                            should_close_connection = True
 
                     elif msg_class is ConnectToPeer:
                         username = msg.user
@@ -1423,6 +1423,7 @@ class NetworkThread(Thread):
         msg_buffer_mem.release()
 
         if should_close_connection:
+            self._manual_server_disconnect = True
             self._close_connection(self._conns, self._server_socket)
             return
 
