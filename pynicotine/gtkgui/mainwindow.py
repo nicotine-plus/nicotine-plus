@@ -540,6 +540,15 @@ class MainWindow(Window):
         end_widget = self.tabs[page_id].toolbar_end_content
         end_widget.get_parent().remove(end_widget)
 
+        for widget in end_widget:
+            # Themes decide if header bar buttons should be flat
+            if isinstance(widget, Gtk.Button):
+                remove_css_class(widget, "flat")
+
+            # Header bars never contain separators, hide them
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(False)
+
         if GTK_API_VERSION >= 4:
             self.header_title.append(title_widget)
             self.header_end_container.append(end_widget)
@@ -587,6 +596,15 @@ class MainWindow(Window):
                 self.widget.unrealize()
                 self.widget.set_titlebar(None)
                 self.widget.map()
+
+        for widget in self.tabs[page_id].toolbar_end_content:
+            # Make secondary buttons at the end of the toolbar flat. Keep buttons
+            # next to text entries raised for more prominence.
+            if isinstance(widget, Gtk.Button):
+                add_css_class(widget, "flat")
+
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(True)
 
         toolbar = self.tabs[page_id].toolbar
         toolbar.set_visible(True)

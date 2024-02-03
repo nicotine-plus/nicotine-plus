@@ -152,6 +152,12 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkButton">
                         <property name="action-name">app.configure-searches</property>
                         <property name="tooltip-text" translatable="yes">Configure Searches</property>
@@ -793,6 +799,12 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkButton">
                         <property name="action-name">app.configure-shares</property>
                         <property name="tooltip-text" translatable="yes">Configure Shares</property>
@@ -952,6 +964,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
@@ -1275,6 +1293,12 @@
                         <style>
                           <class name="image-text-button"/>
                         </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
