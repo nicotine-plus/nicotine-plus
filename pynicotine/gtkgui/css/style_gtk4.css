@@ -30,3 +30,14 @@ window.dialog:not(.message) .dialog-action-area {
     padding: 0;
 }
 
+.fontchooser listview label {
+    /* Use same height for all labels to work around broken scrolling
+    https://gitlab.gnome.org/GNOME/gtk/-/issues/4751 */
+    min-height: 2.5em;
+}
+
+.fontchooser listview row {
+    margin: 0;
+    padding: 0;
+}
+
