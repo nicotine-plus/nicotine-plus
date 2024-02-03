@@ -19,6 +19,7 @@
 from locale import strxfrm
 
 import gi
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -431,6 +432,7 @@ class ComboBox:
         self._button = None
         self._entry_completion = None
         self._is_modifying = False
+        self._is_select_callback_enabled = False
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
 
@@ -804,9 +806,15 @@ class ComboBox:
         # Prevent scrolling when up/down arrow keys are disabled
         return not self.enable_arrow_keys
 
+    def _on_select_callback_status(self, enabled):
+        self._is_select_callback_enabled = enabled
+
     def _on_dropdown_visible(self, widget, param):
 
         visible = widget.get_property(param.name)
+
+        # Only enable item selection callback when an item is selected from the UI
+        GLib.idle_add(self._on_select_callback_status, visible)
 
         if not visible:
             self.entry.grab_focus_without_selecting()
@@ -843,10 +851,8 @@ class ComboBox:
             # Cursor is normally placed at the beginning, move to the end
             self.entry.set_position(-1)
 
-        if self.item_selected_callback is None:
-            return
-
-        self.item_selected_callback(self, selected_id)
+        if self._is_select_callback_enabled and self.item_selected_callback is not None:
+            self.item_selected_callback(self, selected_id)
 
 
 class SpellChecker:
