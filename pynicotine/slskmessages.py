@@ -2776,6 +2776,27 @@ class RelatedSearch(ServerMessage):
             self.terms.append((term, score))
 
 
+class ExcludedSearchPhrases(ServerMessage):
+    """Server code 160.
+
+    The server sends a list of phrases not allowed on the search network.
+    File paths containing such phrases should be excluded when responding
+    to search requests.
+    """
+
+    __slots__ = ("phrases",)
+
+    def __init__(self):
+        self.phrases = []
+
+    def parse_network_message(self, message):
+        pos, num = self.unpack_uint32(message)
+
+        for _ in range(num):
+            pos, phrase = self.unpack_string(message, pos)
+            self.phrases.append(phrase)
+
+
 class CantConnectToPeer(ServerMessage):
     """Server code 1001.
 
@@ -3841,6 +3862,7 @@ NETWORK_MESSAGE_EVENTS = {
     CheckPrivileges: "check-privileges",
     ConnectToPeer: "connect-to-peer",
     DistribSearch: "file-search-request-distributed",
+    ExcludedSearchPhrases: "excluded-search-phrases",
     FileSearch: "file-search-request-server",
     FileSearchResponse: "file-search-response",
     FileTransferInit: "file-transfer-init",
@@ -3996,6 +4018,7 @@ SERVER_MESSAGE_CODES = {
     LeaveGlobalRoom: 151,         # Deprecated
     GlobalRoomMessage: 152,       # Deprecated
     RelatedSearch: 153,           # Obsolete
+    ExcludedSearchPhrases: 160,
     CantConnectToPeer: 1001,
     CantCreateRoom: 1003
 }

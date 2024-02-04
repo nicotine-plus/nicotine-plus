@@ -18,10 +18,12 @@
 
 import os
 
+from collections import UserDict
 from unittest import TestCase
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
 SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
@@ -30,12 +32,14 @@ SEARCH_MODE = "global"
 
 class SearchTest(TestCase):
 
+    # pylint: disable=protected-access
+
     def setUp(self):
 
         config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
         config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
 
-        core.init_components(enabled_components={"pluginhandler", "search"})
+        core.init_components(enabled_components={"pluginhandler", "search", "shares"})
 
     def tearDown(self):
 
@@ -43,6 +47,7 @@ class SearchTest(TestCase):
 
         self.assertIsNone(core.pluginhandler)
         self.assertIsNone(core.search)
+        self.assertIsNone(core.shares)
 
     def test_do_search(self):
         """Test the do_search function, including the outgoing search term and
@@ -110,7 +115,7 @@ class SearchTest(TestCase):
         excluded_words = {"linux", "game"}
         partial_words = {"stem"}
 
-        results = core.search._create_search_result_list(  # pylint: disable=protected-access
+        results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, {37, 38})
 
@@ -118,7 +123,7 @@ class SearchTest(TestCase):
         excluded_words = {"linux", "game", "music", "cd"}
         partial_words = set()
 
-        results = core.search._create_search_result_list(  # pylint: disable=protected-access
+        results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, None)
 
@@ -126,6 +131,36 @@ class SearchTest(TestCase):
         excluded_words = {"system"}
         partial_words = {"ibberish"}
 
-        results = core.search._create_search_result_list(  # pylint: disable=protected-access
+        results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
         self.assertEqual(results, None)
+
+    def test_exclude_server_phrases(self):
+        """Verify that results containing excluded phrases are not included."""
+
+        core.search.excluded_phrases = ["linux distro", "netbsd"]
+        results = {0, 1, 2, 3, 4, 5}
+        public_share_db = core.shares.share_dbs["public_files"] = UserDict({
+            "real\\isos\\freebsd.iso": ["virtual\\isos\\freebsd.iso", 1000, None, None],
+            "real\\isos\\linux.iso": ["virtual\\isos\\linux.iso", 2000, None, None],
+            "real\\isos\\linux distro.iso": ["virtual\\isos\\linux distro.iso", 3000, None, None],
+            "real\\isos\\Linux Distro.iso": ["virtual\\isos\\Linux Distro.iso", 4000, None, None],
+            "real\\isos\\NetBSD.iso": ["virtual\\isos\\NetBSD.iso", 5000, None, None],
+            "real\\isos\\openbsd.iso": ["virtual\\isos\\openbsd.iso", 6000, None, None]
+        })
+        core.shares.share_dbs["buddy_files"] = core.shares.share_dbs["trusted_files"] = UserDict()
+        core.shares.file_path_index = list(public_share_db)
+
+        for share_db in core.shares.share_dbs.values():
+            share_db.close = lambda: None
+
+        num_results, fileinfos, private_fileinfos = core.search._create_file_info_list(
+            results, max_results=100, permission_level=PermissionLevel.PUBLIC
+        )
+        self.assertEqual(num_results, 3)
+        self.assertEqual(fileinfos, [
+            ["virtual\\isos\\freebsd.iso", 1000, None, None],
+            ["virtual\\isos\\linux.iso", 2000, None, None],
+            ["virtual\\isos\\openbsd.iso", 6000, None, None]
+        ])
+        self.assertEqual(private_fileinfos, [])
