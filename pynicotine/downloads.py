@@ -356,7 +356,7 @@ class Downloads(Transfers):
 
         if command:
             try:
-                execute_command(command, file_path)
+                execute_command(command, file_path, hidden=True)
                 log.add(_("Executed: %s"), command)
 
             except Exception as error:
@@ -394,7 +394,7 @@ class Downloads(Transfers):
 
         if command:
             try:
-                execute_command(command, folder_path)
+                execute_command(command, folder_path, hidden=True)
                 log.add(_("Executed on folder: %s"), command)
 
             except Exception as error:

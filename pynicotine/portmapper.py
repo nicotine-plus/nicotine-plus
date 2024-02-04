@@ -137,7 +137,7 @@ class NATPMP(BaseImplementation):
         else:
             gateway_pattern = re.compile(b"(?:default|0\\.0\\.0\\.0|::/0)\\s+([\\w\\.:]+)\\s+.*UG")
 
-        output = execute_command("netstat -rn", returnoutput=True)
+        output = execute_command("netstat -rn", returnoutput=True, hidden=True)
         return gateway_pattern.search(output).group(1)
 
     def _request_port_mapping(self, public_port, private_port, lease_duration):

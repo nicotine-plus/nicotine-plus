@@ -233,7 +233,8 @@ def censor_text(text, censored_patterns, filler="*"):
     return text
 
 
-def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
+def execute_command(command, replacement=None, background=True, returnoutput=False,
+                    hidden=False, placeholder="$"):
     """Executes a string with commands, with partial support for bash-style
     quoting and pipes.
 
@@ -243,6 +244,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     If background is false the function will wait for all the launched
     processes to end before returning.
+
+    If hidden is true, any window created by the command will be hidden
+    (on Windows).
 
     If the 'replacement' argument is given, every occurrence of 'placeholder'
     will be replaced by 'replacement'.
@@ -271,7 +275,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     command = command.strip()
     startupinfo = None
 
-    if sys.platform == "win32":
+    if hidden and sys.platform == "win32":
         from subprocess import STARTF_USESHOWWINDOW, STARTUPINFO
         # Hide console window on Windows
         startupinfo = STARTUPINFO()

@@ -86,7 +86,7 @@ class Notifications:
         while self.tts:
             try:
                 message = self.tts.popleft()
-                execute_command(config.sections["ui"]["speechcommand"], message, background=False)
+                execute_command(config.sections["ui"]["speechcommand"], message, background=False, hidden=True)
 
             except Exception as error:
                 log.add(_("Text-to-speech for message failed: %s"), error)
