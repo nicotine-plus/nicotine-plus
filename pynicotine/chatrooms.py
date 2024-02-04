@@ -21,7 +21,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 
@@ -509,7 +508,7 @@ class ChatRooms:
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=f"{clean_file(room)}.log", text=msg.formatted_message
+                basename=room, text=msg.formatted_message
             )
 
         if is_global:

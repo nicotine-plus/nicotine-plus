@@ -19,8 +19,6 @@
 import re
 import time
 
-from collections import deque
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -33,7 +31,6 @@ from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import encode_path
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
 
@@ -407,17 +404,14 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
-    def append_log_lines(self, path, num_lines, timestamp_format):
+    def append_log_lines(self, folder_path, basename, num_lines, timestamp_format):
 
         if not num_lines:
             return
 
-        try:
-            with open(encode_path(path), "rb") as lines:
-                # Only show as many log lines as specified in config
-                lines = deque(lines, num_lines)
+        lines = log.read_log(folder_path, basename, num_lines)
 
-        except OSError:
+        if not lines:
             return
 
         login = config.sections["server"]["login"]
@@ -455,9 +449,8 @@ class ChatView(TextView):
 
             self.append_line(line, message_type=message_type, username=user, usertag=usertag)
 
-        if lines:
-            self.append_line(_("--- old messages above ---"), message_type="hilite",
-                             timestamp_format=timestamp_format)
+        self.append_line(_("--- old messages above ---"), message_type="hilite",
+                         timestamp_format=timestamp_format)
 
     def clear(self):
         super().clear()

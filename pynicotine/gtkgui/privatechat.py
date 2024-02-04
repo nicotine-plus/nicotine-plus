@@ -21,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import GLib
 
 from pynicotine.config import config
@@ -42,7 +40,6 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import clean_file
 
 
 class PrivateChats(IconNotebook):
@@ -390,7 +387,8 @@ class PrivateChat:
     def read_private_log(self):
 
         self.chat_view.append_log_lines(
-            path=os.path.join(log.private_chat_folder_path, f"{clean_file(self.user)}.log"),
+            folder_path=log.private_chat_folder_path,
+            basename=self.user,
             num_lines=config.sections["logging"]["readprivatelines"],
             timestamp_format=config.sections["logging"]["private_timestamp"]
         )

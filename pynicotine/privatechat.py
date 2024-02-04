@@ -23,7 +23,6 @@ from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.utils import censor_text
-from pynicotine.utils import clean_file
 from pynicotine.utils import find_whole_word
 
 
@@ -284,7 +283,7 @@ class PrivateChat:
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             log.write_log_file(
                 folder_path=log.private_chat_folder_path,
-                basename=f"{clean_file(username)}.log", text=msg.formatted_message, timestamp=timestamp
+                basename=username, text=msg.formatted_message, timestamp=timestamp
             )
 
         if is_outgoing_message:

@@ -20,6 +20,8 @@ import os
 import sys
 import time
 
+from collections import deque
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
@@ -73,9 +75,9 @@ class Logger:
     def __init__(self):
 
         current_date_time = time.strftime("%Y-%m-%d_%H-%M-%S")
-        self.debug_file_name = f"debug_{current_date_time}.log"
-        self.downloads_file_name = f"downloads_{current_date_time}.log"
-        self.uploads_file_name = f"uploads_{current_date_time}.log"
+        self.debug_file_name = f"debug_{current_date_time}"
+        self.downloads_file_name = f"downloads_{current_date_time}"
+        self.uploads_file_name = f"uploads_{current_date_time}"
 
         self.debug_folder_path = None
         self.transfer_folder_path = None
@@ -123,9 +125,9 @@ class Logger:
 
     # Log Files #
 
-    def _get_log_file(self, folder_path, basename):
+    def _get_log_file(self, folder_path, basename, should_create_file=True):
 
-        file_path = os.path.join(folder_path, basename)
+        file_path = os.path.join(folder_path, f"{clean_file(basename)}.log")
         log_file = self._log_files.get(file_path)
 
         if log_file is not None:
@@ -134,11 +136,14 @@ class Logger:
         folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
 
+        if not should_create_file and not os.path.isfile(file_path_encoded):
+            return log_file
+
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
-        log_file = self._log_files[file_path] = LogFile(
-            path=file_path, handle=open(encode_path(file_path), "ab"))  # pylint: disable=consider-using-with
+        log_file = LogFile(
+            path=file_path, handle=open(file_path_encoded, "ab+"))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
         os.chmod(file_path_encoded, 0o600)
@@ -167,7 +172,7 @@ class Logger:
             should_log_file = (folder_path != self.debug_folder_path)
 
             self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
-                "filename": os.path.join(folder_path, basename),
+                "filename": os.path.join(folder_path, f"{clean_file(basename)}.log"),
                 "error": error
             }, should_log_file=should_log_file)
 
@@ -208,6 +213,28 @@ class Logger:
 
     def open_log(self, folder_path, basename):
         self._handle_log(folder_path, basename, self.open_log_callback)
+
+    def read_log(self, folder_path, basename, num_lines):
+
+        lines = None
+
+        try:
+            log_file = self._get_log_file(folder_path, basename, should_create_file=False)
+
+            if log_file is not None:
+                # Read the number of lines specified from the beginning of the file,
+                # then go back to the end of the file to append new lines
+                log_file.handle.seek(0)
+                lines = deque(log_file.handle, num_lines)
+                log_file.handle.seek(0, os.SEEK_END)
+
+        except Exception as error:
+            log.add(_("Cannot access log file %(path)s: %(error)s"), {
+                "path": os.path.join(folder_path, f"{clean_file(basename)}.log"),
+                "error": error
+            })
+
+        return lines
 
     def delete_log(self, folder_path, basename):
         self._handle_log(folder_path, basename, self.delete_log_callback)

@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -52,7 +50,6 @@ from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import clean_file
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
@@ -666,7 +663,8 @@ class ChatRoom:
     def read_room_logs(self):
 
         self.chat_view.append_log_lines(
-            path=os.path.join(log.room_folder_path, f"{clean_file(self.room)}.log"),
+            folder_path=log.room_folder_path,
+            basename=self.room,
             num_lines=config.sections["logging"]["readroomlines"],
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
