@@ -482,10 +482,10 @@ class Search:
         results.clear()
 
         if fileinfos:
-            fileinfos.sort(key=itemgetter(1))
+            fileinfos.sort(key=itemgetter(0))
 
         if private_fileinfos:
-            private_fileinfos.sort(key=itemgetter(1))
+            private_fileinfos.sort(key=itemgetter(0))
 
         num_fileinfos = len(fileinfos) + len(private_fileinfos)
         return num_fileinfos, fileinfos, private_fileinfos
