@@ -24,6 +24,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
 
@@ -47,6 +48,7 @@ class WishList(Dialog):
             width=600,
             height=600
         )
+        application.add_window(self.widget)
 
         self.application = application
         self.list_view = TreeView(
@@ -67,6 +69,14 @@ class WishList(Dialog):
 
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
+
+        popup = PopupMenu(application, self.list_view.widget)
+        popup.add_items(
+            ("#" + _("_Search for Item"), self.on_search_wish),
+            ("#" + _("Edit…"), self.on_edit_wish),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_wish)
+        )
 
         for event_name, callback in (
             ("add-wish", self.add_wish),
@@ -127,6 +137,17 @@ class WishList(Dialog):
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
             ).present()
+            return
+
+    def on_search_wish(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            core.search.do_search(wish, mode="global")
+
+            # Close dialog to discourage manually searching many items in a row
+            # (can result in a temporary ban from the server in extreme cases)
+            self.close()
             return
 
     def on_remove_wish(self, *_args):
