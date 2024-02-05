@@ -179,8 +179,7 @@ class Downloads(Transfers):
     def on_open_file_manager(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.downloads.get_current_download_file_path(
-                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
+            file_path = core.downloads.get_current_download_file_path(transfer)
             folder_path = os.path.dirname(file_path)
 
             if transfer.status == TransferStatus.FINISHED:
@@ -192,9 +191,7 @@ class Downloads(Transfers):
     def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
-            file_path = core.downloads.get_current_download_file_path(
-                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.size)
-
+            file_path = core.downloads.get_current_download_file_path(transfer)
             open_file_path(file_path)
 
     def on_browse_folder(self, *_args):

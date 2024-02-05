@@ -289,9 +289,10 @@ class Downloads(Transfers):
             "user": username
         })
 
-        download_path = self.get_complete_download_file_path(username, virtual_path, size, transfer.folder_path)
+        _file_path, file_exists = self.get_complete_download_file_path(
+            username, virtual_path, size, transfer.folder_path)
 
-        if download_path:
+        if file_exists:
             self._finish_transfer(transfer, already_exists=True)
             return False
 
@@ -666,18 +667,20 @@ class Downloads(Transfers):
         basename = self.get_download_basename(virtual_path, download_folder_path)
         basename_no_extension, extension = os.path.splitext(basename)
         download_file_path = os.path.join(download_folder_path, basename)
+        file_exists = False
         counter = 1
 
         while os.path.isfile(encode_path(download_file_path)):
             if os.stat(encode_path(download_file_path)).st_size == size:
                 # Found a previous download with a matching file size
-                return download_file_path
+                file_exists = True
+                break
 
             basename = f"{basename_no_extension} ({counter}){extension}"
             download_file_path = os.path.join(download_folder_path, basename)
             counter += 1
 
-        return None
+        return download_file_path, file_exists
 
     def get_incomplete_download_file_path(self, username, virtual_path):
         """Returns the path to store a download while it's still
@@ -702,11 +705,16 @@ class Downloads(Transfers):
 
         return os.path.join(incomplete_folder_path, prefix + basename_no_extension + extension)
 
-    def get_current_download_file_path(self, username, virtual_path, download_folder_path, size):
+    def get_current_download_file_path(self, transfer):
         """Returns the current file path of a download."""
 
-        return (self.get_complete_download_file_path(username, virtual_path, size, download_folder_path)
-                or self.get_incomplete_download_file_path(username, virtual_path))
+        file_path, file_exists = self.get_complete_download_file_path(
+            transfer.username, transfer.virtual_path, transfer.size, transfer.folder_path)
+
+        if file_exists or transfer.status == TransferStatus.FINISHED:
+            return file_path
+
+        return self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path)
 
     def enqueue_folder(self, username, folder_path, download_folder_path=None):
 
@@ -824,8 +832,10 @@ class Downloads(Transfers):
                 if download.status != TransferStatus.FINISHED:
                     continue
 
-                if self.get_complete_download_file_path(
-                        download.username, download.virtual_path, download.size, download.folder_path):
+                _file_path, file_exists = self.get_complete_download_file_path(
+                    download.username, download.virtual_path, download.size, download.folder_path)
+
+                if file_exists:
                     continue
 
             self._clear_transfer(download, update_parent=False)
@@ -1058,8 +1068,10 @@ class Downloads(Transfers):
                 cancel_reason = TransferRejectReason.COMPLETE
 
         elif self.can_upload(username):
-            if self.get_complete_download_file_path(username, virtual_path, size):
-                # Check if download exists in our default download folder
+            # Check if download exists in our default download folder
+            _file_path, file_exists = self.get_complete_download_file_path(username, virtual_path, size)
+
+            if file_exists:
                 cancel_reason = TransferRejectReason.COMPLETE
             else:
                 # If this file is not in your download queue, then it must be
