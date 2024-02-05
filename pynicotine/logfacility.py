@@ -217,6 +217,7 @@ class Logger:
     def read_log(self, folder_path, basename, num_lines):
 
         lines = None
+        log_file = None
 
         try:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
@@ -233,6 +234,10 @@ class Logger:
                 "path": os.path.join(folder_path, f"{clean_file(basename)}.log"),
                 "error": error
             })
+
+            if log_file is not None:
+                # In case seek() failed, close log file to prevent future write attempts
+                self._close_log_file(log_file)
 
         return lines
 
