@@ -207,13 +207,6 @@ def add_gtk():
         starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
     )
 
-    if GTK_VERSION == "4":
-        # ANGLE (OpenGL ES)
-        add_files(
-            folder_path=LIB_PATH, output_path="lib",
-            starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
-        )
-
     if USE_LIBADWAITA:
         add_files(
             folder_path=LIB_PATH, output_path="lib",
