@@ -30,7 +30,7 @@ def install_pacman():
     use_libadwaita = (gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1")
 
     packages = [f"{prefix}ca-certificates",
-                f"{prefix}gettext",
+                f"{prefix}gettext-tools",
                 f"{prefix}gtk{gtk_version}",
                 f"{prefix}python-build",
                 f"{prefix}python-cx-freeze",

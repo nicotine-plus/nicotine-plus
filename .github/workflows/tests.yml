@@ -106,7 +106,7 @@ jobs:
           release: false
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
-            mingw-w64-${{ matrix.arch }}-gettext
+            mingw-w64-${{ matrix.arch }}-gettext-tools
             mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
             mingw-w64-${{ matrix.arch }}-libadwaita
             mingw-w64-${{ matrix.arch }}-python-build
