@@ -233,10 +233,13 @@ class Uploads(Transfers):
 
         return self.total_bandwidth >= bandwidth_limit
 
-    def is_new_upload_accepted(self):
+    def is_new_upload_accepted(self, enforce_limits=True):
 
         if core.shares is None or core.shares.rescanning:
             return False
+
+        if not enforce_limits:
+            return True
 
         if config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
@@ -562,18 +565,23 @@ class Uploads(Transfers):
             self._user_update_counter += 1
             self._user_update_counters[username] = self._user_update_counter
 
-    def _check_upload_queue(self):
+    def _check_upload_queue(self, upload_candidate=None):
         """Find next file to upload."""
 
-        if not self.is_new_upload_accepted():
+        # If a candidate is provided, we want to upload it immediately
+        if not self.is_new_upload_accepted(enforce_limits=(upload_candidate is None)):
             return
 
-        upload_candidate, has_active_uploads = self._get_upload_candidate()
-
         if upload_candidate is None:
-            if not has_active_uploads and self.pending_shutdown:
-                self.pending_shutdown = False
-                core.quit()
+            upload_candidate, has_active_uploads = self._get_upload_candidate()
+
+            if upload_candidate is None:
+                if not has_active_uploads and self.pending_shutdown:
+                    self.pending_shutdown = False
+                    core.quit()
+                return
+
+        elif upload_candidate not in self.queued_users.get(upload_candidate.username, {}).values():
             return
 
         username = upload_candidate.username
@@ -686,7 +694,7 @@ class Uploads(Transfers):
 
         if not active_uploads:
             # No active upload, transfer a queued upload immediately
-            self._check_upload_queue()
+            self._check_upload_queue(transfer)
 
     def retry_uploads(self, uploads):
         for upload in uploads:
