@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-01 20:55+0200\n"
-"PO-Revision-Date: 2024-02-01 18:52+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-02-07 02:01+0000\n"
+"Last-Translator: ButterflyOfFire <boffire@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ar/>\n"
 "Language: ar\n"
@@ -5370,7 +5370,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:132
 msgid "Settings"
-msgstr ""
+msgstr "الإعدادات"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:148
 msgid "_Settings"
