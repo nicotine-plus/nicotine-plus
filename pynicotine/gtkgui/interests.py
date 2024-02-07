@@ -394,9 +394,6 @@ class Interests:
         self.recommendations_label.set_label(_("Recommendations"))
         self.similar_users_label.set_label(_("Similar Users"))
 
-        self.recommendations_list_view.clear()
-        self.similar_users_list_view.clear()
-
         if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
             core.interests.request_global_recommendations()
         else:
