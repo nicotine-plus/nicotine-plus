@@ -134,6 +134,8 @@ class PeerConnection(Connection):
 
 class NetworkInterfaces:
 
+    SO_BINDTODEVICE = None
+
     if sys.platform == "win32":
         from ctypes import POINTER, Structure, wintypes
 
@@ -192,6 +194,7 @@ class NetworkInterfaces:
 
     elif sys.platform == "linux":
         SIOCGIFADDR = 0x8915
+        SO_BINDTODEVICE = 25
 
     elif sys.platform.startswith("sunos"):
         SIOCGIFADDR = -0x3fdf96f3  # Solaris
@@ -293,10 +296,21 @@ class NetworkInterfaces:
         return cls.get_interface_addresses().get(interface_name)
 
     @classmethod
-    def bind_to_interface_address(cls, sock, address):
-        """Bind socket to the IP address of a network interface, retrieved from
-        get_interface_addresses().
+    def bind_to_interface(cls, sock, interface_name, address):
+        """Bind socket to the specified network interface name, if required on
+        the current platform. Otherwise bind to the IP address of the network
+        interface, retrieved from get_interface_addresses().
         """
+
+        try:
+            # We need to use SO_BINDTODEVICE on Linux, since socket.bind() has no
+            # effect on routing (weak host model).
+            if cls.SO_BINDTODEVICE:
+                sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
+                return
+
+        except PermissionError:
+            pass
 
         sock.bind((address, 0))
 
@@ -554,7 +568,7 @@ class NetworkThread(Thread):
 
         if self._interface_address:
             if sock is not self._listen_socket:
-                NetworkInterfaces.bind_to_interface_address(sock, self._interface_address)
+                NetworkInterfaces.bind_to_interface(sock, self._interface_name, self._interface_address)
 
             return True
 
