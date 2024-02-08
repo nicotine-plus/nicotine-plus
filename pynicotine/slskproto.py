@@ -309,8 +309,9 @@ class NetworkInterfaces:
                 sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
                 return
 
-        except PermissionError:
-            pass
+        except PermissionError as error:
+            log.add_debug(("Failed to bind socket to network interface with SO_BINDTODEVICE. "
+                           "Falling back to socket.bind(). Error: %s"), error)
 
         sock.bind((address, 0))
 
