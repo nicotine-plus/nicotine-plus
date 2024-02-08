@@ -73,7 +73,7 @@ class Plugin(BasePlugin):
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(
-                bus=self.bus,
+                connection=self.bus,
                 flags=Gio.DBusProxyFlags.NONE,
                 info=None,
                 name="org.freedesktop.DBus",
@@ -93,7 +93,7 @@ class Plugin(BasePlugin):
         """Returns the current song url for the selected MPRIS client."""
 
         dbus_proxy = Gio.DBusProxy.new_sync(
-            bus=self.bus,
+            connection=self.bus,
             flags=Gio.DBusProxyFlags.NONE,
             info=None,
             name=self.dbus_mpris_service + player,
