@@ -140,8 +140,9 @@ class Plugin(BasePlugin):
             player = self.get_current_mpris_player()
             selected_client_song_url = self.get_current_mpris_song_url(player)
 
-        except Exception:
+        except Exception as error:
             # Selected player is invalid
+            self.log("Cannot retrieve currently playing song. Error: %s", error)
             return
 
         if selected_client_song_url != changed_song_url:
