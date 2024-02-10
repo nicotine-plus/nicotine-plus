@@ -16,6 +16,7 @@
         "--filesystem=/media",
         "--filesystem=/mnt",
         "--filesystem=/run/media",
+        "--talk-name=org.a11y.Bus",
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
