@@ -470,6 +470,9 @@ class ComboBox:
 
         self.dropdown.connect("notify::selected", self._on_item_selected)
 
+        popover = list(self.dropdown)[-1]
+        popover.connect("notify::visible", self._on_dropdown_visible)
+
         if not has_entry:
             self.widget = self.dropdown
 
@@ -486,9 +489,6 @@ class ComboBox:
 
         if label:
             label.set_mnemonic_widget(self.entry)
-
-        popover = list(self.dropdown)[-1]
-        popover.connect("notify::visible", self._on_dropdown_visible)
 
         try:
             # Hide Gtk.DropDown label
@@ -516,6 +516,7 @@ class ComboBox:
 
         self.dropdown.connect("scroll-event", self._on_button_scroll_event)
         self.dropdown.connect("notify::active", self._on_item_selected)
+        self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
 
         if label:
             label.set_mnemonic_widget(self.widget)
@@ -529,8 +530,6 @@ class ComboBox:
 
         if has_entry_completion:
             add_css_class(self.dropdown, "dropdown-scrollbar")
-
-        self.dropdown.connect("notify::popup-shown", self._on_dropdown_visible)
 
         if self.entry is None:
             self.entry = self.dropdown.get_child()
@@ -815,6 +814,9 @@ class ComboBox:
 
         # Only enable item selection callback when an item is selected from the UI
         GLib.idle_add(self._on_select_callback_status, visible)
+
+        if self.entry is None:
+            return
 
         if not visible:
             self.entry.grab_focus_without_selecting()
