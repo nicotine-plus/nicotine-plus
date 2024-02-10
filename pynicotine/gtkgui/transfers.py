@@ -263,7 +263,7 @@ class Transfers:
         self.update_model(select_parent=(self.pending_parent_rows_timer_id is not None))
         self.window.notebook.remove_tab_changed(self.transfer_page)
 
-        if self.container.get_visible():
+        if self.container.get_parent().get_visible():
             self.tree_view.grab_focus()
             return True
 

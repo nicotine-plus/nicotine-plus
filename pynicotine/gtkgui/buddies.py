@@ -178,7 +178,7 @@ class Buddies:
 
         self.update_visible()
 
-        if self.container.get_visible():
+        if self.container.get_parent().get_visible():
             self.list_view.grab_focus()
             return True
 
