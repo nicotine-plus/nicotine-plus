@@ -32,6 +32,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -276,6 +277,7 @@ class IconNotebook:
         self.unread_pages = {}
         self.recently_removed_pages = deque(maxlen=5)  # Low limit to prevent excessive server traffic
         self.scroll_x = self.scroll_y = 0
+        self.should_focus_page = True
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
@@ -329,6 +331,9 @@ class IconNotebook:
 
         for style_class in ("circular", "flat"):
             add_css_class(self.pages_button, style_class)
+
+        Accelerator("Left", self.widget, self.on_arrow_accelerator)
+        Accelerator("Right", self.widget, self.on_arrow_accelerator)
 
         self.popup_menu_pages = PopupMenu(self.window.application, self.pages_button, connect_events=False)
         self.update_pages_menu_button()
@@ -647,12 +652,16 @@ class IconNotebook:
         new_first_child.set_visible(True)
 
         # Focus the default widget on the page
-        if self.parent_page is None or self.window.current_page_id == self.parent_page.id:
+        if (self.should_focus_page
+                and (self.parent_page is None or self.window.current_page_id == self.parent_page.id
+                     and self.window.notebook.should_focus_page)):
             GLib.idle_add(self.on_focus_page, new_page, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight
         if self.parent_page is not None:
             self.remove_tab_changed(new_page)
+
+        self.should_focus_page = True
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
@@ -745,6 +754,10 @@ class IconNotebook:
             self.scroll_x = self.scroll_y = 0
 
         return True
+
+    def on_arrow_accelerator(self, *_args):
+        """Left, Right - disable page focus callback when moving through tabs."""
+        self.should_focus_page = False
 
     # Signals (GTK 4) #
 
