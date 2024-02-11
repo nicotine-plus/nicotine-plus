@@ -253,7 +253,6 @@ class Scanner:
         self.processed_share_names = set()
         self.processed_share_paths = set()
         self.current_file_index = 0
-        self.tinytag = None
 
     def run(self):
 
