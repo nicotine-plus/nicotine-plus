@@ -1228,6 +1228,18 @@ class MainWindow(Window):
         self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(_("Quitting..."))
 
+    def present(self):
+
+        super().present()
+
+        if sys.platform != "darwin":
+            # Workaround for window being unresizable when maximized once
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5898
+            GLib.idle_add(
+                self.widget.maximize if config.sections["ui"]["maximized"] else self.widget.unmaximize,
+                priority=GLib.PRIORITY_HIGH_IDLE
+            )
+
     def hide(self):
 
         if not self.is_visible():
