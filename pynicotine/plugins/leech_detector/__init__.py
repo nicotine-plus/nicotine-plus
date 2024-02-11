@@ -80,7 +80,7 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def check_user(self, user, num_files, num_folders):
+    def check_user(self, user, num_files, num_folders, source="server"):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -88,6 +88,10 @@ class Plugin(BasePlugin):
 
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
+            return
+
+        if self.probed_users[user] == "requesting_shares" and source != "peer":
+            # Waiting for stats from peer, but received stats from server. Ignore.
             return
 
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
@@ -149,7 +153,7 @@ class Plugin(BasePlugin):
             self.check_user(user, num_files=stats.files, num_folders=stats.folders)
 
     def user_stats_notification(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], source=stats["source"])
 
     def upload_finished_notification(self, user, *_):
 

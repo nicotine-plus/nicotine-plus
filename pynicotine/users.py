@@ -326,6 +326,7 @@ class Users:
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
+            "source": "server"
         })
 
     @staticmethod
