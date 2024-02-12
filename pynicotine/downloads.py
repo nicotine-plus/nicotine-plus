@@ -718,9 +718,6 @@ class Downloads(Transfers):
 
     def enqueue_folder(self, username, folder_path, download_folder_path=None):
 
-        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
-            return
-
         requested_folder = self._requested_folders.get(username, {}).get(folder_path)
 
         if requested_folder is None:
