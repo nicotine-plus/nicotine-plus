@@ -1232,7 +1232,7 @@ class MainWindow(Window):
 
         super().present()
 
-        if sys.platform != "darwin":
+        if sys.platform == "darwin":
             # Workaround for window being unresizable when maximized once
             # https://gitlab.gnome.org/GNOME/gtk/-/issues/5898
             GLib.idle_add(
