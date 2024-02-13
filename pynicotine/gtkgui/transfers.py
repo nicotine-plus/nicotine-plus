@@ -74,6 +74,7 @@ class Transfers:
         TransferRejectReason.PENDING_SHUTDOWN: _("Pending shutdown"),
         TransferRejectReason.FILE_READ_ERROR: _("File read error")
     }
+    TRANSFER_ITERATOR_PENDING = 0
 
     path_separator = path_label = retry_label = abort_label = None
     deprioritized_statuses = ()
@@ -273,6 +274,14 @@ class Transfers:
 
         self.transfer_list = transfer_list
 
+        for transfer in transfer_list:
+            # Tab highlights are only used when transfers are appended, but we
+            # won't create a transfer row until the tab is active. To prevent
+            # spurious highlights when a previously added transfer changes, but
+            # the tab wasn't activated yet (iterator is None), mark the iterator
+            # as pending.
+            transfer.iterator = self.TRANSFER_ITERATOR_PENDING
+
         self.container.get_parent().set_visible(bool(transfer_list))
         self.update_model()
 
@@ -349,6 +358,7 @@ class Transfers:
         if self.window.current_page_id != self.transfer_page.id:
             if transfer is not None and transfer.iterator is None:
                 self.window.notebook.request_tab_changed(self.transfer_page)
+                transfer.iterator = self.TRANSFER_ITERATOR_PENDING
 
             # No need to do unnecessary work if transfers are not visible
             return
@@ -548,7 +558,7 @@ class Transfers:
         iterator = transfer.iterator
 
         # Modify old transfer
-        if iterator is not None:
+        if iterator and iterator != self.TRANSFER_ITERATOR_PENDING:
             translated_status = self.translate_status(status)
             should_update_size = False
 
@@ -756,7 +766,7 @@ class Transfers:
         self.row_id = 0
 
         for transfer in self.transfer_list:
-            transfer.iterator = None
+            transfer.iterator = self.TRANSFER_ITERATOR_PENDING
 
     def get_transfer_folder_path(self, _transfer):
         # Implemented in subclasses
@@ -783,7 +793,10 @@ class Transfers:
 
     def clear_transfer(self, transfer, update_parent=True):
 
-        if transfer.iterator is None:
+        iterator = transfer.iterator
+        transfer.iterator = None
+
+        if not iterator or iterator == self.TRANSFER_ITERATOR_PENDING:
             return
 
         user = transfer.username
@@ -799,8 +812,7 @@ class Transfers:
             if self.grouping_mode == "ungrouped" and not user_child_transfers:
                 del self.users[user]
 
-        self.tree_view.remove_row(transfer.iterator)
-        transfer.iterator = None
+        self.tree_view.remove_row(iterator)
 
         if update_parent:
             self.update_parent_rows(transfer)
@@ -948,7 +960,7 @@ class Transfers:
         for transfer in user_child_transfers:
             iterator = transfer.iterator
 
-            if iterator:
+            if iterator and iterator != self.TRANSFER_ITERATOR_PENDING:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
