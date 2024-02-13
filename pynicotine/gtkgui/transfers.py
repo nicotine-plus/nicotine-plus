@@ -960,7 +960,7 @@ class Transfers:
         for transfer in user_child_transfers:
             iterator = transfer.iterator
 
-            if iterator and iterator != self.TRANSFER_ITERATOR_PENDING:
+            if iterator:
                 self.tree_view.select_row(iterator, should_scroll=False)
                 continue
 
