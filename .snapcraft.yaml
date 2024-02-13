@@ -16,6 +16,7 @@ apps:
     desktop: share/applications/org.nicotine_plus.Nicotine.desktop
     extensions: [gnome]
     plugs:
+      - desktop-legacy
       - home
       - network
       - network-bind
