@@ -134,7 +134,7 @@ class NetworkPage:
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
             self.check_port_status_label.set_visible(True)
         else:
-            self.current_port_label.set_markup(f"<b>{unknown_label}</b>")
+            self.current_port_label.set_text(unknown_label)
             self.check_port_status_label.set_visible(False)
 
     def set_settings(self):
@@ -308,7 +308,8 @@ class DownloadsPage:
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
-                                           "can be used, otherwise only wildcard * matches are supported.")
+                                           "can be used, otherwise only wildcard * matches "
+                                           "are supported.").replace("<b>", "").replace("</b>", "")
         self.filter_list_view = TreeView(
             application.window, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,

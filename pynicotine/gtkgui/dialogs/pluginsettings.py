@@ -71,7 +71,7 @@ class PluginSettings(Dialog):
 
     @staticmethod
     def _generate_label(text):
-        return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
+        return Gtk.Label(label=text, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
     def _generate_widget_container(self, description, child_widget=None, homogeneous=False,
                                    orientation=Gtk.Orientation.HORIZONTAL):

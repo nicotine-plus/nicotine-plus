@@ -315,7 +315,7 @@ class MessageDialog(Window):
         )
         self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, use_markup=True, visible=True
+            max_width_chars=60, visible=True
         )
 
         add_css_class(title_label, "title-2")
