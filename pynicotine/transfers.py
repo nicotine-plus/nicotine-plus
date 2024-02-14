@@ -85,9 +85,9 @@ class Transfer:
         self.start_time = None
         self.last_update = None
         self.last_byte_offset = None
-        self.speed = None
+        self.speed = 0
         self.time_elapsed = 0
-        self.time_left = None
+        self.time_left = 0
         self.iterator = None
         self.legacy_attempt = False
         self.size_changed = False
@@ -411,7 +411,7 @@ class Transfers:
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
-        transfer.speed = None
+        transfer.speed = 0
         transfer.queue_position = 0
 
         # When our port is closed, certain clients can take up to ~30 seconds before they

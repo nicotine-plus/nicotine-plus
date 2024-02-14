@@ -1100,7 +1100,7 @@ class Uploads(Transfers):
         if byte_difference:
             core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if size > current_byte_offset or upload.speed is None:
+            if size > current_byte_offset or upload.speed <= 0:
                 upload.speed = int(max(0, byte_difference // max(0.1, current_time - upload.last_update)))
                 upload.time_left = (size - current_byte_offset) // upload.speed if upload.speed else 0
             else:
@@ -1126,7 +1126,7 @@ class Uploads(Transfers):
             # We finish the upload here in case the downloading peer has a slow/limited download
             # speed and finishes later than us
 
-            if upload.speed is not None:
+            if upload.speed > 0:
                 # Inform the server about the last upload speed for this transfer
                 log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
                 core.send_message_to_server(slskmessages.SendUploadSpeed(upload.speed))

@@ -490,7 +490,7 @@ class Transfers:
             if status == TransferStatus.TRANSFERRING:
                 # "Transferring" status always has the highest priority
                 parent_status = status
-                speed += transfer.speed or 0
+                speed += transfer.speed
 
             elif parent_status in self.deprioritized_statuses and status != TransferStatus.FINISHED:
                 # "Finished" status always has the lowest priority
@@ -500,8 +500,8 @@ class Transfers:
                 # We don't want to count filtered files when calculating the progress
                 continue
 
-            elapsed += transfer.time_elapsed or 0
-            total_size += transfer.size or 0
+            elapsed += transfer.time_elapsed
+            total_size += transfer.size
             current_byte_offset += transfer.current_byte_offset or 0
 
         transfer = self.tree_view.get_row_value(iterator, "transfer_data")
@@ -543,17 +543,17 @@ class Transfers:
     def update_specific(self, transfer, select_parent=False):
 
         current_byte_offset = transfer.current_byte_offset or 0
-        queue_position = transfer.queue_position or 0
+        queue_position = transfer.queue_position
         status = transfer.status or ""
 
         if transfer.modifier and status == TransferStatus.QUEUED:
             # Priority status
             status += f" ({transfer.modifier})"
 
-        size = transfer.size or 0
-        speed = transfer.speed or 0
-        elapsed = transfer.time_elapsed or 0
-        left = transfer.time_left or 0
+        size = transfer.size
+        speed = transfer.speed
+        elapsed = transfer.time_elapsed
+        left = transfer.time_left
         iterator = transfer.iterator
 
         # Modify old transfer
@@ -637,7 +637,7 @@ class Transfers:
                         empty_int,
                         empty_int,
                         empty_int,
-                        Transfer(user),  # Dummy Transfer object
+                        Transfer(user, status=TransferStatus.FINISHED),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -659,7 +659,9 @@ class Transfers:
                 user_folder_path = user + original_folder_path
 
                 if user_folder_path not in self.paths:
-                    path_transfer = Transfer(user, folder_path=original_folder_path)  # Dummy Transfer object
+                    path_transfer = Transfer(  # Dummy Transfer object
+                        user, folder_path=original_folder_path, status=TransferStatus.FINISHED
+                    )
                     iterator = self.tree_view.add_row(
                         [
                             user,

@@ -1321,7 +1321,7 @@ class Downloads(Transfers):
         if byte_difference:
             core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-            if size > current_byte_offset or download.speed is None:
+            if size > current_byte_offset or download.speed <= 0:
                 download.speed = int(max(0, byte_difference // max(0.1, current_time - download.last_update)))
                 download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
             else:
