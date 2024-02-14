@@ -599,7 +599,7 @@ class Transfers:
 
             return False
 
-        expand_user = False
+        expand_user = select_parent
         expand_folder = False
         user_iterator = None
         user_folder_path_iterator = None
@@ -649,9 +649,9 @@ class Transfers:
                     ], select_row=False
                 )
 
-                expand_user = (
-                    self.grouping_mode == "folder_grouping" or (select_parent and self.expand_button.get_active())
-                )
+                if not self.expand_button.get_active():
+                    expand_user = (self.grouping_mode == "folder_grouping")
+
                 self.row_id += 1
                 self.users[user] = (iterator, [])
 
