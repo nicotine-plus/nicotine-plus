@@ -283,7 +283,6 @@ class Transfers:
             transfer.iterator = self.TRANSFER_ITERATOR_PENDING
 
         self.container.get_parent().set_visible(bool(transfer_list))
-        self.update_model()
 
     def select_transfers(self):
 
