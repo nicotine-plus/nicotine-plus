@@ -393,15 +393,13 @@ def _open_path(path, is_folder=False, create_folder=False, create_file=False):
 
         path = os.path.abspath(path)
         path_encoded = encode_path(path)
-        result = path.rsplit(".", 1)
+        _path, separator, extension = path.rpartition(".")
         protocol_command = None
         protocol_handlers = config.sections["urls"]["protocols"]
         file_manager_command = config.sections["ui"]["filemanager"]
 
-        if len(result) >= 2:
+        if separator:
             from pynicotine.shares import FileTypes
-
-            extension = result[-1].lower()
 
             if "." + extension in protocol_handlers:
                 protocol = "." + extension

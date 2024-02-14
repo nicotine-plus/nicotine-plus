@@ -589,7 +589,7 @@ class Downloads(Transfers):
 
         # Remove parent folders of the requested folder from path
         parent_folder_path = root_folder_path if root_folder_path else folder_path
-        removed_parent_folders = parent_folder_path.rsplit("\\", 1)[0] if "\\" in parent_folder_path else ""
+        removed_parent_folders = parent_folder_path.rpartition("\\")[0]
         target_folders = folder_path.replace(removed_parent_folders, "").lstrip("\\").replace("\\", os.sep)
 
         # Check if a custom download location was specified
@@ -637,8 +637,8 @@ class Downloads(Transfers):
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
-        basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
-        basename_no_extension, extension = os.path.splitext(basename)
+        basename = clean_file(virtual_path.replace("/", "\\").rpartition("\\")[-1])
+        basename_no_extension, _separator, extension = basename.rpartition(".")
         basename_limit = max_bytes - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
@@ -665,7 +665,7 @@ class Downloads(Transfers):
             download_folder_path = self.get_default_download_folder(username)
 
         basename = self.get_download_basename(virtual_path, download_folder_path)
-        basename_no_extension, extension = os.path.splitext(basename)
+        basename_no_extension, _separator, extension = basename.rpartition(".")
         download_file_path = os.path.join(download_folder_path, basename)
         file_exists = False
         counter = 1
@@ -695,8 +695,8 @@ class Downloads(Transfers):
         incomplete_folder_path = self.get_incomplete_download_folder()
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
-        basename = clean_file(virtual_path.replace("/", "\\").split("\\")[-1])
-        basename_no_extension, extension = os.path.splitext(basename)
+        basename = clean_file(virtual_path.replace("/", "\\").rpartition("\\")[-1])
+        basename_no_extension, _separator, extension = basename.rpartition(".")
         basename_limit = max_bytes - len(prefix) - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 

@@ -75,7 +75,7 @@ class Config:
             try:
                 data_folder_path = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
-                data_folder_path, _basename = os.path.split(sys.argv[0])
+                data_folder_path = os.path.dirname(sys.argv[0])
 
             config_folder_path = os.path.join(data_folder_path, "config")
             return config_folder_path, data_folder_path
@@ -107,7 +107,7 @@ class Config:
         """Create the folder for storing the config file in, if the folder
         doesn't exist."""
 
-        folder_path, _basename = os.path.split(self.config_file_path)
+        folder_path = os.path.dirname(self.config_file_path)
 
         if not folder_path:
             # Only file name specified, use current folder

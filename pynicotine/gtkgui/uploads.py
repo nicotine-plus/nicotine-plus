@@ -102,7 +102,7 @@ class Uploads(Transfers):
 
     def get_transfer_folder_path(self, transfer):
         virtual_path = transfer.virtual_path
-        return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
+        return virtual_path.rpartition("\\")[0] if virtual_path else transfer.folder_path
 
     def retry_selected_transfers(self):
         core.uploads.retry_uploads(self.selected_transfers)
@@ -151,7 +151,9 @@ class Uploads(Transfers):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+            url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -164,7 +166,7 @@ class Uploads(Transfers):
     def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
-            basename = transfer.virtual_path.split("\\")[-1]
+            basename = transfer.virtual_path.rpartition("\\")[-1]
 
             open_file_path(os.path.join(transfer.folder_path, basename))
 
@@ -176,9 +178,9 @@ class Uploads(Transfers):
             return
 
         user = config.sections["server"]["login"]
-        folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
+        folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
 
-        core.userbrowse.browse_user(user, path=folder_path)
+        core.userbrowse.browse_user(user, path=(folder_path + separator))
 
     def on_abort_users(self, *_args):
 

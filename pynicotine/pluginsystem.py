@@ -701,7 +701,7 @@ class PluginHandler:
         with open(encode_path(info_path), encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
-                    key, value = line.split("=", 1)
+                    key, _separator, value = line.partition("=")
                     key = key.strip()
                     value = value.strip()
 

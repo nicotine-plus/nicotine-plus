@@ -1001,7 +1001,7 @@ class Search:
                             empty_int,
                             empty_int,
                             empty_int,
-                            file_path.rsplit("\\", 1)[0],
+                            file_path.rpartition("\\")[0],
                             has_free_slots,
                             empty_dict,
                             self.row_id
@@ -1503,9 +1503,9 @@ class Search:
             return
 
         user = self.tree_view.get_row_value(iterator, "user")
-        folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0] + "\\"
+        folder_path, separator, _basename = self.tree_view.get_row_value(iterator, "file_path_data").rpartition("\\")
 
-        core.userbrowse.browse_user(user, path=folder_path)
+        core.userbrowse.browse_user(user, path=(folder_path + separator))
 
     def on_user_profile(self, *_args):
 
@@ -1531,13 +1531,7 @@ class Search:
             country_code = self.tree_view.get_row_value(iterator, "country")[-2:].upper()
             country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
             country = f"{country_name} ({country_code})"
-
-            try:
-                folder_path, basename = file_path.rsplit("\\", 1)
-
-            except ValueError:
-                folder_path = ""
-                basename = file_path
+            folder_path, _separator, basename = file_path.rpartition("\\")
 
             data.append({
                 "user": self.tree_view.get_row_value(iterator, "user"),
@@ -1587,7 +1581,7 @@ class Search:
 
         for iterator in self.selected_results.values():
             user = self.tree_view.get_row_value(iterator, "user")
-            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rsplit("\\", 1)[0]
+            folder_path = self.tree_view.get_row_value(iterator, "file_path_data").rpartition("\\")[0]
             user_folder_key = user + folder_path
 
             if user_folder_key in requested_folders:
@@ -1598,7 +1592,7 @@ class Search:
             visible_files = []
             for row in self.all_data:
                 # Find the wanted folder
-                if folder_path != row[15].rsplit("\\", 1)[0]:
+                if folder_path != row[15].rpartition("\\")[0]:
                     continue
 
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
@@ -1655,7 +1649,9 @@ class Search:
 
         user = self.tree_view.get_row_value(iterator, "user")
         file_path = self.tree_view.get_row_value(iterator, "file_path_data")
-        url = core.userbrowse.get_soulseek_url(user, file_path.rsplit("\\", 1)[0] + "\\")
+        folder_path, separator, _basename = file_path.rpartition("\\")
+        url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+
         clipboard.copy_text(url)
 
     def on_counter_button(self, *_args):

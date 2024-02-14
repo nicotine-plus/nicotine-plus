@@ -338,14 +338,10 @@ class UserBrowse:
     def open_soulseek_url(self, url):
 
         import urllib.parse
-        url_split = urllib.parse.unquote(url.replace("slsk://", "", 1).split("/", 1))
 
-        if len(url_split) >= 2:
-            username, file_path = url_split
-            file_path = file_path.replace("/", "\\")
-        else:
-            username, = url_split
-            file_path = None
+        url = urllib.parse.unquote(url.replace("slsk://", "", 1))
+        username, _separator, file_path = url.partition("/")
+        file_path = file_path.replace("/", "\\")
 
         self.browse_user(username, path=file_path)
 

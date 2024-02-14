@@ -546,12 +546,7 @@ class UserBrowse:
         self.search_entry.set_text("")
         self.search_button.set_active(False)
 
-        try:
-            folder_path, basename = self.queued_path.rsplit("\\", 1)
-
-        except ValueError:
-            folder_path = basename = None
-
+        folder_path, _separator, basename = self.queued_path.rpartition("\\")
         iterator = self.folder_tree_view.iterators.get(folder_path)
 
         if not iterator:

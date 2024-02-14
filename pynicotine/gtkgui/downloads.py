@@ -172,8 +172,9 @@ class Downloads(Transfers):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = core.userbrowse.get_soulseek_url(
-                transfer.username, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+            url = core.userbrowse.get_soulseek_url(transfer.username, folder_path + separator)
+
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -200,9 +201,9 @@ class Downloads(Transfers):
 
         if transfer:
             user = transfer.username
-            folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
 
-            core.userbrowse.browse_user(user, path=folder_path)
+            core.userbrowse.browse_user(user, path=(folder_path + separator))
 
     def on_clear_queued(self, *_args):
         core.downloads.clear_downloads(statuses={TransferStatus.QUEUED})

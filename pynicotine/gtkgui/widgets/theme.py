@@ -127,7 +127,7 @@ def set_default_font_size():
         return
 
     # Increase default font size to match newer apps on Windows and macOS
-    font_name, font_size = font.rsplit(" ", 1)
+    font_name, _separator, font_size = font.rpartition(" ")
     font_size = str(int(font_size) + 1)
     GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
 
@@ -351,12 +351,7 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    result = basename.rsplit(".", 1)
-
-    if len(result) < 2:
-        return "text-x-generic-symbolic"
-
-    extension = result[-1].lower()
+    extension = basename.rpartition(".")[-1].lower()
 
     if extension in FileTypes.AUDIO:
         return "audio-x-generic-symbolic"

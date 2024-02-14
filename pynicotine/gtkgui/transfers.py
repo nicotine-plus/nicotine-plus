@@ -328,11 +328,7 @@ class Transfers:
         if not transfer:
             return
 
-        try:
-            _folder_path, basename = transfer.virtual_path.rsplit("\\", 1)
-
-        except ValueError:
-            basename = transfer.virtual_path
+        _folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
 
         self.window.search_entry.set_text(basename)
         self.window.change_main_page(self.window.search_page)
@@ -606,7 +602,7 @@ class Transfers:
         parent_iterator = None
 
         user = transfer.username
-        basename = transfer.virtual_path.split("\\")[-1]
+        basename = transfer.virtual_path.rpartition("\\")[-1]
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
 
         if config.sections["ui"]["reverse_file_paths"]:
@@ -1038,12 +1034,7 @@ class Transfers:
             if length:
                 selected_length += length
 
-            try:
-                folder_path, basename = file_path.rsplit("\\", 1)
-
-            except ValueError:
-                folder_path = ""
-                basename = file_path
+            folder_path, _separator, basename = file_path.rpartition("\\")
 
             data.append({
                 "user": transfer.username,

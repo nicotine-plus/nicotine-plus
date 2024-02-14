@@ -2466,7 +2466,7 @@ class UrlHandlersPage:
 
         if protocol.startswith("."):
             # Only keep last part of file extension (e.g. .tar.gz -> .gz)
-            protocol = "." + protocol.rsplit(".", 1)[-1]
+            protocol = "." + protocol.rpartition(".")[-1]
 
         elif not protocol.endswith("://") and protocol not in self.default_protocols:
             protocol += "://"

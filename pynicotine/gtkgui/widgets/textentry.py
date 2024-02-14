@@ -112,9 +112,7 @@ class ChatEntry:
             self.send_message(self.entity, text)
             return
 
-        cmd_split = text.split(maxsplit=1)
-        cmd = cmd_split[0]
-        args = cmd_split[1] if len(cmd_split) == 2 else ""
+        cmd, _separator, args = text.partition(" ")
 
         if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
