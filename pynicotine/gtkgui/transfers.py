@@ -248,20 +248,18 @@ class Transfers:
 
     def destroy(self):
 
+        self.clear_model()
         self.tree_view.destroy()
         self.popup_menu.destroy()
         self.popup_menu_users.destroy()
         self.popup_menu_clear.destroy()
         self.popup_menu_copy.destroy()
 
-        if self.pending_parent_rows_timer_id is not None:
-            events.cancel_scheduled(self.pending_parent_rows_timer_id)
-
         self.__dict__.clear()
 
     def on_focus(self, *_args):
 
-        self.update_model(select_parent=(self.pending_parent_rows_timer_id is not None))
+        self.update_model()
         self.window.notebook.remove_tab_changed(self.transfer_page)
 
         if self.container.get_parent().get_visible():
@@ -352,7 +350,7 @@ class Transfers:
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
-    def update_model(self, transfer=None, update_parent=True, select_parent=False):
+    def update_model(self, transfer=None, update_parent=True):
 
         if self.window.current_page_id != self.transfer_page.id:
             if transfer is not None and transfer.iterator is None:
@@ -362,12 +360,18 @@ class Transfers:
             # No need to do unnecessary work if transfers are not visible
             return
 
+        update_counters = False
+
         if self.pending_parent_rows_timer_id is None:
             # Limit individual parent row updates to once per second
             self.pending_parent_rows_timer_id = events.schedule(
                 delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
-        update_counters = False
+            select_parent = False
+            should_expand_all = self.expand_button.get_active()
+        else:
+            select_parent = True
+            should_expand_all = False
 
         if transfer is not None:
             update_counters = self.update_specific(transfer, select_parent=select_parent)
@@ -385,6 +389,9 @@ class Transfers:
 
         if update_counters:
             self.update_num_users_files()
+
+        if should_expand_all:
+            self.tree_view.expand_all_rows()
 
         self.tree_view.redraw()
 
@@ -642,11 +649,9 @@ class Transfers:
                     ], select_row=False
                 )
 
-                if self.grouping_mode == "folder_grouping":
-                    expand_user = True
-                else:
-                    expand_user = self.expand_button.get_active()
-
+                expand_user = (
+                    self.grouping_mode == "folder_grouping" or (select_parent and self.expand_button.get_active())
+                )
                 self.row_id += 1
                 self.users[user] = (iterator, [])
 
@@ -686,7 +691,7 @@ class Transfers:
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_transfers.append(path_transfer)
-                    expand_folder = self.expand_button.get_active()
+                    expand_folder = select_parent and self.expand_button.get_active()
                     self.row_id += 1
                     self.paths[user_folder_path] = (iterator, [])
 
@@ -697,6 +702,7 @@ class Transfers:
                 if select_parent:
                     self.tree_view.expand_row(user_iterator)
                     select_iterator = user_folder_path_iterator
+                    expand_user = False
 
                 # Group by folder, path not visible in file rows
                 folder_path = ""
@@ -758,6 +764,10 @@ class Transfers:
         return True
 
     def clear_model(self):
+
+        if self.pending_parent_rows_timer_id is not None:
+            events.cancel_scheduled(self.pending_parent_rows_timer_id)
+            self.pending_parent_rows_timer_id = None
 
         self.users.clear()
         self.paths.clear()
@@ -901,7 +911,7 @@ class Transfers:
         self.tree_view.create_model()
 
         if self.transfer_list:
-            self.update_model(select_parent=False)
+            self.update_model()
 
         action.set_state(state)
 
