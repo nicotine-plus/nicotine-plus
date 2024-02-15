@@ -310,7 +310,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             super().__init__(
                 interface_name="com.canonical.dbusmenu",
-                object_path="/org/ayatana/NotificationItem/Nicotine/Menu",
+                object_path="/StatusNotifierItem/menu",
                 bus_type=Gio.BusType.SESSION
             )
 
@@ -383,7 +383,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             super().__init__(
                 interface_name="org.kde.StatusNotifierItem",
-                object_path="/org/ayatana/NotificationItem/Nicotine",
+                object_path="/StatusNotifierItem",
                 bus_type=Gio.BusType.SESSION
             )
 
@@ -394,7 +394,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("Id", "s", pynicotine.__application_id__),
                 ("Title", "s", pynicotine.__application_name__),
                 ("ToolTip", "(sa(iiay)ss)", ("", [], pynicotine.__application_name__, "")),
-                ("Menu", "o", "/org/ayatana/NotificationItem/Nicotine/Menu"),
+                ("Menu", "o", "/StatusNotifierItem/menu"),
                 ("ItemIsMenu", "b", False),
                 ("IconName", "s", ""),
                 ("IconThemePath", "s", ""),
@@ -443,7 +443,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 object_path="/StatusNotifierWatcher",
                 interface_name="org.kde.StatusNotifierWatcher",
                 method_name="RegisterStatusNotifierItem",
-                parameters=GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
+                parameters=GLib.Variant("(s)", (self.bus.get_unique_name(),)),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
                 timeout_msec=-1
