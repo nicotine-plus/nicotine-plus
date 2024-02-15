@@ -462,7 +462,8 @@ class Transfers:
         if current_byte_offset > size or size <= 0:
             return 100
 
-        return (current_byte_offset // size) * 100
+        # Multiply first to avoid decimals
+        return (100 * current_byte_offset) // size
 
     def update_parent_row(self, iterator, child_transfers, username=None, user_folder_path=None):
 
