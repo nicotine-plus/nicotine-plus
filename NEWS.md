@@ -9,12 +9,28 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Changes
 
+ * Added function to manually search a wishlist item
  * Added the Synology "#snapshot" and "#recycle" folders to be excluded from Shares (thank you @toineenzo)
- * ..
 
 ### Corrections
 
  * Important: Fixed critical error crash at startup on rejected login (regression in 3.3.0)
+ * Fixed a crash when using up/down arrow keys in empty combo box widget
+ * Fixed an issue that prevented the Now Playing Sender plugin from working
+ * Fixed an issue that prevented the /away command from working
+ * Fixed broken scrolling in font chooser on GTK 4
+ * Fixed an issue where private chat messages did not load in rare cases
+ * Fixed an issue where retrying an upload did not start it immediately
+ * Fixed an issue where the chat room tab order was incorrect in some cases
+ * Removed a keyboard focus trap
+ * Improved performance when loading transfers on startup
+ * Linux: Fixed an issue where binding to a network interface did not work in some cases
+ * Windows: Fixed an issue with flickering/invisible windows on some systems
+ * Windows: Fixed an issue where the file manager/audio player window was hidden
+ * Windows: Fixed an issue where reverse file paths did not work for older downloads
+ * macOS: Fixed an issue where Nicotine+ did not launch on some systems
+ * macOS: Fixed an issue where window was not maximized on startup
+ * macOS: Added missing keyboard shortcuts for text entries/views
 
 ### Issues closed on GitHub
 
