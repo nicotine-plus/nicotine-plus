@@ -3196,7 +3196,7 @@ class Preferences(Dialog):
 
         # Tray icon
         if not config.sections["ui"]["trayicon"]:
-            self.application.tray_icon.unload()
+            self.application.tray_icon.unload(is_shutdown=False)
         else:
             self.application.tray_icon.load()
 

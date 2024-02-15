@@ -177,7 +177,7 @@ class BaseImplementation:
         # Implemented in subclasses
         pass
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
         # Implemented in subclasses
         pass
 
@@ -533,7 +533,7 @@ class StatusNotifierImplementation(BaseImplementation):
     def update_menu(self):
         self.tray_icon.menu.set_items(self.menu_items)
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
 
         if self.tray_icon is None:
             return
@@ -966,7 +966,7 @@ class Win32Implementation(BaseImplementation):
             wintypes.LPARAM(l_param)
         )
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
 
         self._remove_notify_icon()
 
@@ -1068,7 +1068,7 @@ class TrayIcon:
         self.update_window_visibility()
         self.update_user_status()
 
-    def unload(self, *_args, is_shutdown=False):
+    def unload(self, *_args, is_shutdown=True):
 
         if self.implementation:
             self.implementation.unload(is_shutdown=is_shutdown)
@@ -1076,7 +1076,8 @@ class TrayIcon:
 
         if is_shutdown:
             self.implementation = None
+            self.available = False
 
     def destroy(self):
-        self.unload(is_shutdown=True)
+        self.unload()
         self.__dict__.clear()
