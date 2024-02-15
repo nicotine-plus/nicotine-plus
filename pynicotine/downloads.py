@@ -636,7 +636,7 @@ class Downloads(Transfers):
 
         max_bytes = self.get_basename_byte_limit(download_folder_path)
 
-        basename = clean_file(virtual_path.replace("/", "\\").rpartition("\\")[-1])
+        basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
@@ -694,7 +694,7 @@ class Downloads(Transfers):
         incomplete_folder_path = self.get_incomplete_download_folder()
         max_bytes = self.get_basename_byte_limit(incomplete_folder_path)
 
-        basename = clean_file(virtual_path.replace("/", "\\").rpartition("\\")[-1])
+        basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, extension = os.path.splitext(basename)
         basename_limit = max_bytes - len(prefix) - len(extension.encode("utf-8"))
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
