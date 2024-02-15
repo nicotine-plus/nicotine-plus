@@ -231,12 +231,8 @@ class ChatRooms(IconNotebook):
 
         if room not in self.pages:
             is_global = (room == core.chatrooms.GLOBAL_ROOM_NAME)
+            tab_position = 0 if is_global and not remembered else -1
             self.pages[room] = tab = ChatRoom(self, room, is_private=is_private, is_global=is_global)
-
-            if is_global and not remembered:
-                tab_position = 0
-            else:
-                tab_position = -1
 
             self.insert_page(
                 tab.container, room, focus_callback=tab.on_focus, close_callback=tab.on_leave_room,

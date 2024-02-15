@@ -123,7 +123,8 @@ class ChatRooms:
             self.joined_rooms[room] = room_obj = Room(name=room, is_private=is_private)
 
             if room not in config.sections["server"]["autojoin"]:
-                config.sections["server"]["autojoin"].insert(0, room)
+                position = 0 if room == self.GLOBAL_ROOM_NAME else -1
+                config.sections["server"]["autojoin"].insert(position, room)
 
         if not room_obj.users:
             if room == self.GLOBAL_ROOM_NAME:
