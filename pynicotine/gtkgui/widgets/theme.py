@@ -351,7 +351,8 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    extension = basename.rpartition(".")[-1].lower()
+    _basename_no_extension, _separator, extension = basename.rpartition(".")
+    extension = extension.lower()
 
     if extension in FileTypes.AUDIO:
         return "audio-x-generic-symbolic"

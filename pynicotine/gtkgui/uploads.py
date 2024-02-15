@@ -101,8 +101,14 @@ class Uploads(Transfers):
         super().destroy()
 
     def get_transfer_folder_path(self, transfer):
+
         virtual_path = transfer.virtual_path
-        return virtual_path.rpartition("\\")[0] if virtual_path else transfer.folder_path
+
+        if virtual_path:
+            folder_path, _separator, _basename = virtual_path.rpartition("\\")
+            return folder_path
+
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
         core.uploads.retry_uploads(self.selected_transfers)

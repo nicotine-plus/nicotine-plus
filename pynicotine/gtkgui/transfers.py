@@ -357,6 +357,7 @@ class Transfers:
             return
 
         update_counters = False
+        use_reverse_file_path = config.sections["ui"]["reverse_file_paths"]
 
         if self.pending_parent_rows_timer_id is None:
             # Limit individual parent row updates to once per second
@@ -370,11 +371,11 @@ class Transfers:
             should_expand_all = False
 
         if transfer is not None:
-            update_counters = self.update_specific(transfer, select_parent=select_parent)
+            update_counters = self.update_specific(transfer, select_parent, use_reverse_file_path)
 
         elif self.transfer_list:
             for transfer_i in self.transfer_list:
-                row_added = self.update_specific(transfer_i, select_parent=select_parent)
+                row_added = self.update_specific(transfer_i, select_parent, use_reverse_file_path)
 
                 if row_added:
                     select_parent = False
@@ -459,7 +460,7 @@ class Transfers:
         if current_byte_offset > size or size <= 0:
             return 100
 
-        return (100 * current_byte_offset) // size
+        return (current_byte_offset // size) * 100
 
     def update_parent_row(self, iterator, child_transfers, username=None, user_folder_path=None):
 
@@ -508,8 +509,13 @@ class Transfers:
             current_byte_offset += transfer.current_byte_offset or 0
 
         transfer = self.tree_view.get_row_value(iterator, "transfer_data")
-        total_size = min(total_size, UINT64_LIMIT)
-        current_byte_offset = min(current_byte_offset, UINT64_LIMIT)
+
+        if total_size > UINT64_LIMIT:  # pylint: disable=consider-using-min-builtin
+            total_size = UINT64_LIMIT
+
+        if current_byte_offset > UINT64_LIMIT:  # pylint: disable=consider-using-min-builtin
+            current_byte_offset = UINT64_LIMIT
+
         should_update_size = False
 
         if transfer.status != parent_status:
@@ -543,11 +549,12 @@ class Transfers:
             self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
             self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
 
-    def update_specific(self, transfer, select_parent=False):
+    def update_specific(self, transfer, select_parent=False, use_reverse_file_path=True):
 
         current_byte_offset = transfer.current_byte_offset or 0
         queue_position = transfer.queue_position
         status = transfer.status or ""
+        translated_status = self.translate_status(status)
 
         if transfer.modifier and status == TransferStatus.QUEUED:
             # Priority status
@@ -561,7 +568,6 @@ class Transfers:
 
         # Modify old transfer
         if iterator and iterator != self.TRANSFER_ITERATOR_PENDING:
-            translated_status = self.translate_status(status)
             should_update_size = False
 
             if self.tree_view.get_row_value(iterator, "status") != translated_status:
@@ -602,11 +608,13 @@ class Transfers:
         parent_iterator = None
 
         user = transfer.username
-        basename = transfer.virtual_path.rpartition("\\")[-1]
+        folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
 
-        if config.sections["ui"]["reverse_file_paths"]:
-            folder_path = self.path_separator.join(reversed(folder_path.split(self.path_separator)))
+        if use_reverse_file_path:
+            parts = folder_path.split(self.path_separator)
+            parts.reverse()
+            folder_path = self.path_separator.join(parts)
 
         if not self.tree_view.iterators:
             # Hide tab description
@@ -627,20 +635,20 @@ class Transfers:
                         empty_str,
                         empty_str,
                         empty_str,
+                        translated_status,
+                        empty_str,
+                        empty_int,
+                        empty_str,
+                        empty_str,
                         empty_str,
                         empty_str,
                         empty_int,
-                        empty_str,
-                        empty_str,
-                        empty_str,
-                        empty_str,
                         empty_int,
                         empty_int,
                         empty_int,
                         empty_int,
                         empty_int,
-                        empty_int,
-                        Transfer(user, status=TransferStatus.FINISHED),  # Dummy Transfer object
+                        Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
@@ -661,7 +669,7 @@ class Transfers:
 
                 if user_folder_path not in self.paths:
                     path_transfer = Transfer(  # Dummy Transfer object
-                        user, folder_path=original_folder_path, status=TransferStatus.FINISHED
+                        user, folder_path=original_folder_path, status=status
                     )
                     iterator = self.tree_view.add_row(
                         [
@@ -669,7 +677,7 @@ class Transfers:
                             folder_path,
                             empty_str,
                             empty_str,
-                            empty_str,
+                            translated_status,
                             empty_str,
                             empty_int,
                             empty_str,
@@ -726,12 +734,12 @@ class Transfers:
             user_child_transfers.append(transfer)
 
         # Add a new transfer
-        row = [
+        transfer.iterator = self.tree_view.add_row([
             user,
             folder_path,
             get_file_type_icon_name(basename),
             basename,
-            self.translate_status(status),
+            translated_status,
             self.get_hqueue_position(queue_position),
             self.get_percent(current_byte_offset, size),
             self.get_hsize(current_byte_offset, size),
@@ -746,9 +754,7 @@ class Transfers:
             left,
             transfer,
             self.row_id
-        ]
-
-        transfer.iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
+        ], select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
         if expand_user:

@@ -65,7 +65,7 @@ class TreeView:
         self._iterator_key_column = 0
         self._column_ids = {}
         self._column_offsets = {}
-        self._column_gvalues = []
+        self._column_gvalues = {}
         self._column_gesture_controllers = []
         self._column_numbers = None
         self._default_sort_column = None
@@ -220,6 +220,7 @@ class TreeView:
     def _initialise_column_ids(self, columns):
 
         self._data_types = []
+        int_types = {GObject.TYPE_UINT, GObject.TYPE_UINT64}
 
         for column_index, (column_id, column_data) in enumerate(columns.items()):
             data_type = column_data.get("data_type")
@@ -236,12 +237,11 @@ class TreeView:
                 else:
                     data_type = str
 
-            gvalue = GObject.Value(data_type)
-
-            self._data_types.append(data_type)
-            self._column_gvalues.append(gvalue)
-
             self._column_ids[column_id] = column_index
+            self._data_types.append(data_type)
+
+            if data_type in int_types:
+                self._column_gvalues[column_index] = GObject.Value(data_type)
 
         self._column_numbers = list(self._column_ids.values())
 
@@ -492,14 +492,13 @@ class TreeView:
         if key in self.iterators:
             return None
 
-        for i, value in enumerate(values):
-            if isinstance(value, (float, int)) and value > 2147483647:
-                # Need gvalue conversion for large integers
-                gvalue = self._column_gvalues[i]
-                gvalue.set_value(value)
-                value = gvalue
+        for i, gvalue in self._column_gvalues.items():
+            value = values[i]
 
-            values[i] = value
+            if value > 2147483647:
+                # Need gvalue conversion for large integers
+                gvalue.set_value(value)
+                values[i] = gvalue
 
         if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(  # pylint: disable=no-member
@@ -541,7 +540,7 @@ class TreeView:
 
         column_index = self._column_ids[column_id]
 
-        if isinstance(value, (float, int)) and value > 2147483647:
+        if column_index in self._column_gvalues and value > 2147483647:
             # Need gvalue conversion for large integers
             gvalue = self._column_gvalues[column_index]
             gvalue.set_value(value)
