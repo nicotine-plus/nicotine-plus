@@ -5,6 +5,39 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.1.dev1 (Unreleased)
+
+### Changes
+
+ * Added the Synology "#snapshot" and "#recycle" folders to be excluded from Shares (thank you @toineenzo)
+ * ..
+
+### Corrections
+
+ * Important: Fixed critical error crash at startup on rejected login (regression in 3.3.0)
+
+### Issues closed on GitHub
+
+ * Nicotine+ crashes on startup - BufferError ([#2850](https://github.com/nicotine-plus/nicotine-plus/issues/2850))
+ * MacOS ([#2851](https://github.com/nicotine-plus/nicotine-plus/issues/2851))
+ * Failure to launch 3.3.0 on Mac ([#2852](https://github.com/nicotine-plus/nicotine-plus/issues/2852))
+ * Failure to launch ([#2853](https://github.com/nicotine-plus/nicotine-plus/issues/2853))
+ * Application crashes on startup: Linux Mint 21.3 ([#2856]](https://github.com/nicotine-plus/nicotine-plus/issues/2856))
+ * Unable to resize window in Mac Silicon app ([#2857](https://github.com/nicotine-plus/nicotine-plus/issues/2857))
+ * Nicotine 3.3.0 Flickering when changing tabs ([#2859](https://github.com/nicotine-plus/nicotine-plus/issues/2859))
+ * "Open in File Manager" not working on Windows ([#2860](https://github.com/nicotine-plus/nicotine-plus/issues/2860))
+ * 3.3.0: does not connect to server via tun0 (vpn) ([#2861](https://github.com/nicotine-plus/nicotine-plus/issues/2861))
+ * Issue selecting text on macOS Monterey ([#2862](https://github.com/nicotine-plus/nicotine-plus/issues/2862))
+ * Retry on uploads no longer works ([#2864](https://github.com/nicotine-plus/nicotine-plus/issues/2864))
+ * Interest recommendations ([#2866](https://github.com/nicotine-plus/nicotine-plus/issues/2866))
+ * Critical Error - Crashes On Startup - MAC ([#2867](https://github.com/nicotine-plus/nicotine-plus/issues/2867))
+ * App crashing on launch ([#2871](https://github.com/nicotine-plus/nicotine-plus/issues/2871))
+ * Critical Error On Launch: "Value: Existing exports of data: object cannot be re-sized" ([#2873](https://github.com/nicotine-plus/nicotine-plus/issues/2873))
+ * Critical Error ([#2877](https://github.com/nicotine-plus/nicotine-plus/issues/2877))
+ * Crashed on the First Relaunch ([#2878](https://github.com/nicotine-plus/nicotine-plus/issues/2878))
+ * nicotine crash on linux mint ([#2879](https://github.com/nicotine-plus/nicotine-plus/issues/2879))
+
+
 ## Version 3.3.0 (February 1, 2024)
 
 ### Changes
