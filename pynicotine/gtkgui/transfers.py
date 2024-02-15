@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import islice
+
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -854,9 +856,9 @@ class Transfers:
         if not self.selected_users:
             return
 
-        # Multiple users, create submenus for each user
+        # Multiple users, create submenus for some of them
         if len(self.selected_users) > 1:
-            for user in self.selected_users:
+            for user in islice(self.selected_users, 20):
                 popup = UserPopupMenu(self.window.application, username=user, tab_name="transfers")
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))

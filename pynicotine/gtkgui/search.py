@@ -1347,9 +1347,9 @@ class Search:
         if not self.selected_users:
             return
 
-        # Multiple users, create submenus for each user
+        # Multiple users, create submenus for some of them
         if len(self.selected_users) > 1:
-            for user in self.selected_users:
+            for user in islice(self.selected_users, 20):
                 popup = UserPopupMenu(self.window.application, username=user, tab_name="search")
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
