@@ -26,11 +26,11 @@
 
 import json
 import os
-import os.path
 import time
 
 from ast import literal_eval
 from collections import defaultdict
+from os.path import normpath
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -257,6 +257,7 @@ class Transfers:
             return
 
         allowed_statuses = {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}
+        normalized_paths = {}
 
         for transfer_row in transfer_rows:
             num_attributes = len(transfer_row)
@@ -279,6 +280,13 @@ class Transfers:
 
             if not isinstance(folder_path, str):
                 continue
+
+            if folder_path:
+                # Normalize and cache path
+                if folder_path not in normalized_paths:
+                    normalized_paths[folder_path] = normpath(folder_path)
+
+                folder_path = normalized_paths[folder_path]
 
             # Status
             if num_attributes >= 4:
