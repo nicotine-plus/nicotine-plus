@@ -331,7 +331,7 @@ class Plugin(BasePlugin):
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
+        self.core.users.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
         self.output(_("Online") if self.core.users.login_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
