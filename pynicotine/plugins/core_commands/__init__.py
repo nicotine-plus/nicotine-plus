@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
@@ -547,7 +545,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {permission_level} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 

@@ -639,15 +639,15 @@ class SharesPage:
 
         for virtual_name, folder_path, *_unused in self.shared_folders:
             self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), _("Public")], select_row=False)
+                [virtual_name, folder_path, _("Public")], select_row=False)
 
         for virtual_name, folder_path, *_unused in self.buddy_shared_folders:
             self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), _("Buddies")], select_row=False)
+                [virtual_name, folder_path, _("Buddies")], select_row=False)
 
         for virtual_name, folder_path, *_unused in self.trusted_shared_folders:
             self.shares_list_view.add_row(
-                [str(virtual_name), os.path.normpath(folder_path), _("Trusted")], select_row=False)
+                [virtual_name, folder_path, _("Trusted")], select_row=False)
 
         self.rescan_required = self.recompress_shares_required = False
 

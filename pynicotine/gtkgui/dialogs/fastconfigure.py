@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 
 import pynicotine
@@ -300,4 +298,4 @@ class FastConfigure(Dialog):
         self.shares_list_view.clear()
 
         for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
-            self.shares_list_view.add_row([str(virtual_name), os.path.normpath(folder_path)], select_row=False)
+            self.shares_list_view.add_row([virtual_name, folder_path], select_row=False)

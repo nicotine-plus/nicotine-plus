@@ -370,10 +370,8 @@ class Scanner:
             self.config.sections["transfers"]["trustedshared"]
         ):
             for virtual, real, *_unused in shares:
-                # Remove slashes from share name to avoid path conflicts
-                virtual = virtual.replace("/", "_").replace("\\", "_")
-
                 real = real.replace("/", "\\")
+
                 if path == real:
                     return virtual
 
@@ -385,7 +383,7 @@ class Scanner:
                     virtualpath = f"{virtual}\\{path_no_prefix}"
                     return virtualpath
 
-        return "__INTERNAL_ERROR__" + path
+        return "__INVALID_SHARE__" + path
 
     def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None):
 
@@ -449,8 +447,6 @@ class Scanner:
             if virtual_name in self.processed_share_names:
                 # No duplicate names
                 continue
-
-            folder_path = os.path.normpath(folder_path)
 
             if folder_path in self.processed_share_paths:
                 # No duplicate folder paths
@@ -728,42 +724,45 @@ class Shares:
 
     def virtual2real(self, path):
 
-        path = path.replace("/", os.sep).replace("\\", os.sep)
-
         for shares in (
             config.sections["transfers"]["shared"],
             config.sections["transfers"]["buddyshared"],
             config.sections["transfers"]["trustedshared"]
         ):
             for virtual, real, *_unused in shares:
-                # Remove slashes from share name to avoid path conflicts
-                virtual = virtual.replace("/", "_").replace("\\", "_")
-                real = os.path.normpath(real)
-
                 if path == virtual:
                     return real
 
-                if path.startswith(virtual + os.sep):
-                    realpath = real.rstrip(os.sep) + path[len(virtual):]
+                if path.startswith(virtual + "\\"):
+                    realpath = real.rstrip(os.sep) + path[len(virtual):].replace("\\", os.sep)
                     return realpath
 
-        return "__INTERNAL_ERROR__" + path
+        return "__INVALID_SHARE__" + path
 
     def convert_shares(self):
 
-        # Convert fs-based shared to virtual shared (pre-1.4.0)
-        def _convert_to_virtual(shared_folder):
+        def _convert_share(shared_folder):
             if isinstance(shared_folder, tuple):
-                return shared_folder
+                virtual, shared_folder, *_unused = shared_folder
+                virtual = str(virtual)
+                shared_folder = str(shared_folder)
+            else:
+                # Convert fs-based shared to virtual shared (pre-1.4.0)
+                virtual = str(shared_folder).replace("/", "_").replace("\\", "_").strip("_")
+                log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.",
+                        (shared_folder, virtual))
 
-            virtual = shared_folder.replace("/", "_").replace("\\", "_").strip("_")
-            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.",
-                    (shared_folder, virtual))
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace("/", "_").replace("\\", "_")
+
+            if shared_folder:
+                shared_folder = os.path.normpath(shared_folder)
+
             return virtual, shared_folder
 
-        config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
+        config.sections["transfers"]["shared"] = [_convert_share(x)
                                                   for x in config.sections["transfers"]["shared"]]
-        config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
+        config.sections["transfers"]["buddyshared"] = [_convert_share(x)
                                                        for x in config.sections["transfers"]["buddyshared"]]
 
         # Remove old share databases (pre-3.3.0)
@@ -811,7 +810,7 @@ class Shares:
         trusted_shared_files = self.share_dbs.get("trusted_files")
         file_is_shared = False
 
-        if not realfilename.startswith("__INTERNAL_ERROR__"):
+        if not realfilename.startswith("__INVALID_SHARE__"):
             if public_shared_files is not None and realfilename in public_shared_files:
                 file_is_shared = True
 
@@ -1034,8 +1033,6 @@ class Shares:
 
         for share in share_groups:
             for virtual_name, folder_path, *_unused in share:
-                folder_path = os.path.normpath(folder_path)
-
                 if not os.access(encode_path(folder_path), os.R_OK):
                     unavailable_shares.append((virtual_name, folder_path))
 
