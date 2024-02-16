@@ -569,16 +569,15 @@ class PortMapper:
                 self._upnp.add_port_mapping(self.LEASE_DURATION)
 
             except Exception as upnp_error:
-                log.add_debug("UPnP not available, port forwarding failed: %s", upnp_error)
-
                 log.add(_("%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"), {
                     "protocol": self._active_implementation.NAME,
                     "external_port": self._active_implementation.port,
                     "error": upnp_error
                 })
 
-                from traceback import format_exc
-                log.add_debug(format_exc())
+                if str(upnp_error) != _("No UPnP devices found"):
+                    from traceback import format_exc
+                    log.add_debug(format_exc())
 
                 self._active_implementation = None
                 self._is_mapping_port = False
