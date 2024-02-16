@@ -160,15 +160,25 @@ class Uploads(Transfers):
     # Stats/Limits #
 
     @staticmethod
-    def _get_file_size(file_path):
+    def _verify_file_size(file_path, old_size):
+        """Verify that the actual file size matches the cached one from the last
+        rescan of our shares. Perform a rescan if the size has changed, to avoid
+        sending outdated file sizes to other clients.
+        """
 
         try:
-            size = os.path.getsize(encode_path(file_path))
-        except Exception:
-            # file doesn't exist (remote files are always this)
-            size = 0
+            new_size = os.path.getsize(encode_path(file_path))
 
-        return size
+        except Exception:
+            new_size = None
+
+        if new_size is not None and new_size != old_size:
+            log.add_transfer(("Actual file size of file %s does not match cached file size, "
+                              "rescanning shares"), file_path)
+            core.shares.rescan_shares(force=True)
+            return False
+
+        return True
 
     def get_downloading_users(self):
         return set(self.active_users).union(self.queued_users)
@@ -476,6 +486,7 @@ class Uploads(Transfers):
         # Is user allowed to download?
         ip_address, _port = addr
         permission_level, reject_reason = core.shares.check_user_permission(username, ip_address)
+        size = None
 
         if permission_level == PermissionLevel.BANNED:
             reject_message = TransferRejectReason.BANNED
@@ -483,19 +494,19 @@ class Uploads(Transfers):
             if reject_reason:
                 reject_message += f" ({reject_reason})"
 
-            return False, reject_message
+            return False, reject_message, size
 
         if core.shares.rescanning:
             self._pending_network_msgs.append(msg)
-            return False, None
+            return False, None, size
 
         # Is that file already in the queue?
         if self.is_upload_queued(username, virtual_path):
-            return False, TransferRejectReason.QUEUED
+            return False, TransferRejectReason.QUEUED, size
 
         # Are we waiting for existing uploads to finish?
         if self.pending_shutdown:
-            return False, TransferRejectReason.PENDING_SHUTDOWN
+            return False, TransferRejectReason.PENDING_SHUTDOWN, size
 
         # Has user hit queue limit?
         enable_limits = True
@@ -508,13 +519,15 @@ class Uploads(Transfers):
             limit_reached, reason = self.is_queue_limit_reached(username)
 
             if limit_reached:
-                return False, reason
+                return False, reason, size
+
+        is_file_shared, size = core.shares.file_is_shared(username, virtual_path, real_path)
 
         # Do we actually share that file with the world?
-        if not core.shares.file_is_shared(username, virtual_path, real_path):
-            return False, TransferRejectReason.FILE_NOT_SHARED
+        if not is_file_shared:
+            return False, TransferRejectReason.FILE_NOT_SHARED, size
 
-        return True, None
+        return True, None, size
 
     def _get_upload_candidate(self):
         """Retrieve a suitable queued transfer for uploading.
@@ -609,17 +622,24 @@ class Uploads(Transfers):
 
             virtual_path = upload_candidate.virtual_path
             real_path = core.shares.virtual2real(virtual_path)
-            is_file_shared = core.shares.file_is_shared(username, virtual_path, real_path)
+            is_file_shared, new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
                 self._clear_transfer(upload_candidate, denied_message=TransferRejectReason.FILE_NOT_SHARED)
                 continue
+
+            # Update file size with latest cached one from share
+            upload_candidate.size = new_size
 
             if not self.is_file_readable(virtual_path, real_path):
                 self._abort_transfer(
                     upload_candidate, denied_message=TransferRejectReason.FILE_READ_ERROR,
                     status=TransferStatus.LOCAL_FILE_ERROR
                 )
+                continue
+
+            # Check if cached file size matches actual file size, rescan shares otherwise
+            if not self._verify_file_size(real_path, upload_candidate.size):
                 continue
 
             final_upload_candidate = upload_candidate
@@ -667,19 +687,14 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def enqueue_upload(self, username, virtual_path, size):
+    def enqueue_upload(self, username, virtual_path):
 
         transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
-        is_file_shared = core.shares.file_is_shared(username, virtual_path, real_path)
+        is_file_shared, size = core.shares.file_is_shared(username, virtual_path, real_path)
 
         if not is_file_shared:
             return
-
-        new_size = self._get_file_size(real_path)
-
-        if new_size > 0:
-            size = new_size
 
         if transfer is None:
             folder_path = os.path.dirname(real_path)
@@ -856,7 +871,7 @@ class Uploads(Transfers):
         username = msg.username
         virtual_path = msg.file
         real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
 
         log.add_transfer(("Upload request for file %(filename)s from user: %(user)s, "
                           "allowed: %(allowed)s, reason: %(reason)s"), {
@@ -872,7 +887,10 @@ class Uploads(Transfers):
 
             return
 
-        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
+        # Check if cached file size matches actual file size, rescan shares otherwise
+        self._verify_file_size(real_path, size)
+
+        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
         self._enqueue_transfer(transfer)
@@ -924,7 +942,7 @@ class Uploads(Transfers):
 
         # Is user allowed to download?
         real_path = core.shares.virtual2real(virtual_path)
-        allowed, reason = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
+        allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
 
         if not allowed:
             if reason:
@@ -933,9 +951,9 @@ class Uploads(Transfers):
             return None
 
         # All checks passed, user can queue file!
-        if not self.is_new_upload_accepted() or username in self.active_users:
-            transfer = Transfer(
-                username, virtual_path, os.path.dirname(real_path), self._get_file_size(real_path))
+        if (not self.is_new_upload_accepted() or username in self.active_users
+                or not self._verify_file_size(real_path, size)):
+            transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
             self._append_transfer(transfer)
             self._enqueue_transfer(transfer)
@@ -947,7 +965,6 @@ class Uploads(Transfers):
             return slskmessages.TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
         # All checks passed, starting a new upload.
-        size = self._get_file_size(real_path)
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)

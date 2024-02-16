@@ -95,7 +95,7 @@ class UploadsTest(TestCase):
     def test_push_upload(self):
         """Verify that non-existent files are not added to the list."""
 
-        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3", 2000)
-        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3", 100)
+        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3")
+        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3")
 
         self.assertEqual(len(core.uploads.transfers.values()), 3)

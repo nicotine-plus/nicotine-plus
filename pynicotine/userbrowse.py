@@ -311,10 +311,10 @@ class UserBrowse:
 
     def upload_file(self, username, folder_path, file_data):
 
-        _code, basename, file_size, *_unused = file_data
+        _code, basename, *_unused = file_data
         file_path = "\\".join([folder_path, basename])
 
-        core.uploads.enqueue_upload(username, file_path, size=file_size)
+        core.uploads.enqueue_upload(username, file_path)
 
     def upload_folder(self, username, requested_folder_path, local_browsed_user, recurse=False):
 
@@ -324,9 +324,9 @@ class UserBrowse:
         for folder_path, files in self.iter_matching_folders(
             requested_folder_path, browsed_user=local_browsed_user, recurse=recurse
         ):
-            for _code, basename, file_size, *_unused in files:
+            for _code, basename, *_unused in files:
                 file_path = "\\".join([folder_path, basename])
-                core.uploads.enqueue_upload(username, file_path, size=file_size)
+                core.uploads.enqueue_upload(username, file_path)
 
     @staticmethod
     def get_soulseek_url(username, path):

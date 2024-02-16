@@ -809,20 +809,24 @@ class Shares:
         buddy_shared_files = self.share_dbs.get("buddy_files")
         trusted_shared_files = self.share_dbs.get("trusted_files")
         file_is_shared = False
+        size = None
 
         if not realfilename.startswith("__INVALID_SHARE__"):
             if public_shared_files is not None and realfilename in public_shared_files:
                 file_is_shared = True
+                _file_name, size, *_unused = public_shared_files[realfilename]
 
             elif (buddy_shared_files is not None and username in core.buddies.users
                     and realfilename in buddy_shared_files):
                 file_is_shared = True
+                _file_name, size, *_unused = buddy_shared_files[realfilename]
 
             elif trusted_shared_files is not None:
                 user_data = core.buddies.users.get(username)
 
                 if user_data and user_data.is_trusted and realfilename in trusted_shared_files:
                     file_is_shared = True
+                    _file_name, size, *_unused = trusted_shared_files[realfilename]
 
         if not file_is_shared:
             log.add_transfer(("File is not present in the database of shared files, not sharing: "
@@ -830,9 +834,9 @@ class Shares:
                 "virtual_name": virtualfilename,
                 "path": realfilename
             })
-            return False
+            return False, size
 
-        return True
+        return True, size
 
     def check_user_permission(self, username, ip_address=None):
         """Check if this user is banned, geoip-blocked, and which shares it is
@@ -1087,20 +1091,24 @@ class Shares:
     def _shares_ready(self, successful):
 
         # Scanning done, load shares in the main process again
-        try:
-            self.load_shares(
-                self.share_dbs, self.share_db_paths, destinations={
-                    "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
-                    "trusted_files", "trusted_streams"
-                })
-
-        except Exception:
-            self.file_path_index = ()
-
-        self.rescanning = False
-
         if successful:
-            self.send_num_shared_folders_files()
+            try:
+                self.load_shares(
+                    self.share_dbs, self.share_db_paths, destinations={
+                        "words", "public_files", "public_streams", "buddy_files", "buddy_streams",
+                        "trusted_files", "trusted_streams"
+                    })
+
+            except Exception:
+                pass
+
+            else:
+                self.send_num_shared_folders_files()
+                self.rescanning = False
+                return
+
+        self.file_path_index = ()
+        self.rescanning = False
 
     # Network Messages #
 
