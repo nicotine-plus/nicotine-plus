@@ -442,7 +442,21 @@ class Uploads(Transfers):
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
 
         self._abort_transfer(transfer, denied_message=denied_message)
-        del self.transfers[transfer.username + transfer.virtual_path]
+
+        log.add_transfer("Clearing upload %(path)s to user %(user)s", {
+            "path": transfer.virtual_path,
+            "user": transfer.username
+        })
+
+        try:
+            del self.transfers[transfer.username + transfer.virtual_path]
+
+        except KeyError:
+            log.add(("FIXME: failed to remove upload %(path)s to user %(user)s, not "
+                     "present in list"), {
+                "path": transfer.virtual_path,
+                "user": transfer.username
+            })
 
         events.emit("clear-upload", transfer, update_parent)
 

@@ -518,7 +518,21 @@ class Downloads(Transfers):
     def _clear_transfer(self, transfer, update_parent=True):
 
         self._abort_transfer(transfer)
-        del self.transfers[transfer.username + transfer.virtual_path]
+
+        log.add_transfer("Clearing download %(path)s from user %(user)s", {
+            "path": transfer.virtual_path,
+            "user": transfer.username
+        })
+
+        try:
+            del self.transfers[transfer.username + transfer.virtual_path]
+
+        except KeyError:
+            log.add(("FIXME: failed to remove download %(path)s from user %(user)s, not "
+                     "present in list"), {
+                "path": transfer.virtual_path,
+                "user": transfer.username
+            })
 
         events.emit("clear-download", transfer, update_parent)
 
