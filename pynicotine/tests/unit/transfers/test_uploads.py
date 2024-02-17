@@ -93,13 +93,9 @@ class UploadsTest(TestCase):
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_push_upload(self):
-        """Verify that new uploads are prepended to the list."""
+        """Verify that non-existent files are not added to the list."""
 
-        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
-        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
+        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3", 2000)
+        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3", 100)
 
-        transfer = list(core.uploads.transfers.values())[3]
-
-        self.assertEqual(transfer.username, "newuser2")
-        self.assertEqual(transfer.virtual_path, "Hello\\Upload\\File.mp3")
-        self.assertEqual(transfer.folder_path, os.path.join(os.sep, "home", "test"))
+        self.assertEqual(len(core.uploads.transfers.values()), 3)

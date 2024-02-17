@@ -514,9 +514,6 @@ class Uploads(Transfers):
         if not core.shares.file_is_shared(username, virtual_path, real_path):
             return False, TransferRejectReason.FILE_NOT_SHARED
 
-        if not self.is_file_readable(virtual_path, real_path):
-            return False, TransferRejectReason.FILE_READ_ERROR
-
         return True, None
 
     def _get_upload_candidate(self):
@@ -581,34 +578,53 @@ class Uploads(Transfers):
     def _check_upload_queue(self, upload_candidate=None):
         """Find next file to upload."""
 
-        # If a candidate is provided, we want to upload it immediately
-        if not self.is_new_upload_accepted(enforce_limits=(upload_candidate is None)):
-            return
+        final_upload_candidate = None
 
-        if upload_candidate is None:
-            upload_candidate, has_active_uploads = self._get_upload_candidate()
+        while final_upload_candidate is None:
+            # If a candidate is provided, we want to upload it immediately
+            if not self.is_new_upload_accepted(enforce_limits=(upload_candidate is None)):
+                return
 
             if upload_candidate is None:
-                if not has_active_uploads and self.pending_shutdown:
-                    self.pending_shutdown = False
-                    core.quit()
+                upload_candidate, has_active_uploads = self._get_upload_candidate()
+
+                if upload_candidate is None:
+                    if not has_active_uploads and self.pending_shutdown:
+                        self.pending_shutdown = False
+                        core.quit()
+                    return
+
+            elif upload_candidate not in self.queued_users.get(upload_candidate.username, {}).values():
                 return
 
-        elif upload_candidate not in self.queued_users.get(upload_candidate.username, {}).values():
-            return
+            username = upload_candidate.username
 
-        username = upload_candidate.username
+            if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
+                # Either we are offline or the user we want to upload to is
+                if self._auto_clear_transfer(upload_candidate):
+                    continue
 
-        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
-            # Either we are offline or the user we want to upload to is
-            if self._auto_clear_transfer(upload_candidate):
-                return
+                self._abort_transfer(upload_candidate, status=TransferStatus.USER_LOGGED_OFF)
+                continue
 
-            self._abort_transfer(upload_candidate, status=TransferStatus.USER_LOGGED_OFF)
-            return
+            virtual_path = upload_candidate.virtual_path
+            real_path = core.shares.virtual2real(virtual_path)
+            is_file_shared = core.shares.file_is_shared(username, virtual_path, real_path)
+
+            if not is_file_shared:
+                self._clear_transfer(upload_candidate, denied_message=TransferRejectReason.FILE_NOT_SHARED)
+                continue
+
+            if not self.is_file_readable(virtual_path, real_path):
+                self._abort_transfer(
+                    upload_candidate, denied_message=TransferRejectReason.FILE_READ_ERROR,
+                    status=TransferStatus.LOCAL_FILE_ERROR
+                )
+                continue
+
+            final_upload_candidate = upload_candidate
 
         self.token = slskmessages.increment_token(self.token)
-        virtual_path = upload_candidate.virtual_path
 
         log.add_transfer(
             "Checked upload queue, requesting to upload file %(file)s with token %(token)s to user %(user)s", {
@@ -618,16 +634,16 @@ class Uploads(Transfers):
             }
         )
 
-        self._dequeue_transfer(upload_candidate)
-        self._unfail_transfer(upload_candidate)
-        self._activate_transfer(upload_candidate, self.token)
+        self._dequeue_transfer(final_upload_candidate)
+        self._unfail_transfer(final_upload_candidate)
+        self._activate_transfer(final_upload_candidate, self.token)
 
         core.send_message_to_peer(
             username, slskmessages.TransferRequest(
                 direction=slskmessages.TransferDirection.UPLOAD, token=self.token, file=virtual_path,
-                filesize=upload_candidate.size))
+                filesize=final_upload_candidate.size))
 
-        self._update_transfer(upload_candidate)
+        self._update_transfer(final_upload_candidate)
 
     def ban_users(self, users, ban_message=None):
         """Ban a user, cancel all the user's uploads, send a 'Banned' message
@@ -651,21 +667,22 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def enqueue_upload(self, username, virtual_path, size, folder_path=None):
+    def enqueue_upload(self, username, virtual_path, size):
 
         transfer = self.transfers.get(username + virtual_path)
         real_path = core.shares.virtual2real(virtual_path)
+        is_file_shared = core.shares.file_is_shared(username, virtual_path, real_path)
+
+        if not is_file_shared:
+            return
+
         new_size = self._get_file_size(real_path)
 
         if new_size > 0:
             size = new_size
 
         if transfer is None:
-            if not folder_path:
-                folder_path = os.path.dirname(real_path)
-            else:
-                folder_path = os.path.normpath(folder_path)
-
+            folder_path = os.path.dirname(real_path)
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
         else:
@@ -1039,11 +1056,6 @@ class Uploads(Transfers):
         })
 
         real_path = core.shares.virtual2real(virtual_path)
-
-        if not core.shares.file_is_shared(username, virtual_path, real_path):
-            self._abort_transfer(upload, status=TransferRejectReason.FILE_NOT_SHARED)
-            self._check_upload_queue()
-            return
 
         try:
             # Open File
