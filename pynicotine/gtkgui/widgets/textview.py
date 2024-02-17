@@ -388,7 +388,7 @@ class ChatView(TextView):
         self.chat_entry = chat_entry
         self.username_event = username_event
 
-        if status_users:
+        if status_users is not None:
             # In chatrooms, we only want to set the online status for users that are
             # currently in the room, even though we might know their global status
             self.status_users = status_users
