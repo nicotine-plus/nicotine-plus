@@ -2236,19 +2236,19 @@ class NetworkThread(Thread):
                             if self._branch_level == 1:
                                 # Our current branch level is 1, our parent is a branch root
                                 self._set_branch_root(msg.username)
-                            continue
 
-                        if not self._verify_parent_connection(conn_obj, msg_class):
+                        elif not self._verify_parent_connection(conn_obj, msg_class):
                             should_close_connection = True
                             break
 
-                        # Inform the server and child peers of our new branch level
-                        self._branch_level = msg.level + 1
-                        self._send_message_to_server(BranchLevel(self._branch_level))
-                        self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
+                        else:
+                            # Inform the server and child peers of our new branch level
+                            self._branch_level = msg.level + 1
+                            self._send_message_to_server(BranchLevel(self._branch_level))
+                            self._send_message_to_child_peers(DistribBranchLevel(self._branch_level))
 
-                        log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
-                                     self._branch_level)
+                            log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
+                                         self._branch_level)
 
                     elif msg_class is DistribBranchRoot:
                         if not self._verify_parent_connection(conn_obj, msg_class):
