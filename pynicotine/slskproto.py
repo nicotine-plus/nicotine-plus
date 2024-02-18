@@ -2114,10 +2114,13 @@ class NetworkThread(Thread):
         if not self._should_process_queue:
             return
 
+        # Note that we don't clear the previous list of possible parents here, since
+        # it's possible the parent connection was closed immediately or superseded by
+        # an indirect connection
         self._parent_socket = None
         self._branch_level = 0
         self._branch_root = self._server_username
-        #self._potential_parents.clear()
+
         log.add_conn("We have no parent, requesting a new one")
 
         self._send_message_to_server(HaveNoParent(True))
