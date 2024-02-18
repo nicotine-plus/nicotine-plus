@@ -2015,6 +2015,13 @@ class NetworkThread(Thread):
             # We have no parent user and the server hasn't sent search requests, no point
             # in accepting child peers
             log.add_conn("Rejecting distributed child peer connection from user %s, since we have no parent", username)
+            self._close_connection(self._conns, conn_obj.sock)
+            return
+
+        if username in self._child_peers:
+            log.add_conn(("Rejecting distributed child peer connection from user %s, since an existing connection "
+                          "already exists"), username)
+            self._close_connection(self._conns, conn_obj.sock)
             return
 
         if len(self._child_peers) >= self._max_distrib_children:
@@ -2110,7 +2117,7 @@ class NetworkThread(Thread):
         self._parent_socket = None
         self._branch_level = 0
         self._branch_root = self._server_username
-        self._potential_parents.clear()
+        #self._potential_parents.clear()
         log.add_conn("We have no parent, requesting a new one")
 
         self._send_message_to_server(HaveNoParent(True))
