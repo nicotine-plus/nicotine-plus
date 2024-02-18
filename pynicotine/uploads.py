@@ -160,11 +160,7 @@ class Uploads(Transfers):
     # Stats/Limits #
 
     @staticmethod
-    def _verify_file_size(file_path, old_size):
-        """Verify that the actual file size matches the cached one from the last
-        rescan of our shares. Perform a rescan if the size has changed, to avoid
-        sending outdated file sizes to other clients.
-        """
+    def _get_current_file_size(file_path):
 
         try:
             new_size = os.path.getsize(encode_path(file_path))
@@ -172,13 +168,7 @@ class Uploads(Transfers):
         except Exception:
             new_size = None
 
-        if new_size is not None and new_size != old_size:
-            log.add_transfer(("Actual file size of file %s does not match cached file size, "
-                              "rescanning shares"), file_path)
-            core.shares.rescan_shares(force=True)
-            return False
-
-        return True
+        return new_size
 
     def get_downloading_users(self):
         return set(self.active_users).union(self.queued_users)
@@ -622,14 +612,11 @@ class Uploads(Transfers):
 
             virtual_path = upload_candidate.virtual_path
             real_path = core.shares.virtual2real(virtual_path)
-            is_file_shared, new_size = core.shares.file_is_shared(username, virtual_path, real_path)
+            is_file_shared, _new_size = core.shares.file_is_shared(username, virtual_path, real_path)
 
             if not is_file_shared:
                 self._clear_transfer(upload_candidate, denied_message=TransferRejectReason.FILE_NOT_SHARED)
                 continue
-
-            # Update file size with latest cached one from share
-            upload_candidate.size = new_size
 
             if not self.is_file_readable(virtual_path, real_path):
                 self._abort_transfer(
@@ -638,10 +625,7 @@ class Uploads(Transfers):
                 )
                 continue
 
-            # Check if cached file size matches actual file size, rescan shares otherwise
-            if not self._verify_file_size(real_path, upload_candidate.size):
-                continue
-
+            upload_candidate.size = self._get_current_file_size(real_path)
             final_upload_candidate = upload_candidate
 
         self.token = slskmessages.increment_token(self.token)
@@ -887,9 +871,6 @@ class Uploads(Transfers):
 
             return
 
-        # Check if cached file size matches actual file size, rescan shares otherwise
-        self._verify_file_size(real_path, size)
-
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
@@ -951,8 +932,7 @@ class Uploads(Transfers):
             return None
 
         # All checks passed, user can queue file!
-        if (not self.is_new_upload_accepted() or username in self.active_users
-                or not self._verify_file_size(real_path, size)):
+        if not self.is_new_upload_accepted() or username in self.active_users:
             transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
             self._append_transfer(transfer)
@@ -965,6 +945,7 @@ class Uploads(Transfers):
             return slskmessages.TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
         # All checks passed, starting a new upload.
+        size = self._get_current_file_size(real_path)
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)
