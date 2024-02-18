@@ -982,7 +982,9 @@ class NetworkThread(Thread):
                 events.emit_main_thread("peer-connection-closed", username, init.outgoing_msgs[:])
 
         elif conn_type == ConnectionType.DISTRIBUTED:
-            if username in self._child_peers:
+            child_conn_obj = self._child_peers.get(username)
+
+            if child_conn_obj == conn_obj:
                 self._remove_child_peer_connection(username)
 
             elif sock is self._parent_socket:
