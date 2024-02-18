@@ -101,12 +101,8 @@ class Searches(IconNotebook):
 
         self.room_search_combobox = ComboBox(
             container=self.window.search_title, has_entry=True, has_entry_completion=True,
-            entry=self.window.room_search_entry, visible=False,
-            items=(
-                (core.chatrooms.JOINED_ROOMS_NAME, None),
-            )
+            entry=self.window.room_search_entry, visible=False
         )
-        self.room_search_combobox.set_text(core.chatrooms.JOINED_ROOMS_NAME)
 
         self.user_search_combobox = ComboBox(
             container=self.window.search_title, has_entry=True, has_entry_completion=True,

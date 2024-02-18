@@ -221,7 +221,7 @@ class Search:
 
         elif mode == "rooms":
             if not room:
-                room = core.chatrooms.JOINED_ROOMS_NAME
+                room = next(iter(config.defaults["server"]["autojoin"]), None)
 
             feedback = core.pluginhandler.outgoing_room_search_event(room, search_term)
 
@@ -298,14 +298,8 @@ class Search:
 
         # core.send_message_to_server(slskmessages.RelatedSearch(text))
 
-    def do_rooms_search(self, text, room=None):
-
-        if room != core.chatrooms.JOINED_ROOMS_NAME:
-            core.send_message_to_server(slskmessages.RoomSearch(room, self.token, text))
-            return
-
-        for joined_room in core.chatrooms.joined_rooms:
-            core.send_message_to_server(slskmessages.RoomSearch(joined_room, self.token, text))
+    def do_rooms_search(self, text, room):
+        core.send_message_to_server(slskmessages.RoomSearch(room, self.token, text))
 
     def do_buddies_search(self, text):
         for username in core.buddies.users:

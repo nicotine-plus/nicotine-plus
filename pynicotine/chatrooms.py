@@ -40,7 +40,6 @@ class Room:
 class ChatRooms:
     # Trailing spaces to avoid conflict with regular rooms
     GLOBAL_ROOM_NAME = "Public "
-    JOINED_ROOMS_NAME = "Joined Rooms "
 
     def __init__(self):
 
