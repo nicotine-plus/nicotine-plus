@@ -505,9 +505,6 @@ class ChatRoom:
             }
         )
 
-        self.popup_menu_private_rooms_chat = UserPopupMenu(self.window.application, tab_name="chatrooms")
-        self.popup_menu_private_rooms_list = UserPopupMenu(self.window.application, tab_name="chatrooms")
-
         self.popup_menu_user_chat = UserPopupMenu(
             self.window.application, parent=self.chat_view.widget, connect_events=False,
             tab_name="chatrooms"
@@ -517,14 +514,10 @@ class ChatRoom:
             callback=self.on_popup_menu_user, tab_name="chatrooms"
         )
 
-        for menu, menu_private_rooms in (
-            (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),
-            (self.popup_menu_user_list, self.popup_menu_private_rooms_list)
-        ):
+        for menu in (self.popup_menu_user_chat, self.popup_menu_user_list):
             menu.add_items(
                 ("", None),
-                ("#" + _("Sear_ch User's Files"), menu.on_search_user),
-                (">" + _("Private Rooms"), menu_private_rooms)
+                ("#" + _("Sear_ch User's Files"), menu.on_search_user)
             )
 
         self.popup_menu_activity_view = PopupMenu(self.window.application, self.activity_view.widget,
@@ -562,7 +555,6 @@ class ChatRoom:
 
         self.popup_menus = (
             self.popup_menu_user_chat, self.popup_menu_user_list,
-            self.popup_menu_private_rooms_chat, self.popup_menu_private_rooms_list,
             self.popup_menu_activity_view, self.popup_menu_chat_view, self.tab_menu
         )
 
@@ -696,14 +688,9 @@ class ChatRoom:
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
-    def populate_user_menu(self, user, menu, menu_private_rooms):
-
+    def populate_user_menu(self, user, menu):
         menu.set_user(user)
         menu.toggle_user_items()
-        menu.populate_private_rooms(menu_private_rooms)
-
-        private_rooms_enabled = (menu_private_rooms.items and user != core.users.login_username)
-        menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
         self.activity_search_bar.set_visible(True)
@@ -727,7 +714,7 @@ class ChatRoom:
 
     def on_popup_menu_user(self, menu, _widget):
         user = self.get_selected_username()
-        self.populate_user_menu(user, menu, self.popup_menu_private_rooms_list)
+        self.populate_user_menu(user, menu)
 
     def on_popup_menu_log(self, menu, _textview):
         menu.actions[_("Copy")].set_enabled(self.activity_view.get_has_selection())
@@ -936,7 +923,7 @@ class ChatRoom:
 
         menu = self.popup_menu_user_chat
         menu.update_model()
-        self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
+        self.populate_user_menu(user, menu)
         menu.popup(pos_x, pos_y)
 
     def update_tags(self):

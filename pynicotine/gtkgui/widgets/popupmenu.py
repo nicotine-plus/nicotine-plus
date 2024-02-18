@@ -351,8 +351,11 @@ class UserPopupMenu(PopupMenu):
 
         self.username = username
         self.tab_name = tab_name
+        self.popup_menu_private_rooms = None
 
-        self.setup_user_menu(username)
+        if tab_name != "private_rooms":
+            self.popup_menu_private_rooms = UserPopupMenu(self.application, username=username, tab_name="private_rooms")
+            self.setup_user_menu(username)
 
     def setup_user_menu(self, username):
 
@@ -383,7 +386,9 @@ class UserPopupMenu(PopupMenu):
             ("", None),
             ("$" + _("Ban IP Address"), self.on_ban_ip),
             ("$" + _("Ignore IP Address"), self.on_ignore_ip),
-            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
+            ("", None),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
     def update_username_item(self):
@@ -408,6 +413,9 @@ class UserPopupMenu(PopupMenu):
         self.username = username
         self.update_username_item()
 
+        if self.popup_menu_private_rooms is not None:
+            self.popup_menu_private_rooms.set_user(self.username)
+
     def toggle_user_items(self):
 
         self.editing = True
@@ -429,16 +437,17 @@ class UserPopupMenu(PopupMenu):
             self.actions[action_id].set_enabled(GLib.Variant("b", self.username != local_username or value))
             self.actions[action_id].set_state(GLib.Variant("b", value))
 
+        self.popup_menu_private_rooms.populate_private_rooms()
+        self.popup_menu_private_rooms.update_model()
+
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and self.username != core.users.login_username)
+        self.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
+
         self.editing = False
 
-    def populate_private_rooms(self, popup):
+    def populate_private_rooms(self):
 
-        popup.clear()
-
-        if self.username is None:
-            return
-
-        popup.set_user(self.username)
+        self.clear()
 
         for room, data in core.chatrooms.private_rooms.items():
             is_owned = core.chatrooms.is_private_room_owned(room)
@@ -448,23 +457,24 @@ class UserPopupMenu(PopupMenu):
                 continue
 
             if self.username in data["users"]:
-                popup.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
+                self.add_items(
+                    ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
             else:
-                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
+                self.add_items(
+                    ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
             if self.username in data["operators"]:
-                popup.add_items(
-                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
-            else:
-                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
+                self.add_items(
+                    ("#" + _("Remove as Operator of %s") % room, self.on_private_room_remove_operator, room))
 
-            popup.add_items(("", None))
+            elif self.username in data["users"]:
+                self.add_items(
+                    ("#" + _("Add as Operator of %s") % room, self.on_private_room_add_operator, room))
 
-        popup.update_model()
+            self.add_items(("", None))
 
     def update_model(self):
         super().update_model()

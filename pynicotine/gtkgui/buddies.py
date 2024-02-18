@@ -135,16 +135,13 @@ class Buddies:
         )
 
         # Popup menus
-        self.popup_menu_private_rooms = UserPopupMenu(window.application)
-
         self.popup_menu = popup = UserPopupMenu(
             window.application, parent=self.list_view.widget, callback=self.on_popup_menu,
             tab_name="userlist"
         )
         popup.add_items(
-            ("", None),
             ("#" + _("Add User _Note…"), self.on_add_note),
-            (">" + _("Private Rooms"), self.popup_menu_private_rooms),
+            ("", None),
             ("#" + _("Remove"), self.on_remove_buddy)
         )
 
@@ -170,7 +167,6 @@ class Buddies:
 
         self.list_view.destroy()
         self.popup_menu.destroy()
-        self.popup_menu_private_rooms.destroy()
 
         self.__dict__.clear()
 
@@ -272,10 +268,6 @@ class Buddies:
         username = self.get_selected_username()
         menu.set_user(username)
         menu.toggle_user_items()
-        menu.populate_private_rooms(self.popup_menu_private_rooms)
-
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and username != core.users.login_username)
-        menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def user_status(self, msg):
 
