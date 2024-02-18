@@ -61,6 +61,7 @@ class Search:
     def __init__(self):
 
         self.searches = {}
+        self.excluded_phrases = []
         self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
         self._wishlist_timer_id = None
@@ -76,6 +77,7 @@ class Search:
             )
 
         for event_name, callback in (
+            ("excluded-search-phrases", self._excluded_search_phrases),
             ("file-search-request-distributed", self._file_search_request_distributed),
             ("file-search-request-server", self._file_search_request_server),
             ("file-search-response", self._file_search_response),
@@ -386,6 +388,18 @@ class Search:
             self._wishlist_timer_id = events.schedule(
                 delay=self.wishlist_interval, callback=self.do_wishlist_search_interval, repeat=True)
 
+    def _excluded_search_phrases(self, msg):
+        """Server code 160."""
+
+        if self.excluded_phrases and self.excluded_phrases != msg.phrases:
+            log.add_search("Previous list of excluded search phrases: %s", self.excluded_phrases)
+
+        self.excluded_phrases = msg.phrases
+        log.add_search("Server provided %(num_phrases)s excluded search phrase(s): %(phrases)s", {
+            "num_phrases": len(msg.phrases),
+            "phrases": str(msg.phrases)
+        })
+
     def _file_search_response(self, msg):
         """Peer code 9."""
 
@@ -423,8 +437,24 @@ class Search:
 
     # Incoming Search Requests #
 
-    @staticmethod
-    def _create_file_info_list(results, max_results, permission_level):
+    def _append_file_info(self, file_list, fileinfo):
+
+        file_path, *_unused = fileinfo
+        file_path_lower = file_path.lower()
+        excluded_phrase = next((phrase for phrase in self.excluded_phrases if phrase in file_path_lower), None)
+
+        # Check if file path contains phrase excluded from the search network
+        if excluded_phrase:
+            log.add_search(('Excluding file %(file)s from search response because server '
+                            'disallowed phrase "%(phrase)s"'), {
+                "file": file_path,
+                "phrase": excluded_phrase
+            })
+            return
+
+        file_list.append(fileinfo)
+
+    def _create_file_info_list(self, results, max_results, permission_level):
         """Given a list of file indices, retrieve the file information for each index."""
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
@@ -445,7 +475,7 @@ class Search:
             fileinfo = public_files.get(file_path)
 
             if fileinfo is not None:
-                fileinfos.append(fileinfo)
+                self._append_file_info(fileinfos, fileinfo)
                 continue
 
             if is_buddy or reveal_buddy_shares:
@@ -453,9 +483,9 @@ class Search:
 
                 if fileinfo is not None:
                     if is_buddy:
-                        fileinfos.append(fileinfo)
+                        self._append_file_info(fileinfos, fileinfo)
                     else:
-                        private_fileinfos.append(fileinfo)
+                        self._append_file_info(private_fileinfos, fileinfo)
                     continue
 
             if is_trusted or reveal_trusted_shares:
@@ -463,9 +493,9 @@ class Search:
 
                 if fileinfo is not None:
                     if is_trusted:
-                        fileinfos.append(fileinfo)
+                        self._append_file_info(fileinfos, fileinfo)
                     else:
-                        private_fileinfos.append(fileinfo)
+                        self._append_file_info(private_fileinfos, fileinfo)
 
         results.clear()
 

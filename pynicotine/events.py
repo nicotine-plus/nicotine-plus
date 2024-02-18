@@ -126,6 +126,7 @@ EVENT_NAMES = {
     # Search
     "add-search",
     "add-wish",
+    "excluded-search-phrases",
     "file-search-request-distributed",
     "file-search-request-server",
     "file-search-response",

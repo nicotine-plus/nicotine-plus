@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on December 31, 2023
+Last updated on February 18, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -271,6 +271,7 @@ but it handles the protocol well enough (and can be modified).
 | 151  | [Leave Global Room](#server-code-151)             | Deprecated |
 | 152  | [Global Room Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
+| 160  | [Excluded Search Phrases](#server-code-160)       |            |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
@@ -1838,6 +1839,21 @@ The server returns a list of related search terms for a search query.
     3.  Iterate for <ins>number of term</ins>
         1.  **string** <ins>term</ins>
         2.  **uint32** <ins>score</ins>
+
+## Server Code 160
+
+### ExcludedSearchPhrases
+
+The server sends a list of phrases not allowed on the search network. File paths containing such phrases should be excluded when responding to search requests.
+
+### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+    1.  **uint32** <ins>number of phrases</ins>
+    2.  Iterate for <ins>number of phrases</ins>
+        1.  **string** <ins>phrase</ins>
 
 ## Server Code 1001
 
