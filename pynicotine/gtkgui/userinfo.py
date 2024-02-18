@@ -35,6 +35,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -76,6 +77,7 @@ class UserInfos(IconNotebook):
         for event_name, callback in (
             ("add-buddy", self.add_remove_buddy),
             ("ban-user", self.ban_unban_user),
+            ("check-privileges", self.check_privileges),
             ("ignore-user", self.ignore_unignore_user),
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
@@ -156,6 +158,10 @@ class UserInfos(IconNotebook):
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
         page.destroy()
+
+    def check_privileges(self, _msg):
+        for page in self.pages.values():
+            page.update_privileges_button_state()
 
     def ban_unban_user(self, user):
 
@@ -250,6 +256,7 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
+            self.gift_privileges_button,
             self.ignore_unignore_user_button,
             self.ignore_unignore_user_label,
             self.info_bar_container,
@@ -526,12 +533,16 @@ class UserInfo:
         label = _("Unignore User") if core.network_filter.is_user_ignored(self.user) else _("Ignore User")
         self.ignore_unignore_user_label.set_text(label)
 
+    def update_privileges_button_state(self):
+        self.gift_privileges_button.set_visible(bool(core.users.privileges_left))
+
     def update_button_states(self):
 
         self.update_local_buttons_state()
         self.update_buddy_button_state()
         self.update_ban_button_state()
         self.update_ignore_button_state()
+        self.update_privileges_button_state()
 
     # Network Messages #
 
@@ -668,6 +679,43 @@ class UserInfo:
             return
 
         core.network_filter.ignore_user(self.user)
+
+    def on_give_privileges_response(self, dialog, _response_id, _data):
+
+        days = dialog.get_entry_value()
+
+        if not days:
+            return
+
+        try:
+            days = int(days)
+            core.users.request_give_privileges(self.user, days)
+
+        except ValueError:
+            self.on_give_privileges(error=_("Please enter number of days."))
+
+    def on_give_privileges(self, *_args, error=None):
+
+        core.users.request_check_privileges()
+
+        if core.users.privileges_left is None:
+            days = _("Unknown")
+        else:
+            days = core.users.privileges_left // 60 // 60 // 24
+
+        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
+                   {"user": self.user, "days_left": _("%(days)s days left") % {"days": days}})
+
+        if error:
+            message += "\n\n" + error
+
+        EntryDialog(
+            parent=self.window,
+            title=_("Gift Privileges"),
+            message=message,
+            action_button_label=_("_Give Privileges"),
+            callback=self.on_give_privileges_response
+        ).present()
 
     def on_copy_picture(self, *_args):
 

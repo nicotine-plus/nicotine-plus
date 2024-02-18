@@ -653,6 +653,39 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkButton" id="gift_privileges_button">
+                        <property name="visible">True</property>
+                        <signal name="clicked" handler="on_give_privileges"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">6</property>
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="icon-name">starred-symbolic</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="label" translatable="yes">_Gift Privileges…</property>
+                                <property name="mnemonic-widget">gift_privileges_button</property>
+                                <property name="use-underline">True</property>
+                                <property name="visible">True</property>
+                                <style>
+                                  <class name="normal"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkLabel">
                         <property name="vexpand">True</property>
                         <property name="visible">True</property>

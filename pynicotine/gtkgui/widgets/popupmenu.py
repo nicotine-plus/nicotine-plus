@@ -30,7 +30,6 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -379,7 +378,6 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("$" + _("_Add Buddy"), self.on_add_to_list))
 
         self.add_items(
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("", None),
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
@@ -419,7 +417,6 @@ class UserPopupMenu(PopupMenu):
     def toggle_user_items(self):
 
         self.editing = True
-        self.actions[_("_Gift Privileges…")].set_enabled(bool(core.users.privileges_left))
 
         local_username = core.users.login_username or config.sections["server"]["login"]
         add_to_list = _("_Add Buddy")
@@ -579,40 +576,3 @@ class UserPopupMenu(PopupMenu):
 
     def on_copy_user(self, *_args):
         clipboard.copy_text(self.username)
-
-    def on_give_privileges_response(self, dialog, _response_id, _data):
-
-        days = dialog.get_entry_value()
-
-        if not days:
-            return
-
-        try:
-            days = int(days)
-            core.users.request_give_privileges(self.username, days)
-
-        except ValueError:
-            self.on_give_privileges(error=_("Please enter number of days."))
-
-    def on_give_privileges(self, *_args, error=None):
-
-        core.users.request_check_privileges()
-
-        if core.users.privileges_left is None:
-            days = _("Unknown")
-        else:
-            days = core.users.privileges_left // 60 // 60 // 24
-
-        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
-                   {"user": self.username, "days_left": _("%(days)s days left") % {"days": days}})
-
-        if error:
-            message += "\n\n" + error
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Gift Privileges"),
-            message=message,
-            action_button_label=_("_Give Privileges"),
-            callback=self.on_give_privileges_response
-        ).present()
