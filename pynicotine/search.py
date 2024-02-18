@@ -442,18 +442,12 @@ class Search:
         private_fileinfos = []
         num_fileinfos = 0
 
-        public_files = core.shares.share_dbs.get("public_files")
-        buddy_files = core.shares.share_dbs.get("buddy_files")
-        trusted_files = core.shares.share_dbs.get("trusted_files")
+        public_files = core.shares.share_dbs["public_files"]
+        buddy_files = core.shares.share_dbs["buddy_files"]
+        trusted_files = core.shares.share_dbs["trusted_files"]
 
         for index in islice(results, min(len(results), max_results)):
-            try:
-                file_path = core.shares.file_path_index[index]
-
-            except IndexError as error:
-                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
-                break
-
+            file_path = core.shares.file_path_index[index]
             fileinfo = public_files.get(file_path)
 
             if fileinfo is not None:
@@ -559,12 +553,15 @@ class Search:
                     if num_partial_results >= max_results:
                         break
 
+            if not partial_results:
+                return None
+
             results = self._update_search_results(results, partial_results)
 
         # Included search words (e.g. hello)
-        start_results = word_index.get(start_word)
+        if start_word:
+            start_results = word_index[start_word]
 
-        if start_results:
             if has_single_word:
                 # Attempt to avoid large memory usage if someone searches for e.g. "flac"
                 start_results = start_results[:max_results]
@@ -572,12 +569,21 @@ class Search:
             results = self._update_search_results(results, start_results)
 
             for word in included_words:
-                results = self._update_search_results(results, word_index.get(word))
+                if word not in word_index:
+                    return None
+
+                results = self._update_search_results(results, word_index[word])
 
         # Excluded search words (e.g. -hello)
         if results:
             for word in excluded_words:
-                results = self._update_search_results(results, word_index.get(word), excluded=True)
+                if word not in word_index:
+                    continue
+
+                results = self._update_search_results(results, word_index[word], excluded=True)
+
+        if not results:
+            return None
 
         return results
 
