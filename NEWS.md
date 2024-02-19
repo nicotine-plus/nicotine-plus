@@ -10,25 +10,26 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Changes
 
  * Added function to manually search a wishlist item
- * Added the Synology "#snapshot" and "#recycle" folders to be excluded from Shares (thank you @toineenzo)
+ * Exclude the Synology "#snapshot" and "#recycle" folders from Shares (thank you @toineenzo)
+ * Improved performance when loading transfers on startup
 
 ### Corrections
 
  * Important: Fixed critical error crash at startup on rejected login (regression in 3.3.0)
+ * Avoid a rare crash (log a FIXME error) when clearing a transfer not present in list
  * Fixed a crash when using up/down arrow keys in empty combo box widget
  * Fixed an issue that prevented the Now Playing Sender plugin from working
  * Fixed an issue that prevented the /away command from working
  * Fixed broken scrolling in font chooser on GTK 4
  * Fixed an issue where private chat messages did not load in rare cases
  * Fixed an issue where retrying an upload did not start it immediately
- * Fixed an issue where the chat room tab order was incorrect in some cases
+ * Fixed an issue where the chat room tab order was incorrect after restarting
  * Removed a keyboard focus trap
- * Improved performance when loading transfers on startup
- * Linux: Fixed an issue where binding to a network interface did not work in some cases
- * Windows: Fixed an issue with flickering/invisible windows on some systems
+ * Linux: Fixed an issue where binding to a virtual private network interface did not work
+ * Windows: Fixed an issue with flickering/invisible window when maximized with auto-hide taskbar
  * Windows: Fixed an issue where the file manager/audio player window was hidden
  * Windows: Fixed an issue where reverse file paths did not work for older downloads
- * macOS: Fixed an issue where Nicotine+ did not launch on some systems
+ * macOS: Fixed an issue where Nicotine+ did not launch on Monterey systems (thank you @thep50)
  * macOS: Fixed an issue where window was not maximized on startup
  * macOS: Added missing keyboard shortcuts for text entries/views
 
@@ -38,7 +39,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * MacOS ([#2851](https://github.com/nicotine-plus/nicotine-plus/issues/2851))
  * Failure to launch 3.3.0 on Mac ([#2852](https://github.com/nicotine-plus/nicotine-plus/issues/2852))
  * Failure to launch ([#2853](https://github.com/nicotine-plus/nicotine-plus/issues/2853))
- * Application crashes on startup: Linux Mint 21.3 ([#2856]](https://github.com/nicotine-plus/nicotine-plus/issues/2856))
+ * Application crashes on startup: Linux Mint 21.3 ([#2856](https://github.com/nicotine-plus/nicotine-plus/issues/2856))
  * Unable to resize window in Mac Silicon app ([#2857](https://github.com/nicotine-plus/nicotine-plus/issues/2857))
  * Nicotine 3.3.0 Flickering when changing tabs ([#2859](https://github.com/nicotine-plus/nicotine-plus/issues/2859))
  * "Open in File Manager" not working on Windows ([#2860](https://github.com/nicotine-plus/nicotine-plus/issues/2860))
@@ -47,11 +48,14 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Retry on uploads no longer works ([#2864](https://github.com/nicotine-plus/nicotine-plus/issues/2864))
  * Interest recommendations ([#2866](https://github.com/nicotine-plus/nicotine-plus/issues/2866))
  * Critical Error - Crashes On Startup - MAC ([#2867](https://github.com/nicotine-plus/nicotine-plus/issues/2867))
+ * Crash after clearing download folder with 1 file in it ([#2869](https://github.com/nicotine-plus/nicotine-plus/issues/2869))
  * App crashing on launch ([#2871](https://github.com/nicotine-plus/nicotine-plus/issues/2871))
+ * Bug Crash ([#2872](https://github.com/nicotine-plus/nicotine-plus/issues/2872))
  * Critical Error On Launch: "Value: Existing exports of data: object cannot be re-sized" ([#2873](https://github.com/nicotine-plus/nicotine-plus/issues/2873))
  * Critical Error ([#2877](https://github.com/nicotine-plus/nicotine-plus/issues/2877))
  * Crashed on the First Relaunch ([#2878](https://github.com/nicotine-plus/nicotine-plus/issues/2878))
  * nicotine crash on linux mint ([#2879](https://github.com/nicotine-plus/nicotine-plus/issues/2879))
+ * key error ?? NIcotine kills again on linux with Bob ([#2882](https://github.com/nicotine-plus/nicotine-plus/issues/2882))
 
 
 ## Version 3.3.0 (February 1, 2024)
