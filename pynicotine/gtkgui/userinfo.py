@@ -534,7 +534,7 @@ class UserInfo:
         self.ignore_unignore_user_label.set_text(label)
 
     def update_privileges_button_state(self):
-        self.gift_privileges_button.set_visible(bool(core.users.privileges_left))
+        self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
 
     def update_button_states(self):
 
