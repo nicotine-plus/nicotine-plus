@@ -26,14 +26,14 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class ChatCommandHelp(Popover):
 
-    def __init__(self, window, interface):
+    def __init__(self, application, interface):
 
         self.interface = interface
         self.scrollable = Gtk.ScrolledWindow(visible=True)
         self.container = None
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.scrollable,
             show_callback=self._on_show,
             close_callback=self._on_close,

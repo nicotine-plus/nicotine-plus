@@ -46,12 +46,12 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class TreeView:
 
-    def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
+    def __init__(self, application, parent, columns, has_tree=False, multi_select=False, always_select=False,
                  persistent_sort=False, name=None, secondary_name=None, activate_row_callback=None,
                  focus_in_callback=None, select_row_callback=None, delete_accelerator_callback=None,
                  search_entry=None):
 
-        self.window = window
+        self.application = application
         self.widget = Gtk.TreeView(fixed_height_mode=True, has_tooltip=True, visible=True)
         self.model = None
         self.multi_select = multi_select
@@ -92,7 +92,7 @@ class TreeView:
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
         self._column_menu = self.widget.column_menu = PopupMenu(
-            self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
+            self.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
         if multi_select:
             self.widget.set_rubber_banding(True)

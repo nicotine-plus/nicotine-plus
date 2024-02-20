@@ -57,7 +57,7 @@ class FileProperties(Dialog):
         ) = ui.load(scope=self, path="dialogs/fileproperties.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             buttons_start=(self.previous_button, self.next_button),
             default_button=self.next_button,

@@ -61,7 +61,7 @@ class Buddies:
 
         # Columns
         self.list_view = TreeView(
-            window, parent=self.list_container, name="buddy_list",
+            window.application, parent=self.list_container, name="buddy_list",
             persistent_sort=True, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_remove_buddy,
             columns={
@@ -496,7 +496,7 @@ class Buddies:
         note = self.list_view.get_row_value(iterator, "comments") or ""
 
         EntryDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             action_button_label=_("_Add"),

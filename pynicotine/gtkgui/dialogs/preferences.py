@@ -194,7 +194,7 @@ class NetworkPage:
 
         if user_status != core.users.login_status:
             MessageDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
             ).present()
@@ -222,7 +222,7 @@ class NetworkPage:
                        + _("Enter password to use when logging in:"))
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Change Password"),
             message=message,
             visibility=False,
@@ -295,15 +295,15 @@ class DownloadsPage:
         )
 
         self.download_folder_button = FileChooserButton(
-            self.download_folder_label.get_parent(), window=application.preferences,
+            self.download_folder_label.get_parent(), application=application,
             label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder"
         )
         self.incomplete_folder_button = FileChooserButton(
-            self.incomplete_folder_label.get_parent(), window=application.preferences,
+            self.incomplete_folder_label.get_parent(), application=application,
             label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder"
         )
         self.received_folder_button = FileChooserButton(
-            self.received_folder_label.get_parent(), window=application.preferences,
+            self.received_folder_label.get_parent(), application=application,
             label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder"
         )
 
@@ -311,7 +311,7 @@ class DownloadsPage:
                                            "can be used, otherwise only wildcard * matches "
                                            "are supported.").replace("<b>", "").replace("</b>", "")
         self.filter_list_view = TreeView(
-            application.window, parent=self.filter_list_container, multi_select=True,
+            application, parent=self.filter_list_container, multi_select=True,
             activate_row_callback=self.on_edit_filter,
             delete_accelerator_callback=self.on_remove_filter,
             columns={
@@ -454,7 +454,7 @@ class DownloadsPage:
     def on_add_filter(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Download Filter"),
             message=self.filter_syntax_description + "\n\n" + _("Enter a new download filter:"),
             action_button_label=_("_Add"),
@@ -485,7 +485,7 @@ class DownloadsPage:
             enable_regex = self.filter_list_view.get_row_value(iterator, "regex")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Download Filter"),
                 message=self.filter_syntax_description + "\n\n" + _("Modify the following download filter:"),
                 action_button_label=_("_Edit"),
@@ -590,7 +590,7 @@ class SharesPage:
         self.trusted_shared_folders = []
 
         self.shares_list_view = TreeView(
-            application.window, parent=self.shares_list_container, multi_select=True,
+            application, parent=self.shares_list_container, multi_select=True,
             activate_row_callback=self.on_edit_shared_folder,
             delete_accelerator_callback=self.on_remove_shared_folder,
             columns={
@@ -683,7 +683,7 @@ class SharesPage:
     def on_add_shared_folder(self, *_args):
 
         FolderChooser(
-            parent=self.application.preferences,
+            application=self.application,
             callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
             select_multiple=True
@@ -726,7 +726,7 @@ class SharesPage:
             default_item = self.shares_list_view.get_row_value(iterator, "accessible_to")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {"dir": folder_path},
                 default=virtual_name,
@@ -892,7 +892,7 @@ class UserProfilePage:
 
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
-            self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
+            self.select_picture_label.get_parent(), application=application, label=self.select_picture_label,
             end_button=self.reset_picture_button, chooser_type="image", is_flat=True
         )
 
@@ -951,7 +951,7 @@ class IgnoredUsersPage:
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
-            application.window, parent=self.ignored_users_container, multi_select=True,
+            application, parent=self.ignored_users_container, multi_select=True,
             delete_accelerator_callback=self.on_remove_ignored_user,
             columns={
                 "username": {
@@ -964,7 +964,7 @@ class IgnoredUsersPage:
 
         self.ignored_ips = {}
         self.ignored_ips_list_view = TreeView(
-            application.window, parent=self.ignored_ips_container, multi_select=True,
+            application, parent=self.ignored_ips_container, multi_select=True,
             delete_accelerator_callback=self.on_remove_ignored_ip,
             columns={
                 "ip_address": {
@@ -1027,7 +1027,7 @@ class IgnoredUsersPage:
     def on_add_ignored_user(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
             action_button_label=_("_Add"),
@@ -1057,7 +1057,7 @@ class IgnoredUsersPage:
     def on_add_ignored_ip(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
@@ -1094,7 +1094,7 @@ class BannedUsersPage:
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
-            application.window, parent=self.banned_users_container, multi_select=True,
+            application, parent=self.banned_users_container, multi_select=True,
             delete_accelerator_callback=self.on_remove_banned_user,
             columns={
                 "username": {
@@ -1107,7 +1107,7 @@ class BannedUsersPage:
 
         self.banned_ips = {}
         self.banned_ips_list_view = TreeView(
-            application.window, parent=self.banned_ips_container, multi_select=True,
+            application, parent=self.banned_ips_container, multi_select=True,
             delete_accelerator_callback=self.on_remove_banned_ip,
             columns={
                 "ip_address": {
@@ -1190,7 +1190,7 @@ class BannedUsersPage:
     def on_add_banned_user(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
             action_button_label=_("_Add"),
@@ -1221,7 +1221,7 @@ class BannedUsersPage:
     def on_add_banned_ip(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Ban IP Address"),
             message=_("Enter an IP address you want to ban:") + " " + _("* is a wildcard"),
             action_button_label=_("_Add"),
@@ -1287,7 +1287,7 @@ class ChatsPage:
 
         self.censored_patterns = []
         self.censor_list_view = TreeView(
-            application.window, parent=self.censor_list_container, multi_select=True,
+            application, parent=self.censor_list_container, multi_select=True,
             activate_row_callback=self.on_edit_censored,
             delete_accelerator_callback=self.on_remove_censored,
             columns={
@@ -1301,7 +1301,7 @@ class ChatsPage:
 
         self.replacements = {}
         self.replacement_list_view = TreeView(
-            application.window, parent=self.replacement_list_container, multi_select=True,
+            application, parent=self.replacement_list_container, multi_select=True,
             activate_row_callback=self.on_edit_replacement,
             delete_accelerator_callback=self.on_remove_replacement,
             columns={
@@ -1443,7 +1443,7 @@ class ChatsPage:
     def on_add_censored(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1470,7 +1470,7 @@ class ChatsPage:
             pattern = self.censor_list_view.get_row_value(iterator, "pattern")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Censored Pattern"),
                 message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                           "want to match strings inside words (may fail at the beginning and end of lines)."),
@@ -1503,7 +1503,7 @@ class ChatsPage:
     def on_add_replacement(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add Replacement"),
             message=_("Enter a text pattern and what to replace it with:"),
             action_button_label=_("_Add"),
@@ -1533,7 +1533,7 @@ class ChatsPage:
             replacement = self.replacement_list_view.get_row_value(iterator, "replacement")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Replacement"),
                 message=_("Enter a text pattern and what to replace it with:"),
                 action_button_label=_("_Edit"),
@@ -1863,7 +1863,7 @@ class UserInterfacePage:
             self.icon_view.insert(box, -1)
 
         self.icon_theme_button = FileChooserButton(
-            self.icon_theme_label.get_parent(), window=application.preferences,
+            self.icon_theme_label.get_parent(), application=application,
             label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
         )
 
@@ -2127,22 +2127,22 @@ class LoggingPage:
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
 
         self.private_chat_log_folder_button = FileChooserButton(
-            self.private_chat_log_folder_label.get_parent(), window=application.preferences,
+            self.private_chat_log_folder_label.get_parent(), application=application,
             label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
             chooser_type="folder"
         )
         self.chatroom_log_folder_button = FileChooserButton(
-            self.chatroom_log_folder_label.get_parent(), window=application.preferences,
+            self.chatroom_log_folder_label.get_parent(), application=application,
             label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
             chooser_type="folder"
         )
         self.transfer_log_folder_button = FileChooserButton(
-            self.transfer_log_folder_label.get_parent(), window=application.preferences,
+            self.transfer_log_folder_label.get_parent(), application=application,
             label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
             chooser_type="folder"
         )
         self.debug_log_folder_button = FileChooserButton(
-            self.debug_log_folder_label.get_parent(), window=application.preferences,
+            self.debug_log_folder_label.get_parent(), application=application,
             label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
             chooser_type="folder"
         )
@@ -2237,8 +2237,7 @@ class SearchesPage:
         self.application = application
         self.search_required = False
 
-        self.filter_help = SearchFilterHelp(application.preferences)
-        self.filter_help.set_menu_button(self.filter_help_button)
+        self.filter_help = SearchFilterHelp(application=application, menu_button=self.filter_help_button)
 
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(self.filter_help_button))
@@ -2406,7 +2405,7 @@ class UrlHandlersPage:
 
         self.protocols = {}
         self.protocol_list_view = TreeView(
-            application.window, parent=self.protocol_list_container, multi_select=True,
+            application, parent=self.protocol_list_container, multi_select=True,
             activate_row_callback=self.on_edit_handler,
             delete_accelerator_callback=self.on_remove_handler,
             columns={
@@ -2483,7 +2482,7 @@ class UrlHandlersPage:
     def on_add_handler(self, *_args):
 
         EntryDialog(
-            parent=self.application.preferences,
+            application=self.application,
             title=_("Add URL Handler"),
             message=_("Enter the protocol and the command for the URL handler:"),
             action_button_label=_("_Add"),
@@ -2512,7 +2511,7 @@ class UrlHandlersPage:
             command = self.protocol_list_view.get_row_value(iterator, "command")
 
             EntryDialog(
-                parent=self.application.preferences,
+                application=self.application,
                 title=_("Edit Command"),
                 message=_("Enter a new command for protocol %s:") % protocol,
                 action_button_label=_("_Edit"),
@@ -2766,7 +2765,7 @@ class PluginsPage:
         self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
-            application.window, parent=self.plugin_list_container, always_select=True,
+            application, parent=self.plugin_list_container, always_select=True,
             select_row_callback=self.on_select_plugin,
             columns={
                 # Visible columns
@@ -2929,7 +2928,7 @@ class Preferences(Dialog):
         ) = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             buttons_start=(self.cancel_button, self.export_button),
             buttons_end=(self.apply_button, self.ok_button),

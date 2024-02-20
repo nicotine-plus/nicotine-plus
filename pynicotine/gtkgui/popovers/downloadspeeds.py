@@ -22,9 +22,8 @@ from pynicotine.gtkgui.popovers.transferspeeds import TransferSpeeds
 
 class DownloadSpeeds(TransferSpeeds):
 
-    def __init__(self, window):
-        super().__init__(window=window, transfer_type="download")
-        self.set_menu_button(window.download_status_button)
+    def __init__(self, application, menu_button):
+        super().__init__(application=application, menu_button=menu_button, transfer_type="download")
 
     @staticmethod
     def update_transfer_limits():

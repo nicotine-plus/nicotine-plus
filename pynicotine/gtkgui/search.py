@@ -491,7 +491,7 @@ class Search:
             entry=self.filter_country_entry, item_selected_callback=self.on_refilter)
 
         self.tree_view = TreeView(
-            self.window, parent=self.tree_container, name="file_search", persistent_sort=True,
+            self.window.application, parent=self.tree_container, name="file_search", persistent_sort=True,
             multi_select=True, activate_row_callback=self.on_row_activated, focus_in_callback=self.on_refilter,
             columns={
                 # Visible columns

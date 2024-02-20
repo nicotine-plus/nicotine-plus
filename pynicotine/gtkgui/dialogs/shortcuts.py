@@ -27,8 +27,8 @@ class Shortcuts(Dialog):
         self.dialog, self.emoji_shortcut = ui.load(scope=self, path="dialogs/shortcuts.ui")
 
         super().__init__(
-            widget=self.dialog,
-            parent=application.window
+            application=application,
+            widget=self.dialog
         )
         application.window.set_help_overlay(self.dialog)
 

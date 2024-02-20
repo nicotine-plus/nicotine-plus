@@ -248,7 +248,7 @@ class UserBrowse:
 
         # Setup folder_tree_view
         self.folder_tree_view = TreeView(
-            self.window, parent=self.folder_tree_container, has_tree=True,
+            self.window.application, parent=self.folder_tree_container, has_tree=True,
             multi_select=True, activate_row_callback=self.on_folder_row_activated,
             select_row_callback=self.on_select_folder,
             columns={
@@ -306,7 +306,7 @@ class UserBrowse:
 
         # Setup file_list_view
         self.file_list_view = TreeView(
-            self.window, parent=self.file_list_container, name="user_browse",
+            self.window.application, parent=self.file_list_container, name="user_browse",
             multi_select=True, activate_row_callback=self.on_file_row_activated,
             columns={
                 # Visible columns
@@ -944,6 +944,7 @@ class UserBrowse:
             str_title = _("Upload Folder To User")
 
         EntryDialog(
+            application=self.window.application,
             parent=self.window,
             title=str_title,
             message=_("Enter the name of the user you want to upload to:"),

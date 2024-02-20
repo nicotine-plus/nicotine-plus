@@ -91,7 +91,7 @@ class Uploads(Transfers):
         ):
             events.connect(event_name, callback)
 
-        self.upload_speeds = UploadSpeeds(window)
+        self.upload_speeds = UploadSpeeds(application=window.application, menu_button=window.upload_status_button)
 
     def start(self):
         self.init_transfers(core.uploads.transfers.values())
@@ -122,7 +122,7 @@ class Uploads(Transfers):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear Queued Uploads"),
             message=_("Do you really want to clear all queued uploads?"),
             destructive_response_id="ok",
@@ -135,7 +135,7 @@ class Uploads(Transfers):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear All Uploads"),
             message=_("Do you really want to clear all uploads?"),
             destructive_response_id="ok",

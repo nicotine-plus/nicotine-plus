@@ -25,7 +25,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class TransferSpeeds(Popover):
 
-    def __init__(self, window, transfer_type):
+    def __init__(self, application, menu_button, transfer_type):
 
         self.transfer_type = transfer_type
 
@@ -39,8 +39,9 @@ class TransferSpeeds(Popover):
         ) = ui.load(scope=self, path=f"popovers/{transfer_type}speeds.ui")
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.container,
+            menu_button=menu_button,
             show_callback=self.on_show
         )
 

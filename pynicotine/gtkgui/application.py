@@ -123,6 +123,15 @@ class Application:
     def add_window(self, window):
         self._instance.add_window(window)
 
+    def remove_window(self, window):
+        self._instance.remove_window(window)
+
+    def get_active_window(self):
+        return self._instance.get_active_window()
+
+    def get_windows(self):
+        return self._instance.get_windows()
+
     def _set_up_actions(self):
 
         # Regular actions
@@ -535,7 +544,7 @@ class Application:
             buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
-            parent=self.window,
+            application=self,
             title=_("Quit Nicotine+"),
             message=message,
             buttons=buttons,
@@ -556,7 +565,7 @@ class Application:
             shares_list_message += f'• "{virtual_name}" {folder_path}\n'
 
         OptionDialog(
-            parent=self.window,
+            application=self,
             title=_("Shares Not Available"),
             message=_("Verify that external disks are mounted and folder permissions are correct."),
             long_message=shares_list_message,
@@ -581,7 +590,7 @@ class Application:
                 "if this is your first time logging in.") % config.sections["server"]["login"]
 
         OptionDialog(
-            parent=self.window,
+            application=self,
             title=title,
             message=msg,
             buttons=[
@@ -752,7 +761,7 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 
         EntryDialog(
-            parent=self.window,
+            application=self,
             title=_("Message Downloading Users"),
             message=_("Send private message to all users who are downloading from you:"),
             action_button_label=_("_Send Message"),
@@ -766,7 +775,7 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 
         EntryDialog(
-            parent=self.window,
+            application=self,
             title=_("Message Buddies"),
             message=_("Send private message to all online buddies:"),
             action_button_label=_("_Send Message"),
@@ -796,7 +805,7 @@ class Application:
         from pynicotine.gtkgui.widgets.filechooser import FileChooser
 
         FileChooser(
-            parent=self.window,
+            application=self,
             title=_("Select a Saved Shares List File"),
             callback=self.on_load_shares_from_disk_selected,
             initial_folder=core.userbrowse.create_user_shares_folder(),
@@ -893,7 +902,7 @@ class Application:
         from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 
         OptionDialog(
-            parent=self.window,
+            application=self,
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:"),

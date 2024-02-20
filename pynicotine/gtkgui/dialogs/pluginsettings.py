@@ -55,7 +55,7 @@ class PluginSettings(Dialog):
         )
 
         super().__init__(
-            parent=application.preferences,
+            application=application,
             content_box=self.scrolled_window,
             buttons_start=(cancel_button,),
             buttons_end=(ok_button,),
@@ -192,7 +192,7 @@ class PluginSettings(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         self.option_widgets[option_name] = treeview = TreeView(
-            self.application.window, parent=scrolled_window, activate_row_callback=self.on_row_activated,
+            self.application, parent=scrolled_window, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_delete_accelerator,
             columns={
                 "description": {
@@ -248,7 +248,7 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, container, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(
-            container, window=self.widget, label=label, chooser_type=file_chooser_type
+            container, application=self.application, label=label, chooser_type=file_chooser_type
         )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 
@@ -363,7 +363,7 @@ class PluginSettings(Dialog):
     def on_add(self, _button, treeview):
 
         EntryDialog(
-            parent=self,
+            application=self.application,
             title=_("Add Item"),
             message=treeview.description,
             callback=self.on_add_response,
@@ -388,7 +388,7 @@ class PluginSettings(Dialog):
             value = treeview.get_row_value(iterator, "description")
 
             EntryDialog(
-                parent=self,
+                application=self.application,
                 title=_("Edit Item"),
                 message=treeview.description,
                 callback=self.on_edit_response,

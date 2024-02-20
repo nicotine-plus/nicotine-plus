@@ -64,7 +64,10 @@ class PrivateChats(IconNotebook):
         self.highlighted_users = []
         self.completion = ChatCompletion()
         self.spell_checker = SpellChecker()
-        self.history = ChatHistory(window)
+        self.history = ChatHistory(
+            application=window.application, menu_button=window.private_history_button,
+            text_entry=window.private_entry
+        )
         self.command_help = None
 
         for event_name, callback in (
@@ -136,7 +139,7 @@ class PrivateChats(IconNotebook):
             tab.update_room_user_completions()
 
             if self.command_help is None:
-                self.command_help = ChatCommandHelp(window=self.window, interface="private_chat")
+                self.command_help = ChatCommandHelp(application=self.window.application, interface="private_chat")
 
             self.command_help.set_menu_button(tab.help_button)
 
@@ -459,7 +462,7 @@ class PrivateChat:
     def on_delete_chat_log(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this user?"),
             destructive_response_id="ok",

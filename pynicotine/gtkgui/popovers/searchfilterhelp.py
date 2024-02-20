@@ -22,13 +22,14 @@ from pynicotine.gtkgui.widgets.popover import Popover
 
 class SearchFilterHelp(Popover):
 
-    def __init__(self, window):
+    def __init__(self, application, menu_button):
 
         (self.container,) = ui.load(scope=self, path="popovers/searchfilterhelp.ui")
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.container,
+            menu_button=menu_button,
             width=600,
             height=500
         )

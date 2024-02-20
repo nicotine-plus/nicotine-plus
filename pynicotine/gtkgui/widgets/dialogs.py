@@ -31,11 +31,10 @@ from pynicotine.gtkgui.widgets.window import Window
 
 class Dialog(Window):
 
-    def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
+    def __init__(self, application=None, widget=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
                  modal=True, resizable=True, show_title=True, show_title_buttons=True):
 
-        self.parent = parent
         self.modal = modal
         self.default_width = width
         self.default_height = height
@@ -45,7 +44,7 @@ class Dialog(Window):
         self.close_callback = close_callback
 
         if widget:
-            super().__init__(widget=widget)
+            super().__init__(application=application, widget=widget)
             self._set_dialog_properties()
             return
 
@@ -57,7 +56,7 @@ class Dialog(Window):
             resizable=resizable,
             child=container
         )
-        super().__init__(widget)
+        super().__init__(application=application, widget=widget)
         Accelerator("Escape", widget, self.close)
 
         if GTK_API_VERSION == 3:
@@ -156,10 +155,10 @@ class Dialog(Window):
 
     def _on_close_request(self, *_args):
 
-        if self not in Window.active_dialogs:
+        if self.widget not in self.application.get_windows():
             return False
 
-        Window.active_dialogs.remove(self)
+        self.application.remove_window(self.widget)
 
         if self.close_callback is not None:
             self.close_callback(self)
@@ -182,9 +181,6 @@ class Dialog(Window):
 
         self.widget.connect("show", self._on_show)
 
-        if self.parent:
-            self.widget.set_transient_for(self.parent.widget)
-
     def _resize_dialog(self):
 
         if self.widget.get_visible():
@@ -196,8 +192,13 @@ class Dialog(Window):
         if not dialog_width and not dialog_height:
             return
 
-        main_window_width = self.parent.get_width()
-        main_window_height = self.parent.get_height()
+        active_window = self.application.get_active_window()
+
+        if GTK_API_VERSION >= 4:
+            main_window_width = active_window.get_width()
+            main_window_height = active_window.get_height()
+        else:
+            main_window_width, main_window_height = active_window.get_size()
 
         if main_window_width and dialog_width > main_window_width:
             dialog_width = main_window_width - 30
@@ -226,21 +227,26 @@ class Dialog(Window):
             focus_widget.select_region(start_offset=0, end_offset=0)
             self.widget.set_focus(None)
 
-    def _finish_present(self, present_callback):
-        self.widget.set_modal(self.modal and self.parent.is_visible())
+    def _finish_present(self, present_callback, active_window):
+
+        self.widget.set_transient_for(active_window)
+        self.widget.set_modal(self.modal and active_window.is_visible())
+
         present_callback()
 
     def present(self):
 
-        if self not in Window.active_dialogs:
-            Window.active_dialogs.append(self)
+        active_window = self.application.get_active_window()
+
+        if self.widget not in self.application.get_windows():
+            self.application.add_window(self.widget)
 
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_present, super().present)
+        GLib.idle_add(self._finish_present, super().present, active_window)
 
 
 class MessageDialog(Window):
@@ -253,16 +259,9 @@ class MessageDialog(Window):
                 self.set_css_name("messagedialog")
                 super().__init__(*args, **kwargs)
 
-    def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
+    def __init__(self, application, title, message, callback=None, callback_data=None, long_message=None,
                  buttons=None, destructive_response_id=None):
 
-        # Prioritize modal non-message dialogs as parent
-        for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog) and active_dialog.modal:
-                parent = active_dialog
-                break
-
-        self.parent = parent
         self.callback = callback
         self.callback_data = callback_data
         self.destructive_response_id = destructive_response_id
@@ -274,7 +273,7 @@ class MessageDialog(Window):
             buttons = [("cancel", _("Close"))]
 
         widget = self._create_dialog(title, message, buttons)
-        super().__init__(widget=widget)
+        super().__init__(application=application, widget=widget)
 
         self._add_long_message(long_message)
 
@@ -293,7 +292,6 @@ class MessageDialog(Window):
 
         widget = window_class(
             destroy_with_parent=True,
-            transient_for=self.parent.widget if self.parent else None,
             title=title,
             resizable=False,
             child=window_child
@@ -406,8 +404,8 @@ class MessageDialog(Window):
 
     def _on_close_request(self, *_args):
 
-        if self in Window.active_dialogs:
-            Window.active_dialogs.remove(self)
+        if self.widget in self.application.get_windows():
+            self.application.remove_window(self.widget)
 
         self.destroy()
 
@@ -417,24 +415,29 @@ class MessageDialog(Window):
             self.callback(self, response_type, self.callback_data)
 
         # Check if the dialog was already closed in the callback
-        if self in Window.active_dialogs:
+        if self.widget in self.application.get_windows():
             self.close()
 
-    def _finish_present(self, present_callback):
-        self.widget.set_modal(self.parent and self.parent.is_visible())
+    def _finish_present(self, present_callback, active_window):
+
+        self.widget.set_transient_for(active_window)
+        self.widget.set_modal(active_window and active_window.is_visible())
+
         present_callback()
 
     def present(self):
 
-        if self not in Window.active_dialogs:
-            Window.active_dialogs.append(self)
+        active_window = self.application.get_active_window()
+
+        if self.widget not in self.application.get_windows():
+            self.application.add_window(self.widget)
 
         if self.default_focus_widget:
             self.default_focus_widget.grab_focus()
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_present, super().present)
+        GLib.idle_add(self._finish_present, super().present, active_window)
 
 
 class OptionDialog(MessageDialog):

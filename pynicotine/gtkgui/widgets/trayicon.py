@@ -30,7 +30,6 @@ from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
-from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
@@ -45,6 +44,7 @@ class BaseImplementation:
     def __init__(self, application):
 
         self.application = application
+        self.activation_token = None
         self.menu_items = {}
         self.menu_item_id = 1
         self.activate_callback = application.on_window_hide_unhide
@@ -379,7 +379,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
     class StatusNotifierItemService(DBusService):
 
-        def __init__(self, activate_callback):
+        def __init__(self, implementation, activate_callback):
 
             super().__init__(
                 interface_name="org.kde.StatusNotifierItem",
@@ -387,6 +387,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 bus_type=Gio.BusType.SESSION
             )
 
+            self.implementation = implementation
             self.menu = StatusNotifierImplementation.DBusMenuService()
 
             for property_name, signature, value in (
@@ -424,7 +425,7 @@ class StatusNotifierImplementation(BaseImplementation):
             self.menu.unregister()
 
         def on_provide_activation_token(self, token):
-            Window.activation_token = token
+            self.implementation.activation_token = token
 
     def __init__(self, application):
 
@@ -435,7 +436,9 @@ class StatusNotifierImplementation(BaseImplementation):
 
         try:
             self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
-            self.tray_icon = self.StatusNotifierItemService(activate_callback=self.activate_callback)
+            self.tray_icon = self.StatusNotifierItemService(
+                implementation=self, activate_callback=self.activate_callback
+            )
             self.tray_icon.register()
 
             self.bus.call_sync(
@@ -1027,6 +1030,13 @@ class TrayIcon:
                     return
 
         self.refresh_state()
+
+    def get_activation_token(self):
+
+        if hasattr(self, "implementation") and self.implementation:
+            return self.implementation.activation_token
+
+        return None
 
     def update_window_visibility(self):
         if self.implementation:
