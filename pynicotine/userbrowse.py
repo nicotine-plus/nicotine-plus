@@ -203,10 +203,17 @@ class UserBrowse:
                     # JSON stores file attribute types as strings, convert them back to integers with object_hook
                     shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
-            # Basic sanity check
-            for _folder, files in shares_list:
-                for _code, _basename, _size, _ext, _attrs, *_unused in files:
-                    break
+
+            code = 1
+            ext = ""
+
+            for _folder_path, files in shares_list:
+                # Sanitization
+                for index, (_code, basename, size, _ext, attrs, *_unused) in enumerate(files):
+                    if not isinstance(attrs, dict):
+                        attrs = list(attrs)
+
+                    files[index] = [code, str(basename), int(size), ext, attrs]
 
         except Exception as error:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
