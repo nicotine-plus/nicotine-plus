@@ -203,7 +203,6 @@ class UserBrowse:
                     # JSON stores file attribute types as strings, convert them back to integers with object_hook
                     shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
-
             code = 1
             ext = ""
 
