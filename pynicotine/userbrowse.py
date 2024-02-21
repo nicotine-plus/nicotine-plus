@@ -186,6 +186,9 @@ class UserBrowse:
     def load_shares_list_from_disk(self, file_path):
 
         file_path_encoded = encode_path(file_path)
+        suffix = None
+        metadata_index = None
+        username = None
 
         try:
             try:
@@ -203,23 +206,43 @@ class UserBrowse:
                     # JSON stores file attribute types as strings, convert them back to integers with object_hook
                     shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
 
+                suffix = ".json"
 
             code = 1
             ext = ""
 
-            for _folder_path, files in shares_list:
+            for index, (folder_path, files) in enumerate(shares_list):
+                # Extract stored username
+                if metadata_index is None and folder_path == "__NICOTINE_METADATA__":
+                    metadata_index = index
+
+                    for _code, metadata_row, *_unused in files:
+                        key, _separator, value = metadata_row.partition(" = ")
+
+                        if key == "username":
+                            username = value
+
                 # Sanitization
-                for index, (_code, basename, size, _ext, attrs, *_unused) in enumerate(files):
+                for i_index, (_code, basename, size, _ext, attrs, *_unused) in enumerate(files):
                     if not isinstance(attrs, dict):
                         attrs = list(attrs)
 
-                    files[index] = [code, str(basename), int(size), ext, attrs]
+                    files[i_index] = [code, str(basename), int(size), ext, attrs]
 
         except Exception as error:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
             return
 
-        username = os.path.basename(file_path)
+        if metadata_index is not None:
+            del shares_list[metadata_index]
+
+        # No username found in metadata, extract it from the filename
+        if not username:
+            username = os.path.basename(file_path)
+
+            if suffix and username.endswith(suffix):
+                username = username[:-len(suffix)]
+
         browsed_user = self.users.get(username)
 
         if browsed_user is not None:
@@ -241,7 +264,7 @@ class UserBrowse:
             return
 
         try:
-            file_path = os.path.join(folder_path, clean_file(username))
+            file_path = os.path.join(folder_path, clean_file(f"{username}.json"))
             browsed_user = self.users[username]
 
             with open(encode_path(file_path), "w", encoding="utf-8") as file_handle:
@@ -250,6 +273,16 @@ class UserBrowse:
                 is_first_item = True
 
                 file_handle.write("[")
+
+                # Usernames can contain characters that are not allowed in file paths.
+                # Retain the original username in a special metadata "folder" in the list.
+                file_handle.write(
+                    json_encoder.encode(
+                        ["__NICOTINE_METADATA__",
+                            [[1, f"username = {username}", 0, None, {}]]]
+                    )
+                )
+                file_handle.write(",\n")
 
                 for folders in (browsed_user.public_folders, browsed_user.private_folders):
                     for item in folders.items():
