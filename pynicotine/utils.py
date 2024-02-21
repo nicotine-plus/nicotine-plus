@@ -27,10 +27,21 @@ import sys
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-PUNCTUATION = ["!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
-               "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"]
-ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
-ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
+PUNCTUATION = [
+    "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
+    "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"
+]
+ILLEGALPATHCHARS = [
+    # ASCII printable characters
+    "?", ":", ">", "<", "|", "*", '"',
+
+    # ASCII control characters
+    "\u0000", "\u0001", "\u0002", "\u0003", "\u0004", "\u0005", "\u0006", "\u0007", "\u0008", "\u0009",
+    "\u000A", "\u000B", "\u000C", "\u000D", "\u000E", "\u000F", "\u0010", "\u0011", "\u0012", "\u0013",
+    "\u0014", "\u0015", "\u0016", "\u0017", "\u0018", "\u0019", "\u001A", "\u001B", "\u001C", "\u001D",
+    "\u001E", "\u001F"
+]
+ILLEGALFILECHARS = ["\\", "/"] + ILLEGALPATHCHARS
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
@@ -39,7 +50,14 @@ TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 def clean_file(basename):
 
     for char in ILLEGALFILECHARS:
-        basename = basename.replace(char, REPLACEMENTCHAR)
+        if char in basename:
+            basename = basename.replace(char, REPLACEMENTCHAR)
+
+    # Filename can never end with a period or space on Windows machines
+    basename = basename.rstrip(". ")
+
+    if not basename:
+        basename = REPLACEMENTCHAR
 
     return basename
 
@@ -58,7 +76,8 @@ def clean_path(path):
         path = path[3:]
 
     for char in ILLEGALPATHCHARS:
-        path = path.replace(char, REPLACEMENTCHAR)
+        if char in path:
+            path = path.replace(char, REPLACEMENTCHAR)
 
     path = "".join([drive, path])
 

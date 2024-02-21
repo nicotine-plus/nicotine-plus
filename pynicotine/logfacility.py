@@ -127,7 +127,7 @@ class Logger:
 
     def _get_log_file(self, folder_path, basename, should_create_file=True):
 
-        file_path = os.path.join(folder_path, f"{clean_file(basename)}.log")
+        file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
         log_file = self._log_files.get(file_path)
 
         if log_file is not None:
@@ -172,7 +172,7 @@ class Logger:
             should_log_file = (folder_path != self.debug_folder_path)
 
             self.add(_('Couldn\'t write to log file "%(filename)s": %(error)s'), {
-                "filename": os.path.join(folder_path, f"{clean_file(basename)}.log"),
+                "filename": os.path.join(folder_path, clean_file(f"{basename}.log")),
                 "error": error
             }, should_log_file=should_log_file)
 
@@ -231,7 +231,7 @@ class Logger:
 
         except Exception as error:
             log.add(_("Cannot access log file %(path)s: %(error)s"), {
-                "path": os.path.join(folder_path, f"{clean_file(basename)}.log"),
+                "path": os.path.join(folder_path, clean_file(f"{basename}.log")),
                 "error": error
             })
 
@@ -247,7 +247,7 @@ class Logger:
     def _handle_log(self, folder_path, basename, callback):
 
         folder_path_encoded = encode_path(folder_path)
-        file_path = os.path.join(folder_path, f"{clean_file(basename)}.log")
+        file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
 
         try:
             if not os.path.isdir(folder_path_encoded):
