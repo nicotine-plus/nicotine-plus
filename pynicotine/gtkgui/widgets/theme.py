@@ -159,6 +159,10 @@ def set_global_css():
         with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
             css.extend(file_handle.read())
 
+        if sys.platform == "darwin":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
+
         if LIBADWAITA_API_VERSION:
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
                 css.extend(file_handle.read())
