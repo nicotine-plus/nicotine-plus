@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-01 20:55+0200\n"
+"POT-Creation-Date: 2024-02-23 02:26+0200\n"
 "PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -52,9 +52,9 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:24
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
-#: pynicotine/gtkgui/mainwindow.py:683
-#: pynicotine/plugins/core_commands/__init__.py:31
-#: pynicotine/gtkgui/ui/mainwindow.ui:213
+#: pynicotine/gtkgui/mainwindow.py:701
+#: pynicotine/plugins/core_commands/__init__.py:29
+#: pynicotine/gtkgui/ui/mainwindow.ui:219
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:614
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
 #: pynicotine/gtkgui/ui/userbrowse.ui:144
@@ -64,10 +64,10 @@ msgstr "Cauta fișiere"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
-#: pynicotine/gtkgui/dialogs/preferences.py:2902
-#: pynicotine/gtkgui/mainwindow.py:684 pynicotine/gtkgui/mainwindow.py:1032
+#: pynicotine/gtkgui/dialogs/preferences.py:2903
+#: pynicotine/gtkgui/mainwindow.py:702 pynicotine/gtkgui/mainwindow.py:1050
 #: pynicotine/gtkgui/widgets/trayicon.py:91
-#: pynicotine/gtkgui/ui/mainwindow.ui:452
+#: pynicotine/gtkgui/ui/mainwindow.ui:458
 #: pynicotine/gtkgui/ui/settings/downloads.ui:62
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:626
 msgid "Downloads"
@@ -75,9 +75,9 @@ msgstr "Descărcări"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
-#: pynicotine/gtkgui/mainwindow.py:686
+#: pynicotine/gtkgui/mainwindow.py:704
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:246
-#: pynicotine/gtkgui/ui/mainwindow.ui:854
+#: pynicotine/gtkgui/ui/mainwindow.ui:866
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:650
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:821
 #, fuzzy
@@ -86,9 +86,9 @@ msgstr "Răsfoiți acțiuni"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
-#: pynicotine/gtkgui/mainwindow.py:688 pynicotine/gtkgui/widgets/trayicon.py:96
-#: pynicotine/plugins/core_commands/__init__.py:29
-#: pynicotine/gtkgui/ui/mainwindow.ui:1176
+#: pynicotine/gtkgui/mainwindow.py:706 pynicotine/gtkgui/widgets/trayicon.py:96
+#: pynicotine/plugins/core_commands/__init__.py:27
+#: pynicotine/gtkgui/ui/mainwindow.ui:1194
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:674
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:865
 #, fuzzy
@@ -196,12 +196,12 @@ msgstr "%(user)s este offline"
 msgid "Buddy Status"
 msgstr "Stare de prieten"
 
-#: pynicotine/chatrooms.py:339
+#: pynicotine/chatrooms.py:338
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr "Ați fost adăugat în camera privată %(room)s"
 
-#: pynicotine/chatrooms.py:467
+#: pynicotine/chatrooms.py:466
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
@@ -252,13 +252,13 @@ msgstr ""
 "Trebuie să specificați un nume de utilizator și o parolă înainte de "
 "conectare…"
 
-#: pynicotine/downloads.py:219
+#: pynicotine/downloads.py:218
 #, fuzzy, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Eroare: Filtrul de descărcare a eșuat! Verificați-vă filtrele. Motiv: %s"
 
-#: pynicotine/downloads.py:234
+#: pynicotine/downloads.py:233
 #, fuzzy, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Eroare: %(num)d Descărcarea filtrelor a eșuat! %(error)s "
@@ -304,7 +304,7 @@ msgstr "Execut în folder: %s"
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Nu s-a putut muta „%(tempfile)s” în „%(file)s”: %(error)s"
 
-#: pynicotine/downloads.py:433 pynicotine/downloads.py:1170
+#: pynicotine/downloads.py:433 pynicotine/downloads.py:1192
 #, fuzzy
 msgid "Download Folder Error"
 msgstr "Eroare de descărcare a folderului"
@@ -319,22 +319,22 @@ msgstr "Descărcare finalizată: utilizator %(user)s, fișier %(file)s"
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Descărcare anulată, fișierul utilizatorului %(user)s %(file)s"
 
-#: pynicotine/downloads.py:1108
+#: pynicotine/downloads.py:1130
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Eroare de descărcare I/O: %s"
 
-#: pynicotine/downloads.py:1151
+#: pynicotine/downloads.py:1173
 #, fuzzy, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Nu se poate obține o blocare exclusivă a fișierului - eroare I/O: %s"
 
-#: pynicotine/downloads.py:1164
+#: pynicotine/downloads.py:1186
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Nu se poate salva fișierul în %(folder_path)s: %(error)s"
 
-#: pynicotine/downloads.py:1183
+#: pynicotine/downloads.py:1205
 #, fuzzy, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Descărcarea a început: utilizator %(user)s, fișier %(file)s"
@@ -344,177 +344,177 @@ msgstr "Descărcarea a început: utilizator %(user)s, fișier %(file)s"
 msgid "Cannot find %s, please install it."
 msgstr "Nu s-a putut găsi %s, vă rog să instalați componenta lipsă."
 
-#: pynicotine/gtkgui/__init__.py:140
+#: pynicotine/gtkgui/__init__.py:145
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Nu există un mediu grafic, folosind modul headless (fără GUI)"
 
-#: pynicotine/gtkgui/application.py:303
+#: pynicotine/gtkgui/application.py:329
 #: pynicotine/gtkgui/widgets/trayicon.py:126
 #, fuzzy
 msgid "_Connect"
 msgstr "_Conectați"
 
-#: pynicotine/gtkgui/application.py:304
+#: pynicotine/gtkgui/application.py:330
 #: pynicotine/gtkgui/widgets/trayicon.py:126
 #, fuzzy
 msgid "_Disconnect"
 msgstr "_Deconectat"
 
-#: pynicotine/gtkgui/application.py:305
+#: pynicotine/gtkgui/application.py:331
 #, fuzzy
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _Privilegii"
 
-#: pynicotine/gtkgui/application.py:311
+#: pynicotine/gtkgui/application.py:337
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Preferințe"
 
-#: pynicotine/gtkgui/application.py:317 pynicotine/gtkgui/application.py:505
+#: pynicotine/gtkgui/application.py:343 pynicotine/gtkgui/application.py:531
 #: pynicotine/gtkgui/widgets/trayicon.py:108
 msgid "_Quit"
 msgstr "_Ieși"
 
-#: pynicotine/gtkgui/application.py:334
+#: pynicotine/gtkgui/application.py:360
 #, fuzzy
 msgid "Browse _Public Shares"
 msgstr "_Răsfoiți acțiuni publice"
 
-#: pynicotine/gtkgui/application.py:335
+#: pynicotine/gtkgui/application.py:361
 #, fuzzy
 msgid "Browse _Buddy Shares"
 msgstr "Răsfoiește acțiunile lui Buddy"
 
-#: pynicotine/gtkgui/application.py:336
+#: pynicotine/gtkgui/application.py:362
 #, fuzzy
 msgid "Browse _Trusted Shares"
 msgstr "Răsfoiește acțiunile lui Buddy"
 
-#: pynicotine/gtkgui/application.py:345 pynicotine/gtkgui/application.py:401
+#: pynicotine/gtkgui/application.py:371 pynicotine/gtkgui/application.py:427
 #, fuzzy
 msgid "_Rescan Shares"
 msgstr "_Rescanați acțiunile"
 
-#: pynicotine/gtkgui/application.py:346 pynicotine/gtkgui/application.py:403
+#: pynicotine/gtkgui/application.py:372 pynicotine/gtkgui/application.py:429
 #, fuzzy
 msgid "Configure _Shares"
 msgstr "Configurați partajări"
 
-#: pynicotine/gtkgui/application.py:368
+#: pynicotine/gtkgui/application.py:394
 #, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Comenzi rapide de la tastatură"
 
-#: pynicotine/gtkgui/application.py:369
+#: pynicotine/gtkgui/application.py:395
 #, fuzzy
 msgid "_Setup Assistant"
 msgstr "_Setup Assistant"
 
-#: pynicotine/gtkgui/application.py:370
+#: pynicotine/gtkgui/application.py:396
 #, fuzzy
 msgid "_Transfer Statistics"
 msgstr "_Statistici de transfer"
 
-#: pynicotine/gtkgui/application.py:372
+#: pynicotine/gtkgui/application.py:398
 #, fuzzy
 msgid "Report a _Bug"
 msgstr "Raporteaza o eroare"
 
-#: pynicotine/gtkgui/application.py:373
+#: pynicotine/gtkgui/application.py:399
 #, fuzzy
 msgid "Improve T_ranslations"
 msgstr "Îmbunătățiți traducerile"
 
-#: pynicotine/gtkgui/application.py:375
+#: pynicotine/gtkgui/application.py:401
 #, fuzzy
 msgid "_About Nicotine+"
 msgstr "_Despre Nicotina+"
 
-#: pynicotine/gtkgui/application.py:386
+#: pynicotine/gtkgui/application.py:412
 #, fuzzy
 msgid "_File"
 msgstr "_Fişier"
 
-#: pynicotine/gtkgui/application.py:387
+#: pynicotine/gtkgui/application.py:413
 #, fuzzy
 msgid "_Shares"
 msgstr "_Acțiuni"
 
-#: pynicotine/gtkgui/application.py:388 pynicotine/gtkgui/application.py:405
+#: pynicotine/gtkgui/application.py:414 pynicotine/gtkgui/application.py:431
 #, fuzzy
 msgid "_Help"
 msgstr "_Ajutor"
 
-#: pynicotine/gtkgui/application.py:402
+#: pynicotine/gtkgui/application.py:428
 #, fuzzy
 msgid "_Browse Shares"
 msgstr "Răsfoiți acțiuni"
 
-#: pynicotine/gtkgui/application.py:454
+#: pynicotine/gtkgui/application.py:480
 #, fuzzy, python-format
 msgid "Unable to show notification: %s"
 msgstr "Nu se poate afișa notificarea: %s"
 
-#: pynicotine/gtkgui/application.py:497
+#: pynicotine/gtkgui/application.py:523
 #, fuzzy
 msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Ești sigur că vrei să ieși?"
 
-#: pynicotine/gtkgui/application.py:498
+#: pynicotine/gtkgui/application.py:524
 msgid "Wait for uploads to finish"
 msgstr ""
 
-#: pynicotine/gtkgui/application.py:500
+#: pynicotine/gtkgui/application.py:526
 msgid "Do you really want to exit?"
 msgstr "Ești sigur că vrei să ieși?"
 
-#: pynicotine/gtkgui/application.py:504 pynicotine/gtkgui/downloads.py:155
+#: pynicotine/gtkgui/application.py:530 pynicotine/gtkgui/downloads.py:155
 #: pynicotine/gtkgui/widgets/dialogs.py:446
 #, fuzzy
 msgid "_No"
 msgstr "_Nu"
 
-#: pynicotine/gtkgui/application.py:509
+#: pynicotine/gtkgui/application.py:535
 msgid "_Run in Background"
 msgstr "_Rulează în fundal"
 
-#: pynicotine/gtkgui/application.py:513
-#: pynicotine/gtkgui/dialogs/preferences.py:1666
-#: pynicotine/plugins/core_commands/__init__.py:70
+#: pynicotine/gtkgui/application.py:539
+#: pynicotine/gtkgui/dialogs/preferences.py:1667
+#: pynicotine/plugins/core_commands/__init__.py:68
 msgid "Quit Nicotine+"
 msgstr "Ieși Nicotine+"
 
-#: pynicotine/gtkgui/application.py:534
+#: pynicotine/gtkgui/application.py:560
 msgid "Shares Not Available"
 msgstr "Partajări nevalabile"
 
-#: pynicotine/gtkgui/application.py:535 pynicotine/headless/application.py:121
+#: pynicotine/gtkgui/application.py:561 pynicotine/headless/application.py:121
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
 "Verificați că diskurile externe sunt montate și permisiunile folderelor sunt "
 "corecte."
 
-#: pynicotine/gtkgui/application.py:538 pynicotine/gtkgui/application.py:562
+#: pynicotine/gtkgui/application.py:564 pynicotine/gtkgui/application.py:588
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:41
 #: pynicotine/gtkgui/widgets/dialogs.py:486
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 msgid "_Cancel"
 msgstr "_Anulează"
 
-#: pynicotine/gtkgui/application.py:539 pynicotine/gtkgui/uploads.py:46
+#: pynicotine/gtkgui/application.py:565 pynicotine/gtkgui/uploads.py:46
 msgid "_Retry"
 msgstr "_Reîncearcă"
 
-#: pynicotine/gtkgui/application.py:540
+#: pynicotine/gtkgui/application.py:566
 msgid "_Force Rescan"
 msgstr "_Re-scanează forțat"
 
-#: pynicotine/gtkgui/application.py:553
+#: pynicotine/gtkgui/application.py:579
 msgid "Invalid Password"
 msgstr "Parolă greșită"
 
-#: pynicotine/gtkgui/application.py:554
+#: pynicotine/gtkgui/application.py:580
 #, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -524,42 +524,42 @@ msgstr ""
 "alegeți alt nume de utilizator dacă aceasta este prima oară când vă "
 "conectați."
 
-#: pynicotine/gtkgui/application.py:563
+#: pynicotine/gtkgui/application.py:589
 msgid "Change _Login Details"
 msgstr "Schimbați _Detaliile de logare"
 
-#: pynicotine/gtkgui/application.py:730
+#: pynicotine/gtkgui/application.py:756
 msgid "Message Downloading Users"
 msgstr "Trimite mesaj utilizatorilor care descarcă"
 
-#: pynicotine/gtkgui/application.py:731
+#: pynicotine/gtkgui/application.py:757
 msgid "Send private message to all users who are downloading from you:"
 msgstr ""
 "Trimite un mesaj privat tuturor utilizatorilor care descarcă de la tine:"
 
-#: pynicotine/gtkgui/application.py:732 pynicotine/gtkgui/application.py:746
-#: pynicotine/gtkgui/widgets/popupmenu.py:370
+#: pynicotine/gtkgui/application.py:758 pynicotine/gtkgui/application.py:772
+#: pynicotine/gtkgui/widgets/popupmenu.py:372
 #: pynicotine/gtkgui/ui/userinfo.ui:478
 msgid "_Send Message"
 msgstr "_Trimite mesaj"
 
-#: pynicotine/gtkgui/application.py:744
+#: pynicotine/gtkgui/application.py:770
 msgid "Message Buddies"
 msgstr "Trimite mesaj prietenilor"
 
-#: pynicotine/gtkgui/application.py:745
+#: pynicotine/gtkgui/application.py:771
 msgid "Send private message to all online buddies:"
 msgstr "Trimite mesaj privat către toți prietenii online:"
 
-#: pynicotine/gtkgui/application.py:774
+#: pynicotine/gtkgui/application.py:800
 msgid "Select a Saved Shares List File"
 msgstr "Selectați un fișier salvat cu listă de partajări"
 
-#: pynicotine/gtkgui/application.py:871
+#: pynicotine/gtkgui/application.py:897
 msgid "Critical Error"
 msgstr "Eroare Critică"
 
-#: pynicotine/gtkgui/application.py:872
+#: pynicotine/gtkgui/application.py:898
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -567,57 +567,57 @@ msgstr ""
 "Nicotine+ a întâmpinat o eroare critică și trebuie să iasă. Vă rog să "
 "copiați acest mesaj și includeți-l într-un raport de eroare:"
 
-#: pynicotine/gtkgui/application.py:876
+#: pynicotine/gtkgui/application.py:902
 msgid "_Quit Nicotine+"
 msgstr "_Ieșiti Nicotine+"
 
-#: pynicotine/gtkgui/application.py:877
+#: pynicotine/gtkgui/application.py:903
 msgid "_Copy & Report Bug"
 msgstr "_Copiați & Raportați eroare"
 
-#: pynicotine/gtkgui/buddies.py:71 pynicotine/gtkgui/chatrooms.py:473
+#: pynicotine/gtkgui/buddies.py:71 pynicotine/gtkgui/chatrooms.py:466
 #: pynicotine/gtkgui/interests.py:126
 #: pynicotine/gtkgui/popovers/chathistory.py:66
-#: pynicotine/gtkgui/transfers.py:146
+#: pynicotine/gtkgui/transfers.py:149
 msgid "Status"
 msgstr "Stare"
 
-#: pynicotine/gtkgui/buddies.py:77 pynicotine/gtkgui/chatrooms.py:479
-#: pynicotine/gtkgui/interests.py:132 pynicotine/gtkgui/search.py:510
+#: pynicotine/gtkgui/buddies.py:77 pynicotine/gtkgui/chatrooms.py:472
+#: pynicotine/gtkgui/interests.py:132 pynicotine/gtkgui/search.py:506
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:292
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:385
 #: pynicotine/gtkgui/ui/userinfo.ui:290
 msgid "Country"
 msgstr "Țară"
 
-#: pynicotine/gtkgui/buddies.py:83 pynicotine/gtkgui/chatrooms.py:485
-#: pynicotine/gtkgui/dialogs/preferences.py:977
-#: pynicotine/gtkgui/dialogs/preferences.py:1120
+#: pynicotine/gtkgui/buddies.py:83 pynicotine/gtkgui/chatrooms.py:478
+#: pynicotine/gtkgui/dialogs/preferences.py:978
+#: pynicotine/gtkgui/dialogs/preferences.py:1121
 #: pynicotine/gtkgui/interests.py:138
 #: pynicotine/gtkgui/popovers/chathistory.py:72
-#: pynicotine/gtkgui/privatechat.py:370 pynicotine/gtkgui/search.py:504
-#: pynicotine/gtkgui/transfers.py:121 pynicotine/gtkgui/userbrowse.py:292
+#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:500
+#: pynicotine/gtkgui/transfers.py:124 pynicotine/gtkgui/userbrowse.py:292
 #: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
 #: pynicotine/gtkgui/userbrowse.py:385
 msgid "User"
 msgstr "Utilizator"
 
-#: pynicotine/gtkgui/buddies.py:90 pynicotine/gtkgui/chatrooms.py:495
-#: pynicotine/gtkgui/interests.py:145 pynicotine/gtkgui/search.py:516
-#: pynicotine/gtkgui/transfers.py:168
+#: pynicotine/gtkgui/buddies.py:90 pynicotine/gtkgui/chatrooms.py:488
+#: pynicotine/gtkgui/interests.py:145 pynicotine/gtkgui/search.py:512
+#: pynicotine/gtkgui/transfers.py:171
 msgid "Speed"
 msgstr "Viteză"
 
-#: pynicotine/gtkgui/buddies.py:96 pynicotine/gtkgui/chatrooms.py:502
-#: pynicotine/gtkgui/interests.py:152 pynicotine/gtkgui/ui/mainwindow.ui:330
-#: pynicotine/gtkgui/ui/mainwindow.ui:569
+#: pynicotine/gtkgui/buddies.py:96 pynicotine/gtkgui/chatrooms.py:495
+#: pynicotine/gtkgui/interests.py:152 pynicotine/gtkgui/ui/mainwindow.ui:336
+#: pynicotine/gtkgui/ui/mainwindow.ui:575
 msgid "Files"
 msgstr "Fișiere"
 
 #: pynicotine/gtkgui/buddies.py:102
-#: pynicotine/gtkgui/dialogs/preferences.py:649
-#: pynicotine/gtkgui/dialogs/preferences.py:695
-#: pynicotine/gtkgui/dialogs/preferences.py:732
+#: pynicotine/gtkgui/dialogs/preferences.py:650
+#: pynicotine/gtkgui/dialogs/preferences.py:696
+#: pynicotine/gtkgui/dialogs/preferences.py:733
 #, fuzzy
 msgid "Trusted"
 msgstr "De încredere"
@@ -642,19 +642,15 @@ msgstr "Vazut ultima data"
 msgid "Note"
 msgstr "Notă"
 
-#: pynicotine/gtkgui/buddies.py:146
+#: pynicotine/gtkgui/buddies.py:143
 #, fuzzy
 msgid "Add User _Note…"
 msgstr "Adăugați utilizator _Notă…"
 
-#: pynicotine/gtkgui/buddies.py:147 pynicotine/gtkgui/buddies.py:278
-#: pynicotine/gtkgui/chatrooms.py:534 pynicotine/gtkgui/chatrooms.py:712
-msgid "Private Rooms"
-msgstr "Camere private"
-
-#: pynicotine/gtkgui/buddies.py:148
+#: pynicotine/gtkgui/buddies.py:145
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:213
-#: pynicotine/gtkgui/interests.py:181 pynicotine/gtkgui/interests.py:189
+#: pynicotine/gtkgui/dialogs/wishlist.py:78 pynicotine/gtkgui/interests.py:181
+#: pynicotine/gtkgui/interests.py:189
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:447
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:463
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:90
@@ -681,135 +677,135 @@ msgstr "Camere private"
 msgid "Remove"
 msgstr "Elimina"
 
-#: pynicotine/gtkgui/buddies.py:340
+#: pynicotine/gtkgui/buddies.py:332
 #, fuzzy
 msgid "Never seen"
 msgstr "Nemaivăzut"
 
-#: pynicotine/gtkgui/buddies.py:508
+#: pynicotine/gtkgui/buddies.py:500
 #, fuzzy
 msgid "Add User Note"
 msgstr "Adăugați o notă de utilizator"
 
-#: pynicotine/gtkgui/buddies.py:509
+#: pynicotine/gtkgui/buddies.py:501
 #, fuzzy, python-format
 msgid "Add a note about user %s:"
 msgstr "Adăugați o notă despre utilizatorul %s:"
 
-#: pynicotine/gtkgui/buddies.py:510
-#: pynicotine/gtkgui/dialogs/preferences.py:459
-#: pynicotine/gtkgui/dialogs/preferences.py:1032
-#: pynicotine/gtkgui/dialogs/preferences.py:1062
-#: pynicotine/gtkgui/dialogs/preferences.py:1195
-#: pynicotine/gtkgui/dialogs/preferences.py:1226
-#: pynicotine/gtkgui/dialogs/preferences.py:1449
-#: pynicotine/gtkgui/dialogs/preferences.py:1508
-#: pynicotine/gtkgui/dialogs/preferences.py:2488
+#: pynicotine/gtkgui/buddies.py:502
+#: pynicotine/gtkgui/dialogs/preferences.py:460
+#: pynicotine/gtkgui/dialogs/preferences.py:1033
+#: pynicotine/gtkgui/dialogs/preferences.py:1063
+#: pynicotine/gtkgui/dialogs/preferences.py:1196
+#: pynicotine/gtkgui/dialogs/preferences.py:1227
+#: pynicotine/gtkgui/dialogs/preferences.py:1450
+#: pynicotine/gtkgui/dialogs/preferences.py:1509
+#: pynicotine/gtkgui/dialogs/preferences.py:2489
 #, fuzzy
 msgid "_Add"
 msgstr "_Adăuga"
 
-#: pynicotine/gtkgui/chatrooms.py:200
+#: pynicotine/gtkgui/chatrooms.py:197
 msgid "Create New Room?"
 msgstr "Creare cameră nouă?"
 
-#: pynicotine/gtkgui/chatrooms.py:201
+#: pynicotine/gtkgui/chatrooms.py:198
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Chiar doriți să creați camera nouă \"%s\"?"
 
-#: pynicotine/gtkgui/chatrooms.py:202
+#: pynicotine/gtkgui/chatrooms.py:199
 msgid "Make room private"
 msgstr "Faceți camera privată"
 
-#: pynicotine/gtkgui/chatrooms.py:533
+#: pynicotine/gtkgui/chatrooms.py:520
 msgid "Sear_ch User's Files"
 msgstr "Căuta_ți Fișierele Utilizatorului"
 
-#: pynicotine/gtkgui/chatrooms.py:540 pynicotine/gtkgui/chatrooms.py:552
-#: pynicotine/gtkgui/privatechat.py:359
+#: pynicotine/gtkgui/chatrooms.py:526 pynicotine/gtkgui/chatrooms.py:538
+#: pynicotine/gtkgui/privatechat.py:356
 msgid "Find…"
 msgstr "Găsește…"
 
-#: pynicotine/gtkgui/chatrooms.py:542 pynicotine/gtkgui/chatrooms.py:554
-#: pynicotine/gtkgui/chatrooms.py:739 pynicotine/gtkgui/chatrooms.py:742
-#: pynicotine/gtkgui/privatechat.py:361 pynicotine/gtkgui/privatechat.py:429
-#: pynicotine/gtkgui/search.py:614 pynicotine/gtkgui/transfers.py:243
+#: pynicotine/gtkgui/chatrooms.py:528 pynicotine/gtkgui/chatrooms.py:540
+#: pynicotine/gtkgui/chatrooms.py:720 pynicotine/gtkgui/chatrooms.py:723
+#: pynicotine/gtkgui/privatechat.py:358 pynicotine/gtkgui/privatechat.py:427
+#: pynicotine/gtkgui/search.py:610 pynicotine/gtkgui/transfers.py:246
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
 msgid "Copy"
 msgstr "Copiază"
 
-#: pynicotine/gtkgui/chatrooms.py:543 pynicotine/gtkgui/chatrooms.py:556
-#: pynicotine/gtkgui/privatechat.py:363
+#: pynicotine/gtkgui/chatrooms.py:529 pynicotine/gtkgui/chatrooms.py:542
+#: pynicotine/gtkgui/privatechat.py:360
 msgid "Copy All"
 msgstr "Copiază tot"
 
-#: pynicotine/gtkgui/chatrooms.py:545
+#: pynicotine/gtkgui/chatrooms.py:531
 msgid "Clear Activity View"
 msgstr "Golește vizualizarea activității"
 
-#: pynicotine/gtkgui/chatrooms.py:547 pynicotine/gtkgui/chatrooms.py:562
-#: pynicotine/gtkgui/chatrooms.py:567
+#: pynicotine/gtkgui/chatrooms.py:533 pynicotine/gtkgui/chatrooms.py:548
+#: pynicotine/gtkgui/chatrooms.py:553
 msgid "_Leave Room"
 msgstr "_Părăsește camera"
 
-#: pynicotine/gtkgui/chatrooms.py:555 pynicotine/gtkgui/chatrooms.py:743
-#: pynicotine/gtkgui/privatechat.py:362 pynicotine/gtkgui/privatechat.py:430
+#: pynicotine/gtkgui/chatrooms.py:541 pynicotine/gtkgui/chatrooms.py:724
+#: pynicotine/gtkgui/privatechat.py:359 pynicotine/gtkgui/privatechat.py:428
 msgid "Copy Link"
 msgstr "Copiază link"
 
-#: pynicotine/gtkgui/chatrooms.py:558
+#: pynicotine/gtkgui/chatrooms.py:544
 msgid "View Room Log"
 msgstr "Vezi istoric cameră"
 
-#: pynicotine/gtkgui/chatrooms.py:559
+#: pynicotine/gtkgui/chatrooms.py:545
 msgid "Delete Room Log…"
 msgstr "Ștergeți istoric cameră…"
 
-#: pynicotine/gtkgui/chatrooms.py:561 pynicotine/gtkgui/privatechat.py:368
+#: pynicotine/gtkgui/chatrooms.py:547 pynicotine/gtkgui/privatechat.py:365
 msgid "Clear Message View"
 msgstr "Goliți vizualizare mesaje"
 
-#: pynicotine/gtkgui/chatrooms.py:701 pynicotine/gtkgui/chatrooms.py:840
+#: pynicotine/gtkgui/chatrooms.py:687 pynicotine/gtkgui/chatrooms.py:821
 #, python-format
 msgid "%s joined the room"
 msgstr "%s a intrat în cameră"
 
-#: pynicotine/gtkgui/chatrooms.py:765
+#: pynicotine/gtkgui/chatrooms.py:746
 #, python-format
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s te-a menționat în camera %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:770 pynicotine/gtkgui/mainwindow.py:387
+#: pynicotine/gtkgui/chatrooms.py:751 pynicotine/gtkgui/mainwindow.py:387
 #, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Menționat de %(user)s în camera %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:788
+#: pynicotine/gtkgui/chatrooms.py:769
 #, python-format
 msgid "Message by %(user)s in Room %(room)s"
 msgstr "Mesaj de %(user)s în camera %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:863
+#: pynicotine/gtkgui/chatrooms.py:844
 #, python-format
 msgid "%s left the room"
 msgstr "%s a ieșit din cameră"
 
-#: pynicotine/gtkgui/chatrooms.py:908
+#: pynicotine/gtkgui/chatrooms.py:889
 #, python-format
 msgid "%s has gone away"
 msgstr "%s a plecat"
 
-#: pynicotine/gtkgui/chatrooms.py:911
+#: pynicotine/gtkgui/chatrooms.py:892
 #, python-format
 msgid "%s has returned"
 msgstr "%s s-a întors"
 
-#: pynicotine/gtkgui/chatrooms.py:1003 pynicotine/gtkgui/privatechat.py:465
+#: pynicotine/gtkgui/chatrooms.py:984 pynicotine/gtkgui/privatechat.py:463
 msgid "Delete Logged Messages?"
 msgstr "Ștergeți istoric mesaje?"
 
-#: pynicotine/gtkgui/chatrooms.py:1004
+#: pynicotine/gtkgui/chatrooms.py:985
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -840,59 +836,59 @@ msgstr ""
 msgid "Up to date"
 msgstr "Actualizat"
 
-#: pynicotine/gtkgui/dialogs/about.py:465
+#: pynicotine/gtkgui/dialogs/about.py:469
 #, fuzzy
 msgid "Checking latest version…"
 msgstr "Verificați _Ultima versiune"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:73
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:71
 msgid "Setup Assistant"
 msgstr "Asistent de configurare"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:98
-#: pynicotine/gtkgui/dialogs/preferences.py:598
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:96
+#: pynicotine/gtkgui/dialogs/preferences.py:599
 msgid "Virtual Folder"
 msgstr "Folder virtual"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:104
-#: pynicotine/gtkgui/dialogs/preferences.py:605 pynicotine/gtkgui/search.py:530
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:102
+#: pynicotine/gtkgui/dialogs/preferences.py:606 pynicotine/gtkgui/search.py:526
 #: pynicotine/gtkgui/uploads.py:45 pynicotine/gtkgui/userbrowse.py:258
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:113
 #, fuzzy
 msgid "Folder"
 msgstr "Pliant"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:130
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Finish"
 msgstr "_Finalizare"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:130
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Next"
 msgstr "_Următorul"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:171
-#: pynicotine/gtkgui/dialogs/preferences.py:687
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:169
+#: pynicotine/gtkgui/dialogs/preferences.py:688
 msgid "Add a Shared Folder"
 msgstr "Adăugați folder partajat"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:202
-#: pynicotine/gtkgui/dialogs/preferences.py:729
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:200
+#: pynicotine/gtkgui/dialogs/preferences.py:730
 msgid "Edit Shared Folder"
 msgstr "Modificați folder partajat"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:203
-#: pynicotine/gtkgui/dialogs/preferences.py:730
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:201
+#: pynicotine/gtkgui/dialogs/preferences.py:731
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Introduceți un nume virtual nou pentru \"%(dir)s\":"
 
-#: pynicotine/gtkgui/dialogs/fastconfigure.py:205
-#: pynicotine/gtkgui/dialogs/preferences.py:490
-#: pynicotine/gtkgui/dialogs/preferences.py:736
-#: pynicotine/gtkgui/dialogs/preferences.py:1476
-#: pynicotine/gtkgui/dialogs/preferences.py:1538
-#: pynicotine/gtkgui/dialogs/preferences.py:2517
-#: pynicotine/gtkgui/dialogs/wishlist.py:126
+#: pynicotine/gtkgui/dialogs/fastconfigure.py:203
+#: pynicotine/gtkgui/dialogs/preferences.py:491
+#: pynicotine/gtkgui/dialogs/preferences.py:737
+#: pynicotine/gtkgui/dialogs/preferences.py:1477
+#: pynicotine/gtkgui/dialogs/preferences.py:1539
+#: pynicotine/gtkgui/dialogs/preferences.py:2518
+#: pynicotine/gtkgui/dialogs/wishlist.py:136
 #, fuzzy
 msgid "_Edit"
 msgstr "Editați | ×…"
@@ -945,7 +941,7 @@ msgid "Add…"
 msgstr "Adăuga…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:212
-#: pynicotine/gtkgui/search.py:620
+#: pynicotine/gtkgui/dialogs/wishlist.py:76 pynicotine/gtkgui/search.py:616
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:416
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:432
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:60
@@ -980,10 +976,9 @@ msgid "Edit Item"
 msgstr "Editați interesele"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:124
-#: pynicotine/gtkgui/search.py:1532 pynicotine/gtkgui/userinfo.py:570
-#: pynicotine/gtkgui/widgets/popupmenu.py:592
-#: pynicotine/gtkgui/widgets/treeview.py:647 pynicotine/users.py:220
-#: pynicotine/gtkgui/ui/settings/network.ui:129
+#: pynicotine/gtkgui/search.py:1528 pynicotine/gtkgui/userinfo.py:581
+#: pynicotine/gtkgui/userinfo.py:704 pynicotine/gtkgui/widgets/treeview.py:646
+#: pynicotine/users.py:220 pynicotine/gtkgui/ui/settings/network.ui:129
 #: pynicotine/gtkgui/ui/userinfo.ui:139 pynicotine/gtkgui/ui/userinfo.ui:166
 #: pynicotine/gtkgui/ui/userinfo.ui:193 pynicotine/gtkgui/ui/userinfo.ui:220
 #: pynicotine/gtkgui/ui/userinfo.ui:247 pynicotine/gtkgui/ui/userinfo.ui:274
@@ -1048,45 +1043,45 @@ msgid "Everyone"
 msgstr "Toata lumea"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:278
-#: pynicotine/gtkgui/dialogs/preferences.py:569
-#: pynicotine/gtkgui/dialogs/preferences.py:645
-#: pynicotine/gtkgui/mainwindow.py:689 pynicotine/gtkgui/search.py:275
-#: pynicotine/gtkgui/ui/buddies.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:1339
+#: pynicotine/gtkgui/dialogs/preferences.py:570
+#: pynicotine/gtkgui/dialogs/preferences.py:646
+#: pynicotine/gtkgui/mainwindow.py:707 pynicotine/gtkgui/search.py:271
+#: pynicotine/gtkgui/ui/buddies.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:1363
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:686
 #, fuzzy
 msgid "Buddies"
 msgstr "Prieteni"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:279
-#: pynicotine/gtkgui/dialogs/preferences.py:570
-#: pynicotine/gtkgui/dialogs/preferences.py:695
-#: pynicotine/gtkgui/dialogs/preferences.py:732
+#: pynicotine/gtkgui/dialogs/preferences.py:571
+#: pynicotine/gtkgui/dialogs/preferences.py:696
+#: pynicotine/gtkgui/dialogs/preferences.py:733
 #, fuzzy
 msgid "Trusted buddies"
 msgstr "Prieteni de încredere"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:286
-#: pynicotine/gtkgui/dialogs/preferences.py:788
+#: pynicotine/gtkgui/dialogs/preferences.py:789
 #, fuzzy
 msgid "Nothing"
 msgstr "Nimic"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:287
-#: pynicotine/gtkgui/dialogs/preferences.py:789
+#: pynicotine/gtkgui/dialogs/preferences.py:790
 #, fuzzy
 msgid "Open File"
 msgstr "Fișierul următor"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:288
-#: pynicotine/gtkgui/dialogs/preferences.py:790
+#: pynicotine/gtkgui/dialogs/preferences.py:791
 #: pynicotine/gtkgui/widgets/filechooser.py:270
 #, fuzzy
 msgid "Open in File Manager"
 msgstr "Deschideți în File Manager"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:289
-#: pynicotine/gtkgui/dialogs/preferences.py:791
-#: pynicotine/gtkgui/mainwindow.py:1034
+#: pynicotine/gtkgui/dialogs/preferences.py:792
+#: pynicotine/gtkgui/mainwindow.py:1052
 #, fuzzy
 msgid "Search"
 msgstr "Căutare"
@@ -1098,7 +1093,7 @@ msgid "Pause"
 msgstr "Pauză"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:291
-#: pynicotine/gtkgui/dialogs/preferences.py:793
+#: pynicotine/gtkgui/dialogs/preferences.py:794
 #: pynicotine/gtkgui/ui/downloads.ui:116
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:5
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1633
@@ -1119,7 +1114,7 @@ msgid "Resume"
 msgstr "Relua"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:293
-#: pynicotine/gtkgui/dialogs/preferences.py:795
+#: pynicotine/gtkgui/dialogs/preferences.py:796
 #, fuzzy
 msgid "Browse Folder"
 msgstr "Răsfoiți folderul"
@@ -1134,173 +1129,173 @@ msgstr ""
 "expresiile regulate Python pot fi folosite, altfel sunt acceptate numai "
 "potrivirile cu caractere joker *."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:319
+#: pynicotine/gtkgui/dialogs/preferences.py:320
 #, fuzzy
 msgid "Filter"
 msgstr "Filtru"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:326
+#: pynicotine/gtkgui/dialogs/preferences.py:327
 #, fuzzy
 msgid "Regex"
 msgstr "Regex"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:457
+#: pynicotine/gtkgui/dialogs/preferences.py:458
 #, fuzzy
 msgid "Add Download Filter"
 msgstr "Adăugați filtru de descărcare"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:458
+#: pynicotine/gtkgui/dialogs/preferences.py:459
 #, fuzzy
 msgid "Enter a new download filter:"
 msgstr "Introduceți un nou filtru de descărcare:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:462
-#: pynicotine/gtkgui/dialogs/preferences.py:495
+#: pynicotine/gtkgui/dialogs/preferences.py:463
+#: pynicotine/gtkgui/dialogs/preferences.py:496
 #, fuzzy
 msgid "Enable regular expressions"
 msgstr "Activați expresiile regulate"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:488
+#: pynicotine/gtkgui/dialogs/preferences.py:489
 #, fuzzy
 msgid "Edit Download Filter"
 msgstr "Editați filtrul de descărcare"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:489
+#: pynicotine/gtkgui/dialogs/preferences.py:490
 #, fuzzy
 msgid "Modify the following download filter:"
 msgstr "Modificați următorul filtru de descărcare:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:555
+#: pynicotine/gtkgui/dialogs/preferences.py:556
 #, fuzzy, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d Eșuat! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:562
+#: pynicotine/gtkgui/dialogs/preferences.py:563
 #, fuzzy
 msgid "Filters Successful"
 msgstr "Filtre de succes"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:568
-#: pynicotine/gtkgui/dialogs/preferences.py:641
-#: pynicotine/gtkgui/dialogs/preferences.py:680
+#: pynicotine/gtkgui/dialogs/preferences.py:569
+#: pynicotine/gtkgui/dialogs/preferences.py:642
+#: pynicotine/gtkgui/dialogs/preferences.py:681
 msgid "Public"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:611
+#: pynicotine/gtkgui/dialogs/preferences.py:612
 msgid "Accessible To"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:792
+#: pynicotine/gtkgui/dialogs/preferences.py:793
 #: pynicotine/gtkgui/ui/uploads.ui:56
 #, fuzzy
 msgid "Abort"
 msgstr "Avorta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:794
+#: pynicotine/gtkgui/dialogs/preferences.py:795
 #: pynicotine/gtkgui/ui/userbrowse.ui:5 pynicotine/gtkgui/ui/userinfo.ui:5
 #, fuzzy
 msgid "Retry"
 msgstr "Reîncercați"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:802
+#: pynicotine/gtkgui/dialogs/preferences.py:803
 #, fuzzy
 msgid "Round Robin"
 msgstr "Round Robin"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:803
+#: pynicotine/gtkgui/dialogs/preferences.py:804
 #, fuzzy
 msgid "First In, First Out"
 msgstr "Primul intrat, primul ieşit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:958
-#: pynicotine/gtkgui/dialogs/preferences.py:1101
+#: pynicotine/gtkgui/dialogs/preferences.py:959
+#: pynicotine/gtkgui/dialogs/preferences.py:1102
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:215
 #, fuzzy
 msgid "Username"
 msgstr "Nume de utilizator"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:971
-#: pynicotine/gtkgui/dialogs/preferences.py:1114 pynicotine/users.py:230
+#: pynicotine/gtkgui/dialogs/preferences.py:972
+#: pynicotine/gtkgui/dialogs/preferences.py:1115 pynicotine/users.py:230
 msgid "IP Address"
 msgstr "Adresă IP"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1030
-#: pynicotine/gtkgui/userinfo.py:526 pynicotine/gtkgui/widgets/popupmenu.py:382
-#: pynicotine/gtkgui/widgets/popupmenu.py:424
+#: pynicotine/gtkgui/dialogs/preferences.py:1031
+#: pynicotine/gtkgui/userinfo.py:533 pynicotine/gtkgui/widgets/popupmenu.py:383
+#: pynicotine/gtkgui/widgets/popupmenu.py:429
 #, fuzzy
 msgid "Ignore User"
 msgstr "Ignorați utilizatorul"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1031
+#: pynicotine/gtkgui/dialogs/preferences.py:1032
 #, fuzzy
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Introduceți numele utilizatorului pe care doriți să-l ignorați:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1060
-#: pynicotine/gtkgui/widgets/popupmenu.py:385
-#: pynicotine/gtkgui/widgets/popupmenu.py:426
+#: pynicotine/gtkgui/dialogs/preferences.py:1061
+#: pynicotine/gtkgui/widgets/popupmenu.py:386
+#: pynicotine/gtkgui/widgets/popupmenu.py:431
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "Ignorați adresa IP"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1061
+#: pynicotine/gtkgui/dialogs/preferences.py:1062
 #, fuzzy
 msgid "Enter an IP address you want to ignore:"
 msgstr "Introduceți o adresă IP pe care doriți să o ignorați:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1061
-#: pynicotine/gtkgui/dialogs/preferences.py:1225
+#: pynicotine/gtkgui/dialogs/preferences.py:1062
+#: pynicotine/gtkgui/dialogs/preferences.py:1226
 #, fuzzy
 msgid "* is a wildcard"
 msgstr "* este un wildcard"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1193
-#: pynicotine/gtkgui/userinfo.py:522 pynicotine/gtkgui/widgets/popupmenu.py:381
-#: pynicotine/gtkgui/widgets/popupmenu.py:423
+#: pynicotine/gtkgui/dialogs/preferences.py:1194
+#: pynicotine/gtkgui/userinfo.py:529 pynicotine/gtkgui/widgets/popupmenu.py:382
+#: pynicotine/gtkgui/widgets/popupmenu.py:428
 #, fuzzy
 msgid "Ban User"
 msgstr "Ban utilizator"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1194
+#: pynicotine/gtkgui/dialogs/preferences.py:1195
 #, fuzzy
 msgid "Enter the name of the user you want to ban:"
 msgstr "Introduceți numele utilizatorului pe care doriți să-l interziceți:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1224
-#: pynicotine/gtkgui/widgets/popupmenu.py:384
-#: pynicotine/gtkgui/widgets/popupmenu.py:425
+#: pynicotine/gtkgui/dialogs/preferences.py:1225
+#: pynicotine/gtkgui/widgets/popupmenu.py:385
+#: pynicotine/gtkgui/widgets/popupmenu.py:430
 #, fuzzy
 msgid "Ban IP Address"
 msgstr "Interziceți adresa IP"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1225
+#: pynicotine/gtkgui/dialogs/preferences.py:1226
 #, fuzzy
 msgid "Enter an IP address you want to ban:"
 msgstr "Introduceți o adresă IP pe care doriți să o interziceți:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1274
-#: pynicotine/gtkgui/dialogs/preferences.py:2123
+#: pynicotine/gtkgui/dialogs/preferences.py:1275
+#: pynicotine/gtkgui/dialogs/preferences.py:2124
 msgid "Format codes"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1295
-#: pynicotine/gtkgui/dialogs/preferences.py:1309
+#: pynicotine/gtkgui/dialogs/preferences.py:1296
+#: pynicotine/gtkgui/dialogs/preferences.py:1310
 #, fuzzy
 msgid "Pattern"
 msgstr "Model"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1316
+#: pynicotine/gtkgui/dialogs/preferences.py:1317
 #, fuzzy
 msgid "Replacement"
 msgstr "Înlocuire"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1446
+#: pynicotine/gtkgui/dialogs/preferences.py:1447
 #, fuzzy
 msgid "Censor Pattern"
 msgstr "Model de cenzură"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1447
-#: pynicotine/gtkgui/dialogs/preferences.py:1474
+#: pynicotine/gtkgui/dialogs/preferences.py:1448
+#: pynicotine/gtkgui/dialogs/preferences.py:1475
 #, fuzzy
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
@@ -1311,197 +1306,197 @@ msgstr ""
 "modelului dacă nu doriți să potriviți șiruri în interiorul cuvintelor (poate "
 "eșua la începutul și la sfârșitul rândurilor)."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1473
+#: pynicotine/gtkgui/dialogs/preferences.py:1474
 #, fuzzy
 msgid "Edit Censored Pattern"
 msgstr "Editați modelul cenzurat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1506
+#: pynicotine/gtkgui/dialogs/preferences.py:1507
 #, fuzzy
 msgid "Add Replacement"
 msgstr "Adăugați înlocuitor"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1507
-#: pynicotine/gtkgui/dialogs/preferences.py:1537
+#: pynicotine/gtkgui/dialogs/preferences.py:1508
+#: pynicotine/gtkgui/dialogs/preferences.py:1538
 #, fuzzy
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Introduceți un model de text și cu ce să îl înlocuiți:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1536
+#: pynicotine/gtkgui/dialogs/preferences.py:1537
 #, fuzzy
 msgid "Edit Replacement"
 msgstr "Editați înlocuirea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1653
+#: pynicotine/gtkgui/dialogs/preferences.py:1654
 #, fuzzy
 msgid "System default"
 msgstr "Defectiune de sistem"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1667
+#: pynicotine/gtkgui/dialogs/preferences.py:1668
 #, fuzzy
 msgid "Show confirmation dialog"
 msgstr "Afișează dialogul de confirmare"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1668
+#: pynicotine/gtkgui/dialogs/preferences.py:1669
 #, fuzzy
 msgid "Run in the background"
 msgstr "Alergați în fundal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1676
+#: pynicotine/gtkgui/dialogs/preferences.py:1677
 #, fuzzy
 msgid "bold"
 msgstr "îndrăzneţ"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1677
+#: pynicotine/gtkgui/dialogs/preferences.py:1678
 #, fuzzy
 msgid "italic"
 msgstr "cursiv"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1678
+#: pynicotine/gtkgui/dialogs/preferences.py:1679
 #, fuzzy
 msgid "underline"
 msgstr "subliniază"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1679
+#: pynicotine/gtkgui/dialogs/preferences.py:1680
 #, fuzzy
 msgid "normal"
 msgstr "normal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1687
+#: pynicotine/gtkgui/dialogs/preferences.py:1688
 #, fuzzy
 msgid "Separate Buddies tab"
 msgstr "Trimite mesaj prietenilor"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1688
+#: pynicotine/gtkgui/dialogs/preferences.py:1689
 #, fuzzy
 msgid "Sidebar in Chat Rooms tab"
 msgstr "Lista de prieteni în camerele de chat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1689
+#: pynicotine/gtkgui/dialogs/preferences.py:1690
 msgid "Always visible sidebar"
 msgstr ""
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1694
+#: pynicotine/gtkgui/dialogs/preferences.py:1695
 #, fuzzy
 msgid "Top"
 msgstr "Top"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1695
+#: pynicotine/gtkgui/dialogs/preferences.py:1696
 #, fuzzy
 msgid "Bottom"
 msgstr "Fund"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1696
+#: pynicotine/gtkgui/dialogs/preferences.py:1697
 #, fuzzy
 msgid "Left"
 msgstr "Stânga"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1697
+#: pynicotine/gtkgui/dialogs/preferences.py:1698
 #, fuzzy
 msgid "Right"
 msgstr "Dreapta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1832
-#: pynicotine/gtkgui/mainwindow.py:928
-#: pynicotine/gtkgui/widgets/iconnotebook.py:581
-#: pynicotine/gtkgui/widgets/theme.py:211
-#: pynicotine/plugins/core_commands/__init__.py:335
+#: pynicotine/gtkgui/dialogs/preferences.py:1833
+#: pynicotine/gtkgui/mainwindow.py:946
+#: pynicotine/gtkgui/widgets/iconnotebook.py:586
+#: pynicotine/gtkgui/widgets/theme.py:215
+#: pynicotine/plugins/core_commands/__init__.py:333
 #, fuzzy
 msgid "Online"
 msgstr "Pe net"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1833
-#: pynicotine/gtkgui/mainwindow.py:925
-#: pynicotine/gtkgui/widgets/iconnotebook.py:578
-#: pynicotine/gtkgui/widgets/theme.py:212
+#: pynicotine/gtkgui/dialogs/preferences.py:1834
+#: pynicotine/gtkgui/mainwindow.py:943
+#: pynicotine/gtkgui/widgets/iconnotebook.py:583
+#: pynicotine/gtkgui/widgets/theme.py:216
 #: pynicotine/gtkgui/widgets/trayicon.py:103
-#: pynicotine/plugins/core_commands/__init__.py:335
+#: pynicotine/plugins/core_commands/__init__.py:333
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:33
 #, fuzzy
 msgid "Away"
 msgstr "Departe"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1834
-#: pynicotine/gtkgui/mainwindow.py:932
-#: pynicotine/gtkgui/widgets/iconnotebook.py:584
-#: pynicotine/gtkgui/widgets/theme.py:213
-#: pynicotine/plugins/core_commands/__init__.py:331
-#: pynicotine/gtkgui/ui/mainwindow.ui:1819
+#: pynicotine/gtkgui/dialogs/preferences.py:1835
+#: pynicotine/gtkgui/mainwindow.py:950
+#: pynicotine/gtkgui/widgets/iconnotebook.py:589
+#: pynicotine/gtkgui/widgets/theme.py:217
+#: pynicotine/plugins/core_commands/__init__.py:329
+#: pynicotine/gtkgui/ui/mainwindow.ui:1843
 #, fuzzy
 msgid "Offline"
 msgstr "Deconectat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1836
+#: pynicotine/gtkgui/dialogs/preferences.py:1837
 #, fuzzy
 msgid "Tab Changed"
 msgstr "Fila schimbată"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1837
+#: pynicotine/gtkgui/dialogs/preferences.py:1838
 #, fuzzy
 msgid "Tab Highlight"
 msgstr "Evidențiați fila"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1838
+#: pynicotine/gtkgui/dialogs/preferences.py:1839
 #, fuzzy
 msgid "Window"
 msgstr "Fereastră"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1842
+#: pynicotine/gtkgui/dialogs/preferences.py:1843
 #, fuzzy
 msgid "Online (Tray)"
 msgstr "Online (tavă)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1843
+#: pynicotine/gtkgui/dialogs/preferences.py:1844
 #, fuzzy
 msgid "Away (Tray)"
 msgstr "Away (Tavă)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1844
+#: pynicotine/gtkgui/dialogs/preferences.py:1845
 #, fuzzy
 msgid "Offline (Tray)"
 msgstr "Offline (tavă)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1845
+#: pynicotine/gtkgui/dialogs/preferences.py:1846
 #, fuzzy
 msgid "Message (Tray)"
 msgstr "Mesaj (tava)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2414
+#: pynicotine/gtkgui/dialogs/preferences.py:2415
 #, fuzzy
 msgid "Protocol"
 msgstr "Protocol"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2422
+#: pynicotine/gtkgui/dialogs/preferences.py:2423
 #, fuzzy
 msgid "Command"
 msgstr "Comanda"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2486
+#: pynicotine/gtkgui/dialogs/preferences.py:2487
 #, fuzzy
 msgid "Add URL Handler"
 msgstr "Adăugați un handler URL"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2487
+#: pynicotine/gtkgui/dialogs/preferences.py:2488
 #, fuzzy
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Introduceți protocolul și comanda pentru handler-ul URL:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2515
+#: pynicotine/gtkgui/dialogs/preferences.py:2516
 #, fuzzy
 msgid "Edit Command"
 msgstr "Comanda Editare"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2516
+#: pynicotine/gtkgui/dialogs/preferences.py:2517
 #, fuzzy, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "Introduceți o nouă comandă pentru protocolul %s:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2671
+#: pynicotine/gtkgui/dialogs/preferences.py:2672
 #, fuzzy
 msgid "Username;APIKEY:"
 msgstr "Nume utilizator;APIKEY:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2675
+#: pynicotine/gtkgui/dialogs/preferences.py:2676
 #, fuzzy
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
@@ -1509,7 +1504,7 @@ msgstr ""
 "Music player (de exemplu, amarok, audacious, exaile); lăsați gol pentru a "
 "detecta automat:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2679
+#: pynicotine/gtkgui/dialogs/preferences.py:2680
 #: pynicotine/headless/application.py:101
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:170
 #: pynicotine/gtkgui/ui/settings/network.ui:54
@@ -1517,169 +1512,169 @@ msgstr ""
 msgid "Username: "
 msgstr "Nume de utilizator:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2683
+#: pynicotine/gtkgui/dialogs/preferences.py:2684
 #, fuzzy
 msgid "Command:"
 msgstr "Comanda:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2691
-#: pynicotine/gtkgui/dialogs/preferences.py:2694
+#: pynicotine/gtkgui/dialogs/preferences.py:2692
+#: pynicotine/gtkgui/dialogs/preferences.py:2695
 #, fuzzy
 msgid "Title"
 msgstr "Titlu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2693
+#: pynicotine/gtkgui/dialogs/preferences.py:2694
 #, fuzzy, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "În curs de redare (de obicei „%(artist)s - %(title)s”)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2694
-#: pynicotine/gtkgui/dialogs/preferences.py:2702
+#: pynicotine/gtkgui/dialogs/preferences.py:2695
+#: pynicotine/gtkgui/dialogs/preferences.py:2703
 #, fuzzy
 msgid "Artist"
 msgstr "Artist"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2696
-#: pynicotine/gtkgui/search.py:567 pynicotine/gtkgui/userbrowse.py:341
+#: pynicotine/gtkgui/dialogs/preferences.py:2697
+#: pynicotine/gtkgui/search.py:563 pynicotine/gtkgui/userbrowse.py:341
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:163
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:321
 #, fuzzy
 msgid "Duration"
 msgstr "Durată"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2698
+#: pynicotine/gtkgui/dialogs/preferences.py:2699
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 #, fuzzy
 msgid "Bitrate"
 msgstr "Rata de biți"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2700
+#: pynicotine/gtkgui/dialogs/preferences.py:2701
 #, fuzzy
 msgid "Comment"
 msgstr "cometariu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2704
+#: pynicotine/gtkgui/dialogs/preferences.py:2705
 #, fuzzy
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2706
+#: pynicotine/gtkgui/dialogs/preferences.py:2707
 #, fuzzy
 msgid "Track Number"
 msgstr "Numărul piesei"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2708
+#: pynicotine/gtkgui/dialogs/preferences.py:2709
 #, fuzzy
 msgid "Year"
 msgstr "An"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2710
+#: pynicotine/gtkgui/dialogs/preferences.py:2711
 #, fuzzy
 msgid "Filename (URI)"
 msgstr "Nume fișier (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2712
+#: pynicotine/gtkgui/dialogs/preferences.py:2713
 #, fuzzy
 msgid "Program"
 msgstr "Program"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2774
+#: pynicotine/gtkgui/dialogs/preferences.py:2775
 #, fuzzy
 msgid "Enabled"
 msgstr "Activat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2781
+#: pynicotine/gtkgui/dialogs/preferences.py:2782
 #, fuzzy
 msgid "Plugin"
 msgstr "Conecteaza"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2830
+#: pynicotine/gtkgui/dialogs/preferences.py:2831
 #, fuzzy
 msgid "No Plugin Selected"
 msgstr "Niciun plugin selectat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2899
+#: pynicotine/gtkgui/dialogs/preferences.py:2900
 #: pynicotine/gtkgui/ui/settings/network.ui:27
 msgid "Network"
 msgstr "Rețea"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2900
+#: pynicotine/gtkgui/dialogs/preferences.py:2901
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:28
 msgid "User Interface"
 msgstr "Interfață utilizator"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2901
-#: pynicotine/plugins/core_commands/__init__.py:32
+#: pynicotine/gtkgui/dialogs/preferences.py:2902
+#: pynicotine/plugins/core_commands/__init__.py:30
 #: pynicotine/gtkgui/ui/settings/shares.ui:11
 msgid "Shares"
 msgstr "Partajări"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2903
-#: pynicotine/gtkgui/mainwindow.py:685 pynicotine/gtkgui/mainwindow.py:1033
+#: pynicotine/gtkgui/dialogs/preferences.py:2904
+#: pynicotine/gtkgui/mainwindow.py:703 pynicotine/gtkgui/mainwindow.py:1051
 #: pynicotine/gtkgui/widgets/trayicon.py:92
-#: pynicotine/gtkgui/ui/mainwindow.ui:691
+#: pynicotine/gtkgui/ui/mainwindow.ui:697
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:638
 msgid "Uploads"
 msgstr "Încărcări"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2904
+#: pynicotine/gtkgui/dialogs/preferences.py:2905
 #: pynicotine/gtkgui/widgets/trayicon.py:98
 #: pynicotine/gtkgui/ui/settings/search.ui:33
 msgid "Searches"
 msgstr "Căutări"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2905
+#: pynicotine/gtkgui/dialogs/preferences.py:2906
 msgid "User Profile"
 msgstr "Profil utilizator"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2906
+#: pynicotine/gtkgui/dialogs/preferences.py:2907
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1064
 msgid "Chats"
 msgstr "Conversații"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2907
+#: pynicotine/gtkgui/dialogs/preferences.py:2908
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:16
 #, fuzzy
 msgid "Now Playing"
 msgstr "Acum se joacă"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2908
+#: pynicotine/gtkgui/dialogs/preferences.py:2909
 #: pynicotine/gtkgui/ui/settings/log.ui:64
 #, fuzzy
 msgid "Logging"
 msgstr "Logare"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2909
+#: pynicotine/gtkgui/dialogs/preferences.py:2910
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
 msgstr "Utilizatori interziși"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2910
+#: pynicotine/gtkgui/dialogs/preferences.py:2911
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "Utilizatori ignorați"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2911
+#: pynicotine/gtkgui/dialogs/preferences.py:2912
 #: pynicotine/gtkgui/ui/settings/plugin.ui:29
 msgid "Plugins"
 msgstr "Plugin-uri"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2912
+#: pynicotine/gtkgui/dialogs/preferences.py:2913
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:11
 #, fuzzy
 msgid "URL Handlers"
 msgstr "Gestionare URL"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2937
+#: pynicotine/gtkgui/dialogs/preferences.py:2938
 #: pynicotine/gtkgui/widgets/trayicon.py:107
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
 #, fuzzy
 msgid "Preferences"
 msgstr "Preferințe"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3245
+#: pynicotine/gtkgui/dialogs/preferences.py:3246
 #, fuzzy
 msgid "Pick a File Name for Config Backup"
 msgstr "Alegeți un nume de fișier pentru Config Backup"
@@ -1704,33 +1699,40 @@ msgstr "Resetați statisticile de transfer?"
 msgid "Do you really want to reset transfer statistics?"
 msgstr "Chiar doriți să resetați statisticile de transfer?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:46
+#: pynicotine/gtkgui/dialogs/wishlist.py:47
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:320
 #, fuzzy
 msgid "Wishlist"
 msgstr "lista de dorințe"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:58 pynicotine/gtkgui/search.py:355
+#: pynicotine/gtkgui/dialogs/wishlist.py:60 pynicotine/gtkgui/search.py:351
 #, fuzzy
 msgid "Wish"
 msgstr "Dori"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:123
+#: pynicotine/gtkgui/dialogs/wishlist.py:75 pynicotine/gtkgui/interests.py:179
+#: pynicotine/gtkgui/interests.py:187 pynicotine/gtkgui/interests.py:198
+#: pynicotine/gtkgui/userinfo.py:347
+#, fuzzy
+msgid "_Search for Item"
+msgstr "_Căutați articol"
+
+#: pynicotine/gtkgui/dialogs/wishlist.py:133
 #, fuzzy
 msgid "Edit Wish"
 msgstr "Editează dorința"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:124
+#: pynicotine/gtkgui/dialogs/wishlist.py:134
 #, fuzzy, python-format
 msgid "Enter new value for wish '%s':"
 msgstr "Introduceți o nouă valoare pentru dorința „%s”:"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:152
+#: pynicotine/gtkgui/dialogs/wishlist.py:173
 #, fuzzy
 msgid "Clear Wishlist?"
 msgstr "Ștergeți lista de dorințe?"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:153
+#: pynicotine/gtkgui/dialogs/wishlist.py:174
 #, fuzzy
 msgid "Do you really want to clear your wishlist?"
 msgstr "Chiar vrei să-ți ștergi lista de dorințe?"
@@ -1756,18 +1758,18 @@ msgstr "Pauză"
 msgid "Finished / Filtered"
 msgstr "Terminat / filtrat"
 
-#: pynicotine/gtkgui/downloads.py:73 pynicotine/gtkgui/transfers.py:68
+#: pynicotine/gtkgui/downloads.py:73 pynicotine/gtkgui/transfers.py:70
 #: pynicotine/gtkgui/uploads.py:74
 #, fuzzy
 msgid "Finished"
 msgstr "Terminat"
 
-#: pynicotine/gtkgui/downloads.py:74 pynicotine/gtkgui/transfers.py:66
+#: pynicotine/gtkgui/downloads.py:74 pynicotine/gtkgui/transfers.py:68
 #, fuzzy
 msgid "Paused"
 msgstr "Întrerupt"
 
-#: pynicotine/gtkgui/downloads.py:75 pynicotine/gtkgui/transfers.py:69
+#: pynicotine/gtkgui/downloads.py:75 pynicotine/gtkgui/transfers.py:71
 #, fuzzy
 msgid "Filtered"
 msgstr "Filtrată"
@@ -1826,12 +1828,12 @@ msgstr ""
 msgid "_Yes"
 msgstr "_Da"
 
-#: pynicotine/gtkgui/interests.py:78 pynicotine/gtkgui/userinfo.py:308
+#: pynicotine/gtkgui/interests.py:78 pynicotine/gtkgui/userinfo.py:315
 #, fuzzy
 msgid "Likes"
 msgstr "Îi place"
 
-#: pynicotine/gtkgui/interests.py:90 pynicotine/gtkgui/userinfo.py:320
+#: pynicotine/gtkgui/interests.py:90 pynicotine/gtkgui/userinfo.py:327
 #, fuzzy
 msgid "Dislikes"
 msgstr "Antipatiile"
@@ -1852,161 +1854,155 @@ msgstr "Articol"
 msgid "_Recommendations for Item"
 msgstr "_Recomandări pentru articol"
 
-#: pynicotine/gtkgui/interests.py:179 pynicotine/gtkgui/interests.py:187
-#: pynicotine/gtkgui/interests.py:198 pynicotine/gtkgui/userinfo.py:340
-#, fuzzy
-msgid "_Search for Item"
-msgstr "_Căutați articol"
-
-#: pynicotine/gtkgui/interests.py:194 pynicotine/gtkgui/interests.py:523
-#: pynicotine/gtkgui/userinfo.py:337
+#: pynicotine/gtkgui/interests.py:194 pynicotine/gtkgui/interests.py:520
+#: pynicotine/gtkgui/userinfo.py:344
 #, fuzzy
 msgid "I _Like This"
 msgstr "Îmi place asta"
 
-#: pynicotine/gtkgui/interests.py:195 pynicotine/gtkgui/interests.py:526
-#: pynicotine/gtkgui/userinfo.py:338
+#: pynicotine/gtkgui/interests.py:195 pynicotine/gtkgui/interests.py:523
+#: pynicotine/gtkgui/userinfo.py:345
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "_Nu-mi place asta"
 
-#: pynicotine/gtkgui/interests.py:394 pynicotine/gtkgui/interests.py:412
+#: pynicotine/gtkgui/interests.py:394 pynicotine/gtkgui/interests.py:409
 #: pynicotine/gtkgui/ui/interests.ui:131
 #, fuzzy
 msgid "Recommendations"
 msgstr "Recomandări"
 
-#: pynicotine/gtkgui/interests.py:395 pynicotine/gtkgui/interests.py:433
+#: pynicotine/gtkgui/interests.py:395 pynicotine/gtkgui/interests.py:430
 #: pynicotine/gtkgui/ui/interests.ui:191
 #, fuzzy
 msgid "Similar Users"
 msgstr "Utilizatori similari"
 
-#: pynicotine/gtkgui/interests.py:410
+#: pynicotine/gtkgui/interests.py:407
 #, fuzzy, python-format
 msgid "Recommendations (%s)"
 msgstr "Recomandări (%s)"
 
-#: pynicotine/gtkgui/interests.py:431
+#: pynicotine/gtkgui/interests.py:428
 #, fuzzy, python-format
 msgid "Similar Users (%s)"
 msgstr "Utilizatori similari (%s)"
 
-#: pynicotine/gtkgui/mainwindow.py:382 pynicotine/gtkgui/privatechat.py:488
+#: pynicotine/gtkgui/mainwindow.py:382 pynicotine/gtkgui/privatechat.py:486
 #, fuzzy, python-format
 msgid "Private Message from %(user)s"
 msgstr "Mesaj privat de la %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:390 pynicotine/gtkgui/search.py:914
+#: pynicotine/gtkgui/mainwindow.py:390 pynicotine/gtkgui/search.py:910
 #, fuzzy
 msgid "Wishlist Results Found"
 msgstr "S-au găsit rezultatele listei de dorințe"
 
-#: pynicotine/gtkgui/mainwindow.py:687 pynicotine/gtkgui/ui/mainwindow.ui:1016
+#: pynicotine/gtkgui/mainwindow.py:705 pynicotine/gtkgui/ui/mainwindow.ui:1034
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:662
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:843
 #, fuzzy
 msgid "User Profiles"
 msgstr "Profilurile utilizatorilor"
 
-#: pynicotine/gtkgui/mainwindow.py:690 pynicotine/gtkgui/widgets/trayicon.py:97
-#: pynicotine/plugins/core_commands/__init__.py:28
-#: pynicotine/gtkgui/ui/mainwindow.ui:1503
+#: pynicotine/gtkgui/mainwindow.py:708 pynicotine/gtkgui/widgets/trayicon.py:97
+#: pynicotine/plugins/core_commands/__init__.py:26
+#: pynicotine/gtkgui/ui/mainwindow.ui:1527
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:887
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Camere de chat"
 
-#: pynicotine/gtkgui/mainwindow.py:691 pynicotine/gtkgui/ui/mainwindow.ui:1559
+#: pynicotine/gtkgui/mainwindow.py:709 pynicotine/gtkgui/ui/mainwindow.ui:1583
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:710
 #: pynicotine/gtkgui/ui/userinfo.ui:348
 #, fuzzy
 msgid "Interests"
 msgstr "Interese"
 
-#: pynicotine/gtkgui/mainwindow.py:1035
-#: pynicotine/plugins/core_commands/__init__.py:27
+#: pynicotine/gtkgui/mainwindow.py:1053
+#: pynicotine/plugins/core_commands/__init__.py:25
 #, fuzzy
 msgid "Chat"
 msgstr "conversație"
 
-#: pynicotine/gtkgui/mainwindow.py:1037
+#: pynicotine/gtkgui/mainwindow.py:1055
 #, fuzzy
 msgid "[Debug] Connections"
 msgstr "[Depanare] Conexiuni"
 
-#: pynicotine/gtkgui/mainwindow.py:1038
+#: pynicotine/gtkgui/mainwindow.py:1056
 #, fuzzy
 msgid "[Debug] Messages"
 msgstr "[Depanare] Mesaje"
 
-#: pynicotine/gtkgui/mainwindow.py:1039
+#: pynicotine/gtkgui/mainwindow.py:1057
 #, fuzzy
 msgid "[Debug] Transfers"
 msgstr "[Depanare] Transferuri"
 
-#: pynicotine/gtkgui/mainwindow.py:1040
+#: pynicotine/gtkgui/mainwindow.py:1058
 #, fuzzy
 msgid "[Debug] Miscellaneous"
 msgstr "[Depanare] Diverse"
 
-#: pynicotine/gtkgui/mainwindow.py:1044
+#: pynicotine/gtkgui/mainwindow.py:1062
 #, fuzzy
 msgid "_Find…"
 msgstr "_Găsi…"
 
-#: pynicotine/gtkgui/mainwindow.py:1046 pynicotine/gtkgui/mainwindow.py:1072
+#: pynicotine/gtkgui/mainwindow.py:1064 pynicotine/gtkgui/mainwindow.py:1090
 #, fuzzy
 msgid "_Copy"
 msgstr "_Copie"
 
-#: pynicotine/gtkgui/mainwindow.py:1047
+#: pynicotine/gtkgui/mainwindow.py:1065
 #, fuzzy
 msgid "Copy _All"
 msgstr "Copiați _Toate"
 
-#: pynicotine/gtkgui/mainwindow.py:1049
+#: pynicotine/gtkgui/mainwindow.py:1067
 #, fuzzy
 msgid "View _Debug Logs"
 msgstr "Vezi istoric cameră"
 
-#: pynicotine/gtkgui/mainwindow.py:1050
+#: pynicotine/gtkgui/mainwindow.py:1068
 #, fuzzy
 msgid "View _Transfer Logs"
 msgstr "Deschideți _Transfer Log"
 
-#: pynicotine/gtkgui/mainwindow.py:1052
+#: pynicotine/gtkgui/mainwindow.py:1070
 #, fuzzy
 msgid "_Log Categories"
 msgstr "_Categorii de jurnal"
 
-#: pynicotine/gtkgui/mainwindow.py:1054
+#: pynicotine/gtkgui/mainwindow.py:1072
 #, fuzzy
 msgid "Clear Log View"
 msgstr "Ștergeți vizualizarea jurnalului"
 
-#: pynicotine/gtkgui/mainwindow.py:1123
+#: pynicotine/gtkgui/mainwindow.py:1141
 #, fuzzy, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Descărcări: %(speed)s"
 
-#: pynicotine/gtkgui/mainwindow.py:1127
+#: pynicotine/gtkgui/mainwindow.py:1145
 #, fuzzy, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Încărcări: %(speed)s"
 
-#: pynicotine/gtkgui/mainwindow.py:1156
+#: pynicotine/gtkgui/mainwindow.py:1174
 #, fuzzy
 msgid "Preparing Shares"
 msgstr "Scanarea acțiunilor"
 
-#: pynicotine/gtkgui/mainwindow.py:1164
+#: pynicotine/gtkgui/mainwindow.py:1182
 #, fuzzy
 msgid "Scanning Shares"
 msgstr "Scanarea acțiunilor"
 
-#: pynicotine/gtkgui/mainwindow.py:1211
+#: pynicotine/gtkgui/mainwindow.py:1229
 msgid "Quitting..."
 msgstr ""
 
@@ -2021,9 +2017,9 @@ msgid "Room"
 msgstr "Cameră"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:76
-#: pynicotine/plugins/core_commands/__init__.py:33
-#: pynicotine/gtkgui/ui/chatrooms.ui:185 pynicotine/gtkgui/ui/mainwindow.ui:290
-#: pynicotine/gtkgui/ui/mainwindow.ui:529
+#: pynicotine/plugins/core_commands/__init__.py:31
+#: pynicotine/gtkgui/ui/chatrooms.ui:185 pynicotine/gtkgui/ui/mainwindow.ui:296
+#: pynicotine/gtkgui/ui/mainwindow.ui:535
 #: pynicotine/gtkgui/ui/settings/ban.ui:123
 #: pynicotine/gtkgui/ui/settings/ignore.ui:59
 #, fuzzy
@@ -2054,30 +2050,30 @@ msgstr "Cameră privată Disown"
 msgid "Cancel Room Membership"
 msgstr "Anulează calitatea de membru al camerei"
 
-#: pynicotine/gtkgui/privatechat.py:353 pynicotine/gtkgui/search.py:624
-#: pynicotine/gtkgui/userbrowse.py:275 pynicotine/gtkgui/userinfo.py:332
-#: pynicotine/gtkgui/widgets/iconnotebook.py:703
+#: pynicotine/gtkgui/privatechat.py:350 pynicotine/gtkgui/search.py:620
+#: pynicotine/gtkgui/userbrowse.py:275 pynicotine/gtkgui/userinfo.py:339
+#: pynicotine/gtkgui/widgets/iconnotebook.py:712
 #, fuzzy
 msgid "Close All Tabs…"
 msgstr "Inchide toate filele…"
 
-#: pynicotine/gtkgui/privatechat.py:354 pynicotine/gtkgui/search.py:625
-#: pynicotine/gtkgui/userbrowse.py:276 pynicotine/gtkgui/userinfo.py:333
+#: pynicotine/gtkgui/privatechat.py:351 pynicotine/gtkgui/search.py:621
+#: pynicotine/gtkgui/userbrowse.py:276 pynicotine/gtkgui/userinfo.py:340
 #, fuzzy
 msgid "_Close Tab"
 msgstr "_Închideți fila"
 
-#: pynicotine/gtkgui/privatechat.py:365
+#: pynicotine/gtkgui/privatechat.py:362
 #, fuzzy
 msgid "View Chat Log"
 msgstr "Vizualizați jurnalul de chat"
 
-#: pynicotine/gtkgui/privatechat.py:366
+#: pynicotine/gtkgui/privatechat.py:363
 #, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Ștergeți jurnalul de chat…"
 
-#: pynicotine/gtkgui/privatechat.py:466
+#: pynicotine/gtkgui/privatechat.py:464
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
@@ -2085,7 +2081,7 @@ msgstr ""
 "Chiar doriți să ștergeți definitiv toate mesajele înregistrate pentru acest "
 "utilizator?"
 
-#: pynicotine/gtkgui/privatechat.py:517
+#: pynicotine/gtkgui/privatechat.py:515
 #, fuzzy
 msgid "* Messages sent while you were offline"
 msgstr "* Mesaje trimise în timp ce erai offline"
@@ -2100,7 +2096,7 @@ msgstr "_Global"
 msgid "_Buddies"
 msgstr "_Prieteni"
 
-#: pynicotine/gtkgui/search.py:83 pynicotine/gtkgui/ui/mainwindow.ui:1421
+#: pynicotine/gtkgui/search.py:83 pynicotine/gtkgui/ui/mainwindow.ui:1445
 #, fuzzy
 msgid "_Rooms"
 msgstr "_Camere"
@@ -2110,295 +2106,295 @@ msgstr "_Camere"
 msgid "_User"
 msgstr "_Utilizator"
 
-#: pynicotine/gtkgui/search.py:523
+#: pynicotine/gtkgui/search.py:519
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:242
 #, fuzzy
 msgid "In Queue"
 msgstr "În coadă"
 
-#: pynicotine/gtkgui/search.py:538 pynicotine/gtkgui/transfers.py:133
+#: pynicotine/gtkgui/search.py:534 pynicotine/gtkgui/transfers.py:136
 #: pynicotine/gtkgui/userbrowse.py:315
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:137
 #, fuzzy
 msgid "File Type"
 msgstr "Tip fișier"
 
-#: pynicotine/gtkgui/search.py:545 pynicotine/gtkgui/transfers.py:139
+#: pynicotine/gtkgui/search.py:541 pynicotine/gtkgui/transfers.py:142
 #, fuzzy
 msgid "Filename"
 msgstr "Nume de fișier"
 
-#: pynicotine/gtkgui/search.py:553 pynicotine/gtkgui/transfers.py:162
+#: pynicotine/gtkgui/search.py:549 pynicotine/gtkgui/transfers.py:165
 #: pynicotine/gtkgui/userbrowse.py:329
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:88
 #, fuzzy
 msgid "Size"
 msgstr "mărimea"
 
-#: pynicotine/gtkgui/search.py:560 pynicotine/gtkgui/userbrowse.py:335
+#: pynicotine/gtkgui/search.py:556 pynicotine/gtkgui/userbrowse.py:335
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:190
 #, fuzzy
 msgid "Quality"
 msgstr "Calitate"
 
-#: pynicotine/gtkgui/search.py:595 pynicotine/gtkgui/transfers.py:222
+#: pynicotine/gtkgui/search.py:591 pynicotine/gtkgui/transfers.py:225
 #: pynicotine/gtkgui/userbrowse.py:367 pynicotine/gtkgui/userbrowse.py:382
 #, fuzzy
 msgid "Copy _File Path"
 msgstr "Copiați _Cale fișierului"
 
-#: pynicotine/gtkgui/search.py:596 pynicotine/gtkgui/transfers.py:223
+#: pynicotine/gtkgui/search.py:592 pynicotine/gtkgui/transfers.py:226
 #: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #: pynicotine/gtkgui/userbrowse.py:368 pynicotine/gtkgui/userbrowse.py:383
 #, fuzzy
 msgid "Copy _URL"
 msgstr "Copiați _URL"
 
-#: pynicotine/gtkgui/search.py:597 pynicotine/gtkgui/transfers.py:224
+#: pynicotine/gtkgui/search.py:593 pynicotine/gtkgui/transfers.py:227
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Copiați dosarul U_RL"
 
-#: pynicotine/gtkgui/search.py:604 pynicotine/gtkgui/userbrowse.py:374
+#: pynicotine/gtkgui/search.py:600 pynicotine/gtkgui/userbrowse.py:374
 #, fuzzy
 msgid "_Download File(s)"
 msgstr "_Descărcați fișiere"
 
-#: pynicotine/gtkgui/search.py:605 pynicotine/gtkgui/userbrowse.py:375
+#: pynicotine/gtkgui/search.py:601 pynicotine/gtkgui/userbrowse.py:375
 #, fuzzy
 msgid "Download File(s) _To…"
 msgstr "Descărcați fișierele _Pentru…"
 
-#: pynicotine/gtkgui/search.py:607
+#: pynicotine/gtkgui/search.py:603
 #, fuzzy
 msgid "Download _Folder(s)"
 msgstr "Descărcați _Folder(e)"
 
-#: pynicotine/gtkgui/search.py:608
+#: pynicotine/gtkgui/search.py:604
 #, fuzzy
 msgid "Download F_older(s) To…"
 msgstr "Descărcați F_older(e) la…"
 
-#: pynicotine/gtkgui/search.py:610 pynicotine/gtkgui/transfers.py:239
-#: pynicotine/gtkgui/widgets/popupmenu.py:367
+#: pynicotine/gtkgui/search.py:606 pynicotine/gtkgui/transfers.py:242
+#: pynicotine/gtkgui/widgets/popupmenu.py:369
 #, fuzzy
 msgid "View User _Profile"
 msgstr "Vizualizați _Profilul utilizatorului"
 
-#: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:240
+#: pynicotine/gtkgui/search.py:607 pynicotine/gtkgui/transfers.py:243
 #, fuzzy
 msgid "_Browse Folder"
 msgstr "Răsfoiți folderul"
 
-#: pynicotine/gtkgui/search.py:612 pynicotine/gtkgui/transfers.py:233
+#: pynicotine/gtkgui/search.py:608 pynicotine/gtkgui/transfers.py:236
 #: pynicotine/gtkgui/userbrowse.py:287 pynicotine/gtkgui/userbrowse.py:299
 #: pynicotine/gtkgui/userbrowse.py:365 pynicotine/gtkgui/userbrowse.py:380
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "Proprietăți fișier"
 
-#: pynicotine/gtkgui/search.py:615 pynicotine/gtkgui/transfers.py:245
+#: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:248
 #, fuzzy
 msgid "User Actions"
 msgstr "Acțiunile utilizatorului"
 
-#: pynicotine/gtkgui/search.py:621
+#: pynicotine/gtkgui/search.py:617
 #, fuzzy
 msgid "Copy Search Term"
 msgstr "Copiați termenul de căutare"
 
-#: pynicotine/gtkgui/search.py:623
+#: pynicotine/gtkgui/search.py:619
 #, fuzzy
 msgid "Clear All Results"
 msgstr "Ștergeți toate rezultatele"
 
-#: pynicotine/gtkgui/search.py:701
+#: pynicotine/gtkgui/search.py:697
 #, fuzzy
 msgid "Clear Filters"
 msgstr "Ștergeți filtrele"
 
-#: pynicotine/gtkgui/search.py:704
+#: pynicotine/gtkgui/search.py:700
 #, fuzzy
 msgid "Restore Filters"
 msgstr "Restaurați filtrele"
 
-#: pynicotine/gtkgui/search.py:831 pynicotine/gtkgui/userbrowse.py:529
+#: pynicotine/gtkgui/search.py:827 pynicotine/gtkgui/userbrowse.py:529
 #, fuzzy, python-format
 msgid "[PRIVATE]  %s"
 msgstr "[PRIVAT] %s"
 
-#: pynicotine/gtkgui/search.py:1266
+#: pynicotine/gtkgui/search.py:1262
 #, fuzzy, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Filtre de rezultate [%d]"
 
-#: pynicotine/gtkgui/search.py:1268 pynicotine/gtkgui/ui/search.ui:181
+#: pynicotine/gtkgui/search.py:1264 pynicotine/gtkgui/ui/search.ui:181
 #, fuzzy
 msgid "_Result Filters"
 msgstr "_Filtre de rezultate"
 
-#: pynicotine/gtkgui/search.py:1270
+#: pynicotine/gtkgui/search.py:1266
 #, fuzzy, python-format
 msgid "%d active filter(s)"
 msgstr "%d filtru(i) activ(e)"
 
-#: pynicotine/gtkgui/search.py:1318
+#: pynicotine/gtkgui/search.py:1314
 #, fuzzy
 msgid "Add Wi_sh"
 msgstr "Adăugați Wi_sh"
 
-#: pynicotine/gtkgui/search.py:1321
+#: pynicotine/gtkgui/search.py:1317
 #, fuzzy
 msgid "Remove Wi_sh"
 msgstr "Eliminați Wi_sh"
 
-#: pynicotine/gtkgui/search.py:1338
+#: pynicotine/gtkgui/search.py:1334
 #, fuzzy
 msgid "Select User's Results"
 msgstr "Selectați Rezultatele utilizatorului"
 
-#: pynicotine/gtkgui/search.py:1461
+#: pynicotine/gtkgui/search.py:1457
 #, fuzzy, python-format
 msgid "Total: %s"
 msgstr "Total: %s"
 
-#: pynicotine/gtkgui/search.py:1464 pynicotine/gtkgui/ui/search.ui:105
+#: pynicotine/gtkgui/search.py:1460 pynicotine/gtkgui/ui/search.ui:105
 #, fuzzy
 msgid "Results"
 msgstr "Rezultate"
 
-#: pynicotine/gtkgui/search.py:1579
+#: pynicotine/gtkgui/search.py:1569
 #, fuzzy
 msgid "Select Destination Folder for File(s)"
 msgstr "Selectați folderul de destinație pentru fișiere"
 
-#: pynicotine/gtkgui/search.py:1622 pynicotine/gtkgui/userbrowse.py:905
+#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:900
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Selectați Dosarul de destinație"
 
-#: pynicotine/gtkgui/transfers.py:58
+#: pynicotine/gtkgui/transfers.py:60
 #, fuzzy
 msgid "Queued"
 msgstr "În așteptare"
 
-#: pynicotine/gtkgui/transfers.py:59
+#: pynicotine/gtkgui/transfers.py:61
 #, fuzzy
 msgid "Queued (prioritized)"
 msgstr "În coadă (cu prioritate)"
 
-#: pynicotine/gtkgui/transfers.py:60
+#: pynicotine/gtkgui/transfers.py:62
 #, fuzzy
 msgid "Queued (privileged)"
 msgstr "În coadă (privilegiat)"
 
-#: pynicotine/gtkgui/transfers.py:61
+#: pynicotine/gtkgui/transfers.py:63
 #, fuzzy
 msgid "Getting status"
 msgstr "Obținerea statutului"
 
-#: pynicotine/gtkgui/transfers.py:62
+#: pynicotine/gtkgui/transfers.py:64
 #, fuzzy
 msgid "Transferring"
 msgstr "Transfer"
 
-#: pynicotine/gtkgui/transfers.py:63
+#: pynicotine/gtkgui/transfers.py:65
 #, fuzzy
 msgid "Connection closed"
 msgstr "Conexiuni"
 
-#: pynicotine/gtkgui/transfers.py:64
+#: pynicotine/gtkgui/transfers.py:66
 #, fuzzy
 msgid "Connection timeout"
 msgstr "Timeout conexiune"
 
-#: pynicotine/gtkgui/transfers.py:65
+#: pynicotine/gtkgui/transfers.py:67
 #, fuzzy
 msgid "User logged off"
 msgstr "Utilizatorul sa deconectat"
 
-#: pynicotine/gtkgui/transfers.py:67 pynicotine/gtkgui/uploads.py:75
+#: pynicotine/gtkgui/transfers.py:69 pynicotine/gtkgui/uploads.py:75
 #, fuzzy
 msgid "Cancelled"
 msgstr "Anulat"
 
-#: pynicotine/gtkgui/transfers.py:70
+#: pynicotine/gtkgui/transfers.py:72
 #, fuzzy
 msgid "Download folder error"
 msgstr "Eroare de descărcare a folderului"
 
-#: pynicotine/gtkgui/transfers.py:71
+#: pynicotine/gtkgui/transfers.py:73
 #, fuzzy
 msgid "Local file error"
 msgstr "Eroare de fișier local"
 
-#: pynicotine/gtkgui/transfers.py:72
+#: pynicotine/gtkgui/transfers.py:74
 #, fuzzy
 msgid "Banned"
 msgstr "Interzis"
 
-#: pynicotine/gtkgui/transfers.py:73
+#: pynicotine/gtkgui/transfers.py:75
 #, fuzzy
 msgid "File not shared"
 msgstr "Fișierul nu a fost partajat"
 
-#: pynicotine/gtkgui/transfers.py:74
+#: pynicotine/gtkgui/transfers.py:76
 #, fuzzy
 msgid "Pending shutdown"
 msgstr "Închidere în așteptare"
 
-#: pynicotine/gtkgui/transfers.py:75
+#: pynicotine/gtkgui/transfers.py:77
 #, fuzzy
 msgid "File read error"
 msgstr "Transferuri de fișiere"
 
-#: pynicotine/gtkgui/transfers.py:151
+#: pynicotine/gtkgui/transfers.py:154
 #, fuzzy
 msgid "Queue"
 msgstr "Coadă"
 
-#: pynicotine/gtkgui/transfers.py:157
+#: pynicotine/gtkgui/transfers.py:160
 #, fuzzy
 msgid "Percent"
 msgstr "La sută"
 
-#: pynicotine/gtkgui/transfers.py:174
+#: pynicotine/gtkgui/transfers.py:177
 #, fuzzy
 msgid "Time Elapsed"
 msgstr "Timpul scurs"
 
-#: pynicotine/gtkgui/transfers.py:180
+#: pynicotine/gtkgui/transfers.py:183
 #, fuzzy
 msgid "Time Left"
 msgstr "Timp rămas"
 
-#: pynicotine/gtkgui/transfers.py:231 pynicotine/gtkgui/userbrowse.py:363
+#: pynicotine/gtkgui/transfers.py:234 pynicotine/gtkgui/userbrowse.py:363
 #, fuzzy
 msgid "_Open File"
 msgstr "_Deschide lista"
 
-#: pynicotine/gtkgui/transfers.py:232 pynicotine/gtkgui/userbrowse.py:286
+#: pynicotine/gtkgui/transfers.py:235 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/userbrowse.py:364
 #, fuzzy
 msgid "Open in File _Manager"
 msgstr "Deschideți în File _Manager"
 
-#: pynicotine/gtkgui/transfers.py:237
+#: pynicotine/gtkgui/transfers.py:240
 #, fuzzy
 msgid "_Clear"
 msgstr "_Clar"
 
-#: pynicotine/gtkgui/transfers.py:241
+#: pynicotine/gtkgui/transfers.py:244
 #, fuzzy
 msgid "_Search"
 msgstr "_Căutare"
 
-#: pynicotine/gtkgui/transfers.py:244
+#: pynicotine/gtkgui/transfers.py:247
 #, fuzzy
 msgid "Clear All"
 msgstr "Curata tot"
 
-#: pynicotine/gtkgui/transfers.py:820
+#: pynicotine/gtkgui/transfers.py:848
 #, fuzzy
 msgid "Select User's Transfers"
 msgstr "Selectați Transferuri utilizator"
@@ -2428,22 +2424,22 @@ msgstr "A eșuat"
 msgid "User Logged Off"
 msgstr "Utilizator deconectat"
 
-#: pynicotine/gtkgui/uploads.py:120
+#: pynicotine/gtkgui/uploads.py:126
 #, fuzzy
 msgid "Clear Queued Uploads"
 msgstr "Ștergeți Încărcările în coadă"
 
-#: pynicotine/gtkgui/uploads.py:121
+#: pynicotine/gtkgui/uploads.py:127
 #, fuzzy
 msgid "Do you really want to clear all queued uploads?"
 msgstr "Chiar doriți să ștergeți toate încărcările din coadă?"
 
-#: pynicotine/gtkgui/uploads.py:133
+#: pynicotine/gtkgui/uploads.py:139
 #, fuzzy
 msgid "Clear All Uploads"
 msgstr "Ștergeți toate încărcările"
 
-#: pynicotine/gtkgui/uploads.py:134
+#: pynicotine/gtkgui/uploads.py:140
 #, fuzzy
 msgid "Do you really want to clear all uploads?"
 msgstr "Chiar doriți să ștergeți toate încărcările?"
@@ -2498,7 +2494,7 @@ msgstr "_Descărcați folderul"
 msgid "Download Folder _To…"
 msgstr "Descărcați folderul _Pentru…"
 
-#: pynicotine/gtkgui/userbrowse.py:585
+#: pynicotine/gtkgui/userbrowse.py:580
 #, fuzzy
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
@@ -2507,7 +2503,7 @@ msgstr ""
 "Lista utilizatorului de fișiere partajate este goală. Fie utilizatorul nu "
 "partajează nimic, fie partajează fișiere în mod privat."
 
-#: pynicotine/gtkgui/userbrowse.py:600
+#: pynicotine/gtkgui/userbrowse.py:595
 #, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, the "
@@ -2518,57 +2514,57 @@ msgstr ""
 "offline, fie porturile de ascultare sunt închise pe ambele părți, fie există "
 "o problemă temporară de conectivitate."
 
-#: pynicotine/gtkgui/userbrowse.py:903
+#: pynicotine/gtkgui/userbrowse.py:898
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Selectați Destinație pentru descărcarea mai multor foldere"
 
-#: pynicotine/gtkgui/userbrowse.py:947
+#: pynicotine/gtkgui/userbrowse.py:942
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Încărcați folderul (cu subdosare) către utilizator"
 
-#: pynicotine/gtkgui/userbrowse.py:949
+#: pynicotine/gtkgui/userbrowse.py:944
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Încărcați dosarul la utilizator"
 
-#: pynicotine/gtkgui/userbrowse.py:954 pynicotine/gtkgui/userbrowse.py:1143
+#: pynicotine/gtkgui/userbrowse.py:949 pynicotine/gtkgui/userbrowse.py:1138
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Introduceți numele utilizatorului în care doriți să încărcați:"
 
-#: pynicotine/gtkgui/userbrowse.py:955 pynicotine/gtkgui/userbrowse.py:1144
+#: pynicotine/gtkgui/userbrowse.py:950 pynicotine/gtkgui/userbrowse.py:1139
 #, fuzzy
 msgid "_Upload"
 msgstr "Încărcări"
 
-#: pynicotine/gtkgui/userbrowse.py:1120
+#: pynicotine/gtkgui/userbrowse.py:1115
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Selectați folderul de destinație pentru fișiere"
 
-#: pynicotine/gtkgui/userbrowse.py:1142
+#: pynicotine/gtkgui/userbrowse.py:1137
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Încărcați fișierele la utilizator"
 
-#: pynicotine/gtkgui/userinfo.py:352
+#: pynicotine/gtkgui/userinfo.py:359
 #, fuzzy
 msgid "Copy Picture"
 msgstr "Copiați imaginea"
 
-#: pynicotine/gtkgui/userinfo.py:353
+#: pynicotine/gtkgui/userinfo.py:360
 #, fuzzy
 msgid "Save Picture"
 msgstr "Salvează poza"
 
-#: pynicotine/gtkgui/userinfo.py:442
+#: pynicotine/gtkgui/userinfo.py:449
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Nu s-a putut încărca imaginea pentru utilizatorul %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:457
+#: pynicotine/gtkgui/userinfo.py:464
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -2579,35 +2575,62 @@ msgstr ""
 "ascultare închis, utilizatorul este offline, fie există o problemă temporară "
 "de conectivitate."
 
-#: pynicotine/gtkgui/userinfo.py:518
+#: pynicotine/gtkgui/userinfo.py:525
 #, fuzzy
 msgid "Remove _Buddy"
 msgstr "Eliminați _Buddy"
 
-#: pynicotine/gtkgui/userinfo.py:518
+#: pynicotine/gtkgui/userinfo.py:525
 #, fuzzy
 msgid "Add _Buddy"
 msgstr "Adauga prieten"
 
-#: pynicotine/gtkgui/userinfo.py:522
+#: pynicotine/gtkgui/userinfo.py:529
 #, fuzzy
 msgid "Unban User"
 msgstr "Anulează utilizatorul"
 
-#: pynicotine/gtkgui/userinfo.py:526
+#: pynicotine/gtkgui/userinfo.py:533
 #, fuzzy
 msgid "Unignore User"
 msgstr "Anulați ignorarea utilizatorului"
 
-#: pynicotine/gtkgui/userinfo.py:549
+#: pynicotine/gtkgui/userinfo.py:560
 #, fuzzy
 msgid "Yes"
 msgstr "da"
 
-#: pynicotine/gtkgui/userinfo.py:549
+#: pynicotine/gtkgui/userinfo.py:560
 #, fuzzy
 msgid "No"
 msgstr "Nu"
+
+#: pynicotine/gtkgui/userinfo.py:694
+#, fuzzy
+msgid "Please enter number of days."
+msgstr "Vă rugăm să introduceți numărul de zile."
+
+#: pynicotine/gtkgui/userinfo.py:708
+#, fuzzy, python-format
+msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
+msgstr ""
+"Dăruiește zilele privilegiilor tale Soulseek utilizatorului %(user)s "
+"(%(days_left)s):"
+
+#: pynicotine/gtkgui/userinfo.py:709
+#, fuzzy, python-format
+msgid "%(days)s days left"
+msgstr "Au mai rămas %(days)s zile"
+
+#: pynicotine/gtkgui/userinfo.py:716
+#, fuzzy
+msgid "Gift Privileges"
+msgstr "Privilegii cadou"
+
+#: pynicotine/gtkgui/userinfo.py:718
+#, fuzzy
+msgid "_Give Privileges"
+msgstr "Privilegii cadou"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:274
 #, fuzzy
@@ -2650,158 +2673,130 @@ msgstr "Salvează ca…"
 msgid "(None)"
 msgstr "(Nici unul)"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:117
+#: pynicotine/gtkgui/widgets/iconnotebook.py:118
 #, fuzzy
 msgid "Close Tab"
 msgstr "Închideți fila"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:423
+#: pynicotine/gtkgui/widgets/iconnotebook.py:428
 #, fuzzy
 msgid "Close All Tabs?"
 msgstr "Inchide toate filele?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:424
+#: pynicotine/gtkgui/widgets/iconnotebook.py:429
 #, fuzzy
 msgid "Do you really want to close all tabs?"
 msgstr "Chiar vrei să închizi toate filele?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:448
+#: pynicotine/gtkgui/widgets/iconnotebook.py:453
 #, fuzzy, python-format
 msgid "%i Unread Tab(s)"
 msgstr "File necitite"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:451
+#: pynicotine/gtkgui/widgets/iconnotebook.py:456
 #, fuzzy
 msgid "All Tabs"
 msgstr "Toate filele"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:702
-#: pynicotine/gtkgui/widgets/iconnotebook.py:707
+#: pynicotine/gtkgui/widgets/iconnotebook.py:711
+#: pynicotine/gtkgui/widgets/iconnotebook.py:716
 #, fuzzy
 msgid "Re_open Closed Tab"
 msgstr "_Închideți fila"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:339
+#: pynicotine/gtkgui/widgets/popupmenu.py:338
 #, fuzzy, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Fișier(e) selectat(e)."
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:373
+#: pynicotine/gtkgui/widgets/popupmenu.py:375
 #: pynicotine/gtkgui/ui/userinfo.ui:512
 #, fuzzy
 msgid "_Browse Files"
 msgstr "_Cauta fisiere"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:376
-#: pynicotine/gtkgui/widgets/popupmenu.py:417
+#: pynicotine/gtkgui/widgets/popupmenu.py:378
+#: pynicotine/gtkgui/widgets/popupmenu.py:422
 #, fuzzy
 msgid "_Add Buddy"
 msgstr "_Adauga prieten"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:379
-#: pynicotine/gtkgui/widgets/popupmenu.py:414
-#, fuzzy
-msgid "_Gift Privileges…"
-msgstr "_Privilegii cadou…"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:386
+#: pynicotine/gtkgui/widgets/popupmenu.py:387
 #: pynicotine/gtkgui/ui/userinfo.ui:639
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Afișați adresa IP"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:452
+#: pynicotine/gtkgui/widgets/popupmenu.py:389
+#: pynicotine/gtkgui/widgets/popupmenu.py:441
+msgid "Private Rooms"
+msgstr "Camere private"
+
+#: pynicotine/gtkgui/widgets/popupmenu.py:458
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Eliminați din camera privată %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:454
+#: pynicotine/gtkgui/widgets/popupmenu.py:461
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Adăugați în camera privată %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:461
+#: pynicotine/gtkgui/widgets/popupmenu.py:468
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Eliminați ca operator al %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:463
+#: pynicotine/gtkgui/widgets/popupmenu.py:472
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Adăugați ca operator pentru %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:585
-#, fuzzy
-msgid "Please enter number of days."
-msgstr "Vă rugăm să introduceți numărul de zile."
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:596
-#, fuzzy, python-format
-msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
-msgstr ""
-"Dăruiește zilele privilegiilor tale Soulseek utilizatorului %(user)s "
-"(%(days_left)s):"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:597
-#, fuzzy, python-format
-msgid "%(days)s days left"
-msgstr "Au mai rămas %(days)s zile"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:604
-#, fuzzy
-msgid "Gift Privileges"
-msgstr "Privilegii cadou"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:606
-#, fuzzy
-msgid "_Give Privileges"
-msgstr "Privilegii cadou"
-
-#: pynicotine/gtkgui/widgets/textview.py:459
+#: pynicotine/gtkgui/widgets/textview.py:452
 msgid "--- old messages above ---"
 msgstr "--- mesaje vechi mai sus ---"
 
-#: pynicotine/gtkgui/widgets/theme.py:201
+#: pynicotine/gtkgui/widgets/theme.py:205
 #, fuzzy
 msgid "Executable"
 msgstr "Executabil"
 
-#: pynicotine/gtkgui/widgets/theme.py:202
+#: pynicotine/gtkgui/widgets/theme.py:206
 #, fuzzy
 msgid "Audio"
 msgstr "Audio"
 
-#: pynicotine/gtkgui/widgets/theme.py:203
+#: pynicotine/gtkgui/widgets/theme.py:207
 #, fuzzy
 msgid "Image"
 msgstr "Imagine"
 
-#: pynicotine/gtkgui/widgets/theme.py:204
+#: pynicotine/gtkgui/widgets/theme.py:208
 #, fuzzy
 msgid "Archive"
 msgstr "Arhiva"
 
-#: pynicotine/gtkgui/widgets/theme.py:205 pynicotine/pluginsystem.py:794
+#: pynicotine/gtkgui/widgets/theme.py:209 pynicotine/pluginsystem.py:794
 #: pynicotine/gtkgui/ui/settings/network.ui:254
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "Diverse"
 
-#: pynicotine/gtkgui/widgets/theme.py:206
+#: pynicotine/gtkgui/widgets/theme.py:210
 #, fuzzy
 msgid "Video"
 msgstr "Video"
 
-#: pynicotine/gtkgui/widgets/theme.py:207
+#: pynicotine/gtkgui/widgets/theme.py:211
 #, fuzzy
 msgid "Document"
 msgstr "Document/Text"
 
-#: pynicotine/gtkgui/widgets/theme.py:208
+#: pynicotine/gtkgui/widgets/theme.py:212
 msgid "Text"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/theme.py:317
+#: pynicotine/gtkgui/widgets/theme.py:321
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Eroare la încărcarea pictogramei personalizate %(path)s: %(error)s"
@@ -2816,22 +2811,22 @@ msgstr "Ascunde Nicotina+"
 msgid "Show Nicotine+"
 msgstr "Arată Nicotina+"
 
-#: pynicotine/gtkgui/widgets/treeview.py:742
+#: pynicotine/gtkgui/widgets/treeview.py:741
 #, fuzzy, python-format
 msgid "Column #%i"
 msgstr "Coloana #%i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:892
+#: pynicotine/gtkgui/widgets/treeview.py:891
 #, fuzzy
 msgid "Ungrouped"
 msgstr "Negrupat"
 
-#: pynicotine/gtkgui/widgets/treeview.py:895
+#: pynicotine/gtkgui/widgets/treeview.py:894
 #, fuzzy
 msgid "Group by Folder"
 msgstr "Grupați după folder"
 
-#: pynicotine/gtkgui/widgets/treeview.py:898
+#: pynicotine/gtkgui/widgets/treeview.py:897
 #, fuzzy
 msgid "Group by User"
 msgstr "Grupați după utilizator"
@@ -2881,12 +2876,12 @@ msgstr ""
 msgid "Retry rescan? %s"
 msgstr ""
 
-#: pynicotine/logfacility.py:169
+#: pynicotine/logfacility.py:174
 #, fuzzy, python-format
 msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr "Nu s-a putut scrie în fișierul jurnal „%(filename)s”: %(error)s"
 
-#: pynicotine/logfacility.py:227
+#: pynicotine/logfacility.py:233 pynicotine/logfacility.py:259
 #, fuzzy, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
 msgstr "Nu se poate accesa fișierul jurnal %(path)s: %(error)s"
@@ -4215,249 +4210,249 @@ msgstr ""
 "ListenBrainz: Nu s-a putut obține melodia curentă de la ListenBrainz: "
 "%(error)s"
 
-#: pynicotine/plugins/core_commands/__init__.py:30
+#: pynicotine/plugins/core_commands/__init__.py:28
 #, fuzzy
 msgid "Network Filters"
 msgstr "Filtre de rețea"
 
-#: pynicotine/plugins/core_commands/__init__.py:46
+#: pynicotine/plugins/core_commands/__init__.py:44
 #, fuzzy
 msgid "List available commands"
 msgstr "Listează comenzile disponibile"
 
-#: pynicotine/plugins/core_commands/__init__.py:51
+#: pynicotine/plugins/core_commands/__init__.py:49
 #, fuzzy
 msgid "Connect to the server"
 msgstr "Nu s-a putut conecta la server. Motiv: %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:55
+#: pynicotine/plugins/core_commands/__init__.py:53
 #, fuzzy
 msgid "Disconnect from the server"
 msgstr "Deconectat de la server %(host)s:%(port)s"
 
-#: pynicotine/plugins/core_commands/__init__.py:60
+#: pynicotine/plugins/core_commands/__init__.py:58
 #, fuzzy
 msgid "Toggle away status"
 msgstr "Dezactivați starea"
 
-#: pynicotine/plugins/core_commands/__init__.py:64
+#: pynicotine/plugins/core_commands/__init__.py:62
 #, fuzzy
 msgid "Manage plugins"
 msgstr "Gestionați pluginurile"
 
-#: pynicotine/plugins/core_commands/__init__.py:76
+#: pynicotine/plugins/core_commands/__init__.py:74
 #, fuzzy
 msgid "Clear chat window"
 msgstr "Ștergeți fereastra de chat"
 
-#: pynicotine/plugins/core_commands/__init__.py:82
+#: pynicotine/plugins/core_commands/__init__.py:80
 #, fuzzy
 msgid "Say something in the third-person"
 msgstr "Spune ceva la persoana a treia"
 
-#: pynicotine/plugins/core_commands/__init__.py:89
+#: pynicotine/plugins/core_commands/__init__.py:87
 #, fuzzy
 msgid "Announce the song currently playing"
 msgstr "Anunțați melodia care se redă în prezent"
 
-#: pynicotine/plugins/core_commands/__init__.py:96
+#: pynicotine/plugins/core_commands/__init__.py:94
 #, fuzzy
 msgid "Join chat room"
 msgstr "Alăturați-vă camerei de chat"
 
-#: pynicotine/plugins/core_commands/__init__.py:104
+#: pynicotine/plugins/core_commands/__init__.py:102
 #, fuzzy
 msgid "Leave chat room"
 msgstr "Părăsiți camera de chat"
 
-#: pynicotine/plugins/core_commands/__init__.py:112
+#: pynicotine/plugins/core_commands/__init__.py:110
 #, fuzzy
 msgid "Say message in specified chat room"
 msgstr "Spuneți mesajul în camera de chat specificată"
 
-#: pynicotine/plugins/core_commands/__init__.py:119
+#: pynicotine/plugins/core_commands/__init__.py:117
 #, fuzzy
 msgid "Open private chat"
 msgstr "Deschide chatul privat"
 
-#: pynicotine/plugins/core_commands/__init__.py:127
+#: pynicotine/plugins/core_commands/__init__.py:125
 #, fuzzy
 msgid "Close private chat"
 msgstr "Închide chatul privat"
 
-#: pynicotine/plugins/core_commands/__init__.py:135
+#: pynicotine/plugins/core_commands/__init__.py:133
 #, fuzzy
 msgid "Request user's client version"
 msgstr "Solicitați versiunea client a utilizatorului"
 
-#: pynicotine/plugins/core_commands/__init__.py:144
+#: pynicotine/plugins/core_commands/__init__.py:142
 #, fuzzy
 msgid "Send private message to user"
 msgstr "Trimiteți mesaj privat utilizatorului"
 
-#: pynicotine/plugins/core_commands/__init__.py:152
+#: pynicotine/plugins/core_commands/__init__.py:150
 #, fuzzy
 msgid "Add user to buddy list"
 msgstr "Adăugați un utilizator la lista de prieteni"
 
-#: pynicotine/plugins/core_commands/__init__.py:160
+#: pynicotine/plugins/core_commands/__init__.py:158
 #, fuzzy
 msgid "Remove buddy from buddy list"
 msgstr "Eliminați prietenul din lista de prieteni"
 
-#: pynicotine/plugins/core_commands/__init__.py:168
+#: pynicotine/plugins/core_commands/__init__.py:166
 #, fuzzy
 msgid "Browse files of user"
 msgstr "Răsfoiți fișierele utilizatorului"
 
-#: pynicotine/plugins/core_commands/__init__.py:177
+#: pynicotine/plugins/core_commands/__init__.py:175
 #, fuzzy
 msgid "Show user profile information"
 msgstr "Afișați informațiile despre profilul utilizatorului"
 
-#: pynicotine/plugins/core_commands/__init__.py:185
+#: pynicotine/plugins/core_commands/__init__.py:183
 #, fuzzy
 msgid "Show IP address or username"
 msgstr "Afișați adresa IP sau numele de utilizator"
 
-#: pynicotine/plugins/core_commands/__init__.py:192
+#: pynicotine/plugins/core_commands/__init__.py:190
 #, fuzzy
 msgid "Block connections from user or IP address"
 msgstr "Blocați conexiunile de la utilizator sau adresa IP"
 
-#: pynicotine/plugins/core_commands/__init__.py:199
+#: pynicotine/plugins/core_commands/__init__.py:197
 #, fuzzy
 msgid "Remove user or IP address from ban lists"
 msgstr "Eliminați utilizatorul sau adresa IP din listele de interdicție"
 
-#: pynicotine/plugins/core_commands/__init__.py:206
+#: pynicotine/plugins/core_commands/__init__.py:204
 #, fuzzy
 msgid "Silence messages from user or IP address"
 msgstr "Opriți mesajele de la utilizator sau adresa IP"
 
-#: pynicotine/plugins/core_commands/__init__.py:214
+#: pynicotine/plugins/core_commands/__init__.py:212
 #, fuzzy
 msgid "Remove user or IP address from ignore lists"
 msgstr "Eliminați utilizatorul sau adresa IP din listele de ignorare"
 
-#: pynicotine/plugins/core_commands/__init__.py:222
+#: pynicotine/plugins/core_commands/__init__.py:220
 #, fuzzy
 msgid "Add share"
 msgstr "Adăugați Wi_sh"
 
-#: pynicotine/plugins/core_commands/__init__.py:228
+#: pynicotine/plugins/core_commands/__init__.py:226
 #, fuzzy
 msgid "Remove share"
 msgstr "Eliminați Wi_sh"
 
-#: pynicotine/plugins/core_commands/__init__.py:235
+#: pynicotine/plugins/core_commands/__init__.py:233
 #, fuzzy
 msgid "List shares"
 msgstr "Listează cotele"
 
-#: pynicotine/plugins/core_commands/__init__.py:241
+#: pynicotine/plugins/core_commands/__init__.py:239
 #, fuzzy
 msgid "Rescan shares"
 msgstr "Rescanați acțiunile"
 
-#: pynicotine/plugins/core_commands/__init__.py:248
+#: pynicotine/plugins/core_commands/__init__.py:246
 #, fuzzy
 msgid "Start global file search"
 msgstr "Începeți căutarea globală de fișiere"
 
-#: pynicotine/plugins/core_commands/__init__.py:256
+#: pynicotine/plugins/core_commands/__init__.py:254
 #, fuzzy
 msgid "Search files in joined rooms"
 msgstr "Căutați fișiere în sălile unite"
 
-#: pynicotine/plugins/core_commands/__init__.py:264
+#: pynicotine/plugins/core_commands/__init__.py:262
 #, fuzzy
 msgid "Search files of all buddies"
 msgstr "Căutați fișierele tuturor prietenilor"
 
-#: pynicotine/plugins/core_commands/__init__.py:272
+#: pynicotine/plugins/core_commands/__init__.py:270
 #, fuzzy
 msgid "Search a user's shared files"
 msgstr "Căutați fișierele partajate ale unui utilizator"
 
-#: pynicotine/plugins/core_commands/__init__.py:298
+#: pynicotine/plugins/core_commands/__init__.py:296
 #, fuzzy, python-format
 msgid "Listing %(num)i available commands:"
 msgstr "Listarea comenzilor disponibile %(num)i:"
 
-#: pynicotine/plugins/core_commands/__init__.py:300
+#: pynicotine/plugins/core_commands/__init__.py:298
 #, fuzzy, python-format
 msgid "Listing %(num)i available commands matching \"%(query)s\":"
 msgstr ""
 "Listarea comenzilor disponibile %(num)i care se potrivesc cu „%(query)s”:"
 
-#: pynicotine/plugins/core_commands/__init__.py:313
+#: pynicotine/plugins/core_commands/__init__.py:311
 #, fuzzy, python-format
 msgid "Type %(command)s to list similar commands"
 msgstr "Tastați %(command)s pentru a lista comenzi similare"
 
-#: pynicotine/plugins/core_commands/__init__.py:316
+#: pynicotine/plugins/core_commands/__init__.py:314
 #, fuzzy, python-format
 msgid "Type %(command)s to list available commands"
 msgstr "Tastați %(command)s pentru a lista comenzile disponibile"
 
-#: pynicotine/plugins/core_commands/__init__.py:373
-#: pynicotine/plugins/core_commands/__init__.py:385
+#: pynicotine/plugins/core_commands/__init__.py:371
+#: pynicotine/plugins/core_commands/__init__.py:383
 #, fuzzy, python-format
 msgid "Not joined in room %s"
 msgstr "Nu a fost alăturat în cameră %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:402
+#: pynicotine/plugins/core_commands/__init__.py:400
 #, python-format
 msgid "Not messaging with user %s"
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:406
+#: pynicotine/plugins/core_commands/__init__.py:404
 #, fuzzy, python-format
 msgid "Closed private chat of user %s"
 msgstr "Închide chatul privat"
 
-#: pynicotine/plugins/core_commands/__init__.py:477
+#: pynicotine/plugins/core_commands/__init__.py:475
 #, fuzzy, python-format
 msgid "Banned %s"
 msgstr "Banat %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:491
+#: pynicotine/plugins/core_commands/__init__.py:489
 #, fuzzy, python-format
 msgid "Unbanned %s"
 msgstr "Neinterzis %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:504
+#: pynicotine/plugins/core_commands/__init__.py:502
 #, fuzzy, python-format
 msgid "Ignored %s"
 msgstr "Ignorat %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:518
+#: pynicotine/plugins/core_commands/__init__.py:516
 #, fuzzy, python-format
 msgid "Unignored %s"
 msgstr "Neignorat %s"
 
-#: pynicotine/plugins/core_commands/__init__.py:554
+#: pynicotine/plugins/core_commands/__init__.py:552
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:566
+#: pynicotine/plugins/core_commands/__init__.py:564
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:569
+#: pynicotine/plugins/core_commands/__init__.py:567
 #, python-format
 msgid "Added %(group_name)s share \"%(virtual_name)s\" (rescan required)"
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:580
+#: pynicotine/plugins/core_commands/__init__.py:578
 #, python-format
 msgid "No share with name \"%s\""
 msgstr ""
 
-#: pynicotine/plugins/core_commands/__init__.py:583
+#: pynicotine/plugins/core_commands/__init__.py:581
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
 msgstr ""
@@ -4547,19 +4542,19 @@ msgstr ""
 "Comanda necunoscută: %(command)s. Tastați %(help_command)s pentru a lista "
 "comenzile disponibile."
 
-#: pynicotine/portmapper.py:463
+#: pynicotine/portmapper.py:463 pynicotine/portmapper.py:578
 #, fuzzy
 msgid "No UPnP devices found"
 msgstr "Nu s-au găsit dispozitive UPnP"
 
-#: pynicotine/portmapper.py:574
+#: pynicotine/portmapper.py:572
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
 "%(protocol)s: Nu s-a redirecționat portul extern %(external_port)s: %(error)s"
 
-#: pynicotine/portmapper.py:587
+#: pynicotine/portmapper.py:586
 #, fuzzy, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
@@ -4568,49 +4563,42 @@ msgstr ""
 "%(protocol)s: Portul extern %(external_port)s a fost redirecționat cu succes "
 "către adresa IP locală %(ip_address)s portul %(local_port)s"
 
-#: pynicotine/privatechat.py:217
+#: pynicotine/privatechat.py:216
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Mesaj privat de la utilizatorul „%(user)s”: %(message)s"
 
-#: pynicotine/search.py:325
+#: pynicotine/search.py:321
 #, fuzzy, python-format
 msgid "Searching for wishlist item \"%s\""
 msgstr "Se caută articolul din lista de dorințe „%s”"
 
-#: pynicotine/search.py:389
+#: pynicotine/search.py:385
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "Perioada de așteptare a listei de dorințe setată la %s secunde"
 
-#: pynicotine/search.py:454 pynicotine/slskmessages.py:2966
-#, fuzzy, python-format
-msgid "Unable to read shares database. Please rescan your shares. Error: %s"
-msgstr ""
-"Imposibil de citit baza de date cu acțiuni. Vă rugăm să scanați din nou "
-"acțiunile dvs. Eroare: %s"
-
-#: pynicotine/search.py:674
+#: pynicotine/search.py:704
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Utilizatorul %(user)s caută „%(query)s”, a găsit rezultate %(num)i."
 
-#: pynicotine/shares.py:274
+#: pynicotine/shares.py:275
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Refacerea acțiunilor…"
 
-#: pynicotine/shares.py:274
+#: pynicotine/shares.py:275
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Se rescanează acțiunile…"
 
-#: pynicotine/shares.py:292
+#: pynicotine/shares.py:293
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Rescanare finalizată: dosare %(num)s găsite"
 
-#: pynicotine/shares.py:301
+#: pynicotine/shares.py:302
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4622,22 +4610,22 @@ msgstr ""
 "ajută, vă rugăm să trimiteți un raport de eroare cu această urmărire a "
 "stivei inclusă: %(trace)s"
 
-#: pynicotine/shares.py:414
+#: pynicotine/shares.py:413
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nu se poate salva %(filename)s: %(error)s"
 
-#: pynicotine/shares.py:563
+#: pynicotine/shares.py:558
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Eroare la scanarea fișierului %(path)s: %(error)s"
 
-#: pynicotine/shares.py:567
+#: pynicotine/shares.py:562
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Eroare la scanarea folderului %(path)s: %(error)s"
 
-#: pynicotine/shares.py:600
+#: pynicotine/shares.py:595
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Eroare la scanarea metadatelor pentru fișierul %(path)s: %(error)s"
@@ -4647,22 +4635,29 @@ msgstr "Eroare la scanarea metadatelor pentru fișierul %(path)s: %(error)s"
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Rescanarea a fost anulată din cauza partajărilor indisponibile: %s"
 
-#: pynicotine/shares.py:1124
+#: pynicotine/shares.py:1127
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Utilizatorul %(user)s răsfoiește lista dvs. de fișiere partajate"
 
-#: pynicotine/shares.py:1161
+#: pynicotine/shares.py:1164
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nu s-a putut prelua folderul partajat %(folder)s: %(error)s"
 
-#: pynicotine/slskproto.py:472
+#: pynicotine/slskmessages.py:2987
+#, fuzzy, python-format
+msgid "Unable to read shares database. Please rescan your shares. Error: %s"
+msgstr ""
+"Imposibil de citit baza de date cu acțiuni. Vă rugăm să scanați din nou "
+"acțiunile dvs. Eroare: %s"
+
+#: pynicotine/slskproto.py:487
 #, fuzzy, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "Interfața de rețea specificată „%s” nu este disponibilă"
 
-#: pynicotine/slskproto.py:483
+#: pynicotine/slskproto.py:498
 #, fuzzy, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -4671,58 +4666,58 @@ msgstr ""
 "Nu se poate asculta pe portul %(port)s. Asigurați-vă că nicio altă aplicație "
 "nu îl folosește sau alegeți un alt port. Eroare: %(error)s"
 
-#: pynicotine/slskproto.py:495
+#: pynicotine/slskproto.py:510
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "Ascultare pe portul: %i"
 
-#: pynicotine/slskproto.py:799
+#: pynicotine/slskproto.py:814
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nu se poate conecta la server %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:1111
+#: pynicotine/slskproto.py:1128
 #, fuzzy, python-format
 msgid "Reconnecting to server in %i seconds"
 msgstr "Conectare automată la server la pornire"
 
-#: pynicotine/slskproto.py:1184
+#: pynicotine/slskproto.py:1201
 #, fuzzy, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Conectarea la %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1223
+#: pynicotine/slskproto.py:1240
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Conectat la server %(host)s:%(port)s, conectare…"
 
-#: pynicotine/slskproto.py:1501
+#: pynicotine/slskproto.py:1519
 #, fuzzy, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Deconectat de la server %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1507
+#: pynicotine/slskproto.py:1525
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Cineva sa conectat la contul tău Soulseek în altă parte"
 
-#: pynicotine/uploads.py:386
+#: pynicotine/uploads.py:388
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Încărcare finalizată: utilizator %(user)s, adresa IP %(ip)s, fișier %(file)s"
 
-#: pynicotine/uploads.py:407
+#: pynicotine/uploads.py:409
 #, fuzzy, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Încărcarea a fost anulată, fișierul utilizatorului %(user)s %(file)s"
 
-#: pynicotine/uploads.py:996 pynicotine/uploads.py:1032
+#: pynicotine/uploads.py:1032 pynicotine/uploads.py:1063
 #, fuzzy, python-format
 msgid "Upload I/O error: %s"
 msgstr "Eroare de încărcare I/O: %s"
 
-#: pynicotine/uploads.py:1045
+#: pynicotine/uploads.py:1076
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
@@ -4733,18 +4728,18 @@ msgstr ""
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nu se poate crea directorul „%(folder)s”, eroare raportată: %(error)s"
 
-#: pynicotine/userbrowse.py:212
+#: pynicotine/userbrowse.py:218
 #, fuzzy, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Încărcarea partajărilor de pe disc a eșuat: %(error)s"
 
-#: pynicotine/userbrowse.py:258
+#: pynicotine/userbrowse.py:264
 #, fuzzy, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr ""
 "Lista salvată de fișiere partajate pentru utilizatorul „%(user)s” la %(dir)s"
 
-#: pynicotine/userbrowse.py:262
+#: pynicotine/userbrowse.py:268
 #, fuzzy, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Nu se pot salva distribuiri, „%(user)s”, eroare raportată: %(error)s"
@@ -4785,16 +4780,16 @@ msgstr ""
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "Adresa IP a utilizatorului %(user)s: %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/users.py:335
+#: pynicotine/users.py:336
 msgid "Soulseek Announcement"
 msgstr "Anunț Soulseek"
 
-#: pynicotine/users.py:343
+#: pynicotine/users.py:344
 #, python-format
 msgid "%i privileged users"
 msgstr "%i utilizatori privilegiați"
 
-#: pynicotine/users.py:353
+#: pynicotine/users.py:354
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
@@ -4803,7 +4798,7 @@ msgstr ""
 "descărcările dvs. vor fi puse în coadă înaintea celor ale utilizatorilor "
 "fără privilegii."
 
-#: pynicotine/users.py:359
+#: pynicotine/users.py:360
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4812,50 +4807,50 @@ msgstr ""
 "%(days)i zile, %(hours)i ore, %(minutes)i minute, %(seconds)i secunde de "
 "privilegii Soulseek rămase"
 
-#: pynicotine/users.py:377
+#: pynicotine/users.py:378
 msgid "Your password has been changed"
 msgstr "Parola dvs. a fost schimbată"
 
-#: pynicotine/users.py:377
+#: pynicotine/users.py:378
 msgid "Password Changed"
 msgstr "Parolă schimbată"
 
-#: pynicotine/utils.py:456
+#: pynicotine/utils.py:477
 #, fuzzy, python-format
 msgid "Cannot open file path %(path)s: %(error)s"
 msgstr "Nu se poate deschide calea fișierului %(path)s: %(error)s"
 
-#: pynicotine/utils.py:503
+#: pynicotine/utils.py:524
 #, fuzzy, python-format
 msgid "Cannot open URL %(url)s: %(error)s"
 msgstr "Nu se poate deschide adresa URL %(url)s: %(error)s"
 
-#: pynicotine/utils.py:528
+#: pynicotine/utils.py:549
 #, fuzzy, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
 msgstr "A apărut o eroare la citirea fișierului %(filename)s: %(error)s"
 
-#: pynicotine/utils.py:533
+#: pynicotine/utils.py:554
 #, fuzzy, python-format
 msgid "Attempting to load backup of file %s"
 msgstr "Se încearcă încărcarea copiei de rezervă a fișierului %s"
 
-#: pynicotine/utils.py:554
+#: pynicotine/utils.py:575
 #, fuzzy, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr "Nu se poate face backup pentru fișierul %(path)s: %(error)s"
 
-#: pynicotine/utils.py:574
+#: pynicotine/utils.py:595
 #, fuzzy, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr "Nu se poate salva fișierul %(path)s: %(error)s"
 
-#: pynicotine/utils.py:585
+#: pynicotine/utils.py:606
 #, fuzzy, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr "Nu se poate restabili fișierul anterior %(path)s: %(error)s"
 
-#: pynicotine/gtkgui/ui/buddies.ui:31 pynicotine/gtkgui/ui/mainwindow.ui:1236
+#: pynicotine/gtkgui/ui/buddies.ui:31 pynicotine/gtkgui/ui/mainwindow.ui:1254
 #, fuzzy
 msgid "Add buddy…"
 msgstr "Adauga prieten…"
@@ -5061,7 +5056,7 @@ msgid "Rescan Shares"
 msgstr "Rescanați acțiunile"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
-#: pynicotine/gtkgui/ui/mainwindow.ui:1837
+#: pynicotine/gtkgui/ui/mainwindow.ui:1861
 #, fuzzy
 msgid "Show Log Pane"
 msgstr "Afișați panoul de jurnal"
@@ -5210,8 +5205,8 @@ msgid "Refresh"
 msgstr "Reîmprospăta"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:286
-#: pynicotine/gtkgui/ui/mainwindow.ui:363
-#: pynicotine/gtkgui/ui/mainwindow.ui:602 pynicotine/gtkgui/ui/search.ui:199
+#: pynicotine/gtkgui/ui/mainwindow.ui:369
+#: pynicotine/gtkgui/ui/mainwindow.ui:608 pynicotine/gtkgui/ui/search.ui:199
 #: pynicotine/gtkgui/ui/userbrowse.ui:103
 #, fuzzy
 msgid "Expand / Collapse All"
@@ -5346,9 +5341,9 @@ msgstr "Meniu principal"
 msgid "Room…"
 msgstr "Cameră…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:724
-#: pynicotine/gtkgui/ui/mainwindow.ui:887
-#: pynicotine/gtkgui/ui/mainwindow.ui:1077
+#: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:730
+#: pynicotine/gtkgui/ui/mainwindow.ui:899
+#: pynicotine/gtkgui/ui/mainwindow.ui:1095
 #, fuzzy
 msgid "Username…"
 msgstr "Nume de utilizator…"
@@ -5377,12 +5372,12 @@ msgstr "Domeniul de căutare"
 msgid "_Wishlist"
 msgstr "_Lista de dorințe"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:157
+#: pynicotine/gtkgui/ui/mainwindow.ui:163
 #, fuzzy
 msgid "Configure Searches"
 msgstr "Configurați căutările"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:224
+#: pynicotine/gtkgui/ui/mainwindow.ui:230
 #, fuzzy
 msgid ""
 "Enter a search term to search for files shared by other users on the "
@@ -5391,18 +5386,18 @@ msgstr ""
 "Introduceți un termen de căutare pentru a căuta fișiere partajate de alți "
 "utilizatori din rețeaua Soulseek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:378
-#: pynicotine/gtkgui/ui/mainwindow.ui:617 pynicotine/gtkgui/ui/search.ui:214
+#: pynicotine/gtkgui/ui/mainwindow.ui:384
+#: pynicotine/gtkgui/ui/mainwindow.ui:623 pynicotine/gtkgui/ui/search.ui:214
 #, fuzzy
 msgid "File Grouping Mode"
 msgstr "Modul de grupare a fișierelor"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:396
+#: pynicotine/gtkgui/ui/mainwindow.ui:402
 #, fuzzy
 msgid "Configure Downloads"
 msgstr "Configurați Descărcări"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:463
+#: pynicotine/gtkgui/ui/mainwindow.ui:469
 #, fuzzy
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
@@ -5411,12 +5406,12 @@ msgstr ""
 "Fișierele pe care le descărcați de la alți utilizatori sunt puse în coadă "
 "aici și pot fi întrerupte și reluate la cerere"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:635
+#: pynicotine/gtkgui/ui/mainwindow.ui:641
 #, fuzzy
 msgid "Configure Uploads"
 msgstr "Configurați încărcările"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:702
+#: pynicotine/gtkgui/ui/mainwindow.ui:708
 #, fuzzy
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
@@ -5424,24 +5419,24 @@ msgstr ""
 "Încercările utilizatorilor de a descărca fișierele dvs. partajate sunt puse "
 "în coadă și gestionate aici"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:781
+#: pynicotine/gtkgui/ui/mainwindow.ui:787
 #, fuzzy
 msgid "_Open List"
 msgstr "_Deschide lista"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:783
+#: pynicotine/gtkgui/ui/mainwindow.ui:789
 #, fuzzy
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
 "Deschide o listă locală de fișiere partajate care au fost salvate anterior "
 "pe disc"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:798
+#: pynicotine/gtkgui/ui/mainwindow.ui:810
 #, fuzzy
 msgid "Configure Shares"
 msgstr "Configurați partajări"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:865
+#: pynicotine/gtkgui/ui/mainwindow.ui:877
 #, fuzzy
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
@@ -5451,17 +5446,17 @@ msgstr ""
 "căutați. Puteți, de asemenea, să salvați lista pe disc și să o inspectați "
 "mai târziu."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:944
+#: pynicotine/gtkgui/ui/mainwindow.ui:956
 #, fuzzy
 msgid "_Personal Profile"
 msgstr "_Profil personal"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:960
+#: pynicotine/gtkgui/ui/mainwindow.ui:978
 #, fuzzy
 msgid "Configure Account"
 msgstr "Configurați chat-uri"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1027
+#: pynicotine/gtkgui/ui/mainwindow.ui:1045
 #, fuzzy
 msgid ""
 "Enter the name of a user to view their user description, information and "
@@ -5470,18 +5465,18 @@ msgstr ""
 "Introduceți numele unui utilizator pentru a vedea descrierea utilizatorului, "
 "informațiile și fotografia personală"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1094
+#: pynicotine/gtkgui/ui/mainwindow.ui:1112
 #, fuzzy
 msgid "Chat _History"
 msgstr "Chat _Istoric"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1120
-#: pynicotine/gtkgui/ui/mainwindow.ui:1447
+#: pynicotine/gtkgui/ui/mainwindow.ui:1138
+#: pynicotine/gtkgui/ui/mainwindow.ui:1471
 #, fuzzy
 msgid "Configure Chats"
 msgstr "Configurați chat-uri"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1187
+#: pynicotine/gtkgui/ui/mainwindow.ui:1205
 #, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
@@ -5489,17 +5484,17 @@ msgstr ""
 "Introduceți numele unui utilizator pentru a începe o conversație text cu "
 "acesta în privat"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1267
+#: pynicotine/gtkgui/ui/mainwindow.ui:1285
 #, fuzzy
 msgid "_Message All"
 msgstr "_Mesajul tuturor"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1283
+#: pynicotine/gtkgui/ui/mainwindow.ui:1307
 #, fuzzy
 msgid "Configure Ignored Users"
 msgstr "Utilizatori ignorați"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1350
+#: pynicotine/gtkgui/ui/mainwindow.ui:1374
 #, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
@@ -5508,12 +5503,12 @@ msgstr ""
 "Adăugați utilizatori ca prieteni pentru a partaja anumite dosare cu ei și "
 "pentru a primi notificări atunci când sunt online"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1404
+#: pynicotine/gtkgui/ui/mainwindow.ui:1428
 #, fuzzy
 msgid "Join or create room…"
 msgstr "Alăturați-vă sau creați o cameră…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1514
+#: pynicotine/gtkgui/ui/mainwindow.ui:1538
 #, fuzzy
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
@@ -5522,27 +5517,27 @@ msgstr ""
 "Alăturați-vă unei camere de chat existente sau creați o cameră nouă pentru a "
 "discuta cu alți utilizatori din rețeaua Soulseek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1575
+#: pynicotine/gtkgui/ui/mainwindow.ui:1599
 #, fuzzy
 msgid "Configure User Profile"
 msgstr "Vizualizați profilul utilizatorului"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1625
+#: pynicotine/gtkgui/ui/mainwindow.ui:1649
 #, fuzzy
 msgid "Search log…"
 msgstr "Termen de căutare…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1706
+#: pynicotine/gtkgui/ui/mainwindow.ui:1730
 #, fuzzy
 msgid "Connections"
 msgstr "Conexiuni"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1738
+#: pynicotine/gtkgui/ui/mainwindow.ui:1762
 #, fuzzy
 msgid "Downloading (Speed / Active Users)"
 msgstr "Descărcare (Viteză/Utilizatori activi)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1769
+#: pynicotine/gtkgui/ui/mainwindow.ui:1793
 #, fuzzy
 msgid "Uploading (Speed / Active Users)"
 msgstr "Încărcare (Viteză/Utilizatori activi)"
@@ -7104,7 +7099,12 @@ msgstr "Viteza de upload"
 msgid "Edit Interests"
 msgstr "Editați interesele"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:678
+#: pynicotine/gtkgui/ui/userinfo.ui:672
+#, fuzzy
+msgid "_Gift Privileges…"
+msgstr "_Privilegii cadou…"
+
+#: pynicotine/gtkgui/ui/userinfo.ui:711
 #, fuzzy
 msgid "_Refresh Profile"
 msgstr "_Actualizați profilul"
