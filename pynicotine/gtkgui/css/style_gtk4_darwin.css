@@ -27,7 +27,7 @@ windowcontrols button:hover image {
 }
 
 windowcontrols button:active image {
-  filter: brightness(90%);
+  filter: brightness(125%);
 }
 
 windowcontrols button.close image {
