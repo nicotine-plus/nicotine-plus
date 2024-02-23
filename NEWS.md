@@ -12,6 +12,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added function to manually search a wishlist item
  * Exclude the Synology "#snapshot" and "#recycle" folders from Shares (thank you @toineenzo)
  * Improved performance when loading transfers on startup
+ * Implemented server code 160 (Excluded Search Phrases)
 
 ### Corrections
 
@@ -24,7 +25,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed an issue where private chat messages did not load in rare cases
  * Fixed an issue where retrying an upload did not start it immediately
  * Fixed an issue where the chat room tab order was incorrect after restarting
- * Removed a keyboard focus trap
+ * Removed a keyboard focus trap during tab navigation
  * Linux: Fixed an issue where binding to a virtual private network interface did not work
  * Windows: Fixed an issue with flickering/invisible window when maximized with auto-hide taskbar
  * Windows: Fixed an issue where the file manager/audio player window was hidden
@@ -37,6 +38,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Nicotine+ crashes on startup - BufferError ([#2850](https://github.com/nicotine-plus/nicotine-plus/issues/2850))
  * Failure to launch 3.3.0 on Mac ([#2852](https://github.com/nicotine-plus/nicotine-plus/issues/2852))
+ * Implement server code 160 ([#2854](https://github.com/nicotine-plus/nicotine-plus/issues/2854))
  * Unable to resize window in Mac Silicon app ([#2857](https://github.com/nicotine-plus/nicotine-plus/issues/2857))
  * Nicotine 3.3.0 Flickering when changing tabs ([#2859](https://github.com/nicotine-plus/nicotine-plus/issues/2859))
  * "Open in File Manager" not working on Windows ([#2860](https://github.com/nicotine-plus/nicotine-plus/issues/2860))
@@ -46,6 +48,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Interest recommendations ([#2866](https://github.com/nicotine-plus/nicotine-plus/issues/2866))
  * Crash after clearing download folder with 1 file in it ([#2869](https://github.com/nicotine-plus/nicotine-plus/issues/2869))
  * Bug Crash ([#2872](https://github.com/nicotine-plus/nicotine-plus/issues/2872))
+ * Cannot save file error ([#2888](https://github.com/nicotine-plus/nicotine-plus/issues/2888))
 
 
 ## Version 3.3.0 (February 1, 2024)
