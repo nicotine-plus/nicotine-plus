@@ -13,6 +13,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Exclude the Synology "#snapshot" and "#recycle" folders from Shares (thank you @toineenzo)
  * Improved performance when loading transfers on startup
  * Implemented server code 160 (Excluded Search Phrases)
+ * macOS: update visual style of window controls to resemble native apps
 
 ### Corrections
 
@@ -21,6 +22,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when using up/down arrow keys in empty combo box widget
  * Fixed an issue that prevented the Now Playing Sender plugin from working
  * Fixed an issue that prevented the /away command from working
+ * Fixed an issue connecting to certain distributed peers
  * Fixed broken scrolling in font chooser on GTK 4
  * Fixed an issue where private chat messages did not load in rare cases
  * Fixed an issue where retrying an upload did not start it immediately
@@ -29,6 +31,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Linux: Fixed an issue where binding to a virtual private network interface did not work
  * Windows: Fixed an issue with flickering/invisible window when maximized with auto-hide taskbar
  * Windows: Fixed an issue where the file manager/audio player window was hidden
+ * Windows: Fixed an issue downloading files containing control characters in the path
  * Windows: Fixed an issue where reverse file paths did not work for older downloads
  * macOS: Fixed an issue where Nicotine+ did not launch on Monterey systems (thank you @thep50)
  * macOS: Fixed an issue where window was not maximized on startup
