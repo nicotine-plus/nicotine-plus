@@ -488,11 +488,13 @@ class EntryDialog(OptionDialog):
         ], **kwargs)
 
         self.entry_container = None
+        self.entry_combobox = None
+        self.second_entry_combobox = None
+
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
-        self.second_entry = None
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
@@ -518,8 +520,8 @@ class EntryDialog(OptionDialog):
 
             combobox.unfreeze()
 
-        if activates_default:
-            self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)
+        if self.entry_combobox is None:
+            self.message_label.set_mnemonic_widget(entry if has_entry else combobox.widget)
 
         self.container.set_visible(True)
         return combobox
@@ -539,7 +541,7 @@ class EntryDialog(OptionDialog):
         else:
             self.entry_container.add(entry)     # pylint: disable=no-member
 
-        if activates_default:
+        if self.entry_combobox is None:
             self.message_label.set_mnemonic_widget(entry)
 
         self.container.set_visible(True)
