@@ -604,7 +604,7 @@ class Transfers:
 
             return False
 
-        expand_user = select_parent
+        expand_user = False
         expand_folder = False
         user_iterator = None
         user_folder_path_iterator = None
@@ -626,6 +626,7 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
+            expand_user = select_parent
             select_iterator = None
             empty_int = 0
             empty_str = ""
@@ -760,10 +761,10 @@ class Transfers:
         ], select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
-        if expand_user:
+        if expand_user and user_iterator is not None:
             self.tree_view.expand_row(user_iterator)
 
-        if expand_folder:
+        if expand_folder and user_folder_path_iterator is not None:
             self.tree_view.expand_row(user_folder_path_iterator)
 
         return True
