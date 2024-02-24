@@ -5,6 +5,14 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.2 (Release Candidate 1)
+
+### Corrections
+
+ * Fixed a crash when adding transfers while in ungrouped mode
+ * Snap: Fixed screen reader detection for enabling GTK 3
+
+
 ## Version 3.3.1 (February 24, 2024)
 
 ### Changes
