@@ -10,6 +10,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Corrections
 
  * Fixed a crash when adding transfers while in ungrouped mode
+ * Fixed an issue where dialog message labels were not read by screen readers
  * Snap: Fixed screen reader detection for enabling GTK 3
 
 
