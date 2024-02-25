@@ -461,7 +461,6 @@ class OptionDialog(MessageDialog):
     def _add_option_toggle(self, option_label, option_value):
 
         toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
-        self.message_label.set_mnemonic_widget(toggle)
 
         if option_label:
             if GTK_API_VERSION >= 4:
