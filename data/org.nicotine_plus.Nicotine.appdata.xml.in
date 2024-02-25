@@ -19,6 +19,10 @@
       also providing a comprehensive set of features.
     </p>
   </description>
+  <branding>
+    <color type="primary" scheme_preference="light">#ffdfc7</color>
+    <color type="primary" scheme_preference="dark">#733000</color>
+  </branding>
   <screenshots>
     <screenshot type="default">
       <caption>Search Files</caption>
