@@ -13,6 +13,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 
 | Operating System                                                                        | Package Name        |
 |-----------------------------------------------------------------------------------------|---------------------|
+| [Alpine Linux Edge](https://pkgs.alpinelinux.org/packages?name=nicotine-plus)           | `nicotine-plus`     |
 | [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`         |
 | [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`          |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
