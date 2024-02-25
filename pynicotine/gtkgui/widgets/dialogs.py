@@ -358,7 +358,7 @@ class MessageDialog(Window):
             action_box.add(action_area)                               # pylint: disable=no-member
 
         for response_type, button_label in buttons:
-            button = Gtk.Button(label=button_label, use_underline=True, hexpand=True, visible=True)
+            button = Gtk.Button(use_underline=True, hexpand=True, visible=True)
             button.connect("clicked", self._on_button_pressed, response_type)
 
             if GTK_API_VERSION >= 4:
@@ -379,6 +379,10 @@ class MessageDialog(Window):
 
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
+
+            # Set mnemonic widget before button label in order for screen reader to
+            # read both labels
+            button.set_label(button_label)
 
         return widget
 
