@@ -178,8 +178,7 @@ class Database:
         return key in self._value_offsets
 
     def __iter__(self):
-        for key in self._value_offsets:
-            yield key
+        yield from self._value_offsets
 
     def __len__(self):
         return len(self._value_offsets)
