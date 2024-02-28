@@ -368,9 +368,8 @@ class MessageDialog(Window):
 
             if response_type == self.destructive_response_id:
                 add_css_class(button, "destructive-action")
-                continue
 
-            if response_type in {"cancel", "ok"}:
+            elif response_type in {"cancel", "ok"}:
                 if GTK_API_VERSION >= 4:
                     widget.set_default_widget(button)  # pylint: disable=no-member
                 else:
