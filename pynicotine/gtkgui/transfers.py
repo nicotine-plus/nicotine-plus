@@ -358,6 +358,8 @@ class Transfers:
             # No need to do unnecessary work if transfers are not visible
             return
 
+        has_selected_parent = False
+        should_expand_all = False
         update_counters = False
         use_reverse_file_path = config.sections["ui"]["reverse_file_paths"]
 
@@ -366,21 +368,20 @@ class Transfers:
             self.pending_parent_rows_timer_id = events.schedule(
                 delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
-            select_parent = False
             should_expand_all = self.expand_button.get_active()
-        else:
-            select_parent = True
-            should_expand_all = False
 
         if transfer is not None:
-            update_counters = self.update_specific(transfer, select_parent, use_reverse_file_path)
+            update_counters = self.update_specific(transfer, use_reverse_file_path)
 
         elif self.transfer_list:
             for transfer_i in self.transfer_list:
+                select_parent = (not has_selected_parent and transfer_i.iterator == self.TRANSFER_ITERATOR_PENDING)
                 row_added = self.update_specific(transfer_i, select_parent, use_reverse_file_path)
 
+                if select_parent:
+                    has_selected_parent = True
+
                 if row_added:
-                    select_parent = False
                     update_counters = True
 
         if update_parent:
@@ -604,7 +605,7 @@ class Transfers:
 
             return False
 
-        expand_user = select_parent
+        expand_user = False
         expand_folder = False
         user_iterator = None
         user_folder_path_iterator = None
@@ -626,6 +627,7 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
+            expand_user = select_parent
             select_iterator = None
             empty_int = 0
             empty_str = ""
@@ -760,10 +762,10 @@ class Transfers:
         ], select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
-        if expand_user:
+        if expand_user and user_iterator is not None:
             self.tree_view.expand_row(user_iterator)
 
-        if expand_folder:
+        if expand_folder and user_folder_path_iterator is not None:
             self.tree_view.expand_row(user_folder_path_iterator)
 
         return True

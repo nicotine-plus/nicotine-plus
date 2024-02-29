@@ -370,6 +370,9 @@ class Downloads(Transfers):
         if not folder_path:
             return
 
+        if folder_path == self.get_default_download_folder(username):
+            return
+
         for downloads in (
             self.queued_users.get(username, {}),
             self.active_users.get(username, {}),

@@ -21,6 +21,7 @@ apps:
       - network
       - network-bind
       - removable-media
+      - unity7
 
 parts:
   snapcraft-preload:

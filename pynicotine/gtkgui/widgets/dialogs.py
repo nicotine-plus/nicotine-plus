@@ -358,7 +358,7 @@ class MessageDialog(Window):
             action_box.add(action_area)                               # pylint: disable=no-member
 
         for response_type, button_label in buttons:
-            button = Gtk.Button(label=button_label, use_underline=True, hexpand=True, visible=True)
+            button = Gtk.Button(use_underline=True, hexpand=True, visible=True)
             button.connect("clicked", self._on_button_pressed, response_type)
 
             if GTK_API_VERSION >= 4:
@@ -368,9 +368,8 @@ class MessageDialog(Window):
 
             if response_type == self.destructive_response_id:
                 add_css_class(button, "destructive-action")
-                continue
 
-            if response_type in {"cancel", "ok"}:
+            elif response_type in {"cancel", "ok"}:
                 if GTK_API_VERSION >= 4:
                     widget.set_default_widget(button)  # pylint: disable=no-member
                 else:
@@ -379,6 +378,10 @@ class MessageDialog(Window):
 
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
+
+            # Set mnemonic widget before button label in order for screen reader to
+            # read both labels
+            button.set_label(button_label)
 
         return widget
 
@@ -457,7 +460,6 @@ class OptionDialog(MessageDialog):
     def _add_option_toggle(self, option_label, option_value):
 
         toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
-        self.message_label.set_mnemonic_widget(toggle)
 
         if option_label:
             if GTK_API_VERSION >= 4:
@@ -488,11 +490,13 @@ class EntryDialog(OptionDialog):
         ], **kwargs)
 
         self.entry_container = None
+        self.entry_combobox = None
+        self.second_entry_combobox = None
+
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
-        self.second_entry = None
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
@@ -518,8 +522,8 @@ class EntryDialog(OptionDialog):
 
             combobox.unfreeze()
 
-        if activates_default:
-            self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)
+        if self.entry_combobox is None:
+            self.message_label.set_mnemonic_widget(entry if has_entry else combobox.widget)
 
         self.container.set_visible(True)
         return combobox
@@ -539,7 +543,7 @@ class EntryDialog(OptionDialog):
         else:
             self.entry_container.add(entry)     # pylint: disable=no-member
 
-        if activates_default:
+        if self.entry_combobox is None:
             self.message_label.set_mnemonic_widget(entry)
 
         self.container.set_visible(True)

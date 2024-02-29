@@ -720,6 +720,12 @@ class UserBrowse:
         if self.active_folder_path == folder_path:
             return
 
+        browsed_user = core.userbrowse.users.get(self.user)
+
+        if browsed_user is None:
+            # Redundant row selection event when closing tab, prevent crash
+            return
+
         self.populate_path_bar(folder_path)
         self.file_list_view.clear()
 
@@ -728,7 +734,6 @@ class UserBrowse:
         if not folder_path:
             return
 
-        browsed_user = core.userbrowse.users[self.user]
         files = browsed_user.public_folders.get(folder_path)
 
         if not files:
