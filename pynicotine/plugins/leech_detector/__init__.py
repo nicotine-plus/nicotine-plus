@@ -122,10 +122,8 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "requesting_shares"
             self.core.userbrowse.request_user_shares(user)
             return
-
-        #ban the leecher
+        # ban the leecher
         self.core.network_filter.ban_user(user)
-        
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
                 for placeholder, option_key in self.PLACEHOLDERS.items():
@@ -137,7 +135,7 @@ class Plugin(BasePlugin):
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
-        #self.probed_users[user] = "pending_leecher" (OLD)
+        # self.probed_users[user] = "pending_leecher" (OLD)
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
@@ -150,7 +148,7 @@ class Plugin(BasePlugin):
 
         self.probed_users[user] = "requesting_stats"
         stats = self.core.users.watched.get(user)
-        #Browse Downloaders
+        # Browse Downloaders
         self.core.userbrowse.browse_user(user, switch_page=False)
 
         if stats is None:
