@@ -364,7 +364,7 @@ class PrivateChat:
             ("", None),
             ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),
             ("", None),
-            (">" + _("User"), self.popup_menu_user_tab),
+            (">" + _("User Actions"), self.popup_menu_user_tab),
         )
 
         self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
