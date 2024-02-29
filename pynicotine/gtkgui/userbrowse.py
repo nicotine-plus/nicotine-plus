@@ -1430,7 +1430,8 @@ class UserBrowse:
         self.set_in_progress()
 
         if self.local_permission_level:
-            core.userbrowse.browse_local_shares(permission_level=self.local_permission_level, new_request=True)
+            core.userbrowse.browse_local_shares(
+                path=file_path, permission_level=self.local_permission_level, new_request=True)
         else:
             core.userbrowse.browse_user(self.user, path=file_path, new_request=True)
 
