@@ -1,4 +1,4 @@
 Version = "1"
 Authors = ["tegetting"]
 Name = "Leech Detector 2"
-Description = "Detects when leechers are downloading, and sends them a message after a file is leeched.\n\nMessage placeholders:\n- %files% : number of required files\n- %folders% : number of required folders"
+Description = "Auto bans leechers and sends them a message.\n\nMessage placeholders:\n- %files% : number of required files\n- %folders% : number of required folders"
