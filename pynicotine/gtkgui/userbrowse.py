@@ -287,7 +287,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy _URL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User"), self.user_popup_menu)
             )
@@ -299,7 +299,7 @@ class UserBrowse:
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
-                ("#" + _("Copy _URL"), self.on_copy_folder_url),
+                ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
                 ("", None),
                 (">" + _("User"), self.user_popup_menu)
             )
