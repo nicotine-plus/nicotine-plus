@@ -289,7 +289,7 @@ class UserBrowse:
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
                 ("", None),
-                (">" + _("User"), self.user_popup_menu)
+                (">" + _("User Actions"), self.user_popup_menu)
             )
         else:
             self.folder_popup_menu.add_items(
@@ -301,7 +301,7 @@ class UserBrowse:
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy Folder U_RL"), self.on_copy_folder_url),
                 ("", None),
-                (">" + _("User"), self.user_popup_menu)
+                (">" + _("User Actions"), self.user_popup_menu)
             )
 
         # Setup file_list_view
@@ -367,7 +367,7 @@ class UserBrowse:
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup_menu)
+                (">" + _("User Actions"), self.user_popup_menu)
             )
         else:
             self.file_popup_menu.add_items(
@@ -382,7 +382,7 @@ class UserBrowse:
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.user_popup_menu)
+                (">" + _("User Actions"), self.user_popup_menu)
             )
 
         # Key Bindings (folder_tree_view)
