@@ -293,8 +293,8 @@ class UserBrowse:
             )
         else:
             self.folder_popup_menu.add_items(
-                ("#" + _("Download Folder & Subfolders"), self.on_download_folder_recursive),
-                ("#" + _("Download Folder & Subfolders To…"), self.on_download_folder_recursive_to),
+                ("#" + _("_Download Folder & Subfolders"), self.on_download_folder_recursive),
+                ("#" + _("Download Folder & Subfolders _To…"), self.on_download_folder_recursive_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
