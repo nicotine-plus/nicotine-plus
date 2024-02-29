@@ -135,7 +135,6 @@ class Plugin(BasePlugin):
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
-        # self.probed_users[user] = "pending_leecher" (OLD)
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
