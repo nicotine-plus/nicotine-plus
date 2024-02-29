@@ -408,11 +408,6 @@ class Scanner:
                 share_db = Shares.create_db_file(self.config.data_folder_path, destination)
                 share_db.update(source)
 
-            except Exception as error:
-                self.queue.put((_("Can't save %(filename)s: %(error)s"),
-                                {"filename": f"{destination}.dbn", "error": error}, LogLevel.DEFAULT))
-                return
-
             finally:
                 if share_db is not None:
                     share_db.close()
