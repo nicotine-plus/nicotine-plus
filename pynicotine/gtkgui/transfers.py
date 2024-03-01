@@ -627,7 +627,7 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
-            expand_user = select_parent
+            expand_user = True
             select_iterator = None
             empty_int = 0
             empty_str = ""
