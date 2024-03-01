@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-04 21:41+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-03-01 23:09+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -33,9 +33,8 @@ msgstr ""
 "sohbet;mesajlaşma;eşler-arası;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Soulseek ağı için grafiksel istemci"
+msgstr "Soulseek ağına göz atın"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -129,7 +128,7 @@ msgstr "programı pencereyi göstermeden başlat"
 
 #: pynicotine/__init__.py:70
 msgid "ip"
-msgstr "ip"
+msgstr "IP"
 
 #: pynicotine/__init__.py:71
 msgid "bind sockets to the given IP (useful for VPN)"
@@ -2178,14 +2177,12 @@ msgid "Copy _Folder Path"
 msgstr "Kla_sör Yolunu Kopyala"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
-msgstr "Klasörü ve Alt Klasörleri İndir"
+msgstr "Klasörü ve Alt Klasörleri İn_dir"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
-msgstr "Klasörü ve Alt Klasörleri Şuraya İndir…"
+msgstr "Klasörü ve Al_t Klasörleri Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"
