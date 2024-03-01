@@ -21,10 +21,8 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 
 class Window:
 
-    active_dialogs = []  # Class variable keeping dialog objects alive
-    activation_token = None
-
-    def __init__(self, widget):
+    def __init__(self, application, widget):
+        self.application = application
         self.widget = widget
 
     def get_surface(self):
@@ -71,9 +69,12 @@ class Window:
 
     def present(self):
 
-        if self.activation_token is not None:
-            # Set XDG activation token if provided by tray icon
-            self.widget.set_startup_id(self.activation_token)
+        if self.application.tray_icon is not None:
+            activation_token = self.application.tray_icon.get_activation_token()
+
+            if activation_token is not None:
+                # Set XDG activation token if provided by tray icon
+                self.widget.set_startup_id(activation_token)
 
         self.widget.present()
 

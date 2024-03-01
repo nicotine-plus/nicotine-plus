@@ -308,7 +308,7 @@ class UserInfo:
 
         # Set up likes list
         self.likes_list_view = TreeView(
-            self.window, parent=self.likes_list_container,
+            self.window.application, parent=self.likes_list_container,
             columns={
                 "likes": {
                     "column_type": "text",
@@ -320,7 +320,7 @@ class UserInfo:
 
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
-            self.window, parent=self.dislikes_list_container,
+            self.window.application, parent=self.dislikes_list_container,
             columns={
                 "dislikes": {
                     "column_type": "text",
@@ -712,7 +712,7 @@ class UserInfo:
             message += "\n\n" + error
 
         EntryDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Gift Privileges"),
             message=message,
             action_button_label=_("_Give Privileges"),

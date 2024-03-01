@@ -114,7 +114,7 @@ class Transfers:
         self.selected_transfers = {}
 
         self.tree_view = TreeView(
-            window, parent=self.tree_container, name=transfer_type,
+            window.application, parent=self.tree_container, name=transfer_type,
             multi_select=True, persistent_sort=True, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_clear_transfers_accelerator,
             columns={

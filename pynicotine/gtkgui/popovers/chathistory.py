@@ -42,7 +42,7 @@ from pynicotine.utils import encode_path
 
 class ChatHistory(Popover):
 
-    def __init__(self, window):
+    def __init__(self, application, menu_button, text_entry):
 
         (
             self.container,
@@ -51,14 +51,15 @@ class ChatHistory(Popover):
         ) = ui.load(scope=self, path="popovers/chathistory.ui")
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.container,
+            menu_button=menu_button,
             width=1000,
             height=700
         )
 
         self.list_view = TreeView(
-            window, parent=self.list_container, activate_row_callback=self.on_show_user,
+            application, parent=self.list_container, activate_row_callback=self.on_show_user,
             search_entry=self.search_entry,
             columns={
                 "status": {
@@ -87,13 +88,8 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=0)
+        self.completion_entry = CompletionEntry(text_entry, self.list_view.model, column=0)
 
-        if GTK_API_VERSION >= 4:
-            inner_button = next(iter(window.private_history_button))
-            add_css_class(widget=inner_button, css_class="arrow-button")
-
-        self.set_menu_button(window.private_history_button)
         self.load_users()
 
         for event_name, callback in (
@@ -109,6 +105,14 @@ class ChatHistory(Popover):
         self.completion_entry.destroy()
 
         super().destroy()
+
+    def set_menu_button(self, menu_button):
+
+        super().set_menu_button(menu_button)
+
+        if menu_button is not None and GTK_API_VERSION >= 4:
+            inner_button = next(iter(menu_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
     def server_login(self, msg):
 

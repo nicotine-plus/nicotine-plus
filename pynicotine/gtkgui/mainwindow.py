@@ -176,7 +176,7 @@ class MainWindow(Window):
             self.vertical_paned
         ) = ui.load(scope=self, path="mainwindow.ui")
 
-        super().__init__(widget=Gtk.ApplicationWindow(child=self.container))
+        super().__init__(application=application, widget=Gtk.ApplicationWindow(child=self.container))
         self.header_bar.pack_end(self.header_end)
 
         if GTK_API_VERSION >= 4:
@@ -633,20 +633,23 @@ class MainWindow(Window):
 
         self.current_page_id = config.sections["ui"]["last_tab_id"] = page_id
 
-    def _show_dialogs(self, dialogs):
-        for dialog in dialogs:
-            dialog.present()
+    def _show_windows(self, windows):
+
+        for window in windows:
+            if window != self.widget:
+                window.present()
 
     def set_use_header_bar(self, enabled):
 
         if enabled == (not self.widget.get_show_menubar()):
             return
 
-        active_dialogs = Window.active_dialogs
+        active_windows = self.application.get_windows()
 
         # Hide active dialogs to prevent parenting issues
-        for dialog in reversed(active_dialogs):
-            dialog.hide()
+        for window in reversed(active_windows):
+            if window != self.widget:
+                window.hide()
 
         # Toggle header bar
         if enabled:
@@ -660,8 +663,8 @@ class MainWindow(Window):
         config.sections["ui"]["header_bar"] = enabled
 
         # Show active dialogs again after a slight delay
-        if active_dialogs:
-            GLib.idle_add(self._show_dialogs, active_dialogs)
+        if active_windows:
+            GLib.idle_add(self._show_windows, active_windows)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
@@ -1078,7 +1081,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).present()
+            MessageDialog(application=self.application, title=title, message=msg).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
@@ -1246,8 +1249,9 @@ class MainWindow(Window):
             return
 
         # Close any visible dialogs
-        for dialog in reversed(Window.active_dialogs):
-            dialog.close()
+        for window in reversed(self.application.get_windows()):
+            if window != self.widget:
+                window.close()
 
         # Save config, in case application is killed later
         config.write_configuration()

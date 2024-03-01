@@ -18,14 +18,16 @@
 
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class Popover:
 
-    def __init__(self, window, content_box=None, show_callback=None, close_callback=None, width=0, height=0):
+    def __init__(self, application, content_box=None, menu_button=None, show_callback=None,
+                 close_callback=None, width=0, height=0):
 
-        self.window = window
+        self.application = application
         self.show_callback = show_callback
         self.close_callback = close_callback
 
@@ -34,6 +36,8 @@ class Popover:
 
         self.widget = Gtk.Popover(child=content_box)
         self.menu_button = None
+        self.set_menu_button(menu_button)
+
         self.widget.connect("notify::visible", self._on_visible_changed)
         self.widget.connect("closed", self._on_close)
 
@@ -61,8 +65,13 @@ class Popover:
         if not popover_width and not popover_height:
             return
 
-        main_window_width = self.window.get_width()
-        main_window_height = self.window.get_height()
+        active_window = self.application.get_active_window()
+
+        if GTK_API_VERSION >= 4:
+            main_window_width = active_window.get_width()
+            main_window_height = active_window.get_height()
+        else:
+            main_window_width, main_window_height = active_window.get_size()
 
         if main_window_width and popover_width > main_window_width:
             popover_width = main_window_width - 60

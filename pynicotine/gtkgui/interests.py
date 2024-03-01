@@ -70,7 +70,7 @@ class Interests:
 
         # Columns
         self.likes_list_view = TreeView(
-            window, parent=self.likes_list_container,
+            window.application, parent=self.likes_list_container,
             delete_accelerator_callback=self.on_remove_thing_i_like,
             columns={
                 "likes": {
@@ -82,7 +82,7 @@ class Interests:
         )
 
         self.dislikes_list_view = TreeView(
-            window, parent=self.dislikes_list_container,
+            window.application, parent=self.dislikes_list_container,
             delete_accelerator_callback=self.on_remove_thing_i_dislike,
             columns={
                 "dislikes": {
@@ -94,7 +94,7 @@ class Interests:
         )
 
         self.recommendations_list_view = TreeView(
-            window, parent=self.recommendations_list_container,
+            window.application, parent=self.recommendations_list_container,
             activate_row_callback=self.on_r_row_activated,
             columns={
                 # Visible columns
@@ -117,7 +117,7 @@ class Interests:
         )
 
         self.similar_users_list_view = TreeView(
-            window, parent=self.similar_users_list_container,
+            window.application, parent=self.similar_users_list_container,
             activate_row_callback=self.on_ru_row_activated,
             columns={
                 # Visible columns

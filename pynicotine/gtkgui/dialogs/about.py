@@ -377,7 +377,7 @@ Copyright (c) 2017 IP2Location.com
         ) = ui.load(scope=self, path="dialogs/about.ui")
 
         super().__init__(
-            parent=application.window,
+            application=application,
             content_box=self.container,
             show_callback=self.on_show,
             close_callback=self.on_close,

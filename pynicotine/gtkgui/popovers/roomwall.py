@@ -26,7 +26,7 @@ from pynicotine.gtkgui.widgets.textview import TextView
 
 class RoomWall(Popover):
 
-    def __init__(self, window):
+    def __init__(self, application):
 
         (
             self.container,
@@ -35,7 +35,7 @@ class RoomWall(Popover):
         ) = ui.load(scope=self, path="popovers/roomwall.ui")
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.container,
             show_callback=self._on_show,
             width=600,

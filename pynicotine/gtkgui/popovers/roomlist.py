@@ -38,7 +38,7 @@ class RoomList(Popover):
 
     PRIVATE_USERS_OFFSET = 10000000
 
-    def __init__(self, window):
+    def __init__(self, application, menu_button, text_entry):
 
         (
             self.container,
@@ -50,8 +50,9 @@ class RoomList(Popover):
         ) = ui.load(scope=self, path="popovers/roomlist.ui")
 
         super().__init__(
-            window=window,
+            application=application,
             content_box=self.container,
+            menu_button=menu_button,
             width=350,
             height=500
         )
@@ -59,7 +60,7 @@ class RoomList(Popover):
         self.initializing_feed = False
 
         self.list_view = TreeView(
-            window, parent=self.list_container,
+            application, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
             columns={
                 # Visible columns
@@ -87,7 +88,7 @@ class RoomList(Popover):
         )
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
+        self.popup_menu = PopupMenu(application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
@@ -112,13 +113,7 @@ class RoomList(Popover):
         self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
-
-        if GTK_API_VERSION >= 4:
-            inner_button = next(iter(window.room_list_button))
-            add_css_class(widget=inner_button, css_class="arrow-button")
-
-        self.set_menu_button(window.room_list_button)
+        self.completion_entry = CompletionEntry(text_entry, self.list_view.model, column=0)
 
         for event_name, callback in (
             ("join-room", self.join_room),
@@ -139,6 +134,14 @@ class RoomList(Popover):
         self.completion_entry.destroy()
 
         super().destroy()
+
+    def set_menu_button(self, menu_button):
+
+        super().set_menu_button(menu_button)
+
+        if menu_button is not None and GTK_API_VERSION >= 4:
+            inner_button = next(iter(menu_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
     def get_selected_room(self):
 

@@ -92,7 +92,7 @@ class Downloads(Transfers):
         ):
             events.connect(event_name, callback)
 
-        self.download_speeds = DownloadSpeeds(window)
+        self.download_speeds = DownloadSpeeds(application=window.application, menu_button=window.download_status_button)
 
     def start(self):
         self.init_transfers(core.downloads.transfers.values())
@@ -116,7 +116,7 @@ class Downloads(Transfers):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear Queued Downloads"),
             message=_("Do you really want to clear all queued downloads?"),
             destructive_response_id="ok",
@@ -129,7 +129,7 @@ class Downloads(Transfers):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Clear All Downloads"),
             message=_("Do you really want to clear all downloads?"),
             destructive_response_id="ok",
@@ -147,7 +147,7 @@ class Downloads(Transfers):
     def download_large_folder(self, username, folder, numfiles, download_callback, callback_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Download %(num)i files?") % {"num": numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 "num": numfiles, "user": username, "folder": folder},

@@ -76,7 +76,10 @@ class ChatRooms(IconNotebook):
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.spell_checker = SpellChecker()
-        self.room_list = RoomList(window)
+        self.room_list = RoomList(
+            application=window.application, menu_button=window.room_list_button,
+            text_entry=window.chatrooms_entry
+        )
         self.command_help = None
         self.room_wall = None
 
@@ -164,10 +167,10 @@ class ChatRooms(IconNotebook):
             tab.update_room_user_completions()
 
             if self.command_help is None:
-                self.command_help = ChatCommandHelp(window=self.window, interface="chatroom")
+                self.command_help = ChatCommandHelp(application=self.window.application, interface="chatroom")
 
             if self.room_wall is None:
-                self.room_wall = RoomWall(window=self.window)
+                self.room_wall = RoomWall(application=self.window.application)
 
             self.command_help.set_menu_button(tab.help_button)
             self.room_wall.set_menu_button(tab.room_wall_button)
@@ -193,7 +196,7 @@ class ChatRooms(IconNotebook):
 
         if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
             OptionDialog(
-                parent=self.window,
+                application=self.window.application,
                 title=_("Create New Room?"),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
@@ -457,7 +460,7 @@ class ChatRoom:
         self.toggle_chat_buttons()
 
         self.users_list_view = TreeView(
-            self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,
+            self.window.application, parent=self.users_list_container, name="chat_room", secondary_name=room,
             persistent_sort=True, activate_row_callback=self.on_row_activated,
             columns={
                 # Visible columns
@@ -980,7 +983,7 @@ class ChatRoom:
     def on_delete_room_log(self, *_args):
 
         OptionDialog(
-            parent=self.window,
+            application=self.window.application,
             title=_("Delete Logged Messages?"),
             message=_("Do you really want to permanently delete all logged messages for this room?"),
             destructive_response_id="ok",
