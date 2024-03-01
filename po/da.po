@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 02:26+0200\n"
+"POT-Creation-Date: 2024-03-01 17:24+0200\n"
 "PO-Revision-Date: 2023-12-01 21:04+0000\n"
 "Last-Translator: Sigrid Davis <lizardlays@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -34,7 +34,7 @@ msgstr "Soulseek;Nicotine;deling;chat;musik;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
 #, fuzzy
-msgid "Graphical client for the Soulseek network"
+msgid "Browse the Soulseek network"
 msgstr "Grafisk klient til Soulseek peer-to-peer-netværket"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
@@ -52,8 +52,8 @@ msgstr ""
 "source (FOSS) alternativ til den officielle Soulseek-klient, samtidig med at "
 "den giver et omfattende sæt funktioner."
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:24
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
 #: pynicotine/gtkgui/mainwindow.py:701
 #: pynicotine/plugins/core_commands/__init__.py:29
 #: pynicotine/gtkgui/ui/mainwindow.ui:219
@@ -63,8 +63,8 @@ msgstr ""
 msgid "Search Files"
 msgstr "Søg filer"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
 #: pynicotine/gtkgui/dialogs/preferences.py:2903
 #: pynicotine/gtkgui/mainwindow.py:702 pynicotine/gtkgui/mainwindow.py:1050
 #: pynicotine/gtkgui/widgets/trayicon.py:91
@@ -74,8 +74,8 @@ msgstr "Søg filer"
 msgid "Downloads"
 msgstr "Downloads"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
 #: pynicotine/gtkgui/mainwindow.py:704
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:246
 #: pynicotine/gtkgui/ui/mainwindow.ui:866
@@ -84,8 +84,8 @@ msgstr "Downloads"
 msgid "Browse Shares"
 msgstr "Søg delinger"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:56
 #: pynicotine/gtkgui/mainwindow.py:706 pynicotine/gtkgui/widgets/trayicon.py:96
 #: pynicotine/plugins/core_commands/__init__.py:27
 #: pynicotine/gtkgui/ui/mainwindow.ui:1194
@@ -95,8 +95,8 @@ msgstr "Søg delinger"
 msgid "Private Chat"
 msgstr "Privat chat"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:72
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:74
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
 msgid "Nicotine+ Team"
 msgstr "Nicotine+-holdet"
 
@@ -230,7 +230,7 @@ msgid "Config backed up to: %s"
 msgstr "Konfigurationen sikkerhedskopieret til: %s"
 
 #: pynicotine/core.py:98 pynicotine/core.py:102
-#: pynicotine/gtkgui/__init__.py:97
+#: pynicotine/gtkgui/__init__.py:96
 #, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Indlæser %(program)s %(version)s"
@@ -284,73 +284,73 @@ msgstr "Fil hentet"
 msgid "Executed: %s"
 msgstr "Udført: %s"
 
-#: pynicotine/downloads.py:363 pynicotine/downloads.py:401
+#: pynicotine/downloads.py:363 pynicotine/downloads.py:404
 #: pynicotine/nowplaying.py:308
 #, fuzzy, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "Udførelsen af '%(command)s' mislykkedes: %(error)s"
 
-#: pynicotine/downloads.py:386
+#: pynicotine/downloads.py:389
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s hentet fra %(user)s"
 
-#: pynicotine/downloads.py:390
+#: pynicotine/downloads.py:393
 #, fuzzy
 msgid "Folder Downloaded"
 msgstr "Mappe hentet"
 
-#: pynicotine/downloads.py:398
+#: pynicotine/downloads.py:401
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Udført på mappe: %s"
 
-#: pynicotine/downloads.py:425
+#: pynicotine/downloads.py:428
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "'%(tempfile)s' kunne ikke flyttes til '%(file)s': %(error)s"
 
-#: pynicotine/downloads.py:433 pynicotine/downloads.py:1192
+#: pynicotine/downloads.py:436 pynicotine/downloads.py:1195
 #, fuzzy
 msgid "Download Folder Error"
 msgstr "Fejl på downloadsbibliotek"
 
-#: pynicotine/downloads.py:472
+#: pynicotine/downloads.py:475
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Download færdig: %(user)s, fil %(file)s"
 
-#: pynicotine/downloads.py:490
+#: pynicotine/downloads.py:493
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Mislykked download: bruger %(user)s, fil %(file)s"
 
-#: pynicotine/downloads.py:1130
+#: pynicotine/downloads.py:1133
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Hent I/O-fejl: %s"
 
-#: pynicotine/downloads.py:1173
+#: pynicotine/downloads.py:1176
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Kunne ikke oprette et exklusivt lås på fil - I/O-fel: %s"
 
-#: pynicotine/downloads.py:1186
+#: pynicotine/downloads.py:1189
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Filen %(path)s kan ikke gemmes: %(error)s"
 
-#: pynicotine/downloads.py:1205
+#: pynicotine/downloads.py:1208
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Mislykked download: bruger %(user)s, fil %(file)s"
 
-#: pynicotine/gtkgui/__init__.py:78 pynicotine/gtkgui/__init__.py:87
+#: pynicotine/gtkgui/__init__.py:77 pynicotine/gtkgui/__init__.py:86
 #, fuzzy, python-format
 msgid "Cannot find %s, please install it."
 msgstr "%s blev ikke fundet."
 
-#: pynicotine/gtkgui/__init__.py:145
+#: pynicotine/gtkgui/__init__.py:144
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Intet grafisk miljø tilgængeligt, bruger hovedløs (ingen GUI) tilstand"
@@ -475,7 +475,7 @@ msgid "Do you really want to exit?"
 msgstr "Har du virkelig lyst til at afslutte Nicotine+?"
 
 #: pynicotine/gtkgui/application.py:530 pynicotine/gtkgui/downloads.py:155
-#: pynicotine/gtkgui/widgets/dialogs.py:446
+#: pynicotine/gtkgui/widgets/dialogs.py:449
 #, fuzzy
 msgid "_No"
 msgstr "N"
@@ -507,7 +507,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:564 pynicotine/gtkgui/application.py:588
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:41
-#: pynicotine/gtkgui/widgets/dialogs.py:486
+#: pynicotine/gtkgui/widgets/dialogs.py:488
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 #, fuzzy
 msgid "_Cancel"
@@ -617,11 +617,8 @@ msgstr "Land"
 #: pynicotine/gtkgui/dialogs/preferences.py:978
 #: pynicotine/gtkgui/dialogs/preferences.py:1121
 #: pynicotine/gtkgui/interests.py:138
-#: pynicotine/gtkgui/popovers/chathistory.py:72
-#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:500
-#: pynicotine/gtkgui/transfers.py:124 pynicotine/gtkgui/userbrowse.py:292
-#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
-#: pynicotine/gtkgui/userbrowse.py:385
+#: pynicotine/gtkgui/popovers/chathistory.py:72 pynicotine/gtkgui/search.py:500
+#: pynicotine/gtkgui/transfers.py:124
 msgid "User"
 msgstr "Bruger"
 
@@ -951,7 +948,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Filegenskaber (%(num)i for %(total)i)"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:44
-#: pynicotine/gtkgui/widgets/dialogs.py:482
+#: pynicotine/gtkgui/widgets/dialogs.py:484
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:23
 #, fuzzy
 msgid "_OK"
@@ -1860,7 +1857,7 @@ msgid ""
 "%(folder)s?"
 msgstr "Vil du virkelig hente %(num)i filer fra %(user)ss mappe %(folder)s?"
 
-#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:447
+#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:450
 #, fuzzy
 msgid "_Yes"
 msgstr "_Ja"
@@ -2106,6 +2103,14 @@ msgstr "Vis chatlog"
 msgid "Delete Chat Log…"
 msgstr "Slet chatlog…"
 
+#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:611
+#: pynicotine/gtkgui/transfers.py:248 pynicotine/gtkgui/userbrowse.py:292
+#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
+#: pynicotine/gtkgui/userbrowse.py:385
+#, fuzzy
+msgid "User Actions"
+msgstr "Overførsler"
+
 #: pynicotine/gtkgui/privatechat.py:464
 #, fuzzy
 msgid ""
@@ -2175,12 +2180,12 @@ msgid "Copy _File Path"
 msgstr "Kopier _File sti"
 
 #: pynicotine/gtkgui/search.py:592 pynicotine/gtkgui/transfers.py:226
-#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #: pynicotine/gtkgui/userbrowse.py:368 pynicotine/gtkgui/userbrowse.py:383
 msgid "Copy _URL"
 msgstr "Kopier _URL"
 
 #: pynicotine/gtkgui/search.py:593 pynicotine/gtkgui/transfers.py:227
+#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Kopier mappens URL"
@@ -2222,11 +2227,6 @@ msgstr "Kig i filer"
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "egenskaber for F_ile"
-
-#: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:248
-#, fuzzy
-msgid "User Actions"
-msgstr "Overførsler"
 
 #: pynicotine/gtkgui/search.py:617
 #, fuzzy
@@ -2298,7 +2298,7 @@ msgstr "Resultater"
 msgid "Select Destination Folder for File(s)"
 msgstr "Vælg destination for download af fil(er) fra bruger"
 
-#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:900
+#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:905
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Vælg en mappe"
@@ -2420,7 +2420,7 @@ msgstr "Søg"
 msgid "Clear All"
 msgstr "Rens logfil"
 
-#: pynicotine/gtkgui/transfers.py:848
+#: pynicotine/gtkgui/transfers.py:850
 #, fuzzy
 msgid "Select User's Transfers"
 msgstr "Vælg brugeroverførsler"
@@ -2487,12 +2487,12 @@ msgstr "Kopier mappens URL"
 
 #: pynicotine/gtkgui/userbrowse.py:296
 #, fuzzy
-msgid "Download Folder & Subfolders"
+msgid "_Download Folder & Subfolders"
 msgstr "_Hent fil(er)"
 
 #: pynicotine/gtkgui/userbrowse.py:297
 #, fuzzy
-msgid "Download Folder & Subfolders To…"
+msgid "Download Folder & Subfolders _To…"
 msgstr "Hent fil(er) _til..."
 
 #: pynicotine/gtkgui/userbrowse.py:321
@@ -2540,37 +2540,37 @@ msgstr ""
 "I har begge en lukket lytteport, eller også er der et midlertidigt "
 "forbindelsesproblem."
 
-#: pynicotine/gtkgui/userbrowse.py:898
+#: pynicotine/gtkgui/userbrowse.py:903
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Vælg destination for download af en mappe fra bruger"
 
-#: pynicotine/gtkgui/userbrowse.py:942
+#: pynicotine/gtkgui/userbrowse.py:947
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Upload mappe (med undermapper) til bruger"
 
-#: pynicotine/gtkgui/userbrowse.py:944
+#: pynicotine/gtkgui/userbrowse.py:949
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Overfør mappe til…"
 
-#: pynicotine/gtkgui/userbrowse.py:949 pynicotine/gtkgui/userbrowse.py:1138
+#: pynicotine/gtkgui/userbrowse.py:954 pynicotine/gtkgui/userbrowse.py:1143
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Angiv navnet på den bruger, du vil overføre til:"
 
-#: pynicotine/gtkgui/userbrowse.py:950 pynicotine/gtkgui/userbrowse.py:1139
+#: pynicotine/gtkgui/userbrowse.py:955 pynicotine/gtkgui/userbrowse.py:1144
 #, fuzzy
 msgid "_Upload"
 msgstr "_Uploads"
 
-#: pynicotine/gtkgui/userbrowse.py:1115
+#: pynicotine/gtkgui/userbrowse.py:1120
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Vælg destination for download af fil(er) fra bruger"
 
-#: pynicotine/gtkgui/userbrowse.py:1137
+#: pynicotine/gtkgui/userbrowse.py:1142
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Overfør filer"
@@ -4606,22 +4606,22 @@ msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
 "Brugeren %(user)s søger efter \"%(query)s\", og returnerer %(num)i-resultater"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Indexering påbegyndt"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Indexering påbegyndt"
 
-#: pynicotine/shares.py:293
+#: pynicotine/shares.py:292
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Genscanning fuldført: %(num)s mapper fundet"
 
-#: pynicotine/shares.py:302
+#: pynicotine/shares.py:301
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4633,38 +4633,33 @@ msgstr ""
 "hjælper, skal du indsende en fejlrapport med denne staksporing inkluderet: "
 "%(trace)s"
 
-#: pynicotine/shares.py:413
-#, fuzzy, python-format
-msgid "Can't save %(filename)s: %(error)s"
-msgstr "Kunne ikke gemme konfigurationsfil, I/O-fel: %s"
-
-#: pynicotine/shares.py:558
+#: pynicotine/shares.py:552
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Der opstod en fejl under scanning af filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:562
+#: pynicotine/shares.py:556
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Der opstod en fejl under scanning af mappen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:595
+#: pynicotine/shares.py:589
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr ""
 "Der opstod en fejl under scanning af metadata for filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:1055
+#: pynicotine/shares.py:1049
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Genscanning afbrudt på grund af utilgængelige delinger"
 
-#: pynicotine/shares.py:1127
+#: pynicotine/shares.py:1121
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Brugeren %(user)s gennemser listen over delte filer"
 
-#: pynicotine/shares.py:1164
+#: pynicotine/shares.py:1158
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Den delte mappe %(folder)s kunne ikke hentes: %(error)s"
@@ -7094,6 +7089,10 @@ msgstr "Opdatere filer"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+"
+
+#, fuzzy, python-format
+#~ msgid "Can't save %(filename)s: %(error)s"
+#~ msgstr "Kunne ikke gemme konfigurationsfil, I/O-fel: %s"
 
 #~ msgid "Nicotine+"
 #~ msgstr "Nicotine+"
