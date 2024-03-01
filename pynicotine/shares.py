@@ -1096,12 +1096,13 @@ class Shares:
             except Exception:
                 successful = False
 
+        self.rescanning = False
+
         if not successful:
             self.file_path_index = ()
-        else:
-            self.send_num_shared_folders_files()
+            return
 
-        self.rescanning = False
+        self.send_num_shared_folders_files()
 
     # Network Messages #
 
