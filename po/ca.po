@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 02:26+0200\n"
+"POT-Creation-Date: 2024-03-01 17:24+0200\n"
 "PO-Revision-Date: 2024-01-08 17:06+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -31,7 +31,8 @@ msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;compartir;xat;missatgeria;P2P;d'igual a igual;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-msgid "Graphical client for the Soulseek network"
+#, fuzzy
+msgid "Browse the Soulseek network"
 msgstr "Client gràfic per a la xarxa Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
@@ -49,8 +50,8 @@ msgstr ""
 "obert (FOSS) al client oficial de Soulseek, tot proporcionant també un "
 "conjunt complet de funcionalitats."
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:24
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
 #: pynicotine/gtkgui/mainwindow.py:701
 #: pynicotine/plugins/core_commands/__init__.py:29
 #: pynicotine/gtkgui/ui/mainwindow.ui:219
@@ -60,8 +61,8 @@ msgstr ""
 msgid "Search Files"
 msgstr "Cercar fitxers"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
 #: pynicotine/gtkgui/dialogs/preferences.py:2903
 #: pynicotine/gtkgui/mainwindow.py:702 pynicotine/gtkgui/mainwindow.py:1050
 #: pynicotine/gtkgui/widgets/trayicon.py:91
@@ -71,8 +72,8 @@ msgstr "Cercar fitxers"
 msgid "Downloads"
 msgstr "Descàrregues"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
 #: pynicotine/gtkgui/mainwindow.py:704
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:246
 #: pynicotine/gtkgui/ui/mainwindow.ui:866
@@ -81,8 +82,8 @@ msgstr "Descàrregues"
 msgid "Browse Shares"
 msgstr "Navegar per compartits"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:56
 #: pynicotine/gtkgui/mainwindow.py:706 pynicotine/gtkgui/widgets/trayicon.py:96
 #: pynicotine/plugins/core_commands/__init__.py:27
 #: pynicotine/gtkgui/ui/mainwindow.ui:1194
@@ -91,8 +92,8 @@ msgstr "Navegar per compartits"
 msgid "Private Chat"
 msgstr "Xat privat"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:72
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:74
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
 msgid "Nicotine+ Team"
 msgstr "Equip de Nicotine+"
 
@@ -216,7 +217,7 @@ msgid "Config backed up to: %s"
 msgstr "S'ha fet una còpia de seguretat de la configuració a: %s"
 
 #: pynicotine/core.py:98 pynicotine/core.py:102
-#: pynicotine/gtkgui/__init__.py:97
+#: pynicotine/gtkgui/__init__.py:96
 #, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "S'està carregant %(program)s %(version)s"
@@ -270,71 +271,71 @@ msgstr "Fitxer descarregat"
 msgid "Executed: %s"
 msgstr "Executat: %s"
 
-#: pynicotine/downloads.py:363 pynicotine/downloads.py:401
+#: pynicotine/downloads.py:363 pynicotine/downloads.py:404
 #: pynicotine/nowplaying.py:308
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "No s'ha pogut executar «%(command)s»: %(error)s"
 
-#: pynicotine/downloads.py:386
+#: pynicotine/downloads.py:389
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s descarregat de %(user)s"
 
-#: pynicotine/downloads.py:390
+#: pynicotine/downloads.py:393
 msgid "Folder Downloaded"
 msgstr "Carpeta descarregada"
 
-#: pynicotine/downloads.py:398
+#: pynicotine/downloads.py:401
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "S'ha executat a la carpeta: %s"
 
-#: pynicotine/downloads.py:425
+#: pynicotine/downloads.py:428
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "No s'ha pogut moure '%(tempfile)s' a '%(file)s': %(error)s"
 
-#: pynicotine/downloads.py:433 pynicotine/downloads.py:1192
+#: pynicotine/downloads.py:436 pynicotine/downloads.py:1195
 msgid "Download Folder Error"
 msgstr "Error en la carpeta de descàrrega"
 
-#: pynicotine/downloads.py:472
+#: pynicotine/downloads.py:475
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Descàrrega acabada: usuari %(user)s, fitxer %(file)s"
 
-#: pynicotine/downloads.py:490
+#: pynicotine/downloads.py:493
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Descàrrega avortada, fitxer d'usuari %(user)s %(file)s"
 
-#: pynicotine/downloads.py:1130
+#: pynicotine/downloads.py:1133
 #, python-format
 msgid "Download I/O error: %s"
 msgstr "Error d'E/S a la descàrrega: %s"
 
-#: pynicotine/downloads.py:1173
+#: pynicotine/downloads.py:1176
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "No es pot obtenir un bloqueig exclusiu al fitxer - Error d'E/S: %s"
 
-#: pynicotine/downloads.py:1186
+#: pynicotine/downloads.py:1189
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "No es pot guardar l'arxiu a %(folder_path)s: %(error)s"
 
-#: pynicotine/downloads.py:1205
+#: pynicotine/downloads.py:1208
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Descàrrega començada: usuari %(user)s, fitxer %(file)s"
 
-#: pynicotine/gtkgui/__init__.py:78 pynicotine/gtkgui/__init__.py:87
+#: pynicotine/gtkgui/__init__.py:77 pynicotine/gtkgui/__init__.py:86
 #, python-format
 msgid "Cannot find %s, please install it."
 msgstr "No es pot trobar %s, instal·la-lo."
 
-#: pynicotine/gtkgui/__init__.py:145
+#: pynicotine/gtkgui/__init__.py:144
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
 "No hi ha entorn gràfic disponible, s'està utilitzant el mode sense "
@@ -448,7 +449,7 @@ msgid "Do you really want to exit?"
 msgstr "Realment vols sortir?"
 
 #: pynicotine/gtkgui/application.py:530 pynicotine/gtkgui/downloads.py:155
-#: pynicotine/gtkgui/widgets/dialogs.py:446
+#: pynicotine/gtkgui/widgets/dialogs.py:449
 msgid "_No"
 msgstr "_No"
 
@@ -475,7 +476,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:564 pynicotine/gtkgui/application.py:588
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:41
-#: pynicotine/gtkgui/widgets/dialogs.py:486
+#: pynicotine/gtkgui/widgets/dialogs.py:488
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 msgid "_Cancel"
 msgstr "_Cancel · lar"
@@ -573,11 +574,8 @@ msgstr "País"
 #: pynicotine/gtkgui/dialogs/preferences.py:978
 #: pynicotine/gtkgui/dialogs/preferences.py:1121
 #: pynicotine/gtkgui/interests.py:138
-#: pynicotine/gtkgui/popovers/chathistory.py:72
-#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:500
-#: pynicotine/gtkgui/transfers.py:124 pynicotine/gtkgui/userbrowse.py:292
-#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
-#: pynicotine/gtkgui/userbrowse.py:385
+#: pynicotine/gtkgui/popovers/chathistory.py:72 pynicotine/gtkgui/search.py:500
+#: pynicotine/gtkgui/transfers.py:124
 msgid "User"
 msgstr "Usuari"
 
@@ -877,7 +875,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Propietats del fitxer (%(num)i de %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:44
-#: pynicotine/gtkgui/widgets/dialogs.py:482
+#: pynicotine/gtkgui/widgets/dialogs.py:484
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:23
 msgid "_OK"
 msgstr "_ Acceptar"
@@ -1685,7 +1683,7 @@ msgid ""
 "%(folder)s?"
 msgstr "Vols descarregar %(num)i fitxers de la carpeta %(folder)s de %(user)s?"
 
-#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:447
+#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:450
 msgid "_Yes"
 msgstr "_Sí"
 
@@ -1901,6 +1899,14 @@ msgstr "Veure el registre de xat"
 msgid "Delete Chat Log…"
 msgstr "Suprimir el registre de xat…"
 
+#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:611
+#: pynicotine/gtkgui/transfers.py:248 pynicotine/gtkgui/userbrowse.py:292
+#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
+#: pynicotine/gtkgui/userbrowse.py:385
+#, fuzzy
+msgid "User Actions"
+msgstr "Accions d'Usuari"
+
 #: pynicotine/gtkgui/privatechat.py:464
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
@@ -1962,12 +1968,12 @@ msgid "Copy _File Path"
 msgstr "Copia _ruta del fitxer"
 
 #: pynicotine/gtkgui/search.py:592 pynicotine/gtkgui/transfers.py:226
-#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #: pynicotine/gtkgui/userbrowse.py:368 pynicotine/gtkgui/userbrowse.py:383
 msgid "Copy _URL"
 msgstr "Copiar _URL"
 
 #: pynicotine/gtkgui/search.py:593 pynicotine/gtkgui/transfers.py:227
+#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 msgid "Copy Folder U_RL"
 msgstr "Copiar la carpeta U_RL"
 
@@ -2003,11 +2009,6 @@ msgstr "_Navega per la Carpeta"
 #: pynicotine/gtkgui/userbrowse.py:365 pynicotine/gtkgui/userbrowse.py:380
 msgid "F_ile Properties"
 msgstr "Propietats de _fitxer"
-
-#: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:248
-#, fuzzy
-msgid "User Actions"
-msgstr "Accions d'Usuari"
 
 #: pynicotine/gtkgui/search.py:617
 msgid "Copy Search Term"
@@ -2071,7 +2072,7 @@ msgstr "Resultats"
 msgid "Select Destination Folder for File(s)"
 msgstr "Selecciona la carpeta de destinació per als fitxers"
 
-#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:900
+#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:905
 msgid "Select Destination Folder"
 msgstr "Selecciona Carpeta de destinació"
 
@@ -2175,7 +2176,7 @@ msgstr "_Cercar"
 msgid "Clear All"
 msgstr "Netejar-ho tot"
 
-#: pynicotine/gtkgui/transfers.py:848
+#: pynicotine/gtkgui/transfers.py:850
 msgid "Select User's Transfers"
 msgstr "Seleccionar Transferències de l'usuari"
 
@@ -2230,12 +2231,12 @@ msgstr "Copiar la ruta de la _carpeta"
 
 #: pynicotine/gtkgui/userbrowse.py:296
 #, fuzzy
-msgid "Download Folder & Subfolders"
+msgid "_Download Folder & Subfolders"
 msgstr "Carpeta de Descàrrega i Subcarpetes"
 
 #: pynicotine/gtkgui/userbrowse.py:297
 #, fuzzy
-msgid "Download Folder & Subfolders To…"
+msgid "Download Folder & Subfolders _To…"
 msgstr "Descarregar carpeta i subcarpetes a…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
@@ -2278,33 +2279,33 @@ msgstr ""
 "desconnectat, els ports d'escolta estan tancats en ambdues bandes, o hi ha "
 "un problema temporal de connectivitat."
 
-#: pynicotine/gtkgui/userbrowse.py:898
+#: pynicotine/gtkgui/userbrowse.py:903
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Selecciona Destinació per a descarregar diverses carpetes"
 
-#: pynicotine/gtkgui/userbrowse.py:942
+#: pynicotine/gtkgui/userbrowse.py:947
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Pujar la carpeta (amb subcarpetes) a l'usuari"
 
-#: pynicotine/gtkgui/userbrowse.py:944
+#: pynicotine/gtkgui/userbrowse.py:949
 msgid "Upload Folder To User"
 msgstr "Pujar la carpeta a l'usuari"
 
-#: pynicotine/gtkgui/userbrowse.py:949 pynicotine/gtkgui/userbrowse.py:1138
+#: pynicotine/gtkgui/userbrowse.py:954 pynicotine/gtkgui/userbrowse.py:1143
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Introdueix el nom de l'usuari al qual vols pujar fitxers:"
 
-#: pynicotine/gtkgui/userbrowse.py:950 pynicotine/gtkgui/userbrowse.py:1139
+#: pynicotine/gtkgui/userbrowse.py:955 pynicotine/gtkgui/userbrowse.py:1144
 #, fuzzy
 msgid "_Upload"
 msgstr "_Upload"
 
-#: pynicotine/gtkgui/userbrowse.py:1115
+#: pynicotine/gtkgui/userbrowse.py:1120
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Seleccionar carpeta de destinació per als fitxers"
 
-#: pynicotine/gtkgui/userbrowse.py:1137
+#: pynicotine/gtkgui/userbrowse.py:1142
 msgid "Upload File(s) To User"
 msgstr "Pujar fitxers a l'usuari"
 
@@ -4061,21 +4062,21 @@ msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
 "L'usuari %(user)s està cercant «%(query)s», ha trobat %(num)i resultats"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Reconstruint Shares…"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 msgid "Rescanning shares…"
 msgstr "Tornant a examinar compartits…"
 
-#: pynicotine/shares.py:293
+#: pynicotine/shares.py:292
 #, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Examen completat: s'han trobat %(num)s carpetes"
 
-#: pynicotine/shares.py:302
+#: pynicotine/shares.py:301
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4087,38 +4088,33 @@ msgstr ""
 "ajuda, si us plau, envia un informe d'error amb aquest rastre d'error "
 "inclòs: %(trace)s"
 
-#: pynicotine/shares.py:413
-#, python-format
-msgid "Can't save %(filename)s: %(error)s"
-msgstr "No es pot desar %(filename)s: %(error)s"
-
-#: pynicotine/shares.py:558
+#: pynicotine/shares.py:552
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Error en examinar el fitxer %(path)s: %(error)s"
 
-#: pynicotine/shares.py:562
+#: pynicotine/shares.py:556
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Error en examinar la carpeta %(path)s: %(error)s"
 
-#: pynicotine/shares.py:595
+#: pynicotine/shares.py:589
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Error en examinar les metadades del fitxer %(path)s: %(error)s"
 
-#: pynicotine/shares.py:1055
+#: pynicotine/shares.py:1049
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Reescaneig avortat per Shares indisponibles: %s"
 
-#: pynicotine/shares.py:1127
+#: pynicotine/shares.py:1121
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "L'usuari %(user)s està navegant per la teva llista de fitxers compartits"
 
-#: pynicotine/shares.py:1164
+#: pynicotine/shares.py:1158
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "No s'ha pogut recuperar la carpeta compartida %(folder)s: %(error)s"
@@ -6288,6 +6284,10 @@ msgstr "_Actualitza el Perfil"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Comandes de Nicotine+"
+
+#, python-format
+#~ msgid "Can't save %(filename)s: %(error)s"
+#~ msgstr "No es pot desar %(filename)s: %(error)s"
 
 #~ msgid "Nicotine+"
 #~ msgstr "Nicotine+"

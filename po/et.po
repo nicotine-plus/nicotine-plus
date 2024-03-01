@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 02:26+0200\n"
+"POT-Creation-Date: 2024-03-01 17:24+0200\n"
 "PO-Revision-Date: 2023-07-25 18:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -35,7 +35,7 @@ msgstr "Soulseek;Nikotiin;jagamine;vestlus;sõnumid;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
 #, fuzzy
-msgid "Graphical client for the Soulseek network"
+msgid "Browse the Soulseek network"
 msgstr "Soulseeki võrgu graafiline klient"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
@@ -54,8 +54,8 @@ msgstr ""
 "alternatiiv ametlikule Soulseeki kliendile, pakkudes täiendavaid "
 "funktsioone, hoides samal ajal kursis Soulseeki protokolliga."
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:24
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
 #: pynicotine/gtkgui/mainwindow.py:701
 #: pynicotine/plugins/core_commands/__init__.py:29
 #: pynicotine/gtkgui/ui/mainwindow.ui:219
@@ -66,8 +66,8 @@ msgstr ""
 msgid "Search Files"
 msgstr "Otsige faile"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
 #: pynicotine/gtkgui/dialogs/preferences.py:2903
 #: pynicotine/gtkgui/mainwindow.py:702 pynicotine/gtkgui/mainwindow.py:1050
 #: pynicotine/gtkgui/widgets/trayicon.py:91
@@ -77,8 +77,8 @@ msgstr "Otsige faile"
 msgid "Downloads"
 msgstr "Allalaadimised"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:32
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:48
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
 #: pynicotine/gtkgui/mainwindow.py:704
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:246
 #: pynicotine/gtkgui/ui/mainwindow.ui:866
@@ -88,8 +88,8 @@ msgstr "Allalaadimised"
 msgid "Browse Shares"
 msgstr "Sirvige aktsiaid"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:36
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:52
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:40
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:56
 #: pynicotine/gtkgui/mainwindow.py:706 pynicotine/gtkgui/widgets/trayicon.py:96
 #: pynicotine/plugins/core_commands/__init__.py:27
 #: pynicotine/gtkgui/ui/mainwindow.ui:1194
@@ -99,8 +99,8 @@ msgstr "Sirvige aktsiaid"
 msgid "Private Chat"
 msgstr "Privaatvestlus"
 
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:72
-#: data/org.nicotine_plus.Nicotine.appdata.xml.in:74
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
 #, fuzzy
 msgid "Nicotine+ Team"
 msgstr "Nikotiini+ meeskond"
@@ -235,7 +235,7 @@ msgid "Config backed up to: %s"
 msgstr "Konfiguratsioon varundatud: %s"
 
 #: pynicotine/core.py:98 pynicotine/core.py:102
-#: pynicotine/gtkgui/__init__.py:97
+#: pynicotine/gtkgui/__init__.py:96
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Laadimine %(program)s %(version)s"
@@ -290,74 +290,74 @@ msgstr "Fail alla laaditud"
 msgid "Executed: %s"
 msgstr "Teostatud: %s"
 
-#: pynicotine/downloads.py:363 pynicotine/downloads.py:401
+#: pynicotine/downloads.py:363 pynicotine/downloads.py:404
 #: pynicotine/nowplaying.py:308
 #, fuzzy, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "'%(command)s' käivitamine ebaõnnestus: %(error)s"
 
-#: pynicotine/downloads.py:386
+#: pynicotine/downloads.py:389
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s laaditi alla saidilt %(user)s"
 
-#: pynicotine/downloads.py:390
+#: pynicotine/downloads.py:393
 #, fuzzy
 msgid "Folder Downloaded"
 msgstr "Kaust alla laaditud"
 
-#: pynicotine/downloads.py:398
+#: pynicotine/downloads.py:401
 #, fuzzy, python-format
 msgid "Executed on folder: %s"
 msgstr "Käivitatud kaustas: %s"
 
-#: pynicotine/downloads.py:425
+#: pynicotine/downloads.py:428
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr ""
 "Üksust „%(tempfile)s” ei saanud teisaldada asukohta „%(file)s”: %(error)s"
 
-#: pynicotine/downloads.py:433 pynicotine/downloads.py:1192
+#: pynicotine/downloads.py:436 pynicotine/downloads.py:1195
 #, fuzzy
 msgid "Download Folder Error"
 msgstr "Kausta allalaadimise viga"
 
-#: pynicotine/downloads.py:472
+#: pynicotine/downloads.py:475
 #, fuzzy, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Allalaadimine on lõppenud: kasutaja %(user)s, fail %(file)s"
 
-#: pynicotine/downloads.py:490
+#: pynicotine/downloads.py:493
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Allalaadimine katkestati, kasutaja %(user)s fail %(file)s"
 
-#: pynicotine/downloads.py:1130
+#: pynicotine/downloads.py:1133
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Allalaadimise I/O viga: %s"
 
-#: pynicotine/downloads.py:1173
+#: pynicotine/downloads.py:1176
 #, fuzzy, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Failile ei saa eksklusiivset lukku saada – I/O viga: %s"
 
-#: pynicotine/downloads.py:1186
+#: pynicotine/downloads.py:1189
 #, fuzzy, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
 msgstr "Faili ei saa salvestada kaustas %(folder_path)s: %(error)s"
 
-#: pynicotine/downloads.py:1205
+#: pynicotine/downloads.py:1208
 #, fuzzy, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Allalaadimine algas: kasutaja %(user)s, fail %(file)s"
 
-#: pynicotine/gtkgui/__init__.py:78 pynicotine/gtkgui/__init__.py:87
+#: pynicotine/gtkgui/__init__.py:77 pynicotine/gtkgui/__init__.py:86
 #, fuzzy, python-format
 msgid "Cannot find %s, please install it."
 msgstr "%s ei leia, installige see."
 
-#: pynicotine/gtkgui/__init__.py:145
+#: pynicotine/gtkgui/__init__.py:144
 #, fuzzy
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr "Graafilist keskkonda pole saadaval, kasutades peata (ilma GUI) režiimi"
@@ -480,7 +480,7 @@ msgid "Do you really want to exit?"
 msgstr "Kas soovite tõesti väljuda?"
 
 #: pynicotine/gtkgui/application.py:530 pynicotine/gtkgui/downloads.py:155
-#: pynicotine/gtkgui/widgets/dialogs.py:446
+#: pynicotine/gtkgui/widgets/dialogs.py:449
 #, fuzzy
 msgid "_No"
 msgstr "_Ei"
@@ -510,7 +510,7 @@ msgstr "Veenduge, et välised kettad on ühendatud ja kausta load on õiged."
 
 #: pynicotine/gtkgui/application.py:564 pynicotine/gtkgui/application.py:588
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:41
-#: pynicotine/gtkgui/widgets/dialogs.py:486
+#: pynicotine/gtkgui/widgets/dialogs.py:488
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:5
 msgid "_Cancel"
 msgstr "_Tühista"
@@ -619,11 +619,8 @@ msgstr "Riik"
 #: pynicotine/gtkgui/dialogs/preferences.py:978
 #: pynicotine/gtkgui/dialogs/preferences.py:1121
 #: pynicotine/gtkgui/interests.py:138
-#: pynicotine/gtkgui/popovers/chathistory.py:72
-#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:500
-#: pynicotine/gtkgui/transfers.py:124 pynicotine/gtkgui/userbrowse.py:292
-#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
-#: pynicotine/gtkgui/userbrowse.py:385
+#: pynicotine/gtkgui/popovers/chathistory.py:72 pynicotine/gtkgui/search.py:500
+#: pynicotine/gtkgui/transfers.py:124
 msgid "User"
 msgstr "Kasutaja"
 
@@ -943,7 +940,7 @@ msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Faili atribuudid (%(num)i / %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:44
-#: pynicotine/gtkgui/widgets/dialogs.py:482
+#: pynicotine/gtkgui/widgets/dialogs.py:484
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:23
 #, fuzzy
 msgid "_OK"
@@ -1828,7 +1825,7 @@ msgid ""
 msgstr ""
 "Kas soovite tõesti %(num)i failid alla laadida %(user)s kaustast %(folder)s?"
 
-#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:447
+#: pynicotine/gtkgui/downloads.py:156 pynicotine/gtkgui/widgets/dialogs.py:450
 #, fuzzy
 msgid "_Yes"
 msgstr "_Jah"
@@ -2067,6 +2064,14 @@ msgstr "Vaata vestluslogi"
 msgid "Delete Chat Log…"
 msgstr "Kustuta vestluslogi…"
 
+#: pynicotine/gtkgui/privatechat.py:367 pynicotine/gtkgui/search.py:611
+#: pynicotine/gtkgui/transfers.py:248 pynicotine/gtkgui/userbrowse.py:292
+#: pynicotine/gtkgui/userbrowse.py:304 pynicotine/gtkgui/userbrowse.py:370
+#: pynicotine/gtkgui/userbrowse.py:385
+#, fuzzy
+msgid "User Actions"
+msgstr "Kasutaja toimingud"
+
 #: pynicotine/gtkgui/privatechat.py:464
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
@@ -2132,12 +2137,12 @@ msgid "Copy _File Path"
 msgstr "Kopeerige _Failitee"
 
 #: pynicotine/gtkgui/search.py:592 pynicotine/gtkgui/transfers.py:226
-#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #: pynicotine/gtkgui/userbrowse.py:368 pynicotine/gtkgui/userbrowse.py:383
 msgid "Copy _URL"
 msgstr "Kopeeri _URL"
 
 #: pynicotine/gtkgui/search.py:593 pynicotine/gtkgui/transfers.py:227
+#: pynicotine/gtkgui/userbrowse.py:290 pynicotine/gtkgui/userbrowse.py:302
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Kopeeri kaust U_RL"
@@ -2179,11 +2184,6 @@ msgstr "Sirvi kausta"
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "F_ile Atribuudid"
-
-#: pynicotine/gtkgui/search.py:611 pynicotine/gtkgui/transfers.py:248
-#, fuzzy
-msgid "User Actions"
-msgstr "Kasutaja toimingud"
 
 #: pynicotine/gtkgui/search.py:617
 #, fuzzy
@@ -2255,7 +2255,7 @@ msgstr "Tulemused"
 msgid "Select Destination Folder for File(s)"
 msgstr "Valige faili(de) jaoks sihtkaust"
 
-#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:900
+#: pynicotine/gtkgui/search.py:1612 pynicotine/gtkgui/userbrowse.py:905
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Valige Sihtkaust"
@@ -2375,7 +2375,7 @@ msgstr "_Otsing"
 msgid "Clear All"
 msgstr "Kustuta kõik"
 
-#: pynicotine/gtkgui/transfers.py:848
+#: pynicotine/gtkgui/transfers.py:850
 #, fuzzy
 msgid "Select User's Transfers"
 msgstr "Valige Kasutajate ülekanded"
@@ -2441,12 +2441,12 @@ msgstr "Kopeerige _kausta tee"
 
 #: pynicotine/gtkgui/userbrowse.py:296
 #, fuzzy
-msgid "Download Folder & Subfolders"
+msgid "_Download Folder & Subfolders"
 msgstr "Laadige alla kaust ja alamkaustad"
 
 #: pynicotine/gtkgui/userbrowse.py:297
 #, fuzzy
-msgid "Download Folder & Subfolders To…"
+msgid "Download Folder & Subfolders _To…"
 msgstr "Laadige kaust ja alamkaustad alla …"
 
 #: pynicotine/gtkgui/userbrowse.py:321
@@ -2493,37 +2493,37 @@ msgstr ""
 "Kasutajalt ei saa jagatud faile taotleda. Kas kasutaja on võrguühenduseta, "
 "teil mõlemal on suletud kuulamisport või on ajutine ühenduvusprobleem."
 
-#: pynicotine/gtkgui/userbrowse.py:898
+#: pynicotine/gtkgui/userbrowse.py:903
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Valige mitme kausta allalaadimise sihtkoht"
 
-#: pynicotine/gtkgui/userbrowse.py:942
+#: pynicotine/gtkgui/userbrowse.py:947
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Laadi kaust (koos alamkaustadega) kasutajale üles"
 
-#: pynicotine/gtkgui/userbrowse.py:944
+#: pynicotine/gtkgui/userbrowse.py:949
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Laadi kaust kasutajale üles"
 
-#: pynicotine/gtkgui/userbrowse.py:949 pynicotine/gtkgui/userbrowse.py:1138
+#: pynicotine/gtkgui/userbrowse.py:954 pynicotine/gtkgui/userbrowse.py:1143
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Sisestage selle kasutaja nimi, kellele soovite üles laadida:"
 
-#: pynicotine/gtkgui/userbrowse.py:950 pynicotine/gtkgui/userbrowse.py:1139
+#: pynicotine/gtkgui/userbrowse.py:955 pynicotine/gtkgui/userbrowse.py:1144
 #, fuzzy
 msgid "_Upload"
 msgstr "Üleslaadimised"
 
-#: pynicotine/gtkgui/userbrowse.py:1115
+#: pynicotine/gtkgui/userbrowse.py:1120
 #, fuzzy
 msgid "Select Destination Folder for Files"
 msgstr "Valige failide sihtkaust"
 
-#: pynicotine/gtkgui/userbrowse.py:1137
+#: pynicotine/gtkgui/userbrowse.py:1142
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Faili(d) kasutajale üleslaadimine"
@@ -4468,22 +4468,22 @@ msgstr "Sooviloendi ooteperioodiks on määratud %s sekundit"
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr "Kasutaja %(user)s otsib \"%(query)s\", leidis %(num)i tulemusi"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 #, fuzzy
 msgid "Rebuilding shares…"
 msgstr "Jagamiste uuesti skannimine…"
 
-#: pynicotine/shares.py:275
+#: pynicotine/shares.py:274
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Jagamiste uuesti skannimine…"
 
-#: pynicotine/shares.py:293
+#: pynicotine/shares.py:292
 #, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Uuesti skannimine on lõpetatud: leitud %(num)s kaustad"
 
-#: pynicotine/shares.py:302
+#: pynicotine/shares.py:301
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4494,37 +4494,32 @@ msgstr ""
 "kustutage %(dir)s/*.db ja proovige uuesti. Kui see ei aita, esitage "
 "veaaruanne koos selle virnajälgiga: %(trace)s"
 
-#: pynicotine/shares.py:413
-#, fuzzy, python-format
-msgid "Can't save %(filename)s: %(error)s"
-msgstr "Ei saa salvestada %(filename)s: %(error)s"
-
-#: pynicotine/shares.py:558
+#: pynicotine/shares.py:552
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Viga faili %(path)s skannimisel: %(error)s"
 
-#: pynicotine/shares.py:562
+#: pynicotine/shares.py:556
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Viga kausta %(path)s skannimisel: %(error)s"
 
-#: pynicotine/shares.py:595
+#: pynicotine/shares.py:589
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Viga faili %(path)s metaandmete skannimisel: %(error)s"
 
-#: pynicotine/shares.py:1055
+#: pynicotine/shares.py:1049
 #, fuzzy, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
 msgstr "Uuesti skannimine katkestati kättesaamatud jagamise tõttu"
 
-#: pynicotine/shares.py:1127
+#: pynicotine/shares.py:1121
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Kasutaja %(user)s sirvib teie jagatud failide loendit"
 
-#: pynicotine/shares.py:1164
+#: pynicotine/shares.py:1158
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Jagatud kausta toomine ebaõnnestus %(folder)s: %(error)s"
@@ -6953,6 +6948,10 @@ msgstr "Värskenda faile"
 #, fuzzy
 msgid "Nicotine+ Commands"
 msgstr "Nikotiini+ meeskond"
+
+#, fuzzy, python-format
+#~ msgid "Can't save %(filename)s: %(error)s"
+#~ msgstr "Ei saa salvestada %(filename)s: %(error)s"
 
 #, fuzzy
 #~ msgid "Nicotine+"
