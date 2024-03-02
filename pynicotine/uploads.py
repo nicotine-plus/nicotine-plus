@@ -27,6 +27,8 @@
 import os
 import time
 
+from threading import Thread
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
@@ -122,11 +124,26 @@ class Uploads(Transfers):
 
     # Load Transfers #
 
-    def _load_transfers(self):
+    def _load_transfers(self, use_thread=True):
 
-        for transfer in self._get_stored_transfers(
-                self.transfers_file_path, self._load_transfers_file, load_only_finished=True):
+        load_func = self._load_transfers_file
+        transfers_file_path = self.transfers_file_path
+
+        if use_thread:
+            Thread(
+                target=self._process_uploads_loader, args=(transfers_file_path, load_func, events.emit_main_thread),
+                name="ProcessUploadsLoader", daemon=True
+            ).start()
+            return
+
+        self._process_downloads_loader(transfers_file_path, load_func, events.emit)
+
+    def _process_uploads_loader(self, transfers_file_path, load_func, emit_event):
+
+        for transfer in self._get_stored_transfers(transfers_file_path, load_func, load_only_finished=True):
             self._append_transfer(transfer)
+
+        self._allow_saving_transfers = True
 
     # Privileges #
 

@@ -30,6 +30,7 @@ import shutil
 import time
 
 from collections import defaultdict
+from threading import Thread
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -167,7 +168,7 @@ class Downloads(Transfers):
         # Fall back to new file format
         return self.transfers_file_path
 
-    def _load_transfers(self):
+    def _load_transfers(self, use_thread=True):
 
         load_func = self._load_transfers_file
         transfers_file_path = self._get_transfer_list_file_path()
@@ -175,12 +176,25 @@ class Downloads(Transfers):
         if transfers_file_path != self.transfers_file_path:
             load_func = self._load_legacy_transfers_file
 
+        if use_thread:
+            Thread(
+                target=self._process_downloads_loader, args=(transfers_file_path, load_func, events.emit_main_thread),
+                name="ProcessDownloadsLoader", daemon=True
+            ).start()
+            return
+
+        self._process_downloads_loader(transfers_file_path, load_func, events.emit)
+
+    def _process_downloads_loader(self, transfers_file_path, load_func, emit_event):
+
         for transfer in self._get_stored_transfers(transfers_file_path, load_func):
             self._append_transfer(transfer)
 
             if transfer.status == TransferStatus.USER_LOGGED_OFF:
                 # Mark transfer as failed in order to resume it when connected
                 self._fail_transfer(transfer)
+
+        self._allow_saving_transfers = True
 
     # Filters/Limits #
 

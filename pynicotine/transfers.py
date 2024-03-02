@@ -123,7 +123,6 @@ class Transfers:
     def _start(self):
 
         self._load_transfers()
-        self._allow_saving_transfers = True
 
         # Save list of transfers every 3 minutes
         events.schedule(delay=180, callback=self._save_transfers, repeat=True)
@@ -494,7 +493,8 @@ class Transfers:
         """Save list of transfers."""
 
         if not self._allow_saving_transfers:
-            # Don't save if transfers didn't load properly!
+            print("Don't save if transfers didn't load properly!")
+            # TODO: Something about it... bail out of loading loop, clear all?
             return
 
         config.create_data_folder()
