@@ -371,7 +371,7 @@ class Transfers:
             should_expand_all = self.expand_button.get_active()
 
         if transfer is not None:
-            update_counters = self.update_specific(transfer, use_reverse_file_path)
+            update_counters = self.update_specific(transfer, use_reverse_file_path=use_reverse_file_path)
 
         elif self.transfer_list:
             for transfer_i in self.transfer_list:
