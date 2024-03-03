@@ -24,6 +24,7 @@
 
 from itertools import islice
 
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -348,6 +349,34 @@ class Transfers:
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
 
+    def batch(self, iterable, update_parent=True, should_expand_all=False, use_reverse_file_path=False):
+
+        l = len(iterable)
+        n = 1000
+        has_selected_parent = False
+        update_counters = False
+
+        self.update_num_users_files()
+
+        for ndx in range(0, l, n):
+            for transfer_i in list(iterable)[ndx:min(ndx + n, l)]:
+                select_parent = (not has_selected_parent and transfer_i.iterator == self.TRANSFER_ITERATOR_PENDING)
+                row_added = self.update_specific(transfer_i, select_parent, use_reverse_file_path)
+
+                if select_parent:
+                    has_selected_parent = True
+
+            yield True
+
+        if update_parent:
+            self.update_parent_rows()
+
+        if should_expand_all:
+            self.tree_view.expand_all_rows()
+
+        self.tree_view.redraw()
+        yield False
+
     def update_model(self, transfer=None, update_parent=True):
 
         if self.window.current_page_id != self.transfer_page.id:
@@ -358,7 +387,6 @@ class Transfers:
             # No need to do unnecessary work if transfers are not visible
             return
 
-        has_selected_parent = False
         should_expand_all = False
         update_counters = False
         use_reverse_file_path = config.sections["ui"]["reverse_file_paths"]
@@ -374,24 +402,17 @@ class Transfers:
             update_counters = self.update_specific(transfer, use_reverse_file_path=use_reverse_file_path)
 
         elif self.transfer_list:
-            for transfer_i in self.transfer_list:
-                select_parent = (not has_selected_parent and transfer_i.iterator == self.TRANSFER_ITERATOR_PENDING)
-                row_added = self.update_specific(transfer_i, select_parent, use_reverse_file_path)
-
-                if select_parent:
-                    has_selected_parent = True
-
-                if row_added:
-                    update_counters = True
+            GLib.idle_add(
+                next, self.batch(self.transfer_list, update_parent, should_expand_all, use_reverse_file_path),
+                priority=GLib.PRIORITY_LOW
+            )
+            return
 
         if update_parent:
             self.update_parent_rows(transfer)
 
         if update_counters:
             self.update_num_users_files()
-
-        if should_expand_all:
-            self.tree_view.expand_all_rows()
 
         self.tree_view.redraw()
 
