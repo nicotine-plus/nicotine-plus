@@ -152,8 +152,8 @@ class Downloads(Transfers):
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 "num": numfiles, "user": username, "folder": folder},
             buttons=[
-                ("cancel", _("_No")),
-                ("download", _("_Yes"))
+                ("cancel", _("_Cancel")),
+                ("download", _("_Download Folder"))
             ],
             callback=self.folder_download_response,
             callback_data=(download_callback, callback_args)
