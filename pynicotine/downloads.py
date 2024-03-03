@@ -872,6 +872,10 @@ class Downloads(Transfers):
 
         username = msg.user
 
+        if username not in core.users.watched:
+            # Skip redundant status updates from users in joined rooms
+            return
+
         if msg.status == slskmessages.UserStatus.OFFLINE:
             for users in (self.queued_users, self.failed_users):
                 for download in users.get(username, {}).copy().values():
@@ -881,7 +885,11 @@ class Downloads(Transfers):
                 if download.status != TransferStatus.TRANSFERRING:
                     self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
 
-        elif username not in self.queued_users:
+            self._online_users.discard(username)
+            return
+
+        # No need to check transfers on away status change
+        if username not in self._online_users:
             for download in self.failed_users.get(username, {}).copy().values():
                 if download.status != TransferStatus.USER_LOGGED_OFF:
                     # Only a online/away status update, no transfers to resume
@@ -892,6 +900,8 @@ class Downloads(Transfers):
 
                 if self._enqueue_transfer(download):
                     self._update_transfer(download)
+
+            self._online_users.add(username)
 
     def _set_connection_stats(self, download_bandwidth=0, **_unused):
         self.total_bandwidth = download_bandwidth

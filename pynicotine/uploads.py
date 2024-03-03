@@ -772,6 +772,10 @@ class Uploads(Transfers):
 
         username = msg.user
 
+        if username not in core.users.watched:
+            # Skip redundant status updates from users in joined rooms
+            return
+
         if msg.status == slskmessages.UserStatus.OFFLINE:
             for upload in self.active_users.get(username, {}).copy().values():
                 if upload.status == TransferStatus.TRANSFERRING:
@@ -783,11 +787,16 @@ class Uploads(Transfers):
             for upload in self.failed_users.get(username, {}).copy().values():
                 self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
 
+            self._online_users.discard(username)
             return
 
-        for upload in self.failed_users.get(username, {}).copy().values():
-            if upload.status == TransferStatus.USER_LOGGED_OFF:
-                self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+        # No need to check transfers on away status change
+        if username not in self._online_users:
+            for upload in self.failed_users.get(username, {}).copy().values():
+                if upload.status == TransferStatus.USER_LOGGED_OFF:
+                    self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+
+            self._online_users.add(username)
 
     def _user_stats(self, msg):
         """Server code 36."""

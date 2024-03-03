@@ -109,6 +109,7 @@ class Transfers:
         self.total_bandwidth = 0
 
         self._allow_saving_transfers = False
+        self._online_users = set()
         self._user_queue_limits = defaultdict(int)
         self._user_queue_sizes = defaultdict(int)
 
@@ -159,6 +160,7 @@ class Transfers:
         self.queued_transfers.clear()
         self.queued_users.clear()
         self.active_users.clear()
+        self._online_users.clear()
         self._user_queue_limits.clear()
         self._user_queue_sizes.clear()
 
