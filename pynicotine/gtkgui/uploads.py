@@ -116,7 +116,7 @@ class Uploads(Transfers):
     def abort_selected_transfers(self):
         core.uploads.abort_uploads(self.selected_transfers, denied_message="Cancelled")
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         core.uploads.clear_uploads(uploads=self.selected_transfers)
 
     def on_try_clear_queued(self, *_args):

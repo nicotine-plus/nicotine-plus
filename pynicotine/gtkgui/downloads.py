@@ -110,7 +110,7 @@ class Downloads(Transfers):
     def abort_selected_transfers(self):
         core.downloads.abort_downloads(self.selected_transfers)
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         core.downloads.clear_downloads(downloads=self.selected_transfers)
 
     def on_try_clear_queued(self, *_args):
