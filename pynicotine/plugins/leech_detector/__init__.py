@@ -33,7 +33,6 @@ class Plugin(BasePlugin):
 
         self.settings = {
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
-            "ban_leeches": True,
             "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
@@ -44,10 +43,6 @@ class Plugin(BasePlugin):
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
                 "type": "textview"
-            },
-            "ban_leeches": {
-                "description": "Auto ban detected leeches",
-                "type": "bool"
             },
             "open_private_chat": {
                 "description": "Open chat tabs when sending private messages to leechers",
@@ -129,8 +124,7 @@ class Plugin(BasePlugin):
             return
 
         # ban the leecher
-        if self.settings["ban_leechers"] = True:
-            self.core.network_filter.ban_user(user)
+        self.core.network_filter.ban_user(user)
         
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
