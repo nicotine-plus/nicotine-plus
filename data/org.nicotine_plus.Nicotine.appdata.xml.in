@@ -57,14 +57,14 @@
       <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/HEAD/data/screenshots/screenshot8.png</image>
     </screenshot>
   </screenshots>
-  <recommends>
-    <control>keyboard</control>
-    <control>pointing</control>
-    <control>touch</control>
-  </recommends>
   <requires>
     <display_length compare="ge">600</display_length>
   </requires>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
   <kudos>
     <kudo>HiDpiIcon</kudo>
     <kudo>ModernToolkit</kudo>
@@ -74,7 +74,7 @@
   <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <url type="translate">https://nicotine-plus.org/doc/TRANSLATIONS</url>
   <developer_name>Nicotine+ Team</developer_name>  <!-- deprecated in AppStream 1.0 (2023) -->
-  <developer id="nicotine-plus.org">
+  <developer id="org.nicotine-plus">
     <name>Nicotine+ Team</name>
   </developer>
   <content_rating type="oars-1.1">
