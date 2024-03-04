@@ -104,7 +104,6 @@ jobs:
         with:
           msystem: MINGW64
           release: false
-          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext-tools

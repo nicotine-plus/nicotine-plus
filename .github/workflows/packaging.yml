@@ -94,7 +94,6 @@ jobs:
         with:
           msystem: MINGW64
           release: false
-          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext-tools
@@ -147,7 +146,6 @@ jobs:
         run: |
           brew uninstall --ignore-dependencies python@3.11
           brew install --overwrite python@3.11
-          brew update
           python3 packaging/macos/dependencies.py
 
       - name: Freeze application
