@@ -475,8 +475,20 @@ class UserBrowse:
 
         if browsed_user.private_folders:
             private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
-
-        self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
+            
+        privv = num_private_folders
+        privstr = str(num_private_folders)
+        all = num_folders + num_private_folders
+        total = humanize(num_folders + num_private_folders)
+        totalstr = str(total)
+        if (num_private_folders > 0):
+            percentage = (num_private_folders / all) * 100
+        else:
+            percentage = 100
+        percentagestr = str(percentage)
+        n00bi = "Private : " + privstr + " / " + "Open : " + totalstr + " Share percentage : " + percentagestr
+        
+        self.num_folders_label.set_text(n00bi)
         self.share_size_label.set_text(human_size(size + private_size))
 
         if self.expand_button.get_active():
