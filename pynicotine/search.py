@@ -600,11 +600,11 @@ class Search:
 
         # Excluded search words (e.g. -hello)
         if results:
-            for included_word in excluded_words:
-                if included_word not in word_index:
+            for excluded_word in excluded_words:
+                if excluded_word not in word_index:
                     continue
 
-                results = self._update_search_results(results, word_index[included_word], excluded=True)
+                results = self._update_search_results(results, word_index[excluded_word], excluded=True)
 
         if not results:
             return None
