@@ -545,7 +545,7 @@ class Search:
 
         try:
             # Start with the word with the least results to reduce memory usage
-            start_word = min(included_words, key=lambda word: len(word_index[word]), default=None)
+            start_word = min(included_words, key=lambda x: len(word_index[x]), default=None)
 
         except KeyError:
             # No results
@@ -555,12 +555,12 @@ class Search:
         included_words.discard(start_word)
 
         # Partial search words (e.g. *ello)
-        for word in partial_words:
+        for partial_word in partial_words:
             partial_results = set()
             num_partial_results = 0
 
             for complete_word in word_index:
-                if complete_word.endswith(word):
+                if complete_word.endswith(partial_word):
                     indices = word_index[complete_word]
 
                     if has_single_word:
@@ -592,19 +592,19 @@ class Search:
 
             results = self._update_search_results(results, start_results)
 
-            for word in included_words:
-                if word not in word_index:
+            for included_word in included_words:
+                if included_word not in word_index:
                     return None
 
-                results = self._update_search_results(results, word_index[word])
+                results = self._update_search_results(results, word_index[included_word])
 
         # Excluded search words (e.g. -hello)
         if results:
-            for word in excluded_words:
-                if word not in word_index:
+            for included_word in excluded_words:
+                if included_word not in word_index:
                     continue
 
-                results = self._update_search_results(results, word_index[word], excluded=True)
+                results = self._update_search_results(results, word_index[included_word], excluded=True)
 
         if not results:
             return None
