@@ -33,6 +33,7 @@ class Plugin(BasePlugin):
 
         self.settings = {
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
+            "ban_leeches": True,
             "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
@@ -43,6 +44,10 @@ class Plugin(BasePlugin):
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
                 "type": "textview"
+            },
+            "ban_leeches": {
+                "description": "Auto ban detected leeches",
+                "type": "bool"
             },
             "open_private_chat": {
                 "description": "Open chat tabs when sending private messages to leechers",
@@ -80,7 +85,7 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def check_user(self, user, num_files, num_folders, source="server"):
+    def check_user(self, user, num_files, num_folders):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -88,10 +93,6 @@ class Plugin(BasePlugin):
 
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
-            return
-
-        if self.probed_users[user] == "requesting_shares" and source != "peer":
-            # Waiting for stats from peer, but received stats from server. Ignore.
             return
 
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
@@ -127,14 +128,24 @@ class Plugin(BasePlugin):
             self.core.userbrowse.request_user_shares(user)
             return
 
+        # ban the leecher
+        if self.settings["ban_leechers"] = True:
+            self.core.network_filter.ban_user(user)
+        
         if self.settings["message"]:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to message "
-                           "leecher after transfer…")
-        else:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to log "
-                           "leecher after transfer…")
+            for line in self.settings["message"].splitlines():
+                for placeholder, option_key in self.PLACEHOLDERS.items():
+                    # Replace message placeholders with actual values specified in the plugin settings
+                    line = line.replace(placeholder, str(self.settings[option_key]))
 
-        self.probed_users[user] = "pending_leecher"
+                self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
+                log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Message sent.")
+        else:
+            log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
+
+        self.probed_users[user] = "processed_leecher"
+        if user not in self.settings["detected_leechers"]:
+            self.settings["detected_leechers"].append(user)
         self.log(log_message, (user, num_files, num_folders))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
@@ -144,6 +155,8 @@ class Plugin(BasePlugin):
 
         self.probed_users[user] = "requesting_stats"
         stats = self.core.users.watched.get(user)
+        # browse Downloaders
+        self.core.userbrowse.browse_user(user, switch_page=False)
 
         if stats is None:
             # Transfer manager will request the stats from the server shortly
@@ -153,30 +166,4 @@ class Plugin(BasePlugin):
             self.check_user(user, num_files=stats.files, num_folders=stats.folders)
 
     def user_stats_notification(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], source=stats["source"])
-
-    def upload_finished_notification(self, user, *_):
-
-        if user not in self.probed_users:
-            return
-
-        if self.probed_users[user] != "pending_leecher":
-            return
-
-        self.probed_users[user] = "processed_leecher"
-
-        if not self.settings["message"]:
-            self.log("Leecher %s doesn't share enough files. No message is specified in plugin settings.", user)
-            return
-
-        for line in self.settings["message"].splitlines():
-            for placeholder, option_key in self.PLACEHOLDERS.items():
-                # Replace message placeholders with actual values specified in the plugin settings
-                line = line.replace(placeholder, str(self.settings[option_key]))
-
-            self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
-
-        if user not in self.settings["detected_leechers"]:
-            self.settings["detected_leechers"].append(user)
-
-        self.log("Leecher %s doesn't share enough files. Message sent.", user)
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
