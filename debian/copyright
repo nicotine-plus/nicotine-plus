@@ -4,7 +4,7 @@ Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2023 Nicotine+ Contributors
+Copyright: 2001-2024 Nicotine+ Contributors
            2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
            2002 Joe Halliwell
            2003 Brett W. Thompson (Zip)
@@ -34,7 +34,7 @@ Copyright: 2001-2023 Nicotine+ Contributors
                 alekksander
            2020-2021 toofar
            2020-2023 Han Boetes (hboetes)
-           2020-2023 Mat (mathiascode)
+           2020-2024 Mat (mathiascode)
            2021 redactedscribe
                 Mendelson Gusmão (mendelgusmao)
                 Inso-m-niaC
@@ -43,21 +43,21 @@ Copyright: 2001-2023 Nicotine+ Contributors
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
-Copyright: 2020-2023 Mat (mathiascode)
+Copyright: 2020-2024 Nicotine+ Contributors
 License: CC0-1.0
 
 Files: po/*.po
-Copyright: 2003-2023 Nicotine+ Translators
+Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
 Files: pynicotine/external/ip2location.py
 Copyright: 2017 IP2Location.com
-           2021-2023 Mat (mathiascode)
+           2021-2023 Nicotine+ Contributors
 License: Expat
 
 Files: pynicotine/external/ipcountrydb.bin
-Copyright: 2001-2023 Hexasoft Development Sdn. Bhd.
+Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
 Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
@@ -66,7 +66,7 @@ License: Expat
 
 Files: pynicotine/external/tinytag.py
 Copyright: 2014-2022 Tom Wallroth
-           2020-2023 Mat (mathiascode)
+           2021-2023 Mat (mathiascode)
 License: Expat
 
 License: GPL-3+

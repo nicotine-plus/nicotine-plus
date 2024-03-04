@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -82,7 +82,7 @@ class Popover:
 
         self.menu_button = menu_button
 
-    def show(self):
+    def present(self):
         self.widget.popup()
 
     def close(self, use_transition=True):
@@ -92,3 +92,7 @@ class Popover:
             return
 
         self.widget.set_visible(False)
+
+    def destroy(self):
+        self.set_menu_button(None)
+        self.__dict__.clear()

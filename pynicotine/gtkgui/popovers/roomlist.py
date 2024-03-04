@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GObject
+from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
@@ -95,14 +96,27 @@ class RoomList(Popover):
             ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
+        for toggle in (self.public_feed_toggle, self.private_room_toggle):
+            parent = next(iter(toggle.get_parent()))
+
+            if GTK_API_VERSION >= 4:
+                parent.gesture_click = Gtk.GestureClick()
+                parent.add_controller(parent.gesture_click)
+            else:
+                parent.set_has_window(True)
+                parent.gesture_click = Gtk.GestureMultiPress(widget=parent)
+
+            parent.gesture_click.connect("released", self.on_toggle_label_pressed, toggle)
+
         self.private_room_toggle.set_active(config.sections["server"]["private_chatrooms"])
-        self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
+        self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
+        self.completion_entry = CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            add_css_class(widget=window.room_list_button.get_first_child(), css_class="arrow-button")
+            inner_button = next(iter(window.room_list_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
         self.set_menu_button(window.room_list_button)
 
@@ -112,10 +126,19 @@ class RoomList(Popover):
             ("remove-room", self.remove_room),
             ("room-list", self.room_list),
             ("server-disconnect", self.clear),
+            ("show-room", self.show_room),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.popup_menu.destroy()
+        self.completion_entry.destroy()
+
+        super().destroy()
 
     def get_selected_room(self):
 
@@ -158,7 +181,12 @@ class RoomList(Popover):
             return
 
         user_count = self.list_view.get_row_value(iterator, "users_data")
-        user_count = (user_count - 1 if decrement else user_count + 1)
+
+        if decrement:
+            if user_count > 0:
+                user_count -= 1
+        else:
+            user_count += 1
 
         if self.list_view.get_row_value(iterator, "is_private_data"):
             h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
@@ -175,11 +203,11 @@ class RoomList(Popover):
         self.add_room(msg.room, is_private=True)
 
     def join_room(self, msg):
-
-        if msg.room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(True)
-
         self.update_room_user_count(msg.room)
+
+    def show_room(self, room, *_args):
+        if room == core.chatrooms.GLOBAL_ROOM_NAME:
+            self.toggle_public_feed(True)
 
     def remove_room(self, room):
 
@@ -236,13 +264,16 @@ class RoomList(Popover):
         core.chatrooms.show_room(self.popup_room)
         self.close(use_transition=False)
 
+    def on_toggle_label_pressed(self, _controller, _num_p, _pos_x, _pos_y, toggle):
+        toggle.emit("activate")
+
     def on_toggle_public_feed(self, *_args):
 
         if self.initializing_feed:
             return
 
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_global_room()
+            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
             self.close(use_transition=False)
             return
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -25,11 +25,11 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -62,6 +62,10 @@ class PopupMenu:
 
         PopupMenu.popup_id_counter += 1
         self.popup_id = PopupMenu.popup_id_counter
+
+    def destroy(self):
+        self.clear()
+        self.__dict__.clear()
 
     def set_parent(self, parent):
 
@@ -134,7 +138,7 @@ class PopupMenu:
         else:
             normalized_label = "-".join(label.translate(TRANSLATE_PUNCTUATION).lower().split())
             action_id = f"app.menu-{normalized_label}-{self.popup_id}"
-            action = self._create_action(action_id[4:], (boolean or choice))
+            action = self._create_action(action_id.replace("app.", "", 1), (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
             # Choice target name
@@ -346,8 +350,11 @@ class UserPopupMenu(PopupMenu):
 
         self.username = username
         self.tab_name = tab_name
+        self.popup_menu_private_rooms = None
 
-        self.setup_user_menu(username)
+        if tab_name != "private_rooms":
+            self.popup_menu_private_rooms = UserPopupMenu(self.application, username=username, tab_name="private_rooms")
+            self.setup_user_menu(username)
 
     def setup_user_menu(self, username):
 
@@ -362,7 +369,7 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("#" + _("View User _Profile"), self.on_user_profile))
 
         if self.tab_name != "privatechat":
-            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
+            self.add_items(("#" + _("_Send Message"), self.on_send_message))
 
         if self.tab_name != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
@@ -371,14 +378,15 @@ class UserPopupMenu(PopupMenu):
             self.add_items(("$" + _("_Add Buddy"), self.on_add_to_list))
 
         self.add_items(
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("", None),
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
             ("", None),
             ("$" + _("Ban IP Address"), self.on_ban_ip),
             ("$" + _("Ignore IP Address"), self.on_ignore_ip),
-            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
+            ("", None),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
     def update_username_item(self):
@@ -403,15 +411,18 @@ class UserPopupMenu(PopupMenu):
         self.username = username
         self.update_username_item()
 
+        if self.popup_menu_private_rooms is not None:
+            self.popup_menu_private_rooms.set_user(self.username)
+
     def toggle_user_items(self):
 
         self.editing = True
-        self.actions[_("_Gift Privileges…")].set_enabled(bool(core.privileges_left))
 
+        local_username = core.users.login_username or config.sections["server"]["login"]
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.userlist.buddies))
+            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -420,19 +431,20 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != core.login_username or value))
+            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != local_username or value))
             self.actions[action_id].set_state(GLib.Variant("b", value))
+
+        self.popup_menu_private_rooms.populate_private_rooms()
+        self.popup_menu_private_rooms.update_model()
+
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and self.username != core.users.login_username)
+        self.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
         self.editing = False
 
-    def populate_private_rooms(self, popup):
+    def populate_private_rooms(self):
 
-        popup.clear()
-
-        if self.username is None:
-            return
-
-        popup.set_user(self.username)
+        self.clear()
 
         for room, data in core.chatrooms.private_rooms.items():
             is_owned = core.chatrooms.is_private_room_owned(room)
@@ -442,23 +454,24 @@ class UserPopupMenu(PopupMenu):
                 continue
 
             if self.username in data["users"]:
-                popup.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
+                self.add_items(
+                    ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
             else:
-                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
+                self.add_items(
+                    ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
             if self.username in data["operators"]:
-                popup.add_items(
-                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
-            else:
-                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
+                self.add_items(
+                    ("#" + _("Remove as Operator of %s") % room, self.on_private_room_remove_operator, room))
 
-            popup.add_items(("", None))
+            elif self.username in data["users"]:
+                self.add_items(
+                    ("#" + _("Add as Operator of %s") % room, self.on_private_room_add_operator, room))
 
-        popup.update_model()
+            self.add_items(("", None))
 
     def update_model(self):
         super().update_model()
@@ -477,7 +490,7 @@ class UserPopupMenu(PopupMenu):
         core.privatechat.show_user(self.username)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.username, notify=True)
+        core.users.request_ip_address(self.username, notify=True)
 
     def on_user_profile(self, *_args):
         core.userinfo.show_user(self.username)
@@ -507,9 +520,9 @@ class UserPopupMenu(PopupMenu):
             return
 
         if state.get_boolean():
-            core.userlist.add_buddy(self.username)
+            core.buddies.add_buddy(self.username)
         else:
-            core.userlist.remove_buddy(self.username)
+            core.buddies.remove_buddy(self.username)
 
         action.set_state(state)
 
@@ -563,40 +576,3 @@ class UserPopupMenu(PopupMenu):
 
     def on_copy_user(self, *_args):
         clipboard.copy_text(self.username)
-
-    def on_give_privileges_response(self, dialog, _response_id, _data):
-
-        days = dialog.get_entry_value()
-
-        if not days:
-            return
-
-        try:
-            days = int(days)
-            core.request_give_privileges(self.username, days)
-
-        except ValueError:
-            self.on_give_privileges(error=_("Please enter number of days."))
-
-    def on_give_privileges(self, *_args, error=None):
-
-        core.request_check_privileges()
-
-        if core.privileges_left is None:
-            days = _("Unknown")
-        else:
-            days = core.privileges_left // 60 // 60 // 24
-
-        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
-                   {"user": self.username, "days_left": _("%(days)s days left") % {"days": days}})
-
-        if error:
-            message += "\n\n" + error
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Gift Privileges"),
-            message=message,
-            action_button_label=_("_Give Privileges"),
-            callback=self.on_give_privileges_response
-        ).show()

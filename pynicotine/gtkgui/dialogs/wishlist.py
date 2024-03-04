@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -24,6 +24,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.treeview import TreeView
 
@@ -45,9 +46,9 @@ class WishList(Dialog):
             show_callback=self.on_show,
             title=_("Wishlist"),
             width=600,
-            height=600,
-            close_destroy=False
+            height=600
         )
+        application.add_window(self.widget)
 
         self.application = application
         self.list_view = TreeView(
@@ -66,14 +67,29 @@ class WishList(Dialog):
             wish = str(wish)
             self.list_view.add_row([wish], select_row=False)
 
-        CompletionEntry(self.wish_entry, self.list_view.model)
+        self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
+
+        popup = PopupMenu(application, self.list_view.widget)
+        popup.add_items(
+            ("#" + _("_Search for Item"), self.on_search_wish),
+            ("#" + _("Edit…"), self.on_edit_wish),
+            ("", None),
+            ("#" + _("Remove"), self.on_remove_wish)
+        )
 
         for event_name, callback in (
             ("add-wish", self.add_wish),
             ("remove-wish", self.remove_wish)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.completion_entry.destroy()
+
+        super().destroy()
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
@@ -120,7 +136,18 @@ class WishList(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            ).show()
+            ).present()
+            return
+
+    def on_search_wish(self, *_args):
+
+        for iterator in self.list_view.get_selected_rows():
+            wish = self.list_view.get_row_value(iterator, "wish")
+            core.search.do_search(wish, mode="global")
+
+            # Close dialog to discourage manually searching many items in a row
+            # (can result in a temporary ban from the server in extreme cases)
+            self.close()
             return
 
     def on_remove_wish(self, *_args):
@@ -147,11 +174,10 @@ class WishList(Dialog):
             message=_("Do you really want to clear your wishlist?"),
             destructive_response_id="ok",
             callback=self.clear_wishlist_response
-        ).show()
+        ).present()
 
     def add_wish(self, wish):
-        if wish not in self.list_view.iterators:
-            self.list_view.add_row([wish])
+        self.list_view.add_row([wish])
 
     def remove_wish(self, wish):
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -24,38 +24,31 @@ from threading import Thread
 
 EVENT_NAMES = {
     # General
-    "add-privileged-user",
-    "admin-message",
-    "change-password",
     "check-latest-version",
-    "check-privileges",
     "cli-command",
     "cli-prompt-finished",
     "confirm-quit",
-    "connect-to-peer",
     "enable-message-queue",
-    "hide-scan-progress",
-    "invalid-password",
     "log-message",
-    "peer-address",
-    "peer-connection-closed",
-    "peer-connection-error",
-    "privileged-users",
     "queue-network-message",
     "quit",
-    "remove-privileged-user",
     "schedule-quit",
-    "server-login",
-    "server-disconnect",
-    "server-timeout",
     "set-connection-stats",
     "setup",
-    "shares-preparing",
-    "shares-ready",
-    "shares-scanning",
-    "shares-unavailable",
     "start",
     "thread-callback",
+
+    # Users
+    "admin-message",
+    "change-password",
+    "check-privileges",
+    "connect-to-peer",
+    "invalid-password",
+    "peer-address",
+    "privileged-users",
+    "server-disconnect",
+    "server-login",
+    "server-reconnect",
     "user-country",
     "user-stats",
     "user-status",
@@ -129,11 +122,11 @@ EVENT_NAMES = {
     "private-chat-completions",
     "private-chat-remove-user",
     "private-chat-show-user",
-    "send-private-message",
 
     # Search
     "add-search",
     "add-wish",
+    "excluded-search-phrases",
     "file-search-request-distributed",
     "file-search-request-server",
     "file-search-response",
@@ -143,13 +136,17 @@ EVENT_NAMES = {
     "show-search",
 
     # Statistics
-    "update-stat-value",
+    "update-stat",
 
     # Shares
     "folder-contents-request",
     "shared-file-list-progress",
     "shared-file-list-request",
     "shared-file-list-response",
+    "shares-preparing",
+    "shares-ready",
+    "shares-scanning",
+    "shares-unavailable",
     "user-browse-remove-user",
     "user-browse-show-user",
 
@@ -165,12 +162,14 @@ EVENT_NAMES = {
     "download-connection-closed",
     "download-file-error",
     "download-large-folder",
-    "download-notification",
-    "file-download-init",
-    "file-upload-init",
+    "file-connection-closed",
     "file-download-progress",
+    "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
+    "folder-download-finished",
+    "peer-connection-closed",
+    "peer-connection-error",
     "place-in-queue-request",
     "place-in-queue-response",
     "queue-upload",
@@ -178,15 +177,11 @@ EVENT_NAMES = {
     "transfer-response",
     "update-download",
     "update-download-limits",
-    "update-downloads",
     "update-upload",
     "update-upload-limits",
-    "update-uploads",
-    "upload-connection-closed",
     "upload-denied",
     "upload-failed",
     "upload-file-error",
-    "upload-notification",
 
     # User info
     "user-info-progress",
@@ -218,7 +213,12 @@ class Events:
 
         self._is_active = True
 
-        self.connect("quit", self._quit)
+        for event_name, callback in (
+            ("quit", self._quit),
+            ("thread-callback", self._thread_callback)
+        ):
+            self.connect(event_name, callback)
+
         Thread(target=self._run_scheduler, name="SchedulerThread", daemon=True).start()
 
     def connect(self, event_name, function):
@@ -251,13 +251,16 @@ class Events:
     def invoke_main_thread(self, callback, *args, **kwargs):
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
 
-    def schedule(self, delay, callback, repeat=False):
+    def schedule(self, delay, callback, callback_args=None, repeat=False):
 
         self._scheduler_event_id += 1
-        next_time = (time.time() + delay)
+        next_time = (time.monotonic() + delay)
+
+        if callback_args is None:
+            callback_args = ()
 
         self._pending_scheduler_events.append(
-            (self._scheduler_event_id, (next_time, delay, repeat, callback)))
+            (self._scheduler_event_id, (next_time, delay, repeat, callback, callback_args)))
 
         return self._scheduler_event_id
 
@@ -307,21 +310,24 @@ class Events:
 
             # Retrieve upcoming event
             event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
-            event_time, delay, repeat, callback = event_data
-            current_time = time.time()
+            event_time, delay, repeat, callback, callback_args = event_data
+            current_time = time.monotonic()
             sleep_time = (event_time - current_time)
 
             if sleep_time <= 0:
-                self.invoke_main_thread(callback)
+                self.invoke_main_thread(callback, *callback_args)
 
                 if repeat:
-                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback)
+                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback, callback_args)
                 else:
                     self._scheduler_events.pop(event_id, None)
 
                 continue
 
             time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
+
+    def _thread_callback(self, callback, *args, **kwargs):
+        callback(*args, **kwargs)
 
     def _quit(self):
 

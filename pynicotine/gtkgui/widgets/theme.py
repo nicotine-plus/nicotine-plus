@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
-from pynicotine.gtkgui.application import LIBADWAITA_MINOR_VERSION
 from pynicotine.logfacility import log
 from pynicotine.shares import FileTypes
 from pynicotine.slskmessages import UserStatus
@@ -117,236 +116,74 @@ def set_use_header_bar(enabled):
     GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
+def set_default_font_size():
+
+    if sys.platform not in {"darwin", "win32"}:
+        return
+
+    font = GTK_SETTINGS.props.gtk_font_name
+
+    if not font:
+        return
+
+    # Increase default font size to match newer apps on Windows and macOS
+    font_name, _separator, font_size = font.rpartition(" ")
+    font_size = str(int(font_size) + 1)
+    GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
+
+
 def set_visual_settings():
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
+    set_default_font_size()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
 
 def set_global_css():
 
-    css = bytearray()
-    css_default = b"""
-    /* Tweaks */
-
-    flowbox, flowboxchild {
-        /* GTK adds unwanted padding to flowbox children by default */
-        border: 0;
-        background: inherit;
-        padding: 0;
-    }
-
-    scrollbar {
-        /* Workaround for themes breaking scrollbar hitbox with margins */
-        margin: 0;
-    }
-
-    .search-view treeview:disabled {
-        /* Search results with no free slots have no style by default */
-        color: unset;
-    }
-
-    treeview button > box {
-        /* Column header padding to match rows */
-        padding-right: 11px;
-    }
-
-    treeview button {
-        /* Column header padding to match rows */
-        padding-left: 11px;
-        padding-right: 1px;
-    }
-
-    infobar box {
-        /* Remove unwanted padding from info bars */
-        padding: 0;
-    }
-
-    progressbar.osd trough,
-    progressbar.osd progress {
-        /* Make overlay progress bars slightly more legible */
-        min-height: 4px;
-    }
-
-    treeview button {
-        /* Remove bottom border from column headers */
-        border: 0;
-        padding-bottom: 3px;
-        padding-top: 3px;
-    }
-
-    treeview button:not(:last-child):dir(ltr) > box,
-    treeview button:not(:first-child):dir(rtl) > box {
-        /* Add column header separators */
-        box-shadow: 1px 0 0 0 alpha(@borders, 2.8);
-    }
-
-    /* Borders */
-
-    .border-top,
-    .preferences-border .action-area {
-        border-top: 1px solid @borders;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid @borders;
-    }
-
-    .border-start:dir(ltr),
-    .border-end:dir(rtl) {
-        /* Use box-shadow to avoid double window border in narrow flowbox */
-        box-shadow: -1px 0 0 0 @borders;
-    }
-
-    .border-start-dim:dir(ltr),
-    .border-end-dim:dir(rtl) {
-        box-shadow: -1px 0 0 0 alpha(@borders, 0.75);
-    }
-
-    .border-end:dir(ltr),
-    .border-start:dir(rtl) {
-        box-shadow: 1px 0 0 0 @borders;
-    }
-
-    .border-end-dim:dir(ltr),
-    .border-start-dim:dir(rtl) {
-        box-shadow: 1px 0 0 0 alpha(@borders, 0.75);
-    }
-
-    /* Buttons */
-
-    .count {
-        min-width: 12px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    /* Headings */
-
-    .title-1 {
-        font-weight: 800;
-        font-size: 20pt;
-    }
-
-    .title-2 {
-        font-weight: 800;
-        font-size: 15pt;
-    }
-
-    .heading {
-        font-weight: bold;
-        font-size: inherit;
-    }
-
-    /* Text Formatting */
-
-    .bold {
-        font-weight: bold;
-    }
-
-    .italic {
-        font-style: italic;
-    }
-
-    .normal {
-        font-weight: normal;
-    }
-
-    .underline {
-        text-decoration-line: underline;
-    }
-    """
-
-    css_gtk3 = b"""
-    /* Tweaks (GTK 3) */
-
-    treeview {
-        /* Set spacing for dropdown menu/entry completion items */
-        -GtkTreeView-horizontal-separator: 12;
-        -GtkTreeView-vertical-separator: 5;
-    }
-
-    filechooser treeview,
-    fontchooser treeview {
-        /* Restore default item spacing in GTK choosers */
-        -GtkTreeView-horizontal-separator: 2;
-        -GtkTreeView-vertical-separator: 2;
-    }
-
-    .treeview-spacing {
-        /* Disable GTK's built-in item spacing in custom treeviews */
-        -GtkTreeView-horizontal-separator: 0;
-        -GtkTreeView-vertical-separator: 0;
-    }
-
-    .dropdown-scrollbar {
-        /* Enable dropdown list with a scrollbar */
-        -GtkComboBox-appears-as-list: 1;
-    }
-    """
-
-    css_gtk4 = b"""
-    /* Tweaks (GTK 4+) */
-
-    treeview.normal-icons {
-        /* Country flag icon size in treeviews */
-        -gtk-icon-size: 21px;
-    }
-
-    window.dialog:not(.message) .dialog-action-area {
-        /* Add missing spacing to dialog action buttons */
-        border-spacing: 6px;
-    }
-
-    .image-text-button box {
-        /* Remove unwanted spacing from buttons */
-        border-spacing: 0;
-    }
-
-    .generic-popover contents {
-        /* Remove unwanted spacing from popovers */
-        padding: 0;
-    }
-    """
-
-    css_libadwaita_1_4 = b"""
-    /* Tweaks (libadwaita 1.4+) */
-
-    window:not(.preferences-border):not(.titlebar-border) headerbar.titlebar,
-    window:not(.menubar-border) menubar {
-        /* Make title/header bars flat to match other libadwaita apps */
-        background: none;
-        box-shadow: none;
-        color: inherit;
-    }
-    """
-
     global_css_provider = Gtk.CssProvider()
-    css.extend(css_default)
+    css_folder_path = os.path.join(GTK_GUI_FOLDER_PATH, "css")
+    css = bytearray()
+
+    with open(encode_path(os.path.join(css_folder_path, "style.css")), "rb") as file_handle:
+        css.extend(file_handle.read())
 
     if GTK_API_VERSION >= 4:
-        css.extend(css_gtk4)
+        add_provider_func = Gtk.StyleContext.add_provider_for_display  # pylint: disable=no-member
+        display = Gdk.Display.get_default()
 
-        if (LIBADWAITA_API_VERSION, LIBADWAITA_MINOR_VERSION) >= (1, 4):
-            css.extend(css_libadwaita_1_4)
+        with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
+            css.extend(file_handle.read())
+
+        if sys.platform == "darwin":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
+
+        if LIBADWAITA_API_VERSION:
+            with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
+
+            if sys.platform in {"win32", "darwin"}:
+                with open(encode_path(os.path.join(css_folder_path, "style_libadwaita_csd.css")), "rb") as file_handle:
+                    css.extend(file_handle.read())
 
         load_css(global_css_provider, css)
-
-        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
-            Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
 
     else:
-        css.extend(css_gtk3)
+        add_provider_func = Gtk.StyleContext.add_provider_for_screen  # pylint: disable=no-member
+        display = Gdk.Screen.get_default()
+
+        with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
+            css.extend(file_handle.read())
+
         load_css(global_css_provider, css)
 
-        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
-            Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+    add_provider_func(display, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    add_provider_func(display, CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
 def set_global_style():
@@ -371,10 +208,16 @@ FILE_TYPE_ICON_LABELS = {
     "package-x-generic-symbolic": _("Archive"),
     "text-x-generic-symbolic": _("Miscellaneous"),
     "video-x-generic-symbolic": _("Video"),
-    "x-office-document-symbolic": _("Document/Text")
+    "x-office-document-symbolic": _("Document"),
+    "emblem-documents-symbolic": _("Text")
+}
+USER_STATUS_ICON_LABELS = {
+    "nplus-status-available": _("Online"),
+    "nplus-status-away": _("Away"),
+    "nplus-status-offline": _("Offline")
 }
 USER_STATUS_ICON_NAMES = {
-    UserStatus.ONLINE: "nplus-status-online",
+    UserStatus.ONLINE: "nplus-status-available",
     UserStatus.AWAY: "nplus-status-away",
     UserStatus.OFFLINE: "nplus-status-offline"
 }
@@ -409,7 +252,7 @@ def load_custom_icons(update=False):
     if not user_icon_theme_path:
         return
 
-    user_icon_theme_path = os.path.normpath(user_icon_theme_path)
+    user_icon_theme_path = os.path.normpath(os.path.expandvars(user_icon_theme_path))
     log.add_debug("Loading custom icon theme from %s", user_icon_theme_path)
 
     theme_file_path = os.path.join(icon_theme_path, "index.theme")
@@ -512,12 +355,8 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    result = basename.rsplit(".", 1)
-
-    if len(result) < 2:
-        return "text-x-generic-symbolic"
-
-    extension = result[-1].lower()
+    _basename_no_extension, _separator, extension = basename.rpartition(".")
+    extension = extension.lower()
 
     if extension in FileTypes.AUDIO:
         return "audio-x-generic-symbolic"
@@ -531,8 +370,11 @@ def get_file_type_icon_name(basename):
     if extension in FileTypes.ARCHIVE:
         return "package-x-generic-symbolic"
 
-    if extension in FileTypes.DOCUMENT_TEXT:
+    if extension in FileTypes.DOCUMENT:
         return "x-office-document-symbolic"
+
+    if extension in FileTypes.TEXT:
+        return "emblem-documents-symbolic"
 
     if extension in FileTypes.EXECUTABLE:
         return "application-x-executable-symbolic"
@@ -625,7 +467,7 @@ def _get_custom_font_css():
             css.extend(
                 f"""
                 {css_selector} {{
-                    font-family: {font_description.get_family()};
+                    font-family: '{font_description.get_family()}';
                     font-size: {font_description.get_size() // 1024}pt;
                     font-style: {PANGO_STYLES.get(font_description.get_style(), "normal")};
                     font-weight: {PANGO_WEIGHTS.get(font_description.get_weight(), "normal")};
@@ -634,6 +476,10 @@ def _get_custom_font_css():
             )
 
     return css
+
+
+def _is_color_valid(color_hex):
+    return color_hex and Gdk.RGBA().parse(color_hex)
 
 
 def _get_custom_color_css():
@@ -645,13 +491,14 @@ def _get_custom_color_css():
     away_color = config.sections["ui"]["useraway"]
     offline_color = config.sections["ui"]["useroffline"]
 
-    css.extend(
-        f"""
-        .user-status {{
-            -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
-        }}
-        """.encode("utf-8")
-    )
+    if _is_color_valid(online_color) and _is_color_valid(away_color) and _is_color_valid(offline_color):
+        css.extend(
+            f"""
+            .user-status {{
+                -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
+            }}
+            """.encode("utf-8")
+        )
 
     # Text colors
     treeview_text_color = config.sections["ui"]["search"]
@@ -664,7 +511,7 @@ def _get_custom_color_css():
         ("treeview", treeview_text_color),
         (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
-        if color:
+        if _is_color_valid(color):
             css.extend(
                 f"""
                 {css_selector} {{
@@ -677,7 +524,7 @@ def _get_custom_color_css():
     for css_selector, color in (
         ("entry", config.sections["ui"]["textbg"]),
     ):
-        if color:
+        if _is_color_valid(color):
             css.extend(
                 f"""
                 {css_selector} {{
@@ -714,15 +561,6 @@ def update_custom_css():
 
     load_css(CUSTOM_CSS_PROVIDER, css)
 
-    if GTK_API_VERSION >= 4:
-        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
-            Gdk.Display.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-    else:
-        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
-            Gdk.Screen.get_default(), CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-
 
 def update_tag_visuals(tag, color_id):
 
@@ -735,8 +573,8 @@ def update_tag_visuals(tag, color_id):
         color_hex = None
 
     if not color_hex:
-        if tag_props.foreground_set:
-            tag_props.foreground_set = False
+        if tag_props.foreground_rgba:
+            tag_props.foreground_rgba = None
     else:
         current_rgba = tag_props.foreground_rgba
         new_rgba = Gdk.RGBA()

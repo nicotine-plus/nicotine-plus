@@ -50,7 +50,9 @@ def load(scope, path):
 
                 original_string = ui_content[string_start_pos:string_end_pos]
                 translated_string = _(original_string)
-                ui_content = ui_content.replace(original_string, translated_string)
+
+                if original_string != translated_string:
+                    ui_content = ui_content[:string_start_pos] + translated_string + ui_content[string_end_pos:]
 
                 # Find next translatable string
                 new_string_end_pos = (string_end_pos + (len(translated_string) - len(original_string)))

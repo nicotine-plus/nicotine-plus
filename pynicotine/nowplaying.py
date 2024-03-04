@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
+import os
 import sys
 
 from pynicotine.config import config
@@ -61,7 +62,7 @@ class NowPlaying:
         if get_player is None:
             player = config.sections["players"]["npplayer"]
 
-            if sys.platform in {"win32", "darwin"} and player == "mpris":
+            if player == "mpris" and (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ):
                 player = "lastfm"
         else:
             player = get_player()
@@ -152,12 +153,12 @@ class NowPlaying:
 
             self.title["artist"] = artist = lastplayed["artist"]["#text"]
             self.title["title"] = title = lastplayed["name"]
-            self.title["album"] = album = lastplayed["album"]["#text"]
-            self.title["nowplaying"] = f"{artist} - {album} - {title}"
+            self.title["album"] = lastplayed["album"]["#text"]
+            self.title["nowplaying"] = f"{artist} - {title}"
 
-        except Exception:
+        except Exception as error:
             log.add(_("Last.fm: Could not get recent track from Audioscrobbler: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
             return None
 
         return True
@@ -281,16 +282,16 @@ class NowPlaying:
 
             track = json_api["listens"][0]["track_metadata"]
 
-            self.title["artist"] = artist = track["artist_name"]
-            self.title["title"] = title = track["track_name"]
-            self.title["album"] = album = track["release_name"]
-            self.title["nowplaying"] = f"{artist} - {album} - {title}"
+            self.title["artist"] = artist = track.get("artist_name", "?")
+            self.title["title"] = title = track.get("track_name", "?")
+            self.title["album"] = track.get("release_name", "?")
+            self.title["nowplaying"] = f"{artist} - {title}"
 
             return True
 
-        except Exception:
+        except Exception as error:
             log.add(_("ListenBrainz: Could not get current track from ListenBrainz: %(error)s"),
-                    {"error": response_body}, title=_("Now Playing Error"))
+                    {"error": error}, title=_("Now Playing Error"))
         return None
 
     def other(self, command):
@@ -299,7 +300,7 @@ class NowPlaying:
             return None
 
         try:
-            output = execute_command(command, returnoutput=True)
+            output = execute_command(command, returnoutput=True, hidden=True)
             self.title["nowplaying"] = output
             return True
 

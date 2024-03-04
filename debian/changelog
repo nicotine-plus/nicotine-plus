@@ -1,8 +1,26 @@
-nicotine (3.3.0-dev6) mantic; urgency=medium
+nicotine (3.3.3-dev1) mantic; urgency=medium
 
   * Development version.
 
- -- Mat <mail@mathias.is>  Mon, 16 Oct 2023 02:03:18 +0300
+ -- Mat <mail@mathias.is>  Wed, 28 Feb 2024 21:31:58 +0200
+
+nicotine (3.3.2-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 25 Feb 2024 01:35:34 +0200
+
+nicotine (3.3.1-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 24 Feb 2024 01:12:49 +0200
+
+nicotine (3.3.0-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Thu, 01 Feb 2024 22:19:53 +0200
 
 nicotine (3.2.9-1) kinetic; urgency=medium
 

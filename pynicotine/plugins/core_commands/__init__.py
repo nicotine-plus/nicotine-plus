@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,9 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from pynicotine.pluginsystem import BasePlugin
+from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import UserStatus
 
 
@@ -44,6 +43,14 @@ class Plugin(BasePlugin):
                 "callback": self.help_command,
                 "description": _("List available commands"),
                 "parameters": ["[query]"]
+            },
+            "connect": {
+                "callback": self.connect_command,
+                "description": _("Connect to the server"),
+            },
+            "disconnect": {
+                "callback": self.disconnect_command,
+                "description": _("Disconnect from the server"),
             },
             "away": {
                 "aliases": ["a"],
@@ -308,14 +315,22 @@ class Plugin(BasePlugin):
 
         self.output(output_text)
 
+    def connect_command(self, _args, **_unused):
+        if self.core.users.login_status == UserStatus.OFFLINE:
+            self.core.connect()
+
+    def disconnect_command(self, _args, **_unused):
+        if self.core.users.login_status != UserStatus.OFFLINE:
+            self.core.disconnect()
+
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == UserStatus.OFFLINE:
+        if self.core.users.login_status == UserStatus.OFFLINE:
             self.output(_("Offline"))
             return
 
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
+        self.core.users.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
+        self.output(_("Online") if self.core.users.login_status == UserStatus.ONLINE else _("Away"))
 
     def quit_command(self, args, **_unused):
 
@@ -412,14 +427,14 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userlist.add_buddy(user)
+        self.core.buddies.add_buddy(user)
 
     def remove_buddy_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.userlist.remove_buddy(user)
+        self.core.buddies.remove_buddy(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 
@@ -446,13 +461,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
-
-        if not online_ip_address:
-            self.core.request_ip_address(user)
-            return
-
-        self.output(online_ip_address)
+        self.core.users.request_ip_address(user, notify=True)
 
     def ban_command(self, args, user=None, **_unused):
 
@@ -519,26 +528,26 @@ class Plugin(BasePlugin):
 
     def list_shares_command(self, args, **_unused):
 
-        group_names = {
-            0: "public",
-            1: "buddy",
-            2: "trusted"
+        permission_levels = {
+            0: PermissionLevel.PUBLIC,
+            1: PermissionLevel.BUDDY,
+            2: PermissionLevel.TRUSTED
         }
         share_groups = self.core.shares.get_shared_folders()
         num_total = num_listed = 0
 
         for group_index, share_group in enumerate(share_groups):
-            group_name = group_names.get(group_index)
+            permission_level = permission_levels.get(group_index)
             num_shares = len(share_group)
             num_total += num_shares
 
-            if not num_shares or args and group_name not in args.lower():
+            if not num_shares or args and permission_level not in args.lower():
                 continue
 
-            self.output("\n" + f"{num_shares} {group_name} shares:")
+            self.output("\n" + f"{num_shares} {permission_level} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 
@@ -550,15 +559,15 @@ class Plugin(BasePlugin):
     def share_command(self, args, **_unused):
 
         args_split = args.split(maxsplit=1)
-        group_name, folder_path = args_split[0], args_split[1].strip(' "')
-        virtual_name = self.core.shares.add_share(folder_path, group_name=group_name)
+        permission_level, folder_path = args_split[0], args_split[1].strip(' "')
+        virtual_name = self.core.shares.add_share(folder_path, permission_level=permission_level)
 
         if not virtual_name:
             self.output(_("Cannot share inaccessible folder \"%s\"") % folder_path)
             return False
 
         self.output(_("Added %(group_name)s share \"%(virtual_name)s\" (rescan required)") % {
-            "group_name": group_name,
+            "group_name": permission_level,
             "virtual_name": virtual_name
         })
         return True

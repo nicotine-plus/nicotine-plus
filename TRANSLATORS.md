@@ -1,14 +1,21 @@
 # Nicotine+ Translators
 
+## Albanian
+ - W L (2023)
+
+## Arabic
+ - ButterflyOfFire (2024)
+
 ## Catalan
  - Maite Guix (2022)
 
 ## Chinese (Simplified)
+ - Bonislaw (2023)
  - hylau (2023)
  - hadwin (2022)
 
 ## Czech
- - burnmail123 (2021)
+ - burnmail123 (2021-2023)
 
 ## Danish
  - mathsped (2003–2004)
@@ -27,6 +34,12 @@
  - daelstorm (2004–2009)
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
+## Esperanto
+ - phlostically (2021)
+
+## Estonian
+ - PriitUring (2023)
+
 ## Euskara
  - Julen (2006–2007)
 
@@ -34,6 +47,7 @@
  - Kari Viittanen (Kalevi) (2006–2007)
 
 ## French
+ - Saumon (2023)
  - subu_versus (2023)
  - zniavre (2007–2023)
  - Lisapple (2021–2022)
@@ -76,10 +90,14 @@
  - Allan Nordhøy (comradekingu) (2021)
 
 ## Polish
- - mariachini (2017–2023)
+ - Mariusz (mariachini) (2017–2023)
  - Amun-Ra (2007)
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
+
+## Portuguese
+ - ssantos (2023)
+ - Vinícius Soares (2023)
 
 ## Portuguese (Brazil)
  - Havokdan (2022–2023)
@@ -93,7 +111,7 @@
  - xslendix (2023)
 
 ## Russian
- - SnIPeRSnIPeR (2022–2023)
+ - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2023)
  - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
 

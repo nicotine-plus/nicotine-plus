@@ -27,10 +27,21 @@ import sys
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-PUNCTUATION = ["!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
-               "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"]
-ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
-ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
+PUNCTUATION = [
+    "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
+    "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"
+]
+ILLEGALPATHCHARS = [
+    # ASCII printable characters
+    "?", ":", ">", "<", "|", "*", '"',
+
+    # ASCII control characters
+    "\u0000", "\u0001", "\u0002", "\u0003", "\u0004", "\u0005", "\u0006", "\u0007", "\u0008", "\u0009",
+    "\u000A", "\u000B", "\u000C", "\u000D", "\u000E", "\u000F", "\u0010", "\u0011", "\u0012", "\u0013",
+    "\u0014", "\u0015", "\u0016", "\u0017", "\u0018", "\u0019", "\u001A", "\u001B", "\u001C", "\u001D",
+    "\u001E", "\u001F"
+]
+ILLEGALFILECHARS = ["\\", "/"] + ILLEGALPATHCHARS
 LONG_PATH_PREFIX = "\\\\?\\"
 REPLACEMENTCHAR = "_"
 TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
@@ -39,7 +50,14 @@ TRANSLATE_PUNCTUATION = str.maketrans(dict.fromkeys(PUNCTUATION, " "))
 def clean_file(basename):
 
     for char in ILLEGALFILECHARS:
-        basename = basename.replace(char, REPLACEMENTCHAR)
+        if char in basename:
+            basename = basename.replace(char, REPLACEMENTCHAR)
+
+    # Filename can never end with a period or space on Windows machines
+    basename = basename.rstrip(". ")
+
+    if not basename:
+        basename = REPLACEMENTCHAR
 
     return basename
 
@@ -58,7 +76,8 @@ def clean_path(path):
         path = path[3:]
 
     for char in ILLEGALPATHCHARS:
-        path = path.replace(char, REPLACEMENTCHAR)
+        if char in path:
+            path = path.replace(char, REPLACEMENTCHAR)
 
     path = "".join([drive, path])
 
@@ -204,7 +223,37 @@ def unescape(string):
     return string
 
 
-def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder="$"):
+def find_whole_word(word, text):
+    """Returns start position of a whole word that is not in a subword."""
+
+    if word not in text:
+        return -1
+
+    word_boundaries = [" "] + PUNCTUATION
+    whole = False
+    start = after = 0
+
+    while not whole and start > -1:
+        start = text.find(word, after)
+        after = start + len(word)
+
+        whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                 and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+    return start if whole else -1
+
+
+def censor_text(text, censored_patterns, filler="*"):
+
+    for word in censored_patterns:
+        word = str(word)
+        text = text.replace(word, filler * len(word))
+
+    return text
+
+
+def execute_command(command, replacement=None, background=True, returnoutput=False,
+                    hidden=False, placeholder="$"):
     """Executes a string with commands, with partial support for bash-style
     quoting and pipes.
 
@@ -214,6 +263,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     If background is false the function will wait for all the launched
     processes to end before returning.
+
+    If hidden is true, any window created by the command will be hidden
+    (on Windows).
 
     If the 'replacement' argument is given, every occurrence of 'placeholder'
     will be replaced by 'replacement'.
@@ -242,7 +294,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     command = command.strip()
     startupinfo = None
 
-    if sys.platform == "win32":
+    if hidden and sys.platform == "win32":
         from subprocess import STARTF_USESHOWWINDOW, STARTUPINFO
         # Hide console window on Windows
         startupinfo = STARTUPINFO()
@@ -345,47 +397,95 @@ def _try_open_uri(uri):
         raise webbrowser.Error("No known URI provider available")
 
 
-def open_file_path(file_path, command=None, create_folder=False, create_file=False):
-    """Currently used to either open a folder or play an audio file Tries to
-    run a user-specified command first, and falls back to the system
-    default."""
+def _open_path(path, is_folder=False, create_folder=False, create_file=False):
+    """Currently used to either open a folder or play an audio file.
 
-    if file_path is None:
+    Tries to run a user-specified command first, and falls back to the system
+    default.
+    """
+
+    if path is None:
         return False
 
     try:
-        file_path = os.path.abspath(file_path)
-        file_path_encoded = encode_path(file_path)
+        from pynicotine.config import config
 
-        if not os.path.exists(file_path_encoded):
+        path = os.path.abspath(path)
+        path_encoded = encode_path(path)
+        _path, separator, extension = path.rpartition(".")
+        protocol_command = None
+        protocol_handlers = config.sections["urls"]["protocols"]
+        file_manager_command = config.sections["ui"]["filemanager"]
+
+        if separator:
+            from pynicotine.shares import FileTypes
+
+            if "." + extension in protocol_handlers:
+                protocol = "." + extension
+
+            elif extension in FileTypes.AUDIO:
+                protocol = "audio"
+
+            elif extension in FileTypes.IMAGE:
+                protocol = "image"
+
+            elif extension in FileTypes.VIDEO:
+                protocol = "video"
+
+            elif extension in FileTypes.DOCUMENT:
+                protocol = "document"
+
+            elif extension in FileTypes.TEXT:
+                protocol = "text"
+
+            elif extension in FileTypes.ARCHIVE:
+                protocol = "archive"
+
+            else:
+                protocol = None
+
+            protocol_command = protocol_handlers.get(protocol)
+
+        if not os.path.exists(path_encoded):
             if create_folder:
-                os.makedirs(file_path_encoded)
+                os.makedirs(path_encoded)
 
             elif create_file:
-                with open(file_path_encoded, "w", encoding="utf-8"):
+                with open(path_encoded, "w", encoding="utf-8"):
                     # Create empty file
                     pass
             else:
                 raise FileNotFoundError("File path does not exist")
 
-        if command and "$" in command:
-            execute_command(command, file_path)
+        if is_folder and "$" in file_manager_command:
+            execute_command(file_manager_command, path)
+
+        elif protocol_command:
+            execute_command(protocol_command, path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path_encoded)  # pylint: disable=no-member
+            os.startfile(path_encoded)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
-            execute_command("open $", file_path)
+            execute_command("open $", path)
 
         else:
-            _try_open_uri("file:///" + file_path)
+            _try_open_uri("file:///" + path)
 
     except Exception as error:
         from pynicotine.logfacility import log
-        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": file_path, "error": error})
+        log.add(_("Cannot open file path %(path)s: %(error)s"), {"path": path, "error": error})
         return False
 
     return True
+
+
+def open_file_path(file_path, create_file=False):
+    return _open_path(path=file_path, create_file=create_file)
+
+
+def open_folder_path(folder_path, create_folder=False):
+    return _open_path(path=folder_path, is_folder=True, create_folder=create_folder)
 
 
 def open_uri(uri):
@@ -400,16 +500,19 @@ def open_uri(uri):
     try:
         # Situation 1, user defined a way of handling the protocol
         protocol = uri[:uri.find(":")]
-        protocol_handlers = config.sections["urls"]["protocols"]
 
-        if protocol in protocol_handlers and protocol_handlers[protocol]:
-            execute_command(protocol_handlers[protocol], uri)
-            return True
+        if not protocol.startswith(".") and protocol not in {"audio", "image", "video", "document", "text", "archive"}:
+            protocol_handlers = config.sections["urls"]["protocols"]
+            protocol_command = protocol_handlers.get(protocol + "://") or protocol_handlers.get(protocol)
 
-        if protocol == "slsk":
-            from pynicotine.core import core
-            core.userbrowse.open_soulseek_url(uri.strip())
-            return True
+            if protocol_command:
+                execute_command(protocol_command, uri)
+                return True
+
+            if protocol == "slsk":
+                from pynicotine.core import core
+                core.userbrowse.open_soulseek_url(uri.strip())
+                return True
 
         # Situation 2, user did not define a way of handling the protocol
         _try_open_uri(uri)

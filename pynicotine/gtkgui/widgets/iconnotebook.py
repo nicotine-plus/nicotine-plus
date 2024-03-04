@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2009 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -32,6 +32,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -79,6 +80,9 @@ class TabLabel:
         self.end_icon = Gtk.Image(visible=False)
 
         self._pack_children()
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def _remove_tab_label(self):
 
@@ -176,16 +180,20 @@ class TabLabel:
         if not self.is_important:
             self.is_important = is_important
 
-        if self.is_important:
-            remove_css_class(self.container, "notebook-tab-changed")
-            add_css_class(self.container, "notebook-tab-highlight")
-        else:
-            remove_css_class(self.container, "notebook-tab-highlight")
-            add_css_class(self.container, "notebook-tab-changed")
-
-        add_css_class(self.container, "bold")
-
         icon_name = "nplus-tab-highlight" if self.is_important else "nplus-tab-changed"
+
+        if self.end_icon.get_icon_name() == icon_name:
+            return
+
+        if self.is_important:
+            remove_css_class(self.box, "notebook-tab-changed")
+            add_css_class(self.box, "notebook-tab-highlight")
+        else:
+            remove_css_class(self.box, "notebook-tab-highlight")
+            add_css_class(self.box, "notebook-tab-changed")
+
+        add_css_class(self.label, "bold")
+
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.end_icon.set_from_icon_name(icon_name, *icon_args)
@@ -194,11 +202,14 @@ class TabLabel:
 
     def remove_changed(self):
 
+        if not self.end_icon.get_icon_name():
+            return
+
         self.is_important = False
 
-        remove_css_class(self.container, "notebook-tab-changed")
-        remove_css_class(self.container, "notebook-tab-highlight")
-        remove_css_class(self.container, "bold")
+        remove_css_class(self.box, "notebook-tab-changed")
+        remove_css_class(self.box, "notebook-tab-highlight")
+        remove_css_class(self.label, "bold")
 
         icon_name = None
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -226,7 +237,16 @@ class TabLabel:
         self.start_icon.set_visible(True)
 
     def set_tooltip_text(self, text):
-        self.container.set_tooltip_text(text.strip() if text else None)
+
+        text = text.strip() if text else None
+
+        if self.container.get_tooltip_text() == text:
+            return
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.container.set_visible(False)
+        self.container.set_tooltip_text(text)
+        self.container.set_visible(True)
 
     def set_text(self, text):
         self.label.set_text(text.strip())
@@ -256,28 +276,33 @@ class IconNotebook:
         self.tab_labels = {}
         self.unread_pages = {}
         self.recently_removed_pages = deque(maxlen=5)  # Low limit to prevent excessive server traffic
+        self.scroll_x = self.scroll_y = 0
+        self.should_focus_page = True
 
         self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
 
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
+        if parent_page is not None:
+            content_box = next(iter(parent_page))
+            content_box.connect("show", self.on_show_parent_page)
+
         if GTK_API_VERSION >= 4:
             parent.append(self.widget)
 
-            if parent_page is not None:
-                content_box = parent_page.get_first_child()
-                content_box.connect("show", self.on_show_parent_page)
+            self.pages_button = Gtk.MenuButton(
+                has_frame=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True
+            )
+            self.pages_button.set_create_popup_func(self.on_pages_button_pressed)  # pylint: disable=no-member
+            self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
-            self.pages_button = Gtk.MenuButton(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
-            self.pages_button.set_has_frame(False)                 # pylint: disable=no-member
-            self.pages_button_container.append(self.pages_button)  # pylint: disable=no-member
-
-            self.scroll_controller = Gtk.EventControllerScroll()
-            self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
+            self.scroll_controller = Gtk.EventControllerScroll(
+                flags=int(Gtk.EventControllerScrollFlags.BOTH_AXES | Gtk.EventControllerScrollFlags.DISCRETE)
+            )
             self.scroll_controller.connect("scroll", self.on_tab_scroll)
 
-            tab_bar = self.widget.get_first_child()                # pylint: disable=no-member
+            tab_bar = next(iter(self.widget))
             tab_bar.add_controller(self.scroll_controller)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
@@ -285,20 +310,16 @@ class IconNotebook:
 
             self.close_button_pressed = False
 
-            self.gesture_click = Gtk.GestureClick()
-            self.gesture_click.set_button(Gdk.BUTTON_PRIMARY)
-            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            self.gesture_click = Gtk.GestureClick(
+                button=Gdk.BUTTON_PRIMARY, propagation_phase=Gtk.PropagationPhase.CAPTURE
+            )
             self.gesture_click.connect("pressed", self.on_notebook_click_pressed)
             self.gesture_click.connect("released", self.on_notebook_click_released)
 
-            self.widget.add_controller(self.gesture_click)         # pylint: disable=no-member
+            self.widget.add_controller(self.gesture_click)                         # pylint: disable=no-member
 
         else:
             parent.add(self.widget)
-
-            if parent_page is not None:
-                content_box = parent_page.get_children()[0]
-                content_box.connect("show", self.on_show_parent_page)
 
             self.pages_button = Gtk.Button(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
             self.pages_button.connect("clicked", self.on_pages_button_pressed)
@@ -311,12 +332,17 @@ class IconNotebook:
         for style_class in ("circular", "flat"):
             add_css_class(self.pages_button, style_class)
 
+        Accelerator("Left", self.widget, self.on_arrow_accelerator)
+        Accelerator("Right", self.widget, self.on_arrow_accelerator)
+
         self.popup_menu_pages = PopupMenu(self.window.application, self.pages_button, connect_events=False)
         self.update_pages_menu_button()
 
         if GTK_API_VERSION >= 4:
             self.pages_button.set_menu_model(self.popup_menu_pages.model)
-            self.pages_button.get_popover().connect("notify::visible", self.on_pages_button_pressed)
+
+    def destroy(self):
+        self.__dict__.clear()
 
     def grab_focus(self):
         self.widget.grab_focus()
@@ -336,13 +362,6 @@ class IconNotebook:
             tab_label = self.get_tab_label(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
-    def set_tab_text_colors(self):
-
-        for i in range(self.get_n_pages()):
-            page = self.get_nth_page(i)
-            tab_label = self.get_tab_label(page)
-            tab_label.set_text(tab_label.get_text())
-
     def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
         self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
 
@@ -358,10 +377,8 @@ class IconNotebook:
         if focus_callback:
             page.focus_callback = focus_callback
 
-        if GTK_API_VERSION >= 4:
-            page.get_first_child().set_visible(False)
-        else:
-            page.get_children()[0].set_visible(False)
+        first_child = next(iter(page))
+        first_child.set_visible(False)
 
         if position is None:
             # Open new tab adjacent to current tab
@@ -372,7 +389,7 @@ class IconNotebook:
         self.parent.set_visible(True)
 
         if user is not None:
-            status = core.user_statuses.get(user, slskmessages.UserStatus.OFFLINE)
+            status = core.users.statuses.get(user, slskmessages.UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
@@ -391,7 +408,8 @@ class IconNotebook:
         if hasattr(page, "focus_callback"):
             del page.focus_callback
 
-        del self.tab_labels[page]
+        tab_label = self.tab_labels.pop(page)
+        tab_label.destroy()
 
         if page_args:
             # Allow for restoring page after closing it
@@ -411,7 +429,7 @@ class IconNotebook:
             message=_("Do you really want to close all tabs?"),
             destructive_response_id="ok",
             callback=self._on_remove_all_pages
-        ).show()
+        ).present()
 
     def _update_pages_menu_button(self, icon_name, tooltip_text):
 
@@ -423,7 +441,10 @@ class IconNotebook:
         else:
             self.pages_button.set_image(Gtk.Image(icon_name=icon_name))  # pylint: disable=no-member
 
+        # Hide widget to keep tooltips for other widgets visible
+        self.pages_button.set_visible(False)
         self.pages_button.set_tooltip_text(tooltip_text)
+        self.pages_button.set_visible(True)
 
     def update_pages_menu_button(self):
 
@@ -518,16 +539,19 @@ class IconNotebook:
 
     def _append_unread_page(self, page, is_important=False):
 
-        is_currently_important = self.unread_pages.get(page)
+        # Remove existing page and move it to the end of the dict
+        is_currently_important = self.unread_pages.pop(page, None)
 
         if is_currently_important and not is_important:
             # Important pages are persistent
+            self.unread_pages[page] = is_currently_important
             return False
+
+        self.unread_pages[page] = is_important
 
         if is_currently_important == is_important:
             return False
 
-        self.unread_pages[page] = is_important
         self.update_pages_menu_button()
         return True
 
@@ -621,21 +645,23 @@ class IconNotebook:
 
         # Hide container widget on previous page for a performance boost
         current_page = self.get_current_page()
+        current_first_child = next(iter(current_page))
+        new_first_child = next(iter(new_page))
 
-        if GTK_API_VERSION >= 4:
-            current_page.get_first_child().set_visible(False)
-            new_page.get_first_child().set_visible(True)
-        else:
-            current_page.get_children()[0].set_visible(False)
-            new_page.get_children()[0].set_visible(True)
+        current_first_child.set_visible(False)
+        new_first_child.set_visible(True)
 
         # Focus the default widget on the page
-        if self.parent_page is None or self.window.current_page_id == self.parent_page.id:
+        if (self.should_focus_page
+                and (self.parent_page is None or self.window.current_page_id == self.parent_page.id
+                     and self.window.notebook.should_focus_page)):
             GLib.idle_add(self.on_focus_page, new_page, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Dismiss tab highlight
         if self.parent_page is not None:
             self.remove_tab_changed(new_page)
+
+        self.should_focus_page = True
 
     def on_reorder_page(self, _notebook, page, page_num):
         if self.reorder_page_callback is not None:
@@ -657,8 +683,8 @@ class IconNotebook:
 
         self.popup_menu_pages.clear()
 
-        # Unread pages
-        for page in self.unread_pages:
+        # Unread pages (most recently changed first)
+        for page in reversed(list(self.unread_pages)):
             tab_label = self.get_tab_label(page)
             self.popup_menu_pages.add_items(
                 ("#*  " + tab_label.get_text(), self.on_show_page, page)
@@ -715,13 +741,23 @@ class IconNotebook:
 
     def on_tab_scroll(self, _controller=None, scroll_x=0, scroll_y=0):
 
-        if scroll_x > 0 or scroll_y > 0:
-            self.next_page()
+        # Simulate discrete scrolling with touchpad in GTK 3
+        self.scroll_x += scroll_x
+        self.scroll_y += scroll_y
 
-        elif scroll_x < 0 or scroll_y < 0:
+        if self.scroll_x >= 1 or self.scroll_y >= 1:
+            self.next_page()
+            self.scroll_x = self.scroll_y = 0
+
+        elif self.scroll_x <= -1 or self.scroll_y <= -1:
             self.prev_page()
+            self.scroll_x = self.scroll_y = 0
 
         return True
+
+    def on_arrow_accelerator(self, *_args):
+        """Left, Right - disable page focus callback when moving through tabs."""
+        self.should_focus_page = False
 
     # Signals (GTK 4) #
 

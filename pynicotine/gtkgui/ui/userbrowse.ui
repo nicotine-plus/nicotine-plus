@@ -121,7 +121,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="path_bar_container">
                     <property name="hexpand">True</property>
                     <property name="hscrollbar-policy">external</property>
                     <property name="visible">True</property>
@@ -211,6 +211,7 @@
                     <signal name="activate" handler="on_search"/>
                     <signal name="next-match" handler="on_search_next_accelerator"/>
                     <signal name="previous-match" handler="on_search_previous_accelerator"/>
+                    <signal name="search-changed" handler="on_search_entry_changed"/>
                     <signal name="stop-search" handler="on_search_escape_accelerator"/>
                   </object>
                 </child>

@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on October 9, 2023
+Last updated on February 18, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -23,6 +23,12 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Number |
 |--------|
 | 1 Byte |
+
+### 16-bit Integer
+
+| Number                  |
+|-------------------------|
+| 2 Bytes (little-endian) |
 
 ### 32-bit Integer
 
@@ -74,6 +80,15 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 1    | Away    |
 | 2    | Online  |
 
+### Upload Permissions
+
+| Code | Status          |
+|------|-----------------|
+| 0    | No One          |
+| 1    | Everyone        |
+| 2    | Users in List   |
+[ 3    | Permitted Users |
+
 ### Transfer Directions
 
 | Code | Direction          |
@@ -81,7 +96,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 0    | Download from Peer |
 | 1    | Upload to Peer     |
 
-### Transfer Status Strings
+### Transfer Rejection Reasons
 
 #### In Use
 
@@ -90,7 +105,6 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | Banned                | SoulseekQt uses 'File not shared.' instead  |
 | Cancelled             |                                             |
 | Complete              |                                             |
-| Disallowed extension  | Sent by Soulseek NS for filtered extensions |
 | File not shared.      | Note: Ends with a dot                       |
 | File read error.      | Note: Ends with a dot                       |
 | Pending shutdown.     | Note: Ends with a dot                       |
@@ -103,6 +117,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | String                             | Comments                                                    |
 | ---------------------------------- | ----------------------------------------------------------- |
 | Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
+| Disallowed extension               | Sent by Soulseek NS for filtered extensions                 |
 | File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 | Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
 | User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
@@ -256,6 +271,7 @@ but it handles the protocol well enough (and can be modified).
 | 151  | [Leave Global Room](#server-code-151)             | Deprecated |
 | 152  | [Global Room Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
+| 160  | [Excluded Search Phrases](#server-code-160)       |            |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
@@ -314,7 +330,7 @@ If this value is set to zero, or the message is not sent upon login (which defau
 ### Data Order
   - Send
     1.  **uint32** <ins>port</ins>
-    2.  **bool** <ins>use obfuscation</ins>
+    2.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
     3.  **uint32** <ins>obfuscated port</ins>
   - Receive
       - *No Message*
@@ -333,8 +349,8 @@ We send this to the server to ask for a peer's address (IP address and port), gi
     1.  **string** <ins>username</ins>
     2.  **ip** <ins>ip</ins>
     3.  **uint32** <ins>port</ins>
-    4.  **bool** <ins>use obfuscation</ins>
-    5.  **uint32** <ins>obfuscated port</ins>
+    4.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
+    5.  **uint16** <ins>obfuscated port</ins>
 
 ## Server Code 5
 
@@ -509,7 +525,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
     4.  **uint32** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token for [PierceFireWall](#peer-init-code-0)*
     6.  **bool** <ins>privileged</ins>
-    7.  **bool** <ins>use obfuscation</ins>
+    7.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
     8.  **uint32** <ins>obfuscated port</ins>
 
 ## Server Code 22
@@ -814,7 +830,7 @@ We ask the server for a user's liked and hated interests. The server responds wi
 
 ### AdminCommand
 
-**OBSOLETE, no longer used since Soulseek stopped supporting third-party servers in 2002**
+**OBSOLETE**
 
 We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
 
@@ -935,6 +951,7 @@ We send this to search for an exact file name and folder, to find other sources.
     3.  **string** <ins>path</ins>
     4.  **uint64** <ins>filesize</ins>
     5.  **uint32** <ins>checksum</ins>
+    6.  **uint8** <ins>unknown</ins>
   - Receive
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>
@@ -1823,6 +1840,21 @@ The server returns a list of related search terms for a search query.
         1.  **string** <ins>term</ins>
         2.  **uint32** <ins>score</ins>
 
+## Server Code 160
+
+### ExcludedSearchPhrases
+
+The server sends a list of phrases not allowed on the search network. File paths containing such phrases should be excluded when responding to search requests.
+
+### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+    1.  **uint32** <ins>number of phrases</ins>
+    2.  Iterate for <ins>number of phrases</ins>
+        1.  **string** <ins>phrase</ins>
+
 ## Server Code 1001
 
 ### CantConnectToPeer
@@ -2150,25 +2182,24 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     2.  Check contents of <ins>picture</ins>
           - If <ins>picture</ins> is not empty
             1.  **bool** <ins>has picture</ins> **1**
-            2.  **string** <ins>picture</ins>
+            2.  **bytes** <ins>picture</ins>
           - If <ins>picture</ins> is empty
             1.  **bool** <ins>has picture</ins> **0**
     3.  **uint32** <ins>totalupl</ins>
     4.  **uint32** <ins>queuesize</ins>
     5.  **bool** <ins>slotsfree</ins> *Can immediately upload*
-    6.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to us?*
-        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
+    6.  Optional (not sent by SoulseekQt)
+        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to us? See [Upload Permissions](#upload-permissions).*
   - Receive
     1.  **string** <ins>description</ins>
     2.  **bool** <ins>has picture</ins>
     3.  Check contents of <ins>has picture</ins>
-        1.  If <ins>has picture</ins> is not empty
-            1.  **string** <ins>picture</ins>
+        1.  **bytes** <ins>picture</ins> *if has picture == 1*
     4.  **uint32** <ins>totalupl</ins>
     5.  **uint32** <ins>queuesize</ins>
     6.  **bool** <ins>slotsfree</ins> *Can immediately download*
-    7.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to this user (not sent by SoulseekQt)?*
-        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
+    7.  Optional (not sent by SoulseekQt)
+        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to this user? See [Upload Permissions](#upload-permissions).*
 
 ## Peer Code 36
 
@@ -2234,7 +2265,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
 
 This message is sent by a peer once they are ready to start uploading a file to us. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
 
-This message was formerly used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
+This message was formerly used to send a download request (direction 0) as well, but Nicotine+ >= 3.0.3, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
 
 ### Data Order
 
@@ -2268,13 +2299,13 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **uint64** <ins>filesize</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 41 b
 
@@ -2290,12 +2321,12 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Status Strings](#transfer-status-strings)*
+          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 42
 
@@ -2361,10 +2392,10 @@ This message is sent to reject [QueueUpload](#peer-code-43) attempts and previou
 
   - Send
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
+    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Status Strings](#transfer-status-strings)*
+    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 51
 
@@ -2412,43 +2443,31 @@ File messages are sent to peers over a 'F' connection, and do not have messages 
 
 | Message                                   |
 |-------------------------------------------|
-| [File Download Init](#file-download-init) |
-| [File Upload Init](#file-upload-init)     |
+| [File Transfer Init](#file-transfer-init) |
 | [File Offset](#file-offset)               |
 
-## File Download Init
+## File Transfer Init
 
-### FileDownloadInit
-
-We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
-
-### Data Order
-
-  - Send
-      - *No Message*
-  - Receive
-      - **uint32** <ins>token</ins>
-
-## File Upload Init
-
-### FileUploadInit
+### FileTransferInit
 
 We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
+Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send this message when initializing our file upload connection from their end.
+
 ### Data Order
 
   - Send
       - **uint32** <ins>token</ins>
   - Receive
-      - *No Message*
+      - **uint32** <ins>token</ins>
 
 ## File Offset
 
 ### FileOffset
 
-We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If nothing was downloaded, the offset is 0.
 
-Soulseek NS fails to read the size of an incomplete file if more than 2 GB of the file has been downloaded by them, and their download pauses and later resumes. The legacy client then sends us an invalid file offset of -1.
+Note that Soulseek NS fails to read the size of an incomplete download if more than 2 GB of the file has been downloaded, and the download is resumed. In consequence, the client sends an invalid file offset of -1.
 
 ### Data Order
 

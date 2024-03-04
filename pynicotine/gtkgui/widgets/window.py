@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,6 +22,7 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 class Window:
 
     active_dialogs = []  # Class variable keeping dialog objects alive
+    activation_token = None
 
     def __init__(self, widget):
         self.widget = widget
@@ -68,8 +69,19 @@ class Window:
     def set_title(self, title):
         self.widget.set_title(title)
 
+    def present(self):
+
+        if self.activation_token is not None:
+            # Set XDG activation token if provided by tray icon
+            self.widget.set_startup_id(self.activation_token)
+
+        self.widget.present()
+
     def hide(self):
         self.widget.set_visible(False)
 
     def close(self, *_args):
         self.widget.close()
+
+    def destroy(self):
+        self.__dict__.clear()

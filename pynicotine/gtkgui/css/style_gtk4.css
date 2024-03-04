@@ -1,0 +1,43 @@
+/* Tweaks (GTK 4+) */
+
+* {
+    /* Unset line height due to it resulting in blurry text */
+    line-height: unset;
+}
+
+treeview.normal-icons {
+    /* Country flag icon size in treeviews */
+    -gtk-icon-size: 21px;
+}
+
+window.dialog:not(.message) .dialog-action-area {
+    /* Add missing spacing to dialog action buttons */
+    border-spacing: 6px;
+}
+
+.image-text-button box {
+    /* Remove unwanted spacing from buttons */
+    border-spacing: 0;
+}
+
+.generic-popover *:not(image):not(separator) {
+    /* Remove unwanted spacing from popovers */
+    margin: 0;
+}
+
+.generic-popover contents {
+    /* Remove unwanted spacing from popovers */
+    padding: 0;
+}
+
+.fontchooser listview label {
+    /* Use same height for all labels to work around broken scrolling
+    https://gitlab.gnome.org/GNOME/gtk/-/issues/4751 */
+    min-height: 2.5em;
+}
+
+.fontchooser listview row {
+    margin: 0;
+    padding: 0;
+}
+

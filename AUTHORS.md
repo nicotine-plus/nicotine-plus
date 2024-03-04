@@ -163,7 +163,8 @@
 # Third-Party Attributions
 
  - tinytag licensed under the MIT License.  
-   Copyright (c) 2014–2022 Tom Wallroth  
+   Copyright (c) 2014–2023 Tom Wallroth  
+   Copyright (c) 2021-2023 Mat (mathiascode)  
    https://github.com/devsnd/tinytag
 
  - Country flags licensed under the MIT License.  
@@ -171,7 +172,7 @@
    https://github.com/madebybowtie/FlagKit
 
  - Country database licensed under the CC-BY-SA-4.0 License.  
-   Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.  
+   Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
    This program includes IP2Location LITE data available from:  
    https://lite.ip2location.com
 

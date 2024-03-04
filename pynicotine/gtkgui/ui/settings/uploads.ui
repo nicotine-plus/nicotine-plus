@@ -55,9 +55,27 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="autoclear_uploads_toggle">
-            <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
+                <property name="mnemonic-widget">autoclear_uploads_toggle</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="autoclear_uploads_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>

@@ -33,14 +33,13 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, close_destroy=True, show_title=True, show_title_buttons=True):
+                 modal=True, resizable=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
         self.default_width = width
         self.default_height = height
         self.default_button = default_button
-        self.close_destroy = close_destroy
 
         self.show_callback = show_callback
         self.close_callback = close_callback
@@ -148,6 +147,10 @@ class Dialog(Window):
                 action_area_end.add(button)           # pylint: disable=no-member
 
     def _on_show(self, *_args):
+
+        self._unselect_focus_label()
+        self._focus_default_button()
+
         if self.show_callback is not None:
             self.show_callback(self)
 
@@ -160,9 +163,6 @@ class Dialog(Window):
 
         if self.close_callback is not None:
             self.close_callback(self)
-
-        if self.close_destroy:
-            return False
 
         # Hide the dialog
         self.widget.set_visible(False)
@@ -217,11 +217,20 @@ class Dialog(Window):
 
         self.default_button.grab_focus()
 
-    def _finish_show(self):
-        self.widget.set_modal(self.modal and self.parent.is_visible())
-        self.widget.present()
+    def _unselect_focus_label(self):
+        """Unselect default focus widget if it's a label."""
 
-    def show(self):
+        focus_widget = self.widget.get_focus()
+
+        if isinstance(focus_widget, Gtk.Label):
+            focus_widget.select_region(start_offset=0, end_offset=0)
+            self.widget.set_focus(None)
+
+    def _finish_present(self, present_callback):
+        self.widget.set_modal(self.modal and self.parent.is_visible())
+        present_callback()
+
+    def present(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -229,12 +238,9 @@ class Dialog(Window):
         # Shrink the dialog if it's larger than the main window
         self._resize_dialog()
 
-        # Focus default button
-        self._focus_default_button()
-
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_present, super().present)
 
 
 class MessageDialog(Window):
@@ -309,7 +315,7 @@ class MessageDialog(Window):
         )
         self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, use_markup=True, visible=True
+            max_width_chars=60, visible=True
         )
 
         add_css_class(title_label, "title-2")
@@ -352,7 +358,7 @@ class MessageDialog(Window):
             action_box.add(action_area)                               # pylint: disable=no-member
 
         for response_type, button_label in buttons:
-            button = Gtk.Button(label=button_label, use_underline=True, hexpand=True, visible=True)
+            button = Gtk.Button(use_underline=True, hexpand=True, visible=True)
             button.connect("clicked", self._on_button_pressed, response_type)
 
             if GTK_API_VERSION >= 4:
@@ -362,9 +368,8 @@ class MessageDialog(Window):
 
             if response_type == self.destructive_response_id:
                 add_css_class(button, "destructive-action")
-                continue
 
-            if response_type in {"cancel", "ok"}:
+            elif response_type in {"cancel", "ok"}:
                 if GTK_API_VERSION >= 4:
                     widget.set_default_widget(button)  # pylint: disable=no-member
                 else:
@@ -373,6 +378,10 @@ class MessageDialog(Window):
 
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
+
+            # Set mnemonic widget before button label in order for screen reader to
+            # read both labels
+            button.set_label(button_label)
 
         return widget
 
@@ -399,21 +408,26 @@ class MessageDialog(Window):
         self.container.set_visible(True)
 
     def _on_close_request(self, *_args):
+
         if self in Window.active_dialogs:
             Window.active_dialogs.remove(self)
+
+        self.destroy()
 
     def _on_button_pressed(self, _button, response_type):
 
         if self.callback and response_type != "cancel":
             self.callback(self, response_type, self.callback_data)
 
-        self.close()
+        # Check if the dialog was already closed in the callback
+        if self in Window.active_dialogs:
+            self.close()
 
-    def _finish_show(self):
+    def _finish_present(self, present_callback):
         self.widget.set_modal(self.parent and self.parent.is_visible())
-        self.widget.present()
+        present_callback()
 
-    def show(self):
+    def present(self):
 
         if self not in Window.active_dialogs:
             Window.active_dialogs.append(self)
@@ -423,7 +437,7 @@ class MessageDialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_show)
+        GLib.idle_add(self._finish_present, super().present)
 
 
 class OptionDialog(MessageDialog):
@@ -446,7 +460,6 @@ class OptionDialog(MessageDialog):
     def _add_option_toggle(self, option_label, option_value):
 
         toggle = Gtk.CheckButton(label=option_label, active=option_value, receives_default=True, visible=True)
-        self.message_label.set_mnemonic_widget(toggle)
 
         if option_label:
             if GTK_API_VERSION >= 4:
@@ -477,11 +490,13 @@ class EntryDialog(OptionDialog):
         ], **kwargs)
 
         self.entry_container = None
+        self.entry_combobox = None
+        self.second_entry_combobox = None
+
         self.entry_combobox = self.default_focus_widget = self._add_entry_combobox(
             default, activates_default=not use_second_entry, visibility=visibility,
             show_emoji_icon=show_emoji_icon, droplist=droplist
         )
-        self.second_entry = None
 
         if use_second_entry:
             self.second_entry_combobox = self._add_entry_combobox(
@@ -500,11 +515,15 @@ class EntryDialog(OptionDialog):
             entry.set_visibility(visibility)
 
         if items is not None:
+            combobox.freeze()
+
             for item in items:
                 combobox.append(item)
 
-        if activates_default:
-            self.message_label.set_mnemonic_widget(entry if activates_default else combobox.widget)
+            combobox.unfreeze()
+
+        if self.entry_combobox is None:
+            self.message_label.set_mnemonic_widget(entry if has_entry else combobox.widget)
 
         self.container.set_visible(True)
         return combobox
@@ -524,7 +543,7 @@ class EntryDialog(OptionDialog):
         else:
             self.entry_container.add(entry)     # pylint: disable=no-member
 
-        if activates_default:
+        if self.entry_combobox is None:
             self.message_label.set_mnemonic_widget(entry)
 
         self.container.set_visible(True)

@@ -33,41 +33,34 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
+          <object class="GtkRadioButton" id="lastfm_radio">
+            <property name="label">Last.fm</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkRadioButton" id="lastfm_radio">
-                <property name="label">Last.fm</property>
-                <property name="visible">True</property>
-                <signal name="toggled" handler="update_now_playing_info"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="listenbrainz_radio">
-                <property name="group">lastfm_radio</property>
-                <property name="label">ListenBrainz</property>
-                <property name="visible">True</property>
-                <signal name="toggled" handler="update_now_playing_info"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="mpris_radio">
-                <property name="group">lastfm_radio</property>
-                <property name="label">MPRIS (v2)</property>
-                <property name="visible">True</property>
-                <signal name="toggled" handler="update_now_playing_info"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="other_radio">
-                <property name="group">lastfm_radio</property>
-                <property name="label" translatable="yes">Other</property>
-                <property name="visible">True</property>
-                <signal name="toggled" handler="update_now_playing_info"/>
-              </object>
-            </child>
+            <signal name="toggled" handler="update_now_playing_info"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="listenbrainz_radio">
+            <property name="group">lastfm_radio</property>
+            <property name="label">ListenBrainz</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="update_now_playing_info"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="mpris_radio">
+            <property name="group">lastfm_radio</property>
+            <property name="label">MPRIS (v2)</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="update_now_playing_info"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="other_radio">
+            <property name="group">lastfm_radio</property>
+            <property name="label" translatable="yes">Other</property>
+            <property name="visible">True</property>
+            <signal name="toggled" handler="update_now_playing_info"/>
           </object>
         </child>
         <child>
@@ -139,6 +132,7 @@
         </child>
         <child>
           <object class="GtkBox">
+            <property name="margin-top">6</property>
             <property name="spacing">12</property>
             <property name="visible">True</property>
             <child>

@@ -26,13 +26,17 @@ from gi.repository import GObject
 
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
+from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 
 
@@ -57,10 +61,17 @@ class ChatHistory(Popover):
             window, parent=self.list_container, activate_row_callback=self.on_show_user,
             search_entry=self.search_entry,
             columns={
+                "status": {
+                    "column_type": "icon",
+                    "title": _("Status"),
+                    "width": 25,
+                    "hide_header": True
+                },
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 175
+                    "width": 175,
+                    "iterator_key": True
                 },
                 "latest_message": {
                     "column_type": "text",
@@ -76,13 +87,41 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        CompletionEntry(window.private_entry, self.list_view.model, column=0)
+        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
-            add_css_class(widget=window.private_history_button.get_first_child(), css_class="arrow-button")
+            inner_button = next(iter(window.private_history_button))
+            add_css_class(widget=inner_button, css_class="arrow-button")
 
         self.set_menu_button(window.private_history_button)
         self.load_users()
+
+        for event_name, callback in (
+            ("server-login", self.server_login),
+            ("server-disconnect", self.server_disconnect),
+            ("user-status", self.user_status)
+        ):
+            events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.list_view.destroy()
+        self.completion_entry.destroy()
+
+        super().destroy()
+
+    def server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        for iterator in self.list_view.iterators.values():
+            username = self.list_view.get_row_value(iterator, "user")
+            core.users.watch_user(username)
+
+    def server_disconnect(self, *_args):
+        for iterator in self.list_view.iterators.values():
+            self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
 
     def load_user(self, file_path):
         """Reads the username and latest message from a given log file path.
@@ -146,7 +185,7 @@ class ChatHistory(Popover):
 
     def load_users(self):
 
-        log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
+        log_path = os.path.join(log.private_chat_folder_path, "*.log")
         user_logs = glob.glob(encode_path(log_path))
 
         for file_path in user_logs:
@@ -169,6 +208,7 @@ class ChatHistory(Popover):
     def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
+        core.users.watch_user(username)
 
         if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]
@@ -176,11 +216,26 @@ class ChatHistory(Popover):
             h_timestamp = time.strftime(timestamp_format)
             message = f"{h_timestamp} {message}"
 
+        status = core.users.statuses.get(username, UserStatus.OFFLINE)
+
         self.list_view.add_row([
+            USER_STATUS_ICON_NAMES[status],
             username,
             message,
             int(timestamp)
         ], select_row=False, prepend=True)
+
+    def user_status(self, msg):
+
+        iterator = self.list_view.iterators.get(msg.user)
+
+        if iterator is None:
+            return
+
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
+
+        if status_icon_name and status_icon_name != self.list_view.get_row_value(iterator, "status"):
+            self.list_view.set_row_value(iterator, "status", status_icon_name)
 
     def on_show_user(self, *_args):
 

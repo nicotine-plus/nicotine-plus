@@ -20,38 +20,72 @@ import os
 import subprocess
 import sys
 
-from unittest import skipIf
 from unittest import TestCase
 
 USER_DATA = os.path.dirname(os.path.realpath(__file__))
 CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
-COMMANDS = (
-    ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"],  # GUI
-    ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode", "--headless"]
-)
 
 
 class StartupTest(TestCase):
 
-    def test_startup(self):
-        """Verify that regular startup works."""
+    def test_gui_startup(self):
+        """Verify that regular GUI startup works."""
 
-        for command in COMMANDS:
-            # Assume failure by default
-            is_success = False
+        command = ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"]
+        broadway_display = ":1000"
+        broadway_process = None
+        is_success = False
 
-            with subprocess.Popen(command) as process:
+        if sys.platform not in {"darwin", "win32"}:
+            # Display server is required, use GDK's Broadway backend if available.
+            # If not available, leave it up to the user to run the tests with e.g. xvfb-run.
+
+            # pylint: disable=consider-using-with
+            try:
+                broadway_process = subprocess.Popen(["gtk4-broadwayd", broadway_display])
+
+            except Exception:
                 try:
-                    process.wait(timeout=5)
+                    broadway_process = subprocess.Popen(["broadwayd", broadway_display])
 
-                except subprocess.TimeoutExpired:
-                    # Program was still running, success!
-                    is_success = True
-                    process.terminate()
+                except Exception:
+                    pass
 
-            self.assertTrue(is_success)
+        if broadway_process is not None:
+            os.environ["GDK_BACKEND"] = "broadway"
+            os.environ["BROADWAY_DISPLAY"] = broadway_display
 
-    @skipIf((sys.platform == "win32"), "CLI tests are currently flaky in Windows CI")
+        with subprocess.Popen(command) as process:
+            try:
+                process.wait(timeout=5)
+
+            except subprocess.TimeoutExpired:
+                is_success = True
+                process.terminate()
+
+        if broadway_process is not None:
+            broadway_process.terminate()
+            broadway_process.wait()
+
+        self.assertTrue(is_success)
+
+    def test_cli_startup(self):
+        """Verify that regular CLI startup works."""
+
+        command = ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
+                   "--ci-mode", "--headless"]
+        is_success = False
+
+        with subprocess.Popen(command) as process:
+            try:
+                process.wait(timeout=5)
+
+            except subprocess.TimeoutExpired:
+                is_success = True
+                process.terminate()
+
+        self.assertTrue(is_success)
+
     def test_cli(self):
         """Verify that CLI-exclusive functionality works."""
 

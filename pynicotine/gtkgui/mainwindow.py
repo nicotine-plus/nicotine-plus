@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import time
 
 from gi.repository import Gio
@@ -33,6 +34,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.buddies import Buddies
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
@@ -41,7 +43,6 @@ from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
-from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -54,9 +55,10 @@ from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_speed
-from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class MainWindow(Window):
@@ -69,7 +71,6 @@ class MainWindow(Window):
         self.away_timer_id = None
         self.away_cooldown_time = 0
         self.gesture_click = None
-        self.scan_progress_indeterminate = False
 
         # Load UI
 
@@ -85,13 +86,13 @@ class MainWindow(Window):
             self.chatrooms_paned,
             self.chatrooms_title,
             self.chatrooms_toolbar,
-            self.chatrooms_toolbar_content,
             self.connections_label,
             self.container,
             self.content,
             self.download_files_label,
             self.download_status_button,
             self.download_status_label,
+            self.download_users_button,
             self.download_users_label,
             self.downloads_content,
             self.downloads_end,
@@ -101,7 +102,6 @@ class MainWindow(Window):
             self.downloads_page,
             self.downloads_title,
             self.downloads_toolbar,
-            self.downloads_toolbar_content,
             self.header_bar,
             self.header_end,
             self.header_end_container,
@@ -113,7 +113,6 @@ class MainWindow(Window):
             self.interests_page,
             self.interests_title,
             self.interests_toolbar,
-            self.interests_toolbar_content,
             self.log_container,
             self.log_search_bar,
             self.log_search_entry,
@@ -126,11 +125,11 @@ class MainWindow(Window):
             self.private_page,
             self.private_title,
             self.private_toolbar,
-            self.private_toolbar_content,
             self.room_list_button,
             self.room_list_label,
             self.room_search_entry,
-            self.scan_progress_bar,
+            self.scan_progress_container,
+            self.scan_progress_spinner,
             self.search_content,
             self.search_end,
             self.search_entry,
@@ -139,11 +138,11 @@ class MainWindow(Window):
             self.search_page,
             self.search_title,
             self.search_toolbar,
-            self.search_toolbar_content,
             self.status_label,
             self.upload_files_label,
             self.upload_status_button,
             self.upload_status_label,
+            self.upload_users_button,
             self.upload_users_label,
             self.uploads_content,
             self.uploads_end,
@@ -153,7 +152,6 @@ class MainWindow(Window):
             self.uploads_page,
             self.uploads_title,
             self.uploads_toolbar,
-            self.uploads_toolbar_content,
             self.user_search_entry,
             self.user_status_button,
             self.user_status_icon,
@@ -164,20 +162,17 @@ class MainWindow(Window):
             self.userbrowse_page,
             self.userbrowse_title,
             self.userbrowse_toolbar,
-            self.userbrowse_toolbar_content,
             self.userinfo_content,
             self.userinfo_end,
             self.userinfo_entry,
             self.userinfo_page,
             self.userinfo_title,
             self.userinfo_toolbar,
-            self.userinfo_toolbar_content,
             self.userlist_content,
             self.userlist_end,
             self.userlist_page,
             self.userlist_title,
             self.userlist_toolbar,
-            self.userlist_toolbar_content,
             self.vertical_paned
         ) = ui.load(scope=self, path="mainwindow.ui")
 
@@ -206,7 +201,8 @@ class MainWindow(Window):
                 (self.download_status_label, self.download_status_button),
                 (self.upload_status_label, self.upload_status_button)
             ):
-                label.set_mnemonic_widget(button.get_first_child())
+                inner_button = next(iter(button))
+                label.set_mnemonic_widget(inner_button)
         else:
             self.header_bar.set_has_subtitle(False)
             self.header_bar.set_show_close_button(True)
@@ -231,6 +227,21 @@ class MainWindow(Window):
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
 
+        # Events
+        for event_name, callback in (
+            ("schedule-quit", self.schedule_quit),
+            ("server-login", self.update_user_status),
+            ("server-disconnect", self.update_user_status),
+            ("set-connection-stats", self.set_connection_stats),
+            ("shares-preparing", self.shares_preparing),
+            ("shares-ready", self.shares_ready),
+            ("shares-scanning", self.shares_scanning),
+            ("update-download-limits", self.update_download_limits),
+            ("update-upload-limits", self.update_upload_limits),
+            ("user-status", self.user_status)
+        ):
+            events.connect(event_name, callback)
+
         # Main notebook
         self.notebook = IconNotebook(
             self,
@@ -245,39 +256,34 @@ class MainWindow(Window):
         self.search = Searches(self)
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
-        self.userlist = UserList(self)
-        self.privatechat = self.private = PrivateChats(self)
+        self.buddies = Buddies(self)
+        self.privatechat = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
+        self.tabs = {
+            "chatrooms": self.chatrooms,
+            "downloads": self.downloads,
+            "interests": self.interests,
+            "private": self.privatechat,
+            "search": self.search,
+            "uploads": self.uploads,
+            "userbrowse": self.userbrowse,
+            "userinfo": self.userinfo,
+            "userlist": self.buddies
+        }
+
         # Actions and menu
         self.set_up_actions()
-        self.set_up_action_accels()
         self.set_up_menu()
 
         # Tab visibility/order
         self.append_main_tabs()
         self.set_tab_positions()
-        self.set_buddy_list_position()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
         self.connect_tab_signals()
-
-        # Events
-        for event_name, callback in (
-            ("schedule-quit", self.schedule_quit),
-            ("server-login", self.server_login),
-            ("server-disconnect", self.server_disconnect),
-            ("set-connection-stats", self.set_connection_stats),
-            ("shares-preparing", self.shares_preparing),
-            ("shares-ready", self.shares_ready),
-            ("shares-scanning", self.shares_scanning),
-            ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits),
-            ("user-status", self.user_status)
-        ):
-            events.connect(event_name, callback)
 
         # Apply UI customizations
         set_global_style()
@@ -308,7 +314,7 @@ class MainWindow(Window):
                 self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
-        if config.sections["ui"]["maximized"]:
+        if sys.platform != "darwin" and config.sections["ui"]["maximized"]:
             self.widget.maximize()
 
         # Auto-away mode
@@ -357,10 +363,51 @@ class MainWindow(Window):
         self.privatechat.clear_notifications()
         self.on_cancel_auto_away()
 
-        self.application.notifications.set_urgency_hint(False)
+        self.set_urgency_hint(False)
 
     def on_window_visible_changed(self, *_args):
         self.application.tray_icon.update_window_visibility()
+
+    def update_title(self):
+
+        notification_text = ""
+
+        if not config.sections["notifications"]["notification_window_title"]:
+            # Reset Title
+            pass
+
+        elif self.privatechat.highlighted_users:
+            # Private Chats have a higher priority
+            user = self.privatechat.highlighted_users[-1]
+            notification_text = _("Private Message from %(user)s") % {"user": user}
+
+        elif self.chatrooms.highlighted_rooms:
+            # Allow for the possibility the username is not available
+            room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
+            notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+
+        elif any(is_important for is_important in self.search.unread_pages.values()):
+            notification_text = _("Wishlist Results Found")
+
+        self.set_urgency_hint(bool(notification_text))
+
+        if not notification_text:
+            self.set_title(pynicotine.__application_name__)
+            return
+
+        self.set_title(f"{pynicotine.__application_name__} - {notification_text}")
+
+    def set_urgency_hint(self, enabled):
+
+        surface = self.get_surface()
+        is_active = self.is_active()
+
+        try:
+            surface.set_urgency_hint(enabled and not is_active)
+
+        except AttributeError:
+            # No support for urgency hints
+            pass
 
     def save_window_state(self):
 
@@ -371,6 +418,9 @@ class MainWindow(Window):
 
         width = self.get_width()
         height = self.get_height()
+
+        if width <= 0 or height <= 0:
+            return
 
         config.sections["ui"]["width"] = width
         config.sections["ui"]["height"] = height
@@ -384,14 +434,6 @@ class MainWindow(Window):
 
         config.sections["ui"]["xposition"] = x_pos
         config.sections["ui"]["yposition"] = y_pos
-
-    def show(self):
-
-        self.widget.present()
-
-        if GTK_API_VERSION == 3:
-            # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.widget.deiconify()
 
     # Actions #
 
@@ -422,8 +464,8 @@ class MainWindow(Window):
         # View
 
         state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
-        action = Gio.SimpleAction(name="show-log-history", state=state)
-        action.connect("change-state", self.on_show_log_history)
+        action = Gio.SimpleAction(name="show-log-pane", state=state)
+        action.connect("change-state", self.on_show_log_pane)
         self.add_action(action)
 
         # Search
@@ -456,137 +498,12 @@ class MainWindow(Window):
             action.connect("activate", self.on_change_primary_tab, num)
             self.add_action(action)
 
-    def set_up_action_accels(self):
-
-        for action_name, accelerators in (
-            ("win.main-menu", ["F10"]),
-            ("win.context-menu", ["<Shift>F10"]),
-            ("win.change-focus-view", ["F6"]),
-            ("win.show-log-history", ["<Primary>l"]),
-            ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
-            ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"])
-        ):
-            self.application.set_accels_for_action(action_name, accelerators)
-
-        for num in range(1, 10):
-            self.application.set_accels_for_action(f"win.primary-tab-{num}",
-                                                   [f"<Primary>{num}", f"<Alt>{num}"])
-
     # Primary Menus #
-
-    @staticmethod
-    def add_connection_section(menu):
-
-        menu.add_items(
-            ("=" + _("_Connect"), "app.connect"),
-            ("=" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("Soulseek _Privileges"), "app.soulseek-privileges"),
-            ("", None)
-        )
-
-    @staticmethod
-    def add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
-
-    def add_quit_item(self, menu):
-
-        menu.add_items(
-            ("", None),
-            ("#" + _("_Quit"), "app.confirm-quit-uploads")
-        )
-
-    def create_file_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        return menu
-
-    def add_browse_shares_section(self, menu):
-
-        menu.add_items(
-            ("#" + _("Browse _Public Shares"), "app.browse-public-shares"),
-            ("#" + _("Browse _Buddy Shares"), "app.browse-buddy-shares"),
-            ("#" + _("Browse _Trusted Shares"), "app.browse-trusted-shares")
-        )
-
-    def create_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None)
-        )
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_browse_shares_menu(self):
-
-        menu = PopupMenu(self.application)
-        self.add_browse_shares_section(menu)
-
-        return menu
-
-    def create_help_menu(self):
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
-            ("#" + _("_Setup Assistant"), "app.setup-assistant"),
-            ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
-            ("", None),
-            ("#" + _("Report a _Bug"), "app.report-bug"),
-            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("", None),
-            ("#" + _("_About Nicotine+"), "app.about")
-        )
-
-        return menu
-
-    def create_hamburger_menu(self):
-        """Menu button menu (header bar enabled)"""
-
-        menu = PopupMenu(self.application)
-        self.add_connection_section(menu)
-        menu.add_items(
-            ("#" + _("_Rescan Shares"), "app.rescan-shares"),
-            (">" + _("_Browse Shares"), self.create_browse_shares_menu()),
-            ("#" + _("Configure _Shares"), "app.configure-shares"),
-            ("", None),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-        self.add_preferences_item(menu)
-        self.add_quit_item(menu)
-
-        menu.update_model()
-        return menu
-
-    def create_menu_bar(self):
-        """Classic menu bar (header bar disabled)"""
-
-        menu = PopupMenu(self.application)
-        menu.add_items(
-            (">" + _("_File"), self.create_file_menu()),
-            (">" + _("_Shares"), self.create_shares_menu()),
-            (">" + _("_Help"), self.create_help_menu())
-        )
-
-        menu.update_model()
-        return menu
 
     def set_up_menu(self):
 
-        menu_bar = self.create_menu_bar()
-        self.application.set_menubar(menu_bar.model)
-
-        hamburger_menu = self.create_hamburger_menu()
-        self.header_menu.set_menu_model(hamburger_menu.model)
+        menu = self.application.create_hamburger_menu()
+        self.header_menu.set_menu_model(menu.model)
 
         if GTK_API_VERSION == 3:
             return
@@ -617,11 +534,20 @@ class MainWindow(Window):
                 # Avoid "Untitled window" in certain desktop environments
                 self.header_bar.set_title(self.widget.get_title())
 
-        title_widget = getattr(self, f"{page_id}_title")
+        title_widget = self.tabs[page_id].toolbar_start_content
         title_widget.get_parent().remove(title_widget)
 
-        end_widget = getattr(self, f"{page_id}_end")
+        end_widget = self.tabs[page_id].toolbar_end_content
         end_widget.get_parent().remove(end_widget)
+
+        for widget in end_widget:
+            # Themes decide if header bar buttons should be flat
+            if isinstance(widget, Gtk.Button):
+                remove_css_class(widget, "flat")
+
+            # Header bars never contain separators, hide them
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(False)
 
         if GTK_API_VERSION >= 4:
             self.header_title.append(title_widget)
@@ -640,19 +566,20 @@ class MainWindow(Window):
             # Unfocus the header bar
             self.notebook.grab_focus()
 
-        title_widget = getattr(self, f"{self.current_page_id}_title")
-        end_widget = getattr(self, f"{self.current_page_id}_end")
+        title_widget = self.tabs[self.current_page_id].toolbar_start_content
+        end_widget = self.tabs[self.current_page_id].toolbar_end_content
         self.header_title.remove(title_widget)
         self.header_end_container.remove(end_widget)
 
-        toolbar = getattr(self, f"{self.current_page_id}_toolbar_content")
+        toolbar = self.tabs[self.current_page_id].toolbar
+        toolbar_content = next(iter(toolbar))
 
         if GTK_API_VERSION >= 4:
-            toolbar.append(title_widget)
-            toolbar.append(end_widget)
+            toolbar_content.append(title_widget)
+            toolbar_content.append(end_widget)
         else:
-            toolbar.add(title_widget)
-            toolbar.add(end_widget)
+            toolbar_content.add(title_widget)
+            toolbar_content.add(end_widget)
 
     def show_toolbar(self, page_id):
         """Show the non-CSD toolbar."""
@@ -670,7 +597,16 @@ class MainWindow(Window):
                 self.widget.set_titlebar(None)
                 self.widget.map()
 
-        toolbar = getattr(self, f"{page_id}_toolbar")
+        for widget in self.tabs[page_id].toolbar_end_content:
+            # Make secondary buttons at the end of the toolbar flat. Keep buttons
+            # next to text entries raised for more prominence.
+            if isinstance(widget, Gtk.Button):
+                add_css_class(widget, "flat")
+
+            elif isinstance(widget, Gtk.Separator):
+                widget.set_visible(True)
+
+        toolbar = self.tabs[page_id].toolbar
         toolbar.set_visible(True)
 
     def hide_current_toolbar(self):
@@ -679,7 +615,7 @@ class MainWindow(Window):
         if not self.current_page_id:
             return
 
-        toolbar = getattr(self, f"{self.current_page_id}_toolbar")
+        toolbar = self.tabs[self.current_page_id].toolbar
         toolbar.set_visible(False)
 
     def set_active_header_bar(self, page_id):
@@ -699,7 +635,7 @@ class MainWindow(Window):
 
     def _show_dialogs(self, dialogs):
         for dialog in dialogs:
-            dialog.show()
+            dialog.present()
 
     def set_use_header_bar(self, enabled):
 
@@ -730,36 +666,32 @@ class MainWindow(Window):
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
 
-        title_widget = getattr(self, f"{self.current_page_id}_title")
+        tab = self.tabs[self.current_page_id]
+        title_widget = tab.toolbar_start_content
 
         # Find the correct widget to focus in the main view
         if title_widget.get_focus_child():
-            try:
+            if isinstance(tab, IconNotebook):
                 # Attempt to focus a widget in a secondary notebook
-                notebook = getattr(self, self.current_page_id)
-                page = notebook.get_current_page()
+                notebook = tab
+                secondary_page = notebook.get_current_page()
 
-                if page is not None:
+                if secondary_page is not None:
                     # Found a focusable widget
-                    page.focus_callback()
+                    secondary_page.focus_callback()
                     return
-
-            except AttributeError:
+            else:
                 # No notebook present, attempt to focus the main content widget
-                content_widget = getattr(self, f"{self.current_page_id}_content")
+                page_container = next(iter(tab.page))
+                content_widget = list(page_container)[-1]
 
                 if content_widget.child_focus(Gtk.DirectionType.TAB_FORWARD):
                     # Found a focusable widget
                     return
 
         # Find the correct widget to focus in the header bar/toolbar
-        try:
-            entry_widget = getattr(self, f"{self.current_page_id}_entry")
-            entry_widget.grab_focus()
-
-        except AttributeError:
-            title_widget = getattr(self, f"{self.current_page_id}_title")
-            title_widget.child_focus(Gtk.DirectionType.TAB_FORWARD)
+        if tab.toolbar_default_widget is not None:
+            tab.toolbar_default_widget.grab_focus()
 
     # Main Notebook #
 
@@ -776,16 +708,13 @@ class MainWindow(Window):
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
         ):
-            notebook = getattr(self, tab_id)
-            page = getattr(self, f"{tab_id}_page")
-            page.id = tab_id
+            tab = self.tabs[tab_id]
+            self.notebook.append_page(tab.page, tab_text, focus_callback=tab.on_focus)
 
-            self.notebook.append_page(page, tab_text, focus_callback=notebook.on_focus)
-
-            tab_label = self.notebook.get_tab_label(page)
+            tab_label = self.notebook.get_tab_label(tab.page)
             tab_label.set_start_icon_name(tab_icon_name)
-            self.notebook.set_tab_reorderable(page, True)
-            self.set_tab_expand(page)
+            self.notebook.set_tab_reorderable(tab.page, True)
+            self.set_tab_expand(tab.page)
 
     def connect_tab_signals(self):
 
@@ -812,42 +741,44 @@ class MainWindow(Window):
     def on_reopen_closed_tab(self, *_args):
         """Ctrl+Shift+T - reopen recently closed tab."""
 
-        try:
-            notebook = getattr(self, self.current_page_id)
+        tab = self.tabs[self.current_page_id]
 
-        except AttributeError:
+        if not isinstance(tab, IconNotebook):
             return False
 
+        notebook = tab
         notebook.restore_removed_page()
         return True
 
     def on_close_tab(self, *_args):
         """Ctrl+W and Ctrl+F4 - close current secondary tab."""
 
-        try:
-            notebook = getattr(self, self.current_page_id)
-            page = notebook.get_current_page()
+        tab = self.tabs[self.current_page_id]
 
-        except AttributeError:
+        if not isinstance(tab, IconNotebook):
             return False
 
-        if page is None:
+        notebook = tab
+        secondary_page = notebook.get_current_page()
+
+        if secondary_page is None:
             return False
 
-        tab_label = notebook.get_tab_label(page)
+        tab_label = notebook.get_tab_label(secondary_page)
         tab_label.close_callback()
         return True
 
     def on_cycle_tabs(self, _widget, _state, backwards=False):
         """Ctrl+Tab and Shift+Ctrl+Tab - cycle through secondary tabs."""
 
-        try:
-            notebook = getattr(self, self.current_page_id)
-            num_pages = notebook.get_n_pages()
-            current_page_num = notebook.get_current_page_num()
+        tab = self.tabs[self.current_page_id]
 
-        except AttributeError:
+        if not isinstance(tab, IconNotebook):
             return False
+
+        notebook = tab
+        num_pages = notebook.get_n_pages()
+        current_page_num = notebook.get_current_page_num()
 
         if backwards:
             if current_page_num <= 0:
@@ -904,13 +835,10 @@ class MainWindow(Window):
     def set_main_tabs_order(self):
 
         for order, page_id in enumerate(config.sections["ui"]["modes_order"]):
-            try:
-                page = getattr(self, f"{page_id}_page")
+            tab = self.tabs.get(page_id)
 
-            except AttributeError:
-                continue
-
-            self.notebook.reorder_child(page, order)
+            if tab is not None:
+                self.notebook.reorder_child(tab.page, order)
 
     def set_main_tabs_visibility(self):
 
@@ -940,15 +868,13 @@ class MainWindow(Window):
             return
 
         last_tab_id = config.sections["ui"]["last_tab_id"]
+        tab = self.tabs.get(last_tab_id)
 
-        try:
-            page = getattr(self, f"{last_tab_id}_page")
-
-        except AttributeError:
+        if tab is None:
             return
 
-        if page.get_visible():
-            self.notebook.set_current_page(page)
+        if tab.page.get_visible():
+            self.notebook.set_current_page(tab.page)
 
     def set_tab_expand(self, page):
 
@@ -987,101 +913,17 @@ class MainWindow(Window):
         self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
         self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
 
-    def set_buddy_list_position(self):
-
-        parent_container = self.userlist.container.get_parent()
-        mode = config.sections["ui"]["buddylistinchatrooms"]
-
-        if mode not in {"tab", "chatrooms", "always"}:
-            mode = "tab"
-
-        if parent_container == self.buddy_list_container:
-            if mode == "always":
-                return
-
-            self.buddy_list_container.remove(self.userlist.container)
-            self.buddy_list_container.set_visible(False)
-
-        elif parent_container == self.chatrooms_buddy_list_container:
-            if mode == "chatrooms":
-                return
-
-            self.chatrooms_buddy_list_container.remove(self.userlist.container)
-            self.chatrooms_buddy_list_container.set_visible(False)
-
-        elif parent_container == self.userlist_content:
-            if mode == "tab":
-                return
-
-            self.userlist_content.remove(self.userlist.container)
-
-        if mode == "always":
-            if GTK_API_VERSION >= 4:
-                self.buddy_list_container.append(self.userlist.container)
-            else:
-                self.buddy_list_container.add(self.userlist.container)
-
-            self.userlist.toolbar.set_visible(True)
-            self.buddy_list_container.set_visible(True)
-            return
-
-        if mode == "chatrooms":
-            if GTK_API_VERSION >= 4:
-                self.chatrooms_buddy_list_container.append(self.userlist.container)
-            else:
-                self.chatrooms_buddy_list_container.add(self.userlist.container)
-
-            self.userlist.toolbar.set_visible(True)
-            self.chatrooms_buddy_list_container.set_visible(True)
-            return
-
-        if mode == "tab":
-            self.userlist.toolbar.set_visible(False)
-
-            if GTK_API_VERSION >= 4:
-                self.userlist_content.append(self.userlist.container)
-            else:
-                self.userlist_content.add(self.userlist.container)
-
     # Connection #
 
-    def server_login(self, msg):
+    def update_user_status(self, *_args):
 
-        if not msg.success:
-            return
-
-        focus_widget = None
-        self.update_user_status()
-
-        if self.current_page_id == self.userbrowse_page.id:
-            focus_widget = self.userbrowse_entry
-
-        if self.current_page_id == self.userinfo_page.id:
-            focus_widget = self.userinfo_entry
-
-        if self.current_page_id == self.search_page.id:
-            focus_widget = self.search_entry
-
-        if focus_widget is not None:
-            focus_widget.grab_focus()
-
-    def server_disconnect(self, _msg):
-        self.update_user_status()
-
-    def update_user_status(self):
-
-        status = core.user_status
+        status = core.users.login_status
         is_online = (status != UserStatus.OFFLINE)
         is_away = (status == UserStatus.AWAY)
+        toggle_status_action = self.lookup_action("toggle-status")
 
         # Action status
-        self.application.lookup_action("connect").set_enabled(not is_online)
-
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away", "personal-profile",
-                            "message-downloading-users", "message-buddies"):
-            self.application.lookup_action(action_name).set_enabled(is_online)
-
-        self.application.tray_icon.update_user_status()
+        toggle_status_action.set_enabled(is_online)
 
         # Away mode
         if not is_away:
@@ -1093,7 +935,7 @@ class MainWindow(Window):
         if core.uploads.pending_shutdown:
             return
 
-        username = core.login_username
+        username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
@@ -1108,18 +950,24 @@ class MainWindow(Window):
             status_text = _("Offline")
 
         if self.user_status_button.get_tooltip_text() != username:
+            # Hide widget to keep tooltips for other widgets visible
+            self.user_status_button.set_visible(False)
             self.user_status_button.set_tooltip_text(username)
+            self.user_status_button.set_visible(True)
 
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(status_text)
+        if self.user_status_label.get_text() != status_text:
+            self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
+            self.user_status_label.set_text(status_text)
 
-        # Disable button toggled state without activating action
-        toggle_status_action = self.lookup_action("toggle-status")
-        toggle_status_action.set_enabled(False)
+        if self.user_status_button.get_active():
+            # Disable button toggled state without activating action
+            toggle_status_action.handler_block_by_func(self.on_toggle_status)
+            self.user_status_button.set_active(False)
+            toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
 
-        self.user_status_button.set_active(False)
-
-        toggle_status_action.set_enabled(is_online)
+    def user_status(self, msg):
+        if msg.user == core.users.login_username:
+            self.update_user_status()
 
     # Search #
 
@@ -1146,26 +994,22 @@ class MainWindow(Window):
 
     # Away Mode #
 
-    def user_status(self, msg):
-        if msg.user == core.login_username:
-            self.update_user_status()
-
     def set_auto_away(self, active=True):
 
         if active:
             self.auto_away = True
             self.away_timer_id = None
 
-            if core.user_status != UserStatus.AWAY:
-                core.set_away_mode(True)
+            if core.users.login_status != UserStatus.AWAY:
+                core.users.set_away_mode(True)
 
             return
 
         if self.auto_away:
             self.auto_away = False
 
-            if core.user_status == UserStatus.AWAY:
-                core.set_away_mode(False)
+            if core.users.login_status == UserStatus.AWAY:
+                core.users.set_away_mode(False)
 
         # Reset away timer
         self.remove_away_timer()
@@ -1173,7 +1017,7 @@ class MainWindow(Window):
 
     def create_away_timer(self):
 
-        if core.user_status != UserStatus.ONLINE:
+        if core.users.login_status != UserStatus.ONLINE:
             return
 
         away_interval = config.sections["server"]["autoaway"]
@@ -1186,7 +1030,7 @@ class MainWindow(Window):
 
     def on_cancel_auto_away(self, *_args):
 
-        current_time = time.time()
+        current_time = time.monotonic()
 
         if (current_time - self.away_cooldown_time) >= 5:
             self.set_auto_away(False)
@@ -1195,7 +1039,7 @@ class MainWindow(Window):
     # User Actions #
 
     def on_add_buddy(self, *_args):
-        self.userlist.on_add_buddy()
+        self.buddies.on_add_buddy()
 
     # Log Pane #
 
@@ -1234,7 +1078,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).show()
+            MessageDialog(parent=self, title=title, message=msg).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
@@ -1250,17 +1094,17 @@ class MainWindow(Window):
 
     @staticmethod
     def on_view_debug_logs(*_args):
-        open_file_path(config.sections["logging"]["debuglogsdir"], create_folder=True)
+        open_folder_path(log.debug_folder_path, create_folder=True)
 
     @staticmethod
     def on_view_transfer_logs(*_args):
-        open_file_path(config.sections["logging"]["transferslogsdir"], create_folder=True)
+        open_folder_path(log.transfer_folder_path, create_folder=True)
 
     def on_clear_log_view(self, *_args):
         self.log_view.on_clear_all_text()
         self.set_status_text("")
 
-    def on_show_log_history(self, action, state):
+    def on_show_log_pane(self, action, state):
 
         action.set_state(state)
         visible = state.get_boolean()
@@ -1274,17 +1118,20 @@ class MainWindow(Window):
     # Status Bar #
 
     def set_status_text(self, msg):
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.status_label.set_visible(False)
         self.status_label.set_text(msg)
         self.status_label.set_tooltip_text(msg)
+        self.status_label.set_visible(True)
 
-    def set_connection_stats(self, total_conns=0, download_conns=0, download_bandwidth=0,
-                             upload_conns=0, upload_bandwidth=0):
+    def set_connection_stats(self, total_conns=0, download_bandwidth=0, upload_bandwidth=0):
 
         total_conns_text = repr(total_conns)
         download_bandwidth = human_speed(download_bandwidth)
         upload_bandwidth = human_speed(upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {download_conns} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {upload_conns} )"
+        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
@@ -1322,34 +1169,24 @@ class MainWindow(Window):
 
     def shares_preparing(self):
 
-        if self.scan_progress_indeterminate:
-            return
-
-        self.scan_progress_indeterminate = True
-
-        self.scan_progress_bar.set_text(_("Preparing Shares"))
-        self.scan_progress_bar.set_visible(True)
-        self.scan_progress_bar.pulse()
-
-        GLib.timeout_add(500, self.pulse_scan_progress)
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(_("Preparing Shares"))
+        self.scan_progress_container.set_visible(True)
+        self.scan_progress_spinner.start()
 
     def shares_scanning(self):
-        self.scan_progress_bar.set_text(_("Scanning Shares"))
 
-    def pulse_scan_progress(self):
-
-        if not self.scan_progress_indeterminate:
-            return False
-
-        self.scan_progress_bar.pulse()
-        return True
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(_("Scanning Shares"))
+        self.scan_progress_container.set_visible(True)
+        self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
 
-        self.scan_progress_indeterminate = False
-
-        self.scan_progress_bar.set_fraction(0.0)  # Ensure we stop pulse mode
-        self.scan_progress_bar.set_visible(False)
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
 
@@ -1382,10 +1219,26 @@ class MainWindow(Window):
 
         icon_name = "system-shutdown-symbolic"
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        toggle_status_action = self.lookup_action("toggle-status")
 
+        toggle_status_action.handler_block_by_func(self.on_toggle_status)
         self.user_status_button.set_active(True)
+        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
+
         self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(_("Quitting..."))
+
+    def present(self):
+
+        super().present()
+
+        if sys.platform == "darwin":
+            # Workaround for window being unresizable when maximized once
+            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5898
+            GLib.idle_add(
+                self.widget.maximize if config.sections["ui"]["maximized"] else self.widget.unmaximize,
+                priority=GLib.PRIORITY_HIGH_IDLE
+            )
 
     def hide(self):
 
@@ -1401,3 +1254,10 @@ class MainWindow(Window):
 
         # Hide window
         super().hide()
+
+    def destroy(self):
+
+        for tab in self.tabs.values():
+            tab.destroy()
+
+        super().destroy()

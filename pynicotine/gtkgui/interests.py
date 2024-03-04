@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
@@ -30,6 +30,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -48,7 +49,6 @@ class Interests:
             self.recommendations_button,
             self.recommendations_label,
             self.recommendations_list_container,
-            self.similar_users_button,
             self.similar_users_label,
             self.similar_users_list_container
         ) = ui.load(scope=self, path="interests.ui")
@@ -59,6 +59,13 @@ class Interests:
             window.interests_container.add(self.container)
 
         self.window = window
+        self.page = window.interests_page
+        self.page.id = "interests"
+        self.toolbar = window.interests_toolbar
+        self.toolbar_start_content = window.interests_title
+        self.toolbar_end_content = window.interests_end
+        self.toolbar_default_widget = None
+
         self.populated_recommends = False
 
         # Columns
@@ -100,7 +107,8 @@ class Interests:
                 },
                 "item": {
                     "column_type": "text",
-                    "title": _("Item")
+                    "title": _("Item"),
+                    "iterator_key": True
                 },
 
                 # Hidden data columns
@@ -117,7 +125,12 @@ class Interests:
                     "column_type": "icon",
                     "title": _("Status"),
                     "width": 25,
-                    "sort_column": "status_data",
+                    "hide_header": True
+                },
+                "country": {
+                    "column_type": "icon",
+                    "title": _("Country"),
+                    "width": 30,
                     "hide_header": True
                 },
                 "user": {
@@ -142,7 +155,6 @@ class Interests:
                 },
 
                 # Hidden data columns
-                "status_data": {"data_type": int},
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "rating_data": {
@@ -163,18 +175,18 @@ class Interests:
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.likes_list_view, "likes"),
+            ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.likes_list_view, "likes"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.likes_list_view, "likes"),
             ("", None),
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
+            ("#" + _("Remove"), self.on_remove_thing_i_like)
         )
 
         popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
-            ("#" + _("Re_commendations for Item"), self.on_recommend_item, self.dislikes_list_view, "dislikes"),
+            ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.dislikes_list_view, "dislikes"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.dislikes_list_view, "dislikes"),
             ("", None),
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
+            ("#" + _("Remove"), self.on_remove_thing_i_dislike)
         )
 
         popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)
@@ -203,10 +215,20 @@ class Interests:
             ("server-login", self.server_login),
             ("server-disconnect", self.server_disconnect),
             ("similar-users", self.similar_users),
+            ("user-country", self.user_country),
             ("user-stats", self.user_stats),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def destroy(self):
+
+        self.likes_list_view.destroy()
+        self.dislikes_list_view.destroy()
+        self.recommendations_list_view.destroy()
+        self.similar_users_list_view.destroy()
+
+        self.__dict__.clear()
 
     def on_focus(self, *_args):
 
@@ -220,7 +242,6 @@ class Interests:
             return
 
         self.recommendations_button.set_sensitive(True)
-        self.similar_users_button.set_sensitive(True)
 
         if self.window.current_page_id != self.window.interests_page.id:
             # Only populate recommendations if the tab is open on login
@@ -229,18 +250,22 @@ class Interests:
         self.populate_recommendations()
 
     def server_disconnect(self, *_args):
+
         self.recommendations_button.set_sensitive(False)
-        self.similar_users_button.set_sensitive(False)
+
+        for iterator in self.similar_users_list_view.iterators.values():
+            self.similar_users_list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
+
+        self.populated_recommends = False
 
     def populate_recommendations(self):
         """Populates the lists of recommendations and similar users if
         empty."""
 
-        if self.populated_recommends or core.user_status == UserStatus.OFFLINE:
+        if self.populated_recommends or core.users.login_status == UserStatus.OFFLINE:
             return
 
         self.on_recommendations_clicked()
-        self.on_similar_users_clicked()
 
         self.populated_recommends = True
 
@@ -366,13 +391,14 @@ class Interests:
 
     def on_recommendations_clicked(self, *_args):
 
+        self.recommendations_label.set_label(_("Recommendations"))
+        self.similar_users_label.set_label(_("Similar Users"))
+
         if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
             core.interests.request_global_recommendations()
-            return
+        else:
+            core.interests.request_recommendations()
 
-        core.interests.request_recommendations()
-
-    def on_similar_users_clicked(self, *_args):
         core.interests.request_similar_users()
 
     def set_recommendations(self, recommendations, item=None):
@@ -405,24 +431,30 @@ class Interests:
 
         self.similar_users_list_view.clear()
 
-        for user, rating in users.items():
-            user_stats = core.watched_users.get(user, {})
+        for index, (user, rating) in enumerate(users.items()):
+            status = core.users.statuses.get(user, UserStatus.OFFLINE)
+            country_code = core.users.countries.get(user, "")
+            stats = core.users.watched.get(user)
+            rating = index + (1000 * rating)  # Preserve default sort order
 
-            status = core.user_statuses.get(user, UserStatus.OFFLINE)
-            speed = user_stats.get("upload_speed", 0)
-            files = user_stats.get("files", 0)
+            if stats is not None:
+                speed = stats.upload_speed or 0
+                files = stats.files
+            else:
+                speed = 0
+                files = None
 
-            h_files = humanize(files)
+            h_files = humanize(files) if files is not None else ""
             h_speed = human_speed(speed) if speed > 0 else ""
 
             self.similar_users_list_view.add_row([
                 USER_STATUS_ICON_NAMES[status],
+                get_flag_icon_name(country_code),
                 user,
                 h_speed,
                 h_files,
-                status,
                 speed,
-                files,
+                files or 0,
                 rating
             ], select_row=False)
 
@@ -433,6 +465,20 @@ class Interests:
         rating = 0
         self.set_similar_users({user: rating for user in msg.users}, msg.thing)
 
+    def user_country(self, user, country_code):
+
+        iterator = self.similar_users_list_view.iterators.get(user)
+
+        if iterator is None:
+            return
+
+        flag_icon_name = get_flag_icon_name(country_code)
+
+        if not flag_icon_name:
+            return
+
+        self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
+
     def user_status(self, msg):
 
         iterator = self.similar_users_list_view.iterators.get(msg.user)
@@ -440,14 +486,12 @@ class Interests:
         if iterator is None:
             return
 
-        status = msg.status
-        status_icon_name = USER_STATUS_ICON_NAMES.get(status)
+        status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
 
-        if not status_icon_name:
+        if not status_icon_name or status_icon_name == self.similar_users_list_view.get_row_value(iterator, "status"):
             return
 
         self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
-        self.similar_users_list_view.set_row_value(iterator, "status_data", status)
 
     def user_stats(self, msg):
 

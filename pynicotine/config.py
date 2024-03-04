@@ -53,8 +53,10 @@ class Config:
 
     def __init__(self):
 
-        config_folder_path, self.data_folder_path = self.get_user_folders()
-        self.config_file_path = os.path.join(config_folder_path, "config")
+        config_folder_path, data_folder_path = self.get_user_folders()
+        self.set_config_file(os.path.join(config_folder_path, "config"))
+        self.set_data_folder(data_folder_path)
+
         self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
@@ -73,7 +75,7 @@ class Config:
             try:
                 data_folder_path = os.path.join(os.path.normpath(os.environ["APPDATA"]), "nicotine")
             except KeyError:
-                data_folder_path, _basename = os.path.split(sys.argv[0])
+                data_folder_path = os.path.dirname(sys.argv[0])
 
             config_folder_path = os.path.join(data_folder_path, "config")
             return config_folder_path, data_folder_path
@@ -95,11 +97,17 @@ class Config:
 
         return config_folder_path, data_folder_path
 
+    def set_config_file(self, file_path):
+        self.config_file_path = os.path.abspath(file_path)
+
+    def set_data_folder(self, folder_path):
+        self.data_folder_path = os.environ["NICOTINE_DATA_HOME"] = os.path.abspath(folder_path)
+
     def create_config_folder(self):
         """Create the folder for storing the config file in, if the folder
         doesn't exist."""
 
-        folder_path, _basename = os.path.split(self.config_file_path)
+        folder_path = os.path.dirname(self.config_file_path)
 
         if not folder_path:
             # Only file name specified, use current folder
@@ -138,7 +146,7 @@ class Config:
 
     def load_config(self):
 
-        log_folder_path = os.path.join(self.data_folder_path, "logs")
+        log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -164,9 +172,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join(self.data_folder_path, "incomplete"),
-                "downloaddir": os.path.join(self.data_folder_path, "downloads"),
-                "uploaddir": os.path.join(self.data_folder_path, "received"),
+                "incompletedir": os.path.join("${NICOTINE_DATA_HOME}", "incomplete"),
+                "downloaddir": os.path.join("${NICOTINE_DATA_HOME}", "downloads"),
+                "uploaddir": os.path.join("${NICOTINE_DATA_HOME}", "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -234,7 +242,6 @@ class Config:
                     "thier": "their",
                     "tihs": "this"
                 },
-                "censorfill": "*",
                 "censorwords": False,
                 "replacewords": False,
                 "tab": True,
@@ -263,6 +270,7 @@ class Config:
                 "readroomlogs": True,
                 "readroomlines": 200,
                 "readprivatelines": 200,
+                "private_chats": [],
                 "rooms": []
             },
             "privatechat": {
@@ -296,7 +304,6 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "remove_special_chars": True,
                 "private_search_results": True
             },
             "ui": {
@@ -304,15 +311,15 @@ class Config:
                 "dark_mode": False,
                 "header_bar": True,
                 "icontheme": "",
-                "chatme": "#908e8b",
+                "chatme": "#908E8B",
                 "chatremote": "",
                 "chatlocal": "",
-                "chatcommand": "#908e8b",
-                "chathilite": "#5288ce",
-                "urlcolor": "#5288ce",
-                "useronline": "#16bb5c",
-                "useraway": "#c9ae13",
-                "useroffline": "#e04f5e",
+                "chatcommand": "#908E8B",
+                "chathilite": "#5288CE",
+                "urlcolor": "#5288CE",
+                "useronline": "#16BB5C",
+                "useraway": "#C9AE13",
+                "useroffline": "#E04F5E",
                 "usernamehotspots": True,
                 "usernamestyle": "bold",
                 "textbg": "",
@@ -322,8 +329,8 @@ class Config:
                 "spellcheck": True,
                 "exitdialog": 1,
                 "tab_default": "",
-                "tab_hilite": "#497ec2",
-                "tab_changed": "#497ec2",
+                "tab_hilite": "#497EC2",
+                "tab_changed": "#497EC2",
                 "tab_select_previous": True,
                 "tabmain": "Top",
                 "tabrooms": "Top",
@@ -508,7 +515,8 @@ class Config:
                 "distrib_ignore",
                 "reopen_tabs",
                 "max_stored_results",
-                "re_filter"
+                "re_filter",
+                "remove_special_chars"
             ),
             "userinfo": (
                 "descrutf8"
@@ -539,7 +547,11 @@ class Config:
             "words": (
                 "cycle",
                 "onematch",
-                "aliases"
+                "aliases",
+                "censorfill"
+            ),
+            "players": (
+                "default"
             )
         }
 
@@ -558,6 +570,7 @@ class Config:
 
         from pynicotine.logfacility import log
         log.init_log_levels()
+        log.update_folder_paths()
         log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
 
         events.connect("quit", self._quit)
@@ -654,7 +667,7 @@ class Config:
                 if option in self.sections[section]:
                     continue
 
-                # Migrate download speed limit preference
+                # Migrate download speed limit preference (3.3.0)
                 if option == "use_download_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
                         use_speed_limit = "alternative"
@@ -668,7 +681,7 @@ class Config:
                     self.sections[section][option] = use_speed_limit
                     continue
 
-                # Migrate upload speed limit preference
+                # Migrate upload speed limit preference (3.3.0)
                 if option == "use_upload_speed_limit" and section == "transfers":
                     if self.sections[section].get("usealtlimits", False):
                         use_speed_limit = "alternative"
@@ -694,12 +707,22 @@ class Config:
             if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
                 shares.append(shared_folder)
 
-        # Migrate old trusted buddy shares to new format
+        # Migrate old trusted buddy shares to new format (3.3.0)
         if self.sections["transfers"].get("buddysharestrustedonly", False):
             buddy_shares = self.sections["transfers"]["buddyshared"]
 
             self.sections["transfers"]["trustedshared"] = buddy_shares[:]
             buddy_shares.clear()
+
+        # Migrate old media player command to new format (3.3.0)
+        old_default_player = self.sections["players"].get("default", None)
+
+        if old_default_player:
+            self.sections["urls"]["protocols"]["audio"] = old_default_player
+
+        # Enable previously disabled header bar on macOS (3.3.0)
+        if sys.platform == "darwin" and old_default_player is not None:
+            self.sections["ui"]["header_bar"] = True
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]

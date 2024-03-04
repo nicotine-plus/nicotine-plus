@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkSizeGroup">
+    <property name="mode">vertical</property>
+    <widgets>
+      <widget name="_recommendations_label_container"/>
+      <widget name="similar_users_label"/>
+    </widgets>
+  </object>
   <object class="GtkBox" id="container">
     <property name="spacing">1</property>
     <property name="visible">True</property>
@@ -112,7 +119,7 @@
                 <property name="visible">True</property>
                 <property name="width-request">360</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="_recommendations_label_container">
                     <property name="margin-bottom">6</property>
                     <property name="margin-end">6</property>
                     <property name="margin-start">6</property>
@@ -180,43 +187,15 @@
                 <property name="visible">True</property>
                 <property name="width-request">360</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="margin-bottom">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-start">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="spacing">12</property>
+                  <object class="GtkLabel" id="similar_users_label">
+                    <property name="label" translatable="yes">Similar Users</property>
+                    <property name="margin-end">12</property>
+                    <property name="margin-start">12</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkLabel" id="similar_users_label">
-                        <property name="label" translatable="yes">Similar Users</property>
-                        <property name="margin-start">6</property>
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <style>
-                          <class name="heading"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="similar_users_button">
-                        <property name="sensitive">False</property>
-                        <property name="tooltip-text" translatable="yes">Refresh Similar Users</property>
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <signal name="clicked" handler="on_similar_users_clicked"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="icon-name">view-refresh-symbolic</property>
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="circular"/>
-                          <class name="image-button"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="xalign">0</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
                   </object>
                 </child>
                 <child>

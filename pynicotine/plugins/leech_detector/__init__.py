@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2011 quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -33,9 +33,9 @@ class Plugin(BasePlugin):
 
         self.settings = {
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
+            "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
-            "open_private_chat": True,
             "detected_leechers": []
         }
         self.metasettings = {
@@ -43,6 +43,10 @@ class Plugin(BasePlugin):
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
                 "type": "textview"
+            },
+            "open_private_chat": {
+                "description": "Open chat tabs when sending private messages to leechers",
+                "type": "bool"
             },
             "num_files": {
                 "description": "Require users to have a minimum number of shared files:",
@@ -52,10 +56,6 @@ class Plugin(BasePlugin):
                 "description": "Require users to have a minimum number of shared folders:",
                 "type": "int", "minimum": 1
             },
-            "open_private_chat": {
-                "description": "Open chat tabs when sending private messages to leechers",
-                "type": "bool"
-            },
             "detected_leechers": {
                 "description": "Detected leechers",
                 "type": "list string"
@@ -63,7 +63,6 @@ class Plugin(BasePlugin):
         }
 
         self.probed_users = {}
-        self.detected_leechers = set()
 
     def loaded_notification(self):
 
@@ -76,30 +75,12 @@ class Plugin(BasePlugin):
         if self.settings["num_folders"] < min_num_folders:
             self.settings["num_folders"] = min_num_folders
 
-        # Separate leechers set for faster membership checks
-        self.detected_leechers = set(self.settings["detected_leechers"])
-
         self.log(
             "Require users have a minimum of %d files in %d shared public folders.",
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def upload_queued_notification(self, user, virtual_path, real_path):
-
-        if user in self.probed_users:
-            # We already have stats for this user.
-            return
-
-        self.probed_users[user] = "requesting"
-
-        if user in self.core.watched_users:
-            self.core.request_user_stats(user)
-        else:
-            self.core.watch_user(user)
-
-        self.log("Getting statistics from the server for new user %s…", user)
-
-    def user_stats_notification(self, user, stats):
+    def check_user(self, user, num_files, num_folders, source="server"):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -109,13 +90,14 @@ class Plugin(BasePlugin):
             # User was already accepted previously, nothing to do
             return
 
-        num_files = stats["files"]
-        num_folders = stats["dirs"]
+        if self.probed_users[user] == "requesting_shares" and source != "peer":
+            # Waiting for stats from peer, but received stats from server. Ignore.
+            return
+
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
 
-        if is_user_accepted or user in self.core.userlist.buddies:
-            if user in self.detected_leechers:
-                self.detected_leechers.remove(user)
+        if is_user_accepted or user in self.core.buddies.users:
+            if user in self.settings["detected_leechers"]:
                 self.settings["detected_leechers"].remove(user)
 
             self.probed_users[user] = "okay"
@@ -123,25 +105,27 @@ class Plugin(BasePlugin):
             if is_user_accepted:
                 self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
             else:
-                self.log("Buddy %s is only sharing %s files in %s folders. Not complaining.",
+                self.log("Buddy %s is sharing %s files in %s folders. Not complaining.",
                          (user, num_files, num_folders))
             return
 
-        if self.probed_users[user] != "requesting":
-            # We already messaged this user previously
+        if not self.probed_users[user].startswith("requesting"):
+            # We already dealt with the user this session
             return
 
-        if num_files <= 0 and num_folders >= self.settings["num_folders"]:
-            # SoulseekQt seems to only send the number of folders to the server in at least some cases
-            self.log(
-                "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
-                (user, num_folders)
-            )
-            # TODO: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request
+        if user in self.settings["detected_leechers"]:
+            # We already messaged the user in a previous session
+            self.probed_users[user] = "processed_leecher"
+            return
 
-        if num_files <= 0 and num_folders <= 0:
-            # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
-            self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
+        if (num_files <= 0 or num_folders <= 0) and self.probed_users[user] != "requesting_shares":
+            # SoulseekQt only sends the number of shared files/folders to the server once on startup.
+            # Verify user's actual number of files/folders.
+            self.log("User %s has no shared files according to the server, requesting shares to verify…", user)
+
+            self.probed_users[user] = "requesting_shares"
+            self.core.userbrowse.request_user_shares(user)
+            return
 
         if self.settings["message"]:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to message "
@@ -150,18 +134,36 @@ class Plugin(BasePlugin):
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Going to log "
                            "leecher after transfer…")
 
-        self.probed_users[user] = "leecher"
+        self.probed_users[user] = "pending_leecher"
         self.log(log_message, (user, num_files, num_folders))
+
+    def upload_queued_notification(self, user, virtual_path, real_path):
+
+        if user in self.probed_users:
+            return
+
+        self.probed_users[user] = "requesting_stats"
+        stats = self.core.users.watched.get(user)
+
+        if stats is None:
+            # Transfer manager will request the stats from the server shortly
+            return
+
+        if stats.files is not None and stats.folders is not None:
+            self.check_user(user, num_files=stats.files, num_folders=stats.folders)
+
+    def user_stats_notification(self, user, stats):
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], source=stats["source"])
 
     def upload_finished_notification(self, user, *_):
 
         if user not in self.probed_users:
             return
 
-        if self.probed_users[user] != "leecher":
+        if self.probed_users[user] != "pending_leecher":
             return
 
-        self.probed_users[user] = "processed"
+        self.probed_users[user] = "processed_leecher"
 
         if not self.settings["message"]:
             self.log("Leecher %s doesn't share enough files. No message is specified in plugin settings.", user)
@@ -174,7 +176,7 @@ class Plugin(BasePlugin):
 
             self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
 
-        self.detected_leechers.add(user)
-        self.settings["detected_leechers"].append(user)
+        if user not in self.settings["detected_leechers"]:
+            self.settings["detected_leechers"].append(user)
 
         self.log("Leecher %s doesn't share enough files. Message sent.", user)

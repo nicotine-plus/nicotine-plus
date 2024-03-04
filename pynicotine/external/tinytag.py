@@ -1,12 +1,13 @@
 # tinytag - an audio meta info reader
-# Copyright (c) 2014-2022 Tom Wallroth
+# Copyright (c) 2014-2023 Tom Wallroth
+# Copyright (c) 2021-2023 Mat (mathiascode)
 #
-# Sources on github:
+# Sources on GitHub:
 # http://github.com/devsnd/tinytag/
 
 # MIT License
 
-# Copyright (c) 2014-2023 Tom Wallroth
+# Copyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)
 # Copyright (c) 2020-2023 Nicotine+ Contributors
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -77,7 +78,7 @@ def _bytes_to_int(b):
 class TinyTag(object):
     SUPPORTED_FILE_EXTENSIONS = [
         '.mp1', '.mp2', '.mp3',
-        '.oga', '.ogg', '.opus',
+        '.oga', '.ogg', '.opus', '.spx',
         '.wav', '.flac', '.wma',
         '.m4b', '.m4a', '.m4r', '.m4v', '.mp4', '.aax', '.aaxc',
         '.aiff', '.aifc', '.aif', '.afc'
@@ -136,7 +137,7 @@ class TinyTag(object):
         if cls._file_extension_mapping is None:
             cls._file_extension_mapping = {
                 (b'.mp1', b'.mp2', b'.mp3'): ID3,
-                (b'.oga', b'.ogg', b'.opus'): Ogg,
+                (b'.oga', b'.ogg', b'.opus', b'.spx'): Ogg,
                 (b'.wav',): Wave,
                 (b'.flac',): Flac,
                 (b'.wma',): Wma,
@@ -160,7 +161,10 @@ class TinyTag(object):
             cls._magic_bytes_mapping = {
                 b'^ID3': ID3,
                 b'^\xff\xfb': ID3,
-                b'^OggS': Ogg,
+                b'^OggS.........................FLAC': Ogg,
+                b'^OggS........................Opus': Ogg,
+                b'^OggS........................Speex': Ogg,
+                b'^OggS.........................vorbis': Ogg,
                 b'^RIFF....WAVE': Wave,
                 b'^fLaC': Flac,
                 b'^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C': Wma,
@@ -196,10 +200,7 @@ class TinyTag(object):
             ignore_errors=False, encoding=None, file_obj=None):
         should_open_file = (file_obj is None)
         if should_open_file:
-            try:
-                file_obj = io.open(filename, 'rb')
-            except TypeError:
-                file_obj = io.open(str(filename.absolute()), 'rb')  # Python 3.4/3.5 pathlib support
+            file_obj = io.open(filename, 'rb')
         elif isinstance(file_obj, io.BytesIO):
             file_obj = io.BufferedReader(file_obj)  # buffered reader to support peeking
         try:
@@ -227,6 +228,7 @@ class TinyTag(object):
 
     def load(self, tags, duration, image=False):
         self._parse_tags = tags
+        self._parse_duration = duration
         self._load_image = image
         if tags:
             self._parse_tag(self._filehandler)
@@ -277,18 +279,24 @@ class TinyTag(object):
     def _parse_tag(self, fh):
         raise NotImplementedError()
 
-    def update(self, other):
+    def update(self, other, all_fields=False):
         # update the values of this tag with the values from another tag
+        if all_fields:
+            self.__dict__.update(other.__dict__)
+            return
         for key in ['track', 'track_total', 'title', 'artist',
                     'album', 'albumartist', 'year', 'duration',
-                    'genre', 'disc', 'disc_total', 'comment', 'composer']:
+                    'genre', 'disc', 'disc_total', 'comment', 'composer',
+                    '_image_data']:
             if not getattr(self, key) and getattr(other, key):
                 setattr(self, key, getattr(other, key))
+        if other.extra:
+            self.extra.update(other.extra)
 
     @staticmethod
     def _unpad(s):
         # strings in mp3 and asf *may* be terminated with a zero byte at the end
-        return s.replace('\x00', '')
+        return s.strip('\x00')
 
 
 class MP4(TinyTag):
@@ -531,6 +539,7 @@ class ID3(TinyTag):
         'TXXX': 'extra.text',
         'TKEY': 'extra.initial_key',
         'USLT': 'extra.lyrics',
+        'TCOP': 'extra.copyright', 'TCR': 'extra.copyright',
     }
     IMAGE_FRAME_IDS = {'APIC', 'PIC'}
     PARSABLE_FRAME_IDS = set(FRAME_ID_TO_FIELD.keys()).union(IMAGE_FRAME_IDS)
@@ -891,6 +900,8 @@ class Ogg(TinyTag):
         if not self._tags_parsed:
             self._parse_tag(fh)  # determine sample rate
             fh.seek(0)           # and rewind to start
+        if self.duration is not None or not self.samplerate:
+            return  # either ogg flac or invalid file
         if self.filesize > max_page_size:
             fh.seek(-max_page_size, 2)  # go to last possible page position
         while True:
@@ -908,35 +919,72 @@ class Ogg(TinyTag):
 
     def _parse_tag(self, fh):
         page_start_pos = fh.tell()  # set audio_offset later if its audio data
+        check_flac_second_packet = False
+        check_speex_second_packet = False
         for packet in self._parse_pages(fh):
             walker = BytesIO(packet)
             if packet[0:7] == b"\x01vorbis":
-                (channels, self.samplerate, max_bitrate, bitrate,
-                 min_bitrate) = struct.unpack("<B4i", packet[11:28])
-                if not self.audio_offset:
-                    self.bitrate = bitrate / 1000
-                    self.audio_offset = page_start_pos
-            elif packet[0:7] == b"\x03vorbis" and self._parse_tags:
-                walker.seek(7, os.SEEK_CUR)  # jump over header name
-                self._parse_vorbis_comment(walker)
-            elif packet[0:8] == b'OpusHead':  # parse opus header
-                # https://www.videolan.org/developers/vlc/modules/codec/opus_header.c
-                # https://mf4.xiph.org/jenkins/view/opus/job/opusfile-unix/ws/doc/html/structOpusHead.html
-                walker.seek(8, os.SEEK_CUR)  # jump over header name
-                (version, ch, _, sr, _, _) = struct.unpack("<BBHIHB", walker.read(11))
-                if (version & 0xF0) == 0:  # only major version 0 supported
-                    self.channels = ch
-                    self.samplerate = 48000  # internally opus always uses 48khz
-            elif packet[0:8] == b'OpusTags' and self._parse_tags:  # parse opus metadata:
-                walker.seek(8, os.SEEK_CUR)  # jump over header name
-                self._parse_vorbis_comment(walker)
+                if self._parse_duration:
+                    (channels, self.samplerate, max_bitrate, bitrate,
+                     min_bitrate) = struct.unpack("<B4i", packet[11:28])
+                    if not self.audio_offset:
+                        self.bitrate = bitrate / 1000
+                        self.audio_offset = page_start_pos
+            elif packet[0:7] == b"\x03vorbis":
+                if self._parse_tags:
+                    walker.seek(7, os.SEEK_CUR)  # jump over header name
+                    self._parse_vorbis_comment(walker)
+            elif packet[0:8] == b'OpusHead':
+                if self._parse_duration:  # parse opus header
+                    # https://www.videolan.org/developers/vlc/modules/codec/opus_header.c
+                    # https://mf4.xiph.org/jenkins/view/opus/job/opusfile-unix/ws/doc/html/structOpusHead.html
+                    walker.seek(8, os.SEEK_CUR)  # jump over header name
+                    (version, ch, _, sr, _, _) = struct.unpack("<BBHIHB", walker.read(11))
+                    if (version & 0xF0) == 0:  # only major version 0 supported
+                        self.channels = ch
+                        self.samplerate = 48000  # internally opus always uses 48khz
+            elif packet[0:8] == b'OpusTags':
+                if self._parse_tags:  # parse opus metadata:
+                    walker.seek(8, os.SEEK_CUR)  # jump over header name
+                    self._parse_vorbis_comment(walker)
+            elif packet[0:5] == b'\x7fFLAC':
+                # https://xiph.org/flac/ogg_mapping.html
+                walker.seek(9, os.SEEK_CUR)  # jump over header name, version and number of headers
+                flactag = Flac(io.BufferedReader(walker), self.filesize)
+                flactag.load(tags=self._parse_tags, duration=self._parse_duration,
+                             image=self._load_image)
+                self.update(flactag, all_fields=True)
+                check_flac_second_packet = True
+            elif check_flac_second_packet:
+                # second packet contains FLAC metadata block
+                if self._parse_tags:
+                    meta_header = struct.unpack('B3B', walker.read(4))
+                    block_type = meta_header[0] & 0x7f
+                    if block_type == Flac.METADATA_VORBIS_COMMENT:
+                        self._parse_vorbis_comment(walker)
+                check_flac_second_packet = False
+            elif packet[0:8] == b'Speex   ':
+                # https://speex.org/docs/manual/speex-manual/node8.html
+                if self._parse_duration:
+                    walker.seek(36, os.SEEK_CUR)  # jump over header name and irrelevant fields
+                    (self.samplerate, _, _, self.channels,
+                     self.bitrate) = struct.unpack("<5i", walker.read(20))
+                check_speex_second_packet = True
+            elif check_speex_second_packet:
+                if self._parse_tags:
+                    length = struct.unpack('I', walker.read(4))[0]  # starts with a comment string
+                    comment = codecs.decode(walker.read(length), 'UTF-8')
+                    self._set_field('comment', comment)
+                    self._parse_vorbis_comment(walker, contains_vendor=False)  # other tags
+                check_speex_second_packet = False
             else:
                 if DEBUG:
                     stderr('Unsupported Ogg page type: ', packet[:16])
                 break
             page_start_pos = fh.tell()
+        self._tags_parsed = True
 
-    def _parse_vorbis_comment(self, fh):
+    def _parse_vorbis_comment(self, fh, contains_vendor=True):
         # for the spec, see: http://xiph.org/vorbis/doc/v-comment.html
         # discnumber tag based on: https://en.wikipedia.org/wiki/Vorbis_comment
         # https://sno.phy.queensu.ca/~phil/exiftool/TagNames/Vorbis.html
@@ -945,6 +993,7 @@ class Ogg(TinyTag):
             'albumartist': 'albumartist',
             'title': 'title',
             'artist': 'artist',
+            'author': 'artist',
             'date': 'year',
             'tracknumber': 'track',
             'tracktotal': 'track_total',
@@ -954,10 +1003,15 @@ class Ogg(TinyTag):
             'totaldiscs': 'disc_total',
             'genre': 'genre',
             'description': 'comment',
+            'comment': 'comment',
             'composer': 'composer',
+            'copyright': 'extra.copyright',
+            'isrc': 'extra.isrc',
+            'lyrics': 'extra.lyrics',
         }
-        vendor_length = struct.unpack('I', fh.read(4))[0]
-        fh.seek(vendor_length, os.SEEK_CUR)  # jump over vendor
+        if contains_vendor:
+            vendor_length = struct.unpack('I', fh.read(4))[0]
+            fh.seek(vendor_length, os.SEEK_CUR)  # jump over vendor
         elements = struct.unpack('I', fh.read(4))[0]
         for i in range(elements):
             length = struct.unpack('I', fh.read(4))[0]
@@ -984,7 +1038,7 @@ class Ogg(TinyTag):
         # for the spec, see: https://wiki.xiph.org/Ogg
         previous_page = b''  # contains data from previous (continuing) pages
         header_data = fh.read(27)  # read ogg page header
-        while len(header_data) != 0:
+        while len(header_data) == 27:
             header = struct.unpack('<4sBBqIIiB', header_data)
             # https://xiph.org/ogg/doc/framing.html
             oggs, version, flags, pos, serial, pageseq, crc, segments = header
@@ -1074,7 +1128,7 @@ class Wave(TinyTag):
                         field = sub_fh.read(4)
             elif subchunkid in (b'id3 ', b'ID3 ') and self._parse_tags:
                 id3 = ID3(fh, 0)
-                id3._parse_id3v2(fh)
+                id3.load(tags=True, duration=False, image=self._load_image)
                 self.update(id3)
             else:  # some other chunk, just skip the data
                 fh.seek(subchunksize, 1)
@@ -1097,6 +1151,7 @@ class Flac(TinyTag):
 
     def load(self, tags, duration, image=False):
         self._parse_tags = tags
+        self._parse_duration = duration
         self._load_image = image
         header = self._filehandler.peek(4)
         if header[:3] == b'ID3':  # parse ID3 header if it exists
@@ -1112,13 +1167,13 @@ class Flac(TinyTag):
     def _determine_duration(self, fh):
         # for spec, see https://xiph.org/flac/ogg_mapping.html
         header_data = fh.read(4)
-        while len(header_data):
+        while len(header_data) == 4:
             meta_header = struct.unpack('B3B', header_data)
             block_type = meta_header[0] & 0x7f
             is_last_block = meta_header[0] & 0x80
             size = _bytes_to_int(meta_header[1:4])
             # http://xiph.org/flac/format.html#metadata_block_streaminfo
-            if block_type == Flac.METADATA_STREAMINFO:
+            if block_type == Flac.METADATA_STREAMINFO and self._parse_duration:
                 stream_info_header = fh.read(size)
                 if len(stream_info_header) < 34:  # invalid streaminfo
                     return
@@ -1335,7 +1390,7 @@ class Wma(TinyTag):
                 fh.seek(object_size - 24, os.SEEK_CUR)  # read over onknown object ids
 
 
-class Aiff(ID3):
+class Aiff(TinyTag):
     #
     # AIFF is part of the IFF family of file formats.
     #
@@ -1378,7 +1433,7 @@ class Aiff(ID3):
     }
 
     def __init__(self, filehandler, filesize, *args, **kwargs):
-        ID3.__init__(self, filehandler, filesize, *args, **kwargs)
+        TinyTag.__init__(self, filehandler, filesize, *args, **kwargs)
         self._tags_parsed = False
 
     def _parse_tag(self, fh):
@@ -1403,7 +1458,9 @@ class Aiff(ID3):
                     self.samplerate = self.duration = self.bitrate = None  # invalid sample rate
                 fh.seek(sub_chunk_size - 18, 1)  # skip remaining data in chunk
             elif sub_chunk_id in (b'id3 ', b'ID3 ') and self._parse_tags:
-                ID3._parse_tag(self, fh)
+                id3 = ID3(fh, 0)
+                id3.load(tags=True, duration=False, image=self._load_image)
+                self.update(id3)
             elif sub_chunk_id == b'SSND':
                 self.audio_offset = fh.tell()
                 fh.seek(sub_chunk_size, 1)

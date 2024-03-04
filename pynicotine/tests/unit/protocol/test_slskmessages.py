@@ -116,14 +116,14 @@ class GetPeerAddressMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = GetPeerAddress(user="test")
+        obj = GetPeerAddress(user="user1")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x04\x00\x00\x00test",
+            b"\x05\x00\x00\x00user1",
             message)
 
 
@@ -131,14 +131,14 @@ class WatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = WatchUser(user="test")
+        obj = WatchUser(user="user2")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x04\x00\x00\x00test",
+            b"\x05\x00\x00\x00user2",
             message)
 
 
@@ -146,14 +146,14 @@ class UnwatchUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = UnwatchUser(user="test")
+        obj = UnwatchUser(user="user3")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x04\x00\x00\x00test",
+            b"\x05\x00\x00\x00user3",
             message)
 
 
@@ -161,14 +161,14 @@ class GetUserStatusMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = GetUserStatus(user="test")
+        obj = GetUserStatus(user="user4")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x04\x00\x00\x00test",
+            b"\x05\x00\x00\x00user4",
             message)
 
 
@@ -206,14 +206,14 @@ class NotifyPrivilegesMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = NotifyPrivileges(token=123456, user="test")
+        obj = NotifyPrivileges(token=123456, user="user5")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"@\xe2\x01\x00\x04\x00\x00\x00test",
+            b"@\xe2\x01\x00\x05\x00\x00\x00user5",
             message)
 
 
@@ -270,14 +270,14 @@ class SayChatroomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = SayChatroom(room="nicotine", msg="Wassup?")
+        obj = SayChatroom(room="room1", message="Wassup?")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine\x07\x00\x00\x00Wassup?",
+            b"\x05\x00\x00\x00room1\x07\x00\x00\x00Wassup?",
             message)
 
 
@@ -285,8 +285,8 @@ class JoinRoomMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = JoinRoom(room="nicotine", private=0)
-        obj_private = JoinRoom(room="nicotine", private=1)
+        obj = JoinRoom(room="room2", private=False)
+        obj_private = JoinRoom(room="room2", private=True)
 
         # Act
         message = obj.make_network_message()
@@ -294,10 +294,10 @@ class JoinRoomMessageTest(TestCase):
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine\x00\x00\x00\x00",
+            b"\x05\x00\x00\x00room2\x00\x00\x00\x00",
             message)
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine\x01\x00\x00\x00",
+            b"\x05\x00\x00\x00room2\x01\x00\x00\x00",
             message_private)
 
 
@@ -313,14 +313,14 @@ class PrivateRoomAddUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomAddUser(room="nicotine", user="admin")
+        obj = PrivateRoomAddUser(room="room3", user="admin")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin",
+            b"\x05\x00\x00\x00room3\x05\x00\x00\x00admin",
             message)
 
 
@@ -328,14 +328,14 @@ class PrivateRoomDismemberMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomDismember(room="nicotine")
+        obj = PrivateRoomDismember(room="room4")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine",
+            b"\x05\x00\x00\x00room4",
             message)
 
 
@@ -343,14 +343,14 @@ class PrivateRoomDisownMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomDisown(room="nicotine")
+        obj = PrivateRoomDisown(room="room5")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine",
+            b"\x05\x00\x00\x00room5",
             message)
 
 
@@ -358,14 +358,14 @@ class PrivateRoomSomethingMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomSomething(room="nicotine")
+        obj = PrivateRoomSomething(room="room6")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine",
+            b"\x05\x00\x00\x00room6",
             message)
 
 
@@ -373,24 +373,24 @@ class PrivateRoomRemoveUserMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomRemoveUser(room="nicotine", user="admin")
+        obj = PrivateRoomRemoveUser(room="room7", user="admin")
 
         # Act
         message = obj.make_network_message()
 
         # Assert
         self.assertEqual(
-            b"\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin",
+            b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin",
             message)
 
     def test_parse_network_message(self):
         # Arrange
-        message = memoryview(b"\x08\x00\x00\x00nicotine\x05\x00\x00\x00admin")
+        message = memoryview(b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin")
 
         # Act
         obj = PrivateRoomRemoveUser()
         obj.parse_network_message(message)
 
         # Assert
-        self.assertEqual("nicotine", obj.room)
+        self.assertEqual("room7", obj.room)
         self.assertEqual("admin", obj.user)

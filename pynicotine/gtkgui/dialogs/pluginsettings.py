@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -31,14 +31,12 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class PluginSettings(Dialog):
 
-    def __init__(self, application, plugin_id, plugin_settings):
+    def __init__(self, application):
 
         self.application = application
-        self.plugin_id = plugin_id
-        self.plugin_settings = plugin_settings
+        self.plugin_id = None
+        self.plugin_settings = None
         self.option_widgets = {}
-
-        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
 
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
@@ -51,29 +49,29 @@ class PluginSettings(Dialog):
             orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
             margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
         )
-        scrolled_window = Gtk.ScrolledWindow(
+        self.scrolled_window = Gtk.ScrolledWindow(
             child=self.primary_container, hexpand=True, vexpand=True, min_content_height=300,
             hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
         )
 
         super().__init__(
             parent=application.preferences,
-            content_box=scrolled_window,
+            content_box=self.scrolled_window,
             buttons_start=(cancel_button,),
             buttons_end=(ok_button,),
             default_button=ok_button,
-            title=_("%s Settings") % plugin_name,
+            close_callback=self.on_close,
             width=600,
             height=425,
-            close_destroy=True,
             show_title_buttons=False
         )
 
-        self._add_options()
+    def destroy(self):
+        self.__dict__.clear()
 
     @staticmethod
     def _generate_label(text):
-        return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=bool(text))
+        return Gtk.Label(label=text, hexpand=True, wrap=True, xalign=0, visible=bool(text))
 
     def _generate_widget_container(self, description, child_widget=None, homogeneous=False,
                                    orientation=Gtk.Orientation.HORIZONTAL):
@@ -112,15 +110,14 @@ class PluginSettings(Dialog):
 
     def _add_boolean_option(self, option_name, option_value, description):
 
-        self.option_widgets[option_name] = button = Gtk.CheckButton(label=description, receives_default=True,
-                                                                    visible=True)
-        self._generate_widget_container("", button)
-        self.application.preferences.set_widget(button, option_value)
+        self.option_widgets[option_name] = button = Gtk.Switch(
+            receives_default=True, valign=Gtk.Align.CENTER, visible=True
+        )
 
-        if GTK_API_VERSION >= 4:
-            button.get_last_child().set_wrap(True)  # pylint: disable=no-member
-        else:
-            button.get_child().set_line_wrap(True)  # pylint: disable=no-member
+        label = self._generate_widget_container(description, button)
+        label.set_mnemonic_widget(button)
+
+        self.application.preferences.set_widget(button, option_value)
 
     def _add_radio_option(self, option_name, option_value, description, items):
 
@@ -153,11 +150,8 @@ class PluginSettings(Dialog):
 
         label = self._generate_widget_container(description, homogeneous=True)
         self.option_widgets[option_name] = combobox = ComboBox(
-            container=label.get_parent(), label=label)
-
-        for item in items:
-            combobox.append(item)
-
+            container=label.get_parent(), label=label, items=((item, item) for item in items)
+        )
         self.application.preferences.set_widget(combobox, option_value)
 
     def _add_entry_option(self, option_name, option_value, description):
@@ -260,6 +254,11 @@ class PluginSettings(Dialog):
 
     def _add_options(self):
 
+        self.option_widgets.clear()
+
+        for child in list(self.primary_container):
+            self.primary_container.remove(child)
+
         for option_name, data in self.plugin_settings.items():
             option_type = data.get("type")
 
@@ -315,6 +314,9 @@ class PluginSettings(Dialog):
         if isinstance(widget, TextView):
             return widget.get_text()
 
+        if isinstance(widget, Gtk.Switch):
+            return widget.get_active()
+
         if isinstance(widget, Gtk.CheckButton):
             try:
                 # Radio button
@@ -340,14 +342,20 @@ class PluginSettings(Dialog):
 
         return None
 
+    def update_settings(self, plugin_id, plugin_settings):
+
+        self.plugin_id = plugin_id
+        self.plugin_settings = plugin_settings
+        plugin_name = core.pluginhandler.get_plugin_info(plugin_id).get("Name", plugin_id)
+
+        self.set_title(_("%s Settings") % plugin_name)
+        self._add_options()
+
     def on_add_response(self, window, _response_id, treeview):
 
         value = window.get_entry_value()
 
         if not value:
-            return
-
-        if value in treeview.iterators:
             return
 
         treeview.add_row([value])
@@ -360,7 +368,7 @@ class PluginSettings(Dialog):
             message=treeview.description,
             callback=self.on_add_response,
             callback_data=treeview
-        ).show()
+        ).present()
 
     def on_edit_response(self, window, _response_id, data):
 
@@ -386,7 +394,7 @@ class PluginSettings(Dialog):
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
-            ).show()
+            ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):
@@ -414,3 +422,6 @@ class PluginSettings(Dialog):
             self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
 
         self.close()
+
+    def on_close(self, *_args):
+        self.scrolled_window.get_vadjustment().set_value(0)

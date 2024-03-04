@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,9 +18,9 @@
 
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
-__version__ = "3.3.0.dev6"
+__version__ = "3.3.3.dev1"
 __author__ = "Nicotine+ Team"
-__copyright__ = """© 2004–2023 Nicotine+ Contributors
+__copyright__ = """© 2004–2024 Nicotine+ Contributors
 © 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 __website_url__ = "https://nicotine-plus.org"
@@ -45,7 +45,7 @@ def check_arguments():
     """Parse command line arguments specified by the user."""
 
     parser = argparse.ArgumentParser(
-        description=_("Graphical client for the Soulseek peer-to-peer network"),
+        prog="nicotine", description=_("Graphical client for the Soulseek peer-to-peer network"),
         epilog=_("Website: %s") % __website_url__, add_help=False
     )
 
@@ -94,13 +94,13 @@ def check_arguments():
     multi_instance = False
 
     if args.config:
-        config.config_file_path = os.path.abspath(args.config)
+        config.set_config_file(args.config)
 
         # Since a custom config was specified, allow another instance of the application to open
         multi_instance = True
 
     if args.user_data:
-        config.data_folder_path = os.path.abspath(args.user_data)
+        config.set_data_folder(args.user_data)
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port

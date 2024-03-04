@@ -43,7 +43,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="action-name">win.show-log-history</property>
+                <property name="action-name">win.show-log-pane</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
                 <property name="visible">True</property>
               </object>

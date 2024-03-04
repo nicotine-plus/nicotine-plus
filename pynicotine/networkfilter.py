@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -310,7 +310,7 @@ class NetworkFilter:
         if username not in request_list:
             request_list[username] = action
 
-        core.request_ip_address(username)
+        core.users.request_ip_address(username)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """Add the current IP address and username of a user to a list."""
@@ -365,20 +365,6 @@ class NetworkFilter:
 
         return ip_addresses
 
-    @staticmethod
-    def get_online_user_ip_address(username):
-        """Try to lookup an address from watched known connections, for
-        updating an IP list item if the address is unspecified."""
-
-        user_address = core.user_addresses.get(username)
-
-        if not user_address:
-            # User is offline
-            return None
-
-        user_ip_address, _user_port = user_address
-        return user_ip_address
-
     def _get_user_ip_addresses(self, username, ip_list, request_action):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
@@ -386,9 +372,10 @@ class NetworkFilter:
 
         if request_action == "add":
             # Get current IP for user, if known
-            online_ip_address = self.get_online_user_ip_address(username)
+            online_address = core.users.addresses.get(username)
 
-            if online_ip_address:
+            if online_address:
+                online_ip_address, _port = online_address
                 ip_addresses.add(online_ip_address)
 
         elif request_action == "remove":
@@ -412,7 +399,7 @@ class NetworkFilter:
         """Try to match a username from watched and known connections, for
         updating an IP list item if the username is unspecified."""
 
-        for username, user_address in core.user_addresses.items():
+        for username, user_address in core.users.addresses.items():
             if ip_address == user_address[0]:
                 return username
 
@@ -460,11 +447,13 @@ class NetworkFilter:
             return True
 
         if not ip_address:
-            ip_address = self.get_online_user_ip_address(username)
+            address = core.users.addresses.get(username)
 
-            if not ip_address:
+            if not address:
                 # Username not listed and is offline, so we can't filter it
                 return False
+
+            ip_address, _port = address
 
         if ip_address in ip_list:
             # IP filtered
@@ -505,44 +494,6 @@ class NetworkFilter:
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
                 core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
 
-    # Permission Level #
-
-    def check_user_permission(self, username, ip_address=None):
-        """Check if this user is banned, geoip-blocked, and which shares it is
-        allowed to access based on transfer and shares settings."""
-
-        if self.is_user_banned(username) or self.is_user_ip_banned(username, ip_address):
-            if config.sections["transfers"]["usecustomban"]:
-                ban_message = config.sections["transfers"]["customban"]
-                return "banned", f"Banned ({ban_message})"
-
-            return "banned", "Banned"
-
-        user_data = core.userlist.buddies.get(username)
-
-        if user_data:
-            if user_data.is_trusted:
-                return "trusted", ""
-
-            return "buddy", ""
-
-        if ip_address is None or not config.sections["transfers"]["geoblock"]:
-            return "public", ""
-
-        country_code = self.get_country_code(ip_address)
-
-        # Please note that all country codes are stored in the same string at the first index
-        # of an array, separated by commas (no idea why this decision was made...)
-
-        if country_code and config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
-            if config.sections["transfers"]["usecustomgeoblock"]:
-                ban_message = config.sections["transfers"]["customgeoblock"]
-                return "banned", f"Banned ({ban_message})"
-
-            return "banned", "Banned"
-
-        return "public", ""
-
     # Callbacks #
 
     def _update_saved_user_ip_addresses(self, ip_list, username, ip_address):
@@ -566,12 +517,11 @@ class NetworkFilter:
         """Server code 3."""
 
         username = msg.user
+        ip_address = msg.ip_address
 
-        if username not in core.user_addresses:
+        if ip_address == "0.0.0.0":
             # User is offline
             return
-
-        ip_address = msg.ip_address
 
         # If the IP address changed, make sure our IP ban/ignore list reflects this
         self._update_saved_user_ip_addresses(config.sections["server"]["ipblocklist"], username, ip_address)

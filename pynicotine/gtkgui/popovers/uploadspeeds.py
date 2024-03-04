@@ -24,6 +24,7 @@ class UploadSpeeds(TransferSpeeds):
 
     def __init__(self, window):
         super().__init__(window=window, transfer_type="upload")
+        self.set_menu_button(window.upload_status_button)
 
     @staticmethod
     def update_transfer_limits():

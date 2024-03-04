@@ -24,6 +24,7 @@ class DownloadSpeeds(TransferSpeeds):
 
     def __init__(self, window):
         super().__init__(window=window, transfer_type="download")
+        self.set_menu_button(window.download_status_button)
 
     @staticmethod
     def update_transfer_limits():

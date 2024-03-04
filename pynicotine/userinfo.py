@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import time
 
 from pynicotine import slskmessages
@@ -23,6 +24,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.shares import PermissionLevel
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -52,12 +54,65 @@ class UserInfo:
             return
 
         for username in self.users:
-            core.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username)  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
 
-    def show_user(self, username, refresh=False, switch_page=True):
+    def _get_user_info_response(self, requesting_username=None, requesting_ip_address=None):
+
+        if requesting_username is not None and requesting_ip_address is not None:
+            permission_level, reject_reason = core.shares.check_user_permission(
+                requesting_username, requesting_ip_address)
+        else:
+            permission_level = PermissionLevel.PUBLIC
+            reject_reason = None
+
+        if permission_level == PermissionLevel.BANNED:
+            # Hide most details from banned users
+            pic = None
+            descr = ""
+            totalupl = queuesize = uploadallowed = 0
+            slotsavail = False
+
+            if reject_reason:
+                descr = f"You are not allowed to download my shared files.\nReason: {reject_reason}"
+        else:
+            try:
+                with open(encode_path(os.path.expandvars(config.sections["userinfo"]["pic"])), "rb") as file_handle:
+                    pic = file_handle.read()
+
+            except Exception:
+                pic = None
+
+            descr = unescape(config.sections["userinfo"]["descr"])
+
+            totalupl = core.uploads.get_total_uploads_allowed()
+            queuesize = core.uploads.get_upload_queue_size(requesting_username)
+            slotsavail = core.uploads.is_new_upload_accepted()
+
+            if config.sections["transfers"]["remotedownloads"]:
+                uploadallowed = config.sections["transfers"]["uploadallowed"]
+            else:
+                uploadallowed = 0
+
+        msg = slskmessages.UserInfoResponse(
+            descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
+            uploadallowed=uploadallowed
+        )
+        msg.username = core.users.login_username or config.sections["server"]["login"]
+        return msg
+
+    def show_user(self, username=None, refresh=False, switch_page=True):
+
+        local_username = core.users.login_username or config.sections["server"]["login"]
+
+        if not username:
+            username = local_username
+
+            if not username:
+                core.setup()
+                return
 
         if username not in self.users:
             self.users.add(username)
@@ -65,18 +120,23 @@ class UserInfo:
 
         events.emit("user-info-show-user", user=username, refresh=refresh, switch_page=switch_page)
 
-        if core.user_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", username)
-            return
-
         if not refresh:
             return
 
-        # Request user description, picture and queue information
-        core.send_message_to_peer(username, slskmessages.UserInfoRequest())
+        if username == local_username:
+            msg = self._get_user_info_response()
+            events.emit("user-info-response", msg)
 
-        # Request user status, speed and number of shared files
-        core.watch_user(username)
+        elif core.users.login_status == slskmessages.UserStatus.OFFLINE:
+            events.emit("peer-connection-error", username, is_offline=True)
+            return
+
+        else:
+            # Request user status, speed and number of shared files
+            core.users.watch_user(username)
+
+            # Request user description, picture and queue information
+            core.send_message_to_peer(username, slskmessages.UserInfoRequest())
 
         # Request user interests
         core.send_message_to_server(slskmessages.UserInterests(username))
@@ -114,9 +174,9 @@ class UserInfo:
     def _user_info_request(self, msg):
         """Peer code 15."""
 
-        username = msg.init.target_user
-        ip_address, _port = msg.init.addr
-        request_time = time.time()
+        username = msg.username
+        ip_address, _port = msg.addr
+        request_time = time.monotonic()
 
         if username in self.requested_info_times and request_time < self.requested_info_times[username] + 0.4:
             # Ignoring request, because it's less than half a second since the
@@ -124,40 +184,7 @@ class UserInfo:
             return
 
         self.requested_info_times[username] = request_time
+        msg = self._get_user_info_response(username, ip_address)
 
-        if core.login_username != username:
-            log.add(_("User %(user)s is viewing your profile"), {"user": username})
-
-        permission_level, reject_reason = core.network_filter.check_user_permission(username, ip_address)
-
-        if permission_level == "banned":
-            pic = None
-            descr = core.ban_message % reject_reason
-            descr += "\n\n----------------------------------------------\n\n"
-            descr += unescape(config.sections["userinfo"]["descr"])
-
-        else:
-            try:
-                with open(encode_path(config.sections["userinfo"]["pic"]), "rb") as file_handle:
-                    pic = file_handle.read()
-
-            except Exception:
-                pic = None
-
-            descr = unescape(config.sections["userinfo"]["descr"])
-
-        totalupl = core.uploads.get_total_uploads_allowed()
-        queuesize = core.uploads.get_upload_queue_size()
-        slotsavail = core.uploads.allow_new_uploads()
-
-        if config.sections["transfers"]["remotedownloads"]:
-            uploadallowed = config.sections["transfers"]["uploadallowed"]
-        else:
-            uploadallowed = 0
-
-        core.send_message_to_peer(
-            username, slskmessages.UserInfoResponse(
-                descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
-                uploadallowed=uploadallowed
-            )
-        )
+        log.add(_("User %(user)s is viewing your profile"), {"user": username})
+        core.send_message_to_peer(username, msg)

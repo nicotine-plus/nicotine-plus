@@ -18,7 +18,6 @@
 
 import time
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -33,7 +32,6 @@ class Statistics(Dialog):
     def __init__(self, application):
 
         (
-            self.close_button,
             self.completed_downloads_session_label,
             self.completed_downloads_total_label,
             self.completed_uploads_session_label,
@@ -44,33 +42,52 @@ class Statistics(Dialog):
             self.downloaded_size_total_label,
             self.reset_button,
             self.since_timestamp_total_label,
-            self.started_downloads_session_label,
-            self.started_downloads_total_label,
-            self.started_uploads_session_label,
-            self.started_uploads_total_label,
             self.uploaded_size_session_label,
             self.uploaded_size_total_label
         ) = ui.load(scope=self, path="dialogs/statistics.ui")
 
+        self.stat_id_labels = {
+            "completed_downloads": {
+                "session": self.completed_downloads_session_label,
+                "total": self.completed_downloads_total_label
+            },
+            "completed_uploads": {
+                "session": self.completed_uploads_session_label,
+                "total": self.completed_uploads_total_label
+            },
+            "downloaded_size": {
+                "session": self.downloaded_size_session_label,
+                "total": self.downloaded_size_total_label
+            },
+            "uploaded_size": {
+                "session": self.uploaded_size_session_label,
+                "total": self.uploaded_size_total_label
+            },
+            "since_timestamp": {
+                "total": self.since_timestamp_total_label
+            }
+        }
+
         super().__init__(
             parent=application.window,
             content_box=self.container,
-            buttons_start=(self.close_button,),
-            buttons_end=(self.reset_button,),
-            default_button=self.close_button,
+            show_callback=self.on_show,
             title=_("Transfer Statistics"),
-            width=450,
-            resizable=False,
-            close_destroy=False,
-            show_title_buttons=False
+            width=425,
+            resizable=False
         )
 
-        events.connect("update-stat-value", self.update_stat_value)
+        events.connect("update-stat", self.update_stat)
 
-        for stat_id in config.defaults["statistics"]:
-            core.statistics.update_ui(stat_id)
+    def update_stat(self, stat_id, session_value, total_value):
 
-    def update_stat_value(self, stat_id, session_value, total_value):
+        current_stat_id_labels = self.stat_id_labels.get(stat_id)
+
+        if not current_stat_id_labels:
+            return
+
+        if not self.widget.get_visible():
+            return
 
         if stat_id in {"downloaded_size", "uploaded_size"}:
             session_value = human_size(session_value)
@@ -86,10 +103,16 @@ class Statistics(Dialog):
             total_value = humanize(total_value)
 
         if session_value is not None:
-            getattr(self, f"{stat_id}_session_label").set_text(session_value)
+            session_label = current_stat_id_labels["session"]
+
+            if session_label.get_text() != session_value:
+                session_label.set_text(session_value)
 
         if total_value is not None:
-            getattr(self, f"{stat_id}_total_label").set_text(total_value)
+            total_label = current_stat_id_labels["total"]
+
+            if total_label.get_text() != total_value:
+                total_label.set_text(total_value)
 
     def on_reset_statistics_response(self, *_args):
         core.statistics.reset_stats()
@@ -102,7 +125,10 @@ class Statistics(Dialog):
             message=_("Do you really want to reset transfer statistics?"),
             destructive_response_id="ok",
             callback=self.on_reset_statistics_response
-        ).show()
+        ).present()
 
     def on_close(self, *_args):
         self.close()
+
+    def on_show(self, *_args):
+        core.statistics.update_stats()

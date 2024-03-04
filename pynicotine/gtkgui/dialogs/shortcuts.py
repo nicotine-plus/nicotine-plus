@@ -28,8 +28,7 @@ class Shortcuts(Dialog):
 
         super().__init__(
             widget=self.dialog,
-            parent=application.window,
-            close_destroy=False
+            parent=application.window
         )
         application.window.set_help_overlay(self.dialog)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -61,7 +61,7 @@ import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-pos
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
-GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION") or "4"
+GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 # Include (almost) all standard library modules for plugins
@@ -171,7 +171,8 @@ def add_typelibs():
         ]
     else:
         required_typelibs += [
-            "Atk-"
+            "Atk-",
+            "Gspell-"
         ]
 
     if USE_LIBADWAITA:
@@ -206,13 +207,6 @@ def add_gtk():
         starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
     )
 
-    if GTK_VERSION == "4":
-        # ANGLE (OpenGL ES)
-        add_files(
-            folder_path=LIB_PATH, output_path="lib",
-            starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
-        )
-
     if USE_LIBADWAITA:
         add_files(
             folder_path=LIB_PATH, output_path="lib",
@@ -242,7 +236,6 @@ def add_icon_packs():
 
     required_icon_packs = (
         "Adwaita",
-        "hicolor"
     )
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
@@ -338,6 +331,7 @@ setup(
             "applications_shortcut": True
         }
     },
+    data_files=[],
     packages=[],
     executables=[
         Executable(

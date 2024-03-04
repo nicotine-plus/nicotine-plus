@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -46,11 +46,15 @@ class RoomWall(Popover):
         self.message_view = TextView(self.message_view_container, editable=False, vertical_margin=4,
                                      pixels_above_lines=3, pixels_below_lines=3)
 
+    def destroy(self):
+        self.message_view.destroy()
+        super().destroy()
+
     def _update_message_list(self):
 
         tickers = core.chatrooms.joined_rooms[self.room].tickers
         newline = "\n"
-        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(tickers.items())]
+        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(list(tickers.items()))]
 
         self.message_view.append_line("\n".join(messages))
         self.message_view.place_cursor_at_line(0)
@@ -60,7 +64,7 @@ class RoomWall(Popover):
         entry_text = self.message_entry.get_text()
         self.message_entry.set_text("")
 
-        core.chatrooms.joined_rooms[self.room].tickers.pop(core.login_username, None)
+        core.chatrooms.joined_rooms[self.room].tickers.pop(core.users.login_username, None)
         self.message_view.clear()
 
         if update_list:
@@ -75,7 +79,7 @@ class RoomWall(Popover):
         core.chatrooms.request_update_ticker(self.room, entry_text)
 
         if entry_text:
-            user = core.login_username
+            user = core.users.login_username
             self.message_view.append_line(f"> [{user}] {entry_text}")
 
         self._update_message_list()
@@ -93,7 +97,7 @@ class RoomWall(Popover):
         self.message_view.clear()
         self._update_message_list()
 
-        login_username = core.login_username
+        login_username = core.users.login_username
         message = core.chatrooms.joined_rooms[self.room].tickers.get(login_username)
 
         if message:

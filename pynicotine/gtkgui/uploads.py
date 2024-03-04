@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -32,7 +32,9 @@ from pynicotine.gtkgui.popovers.uploadspeeds import UploadSpeeds
 from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
+from pynicotine.transfers import TransferStatus
 from pynicotine.utils import open_file_path
+from pynicotine.utils import open_folder_path
 
 
 class Uploads(Transfers):
@@ -43,9 +45,15 @@ class Uploads(Transfers):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.deprioritized_statuses = {"Cancelled", "Finished"}
+        self.deprioritized_statuses = {TransferStatus.CANCELLED, TransferStatus.FINISHED}
 
-        self.transfer_page = window.uploads_page
+        self.transfer_page = self.page = window.uploads_page
+        self.page.id = "uploads"
+        self.toolbar = window.uploads_toolbar
+        self.toolbar_start_content = window.uploads_title
+        self.toolbar_end_content = window.uploads_end
+        self.toolbar_default_widget = window.upload_users_button
+
         self.user_counter = window.upload_users_label
         self.file_counter = window.upload_files_label
         self.expand_button = window.uploads_expand_button
@@ -79,20 +87,28 @@ class Uploads(Transfers):
             ("clear-upload", self.clear_transfer),
             ("clear-uploads", self.clear_transfers),
             ("start", self.start),
-            ("update-upload", self.update_model),
-            ("update-uploads", self.update_model),
-            ("upload-notification", self.new_transfer_notification)
+            ("update-upload", self.update_model)
         ):
             events.connect(event_name, callback)
 
         self.upload_speeds = UploadSpeeds(window)
 
     def start(self):
-        self.init_transfers(core.uploads.transfers)
+        self.init_transfers(core.uploads.transfers.values())
+
+    def destroy(self):
+        self.upload_speeds.destroy()
+        super().destroy()
 
     def get_transfer_folder_path(self, transfer):
+
         virtual_path = transfer.virtual_path
-        return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
+
+        if virtual_path:
+            folder_path, _separator, _basename = virtual_path.rpartition("\\")
+            return folder_path
+
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
         core.uploads.retry_uploads(self.selected_transfers)
@@ -103,9 +119,6 @@ class Uploads(Transfers):
     def clear_selected_transfers(self):
         core.uploads.clear_uploads(uploads=self.selected_transfers)
 
-    def on_clear_queued_response(self, *_args):
-        core.uploads.clear_uploads(statuses=["Queued"])
-
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
@@ -113,8 +126,8 @@ class Uploads(Transfers):
             title=_("Clear Queued Uploads"),
             message=_("Do you really want to clear all queued uploads?"),
             destructive_response_id="ok",
-            callback=self.on_clear_queued_response
-        ).show()
+            callback=self.on_clear_queued
+        ).present()
 
     def on_clear_all_response(self, *_args):
         core.uploads.clear_uploads()
@@ -127,7 +140,7 @@ class Uploads(Transfers):
             message=_("Do you really want to clear all uploads?"),
             destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
     def on_copy_url(self, *_args):
 
@@ -144,7 +157,9 @@ class Uploads(Transfers):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+            url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -152,15 +167,14 @@ class Uploads(Transfers):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            open_file_path(file_path=transfer.folder_path, command=config.sections["ui"]["filemanager"])
+            open_folder_path(transfer.folder_path)
 
-    def on_play_files(self, *_args):
+    def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
-            basename = transfer.virtual_path.split("\\")[-1]
+            basename = transfer.virtual_path.rpartition("\\")[-1]
 
-            open_file_path(file_path=os.path.join(transfer.folder_path, basename),
-                           command=config.sections["players"]["default"])
+            open_file_path(os.path.join(transfer.folder_path, basename))
 
     def on_browse_folder(self, *_args):
 
@@ -170,9 +184,9 @@ class Uploads(Transfers):
             return
 
         user = config.sections["server"]["login"]
-        folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
+        folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
 
-        core.userbrowse.browse_user(user, path=folder_path)
+        core.userbrowse.browse_user(user, path=(folder_path + separator))
 
     def on_abort_users(self, *_args):
 
@@ -189,24 +203,24 @@ class Uploads(Transfers):
         core.uploads.ban_users(self.selected_users)
 
     def on_clear_queued(self, *_args):
-        core.uploads.clear_uploads(statuses=["Queued"])
+        core.uploads.clear_uploads(statuses={TransferStatus.QUEUED})
 
     def on_clear_finished(self, *_args):
-        core.uploads.clear_uploads(statuses=["Finished"])
+        core.uploads.clear_uploads(statuses={TransferStatus.FINISHED})
 
     def on_clear_cancelled(self, *_args):
-        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension"])
+        core.uploads.clear_uploads(statuses={TransferStatus.CANCELLED})
 
     def on_clear_failed(self, *_args):
-        core.uploads.clear_uploads(statuses=["Connection timeout", "Local file error", "Remote file error"])
+        core.uploads.clear_uploads(statuses={TransferStatus.CONNECTION_TIMEOUT, TransferStatus.LOCAL_FILE_ERROR})
 
     def on_clear_logged_off(self, *_args):
-        core.uploads.clear_uploads(statuses=["User logged off"])
+        core.uploads.clear_uploads(statuses={TransferStatus.USER_LOGGED_OFF})
 
     def on_clear_finished_cancelled(self, *_args):
-        core.uploads.clear_uploads(statuses=["Cancelled", "Disallowed extension", "Finished"])
+        core.uploads.clear_uploads(statuses={TransferStatus.CANCELLED, TransferStatus.FINISHED})
 
     def on_clear_finished_failed(self, *_args):
         core.uploads.clear_uploads(
-            statuses=["Cancelled", "Disallowed extension", "Finished", "Connection timeout",
-                      "Local file error", "Remote file error"])
+            statuses={TransferStatus.CANCELLED, TransferStatus.FINISHED, TransferStatus.CONNECTION_TIMEOUT,
+                      TransferStatus.LOCAL_FILE_ERROR})

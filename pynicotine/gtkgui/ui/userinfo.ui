@@ -50,6 +50,7 @@
                                 <property name="ellipsize">end</property>
                                 <property name="margin-bottom">6</property>
                                 <property name="margin-top">6</property>
+                                <property name="selectable">True</property>
                                 <property name="single-line-mode">True</property>
                                 <property name="tooltip-text" bind-source="user_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                 <property name="visible">True</property>
@@ -61,6 +62,7 @@
                             </child>
                             <child>
                               <object class="GtkImage" id="country_icon">
+                                <property name="can-focus">True</property>
                                 <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                 <property name="visible">False</property>
                               </object>
@@ -422,13 +424,13 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage" id="placeholder_picture">
-                        <property name="hexpand">True</property>
+                        <property name="halign">center</property>
                         <property name="icon-name">avatar-default-symbolic</property>
                         <property name="margin-bottom">6</property>
                         <property name="margin-start">6</property>
                         <property name="margin-top">6</property>
                         <property name="pixel-size">128</property>
-                        <property name="vexpand">True</property>
+                        <property name="valign">center</property>
                         <property name="visible">True</property>
                         <style>
                           <class name="dim-label"/>
@@ -449,7 +451,7 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="margin-bottom">8</property>
+                    <property name="margin-bottom">6</property>
                     <property name="margin-end">6</property>
                     <property name="margin-start">6</property>
                     <property name="margin-top">6</property>
@@ -473,7 +475,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Send M_essage</property>
+                                <property name="label" translatable="yes">_Send Message</property>
                                 <property name="mnemonic-widget">_send_message_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
@@ -556,7 +558,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ban_unban_user_button">
+                      <object class="GtkButton" id="ban_unban_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ban_unban_user"/>
                         <child>
@@ -572,7 +574,7 @@
                             <child>
                               <object class="GtkLabel" id="ban_unban_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ban_unban_user_button</property>
+                                <property name="mnemonic-widget">ban_unban_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
@@ -587,7 +589,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ignore_unignore_user_button">
+                      <object class="GtkButton" id="ignore_unignore_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ignore_unignore_user"/>
                         <child>
@@ -603,7 +605,7 @@
                             <child>
                               <object class="GtkLabel" id="ignore_unignore_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ignore_unignore_user_button</property>
+                                <property name="mnemonic-widget">ignore_unignore_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
@@ -651,25 +653,24 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_save_picture_button">
-                        <property name="sensitive" bind-source="picture_view" bind-property="visible" bind-flags="sync-create"/>
+                      <object class="GtkButton" id="gift_privileges_button">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_save_picture"/>
+                        <signal name="clicked" handler="on_give_privileges"/>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">image-x-generic-symbolic</property>
+                                <property name="icon-name">starred-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Save _Picture</property>
-                                <property name="mnemonic-widget">_save_picture_button</property>
+                                <property name="label" translatable="yes">_Gift Privileges…</property>
+                                <property name="mnemonic-widget">gift_privileges_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                                 <style>
@@ -738,7 +739,6 @@
             <child>
               <object class="GtkProgressBar" id="progress_bar">
                 <property name="pulse-step">0.72</property>
-                <property name="valign">end</property>
                 <property name="visible">True</property>
                 <signal name="map" handler="on_show_progress_bar"/>
                 <signal name="unmap" handler="on_hide_progress_bar"/>

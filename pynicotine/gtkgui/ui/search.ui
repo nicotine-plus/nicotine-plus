@@ -79,7 +79,6 @@
     <signal name="icon-press" handler="on_filter_entry_icon_press"/>
   </object>
   <object class="GtkBox" id="container">
-    <property name="orientation">vertical</property>
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
