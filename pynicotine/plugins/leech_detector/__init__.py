@@ -125,7 +125,7 @@ class Plugin(BasePlugin):
 
         # ban the leecher
         self.core.network_filter.ban_user(user)
-        
+
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
                 for placeholder, option_key in self.PLACEHOLDERS.items():
