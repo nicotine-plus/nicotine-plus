@@ -132,7 +132,7 @@ class Plugin(BasePlugin):
         total_size_text = self.core.userbrowse.pages[user].share_size_label.get_text()
         total_size_array = total_size_text.split(" ")
         extracted_percentage = total_size_array[10]
-        self.log("User %s share percentage is %s ", (user, extracted_percentage))        
+        self.log("User %s share percentage is %s ", (user, extracted_percentage))  
         # ban the leecher
         self.core.network_filter.ban_user(user)
 
