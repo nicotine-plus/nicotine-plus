@@ -96,25 +96,25 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="_clear_button">
-                <property name="tooltip-text" bind-source="_clear_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+              <object class="GtkButton" id="_remove_button">
+                <property name="tooltip-text" bind-source="_remove_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                 <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_transfer"/>
+                <signal name="clicked" handler="on_remove_transfer"/>
                 <child>
                   <object class="GtkBox">
                     <property name="spacing">6</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">edit-delete-symbolic</property>
+                        <property name="icon-name">list-remove-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="_clear_label">
+                      <object class="GtkLabel" id="_remove_label">
                         <property name="ellipsize">end</property>
-                        <property name="label" translatable="yes">Clear</property>
-                        <property name="mnemonic-widget">_clear_button</property>
+                        <property name="label" translatable="yes">Remove</property>
+                        <property name="mnemonic-widget">_remove_button</property>
                         <property name="visible">True</property>
                       </object>
                     </child>

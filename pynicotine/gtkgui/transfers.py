@@ -116,7 +116,7 @@ class Transfers:
         self.tree_view = TreeView(
             window, parent=self.tree_container, name=transfer_type,
             multi_select=True, persistent_sort=True, activate_row_callback=self.on_row_activated,
-            delete_accelerator_callback=self.on_clear_transfers_accelerator,
+            delete_accelerator_callback=self.on_remove_transfers_accelerator,
             columns={
                 # Visible columns
                 "user": {
@@ -237,7 +237,7 @@ class Transfers:
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
-            ("#" + _("_Clear"), self.on_clear_transfer),
+            ("#" + _("Remove"), self.on_remove_transfer),
             ("", None),
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
@@ -798,7 +798,7 @@ class Transfers:
         # Implemented in subclasses
         raise NotImplementedError
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         # Implemented in subclasses
         raise NotImplementedError
 
@@ -956,8 +956,8 @@ class Transfers:
         elif action == 4:  # Pause / Abort
             self.abort_selected_transfers()
 
-        elif action == 5:  # Clear
-            self.clear_selected_transfers()
+        elif action == 5:  # Remove
+            self.remove_selected_transfers()
 
         elif action == 6:  # Resume / Retry
             self.retry_selected_transfers()
@@ -1008,11 +1008,11 @@ class Transfers:
         self.retry_selected_transfers()
         return True
 
-    def on_clear_transfers_accelerator(self, *_args):
-        """Delete - clear transfers."""
+    def on_remove_transfers_accelerator(self, *_args):
+        """Delete - remove transfers."""
 
         self.select_transfers()
-        self.clear_selected_transfers()
+        self.remove_selected_transfers()
         return True
 
     def on_file_properties_accelerator(self, *_args):
@@ -1101,6 +1101,6 @@ class Transfers:
         self.select_transfers()
         self.abort_selected_transfers()
 
-    def on_clear_transfer(self, *_args):
+    def on_remove_transfer(self, *_args):
         self.select_transfers()
-        self.clear_selected_transfers()
+        self.remove_selected_transfers()
