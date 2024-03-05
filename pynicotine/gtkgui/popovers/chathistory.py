@@ -87,7 +87,7 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=0)
+        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=1)
 
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(window.private_history_button))

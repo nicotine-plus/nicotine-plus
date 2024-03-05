@@ -625,7 +625,11 @@ class Uploads(Transfers):
                 )
                 continue
 
-            upload_candidate.size = self._get_current_file_size(real_path)
+            current_size = self._get_current_file_size(real_path)
+
+            if current_size is not None:
+                upload_candidate.size = current_size
+
             final_upload_candidate = upload_candidate
 
         self.token = slskmessages.increment_token(self.token)
@@ -954,7 +958,11 @@ class Uploads(Transfers):
             return slskmessages.TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
         # All checks passed, starting a new upload.
-        size = self._get_current_file_size(real_path)
+        current_size = self._get_current_file_size(real_path)
+
+        if current_size is not None:
+            size = current_size
+
         transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
 
         self._append_transfer(transfer)

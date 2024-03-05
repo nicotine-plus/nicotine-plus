@@ -288,7 +288,7 @@ class DownloadsPage:
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Pause"), None),
-                (_("Clear"), None),
+                (_("Remove"), None),
                 (_("Resume"), None),
                 (_("Browse Folder"), None)
             )
@@ -791,7 +791,7 @@ class UploadsPage:
                 (_("Open in File Manager"), None),
                 (_("Search"), None),
                 (_("Abort"), None),
-                (_("Clear"), None),
+                (_("Remove"), None),
                 (_("Retry"), None),
                 (_("Browse Folder"), None)
             )
