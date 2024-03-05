@@ -85,7 +85,7 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def check_user(self, user, num_files, num_folders):
+    def check_user(self, user, num_files, num_folders, num_privs):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -128,11 +128,6 @@ class Plugin(BasePlugin):
             self.core.userbrowse.request_user_shares(user)
             return
 
-        # Private : 0 / Open : 30,000 Share Percentage : 45
-        total_size_text = self.core.userbrowse.pages[user].share_size_label.get_text()
-        total_size_array = total_size_text.split(" ")
-        extracted_percentage = total_size_array[10]
-        self.log("User %s share percentage is %s ", (user, extracted_percentage))  
         # ban the leecher
         self.core.network_filter.ban_user(user)
 
@@ -170,4 +165,4 @@ class Plugin(BasePlugin):
             self.check_user(user, num_files=stats.files, num_folders=stats.folders)
 
     def user_stats_notification(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_privs=stats["privs"])
