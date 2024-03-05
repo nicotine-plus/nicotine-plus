@@ -374,5 +374,5 @@ class UserBrowse:
             "avgspeed": None,
             "files": num_files,
             "dirs": num_folders,
-            "privs": num_privs
+            "pri": num_privs
         })
