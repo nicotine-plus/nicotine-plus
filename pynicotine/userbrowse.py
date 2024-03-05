@@ -373,5 +373,6 @@ class UserBrowse:
             "avgspeed": None,
             "files": num_files,
             "dirs": num_folders,
+            "privs": len(msg.privatelist),
             "source": "peer"
         })
