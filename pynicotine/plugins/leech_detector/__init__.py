@@ -85,7 +85,7 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def check_user(self, user, num_files, num_folders, num_privs):
+    def check_user(self, user, num_files, num_folders):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -165,4 +165,4 @@ class Plugin(BasePlugin):
             self.check_user(user, num_files=stats.files, num_folders=stats.folders)
 
     def user_stats_notification(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_privs=stats["privs"])
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
