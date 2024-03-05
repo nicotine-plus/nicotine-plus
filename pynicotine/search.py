@@ -21,11 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-import shlex
-
 from itertools import islice
 from operator import itemgetter
+from random import random
+from shlex import shlex
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -62,7 +61,7 @@ class Search:
 
         self.searches = {}
         self.excluded_phrases = []
-        self.token = int(random.random() * (2 ** 31 - 1))
+        self.token = int(random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
         self._wishlist_timer_id = None
 
@@ -157,7 +156,7 @@ class Search:
         search_term = search_term_no_quotes = search_term.strip()
 
         try:
-            lex = shlex.shlex(search_term)
+            lex = shlex(search_term)
             lex.quotes = '"'
             lex.whitespace_split = True
             lex.commenters = ""
