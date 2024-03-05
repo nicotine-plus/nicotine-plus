@@ -476,7 +476,7 @@ class UserBrowse:
         if browsed_user.private_folders:
             private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
         privstr = str(num_private_folders)
-        # all = num_folders + num_private_folders
+        all = num_folders + num_private_folders
         total = humanize(num_folders + num_private_folders)
         totalstr = str(total)
         if (num_private_folders > 0):
