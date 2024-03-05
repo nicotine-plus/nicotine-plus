@@ -32,6 +32,7 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
+            "autoban": True,
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
             "open_private_chat": True,
             "num_files": 1,
@@ -39,6 +40,10 @@ class Plugin(BasePlugin):
             "detected_leechers": []
         }
         self.metasettings = {
+            "autoban": {
+                "description": "Auto bans detected leechers",
+                "type": "bool"
+            },
             "message": {
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
@@ -123,6 +128,11 @@ class Plugin(BasePlugin):
             self.core.userbrowse.request_user_shares(user)
             return
 
+        # Private : 0 / Open : 30,000 Share Percentage : 45
+        total_size_text = self.core.userbrowse.pages[user].share_size_label.get_text()
+        total_size_array = total_size_text.split(" ")
+        extracted_percentage = total_size_array[10]
+        self.log("User %s share percentage is %s ", (user, extracted_percentage))        
         # ban the leecher
         self.core.network_filter.ban_user(user)
 
