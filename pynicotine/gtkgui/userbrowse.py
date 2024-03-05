@@ -475,7 +475,6 @@ class UserBrowse:
 
         if browsed_user.private_folders:
             private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
-        
         privv = num_private_folders
         privstr = str(num_private_folders)
         all = num_folders + num_private_folders
@@ -487,7 +486,6 @@ class UserBrowse:
             percentage = 100
         percentagestr = str(percentage)
         n00bi = "Private : " + privstr + " / " + "Open : " + totalstr + " Share percentage : " + percentagestr
-
         self.num_folders_label.set_text(n00bi)
         self.share_size_label.set_text(human_size(size + private_size))
 
