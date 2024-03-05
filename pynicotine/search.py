@@ -147,9 +147,6 @@ class Search:
         for token in self.searches.copy():
             self.remove_search(token)
 
-    def show_search(self, token):
-        events.emit("show-search", token)
-
     def sanitize_search_term(self, search_term):
 
         included_words = []
