@@ -28,7 +28,7 @@ from pynicotine.utils import open_uri
 
 class WatchedUser:
 
-    __slots__ = ("username", "upload_speed", "files", "folders")
+    __slots__ = ("username", "upload_speed", "files", "folders", "pfolders")
 
     def __init__(self, username):
 
@@ -36,6 +36,7 @@ class WatchedUser:
         self.upload_speed = None
         self.files = None
         self.folders = None
+        self.pfolders = None
 
 
 class Users:
