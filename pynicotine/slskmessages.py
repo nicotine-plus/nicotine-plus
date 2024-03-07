@@ -767,7 +767,7 @@ class WatchUser(ServerMessage):
 
         pos, self.files = self.unpack_uint32(message, pos)
         pos, self.dirs = self.unpack_uint32(message, pos)
-        pos, self.pdirs = self.unpack_uint32(message, pos)
+        # pos, self.pdirs = self.unpack_uint32(message, pos)
 
         if not message[pos:]:
             # User is offline
