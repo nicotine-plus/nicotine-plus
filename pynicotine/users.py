@@ -314,6 +314,7 @@ class Users:
         upload_speed = msg.avgspeed
         files = msg.files
         folders = msg.dirs
+        pfolders = msg.pdirs
 
         stats = self.watched.get(username)
 
