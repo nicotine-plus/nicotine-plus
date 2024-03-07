@@ -32,7 +32,7 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            "autoban": True,
+            # "autoban": True,
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
             "open_private_chat": True,
             "num_files": 1,
@@ -40,10 +40,10 @@ class Plugin(BasePlugin):
             "detected_leechers": []
         }
         self.metasettings = {
-            "autoban": {
-                "description": "Auto bans detected leechers",
-                "type": "bool"
-            },
+            # "autoban": {
+            #    "description": "Auto bans detected leechers",
+            #    "type": "bool"
+            # },
             "message": {
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
@@ -129,8 +129,8 @@ class Plugin(BasePlugin):
             return
 
         # ban the leecher
-        if self.settings["autoban"] = True:
-            self.core.network_filter.ban_user(user)
+        # if self.settings["autoban"] = True:
+        self.core.network_filter.ban_user(user)
 
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
