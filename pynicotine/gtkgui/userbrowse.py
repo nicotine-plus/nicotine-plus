@@ -481,10 +481,12 @@ class UserBrowse:
         totalstr = str(total)
         if (num_private_folders > 0):
             percentage = round((num_private_folders / all) * 100)
+        if (num_private_folders == all):
+            percentage = 0
         else:
             percentage = 100
         percentagestr = str(percentage)
-        n00bi = "Private : " + privstr + " / " + "Open : " + totalstr + " Share percentage : " + percentagestr
+        n00bi = "Private : " + privstr + " / " + "Total : " + totalstr + " Share percentage : " + percentagestr
         self.num_folders_label.set_text(n00bi)
         self.share_size_label.set_text(human_size(size + private_size))
 
