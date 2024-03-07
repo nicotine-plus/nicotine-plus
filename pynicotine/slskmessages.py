@@ -747,6 +747,7 @@ class WatchUser(ServerMessage):
         self.uploadnum = None
         self.files = None
         self.dirs = None
+        self.pdirs = None
         self.country = None
 
     def make_network_message(self):
@@ -766,6 +767,7 @@ class WatchUser(ServerMessage):
 
         pos, self.files = self.unpack_uint32(message, pos)
         pos, self.dirs = self.unpack_uint32(message, pos)
+        pos, self.pdirs = self.unpack_uint32(message, pos)
 
         if not message[pos:]:
             # User is offline
