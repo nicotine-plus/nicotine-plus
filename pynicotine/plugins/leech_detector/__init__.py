@@ -32,7 +32,7 @@ class Plugin(BasePlugin):
         super().__init__(*args, **kwargs)
 
         self.settings = {
-            # "autoban": True,
+            "autoban": True,
             "message": "Please consider sharing more files if you would like to download from me again. Thanks :)",
             "open_private_chat": True,
             "num_files": 1,
@@ -40,10 +40,10 @@ class Plugin(BasePlugin):
             "detected_leechers": []
         }
         self.metasettings = {
-            # "autoban": {
-            #    "description": "Auto bans detected leechers",
-            #    "type": "bool"
-            # },
+            "autoban": {
+                "description": "Auto bans detected leechers",
+                "type": "bool"
+            },
             "message": {
                 "description": ("Private chat message to send to leechers. Each line is sent as a separate message, "
                                 "too many message lines may get you temporarily banned for spam!"),
@@ -128,10 +128,6 @@ class Plugin(BasePlugin):
             self.core.userbrowse.request_user_shares(user)
             return
 
-        # ban the leecher
-        # if self.settings["autoban"] = True:
-        self.core.network_filter.ban_user(user)
-
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
                 for placeholder, option_key in self.PLACEHOLDERS.items():
@@ -143,6 +139,10 @@ class Plugin(BasePlugin):
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
+
+        if (self.settings["autoban"] = True):
+            self.core.network_filter.ban_user(user)
+            
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
