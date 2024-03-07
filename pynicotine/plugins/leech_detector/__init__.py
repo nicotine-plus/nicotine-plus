@@ -85,7 +85,8 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"])
         )
 
-    def check_user(self, user, num_files, num_folders, num_pfolders):
+    def check_user(self, user, num_files, num_folders):
+    # def check_user(self, user, num_files, num_folders, num_pfolders):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -139,7 +140,8 @@ class Plugin(BasePlugin):
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
-
+        total_size_text = self.userbrowse.pages[user].share_size_label.get_text()
+        self.log("User %s total share text is " total_size_text, (user))
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
@@ -162,8 +164,9 @@ class Plugin(BasePlugin):
             return
 
         if stats.files is not None and stats.folders is not None:
-            self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders)
+            self.check_user(user, num_files=stats.files, num_folders=stats.folders)
+            # self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders)
 
     def user_stats_notification(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
-        # self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
+        # self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
