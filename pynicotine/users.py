@@ -322,11 +322,13 @@ class Users:
             stats.upload_speed = upload_speed
             stats.files = files
             stats.folders = folders
+            stats.pfolders = pfolders
 
         core.pluginhandler.user_stats_notification(msg.user, stats={
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
+            "pdirs": pfolders,
             "source": "server"
         })
 
