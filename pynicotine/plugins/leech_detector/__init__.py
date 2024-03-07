@@ -140,8 +140,7 @@ class Plugin(BasePlugin):
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
 
-        if (self.settings["autoban"] = True):
-            self.core.network_filter.ban_user(user)
+        if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
