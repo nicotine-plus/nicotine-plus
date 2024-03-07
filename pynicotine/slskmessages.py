@@ -737,7 +737,7 @@ class WatchUser(ServerMessage):
     the new user stats.
     """
 
-    __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "country")
+    __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "pdirs", "country")
 
     def __init__(self, user=None):
         self.user = user
