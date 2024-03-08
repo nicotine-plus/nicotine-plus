@@ -141,7 +141,7 @@ class Plugin(BasePlugin):
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
         total_size_text = self.userbrowse.pages[user].share_size_label.get_text()
-        self.log("User %s total share text is " total_size_text, (user))
+        self.log(total_size_text)
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
