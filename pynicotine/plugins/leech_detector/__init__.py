@@ -97,7 +97,7 @@ class Plugin(BasePlugin):
             return
 
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
-        total_size_text = self.userbrowse.pages[user].share_size_label.get_text()
+        total_size_text = self.core.userbrowse.pages[user].share_size_label.get_text()
         self.log(total_size_text)
         if is_user_accepted or user in self.core.buddies.users:
             if user in self.settings["detected_leechers"]:
