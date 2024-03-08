@@ -97,7 +97,8 @@ class Plugin(BasePlugin):
             return
 
         is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
-
+        total_size_text = self.userbrowse.pages[user].share_size_label.get_text()
+        self.log(total_size_text)
         if is_user_accepted or user in self.core.buddies.users:
             if user in self.settings["detected_leechers"]:
                 self.settings["detected_leechers"].remove(user)
@@ -140,8 +141,7 @@ class Plugin(BasePlugin):
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
 
-        total_size_text = self.userbrowse.pages[user].share_size_label.get_text()
-        self.log(total_size_text)
+
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
