@@ -331,7 +331,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="network_interface_label">
-                <property name="label" translatable="yes">Network interface (For VPN)(requires a restart):</property>
+                <property name="label" translatable="yes">Network interface (requires a restart):</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>
