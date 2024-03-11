@@ -262,7 +262,7 @@ class Config:
                 "private_timestamp": "%x %X",
                 "log_timestamp": "%x %X",
                 "privatechat": True,
-                "chatrooms": True,
+                "chatrooms": False,
                 "transfers": False,
                 "debug_file_output": False,
                 "roomlogsdir": os.path.join(log_folder_path, "rooms"),
