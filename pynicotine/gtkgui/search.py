@@ -1499,9 +1499,9 @@ class Search:
             return
 
         user = self.tree_view.get_row_value(iterator, "user")
-        folder_path, separator, _basename = self.tree_view.get_row_value(iterator, "file_path_data").rpartition("\\")
+        path = self.tree_view.get_row_value(iterator, "file_path_data")
 
-        core.userbrowse.browse_user(user, path=(folder_path + separator))
+        core.userbrowse.browse_user(user, path=path)
 
     def on_user_profile(self, *_args):
 
