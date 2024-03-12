@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-01-14 17:06+0000\n"
+"PO-Revision-Date: 2024-03-11 10:01+0000\n"
 "Last-Translator: Szia Tomi <sziatomi01@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -31,9 +31,8 @@ msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;megosztás;csevegés;üzenetek;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Grafikus kliens a Soulseek P2P hálózathoz"
+msgstr "A Soulseek hálózat böngészése"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2100,7 +2099,7 @@ msgstr "Hátralévő idő"
 
 #: pynicotine/gtkgui/transfers.py:234 pynicotine/gtkgui/userbrowse.py:363
 msgid "_Open File"
-msgstr "Fá_jl megnyitása"
+msgstr "Fájl _megnyitása"
 
 #: pynicotine/gtkgui/transfers.py:235 pynicotine/gtkgui/userbrowse.py:286
 #: pynicotine/gtkgui/userbrowse.py:364
@@ -2172,14 +2171,12 @@ msgid "Copy _Folder Path"
 msgstr "_Mappaelérési út másolása"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
-msgstr "Mappa és almappáinak letöltése"
+msgstr "Mappa és az almappáinak _letöltése"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
-msgstr "Mappa és almappáinak letöltése ide…"
+msgstr "Mappa és az almappáinak letöltése _ide…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"
