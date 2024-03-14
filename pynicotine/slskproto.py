@@ -94,7 +94,7 @@ class Connection:
     slskmessages docstrings).
     """
 
-    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "lastactive", "lastreadlength")
+    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "lastactive", "recv_size")
 
     def __init__(self, sock=None, addr=None, selector_events=None):
 
@@ -104,7 +104,7 @@ class Connection:
         self.ibuf = bytearray()
         self.obuf = bytearray()
         self.lastactive = time.monotonic()
-        self.lastreadlength = 100 * 1024
+        self.recv_size = None
 
 
 class ServerConnection(Connection):
@@ -2587,19 +2587,20 @@ class NetworkThread(Thread):
         use_download_limit = (self._download_limit_split and self._is_transferring_download(conn_obj))
 
         if use_download_limit:
-            limit = (self._download_limit_split - self._conns_downloaded[conn_obj])
-        else:
-            limit = conn_obj.lastreadlength
+            conn_obj.recv_size = (self._download_limit_split - self._conns_downloaded[conn_obj])
 
-        data = sock.recv(limit)
+        elif conn_obj.recv_size is None:
+            conn_obj.recv_size = self.SOCKET_READ_BUFFER_SIZE
+
+        data = sock.recv(conn_obj.recv_size)
         data_length = len(data)
         conn_obj.ibuf.extend(data)
 
         if use_download_limit:
             self._conns_downloaded[conn_obj] += data_length
 
-        if data_length >= conn_obj.lastreadlength // 2:
-            conn_obj.lastreadlength *= 2
+        elif data_length >= conn_obj.recv_size // 2:
+            conn_obj.recv_size *= 2
 
         if not data:
             return False
