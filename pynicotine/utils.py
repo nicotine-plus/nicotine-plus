@@ -24,13 +24,17 @@
 import os
 import sys
 
+from unicodedata import category
+from string import punctuation
+
 UINT32_LIMIT = 4294967295
 UINT64_LIMIT = 18446744073709551615
 FILE_SIZE_SUFFIXES = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-PUNCTUATION = [
-    "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">",
-    "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—", "‐", "’", "“", "”", "…"
-]
+PUNCTUATION = list(sorted(set(
+    list(punctuation)
+    + ["﹢", "﹤", "﹥", "﹦", "＋", "＜", "＝", "＞", "｜", "～"]
+    + [chr(i) for i in range(sys.maxunicode) if category(chr(i)).startswith("P")]
+)))
 ILLEGALPATHCHARS = [
     # ASCII printable characters
     "?", ":", ">", "<", "|", "*", '"',

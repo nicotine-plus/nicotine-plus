@@ -25,6 +25,7 @@ from itertools import islice
 from operator import itemgetter
 from random import random
 from shlex import shlex
+from string import punctuation
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -56,6 +57,8 @@ class Search:
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
+    REMOVED_SEARCH_CHARACTERS = list(punctuation) + ["–", "—", "‐", "’", "“", "”", "…"]
+    TRANSLATE_REMOVED_SEARCH_CHARACTERS = str.maketrans(dict.fromkeys(REMOVED_SEARCH_CHARACTERS, " "))
 
     def __init__(self):
 
@@ -166,8 +169,8 @@ class Search:
         except ValueError:
             search_term_words = search_term.split()
 
-        # Remove special characters from search term
-        # SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+        # Remove certain special characters from search term
+        # SoulseekQt doesn't seem to send search results if such characters are included (July 7, 2020)
         search_term_words_no_quotes = []
 
         for index, word in enumerate(search_term_words):
@@ -184,19 +187,21 @@ class Search:
                 word = word[1:-1]
                 included_words.append(word.lower())
 
-                for inner_word in word.translate(TRANSLATE_PUNCTUATION).strip().split():
+                # Remove problematic characters before appending to outgoing search term
+                for inner_word in word.translate(self.TRANSLATE_REMOVED_SEARCH_CHARACTERS).strip().split():
                     search_term_words_no_quotes.append(inner_word)
 
                 continue
 
             else:
-                subwords = word.translate(TRANSLATE_PUNCTUATION).strip().split()
+                # Remove problematic characters before appending to outgoing search term
+                subwords = word.translate(self.TRANSLATE_REMOVED_SEARCH_CHARACTERS).strip().split()
                 word = search_term_words[index] = " ".join(x for x in subwords if x)
 
                 if not subwords:
                     continue
 
-                for subword in subwords:
+                for subword in word.translate(TRANSLATE_PUNCTUATION).strip().split():
                     included_words.append(subword.lower())
 
             search_term_words_no_quotes.append(word)
