@@ -55,6 +55,7 @@ class Users:
         self.watched = {}
         self.privileged = set()
         self._ip_requested = {}
+        self._pending_watch_removals = set()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -144,6 +145,7 @@ class Users:
         self.watched.clear()
         self.privileged.clear()
         self._ip_requested.clear()
+        self._pending_watch_removals.clear()
 
         self.login_username = None
         self.public_ip_address = None
@@ -237,8 +239,12 @@ class Users:
                 events.emit("user-stats", msg)
             return
 
-        # User does not exist, server will not keep us informed if the user is created later
-        self.watched.pop(msg.user, None)
+        # User does not exist. The server will not keep us informed if the user is created
+        # later, so we need to remove the user from our list.
+        # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
+        # the user is actually online. Remove the user when we receive a UserStatus message
+        # telling us the user is offline.
+        self._pending_watch_removals.add(msg.user)
 
     def _user_status(self, msg):
         """Server code 7."""
@@ -274,6 +280,10 @@ class Users:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
+            if username in self._pending_watch_removals:
+                # User does not exist, remove it from list
+                self.watched.pop(username, None)
+
         elif is_watched:
             user_status = self.statuses.get(username)
 
@@ -285,6 +295,8 @@ class Users:
             elif user_status == slskmessages.UserStatus.OFFLINE:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
+
+        self._pending_watch_removals.discard(username)
 
         # Store statuses for watched users, update statuses of room members
         if is_watched or username in self.statuses:
