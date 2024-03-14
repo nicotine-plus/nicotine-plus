@@ -329,10 +329,10 @@ class NetworkThread(Thread):
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
-    CONNECTION_BACKLOG_LENGTH = 4096
+    CONNECTION_BACKLOG_LENGTH = 65535      # OS limit can be lower
     MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
-    SOCKET_READ_BUFFER_SIZE = 1048576
-    SOCKET_WRITE_BUFFER_SIZE = 1048576
+    SOCKET_READ_BUFFER_SIZE = 1048576      # OS limit can be lower
+    SOCKET_WRITE_BUFFER_SIZE = 1048576     # OS limit can be lower
 
     # Looping max ~60 times per second (SLEEP_MIN_IDLE) on high activity
     # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
