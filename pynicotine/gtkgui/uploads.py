@@ -45,7 +45,6 @@ class Uploads(Transfers):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.deprioritized_statuses = {TransferStatus.CANCELLED, TransferStatus.FINISHED}
 
         self.transfer_page = self.page = window.uploads_page
         self.page.id = "uploads"
