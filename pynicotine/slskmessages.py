@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import struct
 import zlib
 
 from locale import strxfrm
@@ -3145,8 +3146,45 @@ class FileSearchResponse(PeerMessage):
         return zlib.compress(msg)
 
     def parse_network_message(self, message):
-        message = memoryview(zlib.decompress(message))
-        self._parse_network_message(message)
+        decompressor = zlib.decompressobj()
+        chunk_size = 38
+        message_array = bytearray()
+        remaining_message = message
+
+        while self.token is None:
+            message_array.extend(decompressor.decompress(remaining_message, chunk_size))
+            message_mem = memoryview(message_array)
+            remaining_message = decompressor.unconsumed_tail
+
+            try:
+                pos, self.search_username = self.unpack_string(message_mem)
+                pos, self.token = self.unpack_uint32(message_mem, pos)
+
+            except struct.error:
+                # Read next chunk in case someone sent a username longer than 30 chars
+                pass
+
+            message_mem.release()
+
+        if self.token not in SEARCH_TOKENS_ALLOWED:
+            # Results are no longer accepted for this search token, stop parsing message
+            self.list = []
+            return
+
+        # Optimization: only decompress the rest of the message when needed
+        message_array.extend(decompressor.decompress(remaining_message))
+        message_mem = memoryview(message_array)
+
+        pos, self.list = self._parse_result_list(message_mem, pos)
+        pos, self.freeulslots = self.unpack_bool(message_mem, pos)
+        pos, self.ulspeed = self.unpack_uint32(message_mem, pos)
+        pos, self.inqueue = self.unpack_uint32(message_mem, pos)
+
+        if message_mem[pos:]:
+            pos, self.unknown = self.unpack_uint32(message_mem, pos)
+
+        if message_mem[pos:]:
+            pos, self.privatelist = self._parse_result_list(message_mem, pos)
 
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.unpack_uint32(message, pos)
@@ -3167,27 +3205,6 @@ class FileSearchResponse(PeerMessage):
             results.sort(key=lambda x: strxfrm(x[1]))
 
         return pos, results
-
-    def _parse_network_message(self, message):
-        pos, self.search_username = self.unpack_string(message)
-        pos, self.token = self.unpack_uint32(message, pos)
-
-        if self.token not in SEARCH_TOKENS_ALLOWED:
-            # Results are no longer accepted for this search token, stop parsing message
-            self.list = []
-            return
-
-        pos, self.list = self._parse_result_list(message, pos)
-
-        pos, self.freeulslots = self.unpack_bool(message, pos)
-        pos, self.ulspeed = self.unpack_uint32(message, pos)
-        pos, self.inqueue = self.unpack_uint32(message, pos)
-
-        if message[pos:]:
-            pos, self.unknown = self.unpack_uint32(message, pos)
-
-        if message[pos:]:
-            pos, self.privatelist = self._parse_result_list(message, pos)
 
 
 class UserInfoRequest(PeerMessage):
