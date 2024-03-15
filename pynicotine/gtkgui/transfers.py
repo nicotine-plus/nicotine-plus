@@ -76,10 +76,30 @@ class Transfers:
         TransferRejectReason.PENDING_SHUTDOWN: _("Pending shutdown"),
         TransferRejectReason.FILE_READ_ERROR: _("File read error")
     }
+    STATUS_PRIORITIES = {
+        TransferStatus.FILTERED: 0,
+        TransferStatus.FINISHED: 1,
+        TransferStatus.PAUSED: 2,
+        TransferStatus.CANCELLED: 3,
+        TransferStatus.QUEUED: 4,
+        f"{TransferStatus.QUEUED} (prioritized)": 4,
+        f"{TransferStatus.QUEUED} (privileged)": 4,
+        TransferStatus.USER_LOGGED_OFF: 5,
+        TransferStatus.CONNECTION_CLOSED: 6,
+        TransferStatus.CONNECTION_TIMEOUT: 7,
+        TransferRejectReason.FILE_NOT_SHARED: 8,
+        TransferRejectReason.PENDING_SHUTDOWN: 9,
+        TransferRejectReason.FILE_READ_ERROR: 10,
+        TransferStatus.LOCAL_FILE_ERROR: 11,
+        TransferStatus.DOWNLOAD_FOLDER_ERROR: 12,
+        TransferRejectReason.BANNED: 13,
+        TransferStatus.GETTING_STATUS: 9998,
+        TransferStatus.TRANSFERRING: 9999
+    }
     TRANSFER_ITERATOR_PENDING = 0
+    UNKNOWN_STATUS_PRIORITY = 1000
 
     path_separator = path_label = retry_label = abort_label = None
-    deprioritized_statuses = ()
     transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, window, transfer_type):
@@ -500,9 +520,12 @@ class Transfers:
                 parent_status = status
                 speed += transfer.speed
 
-            elif parent_status in self.deprioritized_statuses and status != TransferStatus.FINISHED:
-                # "Finished" status always has the lowest priority
-                parent_status = status
+            elif parent_status in self.STATUS_PRIORITIES:
+                parent_status_priority = self.STATUS_PRIORITIES[parent_status]
+                status_priority = self.STATUS_PRIORITIES.get(status, self.UNKNOWN_STATUS_PRIORITY)
+
+                if status_priority > parent_status_priority:
+                    parent_status = status
 
             if status == TransferStatus.FILTERED and transfer.virtual_path:
                 # We don't want to count filtered files when calculating the progress

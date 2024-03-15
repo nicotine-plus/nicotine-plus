@@ -45,7 +45,6 @@ class Downloads(Transfers):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.deprioritized_statuses = {TransferStatus.PAUSED, TransferStatus.FINISHED, TransferStatus.FILTERED}
 
         self.transfer_page = self.page = window.downloads_page
         self.page.id = "downloads"
