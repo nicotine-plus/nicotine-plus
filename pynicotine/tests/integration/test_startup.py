@@ -31,7 +31,8 @@ class StartupTest(TestCase):
     def test_gui_startup(self):
         """Verify that regular GUI startup works."""
 
-        command = ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--ci-mode"]
+        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
+                   "--ci-mode"]
         broadway_display = ":1000"
         broadway_process = None
         is_success = False
@@ -72,7 +73,7 @@ class StartupTest(TestCase):
     def test_cli_startup(self):
         """Verify that regular CLI startup works."""
 
-        command = ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
+        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
                    "--ci-mode", "--headless"]
         is_success = False
 
@@ -89,16 +90,16 @@ class StartupTest(TestCase):
     def test_cli(self):
         """Verify that CLI-exclusive functionality works."""
 
-        output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
+        output = subprocess.check_output([sys.executable, "-m", "pynicotine", "--help"], timeout=3)
         self.assertIn(b"--help", output)
 
         # Check for " 0 folders found after rescan" in output. Text strings are translatable,
         # so we can't match them directly.
         output = subprocess.check_output(
-            ["python3", "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--rescan"],
+            [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--rescan"],
             timeout=10
         )
         self.assertIn(b" 0 ", output)
 
-        output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
+        output = subprocess.check_output([sys.executable, "-m", "pynicotine", "--version"], timeout=3)
         self.assertIn(b"Nicotine+", output)

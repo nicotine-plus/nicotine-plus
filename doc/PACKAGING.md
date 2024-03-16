@@ -104,14 +104,15 @@ Install dependencies:
 ```sh
 export NICOTINE_GTK_VERSION=4
 export NICOTINE_USE_LIBADWAITA=1
-brew install python
-python3 packaging/macos/dependencies.py
+brew install python@3.11
+python3.11 -m venv venv
+venv/bin/python3 packaging/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-python3 packaging/macos/setup.py bdist_dmg
+venv/bin/python3 packaging/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the `packaging/macos/build/` subfolder as a .dmg file.
