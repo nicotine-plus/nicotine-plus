@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import struct
 import zlib
 
 from locale import strxfrm
@@ -3066,7 +3065,6 @@ class SharedFileListResponse(PeerMessage):
                 pos, size = FileListMessage.parse_file_size(message, pos)
                 pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
                 pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
-                print(attrs)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -3166,24 +3164,9 @@ class FileSearchResponse(PeerMessage):
 
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
-        chunk_size = 38
-        message_array = bytearray()
-        remaining_message = message
-
-        while self.token is None:
-            message_array.extend(decompressor.decompress(remaining_message, chunk_size))
-            message_mem = memoryview(message_array)
-            remaining_message = decompressor.unconsumed_tail
-
-            try:
-                pos, username_len = self.unpack_uint32(message_mem)
-                pos, self.token = self.unpack_uint32(message_mem, pos + username_len)
-
-            except struct.error:
-                # Read next chunk in case someone sent a username longer than 30 chars
-                pass
-
-            message_mem.release()
+        pos, username_len = self.unpack_uint32(decompressor.decompress(message, 4))
+        pos, self.token = self.unpack_uint32(
+            decompressor.decompress(decompressor.unconsumed_tail, username_len + 4), username_len)
 
         if self.token not in SEARCH_TOKENS_ALLOWED:
             # Results are no longer accepted for this search token, stop parsing message
@@ -3191,10 +3174,9 @@ class FileSearchResponse(PeerMessage):
             return
 
         # Optimization: only decompress the rest of the message when needed
-        message_array.extend(decompressor.decompress(remaining_message))
-        message_mem = memoryview(message_array)
+        message_mem = memoryview(decompressor.decompress(decompressor.unconsumed_tail))
 
-        pos, self.list = self._parse_result_list(message_mem, pos)
+        pos, self.list = self._parse_result_list(message_mem)
         pos, self.freeulslots = self.unpack_bool(message_mem, pos)
         pos, self.ulspeed = self.unpack_uint32(message_mem, pos)
         pos, self.inqueue = self.unpack_uint32(message_mem, pos)
@@ -3205,7 +3187,7 @@ class FileSearchResponse(PeerMessage):
         if message_mem[pos:]:
             pos, self.privatelist = self._parse_result_list(message_mem, pos)
 
-    def _parse_result_list(self, message, pos):
+    def _parse_result_list(self, message, pos=0):
         pos, nfiles = self.unpack_uint32(message, pos)
 
         ext = None
