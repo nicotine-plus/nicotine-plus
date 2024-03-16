@@ -288,16 +288,20 @@ class SlskMessage:
     @staticmethod
     def unpack_bytes(message, start=0):
 
-        length = UINT32_UNPACK(message, start)[0]
-        content = message[start + 4:start + length + 4]
+        length, = UINT32_UNPACK(message, start)
+        start += 4
+        end = start + length
+        content = message[start:end]
 
-        return start + 4 + length, content.tobytes()
+        return end, content.tobytes()
 
     @staticmethod
     def unpack_string(message, start=0):
 
-        length = UINT32_UNPACK(message, start)[0]
-        content = message[start + 4:start + length + 4].tobytes()
+        length, = UINT32_UNPACK(message, start)
+        start += 4
+        end = start + length
+        content = message[start:end].tobytes()
 
         try:
             string = content.decode("utf-8")
@@ -306,7 +310,7 @@ class SlskMessage:
             # Legacy strings
             string = content.decode("latin-1")
 
-        return start + 4 + length, string
+        return end, string
 
     @staticmethod
     def unpack_bool(message, start=0):
@@ -314,7 +318,8 @@ class SlskMessage:
 
     @staticmethod
     def unpack_ip(message, start=0):
-        return start + 4, inet_ntoa(message[start:start + 4][::-1].tobytes())
+        end = start + 4
+        return end, inet_ntoa(message[start:end].tobytes()[::-1])
 
     @staticmethod
     def unpack_uint8(message, start=0):
@@ -322,19 +327,23 @@ class SlskMessage:
 
     @staticmethod
     def unpack_uint16(message, start=0):
-        return start + 4, UINT16_UNPACK(message, start)[0]
+        result, = UINT16_UNPACK(message, start)
+        return start + 4, result
 
     @staticmethod
     def unpack_int32(message, start=0):
-        return start + 4, INT32_UNPACK(message, start)[0]
+        result, = INT32_UNPACK(message, start)
+        return start + 4, result
 
     @staticmethod
     def unpack_uint32(message, start=0):
-        return start + 4, UINT32_UNPACK(message, start)[0]
+        result, = UINT32_UNPACK(message, start)
+        return start + 4, result
 
     @staticmethod
     def unpack_uint64(message, start=0):
-        return start + 8, UINT64_UNPACK(message, start)[0]
+        result, = UINT64_UNPACK(message, start)
+        return start + 8, result
 
     def __str__(self):
         attrs = {s: self.__getattribute__(s) for s in self.__slots__ if s not in self.__excluded_attrs__}
@@ -356,48 +365,57 @@ class FileListMessage(SlskMessage):
     def pack_file_info(cls, fileinfo):
 
         msg = bytearray()
+        virtual_file_path, size, quality, duration = fileinfo
+        bitrate = is_vbr = samplerate = bitdepth = None
+
+        if quality is not None:
+            bitrate, is_vbr, samplerate, bitdepth = quality
+
         msg.extend(cls.pack_uint8(1))
-        msg.extend(cls.pack_string(fileinfo[0]))
-        msg.extend(cls.pack_uint64(fileinfo[1]))
-        msg.extend(cls.pack_string(""))
+        msg.extend(cls.pack_string(virtual_file_path))
+        msg.extend(cls.pack_uint64(size))
+        msg.extend(cls.pack_uint32(0))  # empty ext
 
-        if fileinfo[2] is None or fileinfo[3] is None:
-            # No metadata
-            msg.extend(cls.pack_uint32(0))
+        num_attrs = 0
+        msg_attrs = bytearray()
+
+        is_lossless = bitdepth is not None
+
+        if is_lossless:
+            if duration is not None:
+                msg_attrs.extend(cls.pack_uint32(1))
+                msg_attrs.extend(cls.pack_uint32(duration))
+                num_attrs += 1
+
+            if samplerate is not None:
+                msg_attrs.extend(cls.pack_uint32(4))
+                msg_attrs.extend(cls.pack_uint32(samplerate))
+                num_attrs += 1
+
+            if bitdepth is not None:
+                msg_attrs.extend(cls.pack_uint32(5))
+                msg_attrs.extend(cls.pack_uint32(bitdepth))
+                num_attrs += 1
         else:
-            # NumAttributes
-            msg.extend(cls.pack_uint32(3))
+            if bitrate is not None:
+                msg_attrs.extend(cls.pack_uint32(0))
+                msg_attrs.extend(cls.pack_uint32(bitrate))
+                num_attrs += 1
 
-            audio_info = fileinfo[2]
-            bitdepth = len(audio_info) > 3 and audio_info[3]
+            if duration is not None:
+                msg_attrs.extend(cls.pack_uint32(1))
+                msg_attrs.extend(cls.pack_uint32(duration))
+                num_attrs += 1
 
-            # Lossless audio file
-            if bitdepth:
-                # Duration
-                msg.extend(cls.pack_uint32(1))
-                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
+            if bitrate is not None:
+                msg_attrs.extend(cls.pack_uint32(2))
+                msg_attrs.extend(cls.pack_uint32(is_vbr))
+                num_attrs += 1
 
-                # Sample rate
-                msg.extend(cls.pack_uint32(4))
-                msg.extend(cls.pack_uint32(audio_info[2] or 0))
+        msg.extend(cls.pack_uint32(num_attrs))
 
-                # Bit depth
-                msg.extend(cls.pack_uint32(5))
-                msg.extend(cls.pack_uint32(bitdepth or 0))
-
-            # Lossy audio file
-            else:
-                # Bitrate
-                msg.extend(cls.pack_uint32(0))
-                msg.extend(cls.pack_uint32(audio_info[0] or 0))
-
-                # Duration
-                msg.extend(cls.pack_uint32(1))
-                msg.extend(cls.pack_uint32(fileinfo[3] or 0))
-
-                # VBR
-                msg.extend(cls.pack_uint32(2))
-                msg.extend(cls.pack_uint32(audio_info[1] or 0))
+        if msg_attrs:
+            msg.extend(msg_attrs)
 
         return msg
 
@@ -3046,8 +3064,8 @@ class SharedFileListResponse(PeerMessage):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = FileListMessage.parse_file_size(message, pos)
-                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
+                pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
+                pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
 
                 files.append((code, name, size, ext, attrs))
 
@@ -3157,8 +3175,8 @@ class FileSearchResponse(PeerMessage):
             remaining_message = decompressor.unconsumed_tail
 
             try:
-                pos, self.search_username = self.unpack_string(message_mem)
-                pos, self.token = self.unpack_uint32(message_mem, pos)
+                pos, username_len = self.unpack_uint32(message_mem)
+                pos, self.token = self.unpack_uint32(message_mem, pos + username_len)
 
             except struct.error:
                 # Read next chunk in case someone sent a username longer than 30 chars
@@ -3196,8 +3214,8 @@ class FileSearchResponse(PeerMessage):
             pos, code = self.unpack_uint8(message, pos)
             pos, name = self.unpack_string(message, pos)
             pos, size = FileListMessage.parse_file_size(message, pos)
-            pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-            pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
+            pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
+            pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
 
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
@@ -3375,8 +3393,8 @@ class FolderContentsResponse(PeerMessage):
                 pos, code = self.unpack_uint8(message, pos)
                 pos, name = self.unpack_string(message, pos)
                 pos, size = self.unpack_uint64(message, pos)
-                pos, _ext = self.unpack_string(message, pos)  # Obsolete, ignore
-                pos, attrs = FileListMessage.unpack_file_attributes(message, pos)
+                pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
+                pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
 
                 folders[directory].append((code, name, size, ext, attrs))
 
