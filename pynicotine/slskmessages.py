@@ -3066,6 +3066,7 @@ class SharedFileListResponse(PeerMessage):
                 pos, size = FileListMessage.parse_file_size(message, pos)
                 pos, ext_len = self.unpack_uint32(message, pos)  # Obsolete, ignore
                 pos, attrs = FileListMessage.unpack_file_attributes(message, pos + ext_len)
+                print(attrs)
 
                 files.append((code, name, size, ext, attrs))
 

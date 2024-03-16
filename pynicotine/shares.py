@@ -598,26 +598,26 @@ class Scanner:
             if bitrate is not None:
                 bitrate = int(bitrate + 0.5)  # Round the value with minimal performance loss
 
-                if not UINT32_LIMIT > bitrate >= 0:
+                if not UINT32_LIMIT > bitrate > 0:
                     bitrate = None
+
+            if samplerate is not None:
+                samplerate = int(samplerate)
+
+                if not UINT32_LIMIT > samplerate > 0:
+                    samplerate = None
+
+            if bitdepth is not None:
+                bitdepth = int(bitdepth)
+
+                if not UINT32_LIMIT > bitdepth > 0:
+                    bitdepth = None
 
             if duration is not None:
                 duration = int(duration)
 
                 if not UINT32_LIMIT > duration >= 0:
                     duration = None
-
-            if samplerate is not None:
-                samplerate = int(samplerate)
-
-                if not UINT32_LIMIT > samplerate >= 0:
-                    samplerate = None
-
-            if bitdepth is not None:
-                bitdepth = int(bitdepth)
-
-                if not UINT32_LIMIT > bitdepth >= 0:
-                    bitdepth = None
 
             quality = (bitrate, int(tag.is_vbr), samplerate, bitdepth)
 
