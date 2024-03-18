@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-31 13:07+0000\n"
+"PO-Revision-Date: 2024-03-18 14:01+0000\n"
 "Last-Translator: Havokdan <havokdan@yahoo.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -33,9 +33,8 @@ msgstr ""
 "pessoa;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Cliente gráfico para a rede peer-to-peer Soulseek"
+msgstr "Navegue na rede Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -1408,7 +1407,7 @@ msgstr "Duração"
 #: pynicotine/gtkgui/dialogs/preferences.py:2699
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:272
 msgid "Bitrate"
-msgstr "Taxa de Bits"
+msgstr "Bitrate"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2701
 msgid "Comment"
@@ -1547,7 +1546,7 @@ msgstr "Você realmente quer redefinir as estatísticas de transferência?"
 #: pynicotine/gtkgui/dialogs/wishlist.py:47
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:320
 msgid "Wishlist"
-msgstr "_Lista de Desejos"
+msgstr "Lista de Desejos"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:60 pynicotine/gtkgui/search.py:351
 msgid "Wish"
@@ -2178,14 +2177,12 @@ msgid "Copy _Folder Path"
 msgstr "Copiar_Caminho da Pasta"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
-msgstr "Pasta(s) & Subpasta(s) de Download"
+msgstr "_Baixar Pastas e Subpastas"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
-msgstr "Baixar Pasta(s) & Subpasta(s) Para…"
+msgstr "Baixar Pastas & Subpastas _Para…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"
