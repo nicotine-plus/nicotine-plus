@@ -183,9 +183,9 @@ class Uploads(Transfers):
             return
 
         user = config.sections["server"]["login"]
-        folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+        path = transfer.virtual_path
 
-        core.userbrowse.browse_user(user, path=(folder_path + separator))
+        core.userbrowse.browse_user(user, path=path)
 
     def on_abort_users(self, *_args):
 
