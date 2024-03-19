@@ -10,6 +10,7 @@
  - Maite Guix (2022)
 
 ## Chinese (Simplified)
+ - Ys413 (2024)
  - Bonislaw (2023)
  - hylau (2023)
  - hadwin (2022)
@@ -21,15 +22,16 @@
  - mathsped (2003–2004)
 
 ## Dutch
- - Han Boetes (hboetes) (2021–2023)
+ - Toine Rademacher (2023-2024)
+ - Han Boetes (hboetes) (2021–2024)
  - Kenny Verstraete (2009)
  - nince78 (2007)
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## English
- - slook (2021–2023)
- - Han Boetes (hboetes) (2021–2023)
- - Mat (mathiascode) (2020–2023)
+ - slook (2021–2024)
+ - Han Boetes (hboetes) (2021–2024)
+ - Mat (mathiascode) (2020–2024)
  - Michael Labouebe (gfarmerfr) (2016)
  - daelstorm (2004–2009)
  - Ingmar K. Steen (Hyriand) (2003–2004)
@@ -60,7 +62,7 @@
  - Julien Wajsberg (flashfr) (2003–2004)
 
 ## German
- - Han Boetes (hboetes) (2021–2023)
+ - Han Boetes (hboetes) (2021–2024)
  - phelissimo_ (2023)
  - Meokater (2007)
  - (._.) (2007)
@@ -68,7 +70,7 @@
  - Ingmar K. Steen (Hyriand) (2003–2004)
 
 ## Hungarian
- - Szia Tomi (2022–2023)
+ - Szia Tomi (2022–2024)
  - Nils (2009)
  - David Balazs (djbaloo) (2006–2020)
 
@@ -80,7 +82,7 @@
  - dbazza (2003–2004)
 
 ## Latvian
- - Pagal3 (2022–2023)
+ - Pagal3 (2022–2024)
 
 ## Lithuanian
  - mantas (2020)
@@ -138,7 +140,8 @@
  - Markus Magnuson (alimony) (2003–2004)
 
 ## Turkish
- - Oğuz Ersen (2021–2023)
+ - Oğuz Ersen (2021–2024)
 
 ## Ukrainian
+ - Oleg Gritsun (2024)
  - uniss2209 (2022)
