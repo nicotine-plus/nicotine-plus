@@ -380,8 +380,7 @@ class Plugin(BasePlugin):
 
     def say_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        room, text = args_split[0], args_split[1]
+        room, text = self.split_args(args, 2)
 
         if room not in self.core.chatrooms.joined_rooms:
             self.output(_("Not joined in room %s") % room)
@@ -417,10 +416,13 @@ class Plugin(BasePlugin):
 
     def msg_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        user, text = args_split[0], args_split[1]
+        user, text = self.split_args(args, 2)
+
+        if not text:
+            return False
 
         self.send_private(user, text, show_ui=True, switch_page=False)
+        return True
 
     # Users #
 
@@ -598,17 +600,22 @@ class Plugin(BasePlugin):
 
     def search_user_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        user, query = args_split[0], args_split[1]
+        user, query = self.split_args(args, 2)
+
+        if not query:
+            return False
 
         self.core.search.do_search(query, "user", users=[user])
+        return True
 
     # Plugin Commands #
 
     def plugin_handler_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        action, plugin_name = args_split[0], args_split[1]
+        action, plugin_name = self.split_args(args, 2)
+
+        if not plugin_name:
+            return
 
         if action == "toggle":
             self.parent.toggle_plugin(plugin_name)
