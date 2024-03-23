@@ -22,6 +22,7 @@ import sys
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Gtk
 
 import pynicotine
 from pynicotine import slskmessages
@@ -70,16 +71,13 @@ class BaseImplementation:
 
         return item
 
-    @staticmethod
-    def set_item_text(item, text):
+    def set_item_text(self, item, text):
         item["text"] = text
 
-    @staticmethod
-    def set_item_sensitive(item, sensitive):
+    def set_item_sensitive(self, item, sensitive):
         item["sensitive"] = sensitive
 
-    @staticmethod
-    def set_item_toggled(item, toggled):
+    def set_item_toggled(self, item, toggled):
         item["toggled"] = toggled
 
     def create_menu(self):
@@ -979,6 +977,77 @@ class Win32Implementation(BaseImplementation):
         self._unregister_class()
 
 
+class StatusIconImplementation(BaseImplementation):
+
+    def __init__(self, application):
+
+        super().__init__(application)
+
+        if not hasattr(Gtk, "StatusIcon") or os.environ.get("WAYLAND_DISPLAY"):
+            # GtkStatusIcon does not work on Wayland
+            raise ImplementationUnavailable("StatusIcon implementation not available")
+
+        self.tray_icon = Gtk.StatusIcon(tooltip_text=pynicotine.__application_name__)
+        self.tray_icon.connect("activate", self.activate_callback)
+        self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
+
+        self.gtk_menu = self.build_gtk_menu()
+        GLib.idle_add(self.update_icon)
+
+    def on_status_icon_popup(self, _status_icon, button, _activate_time):
+
+        if button == 3:
+            time = Gtk.get_current_event_time()
+            self.gtk_menu.popup(None, None, None, None, button, time)
+
+    def set_item_text(self, item, text):
+        super().set_item_text(item, text)
+        item["gtk_menu_item"].set_label(text)
+
+    def set_item_sensitive(self, item, sensitive):
+        super().set_item_sensitive(item, sensitive)
+        item["gtk_menu_item"].set_sensitive(sensitive)
+
+    def set_item_toggled(self, item, toggled):
+
+        super().set_item_toggled(item, toggled)
+        gtk_menu_item = item["gtk_menu_item"]
+
+        with gtk_menu_item.handler_block(item["gtk_handler"]):
+            gtk_menu_item.set_active(toggled)
+
+    def build_gtk_menu(self):
+
+        gtk_menu = Gtk.Menu()
+
+        for item in self.menu_items.values():
+            text = item.get("text")
+
+            if text is None:
+                item["gtk_menu_item"] = gtk_menu_item = Gtk.SeparatorMenuItem(visible=True)
+            else:
+                gtk_menu_item_class = Gtk.CheckMenuItem if "toggled" in item else Gtk.MenuItem
+                item["gtk_menu_item"] = gtk_menu_item = gtk_menu_item_class(
+                    label=text, use_underline=True, visible=True
+                )
+                item["gtk_handler"] = gtk_menu_item.connect("activate", item["callback"])
+
+            gtk_menu.append(gtk_menu_item)
+
+        return gtk_menu
+
+    def set_icon_name(self, icon_name):
+
+        if not self.tray_icon.get_visible():
+            self.tray_icon.set_visible(True)
+
+        if self.tray_icon.is_embedded():
+            self.tray_icon.set_from_icon_name(icon_name)
+
+    def unload(self, is_shutdown=True):
+        self.tray_icon.set_visible(False)
+
+
 class TrayIcon:
 
     def __init__(self, application):
@@ -986,6 +1055,7 @@ class TrayIcon:
         self.application = application
         self.available = True
         self.implementation = None
+        self.watch_id = None
 
         self.watch_availability()
         self.load()
@@ -995,13 +1065,22 @@ class TrayIcon:
         if sys.platform in {"win32", "darwin"}:
             return
 
-        Gio.bus_watch_name(
+        if self.watch_id is not None:
+            return
+
+        self.watch_id = Gio.bus_watch_name(
             bus_type=Gio.BusType.SESSION,
             name="org.kde.StatusNotifierWatcher",
             flags=Gio.BusNameWatcherFlags.NONE,
             name_appeared_closure=self.load,
             name_vanished_closure=self.unload
         )
+
+    def unwatch_availability(self):
+
+        if self.watch_id is not None:
+            Gio.bus_unwatch_name(self.watch_id)
+            self.watch_id = None
 
     def load(self, *_args):
 
@@ -1018,13 +1097,22 @@ class TrayIcon:
         if self.implementation is None:
             if sys.platform == "win32":
                 self.implementation = Win32Implementation(self.application)
+
+            elif sys.platform == "darwin":
+                self.available = False
+
             else:
                 try:
                     self.implementation = StatusNotifierImplementation(self.application)
 
                 except ImplementationUnavailable:
-                    self.available = False
-                    return
+                    try:
+                        self.implementation = StatusIconImplementation(self.application)
+                        self.unwatch_availability()
+
+                    except ImplementationUnavailable:
+                        self.available = False
+                        return
 
         self.refresh_state()
 

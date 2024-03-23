@@ -1548,7 +1548,7 @@ class NetworkThread(Thread):
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
+            msg_size, = UINT32_UNPACK(msg_buffer_mem, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
@@ -2175,7 +2175,7 @@ class NetworkThread(Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msg_size = UINT32_UNPACK(msg_buffer_mem, idx)[0]
+            msg_size, = UINT32_UNPACK(msg_buffer_mem, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:

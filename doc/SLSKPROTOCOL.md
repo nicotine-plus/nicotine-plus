@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on February 18, 2024
+Last updated on March 16, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -136,19 +136,13 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 #### File Attribute Combinations
 
-These combinations are actively used by clients. Other combinations are discouraged, unless the official client makes changes.
+These combinations are actively used by clients. Certain attributes can be missing if a file does not provide them.
 
   - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+ (lossy formats), Museek+, SoulSeeX, slskd (lossy formats):
       - {0: *bitrate*, 1: *duration*, 2: *VBR*}
 
-  - SoulseekQt (2015-2-21 and earlier):
-      - {0: *bitrate*, 2: *VBR*}
-
   - SoulseekQt (2015-6-12 and later):
-      - {0: *bitrate*}
-      - {1: *duration*}
       - {0: *bitrate*, 1: *duration*} (MP3, OGG, WMA, M4A)
-      - {4: *sample rate*, 5: *bit depth*}
       - {1: *duration*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
       - {0: *bitrate*, 1: *duration*, 4: *sample rate*, 5: *bit depth*} (WV)
 

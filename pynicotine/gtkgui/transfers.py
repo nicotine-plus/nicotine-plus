@@ -801,6 +801,8 @@ class Transfers:
 
         self.users.clear()
         self.paths.clear()
+        self.pending_folder_rows.clear()
+        self.pending_user_rows.clear()
         self.selected_transfers.clear()
         self.selected_users.clear()
         self.tree_view.clear()

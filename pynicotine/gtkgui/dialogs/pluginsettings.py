@@ -41,7 +41,7 @@ class PluginSettings(Dialog):
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
 
-        ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
+        ok_button = Gtk.Button(label=_("_Apply"), use_underline=True, visible=True)
         ok_button.connect("clicked", self.on_ok)
         add_css_class(ok_button, "suggested-action")
 
@@ -366,6 +366,7 @@ class PluginSettings(Dialog):
             parent=self,
             title=_("Add Item"),
             message=treeview.description,
+            action_button_label=_("_Add"),
             callback=self.on_add_response,
             callback_data=treeview
         ).present()
@@ -391,6 +392,7 @@ class PluginSettings(Dialog):
                 parent=self,
                 title=_("Edit Item"),
                 message=treeview.description,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value

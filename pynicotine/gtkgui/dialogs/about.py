@@ -203,6 +203,7 @@ class About(Dialog):
  •  Maite Guix (2022)""",
 
         """<b>Chinese (Simplified)</b>
+ •  Ys413 (2024)
  •  Bonislaw (2023)
  •  hylau (2023)
  •  hadwin (2022)""",
@@ -214,15 +215,16 @@ class About(Dialog):
  •  mathsped (2003–2004)""",
 
         """<b>Dutch</b>
- •  Han Boetes (hboetes) (2021–2023)
+ •  Toine Rademacher (2024)
+ •  Han Boetes (hboetes) (2021–2024)
  •  Kenny Verstraete (2009)
  •  nince78 (2007)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """<b>English</b>
- •  slook (2021–2023)
- •  Han Boetes (hboetes) (2021–2023)
- •  Mat (mathiascode) (2020–2023)
+ •  slook (2021–2024)
+ •  Han Boetes (hboetes) (2021–2024)
+ •  Mat (mathiascode) (2020–2024)
  •  Michael Labouebe (gfarmerfr) (2016)
  •  daelstorm (2004–2009)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
@@ -253,7 +255,7 @@ class About(Dialog):
  •  Julien Wajsberg (flashfr) (2003–2004)""",
 
         """<b>German</b>
- •  Han Boetes (hboetes) (2021–2023)
+ •  Han Boetes (hboetes) (2021–2024)
  •  phelissimo_ (2023)
  •  Meokater (2007)
  •  (._.) (2007)
@@ -261,7 +263,7 @@ class About(Dialog):
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """<b>Hungarian</b>
- •  Szia Tomi (2022–2023)
+ •  Szia Tomi (2022–2024)
  •  Nils (2009)
  •  David Balazs (djbaloo) (2006–2020)""",
 
@@ -273,7 +275,7 @@ class About(Dialog):
  •  dbazza (2003–2004)""",
 
         """<b>Latvian</b>
- •  Pagal3 (2022–2023)""",
+ •  Pagal3 (2022–2024)""",
 
         """<b>Lithuanian</b>
  •  mantas (2020)
@@ -331,9 +333,10 @@ class About(Dialog):
  •  Markus Magnuson (alimony) (2003–2004)""",
 
         """<b>Turkish</b>
- •  Oğuz Ersen (2021–2023)""",
+ •  Oğuz Ersen (2021–2024)""",
 
         """<b>Ukrainian</b>
+ •  Oleg Gritsun (2024)
  •  uniss2209 (2022)"""]
 
     LICENSE = [

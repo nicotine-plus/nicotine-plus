@@ -142,14 +142,17 @@ jobs:
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
-      - name: Install build dependencies
+      - name: Create Python virtual environment
         run: |
           brew uninstall --ignore-dependencies python@3.11
           brew install --overwrite python@3.11
-          python3 packaging/macos/dependencies.py
+          python3.11 -m venv venv
+
+      - name: Install build dependencies
+        run: venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/macos/setup.py bdist_dmg
+        run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v4

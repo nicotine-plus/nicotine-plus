@@ -2767,7 +2767,7 @@ class PluginsPage:
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
             application.window, parent=self.plugin_list_container, always_select=True,
-            select_row_callback=self.on_select_plugin,
+            activate_row_callback=self.on_row_activated, select_row_callback=self.on_select_plugin,
             columns={
                 # Visible columns
                 "enabled": {
@@ -2884,14 +2884,20 @@ class PluginsPage:
         if self.selected_plugin is None:
             return
 
+        settings = core.pluginhandler.get_plugin_settings(self.selected_plugin)
+
+        if not settings:
+            return
+
         if self.plugin_settings is None:
             self.plugin_settings = PluginSettings(self.application)
 
-        self.plugin_settings.update_settings(
-            plugin_id=self.selected_plugin,
-            plugin_settings=core.pluginhandler.get_plugin_settings(self.selected_plugin)
-        )
+        self.plugin_settings.update_settings(plugin_id=self.selected_plugin, plugin_settings=settings)
         self.plugin_settings.present()
+
+    def on_row_activated(self, _list_view, _iterator, column_id):
+        if column_id == "plugin":
+            self.on_plugin_settings()
 
 
 class Preferences(Dialog):
