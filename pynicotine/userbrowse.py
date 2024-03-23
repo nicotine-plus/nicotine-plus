@@ -363,7 +363,7 @@ class UserBrowse:
         username = msg.username
         browsed_user = self.users.get(username)
         num_folders = len(msg.list) + len(msg.privatelist)
-        num_privs = len(msg.privatelist)
+        num_pfolders = len(msg.privatelist)
         num_files = sum(len(files) for folder_path, files in chain(msg.list, msg.privatelist))
 
         if browsed_user is not None:
@@ -374,6 +374,6 @@ class UserBrowse:
             "avgspeed": None,
             "files": num_files,
             "dirs": num_folders,
-            # "pdirs": num_privs,
+            "pdirs": num_pfolders,
             "source": "peer"
         })
