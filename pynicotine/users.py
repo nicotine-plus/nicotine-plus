@@ -29,7 +29,7 @@ from pynicotine.utils import open_uri
 class WatchedUser:
 
     # __slots__ = ("username", "upload_speed", "files", "folders", "pfolders")
-    __slots__ = ("username", "upload_speed", "files", "folders", "pfolders")
+    __slots__ = ("username", "upload_speed", "files", "folders")
 
     def __init__(self, username):
 
