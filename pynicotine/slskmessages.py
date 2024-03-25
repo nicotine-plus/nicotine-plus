@@ -1243,8 +1243,8 @@ class GetUserStats(ServerMessage):
     to the server, but WatchUser should be used instead.
     """
 
-    # __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
-    __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs", "pdirs")
+    __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
+    # __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs", "pdirs")
 
     def __init__(self, user=None):
         self.user = user
@@ -1252,7 +1252,7 @@ class GetUserStats(ServerMessage):
         self.uploadnum = None
         self.files = None
         self.dirs = None
-        self.pdirs = None
+        # self.pdirs = None
 
     def make_network_message(self):
         return self.pack_string(self.user)
