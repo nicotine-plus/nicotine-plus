@@ -342,7 +342,7 @@ class Users:
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
-            "pdirs": pfolders,
+            # "pdirs": pfolders,
             "source": "server"
         })
 
