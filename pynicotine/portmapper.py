@@ -252,11 +252,17 @@ class UPnP(BaseImplementation):
             control_url = None
 
             try:
+                from urllib.error import HTTPError
                 from urllib.request import urlopen
                 from xml.etree import ElementTree
 
-                with urlopen(location_url, timeout=UPnP.HTTP_REQUEST_TIMEOUT) as response:
-                    response_body = response.read()
+                try:
+                    with urlopen(location_url, timeout=UPnP.HTTP_REQUEST_TIMEOUT) as response:
+                        response_body = response.read()
+
+                except HTTPError as error:
+                    # Received HTTP error, check what the response body says
+                    response_body = error.read()
 
                 log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
 
@@ -392,6 +398,7 @@ class UPnP(BaseImplementation):
         period of 12 hours.
         """
 
+        from urllib.error import HTTPError
         from urllib.request import Request
         from urllib.request import urlopen
         from xml.etree import ElementTree
@@ -431,8 +438,15 @@ class UPnP(BaseImplementation):
         log.add_debug("UPnP: Add port mapping request headers: %s", headers)
         log.add_debug("UPnP: Add port mapping request contents: %s", body)
 
-        with urlopen(Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
-            response_body = response.read()
+        try:
+            request = Request(control_url, data=body, headers=headers)
+            with urlopen(request, timeout=self.HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
+
+        except HTTPError as error:
+            # Received HTTP error, but response might also contain UPnP error code.
+            # E.g. MikroTik routers that send UPnP error 725 (OnlyPermanentLeasesSupported).
+            response_body = error.read()
 
         xml = ElementTree.fromstring(response_body.decode("utf-8"))
 
@@ -490,6 +504,7 @@ class UPnP(BaseImplementation):
         if not self._service:
             return
 
+        from urllib.error import HTTPError
         from urllib.request import Request
         from urllib.request import urlopen
 
@@ -521,9 +536,16 @@ class UPnP(BaseImplementation):
         log.add_debug("UPnP: Remove port mapping request headers: %s", headers)
         log.add_debug("UPnP: Remove port mapping request contents: %s", body)
 
-        with urlopen(
-                Request(control_url, data=body, headers=headers), timeout=self.HTTP_REQUEST_TIMEOUT) as response:
-            log.add_debug("UPnP: Remove port mapping response: %s", response.read())
+        try:
+            request = Request(control_url, data=body, headers=headers)
+            with urlopen(request, timeout=self.HTTP_REQUEST_TIMEOUT) as response:
+                response_body = response.read()
+
+        except HTTPError as error:
+            # Received HTTP error, but response body might contain useful information
+            response_body = error.read()
+
+        log.add_debug("UPnP: Remove port mapping response: %s", response_body)
 
 
 class PortMapper:
