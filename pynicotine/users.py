@@ -338,7 +338,7 @@ class Users:
             stats.folders = folders
             # stats.pfolders = pfolders
 
-        core.pluginhandler.user_stats_notification(msg.user, stats={
+        core.pluginhandler.user_stats_notification_login(msg.user, stats={
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
