@@ -95,10 +95,10 @@ class Plugin(BasePlugin):
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
             return
-
-        is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"])
-        # total_size_text = self.core.userbrowse.pages[user].share_size_label.get_text()
-        # self.log(total_size_text)
+        
+        # conditions to be met to avoid ban
+        is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"] and num_pfolders < num_folders)
+        
         if is_user_accepted or user in self.core.buddies.users:
             if user in self.settings["detected_leechers"]:
                 self.settings["detected_leechers"].remove(user)
@@ -106,10 +106,10 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                self.log("User %s is okay, sharing %s files in %s folders.", (user, num_files, num_folders))
+                self.log("User %s is okay, sharing %s files in %s folders with %s private", (user, num_files, num_folders, num_pfolders))
             else:
-                self.log("Buddy %s is sharing %s files in %s folders. Not complaining.",
-                         (user, num_files, num_folders))
+                self.log("Buddy %s is sharing %s files in %s folders and %s private Not complaining.",
+                         (user, num_files, num_folders, num_folders))
             return
 
         if not self.probed_users[user].startswith("requesting"):
@@ -125,7 +125,6 @@ class Plugin(BasePlugin):
             # SoulseekQt only sends the number of shared files/folders to the server once on startup.
             # Verify user's actual number of files/folders.
             self.log("User %s has no shared files according to the server, requesting shares to verify…", user)
-
             self.probed_users[user] = "requesting_shares"
             self.core.userbrowse.request_user_shares(user)
             return
@@ -137,9 +136,9 @@ class Plugin(BasePlugin):
                     line = line.replace(placeholder, str(self.settings[option_key]))
 
                 self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
-                log_message = ("Leecher detected, %s is only sharing %s files in %s folders. Message sent.")
+                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. Message sent.")
         else:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders. No messsage to send…")
+            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. No messsage to send…")
 
 
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
