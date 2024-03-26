@@ -37,6 +37,7 @@ class Plugin(BasePlugin):
             "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
+            "share_percentage_config": 75,
             "detected_leechers": []
         }
         self.metasettings = {
@@ -60,6 +61,10 @@ class Plugin(BasePlugin):
             "num_folders": {
                 "description": "Require users to have a minimum number of shared folders:",
                 "type": "int", "minimum": 1
+            },
+            "share_percentage_config": {
+                "description": "Require this percentage of share vs private to avoid leech detection",
+                "type": "int", "minimum": 1, "maximum": 100
             },
             "detected_leechers": {
                 "description": "Detected leechers",
@@ -97,7 +102,17 @@ class Plugin(BasePlugin):
             return
         
         # conditions to be met to avoid ban
-        is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"] and num_pfolders < num_folders)
+        total_shared_folders = num_folders + num_pfolders
+        shared_folder_percentage = round((num_pfolders / total_shared_folders) * 100)
+        if (num_pfolders > 0 and num_pfolders == total_shared_folders):
+            percentage = 0
+            
+        # is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"] and num_pfolders < num_folders)
+        is_user_accepted = (
+            num_files >= self.settings["num_files"] and 
+            num_folders >= self.settings["num_folders"] and
+            shared_folder_percentage >= share_percentage_config
+        )
         
         if is_user_accepted or user in self.core.buddies.users:
             if user in self.settings["detected_leechers"]:
