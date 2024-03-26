@@ -755,7 +755,6 @@ class WatchUser(ServerMessage):
     the new user stats.
     """
 
-    # __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "pdirs", "country")
     __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "country")
 
     def __init__(self, user=None):
@@ -766,7 +765,6 @@ class WatchUser(ServerMessage):
         self.uploadnum = None
         self.files = None
         self.dirs = None
-        # self.pdirs = None
         self.country = None
 
     def make_network_message(self):
@@ -786,7 +784,6 @@ class WatchUser(ServerMessage):
 
         pos, self.files = self.unpack_uint32(message, pos)
         pos, self.dirs = self.unpack_uint32(message, pos)
-        pos, self.pdirs = self.unpack_uint32(message, pos)
 
         if not message[pos:]:
             # User is offline
