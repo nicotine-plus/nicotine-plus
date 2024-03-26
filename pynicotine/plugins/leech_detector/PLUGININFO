@@ -1,4 +1,4 @@
 Version = "2023-11-11r00"
-Authors = ["Nicotine+"]
-Name = "Leech Detector"
-Description = "Detects when leechers are downloading, and sends them a message after a file is leeched.\n\nMessage placeholders:\n- %files% : number of required files\n- %folders% : number of required folders"
+Authors = ["TegettinG"]
+Name = "Leech Detector 2 Unnofficial"
+Description = "Detects when leechers are leeching, bans them and send an optional message.\n\nMessage placeholders:\n- %files% : number of required files\n- %folders% : number of required folders"
