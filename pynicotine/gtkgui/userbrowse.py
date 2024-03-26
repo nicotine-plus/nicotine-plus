@@ -476,15 +476,13 @@ class UserBrowse:
         if browsed_user.private_folders:
             private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
         privstr = str(num_private_folders)
-        all = num_folders + num_private_folders
+        all_folders = num_folders + num_private_folders
         total = humanize(num_folders + num_private_folders)
         totalstr = str(total)
-        if (num_private_folders > 0):
-            percentage = round((num_private_folders / all) * 100)
-        if (num_private_folders == all):
+        if (num_private_folders > 0 and num_private_folders == all_folders):
             percentage = 0
         else:
-            percentage = 100
+            percentage = round((num_private_folders / all_folders) * 100)
         percentagestr = str(percentage)
         n00bi = "Private : " + privstr + " / " + "Total : " + totalstr + " Share percentage : " + percentagestr
         self.num_folders_label.set_text(n00bi)
