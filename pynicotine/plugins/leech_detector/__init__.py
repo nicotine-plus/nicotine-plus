@@ -171,4 +171,4 @@ class Plugin(BasePlugin):
         self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
 
     def user_stats_notification_login(self, user, stats):
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"])
+        return
