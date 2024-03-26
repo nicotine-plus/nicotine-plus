@@ -146,7 +146,7 @@ class Plugin(BasePlugin):
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
-        self.log(log_message, (user, num_files, num_folders))
+        self.log(log_message, (user, num_files, num_folders, num_pfolders))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
 
