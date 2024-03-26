@@ -177,6 +177,10 @@ class BasePlugin:
         # Override method in plugin
         pass
 
+    def user_stats_notification_login(self, user, stats):
+        # Override method in plugin
+        pass
+
     def user_status_notification(self, user, status, privileged):
         # Override method in plugin
         pass
@@ -1053,6 +1057,9 @@ class PluginHandler:
 
     def user_stats_notification(self, user, stats):
         self._trigger_event("user_stats_notification", (user, stats))
+
+    def user_stats_notification_login(self, user, stats):
+        self._trigger_event("user_stats_notification_login", (user, stats))
 
     def user_status_notification(self, user, status, privileged):
         self._trigger_event("user_status_notification", (user, status, privileged))
