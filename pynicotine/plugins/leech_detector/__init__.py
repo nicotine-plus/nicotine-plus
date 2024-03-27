@@ -174,12 +174,12 @@ class Plugin(BasePlugin):
 
         if stats.files is not None and stats.folders is not None:
             total = stats.folders + stats.pfolders
-            percentage = round((num_pfolders=stats.pfolders / total) * 100)
+            percentage = round((stats.pfolders / total) * 100)
             self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
 
     def user_stats_notification(self, user, stats):
-        total = num_folders=stats["dirs"] + num_pfolders=stats["pdirs"]
-        percentage = round((num_pfolders=stats["pdirs"] / total) * 100)
+        total = stats["dirs"] + stats["pdirs"]
+        percentage = round((stats["pdirs"] / total) * 100)
         self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], percentage)
 
     def user_stats_notification_login(self, user, stats):
