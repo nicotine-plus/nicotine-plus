@@ -119,7 +119,7 @@ class Plugin(BasePlugin):
                 self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, share_percent))
             else:
                 self.log("Buddy %s is sharing %s files in %s folders and %s private. Percent: %s",
-                         (user, num_files, num_folders, num_folders, share_percent))
+                         (user, num_files, num_folders, num_pfolders, share_percent))
             return
 
         if not self.probed_users[user].startswith("requesting"):
@@ -178,9 +178,9 @@ class Plugin(BasePlugin):
             self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
 
     def user_stats_notification(self, user, stats):
-        total = stats["dirs"] + stats["pdirs"]
-        percentage = round((stats["pdirs"] / total) * 100)
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], percentage)
+        tot = stats["dirs"] + stats["pdirs"]
+        per = round((stats["pdirs"] / tot) * 100)
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], share_percent=per)
 
     def user_stats_notification_login(self, user, stats):
         return
