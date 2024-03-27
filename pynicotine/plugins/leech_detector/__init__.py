@@ -92,8 +92,6 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"], self.settings["share_percentage_config"])
         )
     
-    # def check_user(self, user, num_files, num_folders):
-    # def check_user(self, user, num_files, num_folders, num_pfolders):
     def check_user(self, user, num_files, num_folders, num_pfolders, share_percent):
 
         if user not in self.probed_users:
@@ -103,19 +101,7 @@ class Plugin(BasePlugin):
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
             return
-        
-        # total_shared_folders = num_folders + num_pfolders
-        # calculate the shared percentage
-        # if (num_pfolders > 0 and num_folders == 0):
-            # shared_folder_percentage = 100
-        # elif (num_pfolders > 0 and num_pfolders == total_shared_folders):
-            # shared_folder_percentage = 0
-        # elif (num_pfolders > 0 and num_folders > 0):
-            # shared_folder_percentage = round((num_pfolders / total_shared_folders) * 100)
-        # else:
-            # shared_folder_percentage = round((num_pfolders / total_shared_folders) * 100)
             
-        # is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"] and num_pfolders < num_folders)
         # conditions to be met to avoid ban
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
@@ -130,11 +116,8 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                # self.log("User %s is okay, sharing %s files in %s folders with %s private", (user, num_files, num_folders, num_pfolders))
                 self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, shared_percentage))
             else:
-                # self.log("Buddy %s is sharing %s files in %s folders and %s private Not complaining.",
-                         # (user, num_files, num_folders, num_folders))
                 self.log("Buddy %s is sharing %s files in %s folders and %s private. Percent: %s",
                          (user, num_files, num_folders, num_folders, shared_percentage))
             return
@@ -163,9 +146,9 @@ class Plugin(BasePlugin):
                     line = line.replace(placeholder, str(self.settings[option_key]))
 
                 self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
-                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. Message sent.")
+                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. Message sent.")
         else:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. No messsage to send…")
+            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. No messsage to send…")
 
 
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
@@ -174,7 +157,6 @@ class Plugin(BasePlugin):
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
         self.log(log_message, (user, num_files, num_folders, num_pfolders, share_percent))
-        # self.log(log_message, (user, num_files, num_folders, num_pfolders))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
 
@@ -191,16 +173,13 @@ class Plugin(BasePlugin):
             return
 
         if stats.files is not None and stats.folders is not None:
-            # self.check_user(user, num_files=stats.files, num_folders=stats.folders)
             total = num_folders=stats.folders + num_pfolders=stats.pfolders
             percentage = round((num_pfolders=stats.pfolders / total) * 100)
-            # self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders)
             self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
 
     def user_stats_notification(self, user, stats):
         total = num_folders=stats["dirs"] + num_pfolders=stats["pdirs"]
         percentage = round((num_pfolders=stats["pdirs"] / total) * 100)
-        # self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
         self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], percentage)
 
     def user_stats_notification_login(self, user, stats):
