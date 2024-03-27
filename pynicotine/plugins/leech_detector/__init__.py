@@ -104,7 +104,7 @@ class Plugin(BasePlugin):
         # conditions to be met to avoid ban
         total_shared_folders = num_folders + num_pfolders
         shared_folder_percentage = round((num_pfolders / total_shared_folders) * 100)
-        if (num_pfolders > 0 and num_pfolders == total_shared_folders):
+        if (num_pfolders is not None and num_pfolders == total_shared_folders):
             shared_folder_percentage = 0
             
         # is_user_accepted = (num_files >= self.settings["num_files"] and num_folders >= self.settings["num_folders"] and num_pfolders < num_folders)
