@@ -92,6 +92,11 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"], self.settings["share_percentage_config"])
         )
 
+    def calculate_percentage(value, total):
+        percentage = round((value / total) * 100)
+        return percentage
+
+    
     # def check_user(self, user, num_files, num_folders):
     def check_user(self, user, num_files, num_folders, num_pfolders):
 
