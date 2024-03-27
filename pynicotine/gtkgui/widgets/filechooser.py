@@ -39,9 +39,7 @@ class FileChooser:
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder=None, select_multiple=False):
 
-        if not initial_folder:
-            initial_folder = os.path.expanduser("~")
-        else:
+        if initial_folder:
             initial_folder = os.path.normpath(os.path.expandvars(initial_folder))
             initial_folder_encoded = encode_path(initial_folder)
 
@@ -69,7 +67,8 @@ class FileChooser:
                 self.select_method = self.file_chooser.open
                 self.finish_method = self.file_chooser.open_finish
 
-            self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
+            if initial_folder:
+                self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
 
         except AttributeError:
             # GTK < 4.10
@@ -84,12 +83,15 @@ class FileChooser:
             self.file_chooser.connect("response", self.on_response)
 
             if GTK_API_VERSION >= 4:
-                self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
+                if initial_folder:
+                    self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
                 return
 
             # Display network shares
             self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-            self.file_chooser.set_current_folder(initial_folder)
+
+            if initial_folder:
+                self.file_chooser.set_current_folder(initial_folder)
 
     def on_finish(self, _dialog, result):
 
