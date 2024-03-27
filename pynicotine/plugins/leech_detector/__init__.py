@@ -24,7 +24,8 @@ class Plugin(BasePlugin):
 
     PLACEHOLDERS = {
         "%files%": "num_files",
-        "%folders%": "num_folders"
+        "%folders%": "num_folders",
+        "%shared_percentage%": "share_percentage_config"
     }
 
     def __init__(self, *args, **kwargs):
@@ -86,8 +87,8 @@ class Plugin(BasePlugin):
             self.settings["num_folders"] = min_num_folders
 
         self.log(
-            "Require users have a minimum of %d files in %d shared public folders.",
-            (self.settings["num_files"], self.settings["num_folders"])
+            "Require users have a minimum of %d files in %d shared public folders which totals more than %d percent shared.",
+            (self.settings["num_files"], self.settings["num_folders"], self.settings["share_percentage_config"])
         )
 
     # def check_user(self, user, num_files, num_folders):
@@ -111,7 +112,7 @@ class Plugin(BasePlugin):
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
             num_folders >= self.settings["num_folders"] and
-            shared_folder_percentage >= share_percentage_config
+            shared_folder_percentage >= self.settings["share_percentage_config"]
         )
         
         if is_user_accepted or user in self.core.buddies.users:
