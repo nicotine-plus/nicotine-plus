@@ -106,7 +106,7 @@ class Plugin(BasePlugin):
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
             num_folders >= self.settings["num_folders"] and
-            shared_percentage >= self.settings["share_percentage_config"]
+            share_percent >= self.settings["share_percentage_config"]
         )
         
         if is_user_accepted or user in self.core.buddies.users:
@@ -116,10 +116,10 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, shared_percentage))
+                self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, share_percent))
             else:
                 self.log("Buddy %s is sharing %s files in %s folders and %s private. Percent: %s",
-                         (user, num_files, num_folders, num_folders, shared_percentage))
+                         (user, num_files, num_folders, num_folders, share_percent))
             return
 
         if not self.probed_users[user].startswith("requesting"):
