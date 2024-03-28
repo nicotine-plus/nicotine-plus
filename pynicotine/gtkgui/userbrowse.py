@@ -486,7 +486,7 @@ class UserBrowse:
             percentage = round((num_private_folders / num_folders) * 100)
         percentagestr = str(percentage)
         # n00bi = "Private : " + privstr + " / " + "Total : " + totalstr
-        n00bi = "Private : " + privstr + " / " + "Open : " + opened + " Share percentage : " + percentagestr
+        n00bi = "Private: " + privstr + " / " + "Open: " + opened + " Locked Percentage: " + percentagestr
         self.num_folders_label.set_text(n00bi)
         self.share_size_label.set_text(human_size(size + private_size))
 
