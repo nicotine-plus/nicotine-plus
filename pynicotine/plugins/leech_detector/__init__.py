@@ -140,12 +140,12 @@ class Plugin(BasePlugin):
             return
 
         if self.settings["message"]:
-            for line in self.settings["message"].splitlines():
-                for placeholder, option_key in self.PLACEHOLDERS.items():
+            # for line in self.settings["message"].splitlines():
+                # for placeholder, option_key in self.PLACEHOLDERS.items():
                     # Replace message placeholders with actual values specified in the plugin settings
-                    line = line.replace(placeholder, str(self.settings[option_key]))
+                    # line = line.replace(placeholder, str(self.settings[option_key]))
 
-                self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
+                # self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
                 log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. Message sent.")
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. No messsage to send…")
