@@ -38,7 +38,7 @@ class Plugin(BasePlugin):
             "open_private_chat": True,
             "num_files": 1,
             "num_folders": 1,
-            "share_percentage_config": 75,
+            "max_private_percentage": 15,
             "detected_leechers": []
         }
         self.metasettings = {
@@ -63,8 +63,8 @@ class Plugin(BasePlugin):
                 "description": "Require users to have a minimum number of shared folders:",
                 "type": "int", "minimum": 1
             },
-            "share_percentage_config": {
-                "description": "Require this percentage of share vs private to avoid leech detection",
+            "max_private_percentage": {
+                "description": "Must have LESS THAN this percentage of private files to avoid detection",
                 "type": "int", "minimum": 1, "maximum": 100
             },
             "detected_leechers": {
@@ -88,8 +88,8 @@ class Plugin(BasePlugin):
             self.settings["num_folders"] = min_num_folders
 
         self.log(
-            "Require users have a minimum of %d files in %d shared public folders which totals more than %d percent shared.",
-            (self.settings["num_files"], self.settings["num_folders"], self.settings["share_percentage_config"])
+            "Require users have a minimum of %d files in %d shared public folders with no more than %d percent locked or privatised.",
+            (self.settings["num_files"], self.settings["num_folders"], self.settings["max_private_percentage"])
         )
     
     # def check_user(self, user, num_files, num_folders, num_pfolders, share_percent):
@@ -107,13 +107,13 @@ class Plugin(BasePlugin):
         if num_pfolders == 0:
             share_percent = 100
         else:
-            share_percent = round((num_folders / num_pfolders) * 100)
+            private_percentage = round((num_pfolders / num_folders) * 100)
             
         # conditions to be met to avoid ban
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
             num_folders >= self.settings["num_folders"] and
-            share_percent >= self.settings["share_percentage_config"]
+            private_percentage <= self.settings["share_percentage_config"]
         )
         
         if is_user_accepted or user in self.core.buddies.users:
@@ -123,10 +123,10 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, share_percent))
+                self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, private_percentage))
             else:
                 self.log("Buddy %s is sharing %s files in %s folders and %s private. Percent: %s",
-                         (user, num_files, num_folders, num_pfolders, share_percent))
+                         (user, num_files, num_folders, num_pfolders, private_percentage))
             return
 
         if not self.probed_users[user].startswith("requesting"):
@@ -163,7 +163,7 @@ class Plugin(BasePlugin):
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
-        self.log(log_message, (user, num_files, num_folders, num_pfolders, share_percent))
+        self.log(log_message, (user, num_files, num_folders, num_pfolders, private_percentage))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
 
