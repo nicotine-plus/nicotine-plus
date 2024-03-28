@@ -149,7 +149,7 @@ class Plugin(BasePlugin):
         if self.settings["message"]:
             for line in self.settings["message"].splitlines():
                 for placeholder, option_key in self.PLACEHOLDERS.items():
-                    Replace message placeholders with actual values specified in the plugin settings
+                    # Replace message placeholders with actual values specified in the plugin settings
                     line = line.replace(placeholder, str(self.settings[option_key]))
 
                 self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
