@@ -484,7 +484,7 @@ class UserBrowse:
                 percentage = 0
             else:
                 percentage = round((all_folders / num_private_folders) * 100)
-        elif (num_folders == 0):
+        if (num_private_folders == 0 and num_folders == 0):
             percentage = 0
         percentagestr = str(percentage)
         # n00bi = "Private : " + privstr + " / " + "Total : " + totalstr
