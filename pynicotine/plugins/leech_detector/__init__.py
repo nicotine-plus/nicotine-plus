@@ -25,7 +25,7 @@ class Plugin(BasePlugin):
     PLACEHOLDERS = {
         "%files%": "num_files",
         "%folders%": "num_folders",
-        "%shared_percentage%": "share_percentage_config"
+        "%max_private%": "max_private_percentage"
     }
 
     def __init__(self, *args, **kwargs):
@@ -88,7 +88,7 @@ class Plugin(BasePlugin):
             self.settings["num_folders"] = min_num_folders
 
         self.log(
-            "Require users have a minimum of %d files in %d shared public folders with no more than %d percent locked or privatised.",
+            "Require users have a minimum of %d files in %d shared public folders with a maxiumum of %d percent locked or privatised.",
             (self.settings["num_files"], self.settings["num_folders"], self.settings["max_private_percentage"])
         )
     
