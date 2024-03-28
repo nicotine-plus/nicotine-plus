@@ -92,7 +92,8 @@ class Plugin(BasePlugin):
             (self.settings["num_files"], self.settings["num_folders"], self.settings["share_percentage_config"])
         )
     
-    def check_user(self, user, num_files, num_folders, num_pfolders, share_percent):
+    # def check_user(self, user, num_files, num_folders, num_pfolders, share_percent):
+    def check_user(self, user, num_files, num_folders, num_pfolders):
 
         if user not in self.probed_users:
             # We are not watching this user
@@ -101,7 +102,10 @@ class Plugin(BasePlugin):
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
             return
-            
+        if num_pfolders == 0:
+            share_percent = 100
+        else:
+            share_percent = round((num_folders / num_pfolders) * 100)
         # conditions to be met to avoid ban
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
@@ -174,21 +178,23 @@ class Plugin(BasePlugin):
 
         if stats.files is not None and stats.folders is not None:
             # total = stats.folders + stats.pfolders
-            if (stats.pfolders == stats.folders):
-                percentage = 0
-            else:
-                percentage = round((stats.folders / stats.pfolders) * 100)
-            self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
+            # if (stats.pfolders == stats.folders):
+                # percentage = 0
+            # else:
+                # percentage = round((stats.folders / stats.pfolders) * 100)
+            # self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
+            self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders)
 
     def user_stats_notification(self, user, stats):
         # priv_folders = num_pfolders=stats["pdirs"]
         # open_folders = num_folders=stats["dirs"]
         # tot = stats["dirs"] + stats["pdirs"]
-        if (stats["pdirs"] == stats["dirs"]):
-            percentage = 0
-        else:
-            per = round((stats["dirs"] / stats["pdirs"]) * 100)
-        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], share_percent=per)
+        # if (stats["pdirs"] == stats["dirs"]):
+            # percentage = 0
+        # else:
+            # per = round((stats["dirs"] / stats["pdirs"]) * 100)
+        # self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], share_percent=per)
+        self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
 
     def user_stats_notification_login(self, user, stats):
         return
