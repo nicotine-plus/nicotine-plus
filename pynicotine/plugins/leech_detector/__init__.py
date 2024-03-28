@@ -102,10 +102,13 @@ class Plugin(BasePlugin):
         if self.probed_users[user] == "okay":
             # User was already accepted previously, nothing to do
             return
+
+        # if user has private folders, calculate what percentage is shared
         if num_pfolders == 0:
             share_percent = 100
         else:
             share_percent = round((num_folders / num_pfolders) * 100)
+            
         # conditions to be met to avoid ban
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
@@ -144,17 +147,17 @@ class Plugin(BasePlugin):
             return
 
         if self.settings["message"]:
-            # for line in self.settings["message"].splitlines():
-                # for placeholder, option_key in self.PLACEHOLDERS.items():
-                    # Replace message placeholders with actual values specified in the plugin settings
-                    # line = line.replace(placeholder, str(self.settings[option_key]))
+            for line in self.settings["message"].splitlines():
+                for placeholder, option_key in self.PLACEHOLDERS.items():
+                    Replace message placeholders with actual values specified in the plugin settings
+                    line = line.replace(placeholder, str(self.settings[option_key]))
 
-                # self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
+                self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
                 log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. Message sent.")
         else:
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. No messsage to send…")
 
-
+        # check if we have enabled banning, if true, apply a ban
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
@@ -177,23 +180,9 @@ class Plugin(BasePlugin):
             return
 
         if stats.files is not None and stats.folders is not None:
-            # total = stats.folders + stats.pfolders
-            # if (stats.pfolders == stats.folders):
-                # percentage = 0
-            # else:
-                # percentage = round((stats.folders / stats.pfolders) * 100)
-            # self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders, share_percent=percentage)
             self.check_user(user, num_files=stats.files, num_folders=stats.folders, num_pfolders=stats.pfolders)
 
     def user_stats_notification(self, user, stats):
-        # priv_folders = num_pfolders=stats["pdirs"]
-        # open_folders = num_folders=stats["dirs"]
-        # tot = stats["dirs"] + stats["pdirs"]
-        # if (stats["pdirs"] == stats["dirs"]):
-            # percentage = 0
-        # else:
-            # per = round((stats["dirs"] / stats["pdirs"]) * 100)
-        # self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"], share_percent=per)
         self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], num_pfolders=stats["pdirs"])
 
     def user_stats_notification_login(self, user, stats):
