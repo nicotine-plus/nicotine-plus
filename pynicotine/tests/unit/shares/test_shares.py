@@ -17,6 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
+import struct
+import wave
 
 from unittest import TestCase
 
@@ -24,21 +27,28 @@ from pynicotine.config import config
 from pynicotine.core import core
 
 CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
 SHARES_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, ".sharedfiles")
 BUDDY_SHARES_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, ".sharedbuddyfiles")
 TRUSTED_SHARES_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, ".sharedtrustedfiles")
 INVALID_SHARES_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, ".sharedinvalidfiles")
+AUDIO_FILES = (
+    (SHARES_FOLDER_PATH, "audiofile.wav", 50000),
+    (BUDDY_SHARES_FOLDER_PATH, "audiofile2.wav", 150000),
+    (TRUSTED_SHARES_FOLDER_PATH, "audiofile3.wav", 200000)
+)
 
 
 class SharesTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
         core.init_components(enabled_components={"shares"})
 
+        # Prepare shares
         config.sections["transfers"]["shared"] = [
             ("Shares", SHARES_FOLDER_PATH, "junk"),                     # Superfluous item in tuple
             ("invalid", os.path.join(SHARES_FOLDER_PATH, "folder2"))    # Resharing subfolder from previous share
@@ -53,11 +63,30 @@ class SharesTest(TestCase):
             ("invalid4", SHARES_FOLDER_PATH),                           # Resharing public folder
             ("Trusted", TRUSTED_SHARES_FOLDER_PATH)
         ]
+
+        # Prepare audio files
+        for folder_path, basename, num_frames in AUDIO_FILES:
+            with wave.open(os.path.join(folder_path, basename), "wb") as audio_file:
+                # pylint: disable=no-member
+                audio_file.setnchannels(1)
+                audio_file.setsampwidth(2)
+                audio_file.setframerate(44100)
+                audio_file.writeframes(struct.pack("h", 0) * num_frames)
+
+        # Rescan shares
         core.shares.rescan_shares(rebuild=True, use_thread=False)
         core.shares.load_shares(core.shares.share_dbs, core.shares.share_db_paths)
 
+
     def tearDown(self):
+
         core.quit()
+
+        shutil.rmtree(DATA_FOLDER_PATH)
+
+        for folder_path, basename, _num_frames in AUDIO_FILES:
+            os.remove(os.path.join(folder_path, basename))
+
         self.assertIsNone(core.shares)
 
     def test_shares_scan(self):
@@ -69,11 +98,10 @@ class SharesTest(TestCase):
         trusted_mtimes = list(core.shares.share_dbs["trusted_mtimes"])
 
         self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), public_mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3"), public_mtimes)
-        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3"), public_mtimes)
-        self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "nicotinevbr2.mp3"), buddy_mtimes)
+        self.assertIn(os.path.join(SHARES_FOLDER_PATH, "audiofile.wav"), public_mtimes)
+        self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "audiofile2.wav"), buddy_mtimes)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "something2", "nothing2"), buddy_mtimes)
-        self.assertIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, "nicotinetestdata3.ogg"), trusted_mtimes)
+        self.assertIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, "audiofile3.wav"), trusted_mtimes)
         self.assertIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, "folder", "folder2", "folder3", "folder4", "nothing"),
                       trusted_mtimes)
 
@@ -87,24 +115,20 @@ class SharesTest(TestCase):
             public_files[os.path.join(SHARES_FOLDER_PATH, "dummy_file")]
         )
         self.assertEqual(
-            ["Shares\\nicotinetestdata.mp3", 80919, (128, 0, 44100, None), 5],
-            public_files[os.path.join(SHARES_FOLDER_PATH, "nicotinetestdata.mp3")]
+            ["Shares\\audiofile.wav", 100044, (706, 0, 44100, 16), 1],
+            public_files[os.path.join(SHARES_FOLDER_PATH, "audiofile.wav")]
         )
         self.assertEqual(
-            ["Shares\\nicotinevbr.mp3", 36609, (32, 1, 44100, None), 9],
-            public_files[os.path.join(SHARES_FOLDER_PATH, "nicotinevbr.mp3")]
-        )
-        self.assertEqual(
-            ["Secrets\\nicotinevbr2.mp3", 36609, (32, 1, 44100, None), 9],
-            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "nicotinevbr2.mp3")]
+            ["Secrets\\audiofile2.wav", 300044, (706, 0, 44100, 16), 3],
+            buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "audiofile2.wav")]
         )
         self.assertEqual(
             ["Secrets\\something2\\nothing2", 0, None, None],
             buddy_files[os.path.join(BUDDY_SHARES_FOLDER_PATH, "something2", "nothing2")]
         )
         self.assertEqual(
-            ["Trusted\\nicotinetestdata3.ogg", 4567, (112, 0, 44100, None), 5],
-            trusted_files[os.path.join(TRUSTED_SHARES_FOLDER_PATH, "nicotinetestdata3.ogg")]
+            ["Trusted\\audiofile3.wav", 400044, (706, 0, 44100, 16), 4],
+            trusted_files[os.path.join(TRUSTED_SHARES_FOLDER_PATH, "audiofile3.wav")]
         )
 
         # Verify that expected folders are empty
@@ -114,38 +138,38 @@ class SharesTest(TestCase):
 
         # Verify that search index was updated
         word_index = core.shares.share_dbs["words"]
-        nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
-        nicotinetestdata2_indexes = list(word_index["nicotinetestdata2"])
-        nicotinetestdata3_indexes = list(word_index["nicotinetestdata3"])
-        ogg_indexes = list(word_index["ogg"])
+        audiofile_indexes = list(word_index["audiofile"])
+        audiofile2_indexes = list(word_index["audiofile2"])
+        audiofile3_indexes = list(word_index["audiofile3"])
+        wav_indexes = list(word_index["wav"])
 
         self.assertEqual(set(word_index), {
-            "ogg", "folder2", "nothing2", "mp3", "trusted", "nothing", "folder3", "dummy",
-            "test", "file3", "folder", "nicotinevbr", "file", "folder4", "secrets", "test2",
-            "something", "nicotinevbr2", "something2", "file2", "nicotinetestdata", "somefile",
-            "nicotinetestdata2", "txt", "folder1", "buddies", "nicotinetestdata3", "shares"
+            "wav", "folder2", "nothing2", "trusted", "nothing", "folder3", "dummy",
+            "test", "file3", "folder", "file", "folder4", "secrets", "test2",
+            "something", "something2", "file2", "audiofile", "somefile",
+            "audiofile2", "txt", "folder1", "buddies", "audiofile3", "shares"
         })
 
-        self.assertEqual(len(nicotinetestdata_indexes), 2)
-        self.assertEqual(len(nicotinetestdata2_indexes), 2)
-        self.assertEqual(len(nicotinetestdata3_indexes), 1)
-        self.assertEqual(len(ogg_indexes), 3)
+        self.assertEqual(len(audiofile_indexes), 1)
+        self.assertEqual(len(audiofile2_indexes), 1)
+        self.assertEqual(len(audiofile3_indexes), 1)
+        self.assertEqual(len(wav_indexes), 3)
 
-        # File ID associated with word "ogg" should return our nicotinetestdata files
-        self.assertIn(ogg_indexes[0], nicotinetestdata_indexes)
-        self.assertIn(ogg_indexes[1], nicotinetestdata2_indexes)
-        self.assertIn(ogg_indexes[2], nicotinetestdata3_indexes)
+        # File ID associated with word "wav" should return our audiofile files
+        self.assertIn(wav_indexes[0], audiofile_indexes)
+        self.assertIn(wav_indexes[1], audiofile2_indexes)
+        self.assertIn(wav_indexes[2], audiofile3_indexes)
         self.assertEqual(
-            core.shares.share_dbs["public_files"][core.shares.file_path_index[ogg_indexes[0]]][0],
-            "Shares\\nicotinetestdata.ogg"
+            core.shares.share_dbs["public_files"][core.shares.file_path_index[wav_indexes[0]]][0],
+            "Shares\\audiofile.wav"
         )
         self.assertEqual(
-            core.shares.share_dbs["buddy_files"][core.shares.file_path_index[ogg_indexes[1]]][0],
-            "Secrets\\nicotinetestdata2.ogg"
+            core.shares.share_dbs["buddy_files"][core.shares.file_path_index[wav_indexes[1]]][0],
+            "Secrets\\audiofile2.wav"
         )
         self.assertEqual(
-            core.shares.share_dbs["trusted_files"][core.shares.file_path_index[ogg_indexes[2]]][0],
-            "Trusted\\nicotinetestdata3.ogg"
+            core.shares.share_dbs["trusted_files"][core.shares.file_path_index[wav_indexes[2]]][0],
+            "Trusted\\audiofile3.wav"
         )
 
     def test_hidden_file_folder_scan(self):
@@ -181,11 +205,11 @@ class SharesTest(TestCase):
         self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".hidden_file"), public_files)
         self.assertNotIn(os.path.join(SHARES_FOLDER_PATH, ".xyz_file"), public_files)
         self.assertIn(os.path.join(SHARES_FOLDER_PATH, "dummy_file"), public_files)
-        self.assertEqual(len(public_files), 7)
+        self.assertEqual(len(public_files), 5)
 
         self.assertNotIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, ".uvw_file"), buddy_files)
         self.assertIn(os.path.join(BUDDY_SHARES_FOLDER_PATH, "dummy_file2"), buddy_files)
-        self.assertEqual(len(buddy_files), 8)
+        self.assertEqual(len(buddy_files), 6)
 
         self.assertNotIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, ".hidden_folder", "nothing"), trusted_files)
         self.assertIn(os.path.join(TRUSTED_SHARES_FOLDER_PATH, "dummy_file3"), trusted_files)

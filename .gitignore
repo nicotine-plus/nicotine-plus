@@ -17,6 +17,7 @@ pynicotine/tests/**/*.db
 pynicotine/tests/**/*.dbn
 pynicotine/tests/**/*.json
 pynicotine/tests/**/*.old
+pynicotine/tests/**/*.wav
 
 # Ignore venv files
 venv/*
