@@ -480,9 +480,9 @@ class UserBrowse:
         total = humanize(all_folders)
         opened = str(num_folders)
         totalstr = str(total)
-        if (num_private_folders == 0):
+        if num_private_folders == 0:
             percentage = 100
-        if (num_folders == 0):
+        if num_folders == 0:
             percentage = 0
         else : 
             percentage = round((num_private_folders / num_folders) * 100)
