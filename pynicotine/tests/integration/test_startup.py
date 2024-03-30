@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,21 +17,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 import subprocess
 import sys
 
 from unittest import TestCase
 
-USER_DATA = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
+CONFIG_FILE = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
 
 class StartupTest(TestCase):
 
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
+
     def test_gui_startup(self):
         """Verify that regular GUI startup works."""
 
-        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
+        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={DATA_FOLDER_PATH}",
                    "--ci-mode"]
         broadway_display = ":1000"
         broadway_process = None
@@ -73,7 +78,7 @@ class StartupTest(TestCase):
     def test_cli_startup(self):
         """Verify that regular CLI startup works."""
 
-        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}",
+        command = [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={DATA_FOLDER_PATH}",
                    "--ci-mode", "--headless"]
         is_success = False
 
@@ -96,7 +101,8 @@ class StartupTest(TestCase):
         # Check for " 0 folders found after rescan" in output. Text strings are translatable,
         # so we can't match them directly.
         output = subprocess.check_output(
-            [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={USER_DATA}", "--rescan"],
+            [sys.executable, "-m", "pynicotine", f"--config={CONFIG_FILE}", f"--user-data={DATA_FOLDER_PATH}",
+             "--rescan"],
             timeout=10
         )
         self.assertIn(b" 0 ", output)

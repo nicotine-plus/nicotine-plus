@@ -48,7 +48,7 @@ class DownloadsTest(TestCase):
 
         shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
-        core.init_components(enabled_components={"users", "downloads", "userbrowse", "buddies"})
+        core.init_components(enabled_components={"users", "downloads", "userbrowse"})
         config.sections["transfers"]["downloaddir"] = DATA_FOLDER_PATH
 
         core.start()

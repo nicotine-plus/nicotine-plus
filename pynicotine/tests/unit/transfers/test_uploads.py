@@ -46,7 +46,7 @@ class UploadsTest(TestCase):
 
         shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
-        core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "buddies"})
+        core.init_components(enabled_components={"users", "shares", "uploads", "buddies"})
         core.start()
 
     def tearDown(self):
