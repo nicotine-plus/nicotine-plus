@@ -123,9 +123,9 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                self.log("User %s is okay, sharing %s files in %s folders with %s private. Percent: %s", (user, num_files, num_folders, num_pfolders, private_percentage))
+                self.log("User %s is okay, sharing %s files in %s folders with %s private. %s percent is locked", (user, num_files, num_folders, num_pfolders, private_percentage))
             else:
-                self.log("Buddy %s is sharing %s files in %s folders and %s private. Percent: %s",
+                self.log("Buddy %s is sharing %s files in %s folders and %s private. %s is locked",
                          (user, num_files, num_folders, num_pfolders, private_percentage))
             return
 
@@ -153,9 +153,9 @@ class Plugin(BasePlugin):
                     line = line.replace(placeholder, str(self.settings[option_key]))
 
                 self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
-                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. Message sent.")
+                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s percent is locked. Message sent.")
         else:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s Percent shared. No messsage to send…")
+            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s percent is locked. No messsage to send…")
 
         # check if we have enabled banning, if true, apply a ban
         if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
