@@ -25,15 +25,21 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.utils import encode_path
 
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+
 
 class ConfigTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
 
-        default_config_path = os.path.join(config.data_folder_path, "config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
+
+        default_config_path = os.path.join(CURRENT_FOLDER_PATH, "config")
+        os.makedirs(DATA_FOLDER_PATH)
         shutil.copy(default_config_path, config.config_file_path)
 
         core.init_components(enabled_components={})

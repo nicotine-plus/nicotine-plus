@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -27,6 +28,11 @@ from pynicotine.downloads import RequestedFolder
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+TRANSFERS_BASENAME = "downloads.json"
+TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+
 
 class DownloadsTest(TestCase):
 
@@ -34,14 +40,18 @@ class DownloadsTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
+
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
+
+        os.makedirs(DATA_FOLDER_PATH)
+        shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
         core.init_components(enabled_components={"users", "shares", "downloads", "userbrowse", "buddies"})
-        config.sections["transfers"]["downloaddir"] = config.data_folder_path
+        config.sections["transfers"]["downloaddir"] = DATA_FOLDER_PATH
 
         core.start()
-        core.downloads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -110,7 +120,7 @@ class DownloadsTest(TestCase):
         will be added at the end of the session.
         """
 
-        old_transfers = core.downloads._load_transfers_file(core.downloads.transfers_file_path)[:12]
+        old_transfers = core.downloads._load_transfers_file(TRANSFERS_FILE_PATH)[:12]
 
         saved_transfers = core.downloads._get_transfer_rows()[:12]
         self.assertEqual(old_transfers, saved_transfers)

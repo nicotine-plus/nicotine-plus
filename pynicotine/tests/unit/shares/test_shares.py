@@ -43,6 +43,8 @@ class SharesTest(TestCase):
 
     def setUp(self):
 
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
+
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
@@ -73,20 +75,15 @@ class SharesTest(TestCase):
                 audio_file.setframerate(44100)
                 audio_file.writeframes(struct.pack("h", 0) * num_frames)
 
+            self.addCleanup(os.remove, os.path.join(folder_path, basename))
+
         # Rescan shares
         core.shares.rescan_shares(rebuild=True, use_thread=False)
         core.shares.load_shares(core.shares.share_dbs, core.shares.share_db_paths)
 
 
     def tearDown(self):
-
         core.quit()
-
-        shutil.rmtree(DATA_FOLDER_PATH)
-
-        for folder_path, basename, _num_frames in AUDIO_FILES:
-            os.remove(os.path.join(folder_path, basename))
-
         self.assertIsNone(core.shares)
 
     def test_shares_scan(self):

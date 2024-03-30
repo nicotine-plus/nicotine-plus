@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from collections import UserDict
 from unittest import TestCase
@@ -26,6 +27,7 @@ from pynicotine.core import core
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
 SEARCH_MODE = "global"
 
@@ -36,8 +38,10 @@ class SearchTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
+
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
         core.init_components(enabled_components={"pluginhandler", "search", "shares"})
 

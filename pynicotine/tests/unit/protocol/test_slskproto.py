@@ -20,6 +20,7 @@
 import os
 import pickle
 import selectors
+import shutil
 import socket
 import sys
 
@@ -35,8 +36,8 @@ from pynicotine.events import events
 from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
 
-# Time (in s) needed for SoulseekNetworkThread main loop to run at least once
-SLSKPROTO_RUN_TIME = 1.5
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
+SLSKPROTO_RUN_TIME = 1.5  # Time (in s) needed for SoulseekNetworkThread main loop to run at least once
 
 
 class MockSocket(Mock):
@@ -80,8 +81,10 @@ class SoulseekNetworkTest(TestCase):
         # Windows doesn't accept mock_socket in select() calls
         selectors.DefaultSelector = MagicMock()
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
+
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
         core.init_components(enabled_components={"network_thread"})
 

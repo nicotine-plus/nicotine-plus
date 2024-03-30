@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -24,6 +25,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import Transfer
 
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 NUM_ALLOWED_NONE = 2
 
 
@@ -34,9 +36,10 @@ class GetUploadCandidateTest(TestCase):
     def setUp(self):
 
         self.token = 0
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
         core.init_components(enabled_components={
             "users", "pluginhandler", "shares", "statistics", "uploads", "buddies"}

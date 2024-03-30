@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -25,6 +26,11 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import TransferStatus
 
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+TRANSFERS_BASENAME = "uploads.json"
+TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+
 
 class UploadsTest(TestCase):
 
@@ -32,13 +38,16 @@ class UploadsTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
+
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
+
+        os.makedirs(DATA_FOLDER_PATH)
+        shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
         core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "buddies"})
-
         core.start()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -87,7 +96,7 @@ class UploadsTest(TestCase):
         saved to file.
         """
 
-        old_transfers = core.uploads._load_transfers_file(core.uploads.transfers_file_path)[2:]
+        old_transfers = core.uploads._load_transfers_file(TRANSFERS_FILE_PATH)[2:]
 
         saved_transfers = core.uploads._get_transfer_rows()
         self.assertEqual(old_transfers, saved_transfers)
