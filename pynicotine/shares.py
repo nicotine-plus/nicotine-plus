@@ -651,6 +651,7 @@ class Shares:
             PermissionLevel.BANNED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BANNED)
         }
         self.file_path_index = ()
+        self._scanner_process = None
 
         self.convert_shares()
         self.share_db_paths = [
@@ -685,8 +686,12 @@ class Shares:
         self.rescan_shares(init=True, rescan=rescan_startup)
 
     def _quit(self):
+
         self.close_shares(self.share_dbs)
         self.initialized = False
+
+        if self._scanner_process is not None:
+            self._scanner_process.terminate()
 
     def _server_login(self, msg):
         if msg.success:
@@ -994,9 +999,9 @@ class Shares:
     def rebuild_shares(self, use_thread=True):
         return self.rescan_shares(rebuild=True, use_thread=use_thread)
 
-    def process_scanner_messages(self, scanner, scanner_queue, emit_event):
+    def process_scanner_messages(self, scanner_queue, emit_event):
 
-        while scanner.is_alive():
+        while self._scanner_process.is_alive():
             # Cooldown
             time.sleep(0.05)
 
@@ -1022,6 +1027,7 @@ class Shares:
                 elif item == "initialized":
                     self.initialized = True
 
+        self._scanner_process = None
         return True
 
     def check_shares_available(self):
@@ -1062,22 +1068,22 @@ class Shares:
         events.emit("shares-preparing")
 
         share_groups = self.get_shared_folders()
-        scanner, scanner_queue = self.build_scanner_process(share_groups, init, rescan, rebuild)
-        scanner.start()
+        self._scanner_process, scanner_queue = self.build_scanner_process(share_groups, init, rescan, rebuild)
+        self._scanner_process.start()
 
         if use_thread:
             Thread(
-                target=self._process_scanner, args=(scanner, scanner_queue, events.emit_main_thread),
+                target=self._process_scanner, args=(scanner_queue, events.emit_main_thread),
                 name="ProcessShareScanner", daemon=True
             ).start()
             return None
 
-        return self._process_scanner(scanner, scanner_queue, events.emit)
+        return self._process_scanner(scanner_queue, events.emit)
 
-    def _process_scanner(self, scanner, scanner_queue, emit_event):
+    def _process_scanner(self, scanner_queue, emit_event):
 
         # Let the scanner process do its thing
-        successful = self.process_scanner_messages(scanner, scanner_queue, emit_event)
+        successful = self.process_scanner_messages(scanner_queue, emit_event)
         emit_event("shares-ready", successful)
 
         return successful

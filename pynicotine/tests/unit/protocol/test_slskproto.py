@@ -81,8 +81,6 @@ class SoulseekNetworkTest(TestCase):
         # Windows doesn't accept mock_socket in select() calls
         selectors.DefaultSelector = MagicMock()
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
@@ -104,6 +102,10 @@ class SoulseekNetworkTest(TestCase):
         events.process_thread_events()
         self.assertIsNone(core.portmapper)
         self.assertIsNone(core._network_thread)  # pylint: disable=protected-access
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):

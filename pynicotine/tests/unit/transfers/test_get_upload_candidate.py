@@ -36,7 +36,6 @@ class GetUploadCandidateTest(TestCase):
     def setUp(self):
 
         self.token = 0
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
 
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
@@ -48,7 +47,6 @@ class GetUploadCandidateTest(TestCase):
 
         core.users.privileged = {"puser1", "puser2"}
         core.uploads.transfers.clear()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -60,6 +58,10 @@ class GetUploadCandidateTest(TestCase):
         self.assertIsNone(core.statistics)
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def add_transfers(self, users, is_active=False):
 

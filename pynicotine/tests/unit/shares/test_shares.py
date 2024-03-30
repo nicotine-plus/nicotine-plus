@@ -43,8 +43,6 @@ class SharesTest(TestCase):
 
     def setUp(self):
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
@@ -84,6 +82,10 @@ class SharesTest(TestCase):
     def tearDown(self):
         core.quit()
         self.assertIsNone(core.shares)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_shares_scan(self):
         """Test a full shares scan."""

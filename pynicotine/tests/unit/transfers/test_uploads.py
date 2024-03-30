@@ -38,12 +38,12 @@ class UploadsTest(TestCase):
 
     def setUp(self):
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
-        os.makedirs(DATA_FOLDER_PATH)
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
+
         shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
         core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "buddies"})
@@ -58,6 +58,10 @@ class UploadsTest(TestCase):
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userbrowse)
         self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_uploads(self):
         """Test loading a uploads.json file."""

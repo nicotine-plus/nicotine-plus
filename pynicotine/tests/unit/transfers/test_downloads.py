@@ -40,15 +40,15 @@ class DownloadsTest(TestCase):
 
     def setUp(self):
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
-        os.makedirs(DATA_FOLDER_PATH)
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
+
         shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
 
-        core.init_components(enabled_components={"users", "shares", "downloads", "userbrowse", "buddies"})
+        core.init_components(enabled_components={"users", "downloads", "userbrowse", "buddies"})
         config.sections["transfers"]["downloaddir"] = DATA_FOLDER_PATH
 
         core.start()
@@ -58,10 +58,13 @@ class DownloadsTest(TestCase):
         core.quit()
 
         self.assertIsNone(core.users)
-        self.assertIsNone(core.shares)
         self.assertIsNone(core.downloads)
         self.assertIsNone(core.userbrowse)
         self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_downloads(self):
         """Test loading a downloads.json file."""

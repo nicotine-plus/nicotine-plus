@@ -33,13 +33,13 @@ class ConfigTest(TestCase):
 
     def setUp(self):
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
-
         default_config_path = os.path.join(CURRENT_FOLDER_PATH, "config")
-        os.makedirs(DATA_FOLDER_PATH)
+
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
+
         shutil.copy(default_config_path, config.config_file_path)
 
         core.init_components(enabled_components={})
@@ -47,6 +47,10 @@ class ConfigTest(TestCase):
     def tearDown(self):
         core.quit()
         self.assertFalse(config.sections)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_config(self):
         """Test loading a config file."""

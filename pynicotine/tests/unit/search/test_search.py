@@ -38,8 +38,6 @@ class SearchTest(TestCase):
 
     def setUp(self):
 
-        self.addCleanup(shutil.rmtree, DATA_FOLDER_PATH)
-
         config.data_folder_path = DATA_FOLDER_PATH
         config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
@@ -52,6 +50,10 @@ class SearchTest(TestCase):
         self.assertIsNone(core.pluginhandler)
         self.assertIsNone(core.search)
         self.assertIsNone(core.shares)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_do_search(self):
         """Test the do_search function, including the outgoing search term and
