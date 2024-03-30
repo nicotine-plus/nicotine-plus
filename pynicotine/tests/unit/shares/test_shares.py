@@ -81,7 +81,6 @@ class SharesTest(TestCase):
         core.shares.rescan_shares(rebuild=True, use_thread=False)
         core.shares.load_shares(core.shares.share_dbs, core.shares.share_db_paths)
 
-
     def tearDown(self):
         core.quit()
         self.assertIsNone(core.shares)
