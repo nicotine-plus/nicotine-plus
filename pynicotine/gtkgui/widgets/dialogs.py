@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -61,8 +63,14 @@ class Dialog(Window):
         Accelerator("Escape", widget, self.close)
 
         if GTK_API_VERSION == 3:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                # Workaround for dialogs being centered at (0,0) coords on startup
+                position = Gtk.WindowPosition.CENTER
+            else:
+                position = Gtk.WindowPosition.CENTER_ON_PARENT
+
+            widget.set_position(position)                    # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
 
         if content_box:
             content_box.set_vexpand(True)
