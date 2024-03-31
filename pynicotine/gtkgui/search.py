@@ -670,7 +670,6 @@ class Search:
 
     def clear(self):
         self.clear_model(stored_results=True)
-        self.window.update_title()
 
     def destroy(self):
 
@@ -682,6 +681,7 @@ class Search:
 
         self.tree_view.destroy()
         self.__dict__.clear()
+        self.window.update_title()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
