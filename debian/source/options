@@ -1,1 +1,2 @@
+compression = "gzip"
 extend-diff-ignore = "(^|/)(.*)$"
