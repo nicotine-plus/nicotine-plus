@@ -670,6 +670,7 @@ class Search:
 
     def clear(self):
         self.clear_model(stored_results=True)
+        self.window.update_title()
 
     def destroy(self):
 
