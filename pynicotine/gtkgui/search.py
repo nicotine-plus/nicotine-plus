@@ -680,8 +680,8 @@ class Search:
             combobox.destroy()
 
         self.tree_view.destroy()
-        self.__dict__.clear()
         self.window.update_title()
+        self.__dict__.clear()
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
