@@ -36,6 +36,7 @@ parts:
   nicotine-plus:
     plugin: python
     source: .
+    python-packages: []
     parse-info: [share/metainfo/org.nicotine_plus.Nicotine.appdata.xml]
     override-pull: |
       craftctl default
