@@ -73,6 +73,7 @@
   <url type="homepage">https://nicotine-plus.org/</url>
   <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <url type="translate">https://nicotine-plus.org/doc/TRANSLATIONS</url>
+  <url type="vcs-browser">https://github.com/nicotine-plus/nicotine-plus</url>
   <developer_name>Nicotine+ Team</developer_name>  <!-- deprecated in AppStream 1.0 (2023) -->
   <developer id="org.nicotine-plus">
     <name>Nicotine+ Team</name>
