@@ -138,6 +138,10 @@ def set_visual_settings():
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
+    elif os.environ.get("GDK_BACKEND") == "broadway":
+        # Hide minimize/maximize buttons in Broadway backend
+        GTK_SETTINGS.props.gtk_decoration_layout = ":close"
+
     set_default_font_size()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])

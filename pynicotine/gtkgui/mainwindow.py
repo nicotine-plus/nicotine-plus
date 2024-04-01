@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -295,6 +296,8 @@ class MainWindow(Window):
 
     def init_window(self):
 
+        is_broadway_backend = (os.environ.get("GDK_BACKEND") == "broadway")
+
         # Set main window title and icon
         self.set_title(pynicotine.__application_name__)
         self.widget.set_default_icon_name(pynicotine.__application_id__)
@@ -313,8 +316,12 @@ class MainWindow(Window):
             else:
                 self.widget.move(x_pos, y_pos)
 
+        # Hide close button in Broadway backend
+        if is_broadway_backend:
+            self.widget.set_deletable(False)
+
         # Maximize main window if necessary
-        if sys.platform != "darwin" and config.sections["ui"]["maximized"]:
+        if (sys.platform != "darwin" and config.sections["ui"]["maximized"]) or is_broadway_backend:
             self.widget.maximize()
 
         # Auto-away mode
