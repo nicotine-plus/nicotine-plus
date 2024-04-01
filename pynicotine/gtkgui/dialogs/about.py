@@ -352,14 +352,9 @@ Copyright (c) 2021-2023 Mat (mathiascode)
 Copyright (c) 2016–2021 Bowtie AB
 <a href="https://github.com/madebybowtie/FlagKit">https://github.com/madebybowtie/FlagKit</a>""",
 
-        """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
+        """<b>Country data licensed under the CC-BY-SA-4.0 License.</b>
 Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.
-This program includes IP2Location LITE data available from:
-<a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
-
-        """<b>Country database reader licensed under the MIT License.</b>
-Copyright (c) 2017 IP2Location.com
-<a href="https://github.com/chrislim2888/IP2Location-Python">https://github.com/chrislim2888/IP2Location-Python</a>"""]
+Nicotine+ uses the IP2Location LITE database for <a href="https://lite.ip2location.com">IP geolocation</a>."""]
 
     def __init__(self, application):
 

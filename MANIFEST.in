@@ -3,6 +3,7 @@
 
 include *.md
 recursive-include data *.in
+recursive-include data *.py
 recursive-include doc *
 recursive-include po *
 recursive-include pynicotine *

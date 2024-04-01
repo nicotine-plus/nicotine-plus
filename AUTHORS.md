@@ -165,17 +165,12 @@
  - tinytag licensed under the MIT License.  
    Copyright (c) 2014–2023 Tom Wallroth  
    Copyright (c) 2021-2023 Mat (mathiascode)  
-   https://github.com/devsnd/tinytag
+   [https://github.com/devsnd/tinytag](https://github.com/devsnd/tinytag)
 
  - Country flags licensed under the MIT License.  
    Copyright (c) 2016–2021 Bowtie AB  
-   https://github.com/madebybowtie/FlagKit
+   [https://github.com/madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit)
 
- - Country database licensed under the CC-BY-SA-4.0 License.  
+ - Country data licensed under the CC-BY-SA-4.0 License.  
    Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
-   This program includes IP2Location LITE data available from:  
-   https://lite.ip2location.com
-
- - Country database reader licensed under the MIT License.  
-   Copyright (c) 2017 IP2Location.com  
-   https://github.com/chrislim2888/IP2Location-Python
+   Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
