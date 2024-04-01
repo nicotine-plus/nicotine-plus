@@ -626,7 +626,7 @@ class Transfers:
 
             return False
 
-        expand_allowed = self.pending_parent_rows_timer_id is None
+        expand_allowed = self.pending_parent_rows_timer_id is not None
         expand_user = False
         expand_folder = False
         user_iterator = None
