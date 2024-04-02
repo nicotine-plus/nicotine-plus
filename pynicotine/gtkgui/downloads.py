@@ -188,8 +188,7 @@ class Downloads(Transfers):
                 # Prioritize finished downloads
                 break
 
-        if folder_path:
-            open_folder_path(folder_path)
+        open_folder_path(folder_path)
 
     def on_open_file(self, *_args):
 
