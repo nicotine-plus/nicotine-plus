@@ -178,6 +178,8 @@ class Downloads(Transfers):
 
     def on_open_file_manager(self, *_args):
 
+        folder_path = None
+
         for transfer in self.selected_transfers:
             file_path = core.downloads.get_current_download_file_path(transfer)
             folder_path = os.path.dirname(file_path)
@@ -186,7 +188,8 @@ class Downloads(Transfers):
                 # Prioritize finished downloads
                 break
 
-        open_folder_path(folder_path)
+        if folder_path:
+            open_folder_path(folder_path)
 
     def on_open_file(self, *_args):
 
