@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2023-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,9 +17,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import glob
+import os
+import subprocess
+
 from setuptools import setup  # pylint: disable=import-error
 
-from pynicotine.i18n import build_translations
+
+def build_translations():
+    """Builds .mo translation files in the 'mo' folder of the project
+    repository."""
+
+    base_path = os.path.dirname(os.path.realpath(__file__))
+    locale_path = os.path.join(base_path, "pynicotine", "locale")
+
+    with open(os.path.join(base_path, "po", "LINGUAS"), encoding="utf-8") as file_handle:
+        languages = file_handle.read().splitlines()
+
+    for language_code in languages:
+        lc_messages_folder_path = os.path.join(locale_path, language_code, "LC_MESSAGES")
+        po_file_path = os.path.join(base_path, "po", f"{language_code}.po")
+        mo_file_path = os.path.join(lc_messages_folder_path, "nicotine.mo")
+
+        if not os.path.exists(lc_messages_folder_path):
+            os.makedirs(lc_messages_folder_path)
+
+        subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
+
+    # Merge translations into .desktop and appdata files
+    for desktop_file_path in glob.glob(os.path.join(base_path, "data", "*.desktop.in")):
+        subprocess.check_call(["msgfmt", "--desktop", f"--template={desktop_file_path}", "-d", "po",
+                               "-o", desktop_file_path[:-3]])
+
+    for appdata_file_path in glob.glob(os.path.join(base_path, "data", "*.appdata.xml.in")):
+        subprocess.check_call(["msgfmt", "--xml", f"--template={appdata_file_path}", "-d", "po",
+                               "-o", appdata_file_path[:-3]])
 
 
 if __name__ == "__main__":

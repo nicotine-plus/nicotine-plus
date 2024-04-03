@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,9 +23,6 @@ import subprocess
 from unittest import TestCase
 
 from pynicotine.i18n import BASE_PATH
-from pynicotine.i18n import LANGUAGES
-from pynicotine.i18n import LOCALE_PATH
-from pynicotine.i18n import build_translations
 
 
 class I18nTest(TestCase):
@@ -41,16 +38,3 @@ class I18nTest(TestCase):
                 ["msgfmt", "--check", po_file_path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
 
             self.assertFalse(error_output)
-
-    def test_build_translations(self):
-        """Verify that translations are built and installed properly."""
-
-        build_translations()
-        mo_file_paths = glob.glob(os.path.join(LOCALE_PATH, "**", "*.mo"), recursive=True)
-
-        for language_code, _language_name in LANGUAGES:
-            if language_code == "en":
-                # English is the default language
-                continue
-
-            self.assertIn(os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES", "nicotine.mo"), mo_file_paths)
