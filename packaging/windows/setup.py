@@ -55,7 +55,7 @@ TEMP_PATH = tempfile.mkdtemp()
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 BUILD_PATH = os.path.join(CURRENT_PATH, "build")
 PROJECT_PATH = os.path.abspath(os.path.join(CURRENT_PATH, "..", ".."))
-sys.path.append(PROJECT_PATH)
+sys.path.insert(0, PROJECT_PATH)
 
 import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
@@ -263,13 +263,12 @@ def add_ssl_certs():
 
 def add_translations():
 
-    from pynicotine.i18n import LANGUAGES           # noqa: E402  # pylint: disable=import-error
-    from pynicotine.i18n import build_translations  # noqa: E402  # pylint: disable=import-error
+    from setup import build_translations  # noqa: E402  # pylint: disable=import-self,no-name-in-module
     build_translations()
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
+        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
     )
 
 

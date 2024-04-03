@@ -25,7 +25,7 @@
             "name" : "nicotine-plus",
             "buildsystem" : "simple",
             "build-commands" : [
-                "pip3 install --no-deps --prefix=${FLATPAK_DEST} ."
+                "pip3 install --no-build-isolation --no-deps --prefix=${FLATPAK_DEST} ."
             ],
             "sources" : [
                 {
