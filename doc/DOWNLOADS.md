@@ -109,3 +109,12 @@ If you are using any of the package managers listed, you can install Nicotine+ u
 
 - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)]  
   for macOS 14 Sonoma or later
+
+### Package Managers
+
+If you are using any of the package managers listed, you can install Nicotine+ using them.
+
+| Package Manager                                                     | Package Name    |
+|---------------------------------------------------------------------|-----------------|
+| [Homebrew Formulae](https://formulae.brew.sh/formula/nicotine-plus) | `nicotine-plus` |
+| [MacPorts](https://ports.macports.org/port/nicotine-plus/)          | `nicotine-plus` |
