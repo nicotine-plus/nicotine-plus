@@ -9,7 +9,8 @@
 *.po~
 
 # Translation Machine Object files
-pynicotine/locale/**/*
+*.mo
+pynicotine/locale/
 
 # Temporary test files
 pynicotine/tests/**/*temp_config*
