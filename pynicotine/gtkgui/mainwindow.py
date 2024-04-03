@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 import time
 
 from gi.repository import Gio
@@ -321,7 +320,7 @@ class MainWindow(Window):
             self.widget.set_deletable(False)
 
         # Maximize main window if necessary
-        if (sys.platform != "darwin" and config.sections["ui"]["maximized"]) or is_broadway_backend:
+        if config.sections["ui"]["maximized"] or is_broadway_backend:
             self.widget.maximize()
 
         # Auto-away mode
@@ -1234,18 +1233,6 @@ class MainWindow(Window):
 
         self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.user_status_label.set_text(_("Quitting..."))
-
-    def present(self):
-
-        super().present()
-
-        if sys.platform == "darwin":
-            # Workaround for window being unresizable when maximized once
-            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5898
-            GLib.idle_add(
-                self.widget.maximize if config.sections["ui"]["maximized"] else self.widget.unmaximize,
-                priority=GLib.PRIORITY_HIGH_IDLE
-            )
 
     def hide(self):
 
