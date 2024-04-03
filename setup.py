@@ -25,8 +25,7 @@ from setuptools import setup  # pylint: disable=import-error
 
 
 def build_translations():
-    """Builds .mo translation files in the 'mo' folder of the project
-    repository."""
+    """Builds .mo translation files in the 'locale' folder of the package."""
 
     base_path = os.path.dirname(os.path.realpath(__file__))
     locale_path = os.path.join(base_path, "pynicotine", "locale")
