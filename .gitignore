@@ -2,14 +2,14 @@
 *.desktop
 *.appdata.xml
 
-# Translation Machine Object files
-*.mo
-
 # Python byte code files
 *.pyc
 
 # Pot backup files
 *.po~
+
+# Translation Machine Object files
+pynicotine/locale/**/*
 
 # Temporary test files
 pynicotine/tests/**/*temp_config*

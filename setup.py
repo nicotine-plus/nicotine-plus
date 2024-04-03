@@ -35,12 +35,17 @@ def build_translations():
         languages = file_handle.read().splitlines()
 
     for language_code in languages:
-        lc_messages_folder_path = os.path.join(locale_path, language_code, "LC_MESSAGES")
+        lang_folder_path = os.path.join(locale_path, language_code)
+        lc_messages_folder_path = os.path.join(lang_folder_path, "LC_MESSAGES")
         po_file_path = os.path.join(base_path, "po", f"{language_code}.po")
         mo_file_path = os.path.join(lc_messages_folder_path, "nicotine.mo")
 
         if not os.path.exists(lc_messages_folder_path):
             os.makedirs(lc_messages_folder_path)
+
+        for path in (locale_path, lang_folder_path, lc_messages_folder_path):
+            with open(os.path.join(path, "__init__.py"), "wb") as file_handle:
+                pass
 
         subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
 
