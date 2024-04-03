@@ -199,7 +199,7 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
+        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="gdbus.exe")
 
     # This also includes all dlls required by GTK
     add_files(
