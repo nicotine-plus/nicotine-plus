@@ -104,6 +104,7 @@ jobs:
         with:
           msystem: MINGW64
           release: false
+          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext-tools
@@ -156,7 +157,9 @@ jobs:
           python3.11 -m venv venv
 
       - name: Install dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: |
+          brew update
+          venv/bin/python3 packaging/macos/dependencies.py
 
       - name: PEP 8 style checks
         run: venv/bin/python3 -m pycodestyle

@@ -94,6 +94,7 @@ jobs:
         with:
           msystem: MINGW64
           release: false
+          update: true
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext-tools
@@ -149,7 +150,9 @@ jobs:
           python3.11 -m venv venv
 
       - name: Install build dependencies
-        run: venv/bin/python3 packaging/macos/dependencies.py
+        run: |
+          brew update
+          venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
         run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
