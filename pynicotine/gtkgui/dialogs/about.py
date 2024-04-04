@@ -233,6 +233,7 @@ class About(Dialog):
  •  phlostically (2021)""",
 
         """<b>Estonian</b>
+ •  rimasx (2024)
  •  PriitUring (2023)""",
 
         """<b>Euskara</b>
