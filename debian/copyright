@@ -51,12 +51,8 @@ Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
-Files: pynicotine/external/ip2location.py
-Copyright: 2017 IP2Location.com
-           2021-2023 Nicotine+ Contributors
-License: Expat
-
-Files: pynicotine/external/ipcountrydb.bin
+Files: pynicotine/external/country_codes.py
+       pynicotine/external/ip_ranges.py
 Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,7 +22,7 @@ import os
 import subprocess
 
 
-def update_pot():
+def update_translation_template():
     """Update .pot translation template."""
 
     # Desktop files
@@ -45,4 +45,4 @@ def update_pot():
 
 
 if __name__ == "__main__":
-    update_pot()
+    update_translation_template()
