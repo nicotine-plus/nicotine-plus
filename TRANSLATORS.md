@@ -40,6 +40,7 @@
  - phlostically (2021)
 
 ## Estonian
+ - rimasx (2024)
  - PriitUring (2023)
 
 ## Euskara
