@@ -1,8 +1,8 @@
-nicotine (3.3.3-rc1) mantic; urgency=medium
+nicotine (3.3.3-rc2) mantic; urgency=medium
 
-  * Release candidate 1.
+  * Release candidate 2.
 
- -- Mat <mail@mathias.is>  Wed, 27 Mar 2024 23:47:58 +0200
+ -- Mat <mail@mathias.is>  Thu, 04 Apr 2024 18:17:39 +0300
 
 nicotine (3.3.2-1) mantic; urgency=medium
 
