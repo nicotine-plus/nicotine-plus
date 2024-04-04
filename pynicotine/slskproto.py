@@ -1190,6 +1190,7 @@ class NetworkThread(Thread):
 
         if not self._create_listen_socket():
             self._should_process_queue = False
+            events.emit_main_thread("set-connection-stats")  # Reset connection stats
             return
 
         self._portmapper = msg_obj.portmapper
