@@ -150,9 +150,7 @@ jobs:
           python3.11 -m venv venv
 
       - name: Install build dependencies
-        run: |
-          brew update
-          venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
         run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
