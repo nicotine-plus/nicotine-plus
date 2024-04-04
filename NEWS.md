@@ -37,7 +37,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * No icon in taskbar when running in background ([#2928](https://github.com/nicotine-plus/nicotine-plus/issues/2928))
  * Set 'Finished' status instead of 'Filtered' for finished transfers in case the directory had files matching download filtering pattern ([#2932](https://github.com/nicotine-plus/nicotine-plus/issues/2932))
  * Refresh Files button not working ([#2937](https://github.com/nicotine-plus/nicotine-plus/issues/2937))
- * Nictotine Hard fail trying to get pointer ([#2943](https://github.com/nicotine-plus/nicotine-plus/issues/2943))
+ * Nicotine Hard fail trying to get pointer ([#2943](https://github.com/nicotine-plus/nicotine-plus/issues/2943))
  * 3.3.2 - System Tray Icons Don't Appear ([#2944](https://github.com/nicotine-plus/nicotine-plus/issues/2944))
  * Sudden crash ([#2950](https://github.com/nicotine-plus/nicotine-plus/issues/2950))
  * bug on checking transfers ([#2953](https://github.com/nicotine-plus/nicotine-plus/issues/2953))
