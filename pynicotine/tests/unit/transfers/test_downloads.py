@@ -32,6 +32,7 @@ CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
 DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
 TRANSFERS_BASENAME = "downloads.json"
 TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+SAVED_TRANSFERS_FILE_PATH = os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME)
 
 
 class DownloadsTest(TestCase):
@@ -124,8 +125,9 @@ class DownloadsTest(TestCase):
         """
 
         old_transfers = core.downloads._load_transfers_file(TRANSFERS_FILE_PATH)[:12]
+        core.downloads._save_transfers()
+        saved_transfers = core.downloads._load_transfers_file(SAVED_TRANSFERS_FILE_PATH)[:12]
 
-        saved_transfers = core.downloads._get_transfer_rows()[:12]
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_queue_download(self):

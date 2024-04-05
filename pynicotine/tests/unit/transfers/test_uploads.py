@@ -30,6 +30,7 @@ CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
 DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
 TRANSFERS_BASENAME = "uploads.json"
 TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+SAVED_TRANSFERS_FILE_PATH = os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME)
 
 
 class UploadsTest(TestCase):
@@ -101,8 +102,9 @@ class UploadsTest(TestCase):
         """
 
         old_transfers = core.uploads._load_transfers_file(TRANSFERS_FILE_PATH)[2:]
+        core.uploads._save_transfers()
+        saved_transfers = core.uploads._load_transfers_file(SAVED_TRANSFERS_FILE_PATH)
 
-        saved_transfers = core.uploads._get_transfer_rows()
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_push_upload(self):

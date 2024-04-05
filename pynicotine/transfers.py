@@ -477,20 +477,31 @@ class Transfers:
 
     # Saving #
 
-    def _get_transfer_rows(self):
+    def _iter_transfer_rows(self):
         """Get a list of transfers to dump to file."""
-        return [
-            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
-             transfer.current_byte_offset, transfer.file_attributes]
-            for transfer in self.transfers.values()
-        ]
+        for transfer in self.transfers.values():
+            yield [
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+                transfer.current_byte_offset, transfer.file_attributes
+            ]
 
     def _save_transfers_callback(self, file_handle):
 
-        # We can't use indent=0 to add line breaks, since Python's C-based json encoder doesn't
-        # support this. Add them using replace() instead.
-        file_handle.write(
-            json.dumps(self._get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
+        # Dump every transfer to the file individually to avoid large memory usage
+        json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+        is_first_item = True
+
+        file_handle.write("[")
+
+        for row in self._iter_transfer_rows():
+            if is_first_item:
+                is_first_item = False
+            else:
+                file_handle.write(",\n")
+
+            file_handle.write(json_encoder.encode(row))
+
+        file_handle.write("]")
 
     def _save_transfers(self):
         """Save list of transfers."""
