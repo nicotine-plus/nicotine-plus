@@ -14,6 +14,7 @@
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
+        <property name="vexpand">True</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkLabel" id="current_session_label">

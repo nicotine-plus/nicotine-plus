@@ -383,7 +383,6 @@ Nicotine+ uses the IP2Location LITE database for <a href="https://lite.ip2locati
             title=_("About"),
             width=425,
             height=540,
-            resizable=False,
             show_title=False
         )
 

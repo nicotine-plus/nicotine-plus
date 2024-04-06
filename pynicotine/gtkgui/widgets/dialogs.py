@@ -35,7 +35,7 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, show_title=True, show_title_buttons=True):
+                 modal=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
@@ -56,7 +56,6 @@ class Dialog(Window):
             destroy_with_parent=True,
             default_width=width,
             default_height=height,
-            resizable=resizable,
             child=container
         )
         super().__init__(widget)
@@ -174,11 +173,6 @@ class Dialog(Window):
 
         # Hide the dialog
         self.widget.set_visible(False)
-
-        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
-        # appearing in window peek on Windows
-        self.widget.unrealize()
-
         return True
 
     def _set_dialog_properties(self):
@@ -189,6 +183,10 @@ class Dialog(Window):
             self.widget.connect("delete-event", self._on_close_request)
 
         self.widget.connect("show", self._on_show)
+
+        # Make all dialogs resizable to fix positioning issue.
+        # Workaround for https://gitlab.gnome.org/GNOME/mutter/-/issues/3099
+        self.widget.set_resizable(True)
 
         if self.parent:
             self.widget.set_transient_for(self.parent.widget)

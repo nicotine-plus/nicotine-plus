@@ -73,8 +73,7 @@ class Statistics(Dialog):
             content_box=self.container,
             show_callback=self.on_show,
             title=_("Transfer Statistics"),
-            width=425,
-            resizable=False
+            width=425
         )
 
         events.connect("update-stat", self.update_stat)
