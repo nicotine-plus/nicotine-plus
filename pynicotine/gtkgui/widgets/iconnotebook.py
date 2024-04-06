@@ -271,6 +271,8 @@ class IconNotebook:
         self.parent_page = parent_page
         self.switch_page_callback = switch_page_callback
         self.reorder_page_callback = reorder_page_callback
+        self.switch_page_handler = None
+        self.reorder_page_handler = None
 
         self.pages = {}
         self.tab_labels = {}
@@ -279,7 +281,7 @@ class IconNotebook:
         self.scroll_x = self.scroll_y = 0
         self.should_focus_page = True
 
-        self.widget = Gtk.Notebook(scrollable=True, show_border=False, visible=True)
+        self.widget = Gtk.Notebook(enable_popup=False, scrollable=True, show_border=False, visible=True)
 
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
@@ -342,12 +344,36 @@ class IconNotebook:
             self.pages_button.set_menu_model(self.popup_menu_pages.model)
 
     def destroy(self):
+
+        if self.switch_page_handler is not None:
+            self.widget.disconnect(self.switch_page_handler)
+
+        if self.reorder_page_handler is not None:
+            self.widget.disconnect(self.reorder_page_handler)
+
+        for i in reversed(range(self.get_n_pages())):
+            page = self.get_nth_page(i)
+            self.remove_page(page)
+
         self.__dict__.clear()
 
     def grab_focus(self):
         self.widget.grab_focus()
 
     # Tabs #
+
+    def freeze(self):
+        """Use when adding/removing many tabs at once, to stop unnecessary updates."""
+
+        self.widget.set_visible(False)
+        self.widget.set_show_tabs(False)
+        self.widget.set_scrollable(False)
+
+    def unfreeze(self):
+
+        self.widget.set_visible(True)
+        self.widget.set_show_tabs(True)
+        self.widget.set_scrollable(True)
 
     def get_tab_label(self, page):
         return self.tab_labels.get(page)
@@ -384,7 +410,8 @@ class IconNotebook:
             # Open new tab adjacent to current tab
             position = self.widget.get_current_page() + 1
 
-        self.widget.insert_page(page, tab_label.container, position)
+        self.widget.insert_page(page, None, position)
+        self.widget.set_tab_label(page, tab_label.container)  # Tab label widget leaks when passed to insert_page()
         self.set_tab_reorderable(page, True)
         self.parent.set_visible(True)
 
@@ -415,7 +442,7 @@ class IconNotebook:
             # Allow for restoring page after closing it
             self.recently_removed_pages.append(page_args)
 
-        if self.get_n_pages() <= 0:
+        if self.parent_page is not None and self.get_n_pages() <= 0:
             if self.window.current_page_id == self.parent_page.id:
                 self.window.notebook.grab_focus()
 
@@ -605,9 +632,9 @@ class IconNotebook:
 
     def connect_signals(self):
 
-        self.widget.connect("page-reordered", self.on_reorder_page)
+        self.reorder_page_handler = self.widget.connect("page-reordered", self.on_reorder_page)
+        self.switch_page_handler = self.widget.connect("switch-page", self.on_switch_page)
         self.widget.connect("page-removed", self.on_remove_page)
-        self.widget.connect("switch-page", self.on_switch_page)
 
         if self.parent_page is None:
             # Show active page and focus default widget
@@ -630,7 +657,9 @@ class IconNotebook:
 
     def _on_remove_all_pages(self, *args):
 
+        self.freeze()
         self.on_remove_all_pages(args)
+        self.unfreeze()
 
         # Don't allow restoring tabs after removing all
         self.recently_removed_pages.clear()

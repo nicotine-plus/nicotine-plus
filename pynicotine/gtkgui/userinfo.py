@@ -81,6 +81,7 @@ class UserInfos(IconNotebook):
             ("ignore-user", self.ignore_unignore_user),
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
+            ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
             ("server-login", self.on_focus),
@@ -96,6 +97,9 @@ class UserInfos(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
         self.userinfo_combobox.destroy()

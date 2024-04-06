@@ -74,11 +74,21 @@ class PrivateChats(IconNotebook):
             ("private-chat-completions", self.update_completions),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
+            ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
             ("server-login", self.server_login),
+            ("start", self.start),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+        self.freeze()
+
+    def start(self):
+        self.unfreeze()
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 

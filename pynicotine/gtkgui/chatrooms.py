@@ -91,11 +91,13 @@ class ChatRooms(IconNotebook):
             ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
             ("leave-room", self.leave_room),
+            ("quit", self.quit),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
             ("show-room", self.show_room),
+            ("start", self.start),
             ("user-country", self.user_country),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room),
@@ -103,6 +105,14 @@ class ChatRooms(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+        self.freeze()
+
+    def start(self):
+        self.unfreeze()
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 

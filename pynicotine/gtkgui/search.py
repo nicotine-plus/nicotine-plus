@@ -120,6 +120,7 @@ class Searches(IconNotebook):
             ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
             ("file-search-response", self.file_search_response),
+            ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
             ("server-login", self.on_focus),
@@ -128,6 +129,9 @@ class Searches(IconNotebook):
             events.connect(event_name, callback)
 
         self.populate_search_history()
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 

@@ -65,6 +65,7 @@ class Interests:
         self.toolbar_start_content = window.interests_title
         self.toolbar_end_content = window.interests_end
         self.toolbar_default_widget = None
+        self.popup_menus = []
 
         self.populated_recommends = False
 
@@ -180,6 +181,7 @@ class Interests:
             ("", None),
             ("#" + _("Remove"), self.on_remove_thing_i_like)
         )
+        self.popup_menus.append(popup)
 
         popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
@@ -188,6 +190,7 @@ class Interests:
             ("", None),
             ("#" + _("Remove"), self.on_remove_thing_i_dislike)
         )
+        self.popup_menus.append(popup)
 
         popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
@@ -197,11 +200,13 @@ class Interests:
             ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.recommendations_list_view, "item"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
+        self.popup_menus.append(popup)
 
-        UserPopupMenu(
+        popup = UserPopupMenu(
             self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
             tab_name="interests"
         )
+        self.popup_menus.append(popup)
 
         for event_name, callback in (
             ("add-dislike", self.add_thing_i_hate),
@@ -222,6 +227,9 @@ class Interests:
             events.connect(event_name, callback)
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.likes_list_view.destroy()
         self.dislikes_list_view.destroy()

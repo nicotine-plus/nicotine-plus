@@ -1051,8 +1051,8 @@ class MainWindow(Window):
 
     def create_log_context_menu(self):
 
-        popup_menu_log_categories = PopupMenu(self.application)
-        popup_menu_log_categories.add_items(
+        self.popup_menu_log_categories = PopupMenu(self.application)
+        self.popup_menu_log_categories.add_items(
             ("$" + _("Downloads"), "app.log-downloads"),
             ("$" + _("Uploads"), "app.log-uploads"),
             ("$" + _("Search"), "app.log-searches"),
@@ -1064,7 +1064,8 @@ class MainWindow(Window):
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log).add_items(
+        self.popup_menu_log_view = PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log)
+        self.popup_menu_log_view.add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
@@ -1073,7 +1074,7 @@ class MainWindow(Window):
             ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
             ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
             ("", None),
-            (">" + _("_Log Categories"), popup_menu_log_categories),
+            (">" + _("_Log Categories"), self.popup_menu_log_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_view)
         )
@@ -1253,5 +1254,11 @@ class MainWindow(Window):
 
         for tab in self.tabs.values():
             tab.destroy()
+
+        self.notebook.destroy()
+        self.log_search_bar.destroy()
+        self.log_view.destroy()
+        self.popup_menu_log_categories.destroy()
+        self.popup_menu_log_view.destroy()
 
         super().destroy()

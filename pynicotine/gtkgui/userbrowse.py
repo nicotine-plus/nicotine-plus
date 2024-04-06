@@ -86,6 +86,7 @@ class UserBrowses(IconNotebook):
         for event_name, callback in (
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
+            ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
             ("server-login", self.on_focus),
             ("shared-file-list-progress", self.shared_file_list_progress),
@@ -95,6 +96,9 @@ class UserBrowses(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 

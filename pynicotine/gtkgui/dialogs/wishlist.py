@@ -70,8 +70,8 @@ class WishList(Dialog):
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
-        popup = PopupMenu(application, self.list_view.widget)
-        popup.add_items(
+        self.popup_menu = PopupMenu(application, self.list_view.widget)
+        self.popup_menu.add_items(
             ("#" + _("_Search for Item"), self.on_search_wish),
             ("#" + _("Edit…"), self.on_edit_wish),
             ("", None),
@@ -88,6 +88,7 @@ class WishList(Dialog):
 
         self.list_view.destroy()
         self.completion_entry.destroy()
+        self.popup_menu.destroy()
 
         super().destroy()
 

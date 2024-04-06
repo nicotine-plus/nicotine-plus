@@ -3279,6 +3279,9 @@ class Preferences(Dialog):
 
     def on_switch_page(self, _listbox, row):
 
+        if row is None:
+            return
+
         page_id, page_class, _label, _icon_name = self.PAGE_IDS[row.get_index()]
         old_page = self.viewport.get_child()
 

@@ -1029,13 +1029,13 @@ class Application:
         if self.wishlist is not None:
             self.wishlist.destroy()
 
-        if self.tray_icon is not None:
-            self.tray_icon.destroy()
-
         if self.spell_checker is not None:
             self.spell_checker.destroy()
 
         if self.window is not None:
             self.window.destroy()
+
+        if self.tray_icon is not None:
+            self.tray_icon.destroy()
 
         self.__dict__.clear()

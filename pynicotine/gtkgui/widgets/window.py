@@ -84,4 +84,5 @@ class Window:
         self.widget.close()
 
     def destroy(self):
+        self.widget.destroy()
         self.__dict__.clear()
