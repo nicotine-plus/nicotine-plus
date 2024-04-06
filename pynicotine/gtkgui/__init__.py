@@ -132,9 +132,10 @@ def run(hidden, ci_mode, multi_instance):
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
         os.environ["GSK_RENDERER"] = "cairo"
 
-    elif sys.platform == "darwin" and "GSK_RENDERER" not in os.environ:
-        # Old GL renderer is faster on macOS. Use it for now.
+    elif "GSK_RENDERER" not in os.environ:
+        # Old GL renderer is faster for now. Make it the default.
         os.environ["GSK_RENDERER"] = "gl"
+        os.environ["GDK_DEBUG"] = ",".join(("gl-no-fractional", os.environ.get("GDK_DEBUG", "")))
 
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
