@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-04-05 05:02+0000\n"
-"Last-Translator: rimasx <riks_12@hot.ee>\n"
+"PO-Revision-Date: 2024-04-06 14:34+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
 "Language: fi\n"
@@ -950,7 +950,7 @@ msgid "File Properties"
 msgstr "Tiedoston ominaisuudet"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:75
-#, python-format
+#, fuzzy, python-format
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)"
 msgstr "Faili omadused (%(num)i / %(total)i  /  %(size)s  /  %(length)s)"
 
