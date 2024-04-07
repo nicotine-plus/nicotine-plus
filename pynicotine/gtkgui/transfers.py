@@ -409,7 +409,7 @@ class Transfers:
             self.pending_parent_rows_timer_id = events.schedule(
                 delay=1, callback=self._update_pending_parent_rows, repeat=True)
 
-            self.tree_view.expand_all_rows()
+            self.on_expand_tree()
 
         self.tree_view.redraw()
 
@@ -898,6 +898,9 @@ class Transfers:
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_expand_tree(self, *_args):
+
+        if not self.expand_button.get_visible():
+            return
 
         expanded = self.expand_button.get_active()
 
