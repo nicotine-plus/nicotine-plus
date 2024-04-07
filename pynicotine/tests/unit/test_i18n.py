@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import glob
 import os
 import subprocess
 
@@ -30,11 +29,17 @@ class I18nTest(TestCase):
     def test_po_files(self):
         """Verify that translation files don't contain errors."""
 
-        po_file_paths = glob.glob(os.path.join(BASE_PATH, "po", "*.po"))
-        self.assertTrue(po_file_paths)
+        po_file_found = False
 
-        for po_file_path in po_file_paths:
-            error_output = subprocess.check_output(
-                ["msgfmt", "--check", po_file_path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
+        with os.scandir(os.path.join(BASE_PATH, "po")) as entries:
+            for entry in entries:
+                if not entry.is_file() or not entry.name.endswith(".po"):
+                    continue
 
-            self.assertFalse(error_output)
+                po_file_found = True
+                error_output = subprocess.check_output(
+                    ["msgfmt", "--check", entry.path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
+
+                self.assertFalse(error_output)
+
+        self.assertTrue(po_file_found)

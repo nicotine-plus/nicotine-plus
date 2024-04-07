@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import glob
 import os
 import time
 
@@ -185,18 +184,23 @@ class ChatHistory(Popover):
 
     def load_users(self):
 
-        log_path = os.path.join(log.private_chat_folder_path, "*.log")
-        user_logs = glob.glob(encode_path(log_path))
+        try:
+            with os.scandir(encode_path(log.private_chat_folder_path)) as entries:
+                for entry in entries:
+                    if not entry.is_file() or not entry.name.endswith(b".log"):
+                        continue
 
-        for file_path in user_logs:
-            try:
-                username, latest_message, timestamp = self.load_user(file_path)
+                    try:
+                        username, latest_message, timestamp = self.load_user(entry.path)
 
-                if latest_message is not None:
-                    self.update_user(username, latest_message.strip(), timestamp)
+                    except OSError:
+                        continue
 
-            except OSError:
-                continue
+                    if latest_message is not None:
+                        self.update_user(username, latest_message.strip(), timestamp)
+
+        except OSError:
+            pass
 
     def remove_user(self, username):
 
