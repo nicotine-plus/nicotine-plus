@@ -25,7 +25,6 @@ from itertools import islice
 from operator import itemgetter
 from random import random
 from shlex import shlex
-from string import punctuation
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -57,7 +56,11 @@ class Search:
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
-    REMOVED_SEARCH_CHARACTERS = list(punctuation) + ["–", "—", "‐", "’", "“", "”", "…"]
+    REMOVED_SEARCH_CHARACTERS = [
+        "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";",
+        "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—",
+        "‐", "’", "“", "”", "…"
+    ]
     TRANSLATE_REMOVED_SEARCH_CHARACTERS = str.maketrans(dict.fromkeys(REMOVED_SEARCH_CHARACTERS, " "))
 
     def __init__(self):
