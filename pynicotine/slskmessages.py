@@ -19,6 +19,12 @@
 
 import zlib
 
+try:
+    # Try faster module import first, if available
+    from _md5 import md5  # pylint: disable=import-private-name
+except ImportError:
+    from hashlib import md5
+
 from locale import strxfrm
 from socket import inet_aton
 from socket import inet_ntoa
@@ -661,7 +667,6 @@ class Login(ServerMessage):
         self.is_supporter = None
 
     def make_network_message(self):
-        from hashlib import md5
 
         msg = bytearray()
         msg.extend(self.pack_string(self.username))

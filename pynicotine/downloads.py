@@ -29,6 +29,12 @@ import re
 import shutil
 import time
 
+try:
+    # Try faster module import first, if available
+    from _md5 import md5  # pylint: disable=import-private-name
+except ImportError:
+    from hashlib import md5
+
 from collections import defaultdict
 
 from pynicotine import slskmessages
@@ -702,7 +708,6 @@ class Downloads(Transfers):
         """Returns the path to store a download while it's still
         transferring."""
 
-        from hashlib import md5
         md5sum = md5()
         md5sum.update((virtual_path + username).encode("utf-8"))
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
