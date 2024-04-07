@@ -144,6 +144,9 @@ class Config:
 
     def load_config(self):
 
+        if self.config_loaded:
+            return
+
         from configparser import ConfigParser
 
         self._parser = ConfigParser(strict=False, interpolation=None)
