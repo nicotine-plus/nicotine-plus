@@ -16,15 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
 import os
-import signal
 import sys
 import threading
 
 import pynicotine
-from pynicotine import slskmessages
-from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -82,6 +78,7 @@ class Core:
             self._init_signal_handler()
 
         if "cli" in enabled_components:
+            from pynicotine.cli import cli
             cli.enable_logging()
 
         config.load_config()
@@ -184,6 +181,8 @@ class Core:
     def _init_signal_handler(self):
         """Handle Ctrl+C and "kill" exit gracefully."""
 
+        import signal
+
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
 
@@ -217,6 +216,7 @@ class Core:
     def start(self):
 
         if "cli" in self.enabled_components:
+            from pynicotine.cli import cli
             cli.enable_prompt()
 
         events.emit("start")
@@ -230,6 +230,7 @@ class Core:
     def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
 
         if not should_finish_uploads:
+            import signal
             log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
                 "program": pynicotine.__application_name__,
                 "version": pynicotine.__version__,
@@ -279,9 +280,11 @@ class Core:
             self.setup()
             return
 
+        from pynicotine.slskmessages import ServerConnect
+
         events.emit("enable-message-queue")
 
-        self.send_message_to_network_thread(slskmessages.ServerConnect(
+        self.send_message_to_network_thread(ServerConnect(
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface_name=config.sections["server"]["interface"],
@@ -291,7 +294,8 @@ class Core:
         ))
 
     def disconnect(self):
-        self.send_message_to_network_thread(slskmessages.ServerDisconnect())
+        from pynicotine.slskmessages import ServerDisconnect
+        self.send_message_to_network_thread(ServerDisconnect())
 
     def send_message_to_network_thread(self, message):
         """Sends message to the networking thread to inform about something."""
@@ -352,7 +356,9 @@ class UpdateChecker:
     @classmethod
     def retrieve_latest_version(cls):
 
+        import json
         from urllib.request import urlopen
+
         with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
             response_body = response.read().decode("utf-8")
 

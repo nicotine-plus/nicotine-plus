@@ -23,7 +23,6 @@
 import gc
 import mmap
 import os
-import shutil
 import stat
 import sys
 import time
@@ -719,6 +718,7 @@ class Shares:
             os.remove(db_path_encoded)
 
         elif os.path.isdir(db_path_encoded):
+            import shutil
             shutil.rmtree(db_path_encoded)
 
     def virtual2real(self, path):

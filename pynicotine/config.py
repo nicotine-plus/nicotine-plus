@@ -24,11 +24,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import configparser
 import os
 import sys
 
-from ast import literal_eval
 from collections import defaultdict
 
 from pynicotine.events import events
@@ -58,10 +56,10 @@ class Config:
         self.set_data_folder(data_folder_path)
 
         self.config_loaded = False
-        self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
         self.removed_options = {}
+        self._parser = None
 
     @staticmethod
     def get_user_folders():
@@ -146,6 +144,9 @@ class Config:
 
     def load_config(self):
 
+        from configparser import ConfigParser
+
+        self._parser = ConfigParser(strict=False, interpolation=None)
         log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
         self.defaults = {
             "server": {
@@ -558,10 +559,10 @@ class Config:
         self.create_config_folder()
         self.create_data_folder()
 
-        load_file(self.config_file_path, self.parse_config)
+        load_file(self.config_file_path, self._parse_config)
 
         # Update config values from file
-        self.set_config()
+        self._set_config()
 
         language = self.sections["ui"]["language"]
 
@@ -575,12 +576,12 @@ class Config:
 
         events.connect("quit", self._quit)
 
-    def parse_config(self, file_path):
+    def _parse_config(self, file_path):
         """Parses the config file."""
 
         with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
             file_handle.seek(0)
-            self.parser.read_file(file_handle)
+            self._parser.read_file(file_handle)
 
     def need_config(self):
 
@@ -590,13 +591,14 @@ class Config:
 
         return False
 
-    def set_config(self):
+    def _set_config(self):
         """Set config values parsed from file earlier."""
 
+        from ast import literal_eval
         from pynicotine.logfacility import log
 
-        for i in self.parser.sections():
-            for j, val in self.parser.items(i, raw=True):
+        for i in self._parser.sections():
+            for j, val in self._parser.items(i, raw=True):
 
                 # Check if config section exists in defaults
                 if i not in self.defaults and i not in self.removed_options:
@@ -738,8 +740,8 @@ class Config:
 
         self.config_loaded = True
 
-    def write_config_callback(self, file_path):
-        self.parser.write(file_path)
+    def _write_config_callback(self, file_path):
+        self._parser.write(file_path)
 
     def write_configuration(self):
 
@@ -748,29 +750,29 @@ class Config:
 
         # Write new config options to file
         for section, options in self.sections.items():
-            if not self.parser.has_section(section):
-                self.parser.add_section(section)
+            if not self._parser.has_section(section):
+                self._parser.add_section(section)
 
             for option, value in options.items():
                 if value is None:
                     value = ""
 
-                self.parser.set(section, option, str(value))
+                self._parser.set(section, option, str(value))
 
         # Remove legacy config options
         for section, options in self.removed_options.items():
-            if not self.parser.has_section(section):
+            if not self._parser.has_section(section):
                 continue
 
             for option in options:
-                self.parser.remove_option(section, option)
+                self._parser.remove_option(section, option)
 
         if not self.create_config_folder():
             return
 
         from pynicotine.logfacility import log
 
-        write_file_and_backup(self.config_file_path, self.write_config_callback, protect=True)
+        write_file_and_backup(self.config_file_path, self._write_config_callback, protect=True)
         log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
 
     def write_config_backup(self, file_path):
@@ -801,7 +803,9 @@ class Config:
 
     def _quit(self):
 
-        self.parser.clear()
+        if self._parser is not None:
+            self._parser.clear()
+
         self.sections.clear()
         self.defaults.clear()
         self.removed_options.clear()
