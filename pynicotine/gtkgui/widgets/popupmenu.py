@@ -164,7 +164,9 @@ class PopupMenu:
             action.connect(action_name, *item[1:])
 
         self.items[label] = menuitem
-        self.actions[label] = action
+
+        if action is not None:
+            self.actions[label] = action
 
         return menuitem
 

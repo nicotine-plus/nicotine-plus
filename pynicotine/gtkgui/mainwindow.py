@@ -1258,7 +1258,7 @@ class MainWindow(Window):
         self.notebook.destroy()
         self.log_search_bar.destroy()
         self.log_view.destroy()
-        self.popup_menu_log_categories.destroy()
         self.popup_menu_log_view.destroy()
+        self.popup_menu_log_categories.destroy()
 
         super().destroy()
