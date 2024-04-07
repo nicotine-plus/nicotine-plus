@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
-import string
 import time
 
 import gi.module
@@ -884,7 +882,7 @@ def verify_grouping_mode(mode):
 
 def create_grouping_menu(window, active_mode, callback):
 
-    action_id = "grouping-" + "".join(random.choice(string.digits) for _ in range(8))
+    action_id = f"grouping-{GLib.uuid_string_random()}"
     menu = Gio.Menu()
 
     menuitem = Gio.MenuItem.new(_("Ungrouped"), f"win.{action_id}::ungrouped")
