@@ -20,8 +20,8 @@
     </p>
   </description>
   <branding>
-    <color type="primary" scheme_preference="light">#ffdfc7</color>
-    <color type="primary" scheme_preference="dark">#733000</color>
+    <color type="primary" scheme_preference="light">#D4E0EE</color>
+    <color type="primary" scheme_preference="dark">#203651</color>
   </branding>
   <screenshots>
     <screenshot type="default">
