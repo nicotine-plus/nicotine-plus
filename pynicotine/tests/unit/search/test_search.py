@@ -131,7 +131,7 @@ class SearchTest(TestCase):
 
         results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
-        self.assertEqual(results, None)
+        self.assertIsNone(results)
 
         included_words = {"iso"}
         excluded_words = {"system"}
@@ -139,7 +139,7 @@ class SearchTest(TestCase):
 
         results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
-        self.assertEqual(results, None)
+        self.assertIsNone(results)
 
     def test_exclude_server_phrases(self):
         """Verify that results containing excluded phrases are not included."""

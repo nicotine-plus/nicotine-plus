@@ -43,6 +43,7 @@ def build_translations():
 
         for path in (locale_path, lang_folder_path, lc_messages_folder_path):
             with open(os.path.join(path, "__init__.py"), "wb") as file_handle:
+                # Create empty file
                 pass
 
         subprocess.check_call(["msgfmt", "--check", po_file_path, "-o", mo_file_path])
