@@ -44,7 +44,7 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 
 class TreeView:
 
-    def __init__(self, window, parent, columns, has_tree=False, multi_select=False, always_select=False,
+    def __init__(self, window, parent, columns, has_tree=False, multi_select=False,
                  persistent_sort=False, name=None, secondary_name=None, activate_row_callback=None,
                  focus_in_callback=None, select_row_callback=None, delete_accelerator_callback=None,
                  search_entry=None):
@@ -95,9 +95,6 @@ class TreeView:
         if multi_select:
             self.widget.set_rubber_banding(True)
             self._selection.set_mode(Gtk.SelectionMode.MULTIPLE)
-
-        elif always_select:
-            self._selection.set_mode(Gtk.SelectionMode.BROWSE)
 
         if activate_row_callback:
             self.widget.connect("row-activated", self.on_activate_row, activate_row_callback)

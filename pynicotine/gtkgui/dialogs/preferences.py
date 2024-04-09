@@ -2766,7 +2766,7 @@ class PluginsPage:
         self.plugin_description_view = TextView(self.plugin_description_view_container, editable=False,
                                                 pixels_below_lines=2)
         self.plugin_list_view = TreeView(
-            application.window, parent=self.plugin_list_container, always_select=True,
+            application.window, parent=self.plugin_list_container,
             activate_row_callback=self.on_row_activated, select_row_callback=self.on_select_plugin,
             columns={
                 # Visible columns
