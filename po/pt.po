@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-29 19:55+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2024-04-12 16:39+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pt/>\n"
 "Language: pt\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -33,9 +33,8 @@ msgstr ""
 "GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Cliente gráfico para a rede Soulseek"
+msgstr "Procurar no Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2182,14 +2181,12 @@ msgid "Copy _Folder Path"
 msgstr "Copiar_Caminho da Pasta"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
-msgstr "Pasta(s) & Subpasta(s) de Descargas"
+msgstr "_Pasta(s) & Subpasta(s) de Descargas"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
-msgstr "Descarregar Pasta(s) & Subpasta(s) Para…"
+msgstr "Descarregar Pasta(s) & Subpasta(s) _Para…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"

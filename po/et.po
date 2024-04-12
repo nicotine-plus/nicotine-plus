@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-04-09 00:25+0000\n"
+"PO-Revision-Date: 2024-04-12 11:02+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -4595,7 +4595,7 @@ msgstr "Kasutajanimi…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:58
 msgid "Search term…"
-msgstr "Otsingutermin…"
+msgstr "Otsingusõna…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:60
 msgid ""

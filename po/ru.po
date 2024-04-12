@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-29 19:55+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2024-04-12 16:30+0000\n"
+"Last-Translator: SnIPeRSnIPeR <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -33,9 +33,8 @@ msgstr ""
 "Soulseek;Nicotine;обмен;чат;обмен сообщениями;P2P;одноранговая сеть;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Графический клиент для сети Soulseek"
+msgstr "Просмотреть сеть Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -403,7 +402,7 @@ msgstr "Предложить _перевод"
 
 #: pynicotine/gtkgui/application.py:401
 msgid "_About Nicotine+"
-msgstr "_О программе"
+msgstr "_О Nicotine+"
 
 #: pynicotine/gtkgui/application.py:412
 msgid "_File"
@@ -769,7 +768,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/about.py:384
 msgid "About"
-msgstr "О"
+msgstr "О Nicotine+"
 
 #: pynicotine/gtkgui/dialogs/about.py:395
 msgid "Website"
@@ -975,11 +974,11 @@ msgstr "Изменить"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:276
 msgid "No one"
-msgstr "Никто"
+msgstr "Никому"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:277
 msgid "Everyone"
-msgstr "Все"
+msgstr "Всем"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:278
 #: pynicotine/gtkgui/dialogs/preferences.py:570
@@ -988,14 +987,14 @@ msgstr "Все"
 #: pynicotine/gtkgui/ui/buddies.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:1363
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:686
 msgid "Buddies"
-msgstr "Друзья"
+msgstr "Друзьям"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:279
 #: pynicotine/gtkgui/dialogs/preferences.py:571
 #: pynicotine/gtkgui/dialogs/preferences.py:696
 #: pynicotine/gtkgui/dialogs/preferences.py:733
 msgid "Trusted buddies"
-msgstr "Доверенные друзья"
+msgstr "Доверенным друзьям"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:286
 #: pynicotine/gtkgui/dialogs/preferences.py:789
@@ -1709,7 +1708,7 @@ msgstr "Личное сообщение от %(user)s"
 
 #: pynicotine/gtkgui/mainwindow.py:390 pynicotine/gtkgui/search.py:910
 msgid "Wishlist Results Found"
-msgstr "Найдено желаемого"
+msgstr "Найдено из списка желаемого"
 
 #: pynicotine/gtkgui/mainwindow.py:705 pynicotine/gtkgui/ui/mainwindow.ui:1034
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:662
@@ -2178,14 +2177,12 @@ msgid "Copy _Folder Path"
 msgstr "Скопировать путь до _каталога"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
-msgstr "Скачать каталог(и) и подкаталог(и)"
+msgstr "Скачать каталог и подкаталог(и)"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
-msgstr "Скачать каталог(и) и подкаталог(и) в…"
+msgstr "Скачать каталог и подкаталог(и) в…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"
@@ -2281,7 +2278,7 @@ msgstr "Удалить из списка друзей"
 
 #: pynicotine/gtkgui/userinfo.py:525
 msgid "Add _Buddy"
-msgstr "Добавить друга"
+msgstr "Добавить в друзья"
 
 #: pynicotine/gtkgui/userinfo.py:529
 msgid "Unban User"
@@ -2394,7 +2391,7 @@ msgstr "_Просмотр файлов"
 #: pynicotine/gtkgui/widgets/popupmenu.py:378
 #: pynicotine/gtkgui/widgets/popupmenu.py:422
 msgid "_Add Buddy"
-msgstr "Добавить друга"
+msgstr "_Добавить в друзья"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:387
 #: pynicotine/gtkgui/ui/userinfo.ui:639
@@ -4151,8 +4148,8 @@ msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
 msgstr ""
-"У вас нет привилегий. Привилегии не обязательны, но позволяют помещать ваши "
-"загрузки в очереди перед непривилегированными пользователями."
+"У вас нет привилегий. Привилегии не обязательны, но они позволяют вам "
+"скачивать файлы быстрее, в отличие от непривилегированных пользователей."
 
 #: pynicotine/users.py:360
 #, python-format
@@ -4208,7 +4205,7 @@ msgstr "Невозможно восстановить предыдущий фа�
 
 #: pynicotine/gtkgui/ui/buddies.ui:31 pynicotine/gtkgui/ui/mainwindow.ui:1254
 msgid "Add buddy…"
-msgstr "Добавить друга…"
+msgstr "Добавить в друзья…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:27
 msgid "Search activity log…"
@@ -4244,7 +4241,7 @@ msgstr "Стена комнаты"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:123
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создатели"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:162
 msgid "Translated by"
@@ -5363,7 +5360,7 @@ msgstr "Двойной щелчок для загрузок:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:143
 msgid "Allow users to send you any files:"
-msgstr "Разрешить пользователям отправлять вам любые файлы:"
+msgstr "Кому разрешается отправлять вам файлы:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:239
 #: pynicotine/gtkgui/ui/userbrowse.ui:45
@@ -5418,7 +5415,7 @@ msgstr "Проверить фильтры"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:608
 msgid "Unverified"
-msgstr "Сомнительный"
+msgstr "Не проверено"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
 msgid ""
@@ -5854,7 +5851,7 @@ msgstr "Упоминания в чате"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:352
 msgid "Wishlist results found"
-msgstr "Найдено желаемого"
+msgstr "Найдено из списка желаемого"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:395
 msgid "Restore the previously active main tab at startup"
