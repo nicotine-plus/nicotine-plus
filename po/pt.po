@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-04-10 23:02+0000\n"
-"Last-Translator: jose alberto matos <albmatos@gmail.com>\n"
+"PO-Revision-Date: 2024-04-12 16:39+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pt/>\n"
 "Language: pt\n"
@@ -2186,7 +2186,7 @@ msgstr "_Pasta(s) & Subpasta(s) de Descargas"
 
 #: pynicotine/gtkgui/userbrowse.py:297
 msgid "Download Folder & Subfolders _To…"
-msgstr "Descarregar Pasta(s) & Subpasta(s)_Para…"
+msgstr "Descarregar Pasta(s) & Subpasta(s) _Para…"
 
 #: pynicotine/gtkgui/userbrowse.py:321
 msgid "File Name"
