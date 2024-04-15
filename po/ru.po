@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-04-12 16:30+0000\n"
+"PO-Revision-Date: 2024-04-13 22:01+0000\n"
 "Last-Translator: SnIPeRSnIPeR <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -432,7 +432,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:524
 msgid "Wait for uploads to finish"
-msgstr "Ожидание завершения раздач"
+msgstr "Подождать завершения раздач"
 
 #: pynicotine/gtkgui/application.py:526
 msgid "Do you really want to exit?"
@@ -4253,7 +4253,7 @@ msgstr "Лицензия"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:5
 msgid "_Previous"
-msgstr "Предыдущий"
+msgstr "Назад"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:57
 msgid "Welcome to Nicotine+"
@@ -4308,9 +4308,10 @@ msgid ""
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Пользователи Soulseek смогут скачивать ваши раздачи. Внесите свой вклад в "
-"сеть Soulseek, поделившись своей собственной коллекцией и опубликовав то, "
-"что вы скачали у других пользователей."
+"Пользователи Soulseek смогут скачивать ваши файлы, если вы добавите их в "
+"общий доступ. Внесите свой вклад в сеть Soulseek, поделившись своей "
+"собственной коллекцией, а также опубликовав то, что вы скачали у других "
+"пользователей."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
 msgid "You are ready to use Nicotine+!"
@@ -4571,7 +4572,7 @@ msgstr "Очистить список загруженных файлов"
 
 #: pynicotine/gtkgui/ui/downloads.ui:154 pynicotine/gtkgui/ui/uploads.ui:154
 msgid "Clear Finished"
-msgstr "Очистить законченные"
+msgstr "Очистить завершённые"
 
 #: pynicotine/gtkgui/ui/downloads.ui:169
 msgid "Clear Specific Downloads"
@@ -5665,17 +5666,17 @@ msgid ""
 "Automatically rescans the contents of your shared folders on startup. If "
 "disabled, your shares are only updated when you manually initiate a rescan."
 msgstr ""
-"Автоматически пересканирует содержимое ваших общих каталогов при запуске. "
-"Если этот параметр отключен, ваши общие файлы обновляются только при "
-"пересканировании вручную."
+"Nicotine+ автоматически пересканирует содержимое ваших общих каталогов при "
+"запуске. Если этот параметр отключен, ваши общие файлы обновляются только "
+"при пересканировании вручную."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:39
 msgid "Rescan shares on startup"
-msgstr "Пересканировать общие файлы при запуске"
+msgstr "Пересканировать общие файлы при запуске программы"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:68
 msgid "Visible to everyone:"
-msgstr "Видно для всех:"
+msgstr "Показывать для всех:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
 msgid "Buddy shares"
@@ -5795,7 +5796,7 @@ msgstr "Использовать тёмный режим"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:70
 msgid "Use header bar"
-msgstr "Использовать панель заголовка"
+msgstr "Скрыть панель меню"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:98
 msgid "Display tray icon"
