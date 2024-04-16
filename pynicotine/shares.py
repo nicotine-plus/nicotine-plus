@@ -44,7 +44,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.external.tinytag import TinyTag
-from pynicotine.logfacility import LogLevel
 from pynicotine.logfacility import log
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
@@ -270,8 +269,7 @@ class Scanner:
 
             if self.rescan:
                 self.queue.put("rescanning")
-                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"),
-                               None, LogLevel.DEFAULT))
+                self.queue.put((_("Rebuilding shares…") if self.rebuild else _("Rescanning shares…"), None))
 
                 # Clear previous word index to prevent inconsistent state if the scanner fails
                 self.set_shares(word_index={})
@@ -289,8 +287,7 @@ class Scanner:
 
                 self.queue.put(
                     (_("Rescan complete: %(num)s folders found"),
-                     {"num": num_public_folders + num_buddy_folders + num_trusted_folders},
-                     LogLevel.DEFAULT)
+                     {"num": num_public_folders + num_buddy_folders + num_trusted_folders})
                 )
 
         except Exception:
@@ -302,7 +299,7 @@ class Scanner:
                   "report with this stack trace included: %(trace)s"), {
                     "dir": self.config.data_folder_path,
                     "trace": "\n" + format_exc()
-                }, LogLevel.DEFAULT
+                }
             ))
             self.queue.put(Exception("Scanning failed"))
 
@@ -549,11 +546,11 @@ class Scanner:
 
                         except OSError as error:
                             self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                           {"path": path, "error": error}, LogLevel.DEFAULT))
+                                           {"path": path, "error": error}))
 
             except OSError as error:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                               {"path": folder_path, "error": error}, LogLevel.DEFAULT))
+                               {"path": folder_path, "error": error}))
 
             self.streams[virtual_folder_path] = self.get_folder_stream(file_list)
 
@@ -586,7 +583,7 @@ class Scanner:
 
             except Exception as error:
                 self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
-                               {"path": file_path, "error": error}, LogLevel.DEFAULT))
+                               {"path": file_path, "error": error}))
 
         if tag is not None:
             bitrate = tag.bitrate
@@ -1012,8 +1009,8 @@ class Shares:
                     return False
 
                 if isinstance(item, tuple):
-                    template, args, log_level = item
-                    log.add(template, msg_args=args, level=log_level)
+                    template, args = item
+                    log.add(template, args)
 
                 elif isinstance(item, slskmessages.SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item

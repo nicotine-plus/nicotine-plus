@@ -236,7 +236,10 @@ class Events:
 
     def emit(self, event_name, *args, **kwargs):
 
-        callbacks = self._callbacks.get(event_name, [])
+        if event_name not in self._callbacks:
+            return
+
+        callbacks = self._callbacks[event_name]
 
         if event_name == "quit":
             # Event and log modules register callbacks first, but need to quit last
