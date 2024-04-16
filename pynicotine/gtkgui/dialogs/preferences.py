@@ -2669,7 +2669,7 @@ class NowPlayingPage:
 
         if self.lastfm_radio.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.command_label.set_text(_("Username;APIKEY:"))
+            self.command_label.set_text(_("Username;APIKEY"))
 
         elif self.mpris_radio.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
