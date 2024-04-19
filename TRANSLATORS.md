@@ -22,7 +22,7 @@
  - mathsped (2003–2004)
 
 ## Dutch
- - Toine Rademacher (2023-2024)
+ - Toine Rademacher (toineenzo) (2023-2024)
  - Han Boetes (hboetes) (2021–2024)
  - Kenny Verstraete (2009)
  - nince78 (2007)
