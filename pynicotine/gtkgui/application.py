@@ -129,6 +129,7 @@ class Application:
 
         for action_name, callback, parameter_type, is_enabled in (
             # General
+            ("disabled", None, None, False),
             ("connect", self.on_connect, None, True),
             ("disconnect", self.on_disconnect, None, False),
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
@@ -179,7 +180,10 @@ class Application:
                 parameter_type = GLib.VariantType(parameter_type)
 
             action = Gio.SimpleAction(name=action_name, parameter_type=parameter_type, enabled=is_enabled)
-            action.connect("activate", callback)
+
+            if callback:
+                action.connect("activate", callback)
+
             self.add_action(action)
 
         self.lookup_action("away-accel").cooldown_time = 0  # needed to prevent server ban
@@ -257,8 +261,14 @@ class Application:
         ):
             self._set_accels_for_action(action_name, accelerators)
 
+        numpad_accels = []
+
         for num in range(1, 10):
+            numpad_accels.append(f"<Alt>KP_{num}")
             self._set_accels_for_action(f"win.primary-tab-{num}", [f"<Primary>{num}", f"<Alt>{num}"])
+
+        # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
+        self._set_accels_for_action("app.disabled", numpad_accels)
 
         if GTK_API_VERSION == 3 or sys.platform != "darwin":
             return
