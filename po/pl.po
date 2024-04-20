@@ -6,17 +6,17 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-23 19:22+0000\n"
-"Last-Translator: alekksander <elum@o2.pl>\n"
+"PO-Revision-Date: 2024-04-20 15:17+0000\n"
+"Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -25,20 +25,19 @@ msgstr "Klient Soulseek"
 #: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/__init__.py:48
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:71
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Graficzny klient sieci P2P Soulseek"
+msgstr "Graficzny klient sieci peer-to-peer Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:10
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Graficzny klient dla sieci Soulseek"
+msgstr "Przeglądaj sieć Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:12
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotine+ jest graficznym klientem sieci P2P Soulseek."
+msgstr "Nicotine+ to graficzny klient sieci peer-to-peer Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:16
 msgid ""
@@ -46,9 +45,9 @@ msgid ""
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ ma na celu być przyjemną, wolną i otwartą (FOSS) alternatywą dla "
-"oficjalnego klienta Soulseek, zapewniając jednocześnie kompleksowy zestaw "
-"funkcji."
+"Nicotine+ ma na celu być lekką, przyjemną, darmową i otwartoźródłową (FOSS) "
+"alternatywą dla oficjalnego klienta Soulseek, oferując jednocześnie obszerny "
+"zestaw funkcji."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:44
@@ -332,7 +331,7 @@ msgstr "Pobieranie rozpoczęte: użytkownik %(user)s, plik %(file)s"
 #: pynicotine/gtkgui/__init__.py:77 pynicotine/gtkgui/__init__.py:86
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "Nie można znaleźć %s, zainstaluj go."
+msgstr "Nie można znaleźć %s, proszę zainstalować."
 
 #: pynicotine/gtkgui/__init__.py:144
 msgid "No graphical environment available, using headless (no GUI) mode"
@@ -1347,7 +1346,7 @@ msgstr "Komenda"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2487
 msgid "Add URL Handler"
-msgstr "Obsługa URL"
+msgstr "Dodaj obsługę adresu URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2488
 msgid "Enter the protocol and the command for the URL handler:"
@@ -1516,7 +1515,7 @@ msgstr "Wtyczki"
 #: pynicotine/gtkgui/dialogs/preferences.py:2913
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:11
 msgid "URL Handlers"
-msgstr "Obsługa URL"
+msgstr "Obsługi protokołów URL"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2938
 #: pynicotine/gtkgui/widgets/trayicon.py:107
@@ -2180,12 +2179,10 @@ msgid "Copy _Folder Path"
 msgstr "Kopiuj ścieżkę folderu"
 
 #: pynicotine/gtkgui/userbrowse.py:296
-#, fuzzy
 msgid "_Download Folder & Subfolders"
 msgstr "Pobierz folder i podfolder(y)"
 
 #: pynicotine/gtkgui/userbrowse.py:297
-#, fuzzy
 msgid "Download Folder & Subfolders _To…"
 msgstr "Pobierz folder i podfolder(y) do…"
 
