@@ -20,14 +20,18 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a rare crash when closing Browse Shares tab
  * Fixed a rare crash when initializing an upload
  * Fixed a rare crash when double-clicking a download
+ * Fixed an issue where passwords were not remembered after changing them
  * Fixed an issue where number of shared files was only updated on startup (regression in 3.3.2)
  * Fixed an issue where transfers displayed incorrect "User logged off" status in some cases
  * Fixed an issue where chat history entry completion no longer worked
  * Fixed an issue where UPnP did not work on MikroTik routers
  * Fixed missing button labels in certain dialogs
+ * Fixed some small memory leaks
  * Avoid selecting new transfers while tab is active
  * Remember selected folder when refreshing local shares
+ * Windows: Fixed Alt+1-9 tab shortcuts interfering with Alt codes
  * Snap: Fixed an issue where the file chooser displayed the wrong initial folder
+ * Snap: Fixed an issue where folders shared from external drives were unavailable after remounting
  * Termux: Fixed an issue where connecting to the server failed
 
 ### Issues closed on GitHub
