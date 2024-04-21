@@ -30,6 +30,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Avoid selecting new transfers while tab is active
  * Remember selected folder when refreshing local shares
  * Windows: Fixed Alt+1-9 tab shortcuts interfering with Alt codes
+ * Windows: Fixed window not minimizing when clicking task bar icon
  * Snap: Fixed an issue where the file chooser displayed the wrong initial folder
  * Snap: Fixed an issue where folders shared from external drives were unavailable after remounting
  * Termux: Fixed an issue where connecting to the server failed
@@ -48,6 +49,11 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * UPnP: Failed to forward external port 2234: HTTP Error 500: Internal Server Error ([#2955](https://github.com/nicotine-plus/nicotine-plus/issues/2955))
  * 0 Shares on Profile ([#2956](https://github.com/nicotine-plus/nicotine-plus/issues/2956))
  * Crash when double clicking download row ([#2961](https://github.com/nicotine-plus/nicotine-plus/issues/2961))
+ * Nicotine+ 3.3.2 permission denied to port 2234 on Fedora 39 ([#2968](https://github.com/nicotine-plus/nicotine-plus/issues/2968))
+ * This option is doesn't work on Nicotine+ 3.3.3 rc2 ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
+ * Num lock state is inverted ([#2977](https://github.com/nicotine-plus/nicotine-plus/issues/2977))
+ * Random crash ([#2982](https://github.com/nicotine-plus/nicotine-plus/issues/2982))
+ * Found another bug ([#2988](https://github.com/nicotine-plus/nicotine-plus/issues/2988))
 
 
 ## Version 3.3.2 (February 25, 2024)
