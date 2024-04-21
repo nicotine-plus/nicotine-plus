@@ -2581,7 +2581,7 @@ class ChangePassword(ServerMessage):
         return self.pack_string(self.password)
 
     def parse_network_message(self, message):
-        _pos, _password = self.unpack_string(message)
+        _pos, self.password = self.unpack_string(message)
 
 
 class PrivateRoomAddOperator(ServerMessage):
