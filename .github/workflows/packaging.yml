@@ -145,9 +145,9 @@ jobs:
 
       - name: Create Python virtual environment
         run: |
-          brew uninstall --ignore-dependencies python@3.11
-          brew install --overwrite python@3.11
-          python3.11 -m venv venv
+          brew uninstall --ignore-dependencies python@3.12
+          brew install --overwrite python@3.12
+          python3.12 -m venv venv
 
       - name: Install build dependencies
         run: venv/bin/python3 packaging/macos/dependencies.py
