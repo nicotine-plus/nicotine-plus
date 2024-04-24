@@ -105,9 +105,9 @@ class Plugin(BasePlugin):
 
         # if user has private folders, calculate what percentage is shared
         if num_pfolders == 0:
-            private_percentage = "0"
+            private_percentage = 0
         elif num_pfolders == num_folders:
-            private_percentage = "100"
+            private_percentage = 100
         else:
             private_percentage = round((num_pfolders / num_folders) * 100)
             
