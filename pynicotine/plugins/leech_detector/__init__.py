@@ -123,7 +123,8 @@ class Plugin(BasePlugin):
             self.probed_users[user] = "okay"
 
             if is_user_accepted:
-                self.log("User %s is okay, sharing %s files in %s folders with %s private. %s percent is locked", (user, num_files, num_folders, num_pfolders, private_percentage))
+                self.log("User %s is okay, sharing %s files in %s folders with %s private. %s percent is locked", 
+                         (user, num_files, num_folders, num_pfolders, private_percentage))
             else:
                 self.log("Buddy %s is sharing %s files in %s folders and %s private. %s is locked",
                          (user, num_files, num_folders, num_pfolders, private_percentage))
