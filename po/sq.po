@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2023-12-11 19:06+0000\n"
+"PO-Revision-Date: 2024-04-28 18:07+0000\n"
 "Last-Translator: W L <wl@mailhole.de>\n"
 "Language-Team: Albanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sq/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -255,7 +255,7 @@ msgstr ""
 #: pynicotine/downloads.py:360
 #, python-format
 msgid "Executed: %s"
-msgstr ""
+msgstr "U ekzekutua: %s"
 
 #: pynicotine/downloads.py:363 pynicotine/downloads.py:404
 #: pynicotine/nowplaying.py:308
@@ -337,7 +337,7 @@ msgstr "_Zgjidhu"
 
 #: pynicotine/gtkgui/application.py:331
 msgid "Soulseek _Privileges"
-msgstr ""
+msgstr "Privilegjet e Soulseek"
 
 #: pynicotine/gtkgui/application.py:337
 msgid "_Preferences"
@@ -362,11 +362,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:371 pynicotine/gtkgui/application.py:427
 msgid "_Rescan Shares"
-msgstr ""
+msgstr "_Riskano ndarjet"
 
 #: pynicotine/gtkgui/application.py:372 pynicotine/gtkgui/application.py:429
 msgid "Configure _Shares"
-msgstr ""
+msgstr "Konfiguro _ndarjet"
 
 #: pynicotine/gtkgui/application.py:394
 msgid "_Keyboard Shortcuts"
@@ -378,7 +378,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:396
 msgid "_Transfer Statistics"
-msgstr ""
+msgstr "Statistikat e _transferit"
 
 #: pynicotine/gtkgui/application.py:398
 msgid "Report a _Bug"
@@ -390,7 +390,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:401
 msgid "_About Nicotine+"
-msgstr ""
+msgstr "_Rreth Nicotine+"
 
 #: pynicotine/gtkgui/application.py:412
 msgid "_File"
@@ -398,7 +398,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:413
 msgid "_Shares"
-msgstr ""
+msgstr "_Ndarjet"
 
 #: pynicotine/gtkgui/application.py:414 pynicotine/gtkgui/application.py:431
 msgid "_Help"
@@ -467,7 +467,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:579
 msgid "Invalid Password"
-msgstr ""
+msgstr "Fjalkalim i palejuar"
 
 #: pynicotine/gtkgui/application.py:580
 #, python-format
@@ -478,7 +478,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/application.py:589
 msgid "Change _Login Details"
-msgstr ""
+msgstr "Ndrysho detajet e hyrjës"
 
 #: pynicotine/gtkgui/application.py:756
 msgid "Message Downloading Users"
@@ -577,7 +577,7 @@ msgstr "Besuar"
 
 #: pynicotine/gtkgui/buddies.py:120
 msgid "Last Seen"
-msgstr ""
+msgstr "Pare se fundmi"
 
 #: pynicotine/gtkgui/buddies.py:126
 msgid "Note"
@@ -618,7 +618,7 @@ msgstr "Hiq"
 
 #: pynicotine/gtkgui/buddies.py:332
 msgid "Never seen"
-msgstr ""
+msgstr "Parë: asnjeherë"
 
 #: pynicotine/gtkgui/buddies.py:500
 msgid "Add User Note"
@@ -692,11 +692,11 @@ msgstr "Kopju linkun"
 
 #: pynicotine/gtkgui/chatrooms.py:544
 msgid "View Room Log"
-msgstr ""
+msgstr "Shiko logun e dhomës"
 
 #: pynicotine/gtkgui/chatrooms.py:545
 msgid "Delete Room Log…"
-msgstr ""
+msgstr "Fshijë logun e dhomës"
 
 #: pynicotine/gtkgui/chatrooms.py:547 pynicotine/gtkgui/privatechat.py:365
 msgid "Clear Message View"
@@ -787,7 +787,7 @@ msgstr ""
 #: pynicotine/gtkgui/uploads.py:45 pynicotine/gtkgui/userbrowse.py:258
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:113
 msgid "Folder"
-msgstr ""
+msgstr "Dosja"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:128
 msgid "_Finish"
@@ -885,7 +885,7 @@ msgstr "Shto…"
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:107
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:123
 msgid "Edit…"
-msgstr ""
+msgstr "Ndrysho…"
 
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:351
 #, python-format
@@ -1023,7 +1023,7 @@ msgstr "Rivazhdo"
 #: pynicotine/gtkgui/dialogs/preferences.py:293
 #: pynicotine/gtkgui/dialogs/preferences.py:796
 msgid "Browse Folder"
-msgstr ""
+msgstr "Eksploro dosjen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:310
 msgid ""
@@ -1325,7 +1325,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2516
 msgid "Edit Command"
-msgstr ""
+msgstr "Ndrysho komanden"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2517
 #, python-format
@@ -1334,7 +1334,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2672
 msgid "Username;APIKEY:"
-msgstr ""
+msgstr "Perdoruesi;APIKEY:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2676
 msgid ""
@@ -1390,7 +1390,7 @@ msgstr "Album"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2707
 msgid "Track Number"
-msgstr ""
+msgstr "Numri i kenges"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2709
 msgid "Year"
@@ -1424,7 +1424,7 @@ msgstr "Rrjeti"
 #: pynicotine/gtkgui/dialogs/preferences.py:2901
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:28
 msgid "User Interface"
-msgstr ""
+msgstr "Interface e perdoruesit"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2902
 #: pynicotine/plugins/core_commands/__init__.py:30
@@ -1626,7 +1626,7 @@ msgstr "Pëlqimet"
 
 #: pynicotine/gtkgui/interests.py:90 pynicotine/gtkgui/userinfo.py:327
 msgid "Dislikes"
-msgstr ""
+msgstr "Mospelqimet"
 
 #: pynicotine/gtkgui/interests.py:103
 msgid "Rating"
@@ -1715,11 +1715,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/mainwindow.py:1057
 msgid "[Debug] Transfers"
-msgstr ""
+msgstr "[Debug] Transferet"
 
 #: pynicotine/gtkgui/mainwindow.py:1058
 msgid "[Debug] Miscellaneous"
-msgstr ""
+msgstr "[Debug] Ndryshme"
 
 #: pynicotine/gtkgui/mainwindow.py:1062
 msgid "_Find…"
@@ -1743,7 +1743,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/mainwindow.py:1070
 msgid "_Log Categories"
-msgstr ""
+msgstr "_Log Kategorite"
 
 #: pynicotine/gtkgui/mainwindow.py:1072
 msgid "Clear Log View"
@@ -1761,7 +1761,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/mainwindow.py:1174
 msgid "Preparing Shares"
-msgstr ""
+msgstr "Po përgatit ndarjet"
 
 #: pynicotine/gtkgui/mainwindow.py:1182
 msgid "Scanning Shares"
@@ -1773,7 +1773,7 @@ msgstr "Po ndalohet..."
 
 #: pynicotine/gtkgui/popovers/chathistory.py:78
 msgid "Latest Message"
-msgstr ""
+msgstr "Message e fundit"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:68
 msgid "Room"
@@ -2018,7 +2018,7 @@ msgstr "Transferohet"
 
 #: pynicotine/gtkgui/transfers.py:65
 msgid "Connection closed"
-msgstr ""
+msgstr "Lidhja u mbyll"
 
 #: pynicotine/gtkgui/transfers.py:66
 msgid "Connection timeout"
@@ -2352,7 +2352,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/popupmenu.py:378
 #: pynicotine/gtkgui/widgets/popupmenu.py:422
 msgid "_Add Buddy"
-msgstr ""
+msgstr "_Shtoo Buddy"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:387
 #: pynicotine/gtkgui/ui/userinfo.ui:639
@@ -2421,7 +2421,7 @@ msgstr "Dokument/Tekst"
 
 #: pynicotine/gtkgui/widgets/theme.py:212
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: pynicotine/gtkgui/widgets/theme.py:321
 #, python-format
@@ -2430,16 +2430,16 @@ msgstr ""
 
 #: pynicotine/gtkgui/widgets/trayicon.py:116
 msgid "Hide Nicotine+"
-msgstr ""
+msgstr "Fsheh Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:118
 msgid "Show Nicotine+"
-msgstr ""
+msgstr "Shfaq Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:741
 #, python-format
 msgid "Column #%i"
-msgstr ""
+msgstr "Kolumna #%i"
 
 #: pynicotine/gtkgui/widgets/treeview.py:891
 msgid "Ungrouped"
@@ -2527,19 +2527,19 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:38
 msgid "Armenia"
-msgstr ""
+msgstr "Armenia"
 
 #: pynicotine/networkfilter.py:39
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: pynicotine/networkfilter.py:40
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktika"
 
 #: pynicotine/networkfilter.py:41
 msgid "Argentina"
-msgstr ""
+msgstr "Argjentina"
 
 #: pynicotine/networkfilter.py:42
 msgid "American Samoa"
@@ -2547,15 +2547,15 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:43
 msgid "Austria"
-msgstr ""
+msgstr "Austria"
 
 #: pynicotine/networkfilter.py:44
 msgid "Australia"
-msgstr ""
+msgstr "Australia"
 
 #: pynicotine/networkfilter.py:45
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: pynicotine/networkfilter.py:46
 msgid "Åland Islands"
@@ -2571,15 +2571,15 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:49
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: pynicotine/networkfilter.py:50
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #: pynicotine/networkfilter.py:51
 msgid "Belgium"
-msgstr ""
+msgstr "Belgjike"
 
 #: pynicotine/networkfilter.py:52
 msgid "Burkina Faso"
@@ -2587,7 +2587,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:53
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bullgaria"
 
 #: pynicotine/networkfilter.py:54
 msgid "Bahrain"
@@ -2595,11 +2595,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:55
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: pynicotine/networkfilter.py:56
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: pynicotine/networkfilter.py:57
 msgid "Saint Barthelemy"
@@ -2607,7 +2607,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:58
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #: pynicotine/networkfilter.py:59
 msgid "Brunei Darussalam"
@@ -2615,7 +2615,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:60
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #: pynicotine/networkfilter.py:61
 msgid "Bonaire, Sint Eustatius and Saba"
@@ -2623,11 +2623,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:62
 msgid "Brazil"
-msgstr ""
+msgstr "Brazil"
 
 #: pynicotine/networkfilter.py:63
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: pynicotine/networkfilter.py:64
 msgid "Bhutan"
@@ -2643,7 +2643,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:67
 msgid "Belarus"
-msgstr ""
+msgstr "Bjellorusia"
 
 #: pynicotine/networkfilter.py:68
 msgid "Belize"
@@ -2651,7 +2651,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:69
 msgid "Canada"
-msgstr ""
+msgstr "Kanada"
 
 #: pynicotine/networkfilter.py:70
 msgid "Cocos (Keeling) Islands"
@@ -2819,7 +2819,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:111
 msgid "Georgia"
-msgstr ""
+msgstr "Gjeorgjia"
 
 #: pynicotine/networkfilter.py:112
 msgid "French Guiana"
@@ -3215,11 +3215,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:210
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: pynicotine/networkfilter.py:211
 msgid "Poland"
-msgstr ""
+msgstr "Poloni"
 
 #: pynicotine/networkfilter.py:212
 msgid "Saint Pierre & Miquelon"
@@ -3239,7 +3239,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:216
 msgid "Portugal"
-msgstr ""
+msgstr "Portugali"
 
 #: pynicotine/networkfilter.py:217
 msgid "Palau"
@@ -3247,11 +3247,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:218
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguai"
 
 #: pynicotine/networkfilter.py:219
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #: pynicotine/networkfilter.py:220
 msgid "Réunion"
@@ -3259,7 +3259,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:221
 msgid "Romania"
-msgstr ""
+msgstr "Rumania"
 
 #: pynicotine/networkfilter.py:222
 msgid "Serbia"
@@ -3291,11 +3291,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:229
 msgid "Sweden"
-msgstr ""
+msgstr "Suedi"
 
 #: pynicotine/networkfilter.py:230
 msgid "Singapore"
-msgstr ""
+msgstr "SIngapor"
 
 #: pynicotine/networkfilter.py:231
 msgid "Saint Helena"
@@ -3303,7 +3303,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:232
 msgid "Slovenia"
-msgstr ""
+msgstr "Slloveni"
 
 #: pynicotine/networkfilter.py:233
 msgid "Svalbard & Jan Mayen Islands"
@@ -3323,11 +3323,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:237
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: pynicotine/networkfilter.py:238
 msgid "Somalia"
-msgstr ""
+msgstr "Somali"
 
 #: pynicotine/networkfilter.py:239
 msgid "Suriname"
@@ -3351,7 +3351,7 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:244
 msgid "Syria"
-msgstr ""
+msgstr "Siria"
 
 #: pynicotine/networkfilter.py:245
 msgid "Eswatini"
@@ -3371,11 +3371,11 @@ msgstr ""
 
 #: pynicotine/networkfilter.py:249
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #: pynicotine/networkfilter.py:250
 msgid "Thailand"
-msgstr ""
+msgstr "Tailanda"
 
 #: pynicotine/networkfilter.py:251
 msgid "Tajikistan"
@@ -3588,7 +3588,7 @@ msgstr ""
 
 #: pynicotine/plugins/core_commands/__init__.py:62
 msgid "Manage plugins"
-msgstr ""
+msgstr "Menagjo pluginat"
 
 #: pynicotine/plugins/core_commands/__init__.py:74
 msgid "Clear chat window"
@@ -3668,7 +3668,7 @@ msgstr ""
 
 #: pynicotine/plugins/core_commands/__init__.py:220
 msgid "Add share"
-msgstr ""
+msgstr "Shto nje ndarje"
 
 #: pynicotine/plugins/core_commands/__init__.py:226
 msgid "Remove share"
@@ -3676,11 +3676,11 @@ msgstr ""
 
 #: pynicotine/plugins/core_commands/__init__.py:233
 msgid "List shares"
-msgstr ""
+msgstr "Listo ndarjet"
 
 #: pynicotine/plugins/core_commands/__init__.py:239
 msgid "Rescan shares"
-msgstr ""
+msgstr "Riskano ndarjet"
 
 #: pynicotine/plugins/core_commands/__init__.py:246
 msgid "Start global file search"
@@ -3737,22 +3737,22 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:475
 #, python-format
 msgid "Banned %s"
-msgstr ""
+msgstr "Bllokuar %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:489
 #, python-format
 msgid "Unbanned %s"
-msgstr ""
+msgstr "Pa-bllokuar %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:502
 #, python-format
 msgid "Ignored %s"
-msgstr ""
+msgstr "Injoruar %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:516
 #, python-format
 msgid "Unignored %s"
-msgstr ""
+msgstr "Pa-injoruar %s"
 
 #: pynicotine/plugins/core_commands/__init__.py:552
 #, python-format
@@ -3828,7 +3828,7 @@ msgstr ""
 
 #: pynicotine/pluginsystem.py:793
 msgid "No description"
-msgstr ""
+msgstr "Ska mbishkrim"
 
 #: pynicotine/pluginsystem.py:873
 #, python-format
@@ -4146,7 +4146,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:96 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
-msgstr ""
+msgstr "Dergo mesazh…"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:106 pynicotine/gtkgui/ui/privatechat.ui:61
 msgid "Toggle Text-to-Speech"
@@ -4170,11 +4170,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:123
 msgid "Created by"
-msgstr ""
+msgstr "Krijuar nga"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:162
 msgid "Translated by"
-msgstr ""
+msgstr "Përkthyer nga"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:201
 msgid "License"
@@ -4260,7 +4260,7 @@ msgstr "Emri"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:267
 msgid "Last Speed"
-msgstr ""
+msgstr "Shpejësia e fundit"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:11
 msgid "_Export…"
@@ -4298,7 +4298,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
 msgid "Confirm Quit"
-msgstr ""
+msgstr "Konfirmo ndalesen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:75
 msgid "Quit"
@@ -4368,11 +4368,11 @@ msgstr "Vendos"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:190
 msgid "Insert Emoji"
-msgstr ""
+msgstr "Shto Emoji"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:197
 msgid "Select All"
-msgstr ""
+msgstr "Zgjidh të gjitha"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:204
 msgid "Find"
@@ -4428,7 +4428,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:306
 msgid "Result Filters"
-msgstr ""
+msgstr "Filterët e rezultatit"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:20
 msgid "Current Session"
@@ -4437,22 +4437,22 @@ msgstr ""
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:37
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:155
 msgid "Completed Downloads"
-msgstr ""
+msgstr "Shkarkimet e kompletuara"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:63
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:181
 msgid "Downloaded Size"
-msgstr ""
+msgstr "Madhsia e shkarkuar"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:90
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:208
 msgid "Completed Uploads"
-msgstr ""
+msgstr "Ngarkimet e kompletuara"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:116
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:234
 msgid "Uploaded Size"
-msgstr ""
+msgstr "Madhsiea e ngarkuar"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:137
 msgid "Total"
@@ -4475,7 +4475,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:125
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:141
 msgid "Clear All…"
-msgstr ""
+msgstr "Pastro te gjitha…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:138
 msgid "Clear All Finished/Filtered Downloads"
@@ -4483,7 +4483,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/downloads.ui:154 pynicotine/gtkgui/ui/uploads.ui:154
 msgid "Clear Finished"
-msgstr ""
+msgstr "Pastro te mbaruarat"
 
 #: pynicotine/gtkgui/ui/downloads.ui:169
 msgid "Clear Specific Downloads"
@@ -4491,7 +4491,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/downloads.ui:178 pynicotine/gtkgui/ui/uploads.ui:208
 msgid "Clear _All…"
-msgstr ""
+msgstr "Pastro te _gjitha…"
 
 #: pynicotine/gtkgui/ui/interests.ui:21
 msgid "Personal Interests"
@@ -4515,7 +4515,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:26
 msgid "Main Menu"
-msgstr ""
+msgstr "Menyja kryesore"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:43
 msgid "Room…"
@@ -4529,7 +4529,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:58
 msgid "Search term…"
-msgstr ""
+msgstr "Kerko fjalen…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:60
 msgid ""
@@ -4547,7 +4547,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:163
 msgid "Configure Searches"
-msgstr ""
+msgstr "Konfiguro kërkimet"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:230
 msgid ""
@@ -4562,7 +4562,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:402
 msgid "Configure Downloads"
-msgstr ""
+msgstr "Konfiguro shkarkimet"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:469
 msgid ""
@@ -4572,7 +4572,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:641
 msgid "Configure Uploads"
-msgstr ""
+msgstr "Konfiguro ngarkimet"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:708
 msgid ""
@@ -4581,7 +4581,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:787
 msgid "_Open List"
-msgstr ""
+msgstr "_Hap listën"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:789
 msgid "Opens a local list of shared files that was previously saved to disk"
@@ -4589,7 +4589,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:810
 msgid "Configure Shares"
-msgstr ""
+msgstr "Konfiguro ndarjet"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:877
 msgid ""
@@ -4603,7 +4603,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:978
 msgid "Configure Account"
-msgstr ""
+msgstr "Konfiguro llogarinë"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1045
 msgid ""
@@ -4618,7 +4618,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1138
 #: pynicotine/gtkgui/ui/mainwindow.ui:1471
 msgid "Configure Chats"
-msgstr ""
+msgstr "Konfiguro bisedat"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1205
 msgid ""
@@ -4699,7 +4699,7 @@ msgstr "Kërko dhomat…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:27
 msgid "Refresh Rooms"
-msgstr ""
+msgstr "Rifresko dhomat"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:70
 msgid "_Show feed of public chat room messages"
@@ -4751,7 +4751,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:67
 msgid "Include Text"
-msgstr ""
+msgstr "Përfshij tekstin"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:83
 msgid "Files, folders and usernames containing this text will be shown."
@@ -4771,7 +4771,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:116
 msgid "Exclude Text"
-msgstr ""
+msgstr "Përvec tekstit"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:127
 msgid ""
@@ -5029,7 +5029,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/ban.ui:244
 #: pynicotine/gtkgui/ui/settings/ignore.ui:179
 msgid "IP Addresses"
-msgstr ""
+msgstr "IP Adresat"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Enable spell checker"
@@ -5081,7 +5081,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:346
 msgid "Room names"
-msgstr ""
+msgstr "Emrat e dhomës"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:359
 msgid "Commands"
@@ -5190,11 +5190,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:256
 msgid "Finished downloads:"
-msgstr ""
+msgstr "Shkarkimet e mbaruara:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:272
 msgid "Incomplete downloads:"
-msgstr ""
+msgstr "Ngrkimet e pa-mbaruara:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:288
 msgid "Received files:"
@@ -5352,19 +5352,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:155
 msgid "Test Configuration"
-msgstr ""
+msgstr "Testo konfiguracionin"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:48
 msgid "Enable plugins"
-msgstr ""
+msgstr "Aktivizo pluginat"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:95
 msgid "Add Plugins"
-msgstr ""
+msgstr "Shto plugina"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:111
 msgid "_Add Plugins"
-msgstr ""
+msgstr "_Shto plugina"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:132
 msgid "Settings"
@@ -5380,7 +5380,7 @@ msgstr "Version:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:241
 msgid "Created by:"
-msgstr ""
+msgstr "Krijuar nga:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:51
 msgid "Enable search history"
@@ -5411,7 +5411,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:201
 msgid "Exclude:"
-msgstr ""
+msgstr "Perveq:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:226
 msgid "File Type:"
@@ -5486,7 +5486,7 @@ msgstr "Shokët"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:90
 msgid "Trusted shares"
-msgstr ""
+msgstr "Ndarjet e besuara"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:65
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5506,7 +5506,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:145
 msgid "Total transfers"
-msgstr ""
+msgstr "Transfermiet totale"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:217
 #: pynicotine/gtkgui/ui/userinfo.ui:182
@@ -5679,7 +5679,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:777
 msgid "Main tabs"
-msgstr ""
+msgstr "Tabet kryesore"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:935
 msgid "Show reverse file paths (requires a restart)"
@@ -5763,11 +5763,11 @@ msgstr "Fontet"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1612
 msgid "Global font:"
-msgstr ""
+msgstr "Fonti global:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1657
 msgid "List font:"
-msgstr ""
+msgstr "Fonti i listave:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1702
 msgid "Text view font:"
@@ -5775,15 +5775,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1747
 msgid "Chat font:"
-msgstr ""
+msgstr "Fonti i bisedave:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1792
 msgid "Transfers font:"
-msgstr ""
+msgstr "Fonti i transfereve:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1837
 msgid "Search font:"
-msgstr ""
+msgstr "Fonti i kerkimit"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1882
 msgid "Browse font:"
