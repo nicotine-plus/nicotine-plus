@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
 "PO-Revision-Date: 2024-04-30 18:50+0000\n"
-"Last-Translator: Elias Groß <eliasgross378@gmail.com>\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -228,7 +228,7 @@ msgstr "Aufhören mit %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/core.py:236
 msgid "terminating"
-msgstr "Beendigung"
+msgstr "beendend"
 
 #: pynicotine/core.py:236
 msgid "application closing"
