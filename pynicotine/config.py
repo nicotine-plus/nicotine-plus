@@ -399,7 +399,6 @@ class Config:
                 "dislikes": []
             },
             "players": {
-                "default": "",
                 "npothercommand": "",
                 "npplayer": "mpris",
                 "npformatlist": [],
@@ -523,10 +522,10 @@ class Config:
                 "remove_special_chars"
             ),
             "userinfo": (
-                "descrutf8"
+                "descrutf8",
             ),
             "private_rooms": (
-                "enabled"
+                "enabled",
             ),
             "logging": (
                 "logsdir",
@@ -546,7 +545,7 @@ class Config:
                 "humanizeurls"
             ),
             "notifications": (
-                "notification_tab_icons"
+                "notification_tab_icons",
             ),
             "words": (
                 "cycle",
@@ -555,7 +554,7 @@ class Config:
                 "censorfill"
             ),
             "players": (
-                "default"
+                "default",
             )
         }
 
