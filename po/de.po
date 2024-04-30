@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-01 17:24+0200\n"
-"PO-Revision-Date: 2024-03-20 00:01+0000\n"
-"Last-Translator: Han <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2024-04-30 18:50+0000\n"
+"Last-Translator: Elias Groß <eliasgross378@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.5.3-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -45,8 +45,8 @@ msgid ""
 "alternative to the official Soulseek client, while also providing a "
 "comprehensive set of features."
 msgstr ""
-"Nicotine+ zielt darauf ab, eine leichte, angenehme, freie und offene Quelle "
-"(FOSS) Alternative zum offiziellen Soulseek-Klient zu sein, während auch "
+"Nicotine+ zielt darauf ab, eine leichte, angenehme, freie und eine open "
+"source (FOSS) Alternative zum offiziellen Soulseek-Client zu sein und auch "
 "eine umfassende Reihe von Funktionen zu bieten."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:28
@@ -94,7 +94,7 @@ msgstr "Privater Chat"
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
 msgid "Nicotine+ Team"
-msgstr "Nicotine+ Mannschaft"
+msgstr "Nicotine+ Team"
 
 #: pynicotine/__init__.py:49
 #, python-format
@@ -115,7 +115,7 @@ msgstr "verwende eine nicht standardmäßige Konfigurationsdatei"
 
 #: pynicotine/__init__.py:62
 msgid "dir"
-msgstr "Ordner"
+msgstr "Verzeichnis"
 
 #: pynicotine/__init__.py:63
 msgid "alternative directory for user data and plugins"
