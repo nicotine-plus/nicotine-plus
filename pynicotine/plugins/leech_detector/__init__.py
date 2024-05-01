@@ -111,7 +111,7 @@ class Plugin(BasePlugin):
         else:
             private_percentage = round((num_pfolders / num_folders) * 100)
             
-        # conditions to be met to avoid ban
+        # conditions to be met to avoid ban.
         is_user_accepted = (
             num_files >= self.settings["num_files"] and 
             num_folders >= self.settings["num_folders"] and
