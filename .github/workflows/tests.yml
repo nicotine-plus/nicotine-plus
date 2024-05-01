@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal', 'ubuntu:bionic']
+        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal', 'ubuntu:bionic', 'ubuntu:noble']
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     steps:
