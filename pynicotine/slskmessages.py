@@ -452,12 +452,10 @@ class FileListMessage(SlskMessage):
 
         for _ in range(numattr):
             pos, attrnum = cls.unpack_uint32(message, pos)
-
-            if attrnum not in valid_file_attributes:
-                continue
-
             pos, attr = cls.unpack_uint32(message, pos)
-            attrs[attrnum] = attr
+
+            if attrnum in valid_file_attributes:
+                attrs[attrnum] = attr
 
         return pos, attrs
 
