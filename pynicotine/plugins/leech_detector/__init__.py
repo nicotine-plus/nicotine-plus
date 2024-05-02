@@ -157,14 +157,14 @@ class Plugin(BasePlugin):
                     line = line.replace(placeholder, str(self.settings[option_key]))
 
                 self.send_private(user, line, show_ui=self.settings["open_private_chat"], switch_page=False)
-                log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s percent is locked. Message sent.")
+                log_message = ("Leecher detected, %s is sharing %s files in %s folders and %s private. %s percent locked.")
         else:
-            log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s percent is locked. No messsage to send…")
+            log_message = ("Leecher detected, %s is sharing %s files in %s folders and %s private. %s percent locked.")
 
         # check if we have enabled banning, if true, apply a ban
-        if self.settings["autoban"] != False: 
+        if self.settings["autoban"] is not False: 
             self.core.network_filter.ban_user(user)
-            
+        
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
             self.settings["detected_leechers"].append(user)
