@@ -76,10 +76,9 @@ class Plugin(BasePlugin):
         self.probed_users = {}
 
     def loaded_notification(self):
-
+        
         min_num_files = self.metasettings["num_files"]["minimum"]
         min_num_folders = self.metasettings["num_folders"]["minimum"]
-
 
         if self.settings["num_files"] < min_num_files:
             self.settings["num_files"] = min_num_files
@@ -88,7 +87,7 @@ class Plugin(BasePlugin):
             self.settings["num_folders"] = min_num_folders
 
         self.log(
-            "Require users have a minimum of %d files in %d shared public folders with a maxiumum of %d percent locked or privatised.",
+            "Require users have a minimum of %d files in %d shared public folderswith a maxiumum of %d percent locked or privatised.",
             (self.settings["num_files"], self.settings["num_folders"], self.settings["max_private_percentage"])
         )
     
@@ -163,7 +162,8 @@ class Plugin(BasePlugin):
             log_message = ("Leecher detected, %s is only sharing %s files in %s folders and %s private. %s percent is locked. No messsage to send…")
 
         # check if we have enabled banning, if true, apply a ban
-        if self.settings["autoban"] != False: self.core.network_filter.ban_user(user)
+        if self.settings["autoban"] != False: 
+            self.core.network_filter.ban_user(user)
             
         self.probed_users[user] = "processed_leecher"
         if user not in self.settings["detected_leechers"]:
