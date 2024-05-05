@@ -12,6 +12,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Performance improvements when searching for common files
  * Improved search result matching for non-Latin languages
  * Minor accessibility improvements
+ * Updated translations
  * GTK 3: Restored X11 tray icon implementation for compatibility with older systems
 
 ### Corrections
@@ -31,12 +32,14 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Remember selected folder when refreshing local shares
  * Windows: Fixed Alt+1-9 tab shortcuts interfering with Alt codes
  * Windows: Fixed window not minimizing when clicking task bar icon
+ * Windows: Fixed title bar buttons requiring two clicks to activate
  * Snap: Fixed an issue where the file chooser displayed the wrong initial folder
  * Snap: Fixed an issue where folders shared from external drives were unavailable after remounting
  * Termux: Fixed an issue where connecting to the server failed
 
 ### Issues closed on GitHub
 
+ * Bad user experience with Windows-like buttons on Nicotine 3.3.0 ([#2880](https://github.com/nicotine-plus/nicotine-plus/issues/2880))
  * Auto-selection of new transfers ([#2901](https://github.com/nicotine-plus/nicotine-plus/issues/2901))
  * Nicotine+ 3.3.2 displays user as logged off while the transfers are active ([#2909](https://github.com/nicotine-plus/nicotine-plus/issues/2909))
  * No icon in taskbar when running in background ([#2928](https://github.com/nicotine-plus/nicotine-plus/issues/2928))
@@ -54,6 +57,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Num lock state is inverted ([#2977](https://github.com/nicotine-plus/nicotine-plus/issues/2977))
  * Random crash ([#2982](https://github.com/nicotine-plus/nicotine-plus/issues/2982))
  * Found another bug ([#2988](https://github.com/nicotine-plus/nicotine-plus/issues/2988))
+ * Arbitrary Critical Error ([#2996](https://github.com/nicotine-plus/nicotine-plus/issues/2996))
 
 
 ## Version 3.3.2 (February 25, 2024)
