@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -31,6 +31,7 @@ LANGUAGES = (
     ("en", "English"),
     ("es_CL", "Español (Chile)"),
     ("es_ES", "Español (España)"),
+    ("et", "Eesti"),
     ("fr", "Français"),
     ("hu", "Magyar"),
     ("it", "Italiano"),
