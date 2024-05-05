@@ -98,10 +98,6 @@
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
 
-## Portuguese
- - ssantos (2023)
- - Vinícius Soares (2023)
-
 ## Portuguese (Brazil)
  - Havokdan (2022–2024)
  - Guilherme Santos (2022)
@@ -109,6 +105,10 @@
  - Nicolas Abril (2021)
  - yyyyyyyan (2020)
  - Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)
+
+## Portuguese (Portugal)
+ - ssantos (2023)
+ - Vinícius Soares (2023)
 
 ## Romanian
  - xslendix (2023)

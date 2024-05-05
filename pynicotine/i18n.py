@@ -39,6 +39,7 @@ LANGUAGES = (
     ("nl", "Nederlands"),
     ("pl", "Polski"),
     ("pt_BR", "Português (Brasil)"),
+    ("pt_PT", "Português (Portugal)"),
     ("ru", "Русский"),
     ("tr", "Türkçe"),
     ("uk", "Українська"),
