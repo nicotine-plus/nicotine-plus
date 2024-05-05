@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-05 13:36+0300\n"
-"PO-Revision-Date: 2024-04-12 16:39+0000\n"
+"PO-Revision-Date: 2024-05-05 11:12+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pt/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.5.3\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -1350,9 +1350,8 @@ msgid "Enter a new command for protocol %s:"
 msgstr "Digite um novo comando para o protocolo %s:"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2672
-#, fuzzy
 msgid "Username;APIKEY"
-msgstr "Nome de utilizador; APIKEY:"
+msgstr "Nome de utilizador;APIKEY"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2676
 msgid ""
