@@ -1,7 +1,7 @@
 # Nicotine+ Translators
 
 ## Albanian
- - W L (2023)
+ - W L (2023–2024)
 
 ## Arabic
  - ButterflyOfFire (2024)
@@ -16,13 +16,13 @@
  - hadwin (2022)
 
 ## Czech
- - burnmail123 (2021-2023)
+ - burnmail123 (2021–2023)
 
 ## Danish
  - mathsped (2003–2004)
 
 ## Dutch
- - Toine Rademacher (toineenzo) (2023-2024)
+ - Toine Rademacher (toineenzo) (2023–2024)
  - Han Boetes (hboetes) (2021–2024)
  - Kenny Verstraete (2009)
  - nince78 (2007)
@@ -54,7 +54,7 @@
  - subu_versus (2023)
  - zniavre (2007–2023)
  - Lisapple (2021–2022)
- - melmorabity (2021–2022)
+ - melmorabity (2021–2024)
  - m-balthazar (2020)
  - Michael Labouebe (gfarmerfr) (2016–2017)
  - Monsieur Poisson (2009–2010)
@@ -93,7 +93,7 @@
  - Allan Nordhøy (comradekingu) (2021)
 
 ## Polish
- - Mariusz (mariachini) (2017–2023)
+ - Mariusz (mariachini) (2017–2024)
  - Amun-Ra (2007)
  - thine (2007)
  - Wojciech Owczarek (owczi) (2003–2004)
@@ -103,7 +103,7 @@
  - Vinícius Soares (2023)
 
 ## Portuguese (Brazil)
- - Havokdan (2022–2023)
+ - Havokdan (2022–2024)
  - Guilherme Santos (2022)
  - b1llso (2022)
  - Nicolas Abril (2021)
@@ -114,7 +114,7 @@
  - xslendix (2023)
 
 ## Russian
- - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2023)
+ - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)
  - Mehavoid (2021–2023)
  - AHOHNMYC (2022)
 
@@ -129,7 +129,7 @@
  - Dreslo (2003–2004)
 
 ## Spanish (Spain)
- - gallegonovato (2023)
+ - gallegonovato (2023–2024)
  - MELERIX (2021–2023)
  - tagomago (2021–2022)
  - Strange (2021)

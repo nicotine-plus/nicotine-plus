@@ -194,7 +194,7 @@ class About(Dialog):
         "<b>Nicotine+ Translators</b>",
 
         """<b>Albanian</b>
- •  W L (2023)""",
+ •  W L (2023–2024)""",
 
         """<b>Arabic</b>
  •  ButterflyOfFire (2024)""",
@@ -215,7 +215,7 @@ class About(Dialog):
  •  mathsped (2003–2004)""",
 
         """<b>Dutch</b>
- •  Toine Rademacher (toineenzo) (2023-2024)
+ •  Toine Rademacher (toineenzo) (2023–2024)
  •  Han Boetes (hboetes) (2021–2024)
  •  Kenny Verstraete (2009)
  •  nince78 (2007)
@@ -247,7 +247,7 @@ class About(Dialog):
  •  subu_versus (2023)
  •  zniavre (2007–2023)
  •  Lisapple (2021–2022)
- •  melmorabity (2021–2022)
+ •  melmorabity (2021–2024)
  •  m-balthazar (2020)
  •  Michael Labouebe (gfarmerfr) (2016–2017)
  •  Monsieur Poisson (2009–2010)
@@ -286,7 +286,7 @@ class About(Dialog):
  •  Allan Nordhøy (comradekingu) (2021)""",
 
         """<b>Polish</b>
- •  Mariusz (mariachini) (2017–2023)
+ •  Mariusz (mariachini) (2017–2024)
  •  Amun-Ra (2007)
  •  thine (2007)
  •  Wojciech Owczarek (owczi) (2003–2004)""",
@@ -307,7 +307,7 @@ class About(Dialog):
  •  xslendix (2023)""",
 
         """<b>Russian</b>
- •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2023)
+ •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)
  •  Mehavoid (2021–2023)
  •  AHOHNMYC (2022)""",
 
@@ -322,7 +322,7 @@ class About(Dialog):
  •  Dreslo (2003–2004)""",
 
         """<b>Spanish (Spain)</b>
- •  gallegonovato (2023)
+ •  gallegonovato (2023–2024)
  •  MELERIX (2021–2023)
  •  tagomago (2021–2022)
  •  Strange (2021)
