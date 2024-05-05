@@ -1,8 +1,8 @@
-nicotine (3.3.3-rc2) mantic; urgency=medium
+nicotine (3.3.3-1) noble; urgency=medium
 
-  * Release candidate 2.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Thu, 04 Apr 2024 18:17:39 +0300
+ -- Mat <mail@mathias.is>  Sun, 05 May 2024 14:59:48 +0300
 
 nicotine (3.3.2-1) mantic; urgency=medium
 
