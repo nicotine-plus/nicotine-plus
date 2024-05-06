@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -78,6 +78,12 @@ class Window:
         self.widget.present()
 
     def hide(self):
+
+        if GTK_API_VERSION >= 4:
+            self.widget.minimize()
+        else:
+            self.widget.iconify()
+
         self.widget.set_visible(False)
 
     def close(self, *_args):
