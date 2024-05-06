@@ -16,6 +16,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Scrolling performance suddenly abysmal (again) ([#3000](https://github.com/nicotine-plus/nicotine-plus/issues/3000))
  * Can't access "Format Codes" link in settings through left mouse click on 3.3.3 ([#3001](https://github.com/nicotine-plus/nicotine-plus/issues/3001))
+ * Sometimes, Nicotine+ (3.3.3) window doesn't open on top when other windows already opened full screen on the desktop. ([#3002](https://github.com/nicotine-plus/nicotine-plus/issues/3002))
 
 
 ## Version 3.3.3 (May 5, 2024)
