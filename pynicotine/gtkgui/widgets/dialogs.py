@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 from gi.repository import Gdk
 from gi.repository import GLib
@@ -173,6 +174,12 @@ class Dialog(Window):
 
         # Hide the dialog
         self.widget.set_visible(False)
+
+        # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+        # appearing in window peek on Windows
+        if sys.platform == "win32":
+            self.widget.unrealize()
+
         return True
 
     def _set_dialog_properties(self):
