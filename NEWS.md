@@ -5,6 +5,17 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.4rc1 (Unreleased)
+
+### Corrections
+
+ * Windows: Fixed regression in scrolling performance
+
+### Issues closed on GitHub
+
+ * Scrolling performance suddenly abysmal (again) ([#3000](https://github.com/nicotine-plus/nicotine-plus/issues/3000))
+
+
 ## Version 3.3.3 (May 5, 2024)
 
 ### Changes
