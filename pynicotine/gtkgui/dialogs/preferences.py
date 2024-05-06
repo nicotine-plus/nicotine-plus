@@ -63,6 +63,7 @@ from pynicotine.i18n import LANGUAGES
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskproto import NetworkInterfaces
+from pynicotine.utils import encode_path
 from pynicotine.utils import open_folder_path
 from pynicotine.utils import open_uri
 from pynicotine.utils import unescape
@@ -585,6 +586,7 @@ class SharesPage:
 
         self.rescan_required = False
         self.recompress_shares_required = False
+        self.last_parent_folder = None
         self.shared_folders = []
         self.buddy_shared_folders = []
         self.trusted_shared_folders = []
@@ -677,15 +679,28 @@ class SharesPage:
             if not virtual_name:
                 continue
 
+            self.last_parent_folder = os.path.dirname(folder_path)
             self.rescan_required = True
             self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
 
+        # By default, show parent folder of last added share as initial folder
+        initial_folder = self.last_parent_folder
+
+        # If present, show parent folder of selected share as initial folder
+        for iterator in self.shares_list_view.get_selected_rows():
+            initial_folder = os.path.dirname(self.shares_list_view.get_row_value(iterator, "folder"))
+            break
+
+        if initial_folder and not os.path.exists(encode_path(initial_folder)):
+            initial_folder = None
+
         FolderChooser(
             parent=self.application.preferences,
             callback=self.on_add_shared_folder_selected,
             title=_("Add a Shared Folder"),
+            initial_folder=initial_folder,
             select_multiple=True
         ).present()
 
