@@ -1,3 +1,9 @@
+nicotine (3.3.5-dev1) noble; urgency=medium
+
+  * Development version.
+
+ -- Mat <mail@mathias.is>  Tue, 07 May 2024 02:39:31 +0300
+
 nicotine (3.3.4-1) noble; urgency=medium
 
   * Latest upstream.
