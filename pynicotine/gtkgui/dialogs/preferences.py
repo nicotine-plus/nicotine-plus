@@ -1276,6 +1276,7 @@ class ChatsPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
+        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -2125,6 +2126,7 @@ class LoggingPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
+        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
