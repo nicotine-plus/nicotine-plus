@@ -9,11 +9,13 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Corrections
 
+ * Fixed "Format codes" link not opening in the preferred browser
  * Windows: Fixed regression in scrolling performance
 
 ### Issues closed on GitHub
 
  * Scrolling performance suddenly abysmal (again) ([#3000](https://github.com/nicotine-plus/nicotine-plus/issues/3000))
+ * Can't access "Format Codes" link in settings through left mouse click on 3.3.3 ([#3001](https://github.com/nicotine-plus/nicotine-plus/issues/3001))
 
 
 ## Version 3.3.3 (May 5, 2024)
