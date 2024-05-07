@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-05 13:36+0300\n"
-"PO-Revision-Date: 2024-05-05 11:12+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-05-07 11:07+0000\n"
+"Last-Translator: SnIPeRSnIPeR <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5.3\n"
+"X-Generator: Weblate 5.5.4-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -1169,7 +1169,7 @@ msgstr "Введите IP-адрес для блокировки:"
 #: pynicotine/gtkgui/dialogs/preferences.py:1275
 #: pynicotine/gtkgui/dialogs/preferences.py:2124
 msgid "Format codes"
-msgstr "Коды формата"
+msgstr "Расшифровка кодов формата"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1296
 #: pynicotine/gtkgui/dialogs/preferences.py:1310
@@ -5411,15 +5411,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/log.ui:82
 msgid "Log chatrooms by default"
-msgstr "Журналировать чаты по умолчанию"
+msgstr "Журналировать историю публичных чатов по умолчанию"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:106
 msgid "Log private chat by default"
-msgstr "Журналировать историю чата по умолчанию"
+msgstr "Журналировать историю приватных чатов по умолчанию"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:130
 msgid "Log transfers to file"
-msgstr "Журналировать передачи в файл"
+msgstr "Журналировать историю передач в файл"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:154
 msgid "Log debug messages to file"
@@ -5427,7 +5427,7 @@ msgstr "Журналировать отладочные сообщения в ф
 
 #: pynicotine/gtkgui/ui/settings/log.ui:178
 msgid "Log timestamp format:"
-msgstr "Формат метки времени журнала:"
+msgstr "Формат меток времени журналов:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:216
 msgid "Folder Locations"
@@ -5435,15 +5435,15 @@ msgstr "Место"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:233
 msgid "Chatroom logs folder:"
-msgstr "Каталог журналов чата:"
+msgstr "Каталог журналов публичных чатов:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:249
 msgid "Private chat logs folder:"
-msgstr "Каталог журналов чата:"
+msgstr "Каталог журналов приватных чатов:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:265
 msgid "Transfer logs folder:"
-msgstr "Каталог журналов передачи:"
+msgstr "Каталог журналов истории передач:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:281
 msgid "Debug logs folder:"
@@ -5576,7 +5576,7 @@ msgstr "Показывать частные файлы в результатах
 
 #: pynicotine/gtkgui/ui/settings/search.ui:106
 msgid "Limit number of results per search:"
-msgstr "Ограничить количество результатов на поиск:"
+msgstr "Ограничить количество результатов поиска:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:152
 msgid "Enable search result filters by default"
@@ -5766,8 +5766,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
-"Добавьте то, что вы хотите, чтобы все увидели, например, краткое описание, "
-"полезные советы или рекомендации по загрузке ваших раздач."
+"Добавьте информацию, которую увидят все зашедшие в ваш профиль люди, "
+"например: краткое описание, полезные советы или рекомендации по загрузке "
+"ваших раздач."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 msgid "Picture:"
