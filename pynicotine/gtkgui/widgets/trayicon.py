@@ -680,7 +680,6 @@ class Win32Implementation(BaseImplementation):
 
         self._register_class()
         self._create_window()
-        self.update_icon()
 
     def _register_class(self):
 
@@ -1149,7 +1148,7 @@ class TrayIcon:
         if not self.implementation:
             return
 
-        self.implementation.is_visible = True
+        self.implementation.is_visible = config.sections["ui"]["trayicon"]
 
         self.update_icon_theme()
         self.update_icon()
