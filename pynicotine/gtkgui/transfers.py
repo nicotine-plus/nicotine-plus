@@ -649,7 +649,6 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
-            expand_user = expand_allowed
             select_iterator = None
             empty_int = 0
             empty_str = ""
@@ -679,9 +678,6 @@ class Transfers:
                         self.row_id
                     ], select_row=False
                 )
-
-                if expand_allowed and not self.expand_button.get_active():
-                    expand_user = (self.grouping_mode == "folder_grouping")
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])
@@ -734,12 +730,15 @@ class Transfers:
                     self.tree_view.expand_row(user_iterator)
                     select_iterator = user_folder_path_iterator
                     expand_user = False
+                else:
+                    expand_user = expand_allowed
 
                 # Group by folder, path not visible in file rows
                 folder_path = ""
             else:
                 parent_iterator = user_iterator
                 user_child_transfers.append(transfer)
+                expand_user = expand_allowed and self.expand_button.get_active()
 
                 if select_parent:
                     select_iterator = user_iterator
