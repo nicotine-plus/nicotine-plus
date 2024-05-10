@@ -1214,6 +1214,9 @@ class NetworkThread(Thread):
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
 
+        if hasattr(socket, "TCP_NODELAY"):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(server_socket)
         self._bind_socket_interface(server_socket)
