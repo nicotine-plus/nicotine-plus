@@ -142,7 +142,7 @@ class Logger:
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
-        log_file = LogFile(
+        log_file = self._log_files[file_path] = LogFile(
             path=file_path, handle=open(file_path_encoded, "ab+"))  # pylint: disable=consider-using-with
 
         # Disable file access for outsiders
@@ -235,9 +235,8 @@ class Logger:
                 "error": error
             })
 
-            if log_file is not None:
-                # In case seek() failed, close log file to prevent future write attempts
-                self._close_log_file(log_file)
+        if log_file is not None:
+            self._close_log_file(log_file)
 
         return lines
 
