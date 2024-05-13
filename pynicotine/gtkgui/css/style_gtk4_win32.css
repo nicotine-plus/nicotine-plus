@@ -1,4 +1,4 @@
-/* Tweaks (libadwaita on Windows and macOS) */
+/* Tweaks (GTK 4+ on Windows) */
 
 window.csd {
     /* Smaller window shadows to mitigate GTK bug where shadows are clickable */
