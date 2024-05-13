@@ -2953,6 +2953,7 @@ class Preferences(Dialog):
 
         super().__init__(
             parent=application.window,
+            modal=False,
             content_box=self.container,
             buttons_start=(self.cancel_button, self.export_button),
             buttons_end=(self.apply_button, self.ok_button),
