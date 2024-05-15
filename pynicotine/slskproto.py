@@ -1214,8 +1214,7 @@ class NetworkThread(Thread):
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
 
-        if hasattr(socket, "TCP_NODELAY"):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(server_socket)
@@ -1717,8 +1716,7 @@ class NetworkThread(Thread):
         sock.setblocking(False)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-        if hasattr(socket, "TCP_NODELAY"):
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
         self._bind_socket_interface(sock)
 
         try:
@@ -2400,8 +2398,7 @@ class NetworkThread(Thread):
 
                 selector_events = selectors.EVENT_READ
                 incoming_sock.setblocking(False)
-                if hasattr(socket, "TCP_NODELAY"):
-                    incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
 
                 self._conns[incoming_sock] = PeerConnection(
                     sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
