@@ -322,7 +322,7 @@ class FileChooserButton:
 
         except TypeError:
             # No function defined
-            return
+            pass
 
     def on_open_file_chooser(self, *_args):
 

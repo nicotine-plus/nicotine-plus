@@ -936,6 +936,8 @@ class Search:
         expand_user = False
         expand_folder = False
         parent_iterator = None
+        user_child_iterators = None
+        user_folder_child_iterators = None
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -1032,7 +1034,7 @@ class Search:
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
-        if self.grouping_mode == "folder_grouping":
+        if user_folder_child_iterators is not None:
             user_folder_child_iterators.append(iterator)
         else:
             user_child_iterators.append(iterator)

@@ -451,9 +451,9 @@ class NetworkThread(Thread):
     def _create_listen_socket(self):
 
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._listen_socket.setblocking(False)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-        self._listen_socket.setblocking(False)
 
         # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
         # to the same port immediately after reconnecting. This option behaves differently
@@ -1213,8 +1213,7 @@ class NetworkThread(Thread):
         server_socket.setblocking(False)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-
-        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(server_socket)
@@ -1716,7 +1715,7 @@ class NetworkThread(Thread):
         sock.setblocking(False)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self._bind_socket_interface(sock)
 
         try:
@@ -2398,7 +2397,7 @@ class NetworkThread(Thread):
 
                 selector_events = selectors.EVENT_READ
                 incoming_sock.setblocking(False)
-                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # pylint: disable=no-member
+                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
                 self._conns[incoming_sock] = PeerConnection(
                     sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
@@ -2539,6 +2538,7 @@ class NetworkThread(Thread):
                 return
 
             msg_type = msg_obj.msg_type
+            process_func = None
 
             if msg_type == MessageType.INIT:
                 process_func = self._process_peer_init_output
@@ -2581,7 +2581,8 @@ class NetworkThread(Thread):
                 })
                 continue
 
-            process_func(msg_obj)
+            if process_func is not None:
+                process_func(msg_obj)
 
     def _process_queue_messages(self):
 
