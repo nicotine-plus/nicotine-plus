@@ -119,13 +119,13 @@ class SoulseekNetworkTest(TestCase):
 
         if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             if sys.platform == "win32":
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 8)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
 
             elif hasattr(socket, "TCP_USER_TIMEOUT"):
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 11)
 
             else:
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(core._network_thread._server_socket.ioctl.call_count, 1)
