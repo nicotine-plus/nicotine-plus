@@ -2397,6 +2397,8 @@ class NetworkThread(Thread):
 
                 selector_events = selectors.EVENT_READ
                 incoming_sock.setblocking(False)
+                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
                 incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
                 self._conns[incoming_sock] = PeerConnection(
