@@ -129,7 +129,7 @@ class SoulseekNetworkTest(TestCase):
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(core._network_thread._server_socket.ioctl.call_count, 1)
-            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 5)
+            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 6)
 
         self.assertEqual(core._network_thread._server_socket.setblocking.call_count, 2)
         self.assertEqual(core._network_thread._server_socket.connect_ex.call_count, 1)
