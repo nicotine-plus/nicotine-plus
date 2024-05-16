@@ -363,7 +363,14 @@ class UserBrowse:
         username = msg.username
         browsed_user = self.users.get(username)
         num_folders = len(msg.list) + len(msg.privatelist)
-        num_files = sum(len(files) for folder_path, files in chain(msg.list, msg.privatelist))
+        num_files = 0
+        shared_size = 0
+
+        for _folder_path, files in chain(msg.list, msg.privatelist):
+            for _code, _basename, file_size, *_unused in files:
+                shared_size += file_size
+
+            num_files += len(files)
 
         if browsed_user is not None:
             browsed_user.public_folders = dict(msg.list)
@@ -373,5 +380,6 @@ class UserBrowse:
             "avgspeed": None,
             "files": num_files,
             "dirs": num_folders,
+            "shared_size": shared_size,
             "source": "peer"
         })

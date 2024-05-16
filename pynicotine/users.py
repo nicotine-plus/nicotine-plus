@@ -338,6 +338,7 @@ class Users:
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
+            "shared_size": None,
             "source": "server"
         })
 

@@ -503,11 +503,11 @@ class UserBrowse:
             root_processed = False
             skip_folder = (self.query and self.query not in folder_path.lower())
 
-            for filedata in files:
-                if skip_folder and self.query in filedata[1].lower():
+            for _code, basename, file_size, *_unused in files:
+                if skip_folder and self.query in basename.lower():
                     skip_folder = False
 
-                total_size += filedata[2]
+                total_size += file_size
 
             if skip_folder:
                 continue
