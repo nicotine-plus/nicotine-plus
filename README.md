@@ -49,7 +49,7 @@ I stumbled across this quote:
 
 ## Legal and Privacy
 
-Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
+The Nicotine+ Team does not collect any data used or stored by the client. Different policies may apply for data sent to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
 When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
 
