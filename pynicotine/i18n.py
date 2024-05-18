@@ -59,8 +59,19 @@ def _set_system_language(language=None):
             language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
 
         elif sys.platform == "darwin":
+            import subprocess
+
             try:
-                import subprocess
+                # macOS provides locales with additional @ specifiers, e.g. en_GB@rg=US (region).
+                # Remove them, since they are not supported.
+                default_locale_output = subprocess.check_output(("defaults", "read", "-g", "AppleLocale"))
+                default_locale = default_locale_output.decode("utf-8").strip('()\n" ').split("@")[0]
+                os.environ["LC_ALL"] = default_locale
+
+            except Exception as error:
+                print("Cannot read default system locale: %s", error)
+
+            try:
                 language_output = subprocess.check_output(("defaults", "read", "-g", "AppleLanguages"))
                 languages = language_output.decode("utf-8").strip('()\n" ').split(",")
                 language = next(iter(languages), None)
