@@ -39,7 +39,7 @@ class Window:
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("pressed", self._callback_click_gtk4_darwin)
-            widget.add_controller(gesture_click)
+            widget.add_controller(gesture_click)  # pylint: disable=no-member
 
     def _menu_popup(self, controller, widget):
         if controller.is_active():

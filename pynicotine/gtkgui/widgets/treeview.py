@@ -130,7 +130,7 @@ class TreeView:
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("pressed", self.on_treeview_click_gtk4_darwin)
-            self.widget.add_controller(gesture_click)
+            self.widget.add_controller(gesture_click)  # pylint: disable=no-member
 
     def destroy(self):
 
@@ -856,7 +856,7 @@ class TreeView:
         if not event.get_modifier_state() & cmd_mask:
             return False
 
-        widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)
+        widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)  # pylint: disable=no-member
 
         if not isinstance(widget, Gtk.TreeView):
             return False
