@@ -45,14 +45,14 @@ class Window:
         if controller.is_active():
             widget.activate_action("menu.popup")
 
-    def _callback_click_gtk4_darwin(self, controller, _num_p, x, y, *_args):
+    def _callback_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y, *_args):
 
         event = controller.get_last_event()
 
-        if event.get_modifier_state() != Gdk.ModifierType.CONTROL_MASK:
+        if not event.get_modifier_state() & Gdk.ModifierType.CONTROL_MASK:
             return False
 
-        cursor_widget = self.widget.pick(x, y, Gtk.PickFlags.DEFAULT)
+        cursor_widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)
         widget = cursor_widget.get_ancestor(Gtk.Text)
 
         if widget is None:

@@ -298,7 +298,7 @@ class PopupMenu:
 
         event = controller.get_last_event()
 
-        if event.get_modifier_state() == Gdk.ModifierType.CONTROL_MASK:
+        if event.get_modifier_state() & Gdk.ModifierType.CONTROL_MASK:
             return self._callback(controller, pos_x, pos_y)
 
         return False

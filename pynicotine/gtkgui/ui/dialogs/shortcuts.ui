@@ -152,6 +152,20 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="action-name">accel.select-all</property>
+                <property name="title" translatable="yes">Select All</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="action-name">accel.find</property>
+                <property name="title" translatable="yes">Find</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="action-name">accel.remove</property>
                 <property name="title" translatable="yes">Remove Selected Row</property>
                 <property name="visible">True</property>
