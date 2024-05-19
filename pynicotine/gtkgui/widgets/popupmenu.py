@@ -113,6 +113,7 @@ class PopupMenu:
             O - choice
             # - regular
             = - hidden when disabled
+            ^ - hidden in macOS menu bar
         """
 
         submenu = False
@@ -148,6 +149,9 @@ class PopupMenu:
 
         if item_type == "=":
             menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
+
+        elif item_type == "^":
+            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "macos-menubar"))
 
         if submenu:
             menuitem.set_submenu(item[1].model)

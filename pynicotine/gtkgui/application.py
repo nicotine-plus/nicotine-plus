@@ -346,13 +346,13 @@ class Application:
 
     @staticmethod
     def _add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
+        menu.add_items(("^" + _("_Preferences"), "app.preferences"))
 
     def _add_quit_item(self, menu):
 
         menu.add_items(
             ("", None),
-            ("#" + _("_Quit"), "app.confirm-quit-uploads")
+            ("^" + _("_Quit"), "app.confirm-quit-uploads")
         )
 
     def _create_file_menu(self):
@@ -410,7 +410,7 @@ class Application:
             ("#" + _("Report a _Bug"), "app.report-bug"),
             ("#" + _("Improve T_ranslations"), "app.improve-translations"),
             ("", None),
-            ("#" + _("_About Nicotine+"), "app.about")
+            ("^" + _("_About Nicotine+"), "app.about")
         )
 
         return menu
@@ -1021,7 +1021,7 @@ class Application:
     def on_quit_request(self, *_args):
 
         if sys.platform == "darwin":
-            /* macOS menu bar Quit item should ask for confirmation when uploads are active */
+            # macOS menu bar Quit item should ask for confirmation when uploads are active
             self.on_confirm_quit_uploads_request()
             return
 
