@@ -140,6 +140,7 @@ class Application:
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
             ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
+            ("force-quit", self.on_force_quit_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
@@ -225,7 +226,8 @@ class Application:
             ("app.away-accel", ["<Primary>h"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
-            ("app.quit", ["<Primary><Alt>q"]),
+            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.quit", []),
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -1013,8 +1015,17 @@ class Application:
     def on_confirm_quit_uploads_request(self, *_args):
         core.confirm_quit(only_on_active_uploads=True)
 
-    def on_quit_request(self, *_args):
+    def on_force_quit_request(self, *_args):
         core.quit()
+
+    def on_quit_request(self, *_args):
+
+        if sys.platform == "darwin":
+            /* macOS menu bar Quit item should ask for confirmation when uploads are active */
+            self.on_confirm_quit_uploads_request()
+            return
+
+        self.on_force_quit_request()
 
     def on_shutdown(self, *_args):
 
