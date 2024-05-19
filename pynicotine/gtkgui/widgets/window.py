@@ -78,12 +78,6 @@ class Window:
         self.widget.present()
 
     def hide(self):
-
-        if GTK_API_VERSION >= 4:
-            self.widget.minimize()
-        else:
-            self.widget.iconify()
-
         self.widget.set_visible(False)
 
     def close(self, *_args):

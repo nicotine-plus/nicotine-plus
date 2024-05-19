@@ -1880,5 +1880,10 @@
         </style>
       </object>
     </child>
+    <child>
+      <object class="GtkButton" id="hide_window_button">
+        <property name="visible">False</property>
+      </object>
+    </child>
   </object>
 </interface>

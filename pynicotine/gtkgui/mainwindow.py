@@ -23,6 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import time
 
 from gi.repository import Gio
@@ -107,6 +108,7 @@ class MainWindow(Window):
             self.header_end_container,
             self.header_menu,
             self.header_title,
+            self.hide_window_button,
             self.horizontal_paned,
             self.interests_container,
             self.interests_end,
@@ -1248,6 +1250,17 @@ class MainWindow(Window):
         config.write_configuration()
 
         # Hide window
+        if sys.platform == "darwin":
+            # macOS-specific way to hide the application, to ensure it is restored when clicking the dock icon
+            self.hide_window_button.set_action_name("gtkinternal.hide")
+            self.hide_window_button.emit("clicked")
+            return
+
+        if GTK_API_VERSION >= 4:
+            self.widget.minimize()
+        else:
+            self.widget.iconify()
+
         super().hide()
 
     def destroy(self):
