@@ -1,3 +1,12 @@
+/* Tweaks (GTK 4+ on macOS) */
+
+window {
+  /* Remove GTK's window border, since macOS provides one */
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 /* macOS-style window controls */
 
 windowcontrols {
@@ -27,7 +36,7 @@ windowcontrols button:hover image {
 }
 
 windowcontrols button:active image {
-  filter: brightness(125%);
+  filter: brightness(75%);
 }
 
 windowcontrols button.close image {
