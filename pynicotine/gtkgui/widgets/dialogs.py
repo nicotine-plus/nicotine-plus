@@ -432,8 +432,8 @@ class MessageDialog(Window):
         if self.callback and response_type != "cancel":
             self.callback(self, response_type, self.callback_data)
 
-        # Check if the dialog was already closed in the callback
-        if self in Window.active_dialogs:
+        # "Run in Background" response already closes all dialogs
+        if response_type != "run_background":
             self.close()
 
     def _finish_present(self, present_callback):
