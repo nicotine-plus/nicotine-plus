@@ -223,7 +223,7 @@ class Application:
             # Global accelerators
             ("app.connect", ["<Shift><Primary>c"]),
             ("app.disconnect", ["<Shift><Primary>d"]),
-            ("app.away-accel", ["<Primary>h"]),
+            ("app.away-accel", ["<Shift><Primary>a"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
             ("app.force-quit", ["<Primary><Alt>q"]),
@@ -276,6 +276,12 @@ class Application:
             return
 
         # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
+        for action_name, accelerators in (
+            ("gtkinternal.hide", ["<Primary>h"]),
+            ("gtkinternal.hide-others", ["<Primary><Alt>h"])
+        ):
+            self._set_accels_for_action(action_name, accelerators)
+
         for widget in (Gtk.Text, Gtk.TextView):
             for action_name, accelerator in (
                 ("clipboard.cut", "<Meta>x"),
