@@ -16,6 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
+from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import Gtk
+
 from pynicotine.gtkgui.application import GTK_API_VERSION
 
 
@@ -25,7 +31,40 @@ class Window:
     activation_token = None
 
     def __init__(self, widget):
+
         self.widget = widget
+
+        if GTK_API_VERSION == 4 and sys.platform == "darwin":
+            # Workaround to restore Ctrl-click to show context menu on macOS
+            gesture_click = Gtk.GestureClick()
+            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            gesture_click.connect("pressed", self._callback_click_gtk4_darwin)
+            widget.add_controller(gesture_click)
+
+    def _menu_popup(self, controller, widget):
+        if controller.is_active():
+            widget.activate_action("menu.popup")
+
+    def _callback_click_gtk4_darwin(self, controller, _num_p, x, y, *_args):
+
+        event = controller.get_last_event()
+
+        if event.get_modifier_state() != Gdk.ModifierType.CONTROL_MASK:
+            return False
+
+        cursor_widget = self.widget.pick(x, y, Gtk.PickFlags.DEFAULT)
+        widget = cursor_widget.get_ancestor(Gtk.Text)
+
+        if widget is None:
+            widget = cursor_widget.get_ancestor(Gtk.TextView)
+
+        if widget is None:
+            widget = cursor_widget.get_ancestor(Gtk.Label)
+
+        if widget is not None:
+            GLib.idle_add(self._menu_popup, controller, widget)
+
+        return False
 
     def get_surface(self):
 

@@ -20,6 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
@@ -289,8 +291,26 @@ class PopupMenu:
         self.popup(pos_x, pos_y, controller, menu=menu)
         return True
 
-    def _callback_click(self, controller, _num_p, pos_x, pos_y):
+    def _callback_click_gtk4(self, controller, _num_p, pos_x, pos_y):
         return self._callback(controller, pos_x, pos_y)
+
+    def _callback_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y):
+
+        event = controller.get_last_event()
+
+        if event.get_modifier_state() == Gdk.ModifierType.CONTROL_MASK:
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
+
+    def _callback_click_gtk3(self, controller, _num_p, pos_x, pos_y):
+
+        event = controller.get_last_event()
+
+        if event.triggers_context_menu():
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
 
     def _callback_menu(self, *_args):
         return self._callback()
@@ -299,6 +319,8 @@ class PopupMenu:
 
         if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
+            self.gesture_click.connect("pressed", self._callback_click_gtk4)
             parent.add_controller(self.gesture_click)
 
             self.gesture_press = Gtk.GestureLongPress()
@@ -306,16 +328,24 @@ class PopupMenu:
 
             Accelerator("<Shift>F10", parent, self._callback_menu)
 
+            if sys.platform == "darwin":
+                gesture_click_darwin = Gtk.GestureClick()
+                parent.add_controller(gesture_click_darwin)
+
+                gesture_click_darwin.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+                gesture_click_darwin.connect("pressed", self._callback_click_gtk4_darwin)
+
         else:
             self.gesture_click = Gtk.GestureMultiPress(widget=parent)
+            self.gesture_click.set_button(0)
+            self.gesture_click.connect("pressed", self._callback_click_gtk3)
+
             self.gesture_press = Gtk.GestureLongPress(widget=parent)
 
             # Shift+F10
             parent.connect("popup-menu", self._callback_menu)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
-        self.gesture_click.connect("pressed", self._callback_click)
 
         self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_press.set_touch_only(True)
