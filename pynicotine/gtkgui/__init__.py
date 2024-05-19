@@ -132,7 +132,11 @@ def run(hidden, ci_mode, multi_instance):
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
         os.environ["GSK_RENDERER"] = "cairo"
 
-    elif "GSK_RENDERER" not in os.environ:
+    elif sys.platform == "darwin":
+        # Always enable CSD on macOS for a more uniform look
+        os.environ["GTK_CSD"] = "1"
+
+    if "GSK_RENDERER" not in os.environ:
         # Old GL renderer is faster for now. Make it the default.
         os.environ["GSK_RENDERER"] = "gl"
 
