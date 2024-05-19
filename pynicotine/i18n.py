@@ -57,7 +57,7 @@ def _set_system_language(language=None):
     if sys.platform == "win32":
         import ctypes
         windll = ctypes.windll.kernel32
- 
+
         if not language and "LANGUAGE" not in os.environ:
             language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
 
@@ -68,23 +68,23 @@ def _set_system_language(language=None):
 
         try:
             with open(os_preferences_path, "rb") as file_handle:
-                os_preferences = plistlib.load(file_handle)   
+                os_preferences = plistlib.load(file_handle)
 
         except Exception as error:
             os_preferences = {}
             print(f"Cannot load global preferences: {error}")
-    
+
         # macOS provides locales with additional @ specifiers, e.g. en_GB@rg=US (region).
         # Remove them, since they are not supported.
         default_locale = next(iter(os_preferences.get("AppleLocale", "").split("@", maxsplit=1)))
-    
+
         if not language and "LANGUAGE" not in os.environ:
             languages = os_preferences.get("AppleLanguages", [""])
             language = next(iter(languages)).replace("-", "_")
-    
-    if default_locale: 
+
+    if default_locale:
         os.environ["LC_ALL"] = default_locale
-    
+
     if language:
         os.environ["LANGUAGE"] = language
 
