@@ -34,7 +34,7 @@ class Window:
 
         self.widget = widget
 
-        if GTK_API_VERSION == 4 and sys.platform == "darwin":
+        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
             # Workaround to restore Ctrl-click to show context menu on macOS
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
