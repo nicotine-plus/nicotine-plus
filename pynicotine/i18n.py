@@ -78,6 +78,11 @@ def _set_system_language(language=None):
         # Remove them, since they are not supported.
         default_locale = next(iter(os_preferences.get("AppleLocale", "").split("@", maxsplit=1)))
 
+        if default_locale.endswith("_ES"):
+            # *_ES locale is currently broken on macOS (crashes when sorting strings).
+            # Disable it for now.
+            default_locale = "pt_PT"
+
         if not language and "LANGUAGE" not in os.environ:
             languages = os_preferences.get("AppleLanguages", [""])
             language = next(iter(languages)).replace("-", "_")
