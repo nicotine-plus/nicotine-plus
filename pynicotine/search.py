@@ -176,16 +176,25 @@ class Search:
         # SoulseekQt doesn't seem to send search results if such characters are included (July 7, 2020)
         search_term_words_no_quotes = []
 
+        excluded_char = "-"
+        partial_char = "*"
+        quotation_char = '"'
+
         for index, word in enumerate(search_term_words):
-            if word.startswith("*") and len(word) > 1:
+            if not word:
+                continue
+
+            first_char = word[0]
+
+            if first_char == partial_char and len(word) > 1:
                 # Partial word (*erm)
                 included_words.append(word[1:].lower())
 
-            elif word.startswith("-") and len(word) > 1:
+            elif first_char == excluded_char and len(word) > 1:
                 # Excluded word (-word)
                 excluded_words.append(word[1:].lower())
 
-            elif word.startswith('"') and word.endswith('"') and len(word) > 2:
+            elif first_char == quotation_char and word[-1] == quotation_char and len(word) > 2:
                 # Phrase "some words here"
                 word = word[1:-1]
                 included_words.append(word.lower())
@@ -479,30 +488,27 @@ class Search:
 
         for index in islice(results, min(len(results), max_results)):
             file_path = core.shares.file_path_index[index]
-            fileinfo = public_files.get(file_path)
 
-            if fileinfo is not None:
-                self._append_file_info(fileinfos, fileinfo)
+            if file_path in public_files:
+                self._append_file_info(fileinfos, public_files[file_path])
                 continue
 
-            if is_buddy or reveal_buddy_shares:
-                fileinfo = buddy_files.get(file_path)
+            if (is_buddy or reveal_buddy_shares) and file_path in buddy_files:
+                fileinfo = buddy_files[file_path]
 
-                if fileinfo is not None:
-                    if is_buddy:
-                        self._append_file_info(fileinfos, fileinfo)
-                    else:
-                        self._append_file_info(private_fileinfos, fileinfo)
-                    continue
+                if is_buddy:
+                    self._append_file_info(fileinfos, fileinfo)
+                else:
+                    self._append_file_info(private_fileinfos, fileinfo)
+                continue
 
-            if is_trusted or reveal_trusted_shares:
-                fileinfo = trusted_files.get(file_path)
+            if (is_trusted or reveal_trusted_shares) and file_path in trusted_files:
+                fileinfo = trusted_files[file_path]
 
-                if fileinfo is not None:
-                    if is_trusted:
-                        self._append_file_info(fileinfos, fileinfo)
-                    else:
-                        self._append_file_info(private_fileinfos, fileinfo)
+                if is_trusted:
+                    self._append_file_info(fileinfos, fileinfo)
+                else:
+                    self._append_file_info(private_fileinfos, fileinfo)
 
         results.clear()
 
@@ -563,26 +569,29 @@ class Search:
 
         # Partial search words (e.g. *ello)
         for partial_word in partial_words:
+            partial_word_len = len(partial_word)
             partial_results = set()
             num_partial_results = 0
 
             for complete_word in word_index:
-                if complete_word.endswith(partial_word):
-                    indices = word_index[complete_word]
+                if len(complete_word) < partial_word_len or not complete_word.endswith(partial_word):
+                    continue
 
-                    if has_single_word:
-                        # Attempt to avoid large memory usage if someone searches for e.g. "*lac"
-                        indices = indices[:max_results - num_partial_results]
+                indices = word_index[complete_word]
 
-                    partial_results.update(indices)
+                if has_single_word:
+                    # Attempt to avoid large memory usage if someone searches for e.g. "*lac"
+                    indices = indices[:max_results - num_partial_results]
 
-                    if not has_single_word:
-                        continue
+                partial_results.update(indices)
 
-                    num_partial_results = len(partial_results)
+                if not has_single_word:
+                    continue
 
-                    if num_partial_results >= max_results:
-                        break
+                num_partial_results = len(partial_results)
+
+                if num_partial_results >= max_results:
+                    break
 
             if not partial_results:
                 return None
@@ -655,11 +664,10 @@ class Search:
         if permission_level == PermissionLevel.BANNED:
             return
 
-        word_index = core.shares.share_dbs.get("words")
-
-        if word_index is None:
+        if "words" not in core.shares.share_dbs:
             return
 
+        word_index = core.shares.share_dbs["words"]
         original_search_term = search_term
         search_term = search_term.lower()
 
@@ -667,16 +675,21 @@ class Search:
         excluded_words = set()
         partial_words = set()
 
-        if "-" in search_term or "*" in search_term:
+        excluded_char = "-"
+        partial_char = "*"
+
+        if excluded_char in search_term or partial_char in search_term:
             for word in search_term.split():
-                if len(word) < 1:
+                if not word:
                     continue
 
-                if word.startswith("-"):
+                first_char = word[0]
+
+                if first_char == excluded_char:
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         excluded_words.add(subword)
 
-                elif word.startswith("*"):
+                elif first_char == partial_char:
                     for subword in word.translate(TRANSLATE_PUNCTUATION).split():
                         partial_words.add(subword)
 
