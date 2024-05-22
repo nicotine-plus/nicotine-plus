@@ -871,15 +871,18 @@ class ChatRoom:
 
         speed = msg.avgspeed
         num_files = msg.files
-        h_speed = ""
 
-        if speed > 0:
-            h_speed = human_speed(speed)
+        if speed != self.users_list_view.get_row_value(iterator, "speed_data"):
+            h_speed = human_speed(speed) if speed > 0 else ""
 
-        self.users_list_view.set_row_value(iterator, "speed", h_speed)
-        self.users_list_view.set_row_value(iterator, "files", humanize(num_files))
-        self.users_list_view.set_row_value(iterator, "speed_data", speed)
-        self.users_list_view.set_row_value(iterator, "files_data", num_files)
+            self.users_list_view.set_row_value(iterator, "speed", h_speed)
+            self.users_list_view.set_row_value(iterator, "speed_data", speed)
+
+        if num_files != self.users_list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
+            self.users_list_view.set_row_value(iterator, "files", h_num_files)
+            self.users_list_view.set_row_value(iterator, "files_data", num_files)
 
     def user_status(self, msg):
 
@@ -923,11 +926,8 @@ class ChatRoom:
 
         flag_icon_name = get_flag_icon_name(country_code)
 
-        if not flag_icon_name or flag_icon_name == self.users_list_view.get_row_value(iterator, "country"):
-            # Country didn't change, no need to update
-            return
-
-        self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
+        if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
+            self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
     def username_event(self, pos_x, pos_y, user):
 

@@ -482,10 +482,8 @@ class Interests:
 
         flag_icon_name = get_flag_icon_name(country_code)
 
-        if not flag_icon_name:
-            return
-
-        self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
+        if flag_icon_name and flag_icon_name != self.similar_users_list_view.get_row_value(iterator, "country"):
+            self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
     def user_status(self, msg):
 
@@ -496,10 +494,8 @@ class Interests:
 
         status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
 
-        if not status_icon_name or status_icon_name == self.similar_users_list_view.get_row_value(iterator, "status"):
-            return
-
-        self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
+        if status_icon_name and status_icon_name != self.similar_users_list_view.get_row_value(iterator, "status"):
+            self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):
 
@@ -509,15 +505,19 @@ class Interests:
             return
 
         speed = msg.avgspeed
-        files = msg.files
+        num_files = msg.files
 
-        h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(msg.files)
+        if speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
+            h_speed = human_speed(speed) if speed > 0 else ""
 
-        self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
-        self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
-        self.similar_users_list_view.set_row_value(iterator, "files_data", files)
+            self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
+            self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
+
+        if num_files != self.similar_users_list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
+            self.similar_users_list_view.set_row_value(iterator, "files", h_num_files)
+            self.similar_users_list_view.set_row_value(iterator, "files_data", num_files)
 
     @staticmethod
     def toggle_menu_items(menu, list_view, column_id):
