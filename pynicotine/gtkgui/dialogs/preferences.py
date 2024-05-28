@@ -88,7 +88,7 @@ class NetworkPage:
         ) = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
-        self.portmap_required = False
+        self.portmap_required = None
 
         self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
 
@@ -162,7 +162,7 @@ class NetworkPage:
         listen_port, _unused_port = config.sections["server"]["portrange"]
         self.listen_port_spinner.set_value(listen_port)
 
-        self.portmap_required = False
+        self.portmap_required = None
 
     def get_settings(self):
 
@@ -233,7 +233,7 @@ class NetworkPage:
         ).present()
 
     def on_toggle_upnp(self, *_args):
-        self.portmap_required = self.upnp_toggle.get_active()
+        self.portmap_required = "add" if self.upnp_toggle.get_active() else "remove"
 
     def on_default_server(self, *_args):
         server_address, server_port = config.defaults["server"]["server"]
@@ -3168,9 +3168,10 @@ class Preferences(Dialog):
         for key, data in options.items():
             config.sections[key].update(data)
 
-        if portmap_required:
+        if portmap_required == "add":
             core.portmapper.add_port_mapping()
-        else:
+
+        elif portmap_required == "remove":
             core.portmapper.remove_port_mapping()
 
         if user_profile_required:
