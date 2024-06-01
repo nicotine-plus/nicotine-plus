@@ -167,6 +167,7 @@ EVENT_NAMES = {
     "file-transfer-init",
     "file-upload-progress",
     "folder-contents-response",
+    "folder-contents-timeout",
     "folder-download-finished",
     "peer-connection-closed",
     "peer-connection-error",
