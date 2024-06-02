@@ -2440,7 +2440,7 @@ class NetworkThread(Thread):
                     self._close_connection(self._conns, sock)
                     return
 
-            except OSError as error:
+            except (OSError, MemoryError) as error:
                 log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
                               "Error: %(error)s"), {
                     "addr": conn_obj_established.addr,
