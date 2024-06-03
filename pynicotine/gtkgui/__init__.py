@@ -104,18 +104,13 @@ def run(hidden, ci_mode, multi_instance):
     if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
-        resources_folder = executable_folder
 
-        if sys.platform == "win32":
-            import ctypes
-            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
-
-        elif sys.platform == "darwin":
-            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
-
-        os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share", "fonts", "fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share", "fonts")
+        os.environ["GTK_EXE_PREFIX"] = executable_folder
+        os.environ["GTK_DATA_PREFIX"] = executable_folder
+        os.environ["GTK_PATH"] = executable_folder
+        os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "share", "fonts")
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
