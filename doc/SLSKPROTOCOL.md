@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 16, 2024
+Last updated on June 4, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -350,7 +350,19 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 ### WatchUser
 
-Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
+Used to be kept updated about a user's stats/status. Whenever a user's stats (number of shared
+files, upload speed) or status change, the server sends a [GetUserStats](#server-code-36) and
+[GetUserStatus](#server-code-7) message respectively.
+
+No [GetUserStats](#server-code-36) message is sent for watched users that reconnect to the server.
+This can result in outdated stats when a user rescans their shares before connecting to the server.
+To work around this issue, send a [GetUserStats](#server-code-36) message to the server whenever
+a previously watched user logs in.
+
+When watching your own username, the server only sends an initial [WatchUser](#server-code-5)
+response. No further [GetUserStats](#server-code-36) messages are sent, even if the stats have
+changed. A [GetUserStatus](#server-code-7) message is only sent when enabling away status, not
+when disabling it.
 
 ### Data Order
 

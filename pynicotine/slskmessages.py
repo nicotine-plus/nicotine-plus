@@ -753,9 +753,20 @@ class GetPeerAddress(ServerMessage):
 class WatchUser(ServerMessage):
     """Server code 5.
 
-    Used to be kept updated about a user's stats. When a user's stats
-    have changed, the server sends a GetUserStats response message with
-    the new user stats.
+    Used to be kept updated about a user's stats/status. Whenever a user's stats
+    (number of shared files, upload speed) or status change, the server sends
+    a GetUserStats and GetUserStatus message respectively.
+
+    No GetUserStats message is sent for watched users that reconnect to the
+    server. This can result in outdated stats when a user rescans their
+    shares before connecting to the server. To work around this issue, send
+    a GetUserStats message to the server whenever a previously watched user
+    logs in.
+
+    When watching your own username, the server only sends an initial WatchUser
+    response message. No further GetUserStats messages are sent, even if the
+    stats have changed. A GetUserStatus message is only sent when enabling away
+    status, not when disabling it.
     """
 
     __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "country")
