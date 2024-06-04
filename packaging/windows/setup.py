@@ -245,19 +245,6 @@ def add_icon_packs():
     )
 
 
-def add_themes():
-
-    # "Mac" is required for macOS-specific keybindings in GTK
-    required_themes = (
-        "Default",
-        "Mac"
-    )
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/themes"), output_path="share/themes",
-        starts_with=required_themes, ends_with=".css", recursive=True
-    )
-
-
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
     add_file(file_path=ssl_paths.openssl_cafile, output_path="lib/cert.pem")
@@ -277,7 +264,6 @@ def add_translations():
 # GTK
 add_gtk()
 add_icon_packs()
-add_themes()
 
 # SSL
 add_ssl_certs()
