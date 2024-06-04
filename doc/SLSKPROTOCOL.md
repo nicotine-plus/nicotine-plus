@@ -514,7 +514,9 @@ The server tells us someone has just left a room we're in.
 
 ### ConnectToPeer
 
-Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
+We send this to the server to attempt an indirect connection with a user.
+The server forwards the message to the user, who in turn attempts to establish
+a connection to our IP address and port from their end.
 
 See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
