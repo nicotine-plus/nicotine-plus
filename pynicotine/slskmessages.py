@@ -3402,11 +3402,11 @@ class FolderContentsResponse(PeerMessage):
         msg = bytearray()
         msg.extend(self.pack_uint32(self.token))
         msg.extend(self.pack_string(self.dir))
-        msg.extend(self.pack_uint32(1))
-
-        msg.extend(self.pack_string(self.dir))
 
         if self.list is not None:
+            msg.extend(self.pack_uint32(1))
+            msg.extend(self.pack_string(self.dir))
+
             # We already saved the folder contents as a bytearray when scanning our shares
             msg.extend(self.list)
         else:
