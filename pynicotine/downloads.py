@@ -119,8 +119,9 @@ class Downloads(Transfers):
 
         super()._server_login(msg)
 
-        # Request queue position of queued downloads every 3 minutes
-        self._download_queue_timer_id = events.schedule(delay=180, callback=self._check_download_queue, repeat=True)
+        # Request queue position of queued downloads every 5 minutes
+        self._download_queue_timer_id = events.schedule(
+            delay=300, callback=self._request_queue_positions, repeat=True)
 
         # Retry downloads failed due to connection issues every 3 minutes
         self._retry_connection_downloads_timer_id = events.schedule(
@@ -545,7 +546,7 @@ class Downloads(Transfers):
 
         events.emit("clear-download", transfer, update_parent)
 
-    def _check_download_queue(self):
+    def _request_queue_positions(self):
 
         for download in self.queued_transfers:
             core.send_message_to_peer(
