@@ -1136,31 +1136,22 @@ class Shares:
 
         ip_address, _port = msg.addr
         username = msg.username
+        folder_path = msg.dir
         permission_level, _reject_reason = self.check_user_permission(username, ip_address)
-
-        if permission_level == PermissionLevel.BANNED:
-            return
-
-        reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
-        reveal_trusted_shares = config.sections["transfers"]["reveal_trusted_shares"]
-        public_shares = self.share_dbs.get("public_streams")
-        buddy_shares = self.share_dbs.get("buddy_streams")
-        trusted_shares = self.share_dbs.get("trusted_streams")
         folder_data = None
 
-        try:
-            if (reveal_trusted_shares or permission_level == PermissionLevel.TRUSTED) and msg.dir in trusted_shares:
-                folder_data = trusted_shares[msg.dir]
+        if permission_level != PermissionLevel.BANNED:
+            folder_data = self.share_dbs.get("public_streams", {}).get(folder_path)
 
-            elif (reveal_buddy_shares or permission_level == PermissionLevel.BUDDY) and msg.dir in buddy_shares:
-                folder_data = buddy_shares[msg.dir]
+            if (folder_data is None
+                    and (config.sections["transfers"]["reveal_buddy_shares"]
+                         or permission_level in {PermissionLevel.BUDDY, PermissionLevel.TRUSTED})):
+                folder_data = self.share_dbs.get("buddy_streams", {}).get(folder_path)
 
-            elif msg.dir in public_shares:
-                folder_data = public_shares[msg.dir]
-
-        except Exception as error:
-            log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
-                    {"folder": msg.dir, "error": error})
+            if (folder_data is None
+                    and (config.sections["transfers"]["reveal_trusted_shares"]
+                         or permission_level == PermissionLevel.TRUSTED)):
+                folder_data = self.share_dbs.get("trusted_streams", {}).get(folder_path)
 
         core.send_message_to_peer(
-            username, slskmessages.FolderContentsResponse(directory=msg.dir, token=msg.token, shares=folder_data))
+            username, slskmessages.FolderContentsResponse(directory=folder_path, token=msg.token, shares=folder_data))

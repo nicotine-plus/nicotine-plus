@@ -121,8 +121,9 @@ class Downloads(Transfers):
 
         super()._server_login(msg)
 
-        # Request queue position of queued downloads every 3 minutes
-        self._download_queue_timer_id = events.schedule(delay=180, callback=self._check_download_queue, repeat=True)
+        # Request queue position of queued downloads every 5 minutes
+        self._download_queue_timer_id = events.schedule(
+            delay=300, callback=self._request_queue_positions, repeat=True)
 
         # Retry downloads failed due to connection issues every 3 minutes
         self._retry_connection_downloads_timer_id = events.schedule(
@@ -579,7 +580,7 @@ class Downloads(Transfers):
         except OSError as error:
             log.add_transfer("Cannot read incomplete download folder: %s", error)
 
-    def _check_download_queue(self):
+    def _request_queue_positions(self):
 
         for download in self.queued_transfers:
             core.send_message_to_peer(
@@ -1016,26 +1017,37 @@ class Downloads(Transfers):
         """Peer code 37."""
 
         username = msg.username
+        folder_path = msg.dir
 
         if username not in self._requested_folders:
             return
 
-        for folder_path, files in msg.list.items():
-            if folder_path not in self._requested_folders[username]:
+        requested_folder = self._requested_folders[username].get(msg.dir)
+
+        if requested_folder is None:
+            return
+
+        log.add_transfer(("Received response for folder content request for folder %(path)s "
+                          "from user %(user)s"), {
+            "path": folder_path,
+            "user": username
+        })
+
+        if requested_folder.request_timer_id is not None:
+            events.cancel_scheduled(requested_folder.request_timer_id)
+            requested_folder.request_timer_id = None
+
+        if not msg.list and not requested_folder.legacy_attempt:
+            log.add_transfer("Folder content response is empty. Trying legacy latin-1 request.")
+            requested_folder.legacy_attempt = True
+            self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
+            return
+
+        for i_folder_path, files in msg.list.items():
+            if i_folder_path != folder_path:
                 continue
 
-            log.add_transfer(("Received response for folder content request for folder %(path)s "
-                              "from user %(user)s"), {
-                "path": folder_path,
-                "user": username
-            })
-
             num_files = len(files)
-            requested_folder = self._requested_folders[username][folder_path]
-
-            if requested_folder.request_timer_id is not None:
-                events.cancel_scheduled(requested_folder.request_timer_id)
-                requested_folder.request_timer_id = None
 
             if check_num_files and num_files > 100:
                 check_num_files = False
@@ -1045,14 +1057,7 @@ class Downloads(Transfers):
                 )
                 return
 
-            if not files and not requested_folder.legacy_attempt:
-                log.add_transfer("Folder content response is empty. Trying legacy latin-1 request.")
-                requested_folder.legacy_attempt = requested_folder.has_retried = True
-                self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
-                return
-
             destination_folder_path = self.get_folder_destination(username, folder_path)
-            del self._requested_folders[username][folder_path]
 
             log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
                               "Destination path: %(destination)s"), {
@@ -1067,6 +1072,8 @@ class Downloads(Transfers):
                 self.enqueue_download(
                     username, virtual_path, folder_path=destination_folder_path, size=file_size,
                     file_attributes=file_attributes)
+
+        del self._requested_folders[username][folder_path]
 
     def _transfer_request(self, msg):
         """Peer code 40."""
