@@ -37,10 +37,6 @@ class PrivateChat:
         self.away_message_users = set()
         self.users = set()
 
-        # Clear list of previously open chats if we don't want to restore them
-        if not config.sections["privatechat"]["store"]:
-            config.sections["privatechat"]["users"].clear()
-
         for event_name, callback in (
             ("message-user", self._message_user),
             ("peer-address", self._get_peer_address),
@@ -55,6 +51,8 @@ class PrivateChat:
     def _start(self):
 
         if not config.sections["privatechat"]["store"]:
+            # Clear list of previously open chats if we don't want to restore them
+            config.sections["privatechat"]["users"].clear()
             return
 
         for username in config.sections["privatechat"]["users"]:

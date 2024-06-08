@@ -71,6 +71,20 @@ class Search:
         self.wishlist_interval = 0
         self._wishlist_timer_id = None
 
+        for event_name, callback in (
+            ("excluded-search-phrases", self._excluded_search_phrases),
+            ("file-search-request-distributed", self._file_search_request_distributed),
+            ("file-search-request-server", self._file_search_request_server),
+            ("file-search-response", self._file_search_response),
+            ("quit", self._quit),
+            ("server-disconnect", self._server_disconnect),
+            ("set-wishlist-interval", self._set_wishlist_interval),
+            ("start", self._start)
+        ):
+            events.connect(event_name, callback)
+
+    def _start(self):
+
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
@@ -80,17 +94,6 @@ class Search:
                 token=self.token, term=term, included_words=included_words,
                 excluded_words=excluded_words, mode="wishlist", is_ignored=True
             )
-
-        for event_name, callback in (
-            ("excluded-search-phrases", self._excluded_search_phrases),
-            ("file-search-request-distributed", self._file_search_request_distributed),
-            ("file-search-request-server", self._file_search_request_server),
-            ("file-search-response", self._file_search_response),
-            ("quit", self._quit),
-            ("server-disconnect", self._server_disconnect),
-            ("set-wishlist-interval", self._set_wishlist_interval)
-        ):
-            events.connect(event_name, callback)
 
     def _quit(self):
         self.remove_all_searches()

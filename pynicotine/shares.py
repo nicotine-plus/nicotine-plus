@@ -649,7 +649,6 @@ class Shares:
         self.file_path_index = ()
         self._scanner_process = None
 
-        self.convert_shares()
         self.share_db_paths = [
             ("words", os.path.join(config.data_folder_path, "words.dbn")),
             ("public_files", os.path.join(config.data_folder_path, "publicfiles.dbn")),
@@ -679,6 +678,7 @@ class Shares:
         rescan_startup = (config.sections["transfers"]["rescanonstartup"]
                           and not config.need_config())
 
+        self.convert_shares()
         self.rescan_shares(init=True, rescan=rescan_startup)
 
     def _quit(self):
