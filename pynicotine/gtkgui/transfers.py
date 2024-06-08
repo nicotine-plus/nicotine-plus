@@ -380,6 +380,7 @@ class Transfers:
             # No need to do unnecessary work if transfers are not visible
             return
 
+        has_disabled_sorting = False
         has_selected_parent = False
         update_counters = False
         use_reverse_file_path = config.sections["ui"]["reverse_file_paths"]
@@ -395,8 +396,18 @@ class Transfers:
                 if select_parent:
                     has_selected_parent = True
 
-                if row_added:
-                    update_counters = True
+                if not row_added:
+                    continue
+
+                update_counters = True
+
+                if not has_disabled_sorting:
+                    # Optimization: disable sorting while adding rows
+                    self.tree_view.disable_sorting()
+                    has_disabled_sorting = True
+
+            if has_disabled_sorting:
+                self.tree_view.enable_sorting()
 
         if update_parent:
             self.update_parent_rows(transfer)
