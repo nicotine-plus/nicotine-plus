@@ -2384,6 +2384,8 @@ class NetworkThread(Thread):
         if sock is self._listen_socket:
             # Manage incoming connections to listening socket
             while self._num_sockets < self.MAX_SOCKETS:
+                incoming_sock = None
+
                 try:
                     incoming_sock, incoming_addr = sock.accept()
                     incoming_sock.setblocking(False)
@@ -2397,7 +2399,11 @@ class NetworkThread(Thread):
                         break
 
                     log.add_conn("Incoming connection failed: %s", error)
-                    break
+
+                    if incoming_sock is not None:
+                        self._close_socket(incoming_sock)
+
+                    continue
 
                 selector_events = selectors.EVENT_READ
 
