@@ -290,10 +290,10 @@ class Search:
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
 
-            if search_term in items:
-                items.remove(search_term)
+            if search.term_sanitized in items:
+                items.remove(search.term_sanitized)
 
-            items.insert(0, search_term)
+            items.insert(0, search.term_sanitized)
 
             # Clear old items
             del items[self.SEARCH_HISTORY_LIMIT:]

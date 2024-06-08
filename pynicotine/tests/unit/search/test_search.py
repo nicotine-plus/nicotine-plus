@@ -60,24 +60,25 @@ class SearchTest(TestCase):
         search history."""
 
         old_token = core.search.token
-        search_term, search_term_no_quotes, included_words, excluded_words = core.search.sanitize_search_term(
-            SEARCH_TEXT
-        )
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search = core.search.searches[core.search.token]
 
         self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(search_term, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes')
+        self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(
-            search_term_no_quotes, '70 Gwen test -mp3 what s up don t -nothanks a b c d *ello auto -No yes'
+            search.term_sanitized, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes'
         )
-        self.assertEqual(config.sections["searches"]["history"][0], search_term)
-        self.assertIn("ello", included_words)
-        self.assertIn("gwen", included_words)
-        self.assertIn("what's up", included_words)
-        self.assertIn("don", included_words)
-        self.assertIn("t", included_words)
-        self.assertIn("no", excluded_words)
-        self.assertIn("mp3", excluded_words)
+        self.assertEqual(
+            search.term_transmitted, '70 Gwen test -mp3 what s up don t -nothanks a b c d *ello auto -No yes'
+        )
+        self.assertEqual(config.sections["searches"]["history"][0], search.term_sanitized)
+        self.assertIn("ello", search.included_words)
+        self.assertIn("gwen", search.included_words)
+        self.assertIn("what's up", search.included_words)
+        self.assertIn("don", search.included_words)
+        self.assertIn("t", search.included_words)
+        self.assertIn("no", search.excluded_words)
+        self.assertIn("mp3", search.excluded_words)
 
     def test_search_token_increment(self):
         """Test that search token increments work properly."""
@@ -95,16 +96,26 @@ class SearchTest(TestCase):
         # First item
 
         core.search.add_wish(SEARCH_TEXT)
+        search = core.search.searches[core.search.token]
+
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(core.search.token, old_token + 1)
         self.assertEqual(core.search.token, core.search.token)
+        self.assertEqual(search.term, SEARCH_TEXT)
+        self.assertEqual(search.mode, "wishlist")
+        self.assertEqual(search.is_ignored, True)
 
         # Second item
 
         new_item = f"{SEARCH_TEXT}1"
         core.search.add_wish(new_item)
+        search = core.search.searches[core.search.token]
+
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
+        self.assertEqual(search.term, new_item)
+        self.assertEqual(search.mode, "wishlist")
+        self.assertEqual(search.is_ignored, True)
 
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
