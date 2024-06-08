@@ -2386,6 +2386,10 @@ class NetworkThread(Thread):
             while self._num_sockets < self.MAX_SOCKETS:
                 try:
                     incoming_sock, incoming_addr = sock.accept()
+                    incoming_sock.setblocking(False)
+                    incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+                    incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+                    incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
                 except OSError as error:
                     if error.errno == errno.EWOULDBLOCK:
@@ -2396,10 +2400,6 @@ class NetworkThread(Thread):
                     break
 
                 selector_events = selectors.EVENT_READ
-                incoming_sock.setblocking(False)
-                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
                 self._conns[incoming_sock] = PeerConnection(
                     sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
