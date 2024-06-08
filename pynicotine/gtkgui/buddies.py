@@ -155,6 +155,7 @@ class Buddies:
             ("buddy-trusted", self.buddy_trusted),
             ("remove-buddy", self.remove_buddy),
             ("server-disconnect", self.server_disconnect),
+            ("start", self.start),
             ("user-country", self.user_country),
             ("user-stats", self.user_stats),
             ("user-status", self.user_status)
@@ -162,6 +163,15 @@ class Buddies:
             events.connect(event_name, callback)
 
         self.set_buddy_list_position()
+
+    def start(self):
+
+        self.list_view.disable_sorting()
+
+        for username, user_data in core.buddies.users.items():
+            self.add_buddy(username, user_data)
+
+        self.list_view.enable_sorting()
 
     def destroy(self):
 

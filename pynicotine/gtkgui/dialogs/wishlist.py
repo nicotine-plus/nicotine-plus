@@ -63,9 +63,13 @@ class WishList(Dialog):
             }
         )
 
+        self.list_view.disable_sorting()
+
         for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
             self.list_view.add_row([wish], select_row=False)
+
+        self.list_view.enable_sorting()
 
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header

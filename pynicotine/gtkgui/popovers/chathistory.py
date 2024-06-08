@@ -184,6 +184,8 @@ class ChatHistory(Popover):
 
     def load_users(self):
 
+        self.list_view.disable_sorting()
+
         try:
             with os.scandir(encode_path(log.private_chat_folder_path)) as entries:
                 for entry in entries:
@@ -201,6 +203,8 @@ class ChatHistory(Popover):
 
         except OSError:
             pass
+
+        self.list_view.enable_sorting()
 
     def remove_user(self, username):
 

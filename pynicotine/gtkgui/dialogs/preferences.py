@@ -375,6 +375,8 @@ class DownloadsPage:
         else:
             self.use_unlimited_speed_radio.set_active(True)
 
+        self.filter_list_view.disable_sorting()
+
         for item in config.sections["transfers"]["downloadfilters"]:
             if not isinstance(item, list) or len(item) < 2:
                 continue
@@ -383,6 +385,8 @@ class DownloadsPage:
             enable_regex = not escaped
 
             self.filter_list_view.add_row([dfilter, enable_regex], select_row=False)
+
+        self.filter_list_view.enable_sorting()
 
     def get_settings(self):
 
@@ -508,10 +512,12 @@ class DownloadsPage:
     def on_default_filters(self, *_args):
 
         self.filter_list_view.clear()
+        self.filter_list_view.disable_sorting()
 
         for filter_row in config.defaults["transfers"]["downloadfilters"]:
             self.filter_list_view.add_row(filter_row, select_row=False)
 
+        self.filter_list_view.enable_sorting()
         self.on_verify_filter()
 
     def on_verify_filter(self, *_args):
@@ -632,6 +638,7 @@ class SharesPage:
     def set_settings(self):
 
         self.shares_list_view.clear()
+        self.shares_list_view.disable_sorting()
 
         self.application.preferences.set_widgets_data(self.options)
 
@@ -651,6 +658,7 @@ class SharesPage:
             self.shares_list_view.add_row(
                 [virtual_name, folder_path, _("Trusted")], select_row=False)
 
+        self.shares_list_view.enable_sorting()
         self.rescan_required = self.recompress_shares_required = False
 
     def get_settings(self):
@@ -2453,6 +2461,7 @@ class UrlHandlersPage:
     def set_settings(self):
 
         self.protocol_list_view.clear()
+        self.protocol_list_view.disable_sorting()
         self.protocols.clear()
 
         self.application.preferences.set_widgets_data(self.options)
@@ -2461,6 +2470,8 @@ class UrlHandlersPage:
 
         for protocol, command in self.protocols.items():
             self.protocol_list_view.add_row([str(protocol), str(command)], select_row=False)
+
+        self.protocol_list_view.enable_sorting()
 
     def get_settings(self):
 
@@ -2818,6 +2829,7 @@ class PluginsPage:
     def set_settings(self):
 
         self.plugin_list_view.clear()
+        self.plugin_list_view.disable_sorting()
 
         self.application.preferences.set_widgets_data(self.options)
 
@@ -2830,6 +2842,8 @@ class PluginsPage:
             plugin_name = info.get("Name", plugin_id)
             enabled = (plugin_id in config.sections["plugins"]["enabled"])
             self.plugin_list_view.add_row([enabled, plugin_name, plugin_id], select_row=False)
+
+        self.plugin_list_view.enable_sorting()
 
     def get_settings(self):
 
@@ -3070,6 +3084,8 @@ class Preferences(Dialog):
             widget.set_font(value)
 
         elif isinstance(widget, TreeView):
+            widget.disable_sorting()
+
             if isinstance(value, list):
                 for item in value:
                     if isinstance(item, list):
@@ -3082,6 +3098,8 @@ class Preferences(Dialog):
             elif isinstance(value, dict):
                 for item1, item2 in value.items():
                     widget.add_row([str(item1), str(item2)], select_row=False)
+
+            widget.enable_sorting()
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)

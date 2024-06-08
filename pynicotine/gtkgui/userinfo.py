@@ -596,13 +596,18 @@ class UserInfo:
     def user_interests(self, msg):
 
         self.likes_list_view.clear()
+        self.likes_list_view.disable_sorting()
         self.dislikes_list_view.clear()
+        self.dislikes_list_view.disable_sorting()
 
         for like in msg.likes:
             self.likes_list_view.add_row([like], select_row=False)
 
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
+
+        self.likes_list_view.enable_sorting()
+        self.dislikes_list_view.enable_sorting()
 
     # Callbacks #
 

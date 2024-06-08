@@ -101,7 +101,7 @@ class Buddies:
 
             _username, note, notify_status, is_prioritized, is_trusted, last_seen, country = row
 
-            self.users[username] = user_data = Buddy(
+            self.users[username] = Buddy(
                 username=username,
                 note=note,
                 notify_status=notify_status,
@@ -111,7 +111,6 @@ class Buddies:
                 country=country,
                 status=UserStatus.OFFLINE
             )
-            events.emit("add-buddy", username, user_data)
 
         self.allow_saving_buddies = True
 

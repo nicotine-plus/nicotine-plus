@@ -165,6 +165,9 @@ class Interests:
             }
         )
 
+        self.likes_list_view.disable_sorting()
+        self.dislikes_list_view.disable_sorting()
+
         for item in config.sections["interests"]["likes"]:
             if isinstance(item, str):
                 self.add_thing_i_like(item)
@@ -172,6 +175,9 @@ class Interests:
         for item in config.sections["interests"]["dislikes"]:
             if isinstance(item, str):
                 self.add_thing_i_hate(item)
+
+        self.likes_list_view.enable_sorting()
+        self.dislikes_list_view.enable_sorting()
 
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
@@ -417,9 +423,12 @@ class Interests:
             self.recommendations_label.set_label(_("Recommendations"))
 
         self.recommendations_list_view.clear()
+        self.recommendations_list_view.disable_sorting()
 
         for thing, rating in recommendations:
             self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+
+        self.recommendations_list_view.enable_sorting()
 
     def global_recommendations(self, msg):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
@@ -438,6 +447,7 @@ class Interests:
             self.similar_users_label.set_label(_("Similar Users"))
 
         self.similar_users_list_view.clear()
+        self.similar_users_list_view.disable_sorting()
 
         for index, (user, rating) in enumerate(users.items()):
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
@@ -465,6 +475,8 @@ class Interests:
                 files or 0,
                 rating
             ], select_row=False)
+
+        self.similar_users_list_view.enable_sorting()
 
     def similar_users(self, msg):
         self.set_similar_users(msg.users)
