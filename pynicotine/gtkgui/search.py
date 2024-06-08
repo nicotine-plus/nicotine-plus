@@ -274,12 +274,12 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term, mode, mode_label, room=room, users=users)
+        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
 
-        self.add_search_history_item(search.term)
+        self.add_search_history_item(search.term_sanitized)
 
     def show_search(self, token):
 

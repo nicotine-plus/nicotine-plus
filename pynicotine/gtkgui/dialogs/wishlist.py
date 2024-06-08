@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -65,9 +64,9 @@ class WishList(Dialog):
 
         self.list_view.disable_sorting()
 
-        for wish in config.sections["server"]["autosearch"]:
-            wish = str(wish)
-            self.list_view.add_row([wish], select_row=False)
+        for search_item in core.search.searches.values():
+            if search_item.mode == "wishlist":
+                self.add_wish(search_item.term, select=False)
 
         self.list_view.enable_sorting()
 
@@ -181,8 +180,8 @@ class WishList(Dialog):
             callback=self.clear_wishlist_response
         ).present()
 
-    def add_wish(self, wish):
-        self.list_view.add_row([wish])
+    def add_wish(self, wish, select=True):
+        self.list_view.add_row([wish], select_row=select)
 
     def remove_wish(self, wish):
 

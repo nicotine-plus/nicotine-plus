@@ -37,13 +37,16 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 class SearchRequest:
 
-    __slots__ = ("token", "term", "included_words", "excluded_words", "mode", "room", "users", "is_ignored")
+    __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
+                 "mode", "room", "users", "is_ignored")
 
-    def __init__(self, token=None, term=None, included_words=None, excluded_words=None, mode="global",
-                 room=None, users=None, is_ignored=False):
+    def __init__(self, token=None, term=None, term_sanitized=None, term_transmitted=None, included_words=None,
+                 excluded_words=None, mode="global", room=None, users=None, is_ignored=False):
 
         self.token = token
         self.term = term
+        self.term_sanitized = term_sanitized
+        self.term_transmitted = term_transmitted
         self.included_words = included_words
         self.excluded_words = excluded_words
         self.mode = mode
@@ -86,14 +89,9 @@ class Search:
     def _start(self):
 
         # Create wishlist searches
-        for term in config.sections["server"]["autosearch"]:
+        for search_term in config.sections["server"]["autosearch"]:
             self.token = slskmessages.increment_token(self.token)
-            term, _term_no_quotes, included_words, excluded_words = self.sanitize_search_term(term)
-
-            self.searches[self.token] = SearchRequest(
-                token=self.token, term=term, included_words=included_words,
-                excluded_words=excluded_words, mode="wishlist", is_ignored=True
-            )
+            self.add_search(search_term, mode="wishlist", is_ignored=True)
 
     def _quit(self):
         self.remove_all_searches()
@@ -126,14 +124,19 @@ class Search:
         """Disallow parsing search result messages for a search ID."""
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, term, included_words, excluded_words, mode, room=None, users=None, is_ignored=False):
+    def add_search(self, search_term, mode, room=None, users=None, is_ignored=False):
+
+        term_sanitized, term_transmitted, included_words, excluded_words = self.sanitize_search_term(search_term)
 
         self.searches[self.token] = search = SearchRequest(
-            token=self.token, term=term, included_words=included_words,
-            excluded_words=excluded_words, mode=mode, room=room, users=users,
+            token=self.token, term=search_term, term_sanitized=term_sanitized, term_transmitted=term_transmitted,
+            included_words=included_words, excluded_words=excluded_words, mode=mode, room=room, users=users,
             is_ignored=is_ignored
         )
-        self.add_allowed_token(self.token)
+
+        if not is_ignored:
+            self.add_allowed_token(self.token)
+
         return search
 
     def remove_search(self, token):
@@ -162,7 +165,7 @@ class Search:
 
         included_words = []
         excluded_words = []
-        search_term = search_term_no_quotes = search_term.strip()
+        search_term = search_term_transmitted = search_term.strip()
 
         try:
             lex = shlex(search_term)
@@ -177,7 +180,7 @@ class Search:
 
         # Remove certain special characters from search term
         # SoulseekQt doesn't seem to send search results if such characters are included (July 7, 2020)
-        search_term_words_no_quotes = []
+        search_term_words_transmitted = []
 
         excluded_char = "-"
         partial_char = "*"
@@ -204,7 +207,7 @@ class Search:
 
                 # Remove problematic characters before appending to outgoing search term
                 for inner_word in word.translate(self.TRANSLATE_REMOVED_SEARCH_CHARACTERS).strip().split():
-                    search_term_words_no_quotes.append(inner_word)
+                    search_term_words_transmitted.append(inner_word)
 
                 continue
 
@@ -219,16 +222,16 @@ class Search:
                 for subword in word.translate(TRANSLATE_PUNCTUATION).strip().split():
                     included_words.append(subword.lower())
 
-            search_term_words_no_quotes.append(word)
+            search_term_words_transmitted.append(word)
 
-        sanitized_search_term_no_quotes = " ".join(x for x in search_term_words_no_quotes).strip()
+        sanitized_search_term_transmitted = " ".join(x for x in search_term_words_transmitted).strip()
 
         # Only modify search term if string also contains non-special characters
-        if sanitized_search_term_no_quotes:
+        if sanitized_search_term_transmitted:
             search_term = " ".join(x for x in search_term_words if x).strip()
-            search_term_no_quotes = sanitized_search_term_no_quotes
+            search_term_transmitted = sanitized_search_term_transmitted
 
-        return search_term, search_term_no_quotes, included_words, excluded_words
+        return search_term, search_term_transmitted, included_words, excluded_words
 
     def process_search_term(self, search_term, mode, room=None, users=None):
 
@@ -279,10 +282,10 @@ class Search:
 
         # Validate search term and run it through plugins
         search_term, room, users = self.process_search_term(search_term, mode, room, users)
-        search_term, search_term_no_quotes, included_words, excluded_words = self.sanitize_search_term(search_term)
 
         # Get a new search token
         self.token = slskmessages.increment_token(self.token)
+        search = self.add_search(search_term, mode, room, users)
 
         if config.sections["searches"]["enable_history"]:
             items = config.sections["searches"]["history"]
@@ -297,18 +300,17 @@ class Search:
             config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(search_term_no_quotes)
+            self.do_global_search(search.term_transmitted)
 
         elif mode == "rooms":
-            self.do_rooms_search(search_term_no_quotes, room)
+            self.do_rooms_search(search.term_transmitted, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(search_term_no_quotes)
+            self.do_buddies_search(search.term_transmitted)
 
         elif mode == "user":
-            self.do_peer_search(search_term_no_quotes, users)
+            self.do_peer_search(search.term_transmitted, users)
 
-        search = self.add_search(search_term, included_words, excluded_words, mode, room, users)
         events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
@@ -353,12 +355,10 @@ class Search:
         term = searches.pop()
         searches.insert(0, term)
 
-        term, term_no_quotes, _included_words, _excluded_words = self.sanitize_search_term(term)
-
         for search in self.searches.values():
             if search.term == term and search.mode == "wishlist":
                 search.is_ignored = False
-                self.do_wishlist_search(search.token, term_no_quotes)
+                self.do_wishlist_search(search.token, search.term_transmitted)
                 break
 
     def add_wish(self, wish):
@@ -368,25 +368,22 @@ class Search:
 
         # Get a new search token
         self.token = slskmessages.increment_token(self.token)
-        wish_sanitized, _wish_no_quotes, included_words, excluded_words = self.sanitize_search_term(wish)
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish_sanitized, included_words, excluded_words, mode="wishlist", is_ignored=True)
+        self.add_search(wish, mode="wishlist", is_ignored=True)
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
 
         if wish in config.sections["server"]["autosearch"]:
-            wish_sanitized, _wish_no_quotes, _included_words, _excluded_words = self.sanitize_search_term(wish)
-
             config.sections["server"]["autosearch"].remove(wish)
             config.write_configuration()
 
             for search in self.searches.values():
-                if search.term == wish_sanitized and search.mode == "wishlist":
+                if search.term == wish and search.mode == "wishlist":
                     del search
                     break
 
