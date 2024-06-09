@@ -514,8 +514,9 @@ class DownloadsPage:
         self.filter_list_view.clear()
         self.filter_list_view.disable_sorting()
 
-        for filter_row in config.defaults["transfers"]["downloadfilters"]:
-            self.filter_list_view.add_row(filter_row, select_row=False)
+        for download_filter, escaped in config.defaults["transfers"]["downloadfilters"]:
+            enable_regex = not escaped
+            self.filter_list_view.add_row([download_filter, enable_regex], select_row=False)
 
         self.filter_list_view.enable_sorting()
         self.on_verify_filter()
