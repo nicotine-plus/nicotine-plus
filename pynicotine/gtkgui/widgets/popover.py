@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,6 +18,7 @@
 
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
@@ -38,6 +39,34 @@ class Popover:
         self.widget.connect("closed", self._on_close)
 
         add_css_class(self.widget, "generic-popover")
+
+        if GTK_API_VERSION == 3:
+            return
+
+        # Workaround for popover not closing in GTK 4
+        # https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
+        self.has_clicked_content = False
+
+        for widget, callback in (
+            (self.widget, self._on_click_popover_gtk4),
+            (content_box.get_parent(), self._on_click_content_gtk4)
+        ):
+            gesture_click = Gtk.GestureClick(button=0)
+            gesture_click.connect("pressed", callback)
+            widget.add_controller(gesture_click)
+
+    def _on_click_popover_gtk4(self, *_args):
+
+        if not self.has_clicked_content:
+            # Clicked outside the popover, close it. Normally GTK handles this,
+            # but due to a bug, a popover intercepts clicks outside it after
+            # closing a child popover.
+            self.close()
+
+        self.has_clicked_content = False
+
+    def _on_click_content_gtk4(self, *_args):
+        self.has_clicked_content = True
 
     def _on_visible_changed(self, *_args):
 
