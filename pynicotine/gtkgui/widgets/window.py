@@ -38,12 +38,18 @@ class Window:
 
         self.widget = widget
 
-        if LIBADWAITA_API_VERSION and sys.platform == "win32":
-            # Use dark window controls on Windows when requested
-            from gi.repository import Adw  # pylint: disable=no-name-in-module
-            Adw.StyleManager.get_default().connect("notify::dark", self._on_dark_mode_win32)
+        if GTK_API_VERSION == 3:
+            return
 
-        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
+        if sys.platform == "win32":
+            widget.connect("realize", self._on_realize_win32)
+
+            # Use dark window controls on Windows when requested
+            if LIBADWAITA_API_VERSION:
+                from gi.repository import Adw  # pylint: disable=no-name-in-module
+                Adw.StyleManager.get_default().connect("notify::dark", self._on_dark_mode_win32)
+
+        elif sys.platform == "darwin":
             # Workaround to restore Ctrl-click to show context menu on macOS
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -53,6 +59,19 @@ class Window:
     def _menu_popup(self, controller, widget):
         if controller.is_active():
             widget.activate_action("menu.popup")
+
+    def _on_realize_win32(self, *_args):
+
+        from ctypes import windll
+
+        # Don't overlap taskbar when auto-hidden
+        h_wnd = self.get_surface().get_handle()
+        windll.user32.SetPropW(h_wnd, "NonRudeHWND", True)
+
+        # Set dark window controls
+        if LIBADWAITA_API_VERSION:
+            from gi.repository import Adw  # pylint: disable=no-name-in-module
+            self._on_dark_mode_win32(Adw.StyleManager.get_default())
 
     def _on_dark_mode_win32(self, style_manager, *_args):
 
@@ -147,10 +166,6 @@ class Window:
             self.widget.set_startup_id(self.activation_token)
 
         self.widget.present()
-
-        if LIBADWAITA_API_VERSION and sys.platform == "win32":
-            from gi.repository import Adw  # pylint: disable=no-name-in-module
-            self._on_dark_mode_win32(Adw.StyleManager.get_default())
 
     def hide(self):
         self.widget.set_visible(False)
