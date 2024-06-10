@@ -169,7 +169,7 @@ class Config:
                 "ignorelist": [],
                 "ipignorelist": {},
                 "ipblocklist": {},
-                "autojoin": ["nicotine"],
+                "autojoin": [],
                 "autoaway": 15,
                 "away": False,
                 "private_chatrooms": False,
