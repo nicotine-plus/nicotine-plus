@@ -43,3 +43,9 @@ window.dialog:not(.message) .dialog-action-area {
     padding: 0;
 }
 
+dropdown.entry > button > box {
+    /* Hide label in combobox dropdown button */
+    border-spacing: 0;
+    font-size: 0;
+}
+

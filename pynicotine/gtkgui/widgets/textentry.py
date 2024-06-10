@@ -428,6 +428,7 @@ class ComboBox:
         self._positions = {}
         self._model = None
         self._button = None
+        self._popover = None
         self._entry_completion = None
         self._is_modifying = False
         self._is_select_callback_enabled = False
@@ -468,8 +469,8 @@ class ComboBox:
 
         self.dropdown.connect("notify::selected", self._on_item_selected)
 
-        popover = list(self.dropdown)[-1]
-        popover.connect("notify::visible", self._on_dropdown_visible)
+        self._popover = list(self.dropdown)[-1]
+        self._popover.connect("notify::visible", self._on_dropdown_visible)
 
         if not has_entry:
             self.widget = self.dropdown
@@ -488,23 +489,13 @@ class ComboBox:
         if label:
             label.set_mnemonic_widget(self.entry)
 
-        try:
-            # Hide Gtk.DropDown label
-            inner_button = next(iter(self.dropdown))
-            button_container = next(iter(inner_button))
-            button_stack = next(iter(button_container))
-
-            button_stack.set_visible(False)
-
-        except AttributeError:
-            pass
-
         self._button.set_sensitive(False)
 
         self.widget.append(self.entry)
         self.widget.append(self.dropdown)
 
         add_css_class(self.widget, "linked")
+        add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
@@ -826,13 +817,12 @@ class ComboBox:
             return
 
         # Align dropdown with entry and button
-        popover = list(self.dropdown)[-1]
-        scrolled_window = popover.get_child()
+        popover_content = next(iter(self._popover))
         container_width = self.entry.get_parent().get_width()
         button_width = self._button.get_width()
 
-        popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
-        scrolled_window.set_size_request(container_width, height=-1)
+        self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
+        popover_content.set_size_request(container_width, height=-1)
 
     def _on_item_selected(self, *_args):
 
