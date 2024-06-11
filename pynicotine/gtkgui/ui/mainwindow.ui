@@ -1682,14 +1682,19 @@
         <property name="spacing">18</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkLabel" id="status_label">
-            <property name="ellipsize">end</property>
+          <object class="GtkBox">
             <property name="hexpand">True</property>
-            <property name="margin-start">12</property>
-            <property name="selectable">True</property>
-            <property name="single-line-mode">True</property>
             <property name="visible">True</property>
-            <property name="xalign">0</property>
+            <child>
+              <object class="GtkLabel" id="status_label">
+                <property name="ellipsize">end</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="single-line-mode">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
