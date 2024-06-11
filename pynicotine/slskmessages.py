@@ -1254,12 +1254,12 @@ class GetUserStats(ServerMessage):
 
     __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
 
-    def __init__(self, user=None):
+    def __init__(self, user=None, avgspeed=None, files=None, dirs=None):
         self.user = user
-        self.avgspeed = None
+        self.avgspeed = avgspeed
+        self.files = files
+        self.dirs = dirs
         self.uploadnum = None
-        self.files = None
-        self.dirs = None
 
     def make_network_message(self):
         return self.pack_string(self.user)

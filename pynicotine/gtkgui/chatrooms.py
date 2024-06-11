@@ -615,12 +615,12 @@ class ChatRoom:
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
         flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
-        avgspeed = userdata.avgspeed
+        avgspeed = userdata.avgspeed or 0
 
         if avgspeed > 0:
             h_speed = human_speed(avgspeed)
 
-        files = userdata.files
+        files = userdata.files or 0
         h_files = humanize(files)
 
         weight = Pango.Weight.NORMAL
@@ -869,8 +869,8 @@ class ChatRoom:
         if iterator is None:
             return
 
-        speed = msg.avgspeed
-        num_files = msg.files
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
 
         if speed != self.users_list_view.get_row_value(iterator, "speed_data"):
             h_speed = human_speed(speed) if speed > 0 else ""

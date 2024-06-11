@@ -953,11 +953,12 @@ class Shares:
                 database.close()
 
     def send_num_shared_folders_files(self):
-        """Send number publicly shared files to the server."""
+        """Send number of publicly shared files to the server."""
 
         if self.rescanning:
             return
 
+        local_username = core.users.login_username
         num_shared_folders = len(self.share_dbs.get("public_streams", {}))
         num_shared_files = len(self.share_dbs.get("public_files", {}))
 
@@ -971,73 +972,22 @@ class Shares:
 
         core.send_message_to_server(slskmessages.SharedFoldersFiles(num_shared_folders, num_shared_files))
 
-    # Scanning #
+        if not local_username:
+            return
 
-    def build_scanner_process(self, share_groups=None, init=False, rescan=True, rebuild=False):
-
-        import multiprocessing
-
-        context = multiprocessing.get_context(method="spawn")
-        scanner_queue = context.Queue()
-        scanner_obj = Scanner(
-            config,
-            scanner_queue,
-            share_groups,
-            self.share_db_paths,
-            init,
-            rescan,
-            rebuild,
-            reveal_buddy_shares=config.sections["transfers"]["reveal_buddy_shares"],
-            reveal_trusted_shares=config.sections["transfers"]["reveal_trusted_shares"]
+        # Fake a user stats message, since server doesn't send updates for our own username
+        events.emit(
+            "user-stats",
+            slskmessages.GetUserStats(
+                user=local_username,
+                avgspeed=core.uploads.upload_speed, files=num_shared_files, dirs=num_shared_folders
+            )
         )
-        scanner = context.Process(target=scanner_obj.run, daemon=True)
-        return scanner, scanner_queue
+
+    # Scanning #
 
     def rebuild_shares(self, use_thread=True):
         return self.rescan_shares(rebuild=True, use_thread=use_thread)
-
-    def process_scanner_messages(self, scanner_queue, emit_event):
-
-        while self._scanner_process.is_alive():
-            # Cooldown
-            time.sleep(0.05)
-
-            while not scanner_queue.empty():
-                item = scanner_queue.get()
-
-                if isinstance(item, Exception):
-                    return False
-
-                if isinstance(item, tuple):
-                    template, args = item
-                    log.add(template, args)
-
-                elif isinstance(item, slskmessages.SharedFileListResponse):
-                    self.compressed_shares[item.permission_level] = item
-
-                elif isinstance(item, list):
-                    self.file_path_index = tuple(item)
-
-                elif item == "rescanning":
-                    emit_event("shares-scanning")
-
-                elif item == "initialized":
-                    self.initialized = True
-
-        self._scanner_process = None
-        return True
-
-    def check_shares_available(self):
-
-        share_groups = self.get_shared_folders()
-        unavailable_shares = []
-
-        for share in share_groups:
-            for virtual_name, folder_path, *_unused in share:
-                if not os.access(encode_path(folder_path), os.R_OK):
-                    unavailable_shares.append((virtual_name, folder_path))
-
-        return unavailable_shares
 
     def rescan_shares(self, init=False, rescan=True, rebuild=False, use_thread=True, force=False):
 
@@ -1065,7 +1015,7 @@ class Shares:
         events.emit("shares-preparing")
 
         share_groups = self.get_shared_folders()
-        self._scanner_process, scanner_queue = self.build_scanner_process(share_groups, init, rescan, rebuild)
+        self._scanner_process, scanner_queue = self._build_scanner_process(share_groups, init, rescan, rebuild)
         self._scanner_process.start()
 
         if use_thread:
@@ -1075,13 +1025,76 @@ class Shares:
             ).start()
             return None
 
-        return self._process_scanner(scanner_queue, events.emit)
+        return self._process_scanner(scanner_queue)
 
-    def _process_scanner(self, scanner_queue, emit_event):
+    def check_shares_available(self):
 
-        # Let the scanner process do its thing
-        successful = self.process_scanner_messages(scanner_queue, emit_event)
-        emit_event("shares-ready", successful)
+        share_groups = self.get_shared_folders()
+        unavailable_shares = []
+
+        for share in share_groups:
+            for virtual_name, folder_path, *_unused in share:
+                if not os.access(encode_path(folder_path), os.R_OK):
+                    unavailable_shares.append((virtual_name, folder_path))
+
+        return unavailable_shares
+
+    def _build_scanner_process(self, share_groups=None, init=False, rescan=True, rebuild=False):
+
+        import multiprocessing
+
+        context = multiprocessing.get_context(method="spawn")
+        scanner_queue = context.Queue()
+        scanner_obj = Scanner(
+            config,
+            scanner_queue,
+            share_groups,
+            self.share_db_paths,
+            init,
+            rescan,
+            rebuild,
+            reveal_buddy_shares=config.sections["transfers"]["reveal_buddy_shares"],
+            reveal_trusted_shares=config.sections["transfers"]["reveal_trusted_shares"]
+        )
+        scanner = context.Process(target=scanner_obj.run, daemon=True)
+        return scanner, scanner_queue
+
+    def _process_scanner(self, scanner_queue, emit_event=None):
+
+        successful = False
+
+        while self._scanner_process.is_alive():
+            # Cooldown
+            time.sleep(0.05)
+
+            while not scanner_queue.empty():
+                item = scanner_queue.get()
+
+                if isinstance(item, Exception):
+                    break
+
+                if isinstance(item, tuple):
+                    template, args = item
+                    log.add(template, args)
+
+                elif isinstance(item, slskmessages.SharedFileListResponse):
+                    self.compressed_shares[item.permission_level] = item
+
+                elif isinstance(item, list):
+                    self.file_path_index = tuple(item)
+
+                elif item == "rescanning":
+                    if emit_event is not None:
+                        emit_event("shares-scanning")
+
+                elif item == "initialized":
+                    self.initialized = True
+
+        successful = True
+        self._scanner_process = None
+
+        if emit_event is not None:
+            emit_event("shares-ready", successful)
 
         return successful
 

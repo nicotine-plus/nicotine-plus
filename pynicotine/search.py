@@ -645,7 +645,9 @@ class Search:
             # Don't return results when waiting to quit after finishing uploads
             return
 
-        if not direct and username == core.users.login_username:
+        local_username = core.users.login_username
+
+        if not direct and username == local_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -712,7 +714,7 @@ class Search:
             return
 
         core.send_message_to_peer(username, slskmessages.FileSearchResponse(
-            search_username=core.users.login_username,
+            search_username=local_username,
             token=token,
             shares=fileinfos,
             freeulslots=core.uploads.is_new_upload_accepted(),

@@ -516,8 +516,8 @@ class Interests:
         if iterator is None:
             return
 
-        speed = msg.avgspeed
-        num_files = msg.files
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
 
         if speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
             h_speed = human_speed(speed) if speed > 0 else ""

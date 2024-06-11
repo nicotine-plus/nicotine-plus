@@ -571,11 +571,22 @@ class UserInfo:
 
     def user_stats(self, msg):
 
-        if msg.avgspeed > 0:
-            self.upload_speed_label.set_text(human_speed(msg.avgspeed))
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
+        num_folders = msg.dirs or 0
 
-        self.shared_files_label.set_text(humanize(msg.files))
-        self.shared_folders_label.set_text(humanize(msg.dirs))
+        h_speed = human_speed(speed) if speed > 0 else ""
+        h_num_files = humanize(num_files)
+        h_num_folders = humanize(num_folders)
+
+        if self.upload_speed_label.get_text() != h_speed:
+            self.upload_speed_label.set_text(h_speed)
+
+        if self.shared_files_label.get_text() != h_num_files:
+            self.shared_files_label.set_text(h_num_files)
+
+        if self.shared_folders_label.get_text() != h_num_folders:
+            self.shared_folders_label.set_text(h_num_folders)
 
     def user_country(self, country_code):
 
