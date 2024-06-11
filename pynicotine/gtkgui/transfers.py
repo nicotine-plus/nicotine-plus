@@ -472,6 +472,10 @@ class Transfers:
 
     @staticmethod
     def get_hsize(current_byte_offset, size):
+
+        if current_byte_offset >= size:
+            return human_size(size)
+
         return f"{human_size(current_byte_offset)} / {human_size(size)}"
 
     @staticmethod
