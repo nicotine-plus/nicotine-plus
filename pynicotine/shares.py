@@ -1061,7 +1061,7 @@ class Shares:
 
     def _process_scanner(self, scanner_queue, emit_event=None):
 
-        successful = False
+        successful = True
 
         while self._scanner_process.is_alive():
             # Cooldown
@@ -1071,6 +1071,7 @@ class Shares:
                 item = scanner_queue.get()
 
                 if isinstance(item, Exception):
+                    successful = False
                     break
 
                 if isinstance(item, tuple):
@@ -1090,7 +1091,6 @@ class Shares:
                 elif item == "initialized":
                     self.initialized = True
 
-        successful = True
         self._scanner_process = None
 
         if emit_event is not None:
