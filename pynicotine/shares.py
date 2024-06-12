@@ -979,7 +979,9 @@ class Shares:
             # this check only happens after sending the SharedFoldersFiles server message.
             return
 
-        # Fake a user stats message, since server doesn't send updates for our own username
+        # We've connected and rescanned our shares again. Fake a user stats message, since
+        # server doesn't send updates for our own username after the first WatchUser message
+        # response
         events.emit(
             "user-stats",
             slskmessages.GetUserStats(
