@@ -406,14 +406,14 @@ class Transfers:
                     self.tree_view.disable_sorting()
                     has_disabled_sorting = True
 
-            if has_disabled_sorting:
-                self.tree_view.enable_sorting()
-
         if update_parent:
             self.update_parent_rows(transfer)
 
         if update_counters:
             self.update_num_users_files()
+
+        if has_disabled_sorting:
+            self.tree_view.enable_sorting()
 
         if self.pending_parent_rows_timer_id is None:
             # Limit individual parent row updates to once per second
