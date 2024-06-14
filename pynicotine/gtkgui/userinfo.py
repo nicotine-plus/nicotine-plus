@@ -575,7 +575,7 @@ class UserInfo:
         num_files = msg.files or 0
         num_folders = msg.dirs or 0
 
-        h_speed = human_speed(speed) if speed > 0 else ""
+        h_speed = human_speed(speed) if speed > 0 else _("Unknown")
         h_num_files = humanize(num_files)
         h_num_folders = humanize(num_folders)
 
