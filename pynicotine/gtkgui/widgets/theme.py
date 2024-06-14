@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import random
 import shutil
 import sys
 
@@ -546,6 +547,18 @@ def _get_custom_color_css():
             }
             """
         )
+
+    # Workaround for GTK bug where tree view colors don't update until moving the
+    # cursor over the widget. Changing the color of the text caret to a random one
+    # forces the tree view to re-render with new icon/text colors (text carets are
+    # never visible in our tree views, so usability is unaffected).
+    css.extend(
+        f"""
+        treeview {{
+            caret-color: #{random.randint(0, 0xFFFFFF):06x};
+        }}
+        """.encode("utf-8")
+    )
 
     return css
 
