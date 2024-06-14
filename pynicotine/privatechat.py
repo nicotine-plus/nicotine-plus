@@ -71,7 +71,7 @@ class PrivateChat:
             return
 
         for username in self.users:
-            core.users.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username, context="privatechat")  # Get notified of user status
 
     def _server_disconnect(self, _msg):
 
@@ -95,6 +95,7 @@ class PrivateChat:
             config.sections["privatechat"]["users"].remove(username)
 
         self.users.remove(username)
+        core.users.unwatch_user(username, context="privatechat")
         events.emit("private-chat-remove-user", username)
 
     def remove_all_users(self, is_permanent=True):
@@ -105,7 +106,7 @@ class PrivateChat:
 
         self.add_user(username)
         events.emit("private-chat-show-user", username, switch_page, remembered)
-        core.users.watch_user(username)
+        core.users.watch_user(username, context="privatechat")
 
     def clear_private_messages(self, username):
         events.emit("clear-private-messages", username)

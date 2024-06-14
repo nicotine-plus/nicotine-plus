@@ -124,7 +124,7 @@ class Buddies:
             return
 
         for username in self.users:
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="buddies")
 
     def _server_disconnect(self, _msg):
 
@@ -165,7 +165,7 @@ class Buddies:
         events.emit("add-buddy", username, user_data)
 
         # Request user status, speed and number of shared files
-        core.users.watch_user(username)
+        core.users.watch_user(username, context="buddies")
 
     def remove_buddy(self, username):
 
@@ -176,6 +176,7 @@ class Buddies:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
 
+        core.users.unwatch_user(username, context="buddies")
         self.save_buddy_list()
         events.emit("remove-buddy", username)
 

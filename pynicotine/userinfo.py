@@ -54,7 +54,7 @@ class UserInfo:
             return
 
         for username in self.users:
-            core.users.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username, context="userinfo")  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
@@ -133,7 +133,7 @@ class UserInfo:
 
         else:
             # Request user status, speed and number of shared files
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="userinfo")
 
             # Request user description, picture and queue information
             core.send_message_to_peer(username, slskmessages.UserInfoRequest())
@@ -142,7 +142,9 @@ class UserInfo:
         core.send_message_to_server(slskmessages.UserInterests(username))
 
     def remove_user(self, username):
+
         self.users.remove(username)
+        core.users.unwatch_user(username, context="userinfo")
         events.emit("user-info-remove-user", username)
 
     def remove_all_users(self):
