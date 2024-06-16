@@ -753,20 +753,12 @@ class GetPeerAddress(ServerMessage):
 class WatchUser(ServerMessage):
     """Server code 5.
 
-    Used to be kept updated about a user's stats/status. Whenever a user's stats
-    (number of shared files, upload speed) or status change, the server sends
-    a GetUserStats and GetUserStatus message respectively.
+    Used to be kept updated about a user's status. Whenever a user's status
+    changes, the server sends a GetUserStatus message.
 
-    No GetUserStats message is sent for watched users that reconnect to the
-    server. This can result in outdated stats when a user rescans their
-    shares before connecting to the server. To work around this issue, send
-    a GetUserStats message to the server whenever a previously watched user
-    logs in.
-
-    When watching your own username, the server only sends an initial WatchUser
-    response message. No further GetUserStats messages are sent, even if the
-    stats have changed. A GetUserStatus message is only sent when enabling away
-    status, not when disabling it.
+    Note that the server does not currently send stat updates (GetUserStats)
+    when watching a user, only the initial stats in the WatchUser response.
+    As a consequence, stats can be outdated.
     """
 
     __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "country")
@@ -809,7 +801,7 @@ class WatchUser(ServerMessage):
 class UnwatchUser(ServerMessage):
     """Server code 6.
 
-    Used when we no longer want to be kept updated about a user's stats.
+    Used when we no longer want to be kept updated about a user's status.
     """
 
     __slots__ = ("user",)
@@ -1147,6 +1139,9 @@ class SetStatus(ServerMessage):
 
     We send our new status to the server. Status is a way to define
     whether we're available (online) or busy (away).
+
+    When changing our own status, the server sends us a GetUserStatus
+    message when enabling away status, but not when disabling it.
 
     1 = Away 2 = Online
     """
@@ -2857,7 +2852,7 @@ class CantCreateRoom(ServerMessage):
     """Server code 1003.
 
     Server tells us a new room cannot be created. This message only
-    seems to be sent if you try to create a room with the same name as
+    seems to be sent if we try to create a room with the same name as
     an existing private room. In other cases, such as using a room name
     with leading or trailing spaces, only a private message containing
     an error message is sent.
