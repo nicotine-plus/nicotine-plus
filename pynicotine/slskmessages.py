@@ -875,6 +875,10 @@ class JoinRoom(ServerMessage):
 
     Server responds with this message when we join a room. Contains
     users list with data on everyone.
+
+    As long as we're in the room, the server will automatically send us
+    status/stat updates for room users, including ourselves, in the form
+    of GetUserStatus and GetUserStats messages.
     """
 
     __slots__ = ("room", "private", "owner", "users", "operators")

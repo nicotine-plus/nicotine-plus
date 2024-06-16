@@ -421,9 +421,16 @@ Either we want to say something in the chatroom, or someone else did.
 
 ### JoinRoom
 
-We send this message to the server when we want to join a room. If the room doesn't exist, it is created.
+We send this message to the server when we want to join a room. If the
+room doesn't exist, it is created.
 
-Server responds with this message when we join a room. Contains users list with data on everyone.
+Server responds with this message when we join a room. Contains users
+list with data on everyone.
+
+As long as we're in the room, the server will automatically send us
+status/stat updates for room users, including ourselves, in the form
+of [GetUserStatus](#server-code-7) and [GetUserStats](#server-code-36)
+messages.
 
 ### Data Order
 
