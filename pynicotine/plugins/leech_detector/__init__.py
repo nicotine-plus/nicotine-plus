@@ -143,14 +143,14 @@ class Plugin(BasePlugin):
             return
 
         self.probed_users[user] = "requesting_stats"
-        stats = self.core.users.watched.get(user)
 
-        if stats is None:
+        if user not in self.core.users.watched:
             # Transfer manager will request the stats from the server shortly
             return
 
-        if stats.files is not None and stats.folders is not None:
-            self.check_user(user, num_files=stats.files, num_folders=stats.folders)
+        # We've received the user's stats in the past. They could be outdated by
+        # now, so request them again.
+        self.core.users.request_user_stats(user)
 
     def user_stats_notification(self, user, stats):
         self.check_user(user, num_files=stats["files"], num_folders=stats["dirs"], source=stats["source"])
