@@ -107,6 +107,8 @@ class Downloads(Transfers):
 
     def _quit(self):
 
+        self._delete_stale_incomplete_downloads()
+
         super()._quit()
 
         self._folder_basename_byte_limits.clear()
@@ -545,6 +547,38 @@ class Downloads(Transfers):
             })
 
         events.emit("clear-download", transfer, update_parent)
+
+    def _delete_stale_incomplete_downloads(self):
+
+        allowed_incomplete_file_paths = {
+            encode_path(self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path))
+            for transfer in self.transfers.values()
+            if transfer.current_byte_offset and transfer.status != TransferStatus.FINISHED
+        }
+        incomplete_download_folder_path = self.get_incomplete_download_folder()
+
+        try:
+            with os.scandir(encode_path(incomplete_download_folder_path)) as entries:
+                for entry in entries:
+                    if entry.is_dir():
+                        continue
+
+                    if entry.path in allowed_incomplete_file_paths:
+                        continue
+
+                    # Incomplete file no longer has a download associated with it. Delete it.
+                    try:
+                        os.remove(entry.path)
+                        log.add_transfer("Deleted stale incomplete download %s", entry.path)
+
+                    except OSError as error:
+                        log.add_transfer("Cannot delete incomplete download %(path)s: %(error)s", {
+                            "path": entry.path,
+                            "error": error
+                        })
+
+        except OSError as error:
+            log.add_transfer("Cannot read incomplete download folder: %s", error)
 
     def _request_queue_positions(self):
 
