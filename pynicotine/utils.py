@@ -223,18 +223,14 @@ def _human_speed_or_size(number, unit=None):
     if unit == "B":
         return humanize(number)
 
-    try:
-        for suffix in FILE_SIZE_SUFFIXES:
-            if number < 1024:
-                if number > 999:
-                    return f"{number:.4g} {suffix}"
+    for suffix in FILE_SIZE_SUFFIXES:
+        if number < 1024:
+            if number > 999:
+                return f"{number:.4g} {suffix}"
 
-                return f"{number:.3g} {suffix}"
+            return f"{number:.3g} {suffix}"
 
-            number /= 1024
-
-    except TypeError:
-        pass
+        number /= 1024
 
     return str(number)
 
