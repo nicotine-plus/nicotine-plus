@@ -329,14 +329,16 @@ def find_whole_word(word, text):
         return -1
 
     word_boundaries = [" "] + PUNCTUATION
-    whole = False
+    len_text = len(text)
+    len_word = len(word)
     start = after = 0
+    whole = False
 
     while not whole and start > -1:
         start = text.find(word, after)
-        after = start + len(word)
+        after = start + len_word
 
-        whole = ((text[after] if after < len(text) else " ") in word_boundaries
+        whole = ((text[after] if after < len_text else " ") in word_boundaries
                  and (text[start - 1] if start > 0 else " ") in word_boundaries)
 
     return start if whole else -1
