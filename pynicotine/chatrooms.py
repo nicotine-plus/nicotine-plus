@@ -492,14 +492,14 @@ class ChatRooms:
         is_action_message = (msg.message_type == "action")
 
         if is_action_message:
-            message = message.replace("/me ", "", 1)
+            msg.message = message = message.replace("/me ", "", 1)
 
         if config.sections["words"]["censorwords"] and username != core.users.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
             if is_action_message:
-                formatted_message = msg.message = f"* {username} {message}"
+                formatted_message = f"* {username} {message}"
             else:
                 formatted_message = f"[{username}] {message}"
 

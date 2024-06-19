@@ -268,14 +268,14 @@ class PrivateChat:
             msg.message = message = "CTCP VERSION"
 
         if is_action_message:
-            message = message.replace("/me ", "", 1)
+            msg.message = message = message.replace("/me ", "", 1)
 
         if not is_outgoing_message and config.sections["words"]["censorwords"]:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if config.sections["logging"]["privatechat"] or username in config.sections["logging"]["private_chats"]:
             if is_action_message:
-                formatted_message = msg.message = f"* {tag_username} {message}"
+                formatted_message = f"* {tag_username} {message}"
             else:
                 formatted_message = f"[{tag_username}] {message}"
 

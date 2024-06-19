@@ -557,7 +557,7 @@ class UserInfo:
 
         if msg.descr is not None:
             self.description_view.clear()
-            self.description_view.append_line(msg.descr)
+            self.description_view.add_line(msg.descr)
 
         self.upload_slots_label.set_text(humanize(msg.totalupl))
         self.queued_uploads_label.set_text(humanize(msg.queuesize))

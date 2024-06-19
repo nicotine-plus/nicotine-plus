@@ -22,14 +22,12 @@ import time
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
@@ -49,7 +47,6 @@ class TextView:
 
     except TypeError:
         # Broken cursor theme, but what can we do...
-        log.add_debug("Cannot load cursors from theme, falling back to default cursor")
         DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
@@ -72,7 +69,6 @@ class TextView:
             parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
-        self.end_iter = self.textbuffer.get_end_iter()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
@@ -83,7 +79,6 @@ class TextView:
         self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.default_tags = {}
         self.parse_urls = parse_urls
 
         if GTK_API_VERSION >= 4:
@@ -127,84 +122,103 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _insert_text(self, text, tag=None):
+    def _build_text_line(self, text, tag=None):
 
-        if not text:
-            return
+        text_line = []
+
+        if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
+            # Match first url
+            match = self.URL_REGEX.search(text)
+
+            while match:
+                text_line.append((text[:match.start()], tag))
+
+                url = match.group()
+                urltag = self.create_tag("urlcolor", url=url)
+                text_line.append((url, urltag))
+
+                # Match remaining url
+                text = text[match.end():]
+                match = self.URL_REGEX.search(text)
+
+        text_line.append((text, tag))
+
+        return text_line
+
+    def _insert_line(self, text_line, prepend=False):
+
+        line_number = 0 if prepend else self.textbuffer.get_line_count()
+        iterator = self.get_iter_at_line(line_number)
+
+        if prepend:
+            # Break at end of line to avoid unwanted whitespace
+            text_line.append(("\n", None))
+
+        elif line_number > 1 or self.textbuffer.get_char_count() > 0:
+            # No tag applied on line breaks to prevent visual glitch where text on the
+            # next line has the wrong color
+            self._insert_text("\n", None, iterator)
+
+        for text, tag in text_line:
+            self._insert_text(text, tag, iterator)
+
+        self._remove_old_lines(line_number)
+
+    def _insert_text(self, text, tag, iterator):
 
         if tag is not None:
-            start_offset = self.end_iter.get_offset()
+            start_offset = iterator.get_offset()
 
-        self.textbuffer.insert(self.end_iter, text)
+        self.textbuffer.insert(iterator, text)
 
         if tag is not None:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
-            self.textbuffer.apply_tag(tag, start_iter, self.end_iter)
+            self.textbuffer.apply_tag(tag, start_iter, iterator)
 
-    def _remove_old_lines(self, num_lines):
+    def _remove_old_lines(self, num_line_count):
 
-        if num_lines < self.MAX_NUM_LINES:
+        if num_line_count < self.MAX_NUM_LINES:
+            # Not counted when prepending line
             return
 
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
-        end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
-        end_iter = self.textbuffer.get_iter_at_line(end_line)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, end_iter = end_iter
+        end_line = (num_line_count - (self.MAX_NUM_LINES - 1000))
+        end_iter = self.get_iter_at_line(end_line)
 
         self.textbuffer.delete(start_iter, end_iter)
-        self.end_iter = self.textbuffer.get_end_iter()
+        self.add_line("--- overflow ---", prepend=True)
 
-    def append_line(self, message, message_type=None, timestamp=None, timestamp_format=None,
-                    roomname=None, roomtag=None, username=None, usertag=None):
+    def add_line(self, message, prepend=False, timestamp_format=None):
+        """Append or prepend message on a new line."""
 
-        tag = self.default_tags.get(message_type)
-        num_lines = self.textbuffer.get_line_count()
-
-        if self.textbuffer.get_char_count() > 0:
-            # No tag applied on line breaks to prevent visual glitch where text on the
-            # next line has the wrong color
-            self._insert_text("\n")
+        text_line = []
 
         if timestamp_format:
-            self._insert_text(time.strftime(timestamp_format, time.localtime(timestamp)) + " ", tag)
-
-        elif timestamp:
-            self._insert_text(timestamp + " ", tag)
-
-        # Tag roomnames with clickable color for joining rooms from global feed
-        if roomtag:
-            self._insert_text(roomname, roomtag)
-            self._insert_text(" | ", tag)
-
-        # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if usertag:
-            self._insert_text("[", tag)
-            self._insert_text(username, usertag)
-            self._insert_text("] ", tag)
+            # Create new timestamped string (use current localtime)
+            text_line.append((time.strftime(timestamp_format, time.localtime()), None))
+            text_line.append((" ", None))
 
         # Highlight urls, if found and tag them
-        if self.parse_urls and ("://" in message or "www." in message or "mailto:" in message):
-            # Match first url
-            match = self.URL_REGEX.search(message)
+        text_line.extend(self._build_text_line(message))
 
-            while match:
-                self._insert_text(message[:match.start()], tag)
+        self._insert_line(text_line, prepend=prepend)
 
-                url = match.group()
-                urltag = self.create_tag("urlcolor", url=url)
-                self._insert_text(url, urltag)
+    def add_text(self, text, tag=None, prepend=False):
+        """Append or prepend text without adding line breaks."""
 
-                # Match remaining url
-                message = message[match.end():]
-                match = self.URL_REGEX.search(message)
+        iterator = self.get_iter_at_line(0 if prepend else -1)
 
-        self._insert_text(message, tag)
-        self._remove_old_lines(num_lines)
+        self._insert_text(text, tag, iterator)
 
-        return num_lines
+    def get_iter_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        return iterator
 
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
@@ -212,9 +226,9 @@ class TextView:
     def get_text(self):
 
         start_iter = self.textbuffer.get_start_iter()
-        self.end_iter = self.textbuffer.get_end_iter()
+        end_iter = self.textbuffer.get_end_iter()
 
-        return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -240,10 +254,7 @@ class TextView:
 
     def place_cursor_at_line(self, line_number):
 
-        iterator = self.textbuffer.get_iter_at_line(line_number)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, iterator = iterator
+        iterator = self.get_iter_at_line(line_number)
 
         self.textbuffer.place_cursor(iterator)
 
@@ -251,7 +262,6 @@ class TextView:
         """Sets text without any additional processing, and clears the undo stack."""
 
         self.textbuffer.set_text(text)
-        self.end_iter = self.textbuffer.get_end_iter()
 
     def update_cursor(self, pos_x, pos_y):
 
@@ -275,7 +285,7 @@ class TextView:
     def clear(self):
         self.set_text("")
 
-    # Text Tags (Usernames, URLs) #
+    # Text Tags (Roomnames, Usernames, URLs) #
 
     def create_tag(self, color_id=None, callback=None, name=None, url=None):
 
@@ -390,19 +400,20 @@ class ChatView(TextView):
 
         self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
+        self.num_prepended_lines = 0
         self.roomname_event = roomname_event
         self.username_event = username_event
 
         if roomname_event is not None:
-            # This tab is the global Public room feed, create clickable room tags
-            self.room_tags = {}
+            # Only used in global room feed
+            self._room_tags = {}
 
         if status_users is not None:
             # In chatrooms, we only want to set the online status for users that are
             # currently in the room, even though we might know their global status
             self.status_users = status_users
 
-        self.default_tags = {
+        self.type_tags = {
             "remote": self.create_tag("chatremote"),
             "local": self.create_tag("chatlocal"),
             "command": self.create_tag("chatcommand"),
@@ -413,83 +424,146 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
-    def append_log_lines(self, folder_path, basename, num_lines, timestamp_format):
+    def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
+                 timestamp=None, timestamp_string=None, roomname=None, username=None):
+        """Append or prepend a new chat message line with name tags and links."""
 
-        if not num_lines:
+        # Make a list of tuples [(text, tag),]
+        chat_texts = self._build_chat_line(
+            message,
+            message_type=message_type,
+            timestamp_string=timestamp_string,
+            timestamp=timestamp,
+            timestamp_format=timestamp_format,
+            roomname=roomname,
+            username=username
+        )
+        self._insert_line(chat_texts, prepend=prepend)
+
+    def _build_chat_line(self, message, timestamp_format=None, message_type=None,
+                         timestamp=None, timestamp_string=None, roomname=None, username=None):
+
+        tag = self.type_tags.get(message_type)
+        chat_line = []
+
+        if timestamp_format:
+            # Create timestamped string (use current localtime if timestamp is None)
+            chat_line.append([time.strftime(timestamp_format, time.localtime(timestamp)), tag])
+            chat_line.append((" ", tag))
+
+        elif timestamp_string:
+            # Use original timestamp string from log file (plus roomname for global feed)
+            chat_line.append((timestamp_string, tag))
+            chat_line.append((" ", tag))
+
+        # Tag roomname, only used in global room feed
+        roomtag = self._get_room_tag(roomname)
+
+        if roomtag:
+            chat_line.append((roomname, roomtag))
+            chat_line.append((" | ", tag))
+
+        # Tag username with popup menu creating tag, and away/online/offline colors
+        if username:
+            usertag = self._get_user_tag(username)
+            opener, closer = ("* ", " ") if message_type == "action" else ("[", "] ")
+
+            chat_line.append((opener, tag))
+            chat_line.append((username, usertag))
+            chat_line.append((closer, tag))
+
+        # Highlight urls, if found and tag them
+        chat_line.extend(self._build_text_line(message, tag))
+
+        return chat_line
+
+    def prepend_log_lines(self, log_lines, login_username=None):
+        """Insert batch of previously gathered log lines."""
+
+        if not self.num_prepended_lines and log_lines:
+            self.add_text(_("--- old messages above ---"), tag=self.type_tags.get("hilite"))
+
+        elif self.MAX_NUM_LINES - self.textbuffer.get_line_count() - len(log_lines) < 1000:
+            self.add_line("--- overflow ---", prepend=True, message_type="hilite")
             return
 
-        lines = log.read_log(folder_path, basename, num_lines)
+        for decoded_line in self.decode_log_lines(log_lines, login_username=login_username):
+            timestamp_string, username, message, message_type = decoded_line
 
-        if not lines:
-            return
+            self.add_line(
+                message, prepend=True, message_type=message_type, timestamp_string=timestamp_string, username=username)
 
-        login = config.sections["server"]["login"]
+        self.num_prepended_lines += len(log_lines)
 
-        for line in lines:
+    @staticmethod
+    def decode_log_lines(log_lines, login_username=None):
+        """Split encoded text strings into individual elements as
+        required when reading raw chat log lines from disk."""
+
+        login_lowercase = login_username.lower()
+
+        for log_line in reversed(log_lines):
             try:
-                line = line.decode("utf-8")
+                line = log_line.decode("utf-8")
 
             except UnicodeDecodeError:
-                line = line.decode("latin-1")
+                line = log_lines.decode("latin-1")
 
-            timestamp = username = usertag = message = message_type = None
+            timestamp_string = username = message = message_type = None
 
             if " [" in line and "] " in line:
                 start = line.find(" [") + 2
                 end = line.find("] ", start)
 
                 if end > start:
-                    timestamp = line[:start - 2]
+                    timestamp_string = line[:start - 2]
                     username = line[start:end]
-                    usertag = self.get_user_tag(username)
                     message = line[end + 2:-1]
 
-                    if username == login:
+                    if username == login_username:
                         message_type = "local"
 
-                    elif login and find_whole_word(login.lower(), message.lower()) > -1:
+                    elif login_lowercase and find_whole_word(login_lowercase, message.lower()) > -1:
                         message_type = "hilite"
 
                     else:
                         message_type = "remote"
 
-            elif "* " in line:
+            elif " * " in line:
+                start = line.find(" * ")
+
+                timestamp_string = line[:start]
+                message = line[start + 1:-1]
                 message_type = "action"
 
-            message = (message or line).rstrip("\n")
+            if message is None:
+                message = line[:-1]
 
-            self.append_line(
-                message,
-                message_type=message_type,
-                timestamp=timestamp,
-                username=username,
-                usertag=usertag
-            )
-
-        self.append_line(_("--- old messages above ---"), message_type="hilite",
-                         timestamp_format=timestamp_format)
+            yield timestamp_string, username, message, message_type
 
     def clear(self):
 
         super().clear()
+        self.num_prepended_lines = 0
         self.user_tags.clear()
 
         if self.roomname_event:
-            self.room_tags.clear()
+            self._room_tags.clear()
 
-    def get_room_tag(self, roomname):
+    def _get_room_tag(self, roomname):
 
         if not self.roomname_event or not roomname:
-            # Roomname only shown in global room feed
+            # Room tags only used in global room feed
             return None
 
-        if roomname not in self.room_tags:
-            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)  # Pick a color, any color?
-            self.room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
+        if roomname not in self._room_tags:
+            # Pick a color, any color?
+            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)
+            self._room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
 
-        return self.room_tags[roomname]
+        return self._room_tags[roomname]
 
-    def get_user_tag(self, username):
+    def _get_user_tag(self, username):
 
         if username not in self.user_tags:
             self.user_tags[username] = self.create_tag(callback=self.username_event, name=username)
