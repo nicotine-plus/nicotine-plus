@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,6 +26,8 @@ import sys
 import tempfile
 
 from cx_Freeze import Executable, setup  # pylint: disable=import-error
+from cx_Freeze.hooks import gi  # pylint: disable=import-error
+del gi.load_gi
 
 # pylint: disable=duplicate-code
 
@@ -55,7 +57,7 @@ TEMP_PATH = tempfile.mkdtemp()
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 BUILD_PATH = os.path.join(CURRENT_PATH, "build")
 PROJECT_PATH = os.path.abspath(os.path.join(CURRENT_PATH, "..", ".."))
-sys.path.append(PROJECT_PATH)
+sys.path.insert(0, PROJECT_PATH)
 
 import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
@@ -79,7 +81,9 @@ include_files = []
 def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
 
     for full_path in glob.glob(os.path.join(folder_path, "**"), recursive=recursive):
-        short_path = os.path.relpath(full_path, folder_path)
+        short_folder_path = os.path.dirname(os.path.relpath(full_path, folder_path))
+        real_full_path = os.path.realpath(full_path)
+        short_path = os.path.join(short_folder_path, os.path.basename(real_full_path))
 
         if starts_with and not short_path.startswith(starts_with):
             continue
@@ -87,7 +91,7 @@ def process_files(folder_path, callback, callback_data=None, starts_with=None, e
         if ends_with and not short_path.endswith(ends_with):
             continue
 
-        callback(full_path, short_path, callback_data)
+        callback(real_full_path, short_path, callback_data)
 
 
 def add_file(file_path, output_path):
@@ -199,20 +203,13 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
+        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="gdbus.exe")
 
     # This also includes all dlls required by GTK
     add_files(
         folder_path=LIB_PATH, output_path="lib",
         starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
     )
-
-    if GTK_VERSION == "4":
-        # ANGLE (OpenGL ES)
-        add_files(
-            folder_path=LIB_PATH, output_path="lib",
-            starts_with=("libEGL", "libGLESv1", "libGLESv2.", "libfeature"), ends_with=LIB_EXTENSION
-        )
 
     if USE_LIBADWAITA:
         add_files(
@@ -243,24 +240,10 @@ def add_icon_packs():
 
     required_icon_packs = (
         "Adwaita",
-        "hicolor"
     )
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
         starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True
-    )
-
-
-def add_themes():
-
-    # "Mac" is required for macOS-specific keybindings in GTK
-    required_themes = (
-        "Default",
-        "Mac"
-    )
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/themes"), output_path="share/themes",
-        starts_with=required_themes, ends_with=".css", recursive=True
     )
 
 
@@ -271,20 +254,18 @@ def add_ssl_certs():
 
 def add_translations():
 
-    from pynicotine.i18n import LANGUAGES           # noqa: E402  # pylint: disable=import-error
-    from pynicotine.i18n import build_translations  # noqa: E402  # pylint: disable=import-error
+    from setup import build_translations  # noqa: E402  # pylint: disable=import-self,no-name-in-module
     build_translations()
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
+        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
     )
 
 
 # GTK
 add_gtk()
 add_icon_packs()
-add_themes()
 
 # SSL
 add_ssl_certs()
@@ -339,6 +320,7 @@ setup(
             "applications_shortcut": True
         }
     },
+    data_files=[],
     packages=[],
     executables=[
         Executable(

@@ -15,14 +15,14 @@
 
 ## Building
 
-- [build](https://pypa-build.readthedocs.io/) for building;
+- [build](https://build.pypa.io/) for building;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
 - [setuptools](https://setuptools.pypa.io/) for packaging.
 
 ## Testing
 
 - [pycodestyle](https://pycodestyle.pycqa.org/) for code style checks;
-- [pylint](https://pylint.pycqa.org/) for linting.
+- [pylint](https://pylint.readthedocs.io/) for linting.
 
 
 ## Installing Dependencies
@@ -40,7 +40,7 @@ sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
 - On Redhat/Fedora-based distributions:
 
 ```sh
-sudo dnf install gspell gtk4 libaadwaita python3-gobject
+sudo dnf install gspell gtk4 libadwaita python3-gobject
 ```
 
 - On SUSE-based distributions:

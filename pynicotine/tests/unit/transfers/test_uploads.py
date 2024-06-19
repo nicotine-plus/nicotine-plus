@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -25,6 +26,12 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import TransferStatus
 
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+TRANSFERS_BASENAME = "uploads.json"
+TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+SAVED_TRANSFERS_FILE_PATH = os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME)
+
 
 class UploadsTest(TestCase):
 
@@ -32,22 +39,30 @@ class UploadsTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
-        core.init_components(enabled_components={"shares", "uploads", "userbrowse", "userlist"})
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
 
+        shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
+
+        core.init_components(enabled_components={"users", "shares", "uploads", "buddies"})
         core.start()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
         core.quit()
 
+        self.assertIsNone(core.users)
         self.assertIsNone(core.shares)
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userbrowse)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_uploads(self):
         """Test loading a uploads.json file."""
@@ -86,19 +101,16 @@ class UploadsTest(TestCase):
         saved to file.
         """
 
-        old_transfers = core.uploads._load_transfers_file(core.uploads.transfers_file_path)[2:]
+        old_transfers = core.uploads._load_transfers_file(TRANSFERS_FILE_PATH)[2:]
+        core.uploads._save_transfers()
+        saved_transfers = core.uploads._load_transfers_file(SAVED_TRANSFERS_FILE_PATH)
 
-        saved_transfers = core.uploads._get_transfer_rows()
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_push_upload(self):
-        """Verify that new uploads are prepended to the list."""
+        """Verify that non-existent files are not added to the list."""
 
-        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3", 2000, os.path.join(os.sep, "home", "test"))
-        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3", 100, os.path.join(os.sep, "home", "more"))
+        core.uploads.enqueue_upload("newuser2", "Hello\\Upload\\File.mp3")
+        core.uploads.enqueue_upload("newuser99", "Home\\None.mp3")
 
-        transfer = list(core.uploads.transfers.values())[3]
-
-        self.assertEqual(transfer.username, "newuser2")
-        self.assertEqual(transfer.virtual_path, "Hello\\Upload\\File.mp3")
-        self.assertEqual(transfer.folder_path, os.path.join(os.sep, "home", "test"))
+        self.assertEqual(len(core.uploads.transfers.values()), 3)

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -15,8 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.shares import PermissionLevel
@@ -318,19 +316,25 @@ class Plugin(BasePlugin):
         self.output(output_text)
 
     def connect_command(self, _args, **_unused):
-        self.core.connect()
+        if self.core.users.login_status == UserStatus.OFFLINE:
+            self.core.connect()
 
     def disconnect_command(self, _args, **_unused):
-        self.core.disconnect()
+        if self.core.users.login_status != UserStatus.OFFLINE:
+            self.core.disconnect()
 
     def away_command(self, _args, **_unused):
 
-        if self.core.user_status == UserStatus.OFFLINE:
-            self.output(_("Offline"))
+        if self.core.users.login_status == UserStatus.OFFLINE:
+            self.output(_("%(user)s is offline") % {"user": self.config.sections["server"]["login"]})
             return
 
-        self.core.set_away_mode(self.core.user_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.user_status == UserStatus.ONLINE else _("Away"))
+        self.core.users.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
+
+        if self.core.users.login_status == UserStatus.ONLINE:
+            self.output(_("%(user)s is online") % {"user": self.core.users.login_username})
+        else:
+            self.output(_("%(user)s is away") % {"user": self.core.users.login_username})
 
     def quit_command(self, args, **_unused):
 
@@ -425,14 +429,14 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        self.core.userlist.add_buddy(user)
+        self.core.buddies.add_buddy(user)
 
     def remove_buddy_command(self, args, user=None, **_unused):
 
         if args:
             user = args
 
-        self.core.userlist.remove_buddy(user)
+        self.core.buddies.remove_buddy(user)
 
     def browse_user_command(self, args, user=None, **_unused):
 
@@ -459,13 +463,7 @@ class Plugin(BasePlugin):
         if args:
             user = args
 
-        online_ip_address = self.core.network_filter.get_online_user_ip_address(user)
-
-        if not online_ip_address:
-            self.core.request_ip_address(user)
-            return
-
-        self.output(online_ip_address)
+        self.core.users.request_ip_address(user, notify=True)
 
     def ban_command(self, args, user=None, **_unused):
 
@@ -551,7 +549,7 @@ class Plugin(BasePlugin):
             self.output("\n" + f"{num_shares} {permission_level} shares:")
 
             for virtual_name, folder_path, *_ignored in share_group:
-                self.output(f'• "{virtual_name}" {os.path.normpath(folder_path)}')
+                self.output(f'• "{virtual_name}" {folder_path}')
 
             num_listed += num_shares
 

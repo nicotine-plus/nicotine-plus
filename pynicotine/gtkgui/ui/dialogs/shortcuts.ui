@@ -43,7 +43,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="action-name">win.show-log-history</property>
+                <property name="action-name">win.show-log-pane</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
                 <property name="visible">True</property>
               </object>
@@ -71,7 +71,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="action-name">app.quit</property>
+                <property name="action-name">app.force-quit</property>
                 <property name="title" translatable="yes">Quit</property>
                 <property name="visible">True</property>
               </object>
@@ -147,6 +147,20 @@
               <object class="GtkShortcutsShortcut">
                 <property name="action-name">accel.copy-clipboard</property>
                 <property name="title" translatable="yes">Copy Selected Cell</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="action-name">accel.select-all</property>
+                <property name="title" translatable="yes">Select All</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="action-name">accel.find</property>
+                <property name="title" translatable="yes">Find</property>
                 <property name="visible">True</property>
               </object>
             </child>

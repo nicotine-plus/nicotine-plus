@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
 #
@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 
 import pynicotine
@@ -32,6 +30,7 @@ from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.treeview import TreeView
+from pynicotine.slskmessages import UserStatus
 
 
 class FastConfigure(Dialog):
@@ -72,9 +71,7 @@ class FastConfigure(Dialog):
             title=_("Setup Assistant"),
             width=720,
             height=450,
-            resizable=False,
-            show_title=False,
-            close_destroy=False
+            show_title=False
         )
 
         icon_name = pynicotine.__application_id__
@@ -97,7 +94,8 @@ class FastConfigure(Dialog):
                     "column_type": "text",
                     "title": _("Virtual Folder"),
                     "width": 1,
-                    "expand_column": True
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
                 },
                 "folder": {
                     "column_type": "text",
@@ -109,6 +107,13 @@ class FastConfigure(Dialog):
         )
 
         self.reset_completeness()
+
+    def destroy(self):
+
+        self.download_folder_button.destroy()
+        self.shares_list_view.destroy()
+
+        super().destroy()
 
     def reset_completeness(self):
         """Turns on the complete flag if everything required is filled in."""
@@ -164,7 +169,7 @@ class FastConfigure(Dialog):
             title=_("Add a Shared Folder"),
             callback=self.on_add_shared_folder_selected,
             select_multiple=True
-        ).show()
+        ).present()
 
     def on_edit_shared_folder_response(self, dialog, _response_id, iterator):
 
@@ -198,7 +203,7 @@ class FastConfigure(Dialog):
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_shared_folder_response,
                 callback_data=iterator
-            ).show()
+            ).present()
             return
 
     def on_remove_shared_folder(self, *_args):
@@ -264,7 +269,9 @@ class FastConfigure(Dialog):
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        core.connect()
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+
         return True
 
     def on_show(self, *_args):
@@ -289,6 +296,9 @@ class FastConfigure(Dialog):
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
+        self.shares_list_view.disable_sorting()
 
         for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
-            self.shares_list_view.add_row([str(virtual_name), os.path.normpath(folder_path)], select_row=False)
+            self.shares_list_view.add_row([virtual_name, folder_path], select_row=False)
+
+        self.shares_list_view.enable_sorting()

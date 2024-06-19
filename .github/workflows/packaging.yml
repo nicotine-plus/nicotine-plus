@@ -8,9 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -30,7 +28,7 @@ jobs:
           cp -Lr ../nicotine_* build/package/
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-package
           path: build/package/
@@ -41,13 +39,11 @@ jobs:
       matrix:
         arch: [x86_64]
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-45
+      image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Build Flatpak package
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -63,9 +59,7 @@ jobs:
         arch: [x86_64]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Build Snap package
         uses: snapcore/action-build@v1
@@ -75,7 +69,7 @@ jobs:
         run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: snap-${{ matrix.arch }}-package
           path: ${{ steps.build-snap.outputs.snap }}
@@ -83,34 +77,31 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - { msystem: MINGW64, arch: x86_64, gtk: 4, libadwaita: 1 }
-          - { msystem: MINGW32, arch: i686, gtk: 4, libadwaita: 1 }
+        arch: [x86_64]
     defaults:
       run:
         shell: msys2 {0}
     env:
-      ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
-      NICOTINE_LIBADWAITA: ${{ matrix.libadwaita }}
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{ matrix.msystem }}
+          msystem: MINGW64
           release: false
+          update: true
           install: >-
-            mingw-w64-${{ matrix.arch }}-gettext
-            mingw-w64-${{ matrix.arch }}-gtk${{ matrix.gtk }}
+            mingw-w64-${{ matrix.arch }}-ca-certificates
+            mingw-w64-${{ matrix.arch }}-gettext-tools
+            mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
+            mingw-w64-${{ matrix.arch }}-libadwaita
+            mingw-w64-${{ matrix.arch }}-python-build
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-pip
             mingw-w64-${{ matrix.arch }}-python-pycodestyle
             mingw-w64-${{ matrix.arch }}-python-pylint
             mingw-w64-${{ matrix.arch }}-python-gobject
@@ -122,42 +113,52 @@ jobs:
         run: python3 packaging/windows/setup.py bdist_msi
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-installer
           path: packaging/windows/build/*.msi
 
       - name: Archive package artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}-package
           path: packaging/windows/build/package
 
   macos:
-    runs-on: macos-12
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            platform: macos-12
+          - arch: arm64
+            platform: macos-14
+    runs-on: ${{ matrix.platform }}
     env:
       NICOTINE_GTK_VERSION: 4
       NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
+      - name: Create Python virtual environment
+        run: |
+          brew uninstall --ignore-dependencies python@3.12
+          brew install --overwrite python@3.12
+          python3.12 -m venv venv
+
       - name: Install build dependencies
         run: |
-          brew uninstall --ignore-dependencies python@3.11
-          brew install --overwrite python@3.11
-          python3 packaging/macos/dependencies.py
+          brew update
+          venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
-        run: python3 packaging/macos/setup.py bdist_dmg
+        run: venv/bin/python3 packaging/macos/setup.py bdist_dmg
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: macos-installer
+          name: macos-${{ matrix.arch }}-installer
           path: packaging/macos/build/*.dmg

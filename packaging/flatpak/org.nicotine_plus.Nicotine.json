@@ -1,7 +1,7 @@
 {
     "id" : "org.nicotine_plus.Nicotine",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "45",
+    "runtime-version" : "46",
     "sdk" : "org.gnome.Sdk",
     "command" : "nicotine",
     "separate-locales" : false,
@@ -16,6 +16,7 @@
         "--filesystem=/media",
         "--filesystem=/mnt",
         "--filesystem=/run/media",
+        "--talk-name=org.a11y.Bus",
         "--talk-name=org.kde.StatusNotifierWatcher",
         "--talk-name=org.mpris.MediaPlayer2.*"
     ],
@@ -24,7 +25,7 @@
             "name" : "nicotine-plus",
             "buildsystem" : "simple",
             "build-commands" : [
-                "pip3 install --no-deps --prefix=${FLATPAK_DEST} ."
+                "pip3 install --no-build-isolation --no-deps --prefix=${FLATPAK_DEST} ."
             ],
             "sources" : [
                 {

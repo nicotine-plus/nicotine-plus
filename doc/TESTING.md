@@ -51,23 +51,27 @@ See [All Platforms](#all-platforms) for installing the unstable version of Nicot
 
 ## Windows
 
-Unstable packages for Windows 10 and later are built after every commit to the master branch.
+Unstable packages are built after every commit to the master branch.
 
-- [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]
-- [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer)]
+- [Download Unstable Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer)]  
+  for Windows 10 or later
 
 Standalone executables are also available. They can be run from any folder and do not require installation or administrator privileges. Configuration files are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
-- [Download Unstable 64-bit Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]
-- [Download Unstable 32-bit Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package)]
+- [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]  
+  for Windows 10 or later
 
 ## macOS
 
-Unstable installers for macOS Monterey 12 and later are built after every commit to the master branch.
+Unstable installers are built after every commit to the master branch.
 
 *NOTE: You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) the first time you open Nicotine+ on macOS.*
 
-- [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer)]
+- [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)]  
+  for macOS 12 Monterey or later
+
+- [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer)]  
+  for macOS 14 Sonoma or later
 
 
 ## All Platforms

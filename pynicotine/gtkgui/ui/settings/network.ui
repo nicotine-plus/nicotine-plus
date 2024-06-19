@@ -51,7 +51,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Username:</property>
+                <property name="label" translatable="yes">Username: </property>
                 <property name="mnemonic-widget">username_entry</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
@@ -67,6 +67,7 @@
                 <child>
                   <object class="GtkEntry" id="username_entry">
                     <property name="hexpand">True</property>
+                    <property name="max-width-chars">10</property>
                     <property name="visible">True</property>
                     <property name="width-chars">10</property>
                   </object>
@@ -130,7 +131,7 @@
                     <property name="selectable">True</property>
                     <property name="visible">True</property>
                     <property name="wrap">True</property>
-                    <property name="wrap-mode">word-char</property>
+                    <property name="wrap-mode">word</property>
                     <property name="xalign">0</property>
                   </object>
                 </child>

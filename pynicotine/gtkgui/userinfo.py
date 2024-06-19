@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
@@ -28,12 +28,14 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -68,16 +70,18 @@ class UserInfos(IconNotebook):
 
         self.userinfo_combobox = ComboBox(
             container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
-            entry=self.window.userinfo_entry
+            entry=self.window.userinfo_entry, item_selected_callback=self.on_show_user_profile
         )
 
         # Events
         for event_name, callback in (
             ("add-buddy", self.add_remove_buddy),
             ("ban-user", self.ban_unban_user),
+            ("check-privileges", self.check_privileges),
             ("ignore-user", self.ignore_unignore_user),
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
+            ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
             ("server-login", self.on_focus),
@@ -93,6 +97,13 @@ class UserInfos(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def quit(self):
+        self.freeze()
+
+    def destroy(self):
+        self.userinfo_combobox.destroy()
+        super().destroy()
 
     def on_focus(self, *_args):
 
@@ -132,8 +143,8 @@ class UserInfos(IconNotebook):
         if page is None:
             self.pages[user] = page = UserInfo(self, user)
 
-            self.prepend_page(page.container, user, focus_callback=page.on_focus,
-                              close_callback=page.on_close, user=user)
+            self.append_page(page.container, user, focus_callback=page.on_focus,
+                             close_callback=page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
@@ -151,6 +162,10 @@ class UserInfos(IconNotebook):
         self.remove_page(page.container, page_args=(user,))
         del self.pages[user]
         page.destroy()
+
+    def check_privileges(self, _msg):
+        for page in self.pages.values():
+            page.update_privileges_button_state()
 
     def ban_unban_user(self, user):
 
@@ -235,6 +250,7 @@ class UserInfo:
 
         (
             self.add_remove_buddy_label,
+            self.ban_unban_user_button,
             self.ban_unban_user_label,
             self.container,
             self.country_icon,
@@ -244,6 +260,8 @@ class UserInfo:
             self.edit_interests_button,
             self.edit_profile_button,
             self.free_upload_slots_label,
+            self.gift_privileges_button,
+            self.ignore_unignore_user_button,
             self.ignore_unignore_user_label,
             self.info_bar_container,
             self.likes_list_container,
@@ -254,7 +272,6 @@ class UserInfo:
             self.queued_uploads_label,
             self.refresh_button,
             self.retry_button,
-            self.save_picture_button,
             self.shared_files_label,
             self.shared_folders_label,
             self.upload_slots_label,
@@ -271,7 +288,7 @@ class UserInfo:
 
         if GTK_API_VERSION >= 4:
             self.country_icon.set_pixel_size(21)
-            self.picture = Gtk.Picture(can_shrink=True, hexpand=True, vexpand=True)
+            self.picture = Gtk.Picture(can_shrink=True, focusable=True, hexpand=True, vexpand=True)
             self.picture_view.append(self.picture)  # pylint: disable=no-member
 
             if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 8):
@@ -283,7 +300,7 @@ class UserInfo:
             # Setting a pixel size of 21 results in a misaligned country flag
             self.country_icon.set_pixel_size(0)
 
-            self.picture = Gtk.EventBox(hexpand=True, vexpand=True, visible=True)
+            self.picture = Gtk.EventBox(can_focus=True, hexpand=True, vexpand=True, visible=True)
             self.picture.connect("draw", self.on_draw_picture)
 
             self.picture_view.add(self.picture)    # pylint: disable=no-member
@@ -383,11 +400,16 @@ class UserInfo:
 
     def populate_stats(self):
 
-        user_stats = core.watched_users.get(self.user, {})
-        speed = user_stats.get("upload_speed", 0)
-        files = user_stats.get("files")
-        folders = user_stats.get("folders")
-        country_code = core.user_countries.get(self.user)
+        country_code = core.users.countries.get(self.user)
+        stats = core.users.watched.get(self.user)
+
+        if stats is not None:
+            speed = stats.upload_speed or 0
+            files = stats.files
+            folders = stats.folders
+        else:
+            speed = 0
+            files = folders = None
 
         if speed > 0:
             self.upload_speed_label.set_text(human_speed(speed))
@@ -411,7 +433,6 @@ class UserInfo:
         self.picture_surface = None
 
         self.picture_container.set_visible_child(self.placeholder_picture)
-        self.save_picture_button.set_sensitive(False)
 
     def load_picture(self, data):
 
@@ -437,7 +458,6 @@ class UserInfo:
             return
 
         self.picture_container.set_visible_child(self.picture_view)
-        self.save_picture_button.set_sensitive(True)
 
     def peer_connection_error(self):
 
@@ -495,15 +515,18 @@ class UserInfo:
 
     # Button States #
 
-    def update_edit_button_state(self):
+    def update_local_buttons_state(self):
 
-        is_personal_profile = (self.user == core.login_username)
+        local_username = core.users.login_username or config.sections["server"]["login"]
 
         for widget in (self.edit_interests_button, self.edit_profile_button):
-            widget.set_visible(is_personal_profile)
+            widget.set_visible(self.user == local_username)
+
+        for widget in (self.ban_unban_user_button, self.ignore_unignore_user_button):
+            widget.set_visible(self.user != local_username)
 
     def update_buddy_button_state(self):
-        label = _("Remove _Buddy") if self.user in core.userlist.buddies else _("Add _Buddy")
+        label = _("Remove _Buddy") if self.user in core.buddies.users else _("Add _Buddy")
         self.add_remove_buddy_label.set_text_with_mnemonic(label)
 
     def update_ban_button_state(self):
@@ -514,12 +537,16 @@ class UserInfo:
         label = _("Unignore User") if core.network_filter.is_user_ignored(self.user) else _("Ignore User")
         self.ignore_unignore_user_label.set_text(label)
 
+    def update_privileges_button_state(self):
+        self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
+
     def update_button_states(self):
 
-        self.update_edit_button_state()
+        self.update_local_buttons_state()
         self.update_buddy_button_state()
         self.update_ban_button_state()
         self.update_ignore_button_state()
+        self.update_privileges_button_state()
 
     # Network Messages #
 
@@ -544,11 +571,22 @@ class UserInfo:
 
     def user_stats(self, msg):
 
-        if msg.avgspeed > 0:
-            self.upload_speed_label.set_text(human_speed(msg.avgspeed))
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
+        num_folders = msg.dirs or 0
 
-        self.shared_files_label.set_text(humanize(msg.files))
-        self.shared_folders_label.set_text(humanize(msg.dirs))
+        h_speed = human_speed(speed) if speed > 0 else _("Unknown")
+        h_num_files = humanize(num_files)
+        h_num_folders = humanize(num_folders)
+
+        if self.upload_speed_label.get_text() != h_speed:
+            self.upload_speed_label.set_text(h_speed)
+
+        if self.shared_files_label.get_text() != h_num_files:
+            self.shared_files_label.set_text(h_num_files)
+
+        if self.shared_folders_label.get_text() != h_num_folders:
+            self.shared_folders_label.set_text(h_num_folders)
 
     def user_country(self, country_code):
 
@@ -569,13 +607,18 @@ class UserInfo:
     def user_interests(self, msg):
 
         self.likes_list_view.clear()
+        self.likes_list_view.disable_sorting()
         self.dislikes_list_view.clear()
+        self.dislikes_list_view.disable_sorting()
 
         for like in msg.likes:
             self.likes_list_view.add_row([like], select_row=False)
 
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
+
+        self.likes_list_view.enable_sorting()
+        self.dislikes_list_view.enable_sorting()
 
     # Callbacks #
 
@@ -628,18 +671,18 @@ class UserInfo:
         core.privatechat.show_user(self.user)
 
     def on_show_ip_address(self, *_args):
-        core.request_ip_address(self.user, notify=True)
+        core.users.request_ip_address(self.user, notify=True)
 
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.user)
 
     def on_add_remove_buddy(self, *_args):
 
-        if self.user in core.userlist.buddies:
-            core.userlist.remove_buddy(self.user)
+        if self.user in core.buddies.users:
+            core.buddies.remove_buddy(self.user)
             return
 
-        core.userlist.add_buddy(self.user)
+        core.buddies.add_buddy(self.user)
 
     def on_ban_unban_user(self, *_args):
 
@@ -656,6 +699,45 @@ class UserInfo:
             return
 
         core.network_filter.ignore_user(self.user)
+
+    def on_give_privileges_response(self, dialog, _response_id, _data):
+
+        days = dialog.get_entry_value()
+
+        if not days:
+            return
+
+        try:
+            days = int(days)
+
+        except ValueError:
+            self.on_give_privileges(error=_("Please enter number of days."))
+            return
+
+        core.users.request_give_privileges(self.user, days)
+
+    def on_give_privileges(self, *_args, error=None):
+
+        core.users.request_check_privileges()
+
+        if core.users.privileges_left is None:
+            days = _("Unknown")
+        else:
+            days = core.users.privileges_left // 60 // 60 // 24
+
+        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
+                   {"user": self.user, "days_left": _("%(days)s days left") % {"days": days}})
+
+        if error:
+            message += "\n\n" + error
+
+        EntryDialog(
+            parent=self.window,
+            title=_("Gift Privileges"),
+            message=message,
+            action_button_label=_("_Give Privileges"),
+            callback=self.on_give_privileges_response
+        ).present()
 
     def on_copy_picture(self, *_args):
 
@@ -686,7 +768,7 @@ class UserInfo:
             callback=self.on_save_picture_response,
             initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
-        ).show()
+        ).present()
 
     def on_refresh(self, *_args):
         self.set_in_progress()

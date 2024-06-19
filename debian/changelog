@@ -1,8 +1,38 @@
-nicotine (3.3.0-rc1) mantic; urgency=medium
+nicotine (3.3.5-dev1) noble; urgency=medium
 
-  * Release candidate 1.
+  * Development version.
 
- -- Mat <mail@mathias.is>  Tue, 19 Dec 2023 18:22:43 +0300
+ -- Mat <mail@mathias.is>  Tue, 07 May 2024 02:39:31 +0300
+
+nicotine (3.3.4-1) noble; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Mon, 06 May 2024 16:38:36 +0300
+
+nicotine (3.3.3-1) noble; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 05 May 2024 14:59:48 +0300
+
+nicotine (3.3.2-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sun, 25 Feb 2024 01:35:34 +0200
+
+nicotine (3.3.1-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 24 Feb 2024 01:12:49 +0200
+
+nicotine (3.3.0-1) mantic; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Thu, 01 Feb 2024 22:19:53 +0200
 
 nicotine (3.2.9-1) kinetic; urgency=medium
 

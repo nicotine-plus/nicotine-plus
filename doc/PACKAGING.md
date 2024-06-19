@@ -83,12 +83,6 @@ When the application has finished building, it is located in the `packaging\wind
 
 If you want to run the application, you can launch the executable `packaging\windows\build\package\Nicotine+\Nicotine+.exe`.
 
-### Building a 32-bit (i686) Application and Installer
-
-Start a MinGW 32-bit terminal, and follow the above instructions again. Replace any instance of `x86_64` with `i686` when installing packages.
-
-You are recommended to clone a fresh copy of the `nicotine-plus` Git repository before building a frozen application again.
-
 
 ## macOS
 
@@ -110,14 +104,15 @@ Install dependencies:
 ```sh
 export NICOTINE_GTK_VERSION=4
 export NICOTINE_USE_LIBADWAITA=1
-brew install python
-python3 packaging/macos/dependencies.py
+brew install python@3.11
+python3.11 -m venv venv
+venv/bin/python3 packaging/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-python3 packaging/macos/setup.py bdist_dmg
+venv/bin/python3 packaging/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the `packaging/macos/build/` subfolder as a .dmg file.

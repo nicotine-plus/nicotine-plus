@@ -73,9 +73,7 @@ class Statistics(Dialog):
             content_box=self.container,
             show_callback=self.on_show,
             title=_("Transfer Statistics"),
-            width=425,
-            resizable=False,
-            close_destroy=False
+            width=425
         )
 
         events.connect("update-stat", self.update_stat)
@@ -126,7 +124,7 @@ class Statistics(Dialog):
             message=_("Do you really want to reset transfer statistics?"),
             destructive_response_id="ok",
             callback=self.on_reset_statistics_response
-        ).show()
+        ).present()
 
     def on_close(self, *_args):
         self.close()

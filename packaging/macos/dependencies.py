@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -45,7 +45,7 @@ def install_brew():
 def install_pypi():
     """Install dependencies from PyPi."""
 
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", "cx_Freeze",
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-binary", ":all:",
                            "-e", ".[packaging,tests]", "build"])
 
 

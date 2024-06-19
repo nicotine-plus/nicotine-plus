@@ -108,3 +108,5 @@ if GTK_API_VERSION == 3:
     ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])
+else:
+    ALL_MODIFIERS = []

@@ -39,9 +39,7 @@ class FileChooser:
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder=None, select_multiple=False):
 
-        if not initial_folder:
-            initial_folder = os.path.expanduser("~")
-        else:
+        if initial_folder:
             initial_folder = os.path.normpath(os.path.expandvars(initial_folder))
             initial_folder_encoded = encode_path(initial_folder)
 
@@ -69,7 +67,8 @@ class FileChooser:
                 self.select_method = self.file_chooser.open
                 self.finish_method = self.file_chooser.open_finish
 
-            self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
+            if initial_folder:
+                self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
 
         except AttributeError:
             # GTK < 4.10
@@ -84,12 +83,15 @@ class FileChooser:
             self.file_chooser.connect("response", self.on_response)
 
             if GTK_API_VERSION >= 4:
-                self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
+                if initial_folder:
+                    self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
                 return
 
             # Display network shares
             self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-            self.file_chooser.set_current_folder(initial_folder)
+
+            if initial_folder:
+                self.file_chooser.set_current_folder(initial_folder)
 
     def on_finish(self, _dialog, result):
 
@@ -133,7 +135,7 @@ class FileChooser:
 
         self.destroy()
 
-    def show(self):
+    def present(self):
 
         FileChooser.active_chooser = self
 
@@ -304,6 +306,9 @@ class FileChooserButton:
 
         self.open_folder_button.connect("clicked", self.on_open_folder)
 
+    def destroy(self):
+        self.__dict__.clear()
+
     def on_open_file_chooser_response(self, selected, _data):
 
         if selected.startswith(config.data_folder_path):
@@ -317,7 +322,7 @@ class FileChooserButton:
 
         except TypeError:
             # No function defined
-            return
+            pass
 
     def on_open_file_chooser(self, *_args):
 
@@ -326,7 +331,7 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=self.path
-            ).show()
+            ).present()
             return
 
         folder_path = os.path.dirname(self.path) if self.path else None
@@ -336,14 +341,14 @@ class FileChooserButton:
                 parent=self.window,
                 callback=self.on_open_file_chooser_response,
                 initial_folder=folder_path
-            ).show()
+            ).present()
             return
 
         FileChooser(
             parent=self.window,
             callback=self.on_open_file_chooser_response,
             initial_folder=folder_path
-        ).show()
+        ).present()
 
     def on_open_folder(self, *_args):
 

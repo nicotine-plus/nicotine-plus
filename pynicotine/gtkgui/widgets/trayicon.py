@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,21 +19,19 @@
 import os
 import sys
 
-from locale import strxfrm
-
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Gtk
 
 import pynicotine
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
-from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
+from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
@@ -50,7 +48,7 @@ class BaseImplementation:
         self.application = application
         self.menu_items = {}
         self.menu_item_id = 1
-        self.activate_callback = self.on_window_hide_unhide
+        self.activate_callback = application.on_window_hide_unhide
         self.is_visible = True
 
         self.create_menu()
@@ -73,42 +71,39 @@ class BaseImplementation:
 
         return item
 
-    @staticmethod
-    def set_item_text(item, text):
+    def set_item_text(self, item, text):
         item["text"] = text
 
-    @staticmethod
-    def set_item_sensitive(item, sensitive):
+    def set_item_sensitive(self, item, sensitive):
         item["sensitive"] = sensitive
 
-    @staticmethod
-    def set_item_toggled(item, toggled):
+    def set_item_toggled(self, item, toggled):
         item["toggled"] = toggled
 
     def create_menu(self):
 
-        self.show_hide_item = self.create_item("default", self.on_window_hide_unhide)
+        self.show_hide_item = self.create_item("default", self.application.on_window_hide_unhide)
 
         self.create_item()
 
-        self.downloads_item = self.create_item(_("Downloads"), self.on_downloads)
-        self.uploads_item = self.create_item(_("Uploads"), self.on_uploads)
+        self.downloads_item = self.create_item(_("Downloads"), self.application.on_downloads)
+        self.uploads_item = self.create_item(_("Uploads"), self.application.on_uploads)
 
         self.create_item()
 
-        self.connect_disconnect_item = self.create_item("default", self.on_connect_disconnect)
+        self.create_item(_("Private Chat"), self.application.on_private_chat)
+        self.create_item(_("Chat Rooms"), self.application.on_chat_rooms)
+        self.create_item(_("Searches"), self.application.on_searches)
+
+        self.create_item()
+
+        self.connect_disconnect_item = self.create_item("default", self.application.on_connect_disconnect)
         self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
 
         self.create_item()
 
-        self.send_message_item = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_info_item = self.create_item(_("View User Profile"), self.on_get_a_users_info)
-        self.lookup_shares_item = self.create_item(_("Browse Shares"), self.on_get_a_users_shares)
-
-        self.create_item()
-
         self.create_item(_("Preferences"), self.application.on_preferences)
-        self.create_item(_("Quit"), self.application.on_quit_request)
+        self.create_item(_("_Quit"), self.application.on_quit_request)
 
     def update_window_visibility(self):
 
@@ -125,17 +120,13 @@ class BaseImplementation:
 
     def update_user_status(self):
 
-        sensitive = core.user_status != slskmessages.UserStatus.OFFLINE
-        label = _("Disconnect") if sensitive else _("Connect")
+        sensitive = core.users.login_status != slskmessages.UserStatus.OFFLINE
+        label = _("_Disconnect") if sensitive else _("_Connect")
 
-        for item in (self.away_item, self.send_message_item,
-                     self.lookup_info_item, self.lookup_shares_item):
-
-            # Disable menu items when disconnected from server
-            self.set_item_sensitive(item, sensitive)
+        self.set_item_sensitive(self.away_item, sensitive)
 
         self.set_item_text(self.connect_disconnect_item, label)
-        self.set_item_toggled(self.away_item, core.user_status == slskmessages.UserStatus.AWAY)
+        self.set_item_toggled(self.away_item, core.users.login_status == slskmessages.UserStatus.AWAY)
 
         self.update_icon()
         self.update_menu()
@@ -148,10 +139,10 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.user_status == slskmessages.UserStatus.ONLINE:
+        elif core.users.login_status == slskmessages.UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.user_status == slskmessages.UserStatus.AWAY:
+        elif core.users.login_status == slskmessages.UserStatus.AWAY:
             icon_name = "away"
 
         else:
@@ -184,96 +175,9 @@ class BaseImplementation:
         # Implemented in subclasses
         pass
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
         # Implemented in subclasses
         pass
-
-    def on_window_hide_unhide(self, *_args):
-
-        if self.application.window.is_visible():
-            self.application.window.hide()
-            return
-
-        self.application.window.show()
-
-    def on_connect_disconnect(self, *_args):
-
-        if core.user_status != slskmessages.UserStatus.OFFLINE:
-            self.application.on_disconnect()
-            return
-
-        self.application.on_connect()
-
-    def on_downloads(self, *_args):
-        self.application.window.change_main_page(self.application.window.downloads_page)
-        self.application.window.show()
-
-    def on_uploads(self, *_args):
-        self.application.window.change_main_page(self.application.window.uploads_page)
-        self.application.window.show()
-
-    def on_open_private_chat_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.privatechat.show_user(user)
-        self.application.window.show()
-
-    def on_open_private_chat(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Start Messaging"),
-            message=_("Enter the name of the user whom you want to send a message:"),
-            action_button_label=_("_Message"),
-            callback=self.on_open_private_chat_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
-
-    def on_get_a_users_info_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userinfo.show_user(user)
-        self.application.window.show()
-
-    def on_get_a_users_info(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("View User Profile"),
-            message=_("Enter the name of the user whose profile you want to see:"),
-            action_button_label=_("_View Profile"),
-            callback=self.on_get_a_users_info_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
-
-    def on_get_a_users_shares_response(self, dialog, _response_id, _data):
-
-        user = dialog.get_entry_value()
-
-        if not user:
-            return
-
-        core.userbrowse.browse_user(user)
-        self.application.window.show()
-
-    def on_get_a_users_shares(self, *_args):
-
-        EntryDialog(
-            parent=self.application.window,
-            title=_("Browse Shares"),
-            message=_("Enter the name of the user whose shares you want to see:"),
-            action_button_label=_("_Browse"),
-            callback=self.on_get_a_users_shares_response,
-            droplist=sorted(core.userlist.buddies, key=strxfrm)
-        ).show()
 
 
 class StatusNotifierImplementation(BaseImplementation):
@@ -404,7 +308,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             super().__init__(
                 interface_name="com.canonical.dbusmenu",
-                object_path="/org/ayatana/NotificationItem/Nicotine/Menu",
+                object_path="/StatusNotifierItem/menu",
                 bus_type=Gio.BusType.SESSION
             )
 
@@ -468,11 +372,8 @@ class StatusNotifierImplementation(BaseImplementation):
             return self._revision, (0, {}, serialized_items)
 
         def on_event(self, idx, event_id, _data, _timestamp):
-
-            if event_id != "clicked":
-                return
-
-            self._items[idx]["callback"]()
+            if event_id == "clicked":
+                self._items[idx]["callback"]()
 
     class StatusNotifierItemService(DBusService):
 
@@ -480,7 +381,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             super().__init__(
                 interface_name="org.kde.StatusNotifierItem",
-                object_path="/org/ayatana/NotificationItem/Nicotine",
+                object_path="/StatusNotifierItem",
                 bus_type=Gio.BusType.SESSION
             )
 
@@ -491,7 +392,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 ("Id", "s", pynicotine.__application_id__),
                 ("Title", "s", pynicotine.__application_name__),
                 ("ToolTip", "(sa(iiay)ss)", ("", [], pynicotine.__application_name__, "")),
-                ("Menu", "o", "/org/ayatana/NotificationItem/Nicotine/Menu"),
+                ("Menu", "o", "/StatusNotifierItem/menu"),
                 ("ItemIsMenu", "b", False),
                 ("IconName", "s", ""),
                 ("IconThemePath", "s", ""),
@@ -501,6 +402,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for method_name, in_args, out_args, callback in (
                 ("Activate", ("i", "i"), (), activate_callback),
+                ("ProvideXdgActivationToken", ("s",), (), self.on_provide_activation_token)
             ):
                 self.add_method(method_name, in_args, out_args, callback)
 
@@ -519,6 +421,9 @@ class StatusNotifierImplementation(BaseImplementation):
             super().unregister()
             self.menu.unregister()
 
+        def on_provide_activation_token(self, token):
+            Window.activation_token = token
+
     def __init__(self, application):
 
         super().__init__(application)
@@ -536,7 +441,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 object_path="/StatusNotifierWatcher",
                 interface_name="org.kde.StatusNotifierWatcher",
                 method_name="RegisterStatusNotifierItem",
-                parameters=GLib.Variant("(s)", ("/org/ayatana/NotificationItem/Nicotine",)),
+                parameters=GLib.Variant("(s)", (self.bus.get_unique_name(),)),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
                 timeout_msec=-1
@@ -555,12 +460,12 @@ class StatusNotifierImplementation(BaseImplementation):
         if not icon_path:
             return False
 
-        icon_scheme = f"{pynicotine.__application_id__}-{icon_name}."
+        icon_scheme = f"{pynicotine.__application_id__}-{icon_name}.".encode()
 
         try:
             with os.scandir(encode_path(icon_path)) as entries:
                 for entry in entries:
-                    if entry.is_file() and entry.name.decode("utf-8", "replace").startswith(icon_scheme):
+                    if entry.is_file() and entry.name.startswith(icon_scheme):
                         return True
 
         except OSError as error:
@@ -626,7 +531,7 @@ class StatusNotifierImplementation(BaseImplementation):
     def update_menu(self):
         self.tray_icon.menu.set_items(self.menu_items)
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
 
         if self.tray_icon is None:
             return
@@ -775,7 +680,6 @@ class Win32Implementation(BaseImplementation):
 
         self._register_class()
         self._create_window()
-        self.update_icon()
 
     def _register_class(self):
 
@@ -964,7 +868,7 @@ class Win32Implementation(BaseImplementation):
 
         if text is not None:
             item_info.f_mask |= self.MIIM_STRING
-            item_info.dw_type_data = text
+            item_info.dw_type_data = text.replace("_", "&")  # Mnemonics use &
         else:
             item_info.f_type |= self.MFT_SEPARATOR
 
@@ -1045,7 +949,7 @@ class Win32Implementation(BaseImplementation):
             # Menu item pressed
             menu_item_id = w_param & 0xFFFF
             menu_item_callback = self.menu_items[menu_item_id]["callback"]
-            events.invoke_main_thread(menu_item_callback)
+            menu_item_callback()
 
         elif msg == self._wm_taskbarcreated:
             # Taskbar process restarted, create new icon
@@ -1059,7 +963,7 @@ class Win32Implementation(BaseImplementation):
             wintypes.LPARAM(l_param)
         )
 
-    def unload(self, is_shutdown=False):
+    def unload(self, is_shutdown=True):
 
         self._remove_notify_icon()
 
@@ -1072,6 +976,77 @@ class Win32Implementation(BaseImplementation):
         self._unregister_class()
 
 
+class StatusIconImplementation(BaseImplementation):
+
+    def __init__(self, application):
+
+        super().__init__(application)
+
+        if not hasattr(Gtk, "StatusIcon") or os.environ.get("WAYLAND_DISPLAY"):
+            # GtkStatusIcon does not work on Wayland
+            raise ImplementationUnavailable("StatusIcon implementation not available")
+
+        self.tray_icon = Gtk.StatusIcon(tooltip_text=pynicotine.__application_name__)
+        self.tray_icon.connect("activate", self.activate_callback)
+        self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
+
+        self.gtk_menu = self.build_gtk_menu()
+        GLib.idle_add(self.update_icon)
+
+    def on_status_icon_popup(self, _status_icon, button, _activate_time):
+
+        if button == 3:
+            time = Gtk.get_current_event_time()
+            self.gtk_menu.popup(None, None, None, None, button, time)
+
+    def set_item_text(self, item, text):
+        super().set_item_text(item, text)
+        item["gtk_menu_item"].set_label(text)
+
+    def set_item_sensitive(self, item, sensitive):
+        super().set_item_sensitive(item, sensitive)
+        item["gtk_menu_item"].set_sensitive(sensitive)
+
+    def set_item_toggled(self, item, toggled):
+
+        super().set_item_toggled(item, toggled)
+        gtk_menu_item = item["gtk_menu_item"]
+
+        with gtk_menu_item.handler_block(item["gtk_handler"]):
+            gtk_menu_item.set_active(toggled)
+
+    def build_gtk_menu(self):
+
+        gtk_menu = Gtk.Menu()
+
+        for item in self.menu_items.values():
+            text = item.get("text")
+
+            if text is None:
+                item["gtk_menu_item"] = gtk_menu_item = Gtk.SeparatorMenuItem(visible=True)
+            else:
+                gtk_menu_item_class = Gtk.CheckMenuItem if "toggled" in item else Gtk.MenuItem
+                item["gtk_menu_item"] = gtk_menu_item = gtk_menu_item_class(
+                    label=text, use_underline=True, visible=True
+                )
+                item["gtk_handler"] = gtk_menu_item.connect("activate", item["callback"])
+
+            gtk_menu.append(gtk_menu_item)
+
+        return gtk_menu
+
+    def set_icon_name(self, icon_name):
+
+        if not self.tray_icon.get_visible():
+            self.tray_icon.set_visible(True)
+
+        if self.tray_icon.is_embedded():
+            self.tray_icon.set_from_icon_name(icon_name)
+
+    def unload(self, is_shutdown=True):
+        self.tray_icon.set_visible(False)
+
+
 class TrayIcon:
 
     def __init__(self, application):
@@ -1079,24 +1054,32 @@ class TrayIcon:
         self.application = application
         self.available = True
         self.implementation = None
+        self.watch_id = None
 
         self.watch_availability()
         self.load()
-
-        events.connect("quit", self.quit)
 
     def watch_availability(self):
 
         if sys.platform in {"win32", "darwin"}:
             return
 
-        Gio.bus_watch_name(
+        if self.watch_id is not None:
+            return
+
+        self.watch_id = Gio.bus_watch_name(
             bus_type=Gio.BusType.SESSION,
             name="org.kde.StatusNotifierWatcher",
             flags=Gio.BusNameWatcherFlags.NONE,
             name_appeared_closure=self.load,
             name_vanished_closure=self.unload
         )
+
+    def unwatch_availability(self):
+
+        if self.watch_id is not None:
+            Gio.bus_unwatch_name(self.watch_id)
+            self.watch_id = None
 
     def load(self, *_args):
 
@@ -1113,13 +1096,22 @@ class TrayIcon:
         if self.implementation is None:
             if sys.platform == "win32":
                 self.implementation = Win32Implementation(self.application)
+
+            elif sys.platform == "darwin":
+                self.available = False
+
             else:
                 try:
                     self.implementation = StatusNotifierImplementation(self.application)
 
                 except ImplementationUnavailable:
-                    self.available = False
-                    return
+                    try:
+                        self.implementation = StatusIconImplementation(self.application)
+                        self.unwatch_availability()
+
+                    except ImplementationUnavailable:
+                        self.available = False
+                        return
 
         self.refresh_state()
 
@@ -1156,14 +1148,14 @@ class TrayIcon:
         if not self.implementation:
             return
 
-        self.implementation.is_visible = True
+        self.implementation.is_visible = config.sections["ui"]["trayicon"]
 
         self.update_icon_theme()
         self.update_icon()
         self.update_window_visibility()
         self.update_user_status()
 
-    def unload(self, *_args, is_shutdown=False):
+    def unload(self, *_args, is_shutdown=True):
 
         if self.implementation:
             self.implementation.unload(is_shutdown=is_shutdown)
@@ -1171,6 +1163,8 @@ class TrayIcon:
 
         if is_shutdown:
             self.implementation = None
+            self.available = False
 
-    def quit(self):
-        self.unload(is_shutdown=True)
+    def destroy(self):
+        self.unload()
+        self.__dict__.clear()

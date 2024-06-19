@@ -116,7 +116,7 @@
         <child>
           <object class="GtkImage">
             <property name="halign">center</property>
-            <property name="icon-name">dialog-password-symbolic</property>
+            <property name="icon-name">avatar-default-symbolic</property>
             <property name="pixel-size">64</property>
             <property name="visible">True</property>
           </object>
@@ -167,7 +167,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Username</property>
+                        <property name="label" translatable="yes">Username: </property>
                         <property name="mnemonic-widget">username_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
@@ -200,7 +200,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="label" translatable="yes">Password</property>
+                        <property name="label" translatable="yes">Password: </property>
                         <property name="mnemonic-widget">password_entry</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>

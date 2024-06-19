@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -21,7 +21,6 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 
@@ -41,7 +40,6 @@ class Room:
 class ChatRooms:
     # Trailing spaces to avoid conflict with regular rooms
     GLOBAL_ROOM_NAME = "Public "
-    JOINED_ROOMS_NAME = "Joined Rooms "
 
     def __init__(self):
 
@@ -94,6 +92,13 @@ class ChatRooms:
         if not msg.success:
             return
 
+        # Request a complete room list. A limited room list not including blacklisted rooms and
+        # rooms with few users is automatically sent when logging in, but subsequent room list
+        # requests contain all rooms.
+        core.send_message_to_server(slskmessages.RoomList())
+
+        core.send_message_to_server(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
+
         for room in self.joined_rooms:
             if room == self.GLOBAL_ROOM_NAME:
                 core.send_message_to_server(slskmessages.JoinGlobalRoom())
@@ -117,7 +122,8 @@ class ChatRooms:
             self.joined_rooms[room] = room_obj = Room(name=room, is_private=is_private)
 
             if room not in config.sections["server"]["autojoin"]:
-                config.sections["server"]["autojoin"].insert(0, room)
+                position = 0 if room == self.GLOBAL_ROOM_NAME else -1
+                config.sections["server"]["autojoin"].insert(position, room)
 
         if not room_obj.users:
             if room == self.GLOBAL_ROOM_NAME:
@@ -138,11 +144,11 @@ class ChatRooms:
             core.send_message_to_server(slskmessages.LeaveRoom(room))
 
         room_obj = self.joined_rooms.pop(room)
-        non_watched_users = room_obj.users.difference(core.watched_users)
+        non_watched_users = room_obj.users.difference(core.users.watched)
 
         for username in non_watched_users:
             # We haven't explicitly watched the user, server will no longer send status updates
-            for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
+            for dictionary in (core.users.addresses, core.users.countries, core.users.statuses):
                 dictionary.pop(username, None)
 
         if is_permanent:
@@ -221,14 +227,14 @@ class ChatRooms:
 
     def is_private_room_owned(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and private_room["owner"] == core.login_username
+        return private_room is not None and private_room["owner"] == core.users.login_username
 
     def is_private_room_member(self, room):
         return room in self.private_rooms
 
     def is_private_room_operator(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and core.login_username in private_room["operators"]
+        return private_room is not None and core.users.login_username in private_room["operators"]
 
     def request_room_list(self):
         core.send_message_to_server(slskmessages.RoomList())
@@ -271,12 +277,12 @@ class ChatRooms:
 
         for userdata in msg.users:
             username = userdata.username
-            core.user_statuses[username] = userdata.status
+            core.users.statuses[username] = userdata.status
             room_obj.users.add(username)
 
             # Request user's IP address, so we can get the country and ignore messages by IP
-            if username not in core.user_addresses:
-                core.request_ip_address(username)
+            if username not in core.users.addresses:
+                core.users.request_ip_address(username)
 
         core.pluginhandler.join_chatroom_notification(msg.room)
 
@@ -363,16 +369,16 @@ class ChatRooms:
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and core.login_username not in private_room["operators"]:
-            private_room["operators"].append(core.login_username)
+        if private_room is not None and core.users.login_username not in private_room["operators"]:
+            private_room["operators"].append(core.users.login_username)
 
     def _private_room_operator_removed(self, msg):
         """Server code 146."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and core.login_username in private_room["operators"]:
-            private_room["operators"].remove(core.login_username)
+        if private_room is not None and core.users.login_username in private_room["operators"]:
+            private_room["operators"].remove(core.users.login_username)
 
     def _private_room_owned(self, msg):
         """Server code 148."""
@@ -392,7 +398,7 @@ class ChatRooms:
     def _room_list(self, msg):
         """Server code 64."""
 
-        login_username = core.login_username
+        login_username = core.users.login_username
 
         for room, user_count in msg.rooms:
             self.server_rooms.add(room)
@@ -438,10 +444,10 @@ class ChatRooms:
         if text.startswith("/me "):
             return "action"
 
-        if user == core.login_username:
+        if user == core.users.login_username:
             return "local"
 
-        if core.login_username and find_whole_word(core.login_username.lower(), text.lower()) > -1:
+        if core.users.login_username and find_whole_word(core.users.login_username.lower(), text.lower()) > -1:
             return "hilite"
 
         return "remote"
@@ -488,7 +494,7 @@ class ChatRooms:
         if is_action_message:
             message = message.replace("/me ", "", 1)
 
-        if config.sections["words"]["censorwords"] and username != core.login_username:
+        if config.sections["words"]["censorwords"] and username != core.users.login_username:
             message = censor_text(message, censored_patterns=config.sections["words"]["censored"])
 
         if config.sections["logging"]["chatrooms"] or room in config.sections["logging"]["rooms"]:
@@ -502,7 +508,7 @@ class ChatRooms:
 
             log.write_log_file(
                 folder_path=log.room_folder_path,
-                basename=f"{clean_file(room)}.log", text=formatted_message
+                basename=room, text=formatted_message
             )
 
         if is_global:
@@ -521,17 +527,17 @@ class ChatRooms:
 
         username = msg.userdata.username
 
-        if username == core.login_username:
+        if username == core.users.login_username:
             # Redundant message, we're already present in the list of users
             msg.room = None
             return
 
         room_obj.users.add(username)
-        core.user_statuses[username] = msg.userdata.status
+        core.users.statuses[username] = msg.userdata.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
-        if username not in core.user_addresses:
-            core.request_ip_address(username)
+        if username not in core.users.addresses:
+            core.users.request_ip_address(username)
 
         core.pluginhandler.user_join_chatroom_notification(msg.room, username)
 
@@ -547,9 +553,9 @@ class ChatRooms:
         username = msg.username
         room_obj.users.discard(username)
 
-        if username not in core.watched_users:
+        if username not in core.users.watched:
             # We haven't explicitly watched the user, server will no longer send status updates
-            for dictionary in (core.user_addresses, core.user_countries, core.user_statuses):
+            for dictionary in (core.users.addresses, core.users.countries, core.users.statuses):
                 dictionary.pop(username, None)
 
         core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
@@ -610,7 +616,7 @@ class ChatRooms:
             self.completions.update(self.server_rooms)
 
         if config.sections["words"]["buddies"]:
-            self.completions.update(core.userlist.buddies)
+            self.completions.update(core.buddies.users)
 
         if config.sections["words"]["commands"]:
             self.completions.update(core.pluginhandler.get_command_list("chatroom"))

@@ -475,7 +475,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Send M_essage</property>
+                                <property name="label" translatable="yes">_Send Message</property>
                                 <property name="mnemonic-widget">_send_message_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
@@ -558,7 +558,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ban_unban_user_button">
+                      <object class="GtkButton" id="ban_unban_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ban_unban_user"/>
                         <child>
@@ -574,7 +574,7 @@
                             <child>
                               <object class="GtkLabel" id="ban_unban_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ban_unban_user_button</property>
+                                <property name="mnemonic-widget">ban_unban_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
@@ -589,7 +589,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_ignore_unignore_user_button">
+                      <object class="GtkButton" id="ignore_unignore_user_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_ignore_unignore_user"/>
                         <child>
@@ -605,7 +605,7 @@
                             <child>
                               <object class="GtkLabel" id="ignore_unignore_user_label">
                                 <property name="ellipsize">end</property>
-                                <property name="mnemonic-widget">_ignore_unignore_user_button</property>
+                                <property name="mnemonic-widget">ignore_unignore_user_button</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>
@@ -653,24 +653,24 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="save_picture_button">
+                      <object class="GtkButton" id="gift_privileges_button">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_save_picture"/>
+                        <signal name="clicked" handler="on_give_privileges"/>
                         <child>
                           <object class="GtkBox">
                             <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">image-x-generic-symbolic</property>
+                                <property name="icon-name">starred-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Save _Picture</property>
-                                <property name="mnemonic-widget">save_picture_button</property>
+                                <property name="label" translatable="yes">_Gift Privileges…</property>
+                                <property name="mnemonic-widget">gift_privileges_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                                 <style>

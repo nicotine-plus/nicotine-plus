@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import random
 import shutil
 import sys
 
@@ -116,12 +117,33 @@ def set_use_header_bar(enabled):
     GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
+def set_default_font_size():
+
+    if sys.platform not in {"darwin", "win32"}:
+        return
+
+    font = GTK_SETTINGS.props.gtk_font_name
+
+    if not font:
+        return
+
+    # Increase default font size to match newer apps on Windows and macOS
+    font_name, _separator, font_size = font.rpartition(" ")
+    font_size = str(int(font_size) + 1)
+    GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
+
+
 def set_visual_settings():
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
+    elif os.environ.get("GDK_BACKEND") == "broadway":
+        # Hide minimize/maximize buttons in Broadway backend
+        GTK_SETTINGS.props.gtk_decoration_layout = ":close"
+
+    set_default_font_size()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
@@ -142,13 +164,17 @@ def set_global_css():
         with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
             css.extend(file_handle.read())
 
+        if sys.platform == "win32":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_win32.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
+
+        elif sys.platform == "darwin":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
+                css.extend(file_handle.read())
+
         if LIBADWAITA_API_VERSION:
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
                 css.extend(file_handle.read())
-
-            if sys.platform in {"win32", "darwin"}:
-                with open(encode_path(os.path.join(css_folder_path, "style_libadwaita_csd.css")), "rb") as file_handle:
-                    css.extend(file_handle.read())
 
         load_css(global_css_provider, css)
 
@@ -334,12 +360,8 @@ def get_flag_icon_name(country_code):
 
 def get_file_type_icon_name(basename):
 
-    result = basename.rsplit(".", 1)
-
-    if len(result) < 2:
-        return "text-x-generic-symbolic"
-
-    extension = result[-1].lower()
+    _basename_no_extension, _separator, extension = basename.rpartition(".")
+    extension = extension.lower()
 
     if extension in FileTypes.AUDIO:
         return "audio-x-generic-symbolic"
@@ -525,6 +547,18 @@ def _get_custom_color_css():
             }
             """
         )
+
+    # Workaround for GTK bug where tree view colors don't update until moving the
+    # cursor over the widget. Changing the color of the text caret to a random one
+    # forces the tree view to re-render with new icon/text colors (text carets are
+    # never visible in our tree views, so usability is unaffected).
+    css.extend(
+        f"""
+        treeview {{
+            caret-color: #{random.randint(0, 0xFFFFFF):06x};
+        }}
+        """.encode("utf-8")
+    )
 
     return css
 

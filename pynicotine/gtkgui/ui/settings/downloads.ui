@@ -606,6 +606,7 @@
             <child>
               <object class="GtkLabel" id="filter_status_label">
                 <property name="label" translatable="yes">Unverified</property>
+                <property name="hexpand">True</property>
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>

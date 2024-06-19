@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2022-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2022-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
@@ -24,6 +25,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import Transfer
 
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 NUM_ALLOWED_NONE = 2
 
 
@@ -35,23 +37,31 @@ class GetUploadCandidateTest(TestCase):
 
         self.token = 0
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
-        core.init_components(enabled_components={"pluginhandler", "shares", "statistics", "uploads", "userlist"})
+        core.init_components(enabled_components={
+            "users", "pluginhandler", "shares", "statistics", "uploads", "buddies"}
+        )
         core.start()
 
-        core.uploads.privileged_users = {"puser1", "puser2"}
+        core.users.privileged = {"puser1", "puser2"}
         core.uploads.transfers.clear()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
         core.quit()
 
+        self.assertIsNone(core.users)
+        self.assertIsNone(core.pluginhandler)
+        self.assertIsNone(core.shares)
         self.assertIsNone(core.statistics)
         self.assertIsNone(core.uploads)
-        self.assertIsNone(core.userlist)
+        self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def add_transfers(self, users, is_active=False):
 

@@ -15,6 +15,6 @@ export PYBUILD_TEST_ARGS=-k "not test_update_check"
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
-# Enforce xz compression format for increased compatibility with older systems
+# Enforce gzip compression format for increased compatibility with older systems
 override_dh_builddeb:
-	dh_builddeb -- -Zxz
+	dh_builddeb -- -Zgzip

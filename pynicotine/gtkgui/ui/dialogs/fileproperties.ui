@@ -44,20 +44,6 @@
       <class name="image-button"/>
     </style>
   </object>
-  <object class="GtkButton" id="download_button">
-    <property name="tooltip-text" translatable="yes">Download File</property>
-    <property name="visible">True</property>
-    <signal name="clicked" handler="on_download_item"/>
-    <child>
-      <object class="GtkImage">
-        <property name="icon-name">document-save-symbolic</property>
-        <property name="visible">True</property>
-      </object>
-    </child>
-    <style>
-      <class name="image-button"/>
-    </style>
-  </object>
   <object class="GtkBox" id="container">
     <property name="halign">center</property>
     <property name="margin-bottom">18</property>

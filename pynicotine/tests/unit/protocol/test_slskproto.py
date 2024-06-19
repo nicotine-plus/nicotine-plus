@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -20,6 +20,7 @@
 import os
 import pickle
 import selectors
+import shutil
 import socket
 import sys
 
@@ -35,8 +36,8 @@ from pynicotine.events import events
 from pynicotine.slskmessages import ServerConnect, SetWaitPort
 from pynicotine.utils import encode_path
 
-# Time (in s) needed for SoulseekNetworkThread main loop to run at least once
-SLSKPROTO_RUN_TIME = 1.5
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
+SLSKPROTO_RUN_TIME = 1.5  # Time (in s) needed for SoulseekNetworkThread main loop to run at least once
 
 
 class MockSocket(Mock):
@@ -80,8 +81,8 @@ class SoulseekNetworkTest(TestCase):
         # Windows doesn't accept mock_socket in select() calls
         selectors.DefaultSelector = MagicMock()
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.data_folder_path = DATA_FOLDER_PATH
+        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
 
         core.init_components(enabled_components={"network_thread"})
 
@@ -102,6 +103,10 @@ class SoulseekNetworkTest(TestCase):
         self.assertIsNone(core.portmapper)
         self.assertIsNone(core._network_thread)  # pylint: disable=protected-access
 
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
+
     @patch("socket.socket")
     def test_server_conn(self, _mock_socket):
 
@@ -114,17 +119,17 @@ class SoulseekNetworkTest(TestCase):
 
         if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             if sys.platform == "win32":
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 8)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
 
             elif hasattr(socket, "TCP_USER_TIMEOUT"):
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 11)
 
             else:
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
+                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             self.assertEqual(core._network_thread._server_socket.ioctl.call_count, 1)
-            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 5)
+            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 6)
 
         self.assertEqual(core._network_thread._server_socket.setblocking.call_count, 2)
         self.assertEqual(core._network_thread._server_socket.connect_ex.call_count, 1)

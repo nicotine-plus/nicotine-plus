@@ -12,12 +12,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
           cache: 'pip'
@@ -45,14 +43,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal']
+        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal', 'ubuntu:bionic', 'ubuntu:noble']
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Install autopkgtest dependencies
         run: |
@@ -62,38 +58,19 @@ jobs:
       - name: Run autopkgtest
         run: autopkgtest . -- null
 
-  fedora-rocky:
+  fedora:
     strategy:
-      fail-fast: false
       matrix:
-        container: ['fedora:rawhide', 'rockylinux:8']
+        container: ['fedora:rawhide']
         gtk: [3, 4]
-        exclude:
-          - container: 'rockylinux:8'
-            gtk: 4
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
-    env:
-      GSK_RENDERER: cairo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: dnf -y install gettext gtk${{ matrix.gtk }} python3 python3-gobject util-linux
-
-      - name: Install dependencies (Fedora)
-        if: matrix.container == 'fedora:rawhide'
-        run: dnf -y install pylint python3-build python3-pycodestyle
-
-      - name: Install dependencies (Rocky Linux)
-        if: matrix.container == 'rockylinux:8'
-        run: |
-          dnf -y install gcc python3-devel python3-pip
-          python3 -m pip install --upgrade setuptools
-          python3 -m pip install build .[tests]
+        run: dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build python3-gobject python3-pycodestyle util-linux
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -110,35 +87,34 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
-        gtk: [3, 4]
+        arch: [x86_64]
     defaults:
       run:
         shell: msys2 {0}
     env:
-      ARCH: x86_64
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           release: false
+          update: true
           install: >-
-            mingw-w64-${{ env.ARCH }}-gettext
-            mingw-w64-${{ env.ARCH }}-gtk${{ matrix.gtk }}
-            mingw-w64-${{ env.ARCH }}-python-build
-            mingw-w64-${{ env.ARCH }}-python-cx-freeze
-            mingw-w64-${{ env.ARCH }}-python-pip
-            mingw-w64-${{ env.ARCH }}-python-pycodestyle
-            mingw-w64-${{ env.ARCH }}-python-pylint
-            mingw-w64-${{ env.ARCH }}-python-gobject
+            mingw-w64-${{ matrix.arch }}-ca-certificates
+            mingw-w64-${{ matrix.arch }}-gettext-tools
+            mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
+            mingw-w64-${{ matrix.arch }}-libadwaita
+            mingw-w64-${{ matrix.arch }}-python-build
+            mingw-w64-${{ matrix.arch }}-python-cx-freeze
+            mingw-w64-${{ matrix.arch }}-python-pycodestyle
+            mingw-w64-${{ matrix.arch }}-python-pylint
+            mingw-w64-${{ matrix.arch }}-python-gobject
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
@@ -156,36 +132,43 @@ jobs:
         run: python3 -m build
 
   macos:
-    runs-on: macos-12
     strategy:
-      fail-fast: false
       matrix:
-        gtk: [3, 4]
+        include:
+          - arch: x86_64
+            platform: macos-12
+          - arch: arm64
+            platform: macos-14
+    runs-on: ${{ matrix.platform }}
     env:
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      NICOTINE_GTK_VERSION: 4
+      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Set system language
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
+      - name: Create Python virtual environment
+        run: |
+          brew uninstall --ignore-dependencies python@3.12
+          brew install --overwrite python@3.12
+          python3.12 -m venv venv
+
       - name: Install dependencies
         run: |
-          brew uninstall --ignore-dependencies python@3.11
-          brew install --overwrite python@3.11
-          python3 packaging/macos/dependencies.py
+          brew update
+          venv/bin/python3 packaging/macos/dependencies.py
 
       - name: PEP 8 style checks
-        run: python3 -m pycodestyle
+        run: venv/bin/python3 -m pycodestyle
 
       - name: Linting
-        run: python3 -m pylint --recursive=y .
+        run: venv/bin/python3 -m pylint --recursive=y .
 
       - name: Integration and unit tests
-        run: python3 -m unittest -v
+        run: venv/bin/python3 -m unittest -v
 
       - name: Build
-        run: python3 -m build
+        run: venv/bin/python3 -m build

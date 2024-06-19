@@ -1,4 +1,12 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
+# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+# COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
+# COPYRIGHT (C) 2013 eLvErDe <gandalf@le-vert.net>
+# COPYRIGHT (C) 2008-2012 quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2009 hedonist <ak@sensi.org>
+# COPYRIGHT (C) 2006-2009 daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,11 +26,11 @@
 
 import json
 import os
-import os.path
 import time
 
 from ast import literal_eval
 from collections import defaultdict
+from os.path import normpath
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -77,9 +85,9 @@ class Transfer:
         self.start_time = None
         self.last_update = None
         self.last_byte_offset = None
-        self.speed = None
+        self.speed = 0
         self.time_elapsed = 0
-        self.time_left = None
+        self.time_left = 0
         self.iterator = None
         self.legacy_attempt = False
         self.size_changed = False
@@ -101,6 +109,7 @@ class Transfers:
         self.total_bandwidth = 0
 
         self._allow_saving_transfers = False
+        self._online_users = set()
         self._user_queue_limits = defaultdict(int)
         self._user_queue_sizes = defaultdict(int)
 
@@ -137,7 +146,7 @@ class Transfers:
 
         # Watch transfers for user status updates
         for username in self.failed_users:
-            core.watch_user(username)
+            core.users.watch_user(username)
 
         self.update_transfer_limits()
 
@@ -151,6 +160,7 @@ class Transfers:
         self.queued_transfers.clear()
         self.queued_users.clear()
         self.active_users.clear()
+        self._online_users.clear()
         self._user_queue_limits.clear()
         self._user_queue_sizes.clear()
 
@@ -249,6 +259,7 @@ class Transfers:
             return
 
         allowed_statuses = {TransferStatus.PAUSED, TransferStatus.FILTERED, TransferStatus.FINISHED}
+        normalized_paths = {}
 
         for transfer_row in transfer_rows:
             num_attributes = len(transfer_row)
@@ -271,6 +282,13 @@ class Transfers:
 
             if not isinstance(folder_path, str):
                 continue
+
+            if folder_path:
+                # Normalize and cache path
+                if folder_path not in normalized_paths:
+                    normalized_paths[folder_path] = normpath(folder_path)
+
+                folder_path = normalized_paths[folder_path]
 
             # Status
             if num_attributes >= 4:
@@ -363,7 +381,7 @@ class Transfers:
 
     def _enqueue_transfer(self, transfer):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.QUEUED
 
@@ -399,11 +417,11 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        core.watch_user(transfer.username)
+        core.users.watch_user(transfer.username)
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
-        transfer.speed = None
+        transfer.speed = 0
         transfer.queue_position = 0
 
         # When our port is closed, certain clients can take up to ~30 seconds before they
@@ -413,7 +431,8 @@ class Transfers:
         # To account for potential delays while initializing the connection, add 15 seconds
         # to the timeout value.
 
-        transfer.request_timer_id = events.schedule(delay=45, callback=lambda: self._transfer_timeout(transfer))
+        transfer.request_timer_id = events.schedule(
+            delay=45, callback=self._transfer_timeout, callback_args=(transfer,))
 
         self.active_users[transfer.username][token] = transfer
 
@@ -458,20 +477,31 @@ class Transfers:
 
     # Saving #
 
-    def _get_transfer_rows(self):
+    def _iter_transfer_rows(self):
         """Get a list of transfers to dump to file."""
-        return [
-            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
-             transfer.current_byte_offset, transfer.file_attributes]
-            for transfer in self.transfers.values()
-        ]
+        for transfer in self.transfers.values():
+            yield [
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+                transfer.current_byte_offset, transfer.file_attributes
+            ]
 
     def _save_transfers_callback(self, file_handle):
 
-        # We can't use indent=0 to add line breaks, since Python's C-based json encoder doesn't
-        # support this. Add them using replace() instead.
-        file_handle.write(
-            json.dumps(self._get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
+        # Dump every transfer to the file individually to avoid large memory usage
+        json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+        is_first_item = True
+
+        file_handle.write("[")
+
+        for row in self._iter_transfer_rows():
+            if is_first_item:
+                is_first_item = False
+            else:
+                file_handle.write(",\n")
+
+            file_handle.write(json_encoder.encode(row))
+
+        file_handle.write("]")
 
     def _save_transfers(self):
         """Save list of transfers."""

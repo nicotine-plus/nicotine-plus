@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 quinox <quinox@users.sf.net>
@@ -45,7 +45,6 @@ class Uploads(Transfers):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.deprioritized_statuses = {TransferStatus.CANCELLED, TransferStatus.FINISHED}
 
         self.transfer_page = self.page = window.uploads_page
         self.page.id = "uploads"
@@ -87,8 +86,7 @@ class Uploads(Transfers):
             ("clear-upload", self.clear_transfer),
             ("clear-uploads", self.clear_transfers),
             ("start", self.start),
-            ("update-upload", self.update_model),
-            ("upload-notification", self.new_transfer_notification)
+            ("update-upload", self.update_model)
         ):
             events.connect(event_name, callback)
 
@@ -97,9 +95,19 @@ class Uploads(Transfers):
     def start(self):
         self.init_transfers(core.uploads.transfers.values())
 
+    def destroy(self):
+        self.upload_speeds.destroy()
+        super().destroy()
+
     def get_transfer_folder_path(self, transfer):
+
         virtual_path = transfer.virtual_path
-        return virtual_path.rsplit("\\", 1)[0] if virtual_path else transfer.folder_path
+
+        if virtual_path:
+            folder_path, _separator, _basename = virtual_path.rpartition("\\")
+            return folder_path
+
+        return transfer.folder_path
 
     def retry_selected_transfers(self):
         core.uploads.retry_uploads(self.selected_transfers)
@@ -107,7 +115,7 @@ class Uploads(Transfers):
     def abort_selected_transfers(self):
         core.uploads.abort_uploads(self.selected_transfers, denied_message="Cancelled")
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         core.uploads.clear_uploads(uploads=self.selected_transfers)
 
     def on_try_clear_queued(self, *_args):
@@ -118,7 +126,7 @@ class Uploads(Transfers):
             message=_("Do you really want to clear all queued uploads?"),
             destructive_response_id="ok",
             callback=self.on_clear_queued
-        ).show()
+        ).present()
 
     def on_clear_all_response(self, *_args):
         core.uploads.clear_uploads()
@@ -131,7 +139,7 @@ class Uploads(Transfers):
             message=_("Do you really want to clear all uploads?"),
             destructive_response_id="ok",
             callback=self.on_clear_all_response
-        ).show()
+        ).present()
 
     def on_copy_url(self, *_args):
 
@@ -148,7 +156,9 @@ class Uploads(Transfers):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = core.userbrowse.get_soulseek_url(user, transfer.virtual_path.rsplit("\\", 1)[0] + "\\")
+            folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+            url = core.userbrowse.get_soulseek_url(user, folder_path + separator)
+
             clipboard.copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -161,7 +171,7 @@ class Uploads(Transfers):
     def on_open_file(self, *_args):
 
         for transfer in self.selected_transfers:
-            basename = transfer.virtual_path.split("\\")[-1]
+            basename = transfer.virtual_path.rpartition("\\")[-1]
 
             open_file_path(os.path.join(transfer.folder_path, basename))
 
@@ -173,9 +183,9 @@ class Uploads(Transfers):
             return
 
         user = config.sections["server"]["login"]
-        folder_path = transfer.virtual_path.rsplit("\\", 1)[0] + "\\"
+        path = transfer.virtual_path
 
-        core.userbrowse.browse_user(user, path=folder_path)
+        core.userbrowse.browse_user(user, path=path)
 
     def on_abort_users(self, *_args):
 

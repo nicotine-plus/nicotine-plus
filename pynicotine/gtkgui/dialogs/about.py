@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -193,33 +193,48 @@ class About(Dialog):
     TRANSLATORS = [
         "<b>Nicotine+ Translators</b>",
 
+        """<b>Albanian</b>
+ •  W L (2023–2024)""",
+
+        """<b>Arabic</b>
+ •  ButterflyOfFire (2024)""",
+
         """<b>Catalan</b>
  •  Maite Guix (2022)""",
 
         """<b>Chinese (Simplified)</b>
+ •  Ys413 (2024)
  •  Bonislaw (2023)
  •  hylau (2023)
  •  hadwin (2022)""",
 
         """<b>Czech</b>
- •  burnmail123 (2021)""",
+ •  burnmail123 (2021-2023)""",
 
         """<b>Danish</b>
  •  mathsped (2003–2004)""",
 
         """<b>Dutch</b>
- •  Han Boetes (hboetes) (2021–2023)
+ •  Toine Rademacher (toineenzo) (2023–2024)
+ •  Han Boetes (hboetes) (2021–2024)
  •  Kenny Verstraete (2009)
  •  nince78 (2007)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """<b>English</b>
- •  slook (2021–2023)
- •  Han Boetes (hboetes) (2021–2023)
- •  Mat (mathiascode) (2020–2023)
+ •  slook (2021–2024)
+ •  Han Boetes (hboetes) (2021–2024)
+ •  Mat (mathiascode) (2020–2024)
  •  Michael Labouebe (gfarmerfr) (2016)
  •  daelstorm (2004–2009)
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
+
+        """<b>Esperanto</b>
+ •  phlostically (2021)""",
+
+        """<b>Estonian</b>
+ •  rimasx (2024)
+ •  PriitUring (2023)""",
 
         """<b>Euskara</b>
  •  Julen (2006–2007)""",
@@ -232,7 +247,7 @@ class About(Dialog):
  •  subu_versus (2023)
  •  zniavre (2007–2023)
  •  Lisapple (2021–2022)
- •  melmorabity (2021–2022)
+ •  melmorabity (2021–2024)
  •  m-balthazar (2020)
  •  Michael Labouebe (gfarmerfr) (2016–2017)
  •  Monsieur Poisson (2009–2010)
@@ -241,7 +256,7 @@ class About(Dialog):
  •  Julien Wajsberg (flashfr) (2003–2004)""",
 
         """<b>German</b>
- •  Han Boetes (hboetes) (2021–2023)
+ •  Han Boetes (hboetes) (2021–2024)
  •  phelissimo_ (2023)
  •  Meokater (2007)
  •  (._.) (2007)
@@ -249,7 +264,7 @@ class About(Dialog):
  •  Ingmar K. Steen (Hyriand) (2003–2004)""",
 
         """<b>Hungarian</b>
- •  Szia Tomi (2022–2023)
+ •  Szia Tomi (2022–2024)
  •  Nils (2009)
  •  David Balazs (djbaloo) (2006–2020)""",
 
@@ -261,7 +276,7 @@ class About(Dialog):
  •  dbazza (2003–2004)""",
 
         """<b>Latvian</b>
- •  Pagal3 (2022–2023)""",
+ •  Pagal3 (2022–2024)""",
 
         """<b>Lithuanian</b>
  •  mantas (2020)
@@ -271,14 +286,10 @@ class About(Dialog):
  •  Allan Nordhøy (comradekingu) (2021)""",
 
         """<b>Polish</b>
- •  Mariusz (mariachini) (2017–2023)
+ •  Mariusz (mariachini) (2017–2024)
  •  Amun-Ra (2007)
  •  thine (2007)
  •  Wojciech Owczarek (owczi) (2003–2004)""",
-
-        """<b>Portuguese</b>
- •  ssantos (2023)
- •  Vinícius Soares (2023)""",
 
         """<b>Portuguese (Brazil)</b>
  •  Havokdan (2022–2023)
@@ -288,11 +299,15 @@ class About(Dialog):
  •  yyyyyyyan (2020)
  •  Felipe Nogaroto Gonzalez (Suicide|Solution) (2006)""",
 
+        """<b>Portuguese (Portugal)</b>
+ •  ssantos (2023)
+ •  Vinícius Soares (2023)""",
+
         """<b>Romanian</b>
  •  xslendix (2023)""",
 
         """<b>Russian</b>
- •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2023)
+ •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)
  •  Mehavoid (2021–2023)
  •  AHOHNMYC (2022)""",
 
@@ -307,7 +322,7 @@ class About(Dialog):
  •  Dreslo (2003–2004)""",
 
         """<b>Spanish (Spain)</b>
- •  gallegonovato (2023)
+ •  gallegonovato (2023–2024)
  •  MELERIX (2021–2023)
  •  tagomago (2021–2022)
  •  Strange (2021)
@@ -319,9 +334,10 @@ class About(Dialog):
  •  Markus Magnuson (alimony) (2003–2004)""",
 
         """<b>Turkish</b>
- •  Oğuz Ersen (2021–2023)""",
+ •  Oğuz Ersen (2021–2024)""",
 
         """<b>Ukrainian</b>
+ •  Oleg Gritsun (2024)
  •  uniss2209 (2022)"""]
 
     LICENSE = [
@@ -329,21 +345,17 @@ class About(Dialog):
 GNU General Public License v3.0 or later</a>, with the following exceptions:""",
 
         """<b>tinytag licensed under the MIT License.</b>
-Copyright (c) 2014–2022 Tom Wallroth
+Copyright (c) 2014–2023 Tom Wallroth
+Copyright (c) 2021-2023 Mat (mathiascode)
 <a href="https://github.com/devsnd/tinytag">https://github.com/devsnd/tinytag</a>""",
 
         """<b>Country flags licensed under the MIT License.</b>
 Copyright (c) 2016–2021 Bowtie AB
 <a href="https://github.com/madebybowtie/FlagKit">https://github.com/madebybowtie/FlagKit</a>""",
 
-        """<b>Country database licensed under the CC-BY-SA-4.0 License.</b>
-Copyright (c) 2001–2023 Hexasoft Development Sdn. Bhd.
-This program includes IP2Location LITE data available from:
-<a href="https://lite.ip2location.com">https://lite.ip2location.com</a>""",
-
-        """<b>Country database reader licensed under the MIT License.</b>
-Copyright (c) 2017 IP2Location.com
-<a href="https://github.com/chrislim2888/IP2Location-Python">https://github.com/chrislim2888/IP2Location-Python</a>"""]
+        """<b>Country data licensed under the CC-BY-SA-4.0 License.</b>
+Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.
+Nicotine+ uses the IP2Location LITE database for <a href="https://lite.ip2location.com">IP geolocation</a>."""]
 
     def __init__(self, application):
 
@@ -371,15 +383,14 @@ Copyright (c) 2017 IP2Location.com
             title=_("About"),
             width=425,
             height=540,
-            resizable=False,
-            show_title=False,
-            close_destroy=False
+            show_title=False
         )
 
         self.is_version_outdated = False
 
         icon_name = pynicotine.__application_id__
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        website_text = _('Website')
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
@@ -389,7 +400,7 @@ Copyright (c) 2017 IP2Location.com
             (self.application_version_label, f"{pynicotine.__application_name__} {pynicotine.__version__}"),
             (self.dependency_versions_label, (f"GTK {gtk_version}   •   Python {sys.version.split()[0]}")),
             (self.website_label, (f"<a href='{pynicotine.__website_url__}' title='{pynicotine.__website_url__}'>"
-                                  f"{_('Website')}</a>")),
+                                  f"{website_text}</a>")),
             (self.copyright_label, f"<small>{pynicotine.__copyright__}</small>")
         ):
             label_widget.set_markup(text)
@@ -439,6 +450,10 @@ Copyright (c) 2017 IP2Location.com
 
     def on_show(self, *_args):
 
+        if core.update_checker is None:
+            # Update checker is not loaded
+            return
+
         if self.is_version_outdated:
             # No need to check latest version again
             return
@@ -452,6 +467,7 @@ Copyright (c) 2017 IP2Location.com
         self.status_label.set_label(_("Checking latest version…"))
         self.status_spinner.set_visible(True)
         self.status_spinner.start()
+        self.status_container.set_visible(True)
 
         core.update_checker.check()
 

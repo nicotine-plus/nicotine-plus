@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,13 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+from bisect import bisect_left
+from socket import inet_aton
+from struct import Struct
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.external.ip2location import IP2Location
+from pynicotine.external.data import country_codes
+from pynicotine.external.data import ip_ranges
+
+UINT32_UNPACK = Struct(">I").unpack_from
 
 
 class NetworkFilter:
@@ -285,7 +290,6 @@ class NetworkFilter:
 
         self.ip_ban_requested = {}
         self.ip_ignore_requested = {}
-        self._ip2location = IP2Location(os.path.join(os.path.dirname(__file__), "external", "ipcountrydb.bin"))
 
         for event_name, callback in (
             ("peer-address", self._get_peer_address),
@@ -310,7 +314,7 @@ class NetworkFilter:
         if username not in request_list:
             request_list[username] = action
 
-        core.request_ip_address(username)
+        core.users.request_ip_address(username)
 
     def _add_user_ip_to_list(self, ip_list, username=None, ip_address=None):
         """Add the current IP address and username of a user to a list."""
@@ -365,20 +369,6 @@ class NetworkFilter:
 
         return ip_addresses
 
-    @staticmethod
-    def get_online_user_ip_address(username):
-        """Try to lookup an address from watched known connections, for
-        updating an IP list item if the address is unspecified."""
-
-        user_address = core.user_addresses.get(username)
-
-        if not user_address:
-            # User is offline
-            return None
-
-        user_ip_address, _user_port = user_address
-        return user_ip_address
-
     def _get_user_ip_addresses(self, username, ip_list, request_action):
         """Returns the known IP addresses of a user, requests one otherwise."""
 
@@ -386,9 +376,10 @@ class NetworkFilter:
 
         if request_action == "add":
             # Get current IP for user, if known
-            online_ip_address = self.get_online_user_ip_address(username)
+            online_address = core.users.addresses.get(username)
 
-            if online_ip_address:
+            if online_address:
+                online_ip_address, _port = online_address
                 ip_addresses.add(online_ip_address)
 
         elif request_action == "remove":
@@ -412,7 +403,7 @@ class NetworkFilter:
         """Try to match a username from watched and known connections, for
         updating an IP list item if the username is unspecified."""
 
-        for username, user_address in core.user_addresses.items():
+        for username, user_address in core.users.addresses.items():
             if ip_address == user_address[0]:
                 return username
 
@@ -420,10 +411,9 @@ class NetworkFilter:
 
     def get_country_code(self, ip_address):
 
-        country_code = self._ip2location.get_country_code(ip_address)
-
-        if country_code is None or country_code == "-":
-            country_code = ""
+        ip_num, = UINT32_UNPACK(inet_aton(ip_address))
+        ip_index = bisect_left(ip_ranges.values, ip_num)
+        country_code = country_codes.values[ip_index]
 
         return country_code
 
@@ -460,11 +450,13 @@ class NetworkFilter:
             return True
 
         if not ip_address:
-            ip_address = self.get_online_user_ip_address(username)
+            address = core.users.addresses.get(username)
 
-            if not ip_address:
+            if not address:
                 # Username not listed and is offline, so we can't filter it
                 return False
+
+            ip_address, _port = address
 
         if ip_address in ip_list:
             # IP filtered
@@ -528,12 +520,11 @@ class NetworkFilter:
         """Server code 3."""
 
         username = msg.user
+        ip_address = msg.ip_address
 
-        if username not in core.user_addresses:
+        if ip_address == "0.0.0.0":
             # User is offline
             return
-
-        ip_address = msg.ip_address
 
         # If the IP address changed, make sure our IP ban/ignore list reflects this
         self._update_saved_user_ip_addresses(config.sections["server"]["ipblocklist"], username, ip_address)
