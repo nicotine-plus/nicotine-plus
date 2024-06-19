@@ -158,7 +158,7 @@ class TextView:
         self.end_iter = self.textbuffer.get_end_iter()
 
     def append_line(self, message, message_type=None, timestamp=None, timestamp_format=None,
-                    username=None, usertag=None, roomname=None):
+                    roomname=None, roomtag=None, username=None, usertag=None):
 
         tag = self.default_tags.get(message_type)
         num_lines = self.textbuffer.get_line_count()
@@ -174,12 +174,13 @@ class TextView:
         elif timestamp:
             self._insert_text(timestamp + " ", tag)
 
-        if roomname:
-            self._insert_text(roomname, tag)
+        # Tag roomnames with clickable color for joining rooms from global feed
+        if roomtag:
+            self._insert_text(roomname, roomtag)
             self._insert_text(" | ", tag)
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username:
+        if usertag:
             self._insert_text("[", tag)
             self._insert_text(username, usertag)
             self._insert_text("] ", tag)
@@ -260,7 +261,7 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "username"):
+            if hasattr(tag, "name"):
                 cursor = self.DEFAULT_CURSOR
                 break
 
@@ -276,7 +277,7 @@ class TextView:
 
     # Text Tags (Usernames, URLs) #
 
-    def create_tag(self, color_id=None, callback=None, username=None, url=None):
+    def create_tag(self, color_id=None, callback=None, name=None, url=None):
 
         tag = self.textbuffer.create_tag()
 
@@ -290,9 +291,9 @@ class TextView:
 
             tag.url = url
 
-        if username:
+        elif name:
             tag.callback = callback
-            tag.username = username
+            tag.name = name
 
         return tag
 
@@ -321,8 +322,8 @@ class TextView:
                 open_uri(tag.url)
                 return True
 
-            if hasattr(tag, "username"):
-                tag.callback(pressed_x, pressed_y, tag.username)
+            if hasattr(tag, "name"):
+                tag.callback(pressed_x, pressed_y, tag.name)
                 return True
 
         return False
@@ -336,8 +337,8 @@ class TextView:
             return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "username"):
-                tag.callback(pressed_x, pressed_y, tag.username)
+            if hasattr(tag, "name"):
+                tag.callback(pressed_x, pressed_y, tag.name)
                 return True
 
         return False
@@ -383,13 +384,18 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, chat_entry=None, status_users=None, username_event=None, **kwargs):
+    def __init__(self, *args, chat_entry=None, status_users=None, roomname_event=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
+        self.roomname_event = roomname_event
         self.username_event = username_event
+
+        if roomname_event is not None:
+            # This tab is the global Public room feed, create clickable room tags
+            self.room_tags = {}
 
         if status_users is not None:
             # In chatrooms, we only want to set the online status for users that are
@@ -453,19 +459,40 @@ class ChatView(TextView):
             message = (message or line).rstrip("\n")
 
             self.append_line(
-                message, message_type=message_type, timestamp=timestamp, username=username, usertag=usertag)
+                message,
+                message_type=message_type,
+                timestamp=timestamp,
+                username=username,
+                usertag=usertag
+            )
 
         self.append_line(_("--- old messages above ---"), message_type="hilite",
                          timestamp_format=timestamp_format)
 
     def clear(self):
+
         super().clear()
         self.user_tags.clear()
+
+        if self.roomname_event:
+            self.room_tags.clear()
+
+    def get_room_tag(self, roomname):
+
+        if not self.roomname_event or not roomname:
+            # Roomname only shown in global room feed
+            return None
+
+        if roomname not in self.room_tags:
+            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)  # Pick a color, any color?
+            self.room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
+
+        return self.room_tags[roomname]
 
     def get_user_tag(self, username):
 
         if username not in self.user_tags:
-            self.user_tags[username] = self.create_tag(callback=self.username_event, username=username)
+            self.user_tags[username] = self.create_tag(callback=self.username_event, name=username)
             self.update_user_tag(username)
 
         return self.user_tags[username]

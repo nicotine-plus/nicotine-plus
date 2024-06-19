@@ -449,6 +449,7 @@ class ChatRoom:
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
                                   status_users=core.chatrooms.joined_rooms[room].users,
+                                  roomname_event=(self.roomname_event if is_global else None),
                                   username_event=self.username_event)
 
         # Event Text Search
@@ -781,41 +782,43 @@ class ChatRoom:
 
     def say_chat_room(self, msg):
 
+        roomname = msg.room
         username = msg.user
-        room = msg.room
         message = msg.message
         message_type = msg.message_type
+        roomtag = self.chat_view.get_room_tag(roomname)
         usertag = self.chat_view.get_user_tag(username)
 
         if message_type != "local":
             if self.speech_toggle.get_active():
                 core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": room, "user": username, "message": message}
+                    config.sections["ui"]["speechrooms"], {"room": roomname, "user": username, "message": message}
                 )
 
             self._show_notification(
-                room, username, message, is_mentioned=(message_type == "hilite"))
+                roomname, username, message, is_mentioned=(message_type == "hilite"))
 
         self.chat_view.append_line(
             message,
             message_type=message_type,
             username=username,
             usertag=usertag,
-            roomname=(room if self.is_global else None),
+            roomname=roomname,
+            roomtag=roomtag,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def global_room_message(self, msg):
         self.say_chat_room(msg)
 
-    def echo_room_message(self, text, message_type):
+    def echo_room_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.append_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def user_joined_room(self, msg):
 
@@ -931,6 +934,9 @@ class ChatRoom:
 
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
+
+    def roomname_event(self, _pos_x, _pos_y, room):
+        core.chatrooms.show_room(room)
 
     def username_event(self, pos_x, pos_y, user):
 
