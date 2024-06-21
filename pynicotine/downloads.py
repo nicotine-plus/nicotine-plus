@@ -1261,6 +1261,7 @@ class Downloads(Transfers):
             download.last_byte_offset = offset
             download.last_update = time.monotonic()
             download.start_time = download.last_update - download.time_elapsed
+            download.retry_attempt = False
 
             core.statistics.append_stat_value("started_downloads", 1)
             download_started = True
@@ -1345,17 +1346,20 @@ class Downloads(Transfers):
 
         username = msg.username
         virtual_path = msg.file
-        download = (self.failed_users.get(username, {}).get(virtual_path)
-                    or self.queued_users.get(username, {}).get(virtual_path))
+        download = self.transfers.get(username + virtual_path)
 
         if download is None:
+            return
+
+        if (download.token not in self.active_users.get(username, {})
+                and virtual_path not in self.failed_users.get(username, {})
+                and virtual_path not in self.queued_users.get(username, {})):
             return
 
         if not download.retry_attempt:
             # Attempt to request file name encoded as latin-1 once
 
-            self._unfail_transfer(download)
-            self._dequeue_transfer(download)
+            self._abort_transfer(download)
             download.legacy_attempt = download.retry_attempt = True
 
             if self._enqueue_transfer(download):
