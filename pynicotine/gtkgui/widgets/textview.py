@@ -200,8 +200,6 @@ class TextView:
         self._insert_text(line, tag)
         self._remove_old_lines(num_lines)
 
-        return num_lines
-
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
@@ -414,7 +412,7 @@ class ChatView(TextView):
         if not lines:
             return
 
-        login = config.sections["server"]["login"]
+        login = config.sections["server"]["login"].lower()
 
         for line in lines:
             try:
@@ -438,7 +436,7 @@ class ChatView(TextView):
                     if user == login:
                         message_type = "local"
 
-                    elif login and find_whole_word(login.lower(), text.lower()) > -1:
+                    elif login and find_whole_word(login, text.lower()) > -1:
                         message_type = "hilite"
 
                     else:
