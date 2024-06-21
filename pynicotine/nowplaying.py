@@ -300,7 +300,7 @@ class NowPlaying:
             return None
 
         try:
-            output = execute_command(command, returnoutput=True, hidden=True)
+            output = execute_command(command, returnoutput=True, hidden=True).decode()
             self.title["nowplaying"] = output
             return True
 
