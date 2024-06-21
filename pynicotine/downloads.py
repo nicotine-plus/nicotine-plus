@@ -954,15 +954,17 @@ class Downloads(Transfers):
         if msgs is None:
             return
 
+        failed_msg_types = {slskmessages.QueueUpload, slskmessages.PlaceInQueueRequest}
+
         for msg in msgs:
-            if msg.__class__ is slskmessages.QueueUpload:
+            if msg.__class__ in failed_msg_types:
                 self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
 
     def _peer_connection_closed(self, username, msgs=None):
         self._peer_connection_error(username, msgs, is_timeout=False)
 
     def _cant_connect_queue_file(self, username, virtual_path, is_offline, is_timeout):
-        """We can't connect to the user, either way (QueueUpload)."""
+        """We can't connect to the user, either way (QueueUpload, PlaceInQueueRequest)."""
 
         download = self.queued_users.get(username, {}).get(virtual_path)
 
