@@ -1348,16 +1348,15 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if download.token not in self.active_users.get(username, {}):
+        if (download.token not in self.active_users.get(username, {})
+                and virtual_path not in self.failed_users.get(username, {})):
             return
 
-        should_retry = not download.legacy_attempt
-
-        if should_retry:
+        if not download.retry_attempt:
             # Attempt to request file name encoded as latin-1 once
 
-            self._dequeue_transfer(download)
-            download.legacy_attempt = True
+            self._abort_transfer(download)
+            download.legacy_attempt = download.retry_attempt = True
 
             if self._enqueue_transfer(download):
                 self._update_transfer(download)
@@ -1366,6 +1365,7 @@ class Downloads(Transfers):
 
         # Already failed once previously, give up
         self._abort_transfer(download, status=TransferStatus.CONNECTION_CLOSED)
+        download.retry_attempt = False
 
         log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
             "filename": virtual_path,
