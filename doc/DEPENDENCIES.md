@@ -34,7 +34,7 @@
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi python3-gi-cairo
 ```
 
 - On Redhat/Fedora-based distributions:
