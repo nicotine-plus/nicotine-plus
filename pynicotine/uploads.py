@@ -816,8 +816,10 @@ class Uploads(Transfers):
         if msgs is None:
             return
 
+        failed_msg_types = {slskmessages.TransferRequest, slskmessages.FileTransferInit}
+
         for msg in msgs:
-            if msg.__class__ in (slskmessages.TransferRequest, slskmessages.FileTransferInit):
+            if msg.__class__ in failed_msg_types:
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
     def _peer_connection_closed(self, username, msgs=None):
