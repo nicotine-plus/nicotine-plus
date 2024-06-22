@@ -24,7 +24,6 @@ from unittest import TestCase
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.downloads import RequestedFolder
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
@@ -213,13 +212,7 @@ class DownloadsTest(TestCase):
         config.sections["transfers"]["usernamesubfolders"] = False
         destination_default = core.downloads.get_folder_destination(username, folder_path)
 
-        core.downloads._requested_folders[username][folder_path] = RequestedFolder(
-            username=username, folder_path=folder_path, download_folder_path="test"
-        )
-        destination_custom = core.downloads.get_folder_destination(username, folder_path)
-        core.downloads._requested_folders.clear()
-
-        destination_custom_second = core.downloads.get_folder_destination(
+        destination_custom = core.downloads.get_folder_destination(
             username, folder_path, download_folder_path="test2")
 
         config.sections["transfers"]["usernamesubfolders"] = True
@@ -232,8 +225,7 @@ class DownloadsTest(TestCase):
         destination_depth = core.downloads.get_folder_destination(username, folder_path)
 
         self.assertEqual(destination_default, os.path.join(config.data_folder_path, "Path"))
-        self.assertEqual(destination_custom, os.path.join("test", "Path"))
-        self.assertEqual(destination_custom_second, os.path.join("test2", "Path"))
+        self.assertEqual(destination_custom, os.path.join("test2", "Path"))
         self.assertEqual(destination_user, os.path.join(config.data_folder_path, "newuser", "Path"))
         self.assertEqual(destination_root, os.path.join(config.data_folder_path, "newuser", "Hello"))
         self.assertEqual(destination_depth, os.path.join(config.data_folder_path, "newuser", "Test"))
