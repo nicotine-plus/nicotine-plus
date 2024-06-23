@@ -122,7 +122,8 @@ class ChatHistory(Popover):
         for iterator in self.list_view.iterators.values():
             self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
 
-    def load_user(self, file_path):
+    @staticmethod
+    def load_user(file_path):
         """Reads the username and latest message from a given log file path.
 
         Usernames are first extracted from the file name. In case the
