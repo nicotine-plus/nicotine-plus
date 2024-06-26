@@ -301,25 +301,14 @@ class Uploads(Transfers):
 
     # Transfer Actions #
 
-    def _append_transfer(self, transfer):
+    def _enqueue_transfer(self, transfer):
 
         username = transfer.username
-        virtual_path = transfer.virtual_path
-        old_upload = self.transfers.get(username + virtual_path)
+
+        super()._enqueue_transfer(transfer)
 
         if self.is_privileged(username):
             transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
-
-        if old_upload is not None:
-            if old_upload.status != TransferStatus.FINISHED:
-                transfer.current_byte_offset = old_upload.current_byte_offset
-                transfer.time_elapsed = old_upload.time_elapsed
-                transfer.time_left = old_upload.time_left
-                transfer.speed = old_upload.speed
-
-            self._clear_transfer(old_upload)
-
-        self.transfers[username + virtual_path] = transfer
 
     def _dequeue_transfer(self, transfer):
 
@@ -329,6 +318,8 @@ class Uploads(Transfers):
 
         if username not in self.queued_users:
             self._user_update_counters.pop(username, None)
+
+        transfer.modifier = None
 
     def _activate_transfer(self, transfer, token):
         super()._activate_transfer(transfer, token)
@@ -872,9 +863,22 @@ class Uploads(Transfers):
 
             return
 
-        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
+        transfer = self.transfers.get(username + virtual_path)
+        folder_path = os.path.dirname(real_path)
 
-        self._append_transfer(transfer)
+        if transfer is not None:
+            self._abort_transfer(transfer)
+
+            transfer.folder_path = folder_path
+            transfer.size = size
+
+            if transfer.status == TransferStatus.FINISHED:
+                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.speed = transfer.time_elapsed = transfer.time_left = 0
+        else:
+            transfer = Transfer(username, virtual_path, folder_path, size)
+            self._append_transfer(transfer)
+
         self._enqueue_transfer(transfer)
         self._update_transfer(transfer)
 
@@ -933,10 +937,23 @@ class Uploads(Transfers):
             return None
 
         # All checks passed, user can queue file!
-        if not self.is_new_upload_accepted() or username in self.active_users:
-            transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
+        transfer = self.transfers.get(username + virtual_path)
+        folder_path = os.path.dirname(real_path)
 
+        if transfer is not None:
+            self._abort_transfer(transfer)
+
+            transfer.folder_path = folder_path
+            transfer.size = size
+
+            if transfer.status == TransferStatus.FINISHED:
+                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.speed = transfer.time_elapsed = transfer.time_left = 0
+        else:
+            transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
+
+        if not self.is_new_upload_accepted() or username in self.active_users:
             self._enqueue_transfer(transfer)
             self._update_transfer(transfer)
 
@@ -949,11 +966,8 @@ class Uploads(Transfers):
         current_size = self._get_current_file_size(real_path)
 
         if current_size is not None:
-            size = current_size
+            transfer.size = current_size
 
-        transfer = Transfer(username, virtual_path, os.path.dirname(real_path), size)
-
-        self._append_transfer(transfer)
         self._activate_transfer(transfer, token)
         self._update_transfer(transfer)
 

@@ -647,6 +647,7 @@ class Transfers:
         user_iterator = None
         user_folder_path_iterator = None
         parent_iterator = None
+        select_iterator = None
 
         user = transfer.username
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
@@ -664,7 +665,6 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
-            select_iterator = None
             empty_int = 0
             empty_str = ""
 
@@ -694,10 +694,17 @@ class Transfers:
                     ], select_row=False
                 )
 
+                if expand_allowed:
+                    expand_user = self.expand_button.get_active() or self.grouping_mode == "folder_grouping"
+
                 self.row_id += 1
                 self.users[user] = (iterator, [])
 
             user_iterator, user_child_transfers = self.users[user]
+            parent_iterator = user_iterator
+
+            if select_parent:
+                select_iterator = parent_iterator
 
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
@@ -741,31 +748,13 @@ class Transfers:
                 parent_iterator = user_folder_path_iterator
                 user_folder_path_child_transfers.append(transfer)
 
-                if select_parent:
-                    self.tree_view.expand_row(user_iterator)
-                    select_iterator = user_folder_path_iterator
-                    expand_user = False
-                else:
-                    expand_user = expand_allowed
+                if select_parent and (expand_user or self.tree_view.is_row_expanded(user_iterator)):
+                    select_iterator = parent_iterator
 
                 # Group by folder, path not visible in file rows
                 folder_path = ""
             else:
-                parent_iterator = user_iterator
                 user_child_transfers.append(transfer)
-                expand_user = expand_allowed and self.expand_button.get_active()
-
-                if select_parent:
-                    select_iterator = user_iterator
-
-            if select_iterator and (not self.tree_view.is_row_selected(select_iterator)
-                                    or self.tree_view.get_num_selected_rows() != 1):
-                # Select parent row of newly added transfer, and scroll to it.
-                # Unselect any other rows to prevent accidental actions on previously
-                # selected transfers.
-                self.tree_view.unselect_all_rows()
-                self.tree_view.select_row(select_iterator, expand_rows=False)
-
         else:
             # No grouping
             if user not in self.users:
@@ -803,6 +792,14 @@ class Transfers:
 
         if expand_folder and user_folder_path_iterator is not None:
             self.tree_view.expand_row(user_folder_path_iterator)
+
+        if select_iterator and (not self.tree_view.is_row_selected(select_iterator)
+                                or self.tree_view.get_num_selected_rows() != 1):
+            # Select parent row of newly added transfer, and scroll to it.
+            # Unselect any other rows to prevent accidental actions on previously
+            # selected transfers.
+            self.tree_view.unselect_all_rows()
+            self.tree_view.select_row(select_iterator, expand_rows=False)
 
         return True
 

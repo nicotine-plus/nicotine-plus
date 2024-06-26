@@ -364,7 +364,7 @@ class Transfers:
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
-        raise NotImplementedError
+        self.transfers[transfer.username + transfer.virtual_path] = transfer
 
     def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
         raise NotImplementedError
