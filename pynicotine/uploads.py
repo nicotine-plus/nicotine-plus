@@ -311,20 +311,6 @@ class Uploads(Transfers):
             transfer.modifier = "privileged" if username in core.users.privileged else "prioritized"
 
         if old_upload is not None:
-            if virtual_path in self.queued_users.get(username, {}):
-                old_size = old_upload.size
-                new_size = transfer.size
-
-                if new_size != old_size:
-                    self._user_queue_sizes[username] -= old_size
-                    self._user_queue_sizes[username] += new_size
-
-                    old_upload.size = new_size
-
-                old_upload.folder_path = transfer.folder_path
-                self._update_transfer(old_upload)
-                return
-
             if old_upload.status != TransferStatus.FINISHED:
                 transfer.current_byte_offset = old_upload.current_byte_offset
                 transfer.time_elapsed = old_upload.time_elapsed
