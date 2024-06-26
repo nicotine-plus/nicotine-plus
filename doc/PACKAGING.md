@@ -53,7 +53,7 @@ GitHub Actions currently builds Nicotine+ installers for Windows. However, the f
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
+Follow the instructions on [installing MSYS2](https://pygobject.gnome.org/getting_started.html#windows-logo-windows).
 
 Clone the `nicotine-plus` Git repository:
 
@@ -90,7 +90,7 @@ GitHub Actions currently builds Nicotine+ packages for macOS. However, the follo
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on installing Homebrew: [https://brew.sh/](https://brew.sh/)
+Follow the instructions on [installing Homebrew](https://brew.sh/).
 
 Clone the `nicotine-plus` Git repository:
 
