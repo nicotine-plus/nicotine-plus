@@ -64,7 +64,8 @@ class Transfer:
                  "folder_path", "token", "size", "file_handle", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "file_attributes",
-                 "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
+                 "iterator", "status", "legacy_attempt", "retry_attempt", "size_changed",
+                 "request_timer_id")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -90,6 +91,7 @@ class Transfer:
         self.time_left = 0
         self.iterator = None
         self.legacy_attempt = False
+        self.retry_attempt = False
         self.size_changed = False
 
         if file_attributes is None:
@@ -362,7 +364,7 @@ class Transfers:
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
-        raise NotImplementedError
+        self.transfers[transfer.username + transfer.virtual_path] = transfer
 
     def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
         raise NotImplementedError

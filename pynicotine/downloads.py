@@ -260,9 +260,6 @@ class Downloads(Transfers):
 
     # Transfer Actions #
 
-    def _append_transfer(self, transfer):
-        self.transfers[transfer.username + transfer.virtual_path] = transfer
-
     def _update_transfer(self, transfer, update_parent=True):
         events.emit("update-download", transfer, update_parent)
 
@@ -954,15 +951,17 @@ class Downloads(Transfers):
         if msgs is None:
             return
 
+        failed_msg_types = {slskmessages.QueueUpload, slskmessages.PlaceInQueueRequest}
+
         for msg in msgs:
-            if msg.__class__ is slskmessages.QueueUpload:
+            if msg.__class__ in failed_msg_types:
                 self._cant_connect_queue_file(username, msg.file, is_offline, is_timeout)
 
     def _peer_connection_closed(self, username, msgs=None):
         self._peer_connection_error(username, msgs, is_timeout=False)
 
     def _cant_connect_queue_file(self, username, virtual_path, is_offline, is_timeout):
-        """We can't connect to the user, either way (QueueUpload)."""
+        """We can't connect to the user, either way (QueueUpload, PlaceInQueueRequest)."""
 
         download = self.queued_users.get(username, {}).get(virtual_path)
 
@@ -1259,6 +1258,7 @@ class Downloads(Transfers):
             download.last_byte_offset = offset
             download.last_update = time.monotonic()
             download.start_time = download.last_update - download.time_elapsed
+            download.retry_attempt = False
 
             core.statistics.append_stat_value("started_downloads", 1)
             download_started = True
@@ -1348,16 +1348,16 @@ class Downloads(Transfers):
         if download is None:
             return
 
-        if download.token not in self.active_users.get(username, {}):
+        if (download.token not in self.active_users.get(username, {})
+                and virtual_path not in self.failed_users.get(username, {})
+                and virtual_path not in self.queued_users.get(username, {})):
             return
 
-        should_retry = not download.legacy_attempt
-
-        if should_retry:
+        if not download.retry_attempt:
             # Attempt to request file name encoded as latin-1 once
 
-            self._dequeue_transfer(download)
-            download.legacy_attempt = True
+            self._abort_transfer(download)
+            download.legacy_attempt = download.retry_attempt = True
 
             if self._enqueue_transfer(download):
                 self._update_transfer(download)
@@ -1366,6 +1366,7 @@ class Downloads(Transfers):
 
         # Already failed once previously, give up
         self._abort_transfer(download, status=TransferStatus.CONNECTION_CLOSED)
+        download.retry_attempt = False
 
         log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
             "filename": virtual_path,

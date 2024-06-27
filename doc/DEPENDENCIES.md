@@ -6,7 +6,7 @@
 
 - [python3](https://www.python.org/) >= 3.6;
 - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30 for graphical interface;
-- [pygobject](https://pygobject.readthedocs.io/) for Python bindings for GTK;
+- [pygobject](https://pygobject.gnome.org/) for Python bindings for GTK;
 
 ### Recommended
 
@@ -34,7 +34,7 @@
 - On Debian/Ubuntu-based distributions:
 
 ```sh
-sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi
+sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi python3-gi-cairo
 ```
 
 - On Redhat/Fedora-based distributions:

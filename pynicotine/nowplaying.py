@@ -301,7 +301,7 @@ class NowPlaying:
 
         try:
             output = execute_command(command, returnoutput=True, hidden=True)
-            self.title["nowplaying"] = output
+            self.title["nowplaying"] = output.decode()
             return True
 
         except Exception as error:

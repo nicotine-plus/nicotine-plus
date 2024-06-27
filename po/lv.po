@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-05 13:36+0300\n"
-"PO-Revision-Date: 2024-05-05 11:12+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-06-23 07:09+0000\n"
+"Last-Translator: Pagal3 <p4gal3@protonmail.com>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
 "Language: lv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5.3\n"
+"X-Generator: Weblate 5.6-rc\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -59,7 +59,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
 #: pynicotine/gtkgui/ui/userbrowse.ui:144
 msgid "Search Files"
-msgstr "Meklēt Failus"
+msgstr "Failu meklēšana"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:31
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:47
@@ -80,7 +80,7 @@ msgstr "Lejupielādes"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:650
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:821
 msgid "Browse Shares"
-msgstr "Pārlūkot Koplietojumus"
+msgstr "Koplietojumu pārlūkošana"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:39
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:55
@@ -90,7 +90,7 @@ msgstr "Pārlūkot Koplietojumus"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:674
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:865
 msgid "Private Chat"
-msgstr "Privātā Tērzēšana"
+msgstr "Privātā tērzēšana"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
@@ -1696,7 +1696,7 @@ msgstr "Atrastie Vēlmju Saraksta Rezultāti"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:662
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:843
 msgid "User Profiles"
-msgstr "Lietotāju Profili"
+msgstr "Lietotāju profili"
 
 #: pynicotine/gtkgui/mainwindow.py:714 pynicotine/gtkgui/widgets/trayicon.py:95
 #: pynicotine/plugins/core_commands/__init__.py:26
@@ -1704,7 +1704,7 @@ msgstr "Lietotāju Profili"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:887
 msgid "Chat Rooms"
-msgstr "Tērzēšanas Istabas"
+msgstr "Tērzēšanas istabas"
 
 #: pynicotine/gtkgui/mainwindow.py:715 pynicotine/gtkgui/ui/mainwindow.ui:1583
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:710

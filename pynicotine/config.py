@@ -308,7 +308,7 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "private_search_results": True
+                "private_search_results": False
             },
             "ui": {
                 "language": "",
