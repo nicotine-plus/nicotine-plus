@@ -172,7 +172,7 @@ class PrivateChats(IconNotebook):
         page = self.pages.get(user)
 
         if page is not None:
-            page.chat_view.clear()
+            page.on_clear_messages()
 
     def clear_notifications(self):
 
@@ -331,7 +331,7 @@ class PrivateChat:
 
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-                                  username_event=self.username_event)
+                                  log_reader=self.prepend_old_messages, username_event=self.username_event)
 
         # Text Search
         self.search_bar = TextSearchBar(self.chat_view.widget, self.search_bar, self.search_entry,
@@ -372,15 +372,14 @@ class PrivateChat:
             ("#" + _("View Chat Log"), self.on_view_chat_log),
             ("#" + _("Delete Chat Log…"), self.on_delete_chat_log),
             ("", None),
-            ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("", None),
             (">" + _("User Actions"), self.popup_menu_user_tab),
         )
 
         self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
 
-        # Old log lines need to be read from the file now, but they can be prepended later
-        self.old_messages = self.get_old_messages(num_lines=config.sections["logging"]["readprivatelines"])
+        GLib.idle_add(self._read_old_messages)
 
     def load(self):
         GLib.idle_add(self.on_loaded)
@@ -392,17 +391,25 @@ class PrivateChat:
             # Tab was closed
             return
 
-        self.put_old_messages()
+        self.prepend_old_messages()
 
         self.chat_view.scroll_bottom()
         self.chat_view.auto_scroll = True
 
-    def get_old_messages(self, num_lines=None):
-        return log.read_log(log.private_chat_folder_path, self.user, num_lines) or []
+    def prepend_old_messages(self):
 
-    def put_old_messages(self):
-        self.chat_view.prepend_log_lines(self.old_messages, login_username=config.sections["server"]["login"])
-        self.old_messages.clear()
+        self.chat_view.prepend_log_lines(login_username=config.sections["server"]["login"])
+
+        GLib.idle_add(self._read_old_messages)
+
+    def _read_old_messages(self):
+
+        if self.loaded and not self.chat_view.num_prepended_lines:
+            # Messages have been cleared, reset read line datum
+            log.shut_log(log.private_chat_folder_path, self.user)
+
+        num_lines = self.chat_view.get_num_viewable_lines()
+        self.chat_view.old_lines = log.read_log(log.private_chat_folder_path, self.user, num_lines)
 
     def server_login(self):
         self.chat_entry.set_sensitive(True)
@@ -424,6 +431,7 @@ class PrivateChat:
             menu.destroy()
 
         self.chat_entry.destroy()
+        self.chat_view.clear()
         self.chat_view.destroy()
         self.search_bar.destroy()
         self.__dict__.clear()
@@ -460,6 +468,10 @@ class PrivateChat:
 
     def on_view_chat_log(self, *_args):
         log.open_log(log.private_chat_folder_path, self.user)
+
+    def on_clear_messages(self, *_args):
+        self.chat_view.clear()
+        GLib.idle_add(self._read_old_messages)
 
     def on_delete_chat_log_response(self, *_args):
 

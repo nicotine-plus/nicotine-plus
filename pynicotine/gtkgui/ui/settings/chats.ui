@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="_recent_private_messages_adjustment">
-    <property name="page-increment">100</property>
-    <property name="step-increment">50</property>
-    <property name="upper">10000</property>
-  </object>
-  <object class="GtkAdjustment" id="_recent_room_messages_adjustment">
-    <property name="page-increment">100</property>
-    <property name="step-increment">50</property>
-    <property name="upper">10000</property>
-  </object>
   <object class="GtkAdjustment" id="_min_chars_dropdown_adjustment">
     <property name="lower">1</property>
     <property name="page-increment">2</property>
@@ -105,57 +95,6 @@
             </child>
             <child>
               <object class="GtkSwitch" id="enable_ctcp_toggle">
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="margin-top">6</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Number of recent private chat messages to show:</property>
-                <property name="mnemonic-widget">recent_private_messages_spinner</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="recent_private_messages_spinner">
-                <property name="adjustment">_recent_private_messages_adjustment</property>
-                <property name="numeric">True</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Number of recent chat room messages to show:</property>
-                <property name="mnemonic-widget">recent_room_messages_spinner</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="recent_room_messages_spinner">
-                <property name="adjustment">_recent_room_messages_adjustment</property>
-                <property name="numeric">True</property>
                 <property name="valign">center</property>
                 <property name="visible">True</property>
               </object>

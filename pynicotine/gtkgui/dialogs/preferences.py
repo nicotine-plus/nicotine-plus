@@ -1281,8 +1281,6 @@ class ChatsPage:
             self.enable_tts_toggle,
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
-            self.recent_private_messages_spinner,
-            self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
             self.timestamp_private_chat_entry,
@@ -1350,8 +1348,6 @@ class ChatsPage:
                 "ctcpmsgs": None  # Special case in set_settings
             },
             "logging": {
-                "readroomlines": self.recent_room_messages_spinner,
-                "readprivatelines": self.recent_private_messages_spinner,
                 "rooms_timestamp": self.timestamp_room_entry,
                 "private_timestamp": self.timestamp_private_chat_entry
             },
@@ -1412,8 +1408,6 @@ class ChatsPage:
                 "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
             },
             "logging": {
-                "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
-                "readprivatelines": self.recent_private_messages_spinner.get_value_as_int(),
                 "private_timestamp": self.timestamp_private_chat_entry.get_text(),
                 "rooms_timestamp": self.timestamp_room_entry.get_text()
             },

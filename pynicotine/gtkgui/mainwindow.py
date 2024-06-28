@@ -1110,7 +1110,7 @@ class MainWindow(Window):
         open_folder_path(log.transfer_folder_path, create_folder=True)
 
     def on_clear_log_view(self, *_args):
-        self.log_view.on_clear_all_text()
+        self.log_view.clear()
         self.set_status_text("")
 
     def on_show_log_pane(self, action, state):

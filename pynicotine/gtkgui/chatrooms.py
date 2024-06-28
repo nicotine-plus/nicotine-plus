@@ -221,7 +221,7 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(room)
 
         if page is not None:
-            page.chat_view.clear()
+            page.on_clear_messages()
             page.activity_view.clear()
 
     def clear_notifications(self):
@@ -448,6 +448,7 @@ class ChatRoom:
                                       horizontal_margin=10, vertical_margin=5, pixels_below_lines=2)
         self.chat_view = ChatView(self.chat_view_container, chat_entry=self.chat_entry, editable=False,
                                   horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
+                                  log_reader=self.prepend_old_messages,
                                   status_users=core.chatrooms.joined_rooms[room].users,
                                   roomname_event=(self.roomname_event if is_global else None),
                                   username_event=self.username_event)
@@ -539,7 +540,7 @@ class ChatRoom:
             ("#" + _("Copy"), self.activity_view.on_copy_text),
             ("#" + _("Copy All"), self.activity_view.on_copy_all_text),
             ("", None),
-            ("#" + _("Clear Activity View"), self.activity_view.on_clear_all_text),
+            ("#" + _("Clear Activity View"), self.activity_view.clear),
             ("", None),
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
@@ -555,7 +556,7 @@ class ChatRoom:
             ("#" + _("View Room Log"), self.on_view_room_log),
             ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
-            ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
@@ -570,9 +571,7 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-
-        # Old log lines need to be read from the file now, but they can be prepended later
-        self.old_messages = self.get_old_messages(num_lines=config.sections["logging"]["readroomlines"])
+        GLib.idle_add(self._read_old_messages)
 
     def load(self):
         GLib.idle_add(self.on_loaded)
@@ -590,6 +589,7 @@ class ChatRoom:
             menu.destroy()
 
         self.activity_view.destroy()
+        self.chat_view.clear()
         self.chat_view.destroy()
         self.chat_entry.destroy()
         self.users_list_view.destroy()
@@ -656,19 +656,28 @@ class ChatRoom:
             # Tab was closed
             return
 
-        self.put_old_messages()
+        # Tab is realized
+        self.prepend_old_messages()
 
         self.activity_view.scroll_bottom()
         self.chat_view.scroll_bottom()
 
         self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
-    def get_old_messages(self, num_lines=None):
-        return log.read_log(log.room_folder_path, self.room, num_lines) or []
+    def prepend_old_messages(self):
 
-    def put_old_messages(self):
-        self.chat_view.prepend_log_lines(self.old_messages, login_username=config.sections["server"]["login"])
-        self.old_messages.clear()
+        self.chat_view.prepend_log_lines(login_username=config.sections["server"]["login"])
+
+        GLib.idle_add(self._read_old_messages)
+
+    def _read_old_messages(self):
+
+        if self.loaded and not self.chat_view.num_prepended_lines:
+            # Message view was cleared, reset log datum
+            log.shut_log(log.room_folder_path, self.room)
+
+        num_lines = self.chat_view.get_num_viewable_lines()
+        self.chat_view.old_lines = log.read_log(log.room_folder_path, self.room, num_lines)
 
     def populate_room_users(self, users):
 
@@ -984,6 +993,10 @@ class ChatRoom:
 
     def on_view_room_log(self, *_args):
         log.open_log(log.room_folder_path, self.room)
+
+    def on_clear_messages(self, *_args):
+        self.chat_view.clear()
+        GLib.idle_add(self._read_old_messages)
 
     def on_delete_room_log_response(self, *_args):
 
