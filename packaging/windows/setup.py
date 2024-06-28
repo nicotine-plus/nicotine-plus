@@ -47,7 +47,7 @@ elif sys.platform == "darwin":
     SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     LIB_EXTENSION = (".dylib", ".so")
-    UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
+    UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -68,9 +68,11 @@ USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") ==
 
 # Include (almost) all standard library modules for plugins
 EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
-    "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
+    f"{MODULE_NAME}.plugins.examplars", f"{MODULE_NAME}.tests",
+    "ctypes.test", "distutils", "ensurepip", "idlelib", "lib2to3", "msilib", "pip", "pydoc", "pydoc_data",
+    "pygtkcompat", "tkinter", "turtle", "turtledemo", "unittest.test", "venv", "zoneinfo"
 ]
-INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
+INCLUDED_MODULES = [MODULE_NAME] + list(
     # pylint: disable=no-member
     {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
 )
@@ -289,7 +291,8 @@ setup(
             "excludes": EXCLUDED_MODULES,
             "include_files": include_files,
             "zip_include_packages": ["*"],
-            "zip_exclude_packages": [MODULE_NAME]
+            "zip_exclude_packages": [MODULE_NAME],
+            "optimize": 2
         },
         "bdist_msi": {
             "all_users": True,
