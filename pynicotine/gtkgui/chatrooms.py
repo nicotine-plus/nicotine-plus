@@ -569,7 +569,7 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.read_room_logs()
+        self.prepend_old_messages()
 
     def load(self):
         GLib.idle_add(self.read_room_logs_finished)
@@ -658,14 +658,14 @@ class ChatRoom:
 
         self.activity_view.auto_scroll = self.chat_view.auto_scroll = True
 
-    def read_room_logs(self):
+    def prepend_old_messages(self):
 
-        self.chat_view.append_log_lines(
-            folder_path=log.room_folder_path,
-            basename=self.room,
-            num_lines=config.sections["logging"]["readroomlines"],
-            timestamp_format=config.sections["logging"]["rooms_timestamp"]
-        )
+        log_lines = self._read_old_messages()
+
+        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
+
+    def _read_old_messages(self):
+        return log.read_log(log.room_folder_path, self.room, config.sections["logging"]["readroomlines"])
 
     def populate_room_users(self, users):
 

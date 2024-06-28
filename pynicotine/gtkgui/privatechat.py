@@ -379,7 +379,7 @@ class PrivateChat:
 
         self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
 
-        self.read_private_log()
+        self.prepend_old_messages()
 
     def load(self):
         GLib.idle_add(self.read_private_log_finished)
@@ -394,14 +394,14 @@ class PrivateChat:
         self.chat_view.scroll_bottom()
         self.chat_view.auto_scroll = True
 
-    def read_private_log(self):
+    def prepend_old_messages(self):
 
-        self.chat_view.append_log_lines(
-            folder_path=log.private_chat_folder_path,
-            basename=self.user,
-            num_lines=config.sections["logging"]["readprivatelines"],
-            timestamp_format=config.sections["logging"]["private_timestamp"]
-        )
+        log_lines = self._read_old_messages()
+
+        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
+
+    def _read_old_messages(self):
+        return log.read_log(log.private_chat_folder_path, self.user, config.sections["logging"]["readprivatelines"])
 
     def server_login(self):
         self.chat_entry.set_sensitive(True)
