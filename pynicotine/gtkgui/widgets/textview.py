@@ -122,28 +122,24 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _build_text_line(self, text, tag=None):
-
-        text_line = []
+    def _generate_tagged_text(self, text, tag=None):
 
         if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
             match = self.URL_REGEX.search(text)
 
             while match:
-                text_line.append((text[:match.start()], tag))
+                yield (text[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                text_line.append((url, urltag))
+                yield (url, urltag)
 
                 # Match remaining url
                 text = text[match.end():]
                 match = self.URL_REGEX.search(text)
 
-        text_line.append((text, tag))
-
-        return text_line
+        yield (text, tag)
 
     def _insert_line(self, text_line, prepend=False):
 
@@ -195,17 +191,17 @@ class TextView:
     def add_line(self, message, prepend=False, timestamp_format=None):
         """Append or prepend a new line of unformatted text."""
 
-        text_line = []
+        line = []
 
         if timestamp_format:
             # Create new timestamped string (use current localtime)
-            text_line.append((time.strftime(timestamp_format, time.localtime()), None))
-            text_line.append((" ", None))
+            line.append((time.strftime(timestamp_format, time.localtime()), None))
+            line.append((" ", None))
 
         # Highlight urls, if found and tag them
-        text_line.extend(self._build_text_line(message))
+        line.extend(list(self._generate_tagged_text(message)))
 
-        self._insert_line(text_line, prepend=prepend)
+        self._insert_line(line, prepend=prepend)
 
     def get_iter_at_line(self, line_number):
 
@@ -431,7 +427,7 @@ class ChatView(TextView):
         """Append or prepend a new chat message line with name tags and links."""
 
         # Make a list of tuples [(text, tag),]
-        chat_texts = self._build_chat_line(
+        line = list(self._generate_chat_line(
             message,
             message_type=message_type,
             timestamp_string=timestamp_string,
@@ -439,45 +435,43 @@ class ChatView(TextView):
             timestamp_format=timestamp_format,
             roomname=roomname,
             username=username
-        )
-        self._insert_line(chat_texts, prepend=prepend)
+        ))
+        self._insert_line(line, prepend=prepend)
 
-    def _build_chat_line(self, message, timestamp_format=None, message_type=None,
-                         timestamp=None, timestamp_string=None, roomname=None, username=None):
+    def _generate_chat_line(self, message, timestamp_format=None, message_type=None,
+                            timestamp=None, timestamp_string=None, roomname=None, username=None):
 
         tag = self.type_tags.get(message_type)
-        chat_line = []
 
         if timestamp_format:
             # Create timestamped string (use current localtime if timestamp is None)
-            chat_line.append([time.strftime(timestamp_format, time.localtime(timestamp)), tag])
-            chat_line.append((" ", tag))
+            yield (time.strftime(timestamp_format, time.localtime(timestamp)), tag)
+            yield (" ", tag)
 
         elif timestamp_string:
             # Use original timestamp string from log file (plus roomname for global feed)
-            chat_line.append((timestamp_string, tag))
-            chat_line.append((" ", tag))
+            yield (timestamp_string, tag)
+            yield (" ", tag)
 
         # Tag roomname, only used in global room feed
         roomtag = self._get_room_tag(roomname)
 
         if roomtag:
-            chat_line.append((roomname, roomtag))
-            chat_line.append((" | ", tag))
+            yield (roomname, roomtag)
+            yield (" | ", tag)
 
         # Tag username with popup menu creating tag, and away/online/offline colors
         if username:
             usertag = self._get_user_tag(username)
             opener, closer = ("* ", " ") if message_type == "action" else ("[", "] ")
 
-            chat_line.append((opener, tag))
-            chat_line.append((username, usertag))
-            chat_line.append((closer, tag))
+            yield (opener, tag)
+            yield (username, usertag)
+            yield (closer, tag)
 
         # Highlight urls, if found and tag them
-        chat_line.extend(self._build_text_line(message, tag))
-
-        return chat_line
+        for message, tag in self._generate_tagged_text(message, tag):
+            yield (message, tag)
 
     def prepend_log_lines(self, login_username=None):
         """Insert batch of previously gathered log lines from file"""
