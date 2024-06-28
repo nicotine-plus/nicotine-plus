@@ -149,10 +149,7 @@ class TextView:
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
         end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
-        end_iter = self.textbuffer.get_iter_at_line(end_line)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, end_iter = end_iter
+        end_iter = self.get_iter_at_line(end_line)
 
         self.textbuffer.delete(start_iter, end_iter)
         self.end_iter = self.textbuffer.get_end_iter()
@@ -202,6 +199,15 @@ class TextView:
 
         return num_lines
 
+    def get_iter_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        return iterator
+
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
 
@@ -235,12 +241,7 @@ class TextView:
         self.widget.grab_focus()
 
     def place_cursor_at_line(self, line_number):
-
-        iterator = self.textbuffer.get_iter_at_line(line_number)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, iterator = iterator
-
+        iterator = self.get_iter_at_line(line_number)
         self.textbuffer.place_cursor(iterator)
 
     def set_text(self, text):
