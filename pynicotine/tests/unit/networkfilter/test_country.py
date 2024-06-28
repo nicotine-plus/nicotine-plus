@@ -30,12 +30,15 @@ MAX_IPV4_RANGE = 4294967295
 
 class CountryTest(TestCase):
 
+    # pylint: disable=protected-access
+
     def setUp(self):
 
         config.set_data_folder(DATA_FOLDER_PATH)
         config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
         core.init_components(enabled_components={"network_filter"})
+        core.network_filter._populate_ip_country_data()
 
     def tearDown(self):
         core.quit()
@@ -48,17 +51,16 @@ class CountryTest(TestCase):
     def test_ip_country_data_structure(self):
         """Verify that IP country data structure is valid."""
 
-        from pynicotine.external.data import ip_ranges
-        from pynicotine.external.data import country_codes
+        self.assertTrue(core.network_filter._ip_range_countries)
+        self.assertTrue(core.network_filter._ip_range_values)
 
-        self.assertEqual(ip_ranges.timestamp, country_codes.timestamp)
-        self.assertEqual(len(ip_ranges.values), len(country_codes.values))
+        self.assertEqual(len(core.network_filter._ip_range_countries), len(core.network_filter._ip_range_values))
 
-        self.assertTrue(all(isinstance(item, int) for item in ip_ranges.values))
-        self.assertTrue(all(0 <= item <= MAX_IPV4_RANGE for item in ip_ranges.values))
+        self.assertTrue(all(isinstance(item, str) for item in core.network_filter._ip_range_countries))
+        self.assertTrue(all(len(item) == 2 or not item for item in core.network_filter._ip_range_countries))
 
-        self.assertTrue(all(isinstance(item, str) for item in country_codes.values))
-        self.assertTrue(all(len(item) == 2 or not item for item in country_codes.values))
+        self.assertTrue(all(isinstance(item, int) for item in core.network_filter._ip_range_values))
+        self.assertTrue(all(0 <= item <= MAX_IPV4_RANGE for item in core.network_filter._ip_range_values))
 
     def test_read_ip_country(self):
         """Test reading country codes at IP range boundaries."""
