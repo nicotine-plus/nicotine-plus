@@ -702,6 +702,26 @@ class Config:
                 # Set default value
                 self.sections[section][option] = value
 
+        # Map legacy folder/user grouping modes (3.1.0)
+        for section, option in (
+            ("searches", "group_searches"),
+            ("transfers", "groupdownloads"),
+            ("transfers", "groupuploads")
+        ):
+            mode = self.sections[section].get(option, "folder_grouping")
+
+            if mode == "0":
+                mode = "ungrouped"
+
+            elif mode == "1":
+                mode = "folder_grouping"
+
+            elif mode == "2":
+                mode = "user_grouping"
+
+            self.sections[section][option] = mode
+            continue
+
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):
             shares = self.sections["transfers"]["shared"]
