@@ -703,11 +703,11 @@ class Config:
                 self.sections[section][option] = value
 
         # Map legacy folder/user grouping modes (3.1.0)
-        for (section, option) in [
+        for section, option in (
             ("searches", "group_searches"),
             ("transfers", "groupdownloads"),
             ("transfers", "groupuploads")
-        ]:
+        ):
             mode = self.sections[section].get(option, "folder_grouping")
 
             if mode == "0":
