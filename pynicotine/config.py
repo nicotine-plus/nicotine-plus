@@ -578,6 +578,10 @@ class Config:
 
         events.connect("quit", self._quit)
 
+    def need_config(self):
+        # Check if we have specified a username or password
+        return not self.sections["server"]["login"] or not self.sections["server"]["passw"]
+
     def _parse_config(self, file_path):
         """Parses the config file."""
 
@@ -585,13 +589,69 @@ class Config:
             file_handle.seek(0)
             self._parser.read_file(file_handle)
 
-    def need_config(self):
+    def _migrate_config(self):
 
-        # Check if we have specified a username or password
-        if not self.sections["server"]["login"] or not self.sections["server"]["passw"]:
-            return True
+        # Map legacy folder/user grouping modes (3.1.0)
+        for section, option in (
+            ("searches", "group_searches"),
+            ("transfers", "groupdownloads"),
+            ("transfers", "groupuploads")
+        ):
+            mode = self.sections[section].get(option, "folder_grouping")
 
-        return False
+            if mode == "0":
+                mode = "ungrouped"
+
+            elif mode == "1":
+                mode = "folder_grouping"
+
+            elif mode == "2":
+                mode = "user_grouping"
+
+            self.sections[section][option] = mode
+
+        # Convert special download folder share to regular share
+        if self.sections["transfers"].get("sharedownloaddir", False):
+            shares = self.sections["transfers"]["shared"]
+            virtual_name = "Downloaded"
+            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
+
+            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
+                shares.append(shared_folder)
+
+        # Migrate download/upload speed limit preference (3.3.0)
+        if "uselimit" in self.sections["transfers"] or "usealtlimits" in self.sections["transfers"]:
+            for option, use_primary_speed_limit in (
+                ("use_download_speed_limit", self.sections["transfers"].get("downloadlimit", 0) > 0),
+                ("use_upload_speed_limit", self.sections["transfers"].get("uselimit", False))
+            ):
+                if self.sections["transfers"].get("usealtlimits", False):
+                    use_speed_limit = "alternative"
+
+                elif use_primary_speed_limit:
+                    use_speed_limit = "primary"
+
+                else:
+                    use_speed_limit = "unlimited"
+
+                self.sections["transfers"][option] = use_speed_limit
+
+        # Migrate old trusted buddy shares to new format (3.3.0)
+        if self.sections["transfers"].get("buddysharestrustedonly", False):
+            buddy_shares = self.sections["transfers"]["buddyshared"]
+
+            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
+            buddy_shares.clear()
+
+        # Migrate old media player command to new format (3.3.0)
+        old_default_player = self.sections["players"].get("default", None)
+
+        if old_default_player:
+            self.sections["urls"]["protocols"]["audio"] = old_default_player
+
+        # Enable previously disabled header bar on macOS (3.3.0)
+        if sys.platform == "darwin" and old_default_player is not None:
+            self.sections["ui"]["header_bar"] = True
 
     def _set_config(self):
         """Set config values parsed from file earlier."""
@@ -668,65 +728,11 @@ class Config:
                 self.sections[section] = {}
 
             for option, value in options.items():
-                if option in self.sections[section]:
-                    continue
+                if option not in self.sections[section]:
+                    self.sections[section][option] = value
 
-                # Migrate download speed limit preference (3.3.0)
-                if option == "use_download_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("downloadlimit", 0) > 0:
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Migrate upload speed limit preference (3.3.0)
-                if option == "use_upload_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("uselimit", False):
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Set default value
-                self.sections[section][option] = value
-
-        # Convert special download folder share to regular share
-        if self.sections["transfers"].get("sharedownloaddir", False):
-            shares = self.sections["transfers"]["shared"]
-            virtual_name = "Downloaded"
-            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
-
-            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
-                shares.append(shared_folder)
-
-        # Migrate old trusted buddy shares to new format (3.3.0)
-        if self.sections["transfers"].get("buddysharestrustedonly", False):
-            buddy_shares = self.sections["transfers"]["buddyshared"]
-
-            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
-            buddy_shares.clear()
-
-        # Migrate old media player command to new format (3.3.0)
-        old_default_player = self.sections["players"].get("default", None)
-
-        if old_default_player:
-            self.sections["urls"]["protocols"]["audio"] = old_default_player
-
-        # Enable previously disabled header bar on macOS (3.3.0)
-        if sys.platform == "darwin" and old_default_player is not None:
-            self.sections["ui"]["header_bar"] = True
+        # Migrate old config values
+        self._migrate_config()
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]

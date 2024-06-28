@@ -914,25 +914,6 @@ class TreeView:
 # Legacy Functions (to be removed) #
 
 
-def verify_grouping_mode(mode):
-
-    # Map legacy values
-    if mode == "0":
-        mode = "ungrouped"
-
-    elif mode == "1":
-        mode = "folder_grouping"
-
-    elif mode == "2":
-        mode = "user_grouping"
-
-    # Verify mode validity
-    elif mode not in {"ungrouped", "folder_grouping", "user_grouping"}:
-        mode = "folder_grouping"
-
-    return mode
-
-
 def create_grouping_menu(window, active_mode, callback):
 
     action_id = f"grouping-{GLib.uuid_string_random()}"
@@ -947,7 +928,7 @@ def create_grouping_menu(window, active_mode, callback):
     menuitem = Gio.MenuItem.new(_("Group by User"), f"win.{action_id}::user_grouping")
     menu.append_item(menuitem)
 
-    state = GLib.Variant("s", verify_grouping_mode(active_mode))
+    state = GLib.Variant("s", active_mode)
     action = Gio.SimpleAction(name=action_id, parameter_type=GLib.VariantType("s"), state=state)
     action.connect("change-state", callback)
 

@@ -122,7 +122,7 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _generate_tagged_text(self, text, tag=None):
+    def _generate_hypertext(self, text, tag=None):
 
         if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
@@ -199,7 +199,7 @@ class TextView:
             line.append((" ", None))
 
         # Highlight urls, if found and tag them
-        line.extend(list(self._generate_tagged_text(message)))
+        line.extend(list(self._generate_hypertext(message)))
 
         self._insert_line(line, prepend=prepend)
 
@@ -245,9 +245,7 @@ class TextView:
         self.widget.grab_focus()
 
     def place_cursor_at_line(self, line_number):
-
         iterator = self.get_iter_at_line(line_number)
-
         self.textbuffer.place_cursor(iterator)
 
     def set_text(self, text):
@@ -470,8 +468,8 @@ class ChatView(TextView):
             yield (closer, tag)
 
         # Highlight urls, if found and tag them
-        for message, tag in self._generate_tagged_text(message, tag):
-            yield (message, tag)
+        for hypertext, tag in list(self._generate_hypertext(message, tag=tag)):
+            yield (hypertext, tag)
 
     def prepend_log_lines(self, login_username=None):
         """Insert batch of previously gathered log lines from file"""
