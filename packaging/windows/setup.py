@@ -72,7 +72,7 @@ EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
     "ctypes.test", "distutils", "ensurepip", "idlelib", "lib2to3", "msilib", "pip", "pydoc", "pydoc_data",
     "pygtkcompat", "tkinter", "turtle", "turtledemo", "unittest.test", "venv", "zoneinfo"
 ]
-INCLUDED_MODULES = [MODULE_NAME] + list(
+INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
     # pylint: disable=no-member
     {module for module in sys.stdlib_module_names if not module.startswith("_")}.difference(EXCLUDED_MODULES)
 )
