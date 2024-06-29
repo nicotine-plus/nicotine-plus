@@ -359,27 +359,60 @@ class Transfers:
     # Events #
 
     def _transfer_timeout(self, transfer):
-        raise NotImplementedError
+        self._abort_transfer(transfer, status=TransferStatus.CONNECTION_TIMEOUT)
 
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
         self.transfers[transfer.username + transfer.virtual_path] = transfer
 
-    def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
-        raise NotImplementedError
+    def _abort_transfer(self, transfer, status=None, denied_message=None):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        transfer.legacy_attempt = False
+        transfer.size_changed = False
+
+        if transfer.sock is not None:
+            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+
+        if transfer.file_handle is not None:
+            self._close_file(transfer)
+
+        elif denied_message and virtual_path in self.queued_users.get(username, {}):
+            core.send_message_to_peer(
+                username, slskmessages.UploadDenied(virtual_path, denied_message))
+
+        self._deactivate_transfer(transfer)
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+
+        if not status:
+            return
+
+        transfer.status = status
+
+        if status not in {TransferStatus.FINISHED, TransferStatus.FILTERED, TransferStatus.PAUSED}:
+            self._fail_transfer(transfer)
 
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
     def _finish_transfer(self, transfer):
-        raise NotImplementedError
+
+        self._deactivate_transfer(transfer)
+        self._close_file(transfer)
+
+        transfer.status = TransferStatus.FINISHED
+        transfer.current_byte_offset = transfer.size
 
     def _auto_clear_transfer(self, transfer):
         raise NotImplementedError
 
-    def _clear_transfer(self, transfer):
-        raise NotImplementedError
+    def _clear_transfer(self, transfer, denied_message=None):
+        self._abort_transfer(transfer, denied_message=denied_message)
+        del self.transfers[transfer.username + transfer.virtual_path]
 
     def _enqueue_transfer(self, transfer):
 
@@ -392,7 +425,8 @@ class Transfers:
         self._user_queue_sizes[transfer.username] += transfer.size
 
     def _enqueue_limited_transfers(self, username):
-        raise NotImplementedError
+        # Optional method
+        pass
 
     def _dequeue_transfer(self, transfer):
 
