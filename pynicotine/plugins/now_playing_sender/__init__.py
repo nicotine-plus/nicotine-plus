@@ -58,7 +58,8 @@ class Plugin(BasePlugin):
             object_path="/org/mpris/MediaPlayer2",
             arg0=None,
             flags=Gio.DBusSignalFlags.NONE,
-            callback=self.song_change
+            callback=self.song_change,
+            user_data=None
         )
 
     def remove_mpris_signal_receiver(self):
@@ -78,7 +79,8 @@ class Plugin(BasePlugin):
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
-                interface_name="org.freedesktop.DBus"
+                interface_name="org.freedesktop.DBus",
+                cancellable=None
             )
             names = dbus_proxy.ListNames()
 
@@ -98,7 +100,8 @@ class Plugin(BasePlugin):
             info=None,
             name=self.dbus_mpris_service + player,
             object_path="/org/mpris/MediaPlayer2",
-            interface_name="org.freedesktop.DBus.Properties"
+            interface_name="org.freedesktop.DBus.Properties",
+            cancellable=None
         )
         metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
         song_url = metadata.get("xesam:url")

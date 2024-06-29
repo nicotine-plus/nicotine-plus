@@ -249,7 +249,8 @@ class StatusNotifierImplementation(BaseImplementation):
                 object_path=self._object_path,
                 interface_info=Gio.DBusNodeInfo.new_for_xml(xml_output).interfaces[0],
                 method_call_closure=self.on_method_call,
-                get_property_closure=self.on_get_property
+                get_property_closure=self.on_get_property,
+                set_property_closure=None
             )
 
             if not registration_id:
@@ -444,7 +445,8 @@ class StatusNotifierImplementation(BaseImplementation):
                 parameters=GLib.Variant("(s)", (self.bus.get_unique_name(),)),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
-                timeout_msec=-1
+                timeout_msec=-1,
+                cancellable=None
             )
 
         except GLib.Error as error:

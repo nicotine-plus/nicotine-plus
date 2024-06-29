@@ -58,8 +58,11 @@ if USE_COLOR_SCHEME_PORTAL:
 
         try:
             result = SETTINGS_PORTAL.call_sync(
-                "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
-                Gio.DBusCallFlags.NONE, -1, None
+                method_name="Read",
+                parameters=GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+                flags=Gio.DBusCallFlags.NONE,
+                timeout_msec=-1,
+                cancellable=None
             )
 
             return result.unpack()[0]
@@ -83,9 +86,13 @@ if USE_COLOR_SCHEME_PORTAL:
 
     try:
         SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
-            Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
-            "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
-            "org.freedesktop.portal.Settings", None
+            bus_type=Gio.BusType.SESSION,
+            flags=Gio.DBusProxyFlags.NONE,
+            info=None,
+            name="org.freedesktop.portal.Desktop",
+            object_path="/org/freedesktop/portal/desktop",
+            interface_name="org.freedesktop.portal.Settings",
+            cancellable=None
         )
         SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
