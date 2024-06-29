@@ -335,7 +335,7 @@ class Application:
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
-        self.tray_icon.update_user_status()
+        self.tray_icon.update()
 
     # Primary Menus #
 

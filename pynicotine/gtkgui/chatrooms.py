@@ -298,7 +298,7 @@ class ChatRooms(IconNotebook):
 
         self.highlighted_rooms[room] = user
         self.window.update_title()
-        self.window.application.tray_icon.update_icon()
+        self.window.application.tray_icon.update()
 
     def unhighlight_room(self, room):
 
@@ -307,7 +307,7 @@ class ChatRooms(IconNotebook):
 
         del self.highlighted_rooms[room]
         self.window.update_title()
-        self.window.application.tray_icon.update_icon()
+        self.window.application.tray_icon.update()
 
     def join_room(self, msg):
 
