@@ -182,6 +182,8 @@ EVENT_NAMES = {
     "upload-denied",
     "upload-failed",
     "upload-file-error",
+    "uploads-shutdown-request",
+    "uploads-shutdown-cancel",
 
     # User info
     "user-info-progress",

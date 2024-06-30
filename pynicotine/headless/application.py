@@ -69,7 +69,7 @@ class Application:
         if user_input.lower().startswith("y"):
             core.quit()
 
-    def on_confirm_quit(self, _only_on_active_uploads):
+    def on_confirm_quit(self):
         responses = "[y/N] "
         cli.prompt(_("Do you really want to exit? %s") % responses, callback=self.on_confirm_quit_response)
 

@@ -66,7 +66,6 @@ class Uploads(Transfers):
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("queue-upload", self._queue_upload),
-            ("schedule-quit", self._schedule_quit),
             ("set-connection-stats", self._set_connection_stats),
             ("shares-ready", self._shares_ready),
             ("transfer-request", self._transfer_request),
@@ -76,14 +75,6 @@ class Uploads(Transfers):
             ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
-
-    def _schedule_quit(self, should_finish_uploads):
-
-        if not should_finish_uploads:
-            return
-
-        self.pending_shutdown = True
-        self._check_upload_queue()
 
     def _quit(self):
 
@@ -705,6 +696,25 @@ class Uploads(Transfers):
             self._clear_transfer(upload, denied_message=denied_message, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
+
+    def request_shutdown(self):
+        """Schedule a shutdown after all queued uploads have finished."""
+
+        if self.pending_shutdown:
+            return
+
+        self.pending_shutdown = True
+        self._check_upload_queue()
+
+        events.emit("uploads-shutdown-request")
+
+    def cancel_shutdown(self):
+
+        if not self.pending_shutdown:
+            return
+
+        self.pending_shutdown = False
+        events.emit("uploads-shutdown-cancel")
 
     # Events #
 

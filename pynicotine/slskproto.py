@@ -443,8 +443,8 @@ class NetworkThread(Thread):
         if self._should_process_queue:
             self._message_queue.append(msg)
 
-    def _schedule_quit(self, should_finish_uploads):
-        self._want_abort = not should_finish_uploads
+    def _schedule_quit(self):
+        self._want_abort = True
 
     # Listening Socket #
 

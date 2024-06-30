@@ -58,7 +58,6 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import human_speed
 from pynicotine.utils import open_folder_path
 
 
@@ -231,15 +230,12 @@ class MainWindow(Window):
 
         # Events
         for event_name, callback in (
-            ("schedule-quit", self.schedule_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
             ("set-connection-stats", self.set_connection_stats),
             ("shares-preparing", self.shares_preparing),
             ("shares-ready", self.shares_ready),
             ("shares-scanning", self.shares_scanning),
-            ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
@@ -1134,47 +1130,12 @@ class MainWindow(Window):
         self.status_label.set_tooltip_text(msg)
         self.status_label.set_visible(True)
 
-    def set_connection_stats(self, total_conns=0, download_bandwidth=0, upload_bandwidth=0):
+    def set_connection_stats(self, total_conns=0, **_kwargs):
 
         total_conns_text = repr(total_conns)
-        download_bandwidth = human_speed(download_bandwidth)
-        upload_bandwidth = human_speed(upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
-
-        if self.download_status_label.get_text() != download_bandwidth_text:
-            self.download_status_label.set_text(download_bandwidth_text)
-            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {"speed": download_bandwidth})
-
-        if self.upload_status_label.get_text() != upload_bandwidth_text:
-            self.upload_status_label.set_text(upload_bandwidth_text)
-            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {"speed": upload_bandwidth})
-
-    def update_download_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="download")
-
-    def update_upload_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="upload")
-
-    def update_bandwidth_label_underlines(self, transfer_type):
-        """Underline status bar bandwidth labels when alternative speed limits
-        are active."""
-
-        if transfer_type == "download":
-            label = self.download_status_label
-            config_key = "use_download_speed_limit"
-        else:
-            label = self.upload_status_label
-            config_key = "use_upload_speed_limit"
-
-        if config.sections["transfers"][config_key] == "alternative":
-            add_css_class(label, "underline")
-            return
-
-        remove_css_class(label, "underline")
 
     def shares_preparing(self):
 
@@ -1193,17 +1154,11 @@ class MainWindow(Window):
         self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
-
         self.scan_progress_container.set_visible(False)
         self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
-
-        if core.uploads.pending_shutdown:
-            core.uploads.pending_shutdown = False
-            self.update_user_status()
-            return
-
+        core.uploads.cancel_shutdown()
         self.application.lookup_action("away").activate()
 
     # Exit #
@@ -1220,22 +1175,6 @@ class MainWindow(Window):
             self.hide()
 
         return True
-
-    def schedule_quit(self, should_finish_uploads):
-
-        if not should_finish_uploads:
-            return
-
-        icon_name = "system-shutdown-symbolic"
-        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        toggle_status_action.handler_block_by_func(self.on_toggle_status)
-        self.user_status_button.set_active(True)
-        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
-
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(_("Quitting..."))
 
     def hide(self):
 
