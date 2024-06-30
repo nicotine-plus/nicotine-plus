@@ -33,8 +33,8 @@ class ConfigTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = DATA_FOLDER_PATH
-        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
         default_config_path = os.path.join(CURRENT_FOLDER_PATH, "config")
 
         if not os.path.exists(DATA_FOLDER_PATH):

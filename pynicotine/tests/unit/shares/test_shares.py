@@ -43,8 +43,8 @@ class SharesTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = DATA_FOLDER_PATH
-        config.config_file_path = os.path.join(DATA_FOLDER_PATH, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
         core.init_components(enabled_components={"shares"})
 

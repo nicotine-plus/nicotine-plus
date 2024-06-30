@@ -523,6 +523,9 @@ class Downloads(Transfers):
 
     def _delete_stale_incomplete_downloads(self):
 
+        if not self._allow_saving_transfers:
+            return
+
         allowed_incomplete_file_paths = {
             encode_path(self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path))
             for transfer in self.transfers.values()
