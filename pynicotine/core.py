@@ -224,23 +224,22 @@ class Core:
     def setup(self):
         events.emit("setup")
 
-    def confirm_quit(self, only_on_active_uploads=False):
-        events.emit("confirm-quit", only_on_active_uploads)
+    def confirm_quit(self):
+        events.emit("confirm-quit")
 
-    def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
+    def quit(self, signal_type=None, _frame=None):
 
-        if not should_finish_uploads:
-            import signal
-            log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
-                "program": pynicotine.__application_name__,
-                "version": pynicotine.__version__,
-                "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
-            })
+        import signal
+        log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__,
+            "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
+        })
 
         # Allow the networking thread to finish up before quitting
-        events.emit("schedule-quit", should_finish_uploads)
+        events.emit("schedule-quit")
 
-    def _schedule_quit(self, _should_finish_uploads):
+    def _schedule_quit(self):
         events.emit("quit")
 
     def _quit(self):

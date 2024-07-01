@@ -139,7 +139,6 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
-            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
             ("force-quit", self.on_force_quit_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
@@ -227,7 +226,7 @@ class Application:
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
             ("app.force-quit", ["<Primary><Alt>q"]),
-            ("app.quit", []),
+            ("app.quit", ["<Primary>q"]),  # Only used to show accelerator in menus
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -358,7 +357,7 @@ class Application:
 
         menu.add_items(
             ("", None),
-            ("^" + _("_Quit"), "app.confirm-quit-uploads")
+            ("^" + _("_Quit"), "app.quit")
         )
 
     def _create_file_menu(self):
@@ -521,16 +520,19 @@ class Application:
         should_finish_uploads = dialog.get_option_value()
 
         if response_id == "quit":
-            core.quit(should_finish_uploads=should_finish_uploads)
+            if should_finish_uploads:
+                core.uploads.request_shutdown()
+            else:
+                core.quit()
 
         elif response_id == "run_background":
             self.window.hide()
 
-    def on_confirm_quit(self, only_on_active_uploads=False):
+    def on_confirm_quit(self):
 
         has_active_uploads = core.uploads.has_active_uploads()
 
-        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+        if not self.window.is_visible():
             # Never show confirmation dialog when main window is hidden
             core.quit()
             return
@@ -546,11 +548,9 @@ class Application:
 
         buttons = [
             ("cancel", _("_No")),
-            ("quit", _("_Quit"))
+            ("quit", _("_Quit")),
+            ("run_background", _("_Run in Background"))
         ]
-
-        if not only_on_active_uploads:
-            buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
             parent=self.window,
@@ -1018,20 +1018,16 @@ class Application:
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
 
-    def on_confirm_quit_uploads_request(self, *_args):
-        core.confirm_quit(only_on_active_uploads=True)
-
     def on_force_quit_request(self, *_args):
         core.quit()
 
     def on_quit_request(self, *_args):
 
-        if sys.platform == "darwin":
-            # macOS menu bar Quit item should ask for confirmation when uploads are active
-            self.on_confirm_quit_uploads_request()
+        if not core.uploads.has_active_uploads():
+            core.quit()
             return
 
-        self.on_force_quit_request()
+        core.confirm_quit()
 
     def on_shutdown(self, *_args):
 

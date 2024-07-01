@@ -102,7 +102,7 @@ class Transfers:
     UNKNOWN_STATUS_PRIORITY = 1000
 
     path_separator = path_label = retry_label = abort_label = None
-    transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+    transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = status_label = None
 
     def __init__(self, window, transfer_type):
 
@@ -365,6 +365,16 @@ class Transfers:
             return translated_status
 
         return status
+
+    def update_limits(self):
+        """Underline status bar bandwidth labels when alternative speed limits
+        are active."""
+
+        if config.sections["transfers"][f"use_{self.type}_speed_limit"] == "alternative":
+            add_css_class(self.status_label, "underline")
+            return
+
+        remove_css_class(self.status_label, "underline")
 
     def update_num_users_files(self):
         self.user_counter.set_text(humanize(len(self.users)))

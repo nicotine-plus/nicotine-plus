@@ -33,6 +33,7 @@ from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.transfers import TransferStatus
+from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -58,6 +59,7 @@ class Downloads(Transfers):
         self.expand_button = window.downloads_expand_button
         self.expand_icon = window.downloads_expand_icon
         self.grouping_button = window.downloads_grouping_button
+        self.status_label = window.download_status_label
 
         super().__init__(window, transfer_type="download")
 
@@ -86,8 +88,10 @@ class Downloads(Transfers):
             ("clear-downloads", self.clear_transfers),
             ("download-large-folder", self.download_large_folder),
             ("folder-download-finished", self.folder_download_finished),
+            ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
-            ("update-download", self.update_model)
+            ("update-download", self.update_model),
+            ("update-download-limits", self.update_limits)
         ):
             events.connect(event_name, callback)
 
@@ -111,6 +115,18 @@ class Downloads(Transfers):
 
     def remove_selected_transfers(self):
         core.downloads.clear_downloads(downloads=self.selected_transfers)
+
+    def set_connection_stats(self, download_bandwidth=0, **_kwargs):
+
+        download_bandwidth = human_speed(download_bandwidth)
+        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
+
+        if self.window.download_status_label.get_text() == download_bandwidth_text:
+            return
+
+        self.window.download_status_label.set_text(download_bandwidth_text)
+        self.window.application.tray_icon.set_download_status(
+            _("Downloads: %(speed)s") % {"speed": download_bandwidth})
 
     def on_try_clear_queued(self, *_args):
 
