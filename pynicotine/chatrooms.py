@@ -144,12 +144,9 @@ class ChatRooms:
             core.send_message_to_server(slskmessages.LeaveRoom(room))
 
         room_obj = self.joined_rooms.pop(room)
-        non_watched_users = room_obj.users.difference(core.users.watched)
 
-        for username in non_watched_users:
-            # We haven't explicitly watched the user, server will no longer send status updates
-            for dictionary in (core.users.addresses, core.users.countries, core.users.statuses):
-                dictionary.pop(username, None)
+        for username in room_obj.users:
+            core.users.unwatch_user(username, context=f"chatrooms_{room}")
 
         if is_permanent:
             if room in config.sections["columns"]["chat_room"]:
@@ -277,8 +274,15 @@ class ChatRooms:
 
         for userdata in msg.users:
             username = userdata.username
-            core.users.statuses[username] = userdata.status
+            core.users.watch_user(username, context=f"chatrooms_{msg.room}", is_implicit=True)
             room_obj.users.add(username)
+
+            watched_user = core.users.watched[username]
+            watched_user.upload_speed = userdata.avgspeed
+            watched_user.files = userdata.files
+            watched_user.folders = userdata.dirs
+
+            core.users.statuses[username] = userdata.status
 
             # Request user's IP address, so we can get the country and ignore messages by IP
             if username not in core.users.addresses:
@@ -292,6 +296,9 @@ class ChatRooms:
         room_obj = self.joined_rooms.get(msg.room)
 
         if room_obj is not None:
+            for username in room_obj.users:
+                core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
+
             room_obj.users.clear()
 
         core.pluginhandler.leave_chatroom_notification(msg.room)
@@ -525,7 +532,8 @@ class ChatRooms:
             msg.room = None
             return
 
-        username = msg.userdata.username
+        userdata = msg.userdata
+        username = userdata.username
 
         if username == core.users.login_username:
             # Redundant message, we're already present in the list of users
@@ -533,7 +541,14 @@ class ChatRooms:
             return
 
         room_obj.users.add(username)
-        core.users.statuses[username] = msg.userdata.status
+        core.users.watch_user(username, context=f"chatrooms_{msg.room}", is_implicit=True)
+
+        watched_user = core.users.watched[username]
+        watched_user.upload_speed = userdata.avgspeed
+        watched_user.files = userdata.files
+        watched_user.folders = userdata.dirs
+
+        core.users.statuses[username] = userdata.status
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         if username not in core.users.addresses:
@@ -552,11 +567,7 @@ class ChatRooms:
 
         username = msg.username
         room_obj.users.discard(username)
-
-        if username not in core.users.watched:
-            # We haven't explicitly watched the user, server will no longer send status updates
-            for dictionary in (core.users.addresses, core.users.countries, core.users.statuses):
-                dictionary.pop(username, None)
+        core.users.unwatch_user(username, context=f"chatrooms_{msg.room}")
 
         core.pluginhandler.user_leave_chatroom_notification(msg.room, username)
 

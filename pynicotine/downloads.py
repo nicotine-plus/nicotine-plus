@@ -71,7 +71,7 @@ class Downloads(Transfers):
 
     def __init__(self):
 
-        super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "downloads.json"))
+        super().__init__(name="downloads")
 
         self._requested_folders = defaultdict(dict)
         self._requested_folder_token = 0
@@ -493,14 +493,6 @@ class Downloads(Transfers):
 
         if status:
             events.emit("abort-download", transfer, status, update_parent)
-
-    def _auto_clear_transfer(self, transfer):
-
-        if config.sections["transfers"]["autoclear_downloads"]:
-            self._clear_transfer(transfer)
-            return True
-
-        return False
 
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
 
@@ -1335,7 +1327,11 @@ class Downloads(Transfers):
         if not download.retry_attempt:
             # Attempt to request file name encoded as latin-1 once
 
-            self._abort_transfer(download)
+            # We mark download as failed when aborting it, to avoid a redundant request
+            # to unwatch the user. Need to call _unfail_transfer() to undo this.
+            self._abort_transfer(download, status=TransferStatus.CONNECTION_CLOSED)
+            self._unfail_transfer(download)
+
             download.legacy_attempt = download.retry_attempt = True
 
             if self._enqueue_transfer(download):
