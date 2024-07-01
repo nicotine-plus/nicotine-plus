@@ -21,6 +21,7 @@ import sys
 import time
 
 from collections import deque
+from itertools import islice
 
 from pynicotine import slskmessages
 from pynicotine.config import config
@@ -32,10 +33,13 @@ from pynicotine.utils import open_file_path
 
 class LogFile:
 
-    def __init__(self, path, handle):
+    def __init__(self, path):
         self.path = path
-        self.handle = handle
-        self.last_active = time.monotonic()
+        self.handle = None
+        self.is_open = False
+        self.last_active = 0.0
+        self.oldest_read_line_number = None
+        self.old_lines = deque()
 
 
 class LogLevel:
@@ -51,6 +55,9 @@ class LogLevel:
 
 
 class Logger:
+
+    NUM_BUFFER_INITIAL_PAGES = 2
+    NUM_BUFFER_SCROLLING_PAGES = 10
 
     PREFIXES = {
         LogLevel.DOWNLOAD: "Download",
@@ -87,8 +94,8 @@ class Logger:
         self._log_levels = {LogLevel.DEFAULT}
         self._log_files = {}
 
-        events.connect("quit", self._close_log_files)
-        events.schedule(delay=10, callback=self._close_inactive_log_files, repeat=True)
+        events.connect("quit", self._shut_log_files)
+        events.schedule(delay=10, callback=self._close_inactive_handles, repeat=True)
 
     # Log Levels #
 
@@ -130,20 +137,26 @@ class Logger:
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
         log_file = self._log_files.get(file_path)
 
-        if log_file is not None:
+        if log_file is not None and log_file.is_open:
+            log_file.last_active = time.monotonic()
             return log_file
 
-        folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
 
         if not should_create_file and not os.path.isfile(file_path_encoded):
             return log_file
 
+        folder_path_encoded = encode_path(folder_path)
+
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
 
-        log_file = self._log_files[file_path] = LogFile(
-            path=file_path, handle=open(file_path_encoded, "ab+"))  # pylint: disable=consider-using-with
+        if log_file is None:
+            log_file = self._log_files[file_path] = LogFile(path=file_path)
+
+        log_file.handle = open(file_path_encoded, "ab+")  # pylint: disable=consider-using-with
+        log_file.is_open = True
+        log_file.last_active = time.monotonic()
 
         # Disable file access for outsiders
         os.chmod(file_path_encoded, 0o600)
@@ -165,7 +178,6 @@ class Logger:
                 text += "\n"
 
             log_file.handle.write(text.encode("utf-8", "replace"))
-            log_file.last_active = time.monotonic()
 
         except Exception as error:
             # Avoid infinite recursion
@@ -176,7 +188,7 @@ class Logger:
                 "error": error
             }, should_log_file=should_log_file)
 
-    def _close_log_file(self, log_file):
+    def _close_inactive_handle(self, log_file):
 
         try:
             log_file.handle.close()
@@ -187,19 +199,25 @@ class Logger:
                 "error": error
             })
 
+        self._log_files[log_file.path].is_open = False
+
+    def _shut_log_file(self, log_file):
+        self._close_inactive_handle(log_file)
+        log_file.old_lines.clear()
         del self._log_files[log_file.path]
 
-    def _close_log_files(self):
+    def _shut_log_files(self):
         for log_file in self._log_files.copy().values():
-            self._close_log_file(log_file)
+            self._shut_log_file(log_file)
 
-    def _close_inactive_log_files(self):
+    def _close_inactive_handles(self):
+        """Keep buffers and current reading places, just close handles."""
 
         current_time = time.monotonic()
 
         for log_file in self._log_files.copy().values():
             if (current_time - log_file.last_active) >= 10:
-                self._close_log_file(log_file)
+                self._close_inactive_handle(log_file)
 
     def _normalize_folder_path(self, folder_path):
         return os.path.normpath(os.path.expandvars(folder_path))
@@ -212,21 +230,53 @@ class Logger:
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
     def open_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.open_log_callback)
+        self._log_file_operation(folder_path, basename, self.open_log_callback)
 
     def read_log(self, folder_path, basename, num_lines):
 
-        lines = None
+        lines = deque()
         log_file = None
 
         try:
             log_file = self._get_log_file(folder_path, basename, should_create_file=False)
 
-            if log_file is not None:
-                # Read the number of lines specified from the beginning of the file,
-                # then go back to the end of the file to append new lines
+            if log_file is None:
+                # No file exists
+                pass
+
+            elif log_file.oldest_read_line_number is not None and log_file.oldest_read_line_number <= 0:
+                # No more lines to read, already reached bof
+                pass
+
+            elif log_file.is_open and len(log_file.old_lines) < num_lines:
+                # Read back the number of lines specified from within the file,
+                # then seek forwards to the end of file to append new lines
                 log_file.handle.seek(0)
-                lines = deque(log_file.handle, num_lines)
+
+                if log_file.oldest_read_line_number is None:
+                    # Count number of lines at startup only, this can cause a delay
+                    log_file.oldest_read_line_number = sum(1 for _ in log_file.handle) + 1
+                    log_file.handle.seek(0)
+                    num_pages = self.NUM_BUFFER_INITIAL_PAGES
+                else:
+                    # Optimization: Reduce disk activity during infinite scrolling
+                    num_pages = self.NUM_BUFFER_SCROLLING_PAGES
+
+                newest_line_number = log_file.oldest_read_line_number - 1
+                oldest_line_number = newest_line_number - (num_lines * num_pages)
+
+                if oldest_line_number < 0:
+                    # Can't read beyond the beginning of file
+                    oldest_line_number = 0
+                    log_file.old_lines.clear()
+                    log_file.old_lines.append("--- bof ---\n".encode())
+
+                # Grab lines from middle without loading entire file into memory
+                log_file.old_lines.extend(islice(log_file.handle, oldest_line_number, newest_line_number))
+
+                # Keep track of where we're up to
+                log_file.oldest_read_line_number = oldest_line_number
+
                 log_file.handle.seek(0, os.SEEK_END)
 
         except Exception as error:
@@ -236,14 +286,27 @@ class Logger:
             })
 
         if log_file is not None:
-            self._close_log_file(log_file)
+            # Take a chunk, save the rest for later
+            while len(lines) < num_lines and log_file.old_lines:
+                lines.append(log_file.old_lines.pop())
 
         return lines
 
-    def delete_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.delete_log_callback)
+    def shut_log(self, folder_path, basename):
+        """Forget everything, including current reading place."""
 
-    def _handle_log(self, folder_path, basename, callback):
+        log_file = self._get_log_file(folder_path, basename, should_create_file=False)
+
+        if log_file is None:
+            return
+
+        self._shut_log_file(log_file)
+
+    def delete_log(self, folder_path, basename):
+        self.shut_log(folder_path, basename)
+        self._log_file_operation(folder_path, basename, self.delete_log_callback)
+
+    def _log_file_operation(self, folder_path, basename, callback):
 
         folder_path_encoded = encode_path(folder_path)
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
