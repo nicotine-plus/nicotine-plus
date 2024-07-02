@@ -78,6 +78,7 @@ from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
 from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import UnwatchUser
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
@@ -443,8 +444,8 @@ class NetworkThread(Thread):
         if self._should_process_queue:
             self._message_queue.append(msg)
 
-    def _schedule_quit(self, should_finish_uploads):
-        self._want_abort = not should_finish_uploads
+    def _schedule_quit(self):
+        self._want_abort = True
 
     # Listening Socket #
 
@@ -1462,6 +1463,9 @@ class NetworkThread(Thread):
             # Only cache IP address of watched users, otherwise we won't know if
             # a user reconnects and changes their IP address.
             self._user_addresses[msg_obj.user] = None
+
+        elif msg_class is UnwatchUser and msg_obj.user != self._server_username:
+            self._user_addresses.pop(msg_obj.user, None)
 
         conn_obj = self._conns[self._server_socket]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))

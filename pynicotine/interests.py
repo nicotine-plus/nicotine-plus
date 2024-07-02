@@ -22,16 +22,30 @@ from pynicotine.core import core
 from pynicotine.events import events
 
 
+class SimilarUser:
+    __slots__ = ("username", "rating")
+
+    def __init__(self, username, rating=None):
+        self.username = username
+        self.rating = rating
+
+
 class Interests:
 
     def __init__(self):
 
+        self.similar_users = {}
+
         for event_name, callback in (
-            ("item-similar-users", self._similar_users),
+            ("item-similar-users", self._item_similar_users),
+            ("quit", self._quit),
             ("server-login", self._server_login),
             ("similar-users", self._similar_users)
         ):
             events.connect(event_name, callback)
+
+    def _quit(self):
+        self.similar_users.clear()
 
     def _server_login(self, msg):
 
@@ -131,9 +145,27 @@ class Interests:
     def request_similar_users(self):
         core.send_message_to_server(slskmessages.SimilarUsers())
 
-    def _similar_users(self, msg):
-        """Server code 110 and 112."""
+    def _similar_users(self, msg, has_ratings=True):
+        """Server code 110."""
 
+        new_users = set(msg.users)
+
+        # Unwatch and remove old users
+        for username in self.similar_users:
+            if username not in new_users:
+                core.users.unwatch_user(username, context="interests")
+
+        self.similar_users.clear()
+
+        # Add new users
         for username in msg.users:
+            rating = msg.users[username] if has_ratings else None
+            self.similar_users[username] = SimilarUser(username, rating)
+
             # Request user status, speed and number of shared files
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="interests")
+
+    def _item_similar_users(self, msg):
+        """Server code 112."""
+
+        self._similar_users(msg, has_ratings=False)

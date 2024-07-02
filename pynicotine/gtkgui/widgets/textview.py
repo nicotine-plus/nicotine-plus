@@ -494,14 +494,14 @@ class ChatView(TextView):
         """Split encoded text strings into individual elements as
         required when reading raw chat log lines from disk."""
 
-        login_lowercase = login_username.lower()
+        login_username_lower = login_username.lower() if login_username else None
 
         for log_line in log_lines:
             try:
                 line = log_line.decode("utf-8")
 
             except UnicodeDecodeError:
-                line = log_lines.decode("latin-1")
+                line = log_line.decode("latin-1")
 
             timestamp_string = username = message = message_type = None
 
@@ -517,7 +517,7 @@ class ChatView(TextView):
                     if username == login_username:
                         message_type = "local"
 
-                    elif login_lowercase and find_whole_word(login_lowercase, message.lower()) > -1:
+                    elif login_username_lower and find_whole_word(login_username_lower, message.lower()) > -1:
                         message_type = "hilite"
 
                     else:

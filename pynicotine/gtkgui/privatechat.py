@@ -406,10 +406,13 @@ class PrivateChat:
 
         if self.loaded and not self.chat_view.num_prepended_lines:
             # Messages have been cleared, reset read line datum
-            log.shut_log(log.private_chat_folder_path, self.user)
+            log.shut_log(folder_path=log.private_chat_folder_path, basename=self.user)
 
-        num_lines = self.chat_view.get_num_viewable_lines()
-        self.chat_view.old_lines = log.read_log(log.private_chat_folder_path, self.user, num_lines)
+        self.chat_view.old_lines = log.read_log(
+            folder_path=log.private_chat_folder_path,
+            basename=self.user,
+            num_lines=self.chat_view.get_num_viewable_lines()
+        )
 
     def server_login(self):
         self.chat_entry.set_sensitive(True)

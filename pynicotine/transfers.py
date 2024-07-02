@@ -100,16 +100,17 @@ class Transfer:
 
 class Transfers:
 
-    def __init__(self, transfers_file_path):
+    def __init__(self, name):
 
         self.transfers = {}
         self.queued_transfers = {}
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)
         self.failed_users = defaultdict(dict)
-        self.transfers_file_path = transfers_file_path
+        self.transfers_file_path = os.path.join(config.data_folder_path, f"{name}.json")
         self.total_bandwidth = 0
 
+        self._name = name
         self._allow_saving_transfers = False
         self._online_users = set()
         self._user_queue_limits = defaultdict(int)
@@ -148,7 +149,7 @@ class Transfers:
 
         # Watch transfers for user status updates
         for username in self.failed_users:
-            core.users.watch_user(username)
+            core.users.watch_user(username, context=self._name)
 
         self.update_transfer_limits()
 
@@ -351,6 +352,20 @@ class Transfers:
                 "error": error
             })
 
+    # User Actions #
+
+    def _unwatch_stale_user(self, username):
+        """Unwatches a user when status updates are no longer required, i.e.
+        no transfers remain, or all remaining transfers are
+        finished/filtered/paused.
+        """
+
+        for users in (self.active_users, self.queued_users, self.failed_users):
+            if username in users:
+                return
+
+        core.users.unwatch_user(username, context=self._name)
+
     # Limits #
 
     def update_transfer_limits(self):
@@ -359,31 +374,71 @@ class Transfers:
     # Events #
 
     def _transfer_timeout(self, transfer):
-        raise NotImplementedError
+        self._abort_transfer(transfer, status=TransferStatus.CONNECTION_TIMEOUT)
 
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
         self.transfers[transfer.username + transfer.virtual_path] = transfer
 
-    def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
-        raise NotImplementedError
+    def _abort_transfer(self, transfer, status=None, denied_message=None):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        transfer.legacy_attempt = False
+        transfer.size_changed = False
+
+        if transfer.sock is not None:
+            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+
+        if transfer.file_handle is not None:
+            self._close_file(transfer)
+
+        elif denied_message and virtual_path in self.queued_users.get(username, {}):
+            core.send_message_to_peer(
+                username, slskmessages.UploadDenied(virtual_path, denied_message))
+
+        self._deactivate_transfer(transfer)
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+
+        if status:
+            transfer.status = status
+
+            if status not in {TransferStatus.FINISHED, TransferStatus.FILTERED, TransferStatus.PAUSED}:
+                self._fail_transfer(transfer)
+
+        # Only attempt to unwatch user after the transfer status is fully set
+        self._unwatch_stale_user(username)
 
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
     def _finish_transfer(self, transfer):
-        raise NotImplementedError
+
+        self._deactivate_transfer(transfer)
+        self._close_file(transfer)
+        self._unwatch_stale_user(transfer.username)
+
+        transfer.status = TransferStatus.FINISHED
+        transfer.current_byte_offset = transfer.size
 
     def _auto_clear_transfer(self, transfer):
-        raise NotImplementedError
 
-    def _clear_transfer(self, transfer):
-        raise NotImplementedError
+        if config.sections["transfers"][f"autoclear_{self._name}"]:
+            self._clear_transfer(transfer)
+            return True
+
+        return False
+
+    def _clear_transfer(self, transfer, denied_message=None):
+        self._abort_transfer(transfer, denied_message=denied_message)
+        del self.transfers[transfer.username + transfer.virtual_path]
 
     def _enqueue_transfer(self, transfer):
 
-        core.users.watch_user(transfer.username)
+        core.users.watch_user(transfer.username, context=self._name)
 
         transfer.status = TransferStatus.QUEUED
 
@@ -392,7 +447,8 @@ class Transfers:
         self._user_queue_sizes[transfer.username] += transfer.size
 
     def _enqueue_limited_transfers(self, username):
-        raise NotImplementedError
+        # Optional method
+        pass
 
     def _dequeue_transfer(self, transfer):
 
@@ -419,7 +475,7 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        core.users.watch_user(transfer.username)
+        core.users.watch_user(transfer.username, context=self._name)
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token

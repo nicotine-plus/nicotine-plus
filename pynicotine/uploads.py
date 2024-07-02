@@ -45,7 +45,7 @@ class Uploads(Transfers):
 
     def __init__(self):
 
-        super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
+        super().__init__(name="uploads")
 
         self.pending_shutdown = False
         self.upload_speed = 0
@@ -66,7 +66,6 @@ class Uploads(Transfers):
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
             ("queue-upload", self._queue_upload),
-            ("schedule-quit", self._schedule_quit),
             ("set-connection-stats", self._set_connection_stats),
             ("shares-ready", self._shares_ready),
             ("transfer-request", self._transfer_request),
@@ -76,14 +75,6 @@ class Uploads(Transfers):
             ("user-status", self._user_status)
         ):
             events.connect(event_name, callback)
-
-    def _schedule_quit(self, should_finish_uploads):
-
-        if not should_finish_uploads:
-            return
-
-        self.pending_shutdown = True
-        self._check_upload_queue()
 
     def _quit(self):
 
@@ -337,20 +328,12 @@ class Uploads(Transfers):
 
         events.emit("update-upload", transfer, update_parent)
 
-    def _enqueue_limited_transfers(self, username):
-        # Not used for uploads
-        pass
-
     def _finish_transfer(self, transfer, already_exists=False):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
 
-        self._deactivate_transfer(transfer)
-        self._close_file(transfer)
-
-        transfer.status = TransferStatus.FINISHED
-        transfer.current_byte_offset = transfer.size
+        super()._finish_transfer(transfer)
 
         if not self._auto_clear_transfer(transfer):
             self._update_transfer(transfer)
@@ -371,54 +354,23 @@ class Uploads(Transfers):
 
         self._check_upload_queue()
 
-    def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
-
-        username = transfer.username
-        virtual_path = transfer.virtual_path
-
-        if transfer.sock is not None:
-            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+    def _abort_transfer(self, transfer, status=None, denied_message=None, update_parent=True):
 
         if transfer.file_handle is not None:
-            self._close_file(transfer)
-
             log.add_upload(
                 _("Upload aborted, user %(user)s file %(file)s"), {
-                    "user": username,
-                    "file": virtual_path
+                    "user": transfer.username,
+                    "file": transfer.virtual_path
                 }
             )
 
-        elif denied_message and virtual_path in self.queued_users.get(username, {}):
-            core.send_message_to_peer(
-                username, slskmessages.UploadDenied(virtual_path, denied_message))
+        super()._abort_transfer(transfer, status=status, denied_message=denied_message)
+        self._update_user_counter(transfer.username)
 
-        self._deactivate_transfer(transfer)
-        self._dequeue_transfer(transfer)
-        self._unfail_transfer(transfer)
-        self._update_user_counter(username)
-
-        if not status:
-            return
-
-        transfer.status = status
-
-        if status not in {TransferStatus.FINISHED, TransferStatus.CANCELLED}:
-            self._fail_transfer(transfer)
-
-        events.emit("abort-upload", transfer, status, update_parent)
-
-    def _auto_clear_transfer(self, transfer):
-
-        if config.sections["transfers"]["autoclear_uploads"]:
-            self._clear_transfer(transfer)
-            return True
-
-        return False
+        if status:
+            events.emit("abort-upload", transfer, status, update_parent)
 
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
-
-        self._abort_transfer(transfer, denied_message=denied_message)
 
         log.add_transfer("Clearing upload %(path)s to user %(user)s", {
             "path": transfer.virtual_path,
@@ -426,7 +378,7 @@ class Uploads(Transfers):
         })
 
         try:
-            del self.transfers[transfer.username + transfer.virtual_path]
+            super()._clear_transfer(transfer, denied_message=denied_message)
 
         except KeyError:
             log.add(("FIXME: failed to remove upload %(path)s to user %(user)s, not "
@@ -597,8 +549,8 @@ class Uploads(Transfers):
 
             if not self.is_file_readable(virtual_path, real_path):
                 self._abort_transfer(
-                    upload_candidate, denied_message=TransferRejectReason.FILE_READ_ERROR,
-                    status=TransferStatus.LOCAL_FILE_ERROR
+                    upload_candidate, status=TransferStatus.LOCAL_FILE_ERROR,
+                    denied_message=TransferRejectReason.FILE_READ_ERROR
                 )
                 continue
 
@@ -717,7 +669,7 @@ class Uploads(Transfers):
         for upload in uploads:
             if upload.status not in ignored_statuses:
                 self._abort_transfer(
-                    upload, denied_message=denied_message, status=status, update_parent=False)
+                    upload, status=status, denied_message=denied_message, update_parent=False)
 
         events.emit("abort-uploads", uploads, status)
 
@@ -736,6 +688,25 @@ class Uploads(Transfers):
             self._clear_transfer(upload, denied_message=denied_message, update_parent=False)
 
         events.emit("clear-uploads", uploads, statuses)
+
+    def request_shutdown(self):
+        """Schedule a shutdown after all queued uploads have finished."""
+
+        if self.pending_shutdown:
+            return
+
+        self.pending_shutdown = True
+        self._check_upload_queue()
+
+        events.emit("uploads-shutdown-request")
+
+    def cancel_shutdown(self):
+
+        if not self.pending_shutdown:
+            return
+
+        self.pending_shutdown = False
+        events.emit("uploads-shutdown-cancel")
 
     # Events #
 
@@ -867,7 +838,7 @@ class Uploads(Transfers):
         folder_path = os.path.dirname(real_path)
 
         if transfer is not None:
-            self._abort_transfer(transfer)
+            self._unfail_transfer(transfer)
 
             transfer.folder_path = folder_path
             transfer.size = size
@@ -941,7 +912,7 @@ class Uploads(Transfers):
         folder_path = os.path.dirname(real_path)
 
         if transfer is not None:
-            self._abort_transfer(transfer)
+            self._unfail_transfer(transfer)
 
             transfer.folder_path = folder_path
             transfer.size = size
@@ -1035,7 +1006,7 @@ class Uploads(Transfers):
             "user": transfer.username
         })
 
-        self._abort_transfer(transfer, status=TransferStatus.CONNECTION_TIMEOUT)
+        super()._transfer_timeout(transfer)
         self._check_upload_queue()
 
     def _upload_file_error(self, username, token, error):

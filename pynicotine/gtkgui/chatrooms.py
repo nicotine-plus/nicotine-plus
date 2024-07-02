@@ -674,10 +674,13 @@ class ChatRoom:
 
         if self.loaded and not self.chat_view.num_prepended_lines:
             # Message view was cleared, reset log datum
-            log.shut_log(log.room_folder_path, self.room)
+            log.shut_log(folder_path=log.room_folder_path, basename=self.room)
 
-        num_lines = self.chat_view.get_num_viewable_lines()
-        self.chat_view.old_lines = log.read_log(log.room_folder_path, self.room, num_lines)
+        self.chat_view.old_lines = log.read_log(
+            folder_path=log.room_folder_path,
+            basename=self.room,
+            num_lines=self.chat_view.get_num_viewable_lines()
+        )
 
     def populate_room_users(self, users):
 
