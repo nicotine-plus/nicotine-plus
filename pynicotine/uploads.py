@@ -45,7 +45,7 @@ class Uploads(Transfers):
 
     def __init__(self):
 
-        super().__init__(transfers_file_path=os.path.join(config.data_folder_path, "uploads.json"))
+        super().__init__(name="uploads")
 
         self.pending_shutdown = False
         self.upload_speed = 0
@@ -370,14 +370,6 @@ class Uploads(Transfers):
         if status:
             events.emit("abort-upload", transfer, status, update_parent)
 
-    def _auto_clear_transfer(self, transfer):
-
-        if config.sections["transfers"]["autoclear_uploads"]:
-            self._clear_transfer(transfer)
-            return True
-
-        return False
-
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
 
         log.add_transfer("Clearing upload %(path)s to user %(user)s", {
@@ -557,8 +549,8 @@ class Uploads(Transfers):
 
             if not self.is_file_readable(virtual_path, real_path):
                 self._abort_transfer(
-                    upload_candidate, denied_message=TransferRejectReason.FILE_READ_ERROR,
-                    status=TransferStatus.LOCAL_FILE_ERROR
+                    upload_candidate, status=TransferStatus.LOCAL_FILE_ERROR,
+                    denied_message=TransferRejectReason.FILE_READ_ERROR
                 )
                 continue
 
@@ -677,7 +669,7 @@ class Uploads(Transfers):
         for upload in uploads:
             if upload.status not in ignored_statuses:
                 self._abort_transfer(
-                    upload, denied_message=denied_message, status=status, update_parent=False)
+                    upload, status=status, denied_message=denied_message, update_parent=False)
 
         events.emit("abort-uploads", uploads, status)
 
@@ -846,7 +838,7 @@ class Uploads(Transfers):
         folder_path = os.path.dirname(real_path)
 
         if transfer is not None:
-            self._abort_transfer(transfer)
+            self._unfail_transfer(transfer)
 
             transfer.folder_path = folder_path
             transfer.size = size
@@ -920,7 +912,7 @@ class Uploads(Transfers):
         folder_path = os.path.dirname(real_path)
 
         if transfer is not None:
-            self._abort_transfer(transfer)
+            self._unfail_transfer(transfer)
 
             transfer.folder_path = folder_path
             transfer.size = size

@@ -116,7 +116,7 @@ class ChatHistory(Popover):
 
         for iterator in self.list_view.iterators.values():
             username = self.list_view.get_row_value(iterator, "user")
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="chathistory")
 
     def server_disconnect(self, *_args):
         for iterator in self.list_view.iterators.values():
@@ -217,7 +217,7 @@ class ChatHistory(Popover):
     def update_user(self, username, message, timestamp=None):
 
         self.remove_user(username)
-        core.users.watch_user(username)
+        core.users.watch_user(username, context="chathistory")
 
         if not timestamp:
             timestamp_format = config.sections["logging"]["log_timestamp"]

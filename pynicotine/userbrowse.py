@@ -69,7 +69,7 @@ class UserBrowse:
             return
 
         for username in self.users:
-            core.users.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username, context="userbrowse")  # Get notified of user status
 
     def send_upload_attempt_notification(self, username):
         """Send notification to user when attempting to initiate upload from
@@ -85,7 +85,9 @@ class UserBrowse:
         events.emit("user-browse-show-user", user=username, path=path, switch_page=switch_page)
 
     def remove_user(self, username):
+
         del self.users[username]
+        core.users.unwatch_user(username, context="userbrowse")
         events.emit("user-browse-remove-user", username)
 
     def remove_all_users(self):
@@ -149,7 +151,7 @@ class UserBrowse:
             events.emit("peer-connection-error", username, is_offline=True)
             return
 
-        core.users.watch_user(username)
+        core.users.watch_user(username, context="userbrowse")
 
         if browsed_user is None or new_request:
             self.request_user_shares(username)
