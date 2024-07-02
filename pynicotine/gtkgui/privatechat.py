@@ -396,12 +396,13 @@ class PrivateChat:
 
     def prepend_old_messages(self):
 
-        log_lines = self._read_old_messages()
+        log_lines = log.read_log(
+            folder_path=log.private_chat_folder_path,
+            basename=self.user,
+            num_lines=config.sections["logging"]["readprivatelines"]
+        )
 
         self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
-
-    def _read_old_messages(self):
-        return log.read_log(log.private_chat_folder_path, self.user, config.sections["logging"]["readprivatelines"])
 
     def server_login(self):
         self.chat_entry.set_sensitive(True)

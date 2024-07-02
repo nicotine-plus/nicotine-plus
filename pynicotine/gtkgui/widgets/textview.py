@@ -405,7 +405,7 @@ class ChatView(TextView):
         if not log_lines:
             return
 
-        login_lower = login_username.lower() if login_username else None
+        login_username_lower = login_username.lower() if login_username else None
 
         for log_line in log_lines:
             try:
@@ -429,7 +429,7 @@ class ChatView(TextView):
                     if user == login_username:
                         message_type = "local"
 
-                    elif login_lower and find_whole_word(login_lower, text.lower()) > -1:
+                    elif login_username_lower and find_whole_word(login_username_lower, text.lower()) > -1:
                         message_type = "hilite"
 
                     else:

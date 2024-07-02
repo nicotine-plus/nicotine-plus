@@ -660,12 +660,13 @@ class ChatRoom:
 
     def prepend_old_messages(self):
 
-        log_lines = self._read_old_messages()
+        log_lines = log.read_log(
+            folder_path=log.room_folder_path,
+            basename=self.room,
+            num_lines=config.sections["logging"]["readroomlines"]
+        )
 
         self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
-
-    def _read_old_messages(self):
-        return log.read_log(log.room_folder_path, self.room, config.sections["logging"]["readroomlines"])
 
     def populate_room_users(self, users):
 
