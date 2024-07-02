@@ -289,9 +289,9 @@ class Transfers:
             if folder_path:
                 # Normalize and cache path
                 if folder_path not in normalized_paths:
-                    normalized_paths[folder_path] = normpath(folder_path)
-
-                folder_path = normalized_paths[folder_path]
+                    folder_path = normalized_paths[folder_path] = normpath(folder_path)
+                else:
+                    folder_path = normalized_paths[folder_path]
 
             # Status
             if num_attributes >= 4:
@@ -313,14 +313,22 @@ class Transfers:
             if num_attributes >= 5:
                 loaded_size = transfer_row[4]
 
-                if loaded_size and isinstance(loaded_size, (int, float)):
-                    size = loaded_size // 1
+                if loaded_size:
+                    try:
+                        size = loaded_size // 1
+
+                    except TypeError:
+                        pass
 
             if num_attributes >= 6:
                 loaded_byte_offset = transfer_row[5]
 
-                if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
-                    current_byte_offset = loaded_byte_offset // 1
+                if loaded_byte_offset:
+                    try:
+                        current_byte_offset = loaded_byte_offset // 1
+
+                    except TypeError:
+                        pass
 
             # File attributes
             file_attributes = self._load_file_attributes(num_attributes, transfer_row)
