@@ -5,6 +5,45 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.5 (Unreleased)
+
+### Changes
+
+ * Incomplete files are now deleted when removing the download from the UI
+ * Quitting from the tray menu asks for confirmation while uploads are active
+ * Various performance improvements
+
+### Corrections
+
+ * Fixed issues related to downloads getting stuck when failing
+ * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where popovers could not be closed in some cases
+ * Fixed an issue where some wishlist searches stopped working after closing their tabs
+ * Fixed an issue where an auto-forwarded listening port would close when saving preferences
+ * Various smaller UI-related fixes
+ * Various smaller fixes related to the Soulseek protocol implementation
+ * Windows: Fixed an issue where the tray icon was visible despite being disabled
+ * Windows: Fixed an issue where window prevented auto-hidden taskbar from showing
+ * macOS: Fixed a crash when using Spanish system locale
+ * macOS: Fixed an issue where window could not be restored after running in background
+ * macOS: Fixed Ctrl-clicking not opening the context menu
+ * macOS: Added a few missing keyboard shortcuts
+ * GTK 3: Fixed a crash when pressing "Run in Background" in the confirmation dialog
+
+### Issues closed on GitHub
+
+ * Nicotine+ can't be launched from network drive on Windows ([#1843](https://github.com/nicotine-plus/nicotine-plus/issues/1843))
+ * Right click with control click doesn't work on mac with trackpad ([#2724](https://github.com/nicotine-plus/nicotine-plus/issues/2724))
+ * Downloads stuck on 'Queued' ([#2926](https://github.com/nicotine-plus/nicotine-plus/issues/2926))
+ * User rows expanding when collapse all enabled ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
+ * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
+ * Crash on Mac OS Monterey 12.7.5 (Intel) - Nicotine+ Version: 3.3.5.dev1 ([#3016](https://github.com/nicotine-plus/nicotine-plus/issues/3016))
+ * "Ok" on Network Closes Port ([#3020](https://github.com/nicotine-plus/nicotine-plus/issues/3020))
+ * nowplaying - other should decode bytes ([#3039](https://github.com/nicotine-plus/nicotine-plus/issues/3039))
+ * Newly started downloads will open a collapsed thread? ([#3044](https://github.com/nicotine-plus/nicotine-plus/issues/3044))
+ * Crash on MBP Ventura 13.6.7 ([#3045](https://github.com/nicotine-plus/nicotine-plus/issues/3045))
+
+
 ## Version 3.3.4 (May 6, 2024)
 
 ### Corrections
