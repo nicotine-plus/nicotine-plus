@@ -49,3 +49,9 @@ dropdown.entry > button > box {
     font-size: 0;
 }
 
+tabs > arrow {
+    /* Workaround for criticals when right-clicking notebook tabs */
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
