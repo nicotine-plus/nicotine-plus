@@ -504,7 +504,7 @@ class DownloadsPage:
 
     def on_remove_filter(self, *_args):
 
-        for iterator in reversed(self.filter_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.filter_list_view.get_selected_rows())):
             self.filter_list_view.remove_row(iterator)
 
         self.on_verify_filter()
@@ -766,7 +766,7 @@ class SharesPage:
 
     def on_remove_shared_folder(self, *_args):
 
-        iterators = reversed(self.shares_list_view.get_selected_rows())
+        iterators = reversed(list(self.shares_list_view.get_selected_rows()))
 
         for iterator in iterators:
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
@@ -1060,7 +1060,7 @@ class IgnoredUsersPage:
 
     def on_remove_ignored_user(self, *_args):
 
-        for iterator in reversed(self.ignored_users_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.ignored_users_list_view.get_selected_rows())):
             user = self.ignored_users_list_view.get_row_value(iterator, "username")
 
             self.ignored_users_list_view.remove_row(iterator)
@@ -1090,7 +1090,7 @@ class IgnoredUsersPage:
 
     def on_remove_ignored_ip(self, *_args):
 
-        for iterator in reversed(self.ignored_ips_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.ignored_ips_list_view.get_selected_rows())):
             ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.ignored_ips_list_view.remove_row(iterator)
@@ -1223,7 +1223,7 @@ class BannedUsersPage:
 
     def on_remove_banned_user(self, *_args):
 
-        for iterator in reversed(self.banned_users_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.banned_users_list_view.get_selected_rows())):
             user = self.banned_users_list_view.get_row_value(iterator, "username")
 
             self.banned_users_list_view.remove_row(iterator)
@@ -1254,7 +1254,7 @@ class BannedUsersPage:
 
     def on_remove_banned_ip(self, *_args):
 
-        for iterator in reversed(self.banned_ips_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.banned_ips_list_view.get_selected_rows())):
             ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
 
             self.banned_ips_list_view.remove_row(iterator)
@@ -1508,7 +1508,7 @@ class ChatsPage:
 
     def on_remove_censored(self, *_args):
 
-        for iterator in reversed(self.censor_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.censor_list_view.get_selected_rows())):
             censor = self.censor_list_view.get_row_value(iterator, "pattern")
 
             self.censor_list_view.remove_row(iterator)
@@ -1572,7 +1572,7 @@ class ChatsPage:
 
     def on_remove_replacement(self, *_args):
 
-        for iterator in reversed(self.replacement_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.replacement_list_view.get_selected_rows())):
             replacement = self.replacement_list_view.get_row_value(iterator, "pattern")
 
             self.replacement_list_view.remove_row(iterator)
@@ -2554,7 +2554,7 @@ class UrlHandlersPage:
 
     def on_remove_handler(self, *_args):
 
-        for iterator in reversed(self.protocol_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.protocol_list_view.get_selected_rows())):
             protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
 
             self.protocol_list_view.remove_row(iterator)

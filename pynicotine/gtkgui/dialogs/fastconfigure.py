@@ -208,7 +208,7 @@ class FastConfigure(Dialog):
 
     def on_remove_shared_folder(self, *_args):
 
-        for iterator in reversed(self.shares_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.shares_list_view.get_selected_rows())):
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
             core.shares.remove_share(virtual_name)

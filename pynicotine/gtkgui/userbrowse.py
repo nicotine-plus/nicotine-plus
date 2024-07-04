@@ -862,9 +862,13 @@ class UserBrowse:
         if iterator is None:
             return
 
-        iterators = tree_view.get_selected_rows()
+        selected_iterators = tree_view.get_selected_rows()
+        folder_path = None
 
-        if len(iterators) > 1:
+        # Skip first folder
+        next(selected_iterators)
+
+        if next(selected_iterators, None):
             # Multiple folders selected. Avoid any confusion by clearing the path bar and file list view.
             folder_path = None
         else:
@@ -1254,7 +1258,7 @@ class UserBrowse:
 
         column_id = self.file_list_view.get_focused_column()
 
-        if self.file_list_view.get_visible_columns()[0] != column_id:
+        if next(self.file_list_view.get_visible_columns(), None) != column_id:
             return False  # allow horizontal scrolling
 
         self.folder_tree_view.grab_focus()
