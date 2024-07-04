@@ -347,7 +347,7 @@ class About(Dialog):
         ("<b>tinytag licensed under the MIT License.</b>"
          "\nCopyright (c) 2014–2023 Tom Wallroth"
          "\nCopyright (c) 2021–2023 Mat (mathiascode)"
-         "\n<a href='https://github.com/devsnd/tinytag'>https://github.com/devsnd/tinytag</a>"),
+         "\n<a href='https://github.com/tinytag/tinytag'>https://github.com/tinytag/tinytag</a>"),
 
         ("<b>Country flags licensed under the MIT License.</b>"
          "\nCopyright (c) 2016–2021 Bowtie AB"

@@ -165,7 +165,7 @@
  - tinytag licensed under the MIT License.  
    Copyright (c) 2014–2023 Tom Wallroth  
    Copyright (c) 2021–2023 Mat (mathiascode)  
-   [https://github.com/devsnd/tinytag](https://github.com/devsnd/tinytag)
+   [https://github.com/tinytag/tinytag](https://github.com/tinytag/tinytag)
 
  - Country flags licensed under the MIT License.  
    Copyright (c) 2016–2021 Bowtie AB  
