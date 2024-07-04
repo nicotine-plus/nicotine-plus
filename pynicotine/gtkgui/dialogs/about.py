@@ -395,7 +395,7 @@ class About(Dialog):
         gtk_version = f"{Gtk.get_major_version()}.{Gtk.get_minor_version()}.{Gtk.get_micro_version()}"
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
-        self.website_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.website_label.connect("activate-link", self.on_activate_link)
 
         for label_widget, text in (
             (self.application_version_label, f"{pynicotine.__application_name__} {pynicotine.__version__}"),
@@ -414,12 +414,18 @@ class About(Dialog):
             for text in entries:
                 label = Gtk.Label(label=text, use_markup=True, selectable=True, wrap=True, xalign=0, visible=True)
 
+                if entries is self.LICENSE:
+                    label.connect("activate-link", self.on_activate_link)
+
                 if GTK_API_VERSION >= 4:
                     container.append(label)  # pylint: disable=no-member
                 else:
                     container.add(label)     # pylint: disable=no-member
 
         events.connect("check-latest-version", self.on_check_latest_version)
+
+    def on_activate_link(self, _label, url):
+        open_uri(url)
 
     def on_check_latest_version(self, latest_version, is_outdated, error):
 
