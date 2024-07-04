@@ -678,6 +678,10 @@ class PluginHandler:
 
         return self.enable_plugin(plugin_name)
 
+    def reload_plugin(self, plugin_name):
+        self.disable_plugin(plugin_name)
+        self.enable_plugin(plugin_name)
+
     def get_plugin_settings(self, plugin_name):
 
         if plugin_name in self.enabled_plugins:

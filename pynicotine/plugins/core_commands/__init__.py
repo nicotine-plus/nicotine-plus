@@ -60,7 +60,7 @@ class Plugin(BasePlugin):
             "plugin": {
                 "callback": self.plugin_handler_command,
                 "description": _("Manage plugins"),
-                "parameters": ["<toggle|info>", "<plugin_name>"]
+                "parameters": ["<toggle|reload|info>", "<plugin_name>"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
@@ -604,6 +604,9 @@ class Plugin(BasePlugin):
 
         if action == "toggle":
             self.parent.toggle_plugin(plugin_name)
+
+        elif action == "reload":
+            self.parent.reload_plugin(plugin_name)
 
         elif action == "info":
             plugin_info = self.parent.get_plugin_info(plugin_name)
