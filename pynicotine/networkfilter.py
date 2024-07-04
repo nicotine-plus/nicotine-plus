@@ -404,7 +404,9 @@ class NetworkFilter:
         updating an IP list item if the username is unspecified."""
 
         for username, user_address in core.users.addresses.items():
-            if ip_address == user_address[0]:
+            user_ip_address, _user_port = user_address
+
+            if ip_address == user_ip_address:
                 return username
 
         return None

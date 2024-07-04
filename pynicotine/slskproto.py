@@ -1103,12 +1103,12 @@ class NetworkThread(Thread):
             if conn_obj is None or sock is self._server_socket:
                 continue
 
-            addr = conn_obj.addr
+            peer_ip_address, peer_port = conn_obj.addr
 
-            if ip_address == addr[0]:
+            if ip_address == peer_ip_address:
                 log.add_conn("Blocking peer connection to IP address %(ip)s:%(port)s", {
-                    "ip": addr[0],
-                    "port": addr[1]
+                    "ip": peer_ip_address,
+                    "port": peer_port
                 })
                 self._close_connection(self._conns, sock)
 
@@ -1237,12 +1237,12 @@ class NetworkThread(Thread):
     def _establish_outgoing_server_connection(self, conn_obj):
 
         self._conns[self._server_socket] = conn_obj
-        addr = conn_obj.addr
+        server_ip_address, server_port = conn_obj.addr
 
         log.add(
             _("Connected to server %(host)s:%(port)s, logging in…"), {
-                "host": addr[0],
-                "port": addr[1]
+                "host": server_ip_address,
+                "port": server_port
             }
         )
 
@@ -1250,7 +1250,7 @@ class NetworkThread(Thread):
         self._user_addresses[login] = (self._local_ip_address, self._listen_port)
         conn_obj.login = True
 
-        self._server_address = addr
+        self._server_address = conn_obj.addr
         self._server_username = self._branch_root = login
         self._server_timeout_value = -1
 
