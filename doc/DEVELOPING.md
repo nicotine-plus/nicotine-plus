@@ -7,7 +7,7 @@ This document contains important information about Nicotine+ design decisions an
  * [Language and Toolkit](#language-and-toolkit)
  * [Dependencies](#dependencies)
  * [Design](#design)
- * [Profiling](#profiling)
+ * [Performance](#performance)
  * [Debug Logging](#debug-logging)
  * [Soulseek Protocol](#soulseek-protocol)
  * [Continuous Integration Testing](#continuous-integration-testing)
@@ -49,7 +49,7 @@ Keep it simple. Many applications fall in the trap of adding endless options wit
 The same principle applies when writing code. Try to simplify code as much as possible. Avoid overengineering. We want to write code that is maintainable and readable by humans.
 
 
-## Profiling
+## Performance
 
 Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses fewer system resources. Our goal is to develop a lightweight client that runs well on older hardware, as well as small servers.
 
