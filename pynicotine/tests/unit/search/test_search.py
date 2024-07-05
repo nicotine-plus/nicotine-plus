@@ -120,7 +120,6 @@ class SearchTest(TestCase):
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
 
-        max_results = 1500
         word_index = {
             "iso": [34, 35, 36, 37, 38],
             "lts": [63, 68, 73],
@@ -133,7 +132,7 @@ class SearchTest(TestCase):
         partial_words = {"stem"}
 
         results = core.search._create_search_result_list(
-            included_words, excluded_words, partial_words, max_results, word_index)
+            included_words, excluded_words, partial_words, word_index)
         self.assertEqual(results, {37, 38})
 
         included_words = {"lts", "iso"}
@@ -141,7 +140,7 @@ class SearchTest(TestCase):
         partial_words = set()
 
         results = core.search._create_search_result_list(
-            included_words, excluded_words, partial_words, max_results, word_index)
+            included_words, excluded_words, partial_words, word_index)
         self.assertIsNone(results)
 
         included_words = {"iso"}
@@ -149,7 +148,7 @@ class SearchTest(TestCase):
         partial_words = {"ibberish"}
 
         results = core.search._create_search_result_list(
-            included_words, excluded_words, partial_words, max_results, word_index)
+            included_words, excluded_words, partial_words, word_index)
         self.assertIsNone(results)
 
     def test_exclude_server_phrases(self):
@@ -172,7 +171,7 @@ class SearchTest(TestCase):
             share_db.close = lambda: None
 
         num_results, fileinfos, private_fileinfos = core.search._create_file_info_list(
-            results, max_results=100, permission_level=PermissionLevel.PUBLIC
+            results, permission_level=PermissionLevel.PUBLIC
         )
         self.assertEqual(num_results, 3)
         self.assertEqual(fileinfos, [

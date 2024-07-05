@@ -59,6 +59,7 @@ class Search:
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
+    RETURNED_RESULTS_LIMIT = 500
     REMOVED_SEARCH_CHARACTERS = [
         "!", '"', "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";",
         "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~", "–", "—",
@@ -470,7 +471,7 @@ class Search:
 
         file_list.append(fileinfo)
 
-    def _create_file_info_list(self, results, max_results, permission_level):
+    def _create_file_info_list(self, results, permission_level):
         """Given a list of file indices, retrieve the file information for each index."""
 
         reveal_buddy_shares = config.sections["transfers"]["reveal_buddy_shares"]
@@ -486,7 +487,7 @@ class Search:
         buddy_files = core.shares.share_dbs["buddy_files"]
         trusted_files = core.shares.share_dbs["trusted_files"]
 
-        for index in islice(results, min(len(results), max_results)):
+        for index in islice(results, min(len(results), self.RETURNED_RESULTS_LIMIT)):
             file_path = core.shares.file_path_index[index]
 
             if file_path in public_files:
@@ -550,11 +551,12 @@ class Search:
 
         return results
 
-    def _create_search_result_list(self, included_words, excluded_words, partial_words, max_results, word_index):
+    def _create_search_result_list(self, included_words, excluded_words, partial_words, word_index):
         """Returns a list of common file indices for each word in a search
         term."""
 
         results = None
+        max_results = self.RETURNED_RESULTS_LIMIT
 
         try:
             # Start with the word with the least results to reduce memory usage
@@ -652,11 +654,6 @@ class Search:
             # unless we're specifically searching our own username
             return
 
-        max_results = config.sections["searches"]["maxresults"]
-
-        if max_results <= 0:
-            return
-
         if len(search_term) < config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
             return
@@ -701,14 +698,14 @@ class Search:
 
         # Find common file matches for each word in search term
         results = self._create_search_result_list(
-            included_words, excluded_words, partial_words, max_results, word_index)
+            included_words, excluded_words, partial_words, word_index)
 
         if not results:
             return
 
         # Get file information for each file index in result list
         num_results, fileinfos, private_fileinfos = self._create_file_info_list(
-            results, max_results, permission_level)
+            results, permission_level)
 
         if not num_results:
             return

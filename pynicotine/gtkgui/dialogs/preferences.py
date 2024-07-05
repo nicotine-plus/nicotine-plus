@@ -2254,7 +2254,6 @@ class SearchesPage:
             self.filter_include_entry,
             self.filter_length_entry,
             self.max_displayed_results_spinner,
-            self.max_sent_results_spinner,
             self.min_search_term_length_spinner,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
@@ -2272,7 +2271,6 @@ class SearchesPage:
 
         self.options = {
             "searches": {
-                "maxresults": self.max_sent_results_spinner,
                 "enablefilters": self.enable_default_filters_toggle,
                 "defilter": None,
                 "search_results": self.repond_search_requests_toggle,
@@ -2327,7 +2325,6 @@ class SearchesPage:
 
         return {
             "searches": {
-                "maxresults": self.max_sent_results_spinner.get_value_as_int(),
                 "enablefilters": self.enable_default_filters_toggle.get_active(),
                 "defilter": [
                     self.filter_include_entry.get_text(),

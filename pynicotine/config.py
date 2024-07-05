@@ -291,7 +291,6 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 150,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -518,7 +517,8 @@ class Config:
                 "reopen_tabs",
                 "max_stored_results",
                 "re_filter",
-                "remove_special_chars"
+                "remove_special_chars",
+                "maxresults"
             ),
             "userinfo": (
                 "descrutf8",
