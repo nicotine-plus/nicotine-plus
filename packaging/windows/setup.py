@@ -63,6 +63,7 @@ import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-pos
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
+MANIFEST_NAME = os.path.join(CURRENT_PATH, f"{SCRIPT_NAME}.manifest") if sys.platform == "win32" else None
 GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
@@ -331,6 +332,7 @@ setup(
             base=GUI_BASE,
             target_name=pynicotine.__application_name__,
             icon=os.path.join(CURRENT_PATH, ICON_NAME),
+            manifest=MANIFEST_NAME,
             copyright=pynicotine.__copyright__,
             shortcut_name=pynicotine.__application_name__,
             shortcut_dir="ProgramMenuFolder"
