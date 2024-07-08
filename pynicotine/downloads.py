@@ -298,7 +298,7 @@ class Downloads(Transfers):
             username, virtual_path, size, transfer.folder_path)
 
         if file_exists:
-            self._finish_transfer(transfer, already_exists=True)
+            self._finish_transfer(transfer)
             return False
 
         super()._enqueue_transfer(transfer)
@@ -442,11 +442,12 @@ class Downloads(Transfers):
 
         return download_file_path
 
-    def _finish_transfer(self, transfer, already_exists=False):
+    def _finish_transfer(self, transfer):
 
         username = transfer.username
         virtual_path = transfer.virtual_path
-        incomplete_file_path = transfer.file_handle.name
+        already_exists = transfer.file_handle is None
+        incomplete_file_path = transfer.file_handle.name if not already_exists else None
 
         super()._finish_transfer(transfer)
 
