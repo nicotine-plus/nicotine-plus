@@ -80,7 +80,6 @@
  - Python 3 migration
  - Unit and DEP-8 continuous integration testing
 
----
 
 # Nicotine Team
 
@@ -119,9 +118,8 @@
  - Mac developer
  - Packaged Nicotine on OSX PowerPC
 
----
 
-# PySoulSeek Contributors
+# PySoulSeek Team
 
 ### Alexander Kanavin
  - Maintainer (2001–2003)
@@ -158,7 +156,16 @@
 ### Jason Green (SmackleFunky)
  - Ignore list and auto-join checkbox, wishlists
 
----
+
+# Contributors
+
+See [Contributors](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors) on GitHub
+
+
+# Translators
+
+See [TRANSLATORS.md](TRANSLATORS.md)
+
 
 # Third-Party Attributions
 

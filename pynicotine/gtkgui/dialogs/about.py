@@ -154,7 +154,7 @@ class About(Dialog):
          "\n •  Packaged Nicotine on OSX PowerPC"),
 
 
-        "\n<b>PySoulSeek Contributors</b>",
+        "\n<b>PySoulSeek Team</b>",
 
         ("<b>Alexander Kanavin</b>"
          "\n •  Maintainer (2001–2003)"),
