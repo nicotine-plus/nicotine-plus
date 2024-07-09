@@ -5,8 +5,22 @@ Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
 Copyright: 2001-2003 PySoulSeek Contributors
+           2001-2003 Alexander Kanavin
            2003-2004 Nicotine Contributors
+           2003-2004 Hyriand <hyriand@thegraveyard.org>
            2004-2024 Nicotine+ Contributors
+           2006-2009 daelstorm <daelstorm@gmail.com>
+           2007-2008 gallows <g4ll0ws@gmail.com>
+           2008-2012 quinox <quinox@users.sf.net>
+           2009 hedonist <ak@sensi.org>
+           2013 eLvErDe <gandalf@le-vert.net>
+           2013 SeeSchloss <see@seos.fr>
+           2016 Mutnick <muhing@yahoo.com>
+           2016-2018 Mutnick <mutnick@techie.com>
+           2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+           2016 Kip Warner
+           2020 Lene Preuss <lene.preuss@gmail.com>
+           2021 Inso-m-niaC
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
