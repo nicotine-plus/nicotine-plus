@@ -196,7 +196,8 @@ class ChatRooms(IconNotebook):
 
     def on_create_room(self, *_args):
 
-        room = self.window.chatrooms_entry.get_text().strip()
+        # Normalize room name, otherwise the server will complain
+        room = " ".join(self.window.chatrooms_entry.get_text().split())
 
         if not room:
             return
