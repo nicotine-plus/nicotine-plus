@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on June 16, 2024
+Last updated on July 9, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -155,7 +155,7 @@ These combinations are actively used by clients. Certain attributes can be missi
 |----------------|---------------------|
 | Send to Server | Receive from Server |
 
-Server messages are used by clients to interface with the server. In Nicotine+, these messages are defined in slskmessages.py.
+Server messages are used by clients to interface with the server over a connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
 If you want a Soulseek server, check out [Soulfind](https://github.com/seeschloss/soulfind).
 Soulfind is obviously not exactly the same as the official proprietary Soulseek server,
@@ -1905,7 +1905,7 @@ This message only seems to be sent if we try to create a room with the same name
 |--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
-Peer init messages are used to initiate a 'P', 'F' or 'D' connection to a peer. In Nicotine+, these messages are defined in slskmessages.py.
+Peer init messages are used to initiate a 'P', 'F' or 'D' connection (TCP) to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Init Message Format
 
@@ -1992,7 +1992,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 |--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
-Peer messages are sent to peers over a 'P' connection. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
+Peer messages are sent to peers over a 'P' connection (TCP). Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Message Format
 
@@ -2443,7 +2443,7 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 |--------------|-------------------|
 | Send to Peer | Receive from Peer |
 
-File messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
+File messages are sent to peers over a 'F' connection (TCP), and do not have messages codes associated with them.
 
 ### File Connection Message Format
 
@@ -2494,7 +2494,7 @@ Note that Soulseek NS fails to read the size of an incomplete download if more t
 |--------------|-------------------|
 | Send to Node | Receive from Node |
 
-Distributed messages are sent to peers over a 'D' connection, and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
+Distributed messages are sent to peers over a 'D' connection (TCP), and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Distributed Message Format
 
