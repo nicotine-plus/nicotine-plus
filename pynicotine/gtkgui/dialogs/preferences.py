@@ -168,8 +168,7 @@ class NetworkPage:
 
         try:
             server_addr = self.soulseek_server_entry.get_text().split(":")
-            server_addr[1] = int(server_addr[1])
-            server_addr = tuple(server_addr)
+            server_addr = tuple(server_addr[0].strip(), int(server_addr[1].strip()))
 
         except Exception:
             server_addr = config.defaults["server"]["server"]
@@ -419,8 +418,8 @@ class DownloadsPage:
                 "downloadlimit": self.speed_spinner.get_value_as_int(),
                 "downloadlimitalt": self.alt_speed_spinner.get_value_as_int(),
                 "usernamesubfolders": self.enable_username_subfolders_toggle.get_active(),
-                "afterfinish": self.file_finished_command_entry.get_text(),
-                "afterfolder": self.folder_finished_command_entry.get_text(),
+                "afterfinish": self.file_finished_command_entry.get_text().strip(),
+                "afterfolder": self.folder_finished_command_entry.get_text().strip(),
                 "download_doubleclick": self.download_double_click_combobox.get_selected_pos()
             }
         }
@@ -1042,7 +1041,7 @@ class IgnoredUsersPage:
 
     def on_add_ignored_user_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_entry_value()
+        user = dialog.get_entry_value().strip()
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
@@ -1068,7 +1067,7 @@ class IgnoredUsersPage:
 
     def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_entry_value()
+        ip_address = dialog.get_entry_value().strip()
 
         if not core.network_filter.is_ip_address(ip_address):
             return
@@ -1205,7 +1204,7 @@ class BannedUsersPage:
 
     def on_add_banned_user_response(self, dialog, _response_id, _data):
 
-        user = dialog.get_entry_value()
+        user = dialog.get_entry_value().strip()
 
         if user and user not in self.banned_users:
             self.banned_users.append(user)
@@ -1231,7 +1230,7 @@ class BannedUsersPage:
 
     def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
-        ip_address = dialog.get_entry_value()
+        ip_address = dialog.get_entry_value().strip()
 
         if not core.network_filter.is_ip_address(ip_address):
             return
@@ -1436,7 +1435,7 @@ class ChatsPage:
             "ui": {
                 "spellcheck": self.enable_spell_checker_toggle.get_active(),
                 "speechenabled": self.enable_tts_toggle.get_active(),
-                "speechcommand": self.tts_command_combobox.get_text(),
+                "speechcommand": self.tts_command_combobox.get_text().strip(),
                 "speechrooms": self.tts_room_message_entry.get_text(),
                 "speechprivate": self.tts_private_message_entry.get_text()
             }
@@ -2011,22 +2010,22 @@ class UserInterfacePage:
                 "tab_select_previous": self.tab_restore_startup_toggle.get_active(),
                 "tabclosers": self.tab_close_buttons_toggle.get_active(),
                 "icontheme": self.icon_theme_button.get_path(),
-                "chatlocal": self.color_chat_local_entry.get_text(),
-                "chatremote": self.color_chat_remote_entry.get_text(),
-                "chatcommand": self.color_chat_command_entry.get_text(),
-                "chatme": self.color_chat_action_entry.get_text(),
-                "chathilite": self.color_chat_highlighted_entry.get_text(),
-                "urlcolor": self.color_url_entry.get_text(),
-                "textbg": self.color_input_background_entry.get_text(),
-                "inputcolor": self.color_input_text_entry.get_text(),
-                "search": self.color_list_text_entry.get_text(),
-                "searchq": self.color_queued_result_text_entry.get_text(),
-                "useraway": self.color_status_away_entry.get_text(),
-                "useronline": self.color_status_online_entry.get_text(),
-                "useroffline": self.color_status_offline_entry.get_text(),
-                "tab_hilite": self.color_tab_highlighted_entry.get_text(),
-                "tab_default": self.color_tab_entry.get_text(),
-                "tab_changed": self.color_tab_changed_entry.get_text(),
+                "chatlocal": self.color_chat_local_entry.get_text().strip(),
+                "chatremote": self.color_chat_remote_entry.get_text().strip(),
+                "chatcommand": self.color_chat_command_entry.get_text().strip(),
+                "chatme": self.color_chat_action_entry.get_text().strip(),
+                "chathilite": self.color_chat_highlighted_entry.get_text().strip(),
+                "urlcolor": self.color_url_entry.get_text().strip(),
+                "textbg": self.color_input_background_entry.get_text().strip(),
+                "inputcolor": self.color_input_text_entry.get_text().strip(),
+                "search": self.color_list_text_entry.get_text().strip(),
+                "searchq": self.color_queued_result_text_entry.get_text().strip(),
+                "useraway": self.color_status_away_entry.get_text().strip(),
+                "useronline": self.color_status_online_entry.get_text().strip(),
+                "useroffline": self.color_status_offline_entry.get_text().strip(),
+                "tab_hilite": self.color_tab_highlighted_entry.get_text().strip(),
+                "tab_default": self.color_tab_entry.get_text().strip(),
+                "tab_changed": self.color_tab_changed_entry.get_text().strip(),
                 "usernamestyle": self.chat_username_appearance_combobox.get_selected_id(),
                 "usernamehotspots": self.chat_colored_usernames_toggle.get_active(),
                 "buddylistinchatrooms": self.buddy_list_position_combobox.get_selected_id(),
@@ -2065,7 +2064,7 @@ class UserInterfacePage:
         self.editing_color = True
 
         rgba = Gdk.RGBA()
-        color_hex = entry.get_text()
+        color_hex = entry.get_text().strip()
 
         if color_hex:
             rgba.parse(color_hex)
@@ -2330,14 +2329,14 @@ class SearchesPage:
                 "maxresults": self.max_sent_results_spinner.get_value_as_int(),
                 "enablefilters": self.enable_default_filters_toggle.get_active(),
                 "defilter": [
-                    self.filter_include_entry.get_text(),
-                    self.filter_exclude_entry.get_text(),
-                    self.filter_file_size_entry.get_text(),
-                    self.filter_bitrate_entry.get_text(),
+                    self.filter_include_entry.get_text().strip(),
+                    self.filter_exclude_entry.get_text().strip(),
+                    self.filter_file_size_entry.get_text().strip(),
+                    self.filter_bitrate_entry.get_text().strip(),
                     self.filter_free_slot_toggle.get_active(),
-                    self.filter_country_entry.get_text(),
-                    self.filter_file_type_entry.get_text(),
-                    self.filter_length_entry.get_text()
+                    self.filter_country_entry.get_text().strip(),
+                    self.filter_file_type_entry.get_text().strip(),
+                    self.filter_length_entry.get_text().strip()
                 ],
                 "search_results": self.repond_search_requests_toggle.get_active(),
                 "max_displayed_results": self.max_displayed_results_spinner.get_value_as_int(),
@@ -2481,14 +2480,14 @@ class UrlHandlersPage:
                 "protocols": self.protocols.copy()
             },
             "ui": {
-                "filemanager": self.file_manager_combobox.get_text()
+                "filemanager": self.file_manager_combobox.get_text().strip()
             }
         }
 
     def on_add_handler_response(self, dialog, _response_id, _data):
 
-        protocol = dialog.get_entry_value()
-        command = dialog.get_second_entry_value()
+        protocol = dialog.get_entry_value().strip()
+        command = dialog.get_second_entry_value().strip()
 
         if not protocol or not command:
             return
@@ -2524,7 +2523,7 @@ class UrlHandlersPage:
 
     def on_edit_handler_response(self, dialog, _response_id, iterator):
 
-        command = dialog.get_entry_value()
+        command = dialog.get_entry_value().strip()
 
         if not command:
             return
@@ -2672,7 +2671,7 @@ class NowPlayingPage:
         return player
 
     def get_command(self):
-        return self.command_entry.get_text()
+        return self.command_entry.get_text().strip()
 
     def get_format(self):
         return self.format_message_combobox.get_text()
