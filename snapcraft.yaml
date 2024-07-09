@@ -2,7 +2,7 @@ name: nicotine-plus
 adopt-info: nicotine-plus
 license: GPL-3.0-or-later
 
-base: core22
+base: core24
 confinement: strict
 compression: lzo
 grade: stable
