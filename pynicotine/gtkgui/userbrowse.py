@@ -34,6 +34,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.dialogs.download import Download
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
@@ -75,6 +76,7 @@ class UserBrowses(IconNotebook):
         self.toolbar_end_content = window.userbrowse_end
         self.toolbar_default_widget = window.userbrowse_entry
 
+        self.download_dialog = None
         self.file_properties = None
 
         self.userbrowse_combobox = ComboBox(
@@ -103,6 +105,9 @@ class UserBrowses(IconNotebook):
     def destroy(self):
 
         self.userbrowse_combobox.destroy()
+
+        if self.download_dialog is not None:
+            self.download_dialog.destroy()
 
         if self.file_properties is not None:
             self.file_properties.destroy()
@@ -377,9 +382,6 @@ class UserBrowse:
             self.file_popup_menu.add_items(
                 ("#" + _("_Download File(s)"), self.on_download_files),
                 ("#" + _("Download File(s) _To…"), self.on_download_files_to),
-                ("", None),
-                ("#" + _("_Download Folder"), self.on_download_folder),
-                ("#" + _("Download Folder _To…"), self.on_download_folder_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
@@ -883,45 +885,49 @@ class UserBrowse:
         self.folder_popup_menu.update_model()
         self.user_popup_menu.toggle_user_items()
 
-    def on_download_folder(self, *_args, download_folder_path=None, recurse=False):
+    def on_download_folder_recursive(self, *_args, download_folder_path=None):
 
         prev_folder_path = None
 
         for iterator in self.folder_tree_view.get_selected_rows():
             folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
 
-            if recurse and prev_folder_path and prev_folder_path in folder_path:
+            if prev_folder_path and prev_folder_path in folder_path:
                 # Already recursing, avoid redundant request for subfolder
                 continue
 
             core.userbrowse.download_folder(
-                self.user, folder_path, download_folder_path=download_folder_path, recurse=recurse)
+                self.user, folder_path, download_folder_path=download_folder_path, recurse=True)
 
             prev_folder_path = folder_path
 
-    def on_download_folder_recursive(self, *_args):
-        self.on_download_folder(recurse=True)
-
-    def on_download_folder_to_selected(self, selected_download_folder_path, recurse):
-        self.on_download_folder(download_folder_path=selected_download_folder_path, recurse=recurse)
-
-    def on_download_folder_to(self, *_args, recurse=False):
-
-        if recurse:
-            str_title = _("Select Destination for Downloading Multiple Folders")
-        else:
-            str_title = _("Select Destination Folder")
-
-        FolderChooser(
-            parent=self.window,
-            title=str_title,
-            callback=self.on_download_folder_to_selected,
-            callback_data=recurse,
-            initial_folder=core.downloads.get_default_download_folder()
-        ).present()
-
     def on_download_folder_recursive_to(self, *_args):
-        self.on_download_folder_to(recurse=True)
+
+        data = []
+        prev_folder_path = None
+        selected = True
+
+        for iterator in self.folder_tree_view.get_selected_rows():
+            selected_folder_path = self.folder_tree_view.get_row_value(iterator, "folder_path_data")
+
+            if prev_folder_path and prev_folder_path in selected_folder_path:
+                continue
+
+            for folder_path, files in core.userbrowse.iter_matching_folders(
+                selected_folder_path, browsed_user=core.userbrowse.users[self.user], recurse=True
+            ):
+                for _code, basename, file_size, _ext, file_attributes, *_unused in files:
+                    file_path = "\\".join([folder_path, basename])
+
+                    data.append((self.user, file_path, file_size, file_attributes, selected, selected_folder_path))
+
+            prev_folder_path = selected_folder_path
+
+        if self.userbrowses.download_dialog is None:
+            self.userbrowses.download_dialog = Download(self.window.application)
+
+        self.userbrowses.download_dialog.update_files(data, partial_files=False)
+        self.userbrowses.download_dialog.present()
 
     def on_upload_folder_to_response(self, dialog, _response_id, recurse):
 
@@ -1095,6 +1101,33 @@ class UserBrowse:
 
         self.user_popup_menu.toggle_user_items()
 
+    def _on_download_files(self, *_args):
+
+        folder_path = self.active_folder_path
+        browsed_user = core.userbrowse.users[self.user]
+
+        data = []
+        files = browsed_user.public_folders.get(folder_path)
+
+        if not files:
+            files = browsed_user.private_folders.get(folder_path)
+
+            if not files:
+                return
+
+        for file_data in files:
+            _code, basename, size, _ext, file_attributes, *_unused = file_data
+            file_path = "\\".join([folder_path, basename])
+            selected = basename in self.selected_files
+
+            data.append((self.user, file_path, size, file_attributes, selected))
+
+        if self.userbrowses.download_dialog is None:
+            self.userbrowses.download_dialog = Download(self.window.application)
+
+        self.userbrowses.download_dialog.update_files(data, partial_files=False)
+        self.userbrowses.download_dialog.present()
+
     def on_download_files(self, *_args, download_folder_path=None):
 
         folder_path = self.active_folder_path
@@ -1112,7 +1145,7 @@ class UserBrowse:
             _code, basename, *_unused = file_data
 
             # Find the wanted file
-            if basename not in self.selected_files:
+            if self.selected_files and basename not in self.selected_files:
                 continue
 
             core.userbrowse.download_file(
@@ -1287,11 +1320,7 @@ class UserBrowse:
 
             return True
 
-        if self.file_list_view.is_selection_empty():
-            self.on_download_folder_to()
-        else:
-            self.on_download_files_to()  # (with prompt, Single or Multi-selection)
-
+        self.on_download_files_to()
         return True
 
     def on_file_transfer_accelerator(self, *_args):
@@ -1311,11 +1340,7 @@ class UserBrowse:
 
             return True
 
-        if self.file_list_view.is_selection_empty():
-            self.on_download_folder()  # (without prompt, No-selection=All)
-        else:
-            self.on_download_files()  # (no prompt, Single or Multi-selection)
-
+        self.on_download_files()
         return True
 
     def on_file_transfer_multi_accelerator(self, *_args):

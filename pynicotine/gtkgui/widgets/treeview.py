@@ -353,6 +353,10 @@ class TreeView:
                 renderer.connect("toggled", self.on_toggle, column_data["toggle_callback"])
 
                 column = Gtk.TreeViewColumn(title=title, cell_renderer=renderer, active=column_index)
+                inconsistent_column = column_data.get("inconsistent_column")
+
+                if inconsistent_column is not None:
+                    column.add_attribute(renderer, "inconsistent", self._column_ids[inconsistent_column])
 
             elif column_type == "icon":
                 icon_args = {}
