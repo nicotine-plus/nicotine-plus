@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 9, 2024
+Last updated on July 11, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -367,9 +367,10 @@ As a consequence, stats can be outdated.
     - If <ins>exists</ins> is true
         1.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
         2.  **uint32** <ins>avgspeed</ins>
-        3.  **uint64** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
-        4.  **uint32** <ins>files</ins>
-        5.  **uint32** <ins>dirs</ins>
+        3.  **uint32** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
+        4.  **uint32** <ins>unknown</ins>
+        5.  **uint32** <ins>files</ins>
+        6.  **uint32** <ins>dirs</ins>
         - If <ins>status</ins> is away/online
             1.  **string** <ins>countrycode</ins> *Uppercase country code*
 
@@ -448,9 +449,10 @@ messages.
     6.  **uint32** <ins>number of user stats</ins>
     7.  Iterate the <ins>number of user stats</ins>
         1.  **uint32** <ins>avgspeed</ins>
-        2.  **uint64** <ins>uploadnum</ins>
-        3.  **uint32** <ins>files</ins>
-        4.  **uint32** <ins>dirs</ins>
+        2.  **uint32** <ins>uploadnum</ins>
+        3.  **uint32** <ins>unknown</ins>
+        4.  **uint32** <ins>files</ins>
+        5.  **uint32** <ins>dirs</ins>
     8.  **uint32** <ins>number of slotsfree</ins>
     9.  Iterate the <ins>number of slotsfree</ins>
         1.  **uint32** <ins>slotsfree</ins>
@@ -490,11 +492,12 @@ The server tells us someone has just joined a room we're in.
     2.  **string** <ins>username</ins>
     3.  **uint32** <ins>status</ins>
     4.  **uint32** <ins>avgspeed</ins>
-    5.  **uint64** <ins>uploadnum</ins>
-    6.  **uint32** <ins>files</ins>
-    7.  **uint32** <ins>dirs</ins>
-    8.  **uint32** <ins>slotsfree</ins>
-    9.  **string** <ins>countrycode</ins> *Uppercase country code*
+    5.  **uint32** <ins>uploadnum</ins>
+    6.  **uint32** <ins>unknown</ins>
+    7.  **uint32** <ins>files</ins>
+    8.  **uint32** <ins>dirs</ins>
+    9.  **uint32** <ins>slotsfree</ins>
+    10. **string** <ins>countrycode</ins> *Uppercase country code*
 
 ## Server Code 17
 
@@ -695,9 +698,10 @@ The server sends this to indicate a change in a user's statistics, if we've requ
   - Receive
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>avgspeed</ins>
-    3.  **uint64** <ins>uploadnum</ins>
-    4.  **uint32** <ins>files</ins>
-    5.  **uint32** <ins>dirs</ins>
+    3.  **uint32** <ins>uploadnum</ins>
+    4.  **uint32** <ins>unknown</ins>
+    5.  **uint32** <ins>files</ins>
+    6.  **uint32** <ins>dirs</ins>
 
 ## Server Code 40
 
@@ -961,7 +965,7 @@ We send this to search for an exact file name and folder, to find other sources.
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>filename</ins>
     3.  **string** <ins>path</ins>
-    4.  **uint64** <ins>filesize</ins>
+    4.  **uint64** <ins>file size</ins>
     5.  **uint32** <ins>checksum</ins>
     6.  **uint8** <ins>unknown</ins>
   - Receive
@@ -969,7 +973,7 @@ We send this to search for an exact file name and folder, to find other sources.
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  **string** <ins>path</ins>
-    5.  **uint64** <ins>filesize</ins>
+    5.  **uint64** <ins>file size</ins>
     6.  **uint32** <ins>checksum</ins>
 
 ## Server Code 66
@@ -1007,9 +1011,10 @@ We send this to get a global list of all users online.
     5.  **uint32** <ins>number of userdata</ins>
     6.  Iterate the <ins>userdata</ins>
         1.  **uint32** <ins>avgspeed</ins>
-        2.  **uint64** <ins>uploadnum</ins>
-        3.  **uint32** <ins>files</ins>
-        4.  **uint32** <ins>dirs</ins>
+        2.  **uint32** <ins>uploadnum</ins>
+        3.  **uint32** <ins>unknown</ins>
+        4.  **uint32** <ins>files</ins>
+        5.  **uint32** <ins>dirs</ins>
     7.  **uint32** <ins>number of slotsfree</ins>
     8.  Iterate through number of slotsfree
         1.  **uint32** <ins>slotsfree</ins>
@@ -2147,7 +2152,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     5.  Iterate for <ins>number of results</ins>
         1.  **uint8** <ins>code</ins> *value is always* **1**
         2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>size</ins>
+        3.  **uint64** <ins>file size</ins>
         4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
         5.  **uint32** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
@@ -2161,7 +2166,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     11.  Iterate for <ins>number of privately shared results</ins>
          1.  **uint8** <ins>code</ins> *value is always 1*
          2.  **string** <ins>filename</ins>
-         3.  **uint64** <ins>size</ins>
+         3.  **uint64** <ins>file size</ins>
          4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
          5.  **uint32** <ins>number of attributes</ins>
          6.  Iterate for <ins>number of attributes</ins>
@@ -2286,13 +2291,13 @@ This message was formerly used to send a download request (direction 0) as well,
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
-          - **uint64** <ins>filesize</ins> *if direction == 1 (upload)*
+          - **uint64** <ins>file size</ins> *if direction == 1 (upload)*
   - Receive
     1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
-          - **uint64** <ins>filesize</ins> *if direction == 1 (upload)*
+          - **uint64** <ins>file size</ins> *if direction == 1 (upload)*
 
 ## Peer Code 41 a
 
@@ -2310,13 +2315,13 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **uint64** <ins>filesize</ins> *if allowed == 1*
+          - **uint64** <ins>file size</ins> *if allowed == 1*
           - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
   - Receive
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
-          - **uint64** <ins>filesize</ins> *if allowed == 1*
+          - **uint64** <ins>file size</ins> *if allowed == 1*
           - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
 
 ## Peer Code 41 b

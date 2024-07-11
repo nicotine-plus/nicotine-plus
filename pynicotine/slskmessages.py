@@ -584,14 +584,15 @@ class UserData:
     """When we join a room, the server sends us a bunch of these for each
     user."""
 
-    __slots__ = ("username", "status", "avgspeed", "uploadnum", "files", "dirs", "slotsfull", "country")
+    __slots__ = ("username", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs", "slotsfull", "country")
 
-    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, files=None, dirs=None,
+    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, unknown=None, files=None, dirs=None,
                  slotsfull=None, country=None):
         self.username = username
         self.status = status
         self.avgspeed = avgspeed
         self.uploadnum = uploadnum
+        self.unknown = unknown
         self.files = files
         self.dirs = dirs
         self.slotsfull = slotsfull
@@ -617,7 +618,8 @@ class UsersMessage(SlskMessage):
         pos, statslen = cls.unpack_uint32(message, pos)
         for i in range(statslen):
             pos, users[i].avgspeed = cls.unpack_uint32(message, pos)
-            pos, users[i].uploadnum = cls.unpack_uint64(message, pos)
+            pos, users[i].uploadnum = cls.unpack_uint32(message, pos)
+            pos, users[i].unknown = cls.unpack_uint32(message, pos)
             pos, users[i].files = cls.unpack_uint32(message, pos)
             pos, users[i].dirs = cls.unpack_uint32(message, pos)
 
@@ -761,7 +763,7 @@ class WatchUser(ServerMessage):
     As a consequence, stats can be outdated.
     """
 
-    __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "files", "dirs", "country")
+    __slots__ = ("user", "userexists", "status", "avgspeed", "uploadnum", "unknown", "files", "dirs", "country")
 
     def __init__(self, user=None):
         self.user = user
@@ -769,6 +771,7 @@ class WatchUser(ServerMessage):
         self.status = None
         self.avgspeed = None
         self.uploadnum = None
+        self.unknown = None
         self.files = None
         self.dirs = None
         self.country = None
@@ -786,8 +789,8 @@ class WatchUser(ServerMessage):
 
         pos, self.status = self.unpack_uint32(message, pos)
         pos, self.avgspeed = self.unpack_uint32(message, pos)
-        pos, self.uploadnum = self.unpack_uint64(message, pos)
-
+        pos, self.uploadnum = self.unpack_uint32(message, pos)
+        pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.files = self.unpack_uint32(message, pos)
         pos, self.dirs = self.unpack_uint32(message, pos)
 
@@ -951,7 +954,8 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.username = self.unpack_string(message, pos)
         pos, self.userdata.status = self.unpack_uint32(message, pos)
         pos, self.userdata.avgspeed = self.unpack_uint32(message, pos)
-        pos, self.userdata.uploadnum = self.unpack_uint64(message, pos)
+        pos, self.userdata.uploadnum = self.unpack_uint32(message, pos)
+        pos, self.userdata.unknown = self.unpack_uint32(message, pos)
         pos, self.userdata.files = self.unpack_uint32(message, pos)
         pos, self.userdata.dirs = self.unpack_uint32(message, pos)
         pos, self.userdata.slotsfull = self.unpack_uint32(message, pos)
@@ -1251,7 +1255,7 @@ class GetUserStats(ServerMessage):
     to the server, but WatchUser should be used instead.
     """
 
-    __slots__ = ("user", "avgspeed", "uploadnum", "files", "dirs")
+    __slots__ = ("user", "avgspeed", "uploadnum", "unknown", "files", "dirs")
 
     def __init__(self, user=None, avgspeed=None, files=None, dirs=None):
         self.user = user
@@ -1259,6 +1263,7 @@ class GetUserStats(ServerMessage):
         self.files = files
         self.dirs = dirs
         self.uploadnum = None
+        self.unknown = None
 
     def make_network_message(self):
         return self.pack_string(self.user)
@@ -1266,7 +1271,8 @@ class GetUserStats(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.avgspeed = self.unpack_uint32(message, pos)
-        pos, self.uploadnum = self.unpack_uint64(message, pos)
+        pos, self.uploadnum = self.unpack_uint32(message, pos)
+        pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.files = self.unpack_uint32(message, pos)
         pos, self.dirs = self.unpack_uint32(message, pos)
 
