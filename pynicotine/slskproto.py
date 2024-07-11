@@ -2697,13 +2697,7 @@ class NetworkThread(Thread):
 
     # Networking Loop #
 
-    def run(self):
-
-        events.emit_main_thread("set-connection-stats")
-
-        # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
-        # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
-        self._selector = selectors.DefaultSelector()
+    def _loop(self):
 
         while not self._want_abort:
             if not self._should_process_queue:
@@ -2744,10 +2738,22 @@ class NetworkThread(Thread):
             # Don't exhaust the CPU
             time.sleep(self.SLEEP_MIN_IDLE)
 
-        # Networking thread aborted
-        self._manual_server_disconnect = True
-        self._server_disconnect()
-        self._selector.close()
+    def run(self):
 
-        # We're ready to quit
-        events.emit_main_thread("quit")
+        events.emit_main_thread("set-connection-stats")
+
+        # Watch sockets for I/0 readiness with the selectors module. Only call register() after a socket
+        # is bound, otherwise watching the socket not guaranteed to work (breaks on OpenBSD at least)
+        self._selector = selectors.DefaultSelector()
+
+        try:
+            self._loop()
+
+        finally:
+            # Networking thread aborted
+            self._manual_server_disconnect = True
+            self._server_disconnect()
+            self._selector.close()
+
+            # We're ready to quit
+            events.emit_main_thread("quit")
