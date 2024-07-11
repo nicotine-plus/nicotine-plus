@@ -1218,9 +1218,9 @@ class NetworkThread(Thread):
 
         # Detect if our connection to the server is still alive
         self._set_server_socket_keepalive(server_socket)
-        self._bind_socket_interface(server_socket)
 
         try:
+            self._bind_socket_interface(server_socket)
             server_socket.connect_ex(msg_obj.addr)
 
         except OSError as error:
@@ -1720,9 +1720,9 @@ class NetworkThread(Thread):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        self._bind_socket_interface(sock)
 
         try:
+            self._bind_socket_interface(sock)
             sock.connect_ex(addr)
 
         except OSError as error:
