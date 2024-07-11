@@ -93,6 +93,25 @@ class FileChooser:
             if initial_folder:
                 self.file_chooser.set_current_folder(initial_folder)
 
+    def _get_selected_paths(self, selected_file=None, selected_files=None):
+
+        selected = []
+
+        if selected_files:
+            for i_file in selected_files:
+                path = i_file.get_path()
+
+                if path:
+                    selected.append(os.path.normpath(path))
+
+        elif selected_file is not None:
+            path = selected_file.get_path()
+
+            if path:
+                selected.append(os.path.normpath(path))
+
+        return selected
+
     def on_finish(self, _dialog, result):
 
         FileChooser.active_chooser = None
@@ -105,10 +124,12 @@ class FileChooser:
             self.destroy()
             return
 
+        selected = []
+
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in selected_result]
+            selected = self._get_selected_paths(selected_files=selected_result)
         else:
-            selected = os.path.normpath(selected_result.get_path())
+            selected = self._get_selected_paths(selected_file=selected_result)
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -125,10 +146,9 @@ class FileChooser:
             return
 
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in self.file_chooser.get_files()]
+            selected = self._get_selected_paths(selected_files=self.file_chooser.get_files())
         else:
-            selected_file = self.file_chooser.get_file()
-            selected = os.path.normpath(selected_file.get_path()) if selected_file else None
+            selected = self._get_selected_paths(selected_file=self.file_chooser.get_file())
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -311,11 +331,16 @@ class FileChooserButton:
 
     def on_open_file_chooser_response(self, selected, _data):
 
-        if selected.startswith(config.data_folder_path):
-            # Use a dynamic path that can be expanded with os.path.expandvars()
-            selected = selected.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+        selected_path = next(iter(selected), None)
 
-        self.set_path(selected)
+        if not selected_path:
+            return
+
+        if selected_path.startswith(config.data_folder_path):
+            # Use a dynamic path that can be expanded with os.path.expandvars()
+            selected_path = selected_path.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+
+        self.set_path(selected_path)
 
         try:
             self.selected_function()

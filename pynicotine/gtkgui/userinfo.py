@@ -746,7 +746,12 @@ class UserInfo:
 
         clipboard.copy_image(self.picture_data)
 
-    def on_save_picture_response(self, file_path, *_args):
+    def on_save_picture_response(self, selected, *_args):
+
+        file_path = next(iter(selected), None)
+
+        if not file_path:
+            return
 
         if GTK_API_VERSION >= 4:
             picture_bytes = self.picture_data.save_to_png_bytes().get_data()

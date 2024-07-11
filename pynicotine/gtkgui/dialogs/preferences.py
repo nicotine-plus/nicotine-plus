@@ -3275,7 +3275,11 @@ class Preferences(Dialog):
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
-        config.write_config_backup(selected)
+
+        file_path = next(iter(selected), None)
+
+        if file_path:
+            config.write_config_backup(file_path)
 
     def on_back_up_config(self, *_args):
 

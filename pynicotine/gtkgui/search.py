@@ -1566,8 +1566,8 @@ class Search:
             core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected_folder_path, _data):
-        self.on_download_files(download_folder_path=selected_folder_path)
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_files_to(self, *_args):
 
@@ -1609,8 +1609,8 @@ class Search:
             )
             requested_folders.add(user_folder_key)
 
-    def on_download_folders_to_selected(self, selected_folder_path, _data):
-        self.on_download_folders(download_folder_path=selected_folder_path)
+    def on_download_folders_to_selected(self, selected_folder_paths, _data):
+        self.on_download_folders(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_folders_to(self, *_args):
 
