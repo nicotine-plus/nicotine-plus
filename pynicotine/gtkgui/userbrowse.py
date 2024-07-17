@@ -390,8 +390,6 @@ class UserBrowse:
             )
 
         # Key Bindings (folder_tree_view)
-        Accelerator("backslash", self.folder_tree_view.widget, self.on_folder_collapse_sub_accelerator)  # "\"
-        Accelerator("equal", self.folder_tree_view.widget, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK)
         Accelerator("Right", self.folder_tree_view.widget, self.on_folder_expand_accelerator)
 
         Accelerator("<Shift>Return", self.folder_tree_view.widget, self.on_folder_focus_filetree_accelerator)
@@ -1010,29 +1008,6 @@ class UserBrowse:
 
         return True
 
-    def on_folder_collapse_sub_accelerator(self, *_args):
-        """\backslash: collapse or expand to show subs."""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.collapse_row(iterator)  # show 2nd level
-        self.folder_tree_view.expand_row(iterator)
-        return True
-
-    def on_folder_expand_sub_accelerator(self, *_args):
-        """=equal: expand only (dont move focus)"""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.expand_row(iterator)
-        return True
-
     def on_folder_focus_filetree_accelerator(self, *_args):
         """Shift+Enter - focus selection over FileTree."""
 
@@ -1040,7 +1015,12 @@ class UserBrowse:
             self.file_list_view.grab_focus()
             return True
 
-        self.on_folder_expand_sub_accelerator()
+        iterator = self.folder_tree_view.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        self.folder_tree_view.expand_row(iterator)
         return True
 
     def on_folder_transfer_to_accelerator(self, *_args):

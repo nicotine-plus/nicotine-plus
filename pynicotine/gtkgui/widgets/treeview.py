@@ -92,10 +92,13 @@ class TreeView:
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
         Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
+
         Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
         Accelerator("minus", self.widget, self.on_collapse_row_blocked_accelerator)
         Accelerator("Right", self.widget, self.on_expand_row_accelerator)
         Accelerator("plus", self.widget, self.on_expand_row_blocked_accelerator)
+        Accelerator("equal", self.widget, self.on_expand_row_blocked_accelerator)
+        Accelerator("backslash", self.widget, self.on_expand_row_level_accelerator)
 
         self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
@@ -927,7 +930,7 @@ class TreeView:
         return self.collapse_row(iterator)
 
     def on_collapse_row_blocked_accelerator(self, *_args):
-        """Minus: collapse row (block search)."""
+        """minus: collapse row (block search)."""
 
         self.on_collapse_row_accelerator()
         return True
@@ -943,9 +946,21 @@ class TreeView:
         return self.expand_row(iterator)
 
     def on_expand_row_blocked_accelerator(self, *_args):
-        """Plus: expand row (block search)."""
+        """plus, equal: expand row (block search)."""
 
         self.on_expand_row_accelerator()
+        return True
+
+    def on_expand_row_level_accelerator(self, *_args):
+        """\backslash: collapse or expand to show subs."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        self.collapse_row(iterator)  # show 2nd level
+        self.expand_row(iterator)
         return True
 
 
