@@ -92,6 +92,8 @@ class TreeView:
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
         Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
+        Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
+        Accelerator("Right", self.widget, self.on_expand_row_accelerator)
 
         self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
@@ -911,6 +913,26 @@ class TreeView:
 
         self.widget.emit("start-interactive-search")
         return True
+
+    def on_collapse_row_accelerator(self, *_args):
+        """Left: collapse row."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        return self.collapse_row(iterator)
+
+    def on_expand_row_accelerator(self, *_args):
+        """Right: expand row."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        return self.expand_row(iterator)
 
 
 # Legacy Functions (to be removed) #

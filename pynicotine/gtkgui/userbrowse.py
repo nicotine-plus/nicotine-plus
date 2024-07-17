@@ -390,8 +390,6 @@ class UserBrowse:
             )
 
         # Key Bindings (folder_tree_view)
-        Accelerator("Left", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)
-        Accelerator("minus", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)  # "-"
         Accelerator("backslash", self.folder_tree_view.widget, self.on_folder_collapse_sub_accelerator)  # "\"
         Accelerator("equal", self.folder_tree_view.widget, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK)
         Accelerator("Right", self.folder_tree_view.widget, self.on_folder_expand_accelerator)
@@ -1018,9 +1016,7 @@ class UserBrowse:
         if iterator is None:
             return False
 
-        expandable = self.folder_tree_view.expand_row(iterator)
-
-        if not expandable and not self.file_list_view.is_empty():
+        if not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
 
         return True
