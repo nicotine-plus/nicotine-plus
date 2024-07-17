@@ -60,6 +60,7 @@
               <object class="GtkSwitch" id="enable_search_history_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
+                <signal name="notify::active" handler="on_toggle_search_history"/>
               </object>
             </child>
           </object>
