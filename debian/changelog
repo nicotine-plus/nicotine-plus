@@ -1,8 +1,8 @@
-nicotine (3.3.5-dev1) noble; urgency=medium
+nicotine (3.3.5-rc1) noble; urgency=medium
 
-  * Development version.
+  * Release candidate 1.
 
- -- Mat <mail@mathias.is>  Tue, 07 May 2024 02:39:31 +0300
+ -- Mat <mail@mathias.is>  Wed, 17 Jul 2024 15:15:46 +0300
 
 nicotine (3.3.4-1) noble; urgency=medium
 
