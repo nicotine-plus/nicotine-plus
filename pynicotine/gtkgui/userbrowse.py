@@ -997,17 +997,6 @@ class UserBrowse:
         # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
         # TODO: Mouse double-click actions will need keycode state & mods [Shift/Ctrl+DblClick]
 
-    def on_folder_collapse_accelerator(self, *_args):
-        """Left, Shift+Left (Gtk), "-", "/" (Gtk) - collapse row."""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.collapse_row(iterator)
-        return True
-
     def on_folder_expand_accelerator(self, *_args):
         """Right, Shift+Right (Gtk), "+" (Gtk) - expand row."""
 

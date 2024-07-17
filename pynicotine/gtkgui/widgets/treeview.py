@@ -93,7 +93,9 @@ class TreeView:
         Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
         Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
+        Accelerator("minus", self.widget, self.on_collapse_row_blocked_accelerator)
         Accelerator("Right", self.widget, self.on_expand_row_accelerator)
+        Accelerator("plus", self.widget, self.on_expand_row_blocked_accelerator)
 
         self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
@@ -924,6 +926,12 @@ class TreeView:
 
         return self.collapse_row(iterator)
 
+    def on_collapse_row_blocked_accelerator(self, *_args):
+        """Minus: collapse row (block search)."""
+
+        self.on_collapse_row_accelerator()
+        return True
+
     def on_expand_row_accelerator(self, *_args):
         """Right: expand row."""
 
@@ -933,6 +941,12 @@ class TreeView:
             return False
 
         return self.expand_row(iterator)
+
+    def on_expand_row_blocked_accelerator(self, *_args):
+        """Plus: expand row (block search)."""
+
+        self.on_expand_row_accelerator()
+        return True
 
 
 # Legacy Functions (to be removed) #
