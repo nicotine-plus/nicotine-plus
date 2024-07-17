@@ -401,7 +401,7 @@ class UserBrowse:
         Accelerator("<Alt>Return", self.folder_tree_view.widget, self.on_file_properties_accelerator, True)
 
         # Key Bindings (file_list_view)
-        for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
+        for accelerator in ("BackSpace", "backslash"):  # Navigate up, "\"
             Accelerator(accelerator, self.file_list_view.widget, self.on_focus_folder_accelerator)
 
         Accelerator("Left", self.file_list_view.widget, self.on_focus_folder_left_accelerator)
@@ -1251,7 +1251,7 @@ class UserBrowse:
         return True
 
     def on_focus_folder_accelerator(self, *_args):
-        """Shift+Tab, BackSpace, \backslash - focus selection back parent folder"""
+        """BackSpace, \backslash - focus selection back parent folder"""
 
         self.folder_tree_view.grab_focus()
         return True
