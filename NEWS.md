@@ -9,12 +9,16 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Changes
 
+ * Added `/plugin reload` subcommand for reloading a plugin
+ * Added arrow key shortcuts to collapse/expand tree rows
  * Incomplete files are now deleted when removing the download from the UI
  * Quitting from the tray menu asks for confirmation while uploads are active
  * Various performance improvements
 
 ### Corrections
 
+ * Fixed a rare crash related to peer connections
+ * Fixed a rare crash when selecting a folder in the file chooser dialog
  * Fixed issues related to downloads getting stuck when failing
  * Fixed issues related to transfer rows expanding when not supposed to
  * Fixed an issue where popovers could not be closed in some cases
@@ -24,6 +28,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Various smaller fixes related to the Soulseek protocol implementation
  * Windows: Fixed an issue where the tray icon was visible despite being disabled
  * Windows: Fixed an issue where window prevented auto-hidden taskbar from showing
+ * Windows: Fixed invalid list sort order with certain system locales
  * macOS: Fixed a crash when using Spanish system locale
  * macOS: Fixed an issue where window could not be restored after running in background
  * macOS: Fixed Ctrl-clicking not opening the context menu
@@ -42,6 +47,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * nowplaying - other should decode bytes ([#3039](https://github.com/nicotine-plus/nicotine-plus/issues/3039))
  * Newly started downloads will open a collapsed thread? ([#3044](https://github.com/nicotine-plus/nicotine-plus/issues/3044))
  * Crash on MBP Ventura 13.6.7 ([#3045](https://github.com/nicotine-plus/nicotine-plus/issues/3045))
+ * Sorting order of files is broken because of characters not in current codepage ([#3052](https://github.com/nicotine-plus/nicotine-plus/issues/3052))
+ * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
+ * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
+ * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
 
 
 ## Version 3.3.4 (May 6, 2024)
