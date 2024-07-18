@@ -2572,7 +2572,6 @@ class PrivateRoomToggle(ServerMessage):
         return self.pack_bool(self.enabled)
 
     def parse_network_message(self, message):
-        # When this is received, we store it in the config, and disable the appropriate menu item
         _pos, self.enabled = self.unpack_bool(message)
 
 

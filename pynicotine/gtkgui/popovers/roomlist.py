@@ -292,7 +292,8 @@ class RoomList(Popover):
         core.chatrooms.request_room_list()
 
     def on_toggle_accept_private_room(self, *_args):
-        core.chatrooms.request_private_room_toggle(self.private_room_toggle.get_active())
+        active = config.sections["server"]["private_chatrooms"] = self.private_room_toggle.get_active()
+        core.chatrooms.request_private_room_toggle(active)
 
     def on_search_accelerator(self, *_args):
         """Ctrl+F - Search rooms."""

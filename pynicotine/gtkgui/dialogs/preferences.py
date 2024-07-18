@@ -1280,6 +1280,7 @@ class ChatsPage:
             self.enable_tts_toggle,
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
+            self.private_room_toggle,
             self.recent_private_messages_spinner,
             self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
@@ -1293,6 +1294,7 @@ class ChatsPage:
 
         self.application = application
         self.completion_required = False
+        self.private_room_required = False
 
         format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
         format_codes_label = _("Format codes")
@@ -1346,7 +1348,8 @@ class ChatsPage:
 
         self.options = {
             "server": {
-                "ctcpmsgs": None  # Special case in set_settings
+                "ctcpmsgs": None,  # Special case in set_settings
+                "private_chatrooms": self.private_room_toggle
             },
             "logging": {
                 "readroomlines": self.recent_room_messages_spinner,
@@ -1403,12 +1406,14 @@ class ChatsPage:
         self.replacements = config.sections["words"]["autoreplaced"].copy()
 
         self.completion_required = False
+        self.private_room_required = False
 
     def get_settings(self):
 
         return {
             "server": {
-                "ctcpmsgs": not self.enable_ctcp_toggle.get_active()
+                "ctcpmsgs": not self.enable_ctcp_toggle.get_active(),
+                "private_chatrooms": self.private_room_toggle.get_active()
             },
             "logging": {
                 "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
@@ -1440,6 +1445,9 @@ class ChatsPage:
                 "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
+
+    def on_private_room_changed(self, *_args):
+        self.private_room_required = True
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
@@ -3158,6 +3166,12 @@ class Preferences(Dialog):
             user_profile_required = False
 
         try:
+            private_room_required = self.pages["chats"].private_room_required
+
+        except KeyError:
+            private_room_required = False
+
+        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
@@ -3175,13 +3189,31 @@ class Preferences(Dialog):
         except KeyError:
             search_required = False
 
-        return (portmap_required, rescan_required, recompress_shares_required, user_profile_required,
-                completion_required, ip_ban_required, search_required, options)
+        return (
+            portmap_required,
+            rescan_required,
+            recompress_shares_required,
+            user_profile_required,
+            private_room_required,
+            completion_required,
+            ip_ban_required,
+            search_required,
+            options
+        )
 
     def update_settings(self, settings_closed=False):
 
-        (portmap_required, rescan_required, recompress_shares_required, user_profile_required, completion_required,
-            ip_ban_required, search_required, options) = self.get_settings()
+        (
+            portmap_required,
+            rescan_required,
+            recompress_shares_required,
+            user_profile_required,
+            private_room_required,
+            completion_required,
+            ip_ban_required,
+            search_required,
+            options
+        ) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -3194,6 +3226,9 @@ class Preferences(Dialog):
 
         if user_profile_required:
             core.userinfo.show_user(refresh=True, switch_page=False)
+
+        if private_room_required:
+            core.chatrooms.request_private_room_toggle(config.sections["server"]["private_chatrooms"])
 
         if completion_required:
             core.chatrooms.update_completions()
