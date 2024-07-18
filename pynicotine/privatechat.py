@@ -172,10 +172,10 @@ class PrivateChat:
         if username not in self.private_message_queue:
             return
 
-        for msg_obj in self.private_message_queue[username][:]:
-            self.private_message_queue[username].remove(msg_obj)
-            msg_obj.user = username
-            events.emit("message-user", msg_obj, queued_message=True)
+        for queued_msg in self.private_message_queue[username][:]:
+            self.private_message_queue[username].remove(queued_msg)
+            queued_msg.user = username
+            events.emit("message-user", queued_msg, queued_message=True)
 
     def _user_status(self, msg):
         """Server code 7."""
