@@ -230,10 +230,9 @@ class Scanner:
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
-    def __init__(self, config_obj, queue, share_groups, share_db_paths, init=False, rescan=True,
+    def __init__(self, queue, share_groups, share_db_paths, init=False, rescan=True,
                  rebuild=False, reveal_buddy_shares=False, reveal_trusted_shares=False):
 
-        self.config = config_obj
         self.queue = queue
         self.share_groups = share_groups
         self.share_dbs = {}
@@ -297,7 +296,7 @@ class Scanner:
                 _("Serious error occurred while rescanning shares. If this problem persists, "
                   "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
                   "report with this stack trace included: %(trace)s"), {
-                    "dir": self.config.data_folder_path,
+                    "dir": os.path.dirname(next(iter(self.share_db_paths.values()))),
                     "trace": "\n" + format_exc()
                 }
             ))
@@ -355,53 +354,46 @@ class Scanner:
 
         Shares.close_shares(self.share_dbs)
 
-    def real2virtual(self, path):
+    def real2virtual(self, real_path):
 
-        path = path.replace("/", "\\")
+        real_path = real_path.replace("/", "\\")
 
-        for shares in (
-            self.config.sections["transfers"]["shared"],
-            self.config.sections["transfers"]["buddyshared"],
-            self.config.sections["transfers"]["trustedshared"]
-        ):
-            for virtual, real, *_unused in shares:
-                real = real.replace("/", "\\")
+        for shared_folder_paths in self.share_groups:
+            for virtual_name, folder_path, *_unused in shared_folder_paths:
+                folder_path = folder_path.replace("/", "\\")
 
-                if path == real:
-                    return virtual
+                if real_path == folder_path:
+                    return virtual_name
 
                 # Use rstrip to remove trailing separator from root folders
-                real = real.rstrip("\\") + "\\"
+                folder_path = folder_path.rstrip("\\") + "\\"
 
-                if path.startswith(real):
-                    path_no_prefix = path[len(real):]
-                    virtualpath = f"{virtual}\\{path_no_prefix}"
-                    return virtualpath
+                if real_path.startswith(folder_path):
+                    real_path_no_prefix = real_path[len(folder_path):]
+                    virtual_path = f"{virtual_name}\\{real_path_no_prefix}"
+                    return virtual_path
 
-        return "__INVALID_SHARE__" + path
+        raise ValueError(f"Cannot find virtual path for {real_path}")
 
     def set_shares(self, permission_level=None, files=None, streams=None, mtimes=None, word_index=None):
 
-        self.config.create_data_folder()
-
-        storable_objects = [
+        for source, destination in (
             (files, "files"),
             (streams, "streams"),
             (mtimes, "mtimes"),
             (word_index, "words")
-        ]
-
-        for source, destination in storable_objects:
+        ):
             if source is None:
                 continue
 
             if destination != "words":
-                destination = f"{permission_level}{destination}"
+                destination = f"{permission_level}_{destination}"
 
             share_db = None
 
             try:
-                share_db = Shares.create_db_file(self.config.data_folder_path, destination)
+                share_db_path = self.share_db_paths[destination]
+                share_db = Shares.create_db_file(share_db_path)
                 share_db.update(source)
 
             finally:
@@ -646,21 +638,21 @@ class Shares:
             PermissionLevel.TRUSTED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.TRUSTED),
             PermissionLevel.BANNED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BANNED)
         }
+        self.share_db_paths = {
+            "words": os.path.join(config.data_folder_path, "words.dbn"),
+            "public_files": os.path.join(config.data_folder_path, "publicfiles.dbn"),
+            "public_mtimes": os.path.join(config.data_folder_path, "publicmtimes.dbn"),
+            "public_streams": os.path.join(config.data_folder_path, "publicstreams.dbn"),
+            "buddy_files": os.path.join(config.data_folder_path, "buddyfiles.dbn"),
+            "buddy_mtimes": os.path.join(config.data_folder_path, "buddymtimes.dbn"),
+            "buddy_streams": os.path.join(config.data_folder_path, "buddystreams.dbn"),
+            "trusted_files": os.path.join(config.data_folder_path, "trustedfiles.dbn"),
+            "trusted_mtimes": os.path.join(config.data_folder_path, "trustedmtimes.dbn"),
+            "trusted_streams": os.path.join(config.data_folder_path, "trustedstreams.dbn")
+        }
         self.file_path_index = ()
-        self._scanner_process = None
 
-        self.share_db_paths = [
-            ("words", os.path.join(config.data_folder_path, "words.dbn")),
-            ("public_files", os.path.join(config.data_folder_path, "publicfiles.dbn")),
-            ("public_mtimes", os.path.join(config.data_folder_path, "publicmtimes.dbn")),
-            ("public_streams", os.path.join(config.data_folder_path, "publicstreams.dbn")),
-            ("buddy_files", os.path.join(config.data_folder_path, "buddyfiles.dbn")),
-            ("buddy_mtimes", os.path.join(config.data_folder_path, "buddymtimes.dbn")),
-            ("buddy_streams", os.path.join(config.data_folder_path, "buddystreams.dbn")),
-            ("trusted_files", os.path.join(config.data_folder_path, "trustedfiles.dbn")),
-            ("trusted_mtimes", os.path.join(config.data_folder_path, "trustedmtimes.dbn")),
-            ("trusted_streams", os.path.join(config.data_folder_path, "trustedstreams.dbn"))
-        ]
+        self._scanner_process = None
 
         for event_name, callback in (
             ("folder-contents-request", self._folder_contents_request),
@@ -699,11 +691,8 @@ class Shares:
     # Shares-related Actions #
 
     @classmethod
-    def create_db_file(cls, folder_path, destination):
-
-        db_path = os.path.join(folder_path, f"{destination}.dbn")
+    def create_db_file(cls, db_path):
         cls.remove_db_file(db_path)
-
         return Database(encode_path(db_path))
 
     @staticmethod
@@ -718,22 +707,22 @@ class Shares:
             import shutil
             shutil.rmtree(db_path_encoded)
 
-    def virtual2real(self, path):
+    def virtual2real(self, virtual_path):
 
         for shares in (
             config.sections["transfers"]["shared"],
             config.sections["transfers"]["buddyshared"],
             config.sections["transfers"]["trustedshared"]
         ):
-            for virtual, real, *_unused in shares:
-                if path == virtual:
-                    return real
+            for virtual_name, folder_path, *_unused in shares:
+                if virtual_path == virtual_name:
+                    return folder_path
 
-                if path.startswith(virtual + "\\"):
-                    realpath = real.rstrip(os.sep) + path[len(virtual):].replace("\\", os.sep)
-                    return realpath
+                if virtual_path.startswith(virtual_name + "\\"):
+                    real_path = folder_path.rstrip(os.sep) + virtual_path[len(virtual_name):].replace("\\", os.sep)
+                    return real_path
 
-        return "__INVALID_SHARE__" + path
+        return "__INVALID_SHARE__" + virtual_path
 
     def convert_shares(self):
 
@@ -779,7 +768,7 @@ class Shares:
 
         exception = None
 
-        for destination, db_path in share_db_paths:
+        for destination, db_path in share_db_paths.items():
             if destinations and destination not in destinations:
                 continue
 
@@ -794,11 +783,11 @@ class Shares:
             cls.close_shares(share_dbs)
             raise exception
 
-    def file_is_shared(self, username, virtualfilename, realfilename):
+    def file_is_shared(self, username, virtual_path, real_path):
 
         log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
+            "virtual_name": virtual_path,
+            "path": real_path
         })
 
         public_shared_files = self.share_dbs.get("public_files")
@@ -807,28 +796,28 @@ class Shares:
         file_is_shared = False
         size = None
 
-        if not realfilename.startswith("__INVALID_SHARE__"):
-            if public_shared_files is not None and realfilename in public_shared_files:
+        if not real_path.startswith("__INVALID_SHARE__"):
+            if public_shared_files is not None and real_path in public_shared_files:
                 file_is_shared = True
-                _file_name, size, *_unused = public_shared_files[realfilename]
+                _file_name, size, *_unused = public_shared_files[real_path]
 
             elif (buddy_shared_files is not None and username in core.buddies.users
-                    and realfilename in buddy_shared_files):
+                    and real_path in buddy_shared_files):
                 file_is_shared = True
-                _file_name, size, *_unused = buddy_shared_files[realfilename]
+                _file_name, size, *_unused = buddy_shared_files[real_path]
 
             elif trusted_shared_files is not None:
                 user_data = core.buddies.users.get(username)
 
-                if user_data and user_data.is_trusted and realfilename in trusted_shared_files:
+                if user_data and user_data.is_trusted and real_path in trusted_shared_files:
                     file_is_shared = True
-                    _file_name, size, *_unused = trusted_shared_files[realfilename]
+                    _file_name, size, *_unused = trusted_shared_files[real_path]
 
         if not file_is_shared:
             log.add_transfer(("File is not present in the database of shared files, not sharing: "
                               "%(virtual_name)s with real path %(path)s"), {
-                "virtual_name": virtualfilename,
-                "path": realfilename
+                "virtual_name": virtual_path,
+                "path": real_path
             })
             return False, size
 
@@ -1052,7 +1041,6 @@ class Shares:
         context = multiprocessing.get_context(method="spawn")
         scanner_queue = context.Queue()
         scanner_obj = Scanner(
-            config,
             scanner_queue,
             share_groups,
             self.share_db_paths,
