@@ -167,10 +167,10 @@ class NetworkPage:
     def get_settings(self):
 
         try:
-            server_addr = self.soulseek_server_entry.get_text().split(":")
-            server_addr = tuple(server_addr[0].strip(), int(server_addr[1].strip()))
+            server_address, server_port = self.soulseek_server_entry.get_text().split(":")
+            server_addr = (server_address.strip(), int(server_port.strip()))
 
-        except Exception:
+        except ValueError:
             server_addr = config.defaults["server"]["server"]
 
         listen_port = self.listen_port_spinner.get_value_as_int()
