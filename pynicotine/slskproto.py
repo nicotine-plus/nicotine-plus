@@ -2465,16 +2465,13 @@ class NetworkThread(Thread):
 
         if sock in self._conns_in_progress:
             # Connection has been established
-            conn_obj_in_progress = self._conns_in_progress[sock]
+            conn_obj_in_progress = self._conns_in_progress.pop(sock)
             conn_obj_in_progress.lastactive = current_time
 
             if sock is self._server_socket:
                 self._establish_outgoing_server_connection(conn_obj_in_progress)
             else:
                 self._establish_outgoing_peer_connection(conn_obj_in_progress)
-
-            del self._conns_in_progress[sock]
-            return
 
         if sock in self._conns:
             conn_obj_established = self._conns[sock]
