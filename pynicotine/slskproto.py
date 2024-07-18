@@ -1129,7 +1129,7 @@ class NetworkThread(Thread):
         log.add(_("Reconnecting to server in %i seconds"), self._server_timeout_value)
 
     @staticmethod
-    def _set_server_socket_keepalive(server_socket, idle=10, interval=2):
+    def _set_server_socket_keepalive(sock, idle=10, interval=2):
         """Ensure we are disconnected from the server in case of connectivity
         issues, by sending TCP keepalive pings.
 
@@ -1143,29 +1143,29 @@ class NetworkThread(Thread):
         timeout_seconds = (idle + (interval * count))
 
         if hasattr(socket, "SO_KEEPALIVE"):
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=no-member
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=no-member
 
         if hasattr(socket, "TCP_KEEPINTVL"):
-            server_socket.setsockopt(socket.IPPROTO_TCP,
-                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=no-member
+            sock.setsockopt(socket.IPPROTO_TCP,
+                            socket.TCP_KEEPINTVL, interval)  # pylint: disable=no-member
 
         if hasattr(socket, "TCP_KEEPCNT"):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=no-member
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=no-member
 
         if hasattr(socket, "TCP_KEEPIDLE"):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=no-member
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=no-member
 
         elif hasattr(socket, "TCP_KEEPALIVE"):
             # macOS fallback
 
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=no-member
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=no-member
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
             # Windows fallback
             # Probe count is set to 10 on a system level, and can't be modified.
             # https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive
 
-            server_socket.ioctl(
+            sock.ioctl(
                 socket.SIO_KEEPALIVE_VALS,  # pylint: disable=no-member
                 (
                     1,
@@ -1175,7 +1175,7 @@ class NetworkThread(Thread):
             )
 
         if hasattr(socket, "TCP_USER_TIMEOUT"):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_USER_TIMEOUT, timeout_seconds * 1000)
 
     def _server_connect(self, msg_obj):
         """We're connecting to the server."""
@@ -1206,32 +1206,32 @@ class NetworkThread(Thread):
 
     def _init_server_conn(self, msg_obj):
 
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = ServerConnection(
-            sock=server_socket, addr=msg_obj.addr, selector_events=selector_events, login=msg_obj.login)
+            sock=sock, addr=msg_obj.addr, selector_events=selector_events, login=msg_obj.login)
 
-        server_socket.setblocking(False)
-        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-        server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        sock.setblocking(False)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         # Detect if our connection to the server is still alive
-        self._set_server_socket_keepalive(server_socket)
+        self._set_server_socket_keepalive(sock)
 
         try:
-            self._bind_socket_interface(server_socket)
-            server_socket.connect_ex(msg_obj.addr)
+            self._bind_socket_interface(sock)
+            sock.connect_ex(msg_obj.addr)
 
         except OSError as error:
             self._connect_error(error, conn_obj)
-            self._close_socket(server_socket)
+            self._close_socket(sock)
             self._server_disconnect()
             return
 
-        self._server_socket = server_socket
-        self._conns_in_progress[server_socket] = conn_obj
-        self._selector.register(server_socket, selector_events)
+        self._server_socket = sock
+        self._conns_in_progress[sock] = conn_obj
+        self._selector.register(sock, selector_events)
         self._num_sockets += 1
 
     def _establish_outgoing_server_connection(self, conn_obj):
