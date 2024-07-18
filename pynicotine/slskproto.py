@@ -967,7 +967,7 @@ class NetworkThread(Thread):
 
         conn_type = init.conn_type
         username = init.target_user
-        is_connection_replaced = (init.sock != sock)
+        is_connection_replaced = (init.sock is not sock)
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             "type": conn_type,
@@ -986,7 +986,7 @@ class NetworkThread(Thread):
         elif conn_type == ConnectionType.DISTRIBUTED:
             child_conn_obj = self._child_peers.get(username)
 
-            if child_conn_obj == conn_obj:
+            if child_conn_obj is conn_obj:
                 self._remove_child_peer_connection(username)
 
             elif sock is self._parent_socket:
@@ -2109,7 +2109,7 @@ class NetworkThread(Thread):
     def _verify_parent_connection(self, conn_obj, msg_class):
         """Verify that a connection is our current parent connection."""
 
-        if conn_obj.sock != self._parent_socket:
+        if conn_obj.sock is not self._parent_socket:
             log.add_conn(("Received a distributed message %(type)s from user %(user)s, who is not our parent. "
                           "Closing connection."), {
                 "type": msg_class,
@@ -2535,7 +2535,7 @@ class NetworkThread(Thread):
         elif init.conn_type == ConnectionType.DISTRIBUTED:
             self._process_distrib_input(conn_obj)
 
-        if conn_obj.sock is not None and init.sock != conn_obj.sock:
+        if conn_obj.sock is not None and init.sock is not conn_obj.sock:
             log.add_conn(("Received message on secondary connection of type %(type)s to user %(user)s, "
                           "promoting to primary connection"), {
                 "type": init.conn_type,
