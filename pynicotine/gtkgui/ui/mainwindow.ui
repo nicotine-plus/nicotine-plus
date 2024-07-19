@@ -758,7 +758,6 @@
                   <object class="GtkBox" id="userbrowse_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -927,7 +926,6 @@
                   <object class="GtkBox" id="userinfo_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>

@@ -759,9 +759,12 @@ class Uploads(Transfers):
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
         self.total_bandwidth = upload_bandwidth
 
-    def _peer_connection_error(self, username, msgs=None, is_offline=False, is_timeout=True):
+    def _peer_connection_error(self, username, conn_type, msgs, is_offline=False, is_timeout=True):
 
-        if msgs is None:
+        if not msgs:
+            return
+
+        if conn_type not in {slskmessages.ConnectionType.FILE, slskmessages.ConnectionType.PEER}:
             return
 
         failed_msg_types = {slskmessages.TransferRequest, slskmessages.FileTransferInit}
@@ -770,8 +773,8 @@ class Uploads(Transfers):
             if msg.__class__ in failed_msg_types:
                 self._cant_connect_upload(username, msg.token, is_offline, is_timeout)
 
-    def _peer_connection_closed(self, username, msgs=None):
-        self._peer_connection_error(username, msgs, is_timeout=False)
+    def _peer_connection_closed(self, username, conn_type, msgs):
+        self._peer_connection_error(username, conn_type, msgs, is_timeout=False)
 
     def _cant_connect_upload(self, username, token, is_offline, is_timeout):
         """We can't connect to the user, either way (TransferRequest,

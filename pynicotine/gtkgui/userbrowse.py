@@ -50,8 +50,9 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -88,7 +89,6 @@ class UserBrowses(IconNotebook):
             ("peer-connection-error", self.peer_connection_error),
             ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.on_focus),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
@@ -174,11 +174,14 @@ class UserBrowses(IconNotebook):
         del self.pages[user]
         page.destroy()
 
-    def peer_connection_error(self, user, *_args, **_kwargs):
+    def peer_connection_error(self, username, conn_type, **_unused):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
-        if page is not None:
+        if page is None:
+            return
+
+        if conn_type == ConnectionType.PEER:
             page.peer_connection_error()
 
     def user_status(self, msg):
@@ -203,9 +206,7 @@ class UserBrowses(IconNotebook):
             page.shared_file_list(msg)
 
     def server_disconnect(self, *_args):
-
         for user, page in self.pages.items():
-            page.peer_connection_error()
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
@@ -1327,6 +1328,9 @@ class UserBrowse:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_in_progress()
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""

@@ -521,7 +521,7 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _check_indirect_connection_timeouts(self, current_time):
+    def _check_indirect_connection_timeouts(self, current_time=None, expire_all=False):
 
         if not self._token_init_msgs:
             return
@@ -532,7 +532,7 @@ class NetworkThread(Thread):
             username = init.target_user
             conn_type = init.conn_type
 
-            if (current_time - request_time) < 20:
+            if not expire_all and (current_time - request_time) < 20:
                 continue
 
             log.add_conn(("Indirect connect request of type %(type)s to user %(user)s with "
@@ -544,7 +544,10 @@ class NetworkThread(Thread):
 
             if init.sock is None:
                 # No direct connection was established, give up
-                events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
+                events.emit_main_thread(
+                    "peer-connection-error", username=username, conn_type=conn_type,
+                    msgs=init.outgoing_msgs[:]
+                )
                 init.outgoing_msgs.clear()
                 self._username_init_msgs.pop(username + conn_type, None)
 
@@ -1030,12 +1033,9 @@ class NetworkThread(Thread):
             log.add_conn("Cannot remove PeerInit message, since an indirect connection attempt is still in progress")
             return
 
-        if self._should_process_queue:
-            if not is_connection_established:
-                events.emit_main_thread("peer-connection-error", username, init.outgoing_msgs[:])
-
-            elif conn_type == ConnectionType.PEER:
-                events.emit_main_thread("peer-connection-closed", username, init.outgoing_msgs[:])
+        event_name = "peer-connection-closed" if is_connection_established else "peer-connection-error"
+        events.emit_main_thread(
+            event_name, username=username, conn_type=conn_type, msgs=init.outgoing_msgs[:])
 
         del self._username_init_msgs[init_key]
 
@@ -1368,7 +1368,8 @@ class NetworkThread(Thread):
                             # attempt a connection with the peer/user
                             if user_offline:
                                 events.emit_main_thread(
-                                    "peer-connection-error", username, init.outgoing_msgs[:], is_offline=True)
+                                    "peer-connection-error", username=username, conn_type=init.conn_type,
+                                    msgs=init.outgoing_msgs[:], is_offline=True)
                             else:
                                 self._connect_to_peer(username, addr, init)
 
@@ -1499,6 +1500,8 @@ class NetworkThread(Thread):
         self._upload_speed = 0
         self._user_addresses.clear()
 
+        self._check_indirect_connection_timeouts(expire_all=True)
+
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock)
 
@@ -1508,7 +1511,6 @@ class NetworkThread(Thread):
         self._message_queue.clear()
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
-        self._token_init_msgs.clear()
         self._username_init_msgs.clear()
 
         # Reset connection stats

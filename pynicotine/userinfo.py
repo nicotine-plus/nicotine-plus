@@ -126,11 +126,6 @@ class UserInfo:
         if username == local_username:
             msg = self._get_user_info_response()
             events.emit("user-info-response", msg)
-
-        elif core.users.login_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", username, is_offline=True)
-            return
-
         else:
             # Request user status, speed and number of shared files
             core.users.watch_user(username, context="userinfo")
