@@ -90,13 +90,15 @@ from pynicotine.utils import human_speed
 
 class Connection:
 
-    __slots__ = ("sock", "addr", "io_events", "in_buffer", "out_buffer", "last_active", "recv_size")
+    __slots__ = ("sock", "addr", "io_events", "is_established", "in_buffer", "out_buffer",
+                 "last_active", "recv_size")
 
-    def __init__(self, sock=None, addr=None, io_events=None):
+    def __init__(self, sock=None, addr=None, io_events=None, is_established=False):
 
         self.sock = sock
         self.addr = addr
         self.io_events = io_events
+        self.is_established = is_established
         self.in_buffer = bytearray()
         self.out_buffer = bytearray()
         self.last_active = time.monotonic()
@@ -412,7 +414,6 @@ class NetworkThread(Thread):
         self._last_cycle_time = 0
 
         self._conns = {}
-        self._conns_in_progress = {}
         self._token = initial_token()
 
         self._file_init_msgs = {}
@@ -730,7 +731,7 @@ class NetworkThread(Thread):
 
             init.outgoing_msgs.append(msg)
 
-            if init.sock is not None and init.sock in self._conns:
+            if init.sock is not None and self._conns[init.sock].is_established:
                 # We have initiated a connection previously, and it's ready
                 self._process_conn_messages(init)
 
@@ -832,6 +833,7 @@ class NetworkThread(Thread):
 
     def _establish_outgoing_peer_connection(self, conn_obj):
 
+        conn_obj.is_established = True
         init = conn_obj.init
         sock = init.sock = conn_obj.sock
         response_token = conn_obj.response_token
@@ -871,7 +873,6 @@ class NetworkThread(Thread):
         prev_init.outgoing_msgs = []
 
         self._close_connection(self._conns, prev_init.sock)
-        self._close_connection(self._conns_in_progress, prev_init.sock)
 
     @staticmethod
     def _close_socket(sock):
@@ -918,7 +919,6 @@ class NetworkThread(Thread):
         conn_type = init.conn_type
         username = init.target_user
         addr = conn_obj.addr
-        is_connection_established = (connection_list is not self._conns_in_progress)
         is_connection_replaced = (init.sock is not sock)
 
         log.add_conn("Removed connection of type %s to user %s, address %s", (conn_type, username, addr))
@@ -982,7 +982,7 @@ class NetworkThread(Thread):
                          "is still in progress")
             return
 
-        event_name = "peer-connection-closed" if is_connection_established else "peer-connection-error"
+        event_name = "peer-connection-closed" if conn_obj.is_established else "peer-connection-error"
         events.emit_main_thread(
             event_name, username=username, conn_type=conn_type, msgs=init.outgoing_msgs[:])
 
@@ -1020,7 +1020,11 @@ class NetworkThread(Thread):
         stale_sockets = set()
 
         for sock, conn_obj in self._conns.items():
-            if self._is_connection_inactive(conn_obj, sock, current_time, num_sockets):
+            if not conn_obj.is_established:
+                if (current_time - conn_obj.last_active) > self.IN_PROGRESS_STALE_AFTER:
+                    stale_sockets.add(sock)
+
+            elif self._is_connection_inactive(conn_obj, sock, current_time, num_sockets):
                 inactive_sockets.add(sock)
 
             elif conn_obj in self._file_download_msgs:
@@ -1056,8 +1060,8 @@ class NetworkThread(Thread):
 
         if stale_sockets:
             for sock in stale_sockets:
-                self._connect_error("Timed out", self._conns_in_progress[sock])
-                self._close_connection(self._conns_in_progress, sock)
+                self._connect_error("Timed out", self._conns[sock])
+                self._close_connection(self._conns, sock)
 
             stale_sockets.clear()
 
@@ -1174,7 +1178,8 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = ServerConnection(
-            sock=sock, addr=msg.addr, io_events=io_events, login=msg.login
+            sock=sock, addr=msg.addr, io_events=io_events, is_established=False,
+            login=msg.login
         )
 
         sock.setblocking(False)
@@ -1196,12 +1201,13 @@ class NetworkThread(Thread):
             return
 
         self._server_socket = sock
-        self._conns_in_progress[sock] = conn_obj
+        self._conns[sock] = conn_obj
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
     def _establish_outgoing_server_connection(self, conn_obj):
 
+        conn_obj.is_established = True
         server_ip_address, server_port = conn_obj.addr
 
         log.add(
@@ -1457,9 +1463,6 @@ class NetworkThread(Thread):
         for sock in self._conns.copy():
             self._close_connection(self._conns, sock)
 
-        for sock in self._conns_in_progress.copy():
-            self._close_connection(self._conns_in_progress, sock)
-
         self._message_queue.clear()
         self._pending_peer_conns.clear()
         self._pending_init_msgs.clear()
@@ -1553,7 +1556,7 @@ class NetworkThread(Thread):
                         init, _request_time = self._token_init_msgs.pop(token)
                         previous_sock = init.sock
                         is_direct_conn_in_progress = (
-                            previous_sock is not None and previous_sock in self._conns_in_progress
+                            previous_sock is not None and not self._conns[previous_sock].is_established
                         )
 
                         log.add_conn("Indirect connection to user %s with token %s established",
@@ -1569,7 +1572,7 @@ class NetworkThread(Thread):
 
                         if is_direct_conn_in_progress:
                             log.add_conn("Stopping direct connection attempt to user %s", init.target_user)
-                            self._close_connection(self._conns_in_progress, previous_sock)
+                            self._close_connection(self._conns, previous_sock)
 
                     elif msg_class is PeerInit:
                         username = msg.target_user
@@ -1659,7 +1662,7 @@ class NetworkThread(Thread):
             io_events = selectors.EVENT_READ
 
             self._conns[incoming_sock] = PeerConnection(
-                sock=incoming_sock, addr=incoming_addr, io_events=io_events
+                sock=incoming_sock, addr=incoming_addr, io_events=io_events, is_established=True
             )
             self._num_sockets += 1
 
@@ -1693,8 +1696,8 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = PeerConnection(
-            sock=sock, addr=addr, io_events=io_events, init=init,
-            request_token=request_token, response_token=response_token
+            sock=sock, addr=addr, io_events=io_events, is_established=False,
+            init=init, request_token=request_token, response_token=response_token
         )
 
         sock.setblocking(False)
@@ -1712,7 +1715,7 @@ class NetworkThread(Thread):
             return
 
         init.sock = sock
-        self._conns_in_progress[sock] = conn_obj
+        self._conns[sock] = conn_obj
         self._selector.register(sock, io_events)
         self._num_sockets += 1
 
@@ -2385,17 +2388,11 @@ class NetworkThread(Thread):
 
     def _process_ready_input_socket(self, sock, current_time):
 
-        if sock in self._conns_in_progress:
-            conns = self._conns_in_progress
-
-        elif sock in self._conns:
-            conns = self._conns
-
+        if sock in self._conns:
+            conn_obj = self._conns[sock]
         else:
             # Unknown connection
             return
-
-        conn_obj = conns[sock]
 
         if (self._download_limit_split
                 and conn_obj in self._conns_downloaded
@@ -2405,37 +2402,34 @@ class NetworkThread(Thread):
         try:
             if not self._read_data(conn_obj, current_time):
                 # No data received, socket was likely closed remotely
-                self._close_connection(conns, sock)
+                self._close_connection(self._conns, sock)
                 return
 
         except OSError as error:
             log.add_conn("Cannot read data from connection %s, closing connection. "
                          "Error: %s", (conn_obj.addr, error))
 
-            if conns is self._conns_in_progress:
+            if not conn_obj.is_established:
                 self._connect_error(error, conn_obj)
 
-            self._close_connection(conns, sock)
+            self._close_connection(self._conns, sock)
             return
 
         self._process_conn_incoming_messages(conn_obj)
 
     def _process_ready_output_socket(self, sock, current_time):
 
-        if sock in self._conns_in_progress:
-            conn_obj = self._conns[sock] = self._conns_in_progress.pop(sock)
+        if sock in self._conns:
+            conn_obj = self._conns[sock]
+        else:
+            # Unknown connection
+            return
 
+        if not conn_obj.is_established:
             if sock is self._server_socket:
                 self._establish_outgoing_server_connection(conn_obj)
             else:
                 self._establish_outgoing_peer_connection(conn_obj)
-
-        elif sock in self._conns:
-            conn_obj = self._conns[sock]
-
-        else:
-            # Unknown connection
-            return
 
         if (self._upload_limit_split
                 and conn_obj in self._conns_uploaded
