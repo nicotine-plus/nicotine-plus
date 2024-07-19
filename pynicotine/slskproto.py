@@ -832,14 +832,11 @@ class NetworkThread(Thread):
 
     def _establish_outgoing_peer_connection(self, conn_obj):
 
-        sock = conn_obj.sock
-        self._conns[sock] = conn_obj
-
         init = conn_obj.init
+        sock = init.sock = conn_obj.sock
         response_token = conn_obj.response_token
         username = init.target_user
         conn_type = init.conn_type
-        init.sock = sock
 
         log.add_conn("Established outgoing connection of type %s with user %s. List of "
                      "outgoing messages: %s", (conn_type, username, init.outgoing_msgs))
@@ -1205,7 +1202,6 @@ class NetworkThread(Thread):
 
     def _establish_outgoing_server_connection(self, conn_obj):
 
-        self._conns[self._server_socket] = conn_obj
         server_ip_address, server_port = conn_obj.addr
 
         log.add(
@@ -2390,66 +2386,69 @@ class NetworkThread(Thread):
     def _process_ready_input_socket(self, sock, current_time):
 
         if sock in self._conns_in_progress:
-            conn_obj_in_progress = self._conns_in_progress[sock]
+            conns = self._conns_in_progress
 
-            try:
-                # Check if the socket has any data for us
-                sock.recv(1, socket.MSG_PEEK)
+        elif sock in self._conns:
+            conns = self._conns
 
-            except OSError as error:
-                self._connect_error(error, conn_obj_in_progress)
-                self._close_connection(self._conns_in_progress, sock)
-
+        else:
+            # Unknown connection
             return
 
-        if sock in self._conns:
-            conn_obj_established = self._conns[sock]
+        conn_obj = conns[sock]
 
-            if (self._download_limit_split
-                    and conn_obj_established in self._conns_downloaded
-                    and self._conns_downloaded[conn_obj_established] >= self._download_limit_split):
+        if (self._download_limit_split
+                and conn_obj in self._conns_downloaded
+                and self._conns_downloaded[conn_obj] >= self._download_limit_split):
+            return
+
+        try:
+            if not self._read_data(conn_obj, current_time):
+                # No data received, socket was likely closed remotely
+                self._close_connection(conns, sock)
                 return
 
-            try:
-                if not self._read_data(conn_obj_established, current_time):
-                    # No data received, socket was likely closed remotely
-                    self._close_connection(self._conns, sock)
-                    return
+        except OSError as error:
+            log.add_conn("Cannot read data from connection %s, closing connection. "
+                         "Error: %s", (conn_obj.addr, error))
 
-            except OSError as error:
-                log.add_conn("Cannot read data from connection %s, closing connection. "
-                             "Error: %s", (conn_obj_established.addr, error))
-                self._close_connection(self._conns, sock)
-                return
+            if conns is self._conns_in_progress:
+                self._connect_error(error, conn_obj)
 
-            self._process_conn_incoming_messages(conn_obj_established)
+            self._close_connection(conns, sock)
+            return
+
+        self._process_conn_incoming_messages(conn_obj)
 
     def _process_ready_output_socket(self, sock, current_time):
 
         if sock in self._conns_in_progress:
-            # Connection has been established
-            conn_obj_in_progress = self._conns_in_progress.pop(sock)
+            conn_obj = self._conns[sock] = self._conns_in_progress.pop(sock)
 
             if sock is self._server_socket:
-                self._establish_outgoing_server_connection(conn_obj_in_progress)
+                self._establish_outgoing_server_connection(conn_obj)
             else:
-                self._establish_outgoing_peer_connection(conn_obj_in_progress)
+                self._establish_outgoing_peer_connection(conn_obj)
 
-        if sock in self._conns:
-            conn_obj_established = self._conns[sock]
+        elif sock in self._conns:
+            conn_obj = self._conns[sock]
 
-            if (self._upload_limit_split
-                    and conn_obj_established in self._conns_uploaded
-                    and self._conns_uploaded[conn_obj_established] >= self._upload_limit_split):
-                return
+        else:
+            # Unknown connection
+            return
 
-            try:
-                self._write_data(conn_obj_established, current_time)
+        if (self._upload_limit_split
+                and conn_obj in self._conns_uploaded
+                and self._conns_uploaded[conn_obj] >= self._upload_limit_split):
+            return
 
-            except (OSError, ValueError) as error:
-                log.add_conn("Cannot write data to connection %s, closing connection. Error: %s",
-                             (conn_obj_established.addr, error))
-                self._close_connection(self._conns, sock)
+        try:
+            self._write_data(conn_obj, current_time)
+
+        except (OSError, ValueError) as error:
+            log.add_conn("Cannot write data to connection %s, closing connection. Error: %s",
+                         (conn_obj.addr, error))
+            self._close_connection(self._conns, sock)
 
     def _process_ready_sockets(self, current_time):
 
