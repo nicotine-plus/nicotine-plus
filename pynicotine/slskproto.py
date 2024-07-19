@@ -2332,8 +2332,6 @@ class NetworkThread(Thread):
                     "size": msg_size - 1,
                     "msg_buffer": msg_buffer[idx + 5:idx + msg_size_total]
                 })
-                should_close_connection = True
-                break
 
             idx += msg_size_total
             buffer_len -= msg_size_total
