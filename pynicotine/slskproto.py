@@ -1689,6 +1689,42 @@ class NetworkThread(Thread):
 
     # Peer Connection #
 
+    def _accept_incoming_peer_connections(self):
+
+        while self._num_sockets < self.MAX_SOCKETS:
+            incoming_sock = None
+
+            try:
+                incoming_sock, incoming_addr = self._listen_socket.accept()
+                incoming_sock.setblocking(False)
+                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
+                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+                incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+
+            except OSError as error:
+                if error.errno == errno.EWOULDBLOCK:
+                    # No more incoming connections
+                    break
+
+                log.add_conn("Incoming connection failed: %s", error)
+
+                if incoming_sock is not None:
+                    self._close_socket(incoming_sock)
+
+                continue
+
+            selector_events = selectors.EVENT_READ
+
+            self._conns[incoming_sock] = PeerConnection(
+                sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
+            )
+            self._num_sockets += 1
+            log.add_conn("Incoming connection from %s", str(incoming_addr))
+
+            # Event flags are modified to include 'write' in subsequent loops, if necessary.
+            # Don't do it here, otherwise connections may break.
+            self._selector.register(incoming_sock, selector_events)
+
     def _init_peer_connection(self, addr, init):
 
         if self._num_sockets >= self.MAX_SOCKETS:
@@ -2385,44 +2421,6 @@ class NetworkThread(Thread):
 
     def _process_ready_input_socket(self, sock, current_time):
 
-        if sock is self._listen_socket:
-            # Manage incoming connections to listening socket
-            while self._num_sockets < self.MAX_SOCKETS:
-                incoming_sock = None
-
-                try:
-                    incoming_sock, incoming_addr = sock.accept()
-                    incoming_sock.setblocking(False)
-                    incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-                    incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
-                    incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-
-                except OSError as error:
-                    if error.errno == errno.EWOULDBLOCK:
-                        # No more incoming connections
-                        break
-
-                    log.add_conn("Incoming connection failed: %s", error)
-
-                    if incoming_sock is not None:
-                        self._close_socket(incoming_sock)
-
-                    continue
-
-                selector_events = selectors.EVENT_READ
-
-                self._conns[incoming_sock] = PeerConnection(
-                    sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
-                )
-                self._num_sockets += 1
-                log.add_conn("Incoming connection from %s", str(incoming_addr))
-
-                # Event flags are modified to include 'write' in subsequent loops, if necessary.
-                # Don't do it here, otherwise connections may break.
-                self._selector.register(incoming_sock, selector_events)
-
-            return
-
         if sock in self._conns_in_progress:
             conn_obj_in_progress = self._conns_in_progress[sock]
 
@@ -2501,6 +2499,10 @@ class NetworkThread(Thread):
             sock = selector_key.fileobj
 
             if selector_events & selectors.EVENT_READ:
+                if sock is self._listen_socket:
+                    self._accept_incoming_peer_connections()
+                    continue
+
                 self._process_ready_input_socket(sock, current_time)
 
             if selector_events & selectors.EVENT_WRITE:
