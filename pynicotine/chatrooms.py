@@ -16,11 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import JoinGlobalRoom
+from pynicotine.slskmessages import JoinRoom
+from pynicotine.slskmessages import LeaveGlobalRoom
+from pynicotine.slskmessages import LeaveRoom
+from pynicotine.slskmessages import PrivateRoomAddOperator
+from pynicotine.slskmessages import PrivateRoomAddUser
+from pynicotine.slskmessages import PrivateRoomDismember
+from pynicotine.slskmessages import PrivateRoomDisown
+from pynicotine.slskmessages import PrivateRoomRemoveOperator
+from pynicotine.slskmessages import PrivateRoomRemoveUser
+from pynicotine.slskmessages import PrivateRoomToggle
+from pynicotine.slskmessages import RoomList
+from pynicotine.slskmessages import RoomTickerSet
+from pynicotine.slskmessages import SayChatroom
 from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 
@@ -101,9 +114,9 @@ class ChatRooms:
 
         for room in self.joined_rooms:
             if room == self.GLOBAL_ROOM_NAME:
-                core.send_message_to_server(slskmessages.JoinGlobalRoom())
+                core.send_message_to_server(JoinGlobalRoom())
             else:
-                core.send_message_to_server(slskmessages.JoinRoom(room))
+                core.send_message_to_server(JoinRoom(room))
 
     def _server_disconnect(self, _msg):
 
@@ -127,9 +140,9 @@ class ChatRooms:
 
         if not room_obj.users:
             if room == self.GLOBAL_ROOM_NAME:
-                core.send_message_to_server(slskmessages.JoinGlobalRoom())
+                core.send_message_to_server(JoinGlobalRoom())
             else:
-                core.send_message_to_server(slskmessages.JoinRoom(room, is_private))
+                core.send_message_to_server(JoinRoom(room, is_private))
 
         events.emit("show-room", room, is_private, switch_page, remembered)
 
@@ -139,9 +152,9 @@ class ChatRooms:
             return
 
         if room == self.GLOBAL_ROOM_NAME:
-            core.send_message_to_server(slskmessages.LeaveGlobalRoom())
+            core.send_message_to_server(LeaveGlobalRoom())
         else:
-            core.send_message_to_server(slskmessages.LeaveRoom(room))
+            core.send_message_to_server(LeaveRoom(room))
 
         room_obj = self.joined_rooms.pop(room)
 
@@ -182,7 +195,7 @@ class ChatRooms:
             for word, replacement in config.sections["words"]["autoreplaced"].items():
                 message = message.replace(str(word), str(replacement))
 
-        core.send_message_to_server(slskmessages.SayChatroom(room, message))
+        core.send_message_to_server(SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
 
     def create_private_room(self, room, owner=None, operators=None):
@@ -211,16 +224,16 @@ class ChatRooms:
         return private_room
 
     def add_user_to_private_room(self, room, username):
-        core.send_message_to_server(slskmessages.PrivateRoomAddUser(room, username))
+        core.send_message_to_server(PrivateRoomAddUser(room, username))
 
     def add_operator_to_private_room(self, room, username):
-        core.send_message_to_server(slskmessages.PrivateRoomAddOperator(room, username))
+        core.send_message_to_server(PrivateRoomAddOperator(room, username))
 
     def remove_user_from_private_room(self, room, username):
-        core.send_message_to_server(slskmessages.PrivateRoomRemoveUser(room, username))
+        core.send_message_to_server(PrivateRoomRemoveUser(room, username))
 
     def remove_operator_from_private_room(self, room, username):
-        core.send_message_to_server(slskmessages.PrivateRoomRemoveOperator(room, username))
+        core.send_message_to_server(PrivateRoomRemoveOperator(room, username))
 
     def is_private_room_owned(self, room):
         private_room = self.private_rooms.get(room)
@@ -234,14 +247,14 @@ class ChatRooms:
         return private_room is not None and core.users.login_username in private_room["operators"]
 
     def request_room_list(self):
-        core.send_message_to_server(slskmessages.RoomList())
+        core.send_message_to_server(RoomList())
 
     def request_private_room_disown(self, room):
 
         if not self.is_private_room_owned(room):
             return
 
-        core.send_message_to_server(slskmessages.PrivateRoomDisown(room))
+        core.send_message_to_server(PrivateRoomDisown(room))
         del self.private_rooms[room]
 
     def request_private_room_dismember(self, room):
@@ -249,14 +262,14 @@ class ChatRooms:
         if not self.is_private_room_member(room):
             return
 
-        core.send_message_to_server(slskmessages.PrivateRoomDismember(room))
+        core.send_message_to_server(PrivateRoomDismember(room))
         del self.private_rooms[room]
 
     def request_private_room_toggle(self, enabled):
-        core.send_message_to_server(slskmessages.PrivateRoomToggle(enabled))
+        core.send_message_to_server(PrivateRoomToggle(enabled))
 
     def request_update_ticker(self, room, message):
-        core.send_message_to_server(slskmessages.RoomTickerSet(room, message))
+        core.send_message_to_server(RoomTickerSet(room, message))
 
     def _join_room(self, msg):
         """Server code 14."""

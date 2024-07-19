@@ -22,11 +22,14 @@ import os
 from itertools import chain
 from threading import Thread
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import SharedFileListRequest
+from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import UploadQueueNotification
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 
@@ -75,7 +78,7 @@ class UserBrowse:
         """Send notification to user when attempting to initiate upload from
         our end."""
 
-        core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
+        core.send_message_to_peer(username, UploadQueueNotification())
 
     def _show_user(self, username, path=None, switch_page=True):
 
@@ -127,7 +130,7 @@ class UserBrowse:
         self._show_user(username, path=path, switch_page=switch_page)
 
     def request_user_shares(self, username):
-        core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
+        core.send_message_to_peer(username, SharedFileListRequest())
 
     def browse_user(self, username, path=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
@@ -223,7 +226,7 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse()
+        msg = SharedFileListResponse()
         msg.username = username
         msg.list = shares_list
 
@@ -353,7 +356,7 @@ class UserBrowse:
         if username not in self.users:
             # We've removed the user. Close the connection to stop the user from
             # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
 
     def _shared_file_list_response(self, msg):
 

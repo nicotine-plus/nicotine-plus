@@ -27,13 +27,26 @@
 import os
 import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import ConnectionType
+from pynicotine.slskmessages import EmitNetworkMessageEvents
+from pynicotine.slskmessages import FileTransferInit
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import PlaceInQueueResponse
+from pynicotine.slskmessages import SendUploadSpeed
+from pynicotine.slskmessages import SetUploadLimit
+from pynicotine.slskmessages import TransferDirection
 from pynicotine.slskmessages import TransferRejectReason
+from pynicotine.slskmessages import TransferRequest
+from pynicotine.slskmessages import TransferResponse
+from pynicotine.slskmessages import UploadDenied
+from pynicotine.slskmessages import UploadFailed
+from pynicotine.slskmessages import UploadFile
+from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
@@ -287,7 +300,7 @@ class Uploads(Transfers):
         else:
             speed_limit = 0
 
-        core.send_message_to_network_thread(slskmessages.SetUploadLimit(speed_limit, limit_by))
+        core.send_message_to_network_thread(SetUploadLimit(speed_limit, limit_by))
         self._check_upload_queue()
 
     # Transfer Actions #
@@ -531,7 +544,7 @@ class Uploads(Transfers):
 
             username = upload_candidate.username
 
-            if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
+            if UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
                 # Either we are offline or the user we want to upload to is
                 if self._auto_clear_transfer(upload_candidate):
                     continue
@@ -561,7 +574,7 @@ class Uploads(Transfers):
 
             final_upload_candidate = upload_candidate
 
-        self.token = slskmessages.increment_token(self.token)
+        self.token = increment_token(self.token)
 
         log.add_transfer(
             "Checked upload queue, requesting to upload file %(file)s with token %(token)s to user %(user)s", {
@@ -576,8 +589,8 @@ class Uploads(Transfers):
         self._activate_transfer(final_upload_candidate, self.token)
 
         core.send_message_to_peer(
-            username, slskmessages.TransferRequest(
-                direction=slskmessages.TransferDirection.UPLOAD, token=self.token, file=virtual_path,
+            username, TransferRequest(
+                direction=TransferDirection.UPLOAD, token=self.token, file=virtual_path,
                 filesize=final_upload_candidate.size))
 
         self._update_transfer(final_upload_candidate)
@@ -629,7 +642,7 @@ class Uploads(Transfers):
             self._unfail_transfer(transfer)
             transfer.size = size
 
-        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
+        if UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to upload to is
             if not self._auto_clear_transfer(transfer):
                 self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
@@ -716,7 +729,7 @@ class Uploads(Transfers):
         """
 
         if self._pending_network_msgs:
-            core.send_message_to_network_thread(slskmessages.EmitNetworkMessageEvents(self._pending_network_msgs[:]))
+            core.send_message_to_network_thread(EmitNetworkMessageEvents(self._pending_network_msgs[:]))
             self._pending_network_msgs.clear()
 
     def _user_status(self, msg):
@@ -728,7 +741,7 @@ class Uploads(Transfers):
             # Skip redundant status updates from users in joined rooms
             return
 
-        if msg.status == slskmessages.UserStatus.OFFLINE:
+        if msg.status == UserStatus.OFFLINE:
             for upload in self.active_users.get(username, {}).copy().values():
                 if upload.status == TransferStatus.TRANSFERRING:
                     continue
@@ -764,10 +777,10 @@ class Uploads(Transfers):
         if not msgs:
             return
 
-        if conn_type not in {slskmessages.ConnectionType.FILE, slskmessages.ConnectionType.PEER}:
+        if conn_type not in {ConnectionType.FILE, ConnectionType.PEER}:
             return
 
-        failed_msg_types = {slskmessages.TransferRequest, slskmessages.FileTransferInit}
+        failed_msg_types = {TransferRequest, FileTransferInit}
 
         for msg in msgs:
             if msg.__class__ in failed_msg_types:
@@ -833,7 +846,7 @@ class Uploads(Transfers):
 
         if not allowed:
             if reason and reason != TransferRejectReason.QUEUED:
-                core.send_message_to_peer(username, slskmessages.UploadDenied(virtual_path, reason))
+                core.send_message_to_peer(username, UploadDenied(virtual_path, reason))
 
             return
 
@@ -866,7 +879,7 @@ class Uploads(Transfers):
 
         username = msg.username
 
-        if msg.direction != slskmessages.TransferDirection.DOWNLOAD:
+        if msg.direction != TransferDirection.DOWNLOAD:
             return
 
         response = self._transfer_request_uploads(msg)
@@ -906,7 +919,7 @@ class Uploads(Transfers):
 
         if not allowed:
             if reason:
-                return slskmessages.TransferResponse(allowed=False, reason=reason, token=token)
+                return TransferResponse(allowed=False, reason=reason, token=token)
 
             return None
 
@@ -934,7 +947,7 @@ class Uploads(Transfers):
             # Must be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
-            return slskmessages.TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
+            return TransferResponse(allowed=False, reason=TransferRejectReason.QUEUED, token=token)
 
         # All checks passed, starting a new upload.
         current_size = self._get_current_file_size(real_path)
@@ -948,7 +961,7 @@ class Uploads(Transfers):
         # Must be emitted after the final update to prevent inconsistent state
         core.pluginhandler.upload_queued_notification(username, virtual_path, real_path)
 
-        return slskmessages.TransferResponse(allowed=True, token=token, filesize=size)
+        return TransferResponse(allowed=True, token=token, filesize=size)
 
     def _transfer_response(self, msg):
         """Peer code 41.
@@ -995,7 +1008,7 @@ class Uploads(Transfers):
             self._check_upload_queue()
             return
 
-        core.send_message_to_peer(upload.username, slskmessages.FileTransferInit(token=token, is_outgoing=True))
+        core.send_message_to_peer(upload.username, FileTransferInit(token=token, is_outgoing=True))
         self._check_upload_queue()
 
     def _transfer_timeout(self, transfer):
@@ -1075,7 +1088,7 @@ class Uploads(Transfers):
 
             if upload.size > 0:
                 upload.status = TransferStatus.TRANSFERRING
-                core.send_message_to_network_thread(slskmessages.UploadFile(
+                core.send_message_to_network_thread(UploadFile(
                     sock=sock, token=token, file=file_handle, size=upload.size
                 ))
 
@@ -1145,19 +1158,19 @@ class Uploads(Transfers):
             if upload.speed > 0:
                 # Inform the server about the last upload speed for this transfer
                 log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
-                core.send_message_to_server(slskmessages.SendUploadSpeed(upload.speed))
+                core.send_message_to_server(SendUploadSpeed(upload.speed))
 
             self._finish_transfer(upload)
             return
 
-        if core.users.statuses.get(upload.username) == slskmessages.UserStatus.OFFLINE:
+        if core.users.statuses.get(upload.username) == UserStatus.OFFLINE:
             status = TransferStatus.USER_LOGGED_OFF
         else:
             status = TransferStatus.CANCELLED
 
             # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
             # intentionally cancelled, the peer should ignore this message.
-            core.send_message_to_peer(upload.username, slskmessages.UploadFailed(upload.virtual_path))
+            core.send_message_to_peer(upload.username, UploadFailed(upload.virtual_path))
 
         if not self._auto_clear_transfer(upload):
             self._abort_transfer(upload, status=status)
@@ -1205,7 +1218,7 @@ class Uploads(Transfers):
 
         if queue_position > 0:
             core.send_message_to_peer(
-                username, slskmessages.PlaceInQueueResponse(virtual_path, queue_position))
+                username, PlaceInQueueResponse(virtual_path, queue_position))
 
         # Update queue position in our list of uploads
         upload.queue_position = queue_position

@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -858,7 +857,7 @@ class Application:
 
     def on_connect_disconnect(self, *_args):
 
-        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != UserStatus.OFFLINE:
             self.on_disconnect()
             return
 

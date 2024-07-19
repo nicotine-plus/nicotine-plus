@@ -21,10 +21,10 @@ import shutil
 
 from unittest import TestCase
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.downloads import RequestedFolder
+from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
 from pynicotine.userbrowse import BrowsedUser
 
@@ -90,27 +90,27 @@ class DownloadsTest(TestCase):
         self.assertEqual(transfer.size, 10093741)
         self.assertEqual(transfer.current_byte_offset, 5000)
         self.assertEqual(transfer.file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 320,
-            slskmessages.FileAttribute.DURATION: 252
+            FileAttribute.BITRATE: 320,
+            FileAttribute.DURATION: 252
         })
 
         # File attribute dictionary represented as string (downgrade from >=3.3.0 to earlier and upgrade again)
         self.assertEqual(transfers[15].file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 256,
-            slskmessages.FileAttribute.DURATION: 476
+            FileAttribute.BITRATE: 256,
+            FileAttribute.DURATION: 476
         })
 
         # Legacy bitrate/duration strings (Nicotine+ <3.3.0)
         self.assertEqual(transfers[14].file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 128,
-            slskmessages.FileAttribute.DURATION: 290
+            FileAttribute.BITRATE: 128,
+            FileAttribute.DURATION: 290
         })
 
         # Legacy bitrate/duration strings (vbr) (Nicotine+ <3.3.0)
         self.assertEqual(transfers[13].file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 238,
-            slskmessages.FileAttribute.VBR: 1,
-            slskmessages.FileAttribute.DURATION: 173
+            FileAttribute.BITRATE: 238,
+            FileAttribute.VBR: 1,
+            FileAttribute.DURATION: 173
         })
 
         # Empty legacy bitrate/duration strings (Nicotine+ <3.3.0)

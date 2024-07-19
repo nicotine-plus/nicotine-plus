@@ -19,12 +19,15 @@
 import os
 import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import UserInfoRequest
+from pynicotine.slskmessages import UserInfoResponse
+from pynicotine.slskmessages import UserInterests
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
@@ -96,7 +99,7 @@ class UserInfo:
             else:
                 uploadallowed = 0
 
-        msg = slskmessages.UserInfoResponse(
+        msg = UserInfoResponse(
             descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
             uploadallowed=uploadallowed
         )
@@ -131,10 +134,10 @@ class UserInfo:
             core.users.watch_user(username, context="userinfo")
 
             # Request user description, picture and queue information
-            core.send_message_to_peer(username, slskmessages.UserInfoRequest())
+            core.send_message_to_peer(username, UserInfoRequest())
 
         # Request user interests
-        core.send_message_to_server(slskmessages.UserInterests(username))
+        core.send_message_to_server(UserInterests(username))
 
     def remove_user(self, username):
 
@@ -166,7 +169,7 @@ class UserInfo:
         if username not in self.users:
             # We've removed the user. Close the connection to stop the user from
             # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
 
     def _user_info_request(self, msg):
         """Peer code 15."""

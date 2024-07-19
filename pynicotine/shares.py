@@ -39,12 +39,16 @@ from struct import Struct
 from threading import Thread
 
 from pynicotine import rename_process
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.external.tinytag import TinyTag
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import FolderContentsResponse
+from pynicotine.slskmessages import GetUserStats
+from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import SharedFoldersFiles
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import encode_path
@@ -319,7 +323,7 @@ class Scanner:
         if permission_level in {PermissionLevel.PUBLIC, PermissionLevel.BUDDY} and not self.reveal_trusted_shares:
             trusted_streams = None
 
-        compressed_shares = slskmessages.SharedFileListResponse(
+        compressed_shares = SharedFileListResponse(
             public_shares=public_streams, buddy_shares=buddy_streams, trusted_shares=trusted_streams,
             permission_level=permission_level
         )
@@ -616,10 +620,10 @@ class Scanner:
         """Pack all files and metadata in folder."""
 
         stream = bytearray()
-        stream.extend(slskmessages.FileListMessage.pack_uint32(len(file_list)))
+        stream.extend(FileListMessage.pack_uint32(len(file_list)))
 
         for fileinfo in file_list:
-            stream.extend(slskmessages.FileListMessage.pack_file_info(fileinfo))
+            stream.extend(FileListMessage.pack_file_info(fileinfo))
 
         return bytes(stream)
 
@@ -633,10 +637,10 @@ class Shares:
         self.initialized = False
         self.rescanning = False
         self.compressed_shares = {
-            PermissionLevel.PUBLIC: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
-            PermissionLevel.BUDDY: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BUDDY),
-            PermissionLevel.TRUSTED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.TRUSTED),
-            PermissionLevel.BANNED: slskmessages.SharedFileListResponse(permission_level=PermissionLevel.BANNED)
+            PermissionLevel.PUBLIC: SharedFileListResponse(permission_level=PermissionLevel.PUBLIC),
+            PermissionLevel.BUDDY: SharedFileListResponse(permission_level=PermissionLevel.BUDDY),
+            PermissionLevel.TRUSTED: SharedFileListResponse(permission_level=PermissionLevel.TRUSTED),
+            PermissionLevel.BANNED: SharedFileListResponse(permission_level=PermissionLevel.BANNED)
         }
         self.share_db_paths = {
             "words": os.path.join(config.data_folder_path, "words.dbn"),
@@ -959,7 +963,7 @@ class Shares:
             num_shared_folders += len(self.share_dbs.get("trusted_streams", {}))
             num_shared_files += len(self.share_dbs.get("trusted_files", {}))
 
-        core.send_message_to_server(slskmessages.SharedFoldersFiles(num_shared_folders, num_shared_files))
+        core.send_message_to_server(SharedFoldersFiles(num_shared_folders, num_shared_files))
 
         if not local_username:
             # The shares module is initialized before the users module (to send updated share
@@ -973,7 +977,7 @@ class Shares:
         # response
         events.emit(
             "user-stats",
-            slskmessages.GetUserStats(
+            GetUserStats(
                 user=local_username,
                 avgspeed=core.uploads.upload_speed, files=num_shared_files, dirs=num_shared_folders
             )
@@ -1072,7 +1076,7 @@ class Shares:
                     template, args = item
                     log.add(template, args)
 
-                elif isinstance(item, slskmessages.SharedFileListResponse):
+                elif isinstance(item, SharedFileListResponse):
                     self.compressed_shares[item.permission_level] = item
 
                 elif isinstance(item, list):
@@ -1161,4 +1165,4 @@ class Shares:
                 folder_data = self.share_dbs.get("trusted_streams", {}).get(folder_path)
 
         core.send_message_to_peer(
-            username, slskmessages.FolderContentsResponse(directory=folder_path, token=msg.token, shares=folder_data))
+            username, FolderContentsResponse(directory=folder_path, token=msg.token, shares=folder_data))

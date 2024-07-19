@@ -17,11 +17,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import ChangePassword
+from pynicotine.slskmessages import CheckPrivileges
+from pynicotine.slskmessages import GetPeerAddress
+from pynicotine.slskmessages import GetUserStats
+from pynicotine.slskmessages import GetUserStatus
+from pynicotine.slskmessages import GivePrivileges
+from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import SetStatus
+from pynicotine.slskmessages import UnwatchUser
+from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import open_uri
 
@@ -44,7 +54,7 @@ class Users:
 
     def __init__(self):
 
-        self.login_status = slskmessages.UserStatus.OFFLINE
+        self.login_status = UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
         self.public_port = None
@@ -79,12 +89,12 @@ class Users:
         if save_state:
             config.sections["server"]["away"] = is_away
 
-        self.login_status = slskmessages.UserStatus.AWAY if is_away else slskmessages.UserStatus.ONLINE
+        self.login_status = UserStatus.AWAY if is_away else UserStatus.ONLINE
         self.request_set_status(self.login_status)
 
         # Fake a user status message, since server doesn't send updates when we
         # disable away mode
-        events.emit("user-status", slskmessages.GetUserStatus(self.login_username, self.login_status))
+        events.emit("user-status", GetUserStatus(self.login_username, self.login_status))
 
     def open_privileges_url(self):
 
@@ -94,15 +104,15 @@ class Users:
         open_uri(pynicotine.__privileges_url__ % login)
 
     def request_change_password(self, password):
-        core.send_message_to_server(slskmessages.ChangePassword(password))
+        core.send_message_to_server(ChangePassword(password))
 
     def request_check_privileges(self, should_open_url=False):
         self._should_open_privileges_url = should_open_url
-        core.send_message_to_server(slskmessages.CheckPrivileges())
+        core.send_message_to_server(CheckPrivileges())
 
     def request_give_privileges(self, username, days):
         if UINT32_LIMIT >= days > 0:
-            core.send_message_to_server(slskmessages.GivePrivileges(username, days))
+            core.send_message_to_server(GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
 
@@ -110,13 +120,13 @@ class Users:
             return
 
         self._ip_requested[username] = notify
-        core.send_message_to_server(slskmessages.GetPeerAddress(username))
+        core.send_message_to_server(GetPeerAddress(username))
 
     def request_set_status(self, status):
-        core.send_message_to_server(slskmessages.SetStatus(status))
+        core.send_message_to_server(SetStatus(status))
 
     def request_user_stats(self, username):
-        core.send_message_to_server(slskmessages.GetUserStats(username))
+        core.send_message_to_server(GetUserStats(username))
 
     def watch_user(self, username, context=None, is_implicit=False):
         """Tells the server we want to be notified of status updates for a
@@ -131,7 +141,7 @@ class Users:
         users in a joined chat room.
         """
 
-        if self.login_status == slskmessages.UserStatus.OFFLINE:
+        if self.login_status == UserStatus.OFFLINE:
             return
 
         watched_user = self.watched.get(username)
@@ -147,8 +157,8 @@ class Users:
             return
 
         if not is_implicit and watched_user.is_implicit:
-            core.send_message_to_server(slskmessages.WatchUser(username))
-            core.send_message_to_server(slskmessages.GetUserStatus(username))  # Get privilege status
+            core.send_message_to_server(WatchUser(username))
+            core.send_message_to_server(GetUserStatus(username))  # Get privilege status
             watched_user.is_implicit = False
 
         watched_user.contexts.add(context)
@@ -185,7 +195,7 @@ class Users:
             return
 
         if not watched_user.is_implicit:
-            core.send_message_to_server(slskmessages.UnwatchUser(username))
+            core.send_message_to_server(UnwatchUser(username))
 
         if username in self.addresses:
             del self.addresses[username]
@@ -200,7 +210,7 @@ class Users:
 
     def _server_disconnect(self, manual_disconnect=False):
 
-        self.login_status = slskmessages.UserStatus.OFFLINE
+        self.login_status = UserStatus.OFFLINE
 
         if core.pluginhandler:
             core.pluginhandler.server_disconnect_notification(manual_disconnect)
@@ -224,12 +234,12 @@ class Users:
         """Server code 1."""
 
         if msg.success:
-            self.login_status = slskmessages.UserStatus.ONLINE
+            self.login_status = UserStatus.ONLINE
             self.login_username = username = msg.username
             _local_ip_address, self.public_port = msg.local_address
             self.addresses[username] = msg.local_address
 
-            core.send_message_to_server(slskmessages.CheckPrivileges())
+            core.send_message_to_server(CheckPrivileges())
             self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(username, context="login")
 
@@ -244,7 +254,7 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.reason == slskmessages.LoginFailure.PASSWORD:
+        if msg.reason == LoginFailure.PASSWORD:
             events.emit("invalid-password")
             return
 
@@ -327,8 +337,7 @@ class Users:
             elif username in self.privileged:
                 self.privileged.remove(username)
 
-        if status not in {slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
-                          slskmessages.UserStatus.AWAY}:
+        if status not in {UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY}:
             log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
                 "status": status,
                 "user": username
@@ -343,7 +352,7 @@ class Users:
         is_watched = (username in self.watched)
 
         # User went offline, reset stored IP address and country
-        if status == slskmessages.UserStatus.OFFLINE:
+        if status == UserStatus.OFFLINE:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
@@ -360,7 +369,7 @@ class Users:
                 self.request_ip_address(username)
 
             # Previously watched user logged in again. Server will not send user stats, so request them.
-            elif user_status == slskmessages.UserStatus.OFFLINE:
+            elif user_status == UserStatus.OFFLINE:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
 

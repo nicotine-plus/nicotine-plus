@@ -28,7 +28,6 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -38,6 +37,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import remove_css_class
+from pynicotine.slskmessages import UserStatus
 
 
 class TabLabel:
@@ -416,7 +416,7 @@ class IconNotebook:
         self.parent.set_visible(True)
 
         if user is not None:
-            status = core.users.statuses.get(user, slskmessages.UserStatus.OFFLINE)
+            status = core.users.statuses.get(user, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
     def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
@@ -606,10 +606,10 @@ class IconNotebook:
 
     def set_user_status(self, page, user, status):
 
-        if status == slskmessages.UserStatus.AWAY:
+        if status == UserStatus.AWAY:
             status_text = _("Away")
 
-        elif status == slskmessages.UserStatus.ONLINE:
+        elif status == UserStatus.ONLINE:
             status_text = _("Online")
 
         else:

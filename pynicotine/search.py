@@ -26,12 +26,18 @@ from operator import itemgetter
 from random import random
 from shlex import shlex
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import FileSearch
+from pynicotine.slskmessages import FileSearchResponse
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import RoomSearch
+from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
+from pynicotine.slskmessages import UserSearch
+from pynicotine.slskmessages import WishlistSearch
 from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
@@ -90,7 +96,7 @@ class Search:
 
         # Create wishlist searches
         for search_term in config.sections["server"]["autosearch"]:
-            self.token = slskmessages.increment_token(self.token)
+            self.token = increment_token(self.token)
             self.add_search(search_term, mode="wishlist", is_ignored=True)
 
     def _quit(self):
@@ -117,12 +123,12 @@ class Search:
     @staticmethod
     def add_allowed_token(token):
         """Allow parsing search result messages for a search ID."""
-        slskmessages.SEARCH_TOKENS_ALLOWED.add(token)
+        SEARCH_TOKENS_ALLOWED.add(token)
 
     @staticmethod
     def remove_allowed_token(token):
         """Disallow parsing search result messages for a search ID."""
-        slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
+        SEARCH_TOKENS_ALLOWED.discard(token)
 
     def add_search(self, search_term, mode, room=None, users=None, is_ignored=False):
 
@@ -284,7 +290,7 @@ class Search:
         search_term, room, users = self.process_search_term(search_term, mode, room, users)
 
         # Get a new search token
-        self.token = slskmessages.increment_token(self.token)
+        self.token = increment_token(self.token)
         search = self.add_search(search_term, mode, room, users)
 
         if config.sections["searches"]["enable_history"]:
@@ -314,23 +320,23 @@ class Search:
         events.emit("add-search", search.token, search, switch_page)
 
     def do_global_search(self, text):
-        core.send_message_to_server(slskmessages.FileSearch(self.token, text))
+        core.send_message_to_server(FileSearch(self.token, text))
 
         # Request a list of related searches from the server.
         # Seemingly non-functional since 2018 (always receiving empty lists).
 
-        # core.send_message_to_server(slskmessages.RelatedSearch(text))
+        # core.send_message_to_server(RelatedSearch(text))
 
     def do_rooms_search(self, text, room):
-        core.send_message_to_server(slskmessages.RoomSearch(room, self.token, text))
+        core.send_message_to_server(RoomSearch(room, self.token, text))
 
     def do_buddies_search(self, text):
         for username in core.buddies.users:
-            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
+            core.send_message_to_server(UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):
         for username in users:
-            core.send_message_to_server(slskmessages.UserSearch(username, self.token, text))
+            core.send_message_to_server(UserSearch(username, self.token, text))
 
     def do_wishlist_search(self, token, text):
 
@@ -342,7 +348,7 @@ class Search:
         log.add_search(_('Searching for wishlist item "%s"'), text)
 
         self.add_allowed_token(token)
-        core.send_message_to_server(slskmessages.WishlistSearch(token, text))
+        core.send_message_to_server(WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
 
@@ -367,7 +373,7 @@ class Search:
             return
 
         # Get a new search token
-        self.token = slskmessages.increment_token(self.token)
+        self.token = increment_token(self.token)
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
@@ -419,7 +425,7 @@ class Search:
     def _file_search_response(self, msg):
         """Peer code 9."""
 
-        if msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+        if msg.token not in SEARCH_TOKENS_ALLOWED:
             msg.token = None
             return
 
@@ -713,7 +719,7 @@ class Search:
         if not num_results:
             return
 
-        core.send_message_to_peer(username, slskmessages.FileSearchResponse(
+        core.send_message_to_peer(username, FileSearchResponse(
             search_username=local_username,
             token=token,
             shares=fileinfos,

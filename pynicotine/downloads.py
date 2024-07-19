@@ -37,12 +37,22 @@ except ImportError:
 
 from collections import defaultdict
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import ConnectionType
+from pynicotine.slskmessages import DownloadFile
+from pynicotine.slskmessages import FileOffset
+from pynicotine.slskmessages import FolderContentsRequest
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import PlaceInQueueRequest
+from pynicotine.slskmessages import QueueUpload
+from pynicotine.slskmessages import SetDownloadLimit
+from pynicotine.slskmessages import TransferDirection
 from pynicotine.slskmessages import TransferRejectReason
+from pynicotine.slskmessages import TransferResponse
+from pynicotine.slskmessages import UserStatus
 from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
@@ -256,7 +266,7 @@ class Downloads(Transfers):
         else:
             speed_limit = 0
 
-        core.send_message_to_network_thread(slskmessages.SetDownloadLimit(speed_limit))
+        core.send_message_to_network_thread(SetDownloadLimit(speed_limit))
 
     # Transfer Actions #
 
@@ -284,7 +294,7 @@ class Downloads(Transfers):
             except re.error:
                 pass
 
-        if slskmessages.UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
+        if UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
             # Either we are offline or the user we want to download from is
             self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return False
@@ -303,7 +313,7 @@ class Downloads(Transfers):
 
         super()._enqueue_transfer(transfer)
 
-        msg = slskmessages.QueueUpload(virtual_path, transfer.legacy_attempt)
+        msg = QueueUpload(virtual_path, transfer.legacy_attempt)
 
         if not core.shares.initialized:
             # Remain queued locally until our shares have initialized, to prevent invalid
@@ -554,7 +564,7 @@ class Downloads(Transfers):
         for download in self.queued_transfers:
             core.send_message_to_peer(
                 download.username,
-                slskmessages.PlaceInQueueRequest(download.virtual_path, download.legacy_attempt)
+                PlaceInQueueRequest(download.virtual_path, download.legacy_attempt)
             )
 
     def _retry_failed_connection_downloads(self):
@@ -770,10 +780,10 @@ class Downloads(Transfers):
             "user": username
         })
 
-        self._requested_folder_token = slskmessages.increment_token(self._requested_folder_token)
+        self._requested_folder_token = increment_token(self._requested_folder_token)
 
         core.send_message_to_peer(
-            username, slskmessages.FolderContentsRequest(
+            username, FolderContentsRequest(
                 folder_path, self._requested_folder_token, legacy_client=requested_folder.legacy_attempt
             )
         )
@@ -888,7 +898,7 @@ class Downloads(Transfers):
             # Skip redundant status updates from users in joined rooms
             return
 
-        if msg.status == slskmessages.UserStatus.OFFLINE:
+        if msg.status == UserStatus.OFFLINE:
             for users in (self.queued_users, self.failed_users):
                 for download in users.get(username, {}).copy().values():
                     self._abort_transfer(download, status=TransferStatus.USER_LOGGED_OFF)
@@ -923,10 +933,10 @@ class Downloads(Transfers):
         if not msgs:
             return
 
-        if conn_type not in {slskmessages.ConnectionType.FILE, slskmessages.ConnectionType.PEER}:
+        if conn_type not in {ConnectionType.FILE, ConnectionType.PEER}:
             return
 
-        failed_msg_types = {slskmessages.QueueUpload, slskmessages.PlaceInQueueRequest}
+        failed_msg_types = {QueueUpload, PlaceInQueueRequest}
 
         for msg in msgs:
             if msg.__class__ in failed_msg_types:
@@ -1052,7 +1062,7 @@ class Downloads(Transfers):
     def _transfer_request(self, msg):
         """Peer code 40."""
 
-        if msg.direction != slskmessages.TransferDirection.UPLOAD:
+        if msg.direction != TransferDirection.UPLOAD:
             return
 
         username = msg.username
@@ -1103,7 +1113,7 @@ class Downloads(Transfers):
             self._activate_transfer(download, token)
             self._update_transfer(download)
 
-            return slskmessages.TransferResponse(allowed=True, token=token)
+            return TransferResponse(allowed=True, token=token)
 
         download = self.transfers.get(username + virtual_path)
         cancel_reason = TransferRejectReason.CANCELLED
@@ -1132,14 +1142,14 @@ class Downloads(Transfers):
                 self._activate_transfer(transfer, token)
                 self._update_transfer(transfer)
 
-                return slskmessages.TransferResponse(allowed=True, token=token)
+                return TransferResponse(allowed=True, token=token)
 
         log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
             "user": username,
             "msg": msg
         })
 
-        return slskmessages.TransferResponse(allowed=False, reason=cancel_reason, token=token)
+        return TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
     def _transfer_timeout(self, transfer):
 
@@ -1247,10 +1257,10 @@ class Downloads(Transfers):
 
             if download.size > offset:
                 download.status = TransferStatus.TRANSFERRING
-                core.send_message_to_network_thread(slskmessages.DownloadFile(
+                core.send_message_to_network_thread(DownloadFile(
                     sock=sock, token=token, file=file_handle, leftbytes=(download.size - offset)
                 ))
-                core.send_message_to_peer(username, slskmessages.FileOffset(sock, offset))
+                core.send_message_to_peer(username, FileOffset(sock, offset))
 
             else:
                 self._finish_transfer(download)
@@ -1402,7 +1412,7 @@ class Downloads(Transfers):
             self._finish_transfer(download)
             return
 
-        if core.users.statuses.get(download.username) == slskmessages.UserStatus.OFFLINE:
+        if core.users.statuses.get(download.username) == UserStatus.OFFLINE:
             status = TransferStatus.USER_LOGGED_OFF
         else:
             status = TransferStatus.CANCELLED

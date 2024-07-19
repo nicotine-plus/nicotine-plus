@@ -22,9 +22,14 @@ import time
 
 from collections import deque
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
+from pynicotine.slskmessages import ChangePassword
+from pynicotine.slskmessages import DistribEmbeddedMessage
+from pynicotine.slskmessages import DistribSearch
+from pynicotine.slskmessages import EmbeddedMessage
+from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
@@ -64,12 +69,12 @@ class Logger:
     }
 
     EXCLUDED_MSGS = {
-        slskmessages.ChangePassword,
-        slskmessages.DistribEmbeddedMessage,
-        slskmessages.DistribSearch,
-        slskmessages.EmbeddedMessage,
-        slskmessages.SharedFileListResponse,
-        slskmessages.UnknownPeerMessage
+        ChangePassword,
+        DistribEmbeddedMessage,
+        DistribSearch,
+        EmbeddedMessage,
+        SharedFileListResponse,
+        UnknownPeerMessage
     }
 
     def __init__(self):

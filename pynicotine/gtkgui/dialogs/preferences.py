@@ -34,7 +34,6 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -62,6 +61,7 @@ from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.i18n import LANGUAGES
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import UserStatus
 from pynicotine.slskproto import NetworkInterfaces
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_folder_path
@@ -204,7 +204,7 @@ class NetworkPage:
             self.on_change_password()
             return
 
-        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status == UserStatus.OFFLINE:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
@@ -213,7 +213,7 @@ class NetworkPage:
 
     def on_change_password(self, *_args):
 
-        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != UserStatus.OFFLINE:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -1862,9 +1862,9 @@ class UserInterfacePage:
                 button.set_use_alpha(True)
 
         icon_list = [
-            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
-            (USER_STATUS_ICON_NAMES[slskmessages.UserStatus.OFFLINE], _("Offline"), 16,
+            (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.AWAY], _("Away"), 16, ("colored-icon", "user-status")),
+            (USER_STATUS_ICON_NAMES[UserStatus.OFFLINE], _("Offline"), 16,
              ("colored-icon", "user-status")),
             ("nplus-tab-changed", _("Tab Changed"), 16, ("colored-icon", "notebook-tab-changed")),
             ("nplus-tab-highlight", _("Tab Highlight"), 16, ("colored-icon", "notebook-tab-highlight")),

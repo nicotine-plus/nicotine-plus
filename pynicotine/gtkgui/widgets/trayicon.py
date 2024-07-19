@@ -25,7 +25,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -33,6 +32,7 @@ from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
 
@@ -119,8 +119,8 @@ class BaseImplementation:
     def _update_user_status(self):
 
         should_update = False
-        away_sensitive = core.users.login_status != slskmessages.UserStatus.OFFLINE
-        away_toggled = core.users.login_status == slskmessages.UserStatus.AWAY
+        away_sensitive = core.users.login_status != UserStatus.OFFLINE
+        away_toggled = core.users.login_status == UserStatus.AWAY
         connect_label = _("_Disconnect") if away_sensitive else _("_Connect")
 
         if self.connect_disconnect_item.get("text") != connect_label:
@@ -147,10 +147,10 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.users.login_status == slskmessages.UserStatus.ONLINE:
+        elif core.users.login_status == UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.users.login_status == slskmessages.UserStatus.AWAY:
+        elif core.users.login_status == UserStatus.AWAY:
             icon_name = "away"
 
         else:

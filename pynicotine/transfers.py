@@ -32,11 +32,13 @@ from ast import literal_eval
 from collections import defaultdict
 from os.path import normpath
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import FileAttribute
+from pynicotine.slskmessages import UploadDenied
 from pynicotine.utils import encode_path
 from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
@@ -227,10 +229,10 @@ class Transfers:
         is_vbr = (" (vbr)" in bitrate)
 
         try:
-            file_attributes[slskmessages.FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
+            file_attributes[FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
 
             if is_vbr:
-                file_attributes[slskmessages.FileAttribute.VBR] = int(is_vbr)
+                file_attributes[FileAttribute.VBR] = int(is_vbr)
 
         except ValueError:
             # No valid bitrate value found
@@ -250,7 +252,7 @@ class Transfers:
         for part in loaded_length.split(":"):
             seconds = seconds * 60 + int(part, 10)
 
-        file_attributes[slskmessages.FileAttribute.DURATION] = seconds
+        file_attributes[FileAttribute.DURATION] = seconds
 
         return file_attributes
 
@@ -398,14 +400,14 @@ class Transfers:
         transfer.size_changed = False
 
         if transfer.sock is not None:
-            core.send_message_to_network_thread(slskmessages.CloseConnection(transfer.sock))
+            core.send_message_to_network_thread(CloseConnection(transfer.sock))
 
         if transfer.file_handle is not None:
             self._close_file(transfer)
 
         elif denied_message and virtual_path in self.queued_users.get(username, {}):
             core.send_message_to_peer(
-                username, slskmessages.UploadDenied(virtual_path, denied_message))
+                username, UploadDenied(virtual_path, denied_message))
 
         self._deactivate_transfer(transfer)
         self._dequeue_transfer(transfer)
