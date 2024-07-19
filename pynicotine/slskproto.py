@@ -95,7 +95,7 @@ class Connection:
     slskmessages docstrings).
     """
 
-    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "lastactive", "recv_size")
+    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "last_active", "recv_size")
 
     def __init__(self, sock=None, addr=None, selector_events=None):
 
@@ -104,7 +104,7 @@ class Connection:
         self.selector_events = selector_events
         self.ibuf = bytearray()
         self.obuf = bytearray()
-        self.lastactive = time.monotonic()
+        self.last_active = time.monotonic()
         self.recv_size = None
 
 
@@ -1007,7 +1007,7 @@ class NetworkThread(Thread):
                 self._calc_upload_limit_function()
 
             if self._should_process_queue:
-                timed_out = (time.monotonic() - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE
+                timed_out = (time.monotonic() - conn_obj.last_active) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
                     "file-connection-closed", username=username, token=conn_obj.fileinit.token,
                     sock=sock, timed_out=timed_out)
@@ -1048,7 +1048,7 @@ class NetworkThread(Thread):
             # Connection limit reached, close connection if inactive
             return True
 
-        time_diff = (current_time - conn_obj.lastactive)
+        time_diff = (current_time - conn_obj.last_active)
 
         if not conn_obj.has_post_init_activity and time_diff > self.CONNECTION_MAX_IDLE_GHOST:
             # "Ghost" connections can appear when an indirect connection is established,
@@ -1069,7 +1069,7 @@ class NetworkThread(Thread):
         stale_sockets = set()
 
         for sock, conn_obj in self._conns_in_progress.items():
-            if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
+            if (current_time - conn_obj.last_active) > self.IN_PROGRESS_STALE_AFTER:
                 stale_sockets.add(sock)
 
         if not stale_sockets:
@@ -2470,7 +2470,7 @@ class NetworkThread(Thread):
         if sock in self._conns_in_progress:
             # Connection has been established
             conn_obj_in_progress = self._conns_in_progress.pop(sock)
-            conn_obj_in_progress.lastactive = current_time
+            conn_obj_in_progress.last_active = current_time
 
             if sock is self._server_socket:
                 self._establish_outgoing_server_connection(conn_obj_in_progress)
@@ -2616,7 +2616,7 @@ class NetworkThread(Thread):
     def _read_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        conn_obj.lastactive = current_time
+        conn_obj.last_active = current_time
         use_download_limit = (self._download_limit_split and self._is_transferring_download(conn_obj))
 
         if use_download_limit:
@@ -2643,8 +2643,8 @@ class NetworkThread(Thread):
     def _write_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        prev_active = conn_obj.lastactive
-        conn_obj.lastactive = current_time
+        prev_active = conn_obj.last_active
+        conn_obj.last_active = current_time
 
         if self._upload_limit_split and self._is_transferring_upload(conn_obj):
             limit = (self._upload_limit_split - self._conns_uploaded[conn_obj])
@@ -2663,7 +2663,7 @@ class NetworkThread(Thread):
                 size = conn_obj.fileupl.size
 
                 if totalsentbytes < size:
-                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.lastactive - prev_active)
+                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.last_active - prev_active)
                                       - len(conn_obj.obuf))
 
                     if bytestoread > 0:
