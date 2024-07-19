@@ -1283,14 +1283,13 @@ class NetworkThread(Thread):
         of the msg_buffer."""
 
         msg_buffer = conn_obj.ibuf
-        msg_buffer_mem = memoryview(msg_buffer)
-        buffer_len = len(msg_buffer_mem)
+        buffer_len = len(msg_buffer)
         idx = 0
         should_close_connection = False
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
@@ -1309,7 +1308,7 @@ class NetworkThread(Thread):
             if msg_type in SERVER_MESSAGE_CLASSES:
                 msg_class = SERVER_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 8:idx + msg_size_total], msg_size - 4, "server")
+                    msg_class, memoryview(msg_buffer)[idx + 8:idx + msg_size_total], msg_size - 4, "server")
 
                 if msg is not None:
                     if msg_class is EmbeddedMessage:
@@ -1445,8 +1444,6 @@ class NetworkThread(Thread):
             idx += msg_size_total
             buffer_len -= msg_size_total
 
-        msg_buffer_mem.release()
-
         if should_close_connection:
             self._manual_server_disconnect = True
             self._close_connection(self._conns, self._server_socket)
@@ -1552,14 +1549,13 @@ class NetworkThread(Thread):
 
         init = None
         msg_buffer = conn_obj.ibuf
-        msg_buffer_mem = memoryview(msg_buffer)
-        buffer_len = len(msg_buffer_mem)
+        buffer_len = len(msg_buffer)
         idx = 0
         should_close_connection = False
 
         # Peer init messages are 8 bytes or greater in length
         while buffer_len >= 8 and init is None:
-            msg_size, = UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size, = UINT32_UNPACK(msg_buffer, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
@@ -1576,13 +1572,14 @@ class NetworkThread(Thread):
                 conn_obj.has_post_init_activity = True
                 break
 
-            msg_type = msg_buffer_mem[idx + 4]
+            msg_type = msg_buffer[idx + 4]
 
             # Unpack peer init messages
             if msg_type in PEER_INIT_MESSAGE_CLASSES:
                 msg_class = PEER_INIT_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 5:idx + msg_size_total], msg_size - 1, "peer init", conn_obj.sock)
+                    msg_class, memoryview(msg_buffer)[idx + 5:idx + msg_size_total], msg_size - 1, "peer init",
+                    conn_obj.sock)
 
                 if msg is not None:
                     if msg_class is PierceFireWall:
@@ -1658,8 +1655,6 @@ class NetworkThread(Thread):
 
             idx += msg_size_total
             buffer_len -= msg_size_total
-
-        msg_buffer_mem.release()
 
         if should_close_connection:
             self._close_connection(self._conns, conn_obj.sock)
@@ -1795,15 +1790,14 @@ class NetworkThread(Thread):
         objects and returns them and the rest of the msg_buffer."""
 
         msg_buffer = conn_obj.ibuf
-        msg_buffer_mem = memoryview(msg_buffer)
-        buffer_len = len(msg_buffer_mem)
+        buffer_len = len(msg_buffer)
         idx = 0
         should_close_connection = False
         search_result_received = False
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= 8:
-            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
@@ -1836,7 +1830,7 @@ class NetworkThread(Thread):
             # Unpack peer messages
             if msg_class:
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 8:idx + msg_size_total], msg_size - 4, "peer",
+                    msg_class, memoryview(msg_buffer)[idx + 8:idx + msg_size_total], msg_size - 4, "peer",
                     conn_obj.sock, conn_obj.addr, conn_obj.init.target_user)
 
                 if msg_class is FileSearchResponse:
@@ -1858,8 +1852,6 @@ class NetworkThread(Thread):
 
             idx += msg_size_total
             buffer_len -= msg_size_total
-
-        msg_buffer_mem.release()
 
         if should_close_connection:
             self._close_connection(self._conns, conn_obj.sock)
@@ -1936,20 +1928,30 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
+    def _write_download_file(self, conn_obj, msg_buffer):
+
+        if not msg_buffer:
+            return
+
+        added_bytes_len = len(msg_buffer)
+        self._total_download_bandwidth += added_bytes_len
+
+        conn_obj.filedown.file.write(msg_buffer)
+        conn_obj.filedown.leftbytes -= added_bytes_len
+
     def _process_file_input(self, conn_obj):
         """We have a "F" connection (filetransfer), peer has sent us something,
         this function retrieves messages from the msg_buffer, creates message
         objects and returns them and the rest of the msg_buffer."""
 
         msg_buffer = conn_obj.ibuf
-        msg_buffer_mem = memoryview(msg_buffer)
         idx = 0
         should_close_connection = False
 
         if conn_obj.fileinit is None:
             msg_size = idx = 4
             msg = self._unpack_network_message(
-                FileTransferInit, msg_buffer_mem[:msg_size], msg_size, "file",
+                FileTransferInit, memoryview(msg_buffer)[:msg_size], msg_size, "file",
                 sock=conn_obj.sock, username=conn_obj.init.target_user)
 
             if msg is not None and msg.token is not None:
@@ -1958,22 +1960,16 @@ class NetworkThread(Thread):
 
         elif conn_obj.filedown is not None:
             idx = conn_obj.filedown.leftbytes
-            added_bytes_mem = msg_buffer_mem[:idx]
 
-            if added_bytes_mem:
-                added_bytes_len = len(added_bytes_mem)
-                self._total_download_bandwidth += added_bytes_len
+            try:
+                self._write_download_file(conn_obj, memoryview(msg_buffer)[:idx])
 
-                try:
-                    conn_obj.filedown.file.write(added_bytes_mem)
-                    conn_obj.filedown.leftbytes -= added_bytes_len
-
-                except (OSError, ValueError) as error:
-                    events.emit_main_thread(
-                        "download-file-error", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
-                        error=error
-                    )
-                    should_close_connection = True
+            except (OSError, ValueError) as error:
+                events.emit_main_thread(
+                    "download-file-error", username=conn_obj.init.target_user,
+                    token=conn_obj.filedown.token, error=error
+                )
+                should_close_connection = True
 
             current_time = time.monotonic()
             finished = (conn_obj.filedown.leftbytes <= 0)
@@ -1991,12 +1987,10 @@ class NetworkThread(Thread):
             if finished:
                 should_close_connection = True
 
-            added_bytes_mem.release()
-
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
             msg_size = idx = 8
             msg = self._unpack_network_message(
-                FileOffset, msg_buffer_mem[:msg_size], msg_size, "file",
+                FileOffset, memoryview(msg_buffer)[:msg_size], msg_size, "file",
                 sock=conn_obj.sock, username=conn_obj.init.target_user)
 
             if msg is not None and msg.offset is not None:
@@ -2013,8 +2007,6 @@ class NetworkThread(Thread):
                         error=error
                     )
                     should_close_connection = True
-
-        msg_buffer_mem.release()
 
         if should_close_connection:
             self._close_connection(self._conns, conn_obj.sock)
@@ -2227,14 +2219,13 @@ class NetworkThread(Thread):
         msg_buffer."""
 
         msg_buffer = conn_obj.ibuf
-        msg_buffer_mem = memoryview(msg_buffer)
-        buffer_len = len(msg_buffer_mem)
+        buffer_len = len(msg_buffer)
         idx = 0
         should_close_connection = False
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= 5:
-            msg_size, = UINT32_UNPACK(msg_buffer_mem, idx)
+            msg_size, = UINT32_UNPACK(msg_buffer, idx)
             msg_size_total = msg_size + 4
 
             if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
@@ -2251,13 +2242,13 @@ class NetworkThread(Thread):
                 conn_obj.has_post_init_activity = True
                 break
 
-            msg_type = msg_buffer_mem[idx + 4]
+            msg_type = msg_buffer[idx + 4]
 
             # Unpack distributed messages
             if msg_type in DISTRIBUTED_MESSAGE_CLASSES:
                 msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
-                    msg_class, msg_buffer_mem[idx + 5:idx + msg_size_total], msg_size - 1, "distrib",
+                    msg_class, memoryview(msg_buffer)[idx + 5:idx + msg_size_total], msg_size - 1, "distrib",
                     sock=conn_obj.sock, username=conn_obj.init.target_user)
 
                 if msg is not None:
@@ -2339,8 +2330,6 @@ class NetworkThread(Thread):
 
             idx += msg_size_total
             buffer_len -= msg_size_total
-
-        msg_buffer_mem.release()
 
         if should_close_connection:
             self._close_connection(self._conns, conn_obj.sock)

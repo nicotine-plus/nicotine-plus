@@ -385,11 +385,11 @@ class PrivateRoomRemoveUserMessageTest(TestCase):
 
     def test_parse_network_message(self):
         # Arrange
-        message = memoryview(b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin")
+        message = b"\x05\x00\x00\x00room7\x05\x00\x00\x00admin"
 
         # Act
         obj = PrivateRoomRemoveUser()
-        obj.parse_network_message(message)
+        obj.parse_network_message(memoryview(message))
 
         # Assert
         self.assertEqual("room7", obj.room)

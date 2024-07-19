@@ -3054,8 +3054,7 @@ class SharedFileListResponse(PeerMessage):
         return self.built
 
     def parse_network_message(self, message):
-        message = memoryview(zlib.decompress(message))
-        self._parse_network_message(message)
+        self._parse_network_message(memoryview(zlib.decompress(message)))
 
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.unpack_uint32(message, pos)
@@ -3175,8 +3174,8 @@ class FileSearchResponse(PeerMessage):
 
     def parse_network_message(self, message):
         decompressor = zlib.decompressobj()
-        pos, username_len = self.unpack_uint32(decompressor.decompress(message, 4))
-        pos, self.token = self.unpack_uint32(
+        _pos, username_len = self.unpack_uint32(decompressor.decompress(message, 4))
+        _pos, self.token = self.unpack_uint32(
             decompressor.decompress(decompressor.unconsumed_tail, username_len + 4), username_len)
 
         if self.token not in SEARCH_TOKENS_ALLOWED:
@@ -3185,18 +3184,21 @@ class FileSearchResponse(PeerMessage):
             return
 
         # Optimization: only decompress the rest of the message when needed
-        message_mem = memoryview(decompressor.decompress(decompressor.unconsumed_tail))
+        self._parse_remaining_network_message(
+            memoryview(decompressor.decompress(decompressor.unconsumed_tail))
+        )
 
-        pos, self.list = self._parse_result_list(message_mem)
-        pos, self.freeulslots = self.unpack_bool(message_mem, pos)
-        pos, self.ulspeed = self.unpack_uint32(message_mem, pos)
-        pos, self.inqueue = self.unpack_uint32(message_mem, pos)
+    def _parse_remaining_network_message(self, message):
+        pos, self.list = self._parse_result_list(message)
+        pos, self.freeulslots = self.unpack_bool(message, pos)
+        pos, self.ulspeed = self.unpack_uint32(message, pos)
+        pos, self.inqueue = self.unpack_uint32(message, pos)
 
-        if message_mem[pos:]:
-            pos, self.unknown = self.unpack_uint32(message_mem, pos)
+        if message[pos:]:
+            pos, self.unknown = self.unpack_uint32(message, pos)
 
-        if message_mem[pos:]:
-            pos, self.privatelist = self._parse_result_list(message_mem, pos)
+        if message[pos:]:
+            pos, self.privatelist = self._parse_result_list(message, pos)
 
     def _parse_result_list(self, message, pos=0):
         pos, nfiles = self.unpack_uint32(message, pos)
@@ -3365,8 +3367,7 @@ class FolderContentsResponse(PeerMessage):
         self.list = shares
 
     def parse_network_message(self, message):
-        message = memoryview(zlib.decompress(message))
-        self._parse_network_message(message)
+        self._parse_network_message(memoryview(zlib.decompress(message)))
 
     def _parse_network_message(self, message):
         pos, self.token = self.unpack_uint32(message)

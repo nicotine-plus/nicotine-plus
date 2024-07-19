@@ -100,8 +100,7 @@ class UserBrowse:
     def _parse_local_shares(self, username, msg):
         """Parse a local shares list and show it in the UI."""
 
-        built = msg.make_network_message()
-        msg.parse_network_message(built)
+        msg.parse_network_message(memoryview(msg.make_network_message()))
         msg.username = username
 
         events.emit_main_thread("shared-file-list-response", msg)

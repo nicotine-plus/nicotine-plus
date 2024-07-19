@@ -135,6 +135,30 @@ class Database:
         self._file_offset = self._file_handle.seek(0, SEEK_END)
         self._overwrite = overwrite
 
+    def _parse_content(self, content, total_size):
+
+        value_offsets = {}
+        file_signature_length = len(self.FILE_SIGNATURE)
+
+        if content[:file_signature_length] != self.FILE_SIGNATURE:
+            raise DatabaseError("Not a database file")
+
+        if content[file_signature_length:file_signature_length + 1][0] != self.VERSION:
+            raise DatabaseError("Incompatible version")
+
+        current_offset = (file_signature_length + 1)
+
+        while current_offset < total_size:
+            key_offset = (current_offset + self.LENGTH_DATA_SIZE)
+            key_length, value_length = self.UNPACK_LENGTHS(content[current_offset:key_offset])
+            value_offset = (key_offset + key_length)
+            key = str(content[key_offset:value_offset], encoding="utf-8")
+
+            value_offsets[key] = value_offset
+            current_offset = (value_offset + value_length)
+
+        return value_offsets
+
     def _load_value_offsets(self, file_path, mode):
 
         value_offsets = {}
@@ -149,30 +173,8 @@ class Database:
 
             file_handle.seek(0)
 
-            with mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ) as contents:
-                contents_view = memoryview(contents)
-
-                try:
-                    file_signature_length = len(self.FILE_SIGNATURE)
-
-                    if contents_view[:file_signature_length] != self.FILE_SIGNATURE:
-                        raise DatabaseError("Not a database file")
-
-                    if contents_view[file_signature_length:file_signature_length + 1][0] != self.VERSION:
-                        raise DatabaseError("Incompatible version")
-
-                    current_offset = (file_signature_length + 1)
-
-                    while current_offset < file_size:
-                        key_offset = (current_offset + self.LENGTH_DATA_SIZE)
-                        key_length, value_length = self.UNPACK_LENGTHS(contents_view[current_offset:key_offset])
-                        value_offset = (key_offset + key_length)
-                        key = str(contents_view[key_offset:value_offset], encoding="utf-8")
-
-                        value_offsets[key] = value_offset
-                        current_offset = (value_offset + value_length)
-                finally:
-                    contents_view.release()
+            with mmap.mmap(file_handle.fileno(), length=0, access=mmap.ACCESS_READ) as content:
+                value_offsets = self._parse_content(memoryview(content), file_size)
 
         return value_offsets
 
