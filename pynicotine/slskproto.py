@@ -669,14 +669,18 @@ class NetworkThread(Thread):
         We unpack the distributed message and process it.
         """
 
-        if msg.distrib_code not in DISTRIBUTED_MESSAGE_CLASSES:
-            return None
+        msg_type = msg.distrib_code
 
-        distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg.distrib_code]
-        distrib_msg = distrib_class()
-        distrib_msg.parse_network_message(memoryview(msg.distrib_message))
+        if msg_type not in DISTRIBUTED_MESSAGE_CLASSES:
+            # Don't know how to unpack embedded message, return the original
+            log.add_debug("Embedded distrib message type %s unknown", msg_type)
+            return msg
 
-        return distrib_msg
+        distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
+        unpacked_msg = distrib_class()
+        unpacked_msg.parse_network_message(memoryview(msg.distrib_message))
+
+        return unpacked_msg
 
     def _emit_network_message_event(self, msg):
 
