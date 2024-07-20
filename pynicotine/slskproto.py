@@ -137,7 +137,7 @@ class PeerConnection(Connection):
 
 class NetworkInterfaces:
 
-    SO_BINDTODEVICE = None
+    IP_BIND_ADDRESS_NO_PORT = SO_BINDTODEVICE = None
 
     if sys.platform == "win32":
         from ctypes import POINTER, Structure, wintypes
@@ -196,6 +196,7 @@ class NetworkInterfaces:
         ]
 
     elif sys.platform == "linux":
+        IP_BIND_ADDRESS_NO_PORT = 24
         SIOCGIFADDR = 0x8915
         SO_BINDTODEVICE = 25
 
@@ -305,16 +306,21 @@ class NetworkInterfaces:
         interface, retrieved from get_interface_addresses().
         """
 
-        try:
-            # We need to use SO_BINDTODEVICE on Linux, since socket.bind() has no
-            # effect on routing (weak host model).
-            if cls.SO_BINDTODEVICE:
+        if cls.SO_BINDTODEVICE:
+            try:
+                # We need to use SO_BINDTODEVICE on Linux, since socket.bind() has no
+                # effect on routing (weak host model).
                 sock.setsockopt(socket.SOL_SOCKET, cls.SO_BINDTODEVICE, interface_name.encode())
                 return
 
-        except PermissionError as error:
-            log.add_debug(("Failed to bind socket to network interface with SO_BINDTODEVICE. "
-                           "Falling back to socket.bind(). Error: %s"), error)
+            except PermissionError as error:
+                log.add_debug(("Failed to bind socket to network interface with SO_BINDTODEVICE. "
+                               "Falling back to socket.bind(). Error: %s"), error)
+
+                # We only need to bind to the interface address, not a port.
+                # Set IP_BIND_ADDRESS_NO_PORT to avoid reserving an ephemeral port in bind(),
+                # and let connect() select one instead later.
+                sock.setsockopt(socket.SOL_IP, cls.IP_BIND_ADDRESS_NO_PORT, 1)
 
         sock.bind((address, 0))
 
