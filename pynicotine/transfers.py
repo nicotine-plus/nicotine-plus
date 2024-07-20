@@ -522,7 +522,7 @@ class Transfers:
         # Set transfer speed to average of whole transfer
         if transfer.time_elapsed > 0 and transfer.current_byte_offset is not None:
             transferred_size = transfer.current_byte_offset - (transfer.start_byte_offset or 0)
-            transfer.speed = max(0, transferred_size // transfer.time_elapsed)
+            transfer.speed = max(0, int(transferred_size // transfer.time_elapsed))
 
         if transfer.request_timer_id is not None:
             events.cancel_scheduled(transfer.request_timer_id)
