@@ -284,7 +284,7 @@ class Logger:
 
         prefix = self.PREFIXES.get(level)
 
-        if msg_args:
+        if msg_args is not None:
             msg %= msg_args
 
         if prefix:

@@ -299,10 +299,7 @@ class Downloads(Transfers):
             self._abort_transfer(transfer, status=TransferStatus.USER_LOGGED_OFF)
             return False
 
-        log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
-            "filename": virtual_path,
-            "user": username
-        })
+        log.add_transfer("Adding file %s from user %s to download queue", (virtual_path, username))
 
         _file_path, file_exists = self.get_complete_download_file_path(
             username, virtual_path, size, transfer.folder_path)
@@ -507,20 +504,17 @@ class Downloads(Transfers):
 
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
 
-        log.add_transfer("Clearing download %(path)s from user %(user)s", {
-            "path": transfer.virtual_path,
-            "user": transfer.username
-        })
+        virtual_path = transfer.virtual_path
+        username = transfer.username
+
+        log.add_transfer("Clearing download %s from user %s", (virtual_path, username))
 
         try:
             super()._clear_transfer(transfer, denied_message=denied_message)
 
         except KeyError:
-            log.add(("FIXME: failed to remove download %(path)s from user %(user)s, not "
-                     "present in list"), {
-                "path": transfer.virtual_path,
-                "user": transfer.username
-            })
+            log.add("FIXME: failed to remove download %s from user %s, not present in list",
+                    (virtual_path, username))
 
         events.emit("clear-download", transfer, update_parent)
 
@@ -551,10 +545,7 @@ class Downloads(Transfers):
                         log.add_transfer("Deleted stale incomplete download %s", entry.path)
 
                     except OSError as error:
-                        log.add_transfer("Cannot delete incomplete download %(path)s: %(error)s", {
-                            "path": entry.path,
-                            "error": error
-                        })
+                        log.add_transfer("Cannot delete incomplete download %s: %s", (entry.path, error))
 
         except OSError as error:
             log.add_transfer("Cannot read incomplete download folder: %s", error)
@@ -775,10 +766,7 @@ class Downloads(Transfers):
             delay=timeout, callback=self._requested_folder_timeout, callback_args=(requested_folder,)
         )
 
-        log.add_transfer("Requesting contents of folder %(path)s from user %(user)s", {
-            "path": folder_path,
-            "user": username
-        })
+        log.add_transfer("Requesting contents of folder %s from user %s", (folder_path, username))
 
         self._requested_folder_token = increment_token(self._requested_folder_token)
 
@@ -962,12 +950,8 @@ class Downloads(Transfers):
         else:
             status = TransferStatus.CONNECTION_CLOSED
 
-        log.add_transfer(("Download attempt for file %(filename)s from user %(user)s failed "
-                          "with status %(status)s"), {
-            "filename": virtual_path,
-            "user": username,
-            "status": status
-        })
+        log.add_transfer("Download attempt for file %s from user %s failed with status %s",
+                         (virtual_path, username, status))
         self._abort_transfer(download, status=status)
 
     def _requested_folder_timeout(self, requested_folder):
@@ -980,19 +964,13 @@ class Downloads(Transfers):
         folder_path = requested_folder.folder_path
 
         if requested_folder.has_retried:
-            log.add_transfer(("Folder content request for folder %(path)s from user %(user)s timed out, "
-                              "giving up"), {
-                "path": folder_path,
-                "user": username
-            })
+            log.add_transfer("Folder content request for folder %s from user %s timed out, "
+                             "giving up", (folder_path, username))
             del self._requested_folders[username][folder_path]
             return
 
-        log.add_transfer(("Folder content request for folder %(path)s from user %(user)s timed out, "
-                          "retrying"), {
-            "path": folder_path,
-            "user": username
-        })
+        log.add_transfer("Folder content request for folder %s from user %s timed out, "
+                         "retrying", (folder_path, username))
 
         requested_folder.has_retried = True
         self.enqueue_folder(username, folder_path, requested_folder.download_folder_path)
@@ -1011,11 +989,8 @@ class Downloads(Transfers):
         if requested_folder is None:
             return
 
-        log.add_transfer(("Received response for folder content request for folder %(path)s "
-                          "from user %(user)s"), {
-            "path": folder_path,
-            "user": username
-        })
+        log.add_transfer("Received response for folder content request for folder %s "
+                         "from user %s", (folder_path, username))
 
         if requested_folder.request_timer_id is not None:
             events.cancel_scheduled(requested_folder.request_timer_id)
@@ -1043,12 +1018,8 @@ class Downloads(Transfers):
 
             destination_folder_path = self.get_folder_destination(username, folder_path)
 
-            log.add_transfer(("Attempting to download files in folder %(folder)s for user %(user)s. "
-                              "Destination path: %(destination)s"), {
-                "folder": folder_path,
-                "user": username,
-                "destination": destination_folder_path
-            })
+            log.add_transfer("Attempting to download files in folder %s for user %s. "
+                             "Destination path: %s", (folder_path, username, destination_folder_path))
 
             for _code, basename, file_size, _ext, file_attributes, *_unused in files:
                 virtual_path = folder_path.rstrip("\\") + "\\" + basename
@@ -1068,11 +1039,9 @@ class Downloads(Transfers):
         username = msg.username
         response = self._transfer_request_downloads(msg)
 
-        log.add_transfer(("Responding to download request with token %(token)s for file %(filename)s "
-                          "from user: %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
-            "token": response.token, "filename": msg.file, "user": username,
-            "allowed": response.allowed, "reason": response.reason
-        })
+        log.add_transfer("Responding to download request with token %s for file %s "
+                         "from user: %s, allowed: %s, reason: %s",
+                         (response.token, msg.file, username, response.allowed, response.reason))
 
         core.send_message_to_peer(username, response)
 
@@ -1083,11 +1052,8 @@ class Downloads(Transfers):
         size = msg.filesize
         token = msg.token
 
-        log.add_transfer("Received download request with token %(token)s for file %(filename)s from user %(user)s", {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
+        log.add_transfer("Received download request with token %s for file %s from user %s",
+                         (token, virtual_path, username))
 
         download = (self.queued_users.get(username, {}).get(virtual_path)
                     or self.failed_users.get(username, {}).get(virtual_path))
@@ -1144,11 +1110,7 @@ class Downloads(Transfers):
 
                 return TransferResponse(allowed=True, token=token)
 
-        log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
-            "user": username,
-            "msg": msg
-        })
-
+        log.add_transfer("Denied file request: user %s, message %s", (username, msg))
         return TransferResponse(allowed=False, reason=cancel_reason, token=token)
 
     def _transfer_timeout(self, transfer):
@@ -1156,11 +1118,8 @@ class Downloads(Transfers):
         if transfer.request_timer_id is None:
             return
 
-        log.add_transfer("Download %(filename)s with token %(token)s for user %(user)s timed out", {
-            "filename": transfer.virtual_path,
-            "token": transfer.token,
-            "user": transfer.username
-        })
+        log.add_transfer("Download %s with token %s for user %s timed out",
+                         (transfer.virtual_path, transfer.token, transfer.username))
 
         super()._transfer_timeout(transfer)
 
@@ -1195,12 +1154,8 @@ class Downloads(Transfers):
         need_update = True
         download_started = False
 
-        log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
-                          "from user %(user)s"), {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
+        log.add_transfer("Received file download init with token %s for file %s from user %s",
+                         (token, virtual_path, username))
 
         try:
             incomplete_folder_path_encoded = encode_path(incomplete_folder_path)
@@ -1292,12 +1247,8 @@ class Downloads(Transfers):
             # The peer is possibly using an old client that doesn't support Unicode
             # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
 
-            log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
-                             "Attempting to request file as latin-1.", {
-                                 "user": username,
-                                 "reason": reason,
-                                 "filename": virtual_path
-                             })
+            log.add_transfer("User %s responded with reason '%s' for download request %s. "
+                             "Attempting to request file as latin-1.", (username, reason, virtual_path))
 
             self._dequeue_transfer(download)
             download.legacy_attempt = True
@@ -1316,11 +1267,8 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=reason)
         self._update_transfer(download)
 
-        log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
-            "user": username,
-            "filename": virtual_path,
-            "reason": msg.reason
-        })
+        log.add_transfer("Download request denied by user %s for file %s. Reason: %s",
+                         (username, virtual_path, msg.reason))
 
     def _upload_failed(self, msg):
         """Peer code 46."""
@@ -1356,11 +1304,8 @@ class Downloads(Transfers):
         self._abort_transfer(download, status=TransferStatus.CONNECTION_CLOSED)
         download.retry_attempt = False
 
-        log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-            "filename": virtual_path,
-            "user": username,
-            "reason": download.status
-        })
+        log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
+                         (virtual_path, username, download.status))
 
     def _file_download_progress(self, username, token, bytes_left, speed):
         """A file download is in progress."""

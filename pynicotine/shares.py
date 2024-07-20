@@ -791,10 +791,8 @@ class Shares:
 
     def file_is_shared(self, username, virtual_path, real_path):
 
-        log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s", {
-            "virtual_name": virtual_path,
-            "path": real_path
-        })
+        log.add_transfer("Checking if file is shared: %s with real path %s",
+                         (virtual_path, real_path))
 
         public_shared_files = self.share_dbs.get("public_files")
         buddy_shared_files = self.share_dbs.get("buddy_files")
@@ -820,11 +818,8 @@ class Shares:
                     _file_name, size, *_unused = trusted_shared_files[real_path]
 
         if not file_is_shared:
-            log.add_transfer(("File is not present in the database of shared files, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"), {
-                "virtual_name": virtual_path,
-                "path": real_path
-            })
+            log.add_transfer("File is not present in the database of shared files, not sharing: "
+                             "%s with real path %s", (virtual_path, real_path))
             return False, size
 
         return True, size

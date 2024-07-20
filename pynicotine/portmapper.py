@@ -369,7 +369,7 @@ class UPnP(BaseImplementation):
                     except socket.timeout:
                         break
 
-                log.add_debug("UPnP: %s service(s) detected", str(len(services)))
+                log.add_debug("UPnP: %s service(s) detected", len(services))
 
             return services
 
@@ -477,11 +477,8 @@ class UPnP(BaseImplementation):
             raise PortmapError(_("No UPnP devices found"))
 
         # Perform the port mapping
-        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-            self.port,
-            self.local_ip_address,
-            self.port
-        ))
+        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP",
+                      (self.port, self.local_ip_address, self.port))
 
         error_code, error_description = self._request_port_mapping(
             public_port=self.port,
@@ -627,10 +624,7 @@ class PortMapper:
             self._active_implementation.remove_port_mapping()
 
         except Exception as error:
-            log.add_debug("%(protocol)s: Failed to remove port mapping: %(error)s", {
-                "protocol": self._active_implementation.NAME,
-                "error": error
-            })
+            log.add_debug("%s: Failed to remove port mapping: %s", (self._active_implementation.NAME, error))
 
         self._active_implementation = None
         self._is_mapping_port = False

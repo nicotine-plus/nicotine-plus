@@ -52,7 +52,6 @@ from pynicotine.transfers import Transfer
 from pynicotine.transfers import Transfers
 from pynicotine.transfers import TransferStatus
 from pynicotine.utils import encode_path
-from pynicotine.utils import human_speed
 
 
 class Uploads(Transfers):
@@ -263,17 +262,12 @@ class Uploads(Transfers):
             if os.access(encode_path(real_path), os.R_OK):
                 return True
 
-            log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
-                "virtual_name": virtual_path,
-                "path": real_path
-            })
+            log.add_transfer("Cannot access file, not sharing: %s with real path %s",
+                             (virtual_path, real_path))
 
         except Exception:
-            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"), {
-                "virtual_name": virtual_path,
-                "path": real_path
-            })
+            log.add_transfer("Requested file path contains invalid characters or other errors, not sharing: "
+                             "%s with real path %s", (virtual_path, real_path))
 
         return False
 
@@ -385,20 +379,17 @@ class Uploads(Transfers):
 
     def _clear_transfer(self, transfer, denied_message=None, update_parent=True):
 
-        log.add_transfer("Clearing upload %(path)s to user %(user)s", {
-            "path": transfer.virtual_path,
-            "user": transfer.username
-        })
+        virtual_path = transfer.virtual_path
+        username = transfer.username
+
+        log.add_transfer("Clearing upload %s to user %s", (virtual_path, username))
 
         try:
             super()._clear_transfer(transfer, denied_message=denied_message)
 
         except KeyError:
-            log.add(("FIXME: failed to remove upload %(path)s to user %(user)s, not "
-                     "present in list"), {
-                "path": transfer.virtual_path,
-                "user": transfer.username
-            })
+            log.add("FIXME: failed to remove upload %s to user %s, not present in list",
+                    (virtual_path, username))
 
         events.emit("clear-upload", transfer, update_parent)
 
@@ -576,13 +567,8 @@ class Uploads(Transfers):
 
         self.token = increment_token(self.token)
 
-        log.add_transfer(
-            "Checked upload queue, requesting to upload file %(file)s with token %(token)s to user %(user)s", {
-                "file": virtual_path,
-                "token": self.token,
-                "user": username
-            }
-        )
+        log.add_transfer("Checked upload queue, requesting to upload file %s with "
+                         "token %s to user %s", (virtual_path, self.token, username))
 
         self._dequeue_transfer(final_upload_candidate)
         self._unfail_transfer(final_upload_candidate)
@@ -807,13 +793,8 @@ class Uploads(Transfers):
         else:
             status = TransferStatus.CONNECTION_CLOSED
 
-        log.add_transfer(("Upload attempt for file %(filename)s with token %(token)s to user %(user)s failed "
-                          "with status %(status)s"), {
-            "filename": upload.virtual_path,
-            "token": token,
-            "user": username,
-            "status": status
-        })
+        log.add_transfer("Upload attempt for file %s with token %s to user %s failed "
+                         "with status %s", (upload.virtual_path, token, username, status))
 
         upload_cleared = is_offline and self._auto_clear_transfer(upload)
 
@@ -836,13 +817,8 @@ class Uploads(Transfers):
         real_path = core.shares.virtual2real(virtual_path)
         allowed, reason, size = self._check_queue_upload_allowed(username, msg.addr, virtual_path, real_path, msg)
 
-        log.add_transfer(("Upload request for file %(filename)s from user: %(user)s, "
-                          "allowed: %(allowed)s, reason: %(reason)s"), {
-            "filename": virtual_path,
-            "user": username,
-            "allowed": allowed,
-            "reason": reason
-        })
+        log.add_transfer("Upload request for file %s from user: %s, allowed: %s, "
+                         "reason: %s", (virtual_path, username, allowed, reason))
 
         if not allowed:
             if reason and reason != TransferRejectReason.QUEUED:
@@ -887,11 +863,9 @@ class Uploads(Transfers):
         if response is None:
             return
 
-        log.add_transfer(("Responding to legacy upload request %(token)s for file %(filename)s "
-                          "from user %(user)s, allowed: %(allowed)s, reason: %(reason)s"), {
-            "token": response.token, "filename": msg.file, "user": username,
-            "allowed": response.allowed, "reason": response.reason
-        })
+        log.add_transfer("Responding to legacy upload request %s for file %s from user %s, "
+                         "allowed: %s, reason: %s",
+                         (response.token, msg.file, username, response.allowed, response.reason))
 
         core.send_message_to_peer(username, response)
 
@@ -907,11 +881,8 @@ class Uploads(Transfers):
         virtual_path = msg.file
         token = msg.token
 
-        log.add_transfer("Received legacy upload request %(token)s for file %(filename)s from user %(user)s", {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
+        log.add_transfer("Received legacy upload request %s for file %s from user %s",
+                         (token, virtual_path, username))
 
         # Is user allowed to download?
         real_path = core.shares.virtual2real(virtual_path)
@@ -973,13 +944,8 @@ class Uploads(Transfers):
         token = msg.token
         reason = msg.reason
 
-        log.add_transfer(("Received response for upload with token: %(token)s, allowed: %(allowed)s, "
-                          "reason: %(reason)s, file size: %(size)s"), {
-            "token": token,
-            "allowed": msg.allowed,
-            "reason": reason,
-            "size": msg.filesize
-        })
+        log.add_transfer("Received response for upload with token: %s, allowed: %s, "
+                         "reason: %s, file size: %s", (token, msg.allowed, reason, msg.filesize))
 
         upload = self.active_users.get(username, {}).get(token)
 
@@ -1016,11 +982,8 @@ class Uploads(Transfers):
         if transfer.request_timer_id is None:
             return
 
-        log.add_transfer("Upload %(filename)s with token %(token)s for user %(user)s timed out", {
-            "filename": transfer.virtual_path,
-            "token": transfer.token,
-            "user": transfer.username
-        })
+        log.add_transfer("Upload %s with token %s for user %s timed out",
+                         (transfer.virtual_path, transfer.token, transfer.username))
 
         super()._transfer_timeout(transfer)
         self._check_upload_queue()
@@ -1053,11 +1016,8 @@ class Uploads(Transfers):
         need_update = True
         upload_started = False
 
-        log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
-            "token": token,
-            "filename": virtual_path,
-            "user": username
-        })
+        log.add_transfer("Initializing upload with token %s for file %s to user %s",
+                         (token, virtual_path, username))
 
         real_path = core.shares.virtual2real(virtual_path)
 
@@ -1159,7 +1119,7 @@ class Uploads(Transfers):
 
             if upload.speed > 0:
                 # Inform the server about the average upload speed for this transfer
-                log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
+                log.add_transfer("Sending average upload speed %s to the server", upload.speed)
                 core.send_message_to_server(SendUploadSpeed(upload.speed))
 
             return

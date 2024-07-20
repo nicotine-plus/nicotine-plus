@@ -486,8 +486,7 @@ class StatusNotifierImplementation(BaseImplementation):
                         return True
 
         except OSError as error:
-            log.add_debug("Error accessing tray icon path %(path)s: %(error)s" %
-                          {"path": icon_path, "error": error})
+            log.add_debug("Error accessing tray icon path %s: %s", (icon_path, error))
 
         return False
 

@@ -797,12 +797,8 @@ class Search:
 
             if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
-                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
-                               'search term "%(query)s"'), {
-                    "filepath": file_path,
-                    "user": user,
-                    "query": self.text
-                })
+                log.add_debug(("Filtered out excluded search result %s from user %s for "
+                               'search term "%s"'), (file_path, user, self.text))
                 continue
 
             if not all(word in file_path_lower for word in search.included_words):

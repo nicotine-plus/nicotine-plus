@@ -493,7 +493,7 @@ class Application:
                 Gdk.Display.get_default().beep()
 
         except Exception as error:
-            log.add(_("Unable to show notification: %s"), str(error))
+            log.add(_("Unable to show notification: %s"), error)
 
     def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
         self._show_notification(

@@ -162,11 +162,8 @@ class Users:
             watched_user.is_implicit = False
 
         watched_user.contexts.add(context)
-        log.add_conn("Watching user %(user)s in context '%(context)s'. Active contexts: %(contexts)s", {
-            "user": username,
-            "context": context,
-            "contexts": watched_user.contexts
-        })
+        log.add_conn("Watching user %s in context '%s'. Active contexts: %s",
+                     (username, context, watched_user.contexts))
 
     def unwatch_user(self, username, context):
         """Tells the server we no longer wish to receive status updates for a
@@ -185,11 +182,8 @@ class Users:
             return
 
         watched_user.contexts.discard(context)
-        log.add_conn("Unwatching user %(user)s in context '%(context)s'. Remaining contexts: %(contexts)s", {
-            "user": username,
-            "context": context,
-            "contexts": watched_user.contexts
-        })
+        log.add_conn("Unwatching user %s in context '%s'. Remaining contexts: %s",
+                     (username, context, watched_user.contexts))
 
         if watched_user.contexts:
             return
@@ -338,10 +332,8 @@ class Users:
                 self.privileged.remove(username)
 
         if status not in {UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY}:
-            log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
-                "status": status,
-                "user": username
-            })
+            log.add_debug("Received an unknown status %s for user %s from the server",
+                          (status, username))
 
         # Ignore invalid status updates for our own username in case we've already
         # changed our status again by the time they arrive from the server

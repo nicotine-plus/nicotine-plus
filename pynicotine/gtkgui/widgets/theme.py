@@ -255,8 +255,7 @@ def load_custom_icons(update=False):
             shutil.rmtree(icon_theme_path_encoded)
 
     except Exception as error:
-        log.add_debug("Failed to remove custom icon theme folder %(theme)s: %(error)s",
-                      {"theme": icon_theme_path, "error": error})
+        log.add_debug("Failed to remove custom icon theme folder %s: %s", (icon_theme_path, error))
         return
 
     user_icon_theme_path = config.sections["ui"]["icontheme"]
@@ -290,8 +289,7 @@ def load_custom_icons(update=False):
             file_handle.write(theme_file_contents)
 
     except Exception as error:
-        log.add_debug("Failed to enable custom icon theme %(theme)s: %(error)s",
-                      {"theme": user_icon_theme_path, "error": error})
+        log.add_debug("Failed to enable custom icon theme %s: %s", (user_icon_theme_path, error))
         return
 
     icon_names = (

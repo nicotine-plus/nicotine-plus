@@ -356,10 +356,8 @@ class Transfers:
             file_handle.close()
 
         except Exception as error:
-            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file_handle.name.decode("utf-8", "replace"),
-                "error": error
-            })
+            file_path = file_handle.name.decode("utf-8", "replace")
+            log.add_transfer("Failed to close file %s: %s", (file_path, error))
 
     # User Actions #
 

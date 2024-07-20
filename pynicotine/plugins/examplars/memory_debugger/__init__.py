@@ -42,8 +42,8 @@ class Plugin(BasePlugin):
         tracemalloc.start()                                                           # pylint: disable=no-member
 
         for i in range(3):
-            self.log("Forcing collection of generation %s...", str(i))
-            self.log("Collected %s objects", str(gc.collect(i)))
+            self.log("Forcing collection of generation %s...", i)
+            self.log("Collected %s objects", gc.collect(i))
 
         unclaimed = [f"A total of {len(gc.garbage)} objects that could not be freed:"]
 
@@ -64,7 +64,7 @@ class Plugin(BasePlugin):
 
         for i in range(50):
             memory_stat = snapshot.statistics("lineno")[i]
-            self.log(str(memory_stat))
+            self.log(memory_stat)
 
             tb_stat = snapshot.statistics("traceback")[i]
             self.log("%s memory blocks: %.1f KiB", (tb_stat.count, tb_stat.size / 1024))

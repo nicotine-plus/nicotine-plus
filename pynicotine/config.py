@@ -574,7 +574,7 @@ class Config:
         from pynicotine.logfacility import log
         log.init_log_levels()
         log.update_folder_paths()
-        log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
+        log.add_debug("Using configuration: %s", self.config_file_path)
 
         events.connect("quit", self._quit)
 
@@ -669,8 +669,7 @@ class Config:
                 # Check if config option exists in defaults
                 elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
-                    log.add_debug("Unknown config option '%(option)s' in section '%(section)s'",
-                                  {"option": j, "section": i})
+                    log.add_debug("Unknown config option '%s' in section '%s'", (j, i))
 
                 else:
                     # Attempt to get the default value for a config option. If there's no default
@@ -781,7 +780,7 @@ class Config:
         from pynicotine.logfacility import log
 
         write_file_and_backup(self.config_file_path, self._write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
+        log.add_debug("Saved configuration: %s", self.config_file_path)
 
     def write_config_backup(self, file_path):
 
