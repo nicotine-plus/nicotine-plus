@@ -36,6 +36,7 @@ from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import EmitNetworkMessageEvents
 from pynicotine.slskmessages import FileTransferInit
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 from pynicotine.slskmessages import PlaceInQueueResponse
 from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import SetUploadLimit
@@ -62,7 +63,7 @@ class Uploads(Transfers):
 
         self.pending_shutdown = False
         self.upload_speed = 0
-        self.token = 0
+        self.token = initial_token()
 
         self._pending_network_msgs = []
         self._user_update_counter = 0
@@ -94,7 +95,6 @@ class Uploads(Transfers):
         super()._quit()
 
         self.upload_speed = 0
-        self.token = 0
 
     def _server_login(self, msg):
 

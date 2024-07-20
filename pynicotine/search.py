@@ -23,7 +23,6 @@
 
 from itertools import islice
 from operator import itemgetter
-from random import random
 from shlex import shlex
 
 from pynicotine.config import config
@@ -34,6 +33,7 @@ from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import FileSearchResponse
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 from pynicotine.slskmessages import RoomSearch
 from pynicotine.slskmessages import SEARCH_TOKENS_ALLOWED
 from pynicotine.slskmessages import UserSearch
@@ -76,7 +76,7 @@ class Search:
 
         self.searches = {}
         self.excluded_phrases = []
-        self.token = int(random() * (2 ** 31 - 1))
+        self.token = initial_token()
         self.wishlist_interval = 0
         self._wishlist_timer_id = None
 

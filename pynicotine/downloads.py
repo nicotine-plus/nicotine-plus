@@ -46,6 +46,7 @@ from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FolderContentsRequest
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 from pynicotine.slskmessages import PlaceInQueueRequest
 from pynicotine.slskmessages import QueueUpload
 from pynicotine.slskmessages import SetDownloadLimit
@@ -84,7 +85,7 @@ class Downloads(Transfers):
         super().__init__(name="downloads")
 
         self._requested_folders = defaultdict(dict)
-        self._requested_folder_token = 0
+        self._requested_folder_token = initial_token()
 
         self._folder_basename_byte_limits = {}
         self._pending_queue_messages = {}
@@ -122,7 +123,6 @@ class Downloads(Transfers):
         super()._quit()
 
         self._folder_basename_byte_limits.clear()
-        self._requested_folder_token = 0
 
     def _server_login(self, msg):
 

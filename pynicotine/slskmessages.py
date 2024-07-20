@@ -26,6 +26,7 @@ except ImportError:
     from hashlib import md5
 
 from locale import strxfrm
+from random import randint
 from socket import inet_aton
 from socket import inet_ntoa
 from struct import Struct
@@ -51,6 +52,12 @@ UINT32_PACK = Struct("<I").pack
 UINT64_PACK = Struct("<Q").pack
 
 SEARCH_TOKENS_ALLOWED = set()
+
+
+def initial_token():
+    """Return a random token in a large enough range to effectively prevent
+    conflicting tokens between sessions."""
+    return randint(0, UINT32_LIMIT // 1000)
 
 
 def increment_token(token):

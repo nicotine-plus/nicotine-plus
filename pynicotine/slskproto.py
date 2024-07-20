@@ -84,6 +84,7 @@ from pynicotine.slskmessages import UserInfoResponse
 from pynicotine.slskmessages import UserStatus
 from pynicotine.slskmessages import WatchUser
 from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 from pynicotine.utils import human_speed
 
 
@@ -422,7 +423,7 @@ class NetworkThread(Thread):
 
         self._conns = {}
         self._conns_in_progress = {}
-        self._token = 0
+        self._token = initial_token()
 
         self._conns_downloaded = defaultdict(int)
         self._conns_uploaded = defaultdict(int)

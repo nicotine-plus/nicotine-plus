@@ -24,6 +24,8 @@ from unittest import TestCase
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.transfers import Transfer
+from pynicotine.slskmessages import increment_token
+from pynicotine.slskmessages import initial_token
 
 DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 NUM_ALLOWED_NONE = 2
@@ -35,7 +37,7 @@ class GetUploadCandidateTest(TestCase):
 
     def setUp(self):
 
-        self.token = 0
+        self.token = initial_token()
 
         config.set_data_folder(DATA_FOLDER_PATH)
         config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
@@ -73,7 +75,7 @@ class GetUploadCandidateTest(TestCase):
 
             if is_active:
                 core.uploads._activate_transfer(transfer, self.token)
-                self.token += 1
+                self.token = increment_token(self.token)
             else:
                 core.uploads._enqueue_transfer(transfer)
 
@@ -132,7 +134,7 @@ class GetUploadCandidateTest(TestCase):
             in_progress.append(candidate)
             core.uploads._activate_transfer(candidate, self.token)
 
-            self.token += 1
+            self.token = increment_token(self.token)
 
         return candidates
 
