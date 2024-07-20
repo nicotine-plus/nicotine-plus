@@ -89,12 +89,6 @@ from pynicotine.utils import human_speed
 
 
 class Connection:
-    """Holds data about a connection.
-
-    sock is a socket object, addr is (ip, port) pair, ibuf and obuf are
-    input and output msgBuffer, init is a PeerInit object (see
-    slskmessages docstrings).
-    """
 
     __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "last_active", "recv_size")
 
@@ -120,8 +114,7 @@ class ServerConnection(Connection):
 
 class PeerConnection(Connection):
 
-    __slots__ = ("init", "fileinit", "filedown", "fileupl", "request_token", "response_token",
-                 "has_post_init_activity")
+    __slots__ = ("init", "request_token", "response_token", "has_post_init_activity")
 
     def __init__(self, *args, init=None, request_token=None, response_token=None, **kwargs):
 
@@ -130,9 +123,6 @@ class PeerConnection(Connection):
         self.init = init
         self.request_token = request_token    # Requesting indirect connection to user
         self.response_token = response_token  # Responding to indirect connection request from user
-        self.fileinit = None
-        self.filedown = None
-        self.fileupl = None
         self.has_post_init_activity = False
 
 
@@ -425,6 +415,9 @@ class NetworkThread(Thread):
         self._conns_in_progress = {}
         self._token = initial_token()
 
+        self._file_init_msgs = {}
+        self._file_download_msgs = {}
+        self._file_upload_msgs = {}
         self._conns_downloaded = defaultdict(int)
         self._conns_uploaded = defaultdict(int)
         self._calc_upload_limit_function = self._calc_upload_limit_none
@@ -945,28 +938,33 @@ class NetworkThread(Thread):
             elif sock is self._parent_socket:
                 self._send_have_no_parent()
 
-        elif conn_obj.fileinit is not None:
-            if self._is_transferring_download(conn_obj):
-                self._total_downloads -= 1
-
-                if not self._total_downloads:
-                    self._total_download_bandwidth = 0
-
-                self._calc_download_limit()
-
-            elif self._is_transferring_upload(conn_obj):
-                self._total_uploads -= 1
-
-                if not self._total_uploads:
-                    self._total_upload_bandwidth = 0
-
-                self._calc_upload_limit_function()
+        elif conn_obj in self._file_init_msgs:
+            file_init = self._file_init_msgs.pop(conn_obj)
 
             if self._should_process_queue:
                 timed_out = (time.monotonic() - conn_obj.last_active) > self.CONNECTION_MAX_IDLE
                 events.emit_main_thread(
-                    "file-connection-closed", username=username, token=conn_obj.fileinit.token,
-                    sock=sock, timed_out=timed_out)
+                    "file-connection-closed", username=username, token=file_init.token,
+                    sock=sock, timed_out=timed_out
+                )
+
+        if conn_obj in self._file_download_msgs:
+            del self._file_download_msgs[conn_obj]
+            self._total_downloads -= 1
+
+            if not self._total_downloads:
+                self._total_download_bandwidth = 0
+
+            self._calc_download_limit()
+
+        elif conn_obj in self._file_upload_msgs:
+            del self._file_upload_msgs[conn_obj]
+            self._total_uploads -= 1
+
+            if not self._total_uploads:
+                self._total_upload_bandwidth = 0
+
+            self._calc_upload_limit_function()
 
         init_key = username + conn_type
 
@@ -1028,21 +1026,26 @@ class NetworkThread(Thread):
             if self._is_connection_inactive(conn_obj, sock, current_time, num_sockets):
                 inactive_sockets.add(sock)
 
-            elif self._is_transferring_download(conn_obj):
-                events.emit_main_thread(
-                    "file-download-progress", username=conn_obj.init.target_user,
-                    token=conn_obj.filedown.token, bytes_left=conn_obj.filedown.leftbytes,
-                    speed=conn_obj.filedown.speed
-                )
-                conn_obj.filedown.speed = 0
+            elif conn_obj in self._file_download_msgs:
+                file_download = self._file_download_msgs[conn_obj]
 
-            elif self._is_transferring_upload(conn_obj):
                 events.emit_main_thread(
-                    "file-upload-progress", username=conn_obj.init.target_user,
-                    token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
-                    bytes_sent=conn_obj.fileupl.sentbytes, speed=conn_obj.fileupl.speed
+                    "file-download-progress",
+                    username=conn_obj.init.target_user, token=file_download.token,
+                    bytes_left=file_download.leftbytes, speed=file_download.speed
                 )
-                conn_obj.fileupl.speed = 0
+                file_download.speed = 0
+
+            elif conn_obj in self._file_upload_msgs:
+                file_upload = self._file_upload_msgs[conn_obj]
+
+                events.emit_main_thread(
+                    "file-upload-progress",
+                    username=conn_obj.init.target_user, token=file_upload.token,
+                    offset=file_upload.offset, bytes_sent=file_upload.sentbytes,
+                    speed=file_upload.speed
+                )
+                file_upload.speed = 0
 
         for sock, conn_obj in self._conns_in_progress.items():
             if (current_time - conn_obj.last_active) > self.IN_PROGRESS_STALE_AFTER:
@@ -1239,9 +1242,7 @@ class NetworkThread(Thread):
         self._send_message_to_server(SetWaitPort(self._listen_port))
 
     def _process_server_input(self, conn_obj):
-        """Server has sent us something, this function retrieves messages from
-        the msg_buffer, creates message objects and returns them and the rest
-        of the msg_buffer."""
+        """Reads messages from the input buffer of a server connection."""
 
         msg_buffer = conn_obj.ibuf
         buffer_len = len(msg_buffer)
@@ -1425,7 +1426,7 @@ class NetworkThread(Thread):
 
         conn_obj = self._conns[self._server_socket]
         conn_obj.obuf.extend(msg.pack_uint32(len(msg_content) + 4))
-        conn_obj.obuf.extend(msg.pack_uint32(SERVER_MESSAGE_CODES[msg.__class__]))
+        conn_obj.obuf.extend(msg.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
         conn_obj.obuf.extend(msg_content)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1500,6 +1501,7 @@ class NetworkThread(Thread):
     # Peer Init #
 
     def _process_peer_init_input(self, conn_obj):
+        """Reads peer init messages from the input buffer of a peer connection."""
 
         init = None
         msg_buffer = conn_obj.ibuf
@@ -1719,9 +1721,7 @@ class NetworkThread(Thread):
         self._num_sockets += 1
 
     def _process_peer_input(self, conn_obj):
-        """We have a "P" connection (p2p exchange), peer has sent us something,
-        this function retrieves messages from the msg_buffer, creates message
-        objects and returns them and the rest of the msg_buffer."""
+        """Reads messages from the input buffer of a 'P' connection."""
 
         msg_buffer = conn_obj.ibuf
         buffer_len = len(msg_buffer)
@@ -1816,14 +1816,6 @@ class NetworkThread(Thread):
 
     # File Connection #
 
-    @staticmethod
-    def _is_transferring_upload(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.fileupl is not None
-
-    @staticmethod
-    def _is_transferring_download(conn_obj):
-        return conn_obj.__class__ is PeerConnection and conn_obj.filedown is not None
-
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
         limit = self._upload_limit
@@ -1859,28 +1851,95 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _write_download_file(self, conn_obj, msg_buffer):
+    def _write_download_file(self, file_download, msg_buffer):
 
         if not msg_buffer:
             return
 
         added_bytes_len = len(msg_buffer)
-        conn_obj.filedown.speed += added_bytes_len
+        file_download.speed += added_bytes_len
         self._total_download_bandwidth += added_bytes_len
 
-        conn_obj.filedown.file.write(msg_buffer)
-        conn_obj.filedown.leftbytes -= added_bytes_len
+        file_download.file.write(msg_buffer)
+        file_download.leftbytes -= added_bytes_len
+
+    def _process_download(self, conn_obj, msg_buffer):
+
+        file_download = self._file_download_msgs[conn_obj]
+        idx = file_download.leftbytes
+        should_close_connection = False
+
+        try:
+            self._write_download_file(file_download, memoryview(msg_buffer)[:idx])
+
+        except (OSError, ValueError) as error:
+            events.emit_main_thread(
+                "download-file-error",
+                username=conn_obj.init.target_user, token=file_download.token, error=error
+            )
+            should_close_connection = True
+
+        # Download finished
+        if file_download.leftbytes <= 0:
+            events.emit_main_thread(
+                "file-download-progress",
+                username=conn_obj.init.target_user, token=file_download.token,
+                bytes_left=file_download.leftbytes, speed=file_download.speed
+            )
+            should_close_connection = True
+
+        return idx, should_close_connection
+
+    def _process_upload(self, conn_obj, num_sent_bytes, current_time):
+
+        file_upload = self._file_upload_msgs[conn_obj]
+
+        if file_upload.offset is None:
+            return
+
+        file_upload.sentbytes += num_sent_bytes
+        total_read_bytes = file_upload.offset + file_upload.sentbytes + len(conn_obj.obuf)
+        size = file_upload.size
+
+        try:
+            if total_read_bytes < size:
+                num_bytes_to_read = int(
+                    (max(4096, num_sent_bytes * 1.25) / max(1, current_time - conn_obj.last_active))
+                    - len(conn_obj.obuf)
+                )
+                if num_bytes_to_read > 0:
+                    read = file_upload.file.read(num_bytes_to_read)
+                    conn_obj.obuf.extend(read)
+
+                    self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
+        except (OSError, ValueError) as error:
+            events.emit_main_thread(
+                "upload-file-error",
+                username=conn_obj.init.target_user, token=file_upload.token, error=error
+            )
+            self._close_connection(self._conns, conn_obj.sock)
+
+        file_upload.speed += num_sent_bytes
+        self._total_upload_bandwidth += num_sent_bytes
+
+        # Upload finished
+        if file_upload.offset + file_upload.sentbytes == size:
+            events.emit_main_thread(
+                "file-upload-progress",
+                username=conn_obj.init.target_user, token=file_upload.token,
+                offset=file_upload.offset, bytes_sent=file_upload.sentbytes,
+                speed=file_upload.speed
+            )
 
     def _process_file_input(self, conn_obj):
-        """We have a "F" connection (filetransfer), peer has sent us something,
-        this function retrieves messages from the msg_buffer, creates message
-        objects and returns them and the rest of the msg_buffer."""
+        """Reads file data/messages from the input buffer of a 'F' connection."""
 
         msg_buffer = conn_obj.ibuf
         idx = 0
         should_close_connection = False
 
-        if conn_obj.fileinit is None:
+        if conn_obj not in self._file_init_msgs:
             msg_size = idx = 4
             msg = self._unpack_network_message(
                 FileTransferInit,
@@ -1892,56 +1951,40 @@ class NetworkThread(Thread):
             )
 
             if msg is not None and msg.token is not None:
+                self._file_init_msgs[conn_obj] = msg
                 self._emit_network_message_event(msg)
-                conn_obj.fileinit = msg
 
-        elif conn_obj.filedown is not None:
-            idx = conn_obj.filedown.leftbytes
+        elif conn_obj in self._file_download_msgs:
+            idx, should_close_connection = self._process_download(conn_obj, msg_buffer)
 
-            try:
-                self._write_download_file(conn_obj, memoryview(msg_buffer)[:idx])
+        elif conn_obj in self._file_upload_msgs:
+            file_upload = self._file_upload_msgs[conn_obj]
 
-            except (OSError, ValueError) as error:
-                events.emit_main_thread(
-                    "download-file-error", username=conn_obj.init.target_user,
-                    token=conn_obj.filedown.token, error=error
+            if file_upload.offset is None:
+                msg_size = idx = 8
+                msg = self._unpack_network_message(
+                    FileOffset,
+                    memoryview(msg_buffer)[:msg_size],
+                    msg_size,
+                    conn_type="file",
+                    sock=conn_obj.sock,
+                    username=conn_obj.init.target_user
                 )
-                should_close_connection = True
 
-            # Download finished
-            if conn_obj.filedown.leftbytes <= 0:
-                events.emit_main_thread(
-                    "file-download-progress", username=conn_obj.init.target_user,
-                    token=conn_obj.filedown.token, bytes_left=conn_obj.filedown.leftbytes,
-                    speed=conn_obj.filedown.speed
-                )
-                should_close_connection = True
+                if msg is not None and msg.offset is not None:
+                    file_upload.offset = msg.offset
+                    self._emit_network_message_event(msg)
 
-        elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
-            msg_size = idx = 8
-            msg = self._unpack_network_message(
-                FileOffset,
-                memoryview(msg_buffer)[:msg_size],
-                msg_size,
-                conn_type="file",
-                sock=conn_obj.sock,
-                username=conn_obj.init.target_user
-            )
+                    try:
+                        file_upload.file.seek(msg.offset)
+                        self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-            if msg is not None and msg.offset is not None:
-                self._emit_network_message_event(msg)
-                conn_obj.fileupl.offset = msg.offset
-
-                try:
-                    conn_obj.fileupl.file.seek(msg.offset)
-                    self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-                except (OSError, ValueError) as error:
-                    events.emit_main_thread(
-                        "upload-file-error", username=conn_obj.init.target_user, token=conn_obj.fileupl.token,
-                        error=error
-                    )
-                    should_close_connection = True
+                    except (OSError, ValueError) as error:
+                        events.emit_main_thread(
+                            "upload-file-error",
+                            username=conn_obj.init.target_user, token=file_upload.token, error=error
+                        )
+                        should_close_connection = True
 
         if should_close_connection:
             self._close_connection(self._conns, conn_obj.sock)
@@ -1963,7 +2006,7 @@ class NetworkThread(Thread):
                 return
 
             conn_obj = self._conns[msg.sock]
-            conn_obj.fileinit = msg
+            self._file_init_msgs[conn_obj] = msg
             conn_obj.obuf.extend(msg_content)
 
             self._emit_network_message_event(msg)
@@ -2143,10 +2186,7 @@ class NetworkThread(Thread):
             self._send_message_to_server(AcceptChildren(False))
 
     def _process_distrib_input(self, conn_obj):
-        """We have a distributed network connection, parent has sent us
-        something, this function retrieves messages from the msg_buffer,
-        creates message objects and returns them and the rest of the
-        msg_buffer."""
+        """Reads messages from the input buffer of a 'D' connection."""
 
         msg_buffer = conn_obj.ibuf
         buffer_len = len(msg_buffer)
@@ -2310,7 +2350,7 @@ class NetworkThread(Thread):
             conn_obj = self._conns.get(msg.sock)
 
             if conn_obj is not None:
-                conn_obj.filedown = msg
+                self._file_download_msgs[conn_obj] = msg
 
                 self._total_downloads += 1
                 self._calc_download_limit()
@@ -2320,7 +2360,7 @@ class NetworkThread(Thread):
             conn_obj = self._conns.get(msg.sock)
 
             if conn_obj is not None:
-                conn_obj.fileupl = msg
+                self._file_upload_msgs[conn_obj] = msg
 
                 self._total_uploads += 1
                 self._calc_upload_limit_function()
@@ -2390,7 +2430,6 @@ class NetworkThread(Thread):
         if sock in self._conns_in_progress:
             # Connection has been established
             conn_obj_in_progress = self._conns_in_progress.pop(sock)
-            conn_obj_in_progress.last_active = current_time
 
             if sock is self._server_socket:
                 self._establish_outgoing_server_connection(conn_obj_in_progress)
@@ -2529,8 +2568,7 @@ class NetworkThread(Thread):
     def _read_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        conn_obj.last_active = current_time
-        use_download_limit = (self._download_limit_split and self._is_transferring_download(conn_obj))
+        use_download_limit = (self._download_limit_split and conn_obj in self._file_download_msgs)
 
         if use_download_limit:
             conn_obj.recv_size = (self._download_limit_split - self._conns_downloaded[conn_obj])
@@ -2548,6 +2586,8 @@ class NetworkThread(Thread):
         elif data_length >= conn_obj.recv_size // 2:
             conn_obj.recv_size *= 2
 
+        conn_obj.last_active = current_time
+
         if not data:
             return False
 
@@ -2556,56 +2596,26 @@ class NetworkThread(Thread):
     def _write_data(self, conn_obj, current_time):
 
         sock = conn_obj.sock
-        prev_active = conn_obj.last_active
-        conn_obj.last_active = current_time
+        is_file_upload = conn_obj in self._file_upload_msgs
 
-        if self._upload_limit_split and self._is_transferring_upload(conn_obj):
+        if is_file_upload and self._upload_limit_split:
             limit = (self._upload_limit_split - self._conns_uploaded[conn_obj])
-            bytes_send = sock.send(memoryview(conn_obj.obuf)[:limit])
-            self._conns_uploaded[conn_obj] += bytes_send
+
+            num_bytes_sent = sock.send(memoryview(conn_obj.obuf)[:limit])
+            self._conns_uploaded[conn_obj] += num_bytes_sent
         else:
-            bytes_send = sock.send(conn_obj.obuf)
+            num_bytes_sent = sock.send(conn_obj.obuf)
 
-        del conn_obj.obuf[:bytes_send]
+        del conn_obj.obuf[:num_bytes_sent]
 
-        if self._is_transferring_upload(conn_obj) and conn_obj.fileupl.offset is not None:
-            conn_obj.fileupl.sentbytes += bytes_send
-            totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
-
-            try:
-                size = conn_obj.fileupl.size
-
-                if totalsentbytes < size:
-                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.last_active - prev_active)
-                                      - len(conn_obj.obuf))
-
-                    if bytestoread > 0:
-                        read = conn_obj.fileupl.file.read(bytestoread)
-                        conn_obj.obuf.extend(read)
-
-                        self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-            except (OSError, ValueError) as error:
-                events.emit_main_thread(
-                    "upload-file-error", username=conn_obj.init.target_user, token=conn_obj.fileupl.token,
-                    error=error
-                )
-                self._close_connection(self._conns, sock)
-
-            conn_obj.fileupl.speed += bytes_send
-            self._total_upload_bandwidth += bytes_send
-
-            # Upload finished
-            if conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size:
-                events.emit_main_thread(
-                    "file-upload-progress", username=conn_obj.init.target_user,
-                    token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
-                    bytes_sent=conn_obj.fileupl.sentbytes, speed=conn_obj.fileupl.speed
-                )
+        if is_file_upload:
+            self._process_upload(conn_obj, num_bytes_sent, current_time)
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
             self._modify_connection_events(conn_obj, selectors.EVENT_READ)
+
+        conn_obj.last_active = current_time
 
     # Networking Loop #
 
