@@ -1384,7 +1384,7 @@ class Downloads(Transfers):
         byte_difference = current_byte_offset - download.last_byte_offset
         download.last_byte_offset = current_byte_offset
 
-        if byte_difference:
+        if byte_difference > 0:
             core.statistics.append_stat_value("downloaded_size", byte_difference)
 
         if speed > 0 and size > current_byte_offset:
