@@ -1252,16 +1252,17 @@ class NetworkThread(Thread):
         # Server messages are 8 bytes or greater in length
         while buffer_len >= msg_content_offset:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
-            msg_size_total = msg_size + 4
 
-            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from server. "
                              "Closing connection.", self.MAX_INCOMING_MESSAGE_SIZE)
                 should_close_connection = True
                 break
 
-            if msg_size_total > buffer_len or msg_size < 0:
-                # Invalid message size or buffer is being filled
+            msg_size_total = msg_size + 4
+
+            if msg_size_total > buffer_len:
+                # Buffer is being filled
                 break
 
             # Unpack server messages
@@ -1510,16 +1511,17 @@ class NetworkThread(Thread):
         # Peer init messages are 5 bytes or greater in length
         while buffer_len >= msg_content_offset and init is None:
             msg_size, = UINT32_UNPACK(msg_buffer, idx)
-            msg_size_total = msg_size + 4
 
-            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from peer %s. "
                              "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn_obj.addr))
                 should_close_connection = True
                 break
 
-            if msg_size_total > buffer_len or msg_size < 0:
-                # Invalid message size or buffer is being filled
+            msg_size_total = msg_size + 4
+
+            if msg_size_total > buffer_len:
+                # Buffer is being filled
                 conn_obj.has_post_init_activity = True
                 break
 
@@ -1731,14 +1733,14 @@ class NetworkThread(Thread):
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= msg_content_offset:
             msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
-            msg_size_total = msg_size + 4
 
-            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
                              "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn_obj.init.target_user))
                 should_close_connection = True
                 break
 
+            msg_size_total = msg_size + 4
             msg_class = None
 
             if msg_type in PEER_MESSAGE_CLASSES:
@@ -1753,8 +1755,8 @@ class NetworkThread(Thread):
                 events.emit_main_thread(
                     "user-info-progress", conn_obj.init.target_user, conn_obj.sock, buffer_len, msg_size_total)
 
-            if msg_size_total > buffer_len or msg_size < 0:
-                # Invalid message size or buffer is being filled
+            if msg_size_total > buffer_len:
+                # Buffer is being filled
                 break
 
             # Unpack peer messages
@@ -2155,16 +2157,17 @@ class NetworkThread(Thread):
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= msg_content_offset:
             msg_size, = UINT32_UNPACK(msg_buffer, idx)
-            msg_size_total = msg_size + 4
 
-            if msg_size_total > self.MAX_INCOMING_MESSAGE_SIZE:
+            if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
                              "Closing connection.", (self.MAX_INCOMING_MESSAGE_SIZE, conn_obj.init.target_user))
                 should_close_connection = True
                 break
 
-            if msg_size_total > buffer_len or msg_size < 0:
-                # Invalid message size or buffer is being filled
+            msg_size_total = msg_size + 4
+
+            if msg_size_total > buffer_len:
+                # Buffer is being filled
                 conn_obj.has_post_init_activity = True
                 break
 
