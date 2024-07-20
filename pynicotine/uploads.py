@@ -860,7 +860,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
                 transfer.speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -934,7 +934,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
                 transfer.speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -1072,8 +1072,7 @@ class Uploads(Transfers):
 
         else:
             upload.file_handle = file_handle
-            upload.last_update = time.monotonic()
-            upload.start_time = upload.last_update - upload.time_elapsed
+            upload.start_time = time.monotonic() - upload.time_elapsed
 
             core.statistics.append_stat_value("started_uploads", 1)
             upload_started = True
@@ -1103,7 +1102,7 @@ class Uploads(Transfers):
             # Must be be emitted after the final update to prevent inconsistent state
             core.pluginhandler.upload_started_notification(username, virtual_path, real_path)
 
-    def _file_upload_progress(self, username, token, offset, bytes_sent):
+    def _file_upload_progress(self, username, token, offset, bytes_sent, speed):
         """A file upload is in progress."""
 
         upload = self.active_users.get(username, {}).get(token)
@@ -1115,28 +1114,28 @@ class Uploads(Transfers):
             events.cancel_scheduled(upload.request_timer_id)
             upload.request_timer_id = None
 
-        current_time = time.monotonic()
         size = upload.size
 
         if not upload.last_byte_offset:
             upload.last_byte_offset = offset
 
         upload.status = TransferStatus.TRANSFERRING
-        upload.time_elapsed = current_time - upload.start_time
+        upload.time_elapsed = time.monotonic() - upload.start_time
+        upload.time_left = 0
+
+        if offset is None:
+            return
+
+        upload.speed = speed
         upload.current_byte_offset = current_byte_offset = (offset + bytes_sent)
         byte_difference = current_byte_offset - upload.last_byte_offset
+        upload.last_byte_offset = current_byte_offset
 
         if byte_difference:
             core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if size > current_byte_offset or upload.speed <= 0:
-                upload.speed = int(max(0, byte_difference // max(0.1, current_time - upload.last_update)))
-                upload.time_left = (size - current_byte_offset) // upload.speed if upload.speed else 0
-            else:
-                upload.time_left = 0
-
-        upload.last_byte_offset = current_byte_offset
-        upload.last_update = current_time
+        if speed > 0 and size > current_byte_offset:
+            upload.time_left = (size - current_byte_offset) // speed
 
         self._update_transfer(upload)
 
@@ -1155,12 +1154,13 @@ class Uploads(Transfers):
             # We finish the upload here in case the downloading peer has a slow/limited download
             # speed and finishes later than us
 
+            self._finish_transfer(upload)
+
             if upload.speed > 0:
-                # Inform the server about the last upload speed for this transfer
+                # Inform the server about the average upload speed for this transfer
                 log.add_transfer("Sending upload speed %s to the server", human_speed(upload.speed))
                 core.send_message_to_server(SendUploadSpeed(upload.speed))
 
-            self._finish_transfer(upload)
             return
 
         if core.users.statuses.get(upload.username) == UserStatus.OFFLINE:

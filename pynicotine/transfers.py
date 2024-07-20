@@ -63,7 +63,7 @@ class Transfer:
     """This class holds information about a single transfer."""
 
     __slots__ = ("sock", "username", "virtual_path",
-                 "folder_path", "token", "size", "file_handle", "start_time", "last_update",
+                 "folder_path", "token", "size", "file_handle", "start_time", "start_byte_offset",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "retry_attempt", "size_changed",
@@ -76,7 +76,7 @@ class Transfer:
         self.folder_path = folder_path
         self.size = size
         self.status = status
-        self.current_byte_offset = current_byte_offset
+        self.start_byte_offset = self.current_byte_offset = current_byte_offset
         self.file_attributes = file_attributes
 
         self.sock = None
@@ -86,7 +86,6 @@ class Transfer:
         self.modifier = None
         self.request_timer_id = None
         self.start_time = None
-        self.last_update = None
         self.last_byte_offset = None
         self.speed = 0
         self.time_elapsed = 0
@@ -517,8 +516,12 @@ class Transfers:
         if not self.active_users[username]:
             del self.active_users[username]
 
-        if transfer.speed:
+        if transfer.speed > 0:
             self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
+
+        if transfer.time_elapsed > 0:
+            transferred_size = transfer.current_byte_offset - (transfer.start_byte_offset or 0)
+            transfer.speed = transferred_size // transfer.time_elapsed
 
         if transfer.request_timer_id is not None:
             events.cancel_scheduled(transfer.request_timer_id)

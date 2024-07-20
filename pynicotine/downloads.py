@@ -1241,8 +1241,7 @@ class Downloads(Transfers):
         else:
             download.file_handle = file_handle
             download.last_byte_offset = offset
-            download.last_update = time.monotonic()
-            download.start_time = download.last_update - download.time_elapsed
+            download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
 
             core.statistics.append_stat_value("started_downloads", 1)
@@ -1363,7 +1362,7 @@ class Downloads(Transfers):
             "reason": download.status
         })
 
-    def _file_download_progress(self, username, token, bytes_left):
+    def _file_download_progress(self, username, token, bytes_left, speed):
         """A file download is in progress."""
 
         download = self.active_users.get(username, {}).get(token)
@@ -1375,25 +1374,21 @@ class Downloads(Transfers):
             events.cancel_scheduled(download.request_timer_id)
             download.request_timer_id = None
 
-        current_time = time.monotonic()
         size = download.size
 
         download.status = TransferStatus.TRANSFERRING
-        download.time_elapsed = current_time - download.start_time
+        download.time_elapsed = time.monotonic() - download.start_time
+        download.time_left = 0
+        download.speed = speed
         download.current_byte_offset = current_byte_offset = (size - bytes_left)
         byte_difference = current_byte_offset - download.last_byte_offset
+        download.last_byte_offset = current_byte_offset
 
         if byte_difference:
             core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-            if size > current_byte_offset or download.speed <= 0:
-                download.speed = int(max(0, byte_difference // max(0.1, current_time - download.last_update)))
-                download.time_left = (size - current_byte_offset) // download.speed if download.speed else 0
-            else:
-                download.time_left = 0
-
-        download.last_byte_offset = current_byte_offset
-        download.last_update = current_time
+        if speed > 0 and size > current_byte_offset:
+            download.time_left = (size - current_byte_offset) // speed
 
         self._update_transfer(download)
 

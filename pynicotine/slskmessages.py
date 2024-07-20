@@ -144,8 +144,7 @@ class CloseConnection(InternalMessage):
 
 
 class CloseConnectionIP(InternalMessage):
-    """Sent by the main thread to the networking thread in order to close any
-    connections using a certain IP address."""
+    """Sent to the networking thread to close any connections using a certain IP address."""
 
     __slots__ = ("addr",)
 
@@ -154,8 +153,7 @@ class CloseConnectionIP(InternalMessage):
 
 
 class ServerConnect(InternalMessage):
-    """Core sends this to make networking thread establish a server
-    connection."""
+    """Sent to the networking thread to establish a server connection."""
 
     __slots__ = ("addr", "login", "interface_name", "interface_address", "listen_port",
                  "portmapper")
@@ -193,22 +191,20 @@ class EmitNetworkMessageEvents(InternalMessage):
 
 
 class DownloadFile(InternalMessage):
-    """Sent by networking thread to indicate file transfer progress.
+    """Sent to the networking thread to pass the file object to write."""
 
-    Sent by UI to pass the file object to write.
-    """
-
-    __slots__ = ("sock", "token", "file", "leftbytes")
+    __slots__ = ("sock", "token", "file", "leftbytes", "speed")
 
     def __init__(self, sock=None, token=None, file=None, leftbytes=None):
         self.sock = sock
         self.token = token
         self.file = file
         self.leftbytes = leftbytes
+        self.speed = 0
 
 
 class UploadFile(InternalMessage):
-    __slots__ = ("sock", "token", "file", "size", "sentbytes", "offset")
+    __slots__ = ("sock", "token", "file", "size", "sentbytes", "offset", "speed")
 
     def __init__(self, sock=None, token=None, file=None, size=None, sentbytes=0, offset=None):
         self.sock = sock
@@ -217,11 +213,11 @@ class UploadFile(InternalMessage):
         self.size = size
         self.sentbytes = sentbytes
         self.offset = offset
+        self.speed = 0
 
 
 class SetUploadLimit(InternalMessage):
-    """Sent by the GUI thread to indicate changes in bandwidth shaping
-    rules."""
+    """Sent to the networking thread to indicate changes in bandwidth shaping rules."""
 
     __slots__ = ("limit", "limitby")
 
@@ -231,8 +227,7 @@ class SetUploadLimit(InternalMessage):
 
 
 class SetDownloadLimit(InternalMessage):
-    """Sent by the GUI thread to indicate changes in bandwidth shaping
-    rules."""
+    """Sent to the networking thread to indicate changes in bandwidth shaping rules."""
 
     __slots__ = ("limit",)
 

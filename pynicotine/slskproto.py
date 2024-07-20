@@ -120,7 +120,7 @@ class ServerConnection(Connection):
 class PeerConnection(Connection):
 
     __slots__ = ("init", "fileinit", "filedown", "fileupl", "request_token", "response_token",
-                 "has_post_init_activity", "lastcallback")
+                 "has_post_init_activity")
 
     def __init__(self, sock=None, addr=None, selector_events=None, init=None, request_token=None,
                  response_token=None):
@@ -134,7 +134,6 @@ class PeerConnection(Connection):
         self.filedown = None
         self.fileupl = None
         self.has_post_init_activity = False
-        self.lastcallback = time.monotonic()
 
 
 class NetworkInterfaces:
@@ -1068,39 +1067,52 @@ class NetworkThread(Thread):
 
         return False
 
-    def _close_stale_in_progress_conns(self, current_time):
-
-        stale_sockets = set()
-
-        for sock, conn_obj in self._conns_in_progress.items():
-            if (current_time - conn_obj.last_active) > self.IN_PROGRESS_STALE_AFTER:
-                stale_sockets.add(sock)
-
-        if not stale_sockets:
-            return
-
-        for sock in stale_sockets:
-            self._connect_error("Timed out", self._conns_in_progress[sock])
-            self._close_connection(self._conns_in_progress, sock)
-
-        stale_sockets.clear()
-
-    def _close_inactive_connections(self, current_time):
+    def _check_connections(self, current_time):
 
         num_sockets = self._num_sockets
         inactive_sockets = set()
+        stale_sockets = set()
 
         for sock, conn_obj in self._conns.items():
             if self._is_connection_inactive(conn_obj, sock, current_time, num_sockets):
                 inactive_sockets.add(sock)
 
-        if not inactive_sockets:
-            return
+            elif self._is_transferring_download(conn_obj):
+                events.emit_main_thread(
+                    "file-download-progress", username=conn_obj.init.target_user,
+                    token=conn_obj.filedown.token, bytes_left=conn_obj.filedown.leftbytes,
+                    speed=conn_obj.filedown.speed
+                )
+                conn_obj.filedown.speed = 0
 
-        for sock in inactive_sockets:
-            self._close_connection(self._conns, sock)
+            elif self._is_transferring_upload(conn_obj):
+                events.emit_main_thread(
+                    "file-upload-progress", username=conn_obj.init.target_user,
+                    token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
+                    bytes_sent=conn_obj.fileupl.sentbytes, speed=conn_obj.fileupl.speed
+                )
+                conn_obj.fileupl.speed = 0
 
-        inactive_sockets.clear()
+        for sock, conn_obj in self._conns_in_progress.items():
+            if (current_time - conn_obj.last_active) > self.IN_PROGRESS_STALE_AFTER:
+                stale_sockets.add(sock)
+
+        if inactive_sockets:
+            for sock in inactive_sockets:
+                self._close_connection(self._conns, sock)
+
+            inactive_sockets.clear()
+
+        if stale_sockets:
+            for sock in stale_sockets:
+                self._connect_error("Timed out", self._conns_in_progress[sock])
+                self._close_connection(self._conns_in_progress, sock)
+
+            stale_sockets.clear()
+
+        if self._pending_peer_conns:
+            for addr, init in self._pending_peer_conns.copy().items():
+                self._init_peer_connection(addr, init)
 
     def _close_connection_by_ip(self, ip_address):
 
@@ -1776,14 +1788,6 @@ class NetworkThread(Thread):
         self._selector.register(sock, selector_events)
         self._num_sockets += 1
 
-    def _init_pending_peer_connections(self):
-
-        if not self._pending_peer_conns:
-            return
-
-        for addr, init in self._pending_peer_conns.copy().items():
-            self._init_peer_connection(addr, init)
-
     def _process_peer_input(self, conn_obj):
         """We have a "P" connection (p2p exchange), peer has sent us something,
         this function retrieves messages from the msg_buffer, creates message
@@ -1934,6 +1938,7 @@ class NetworkThread(Thread):
             return
 
         added_bytes_len = len(msg_buffer)
+        conn_obj.filedown.speed += added_bytes_len
         self._total_download_bandwidth += added_bytes_len
 
         conn_obj.filedown.file.write(msg_buffer)
@@ -1971,20 +1976,13 @@ class NetworkThread(Thread):
                 )
                 should_close_connection = True
 
-            current_time = time.monotonic()
-            finished = (conn_obj.filedown.leftbytes <= 0)
-
-            if finished or (current_time - conn_obj.lastcallback) > 1:
-                # We save resources by not sending data back to core
-                # every time a part of a file is downloaded
-
+            # Download finished
+            if conn_obj.filedown.leftbytes <= 0:
                 events.emit_main_thread(
-                    "file-download-progress", username=conn_obj.init.target_user, token=conn_obj.filedown.token,
-                    bytes_left=conn_obj.filedown.leftbytes
+                    "file-download-progress", username=conn_obj.init.target_user,
+                    token=conn_obj.filedown.token, bytes_left=conn_obj.filedown.leftbytes,
+                    speed=conn_obj.filedown.speed
                 )
-                conn_obj.lastcallback = self._last_cycle_time
-
-            if finished:
                 should_close_connection = True
 
         elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
@@ -2670,22 +2668,16 @@ class NetworkThread(Thread):
                 )
                 self._close_connection(self._conns, sock)
 
-            # bytes_send can be zero if the offset equals the file size, check finished status here
-            finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
+            conn_obj.fileupl.speed += bytes_send
+            self._total_upload_bandwidth += bytes_send
 
-            if finished or bytes_send > 0:
-                self._total_upload_bandwidth += bytes_send
-
-                if finished or (current_time - conn_obj.lastcallback) > 1:
-                    # We save resources by not sending data back to core
-                    # every time a part of a file is uploaded
-
-                    events.emit_main_thread(
-                        "file-upload-progress", username=conn_obj.init.target_user,
-                        token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
-                        bytes_sent=conn_obj.fileupl.sentbytes
-                    )
-                    conn_obj.lastcallback = self._last_cycle_time
+            # Upload finished
+            if conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size:
+                events.emit_main_thread(
+                    "file-upload-progress", username=conn_obj.init.target_user,
+                    token=conn_obj.fileupl.token, offset=conn_obj.fileupl.offset,
+                    bytes_sent=conn_obj.fileupl.sentbytes, speed=conn_obj.fileupl.speed
+                )
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
@@ -2707,15 +2699,14 @@ class NetworkThread(Thread):
             current_time = time.monotonic()
 
             if (current_time - self._last_cycle_time) >= 1:
+                self._check_connections(current_time)
+                self._check_indirect_connection_timeouts(current_time)
+
                 events.emit_main_thread(
                     "set-connection-stats", total_conns=self._num_sockets,
-                    download_bandwidth=self._total_download_bandwidth, upload_bandwidth=self._total_upload_bandwidth
+                    download_bandwidth=self._total_download_bandwidth,
+                    upload_bandwidth=self._total_upload_bandwidth
                 )
-
-                self._check_indirect_connection_timeouts(current_time)
-                self._close_stale_in_progress_conns(current_time)
-                self._close_inactive_connections(current_time)
-                self._init_pending_peer_connections()
 
                 self._conns_downloaded.clear()
                 self._conns_uploaded.clear()
