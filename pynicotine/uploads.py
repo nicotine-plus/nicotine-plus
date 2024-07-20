@@ -1124,6 +1124,7 @@ class Uploads(Transfers):
         upload.time_left = 0
 
         if offset is None:
+            self._update_transfer(upload)
             return
 
         upload.speed = speed
