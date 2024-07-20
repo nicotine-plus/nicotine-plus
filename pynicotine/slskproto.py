@@ -112,8 +112,8 @@ class ServerConnection(Connection):
 
     __slots__ = ("login",)
 
-    def __init__(self, sock=None, addr=None, selector_events=None, login=None):
-        Connection.__init__(self, sock, addr, selector_events)
+    def __init__(self, *args, login=None, **kwargs):
+        Connection.__init__(self, *args, **kwargs)
         self.login = login
 
 
@@ -122,10 +122,9 @@ class PeerConnection(Connection):
     __slots__ = ("init", "fileinit", "filedown", "fileupl", "request_token", "response_token",
                  "has_post_init_activity")
 
-    def __init__(self, sock=None, addr=None, selector_events=None, init=None, request_token=None,
-                 response_token=None):
+    def __init__(self, *args, init=None, request_token=None, response_token=None, **kwargs):
 
-        Connection.__init__(self, sock, addr, selector_events)
+        Connection.__init__(self, *args, **kwargs)
 
         self.init = init
         self.request_token = request_token    # Requesting indirect connection to user
@@ -1226,7 +1225,8 @@ class NetworkThread(Thread):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = ServerConnection(
-            sock=sock, addr=msg.addr, selector_events=selector_events, login=msg.login)
+            sock=sock, addr=msg.addr, selector_events=selector_events, login=msg.login
+        )
 
         sock.setblocking(False)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
