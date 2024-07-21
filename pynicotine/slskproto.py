@@ -1864,7 +1864,7 @@ class NetworkThread(Thread):
         should_close_connection = False
 
         try:
-            self._write_download_file(file_download, memoryview(in_buffer)[:idx])
+            self._write_download_file(file_download, in_buffer[:idx])
 
         except (OSError, ValueError) as error:
             events.emit_main_thread(
@@ -1948,7 +1948,7 @@ class NetworkThread(Thread):
                 self._emit_network_message_event(msg)
 
         elif conn in self._file_download_msgs:
-            idx, should_close_connection = self._process_download(conn, in_buffer)
+            idx, should_close_connection = self._process_download(conn, memoryview(in_buffer))
 
         elif conn in self._file_upload_msgs:
             file_upload = self._file_upload_msgs[conn]
