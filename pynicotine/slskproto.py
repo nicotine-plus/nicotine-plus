@@ -90,15 +90,15 @@ from pynicotine.utils import human_speed
 
 class Connection:
 
-    __slots__ = ("sock", "addr", "selector_events", "ibuf", "obuf", "last_active", "recv_size")
+    __slots__ = ("sock", "addr", "io_events", "in_buffer", "out_buffer", "last_active", "recv_size")
 
-    def __init__(self, sock=None, addr=None, selector_events=None):
+    def __init__(self, sock=None, addr=None, io_events=None):
 
         self.sock = sock
         self.addr = addr
-        self.selector_events = selector_events
-        self.ibuf = bytearray()
-        self.obuf = bytearray()
+        self.io_events = io_events
+        self.in_buffer = bytearray()
+        self.out_buffer = bytearray()
         self.last_active = time.monotonic()
         self.recv_size = None
 
@@ -564,7 +564,7 @@ class NetworkThread(Thread):
             # are critical. Always assume they are active.
             return True
 
-        return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
+        return len(conn_obj.out_buffer) > 0 or len(conn_obj.in_buffer) > 0
 
     def _bind_socket_interface(self, sock):
         """Attempt to bind socket to an IP address, if provided with the
@@ -626,7 +626,7 @@ class NetworkThread(Thread):
         return None
 
     @staticmethod
-    def _unpack_network_message(msg_class, msg_buffer, msg_size, conn_type, sock=None, addr=None, username=None):
+    def _unpack_network_message(msg_class, msg_content, msg_size, conn_type, sock=None, addr=None, username=None):
 
         try:
             msg = msg_class()
@@ -640,12 +640,12 @@ class NetworkThread(Thread):
             if username is not None:
                 msg.username = username
 
-            msg.parse_network_message(msg_buffer)
+            msg.parse_network_message(msg_content)
             return msg
 
         except Exception as error:
             log.add_debug("Unable to parse %s message type %s, size %s, contents %s. Error: %s",
-                          (conn_type, msg_class, msg_size, msg_buffer, error))
+                          (conn_type, msg_class, msg_size, msg_content, error))
 
         return None
 
@@ -681,11 +681,11 @@ class NetworkThread(Thread):
             event_name = NETWORK_MESSAGE_EVENTS[msg_class]
             events.emit_main_thread(event_name, msg)
 
-    def _modify_connection_events(self, conn_obj, selector_events):
+    def _modify_connection_events(self, conn_obj, io_events):
 
-        if conn_obj.selector_events != selector_events:
-            self._selector.modify(conn_obj.sock, selector_events)
-            conn_obj.selector_events = selector_events
+        if conn_obj.io_events != io_events:
+            self._selector.modify(conn_obj.sock, io_events)
+            conn_obj.io_events = io_events
 
     def _process_conn_messages(self, init):
         """A connection is established with the peer, time to queue up our peer
@@ -904,8 +904,8 @@ class NetworkThread(Thread):
         self._num_sockets -= 1
 
         conn_obj.sock = None
-        conn_obj.ibuf.clear()
-        conn_obj.obuf.clear()
+        conn_obj.in_buffer.clear()
+        conn_obj.out_buffer.clear()
 
         if conn_obj.__class__ is ServerConnection:
             # Disconnected from server, clean up connections and queue
@@ -1175,9 +1175,9 @@ class NetworkThread(Thread):
     def _init_server_conn(self, msg):
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = ServerConnection(
-            sock=sock, addr=msg.addr, selector_events=selector_events, login=msg.login
+            sock=sock, addr=msg.addr, io_events=io_events, login=msg.login
         )
 
         sock.setblocking(False)
@@ -1200,7 +1200,7 @@ class NetworkThread(Thread):
 
         self._server_socket = sock
         self._conns_in_progress[sock] = conn_obj
-        self._selector.register(sock, selector_events)
+        self._selector.register(sock, io_events)
         self._num_sockets += 1
 
     def _establish_outgoing_server_connection(self, conn_obj):
@@ -1244,15 +1244,15 @@ class NetworkThread(Thread):
     def _process_server_input(self, conn_obj):
         """Reads messages from the input buffer of a server connection."""
 
-        msg_buffer = conn_obj.ibuf
-        buffer_len = len(msg_buffer)
+        in_buffer = conn_obj.in_buffer
+        buffer_len = len(in_buffer)
         msg_content_offset = 8
         idx = 0
         should_close_connection = False
 
         # Server messages are 8 bytes or greater in length
         while buffer_len >= msg_content_offset:
-            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(in_buffer, idx)
 
             if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from server. "
@@ -1271,7 +1271,7 @@ class NetworkThread(Thread):
                 msg_class = SERVER_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
                     msg_class,
-                    memoryview(msg_buffer)[idx + msg_content_offset:idx + msg_size_total],
+                    memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
                     conn_type="server"
                 )
@@ -1392,7 +1392,7 @@ class NetworkThread(Thread):
                     self._emit_network_message_event(msg)
 
             else:
-                msg_content = msg_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
+                msg_content = in_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
                 log.add_debug("Server message type %s size %s contents %s unknown",
                               (msg_type, msg_size, msg_content))
 
@@ -1405,7 +1405,7 @@ class NetworkThread(Thread):
             return
 
         if idx:
-            del msg_buffer[:idx]
+            del in_buffer[:idx]
 
     def _process_server_output(self, msg):
 
@@ -1425,9 +1425,9 @@ class NetworkThread(Thread):
             self._user_addresses.pop(msg.user, None)
 
         conn_obj = self._conns[self._server_socket]
-        conn_obj.obuf.extend(msg.pack_uint32(len(msg_content) + 4))
-        conn_obj.obuf.extend(msg.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
-        conn_obj.obuf.extend(msg_content)
+        conn_obj.out_buffer.extend(msg.pack_uint32(len(msg_content) + 4))
+        conn_obj.out_buffer.extend(msg.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
+        conn_obj.out_buffer.extend(msg_content)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1504,15 +1504,15 @@ class NetworkThread(Thread):
         """Reads peer init messages from the input buffer of a peer connection."""
 
         init = None
-        msg_buffer = conn_obj.ibuf
-        buffer_len = len(msg_buffer)
+        in_buffer = conn_obj.in_buffer
+        buffer_len = len(in_buffer)
         msg_content_offset = 5
         idx = 0
         should_close_connection = False
 
         # Peer init messages are 5 bytes or greater in length
         while buffer_len >= msg_content_offset and init is None:
-            msg_size, = UINT32_UNPACK(msg_buffer, idx)
+            msg_size, = UINT32_UNPACK(in_buffer, idx)
 
             if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from peer %s. "
@@ -1528,13 +1528,13 @@ class NetworkThread(Thread):
                 break
 
             # Unpack peer init messages
-            msg_type = msg_buffer[idx + 4]
+            msg_type = in_buffer[idx + 4]
 
             if msg_type in PEER_INIT_MESSAGE_CLASSES:
                 msg_class = PEER_INIT_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
                     msg_class,
-                    memoryview(msg_buffer)[idx + msg_content_offset:idx + msg_size_total],
+                    memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
                     conn_type="peer init",
                     sock=conn_obj.sock
@@ -1594,7 +1594,7 @@ class NetworkThread(Thread):
                     self._emit_network_message_event(msg)
 
             else:
-                msg_content = msg_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
+                msg_content = in_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
                 log.add_debug("Peer init message type %s size %s contents %s unknown",
                               (msg_type, msg_size, msg_content))
                 should_close_connection = True
@@ -1608,7 +1608,7 @@ class NetworkThread(Thread):
             return None
 
         if idx:
-            del msg_buffer[:idx]
+            del in_buffer[:idx]
 
         if init is not None:
             conn_obj.init = init
@@ -1628,9 +1628,9 @@ class NetworkThread(Thread):
         if msg_content is None:
             return
 
-        conn_obj.obuf.extend(msg.pack_uint32(len(msg_content) + 1))
-        conn_obj.obuf.extend(msg.pack_uint8(PEER_INIT_MESSAGE_CODES[msg.__class__]))
-        conn_obj.obuf.extend(msg_content)
+        conn_obj.out_buffer.extend(msg.pack_uint32(len(msg_content) + 1))
+        conn_obj.out_buffer.extend(msg.pack_uint8(PEER_INIT_MESSAGE_CODES[msg.__class__]))
+        conn_obj.out_buffer.extend(msg_content)
 
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1660,16 +1660,16 @@ class NetworkThread(Thread):
 
                 continue
 
-            selector_events = selectors.EVENT_READ
+            io_events = selectors.EVENT_READ
 
             self._conns[incoming_sock] = PeerConnection(
-                sock=incoming_sock, addr=incoming_addr, selector_events=selector_events
+                sock=incoming_sock, addr=incoming_addr, io_events=io_events
             )
             self._num_sockets += 1
 
             # Event flags are modified to include 'write' in subsequent loops, if necessary.
             # Don't do it here, otherwise connections may break.
-            self._selector.register(incoming_sock, selector_events)
+            self._selector.register(incoming_sock, io_events)
 
             log.add_conn("Incoming connection from address %s", (incoming_addr,))
 
@@ -1695,9 +1695,9 @@ class NetworkThread(Thread):
             return
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        selector_events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        io_events = selectors.EVENT_READ | selectors.EVENT_WRITE
         conn_obj = PeerConnection(
-            sock=sock, addr=addr, selector_events=selector_events, init=init,
+            sock=sock, addr=addr, io_events=io_events, init=init,
             request_token=request_token, response_token=response_token
         )
 
@@ -1717,14 +1717,14 @@ class NetworkThread(Thread):
 
         init.sock = sock
         self._conns_in_progress[sock] = conn_obj
-        self._selector.register(sock, selector_events)
+        self._selector.register(sock, io_events)
         self._num_sockets += 1
 
     def _process_peer_input(self, conn_obj):
         """Reads messages from the input buffer of a 'P' connection."""
 
-        msg_buffer = conn_obj.ibuf
-        buffer_len = len(msg_buffer)
+        in_buffer = conn_obj.in_buffer
+        buffer_len = len(in_buffer)
         msg_content_offset = 8
         idx = 0
         should_close_connection = False
@@ -1732,7 +1732,7 @@ class NetworkThread(Thread):
 
         # Peer messages are 8 bytes or greater in length
         while buffer_len >= msg_content_offset:
-            msg_size, msg_type = DOUBLE_UINT32_UNPACK(msg_buffer, idx)
+            msg_size, msg_type = DOUBLE_UINT32_UNPACK(in_buffer, idx)
 
             if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
@@ -1763,7 +1763,7 @@ class NetworkThread(Thread):
             if msg_class:
                 msg = self._unpack_network_message(
                     msg_class,
-                    memoryview(msg_buffer)[idx + msg_content_offset:idx + msg_size_total],
+                    memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
                     conn_type="peer",
                     sock=conn_obj.sock,
@@ -1777,7 +1777,7 @@ class NetworkThread(Thread):
                 self._emit_network_message_event(msg)
 
             else:
-                msg_content = msg_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
+                msg_content = in_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
                 log.add_debug("Peer message type %s size %s contents %s unknown, from user: %s, address %s",
                               (msg_type, msg_size, msg_content, conn_obj.init.target_user, conn_obj.addr))
 
@@ -1789,7 +1789,7 @@ class NetworkThread(Thread):
             return
 
         if idx:
-            del msg_buffer[:idx]
+            del in_buffer[:idx]
             conn_obj.has_post_init_activity = True
 
         if search_result_received and not self._is_connection_still_active(conn_obj):
@@ -1807,9 +1807,9 @@ class NetworkThread(Thread):
             return
 
         conn_obj = self._conns[msg.sock]
-        conn_obj.obuf.extend(msg.pack_uint32(len(msg_content) + 4))
-        conn_obj.obuf.extend(msg.pack_uint32(PEER_MESSAGE_CODES[msg.__class__]))
-        conn_obj.obuf.extend(msg_content)
+        conn_obj.out_buffer.extend(msg.pack_uint32(len(msg_content) + 4))
+        conn_obj.out_buffer.extend(msg.pack_uint32(PEER_MESSAGE_CODES[msg.__class__]))
+        conn_obj.out_buffer.extend(msg_content)
 
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1851,26 +1851,26 @@ class NetworkThread(Thread):
 
         self._download_limit_split = int(limit)
 
-    def _write_download_file(self, file_download, msg_buffer):
+    def _write_download_file(self, file_download, in_buffer):
 
-        if not msg_buffer:
+        if not in_buffer:
             return
 
-        added_bytes_len = len(msg_buffer)
+        added_bytes_len = len(in_buffer)
         file_download.speed += added_bytes_len
         self._total_download_bandwidth += added_bytes_len
 
-        file_download.file.write(msg_buffer)
+        file_download.file.write(in_buffer)
         file_download.leftbytes -= added_bytes_len
 
-    def _process_download(self, conn_obj, msg_buffer):
+    def _process_download(self, conn_obj, in_buffer):
 
         file_download = self._file_download_msgs[conn_obj]
         idx = file_download.leftbytes
         should_close_connection = False
 
         try:
-            self._write_download_file(file_download, memoryview(msg_buffer)[:idx])
+            self._write_download_file(file_download, memoryview(in_buffer)[:idx])
 
         except (OSError, ValueError) as error:
             events.emit_main_thread(
@@ -1898,18 +1898,18 @@ class NetworkThread(Thread):
             return
 
         file_upload.sentbytes += num_sent_bytes
-        total_read_bytes = file_upload.offset + file_upload.sentbytes + len(conn_obj.obuf)
+        total_read_bytes = file_upload.offset + file_upload.sentbytes + len(conn_obj.out_buffer)
         size = file_upload.size
 
         try:
             if total_read_bytes < size:
                 num_bytes_to_read = int(
                     (max(4096, num_sent_bytes * 1.25) / max(1, current_time - conn_obj.last_active))
-                    - len(conn_obj.obuf)
+                    - len(conn_obj.out_buffer)
                 )
                 if num_bytes_to_read > 0:
                     read = file_upload.file.read(num_bytes_to_read)
-                    conn_obj.obuf.extend(read)
+                    conn_obj.out_buffer.extend(read)
 
                     self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1935,7 +1935,7 @@ class NetworkThread(Thread):
     def _process_file_input(self, conn_obj):
         """Reads file data/messages from the input buffer of a 'F' connection."""
 
-        msg_buffer = conn_obj.ibuf
+        in_buffer = conn_obj.in_buffer
         idx = 0
         should_close_connection = False
 
@@ -1943,7 +1943,7 @@ class NetworkThread(Thread):
             msg_size = idx = 4
             msg = self._unpack_network_message(
                 FileTransferInit,
-                memoryview(msg_buffer)[:msg_size],
+                memoryview(in_buffer)[:msg_size],
                 msg_size,
                 conn_type="file",
                 sock=conn_obj.sock,
@@ -1955,7 +1955,7 @@ class NetworkThread(Thread):
                 self._emit_network_message_event(msg)
 
         elif conn_obj in self._file_download_msgs:
-            idx, should_close_connection = self._process_download(conn_obj, msg_buffer)
+            idx, should_close_connection = self._process_download(conn_obj, in_buffer)
 
         elif conn_obj in self._file_upload_msgs:
             file_upload = self._file_upload_msgs[conn_obj]
@@ -1964,7 +1964,7 @@ class NetworkThread(Thread):
                 msg_size = idx = 8
                 msg = self._unpack_network_message(
                     FileOffset,
-                    memoryview(msg_buffer)[:msg_size],
+                    memoryview(in_buffer)[:msg_size],
                     msg_size,
                     conn_type="file",
                     sock=conn_obj.sock,
@@ -1991,7 +1991,7 @@ class NetworkThread(Thread):
             return
 
         if idx:
-            del msg_buffer[:idx]
+            del in_buffer[:idx]
             conn_obj.has_post_init_activity = True
 
     def _process_file_output(self, msg):
@@ -2007,7 +2007,7 @@ class NetworkThread(Thread):
 
             conn_obj = self._conns[msg.sock]
             self._file_init_msgs[conn_obj] = msg
-            conn_obj.obuf.extend(msg_content)
+            conn_obj.out_buffer.extend(msg_content)
 
             self._emit_network_message_event(msg)
 
@@ -2018,7 +2018,7 @@ class NetworkThread(Thread):
                 return
 
             conn_obj = self._conns[msg.sock]
-            conn_obj.obuf.extend(msg_content)
+            conn_obj.out_buffer.extend(msg_content)
 
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -2188,15 +2188,15 @@ class NetworkThread(Thread):
     def _process_distrib_input(self, conn_obj):
         """Reads messages from the input buffer of a 'D' connection."""
 
-        msg_buffer = conn_obj.ibuf
-        buffer_len = len(msg_buffer)
+        in_buffer = conn_obj.in_buffer
+        buffer_len = len(in_buffer)
         msg_content_offset = 5
         idx = 0
         should_close_connection = False
 
         # Distributed messages are 5 bytes or greater in length
         while buffer_len >= msg_content_offset:
-            msg_size, = UINT32_UNPACK(msg_buffer, idx)
+            msg_size, = UINT32_UNPACK(in_buffer, idx)
 
             if msg_size > self.MAX_INCOMING_MESSAGE_SIZE:
                 log.add_conn("Received message larger than maximum size %s from user %s. "
@@ -2212,13 +2212,13 @@ class NetworkThread(Thread):
                 break
 
             # Unpack distributed messages
-            msg_type = msg_buffer[idx + 4]
+            msg_type = in_buffer[idx + 4]
 
             if msg_type in DISTRIBUTED_MESSAGE_CLASSES:
                 msg_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
                 msg = self._unpack_network_message(
                     msg_class,
-                    memoryview(msg_buffer)[idx + msg_content_offset:idx + msg_size_total],
+                    memoryview(in_buffer)[idx + msg_content_offset:idx + msg_size_total],
                     msg_size,
                     conn_type="distrib",
                     sock=conn_obj.sock,
@@ -2296,7 +2296,7 @@ class NetworkThread(Thread):
                     self._emit_network_message_event(msg)
 
             else:
-                msg_content = msg_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
+                msg_content = in_buffer[idx + msg_content_offset:idx + min(50, msg_size_total)]
                 log.add_debug("Distrib message type %s size %s contents %s unknown",
                               (msg_type, msg_size, msg_content))
 
@@ -2308,7 +2308,7 @@ class NetworkThread(Thread):
             return
 
         if idx:
-            del msg_buffer[:idx]
+            del in_buffer[:idx]
             conn_obj.has_post_init_activity = True
 
     def _process_distrib_output(self, msg):
@@ -2320,9 +2320,9 @@ class NetworkThread(Thread):
             return
 
         conn_obj = self._conns[msg.sock]
-        conn_obj.obuf.extend(msg.pack_uint32(len(msg_content) + 1))
-        conn_obj.obuf.extend(msg.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg.__class__]))
-        conn_obj.obuf.extend(msg_content)
+        conn_obj.out_buffer.extend(msg.pack_uint32(len(msg_content) + 1))
+        conn_obj.out_buffer.extend(msg.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg.__class__]))
+        conn_obj.out_buffer.extend(msg_content)
 
         conn_obj.has_post_init_activity = True
         self._modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -2458,22 +2458,22 @@ class NetworkThread(Thread):
             # We can't call select() when no sockets are registered (WinError 10022)
             return
 
-        for selector_key, selector_events in self._selector.select(timeout=self.SLEEP_MAX_IDLE):
-            sock = selector_key.fileobj
+        for key, io_events in self._selector.select(timeout=self.SLEEP_MAX_IDLE):
+            sock = key.fileobj
 
-            if selector_events & selectors.EVENT_READ:
+            if io_events & selectors.EVENT_READ:
                 if sock is self._listen_socket:
                     self._accept_incoming_peer_connections()
                     continue
 
                 self._process_ready_input_socket(sock, current_time)
 
-            if selector_events & selectors.EVENT_WRITE:
+            if io_events & selectors.EVENT_WRITE:
                 self._process_ready_output_socket(sock, current_time)
 
     def _process_conn_incoming_messages(self, conn_obj):
 
-        if not conn_obj.ibuf:
+        if not conn_obj.in_buffer:
             return
 
         if conn_obj.sock is self._server_socket:
@@ -2485,7 +2485,7 @@ class NetworkThread(Thread):
         if init is None:
             conn_obj.init = init = self._process_peer_init_input(conn_obj)
 
-            if init is None or not conn_obj.ibuf:
+            if init is None or not conn_obj.in_buffer:
                 return
 
         if init.conn_type == ConnectionType.PEER:
@@ -2578,7 +2578,7 @@ class NetworkThread(Thread):
 
         data = sock.recv(conn_obj.recv_size)
         data_length = len(data)
-        conn_obj.ibuf.extend(data)
+        conn_obj.in_buffer.extend(data)
 
         if use_download_limit:
             self._conns_downloaded[conn_obj] += data_length
@@ -2601,17 +2601,17 @@ class NetworkThread(Thread):
         if is_file_upload and self._upload_limit_split:
             limit = (self._upload_limit_split - self._conns_uploaded[conn_obj])
 
-            num_bytes_sent = sock.send(memoryview(conn_obj.obuf)[:limit])
+            num_bytes_sent = sock.send(memoryview(conn_obj.out_buffer)[:limit])
             self._conns_uploaded[conn_obj] += num_bytes_sent
         else:
-            num_bytes_sent = sock.send(conn_obj.obuf)
+            num_bytes_sent = sock.send(conn_obj.out_buffer)
 
-        del conn_obj.obuf[:num_bytes_sent]
+        del conn_obj.out_buffer[:num_bytes_sent]
 
         if is_file_upload:
             self._process_upload(conn_obj, num_bytes_sent, current_time)
 
-        if not conn_obj.obuf:
+        if not conn_obj.out_buffer:
             # Nothing else to send, stop watching connection for writes
             self._modify_connection_events(conn_obj, selectors.EVENT_READ)
 
