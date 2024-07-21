@@ -956,6 +956,11 @@ class Application:
         # Dialog was closed, quit
         sys.excepthook = None
         core.quit()
+
+        # Process 'quit' event after slight delay in case thread event loop is stuck
+        GLib.idle_add(events.process_thread_events)
+
+        # Log exception in terminal
         self._raise_exception(exc_value)
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
