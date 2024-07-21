@@ -116,23 +116,24 @@ class SoulseekNetworkTest(TestCase):
         sleep(SLSKPROTO_RUN_TIME)
 
         # pylint: disable=no-member,protected-access
+        sock = core._network_thread._server_conn_obj.sock
 
         if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             if sys.platform == "win32":
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 9)
+                self.assertEqual(sock.setsockopt.call_count, 9)
 
             elif hasattr(socket, "TCP_USER_TIMEOUT"):
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 11)
+                self.assertEqual(sock.setsockopt.call_count, 11)
 
             else:
-                self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 10)
+                self.assertEqual(sock.setsockopt.call_count, 10)
 
         elif hasattr(socket, "SIO_KEEPALIVE_VALS"):
-            self.assertEqual(core._network_thread._server_socket.ioctl.call_count, 1)
-            self.assertEqual(core._network_thread._server_socket.setsockopt.call_count, 6)
+            self.assertEqual(sock.ioctl.call_count, 1)
+            self.assertEqual(sock.setsockopt.call_count, 6)
 
-        self.assertEqual(core._network_thread._server_socket.setblocking.call_count, 2)
-        self.assertEqual(core._network_thread._server_socket.connect_ex.call_count, 1)
+        self.assertEqual(sock.setblocking.call_count, 2)
+        self.assertEqual(sock.connect_ex.call_count, 1)
 
     def test_login(self):
 
