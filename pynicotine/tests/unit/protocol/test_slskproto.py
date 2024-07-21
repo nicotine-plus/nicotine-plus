@@ -116,7 +116,7 @@ class SoulseekNetworkTest(TestCase):
         sleep(SLSKPROTO_RUN_TIME)
 
         # pylint: disable=no-member,protected-access
-        sock = core._network_thread._server_conn_obj.sock
+        sock = core._network_thread._server_conn.sock
 
         if hasattr(socket, "TCP_KEEPIDLE") or hasattr(socket, "TCP_KEEPALIVE"):
             if sys.platform == "win32":
