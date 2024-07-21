@@ -1323,9 +1323,9 @@ class Downloads(Transfers):
 
         download.status = TransferStatus.TRANSFERRING
         download.time_elapsed = time.monotonic() - download.start_time
+        download.time_left = 0
 
         if speed is not None:
-            download.time_left = 0
             download.speed = speed
 
         download.current_byte_offset = current_byte_offset = (size - bytes_left)

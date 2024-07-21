@@ -1081,13 +1081,13 @@ class Uploads(Transfers):
 
         upload.status = TransferStatus.TRANSFERRING
         upload.time_elapsed = time.monotonic() - upload.start_time
+        upload.time_left = 0
 
         if offset is None:
             self._update_transfer(upload)
             return
 
         if speed is not None:
-            upload.time_left = 0
             upload.speed = speed
 
         upload.current_byte_offset = current_byte_offset = (offset + bytes_sent)
