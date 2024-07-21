@@ -1307,7 +1307,7 @@ class Downloads(Transfers):
         log.add_transfer("Upload attempt by user %s for file %s failed. Reason: %s",
                          (virtual_path, username, download.status))
 
-    def _file_download_progress(self, username, token, bytes_left, speed):
+    def _file_download_progress(self, username, token, bytes_left, speed=None):
         """A file download is in progress."""
 
         download = self.active_users.get(username, {}).get(token)
@@ -1323,8 +1323,11 @@ class Downloads(Transfers):
 
         download.status = TransferStatus.TRANSFERRING
         download.time_elapsed = time.monotonic() - download.start_time
-        download.time_left = 0
-        download.speed = speed
+
+        if speed is not None:
+            download.time_left = 0
+            download.speed = speed
+
         download.current_byte_offset = current_byte_offset = (size - bytes_left)
         byte_difference = current_byte_offset - download.last_byte_offset
         download.last_byte_offset = current_byte_offset
@@ -1332,7 +1335,7 @@ class Downloads(Transfers):
         if byte_difference > 0:
             core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-        if speed > 0 and size > current_byte_offset:
+        if speed is not None and speed > 0 and size > current_byte_offset:
             download.time_left = (size - current_byte_offset) // speed
 
         self._update_transfer(download)

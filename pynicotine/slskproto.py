@@ -1884,7 +1884,7 @@ class NetworkThread(Thread):
             events.emit_main_thread(
                 "file-download-progress",
                 username=conn_obj.init.target_user, token=file_download.token,
-                bytes_left=file_download.leftbytes, speed=file_download.speed
+                bytes_left=file_download.leftbytes
             )
             should_close_connection = True
 
@@ -1928,8 +1928,7 @@ class NetworkThread(Thread):
             events.emit_main_thread(
                 "file-upload-progress",
                 username=conn_obj.init.target_user, token=file_upload.token,
-                offset=file_upload.offset, bytes_sent=file_upload.sentbytes,
-                speed=file_upload.speed
+                offset=file_upload.offset, bytes_sent=file_upload.sentbytes
             )
 
     def _process_file_input(self, conn_obj):
@@ -2637,7 +2636,8 @@ class NetworkThread(Thread):
                 self._check_indirect_connection_timeouts(current_time)
 
                 events.emit_main_thread(
-                    "set-connection-stats", total_conns=self._num_sockets,
+                    "set-connection-stats",
+                    total_conns=self._num_sockets,
                     download_bandwidth=self._total_download_bandwidth,
                     upload_bandwidth=self._total_upload_bandwidth
                 )
