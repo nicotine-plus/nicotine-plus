@@ -1435,9 +1435,11 @@ class NetworkThread(Thread):
             self._user_addresses.pop(msg.user, None)
 
         conn = self._server_conn
-        conn.out_buffer.extend(msg.pack_uint32(len(msg_content) + 4))
-        conn.out_buffer.extend(msg.pack_uint32(SERVER_MESSAGE_CODES[msg_class]))
-        conn.out_buffer.extend(msg_content)
+        out_buffer = conn.out_buffer
+
+        out_buffer += msg.pack_uint32(len(msg_content) + 4)
+        out_buffer += msg.pack_uint32(SERVER_MESSAGE_CODES[msg_class])
+        out_buffer += msg_content
 
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1635,9 +1637,11 @@ class NetworkThread(Thread):
         if msg_content is None:
             return
 
-        conn.out_buffer.extend(msg.pack_uint32(len(msg_content) + 1))
-        conn.out_buffer.extend(msg.pack_uint8(PEER_INIT_MESSAGE_CODES[msg.__class__]))
-        conn.out_buffer.extend(msg_content)
+        out_buffer = conn.out_buffer
+
+        out_buffer += msg.pack_uint32(len(msg_content) + 1)
+        out_buffer += msg.pack_uint8(PEER_INIT_MESSAGE_CODES[msg.__class__])
+        out_buffer += msg_content
 
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
@@ -1815,9 +1819,11 @@ class NetworkThread(Thread):
             return
 
         conn = self._conns[msg.sock]
-        conn.out_buffer.extend(msg.pack_uint32(len(msg_content) + 4))
-        conn.out_buffer.extend(msg.pack_uint32(PEER_MESSAGE_CODES[msg.__class__]))
-        conn.out_buffer.extend(msg_content)
+        out_buffer = conn.out_buffer
+
+        out_buffer += msg.pack_uint32(len(msg_content) + 4)
+        out_buffer += msg.pack_uint32(PEER_MESSAGE_CODES[msg.__class__])
+        out_buffer += msg_content
 
         conn.has_post_init_activity = True
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1905,20 +1911,20 @@ class NetworkThread(Thread):
         if file_upload.offset is None:
             return
 
+        out_buffer = conn.out_buffer
+        out_buffer_len = len(out_buffer)
         file_upload.sentbytes += num_sent_bytes
-        total_read_bytes = file_upload.offset + file_upload.sentbytes + len(conn.out_buffer)
+        total_read_bytes = file_upload.offset + file_upload.sentbytes + out_buffer_len
         size = file_upload.size
 
         try:
             if total_read_bytes < size:
                 num_bytes_to_read = int(
                     (max(4096, num_sent_bytes * 1.25) / max(1, current_time - conn.last_active))
-                    - len(conn.out_buffer)
+                    - out_buffer_len
                 )
                 if num_bytes_to_read > 0:
-                    read = file_upload.file.read(num_bytes_to_read)
-                    conn.out_buffer.extend(read)
-
+                    out_buffer += file_upload.file.read(num_bytes_to_read)
                     self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
         except (OSError, ValueError) as error:
@@ -2014,7 +2020,7 @@ class NetworkThread(Thread):
 
             conn = self._conns[msg.sock]
             self._file_init_msgs[conn] = msg
-            conn.out_buffer.extend(msg_content)
+            conn.out_buffer += msg_content
 
             self._emit_network_message_event(msg)
 
@@ -2025,7 +2031,7 @@ class NetworkThread(Thread):
                 return
 
             conn = self._conns[msg.sock]
-            conn.out_buffer.extend(msg_content)
+            conn.out_buffer += msg_content
 
         conn.has_post_init_activity = True
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -2330,9 +2336,11 @@ class NetworkThread(Thread):
             return
 
         conn = self._conns[msg.sock]
-        conn.out_buffer.extend(msg.pack_uint32(len(msg_content) + 1))
-        conn.out_buffer.extend(msg.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg.__class__]))
-        conn.out_buffer.extend(msg_content)
+        out_buffer = conn.out_buffer
+
+        out_buffer += msg.pack_uint32(len(msg_content) + 1)
+        out_buffer += msg.pack_uint8(DISTRIBUTED_MESSAGE_CODES[msg.__class__])
+        out_buffer += msg_content
 
         conn.has_post_init_activity = True
         self._modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -2581,13 +2589,13 @@ class NetworkThread(Thread):
             conn.recv_size = self.SOCKET_READ_BUFFER_SIZE
 
         data = sock.recv(conn.recv_size)
-        data_length = len(data)
-        conn.in_buffer.extend(data)
+        data_len = len(data)
+        conn.in_buffer += data
 
         if use_download_limit:
-            self._conns_downloaded[conn] += data_length
+            self._conns_downloaded[conn] += data_len
 
-        elif data_length >= conn.recv_size // 2:
+        elif data_len >= conn.recv_size // 2:
             conn.recv_size *= 2
 
         conn.last_active = current_time
@@ -2600,22 +2608,23 @@ class NetworkThread(Thread):
     def _write_data(self, conn, current_time):
 
         sock = conn.sock
+        out_buffer = conn.out_buffer
         is_file_upload = conn in self._file_upload_msgs
 
         if is_file_upload and self._upload_limit_split:
             limit = (self._upload_limit_split - self._conns_uploaded[conn])
 
-            num_bytes_sent = sock.send(memoryview(conn.out_buffer)[:limit])
+            num_bytes_sent = sock.send(memoryview(out_buffer)[:limit])
             self._conns_uploaded[conn] += num_bytes_sent
         else:
-            num_bytes_sent = sock.send(conn.out_buffer)
+            num_bytes_sent = sock.send(out_buffer)
 
-        del conn.out_buffer[:num_bytes_sent]
+        del out_buffer[:num_bytes_sent]
 
         if is_file_upload:
             self._process_upload(conn, num_bytes_sent, current_time)
 
-        if not conn.out_buffer:
+        if not out_buffer:
             # Nothing else to send, stop watching connection for writes
             self._modify_connection_events(conn, selectors.EVENT_READ)
 

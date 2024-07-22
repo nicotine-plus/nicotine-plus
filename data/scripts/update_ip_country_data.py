@@ -100,14 +100,14 @@ def update_ip_country_data():
 
     # IP range data
     for ip_address in ip_range_values:
-        output.extend(f"{ip_address},".encode())
+        output += f"{ip_address},".encode()
 
     del output[-1]
-    output.extend(b"\n")
+    output += b"\n"
 
     # IP range countries
     for country_code in ip_range_countries:
-        output.extend(f'{country_code.replace("-", "")},'.encode())
+        output += f'{country_code.replace("-", "")},'.encode()
 
     del output[-1]
 

@@ -622,10 +622,10 @@ class Scanner:
         """Pack all files and metadata in folder."""
 
         stream = bytearray()
-        stream.extend(FileListMessage.pack_uint32(len(file_list)))
+        stream += FileListMessage.pack_uint32(len(file_list))
 
         for fileinfo in file_list:
-            stream.extend(FileListMessage.pack_file_info(fileinfo))
+            stream += FileListMessage.pack_file_info(fileinfo)
 
         return bytes(stream)
 

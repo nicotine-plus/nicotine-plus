@@ -1684,9 +1684,9 @@ class UserInterfacePage:
         self.editing_color = False
 
         languages = [(_("System default"), "")]
-        languages.extend([
+        languages += [
             (language_name, language_code) for language_code, language_name in sorted(LANGUAGES, key=itemgetter(1))
-        ])
+        ]
 
         self.language_combobox = ComboBox(
             container=self.language_label.get_parent(), label=self.language_label,
