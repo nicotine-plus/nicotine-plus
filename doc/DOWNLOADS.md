@@ -93,10 +93,11 @@ Standalone executables are also available. They can be run from any folder and d
 
 If you are using any of the package managers listed, you can install Nicotine+ using them.
 
-| Package Manager                                                                         | Package Name           |
-|-----------------------------------------------------------------------------------------|------------------------|
-| [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                   | `nicotine-plus`        |
-| [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json) | `extras/nicotine-plus` |
+| Package Manager                                                                                    | Package Name           |
+|----------------------------------------------------------------------------------------------------|------------------------|
+| [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                              | `nicotine-plus`        |
+| [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json)            | `extras/nicotine-plus` |
+| [Winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/n/Nicotine%2B/Nicotine%2B) | `nicotine+.nicotine+`  |
 
 
 ## macOS
