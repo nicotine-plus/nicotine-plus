@@ -45,6 +45,7 @@ from pynicotine.slskmessages import UINT32_UNPACK
 from pynicotine.slskmessages import AcceptChildren
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
+from pynicotine.slskmessages import CantConnectToPeer
 from pynicotine.slskmessages import CloseConnection
 from pynicotine.slskmessages import CloseConnectionIP
 from pynicotine.slskmessages import ConnectionType
@@ -329,6 +330,7 @@ class NetworkThread(Thread):
     """
 
     IN_PROGRESS_STALE_AFTER = 2
+    INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
     CONNECTION_MAX_IDLE_GHOST = 10
     CONNECTION_BACKLOG_LENGTH = 65535      # OS limit can be lower
@@ -520,7 +522,26 @@ class NetworkThread(Thread):
 
     # Connections #
 
-    def _check_indirect_connection_timeouts(self, current_time=None, expire_all=False):
+    def _indirect_request_error(self, token, init):
+
+        username = init.target_user
+        conn_type = init.conn_type
+
+        log.add_conn("Indirect connect request of type %s to user %s with "
+                     "token %s failed", (conn_type, username, token))
+
+        if init.sock is not None:
+            return
+
+        # No direct connection was established, give up
+        events.emit_main_thread(
+            "peer-connection-error", username=username, conn_type=conn_type,
+            msgs=init.outgoing_msgs[:]
+        )
+        init.outgoing_msgs.clear()
+        self._username_init_msgs.pop(username + conn_type, None)
+
+    def _check_indirect_request_timeouts(self, current_time=None, expire_all=False):
 
         if not self._token_init_msgs:
             return
@@ -528,24 +549,10 @@ class NetworkThread(Thread):
         timed_out_requests = set()
 
         for token, (init, request_time) in self._token_init_msgs.items():
-            username = init.target_user
-            conn_type = init.conn_type
-
-            if not expire_all and (current_time - request_time) < 20:
+            if not expire_all and (current_time - request_time) < self.INDIRECT_REQUEST_TIMEOUT:
                 continue
 
-            log.add_conn("Indirect connect request of type %s to user %s with "
-                         "token %s expired", (conn_type, username, token))
-
-            if init.sock is None:
-                # No direct connection was established, give up
-                events.emit_main_thread(
-                    "peer-connection-error", username=username, conn_type=conn_type,
-                    msgs=init.outgoing_msgs[:]
-                )
-                init.outgoing_msgs.clear()
-                self._username_init_msgs.pop(username + conn_type, None)
-
+            self._indirect_request_error(token, init)
             timed_out_requests.add(token)
 
         if not timed_out_requests:
@@ -807,10 +814,12 @@ class NetworkThread(Thread):
 
         conn_type = conn.init.conn_type
         username = conn.init.target_user
+        response_token = conn.response_token
 
-        if conn.response_token is not None:
+        if response_token is not None:
             log.add_conn("Cannot respond to indirect connection request of type %s from user %s, "
-                         "token %s: %s", (conn_type, username, conn.response_token, error))
+                         "token %s: %s", (conn_type, username, response_token, error))
+            self._send_message_to_server(CantConnectToPeer(response_token, username))
             return
 
         log.add_conn("Direct connection of type %s to user %s failed: %s",
@@ -1304,6 +1313,13 @@ class NetworkThread(Thread):
 
                         self._connect_to_peer(username, addr, init, response_token=token)
 
+                    elif msg_class is CantConnectToPeer:
+                        token = msg.token
+
+                        if token in self._token_init_msgs:
+                            init, _request_time = self._token_init_msgs.pop(token)
+                            self._indirect_request_error(token, init)
+
                     elif msg_class is GetUserStatus:
                         if msg.status == UserStatus.OFFLINE and msg.user in self._user_addresses:
                             # User went offline, reset stored IP address
@@ -1452,7 +1468,7 @@ class NetworkThread(Thread):
         self._upload_speed = 0
         self._user_addresses.clear()
 
-        self._check_indirect_connection_timeouts(expire_all=True)
+        self._check_indirect_request_timeouts(expire_all=True)
 
         for conn in self._conns.copy().values():
             self._close_connection(conn)
@@ -2621,7 +2637,7 @@ class NetworkThread(Thread):
 
             if (current_time - self._last_cycle_time) >= 1:
                 self._check_connections(current_time)
-                self._check_indirect_connection_timeouts(current_time)
+                self._check_indirect_request_timeouts(current_time)
 
                 events.emit_main_thread(
                     "set-connection-stats",

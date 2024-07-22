@@ -2836,10 +2836,13 @@ class ExcludedSearchPhrases(ServerMessage):
 class CantConnectToPeer(ServerMessage):
     """Server code 1001.
 
-    We send this to say we can't connect to peer after it has asked us
-    to connect. We receive this if we asked peer to connect and it can't
-    do this. This message means a connection can't be established either
-    way.
+    We send this when we are not able to respond to an indirect connection
+    request. We receive this if a peer was not able to respond to our
+    indirect connection request. The token is taken from the ConnectToPeer
+    message.
+
+    Do not rely on receiving this message from peers. Keep a local timeout
+    for indirect connections as well.
     """
 
     __slots__ = ("token", "user")

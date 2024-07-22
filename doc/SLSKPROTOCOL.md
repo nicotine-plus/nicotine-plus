@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 11, 2024
+Last updated on July 22, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -1876,7 +1876,13 @@ The server sends a list of phrases not allowed on the search network. File paths
 
 ### CantConnectToPeer
 
-We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
+We send this when we are not able to respond to an indirect connection
+request. We receive this if a peer was not able to respond to our
+indirect connection request. The token is taken from the [ConnectToPeer](#server-code-18)
+message.
+
+Do not rely on receiving this message from peers. Keep a local timeout
+for indirect connections as well.
 
 See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
@@ -1936,15 +1942,13 @@ If User B receives the *PeerInit* message, a connection is established, and user
 Otherwise, once User B receives the *ConnectToPeer* message from the Server, User B proceeds with step 4.
 4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token included in the *ConnectToPeer* message.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
-If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
+If this fails, no connection is possible, and User B proceeds with step 5.
 5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
 6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
 
-Unlike SoulseekQt, Nicotine+ and Soulseek.NET-based clients skip step 5 in favor of letting the connection attempt time out on User A's end.
-
 ### Legacy Peer Connection Message Order
 
-*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier, Museek+, soulseeX*
+*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 5-7), Museek+ (excluding step 7), soulseeX*
 
 1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
@@ -1953,9 +1957,10 @@ If this fails (socket cannot connect), User A proceeds with an indirect connecti
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
 4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same token.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
-If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
+If this fails, no connection is possible, and User B proceeds with step 5.
 5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
 6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
+7.  After 20 seconds, user A retries an indirect connection request (step 2) up to three times before giving up.
 
 ## Peer Init Code 0
 
