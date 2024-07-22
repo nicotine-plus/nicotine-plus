@@ -1374,9 +1374,7 @@ class NetworkThread(Thread):
                         log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
 
                         if self._parent_conn is None and self._potential_parents:
-                            for username in self._potential_parents:
-                                addr = self._potential_parents[username]
-
+                            for username, addr in self._potential_parents.items():
                                 log.add_conn("Attempting parent connection to user %s", username)
                                 self._initiate_connection_to_peer(username, ConnectionType.DISTRIBUTED, in_address=addr)
 
@@ -2165,6 +2163,9 @@ class NetworkThread(Thread):
 
     def _set_branch_root(self, username):
         """Inform the server and child peers of our branch root."""
+
+        if not username:
+            return
 
         if username == self._branch_root:
             return
