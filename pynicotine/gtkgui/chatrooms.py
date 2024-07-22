@@ -196,13 +196,13 @@ class ChatRooms(IconNotebook):
 
     def on_create_room(self, *_args):
 
-        # Normalize room name, otherwise the server will complain
-        room = " ".join(self.window.chatrooms_entry.get_text().split())
+        room = self.window.chatrooms_entry.get_text().strip()
 
         if not room:
             return
 
         if room not in core.chatrooms.server_rooms and room not in core.chatrooms.private_rooms:
+            room = core.chatrooms.sanitize_room_name(room)
             OptionDialog(
                 parent=self.window,
                 title=_("Create New Room?"),
@@ -211,7 +211,6 @@ class ChatRooms(IconNotebook):
                 callback=self.on_create_room_response,
                 callback_data=room
             ).present()
-
         else:
             core.chatrooms.show_room(room)
 

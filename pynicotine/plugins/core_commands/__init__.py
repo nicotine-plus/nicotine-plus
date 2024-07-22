@@ -364,7 +364,7 @@ class Plugin(BasePlugin):
     # Chat Rooms #
 
     def join_command(self, args, **_unused):
-        room = " ".join(args.split())
+        room = self.core.chatrooms.sanitize_room_name(args)
         self.core.chatrooms.show_room(room)
 
     def leave_command(self, args, room=None, **_unused):

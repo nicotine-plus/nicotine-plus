@@ -174,6 +174,16 @@ class ChatRooms:
         for room in self.joined_rooms.copy():
             self.remove_room(room, is_permanent)
 
+    def sanitize_room_name(self, room):
+        """Sanitize room name according to server requirements."""
+
+        # Replace non-ASCII characters
+        room = room.strip().encode("ascii", errors="replace").decode()
+
+        # Remove two or more consecutive spaces
+        room = " ".join(room.split())
+        return room
+
     def clear_room_messages(self, room):
         events.emit("clear-room-messages", room)
 
