@@ -85,6 +85,7 @@ class UserInfos(IconNotebook):
             ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
@@ -240,9 +241,15 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
+    def server_login(self, *_args):
+        for page in self.pages.values():
+            page.update_ip_address_button_state()
+
     def server_disconnect(self, *_args):
+
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            page.update_ip_address_button_state()
 
 
 class UserInfo:
@@ -275,6 +282,7 @@ class UserInfo:
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
+            self.show_ip_address_button,
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_label
@@ -541,6 +549,9 @@ class UserInfo:
     def update_privileges_button_state(self):
         self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
 
+    def update_ip_address_button_state(self):
+        self.show_ip_address_button.set_sensitive(core.users.login_status != UserStatus.OFFLINE)
+
     def update_button_states(self):
 
         self.update_local_buttons_state()
@@ -548,6 +559,7 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
         self.update_privileges_button_state()
+        self.update_ip_address_button_state()
 
     # Network Messages #
 
