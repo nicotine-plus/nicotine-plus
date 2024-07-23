@@ -429,13 +429,9 @@ class Transfers:
 
         transfer.status = TransferStatus.TRANSFERRING
         transfer.time_elapsed = time_elapsed = (time.monotonic() - transfer.start_time)
-        transfer.time_left = 0
 
         if current_byte_offset is None:
             return
-
-        if speed is not None:
-            transfer.speed = speed
 
         transfer.current_byte_offset = current_byte_offset
         transferred_fragment_size = current_byte_offset - transfer.last_byte_offset
@@ -444,11 +440,16 @@ class Transfers:
 
         transfer.avg_speed = max(0, int(transferred_total_size // max(1, time_elapsed)))
 
+        if speed:
+            transfer.speed = speed
+        else:
+            transfer.speed = transfer.avg_speed
+
         if transferred_fragment_size > 0:
             core.statistics.append_stat_value(stat_id, transferred_fragment_size)
 
-        if transfer.avg_speed > 0 and size > current_byte_offset:
-            transfer.time_left = (size - current_byte_offset) // transfer.avg_speed
+        if transfer.speed > 0 and size > current_byte_offset:
+            transfer.time_left = (size - current_byte_offset) // transfer.speed
 
     def _finish_transfer(self, transfer):
 
@@ -549,6 +550,7 @@ class Transfers:
             events.cancel_scheduled(transfer.request_timer_id)
             transfer.request_timer_id = None
 
+        transfer.speed = transfer.avg_speed
         transfer.sock = None
         transfer.token = None
 
