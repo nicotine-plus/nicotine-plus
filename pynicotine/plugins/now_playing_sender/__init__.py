@@ -117,7 +117,8 @@ class Plugin(BasePlugin):
             if playing:
                 self.send_public(room, playing)
 
-    def song_change(self, _connection, _sender_name, _object_path, _interface_name, _signal_name, parameters):
+    def song_change(self, _connection, _sender_name, _object_path, _interface_name,
+                    _signal_name, parameters, _user_data):
 
         if self.config.sections["players"]["npplayer"] != "mpris":
             # MPRIS is not active, exit
