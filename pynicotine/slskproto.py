@@ -1978,7 +1978,7 @@ class NetworkThread(Thread):
         file_upload = self._file_upload_msgs[conn]
 
         if file_upload.offset is None:
-            return
+            return True
 
         out_buffer = conn.out_buffer
         out_buffer_len = len(out_buffer)
@@ -2002,6 +2002,7 @@ class NetworkThread(Thread):
                 username=conn.init.target_user, token=file_upload.token, error=error
             )
             self._close_connection(conn)
+            return False
 
         file_upload.speed += num_sent_bytes
         self._total_upload_bandwidth += num_sent_bytes
@@ -2013,6 +2014,7 @@ class NetworkThread(Thread):
                 username=conn.init.target_user, token=file_upload.token,
                 offset=file_upload.offset, bytes_sent=file_upload.sentbytes
             )
+        return True
 
     def _process_file_input(self, conn):
         """Reads file data/messages from the input buffer of a 'F' connection."""
@@ -2654,8 +2656,9 @@ class NetworkThread(Thread):
 
         del out_buffer[:num_bytes_sent]
 
-        if is_file_upload:
-            self._process_upload(conn, num_bytes_sent, current_time)
+        if is_file_upload and not self._process_upload(conn, num_bytes_sent, current_time):
+            # Connection was closed, stop here
+            return
 
         if not out_buffer:
             # Nothing else to send, stop watching connection for writes
