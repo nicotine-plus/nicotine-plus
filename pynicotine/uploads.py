@@ -837,7 +837,7 @@ class Uploads(Transfers):
 
             if transfer.status == TransferStatus.FINISHED:
                 transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
-                transfer.speed = transfer.time_elapsed = transfer.time_left = 0
+                transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
@@ -906,7 +906,7 @@ class Uploads(Transfers):
 
             if transfer.status == TransferStatus.FINISHED:
                 transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
-                transfer.speed = transfer.time_elapsed = transfer.time_left = 0
+                transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
             self._append_transfer(transfer)
@@ -1034,6 +1034,9 @@ class Uploads(Transfers):
             upload.file_handle = file_handle
             upload.start_time = time.monotonic() - upload.time_elapsed
 
+            if upload.start_byte_offset is None:
+                upload.start_byte_offset = 0
+
             core.statistics.append_stat_value("started_uploads", 1)
             upload_started = True
 
@@ -1074,32 +1077,14 @@ class Uploads(Transfers):
             events.cancel_scheduled(upload.request_timer_id)
             upload.request_timer_id = None
 
-        size = upload.size
-
         if not upload.last_byte_offset:
             upload.last_byte_offset = offset
 
-        upload.status = TransferStatus.TRANSFERRING
-        upload.time_elapsed = time.monotonic() - upload.start_time
-        upload.time_left = 0
-
-        if offset is None:
-            self._update_transfer(upload)
-            return
-
-        if speed is not None:
-            upload.speed = speed
-
-        upload.current_byte_offset = current_byte_offset = (offset + bytes_sent)
-        byte_difference = current_byte_offset - upload.last_byte_offset
-        upload.last_byte_offset = current_byte_offset
-
-        if byte_difference > 0:
-            core.statistics.append_stat_value("uploaded_size", byte_difference)
-
-        if speed is not None and speed > 0 and size > current_byte_offset:
-            upload.time_left = (size - current_byte_offset) // speed
-
+        self._update_transfer_progress(
+            upload, stat_id="uploaded_size",
+            current_byte_offset=(offset + bytes_sent) if offset is not None else None,
+            speed=speed
+        )
         self._update_transfer(upload)
 
     def _file_connection_closed(self, username, token, sock, timed_out):
@@ -1119,10 +1104,10 @@ class Uploads(Transfers):
 
             self._finish_transfer(upload)
 
-            if upload.speed > 0:
+            if upload.avg_speed > 0:
                 # Inform the server about the average upload speed for this transfer
-                log.add_transfer("Sending average upload speed %s to the server", upload.speed)
-                core.send_message_to_server(SendUploadSpeed(upload.speed))
+                log.add_transfer("Sending average upload speed %s to the server", upload.avg_speed)
+                core.send_message_to_server(SendUploadSpeed(upload.avg_speed))
 
             return
 

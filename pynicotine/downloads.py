@@ -1199,6 +1199,9 @@ class Downloads(Transfers):
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
 
+            if download.start_byte_offset is None:
+                download.start_byte_offset = 0
+
             core.statistics.append_stat_value("started_downloads", 1)
             download_started = True
 
@@ -1319,25 +1322,10 @@ class Downloads(Transfers):
             events.cancel_scheduled(download.request_timer_id)
             download.request_timer_id = None
 
-        size = download.size
-
-        download.status = TransferStatus.TRANSFERRING
-        download.time_elapsed = time.monotonic() - download.start_time
-        download.time_left = 0
-
-        if speed is not None:
-            download.speed = speed
-
-        download.current_byte_offset = current_byte_offset = (size - bytes_left)
-        byte_difference = current_byte_offset - download.last_byte_offset
-        download.last_byte_offset = current_byte_offset
-
-        if byte_difference > 0:
-            core.statistics.append_stat_value("downloaded_size", byte_difference)
-
-        if speed is not None and speed > 0 and size > current_byte_offset:
-            download.time_left = (size - current_byte_offset) // speed
-
+        self._update_transfer_progress(
+            download, stat_id="downloaded_size",
+            current_byte_offset=(download.size - bytes_left), speed=speed
+        )
         self._update_transfer(download)
 
     def _file_connection_closed(self, username, token, sock, **_unused):

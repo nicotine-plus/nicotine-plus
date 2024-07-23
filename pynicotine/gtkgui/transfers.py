@@ -537,7 +537,7 @@ class Transfers:
             if status == TransferStatus.TRANSFERRING:
                 # "Transferring" status always has the highest priority
                 parent_status = status
-                speed += transfer.speed
+                speed += transfer.avg_speed
 
             elif parent_status in self.STATUS_PRIORITIES:
                 parent_status_priority = self.STATUS_PRIORITIES[parent_status]
@@ -568,10 +568,10 @@ class Transfers:
             self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
             transfer.status = parent_status
 
-        if transfer.speed != speed:
+        if transfer.avg_speed != speed:
             self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
             self.tree_view.set_row_value(iterator, "speed_data", speed)
-            transfer.speed = speed
+            transfer.avg_speed = speed
 
         if transfer.time_elapsed != elapsed:
             left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
@@ -607,7 +607,7 @@ class Transfers:
 
         translated_status = self.translate_status(status)
         size = transfer.size
-        speed = transfer.speed
+        speed = transfer.avg_speed
         elapsed = transfer.time_elapsed
         left = transfer.time_left
         iterator = transfer.iterator
@@ -1095,7 +1095,7 @@ class Transfers:
                 "virtual_folder_path": folder_path,
                 "real_folder_path": transfer.folder_path,
                 "queue_position": transfer.queue_position,
-                "speed": transfer.speed,
+                "speed": transfer.avg_speed,
                 "size": file_size,
                 "file_attributes": file_attributes
             })

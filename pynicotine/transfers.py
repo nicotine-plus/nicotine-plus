@@ -64,7 +64,7 @@ class Transfer:
 
     __slots__ = ("sock", "username", "virtual_path",
                  "folder_path", "token", "size", "file_handle", "start_time", "start_byte_offset",
-                 "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
+                 "current_byte_offset", "last_byte_offset", "speed", "avg_speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "file_attributes",
                  "iterator", "status", "legacy_attempt", "retry_attempt", "size_changed",
                  "request_timer_id")
@@ -88,6 +88,7 @@ class Transfer:
         self.start_time = None
         self.last_byte_offset = None
         self.speed = 0
+        self.avg_speed = 0
         self.time_elapsed = 0
         self.time_left = 0
         self.iterator = None
@@ -422,6 +423,33 @@ class Transfers:
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
+    def _update_transfer_progress(self, transfer, stat_id, current_byte_offset=None, speed=None):
+
+        size = transfer.size
+
+        transfer.status = TransferStatus.TRANSFERRING
+        transfer.time_elapsed = time_elapsed = (time.monotonic() - transfer.start_time)
+        transfer.time_left = 0
+
+        if current_byte_offset is None:
+            return
+
+        if speed is not None:
+            transfer.speed = speed
+
+        transfer.current_byte_offset = current_byte_offset
+        transferred_fragment_size = current_byte_offset - transfer.last_byte_offset
+        transferred_total_size = current_byte_offset - transfer.start_byte_offset
+        transfer.last_byte_offset = current_byte_offset
+
+        transfer.avg_speed = max(0, int(transferred_total_size // max(1, time_elapsed)))
+
+        if transferred_fragment_size > 0:
+            core.statistics.append_stat_value(stat_id, transferred_fragment_size)
+
+        if transfer.avg_speed > 0 and size > current_byte_offset:
+            transfer.time_left = (size - current_byte_offset) // transfer.avg_speed
+
     def _finish_transfer(self, transfer):
 
         self._deactivate_transfer(transfer)
@@ -486,7 +514,7 @@ class Transfers:
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
-        transfer.speed = 0
+        transfer.speed = transfer.avg_speed = 0
         transfer.queue_position = 0
 
         # When our port is closed, certain clients can take up to ~30 seconds before they
@@ -516,11 +544,6 @@ class Transfers:
 
         if transfer.speed > 0:
             self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
-
-        # Set transfer speed to average of whole transfer
-        if transfer.time_elapsed > 0 and transfer.current_byte_offset is not None:
-            transferred_size = transfer.current_byte_offset - (transfer.start_byte_offset or 0)
-            transfer.speed = max(0, int(transferred_size // max(1, transfer.time_elapsed)))
 
         if transfer.request_timer_id is not None:
             events.cancel_scheduled(transfer.request_timer_id)
