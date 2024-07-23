@@ -1077,6 +1077,9 @@ class Transfers:
         selected_length = 0
 
         for transfer in self.selected_transfers:
+            username = transfer.username
+            watched_user = core.users.watched.get(username)
+            speed = 0
             file_path = transfer.virtual_path
             file_size = transfer.size
             file_attributes = transfer.file_attributes
@@ -1088,6 +1091,9 @@ class Transfers:
 
             folder_path, _separator, basename = file_path.rpartition("\\")
 
+            if watched_user is not None:
+                speed = watched_user.upload_speed or 0
+
             data.append({
                 "user": transfer.username,
                 "file_path": file_path,
@@ -1095,7 +1101,7 @@ class Transfers:
                 "virtual_folder_path": folder_path,
                 "real_folder_path": transfer.folder_path,
                 "queue_position": transfer.queue_position,
-                "speed": transfer.speed,
+                "speed": speed,
                 "size": file_size,
                 "file_attributes": file_attributes
             })
