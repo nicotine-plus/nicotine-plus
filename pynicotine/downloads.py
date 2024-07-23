@@ -1288,6 +1288,10 @@ class Downloads(Transfers):
                 and virtual_path not in self.queued_users.get(username, {})):
             return
 
+        if download.status in {TransferStatus.DOWNLOAD_FOLDER_ERROR, TransferStatus.LOCAL_FILE_ERROR}:
+            # Local error, no need to retry
+            return
+
         if not download.retry_attempt:
             # Attempt to request file name encoded as latin-1 once
 
