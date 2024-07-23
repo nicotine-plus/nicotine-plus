@@ -1140,6 +1140,11 @@ class UserBrowse:
         data = []
         selected_size = 0
         selected_length = 0
+        watched_user = core.users.watched.get(self.user)
+        speed = 0
+
+        if watched_user is not None:
+            speed = watched_user.upload_speed or 0
 
         if all_files:
             prev_folder_path = None
@@ -1168,6 +1173,7 @@ class UserBrowse:
                             "file_path": file_path,
                             "basename": basename,
                             "virtual_folder_path": folder_path,
+                            "speed": speed,
                             "size": file_size,
                             "file_attributes": file_attributes
                         })
@@ -1189,6 +1195,7 @@ class UserBrowse:
                     "file_path": file_path,
                     "basename": basename,
                     "virtual_folder_path": selected_folder_path,
+                    "speed": speed,
                     "size": file_size,
                     "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
