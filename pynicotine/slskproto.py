@@ -667,9 +667,8 @@ class NetworkThread(Thread):
         msg_type = msg.distrib_code
 
         if msg_type not in DISTRIBUTED_MESSAGE_CLASSES:
-            # Don't know how to unpack embedded message, return the original
             log.add_debug("Embedded distrib message type %s unknown", msg_type)
-            return msg
+            return None
 
         distrib_class = DISTRIBUTED_MESSAGE_CLASSES[msg_type]
         unpacked_msg = distrib_class()
@@ -2255,7 +2254,9 @@ class NetworkThread(Thread):
                 return False
 
             msg = self._unpack_embedded_message(msg)
-            self._send_message_to_child_peers(msg)
+
+            if msg is not None:
+                self._send_message_to_child_peers(msg)
 
         elif msg_class is DistribBranchLevel:
             if msg.level < 0:
