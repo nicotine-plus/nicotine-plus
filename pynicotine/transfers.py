@@ -440,10 +440,11 @@ class Transfers:
 
         transfer.avg_speed = max(0, int(transferred_total_size // max(1, time_elapsed)))
 
-        if speed:
-            transfer.speed = speed
-        else:
-            transfer.speed = transfer.avg_speed
+        if speed is not None:
+            if speed <= 0:
+                transfer.speed = transfer.avg_speed
+            else:
+                transfer.speed = speed
 
         if transferred_fragment_size > 0:
             core.statistics.append_stat_value(stat_id, transferred_fragment_size)
