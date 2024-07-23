@@ -153,6 +153,9 @@ class RoomList(Popover):
         self.public_feed_toggle.set_active(active)
         self.initializing_feed = False
 
+    def toggle_accept_private_room(self, active):
+        self.private_room_toggle.set_active(active)
+
     def add_room(self, room, user_count=0, is_private=False, is_owned=False):
 
         h_user_count = humanize(user_count)

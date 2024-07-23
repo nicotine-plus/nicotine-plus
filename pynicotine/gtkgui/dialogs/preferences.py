@@ -3228,7 +3228,8 @@ class Preferences(Dialog):
             core.userinfo.show_user(refresh=True, switch_page=False)
 
         if private_room_required:
-            core.chatrooms.request_private_room_toggle(config.sections["server"]["private_chatrooms"])
+            active = config.sections["server"]["private_chatrooms"]
+            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
 
         if completion_required:
             core.chatrooms.update_completions()
