@@ -103,7 +103,7 @@ class SearchTest(TestCase):
         self.assertEqual(core.search.token, core.search.token)
         self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(search.mode, "wishlist")
-        self.assertEqual(search.is_ignored, True)
+        self.assertTrue(search.is_ignored)
 
         # Second item
 
@@ -115,7 +115,7 @@ class SearchTest(TestCase):
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
         self.assertEqual(search.term, new_item)
         self.assertEqual(search.mode, "wishlist")
-        self.assertEqual(search.is_ignored, True)
+        self.assertTrue(search.is_ignored)
 
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
