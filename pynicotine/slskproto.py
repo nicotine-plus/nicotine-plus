@@ -27,6 +27,7 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from os import strerror
 from threading import Thread
 
 from pynicotine.events import events
@@ -342,6 +343,8 @@ class NetworkThread(Thread):
         ConnectionType.FILE,
         ConnectionType.DISTRIBUTED
     }
+    ERROR_NOT_CONNECTED = OSError(errno.ENOTCONN, strerror(errno.ENOTCONN))
+    ERROR_TIMED_OUT = OSError(errno.ETIMEDOUT, strerror(errno.ETIMEDOUT))
 
     # Looping max ~60 times per second (SLEEP_MIN_IDLE) on high activity
     # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
@@ -1064,7 +1067,7 @@ class NetworkThread(Thread):
 
         if stale_conns:
             for conn in stale_conns:
-                self._connect_error("Timed out", conn)
+                self._connect_error(self.ERROR_TIMED_OUT, conn)
                 self._close_connection(conn)
 
             stale_conns.clear()
@@ -2450,23 +2453,27 @@ class NetworkThread(Thread):
                 and self._conns_downloaded[conn] >= self._download_limit_split):
             return
 
+        conn_error = None
+
         try:
-            if not self._read_data(conn, current_time):
-                # No data received, socket was likely closed remotely
-                self._close_connection(conn)
+            if self._read_data(conn, current_time):
+                self._process_conn_incoming_messages(conn)
                 return
 
         except OSError as error:
             log.add_conn("Cannot read data from connection %s, closing connection. "
                          "Error: %s", (conn.addr, error))
+            conn_error = error
 
-            if not conn.is_established:
-                self._connect_error(error, conn)
+        if not conn.is_established:
+            if conn_error is None:
+                # No error when connection shuts down gracefully (recv() returns
+                # 0 bytes), but we need to display one anyway. Is this is the best fit?
+                conn_error = self.ERROR_NOT_CONNECTED
 
-            self._close_connection(conn)
-            return
+            self._connect_error(conn_error, conn)
 
-        self._process_conn_incoming_messages(conn)
+        self._close_connection(conn)
 
     def _process_ready_output_socket(self, sock, current_time):
 
