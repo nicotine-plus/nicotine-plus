@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 22, 2024
+Last updated on July 24, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -177,6 +177,8 @@ but it handles the protocol well enough (and can be modified).
 | 5    | [Watch User](#server-code-5)                      |            |
 | 6    | [Unwatch User](#server-code-6)                    |            |
 | 7    | [Get User Status](#server-code-7)                 |            |
+| 11   | [Ignore User](#server-code-11)                    |            |
+| 12   | [Unignore User](#server-code-12)                  |            |
 | 13   | [Say in Chat Room](#server-code-13)               |            |
 | 14   | [Join Room](#server-code-14)                      |            |
 | 15   | [Leave Room](#server-code-15)                     |            |
@@ -401,6 +403,40 @@ The server tells us if a user has gone away or has returned.
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
     3.  **bool** <ins>privileged</ins>
+
+## Server Code 11
+
+### IgnoreUser
+
+**OBSOLETE, no longer used**
+
+We send this to the server to tell a user we have ignored them.
+
+The server tells us a user has ignored us.
+
+### Data Order
+
+  - Send
+    1.  **string** <ins>username</ins>
+  - Receive
+    1.  **string** <ins>username</ins>
+
+## Server Code 12
+
+### UnignoreUser
+
+**OBSOLETE, no longer used**
+
+We send this to the server to tell a user we are no longer ignoring them.
+
+The server tells us a user is no longer ignoring us.
+
+### Data Order
+
+  - Send
+    1.  **string** <ins>username</ins>
+  - Receive
+    1.  **string** <ins>username</ins>
 
 ## Server Code 13
 

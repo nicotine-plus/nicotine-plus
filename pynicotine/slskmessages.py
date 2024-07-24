@@ -843,6 +843,50 @@ class GetUserStatus(ServerMessage):
             pos, self.privileged = self.unpack_bool(message, pos)
 
 
+class IgnoreUser(ServerMessage):
+    """Server code 11.
+
+    We send this to the server to tell a user we have ignored them.
+
+    The server tells us a user has ignored us.
+
+    OBSOLETE, no longer used
+    """
+
+    __slots__ = ("user",)
+
+    def __init__(self, user=None):
+        self.user = user
+
+    def make_network_message(self):
+        return self.pack_string(self.user)
+
+    def parse_network_message(self, message):
+        _pos, self.user = self.unpack_string(message)
+
+
+class UnignoreUser(ServerMessage):
+    """Server code 12.
+
+    We send this to the server to tell a user we are no longer ignoring them.
+
+    The server tells us a user is no longer ignoring us.
+
+    OBSOLETE, no longer used
+    """
+
+    __slots__ = ("user",)
+
+    def __init__(self, user=None):
+        self.user = user
+
+    def make_network_message(self):
+        return self.pack_string(self.user)
+
+    def parse_network_message(self, message):
+        _pos, self.user = self.unpack_string(message)
+
+
 class SayChatroom(ServerMessage):
     """Server code 13.
 
@@ -3965,6 +4009,8 @@ SERVER_MESSAGE_CODES = {
     WatchUser: 5,
     UnwatchUser: 6,
     GetUserStatus: 7,
+    IgnoreUser: 11,
+    UnignoreUser: 12,
     SayChatroom: 13,
     JoinRoom: 14,
     LeaveRoom: 15,
