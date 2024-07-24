@@ -813,10 +813,6 @@ class Config:
         if self._parser is not None:
             self._parser.clear()
 
-        self.sections.clear()
-        self.defaults.clear()
-        self.removed_options.clear()
-
         self.config_loaded = False
 
 
