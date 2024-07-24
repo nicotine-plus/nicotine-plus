@@ -177,8 +177,8 @@ but it handles the protocol well enough (and can be modified).
 | 5    | [Watch User](#server-code-5)                      |            |
 | 6    | [Unwatch User](#server-code-6)                    |            |
 | 7    | [Get User Status](#server-code-7)                 |            |
-| 11   | [Ignore User](#server-code-11)                    |            |
-| 12   | [Unignore User](#server-code-12)                  |            |
+| 11   | [Ignore User](#server-code-11)                    | Obsolete   |
+| 12   | [Unignore User](#server-code-12)                  | Obsolete   |
 | 13   | [Say in Chat Room](#server-code-13)               |            |
 | 14   | [Join Room](#server-code-14)                      |            |
 | 15   | [Leave Room](#server-code-15)                     |            |
