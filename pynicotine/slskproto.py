@@ -1884,11 +1884,10 @@ class NetworkThread(Thread):
             username=conn.init.target_user
         )
 
-        if msg is None or msg.token is None:
-            return idx
+        if msg is not None and msg.token is not None:
+            self._file_init_msgs[conn] = msg
+            self._emit_network_message_event(msg)
 
-        self._file_init_msgs[conn] = msg
-        self._emit_network_message_event(msg)
         return idx
 
     def _process_file_offset_message(self, conn, in_buffer):

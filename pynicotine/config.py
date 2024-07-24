@@ -149,8 +149,10 @@ class Config:
 
         from configparser import ConfigParser
 
+        data_home_env = "${NICOTINE_DATA_HOME}"
+        log_folder_path = os.path.join(data_home_env, "logs")
+
         self._parser = ConfigParser(strict=False, interpolation=None)
-        log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -176,9 +178,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join("${NICOTINE_DATA_HOME}", "incomplete"),
-                "downloaddir": os.path.join("${NICOTINE_DATA_HOME}", "downloads"),
-                "uploaddir": os.path.join("${NICOTINE_DATA_HOME}", "received"),
+                "incompletedir": os.path.join(data_home_env, "incomplete"),
+                "downloaddir": os.path.join(data_home_env, "downloads"),
+                "uploaddir": os.path.join(data_home_env, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
