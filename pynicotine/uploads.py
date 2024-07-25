@@ -836,7 +836,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.current_byte_offset = transfer.last_byte_offset = None
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -905,7 +905,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.start_byte_offset = transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.current_byte_offset = transfer.last_byte_offset = None
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -1073,9 +1073,6 @@ class Uploads(Transfers):
         if upload.request_timer_id is not None:
             events.cancel_scheduled(upload.request_timer_id)
             upload.request_timer_id = None
-
-        if upload.start_byte_offset is None:
-            upload.start_byte_offset = offset
 
         if upload.last_byte_offset is None:
             upload.last_byte_offset = offset

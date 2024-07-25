@@ -1199,9 +1199,6 @@ class Downloads(Transfers):
             download.start_time = time.monotonic() - download.time_elapsed
             download.retry_attempt = False
 
-            if download.start_byte_offset is None:
-                download.start_byte_offset = offset
-
             core.statistics.append_stat_value("started_downloads", 1)
             download_started = True
 

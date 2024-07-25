@@ -63,11 +63,11 @@ class Transfer:
     """This class holds information about a single transfer."""
 
     __slots__ = ("sock", "username", "virtual_path",
-                 "folder_path", "token", "size", "file_handle", "start_time", "start_byte_offset",
-                 "current_byte_offset", "last_byte_offset", "speed", "avg_speed", "time_elapsed",
-                 "time_left", "modifier", "queue_position", "file_attributes",
-                 "iterator", "status", "legacy_attempt", "retry_attempt", "size_changed",
-                 "request_timer_id")
+                 "folder_path", "token", "size", "file_handle", "start_time",
+                 "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
+                 "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
+                 "queue_position", "file_attributes", "iterator", "status",
+                 "legacy_attempt", "retry_attempt", "size_changed", "request_timer_id")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -86,8 +86,8 @@ class Transfer:
         self.modifier = None
         self.request_timer_id = None
         self.start_time = None
-        self.start_byte_offset = None
         self.last_byte_offset = None
+        self.transferred_bytes_total = 0
         self.speed = 0
         self.avg_speed = 0
         self.time_elapsed = 0
@@ -437,19 +437,19 @@ class Transfers:
 
         transfer.current_byte_offset = current_byte_offset
         transferred_fragment_size = current_byte_offset - transfer.last_byte_offset
-        transferred_total_size = current_byte_offset - transfer.start_byte_offset
         transfer.last_byte_offset = current_byte_offset
 
-        transfer.avg_speed = max(0, int(transferred_total_size // max(1, time_elapsed)))
+        if transferred_fragment_size > 0:
+            transfer.transferred_bytes_total += transferred_fragment_size
+            core.statistics.append_stat_value(stat_id, transferred_fragment_size)
+
+        transfer.avg_speed = max(0, int(transfer.transferred_bytes_total // max(1, time_elapsed)))
 
         if speed is not None:
             if speed <= 0:
                 transfer.speed = transfer.avg_speed
             else:
                 transfer.speed = speed
-
-        if transferred_fragment_size > 0:
-            core.statistics.append_stat_value(stat_id, transferred_fragment_size)
 
         if transfer.speed > 0 and size > current_byte_offset:
             transfer.time_left = (size - current_byte_offset) // transfer.speed
