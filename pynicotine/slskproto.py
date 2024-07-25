@@ -2493,6 +2493,10 @@ class NetworkThread(Thread):
             else:
                 self._establish_outgoing_peer_connection(conn)
 
+            if sock not in self._conns:
+                # Connection was closed while being established
+                return
+
         if (self._upload_limit_split
                 and conn in self._conns_uploaded
                 and self._conns_uploaded[conn] >= self._upload_limit_split):
