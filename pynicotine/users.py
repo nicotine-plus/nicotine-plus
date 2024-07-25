@@ -365,6 +365,7 @@ class Users:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
 
+        if is_watched:
             self.statuses[username] = status
 
         self._pending_watch_removals.discard(username)
