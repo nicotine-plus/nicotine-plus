@@ -22,37 +22,43 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | Number |
 |--------|
-| 1 Byte |
+| 1 byte |
 
 ### 16-bit Integer
 
 | Number                  |
 |-------------------------|
-| 2 Bytes (little-endian) |
+| 2 bytes (little-endian) |
 
 ### 32-bit Integer
 
 | Number                  |
 |-------------------------|
-| 4 Bytes (little-endian) |
+| 4 bytes (little-endian) |
 
 ### 64-bit Integer
 
 | Number                  |
 |-------------------------|
-| 8 Bytes (little-endian) |
+| 8 bytes (little-endian) |
 
 ### Bool
 
 | Number          |
 |-----------------|
-| 1 Byte (0 or 1) |
+| 1 byte (0 or 1) |
 
 ### String
 
-| Length of String | String |
-|------------------|--------|
-| uint32           | bytes  |
+| Length of String | String      |
+|------------------|-------------|
+| uint32           | byte string |
+
+### Bytes
+
+| Length of Bytes  | Bytes       |
+|------------------|-------------|
+| uint32           | byte array  |
 
 # Constants
 
