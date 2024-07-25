@@ -76,7 +76,7 @@ class Transfer:
         self.folder_path = folder_path
         self.size = size
         self.status = status
-        self.start_byte_offset = self.current_byte_offset = current_byte_offset
+        self.current_byte_offset = current_byte_offset
         self.file_attributes = file_attributes
 
         self.sock = None
@@ -86,6 +86,7 @@ class Transfer:
         self.modifier = None
         self.request_timer_id = None
         self.start_time = None
+        self.start_byte_offset = None
         self.last_byte_offset = None
         self.speed = 0
         self.avg_speed = 0
