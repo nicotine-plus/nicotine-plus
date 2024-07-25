@@ -1034,9 +1034,6 @@ class Uploads(Transfers):
             upload.file_handle = file_handle
             upload.start_time = time.monotonic() - upload.time_elapsed
 
-            if upload.start_byte_offset is None:
-                upload.start_byte_offset = 0
-
             core.statistics.append_stat_value("started_uploads", 1)
             upload_started = True
 
@@ -1077,7 +1074,10 @@ class Uploads(Transfers):
             events.cancel_scheduled(upload.request_timer_id)
             upload.request_timer_id = None
 
-        if not upload.last_byte_offset:
+        if upload.start_byte_offset is None:
+            upload.start_byte_offset = offset
+
+        if upload.last_byte_offset is None:
             upload.last_byte_offset = offset
 
         self._update_transfer_progress(

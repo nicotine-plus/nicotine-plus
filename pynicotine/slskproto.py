@@ -1911,7 +1911,12 @@ class NetworkThread(Thread):
             return idx
 
         file_upload.offset = msg.offset
-        self._emit_network_message_event(msg)
+
+        events.emit_main_thread(
+            "file-upload-progress",
+            username=conn.init.target_user, token=file_upload.token,
+            offset=file_upload.offset, bytes_sent=file_upload.sentbytes
+        )
 
         try:
             file_upload.file.seek(msg.offset)
