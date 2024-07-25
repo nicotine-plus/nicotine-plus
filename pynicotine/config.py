@@ -293,7 +293,7 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 150,
+                "maxresults": 300,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
