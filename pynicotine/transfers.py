@@ -429,6 +429,7 @@ class Transfers:
 
         transfer.status = TransferStatus.TRANSFERRING
         transfer.time_elapsed = time_elapsed = (time.monotonic() - transfer.start_time)
+        transfer.time_left = 0
 
         if current_byte_offset is None:
             return
