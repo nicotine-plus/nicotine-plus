@@ -16,7 +16,7 @@
     <property name="lower">50</property>
     <property name="page-increment">50</property>
     <property name="step-increment">25</property>
-    <property name="upper">100000</property>
+    <property name="upper">10000</property>
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
