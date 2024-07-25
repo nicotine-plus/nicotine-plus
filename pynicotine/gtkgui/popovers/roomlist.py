@@ -52,7 +52,7 @@ class RoomList(Popover):
         super().__init__(
             window=window,
             content_box=self.container,
-            width=350,
+            width=450,
             height=500
         )
 

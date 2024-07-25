@@ -38,7 +38,7 @@ class RoomWall(Popover):
             window=window,
             content_box=self.container,
             show_callback=self._on_show,
-            width=600,
+            width=650,
             height=500
         )
 
