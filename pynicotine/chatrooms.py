@@ -182,6 +182,9 @@ class ChatRooms:
 
         # Remove two or more consecutive spaces
         room = " ".join(room.split())
+
+        # Limit to 24 characters
+        room = room[:24]
         return room
 
     def clear_room_messages(self, room):

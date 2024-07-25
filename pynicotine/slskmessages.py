@@ -928,6 +928,16 @@ class JoinRoom(ServerMessage):
     As long as we're in the room, the server will automatically send us
     status/stat updates for room users, including ourselves, in the form
     of GetUserStatus and GetUserStats messages.
+
+    Room names must meet certain requirements, otherwise the server will
+    send a MessageUser message containing an error message. Requirements
+    include:
+
+      - Non-empty string
+      - Only ASCII characters
+      - 24 characters or fewer
+      - No leading or trailing spaces
+      - No consecutive spaces
     """
 
     __slots__ = ("room", "private", "owner", "users", "operators")

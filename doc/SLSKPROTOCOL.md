@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 24, 2024
+Last updated on July 26, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -468,6 +468,16 @@ As long as we're in the room, the server will automatically send us
 status/stat updates for room users, including ourselves, in the form
 of [GetUserStatus](#server-code-7) and [GetUserStats](#server-code-36)
 messages.
+
+Room names must meet certain requirements, otherwise the server will
+send a [MessageUser](#server-code-22) message containing an error message. Requirements
+include:
+
+  - Non-empty string
+  - Only ASCII characters
+  - 24 characters or fewer
+  - No leading or trailing spaces
+  - No consecutive spaces
 
 ### Data Order
 
