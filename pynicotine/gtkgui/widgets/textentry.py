@@ -482,6 +482,7 @@ class ComboBox:
             return
 
         self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
+        self._popover.connect("map", self._on_dropdown_map)
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
@@ -797,6 +798,16 @@ class ComboBox:
     def _on_select_callback_status(self, enabled):
         self._is_select_callback_enabled = enabled
 
+    def _on_dropdown_map(self, *_args):
+
+        # Align dropdown with entry and button
+        popover_content = next(iter(self._popover))
+        container_width = self.entry.get_parent().get_width()
+        button_width = self._button.get_width()
+
+        self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
+        popover_content.set_size_request(container_width, height=-1)
+
     def _on_dropdown_visible(self, widget, param):
 
         visible = widget.get_property(param.name)
@@ -812,17 +823,6 @@ class ComboBox:
             return
 
         self.set_selected_id(self.get_text())
-
-        if GTK_API_VERSION == 3:
-            return
-
-        # Align dropdown with entry and button
-        popover_content = next(iter(self._popover))
-        container_width = self.entry.get_parent().get_width()
-        button_width = self._button.get_width()
-
-        self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
-        popover_content.set_size_request(container_width, height=-1)
 
     def _on_item_selected(self, *_args):
 
