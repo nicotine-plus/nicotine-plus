@@ -389,6 +389,9 @@ class MessageDialog(Window):
                     button.set_can_default(True)       # pylint: disable=no-member
                     widget.set_default(button)         # pylint: disable=no-member
 
+                if response_type == "ok":
+                    add_css_class(button, "suggested-action")
+
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
 
