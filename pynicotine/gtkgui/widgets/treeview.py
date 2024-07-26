@@ -128,6 +128,7 @@ class TreeView:
             self.widget.set_search_entry(search_entry)
 
         self._query_tooltip_handler = self.widget.connect("query-tooltip", self.on_tooltip)
+        self.widget.connect("move-cursor", self.on_key_move_cursor)
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
@@ -778,6 +779,15 @@ class TreeView:
 
         self._column_offsets[column_id] = offset
         self.save_columns()
+
+    def on_key_move_cursor(self, _widget, step, *_args):
+
+        if step != Gtk.MovementStep.BUFFER_ENDS:
+            return
+
+        # We are scrolling to the end using the End key. Disable the
+        # auto-scroll workaround to actually change the scroll adjustment value.
+        self._is_scrolling_to_row = True
 
     def on_v_adjustment_value(self, *_args):
 
