@@ -33,8 +33,6 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_MICRO_VERSION
-from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -829,21 +827,10 @@ class TreeView:
     def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
         bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+        is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
 
-        # is_blank_at_pos() crashes in 4.12.0 - 4.12.2
-        # Remove check when GTK 4 version in Snap package is >= 4.12.3
-        if (4, 12, 2) >= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) >= (4, 12, 0):
-            result = self.widget.get_path_at_pos(bin_x, bin_y)
-
-            if not result:
-                return False
-
-            path, column, _cell_x, _cell_y = result
-        else:
-            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
-
-            if is_blank:
-                return False
+        if is_blank:
+            return False
 
         iterator = self.model.get_iter(path)
 
