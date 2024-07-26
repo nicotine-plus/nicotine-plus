@@ -3040,6 +3040,7 @@ class SharedFileListResponse(PeerMessage):
 
     __slots__ = ("list", "unknown", "privatelist", "built", "permission_level",
                  "public_shares", "buddy_shares", "trusted_shares")
+    __excluded_attrs__ = {"list", "privatelist"}
 
     def __init__(self, public_shares=None, buddy_shares=None, trusted_shares=None,
                  permission_level=None):
@@ -3196,6 +3197,7 @@ class FileSearchResponse(PeerMessage):
 
     __slots__ = ("search_username", "token", "list", "privatelist", "freeulslots",
                  "ulspeed", "inqueue", "unknown")
+    __excluded_attrs__ = {"list", "privatelist"}
 
     def __init__(self, search_username=None, token=None, shares=None, freeulslots=None,
                  ulspeed=None, inqueue=None, private_shares=None):
@@ -3304,6 +3306,7 @@ class UserInfoResponse(PeerMessage):
     """
 
     __slots__ = ("descr", "pic", "totalupl", "queuesize", "slotsavail", "uploadallowed", "has_pic")
+    __excluded_attrs__ = {"pic"}
 
     def __init__(self, descr=None, pic=None, totalupl=None, queuesize=None,
                  slotsavail=None, uploadallowed=None):
