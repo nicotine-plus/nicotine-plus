@@ -103,7 +103,7 @@ class Connection:
         self.in_buffer = bytearray()
         self.out_buffer = bytearray()
         self.last_active = time.monotonic()
-        self.recv_size = None
+        self.recv_size = 51200
         self.is_established = False
 
 
@@ -2627,22 +2627,27 @@ class NetworkThread(Thread):
 
         sock = conn.sock
         use_download_limit = (self._download_limit_split and conn in self._file_download_msgs)
+        current_recv_size = conn.recv_size
 
         if use_download_limit:
-            conn.recv_size = (self._download_limit_split - self._conns_downloaded[conn])
+            download_limit = (self._download_limit_split - self._conns_downloaded[conn])
 
-        elif conn.recv_size is None:
-            conn.recv_size = self.SOCKET_READ_BUFFER_SIZE
+            if current_recv_size > download_limit:  # pylint: disable=consider-using-min-builtin
+                current_recv_size = download_limit
 
-        data = sock.recv(conn.recv_size)
+        data = sock.recv(current_recv_size)
         data_len = len(data)
         conn.in_buffer += data
 
         if use_download_limit:
             self._conns_downloaded[conn] += data_len
 
-        elif data_len >= conn.recv_size // 2:
+        # Grow or shrink recv buffer depending on how much data we're receiving
+        if data_len >= current_recv_size // 2:
             conn.recv_size *= 2
+
+        elif data_len <= current_recv_size // 6:
+            conn.recv_size //= 2
 
         conn.last_active = current_time
 
