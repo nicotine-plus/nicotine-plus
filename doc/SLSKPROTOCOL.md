@@ -2588,7 +2588,7 @@ We ping distributed children every 60 seconds.
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>unknown</ins>
+      - Empty Message
 
 ## Distributed Code 3
 
