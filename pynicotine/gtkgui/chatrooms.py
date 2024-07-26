@@ -91,6 +91,8 @@ class ChatRooms(IconNotebook):
             ("global-room-message", self.global_room_message),
             ("join-room", self.join_room),
             ("leave-room", self.leave_room),
+            ("private-room-add-operator", self.private_room_add_operator),
+            ("private-room-remove-operator", self.private_room_remove_operator),
             ("quit", self.quit),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
@@ -374,6 +376,20 @@ class ChatRooms(IconNotebook):
 
         if page is not None:
             page.global_room_message(msg)
+
+    def private_room_add_operator(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_add_operator(msg)
+
+    def private_room_remove_operator(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_remove_operator(msg)
 
     def update_completions(self, completions):
 
@@ -858,6 +874,26 @@ class ChatRoom:
 
         self.chat_view.update_user_tag(username)
         self.update_user_count()
+
+    def private_room_add_operator(self, msg):
+
+        iterator = self.users_list_view.iterators.get(msg.user)
+
+        if iterator is None:
+            return
+
+        self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.BOLD)
+        self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
+
+    def private_room_remove_operator(self, msg):
+
+        iterator = self.users_list_view.iterators.get(msg.user)
+
+        if iterator is None:
+            return
+
+        self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.NORMAL)
+        self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
 
     def update_user_count(self):
         user_count = len(self.users_list_view.iterators)
