@@ -26,7 +26,7 @@ from pynicotine.slskmessages import LeaveGlobalRoom
 from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import PrivateRoomAddOperator
 from pynicotine.slskmessages import PrivateRoomAddUser
-from pynicotine.slskmessages import PrivateRoomDismember
+from pynicotine.slskmessages import PrivateRoomCancelMembership
 from pynicotine.slskmessages import PrivateRoomDisown
 from pynicotine.slskmessages import PrivateRoomRemoveOperator
 from pynicotine.slskmessages import PrivateRoomRemoveUser
@@ -70,7 +70,7 @@ class ChatRooms:
             ("private-room-added", self._private_room_added),
             ("private-room-operator-added", self._private_room_operator_added),
             ("private-room-operator-removed", self._private_room_operator_removed),
-            ("private-room-owned", self._private_room_owned),
+            ("private-room-operators", self._private_room_operators),
             ("private-room-remove-operator", self._private_room_remove_operator),
             ("private-room-remove-user", self._private_room_remove_user),
             ("private-room-removed", self._private_room_removed),
@@ -270,12 +270,12 @@ class ChatRooms:
         core.send_message_to_server(PrivateRoomDisown(room))
         del self.private_rooms[room]
 
-    def request_private_room_dismember(self, room):
+    def request_private_room_cancel_membership(self, room):
 
         if not self.is_private_room_member(room):
             return
 
-        core.send_message_to_server(PrivateRoomDismember(room))
+        core.send_message_to_server(PrivateRoomCancelMembership(room))
         del self.private_rooms[room]
 
     def request_private_room_toggle(self, enabled):
@@ -413,7 +413,7 @@ class ChatRooms:
         if private_room is not None and core.users.login_username in private_room["operators"]:
             private_room["operators"].remove(core.users.login_username)
 
-    def _private_room_owned(self, msg):
+    def _private_room_operators(self, msg):
         """Server code 148."""
 
         private_room = self.private_rooms.get(msg.room)

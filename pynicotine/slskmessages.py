@@ -2456,8 +2456,8 @@ class ResetDistributed(ServerMessage):
 class PrivateRoomUsers(ServerMessage):
     """Server code 133.
 
-    The server sends us a list of room users that we can alter (add
-    operator abilities / dismember).
+    The server sends us a list of members (excluding the owner) in a private
+    room we are in.
     """
 
     __slots__ = ("room", "numusers", "users")
@@ -2480,8 +2480,10 @@ class PrivateRoomUsers(ServerMessage):
 class PrivateRoomAddUser(ServerMessage):
     """Server code 134.
 
-    We send this to inform the server that we've added a user to a
-    private room.
+    We send this to the server to add a member to a private room, if we are
+    the owner or an operator.
+
+    The server tells us a member has been added to a private room we are in.
     """
 
     __slots__ = ("room", "user")
@@ -2505,8 +2507,11 @@ class PrivateRoomAddUser(ServerMessage):
 class PrivateRoomRemoveUser(ServerMessage):
     """Server code 135.
 
-    We send this to inform the server that we've removed a user from a
-    private room.
+    We send this to the server to remove a member from a private room, if we
+    are the owner or an operator. Owners can remove operators and regular
+    members, operators can only remove regular members.
+
+    The server tells us a member has been removed from a private room we are in.
     """
 
     __slots__ = ("room", "user")
@@ -2527,11 +2532,10 @@ class PrivateRoomRemoveUser(ServerMessage):
         pos, self.user = self.unpack_string(message, pos)
 
 
-class PrivateRoomDismember(ServerMessage):
+class PrivateRoomCancelMembership(ServerMessage):
     """Server code 136.
 
-    We send this to the server to remove our own membership of a private
-    room.
+    We send this to the server to cancel our own membership of a private room.
     """
 
     __slots__ = ("room",)
@@ -2579,8 +2583,7 @@ class PrivateRoomSomething(ServerMessage):
 class PrivateRoomAdded(ServerMessage):
     """Server code 139.
 
-    The server sends us this message when we are added to a private
-    room.
+    The server tells us we were added to a private room.
     """
 
     __slots__ = ("room",)
@@ -2595,8 +2598,7 @@ class PrivateRoomAdded(ServerMessage):
 class PrivateRoomRemoved(ServerMessage):
     """Server code 140.
 
-    The server sends us this message when we are removed from a private
-    room.
+    The server tells us we were removed from a private room.
     """
 
     __slots__ = ("room",)
@@ -2651,7 +2653,10 @@ class PrivateRoomAddOperator(ServerMessage):
     """Server code 143.
 
     We send this to the server to add private room operator abilities to
-    a user.
+    a member.
+
+    The server tells us a member received operator abilities in a private
+    room we are in.
     """
 
     __slots__ = ("room", "user")
@@ -2676,7 +2681,10 @@ class PrivateRoomRemoveOperator(ServerMessage):
     """Server code 144.
 
     We send this to the server to remove private room operator abilities
-    from a user.
+    from a member.
+
+    The server tells us operator abilities were removed for a member in a
+    private room we are in.
     """
 
     __slots__ = ("room", "user")
@@ -2700,8 +2708,8 @@ class PrivateRoomRemoveOperator(ServerMessage):
 class PrivateRoomOperatorAdded(ServerMessage):
     """Server code 145.
 
-    The server send us this message when we're given operator abilities
-    in a private room.
+    The server tells us we were given operator abilities in a private room
+    we are in.
     """
 
     __slots__ = ("room",)
@@ -2716,8 +2724,8 @@ class PrivateRoomOperatorAdded(ServerMessage):
 class PrivateRoomOperatorRemoved(ServerMessage):
     """Server code 146.
 
-    The server send us this message when our operator abilities are
-    removed in a private room.
+    The server tells us our operator abilities were removed in a private room
+    we are in.
     """
 
     __slots__ = ("room",)
@@ -2732,11 +2740,10 @@ class PrivateRoomOperatorRemoved(ServerMessage):
         _pos, self.room = self.unpack_string(message)
 
 
-class PrivateRoomOwned(ServerMessage):
+class PrivateRoomOperators(ServerMessage):
     """Server code 148.
 
-    The server sends us a list of operators in a specific room, that we
-    can remove operator abilities from.
+    The server sends us a list of operators in a private room we are in.
     """
 
     __slots__ = ("room", "number", "operators")
@@ -3974,7 +3981,7 @@ NETWORK_MESSAGE_EVENTS = {
     PrivateRoomAdded: "private-room-added",
     PrivateRoomOperatorAdded: "private-room-operator-added",
     PrivateRoomOperatorRemoved: "private-room-operator-removed",
-    PrivateRoomOwned: "private-room-owned",
+    PrivateRoomOperators: "private-room-operators",
     PrivateRoomRemoveOperator: "private-room-remove-operator",
     PrivateRoomRemoveUser: "private-room-remove-user",
     PrivateRoomRemoved: "private-room-removed",
@@ -4091,7 +4098,7 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomUsers: 133,
     PrivateRoomAddUser: 134,
     PrivateRoomRemoveUser: 135,
-    PrivateRoomDismember: 136,
+    PrivateRoomCancelMembership: 136,
     PrivateRoomDisown: 137,
     PrivateRoomSomething: 138,    # Obsolete
     PrivateRoomAdded: 139,
@@ -4102,7 +4109,7 @@ SERVER_MESSAGE_CODES = {
     PrivateRoomRemoveOperator: 144,
     PrivateRoomOperatorAdded: 145,
     PrivateRoomOperatorRemoved: 146,
-    PrivateRoomOwned: 148,
+    PrivateRoomOperators: 148,
     MessageUsers: 149,
     JoinGlobalRoom: 150,          # Deprecated
     LeaveGlobalRoom: 151,         # Deprecated

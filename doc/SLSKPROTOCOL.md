@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 26, 2024
+Last updated on July 27, 2024
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -256,8 +256,8 @@ but it handles the protocol well enough (and can be modified).
 | 133  | [Private Room Users](#server-code-133)            |            |
 | 134  | [Private Room Add User](#server-code-134)         |            |
 | 135  | [Private Room Remove User](#server-code-135)      |            |
-| 136  | [Private Room Drop Membership](#server-code-136)  |            |
-| 137  | [Private Room Drop Ownership](#server-code-137)   |            |
+| 136  | [Private Room Cancel Membership](#server-code-136)|            |
+| 137  | [Private Room Disown](#server-code-137)           |            |
 | 138  | [Private Room Unknown](#server-code-138)          | Obsolete   |
 | 139  | [Private Room Added](#server-code-139)            |            |
 | 140  | [Private Room Removed](#server-code-140)          |            |
@@ -267,7 +267,7 @@ but it handles the protocol well enough (and can be modified).
 | 144  | [Private Room Remove Operator](#server-code-144)  |            |
 | 145  | [Private Room Operator Added](#server-code-145)   |            |
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
-| 148  | [Private Room Owned](#server-code-148)            |            |
+| 148  | [Private Room Operators](#server-code-148)        |            |
 | 149  | [Message Users](#server-code-149)                 |            |
 | 150  | [Join Global Room](#server-code-150)              | Deprecated |
 | 151  | [Leave Global Room](#server-code-151)             | Deprecated |
@@ -511,7 +511,7 @@ include:
     10. **uint32** <ins>number of user countries</ins>
     11. Iterate the <ins>number of user countries</ins>
         1.  **string** <ins>countrycode</ins> *Uppercase country code*
-    12. **string** <ins>owner</ins> **If private room**
+    12. **string** <ins>owner</ins> *If private room*
     13. **uint32** <ins>number of operators in room</ins> *If private room*
     14. Iterate the <ins>number of operators</ins>
         1.  **string** <ins>operator</ins>
@@ -978,30 +978,21 @@ The server tells us a list of rooms and the number of users in them. When connec
     3.  **uint32** <ins>number of rooms</ins>
     4.  Iterate for <ins>number of rooms</ins>
         1.  **uint32** <ins>number of users in room</ins>
-
-<!-- end list -->
-
-1.  **uint32** <ins>number of owned private rooms</ins>
-2.  Iterate for <ins>number of owned private rooms</ins>
-    1.  **string** <ins>owned private room</ins>
-3.  **uint32** <ins>number of owned private rooms</ins>
-4.  Iterate for <ins>number of owned private rooms</ins>
-    1.  **uint32** <ins>number of users in owned private room</ins>
-
-<!-- end list -->
-
-1.  **uint32** <ins>number of private rooms (except owned)</ins>
-2.  Iterate for <ins>number of private rooms (except owned)</ins>
-    1.  **string** <ins>private room</ins>
-3.  **uint32** <ins>number of private rooms (except owned)</ins>
-4.  Iterate for <ins>number of private rooms (except owned)</ins>
-    1.  **uint32** <ins>number of users in private rooms (except owned)</ins>
-
-<!-- end list -->
-
-1.  **uint32** <ins>number of operated private rooms</ins>
-2.  Iterate for <ins>number of operated private rooms</ins>
-    1.  **string** <ins>operated private room</ins>
+    5.  **uint32** <ins>number of owned private rooms</ins>
+    6.  Iterate for <ins>number of owned private rooms</ins>
+        1.  **string** <ins>owned private room</ins>
+    7.  **uint32** <ins>number of owned private rooms</ins>
+    8.  Iterate for <ins>number of owned private rooms</ins>
+        1.  **uint32** <ins>number of users in owned private room</ins>
+    9.  **uint32** <ins>number of private rooms (except owned)</ins>
+    10. Iterate for <ins>number of private rooms (except owned)</ins>
+        1.  **string** <ins>private room</ins>
+    11. **uint32** <ins>number of private rooms (except owned)</ins>
+    12. Iterate for <ins>number of private rooms (except owned)</ins>
+        1.  **uint32** <ins>number of users in private rooms (except owned)</ins>
+    13. **uint32** <ins>number of operated private rooms</ins>
+    14. Iterate for <ins>number of operated private rooms</ins>
+        1.  **string** <ins>operated private room</ins>
 
 ## Server Code 65
 
@@ -1620,7 +1611,8 @@ The server asks us to reset our distributed parent and children.
 
 ### PrivateRoomUsers
 
-The server sends us a list of room users that we can alter (add operator abilities / dismember).
+The server sends us a list of members (excluding the owner) in a private
+room we are in.
 
 ### Data Order
 
@@ -1636,7 +1628,10 @@ The server sends us a list of room users that we can alter (add operator abiliti
 
 ### PrivateRoomAddUser
 
-We send this to inform the server that we've added a user to a private room.
+We send this to the server to add a member to a private room, if we are
+the owner or an operator.
+
+The server tells us a member has been added to a private room we are in.
 
 ### Data Order
 
@@ -1651,7 +1646,11 @@ We send this to inform the server that we've added a user to a private room.
 
 ### PrivateRoomRemoveUser
 
-We send this to inform the server that we've removed a user from a private room.
+We send this to the server to remove a member from a private room, if we
+are the owner or an operator. Owners can remove operators and regular
+members, operators can only remove regular members.
+
+The server tells us a member has been removed from a private room we are in.
 
 ### Data Order
 
@@ -1664,9 +1663,9 @@ We send this to inform the server that we've removed a user from a private room.
 
 ## Server Code 136
 
-### PrivateRoomDismember
+### PrivateRoomCancelMembership
 
-We send this to the server to remove our own membership of a private room.
+We send this to the server to cancel our own membership of a private room.
 
 ### Data Order
 
@@ -1707,7 +1706,7 @@ Unknown purpose
 
 ### PrivateRoomAdded
 
-The server sends us this message when we are added to a private room.
+The server tells us we were added to a private room.
 
 ### Data Order
 
@@ -1720,7 +1719,7 @@ The server sends us this message when we are added to a private room.
 
 ### PrivateRoomRemoved
 
-The server sends us this message when we are removed from a private room.
+The server tells us we were removed from a private room.
 
 ### Data Order
 
@@ -1759,7 +1758,11 @@ We send this to the server to change our password. We receive a response if our 
 
 ### PrivateRoomAddOperator
 
-We send this to the server to add private room operator abilities to a user.
+We send this to the server to add private room operator abilities to
+a member.
+
+The server tells us a member received operator abilities in a private
+room we are in.
 
 ### Data Order
 
@@ -1774,7 +1777,11 @@ We send this to the server to add private room operator abilities to a user.
 
 ### PrivateRoomRemoveOperator
 
-We send this to the server to remove private room operator abilities from a user.
+We send this to the server to remove private room operator abilities
+from a member.
+
+The server tells us operator abilities were removed for a member in a
+private room we are in.
 
 ### Data Order
 
@@ -1789,7 +1796,8 @@ We send this to the server to remove private room operator abilities from a user
 
 ### PrivateRoomOperatorAdded
 
-The server send us this message when we're given operator abilities in a private room.
+The server tells us we were given operator abilities in a private room
+we are in.
 
 ### Data Order
 
@@ -1802,7 +1810,8 @@ The server send us this message when we're given operator abilities in a private
 
 ### PrivateRoomOperatorRemoved
 
-The server send us this message when our operator abilities are removed in a private room.
+The server tells us our operator abilities were removed in a private room
+we are in.
 
 ### Data Order
 
@@ -1813,9 +1822,9 @@ The server send us this message when our operator abilities are removed in a pri
 
 ## Server Code 148
 
-### PrivateRoomOwned
+### PrivateRoomOperators
 
-The server sends us a list of operators in a specific room, that we can remove operator abilities from.
+The server sends us a list of operators in a private room we are in.
 
 ### Data Order
 

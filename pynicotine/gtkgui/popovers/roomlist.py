@@ -93,7 +93,7 @@ class RoomList(Popover):
             ("=" + _("Leave Room"), self.on_popup_leave),
             ("", None),
             ("=" + _("Disown Private Room"), self.on_popup_private_room_disown),
-            ("=" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
+            ("=" + _("Cancel Room Membership"), self.on_popup_private_room_cancel_membership)
         )
 
         for toggle in (self.public_feed_toggle, self.private_room_toggle):
@@ -285,8 +285,8 @@ class RoomList(Popover):
     def on_popup_private_room_disown(self, *_args):
         core.chatrooms.request_private_room_disown(self.popup_room)
 
-    def on_popup_private_room_dismember(self, *_args):
-        core.chatrooms.request_private_room_dismember(self.popup_room)
+    def on_popup_private_room_cancel_membership(self, *_args):
+        core.chatrooms.request_private_room_cancel_membership(self.popup_room)
 
     def on_popup_leave(self, *_args):
         core.chatrooms.remove_room(self.popup_room)

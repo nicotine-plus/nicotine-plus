@@ -29,7 +29,7 @@ from pynicotine.slskmessages import LeaveGlobalRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import PrivateRoomAddUser
-from pynicotine.slskmessages import PrivateRoomDismember
+from pynicotine.slskmessages import PrivateRoomCancelMembership
 from pynicotine.slskmessages import PrivateRoomDisown
 from pynicotine.slskmessages import PrivateRoomRemoveUser
 from pynicotine.slskmessages import PrivateRoomSomething
@@ -324,11 +324,11 @@ class PrivateRoomAddUserMessageTest(TestCase):
             message)
 
 
-class PrivateRoomDismemberMessageTest(TestCase):
+class PrivateRoomCancelMembershipMessageTest(TestCase):
 
     def test_make_network_message(self):
         # Arrange
-        obj = PrivateRoomDismember(room="room4")
+        obj = PrivateRoomCancelMembership(room="room4")
 
         # Act
         message = obj.make_network_message()
