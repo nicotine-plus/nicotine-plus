@@ -89,11 +89,11 @@ class RoomList(Popover):
         self.popup_room = None
         self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
-            ("#" + _("Join Room"), self.on_popup_join),
-            ("#" + _("Leave Room"), self.on_popup_leave),
+            ("=" + _("Join Room"), self.on_popup_join),
+            ("=" + _("Leave Room"), self.on_popup_leave),
             ("", None),
-            ("#" + _("Disown Private Room"), self.on_popup_private_room_disown),
-            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
+            ("=" + _("Disown Private Room"), self.on_popup_private_room_disown),
+            ("=" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
         for toggle in (self.public_feed_toggle, self.private_room_toggle):

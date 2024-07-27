@@ -473,9 +473,7 @@ class UserPopupMenu(PopupMenu):
         self.popup_menu_private_rooms.populate_private_rooms()
         self.popup_menu_private_rooms.update_model()
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and self.username != core.users.login_username)
-        self.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
-
+        self.actions[_("Private Rooms")].set_enabled(bool(self.popup_menu_private_rooms.items))
         self.editing = False
 
     def populate_private_rooms(self):
