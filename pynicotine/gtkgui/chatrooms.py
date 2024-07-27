@@ -49,6 +49,7 @@ from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserData
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -92,7 +93,9 @@ class ChatRooms(IconNotebook):
             ("join-room", self.join_room),
             ("leave-room", self.leave_room),
             ("private-room-add-operator", self.private_room_add_operator),
+            ("private-room-add-user", self.private_room_add_user),
             ("private-room-remove-operator", self.private_room_remove_operator),
+            ("private-room-remove-user", self.private_room_remove_user),
             ("quit", self.quit),
             ("remove-room", self.remove_room),
             ("room-completions", self.update_completions),
@@ -384,12 +387,26 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.private_room_add_operator(msg)
 
+    def private_room_add_user(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_add_user(msg)
+
     def private_room_remove_operator(self, msg):
 
         page = self.pages.get(msg.room)
 
         if page is not None:
             page.private_room_remove_operator(msg)
+
+    def private_room_remove_user(self, msg):
+
+        page = self.pages.get(msg.room)
+
+        if page is not None:
+            page.private_room_remove_user(msg)
 
     def update_completions(self, completions):
 
@@ -636,8 +653,13 @@ class ChatRoom:
         if avgspeed > 0:
             h_speed = human_speed(avgspeed)
 
-        files = userdata.files or 0
-        h_files = humanize(files)
+        files = userdata.files
+
+        if files is None:
+            files = 0
+            h_files = ""
+        else:
+            h_files = humanize(files)
 
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
@@ -684,12 +706,12 @@ class ChatRoom:
 
         self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
-    def populate_room_users(self, users):
+    def populate_room_users(self, joined_users, owner=None):
 
         # Temporarily disable sorting for increased performance
         self.users_list_view.disable_sorting()
 
-        for userdata in users:
+        for userdata in joined_users:
             username = userdata.username
             iterator = self.users_list_view.iterators.get(username)
 
@@ -697,6 +719,15 @@ class ChatRoom:
                 self.users_list_view.remove_row(iterator)
 
             self.add_user_row(userdata)
+
+        if self.is_private:
+            # List room members who are offline/not currently joined
+            for username in core.chatrooms.private_rooms[self.room]["users"]:
+                if username not in self.users_list_view.iterators:
+                    self.add_user_row(UserData(username, status=UserStatus.OFFLINE))
+
+            if owner and owner not in self.users_list_view.iterators:
+                self.add_user_row(UserData(owner, status=UserStatus.OFFLINE))
 
         self.users_list_view.enable_sorting()
 
@@ -835,9 +866,13 @@ class ChatRoom:
 
         userdata = msg.userdata
         username = userdata.username
+        iterator = self.users_list_view.iterators.get(username)
 
-        if username in self.users_list_view.iterators:
-            return
+        if iterator is not None:
+            if not self.is_private:
+                return
+
+            self.users_list_view.remove_row(iterator)
 
         # Add to completion list, and completion drop-down
         if self.chatrooms.completion.entry == self.chat_entry:
@@ -870,7 +905,19 @@ class ChatRoom:
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
             self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
-        self.users_list_view.remove_row(iterator)
+        if self.is_private:
+            status_icon_name = USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]
+            empty_str = ""
+            empty_int = 0
+
+            self.users_list_view.set_row_value(iterator, "status", status_icon_name)
+            self.users_list_view.set_row_value(iterator, "speed", empty_str)
+            self.users_list_view.set_row_value(iterator, "speed_data", empty_int)
+            self.users_list_view.set_row_value(iterator, "files", empty_str)
+            self.users_list_view.set_row_value(iterator, "files_data", empty_int)
+            self.users_list_view.set_row_value(iterator, "country", empty_str)
+        else:
+            self.users_list_view.remove_row(iterator)
 
         self.chat_view.update_user_tag(username)
         self.update_user_count()
@@ -885,6 +932,19 @@ class ChatRoom:
         self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.BOLD)
         self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
 
+    def private_room_add_user(self, msg):
+
+        username = msg.user
+        iterator = self.users_list_view.iterators.get(username)
+
+        if iterator is not None:
+            return
+
+        self.add_user_row(UserData(username, status=UserStatus.OFFLINE))
+
+        self.chat_view.update_user_tag(username)
+        self.update_user_count()
+
     def private_room_remove_operator(self, msg):
 
         iterator = self.users_list_view.iterators.get(msg.user)
@@ -895,15 +955,33 @@ class ChatRoom:
         self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.NORMAL)
         self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
 
+    def private_room_remove_user(self, msg):
+
+        username = msg.user
+        iterator = self.users_list_view.iterators.get(username)
+
+        if iterator is None:
+            return
+
+        self.users_list_view.remove_row(iterator)
+
+        self.chat_view.update_user_tag(username)
+        self.update_user_count()
+
     def update_user_count(self):
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
 
     def user_stats(self, msg):
 
-        iterator = self.users_list_view.iterators.get(msg.user)
+        user = msg.user
+        iterator = self.users_list_view.iterators.get(user)
 
         if iterator is None:
+            return
+
+        if user not in core.chatrooms.joined_rooms[self.room].users:
+            # Private room member offline/not currently joined
             return
 
         speed = msg.avgspeed or 0
@@ -927,6 +1005,10 @@ class ChatRoom:
         iterator = self.users_list_view.iterators.get(user)
 
         if iterator is None:
+            return
+
+        if user not in core.chatrooms.joined_rooms[self.room].users:
+            # Private room member offline/not currently joined
             return
 
         status = msg.status
@@ -961,6 +1043,10 @@ class ChatRoom:
         if iterator is None:
             return
 
+        if user not in core.chatrooms.joined_rooms[self.room].users:
+            # Private room member offline/not currently joined
+            return
+
         flag_icon_name = get_flag_icon_name(country_code)
 
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
@@ -980,7 +1066,10 @@ class ChatRoom:
         self.leave_room()
 
     def join_room(self, msg):
-        self.populate_room_users(msg.users)
+
+        self.is_private = msg.private
+
+        self.populate_room_users(msg.users, msg.owner)
         self.chat_entry.set_sensitive(True)
 
     def leave_room(self):
