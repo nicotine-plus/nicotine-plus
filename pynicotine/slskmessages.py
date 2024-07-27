@@ -1613,45 +1613,41 @@ class RoomList(ServerMessage):
     containing the missing rooms.
     """
 
-    __slots__ = ("rooms", "ownedprivaterooms", "otherprivaterooms")
+    __slots__ = ("rooms", "ownedprivaterooms", "otherprivaterooms", "operatedprivaterooms")
 
     def __init__(self):
         self.rooms = []
         self.ownedprivaterooms = []
         self.otherprivaterooms = []
+        self.operatedprivaterooms = []
 
     def make_network_message(self):
         return b""
 
     def parse_network_message(self, message):
-        pos, numrooms = self.unpack_uint32(message)
-
-        for i in range(numrooms):
-            pos, room = self.unpack_string(message, pos)
-
-            self.rooms.append([room, None])
-
-        pos, numusers = self.unpack_uint32(message, pos)
-
-        for i in range(numusers):
-            pos, usercount = self.unpack_uint32(message, pos)
-
-            self.rooms[i][1] = usercount
+        pos, self.rooms = self.parse_rooms(message)
 
         if not message[pos:]:
             return
 
         pos, self.ownedprivaterooms = self.parse_rooms(message, pos)
         pos, self.otherprivaterooms = self.parse_rooms(message, pos)
+        pos, self.operatedprivaterooms = self.parse_rooms(message, pos, has_count=False)
 
-    def parse_rooms(self, message, pos):
+    def parse_rooms(self, message, pos=0, has_count=True):
         pos, numrooms = self.unpack_uint32(message, pos)
 
         rooms = []
         for i in range(numrooms):
             pos, room = self.unpack_string(message, pos)
 
-            rooms.append([room, None])
+            if has_count:
+                rooms.append([room, None])
+            else:
+                rooms.append(room)
+
+        if not has_count:
+            return pos, rooms
 
         pos, numusers = self.unpack_uint32(message, pos)
 
