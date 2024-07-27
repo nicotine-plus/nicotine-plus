@@ -644,22 +644,25 @@ class ChatRoom:
 
         username = userdata.username
         status = userdata.status
-        country_code = core.users.countries.get(username) or userdata.country or ""
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        flag_icon_name = get_flag_icon_name(country_code)
         h_speed = ""
         avgspeed = userdata.avgspeed or 0
+        files = userdata.files
+        country_code = userdata.country
 
         if avgspeed > 0:
             h_speed = human_speed(avgspeed)
-
-        files = userdata.files
 
         if files is None:
             files = 0
             h_files = ""
         else:
             h_files = humanize(files)
+
+        if country_code is not None:
+            country_code = core.users.countries.get(username, country_code)
+
+        flag_icon_name = get_flag_icon_name(country_code)
 
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
