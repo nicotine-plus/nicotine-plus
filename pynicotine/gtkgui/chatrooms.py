@@ -645,25 +645,11 @@ class ChatRoom:
         username = userdata.username
         status = userdata.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status, "")
-        h_speed = ""
-        avgspeed = userdata.avgspeed or 0
+        flag_icon_name = get_flag_icon_name(userdata.country)
+        speed = userdata.avgspeed or 0
         files = userdata.files
-        country_code = userdata.country
-
-        if avgspeed > 0:
-            h_speed = human_speed(avgspeed)
-
-        if files is None:
-            files = 0
-            h_files = ""
-        else:
-            h_files = humanize(files)
-
-        if country_code is not None:
-            country_code = core.users.countries.get(username, country_code)
-
-        flag_icon_name = get_flag_icon_name(country_code)
-
+        h_speed = human_speed(speed) if speed > 0 else ""
+        h_files = humanize(files) if files is not None else ""
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
 
@@ -682,8 +668,8 @@ class ChatRoom:
             username,
             h_speed,
             h_files,
-            avgspeed,
-            files,
+            speed,
+            files or 0,
             weight,
             underline
         ], select_row=False)
@@ -747,11 +733,6 @@ class ChatRoom:
         # Add room users to completion list
         if self.chatrooms.get_current_page() == self.container:
             self.update_room_user_completions()
-
-        self.activity_view.append_line(
-            _("%s joined the room") % core.users.login_username,
-            timestamp_format=config.sections["logging"]["rooms_timestamp"]
-        )
 
     def populate_user_menu(self, user, menu):
         menu.set_user(user)
@@ -885,9 +866,11 @@ class ChatRoom:
         if self.chatrooms.completion.entry == self.chat_entry:
             self.chatrooms.completion.add_completion(username)
 
-        if not core.network_filter.is_user_ignored(username) and not core.network_filter.is_user_ip_ignored(username):
+        if (not core.network_filter.is_user_ignored(username)
+                and not core.network_filter.is_user_ip_ignored(username)):
             self.activity_view.append_line(
-                _("%s joined the room") % username, timestamp_format=config.sections["logging"]["rooms_timestamp"]
+                _("%s joined the room") % username,
+                timestamp_format=config.sections["logging"]["rooms_timestamp"]
             )
 
         self.add_user_row(userdata)

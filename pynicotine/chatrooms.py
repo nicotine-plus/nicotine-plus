@@ -272,6 +272,27 @@ class ChatRooms:
     def request_update_ticker(self, room, message):
         core.send_message_to_server(RoomTickerSet(room, message))
 
+    def _update_room_user(self, room_obj, user_data):
+
+        username = user_data.username
+        room_obj.users.add(username)
+        core.users.watch_user(username, context=f"chatrooms_{room_obj.name}", is_implicit=True)
+
+        watched_user = core.users.watched[username]
+        watched_user.upload_speed = user_data.avgspeed
+        watched_user.files = user_data.files
+        watched_user.folders = user_data.dirs
+
+        core.users.statuses[username] = user_data.status
+
+        # Request user's IP address, so we can get the country and ignore messages by IP
+        if username not in core.users.addresses:
+            core.users.request_ip_address(username)
+
+        # Replace server-provided country with our own
+        if username in core.users.countries:
+            user_data.country = core.users.countries[username]
+
     def _update_private_room(self, room, owner=None, members=None, operators=None):
 
         private_room = self.private_rooms.get(room)
@@ -304,21 +325,8 @@ class ChatRooms:
         if msg.private:
             self._update_private_room(msg.room, owner=msg.owner, operators=msg.operators)
 
-        for userdata in msg.users:
-            username = userdata.username
-            core.users.watch_user(username, context=f"chatrooms_{msg.room}", is_implicit=True)
-            room_obj.users.add(username)
-
-            watched_user = core.users.watched[username]
-            watched_user.upload_speed = userdata.avgspeed
-            watched_user.files = userdata.files
-            watched_user.folders = userdata.dirs
-
-            core.users.statuses[username] = userdata.status
-
-            # Request user's IP address, so we can get the country and ignore messages by IP
-            if username not in core.users.addresses:
-                core.users.request_ip_address(username)
+        for user_data in msg.users:
+            self._update_room_user(room_obj, user_data)
 
         core.pluginhandler.join_chatroom_notification(msg.room)
 
@@ -525,29 +533,8 @@ class ChatRooms:
             msg.room = None
             return
 
-        userdata = msg.userdata
-        username = userdata.username
-
-        if username == core.users.login_username:
-            # Redundant message, we're already present in the list of users
-            msg.room = None
-            return
-
-        room_obj.users.add(username)
-        core.users.watch_user(username, context=f"chatrooms_{msg.room}", is_implicit=True)
-
-        watched_user = core.users.watched[username]
-        watched_user.upload_speed = userdata.avgspeed
-        watched_user.files = userdata.files
-        watched_user.folders = userdata.dirs
-
-        core.users.statuses[username] = userdata.status
-
-        # Request user's IP address, so we can get the country and ignore messages by IP
-        if username not in core.users.addresses:
-            core.users.request_ip_address(username)
-
-        core.pluginhandler.user_join_chatroom_notification(msg.room, username)
+        self._update_room_user(room_obj, msg.userdata)
+        core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
 
     def _user_left_room(self, msg):
         """Server code 17."""
