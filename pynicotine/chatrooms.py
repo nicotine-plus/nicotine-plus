@@ -38,16 +38,28 @@ from pynicotine.utils import censor_text
 from pynicotine.utils import find_whole_word
 
 
-class Room:
+class JoinedRoom:
 
     __slots__ = ("name", "is_private", "users", "tickers")
 
-    def __init__(self, name=None, is_private=False):
+    def __init__(self, name, is_private=False):
 
         self.name = name
         self.is_private = is_private
         self.users = set()
         self.tickers = {}
+
+
+class PrivateRoom:
+
+    __slots__ = ("name", "owner", "members", "operators")
+
+    def __init__(self, name):
+
+        self.name = name
+        self.owner = None
+        self.members = set()
+        self.operators = set()
 
 
 class ChatRooms:
@@ -59,7 +71,7 @@ class ChatRooms:
         self.completions = set()
         self.server_rooms = set()
         self.joined_rooms = {}
-        self.private_rooms = config.sections["private_rooms"]["rooms"]
+        self.private_rooms = {}
 
         for event_name, callback in (
             ("global-room-message", self._global_room_message),
@@ -125,6 +137,7 @@ class ChatRooms:
             room_obj.users.clear()
 
         self.server_rooms.clear()
+        self.private_rooms.clear()
         self.update_completions()
 
     def show_room(self, room, is_private=False, switch_page=True, remembered=False):
@@ -132,7 +145,7 @@ class ChatRooms:
         room_obj = self.joined_rooms.get(room)
 
         if room_obj is None:
-            self.joined_rooms[room] = room_obj = Room(name=room, is_private=is_private)
+            self.joined_rooms[room] = room_obj = JoinedRoom(name=room, is_private=is_private)
 
             if room not in config.sections["server"]["autojoin"]:
                 position = 0 if room == self.GLOBAL_ROOM_NAME else -1
@@ -211,31 +224,6 @@ class ChatRooms:
         core.send_message_to_server(SayChatroom(room, message))
         core.pluginhandler.outgoing_public_chat_notification(room, message)
 
-    def create_private_room(self, room, owner=None, operators=None):
-
-        private_room = self.private_rooms.get(room)
-
-        if private_room is None:
-            private_room = self.private_rooms[room] = {
-                "users": [],
-                "joined": 0,
-                "operators": operators or [],
-                "owned": False,
-                "owner": owner
-            }
-            return private_room
-
-        private_room["owner"] = owner
-
-        if operators is None:
-            return private_room
-
-        for operator in operators:
-            if operator not in private_room["operators"]:
-                private_room["operators"].append(operator)
-
-        return private_room
-
     def add_user_to_private_room(self, room, username):
         core.send_message_to_server(PrivateRoomAddUser(room, username))
 
@@ -250,14 +238,14 @@ class ChatRooms:
 
     def is_private_room_owned(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and private_room["owner"] == core.users.login_username
+        return private_room is not None and private_room.owner == core.users.login_username
 
     def is_private_room_member(self, room):
         return room in self.private_rooms
 
     def is_private_room_operator(self, room):
         private_room = self.private_rooms.get(room)
-        return private_room is not None and core.users.login_username in private_room["operators"]
+        return private_room is not None and core.users.login_username in private_room.operators
 
     def request_room_list(self):
         core.send_message_to_server(RoomList())
@@ -284,6 +272,24 @@ class ChatRooms:
     def request_update_ticker(self, room, message):
         core.send_message_to_server(RoomTickerSet(room, message))
 
+    def _update_private_room(self, room, owner=None, members=None, operators=None):
+
+        private_room = self.private_rooms.get(room)
+
+        if private_room is None:
+            private_room = self.private_rooms[room] = PrivateRoom(room)
+
+        if owner:
+            private_room.owner = owner
+
+        if members:
+            for member in members:
+                private_room.members.add(member)
+
+        if operators:
+            for operator in operators:
+                private_room.operators.add(operator)
+
     def _join_room(self, msg):
         """Server code 14."""
 
@@ -296,7 +302,7 @@ class ChatRooms:
             room_obj.is_private = msg.private
 
         if msg.private:
-            self.create_private_room(msg.room, msg.owner, msg.operators)
+            self._update_private_room(msg.room, owner=msg.owner, operators=msg.operators)
 
         for userdata in msg.users:
             username = userdata.username
@@ -332,29 +338,23 @@ class ChatRooms:
     def _private_room_users(self, msg):
         """Server code 133."""
 
-        private_room = self.private_rooms.get(msg.room)
-
-        if private_room is None:
-            private_room = self.create_private_room(msg.room)
-
-        private_room["users"] = msg.users
-        private_room["joined"] = msg.numusers
+        self._update_private_room(msg.room, members=msg.users)
 
     def _private_room_add_user(self, msg):
         """Server code 134."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and msg.user not in private_room["users"]:
-            private_room["users"].append(msg.user)
+        if private_room is not None:
+            private_room.members.add(msg.user)
 
     def _private_room_remove_user(self, msg):
         """Server code 135."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and msg.user in private_room["users"]:
-            private_room["users"].remove(msg.user)
+        if private_room is not None:
+            private_room.members.discard(msg.user)
 
     def _private_room_added(self, msg):
         """Server code 139."""
@@ -362,7 +362,7 @@ class ChatRooms:
         if msg.room in self.private_rooms:
             return
 
-        self.create_private_room(msg.room)
+        self._update_private_room(msg.room)
 
         if msg.room in self.joined_rooms:
             # Room tab previously opened, join room now
@@ -386,42 +386,37 @@ class ChatRooms:
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and msg.user not in private_room["operators"]:
-            private_room["operators"].append(msg.user)
+        if private_room is not None:
+            private_room.operators.add(msg.user)
 
     def _private_room_remove_operator(self, msg):
         """Server code 144."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and msg.user in private_room["operators"]:
-            private_room["operators"].remove(msg.user)
+        if private_room is not None:
+            private_room.operators.discard(msg.user)
 
     def _private_room_operator_added(self, msg):
         """Server code 145."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and core.users.login_username not in private_room["operators"]:
-            private_room["operators"].append(core.users.login_username)
+        if private_room is not None:
+            private_room.operators.add(core.users.login_username)
 
     def _private_room_operator_removed(self, msg):
         """Server code 146."""
 
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and core.users.login_username in private_room["operators"]:
-            private_room["operators"].remove(core.users.login_username)
+        if private_room is not None:
+            private_room.operators.discard(core.users.login_username)
 
     def _private_room_operators(self, msg):
         """Server code 148."""
 
-        private_room = self.private_rooms.get(msg.room)
-
-        if private_room is None:
-            private_room = self.create_private_room(msg.room)
-
-        private_room["operators"] = msg.operators
+        self._update_private_room(msg.room, operators=msg.operators)
 
     def _global_room_message(self, msg):
         """Server code 152."""
@@ -431,42 +426,14 @@ class ChatRooms:
     def _room_list(self, msg):
         """Server code 64."""
 
-        login_username = core.users.login_username
-
-        for room, user_count in msg.rooms:
+        for room, _user_count in msg.rooms:
             self.server_rooms.add(room)
 
-        for room, user_count in msg.ownedprivaterooms:
-            room_data = self.private_rooms.get(room)
+        for room, _user_count in msg.ownedprivaterooms:
+            self._update_private_room(room, owner=core.users.login_username)
 
-            if room_data is None:
-                self.private_rooms[room] = {
-                    "users": [],
-                    "joined": user_count,
-                    "operators": [],
-                    "owner": login_username
-                }
-                continue
-
-            room_data["joined"] = user_count
-            room_data["owner"] = login_username
-
-        for room, user_count in msg.otherprivaterooms:
-            room_data = self.private_rooms.get(room)
-
-            if room_data is None:
-                self.private_rooms[room] = {
-                    "users": [],
-                    "joined": user_count,
-                    "operators": [],
-                    "owner": None
-                }
-                continue
-
-            room_data["joined"] = user_count
-
-            if room_data["owner"] == login_username:
-                room_data["owner"] = None
+        for room, _user_count in msg.otherprivaterooms:
+            self._update_private_room(room)
 
         if config.sections["words"]["roomnames"]:
             self.update_completions()

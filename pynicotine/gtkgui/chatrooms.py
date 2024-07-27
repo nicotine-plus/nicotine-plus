@@ -668,11 +668,11 @@ class ChatRoom:
         underline = Pango.Underline.NONE
 
         if self.room in core.chatrooms.private_rooms:
-            if username == core.chatrooms.private_rooms[self.room]["owner"]:
+            if username == core.chatrooms.private_rooms[self.room].owner:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.SINGLE
 
-            elif username in core.chatrooms.private_rooms[self.room]["operators"]:
+            elif username in core.chatrooms.private_rooms[self.room].operators:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 
@@ -709,7 +709,7 @@ class ChatRoom:
 
         self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
-    def populate_room_users(self, joined_users, owner=None):
+    def populate_room_users(self, joined_users):
 
         # Temporarily disable sorting for increased performance
         self.users_list_view.disable_sorting()
@@ -723,9 +723,13 @@ class ChatRoom:
 
             self.add_user_row(userdata)
 
-        if self.is_private:
-            # List room members who are offline/not currently joined
-            for username in core.chatrooms.private_rooms[self.room]["users"]:
+        private_room = core.chatrooms.private_rooms.get(self.room)
+
+        # List private room members who are offline/not currently joined
+        if private_room is not None:
+            owner = private_room.owner
+
+            for username in private_room.members:
                 if username not in self.users_list_view.iterators:
                     self.add_user_row(UserData(username, status=UserStatus.OFFLINE))
 
@@ -1072,7 +1076,7 @@ class ChatRoom:
 
         self.is_private = msg.private
 
-        self.populate_room_users(msg.users, msg.owner)
+        self.populate_room_users(msg.users)
         self.chat_entry.set_sensitive(True)
 
     def leave_room(self):

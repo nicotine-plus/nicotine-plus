@@ -390,7 +390,7 @@ class Config:
                 "file_size_unit": ""
             },
             "private_rooms": {
-                "rooms": {}
+                "rooms": {}  # TODO: remove in 3.3.5
             },
             "urls": {
                 "protocols": {}
@@ -775,6 +775,9 @@ class Config:
 
             for option in options:
                 self._parser.remove_option(section, option)
+
+            if not self._parser.options(section):
+                self._parser.remove_section(section)
 
         if not self.create_config_folder():
             return

@@ -487,11 +487,11 @@ class UserPopupMenu(PopupMenu):
             if not is_owned and not is_operator:
                 continue
 
-            if self.username == data["owner"]:
+            if self.username == data.owner:
                 continue
 
-            is_user_member = (self.username in data["users"])
-            is_user_operator = (self.username in data["operators"])
+            is_user_member = (self.username in data.members)
+            is_user_operator = (self.username in data.operators)
 
             if not is_user_operator:
                 if is_user_member:
