@@ -620,7 +620,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="_show_ip_address_button">
+                      <object class="GtkButton" id="show_ip_address_button">
                         <property name="visible">True</property>
                         <signal name="clicked" handler="on_show_ip_address"/>
                         <child>
@@ -637,7 +637,7 @@
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Show IP A_ddress</property>
-                                <property name="mnemonic-widget">_show_ip_address_button</property>
+                                <property name="mnemonic-widget">show_ip_address_button</property>
                                 <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                                 <style>

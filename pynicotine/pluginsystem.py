@@ -358,7 +358,8 @@ class ResponseThrottle:
                 willing_to_respond, reason = False, "Responded in multiple rooms enough"
 
         if self.logging and not willing_to_respond:
-            log.add_debug(f"{self.plugin_name} plugin request rejected - room '{room}', nick '{nick}' - {reason}")
+            log.add_debug("%s plugin request rejected - room '%s', nick '%s' - %s",
+                          (self.plugin_name, room, nick, reason))
 
         return willing_to_respond
 
@@ -408,7 +409,7 @@ class PluginHandler:
             return
 
         to_enable = config.sections["plugins"]["enabled"]
-        log.add_debug(f"Enabled plugin(s): {', '.join(to_enable)}")
+        log.add_debug("Enabled plugin(s): %s", ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
@@ -553,8 +554,8 @@ class PluginHandler:
                 for command, _func in plugin_commands:
                     if command not in interface_commands:
                         interface_commands[command] = None
-                        plugin.log((f"/{command}: {attribute_name} is deprecated, please use the new "
-                                    f"command system. See pynicotine/plugins/ in the Git repository for examples."))
+                        plugin.log(f"/{command}: {attribute_name} is deprecated, please use the new "
+                                   f"command system. See pynicotine/plugins/ in the Git repository for examples.")
 
             self.update_completions(plugin)
 
@@ -678,6 +679,10 @@ class PluginHandler:
 
         return self.enable_plugin(plugin_name)
 
+    def reload_plugin(self, plugin_name):
+        self.disable_plugin(plugin_name)
+        self.enable_plugin(plugin_name)
+
     def get_plugin_settings(self, plugin_name):
 
         if plugin_name in self.enabled_plugins:
@@ -750,12 +755,9 @@ class PluginHandler:
             for key in customsettings:
                 if key in plugin.settings:
                     plugin.settings[key] = customsettings[key]
-
                 else:
-                    log.add_debug("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin", {
-                        "key": key,
-                        "name": plugin_name
-                    })
+                    log.add_debug("Stored setting '%s' is no longer present in the '%s' plugin",
+                                  (key, plugin_name))
 
         except KeyError:
             log.add_debug("No stored settings found for %s", plugin.human_name)
@@ -964,8 +966,7 @@ class PluginHandler:
             if return_value == returncode["pass"]:
                 continue
 
-            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
-                          {"module": module, "value": return_value})
+            log.add_debug("Plugin %s returned something weird, '%s', ignoring", (module, return_value))
 
         return args
 

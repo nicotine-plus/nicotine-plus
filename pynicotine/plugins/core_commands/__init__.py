@@ -60,7 +60,7 @@ class Plugin(BasePlugin):
             "plugin": {
                 "callback": self.plugin_handler_command,
                 "description": _("Manage plugins"),
-                "parameters": ["<toggle|info>", "<plugin_name>"]
+                "parameters": ["<toggle|reload|info>", "<plugin_name>"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
@@ -364,7 +364,8 @@ class Plugin(BasePlugin):
     # Chat Rooms #
 
     def join_command(self, args, **_unused):
-        self.core.chatrooms.show_room(args)
+        room = self.core.chatrooms.sanitize_room_name(args)
+        self.core.chatrooms.show_room(room)
 
     def leave_command(self, args, room=None, **_unused):
 
@@ -380,8 +381,7 @@ class Plugin(BasePlugin):
 
     def say_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        room, text = args_split[0], args_split[1]
+        room, text = args.split(maxsplit=1)
 
         if room not in self.core.chatrooms.joined_rooms:
             self.output(_("Not joined in room %s") % room)
@@ -416,10 +416,7 @@ class Plugin(BasePlugin):
         self.send_private(user, self.core.privatechat.CTCP_VERSION, show_ui=True)
 
     def msg_command(self, args, **_unused):
-
-        args_split = args.split(maxsplit=1)
-        user, text = args_split[0], args_split[1]
-
+        user, text = args.split(maxsplit=1)
         self.send_private(user, text, show_ui=True, switch_page=False)
 
     # Users #
@@ -560,8 +557,8 @@ class Plugin(BasePlugin):
 
     def share_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        permission_level, folder_path = args_split[0], args_split[1].strip(' "')
+        permission_level, folder_path = args.split(maxsplit=1)
+        folder_path = folder_path.strip(' "')
         virtual_name = self.core.shares.add_share(folder_path, permission_level=permission_level)
 
         if not virtual_name:
@@ -597,21 +594,20 @@ class Plugin(BasePlugin):
         self.core.search.do_search(args, "buddies")
 
     def search_user_command(self, args, **_unused):
-
-        args_split = args.split(maxsplit=1)
-        user, query = args_split[0], args_split[1]
-
+        user, query = args.split(maxsplit=1)
         self.core.search.do_search(query, "user", users=[user])
 
     # Plugin Commands #
 
     def plugin_handler_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        action, plugin_name = args_split[0], args_split[1]
+        action, plugin_name = args.split(maxsplit=1)
 
         if action == "toggle":
             self.parent.toggle_plugin(plugin_name)
+
+        elif action == "reload":
+            self.parent.reload_plugin(plugin_name)
 
         elif action == "info":
             plugin_info = self.parent.get_plugin_info(plugin_name)

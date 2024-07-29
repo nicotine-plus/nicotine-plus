@@ -21,9 +21,9 @@ import shutil
 
 from unittest import TestCase
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
 
 CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -89,8 +89,8 @@ class UploadsTest(TestCase):
         self.assertEqual(transfer.size, 27231044)
         self.assertEqual(transfer.current_byte_offset, 27231044)
         self.assertEqual(transfer.file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 792,
-            slskmessages.FileAttribute.DURATION: 268
+            FileAttribute.BITRATE: 792,
+            FileAttribute.DURATION: 268
         })
 
     def test_save_uploads(self):

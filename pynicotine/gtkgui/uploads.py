@@ -128,6 +128,9 @@ class Uploads(Transfers):
 
     def set_connection_stats(self, upload_bandwidth=0, **_kwargs):
 
+        # Sync parent row updates with connection stats
+        self._update_pending_parent_rows()
+
         upload_bandwidth = human_speed(upload_bandwidth)
         upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
 

@@ -2,7 +2,7 @@
 
 <img src="pynicotine/gtkgui/icons/hicolor/scalable/apps/org.nicotine_plus.Nicotine.svg" align="right" width="128" height="128" style="margin: 0 10px">
 
-Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) peer-to-peer network.
+Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer network.
 
 Nicotine+ aims to be a lightweight, pleasant, free and open source (FOSS) alternative to the official Soulseek client, while also providing a comprehensive set of features.
 
@@ -58,4 +58,6 @@ Soulseek is an unencrypted protocol not intended for secure communication.
 
 ## Authors
 
-Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. Nicotine+ exists thanks to its [core team](AUTHORS.md), [translators](TRANSLATORS.md) and [contributors](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors).
+Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. Nicotine+ exists thanks to its [authors](AUTHORS.md).
+
+© 2001–2024 Nicotine+, Nicotine and PySoulSeek Contributors

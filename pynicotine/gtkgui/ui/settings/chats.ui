@@ -85,6 +85,32 @@
               <object class="GtkLabel">
                 <property name="height-request">24</property>
                 <property name="hexpand">True</property>
+                <property name="label" translatable="yes">_Accept private room invitations</property>
+                <property name="mnemonic-widget">private_room_toggle</property>
+                <property name="use-underline">True</property>
+                <property name="visible">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="private_room_toggle">
+                <property name="valign">center</property>
+                <property name="visible">True</property>
+                <signal name="notify::active" handler="on_private_room_changed"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="height-request">24</property>
+                <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
                 <property name="mnemonic-widget">enable_ctcp_toggle</property>
                 <property name="visible">True</property>

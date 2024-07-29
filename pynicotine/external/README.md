@@ -439,7 +439,7 @@ Creative Commons may be contacted at creativecommons.org.
 # tinytag
 
 - Audio metadata parser, modified for Nicotine+
-- Original source code: https://github.com/devsnd/tinytag
+- Original source code: https://github.com/tinytag/tinytag
 
 ## License
 

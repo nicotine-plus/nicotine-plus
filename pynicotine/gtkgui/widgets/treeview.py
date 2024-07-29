@@ -33,8 +33,6 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
-from pynicotine.gtkgui.application import GTK_MICRO_VERSION
-from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -93,6 +91,13 @@ class TreeView:
         Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
 
+        Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
+        Accelerator("minus", self.widget, self.on_collapse_row_blocked_accelerator)
+        Accelerator("Right", self.widget, self.on_expand_row_accelerator)
+        Accelerator("plus", self.widget, self.on_expand_row_blocked_accelerator)
+        Accelerator("equal", self.widget, self.on_expand_row_blocked_accelerator)
+        Accelerator("backslash", self.widget, self.on_expand_row_level_accelerator)
+
         self._column_menu = self.widget.column_menu = PopupMenu(
             self.window.application, self.widget, callback=self.on_column_header_menu, connect_events=False)
 
@@ -121,6 +126,7 @@ class TreeView:
             self.widget.set_search_entry(search_entry)
 
         self._query_tooltip_handler = self.widget.connect("query-tooltip", self.on_tooltip)
+        self.widget.connect("move-cursor", self.on_key_move_cursor)
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
@@ -524,9 +530,9 @@ class TreeView:
     def get_selected_rows(self):
 
         _model, paths = self._selection.get_selected_rows()
-        iterators = [self.model.get_iter(path) for path in paths]
 
-        return iterators
+        for path in paths:
+            yield self.model.get_iter(path)
 
     def get_num_selected_rows(self):
         return self._selection.count_selected_rows()
@@ -616,7 +622,10 @@ class TreeView:
         return column.id
 
     def get_visible_columns(self):
-        return [column.id for column in self.widget.get_columns() if column.get_visible()]
+
+        for column in self.widget.get_columns():
+            if column.get_visible():
+                yield column.id
 
     def is_empty(self):
         return not self.iterators
@@ -680,13 +689,11 @@ class TreeView:
         callback(self)
 
     def on_select_row(self, selection, callback):
+
         iterator = None
 
         if self.multi_select:
-            # We use the bottom selection here.
-            iterators = self.get_selected_rows()
-            if len(iterators):
-                iterator = iterators[-1]
+            iterator = next(self.get_selected_rows(), None)
         else:
             _model, iterator = selection.get_selected()
 
@@ -771,6 +778,15 @@ class TreeView:
         self._column_offsets[column_id] = offset
         self.save_columns()
 
+    def on_key_move_cursor(self, _widget, step, *_args):
+
+        if step != Gtk.MovementStep.BUFFER_ENDS:
+            return
+
+        # We are scrolling to the end using the End key. Disable the
+        # auto-scroll workaround to actually change the scroll adjustment value.
+        self._is_scrolling_to_row = True
+
     def on_v_adjustment_value(self, *_args):
 
         upper = self._v_adjustment.get_upper()
@@ -792,15 +808,16 @@ class TreeView:
         if not search_term:
             return True
 
-        for column_index in self._column_ids.values():
-            if model.get_column_type(column_index) != GObject.TYPE_STRING:
+        accepted_column_types = {"text", "number"}
+
+        for column_index, column_data in enumerate(self._columns.values()):
+            if "column_type" not in column_data:
+                continue
+
+            if column_data["column_type"] not in accepted_column_types:
                 continue
 
             column_value = model.get_value(iterator, column_index).lower()
-
-            if column_value.startswith("nplus-"):
-                # Ignore icon name columns
-                continue
 
             if search_term.lower() in column_value:
                 return False
@@ -810,21 +827,10 @@ class TreeView:
     def on_tooltip(self, _widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
         bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
+        is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
 
-        # is_blank_at_pos() crashes in 4.12.0 - 4.12.2
-        # Remove check when GTK 4 version in Snap package is >= 4.12.3
-        if (4, 12, 2) >= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) >= (4, 12, 0):
-            result = self.widget.get_path_at_pos(bin_x, bin_y)
-
-            if not result:
-                return False
-
-            path, column, _cell_x, _cell_y = result
-        else:
-            is_blank, path, column, _cell_x, _cell_y = self.widget.is_blank_at_pos(bin_x, bin_y)
-
-            if is_blank:
-                return False
+        if is_blank:
+            return False
 
         iterator = self.model.get_iter(path)
 
@@ -908,6 +914,50 @@ class TreeView:
         """Ctrl+F: start search."""
 
         self.widget.emit("start-interactive-search")
+        return True
+
+    def on_collapse_row_accelerator(self, *_args):
+        """Left: collapse row."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        return self.collapse_row(iterator)
+
+    def on_collapse_row_blocked_accelerator(self, *_args):
+        """minus: collapse row (block search)."""
+
+        self.on_collapse_row_accelerator()
+        return True
+
+    def on_expand_row_accelerator(self, *_args):
+        """Right: expand row."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        return self.expand_row(iterator)
+
+    def on_expand_row_blocked_accelerator(self, *_args):
+        """plus, equal: expand row (block search)."""
+
+        self.on_expand_row_accelerator()
+        return True
+
+    def on_expand_row_level_accelerator(self, *_args):
+        """\backslash: collapse or expand to show subs."""
+
+        iterator = self.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        self.collapse_row(iterator)  # show 2nd level
+        self.expand_row(iterator)
         return True
 
 

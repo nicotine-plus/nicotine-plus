@@ -29,7 +29,9 @@ class ChatCommandHelp(Popover):
     def __init__(self, window, interface):
 
         self.interface = interface
-        self.scrollable = Gtk.ScrolledWindow(visible=True)
+        self.scrollable = Gtk.ScrolledWindow(
+            propagate_natural_height=True, propagate_natural_width=True, visible=True
+        )
         self.container = None
 
         super().__init__(

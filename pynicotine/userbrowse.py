@@ -22,11 +22,14 @@ import os
 from itertools import chain
 from threading import Thread
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import SharedFileListRequest
+from pynicotine.slskmessages import SharedFileListResponse
+from pynicotine.slskmessages import UploadQueueNotification
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 
@@ -75,7 +78,7 @@ class UserBrowse:
         """Send notification to user when attempting to initiate upload from
         our end."""
 
-        core.send_message_to_peer(username, slskmessages.UploadQueueNotification())
+        core.send_message_to_peer(username, UploadQueueNotification())
 
     def _show_user(self, username, path=None, switch_page=True):
 
@@ -97,8 +100,7 @@ class UserBrowse:
     def _parse_local_shares(self, username, msg):
         """Parse a local shares list and show it in the UI."""
 
-        built = msg.make_network_message()
-        msg.parse_network_message(built)
+        msg.parse_network_message(memoryview(msg.make_network_message()))
         msg.username = username
 
         events.emit_main_thread("shared-file-list-response", msg)
@@ -127,7 +129,7 @@ class UserBrowse:
         self._show_user(username, path=path, switch_page=switch_page)
 
     def request_user_shares(self, username):
-        core.send_message_to_peer(username, slskmessages.SharedFileListRequest())
+        core.send_message_to_peer(username, SharedFileListRequest())
 
     def browse_user(self, username, path=None, new_request=False, switch_page=True):
         """Browse a user's shares."""
@@ -146,11 +148,6 @@ class UserBrowse:
             return
 
         self._show_user(username, path=path, switch_page=switch_page)
-
-        if core.users.login_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", username, is_offline=True)
-            return
-
         core.users.watch_user(username, context="userbrowse")
 
         if browsed_user is None or new_request:
@@ -228,7 +225,7 @@ class UserBrowse:
 
         self._show_user(username)
 
-        msg = slskmessages.SharedFileListResponse()
+        msg = SharedFileListResponse()
         msg.username = username
         msg.list = shares_list
 
@@ -358,7 +355,7 @@ class UserBrowse:
         if username not in self.users:
             # We've removed the user. Close the connection to stop the user from
             # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
 
     def _shared_file_list_response(self, msg):
 

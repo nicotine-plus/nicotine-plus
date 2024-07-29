@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -23,9 +23,12 @@ import time
 from collections import deque
 from itertools import islice
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.events import events
+from pynicotine.slskmessages import DistribEmbeddedMessage
+from pynicotine.slskmessages import DistribSearch
+from pynicotine.slskmessages import EmbeddedMessage
+from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.utils import clean_file
 from pynicotine.utils import encode_path
 from pynicotine.utils import open_file_path
@@ -71,12 +74,10 @@ class Logger:
     }
 
     EXCLUDED_MSGS = {
-        slskmessages.ChangePassword,
-        slskmessages.DistribEmbeddedMessage,
-        slskmessages.DistribSearch,
-        slskmessages.EmbeddedMessage,
-        slskmessages.SharedFileListResponse,
-        slskmessages.UnknownPeerMessage
+        DistribEmbeddedMessage,
+        DistribSearch,
+        EmbeddedMessage,
+        UnknownPeerMessage
     }
 
     def __init__(self):
@@ -342,7 +343,7 @@ class Logger:
 
         prefix = self.PREFIXES.get(level)
 
-        if msg_args:
+        if msg_args is not None:
             msg %= msg_args
 
         if prefix:

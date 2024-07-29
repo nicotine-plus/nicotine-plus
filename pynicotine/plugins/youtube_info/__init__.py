@@ -130,14 +130,14 @@ class Plugin(BasePlugin):
             data = json.loads(response_body)
 
         except Exception as error:
-            self.log("Failed to parse response from www.googleapis.com: %s", str(error))
+            self.log("Failed to parse response from www.googleapis.com: %s", error)
             return None
 
         if "error" in data:
             error_message = data["error"].get("message", False)
             if not error_message:
                 # This should not occur
-                error_message = str(data["error"])
+                error_message = data["error"]
             self.log(error_message)
             return None
 

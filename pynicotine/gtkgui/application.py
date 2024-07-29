@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -335,7 +334,7 @@ class Application:
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
-        self.tray_icon.update_user_status()
+        self.tray_icon.update()
 
     # Primary Menus #
 
@@ -494,7 +493,7 @@ class Application:
                 Gdk.Display.get_default().beep()
 
         except Exception as error:
-            log.add(_("Unable to show notification: %s"), str(error))
+            log.add(_("Unable to show notification: %s"), error)
 
     def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
         self._show_notification(
@@ -858,7 +857,7 @@ class Application:
 
     def on_connect_disconnect(self, *_args):
 
-        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != UserStatus.OFFLINE:
             self.on_disconnect()
             return
 
@@ -880,13 +879,6 @@ class Application:
         core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 
     # Running #
-
-    def _force_quit(self):
-        """Used when the thread event processor fails due to an unhandled
-        exception, to force a shutdown."""
-
-        core.quit()
-        events.emit("quit")
 
     def _raise_exception(self, exc_value):
         raise exc_value
@@ -927,7 +919,7 @@ class Application:
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            self._force_quit()
+            core.quit()
             self._raise_exception(exc_value)
             return
 
@@ -963,7 +955,12 @@ class Application:
 
         # Dialog was closed, quit
         sys.excepthook = None
-        self._force_quit()
+        core.quit()
+
+        # Process 'quit' event after slight delay in case thread event loop is stuck
+        GLib.idle_add(events.process_thread_events)
+
+        # Log exception in terminal
         self._raise_exception(exc_value)
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):

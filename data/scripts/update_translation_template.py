@@ -25,11 +25,13 @@ import subprocess
 def update_translation_template():
     """Update .pot translation template."""
 
+    pot_file_path = "po/nicotine.pot"
+
     # Desktop files
     files = sorted(glob.glob("data/**/*.desktop.in", recursive=True), key=os.path.abspath)
     subprocess.check_call(
         ["xgettext", "-k", "--keyword=GenericName", "--keyword=Comment", "--keyword=Keywords",
-         "-o", "po/nicotine.pot"] + files
+         "-o", pot_file_path] + files
      )
 
     # Python and GtkBuilder files
@@ -37,11 +39,11 @@ def update_translation_template():
              + sorted(glob.glob("pynicotine/**/*.py", recursive=True), key=os.path.abspath)
              + sorted(glob.glob("pynicotine/**/*.ui", recursive=True), key=os.path.abspath))
 
-    subprocess.check_call(["xgettext", "-j", "-o", "po/nicotine.pot"] + files)
+    subprocess.check_call(["xgettext", "-j", "-o", pot_file_path] + files)
 
     # PLUGININFO files
     files = sorted(glob.glob("pynicotine/plugins/**/PLUGININFO", recursive=True))
-    subprocess.check_call(["xgettext", "--join-existing", "-L", "Python", "-o", "po/nicotine.pot"] + files)
+    subprocess.check_call(["xgettext", "--join-existing", "-L", "Python", "-o", pot_file_path] + files)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,8 @@ This document contains important information about Nicotine+ design decisions an
 
  * [Language and Toolkit](#language-and-toolkit)
  * [Dependencies](#dependencies)
- * [Profiling](#profiling)
+ * [Design](#design)
+ * [Performance](#performance)
  * [Debug Logging](#debug-logging)
  * [Soulseek Protocol](#soulseek-protocol)
  * [Continuous Integration Testing](#continuous-integration-testing)
@@ -28,6 +29,7 @@ Nicotine+ and its predecessors PySoulSeek and Nicotine were originally developed
 
 GTK fits our needs, and we have no plans of switching to another toolkit.
 
+
 ## Dependencies
 
 Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software dependency can be an inconvenience for both packagers and users.
@@ -40,7 +42,14 @@ Modules included in the Python Standard Library should be preferred whenever pos
 The current dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 
-## Profiling
+## Design
+
+Keep it simple. Many applications fall in the trap of adding endless options without thinking about the bigger picture. Nicotine+ is feature-rich, but attempts to provide well-designed, well-integrated features that work out of the box.
+
+The same principle applies when writing code. Try to simplify code as much as possible. Avoid overengineering. We want to write code that is maintainable and readable by humans.
+
+
+## Performance
 
 Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses fewer system resources. Our goal is to develop a lightweight client that runs well on older hardware, as well as small servers.
 

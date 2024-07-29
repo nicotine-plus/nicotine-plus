@@ -118,6 +118,9 @@ class Downloads(Transfers):
 
     def set_connection_stats(self, download_bandwidth=0, **_kwargs):
 
+        # Sync parent row updates with connection stats
+        self._update_pending_parent_rows()
+
         download_bandwidth = human_speed(download_bandwidth)
         download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
 

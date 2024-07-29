@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -149,8 +149,10 @@ class Config:
 
         from configparser import ConfigParser
 
+        data_home_env = "${NICOTINE_DATA_HOME}"
+        log_folder_path = os.path.join(data_home_env, "logs")
+
         self._parser = ConfigParser(strict=False, interpolation=None)
-        log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -176,9 +178,9 @@ class Config:
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join("${NICOTINE_DATA_HOME}", "incomplete"),
-                "downloaddir": os.path.join("${NICOTINE_DATA_HOME}", "downloads"),
-                "uploaddir": os.path.join("${NICOTINE_DATA_HOME}", "received"),
+                "incompletedir": os.path.join(data_home_env, "incomplete"),
+                "downloaddir": os.path.join(data_home_env, "downloads"),
+                "uploaddir": os.path.join(data_home_env, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -289,7 +291,7 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 150,
+                "maxresults": 300,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -386,7 +388,7 @@ class Config:
                 "file_size_unit": ""
             },
             "private_rooms": {
-                "rooms": {}
+                "rooms": {}  # TODO: remove in 3.3.5
             },
             "urls": {
                 "protocols": {}
@@ -574,7 +576,7 @@ class Config:
         from pynicotine.logfacility import log
         log.init_log_levels()
         log.update_folder_paths()
-        log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
+        log.add_debug("Using configuration: %s", self.config_file_path)
 
         events.connect("quit", self._quit)
 
@@ -669,8 +671,7 @@ class Config:
                 # Check if config option exists in defaults
                 elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
-                    log.add_debug("Unknown config option '%(option)s' in section '%(section)s'",
-                                  {"option": j, "section": i})
+                    log.add_debug("Unknown config option '%s' in section '%s'", (j, i))
 
                 else:
                     # Attempt to get the default value for a config option. If there's no default
@@ -775,13 +776,16 @@ class Config:
             for option in options:
                 self._parser.remove_option(section, option)
 
+            if not self._parser.options(section):
+                self._parser.remove_section(section)
+
         if not self.create_config_folder():
             return
 
         from pynicotine.logfacility import log
 
         write_file_and_backup(self.config_file_path, self._write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
+        log.add_debug("Saved configuration: %s", self.config_file_path)
 
     def write_config_backup(self, file_path):
 
@@ -813,10 +817,6 @@ class Config:
 
         if self._parser is not None:
             self._parser.clear()
-
-        self.sections.clear()
-        self.defaults.clear()
-        self.removed_options.clear()
 
         self.config_loaded = False
 

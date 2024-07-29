@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="container">
-    <property name="margin-bottom">18</property>
-    <property name="margin-end">18</property>
-    <property name="margin-start">18</property>
-    <property name="margin-top">18</property>
-    <property name="orientation">vertical</property>
-    <property name="spacing">12</property>
+  <object class="GtkScrolledWindow" id="container">
+    <property name="propagate-natural-height">True</property>
+    <property name="propagate-natural-width">True</property>
     <property name="visible">True</property>
     <child>
-      <object class="GtkLabel">
-        <property name="label" translatable="yes">Write a single message that other room users can read later. Recent messages are shown at the top.</property>
-        <property name="max-width-chars">55</property>
-        <property name="mnemonic-widget">message_view_container</property>
-        <property name="visible">True</property>
-        <property name="wrap">True</property>
-        <property name="xalign">0</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkFrame">
-        <property name="vexpand">True</property>
+      <object class="GtkBox">
+        <property name="margin-bottom">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-top">18</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Write a single message that other room users can read later. Recent messages are shown at the top.</property>
+            <property name="max-width-chars">70</property>
+            <property name="mnemonic-widget">message_view_container</property>
+            <property name="visible">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFrame">
+            <property name="vexpand">True</property>
             <property name="visible">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="message_view_container">
-                <property name="hexpand">True</property>
+              <object class="GtkBox">
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="message_view_container">
+                    <property name="hexpand">True</property>
+                    <property name="propagate-natural-height">True</property>
+                    <property name="propagate-natural-width">True</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkEntry" id="message_entry">
-        <property name="hexpand">True</property>
-        <property name="placeholder-text" translatable="yes">Set wall message…</property>
-        <property name="primary-icon-name">user-available-symbolic</property>
-        <property name="secondary-icon-name">edit-clear-symbolic</property>
-        <property name="visible">True</property>
-        <signal name="activate" handler="on_set_room_wall_message"/>
-        <signal name="icon-press" handler="on_icon_pressed"/>
+        <child>
+          <object class="GtkEntry" id="message_entry">
+            <property name="hexpand">True</property>
+            <property name="placeholder-text" translatable="yes">Set wall message…</property>
+            <property name="primary-icon-name">user-available-symbolic</property>
+            <property name="secondary-icon-name">edit-clear-symbolic</property>
+            <property name="visible">True</property>
+            <signal name="activate" handler="on_set_room_wall_message"/>
+            <signal name="icon-press" handler="on_icon_pressed"/>
+          </object>
+        </child>
       </object>
     </child>
   </object>

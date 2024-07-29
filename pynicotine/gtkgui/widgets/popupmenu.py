@@ -473,9 +473,7 @@ class UserPopupMenu(PopupMenu):
         self.popup_menu_private_rooms.populate_private_rooms()
         self.popup_menu_private_rooms.update_model()
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and self.username != core.users.login_username)
-        self.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
-
+        self.actions[_("Private Rooms")].set_enabled(bool(self.popup_menu_private_rooms.items))
         self.editing = False
 
     def populate_private_rooms(self):
@@ -489,21 +487,28 @@ class UserPopupMenu(PopupMenu):
             if not is_owned and not is_operator:
                 continue
 
-            if self.username in data["users"]:
-                self.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
-            else:
-                self.add_items(
-                    ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
+            if self.username == data.owner:
+                continue
+
+            is_user_member = (self.username in data.members)
+            is_user_operator = (self.username in data.operators)
+
+            if not is_user_operator:
+                if is_user_member:
+                    self.add_items(
+                        ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
+                else:
+                    self.add_items(
+                        ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
-            if self.username in data["operators"]:
+            if is_user_operator:
                 self.add_items(
                     ("#" + _("Remove as Operator of %s") % room, self.on_private_room_remove_operator, room))
 
-            elif self.username in data["users"]:
+            elif is_user_member:
                 self.add_items(
                     ("#" + _("Add as Operator of %s") % room, self.on_private_room_add_operator, room))
 

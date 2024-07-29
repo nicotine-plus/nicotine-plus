@@ -797,12 +797,8 @@ class Search:
 
             if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
-                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
-                               'search term "%(query)s"'), {
-                    "filepath": file_path,
-                    "user": user,
-                    "query": self.text
-                })
+                log.add_debug(("Filtered out excluded search result %s from user %s for "
+                               'search term "%s"'), (file_path, user, self.text))
                 continue
 
             if not all(word in file_path_lower for word in search.included_words):
@@ -1566,8 +1562,8 @@ class Search:
             core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected_folder_path, _data):
-        self.on_download_files(download_folder_path=selected_folder_path)
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_files_to(self, *_args):
 
@@ -1609,8 +1605,8 @@ class Search:
             )
             requested_folders.add(user_folder_key)
 
-    def on_download_folders_to_selected(self, selected_folder_path, _data):
-        self.on_download_folders(download_folder_path=selected_folder_path)
+    def on_download_folders_to_selected(self, selected_folder_paths, _data):
+        self.on_download_folders(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_folders_to(self, *_args):
 

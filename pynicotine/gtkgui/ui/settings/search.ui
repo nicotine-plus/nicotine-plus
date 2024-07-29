@@ -16,7 +16,7 @@
     <property name="lower">50</property>
     <property name="page-increment">50</property>
     <property name="step-increment">25</property>
-    <property name="upper">100000</property>
+    <property name="upper">10000</property>
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
@@ -60,6 +60,7 @@
               <object class="GtkSwitch" id="enable_search_history_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
+                <signal name="notify::active" handler="on_toggle_search_history"/>
               </object>
             </child>
           </object>

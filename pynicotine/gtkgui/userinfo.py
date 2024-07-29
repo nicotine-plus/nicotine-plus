@@ -46,6 +46,7 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -84,7 +85,7 @@ class UserInfos(IconNotebook):
             ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.on_focus),
+            ("server-login", self.server_login),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
@@ -188,11 +189,14 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.update_buddy_button_state()
 
-    def peer_connection_error(self, user, *_args, **_kwargs):
+    def peer_connection_error(self, username, conn_type, **_unused):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
-        if page is not None:
+        if page is None:
+            return
+
+        if conn_type == ConnectionType.PEER:
             page.peer_connection_error()
 
     def user_stats(self, msg):
@@ -237,11 +241,15 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
+    def server_login(self, *_args):
+        for page in self.pages.values():
+            page.update_ip_address_button_state()
+
     def server_disconnect(self, *_args):
 
         for user, page in self.pages.items():
-            page.peer_connection_error()
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
+            page.update_ip_address_button_state()
 
 
 class UserInfo:
@@ -274,6 +282,7 @@ class UserInfo:
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
+            self.show_ip_address_button,
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_label
@@ -540,6 +549,9 @@ class UserInfo:
     def update_privileges_button_state(self):
         self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
 
+    def update_ip_address_button_state(self):
+        self.show_ip_address_button.set_sensitive(core.users.login_status != UserStatus.OFFLINE)
+
     def update_button_states(self):
 
         self.update_local_buttons_state()
@@ -547,6 +559,7 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
         self.update_privileges_button_state()
+        self.update_ip_address_button_state()
 
     # Network Messages #
 
@@ -627,6 +640,9 @@ class UserInfo:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_in_progress()
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""
@@ -746,7 +762,12 @@ class UserInfo:
 
         clipboard.copy_image(self.picture_data)
 
-    def on_save_picture_response(self, file_path, *_args):
+    def on_save_picture_response(self, selected, *_args):
+
+        file_path = next(iter(selected), None)
+
+        if not file_path:
+            return
 
         if GTK_API_VERSION >= 4:
             picture_bytes = self.picture_data.save_to_png_bytes().get_data()

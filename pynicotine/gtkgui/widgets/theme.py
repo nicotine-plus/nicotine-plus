@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -162,26 +162,26 @@ def set_global_css():
     css = bytearray()
 
     with open(encode_path(os.path.join(css_folder_path, "style.css")), "rb") as file_handle:
-        css.extend(file_handle.read())
+        css += file_handle.read()
 
     if GTK_API_VERSION >= 4:
         add_provider_func = Gtk.StyleContext.add_provider_for_display  # pylint: disable=no-member
         display = Gdk.Display.get_default()
 
         with open(encode_path(os.path.join(css_folder_path, "style_gtk4.css")), "rb") as file_handle:
-            css.extend(file_handle.read())
+            css += file_handle.read()
 
         if sys.platform == "win32":
             with open(encode_path(os.path.join(css_folder_path, "style_gtk4_win32.css")), "rb") as file_handle:
-                css.extend(file_handle.read())
+                css += file_handle.read()
 
         elif sys.platform == "darwin":
             with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
-                css.extend(file_handle.read())
+                css += file_handle.read()
 
         if LIBADWAITA_API_VERSION:
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
-                css.extend(file_handle.read())
+                css += file_handle.read()
 
         load_css(global_css_provider, css)
 
@@ -190,7 +190,7 @@ def set_global_css():
         display = Gdk.Screen.get_default()
 
         with open(encode_path(os.path.join(css_folder_path, "style_gtk3.css")), "rb") as file_handle:
-            css.extend(file_handle.read())
+            css += file_handle.read()
 
         load_css(global_css_provider, css)
 
@@ -255,8 +255,7 @@ def load_custom_icons(update=False):
             shutil.rmtree(icon_theme_path_encoded)
 
     except Exception as error:
-        log.add_debug("Failed to remove custom icon theme folder %(theme)s: %(error)s",
-                      {"theme": icon_theme_path, "error": error})
+        log.add_debug("Failed to remove custom icon theme folder %s: %s", (icon_theme_path, error))
         return
 
     user_icon_theme_path = config.sections["ui"]["icontheme"]
@@ -290,8 +289,7 @@ def load_custom_icons(update=False):
             file_handle.write(theme_file_contents)
 
     except Exception as error:
-        log.add_debug("Failed to enable custom icon theme %(theme)s: %(error)s",
-                      {"theme": user_icon_theme_path, "error": error})
+        log.add_debug("Failed to enable custom icon theme %s: %s", (user_icon_theme_path, error))
         return
 
     icon_names = (
@@ -476,7 +474,7 @@ def _get_custom_font_css():
         font_description = Pango.FontDescription.from_string(font)
 
         if font_description.get_set_fields() & (Pango.FontMask.FAMILY | Pango.FontMask.SIZE):
-            css.extend(
+            css += (
                 f"""
                 {css_selector} {{
                     font-family: '{font_description.get_family()}';
@@ -504,7 +502,7 @@ def _get_custom_color_css():
     offline_color = config.sections["ui"]["useroffline"]
 
     if _is_color_valid(online_color) and _is_color_valid(away_color) and _is_color_valid(offline_color):
-        css.extend(
+        css += (
             f"""
             .user-status {{
                 -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
@@ -524,7 +522,7 @@ def _get_custom_color_css():
         (".search-view treeview:disabled", config.sections["ui"]["searchq"])
     ):
         if _is_color_valid(color):
-            css.extend(
+            css += (
                 f"""
                 {css_selector} {{
                     color: {color};
@@ -537,7 +535,7 @@ def _get_custom_color_css():
         ("entry", config.sections["ui"]["textbg"]),
     ):
         if _is_color_valid(color):
-            css.extend(
+            css += (
                 f"""
                 {css_selector} {{
                     background: {color};
@@ -547,7 +545,7 @@ def _get_custom_color_css():
 
     # Reset treeview column header colors
     if treeview_text_color:
-        css.extend(
+        css += (
             b"""
             treeview header {
                 color: initial;
@@ -559,7 +557,7 @@ def _get_custom_color_css():
     # cursor over the widget. Changing the color of the text caret to a random one
     # forces the tree view to re-render with new icon/text colors (text carets are
     # never visible in our tree views, so usability is unaffected).
-    css.extend(
+    css += (
         f"""
         treeview {{
             caret-color: #{random.randint(0, 0xFFFFFF):06x};
@@ -580,8 +578,8 @@ def update_custom_css():
         }}
         """.encode("utf-8")
     )
-    css.extend(_get_custom_font_css())
-    css.extend(_get_custom_color_css())
+    css += _get_custom_font_css()
+    css += _get_custom_color_css()
 
     load_css(CUSTOM_CSS_PROVIDER, css)
 

@@ -58,6 +58,9 @@ def _set_system_language(language=None):
         import ctypes
         windll = ctypes.windll.kernel32
 
+        if not default_locale:
+            default_locale = locale.windows_locale.get(windll.GetUserDefaultLCID())
+
         if not language and "LANGUAGE" not in os.environ:
             language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
 

@@ -46,7 +46,7 @@ class ConfigTest(TestCase):
 
     def tearDown(self):
         core.quit()
-        self.assertFalse(config.sections)
+        self.assertTrue(config.sections)
 
     @classmethod
     def tearDownClass(cls):

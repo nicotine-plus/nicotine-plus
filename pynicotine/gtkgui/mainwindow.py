@@ -71,6 +71,8 @@ class MainWindow(Window):
         self.away_timer_id = None
         self.away_cooldown_time = 0
         self.gesture_click = None
+        self.window_active_handler = None
+        self.window_visible_handler = None
 
         # Load UI
 
@@ -340,8 +342,8 @@ class MainWindow(Window):
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Clear notifications when main window is focused
-        self.widget.connect("notify::is-active", self.on_window_active_changed)
-        self.widget.connect("notify::visible", self.on_window_visible_changed)
+        self.window_active_handler = self.widget.connect("notify::is-active", self.on_window_active_changed)
+        self.window_visible_handler = self.widget.connect("notify::visible", self.on_window_visible_changed)
 
         # System window close (X)
         if GTK_API_VERSION >= 4:
@@ -370,7 +372,7 @@ class MainWindow(Window):
         self.set_urgency_hint(False)
 
     def on_window_visible_changed(self, *_args):
-        self.application.tray_icon.update_window_visibility()
+        self.application.tray_icon.update()
 
     def update_title(self):
 
@@ -1212,5 +1214,8 @@ class MainWindow(Window):
         self.log_view.destroy()
         self.popup_menu_log_view.destroy()
         self.popup_menu_log_categories.destroy()
+
+        self.widget.disconnect(self.window_active_handler)
+        self.widget.disconnect(self.window_visible_handler)
 
         super().destroy()

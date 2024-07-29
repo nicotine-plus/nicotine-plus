@@ -16,16 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from bisect import bisect_left
 from socket import inet_aton
 from struct import Struct
+from sys import intern
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
-from pynicotine.external.data import country_codes
-from pynicotine.external.data import ip_ranges
+from pynicotine.slskmessages import CloseConnectionIP
 
 UINT32_UNPACK = Struct(">I").unpack_from
 
@@ -291,15 +292,49 @@ class NetworkFilter:
         self.ip_ban_requested = {}
         self.ip_ignore_requested = {}
 
+        self._ip_range_values = ()
+        self._ip_range_countries = ()
+        self._loaded_ip_country_data = False
+
         for event_name, callback in (
             ("peer-address", self._get_peer_address),
+            ("quit", self._quit),
             ("server-disconnect", self._server_disconnect)
         ):
             events.connect(event_name, callback)
 
+    def _populate_ip_country_data(self):
+
+        if self._loaded_ip_country_data:
+            return
+
+        data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "external", "data")
+
+        with open(os.path.join(data_path, "ip_country_data.csv"), "r", encoding="ascii") as file_handle:
+            for line in file_handle:
+                line = line.strip()
+
+                if not line or line.startswith("#"):
+                    continue
+
+                if self._ip_range_values:
+                    # String interning to reduce memory usage of duplicate strings
+                    self._ip_range_countries = tuple(intern(x) for x in line.split(","))
+                    break
+
+                self._ip_range_values = tuple(int(x) for x in line.split(","))
+
+        self._loaded_ip_country_data = True
+
     def _server_disconnect(self, _msg):
         self.ip_ban_requested.clear()
         self.ip_ignore_requested.clear()
+
+    def _quit(self):
+
+        self._ip_range_values = ()
+        self._ip_range_countries = ()
+        self._loaded_ip_country_data = False
 
     # IP Filter List Management #
 
@@ -404,16 +439,24 @@ class NetworkFilter:
         updating an IP list item if the username is unspecified."""
 
         for username, user_address in core.users.addresses.items():
-            if ip_address == user_address[0]:
+            user_ip_address, _user_port = user_address
+
+            if ip_address == user_ip_address:
                 return username
 
         return None
 
     def get_country_code(self, ip_address):
 
+        if not self._loaded_ip_country_data:
+            self._populate_ip_country_data()
+
+        if not self._ip_range_countries:
+            return ""
+
         ip_num, = UINT32_UNPACK(inet_aton(ip_address))
-        ip_index = bisect_left(ip_ranges.values, ip_num)
-        country_code = country_codes.values[ip_index]
+        ip_index = bisect_left(self._ip_range_values, ip_num)
+        country_code = self._ip_range_countries[ip_index]
 
         return country_code
 
@@ -495,7 +538,7 @@ class NetworkFilter:
         for ip_address in config.sections["server"]["ipblocklist"]:
             # We can't close wildcard patterns nor dummy (zero) addresses
             if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
-                core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
+                core.send_message_to_network_thread(CloseConnectionIP(ip_address))
 
     # Callbacks #
 
@@ -563,7 +606,7 @@ class NetworkFilter:
 
         if self.is_ip_address(ip_address, allow_wildcard=False, allow_zero=False):
             # We can't close wildcard patterns nor dummy (zero) address entries
-            core.send_message_to_network_thread(slskmessages.CloseConnectionIP(ip_address))
+            core.send_message_to_network_thread(CloseConnectionIP(ip_address))
 
         return ip_address
 

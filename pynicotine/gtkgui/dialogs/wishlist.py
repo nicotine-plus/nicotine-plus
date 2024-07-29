@@ -156,7 +156,7 @@ class WishList(Dialog):
 
     def on_remove_wish(self, *_args):
 
-        for iterator in reversed(self.list_view.get_selected_rows()):
+        for iterator in reversed(list(self.list_view.get_selected_rows())):
             wish = self.list_view.get_row_value(iterator, "wish")
             core.search.remove_wish(wish)
 

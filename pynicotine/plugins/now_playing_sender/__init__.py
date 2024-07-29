@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -117,7 +117,8 @@ class Plugin(BasePlugin):
             if playing:
                 self.send_public(room, playing)
 
-    def song_change(self, _connection, _sender_name, _object_path, _interface_name, _signal_name, parameters):
+    def song_change(self, _connection, _sender_name, _object_path, _interface_name,
+                    _signal_name, parameters, _user_data):
 
         if self.config.sections["players"]["npplayer"] != "mpris":
             # MPRIS is not active, exit

@@ -29,7 +29,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
@@ -129,7 +128,7 @@ class Transfers:
         self.grouping_mode = None
         self.row_id = 0
         self.file_properties = None
-        self.pending_parent_rows_timer_id = None
+        self.initialized = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -425,12 +424,9 @@ class Transfers:
         if has_disabled_sorting:
             self.tree_view.enable_sorting()
 
-        if self.pending_parent_rows_timer_id is None:
-            # Limit individual parent row updates to once per second
-            self.pending_parent_rows_timer_id = events.schedule(
-                delay=1, callback=self._update_pending_parent_rows, repeat=True)
-
+        if not self.initialized:
             self.on_expand_tree()
+            self.initialized = True
 
         self.tree_view.redraw()
 
@@ -651,7 +647,7 @@ class Transfers:
 
             return False
 
-        expand_allowed = self.pending_parent_rows_timer_id is not None
+        expand_allowed = self.initialized
         expand_user = False
         expand_folder = False
         user_iterator = None
@@ -815,10 +811,7 @@ class Transfers:
 
     def clear_model(self):
 
-        if self.pending_parent_rows_timer_id is not None:
-            events.cancel_scheduled(self.pending_parent_rows_timer_id)
-            self.pending_parent_rows_timer_id = None
-
+        self.initialized = False
         self.users.clear()
         self.paths.clear()
         self.pending_folder_rows.clear()
@@ -1084,6 +1077,9 @@ class Transfers:
         selected_length = 0
 
         for transfer in self.selected_transfers:
+            username = transfer.username
+            watched_user = core.users.watched.get(username)
+            speed = 0
             file_path = transfer.virtual_path
             file_size = transfer.size
             file_attributes = transfer.file_attributes
@@ -1095,6 +1091,9 @@ class Transfers:
 
             folder_path, _separator, basename = file_path.rpartition("\\")
 
+            if watched_user is not None:
+                speed = watched_user.upload_speed or 0
+
             data.append({
                 "user": transfer.username,
                 "file_path": file_path,
@@ -1102,7 +1101,7 @@ class Transfers:
                 "virtual_folder_path": folder_path,
                 "real_folder_path": transfer.folder_path,
                 "queue_position": transfer.queue_position,
-                "speed": transfer.speed,
+                "speed": speed,
                 "size": file_size,
                 "file_attributes": file_attributes
             })

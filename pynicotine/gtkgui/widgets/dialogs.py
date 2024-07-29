@@ -177,7 +177,7 @@ class Dialog(Window):
 
         # "Soft-delete" the dialog. This is necessary to prevent the dialog from
         # appearing in window peek on Windows
-        if sys.platform == "win32":
+        if sys.platform == "win32" and self.widget.get_titlebar() is None:
             self.widget.unrealize()
 
         return True
@@ -388,6 +388,9 @@ class MessageDialog(Window):
                 else:
                     button.set_can_default(True)       # pylint: disable=no-member
                     widget.set_default(button)         # pylint: disable=no-member
+
+                if response_type == "ok":
+                    add_css_class(button, "suggested-action")
 
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
