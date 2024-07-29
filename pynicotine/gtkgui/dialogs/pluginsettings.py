@@ -414,14 +414,13 @@ class PluginSettings(Dialog):
 
     def on_ok(self, *_args):
 
+        plugin = core.pluginhandler.enabled_plugins[self.plugin_id]
+
         for name in self.plugin_settings:
             value = self._get_widget_data(self.option_widgets[name])
 
             if value is not None:
-                config.sections["plugins"][self.plugin_id.lower()][name] = value
-
-        core.pluginhandler.plugin_settings(
-            self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
+                plugin.settings[name] = value
 
         self.close()
 

@@ -739,28 +739,21 @@ class PluginHandler:
 
         plugin_name = plugin_name.lower()
 
-        try:
-            if not plugin.settings:
-                return
+        if not plugin.settings:
+            return
 
-            if plugin_name not in config.sections["plugins"]:
-                config.sections["plugins"][plugin_name] = plugin.settings
+        previous_settings = config.sections["plugins"].get(plugin_name, {})
 
-            for i in plugin.settings:
-                if i not in config.sections["plugins"][plugin_name]:
-                    config.sections["plugins"][plugin_name][i] = plugin.settings[i]
+        for key in previous_settings:
+            if key not in plugin.settings:
+                log.add_debug("Stored setting '%s' is no longer present in the '%s' plugin",
+                              (key, plugin_name))
+                continue
 
-            customsettings = config.sections["plugins"][plugin_name]
+            plugin.settings[key] = previous_settings[key]
 
-            for key in customsettings:
-                if key in plugin.settings:
-                    plugin.settings[key] = customsettings[key]
-                else:
-                    log.add_debug("Stored setting '%s' is no longer present in the '%s' plugin",
-                                  (key, plugin_name))
-
-        except KeyError:
-            log.add_debug("No stored settings found for %s", plugin.human_name)
+        # Persist plugin settings in the config
+        config.sections["plugins"][plugin_name] = plugin.settings
 
     def get_command_list(self, command_interface):
         """Returns a list of every command and alias available.
