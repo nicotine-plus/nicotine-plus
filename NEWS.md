@@ -11,7 +11,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Added `/plugin reload` subcommand for reloading a plugin
  * Added arrow key shortcuts to collapse/expand tree rows
+ * Added a toggle for private room invitations to 'Chats' preferences
+ * List all room members not currently joined in a private room
  * Incomplete files are now deleted when removing the download from the UI
+ * Improvements to transfer speed accuracy in the UI
  * Quitting from the tray menu asks for confirmation while uploads are active
  * Various performance improvements
 
@@ -19,11 +22,15 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Fixed a rare crash related to peer connections
  * Fixed a rare crash when selecting a folder in the file chooser dialog
+ * Fixed a possible memory error when reading data from a peer connection
  * Fixed issues related to downloads getting stuck when failing
  * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where uploads would not start immediately in some cases
  * Fixed an issue where popovers could not be closed in some cases
  * Fixed an issue where some wishlist searches stopped working after closing their tabs
  * Fixed an issue where an auto-forwarded listening port would close when saving preferences
+ * Fixed an issue where toggling search history did not update the history dropdown
+ * Fixed scrolling to the bottom of lists with the End key
  * Various smaller UI-related fixes
  * Various smaller fixes related to the Soulseek protocol implementation
  * Windows: Fixed an issue where the tray icon was visible despite being disabled
@@ -44,6 +51,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
  * Crash on Mac OS Monterey 12.7.5 (Intel) - Nicotine+ Version: 3.3.5.dev1 ([#3016](https://github.com/nicotine-plus/nicotine-plus/issues/3016))
  * "Ok" on Network Closes Port ([#3020](https://github.com/nicotine-plus/nicotine-plus/issues/3020))
+ * Python Memory Error ([#3022](https://github.com/nicotine-plus/nicotine-plus/issues/3022))
  * nowplaying - other should decode bytes ([#3039](https://github.com/nicotine-plus/nicotine-plus/issues/3039))
  * Newly started downloads will open a collapsed thread? ([#3044](https://github.com/nicotine-plus/nicotine-plus/issues/3044))
  * Crash on MBP Ventura 13.6.7 ([#3045](https://github.com/nicotine-plus/nicotine-plus/issues/3045))
@@ -51,6 +59,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
  * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
  * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
+ * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
+ * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
 
 
 ## Version 3.3.4 (May 6, 2024)
