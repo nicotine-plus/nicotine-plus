@@ -123,7 +123,8 @@ class Searches(IconNotebook):
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("server-login", self.on_focus),
+            ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -369,6 +370,13 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             if page.text == wish:
                 page.update_wish_button()
+
+    def server_login(self, *_args):
+        self.window.search_title.set_sensitive(True)
+        self.on_focus()
+
+    def server_disconnect(self, *_args):
+        self.window.search_title.set_sensitive(False)
 
 
 class Search:

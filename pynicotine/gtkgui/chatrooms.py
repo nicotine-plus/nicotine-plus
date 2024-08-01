@@ -101,6 +101,7 @@ class ChatRooms(IconNotebook):
             ("room-completions", self.update_completions),
             ("say-chat-room", self.say_chat_room),
             ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("show-room", self.show_room),
             ("start", self.start),
             ("user-country", self.user_country),
@@ -428,7 +429,13 @@ class ChatRooms(IconNotebook):
             tab.toggle_chat_buttons()
             tab.update_tags()
 
+    def server_login(self, *_args):
+        self.window.chatrooms_title.set_sensitive(True)
+
     def server_disconnect(self, *_args):
+
+        self.window.chatrooms_title.set_sensitive(False)
+
         for page in self.pages.values():
             page.server_disconnect()
 
