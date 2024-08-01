@@ -161,7 +161,7 @@ class RoomList(Popover):
         h_user_count = humanize(user_count)
 
         if is_private:
-            # Show private rooms first
+            # Large internal value to sort private rooms first
             user_count += self.PRIVATE_USERS_OFFSET
 
         text_weight = Pango.Weight.BOLD if is_private else Pango.Weight.NORMAL
@@ -183,6 +183,8 @@ class RoomList(Popover):
         if iterator is None:
             return
 
+        is_private = self.list_view.get_row_value(iterator, "is_private_data")
+
         if user_count is None:
             user_count = self.list_view.get_row_value(iterator, "users_data")
 
@@ -192,10 +194,11 @@ class RoomList(Popover):
             else:
                 user_count += 1
 
-        if self.list_view.get_row_value(iterator, "is_private_data"):
-            h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
-        else:
-            h_user_count = humanize(user_count)
+        elif is_private:
+            # Large internal value to sort private rooms first
+            user_count += self.PRIVATE_USERS_OFFSET
+
+        h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET) if is_private else humanize(user_count)
 
         self.list_view.set_row_value(iterator, "users", h_user_count)
         self.list_view.set_row_value(iterator, "users_data", user_count)
