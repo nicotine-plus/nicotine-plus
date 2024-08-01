@@ -147,9 +147,9 @@ class Uploads(Transfers):
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
         toggle_status_action = self.window.lookup_action("toggle-status")
 
-        toggle_status_action.handler_block_by_func(self.window.on_toggle_status)
+        toggle_status_action.set_enabled(False)
         self.window.user_status_button.set_active(True)
-        toggle_status_action.handler_unblock_by_func(self.window.on_toggle_status)
+        toggle_status_action.set_enabled(True)
 
         self.window.user_status_icon.set_from_icon_name(icon_name, *icon_args)
         self.window.user_status_label.set_text(_("Quitting..."))
