@@ -46,7 +46,7 @@ sudo dnf install gspell gtk4 libadwaita python3-gobject
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python3-gobject
+sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python312-gobject python312-gobject-cairo python312-gobject-Gdk
 ```
 
 #### Installing Build Dependencies
@@ -66,7 +66,7 @@ sudo dnf install gettext python3-build python3-setuptools
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install gettext-runtime python3-build python3-setuptools
+sudo zypper install gettext-tools python312-build python312-setuptools
 ```
 
 #### Installing Test Dependencies
@@ -86,7 +86,7 @@ sudo dnf install pylint python3-pycodestyle
 - On SUSE-based distributions:
 
 ```sh
-sudo zypper install python3-pylint python3-pycodestyle
+sudo zypper install python312-pylint python312-pycodestyle
 ```
 
 ### Windows and macOS

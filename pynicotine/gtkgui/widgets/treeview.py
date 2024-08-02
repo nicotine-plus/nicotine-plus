@@ -512,7 +512,7 @@ class TreeView:
                 values[i] = gvalue
 
         if self.has_tree:
-            self.iterators[key] = iterator = self.model.insert_with_values(  # pylint: disable=no-member
+            self.iterators[key] = iterator = self.model.insert_with_values(
                 parent_iterator, position, self._column_numbers, values
             )
         else:

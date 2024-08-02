@@ -8,7 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9', 'pypy-3.10']
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13.0-beta.4',
+                 'pypy-3.6', 'pypy-3.7', 'pypy-3.8', 'pypy-3.9', 'pypy-3.10']
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -43,7 +44,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ['debian:bookworm', 'ubuntu:jammy', 'ubuntu:focal', 'ubuntu:bionic', 'ubuntu:noble']
+        container: ['debian:bullseye', 'debian:bookworm', 'debian:unstable',
+                    'ubuntu:jammy', 'ubuntu:focal', 'ubuntu:bionic', 'ubuntu:noble',
+                    'ubuntu:devel']
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     env:
@@ -63,6 +66,7 @@ jobs:
 
   fedora:
     strategy:
+      fail-fast: false
       matrix:
         container: ['fedora:rawhide']
         gtk: [3, 4]
@@ -73,7 +77,66 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build python3-gobject python3-pycodestyle util-linux
+        run: |
+          dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build \
+            python3-gobject python3-pycodestyle
+
+      - name: PEP 8 style checks
+        run: python3 -m pycodestyle
+
+      - name: Linting
+        run: python3 -m pylint --recursive=y .
+
+      - name: Integration and unit tests
+        run: python3 -m unittest -v
+
+      - name: Build
+        run: python3 -m build
+
+  opensuse:
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['opensuse/tumbleweed']
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          zypper refresh
+          zypper -n install gettext-tools python312-build python312-gobject \
+            python312-gobject-Gdk python312-pycodestyle python312-pylint typelib-1_0-Gtk-4_0
+
+      - name: PEP 8 style checks
+        run: python3.12 -m pycodestyle
+
+      - name: Linting
+        run: python3.12 -m pylint --recursive=y .
+
+      - name: Integration and unit tests
+        run: python3.12 -m unittest -v
+
+      - name: Build
+        run: python3.12 -m build
+
+  alpine:
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ['alpine:edge']
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apk update
+          apk add gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle py3-pylint
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -90,6 +153,7 @@ jobs:
   windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         arch: [x86_64]
     defaults:
@@ -136,6 +200,7 @@ jobs:
 
   macos:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - arch: x86_64
