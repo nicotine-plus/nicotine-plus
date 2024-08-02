@@ -448,11 +448,11 @@ def remove_css_class(widget, css_class):
 def load_css(css_provider, data):
 
     try:
-        css_provider.load_from_string(data.decode("utf-8"))
+        css_provider.load_from_string(data.decode())
 
     except AttributeError:
         try:
-            css_provider.load_from_data(data.decode("utf-8"), length=-1)
+            css_provider.load_from_data(data.decode(), length=-1)
 
         except TypeError:
             css_provider.load_from_data(data)
@@ -482,7 +482,7 @@ def _get_custom_font_css():
                     font-style: {PANGO_STYLES.get(font_description.get_style(), "normal")};
                     font-weight: {PANGO_WEIGHTS.get(font_description.get_weight(), "normal")};
                 }}
-                """.encode("utf-8")
+                """.encode()
             )
 
     return css
@@ -507,7 +507,7 @@ def _get_custom_color_css():
             .user-status {{
                 -gtk-icon-palette: success {online_color}, warning {away_color}, error {offline_color};
             }}
-            """.encode("utf-8")
+            """.encode()
         )
 
     # Text colors
@@ -527,7 +527,7 @@ def _get_custom_color_css():
                 {css_selector} {{
                     color: {color};
                 }}
-                """.encode("utf-8")
+                """.encode()
             )
 
     # Background colors
@@ -540,7 +540,7 @@ def _get_custom_color_css():
                 {css_selector} {{
                     background: {color};
                 }}
-                """.encode("utf-8")
+                """.encode()
             )
 
     # Reset treeview column header colors
@@ -562,7 +562,7 @@ def _get_custom_color_css():
         treeview {{
             caret-color: #{random.randint(0, 0xFFFFFF):06x};
         }}
-        """.encode("utf-8")
+        """.encode()
     )
 
     return css
@@ -576,7 +576,7 @@ def update_custom_css():
         .colored-icon {{
             -gtk-icon-style: {"regular" if using_custom_icon_theme else "symbolic"};
         }}
-        """.encode("utf-8")
+        """.encode()
     )
     css += _get_custom_font_css()
     css += _get_custom_color_css()

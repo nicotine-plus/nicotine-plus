@@ -160,7 +160,7 @@ class DownloadsTest(TestCase):
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
-            len(incomplete_basename.encode("utf-8")),
+            len(incomplete_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETE42d26e9276e024cdaeac645438912b88"))
@@ -174,7 +174,7 @@ class DownloadsTest(TestCase):
         incomplete_basename = os.path.basename(incomplete_file_path)
 
         self.assertLess(
-            len(incomplete_basename.encode("utf-8")),
+            len(incomplete_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(incomplete_basename.startswith("INCOMPLETEf98e3f07a3fc60e114534045f26707d2."))
@@ -187,7 +187,7 @@ class DownloadsTest(TestCase):
         finished_basename = core.downloads.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
-            len(finished_basename.encode("utf-8")),
+            len(finished_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(finished_basename.startswith("片"))
@@ -199,7 +199,7 @@ class DownloadsTest(TestCase):
         finished_basename = core.downloads.get_download_basename(basename, finished_folder_path)
 
         self.assertLess(
-            len(finished_basename.encode("utf-8")),
+            len(finished_basename.encode()),
             core.downloads.get_basename_byte_limit(config.data_folder_path)
         )
         self.assertTrue(finished_basename.startswith(".片"))

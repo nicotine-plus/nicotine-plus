@@ -154,7 +154,7 @@ class Database:
             key_offset = (current_offset + self.LENGTH_DATA_SIZE)
             key_length, value_length = self.UNPACK_LENGTHS(content[current_offset:key_offset])
             value_offset = (key_offset + key_length)
-            key = str(content[key_offset:value_offset], encoding="utf-8")
+            key = content[key_offset:value_offset].tobytes().decode("utf-8")
 
             value_offsets[key] = value_offset
             current_offset = (value_offset + value_length)
@@ -198,7 +198,7 @@ class Database:
 
     def __setitem__(self, key, value):
 
-        encoded_key = str(key).encode("utf-8")
+        encoded_key = key.encode("utf-8")
         pickled_value = dumps(value, protocol=HIGHEST_PROTOCOL)
 
         key_length = len(encoded_key)

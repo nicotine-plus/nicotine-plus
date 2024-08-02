@@ -669,7 +669,7 @@ class Downloads(Transfers):
         basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, separator, extension = basename.rpartition(".")
         extension = separator + extension
-        basename_limit = max_bytes - len(extension.encode("utf-8"))
+        basename_limit = max_bytes - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:
@@ -718,7 +718,7 @@ class Downloads(Transfers):
         transferring."""
 
         md5sum = md5()
-        md5sum.update((virtual_path + username).encode("utf-8"))
+        md5sum.update((virtual_path + username).encode())
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
@@ -728,7 +728,7 @@ class Downloads(Transfers):
         basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, separator, extension = basename.rpartition(".")
         extension = separator + extension
-        basename_limit = max_bytes - len(prefix) - len(extension.encode("utf-8"))
+        basename_limit = max_bytes - len(prefix) - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:

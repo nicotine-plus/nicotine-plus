@@ -279,7 +279,7 @@ class UPnP(BaseImplementation):
 
                 log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
 
-                xml = ElementTree.fromstring(response_body.decode("utf-8"))
+                xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
@@ -377,7 +377,8 @@ class UPnP(BaseImplementation):
                 while True:
                     try:
                         message = sock.recv(65507)  # Maximum size of UDP message
-                        UPnP.SSDP.add_service(services, locations, UPnP.SSDPResponse(message.decode("utf-8")))
+                        UPnP.SSDP.add_service(
+                            services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
                     except socket.timeout:
                         break
@@ -461,7 +462,7 @@ class UPnP(BaseImplementation):
             # E.g. MikroTik routers that send UPnP error 725 (OnlyPermanentLeasesSupported).
             response_body = error.read()
 
-        xml = ElementTree.fromstring(response_body.decode("utf-8"))
+        xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
             raise PortmapError(f"Invalid response: {response_body}")

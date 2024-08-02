@@ -370,7 +370,7 @@ class UpdateChecker:
         from urllib.request import urlopen
 
         with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
-            response_body = response.read().decode("utf-8")
+            response_body = response.read().decode("utf-8", "replace")
 
         data = json.loads(response_body)
         h_latest_version = data["info"]["version"]
