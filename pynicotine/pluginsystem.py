@@ -25,6 +25,7 @@ import sys
 import time
 
 from ast import literal_eval
+from collections import defaultdict
 
 from pynicotine.config import config
 from pynicotine.core import core
@@ -780,7 +781,7 @@ class PluginHandler:
         Currently used for the /help command.
         """
 
-        command_groups = {}
+        command_groups = defaultdict(list)
 
         for command, data in self.commands.get(command_interface).items():
             aliases = []
@@ -801,9 +802,6 @@ class PluginHandler:
                     and not any(search_query in parameter for parameter in parameters)
                     and search_query not in description.lower()):
                 continue
-
-            if group not in command_groups:
-                command_groups[group] = []
 
             command_groups[group].append((command, aliases, parameters, description))
 

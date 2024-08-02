@@ -381,7 +381,7 @@ class NetworkThread(Thread):
 
         self._message_queue = deque()
         self._pending_peer_conns = {}
-        self._pending_init_msgs = {}
+        self._pending_init_msgs = defaultdict(list)
         self._token_init_msgs = {}
         self._username_init_msgs = {}
         self._user_addresses = {}
@@ -771,9 +771,6 @@ class NetworkThread(Thread):
             init.outgoing_msgs.append(msg)
 
         if user_address is None:
-            if username not in self._pending_init_msgs:
-                self._pending_init_msgs[username] = []
-
             self._pending_init_msgs[username].append(init)
             self._send_message_to_server(GetPeerAddress(username))
 
