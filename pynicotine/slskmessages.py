@@ -139,7 +139,7 @@ class InternalMessage:
     msg_type = MessageType.INTERNAL
 
     def __str__(self):
-        attrs = {s: self.__getattribute__(s) for s in self.__slots__ if s not in self.__excluded_attrs__}
+        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.__excluded_attrs__}
         return f"<{self.msg_type} - {self.__class__.__name__}> {attrs}"
 
 
@@ -353,7 +353,7 @@ class SlskMessage:
         return start + 8, result
 
     def __str__(self):
-        attrs = {s: self.__getattribute__(s) for s in self.__slots__ if s not in self.__excluded_attrs__}
+        attrs = {s: getattr(self, s) for s in self.__slots__ if s not in self.__excluded_attrs__}
         return f"<{self.msg_type} - {self.__class__.__name__}> {attrs}"
 
 
