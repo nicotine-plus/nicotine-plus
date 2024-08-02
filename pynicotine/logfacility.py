@@ -34,6 +34,7 @@ from pynicotine.utils import open_file_path
 
 
 class LogFile:
+    __slots__ = ("path", "handle", "last_active")
 
     def __init__(self, path, handle):
         self.path = path
@@ -54,6 +55,9 @@ class LogLevel:
 
 
 class Logger:
+    __slots__ = ("debug_file_name", "downloads_file_name", "uploads_file_name", "debug_folder_path",
+                 "transfer_folder_path", "room_folder_path", "private_chat_folder_path",
+                 "_log_levels", "_log_files")
 
     PREFIXES = {
         LogLevel.DOWNLOAD: "Download",

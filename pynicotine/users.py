@@ -51,6 +51,9 @@ class WatchedUser:
 
 
 class Users:
+    __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
+                 "privileges_left", "_should_open_privileges_url", "addresses", "countries",
+                 "statuses", "watched", "privileged", "_ip_requested", "_pending_watch_removals")
 
     def __init__(self):
 

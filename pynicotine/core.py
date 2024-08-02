@@ -31,6 +31,12 @@ class Core:
     used by the application.
     """
 
+    __slots__ = ("shares", "users", "network_filter", "statistics", "search", "downloads",
+                 "uploads", "interests", "userbrowse", "userinfo", "buddies", "privatechat",
+                 "chatrooms", "pluginhandler", "now_playing", "portmapper", "notifications",
+                 "update_checker", "_network_thread", "cli_interface_address",
+                 "cli_listen_port", "enabled_components")
+
     def __init__(self):
 
         self.shares = None
@@ -316,6 +322,7 @@ class Core:
 
 
 class UpdateChecker:
+    __slots__ = ("_thread",)
 
     def __init__(self):
         self._thread = None

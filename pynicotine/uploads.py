@@ -55,6 +55,9 @@ from pynicotine.utils import encode_path
 
 
 class Uploads(Transfers):
+    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
+                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
+                 "_retry_failed_uploads_timer_id")
 
     def __init__(self):
 

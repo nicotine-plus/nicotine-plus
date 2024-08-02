@@ -43,6 +43,7 @@ class Buddy:
 
 
 class Buddies:
+    __slots__ = ("users", "allow_saving_buddies")
 
     def __init__(self):
 

@@ -34,6 +34,8 @@ class NowPlaying:
     """This class contains code for retrieving information about the song
     currently playing in a media player."""
 
+    __slots__ = ("title",)
+
     def __init__(self):
         self.title_clear()
 

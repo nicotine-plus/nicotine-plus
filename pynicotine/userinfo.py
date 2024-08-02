@@ -33,6 +33,7 @@ from pynicotine.utils import unescape
 
 
 class UserInfo:
+    __slots__ = ("users", "requested_info_times")
 
     def __init__(self):
 

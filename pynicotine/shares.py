@@ -107,6 +107,8 @@ class DatabaseError(Exception):
 class Database:
     """Custom key-value database format for Nicotine+ shares."""
 
+    __slots__ = ("_value_offsets", "_file_handle", "_file_offset", "_overwrite")
+
     FILE_SIGNATURE = b"DBN+"
     VERSION = 3
     LENGTH_DATA_SIZE = 8
@@ -233,6 +235,11 @@ class Scanner:
     It handles scanning of folders and files, as well as building
     databases and writing them to disk.
     """
+
+    __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
+                 "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
+                 "files", "streams", "mtimes", "word_index", "processed_share_names",
+                 "processed_share_paths", "current_file_index")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -631,6 +638,8 @@ class Scanner:
 
 
 class Shares:
+    __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
+                 "share_db_paths", "file_path_index", "_scanner_process")
 
     def __init__(self):
 

@@ -65,7 +65,6 @@ from pynicotine.utils import truncate_string_byte
 
 
 class RequestedFolder:
-
     __slots__ = ("username", "folder_path", "download_folder_path", "request_timer_id", "has_retried",
                  "legacy_attempt")
 
@@ -79,6 +78,9 @@ class RequestedFolder:
 
 
 class Downloads(Transfers):
+    __slots__ = ("_requested_folders", "_requested_folder_token", "_folder_basename_byte_limits",
+                 "_pending_queue_messages", "_download_queue_timer_id", "_retry_connection_downloads_timer_id",
+                 "_retry_io_downloads_timer_id")
 
     def __init__(self):
 

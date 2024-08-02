@@ -39,6 +39,7 @@ class SimilarUser:
 
 
 class Interests:
+    __slots__ = ("similar_users",)
 
     def __init__(self):
 

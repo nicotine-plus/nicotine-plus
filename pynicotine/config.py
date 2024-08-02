@@ -49,6 +49,9 @@ class Config:
     parameters.
     """
 
+    __slots__ = ("config_file_path", "data_folder_path", "config_loaded", "sections",
+                 "defaults", "removed_options", "_parser")
+
     def __init__(self):
 
         config_folder_path, data_folder_path = self.get_user_folders()

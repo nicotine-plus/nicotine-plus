@@ -29,6 +29,7 @@ from pynicotine.logfacility import log
 
 
 class CLIInputProcessor(Thread):
+    __slots__ = ("has_custom_prompt", "prompt_message", "prompt_callback", "prompt_silent")
 
     def __init__(self):
 
@@ -108,6 +109,7 @@ class CLIInputProcessor(Thread):
 
 
 class CLI:
+    __slots__ = ("_input_processor", "_log_message_queue", "_tty_attributes")
 
     def __init__(self):
 

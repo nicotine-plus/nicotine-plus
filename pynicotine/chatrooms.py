@@ -39,7 +39,6 @@ from pynicotine.utils import find_whole_word
 
 
 class JoinedRoom:
-
     __slots__ = ("name", "is_private", "users", "tickers")
 
     def __init__(self, name, is_private=False):
@@ -51,7 +50,6 @@ class JoinedRoom:
 
 
 class PrivateRoom:
-
     __slots__ = ("name", "owner", "members", "operators")
 
     def __init__(self, name):
@@ -63,6 +61,8 @@ class PrivateRoom:
 
 
 class ChatRooms:
+    __slots__ = ("completions", "server_rooms", "joined_rooms", "private_rooms")
+
     # Trailing spaces to avoid conflict with regular rooms
     GLOBAL_ROOM_NAME = "Public "
 

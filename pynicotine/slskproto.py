@@ -91,7 +91,6 @@ from pynicotine.utils import human_speed
 
 
 class Connection:
-
     __slots__ = ("sock", "addr", "io_events", "is_established", "in_buffer", "out_buffer",
                  "last_active", "recv_size")
 
@@ -108,7 +107,6 @@ class Connection:
 
 
 class ServerConnection(Connection):
-
     __slots__ = ("login",)
 
     def __init__(self, *args, login=None, **kwargs):
@@ -117,7 +115,6 @@ class ServerConnection(Connection):
 
 
 class PeerConnection(Connection):
-
     __slots__ = ("init", "request_token", "response_token", "has_post_init_activity")
 
     def __init__(self, *args, init=None, request_token=None, response_token=None, **kwargs):
@@ -329,6 +326,10 @@ class NetworkThread(Thread):
     start with length and message code followed by the actual message
     data.
     """
+
+    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
+                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
+                 "_retry_failed_uploads_timer_id")
 
     IN_PROGRESS_STALE_AFTER = 2
     INDIRECT_REQUEST_TIMEOUT = 20

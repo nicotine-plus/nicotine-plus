@@ -197,6 +197,8 @@ EVENT_NAMES = {
 
 
 class Events:
+    __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
+                 "_scheduler_event_id", "_is_active")
 
     SCHEDULER_MAX_IDLE = 1
 

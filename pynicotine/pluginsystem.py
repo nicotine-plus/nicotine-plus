@@ -370,6 +370,8 @@ class ResponseThrottle:
 
 
 class PluginHandler:
+    __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
+                 "user_plugin_folder")
 
     def __init__(self):
 

@@ -42,7 +42,6 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
 class SearchRequest:
-
     __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
                  "mode", "room", "users", "is_ignored")
 
@@ -62,6 +61,7 @@ class SearchRequest:
 
 
 class Search:
+    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
