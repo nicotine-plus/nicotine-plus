@@ -85,7 +85,7 @@ class NetworkPage:
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui.load(scope=self, path="settings/network.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = None
@@ -266,7 +266,7 @@ class DownloadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui.load(scope=self, path="settings/downloads.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
@@ -586,7 +586,7 @@ class SharesPage:
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
             self.shares_list_container
-        ) = ui.load(scope=self, path="settings/shares.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
@@ -802,7 +802,7 @@ class UploadsPage:
             self.use_unlimited_speed_radio,
             self.use_upload_slots_bandwidth_radio,
             self.use_upload_slots_fixed_radio
-        ) = ui.load(scope=self, path="settings/uploads.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
@@ -908,7 +908,7 @@ class UserProfilePage:
             self.description_view_container,
             self.reset_picture_button,
             self.select_picture_label
-        ) = ui.load(scope=self, path="settings/userinfo.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
         self.user_profile_required = False
@@ -968,7 +968,7 @@ class IgnoredUsersPage:
             self.container,
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui.load(scope=self, path="settings/ignore.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
@@ -1110,7 +1110,7 @@ class BannedUsersPage:
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui.load(scope=self, path="settings/ban.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -1290,7 +1290,7 @@ class ChatsPage:
             self.tts_command_label,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
-        ) = ui.load(scope=self, path="settings/chats.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
@@ -1678,7 +1678,7 @@ class UserInterfacePage:
             self.tab_visible_userlist_toggle,
             self.tray_icon_toggle,
             self.tray_options_container
-        ) = ui.load(scope=self, path="settings/userinterface.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.editing_color = False
@@ -2148,7 +2148,7 @@ class LoggingPage:
             self.private_chat_log_folder_label,
             self.transfer_log_folder_default_button,
             self.transfer_log_folder_label
-        ) = ui.load(scope=self, path="settings/log.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
@@ -2265,7 +2265,7 @@ class SearchesPage:
             self.min_search_term_length_spinner,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
-        ) = ui.load(scope=self, path="settings/search.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
@@ -2380,7 +2380,7 @@ class UrlHandlersPage:
             self.container,
             self.file_manager_label,
             self.protocol_list_container
-        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
 
@@ -2588,7 +2588,7 @@ class NowPlayingPage:
             self.other_radio,
             self.output_label,
             self.test_configuration_button
-        ) = ui.load(scope=self, path="settings/nowplaying.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
@@ -2787,7 +2787,7 @@ class PluginsPage:
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui.load(scope=self, path="settings/plugin.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
         self.selected_plugin = None
@@ -2971,7 +2971,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui.load(scope=self, path="dialogs/preferences.ui")
+        ) = self.widgets = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,
@@ -3333,15 +3333,13 @@ class Preferences(Dialog):
         toggle.emit("activate")
 
     def on_widget_scroll_event(self, _widget, event):
-        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
-        scroll event to container (GTK 3)"""
+        """Prevent scrolling in GtkSpinButton and pass scroll event to container (GTK 3)"""
 
         self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
-        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate
-        scrolling in the container (GTK 4)"""
+        """Prevent scrolling in GtkSpinButton and emulate scrolling in the container (GTK 4)"""
 
         adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
@@ -3372,7 +3370,7 @@ class Preferences(Dialog):
             self.pages[page_id] = page = page_class(self.application)
             page.set_settings()
 
-            for obj in page.__dict__.values():
+            for obj in page.widgets:
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
                         try:
@@ -3399,13 +3397,7 @@ class Preferences(Dialog):
                     obj.set_receives_default(True)
                     switch_label.gesture_click.connect("released", self.on_toggle_label_pressed, obj)
 
-                elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
-                    if isinstance(obj, ComboBox):
-                        if GTK_API_VERSION >= 4:
-                            continue
-
-                        obj = obj.dropdown
-
+                elif isinstance(obj, Gtk.SpinButton):
                     if GTK_API_VERSION >= 4:
                         scroll_controller = Gtk.EventControllerScroll(
                             flags=int(Gtk.EventControllerScrollFlags.VERTICAL)

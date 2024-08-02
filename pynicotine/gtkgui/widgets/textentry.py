@@ -791,9 +791,15 @@ class ComboBox:
         self.set_selected_pos(new_position)
         return True
 
-    def _on_button_scroll_event(self, *_args):
-        # Prevent scrolling when up/down arrow keys are disabled
-        return not self.enable_arrow_keys
+    def _on_button_scroll_event(self, widget, event, *_args):
+        """Prevent scrolling and pass scroll event to parent scrollable (GTK 3)"""
+
+        scrollable = widget.get_ancestor(Gtk.ScrolledWindow)
+
+        if scrollable is not None:
+            scrollable.event(event)
+
+        return True
 
     def _on_select_callback_status(self, enabled):
         self._is_select_callback_enabled = enabled
