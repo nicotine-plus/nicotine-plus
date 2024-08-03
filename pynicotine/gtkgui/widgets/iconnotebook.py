@@ -284,6 +284,7 @@ class IconNotebook:
         self.widget = Gtk.Notebook(enable_popup=False, scrollable=True, show_border=False, visible=True)
 
         self.pages_button_container = Gtk.Box(halign=Gtk.Align.CENTER, visible=(self.parent_page is not None))
+        self.pages_button = Gtk.MenuButton(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
         self.widget.set_action_widget(self.pages_button_container, Gtk.PackType.END)
 
         if parent_page is not None:
@@ -293,9 +294,7 @@ class IconNotebook:
         if GTK_API_VERSION >= 4:
             parent.append(self.widget)
 
-            self.pages_button = Gtk.MenuButton(
-                has_frame=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True
-            )
+            self.pages_button.set_has_frame(False)                                 # pylint: disable=no-member
             self.pages_button.set_create_popup_func(self.on_pages_button_pressed)  # pylint: disable=no-member
             self.pages_button_container.append(self.pages_button)                  # pylint: disable=no-member
 
@@ -323,8 +322,8 @@ class IconNotebook:
         else:
             parent.add(self.widget)
 
-            self.pages_button = Gtk.Button(halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=True)
-            self.pages_button.connect("clicked", self.on_pages_button_pressed)
+            self.pages_button.set_use_popover(False)            # pylint: disable=no-member
+            self.pages_button.connect("toggled", self.on_pages_button_pressed)
             self.pages_button_container.add(self.pages_button)  # pylint: disable=no-member
 
             self.widget.add_events(  # pylint: disable=no-member
@@ -337,11 +336,10 @@ class IconNotebook:
         Accelerator("Left", self.widget, self.on_arrow_accelerator)
         Accelerator("Right", self.widget, self.on_arrow_accelerator)
 
-        self.popup_menu_pages = PopupMenu(self.window.application, self.pages_button, connect_events=False)
+        self.popup_menu_pages = PopupMenu(self.window.application)
         self.update_pages_menu_button()
 
-        if GTK_API_VERSION >= 4:
-            self.pages_button.set_menu_model(self.popup_menu_pages.model)
+        self.pages_button.set_menu_model(self.popup_menu_pages.model)
 
     def destroy(self):
 
@@ -702,13 +700,10 @@ class IconNotebook:
     def on_show_parent_page(self, *_args):
         self.emit_switch_page_signal()
 
-    def on_pages_button_pressed(self, *args):
+    def on_pages_button_pressed(self, *_args):
 
-        if GTK_API_VERSION >= 4:
-            popover, *_unused = args
-
-            if not popover.is_visible():
-                return
+        if not self.pages_button.get_active():
+            return
 
         self.popup_menu_pages.clear()
 
@@ -743,9 +738,6 @@ class IconNotebook:
 
         self.popup_menu_pages.update_model()
         self.popup_menu_pages.actions[_("Re_open Closed Tab")].set_enabled(bool(self.recently_removed_pages))
-
-        if GTK_API_VERSION == 3:
-            self.popup_menu_pages.popup(pos_x=0, pos_y=0)
 
     def on_tab_scroll_event(self, _widget, event):
 
