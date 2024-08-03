@@ -92,7 +92,7 @@ class ChatEntry:
         if core.users.login_status == UserStatus.OFFLINE:
             return
 
-        text = self.widget.get_text()
+        text = self.widget.get_text().strip()
 
         if not text:
             return
@@ -113,6 +113,7 @@ class ChatEntry:
             return
 
         cmd, _separator, args = text.partition(" ")
+        args = args.strip()
 
         if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):

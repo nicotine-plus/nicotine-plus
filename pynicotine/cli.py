@@ -74,13 +74,11 @@ class CLIInputProcessor(Thread):
         if not user_input:
             return False
 
-        command, *args = user_input.split(maxsplit=1)
+        command, _separator, args = user_input.strip().partition(" ")
+        args = args.strip()
 
         if command.startswith("/"):
             command = command[1:]
-
-        if args:
-            (args,) = args
 
         events.emit_main_thread("cli-command", command, args)
         return True

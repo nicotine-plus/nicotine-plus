@@ -427,7 +427,7 @@ class PluginHandler:
             self.disable_plugin(plugin, is_permanent=False)
 
     def _cli_command(self, command, args):
-        self.trigger_cli_command_event(command, args or "")
+        self.trigger_cli_command_event(command, args)
 
     def update_completions(self, plugin):
 
