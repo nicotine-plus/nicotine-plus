@@ -5,6 +5,133 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.5 (Unreleased)
+
+### Changes
+
+ * Added `/plugin reload` subcommand for reloading a plugin
+ * Added arrow key shortcuts to collapse/expand tree rows
+ * Added a toggle for private room invitations to 'Chats' preferences
+ * List all room members not currently joined in a private room
+ * Incomplete files are now deleted when removing the download from the UI
+ * Improvements to transfer speed accuracy in the UI
+ * Quitting from the tray menu asks for confirmation while uploads are active
+ * Various performance improvements
+
+### Corrections
+
+ * Fixed a rare crash related to peer connections
+ * Fixed a rare crash when selecting a folder in the file chooser dialog
+ * Fixed a possible memory error when reading data from a peer connection
+ * Fixed issues related to downloads getting stuck when failing
+ * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where uploads would not start immediately in some cases
+ * Fixed an issue where popovers could not be closed in some cases
+ * Fixed an issue where some wishlist searches stopped working after closing their tabs
+ * Fixed an issue where an auto-forwarded listening port would close when saving preferences
+ * Fixed an issue where toggling search history did not update the history dropdown
+ * Fixed scrolling to the bottom of lists with the End key
+ * Various smaller UI-related fixes
+ * Various smaller fixes related to the Soulseek protocol implementation
+ * Windows: Fixed an issue where the tray icon was visible despite being disabled
+ * Windows: Fixed an issue where window prevented auto-hidden taskbar from showing
+ * Windows: Fixed invalid list sort order with certain system locales
+ * macOS: Fixed a crash when using Spanish system locale
+ * macOS: Fixed an issue where window could not be restored after running in background
+ * macOS: Fixed Ctrl-clicking not opening the context menu
+ * macOS: Added a few missing keyboard shortcuts
+ * GTK 3: Fixed a crash when pressing "Run in Background" in the confirmation dialog
+
+### Issues closed on GitHub
+
+ * Nicotine+ can't be launched from network drive on Windows ([#1843](https://github.com/nicotine-plus/nicotine-plus/issues/1843))
+ * Right click with control click doesn't work on mac with trackpad ([#2724](https://github.com/nicotine-plus/nicotine-plus/issues/2724))
+ * Downloads stuck on 'Queued' ([#2926](https://github.com/nicotine-plus/nicotine-plus/issues/2926))
+ * User rows expanding when collapse all enabled ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
+ * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
+ * Crash on Mac OS Monterey 12.7.5 (Intel) - Nicotine+ Version: 3.3.5.dev1 ([#3016](https://github.com/nicotine-plus/nicotine-plus/issues/3016))
+ * "Ok" on Network Closes Port ([#3020](https://github.com/nicotine-plus/nicotine-plus/issues/3020))
+ * Python Memory Error ([#3022](https://github.com/nicotine-plus/nicotine-plus/issues/3022))
+ * nowplaying - other should decode bytes ([#3039](https://github.com/nicotine-plus/nicotine-plus/issues/3039))
+ * Newly started downloads will open a collapsed thread? ([#3044](https://github.com/nicotine-plus/nicotine-plus/issues/3044))
+ * Crash on MBP Ventura 13.6.7 ([#3045](https://github.com/nicotine-plus/nicotine-plus/issues/3045))
+ * Sorting order of files is broken because of characters not in current codepage ([#3052](https://github.com/nicotine-plus/nicotine-plus/issues/3052))
+ * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
+ * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
+ * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
+ * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
+ * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
+
+
+## Version 3.3.4 (May 6, 2024)
+
+### Corrections
+
+ * Fixed "Format codes" link not opening in the preferred browser
+ * Windows: Fixed regression in scrolling performance
+
+### Issues closed on GitHub
+
+ * Scrolling performance suddenly abysmal (again) ([#3000](https://github.com/nicotine-plus/nicotine-plus/issues/3000))
+ * Can't access "Format Codes" link in settings through left mouse click on 3.3.3 ([#3001](https://github.com/nicotine-plus/nicotine-plus/issues/3001))
+ * Sometimes, Nicotine+ (3.3.3) window doesn't open on top when other windows already opened full screen on the desktop. ([#3002](https://github.com/nicotine-plus/nicotine-plus/issues/3002))
+
+
+## Version 3.3.3 (May 5, 2024)
+
+### Changes
+
+ * Performance improvements when searching for common files
+ * Improved search result matching for non-Latin languages
+ * Minor accessibility improvements
+ * Updated translations
+ * GTK 3: Restored X11 tray icon implementation for compatibility with older systems
+
+### Corrections
+
+ * Fixed a rare crash when changing grouping mode in transfer tabs
+ * Fixed a rare crash when closing Browse Shares tab
+ * Fixed a rare crash when initializing an upload
+ * Fixed a rare crash when double-clicking a download
+ * Fixed an issue where passwords were not remembered after changing them
+ * Fixed an issue where number of shared files was only updated on startup (regression in 3.3.2)
+ * Fixed an issue where transfers displayed incorrect "User logged off" status in some cases
+ * Fixed an issue where chat history entry completion no longer worked
+ * Fixed an issue where UPnP did not work on MikroTik routers
+ * Fixed missing button labels in certain dialogs
+ * Fixed some small memory leaks
+ * Avoid selecting new transfers while tab is active
+ * Remember selected folder when refreshing local shares
+ * Windows: Fixed Alt+1-9 tab shortcuts interfering with Alt codes
+ * Windows: Fixed window not minimizing when clicking task bar icon
+ * Windows: Fixed title bar buttons requiring two clicks to activate
+ * Snap: Fixed an issue where the file chooser displayed the wrong initial folder
+ * Snap: Fixed an issue where folders shared from external drives were unavailable after remounting
+ * Termux: Fixed an issue where connecting to the server failed
+
+### Issues closed on GitHub
+
+ * Bad user experience with Windows-like buttons on Nicotine 3.3.0 ([#2880](https://github.com/nicotine-plus/nicotine-plus/issues/2880))
+ * Auto-selection of new transfers ([#2901](https://github.com/nicotine-plus/nicotine-plus/issues/2901))
+ * Nicotine+ 3.3.2 displays user as logged off while the transfers are active ([#2909](https://github.com/nicotine-plus/nicotine-plus/issues/2909))
+ * No icon in taskbar when running in background ([#2928](https://github.com/nicotine-plus/nicotine-plus/issues/2928))
+ * Set 'Finished' status instead of 'Filtered' for finished transfers in case the directory had files matching download filtering pattern ([#2932](https://github.com/nicotine-plus/nicotine-plus/issues/2932))
+ * Refresh Files button not working ([#2937](https://github.com/nicotine-plus/nicotine-plus/issues/2937))
+ * Nictotine Hard fail trying to get pointer ([#2943](https://github.com/nicotine-plus/nicotine-plus/issues/2943))
+ * 3.3.2 - System Tray Icons Don't Appear ([#2944](https://github.com/nicotine-plus/nicotine-plus/issues/2944))
+ * Sudden crash ([#2950](https://github.com/nicotine-plus/nicotine-plus/issues/2950))
+ * bug on checking transfers ([#2953](https://github.com/nicotine-plus/nicotine-plus/issues/2953))
+ * UPnP: Failed to forward external port 2234: HTTP Error 500: Internal Server Error ([#2955](https://github.com/nicotine-plus/nicotine-plus/issues/2955))
+ * 0 Shares on Profile ([#2956](https://github.com/nicotine-plus/nicotine-plus/issues/2956))
+ * Crash when double clicking download row ([#2961](https://github.com/nicotine-plus/nicotine-plus/issues/2961))
+ * Nicotine+ 3.3.2 permission denied to port 2234 on Fedora 39 ([#2968](https://github.com/nicotine-plus/nicotine-plus/issues/2968))
+ * This option is doesn't work on Nicotine+ 3.3.3 rc2 ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
+ * Num lock state is inverted ([#2977](https://github.com/nicotine-plus/nicotine-plus/issues/2977))
+ * Random crash ([#2982](https://github.com/nicotine-plus/nicotine-plus/issues/2982))
+ * Found another bug ([#2988](https://github.com/nicotine-plus/nicotine-plus/issues/2988))
+ * Arbitrary Critical Error ([#2996](https://github.com/nicotine-plus/nicotine-plus/issues/2996))
+
+
 ## Version 3.3.2 (February 25, 2024)
 
 ### Corrections

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -108,3 +108,5 @@ if GTK_API_VERSION == 3:
     ALL_MODIFIERS = (Accelerator.parse_accelerator("<Primary>")[1]
                      | Accelerator.parse_accelerator("<Shift>")[1]
                      | Accelerator.parse_accelerator("<Alt>")[1])
+else:
+    ALL_MODIFIERS = []

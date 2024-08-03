@@ -120,14 +120,19 @@ class Searches(IconNotebook):
             ("add-search", self.add_search),
             ("add-wish", self.update_wish_button),
             ("file-search-response", self.file_search_response),
+            ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("server-login", self.on_focus),
+            ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
 
         self.populate_search_history()
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 
@@ -270,12 +275,12 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        self.create_page(token, search.term, mode, mode_label, room=room, users=users)
+        self.create_page(token, search.term_sanitized, mode, mode_label, room=room, users=users)
 
         if switch_page:
             self.show_search(token)
 
-        self.add_search_history_item(search.term)
+        self.add_search_history_item(search.term_sanitized)
 
     def show_search(self, token):
 
@@ -365,6 +370,13 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             if page.text == wish:
                 page.update_wish_button()
+
+    def server_login(self, *_args):
+        self.window.search_title.set_sensitive(True)
+        self.on_focus()
+
+    def server_disconnect(self, *_args):
+        self.window.search_title.set_sensitive(False)
 
 
 class Search:
@@ -680,6 +692,7 @@ class Search:
             combobox.destroy()
 
         self.tree_view.destroy()
+        self.window.update_title()
         self.__dict__.clear()
 
     def set_label(self, label):
@@ -792,12 +805,8 @@ class Search:
 
             if any(word in file_path_lower for word in search.excluded_words):
                 # Filter out results with filtered words (e.g. nicotine -music)
-                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
-                               'search term "%(query)s"'), {
-                    "filepath": file_path,
-                    "user": user,
-                    "query": self.text
-                })
+                log.add_debug(("Filtered out excluded search result %s from user %s for "
+                               'search term "%s"'), (file_path, user, self.text))
                 continue
 
             if not all(word in file_path_lower for word in search.included_words):
@@ -931,6 +940,8 @@ class Search:
         expand_user = False
         expand_folder = False
         parent_iterator = None
+        user_child_iterators = None
+        user_folder_child_iterators = None
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -1027,7 +1038,7 @@ class Search:
         iterator = self.tree_view.add_row(row, select_row=False, parent_iterator=parent_iterator)
         self.row_id += 1
 
-        if self.grouping_mode == "folder_grouping":
+        if user_folder_child_iterators is not None:
             user_folder_child_iterators.append(iterator)
         else:
             user_child_iterators.append(iterator)
@@ -1499,9 +1510,9 @@ class Search:
             return
 
         user = self.tree_view.get_row_value(iterator, "user")
-        folder_path, separator, _basename = self.tree_view.get_row_value(iterator, "file_path_data").rpartition("\\")
+        path = self.tree_view.get_row_value(iterator, "file_path_data")
 
-        core.userbrowse.browse_user(user, path=(folder_path + separator))
+        core.userbrowse.browse_user(user, path=path)
 
     def on_user_profile(self, *_args):
 
@@ -1559,8 +1570,8 @@ class Search:
             core.downloads.enqueue_download(
                 user, file_path, folder_path=download_folder_path, size=size, file_attributes=file_attributes)
 
-    def on_download_files_to_selected(self, selected_folder_path, _data):
-        self.on_download_files(download_folder_path=selected_folder_path)
+    def on_download_files_to_selected(self, selected_folder_paths, _data):
+        self.on_download_files(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_files_to(self, *_args):
 
@@ -1602,8 +1613,8 @@ class Search:
             )
             requested_folders.add(user_folder_key)
 
-    def on_download_folders_to_selected(self, selected_folder_path, _data):
-        self.on_download_folders(download_folder_path=selected_folder_path)
+    def on_download_folders_to_selected(self, selected_folder_paths, _data):
+        self.on_download_folders(download_folder_path=next(iter(selected_folder_paths), None))
 
     def on_download_folders_to(self, *_args):
 

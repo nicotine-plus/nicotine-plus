@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.widgets import ui
@@ -63,15 +62,19 @@ class WishList(Dialog):
             }
         )
 
-        for wish in config.sections["server"]["autosearch"]:
-            wish = str(wish)
-            self.list_view.add_row([wish], select_row=False)
+        self.list_view.disable_sorting()
+
+        for search_item in core.search.searches.values():
+            if search_item.mode == "wishlist":
+                self.add_wish(search_item.term, select=False)
+
+        self.list_view.enable_sorting()
 
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
 
-        popup = PopupMenu(application, self.list_view.widget)
-        popup.add_items(
+        self.popup_menu = PopupMenu(application, self.list_view.widget)
+        self.popup_menu.add_items(
             ("#" + _("_Search for Item"), self.on_search_wish),
             ("#" + _("Edit…"), self.on_edit_wish),
             ("", None),
@@ -88,6 +91,7 @@ class WishList(Dialog):
 
         self.list_view.destroy()
         self.completion_entry.destroy()
+        self.popup_menu.destroy()
 
         super().destroy()
 
@@ -152,7 +156,7 @@ class WishList(Dialog):
 
     def on_remove_wish(self, *_args):
 
-        for iterator in reversed(self.list_view.get_selected_rows()):
+        for iterator in reversed(list(self.list_view.get_selected_rows())):
             wish = self.list_view.get_row_value(iterator, "wish")
             core.search.remove_wish(wish)
 
@@ -176,8 +180,8 @@ class WishList(Dialog):
             callback=self.clear_wishlist_response
         ).present()
 
-    def add_wish(self, wish):
-        self.list_view.add_row([wish])
+    def add_wish(self, wish, select=True):
+        self.list_view.add_row([wish], select_row=select)
 
     def remove_wish(self, wish):
 

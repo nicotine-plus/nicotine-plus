@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 gallows <g4ll0ws@gmail.com>
@@ -33,6 +33,8 @@ from pynicotine.utils import human_length
 class NowPlaying:
     """This class contains code for retrieving information about the song
     currently playing in a media player."""
+
+    __slots__ = ("title",)
 
     def __init__(self):
         self.title_clear()
@@ -132,7 +134,7 @@ class NowPlaying:
             from urllib.request import urlopen
             with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
                           f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -180,7 +182,8 @@ class NowPlaying:
                 info=None,
                 name="org.freedesktop.DBus",
                 object_path="/org/freedesktop/DBus",
-                interface_name="org.freedesktop.DBus"
+                interface_name="org.freedesktop.DBus",
+                cancellable=None
             )
             names = dbus_proxy.ListNames()
             players = []
@@ -207,7 +210,8 @@ class NowPlaying:
                 info=None,
                 name=dbus_mpris_service + player,
                 object_path="/org/mpris/MediaPlayer2",
-                interface_name="org.freedesktop.DBus.Properties"
+                interface_name="org.freedesktop.DBus.Properties",
+                cancellable=None
             )
             metadata = dbus_proxy.Get("(ss)", "org.mpris.MediaPlayer2.Player", "Metadata")
 
@@ -265,7 +269,7 @@ class NowPlaying:
         try:
             from urllib.request import urlopen
             with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {"error": error},
@@ -301,7 +305,7 @@ class NowPlaying:
 
         try:
             output = execute_command(command, returnoutput=True, hidden=True)
-            self.title["nowplaying"] = output
+            self.title["nowplaying"] = output.decode("utf-8", "replace")
             return True
 
         except Exception as error:

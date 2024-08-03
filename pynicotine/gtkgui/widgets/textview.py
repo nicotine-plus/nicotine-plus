@@ -22,14 +22,12 @@ import time
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_COLORS
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import find_whole_word
 from pynicotine.utils import open_uri
@@ -49,7 +47,6 @@ class TextView:
 
     except TypeError:
         # Broken cursor theme, but what can we do...
-        log.add_debug("Cannot load cursors from theme, falling back to default cursor")
         DEFAULT_CURSOR = POINTER_CURSOR = TEXT_CURSOR = None
 
     MAX_NUM_LINES = 50000
@@ -149,10 +146,7 @@ class TextView:
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
         end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
-        end_iter = self.textbuffer.get_iter_at_line(end_line)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, end_iter = end_iter
+        end_iter = self.get_iter_at_line(end_line)
 
         self.textbuffer.delete(start_iter, end_iter)
         self.end_iter = self.textbuffer.get_end_iter()
@@ -200,7 +194,14 @@ class TextView:
         self._insert_text(line, tag)
         self._remove_old_lines(num_lines)
 
-        return num_lines
+    def get_iter_at_line(self, line_number):
+
+        iterator = self.textbuffer.get_iter_at_line(line_number)
+
+        if GTK_API_VERSION >= 4:
+            _position_found, iterator = iterator
+
+        return iterator
 
     def get_has_selection(self):
         return self.textbuffer.get_has_selection()
@@ -235,12 +236,7 @@ class TextView:
         self.widget.grab_focus()
 
     def place_cursor_at_line(self, line_number):
-
-        iterator = self.textbuffer.get_iter_at_line(line_number)
-
-        if GTK_API_VERSION >= 4:
-            _position_found, iterator = iterator
-
+        iterator = self.get_iter_at_line(line_number)
         self.textbuffer.place_cursor(iterator)
 
     def set_text(self, text):
@@ -404,24 +400,19 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
 
-    def append_log_lines(self, folder_path, basename, num_lines, timestamp_format):
+    def append_log_lines(self, log_lines, login_username=None):
 
-        if not num_lines:
+        if not log_lines:
             return
 
-        lines = log.read_log(folder_path, basename, num_lines)
+        login_username_lower = login_username.lower() if login_username else None
 
-        if not lines:
-            return
-
-        login = config.sections["server"]["login"]
-
-        for line in lines:
+        for log_line in log_lines:
             try:
-                line = line.decode("utf-8")
+                line = log_line.decode("utf-8")
 
             except UnicodeDecodeError:
-                line = line.decode("latin-1")
+                line = log_line.decode("latin-1")
 
             user = message_type = usertag = None
 
@@ -435,10 +426,10 @@ class ChatView(TextView):
 
                     text = line[end + 2:-1]
 
-                    if user == login:
+                    if user == login_username:
                         message_type = "local"
 
-                    elif login and find_whole_word(login.lower(), text.lower()) > -1:
+                    elif login_username_lower and find_whole_word(login_username_lower, text.lower()) > -1:
                         message_type = "hilite"
 
                     else:
@@ -449,8 +440,7 @@ class ChatView(TextView):
 
             self.append_line(line, message_type=message_type, username=user, usertag=usertag)
 
-        self.append_line(_("--- old messages above ---"), message_type="hilite",
-                         timestamp_format=timestamp_format)
+        self.append_line(_("--- old messages above ---"), message_type="hilite")
 
     def clear(self):
         super().clear()

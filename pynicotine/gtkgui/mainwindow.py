@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -57,7 +58,6 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
-from pynicotine.utils import human_speed
 from pynicotine.utils import open_folder_path
 
 
@@ -71,6 +71,8 @@ class MainWindow(Window):
         self.away_timer_id = None
         self.away_cooldown_time = 0
         self.gesture_click = None
+        self.window_active_handler = None
+        self.window_visible_handler = None
 
         # Load UI
 
@@ -107,6 +109,7 @@ class MainWindow(Window):
             self.header_end_container,
             self.header_menu,
             self.header_title,
+            self.hide_window_button,
             self.horizontal_paned,
             self.interests_container,
             self.interests_end,
@@ -229,15 +232,12 @@ class MainWindow(Window):
 
         # Events
         for event_name, callback in (
-            ("schedule-quit", self.schedule_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
             ("set-connection-stats", self.set_connection_stats),
             ("shares-preparing", self.shares_preparing),
             ("shares-ready", self.shares_ready),
             ("shares-scanning", self.shares_scanning),
-            ("update-download-limits", self.update_download_limits),
-            ("update-upload-limits", self.update_upload_limits),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
@@ -295,6 +295,8 @@ class MainWindow(Window):
 
     def init_window(self):
 
+        is_broadway_backend = (os.environ.get("GDK_BACKEND") == "broadway")
+
         # Set main window title and icon
         self.set_title(pynicotine.__application_name__)
         self.widget.set_default_icon_name(pynicotine.__application_id__)
@@ -313,8 +315,12 @@ class MainWindow(Window):
             else:
                 self.widget.move(x_pos, y_pos)
 
+        # Hide close button in Broadway backend
+        if is_broadway_backend:
+            self.widget.set_deletable(False)
+
         # Maximize main window if necessary
-        if sys.platform != "darwin" and config.sections["ui"]["maximized"]:
+        if config.sections["ui"]["maximized"] or is_broadway_backend:
             self.widget.maximize()
 
         # Auto-away mode
@@ -336,8 +342,8 @@ class MainWindow(Window):
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Clear notifications when main window is focused
-        self.widget.connect("notify::is-active", self.on_window_active_changed)
-        self.widget.connect("notify::visible", self.on_window_visible_changed)
+        self.window_active_handler = self.widget.connect("notify::is-active", self.on_window_active_changed)
+        self.window_visible_handler = self.widget.connect("notify::visible", self.on_window_visible_changed)
 
         # System window close (X)
         if GTK_API_VERSION >= 4:
@@ -366,7 +372,7 @@ class MainWindow(Window):
         self.set_urgency_hint(False)
 
     def on_window_visible_changed(self, *_args):
-        self.application.tray_icon.update_window_visibility()
+        self.application.tray_icon.update()
 
     def update_title(self):
 
@@ -457,7 +463,6 @@ class MainWindow(Window):
         self.add_action(action)
 
         action = Gio.SimpleAction(name="toggle-status")
-        action.set_enabled(False)
         action.connect("activate", self.on_toggle_status)
         self.add_action(action)
 
@@ -918,12 +923,7 @@ class MainWindow(Window):
     def update_user_status(self, *_args):
 
         status = core.users.login_status
-        is_online = (status != UserStatus.OFFLINE)
         is_away = (status == UserStatus.AWAY)
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        # Action status
-        toggle_status_action.set_enabled(is_online)
 
         # Away mode
         if not is_away:
@@ -932,9 +932,6 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
-        if core.uploads.pending_shutdown:
-            return
-
         username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -960,10 +957,11 @@ class MainWindow(Window):
             self.user_status_label.set_text(status_text)
 
         if self.user_status_button.get_active():
-            # Disable button toggled state without activating action
-            toggle_status_action.handler_block_by_func(self.on_toggle_status)
+            toggle_status_action = self.lookup_action("toggle-status")
+
+            toggle_status_action.set_enabled(False)
             self.user_status_button.set_active(False)
-            toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
+            toggle_status_action.set_enabled(True)
 
     def user_status(self, msg):
         if msg.user == core.users.login_username:
@@ -1045,8 +1043,8 @@ class MainWindow(Window):
 
     def create_log_context_menu(self):
 
-        popup_menu_log_categories = PopupMenu(self.application)
-        popup_menu_log_categories.add_items(
+        self.popup_menu_log_categories = PopupMenu(self.application)
+        self.popup_menu_log_categories.add_items(
             ("$" + _("Downloads"), "app.log-downloads"),
             ("$" + _("Uploads"), "app.log-uploads"),
             ("$" + _("Search"), "app.log-searches"),
@@ -1058,7 +1056,8 @@ class MainWindow(Window):
             ("$" + _("[Debug] Miscellaneous"), "app.log-miscellaneous"),
         )
 
-        PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log).add_items(
+        self.popup_menu_log_view = PopupMenu(self.application, self.log_view.widget, self.on_popup_menu_log)
+        self.popup_menu_log_view.add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
@@ -1067,7 +1066,7 @@ class MainWindow(Window):
             ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
             ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
             ("", None),
-            (">" + _("_Log Categories"), popup_menu_log_categories),
+            (">" + _("_Log Categories"), self.popup_menu_log_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_view)
         )
@@ -1125,47 +1124,12 @@ class MainWindow(Window):
         self.status_label.set_tooltip_text(msg)
         self.status_label.set_visible(True)
 
-    def set_connection_stats(self, total_conns=0, download_bandwidth=0, upload_bandwidth=0):
+    def set_connection_stats(self, total_conns=0, **_kwargs):
 
         total_conns_text = repr(total_conns)
-        download_bandwidth = human_speed(download_bandwidth)
-        upload_bandwidth = human_speed(upload_bandwidth)
-        download_bandwidth_text = f"{download_bandwidth} ( {len(core.downloads.active_users)} )"
-        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
 
         if self.connections_label.get_text() != total_conns_text:
             self.connections_label.set_text(total_conns_text)
-
-        if self.download_status_label.get_text() != download_bandwidth_text:
-            self.download_status_label.set_text(download_bandwidth_text)
-            self.application.tray_icon.set_download_status(_("Downloads: %(speed)s") % {"speed": download_bandwidth})
-
-        if self.upload_status_label.get_text() != upload_bandwidth_text:
-            self.upload_status_label.set_text(upload_bandwidth_text)
-            self.application.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {"speed": upload_bandwidth})
-
-    def update_download_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="download")
-
-    def update_upload_limits(self):
-        self.update_bandwidth_label_underlines(transfer_type="upload")
-
-    def update_bandwidth_label_underlines(self, transfer_type):
-        """Underline status bar bandwidth labels when alternative speed limits
-        are active."""
-
-        if transfer_type == "download":
-            label = self.download_status_label
-            config_key = "use_download_speed_limit"
-        else:
-            label = self.upload_status_label
-            config_key = "use_upload_speed_limit"
-
-        if config.sections["transfers"][config_key] == "alternative":
-            add_css_class(label, "underline")
-            return
-
-        remove_css_class(label, "underline")
 
     def shares_preparing(self):
 
@@ -1184,18 +1148,21 @@ class MainWindow(Window):
         self.scan_progress_spinner.start()
 
     def shares_ready(self, _successful):
-
         self.scan_progress_container.set_visible(False)
         self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
 
         if core.uploads.pending_shutdown:
-            core.uploads.pending_shutdown = False
-            self.update_user_status()
-            return
+            core.uploads.cancel_shutdown()
 
-        self.application.lookup_action("away").activate()
+        elif core.users.login_status == UserStatus.OFFLINE:
+            self.application.lookup_action("connect").activate()
+
+        else:
+            self.application.lookup_action("away").activate()
+
+        self.user_status_button.set_active(False)
 
     # Exit #
 
@@ -1212,34 +1179,6 @@ class MainWindow(Window):
 
         return True
 
-    def schedule_quit(self, should_finish_uploads):
-
-        if not should_finish_uploads:
-            return
-
-        icon_name = "system-shutdown-symbolic"
-        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        toggle_status_action.handler_block_by_func(self.on_toggle_status)
-        self.user_status_button.set_active(True)
-        toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
-
-        self.user_status_icon.set_from_icon_name(icon_name, *icon_args)
-        self.user_status_label.set_text(_("Quitting..."))
-
-    def present(self):
-
-        super().present()
-
-        if sys.platform == "darwin":
-            # Workaround for window being unresizable when maximized once
-            # https://gitlab.gnome.org/GNOME/gtk/-/issues/5898
-            GLib.idle_add(
-                self.widget.maximize if config.sections["ui"]["maximized"] else self.widget.unmaximize,
-                priority=GLib.PRIORITY_HIGH_IDLE
-            )
-
     def hide(self):
 
         if not self.is_visible():
@@ -1253,11 +1192,31 @@ class MainWindow(Window):
         config.write_configuration()
 
         # Hide window
+        if sys.platform == "darwin":
+            # macOS-specific way to hide the application, to ensure it is restored when clicking the dock icon
+            self.hide_window_button.set_action_name("gtkinternal.hide")
+            self.hide_window_button.emit("clicked")
+            return
+
+        if GTK_API_VERSION >= 4:
+            self.widget.minimize()
+        else:
+            self.widget.iconify()
+
         super().hide()
 
     def destroy(self):
 
         for tab in self.tabs.values():
             tab.destroy()
+
+        self.notebook.destroy()
+        self.log_search_bar.destroy()
+        self.log_view.destroy()
+        self.popup_menu_log_view.destroy()
+        self.popup_menu_log_categories.destroy()
+
+        self.widget.disconnect(self.window_active_handler)
+        self.widget.disconnect(self.window_visible_handler)
 
         super().destroy()

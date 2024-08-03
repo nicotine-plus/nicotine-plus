@@ -4,42 +4,23 @@ Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2024 Nicotine+ Contributors
-           2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
-           2002 Joe Halliwell
-           2003 Brett W. Thompson (Zip)
-                Geert Kloosterman (geertk)
-                Alexey Vyskubov
-                Jason Green (SmackleFunky)
-                (va)\*10^3
-                Gustavo J. A. M. Carneiro
-           2003-2004, 2007 Ingmar K. Steen (Hyriand)
-           2003-2009 daelstorm
-           2006 Vandy Omall (osiris)
-                lee8oi
-           2006-2017 Adam Cécile (eLvErDe)
-           2007-2008 gallows
-           2007-2012 quinox
-           2010 Julien
-           2013 SeeSchloss
-           2015 chzchzchz
-           2016-2018 Mutnick
-           2016-2017 Michael Labouebe (gfarmerfr)
-           2016-2020 Kip Warner (kiplingw)
-           2019 Vladimir Sedach (vsedach)
-           2019-2020 gahag
-           2020 Lene Preuss
-                droserasprout
-                zniavre
-                alekksander
-           2020-2021 toofar
-           2020-2023 Han Boetes (hboetes)
-           2020-2024 Mat (mathiascode)
-           2021 redactedscribe
-                Mendelson Gusmão (mendelgusmao)
-                Inso-m-niaC
-                Nachtalb
-           2021-2023 slook
+Copyright: 2001-2003 PySoulSeek Contributors
+           2001-2003 Alexander Kanavin
+           2003-2004 Nicotine Contributors
+           2003-2004 Hyriand <hyriand@thegraveyard.org>
+           2004-2024 Nicotine+ Contributors
+           2006-2009 daelstorm <daelstorm@gmail.com>
+           2007-2008 gallows <g4ll0ws@gmail.com>
+           2008-2012 quinox <quinox@users.sf.net>
+           2009 hedonist <ak@sensi.org>
+           2013 eLvErDe <gandalf@le-vert.net>
+           2013 SeeSchloss <see@seos.fr>
+           2016 Mutnick <muhing@yahoo.com>
+           2016-2018 Mutnick <mutnick@techie.com>
+           2016-2017 Michael Labouebe <gfarmerfr@free.fr>
+           2016 Kip Warner
+           2020 Lene Preuss <lene.preuss@gmail.com>
+           2021 Inso-m-niaC
 License: GPL-3+
 
 Files: data/org.nicotine_plus.Nicotine.appdata.xml*
@@ -51,12 +32,8 @@ Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
-Files: pynicotine/external/ip2location.py
-Copyright: 2017 IP2Location.com
-           2021-2023 Nicotine+ Contributors
-License: Expat
-
-Files: pynicotine/external/ipcountrydb.bin
+Files: pynicotine/external/country_codes.py
+       pynicotine/external/ip_ranges.py
 Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 

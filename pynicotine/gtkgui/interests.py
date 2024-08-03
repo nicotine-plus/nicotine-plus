@@ -65,6 +65,7 @@ class Interests:
         self.toolbar_start_content = window.interests_title
         self.toolbar_end_content = window.interests_end
         self.toolbar_default_widget = None
+        self.popup_menus = []
 
         self.populated_recommends = False
 
@@ -164,6 +165,9 @@ class Interests:
             }
         )
 
+        self.likes_list_view.disable_sorting()
+        self.dislikes_list_view.disable_sorting()
+
         for item in config.sections["interests"]["likes"]:
             if isinstance(item, str):
                 self.add_thing_i_like(item)
@@ -171,6 +175,9 @@ class Interests:
         for item in config.sections["interests"]["dislikes"]:
             if isinstance(item, str):
                 self.add_thing_i_hate(item)
+
+        self.likes_list_view.enable_sorting()
+        self.dislikes_list_view.enable_sorting()
 
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
@@ -180,6 +187,7 @@ class Interests:
             ("", None),
             ("#" + _("Remove"), self.on_remove_thing_i_like)
         )
+        self.popup_menus.append(popup)
 
         popup = PopupMenu(self.window.application, self.dislikes_list_view.widget)
         popup.add_items(
@@ -188,6 +196,7 @@ class Interests:
             ("", None),
             ("#" + _("Remove"), self.on_remove_thing_i_dislike)
         )
+        self.popup_menus.append(popup)
 
         popup = PopupMenu(self.window.application, self.recommendations_list_view.widget, self.on_popup_r_menu)
         popup.add_items(
@@ -197,11 +206,13 @@ class Interests:
             ("#" + _("_Recommendations for Item"), self.on_recommend_item, self.recommendations_list_view, "item"),
             ("#" + _("_Search for Item"), self.on_recommend_search, self.recommendations_list_view, "item")
         )
+        self.popup_menus.append(popup)
 
-        UserPopupMenu(
+        popup = UserPopupMenu(
             self.window.application, parent=self.similar_users_list_view.widget, callback=self.on_popup_ru_menu,
             tab_name="interests"
         )
+        self.popup_menus.append(popup)
 
         for event_name, callback in (
             ("add-dislike", self.add_thing_i_hate),
@@ -222,6 +233,9 @@ class Interests:
             events.connect(event_name, callback)
 
     def destroy(self):
+
+        for menu in self.popup_menus:
+            menu.destroy()
 
         self.likes_list_view.destroy()
         self.dislikes_list_view.destroy()
@@ -409,9 +423,12 @@ class Interests:
             self.recommendations_label.set_label(_("Recommendations"))
 
         self.recommendations_list_view.clear()
+        self.recommendations_list_view.disable_sorting()
 
         for thing, rating in recommendations:
             self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
+
+        self.recommendations_list_view.enable_sorting()
 
     def global_recommendations(self, msg):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
@@ -430,6 +447,7 @@ class Interests:
             self.similar_users_label.set_label(_("Similar Users"))
 
         self.similar_users_list_view.clear()
+        self.similar_users_list_view.disable_sorting()
 
         for index, (user, rating) in enumerate(users.items()):
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
@@ -458,6 +476,8 @@ class Interests:
                 rating
             ], select_row=False)
 
+        self.similar_users_list_view.enable_sorting()
+
     def similar_users(self, msg):
         self.set_similar_users(msg.users)
 
@@ -474,10 +494,8 @@ class Interests:
 
         flag_icon_name = get_flag_icon_name(country_code)
 
-        if not flag_icon_name:
-            return
-
-        self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
+        if flag_icon_name and flag_icon_name != self.similar_users_list_view.get_row_value(iterator, "country"):
+            self.similar_users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
     def user_status(self, msg):
 
@@ -488,10 +506,8 @@ class Interests:
 
         status_icon_name = USER_STATUS_ICON_NAMES.get(msg.status)
 
-        if not status_icon_name or status_icon_name == self.similar_users_list_view.get_row_value(iterator, "status"):
-            return
-
-        self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
+        if status_icon_name and status_icon_name != self.similar_users_list_view.get_row_value(iterator, "status"):
+            self.similar_users_list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):
 
@@ -500,16 +516,20 @@ class Interests:
         if iterator is None:
             return
 
-        speed = msg.avgspeed
-        files = msg.files
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
 
-        h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(msg.files)
+        if speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
+            h_speed = human_speed(speed) if speed > 0 else ""
 
-        self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
-        self.similar_users_list_view.set_row_value(iterator, "files", h_files)
-        self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
-        self.similar_users_list_view.set_row_value(iterator, "files_data", files)
+            self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
+            self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
+
+        if num_files != self.similar_users_list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
+            self.similar_users_list_view.set_row_value(iterator, "files", h_num_files)
+            self.similar_users_list_view.set_row_value(iterator, "files_data", num_files)
 
     @staticmethod
     def toggle_menu_items(menu, list_view, column_id):

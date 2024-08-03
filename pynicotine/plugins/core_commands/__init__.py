@@ -60,13 +60,13 @@ class Plugin(BasePlugin):
             "plugin": {
                 "callback": self.plugin_handler_command,
                 "description": _("Manage plugins"),
-                "parameters": ["<toggle|info>", "<plugin_name>"]
+                "parameters": ["<toggle|reload|info>", "<plugin name>"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
-                "parameters": ["[-force]"]
+                "parameters": ["[force]"]
             },
             "clear": {
                 "aliases": ["cl"],
@@ -157,8 +157,8 @@ class Plugin(BasePlugin):
                 "callback": self.remove_buddy_command,
                 "description": _("Remove buddy from buddy list"),
                 "group": _CommandGroup.USERS,
-                "parameters": ["<buddy>"],
-                "parameters_private_chat": ["[buddy]"]
+                "parameters": ["<user>"],
+                "parameters_private_chat": ["[user]"]
             },
             "browse": {
                 "aliases": ["b"],
@@ -232,7 +232,7 @@ class Plugin(BasePlugin):
                 "callback": self.list_shares_command,
                 "description": _("List shares"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["[public]", "[buddy]"]
+                "parameters": ["[public|buddy|trusted]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
@@ -326,15 +326,19 @@ class Plugin(BasePlugin):
     def away_command(self, _args, **_unused):
 
         if self.core.users.login_status == UserStatus.OFFLINE:
-            self.output(_("Offline"))
+            self.output(_("%(user)s is offline") % {"user": self.config.sections["server"]["login"]})
             return
 
         self.core.users.set_away_mode(self.core.users.login_status != UserStatus.AWAY, save_state=True)
-        self.output(_("Online") if self.core.users.login_status == UserStatus.ONLINE else _("Away"))
+
+        if self.core.users.login_status == UserStatus.ONLINE:
+            self.output(_("%(user)s is online") % {"user": self.core.users.login_username})
+        else:
+            self.output(_("%(user)s is away") % {"user": self.core.users.login_username})
 
     def quit_command(self, args, **_unused):
 
-        force = (args.lstrip("- ") in {"force", "f"})
+        force = (args.lstrip("-") in {"force", "f"})
 
         if force:
             self.core.quit()
@@ -360,7 +364,8 @@ class Plugin(BasePlugin):
     # Chat Rooms #
 
     def join_command(self, args, **_unused):
-        self.core.chatrooms.show_room(args)
+        room = self.core.chatrooms.sanitize_room_name(args)
+        self.core.chatrooms.show_room(room)
 
     def leave_command(self, args, room=None, **_unused):
 
@@ -521,8 +526,8 @@ class Plugin(BasePlugin):
 
     def rescan_command(self, args, **_unused):
 
-        rebuild = (args == "rebuild")
-        force = (args == "force") or rebuild
+        rebuild = ("rebuild" in args)
+        force = ("force" in args) or rebuild
 
         self.core.shares.rescan_shares(rebuild=rebuild, force=force)
 
@@ -558,8 +563,8 @@ class Plugin(BasePlugin):
 
     def share_command(self, args, **_unused):
 
-        args_split = args.split(maxsplit=1)
-        permission_level, folder_path = args_split[0], args_split[1].strip(' "')
+        permission_level, folder_path = args.split(maxsplit=1)
+        folder_path = folder_path.strip(' "')
         virtual_name = self.core.shares.add_share(folder_path, permission_level=permission_level)
 
         if not virtual_name:
@@ -615,6 +620,9 @@ class Plugin(BasePlugin):
 
         if action == "toggle":
             self.parent.toggle_plugin(plugin_name)
+
+        elif action == "reload":
+            self.parent.reload_plugin(plugin_name)
 
         elif action == "info":
             plugin_info = self.parent.get_plugin_info(plugin_name)

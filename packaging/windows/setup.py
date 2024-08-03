@@ -26,6 +26,8 @@ import sys
 import tempfile
 
 from cx_Freeze import Executable, setup  # pylint: disable=import-error
+from cx_Freeze.hooks import gi  # pylint: disable=import-error
+del gi.load_gi
 
 # pylint: disable=duplicate-code
 
@@ -45,7 +47,7 @@ elif sys.platform == "darwin":
     SYS_BASE_PATH = "/opt/homebrew" if platform.machine() == "arm64" else "/usr/local"
     LIB_PATH = os.path.join(SYS_BASE_PATH, "lib")
     LIB_EXTENSION = (".dylib", ".so")
-    UNAVAILABLE_MODULES = ["msilib", "msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
+    UNAVAILABLE_MODULES = ["msvcrt", "nt", "nturl2path", "ossaudiodev", "spwd", "winreg", "winsound"]
     ICON_NAME = "icon.icns"
 
 else:
@@ -55,18 +57,21 @@ TEMP_PATH = tempfile.mkdtemp()
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 BUILD_PATH = os.path.join(CURRENT_PATH, "build")
 PROJECT_PATH = os.path.abspath(os.path.join(CURRENT_PATH, "..", ".."))
-sys.path.append(PROJECT_PATH)
+sys.path.insert(0, PROJECT_PATH)
 
 import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-position
 
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
+MANIFEST_NAME = os.path.join(CURRENT_PATH, f"{SCRIPT_NAME}.manifest") if sys.platform == "win32" else None
 GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
 USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 # Include (almost) all standard library modules for plugins
 EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
-    "ensurepip", "idlelib", "pip", "tkinter", "turtle", "turtledemo", "venv", "zoneinfo"
+    f"{MODULE_NAME}.plugins.examplars", f"{MODULE_NAME}.tests",
+    "ctypes.test", "distutils", "ensurepip", "idlelib", "lib2to3", "msilib", "pip", "pydoc", "pydoc_data",
+    "pygtkcompat", "tkinter", "turtle", "turtledemo", "unittest.test", "venv", "zoneinfo"
 ]
 INCLUDED_MODULES = [MODULE_NAME, "gi"] + list(
     # pylint: disable=no-member
@@ -79,7 +84,9 @@ include_files = []
 def process_files(folder_path, callback, callback_data=None, starts_with=None, ends_with=None, recursive=False):
 
     for full_path in glob.glob(os.path.join(folder_path, "**"), recursive=recursive):
-        short_path = os.path.relpath(full_path, folder_path)
+        short_folder_path = os.path.dirname(os.path.relpath(full_path, folder_path))
+        real_full_path = os.path.realpath(full_path)
+        short_path = os.path.join(short_folder_path, os.path.basename(real_full_path))
 
         if starts_with and not short_path.startswith(starts_with):
             continue
@@ -87,7 +94,7 @@ def process_files(folder_path, callback, callback_data=None, starts_with=None, e
         if ends_with and not short_path.endswith(ends_with):
             continue
 
-        callback(full_path, short_path, callback_data)
+        callback(real_full_path, short_path, callback_data)
 
 
 def add_file(file_path, output_path):
@@ -199,7 +206,7 @@ def add_gtk():
 
     if sys.platform == "win32":
         # gdbus required for single-instance application (Windows)
-        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="lib/gdbus.exe")
+        add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="gdbus.exe")
 
     # This also includes all dlls required by GTK
     add_files(
@@ -243,19 +250,6 @@ def add_icon_packs():
     )
 
 
-def add_themes():
-
-    # "Mac" is required for macOS-specific keybindings in GTK
-    required_themes = (
-        "Default",
-        "Mac"
-    )
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/themes"), output_path="share/themes",
-        starts_with=required_themes, ends_with=".css", recursive=True
-    )
-
-
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
     add_file(file_path=ssl_paths.openssl_cafile, output_path="lib/cert.pem")
@@ -263,20 +257,18 @@ def add_ssl_certs():
 
 def add_translations():
 
-    from pynicotine.i18n import LANGUAGES           # noqa: E402  # pylint: disable=import-error
-    from pynicotine.i18n import build_translations  # noqa: E402  # pylint: disable=import-error
+    from setup import build_translations  # noqa: E402  # pylint: disable=import-self,no-name-in-module
     build_translations()
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
+        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
     )
 
 
 # GTK
 add_gtk()
 add_icon_packs()
-add_themes()
 
 # SSL
 add_ssl_certs()
@@ -300,7 +292,8 @@ setup(
             "excludes": EXCLUDED_MODULES,
             "include_files": include_files,
             "zip_include_packages": ["*"],
-            "zip_exclude_packages": [MODULE_NAME]
+            "zip_exclude_packages": [MODULE_NAME],
+            "optimize": 2
         },
         "bdist_msi": {
             "all_users": True,
@@ -339,6 +332,7 @@ setup(
             base=GUI_BASE,
             target_name=pynicotine.__application_name__,
             icon=os.path.join(CURRENT_PATH, ICON_NAME),
+            manifest=MANIFEST_NAME,
             copyright=pynicotine.__copyright__,
             shortcut_name=pynicotine.__application_name__,
             shortcut_dir="ProgramMenuFolder"

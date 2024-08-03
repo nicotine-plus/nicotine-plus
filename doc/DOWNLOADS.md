@@ -22,6 +22,7 @@ If you are using any of the operating systems listed, you can install Nicotine+ 
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
 | [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
 | [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                    | `nicotine+`         |
+| [Solus](https://github.com/getsolus/packages/tree/main/packages/n/nicotine-plus)        | `nicotine-plus`     |
 | [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
 | [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`         |
 
@@ -31,7 +32,8 @@ Packages listed below can be installed on different GNU/Linux distributions.
 
 | Format                                                                           | Package Name                 |
 |----------------------------------------------------------------------------------|------------------------------|
-| [Flatpak (Flathub)](https://flathub.org/apps/details/org.nicotine_plus.Nicotine) | `org.nicotine_plus.Nicotine` |
+| [Flatpak](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)           | `org.nicotine_plus.Nicotine` |
+| [Snap](https://snapcraft.io/nicotine-plus)                                       | `nicotine-plus`              |
 
 ### PPA (Ubuntu/Debian)
 
@@ -91,10 +93,11 @@ Standalone executables are also available. They can be run from any folder and d
 
 If you are using any of the package managers listed, you can install Nicotine+ using them.
 
-| Package Manager                                                                         | Package Name           |
-|-----------------------------------------------------------------------------------------|------------------------|
-| [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                   | `nicotine-plus`        |
-| [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json) | `extras/nicotine-plus` |
+| Package Manager                                                                                    | Package Name           |
+|----------------------------------------------------------------------------------------------------|------------------------|
+| [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus)                              | `nicotine-plus`        |
+| [Scoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json)            | `extras/nicotine-plus` |
+| [Winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/n/Nicotine%2B/Nicotine%2B) | `nicotine+.nicotine+`  |
 
 
 ## macOS
@@ -108,3 +111,12 @@ If you are using any of the package managers listed, you can install Nicotine+ u
 
 - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)]  
   for macOS 14 Sonoma or later
+
+### Package Managers
+
+If you are using any of the package managers listed, you can install Nicotine+ using them.
+
+| Package Manager                                                     | Package Name    |
+|---------------------------------------------------------------------|-----------------|
+| [Homebrew Formulae](https://formulae.brew.sh/formula/nicotine-plus) | `nicotine-plus` |
+| [MacPorts](https://ports.macports.org/port/nicotine-plus/)          | `nicotine-plus` |

@@ -20,12 +20,14 @@ window.dialog:not(.message) .dialog-action-area {
     border-spacing: 0;
 }
 
-.generic-popover *:not(image):not(separator) {
+.generic-popover button,
+.generic-popover entry,
+.generic-popover switch {
     /* Remove unwanted spacing from popovers */
     margin: 0;
 }
 
-.generic-popover contents {
+.generic-popover > contents {
     /* Remove unwanted spacing from popovers */
     padding: 0;
 }
@@ -39,5 +41,17 @@ window.dialog:not(.message) .dialog-action-area {
 .fontchooser listview row {
     margin: 0;
     padding: 0;
+}
+
+dropdown.entry > button > box {
+    /* Hide label in combobox dropdown button */
+    border-spacing: 0;
+    font-size: 0;
+}
+
+tabs > arrow {
+    /* Workaround for criticals when right-clicking notebook tabs */
+    margin-top: -5px;
+    margin-bottom: -5px;
 }
 

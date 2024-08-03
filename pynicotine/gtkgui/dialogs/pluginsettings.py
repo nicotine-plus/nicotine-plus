@@ -41,7 +41,7 @@ class PluginSettings(Dialog):
         cancel_button = Gtk.Button(label=_("_Cancel"), use_underline=True, visible=True)
         cancel_button.connect("clicked", self.on_cancel)
 
-        ok_button = Gtk.Button(label=_("_OK"), use_underline=True, visible=True)
+        ok_button = Gtk.Button(label=_("_Apply"), use_underline=True, visible=True)
         ok_button.connect("clicked", self.on_ok)
         add_css_class(ok_button, "suggested-action")
 
@@ -366,6 +366,7 @@ class PluginSettings(Dialog):
             parent=self,
             title=_("Add Item"),
             message=treeview.description,
+            action_button_label=_("_Add"),
             callback=self.on_add_response,
             callback_data=treeview
         ).present()
@@ -391,6 +392,7 @@ class PluginSettings(Dialog):
                 parent=self,
                 title=_("Edit Item"),
                 message=treeview.description,
+                action_button_label=_("_Edit"),
                 callback=self.on_edit_response,
                 callback_data=(treeview, iterator),
                 default=value
@@ -398,7 +400,7 @@ class PluginSettings(Dialog):
             return
 
     def on_remove(self, _button=None, treeview=None):
-        for iterator in reversed(treeview.get_selected_rows()):
+        for iterator in reversed(list(treeview.get_selected_rows())):
             treeview.remove_row(iterator)
 
     def on_row_activated(self, treeview, *_args):
@@ -412,14 +414,13 @@ class PluginSettings(Dialog):
 
     def on_ok(self, *_args):
 
+        plugin = core.pluginhandler.enabled_plugins[self.plugin_id]
+
         for name in self.plugin_settings:
             value = self._get_widget_data(self.option_widgets[name])
 
             if value is not None:
-                config.sections["plugins"][self.plugin_id.lower()][name] = value
-
-        core.pluginhandler.plugin_settings(
-            self.plugin_id, core.pluginhandler.enabled_plugins[self.plugin_id])
+                plugin.settings[name] = value
 
         self.close()
 

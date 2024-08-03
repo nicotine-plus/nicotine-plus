@@ -86,7 +86,7 @@
                 <child>
                   <object class="GtkBox" id="search_title">
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                    <property name="sensitive">False</property>
                     <property name="spacing">4</property>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
@@ -758,7 +758,6 @@
                   <object class="GtkBox" id="userbrowse_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -927,7 +926,6 @@
                   <object class="GtkBox" id="userinfo_title">
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                   </object>
@@ -1418,7 +1416,7 @@
                       <object class="GtkBox" id="chatrooms_title">
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
+                        <property name="sensitive">False</property>
                         <property name="spacing">4</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
@@ -1682,14 +1680,19 @@
         <property name="spacing">18</property>
         <property name="visible">True</property>
         <child>
-          <object class="GtkLabel" id="status_label">
-            <property name="ellipsize">end</property>
+          <object class="GtkBox">
             <property name="hexpand">True</property>
-            <property name="margin-start">12</property>
-            <property name="selectable">True</property>
-            <property name="single-line-mode">True</property>
             <property name="visible">True</property>
-            <property name="xalign">0</property>
+            <child>
+              <object class="GtkLabel" id="status_label">
+                <property name="ellipsize">end</property>
+                <property name="margin-start">12</property>
+                <property name="selectable">True</property>
+                <property name="single-line-mode">True</property>
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -1878,6 +1881,11 @@
         <style>
           <class name="border-top"/>
         </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="hide_window_button">
+        <property name="visible">False</property>
       </object>
     </child>
   </object>

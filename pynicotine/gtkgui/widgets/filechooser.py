@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -39,9 +39,7 @@ class FileChooser:
     def __init__(self, parent, callback, callback_data=None, title=_("Select a File"),
                  initial_folder=None, select_multiple=False):
 
-        if not initial_folder:
-            initial_folder = os.path.expanduser("~")
-        else:
+        if initial_folder:
             initial_folder = os.path.normpath(os.path.expandvars(initial_folder))
             initial_folder_encoded = encode_path(initial_folder)
 
@@ -69,7 +67,8 @@ class FileChooser:
                 self.select_method = self.file_chooser.open
                 self.finish_method = self.file_chooser.open_finish
 
-            self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
+            if initial_folder:
+                self.file_chooser.set_initial_folder(Gio.File.new_for_path(initial_folder))
 
         except AttributeError:
             # GTK < 4.10
@@ -84,12 +83,34 @@ class FileChooser:
             self.file_chooser.connect("response", self.on_response)
 
             if GTK_API_VERSION >= 4:
-                self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
+                if initial_folder:
+                    self.file_chooser.set_current_folder(Gio.File.new_for_path(initial_folder))
                 return
 
             # Display network shares
             self.file_chooser.set_local_only(False)  # pylint: disable=no-member
-            self.file_chooser.set_current_folder(initial_folder)
+
+            if initial_folder:
+                self.file_chooser.set_current_folder(initial_folder)
+
+    def _get_selected_paths(self, selected_file=None, selected_files=None):
+
+        selected = []
+
+        if selected_files:
+            for i_file in selected_files:
+                path = i_file.get_path()
+
+                if path:
+                    selected.append(os.path.normpath(path))
+
+        elif selected_file is not None:
+            path = selected_file.get_path()
+
+            if path:
+                selected.append(os.path.normpath(path))
+
+        return selected
 
     def on_finish(self, _dialog, result):
 
@@ -103,10 +124,12 @@ class FileChooser:
             self.destroy()
             return
 
+        selected = []
+
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in selected_result]
+            selected = self._get_selected_paths(selected_files=selected_result)
         else:
-            selected = os.path.normpath(selected_result.get_path())
+            selected = self._get_selected_paths(selected_file=selected_result)
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -123,10 +146,9 @@ class FileChooser:
             return
 
         if self.select_multiple:
-            selected = [os.path.normpath(i.get_path()) for i in self.file_chooser.get_files()]
+            selected = self._get_selected_paths(selected_files=self.file_chooser.get_files())
         else:
-            selected_file = self.file_chooser.get_file()
-            selected = os.path.normpath(selected_file.get_path()) if selected_file else None
+            selected = self._get_selected_paths(selected_file=self.file_chooser.get_file())
 
         if selected:
             self.callback(selected, self.callback_data)
@@ -309,18 +331,23 @@ class FileChooserButton:
 
     def on_open_file_chooser_response(self, selected, _data):
 
-        if selected.startswith(config.data_folder_path):
-            # Use a dynamic path that can be expanded with os.path.expandvars()
-            selected = selected.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+        selected_path = next(iter(selected), None)
 
-        self.set_path(selected)
+        if not selected_path:
+            return
+
+        if selected_path.startswith(config.data_folder_path):
+            # Use a dynamic path that can be expanded with os.path.expandvars()
+            selected_path = selected_path.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+
+        self.set_path(selected_path)
 
         try:
             self.selected_function()
 
         except TypeError:
             # No function defined
-            return
+            pass
 
     def on_open_file_chooser(self, *_args):
 

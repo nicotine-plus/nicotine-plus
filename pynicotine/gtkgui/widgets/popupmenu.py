@@ -20,6 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
@@ -113,6 +115,7 @@ class PopupMenu:
             O - choice
             # - regular
             = - hidden when disabled
+            ^ - hidden in macOS menu bar
         """
 
         submenu = False
@@ -149,6 +152,9 @@ class PopupMenu:
         if item_type == "=":
             menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
 
+        elif item_type == "^":
+            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "macos-menubar"))
+
         if submenu:
             menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
@@ -164,7 +170,9 @@ class PopupMenu:
             action.connect(action_name, *item[1:])
 
         self.items[label] = menuitem
-        self.actions[label] = action
+
+        if action is not None:
+            self.actions[label] = action
 
         return menuitem
 
@@ -242,10 +250,10 @@ class PopupMenu:
 
         event = None
 
-        if controller:
+        if controller is not None:
             sequence = controller.get_current_sequence()
 
-            if sequence:
+            if sequence is not None:
                 event = controller.get_last_event(sequence)
 
         menu.popup_at_pointer(event)
@@ -277,14 +285,39 @@ class PopupMenu:
                 # No rows selected, don't show menu
                 return False
 
-        if callback:
+        if callback is not None:
             callback(menu_model, self.parent)
 
         self.popup(pos_x, pos_y, controller, menu=menu)
         return True
 
-    def _callback_click(self, controller, _num_p, pos_x, pos_y):
+    def _callback_click_gtk4(self, controller, _num_p, pos_x, pos_y):
         return self._callback(controller, pos_x, pos_y)
+
+    def _callback_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y):
+
+        event = controller.get_last_event()
+
+        if event.get_modifier_state() & Gdk.ModifierType.CONTROL_MASK:
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
+
+    def _callback_click_gtk3(self, controller, _num_p, pos_x, pos_y):
+
+        sequence = controller.get_current_sequence()
+
+        if sequence is not None:
+            event = controller.get_last_event(sequence)
+            show_context_menu = event.triggers_context_menu()
+        else:
+            # Workaround for GTK 3.22.30
+            show_context_menu = (controller.get_current_button() == Gdk.BUTTON_SECONDARY)
+
+        if show_context_menu:
+            return self._callback(controller, pos_x, pos_y)
+
+        return False
 
     def _callback_menu(self, *_args):
         return self._callback()
@@ -293,6 +326,8 @@ class PopupMenu:
 
         if GTK_API_VERSION >= 4:
             self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
+            self.gesture_click.connect("pressed", self._callback_click_gtk4)
             parent.add_controller(self.gesture_click)
 
             self.gesture_press = Gtk.GestureLongPress()
@@ -300,16 +335,24 @@ class PopupMenu:
 
             Accelerator("<Shift>F10", parent, self._callback_menu)
 
+            if sys.platform == "darwin":
+                gesture_click_darwin = Gtk.GestureClick()
+                parent.add_controller(gesture_click_darwin)
+
+                gesture_click_darwin.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+                gesture_click_darwin.connect("pressed", self._callback_click_gtk4_darwin)
+
         else:
             self.gesture_click = Gtk.GestureMultiPress(widget=parent)
+            self.gesture_click.set_button(0)
+            self.gesture_click.connect("pressed", self._callback_click_gtk3)
+
             self.gesture_press = Gtk.GestureLongPress(widget=parent)
 
             # Shift+F10
             parent.connect("popup-menu", self._callback_menu)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
-        self.gesture_click.connect("pressed", self._callback_click)
 
         self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_press.set_touch_only(True)
@@ -437,9 +480,7 @@ class UserPopupMenu(PopupMenu):
         self.popup_menu_private_rooms.populate_private_rooms()
         self.popup_menu_private_rooms.update_model()
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and self.username != core.users.login_username)
-        self.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
-
+        self.actions[_("Private Rooms")].set_enabled(bool(self.popup_menu_private_rooms.items))
         self.editing = False
 
     def populate_private_rooms(self):
@@ -453,21 +494,28 @@ class UserPopupMenu(PopupMenu):
             if not is_owned and not is_operator:
                 continue
 
-            if self.username in data["users"]:
-                self.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
-            else:
-                self.add_items(
-                    ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
+            if self.username == data.owner:
+                continue
+
+            is_user_member = (self.username in data.members)
+            is_user_operator = (self.username in data.operators)
+
+            if not is_user_operator:
+                if is_user_member:
+                    self.add_items(
+                        ("#" + _("Remove from Private Room %s") % room, self.on_private_room_remove_user, room))
+                else:
+                    self.add_items(
+                        ("#" + _("Add to Private Room %s") % room, self.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
-            if self.username in data["operators"]:
+            if is_user_operator:
                 self.add_items(
                     ("#" + _("Remove as Operator of %s") % room, self.on_private_room_remove_operator, room))
 
-            elif self.username in data["users"]:
+            elif is_user_member:
                 self.add_items(
                     ("#" + _("Add as Operator of %s") % room, self.on_private_room_add_operator, room))
 

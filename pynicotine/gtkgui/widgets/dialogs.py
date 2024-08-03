@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -15,6 +15,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys
 
 from gi.repository import Gdk
 from gi.repository import GLib
@@ -33,7 +36,7 @@ class Dialog(Window):
 
     def __init__(self, widget=None, parent=None, content_box=None, buttons_start=(), buttons_end=(),
                  default_button=None, show_callback=None, close_callback=None, title="", width=0, height=0,
-                 modal=True, resizable=True, show_title=True, show_title_buttons=True):
+                 modal=True, show_title=True, show_title_buttons=True):
 
         self.parent = parent
         self.modal = modal
@@ -54,15 +57,20 @@ class Dialog(Window):
             destroy_with_parent=True,
             default_width=width,
             default_height=height,
-            resizable=resizable,
             child=container
         )
         super().__init__(widget)
         Accelerator("Escape", widget, self.close)
 
         if GTK_API_VERSION == 3:
-            widget.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)  # pylint: disable=no-member
-            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)           # pylint: disable=no-member
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                # Workaround for dialogs being centered at (0,0) coords on startup
+                position = Gtk.WindowPosition.CENTER
+            else:
+                position = Gtk.WindowPosition.CENTER_ON_PARENT
+
+            widget.set_position(position)                    # pylint: disable=no-member
+            widget.set_type_hint(Gdk.WindowTypeHint.DIALOG)  # pylint: disable=no-member
 
         if content_box:
             content_box.set_vexpand(True)
@@ -169,7 +177,8 @@ class Dialog(Window):
 
         # "Soft-delete" the dialog. This is necessary to prevent the dialog from
         # appearing in window peek on Windows
-        self.widget.unrealize()
+        if sys.platform == "win32" and self.widget.get_titlebar() is None:
+            self.widget.unrealize()
 
         return True
 
@@ -181,6 +190,10 @@ class Dialog(Window):
             self.widget.connect("delete-event", self._on_close_request)
 
         self.widget.connect("show", self._on_show)
+
+        # Make all dialogs resizable to fix positioning issue.
+        # Workaround for https://gitlab.gnome.org/GNOME/mutter/-/issues/3099
+        self.widget.set_resizable(True)
 
         if self.parent:
             self.widget.set_transient_for(self.parent.widget)
@@ -376,6 +389,9 @@ class MessageDialog(Window):
                     button.set_can_default(True)       # pylint: disable=no-member
                     widget.set_default(button)         # pylint: disable=no-member
 
+                if response_type == "ok":
+                    add_css_class(button, "suggested-action")
+
                 self.message_label.set_mnemonic_widget(button)
                 self.default_focus_widget = button
 
@@ -419,8 +435,8 @@ class MessageDialog(Window):
         if self.callback and response_type != "cancel":
             self.callback(self, response_type, self.callback_data)
 
-        # Check if the dialog was already closed in the callback
-        if self in Window.active_dialogs:
+        # "Run in Background" response already closes all dialogs
+        if response_type != "run_background":
             self.close()
 
     def _finish_present(self, present_callback):

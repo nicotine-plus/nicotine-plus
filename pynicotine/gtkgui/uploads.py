@@ -24,6 +24,8 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -33,6 +35,7 @@ from pynicotine.gtkgui.transfers import Transfers
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.transfers import TransferStatus
+from pynicotine.utils import human_speed
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_folder_path
 
@@ -45,7 +48,6 @@ class Uploads(Transfers):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.deprioritized_statuses = {TransferStatus.CANCELLED, TransferStatus.FINISHED}
 
         self.transfer_page = self.page = window.uploads_page
         self.page.id = "uploads"
@@ -59,6 +61,7 @@ class Uploads(Transfers):
         self.expand_button = window.uploads_expand_button
         self.expand_icon = window.uploads_expand_icon
         self.grouping_button = window.uploads_grouping_button
+        self.status_label = window.upload_status_label
 
         super().__init__(window, transfer_type="upload")
 
@@ -86,8 +89,12 @@ class Uploads(Transfers):
             ("abort-uploads", self.abort_transfers),
             ("clear-upload", self.clear_transfer),
             ("clear-uploads", self.clear_transfers),
+            ("set-connection-stats", self.set_connection_stats),
             ("start", self.start),
-            ("update-upload", self.update_model)
+            ("update-upload", self.update_model),
+            ("update-upload-limits", self.update_limits),
+            ("uploads-shutdown-request", self.shutdown_request),
+            ("uploads-shutdown-cancel", self.shutdown_cancel)
         ):
             events.connect(event_name, callback)
 
@@ -116,8 +123,39 @@ class Uploads(Transfers):
     def abort_selected_transfers(self):
         core.uploads.abort_uploads(self.selected_transfers, denied_message="Cancelled")
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         core.uploads.clear_uploads(uploads=self.selected_transfers)
+
+    def set_connection_stats(self, upload_bandwidth=0, **_kwargs):
+
+        # Sync parent row updates with connection stats
+        self._update_pending_parent_rows()
+
+        upload_bandwidth = human_speed(upload_bandwidth)
+        upload_bandwidth_text = f"{upload_bandwidth} ( {len(core.uploads.active_users)} )"
+
+        if self.window.upload_status_label.get_text() == upload_bandwidth_text:
+            return
+
+        self.window.upload_status_label.set_text(upload_bandwidth_text)
+        self.window.application.tray_icon.set_upload_status(
+            _("Uploads: %(speed)s") % {"speed": upload_bandwidth})
+
+    def shutdown_request(self):
+
+        icon_name = "system-shutdown-symbolic"
+        icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
+        toggle_status_action = self.window.lookup_action("toggle-status")
+
+        toggle_status_action.set_enabled(False)
+        self.window.user_status_button.set_active(True)
+        toggle_status_action.set_enabled(True)
+
+        self.window.user_status_icon.set_from_icon_name(icon_name, *icon_args)
+        self.window.user_status_label.set_text(_("Quitting..."))
+
+    def shutdown_cancel(self):
+        self.window.update_user_status()
 
     def on_try_clear_queued(self, *_args):
 
@@ -184,9 +222,9 @@ class Uploads(Transfers):
             return
 
         user = config.sections["server"]["login"]
-        folder_path, separator, _basename = transfer.virtual_path.rpartition("\\")
+        path = transfer.virtual_path
 
-        core.userbrowse.browse_user(user, path=(folder_path + separator))
+        core.userbrowse.browse_user(user, path=path)
 
     def on_abort_users(self, *_args):
 

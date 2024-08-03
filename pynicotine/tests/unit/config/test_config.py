@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -25,22 +25,32 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.utils import encode_path
 
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+
 
 class ConfigTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
+        default_config_path = os.path.join(CURRENT_FOLDER_PATH, "config")
 
-        default_config_path = os.path.join(config.data_folder_path, "config")
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
+
         shutil.copy(default_config_path, config.config_file_path)
 
         core.init_components(enabled_components={})
 
     def tearDown(self):
         core.quit()
-        self.assertFalse(config.sections)
+        self.assertTrue(config.sections)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_config(self):
         """Test loading a config file."""

@@ -50,8 +50,9 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
-from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import FileListMessage
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import human_size
 from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
@@ -86,8 +87,8 @@ class UserBrowses(IconNotebook):
         for event_name, callback in (
             ("peer-connection-closed", self.peer_connection_error),
             ("peer-connection-error", self.peer_connection_error),
+            ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.on_focus),
             ("shared-file-list-progress", self.shared_file_list_progress),
             ("shared-file-list-response", self.shared_file_list),
             ("user-browse-remove-user", self.remove_user),
@@ -95,6 +96,9 @@ class UserBrowses(IconNotebook):
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 
@@ -170,11 +174,14 @@ class UserBrowses(IconNotebook):
         del self.pages[user]
         page.destroy()
 
-    def peer_connection_error(self, user, *_args, **_kwargs):
+    def peer_connection_error(self, username, conn_type, **_unused):
 
-        page = self.pages.get(user)
+        page = self.pages.get(username)
 
-        if page is not None:
+        if page is None:
+            return
+
+        if conn_type == ConnectionType.PEER:
             page.peer_connection_error()
 
     def user_status(self, msg):
@@ -199,9 +206,7 @@ class UserBrowses(IconNotebook):
             page.shared_file_list(msg)
 
     def server_disconnect(self, *_args):
-
         for user, page in self.pages.items():
-            page.peer_connection_error()
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
 
 
@@ -386,10 +391,6 @@ class UserBrowse:
             )
 
         # Key Bindings (folder_tree_view)
-        Accelerator("Left", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)
-        Accelerator("minus", self.folder_tree_view.widget, self.on_folder_collapse_accelerator)  # "-"
-        Accelerator("backslash", self.folder_tree_view.widget, self.on_folder_collapse_sub_accelerator)  # "\"
-        Accelerator("equal", self.folder_tree_view.widget, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK)
         Accelerator("Right", self.folder_tree_view.widget, self.on_folder_expand_accelerator)
 
         Accelerator("<Shift>Return", self.folder_tree_view.widget, self.on_folder_focus_filetree_accelerator)
@@ -399,7 +400,7 @@ class UserBrowse:
         Accelerator("<Alt>Return", self.folder_tree_view.widget, self.on_file_properties_accelerator, True)
 
         # Key Bindings (file_list_view)
-        for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
+        for accelerator in ("BackSpace", "backslash"):  # Navigate up, "\"
             Accelerator(accelerator, self.file_list_view.widget, self.on_focus_folder_accelerator)
 
         Accelerator("Left", self.file_list_view.widget, self.on_focus_folder_left_accelerator)
@@ -499,11 +500,11 @@ class UserBrowse:
             root_processed = False
             skip_folder = (self.query and self.query not in folder_path.lower())
 
-            for filedata in files:
-                if skip_folder and self.query in filedata[1].lower():
+            for _code, basename, file_size, *_unused in files:
+                if skip_folder and self.query in basename.lower():
                     skip_folder = False
 
-                total_size += filedata[2]
+                total_size += file_size
 
             if skip_folder:
                 continue
@@ -858,9 +859,13 @@ class UserBrowse:
         if iterator is None:
             return
 
-        iterators = tree_view.get_selected_rows()
+        selected_iterators = tree_view.get_selected_rows()
+        folder_path = None
 
-        if len(iterators) > 1:
+        # Skip first folder
+        next(selected_iterators)
+
+        if next(selected_iterators, None):
             # Multiple folders selected. Avoid any confusion by clearing the path bar and file list view.
             folder_path = None
         else:
@@ -894,8 +899,9 @@ class UserBrowse:
     def on_download_folder_recursive(self, *_args):
         self.on_download_folder(recurse=True)
 
-    def on_download_folder_to_selected(self, selected_download_folder_path, recurse):
-        self.on_download_folder(download_folder_path=selected_download_folder_path, recurse=recurse)
+    def on_download_folder_to_selected(self, selected_download_folder_paths, recurse):
+        self.on_download_folder(
+            download_folder_path=next(iter(selected_download_folder_paths), None), recurse=recurse)
 
     def on_download_folder_to(self, *_args, recurse=False):
 
@@ -990,17 +996,6 @@ class UserBrowse:
         # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
         # TODO: Mouse double-click actions will need keycode state & mods [Shift/Ctrl+DblClick]
 
-    def on_folder_collapse_accelerator(self, *_args):
-        """Left, Shift+Left (Gtk), "-", "/" (Gtk) - collapse row."""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.collapse_row(iterator)
-        return True
-
     def on_folder_expand_accelerator(self, *_args):
         """Right, Shift+Right (Gtk), "+" (Gtk) - expand row."""
 
@@ -1009,34 +1004,9 @@ class UserBrowse:
         if iterator is None:
             return False
 
-        expandable = self.folder_tree_view.expand_row(iterator)
-
-        if not expandable and not self.file_list_view.is_empty():
+        if not self.file_list_view.is_empty():
             self.file_list_view.grab_focus()
 
-        return True
-
-    def on_folder_collapse_sub_accelerator(self, *_args):
-        """\backslash: collapse or expand to show subs."""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.collapse_row(iterator)  # show 2nd level
-        self.folder_tree_view.expand_row(iterator)
-        return True
-
-    def on_folder_expand_sub_accelerator(self, *_args):
-        """=equal: expand only (dont move focus)"""
-
-        iterator = self.folder_tree_view.get_focused_row()
-
-        if iterator is None:
-            return False
-
-        self.folder_tree_view.expand_row(iterator)
         return True
 
     def on_folder_focus_filetree_accelerator(self, *_args):
@@ -1046,7 +1016,12 @@ class UserBrowse:
             self.file_list_view.grab_focus()
             return True
 
-        self.on_folder_expand_sub_accelerator()
+        iterator = self.folder_tree_view.get_focused_row()
+
+        if iterator is None:
+            return False
+
+        self.folder_tree_view.expand_row(iterator)
         return True
 
     def on_folder_transfer_to_accelerator(self, *_args):
@@ -1110,8 +1085,8 @@ class UserBrowse:
             core.userbrowse.download_file(
                 self.user, folder_path, file_data, download_folder_path=download_folder_path)
 
-    def on_download_files_to_selected(self, selected_download_folder_path, _data):
-        self.on_download_files(download_folder_path=selected_download_folder_path)
+    def on_download_files_to_selected(self, selected_download_folder_paths, _data):
+        self.on_download_files(download_folder_path=next(iter(selected_download_folder_paths), None))
 
     def on_download_files_to(self, *_args):
 
@@ -1165,6 +1140,11 @@ class UserBrowse:
         data = []
         selected_size = 0
         selected_length = 0
+        watched_user = core.users.watched.get(self.user)
+        speed = 0
+
+        if watched_user is not None:
+            speed = watched_user.upload_speed or 0
 
         if all_files:
             prev_folder_path = None
@@ -1193,6 +1173,7 @@ class UserBrowse:
                             "file_path": file_path,
                             "basename": basename,
                             "virtual_folder_path": folder_path,
+                            "speed": speed,
                             "size": file_size,
                             "file_attributes": file_attributes
                         })
@@ -1214,6 +1195,7 @@ class UserBrowse:
                     "file_path": file_path,
                     "basename": basename,
                     "virtual_folder_path": selected_folder_path,
+                    "speed": speed,
                     "size": file_size,
                     "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
                 })
@@ -1250,14 +1232,14 @@ class UserBrowse:
 
         column_id = self.file_list_view.get_focused_column()
 
-        if self.file_list_view.get_visible_columns()[0] != column_id:
+        if next(self.file_list_view.get_visible_columns(), None) != column_id:
             return False  # allow horizontal scrolling
 
         self.folder_tree_view.grab_focus()
         return True
 
     def on_focus_folder_accelerator(self, *_args):
-        """Shift+Tab, BackSpace, \backslash - focus selection back parent folder"""
+        """BackSpace, \backslash - focus selection back parent folder"""
 
         self.folder_tree_view.grab_focus()
         return True
@@ -1353,6 +1335,9 @@ class UserBrowse:
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
             self.set_in_progress()
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            self.peer_connection_error()
 
     def on_hide_progress_bar(self, progress_bar):
         """Disables indeterminate progress bar mode when switching to another tab."""

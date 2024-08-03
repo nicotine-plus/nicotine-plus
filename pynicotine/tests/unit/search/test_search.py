@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from collections import UserDict
 from unittest import TestCase
@@ -26,6 +27,7 @@ from pynicotine.core import core
 from pynicotine.shares import PermissionLevel
 from pynicotine.slskmessages import increment_token
 
+DATA_FOLDER_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_data")
 SEARCH_TEXT = '70 - * Gwen "test" "" -mp3 "what\'s up" don\'t -nothanks a:::b;c+d +++---}[ *ello [[ @@ auto -No yes'
 SEARCH_MODE = "global"
 
@@ -36,8 +38,8 @@ class SearchTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
         core.init_components(enabled_components={"pluginhandler", "search", "shares"})
 
@@ -49,29 +51,34 @@ class SearchTest(TestCase):
         self.assertIsNone(core.search)
         self.assertIsNone(core.shares)
 
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
+
     def test_do_search(self):
         """Test the do_search function, including the outgoing search term and
         search history."""
 
         old_token = core.search.token
-        search_term, search_term_no_quotes, included_words, excluded_words = core.search.sanitize_search_term(
-            SEARCH_TEXT
-        )
         core.search.do_search(SEARCH_TEXT, SEARCH_MODE)
+        search = core.search.searches[core.search.token]
 
         self.assertEqual(core.search.token, old_token + 1)
-        self.assertEqual(search_term, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes')
+        self.assertEqual(search.term, SEARCH_TEXT)
         self.assertEqual(
-            search_term_no_quotes, '70 Gwen test -mp3 what s up don t -nothanks a b c d *ello auto -No yes'
+            search.term_sanitized, '70 Gwen "test" -mp3 "what\'s up" don t -nothanks a b c d *ello auto -No yes'
         )
-        self.assertEqual(config.sections["searches"]["history"][0], search_term)
-        self.assertIn("ello", included_words)
-        self.assertIn("gwen", included_words)
-        self.assertIn("what's up", included_words)
-        self.assertIn("don", included_words)
-        self.assertIn("t", included_words)
-        self.assertIn("no", excluded_words)
-        self.assertIn("mp3", excluded_words)
+        self.assertEqual(
+            search.term_transmitted, '70 Gwen test -mp3 what s up don t -nothanks a b c d *ello auto -No yes'
+        )
+        self.assertEqual(config.sections["searches"]["history"][0], search.term_sanitized)
+        self.assertIn("ello", search.included_words)
+        self.assertIn("gwen", search.included_words)
+        self.assertIn("what's up", search.included_words)
+        self.assertIn("don", search.included_words)
+        self.assertIn("t", search.included_words)
+        self.assertIn("no", search.excluded_words)
+        self.assertIn("mp3", search.excluded_words)
 
     def test_search_token_increment(self):
         """Test that search token increments work properly."""
@@ -89,16 +96,26 @@ class SearchTest(TestCase):
         # First item
 
         core.search.add_wish(SEARCH_TEXT)
+        search = core.search.searches[core.search.token]
+
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(core.search.token, old_token + 1)
         self.assertEqual(core.search.token, core.search.token)
+        self.assertEqual(search.term, SEARCH_TEXT)
+        self.assertEqual(search.mode, "wishlist")
+        self.assertTrue(search.is_ignored)
 
         # Second item
 
         new_item = f"{SEARCH_TEXT}1"
         core.search.add_wish(new_item)
+        search = core.search.searches[core.search.token]
+
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
+        self.assertEqual(search.term, new_item)
+        self.assertEqual(search.mode, "wishlist")
+        self.assertTrue(search.is_ignored)
 
     def test_create_search_result_list(self):
         """Test creating search result lists from the word index."""
@@ -125,7 +142,7 @@ class SearchTest(TestCase):
 
         results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
-        self.assertEqual(results, None)
+        self.assertIsNone(results)
 
         included_words = {"iso"}
         excluded_words = {"system"}
@@ -133,7 +150,7 @@ class SearchTest(TestCase):
 
         results = core.search._create_search_result_list(
             included_words, excluded_words, partial_words, max_results, word_index)
-        self.assertEqual(results, None)
+        self.assertIsNone(results)
 
     def test_exclude_server_phrases(self):
         """Verify that results containing excluded phrases are not included."""

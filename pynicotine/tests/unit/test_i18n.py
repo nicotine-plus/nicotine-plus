@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2021-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,16 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import glob
 import os
 import subprocess
 
 from unittest import TestCase
 
 from pynicotine.i18n import BASE_PATH
-from pynicotine.i18n import LANGUAGES
-from pynicotine.i18n import LOCALE_PATH
-from pynicotine.i18n import build_translations
 
 
 class I18nTest(TestCase):
@@ -33,24 +29,17 @@ class I18nTest(TestCase):
     def test_po_files(self):
         """Verify that translation files don't contain errors."""
 
-        po_file_paths = glob.glob(os.path.join(BASE_PATH, "po", "*.po"))
-        self.assertTrue(po_file_paths)
+        po_file_found = False
 
-        for po_file_path in po_file_paths:
-            error_output = subprocess.check_output(
-                ["msgfmt", "--check", po_file_path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
+        with os.scandir(os.path.join(BASE_PATH, "po")) as entries:
+            for entry in entries:
+                if not entry.is_file() or not entry.name.endswith(".po"):
+                    continue
 
-            self.assertFalse(error_output)
+                po_file_found = True
+                error_output = subprocess.check_output(
+                    ["msgfmt", "--check", entry.path, "-o", "/dev/null"], stderr=subprocess.STDOUT)
 
-    def test_build_translations(self):
-        """Verify that translations are built and installed properly."""
+                self.assertFalse(error_output)
 
-        build_translations()
-        mo_file_paths = glob.glob(os.path.join(LOCALE_PATH, "**", "*.mo"), recursive=True)
-
-        for language_code, _language_name in LANGUAGES:
-            if language_code == "en":
-                # English is the default language
-                continue
-
-            self.assertIn(os.path.join(LOCALE_PATH, language_code, "LC_MESSAGES", "nicotine.mo"), mo_file_paths)
+        self.assertTrue(po_file_found)

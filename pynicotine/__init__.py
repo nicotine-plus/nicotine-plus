@@ -18,7 +18,7 @@
 
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
-__version__ = "3.3.3.dev1"
+__version__ = "3.3.5.dev3"
 __author__ = "Nicotine+ Team"
 __copyright__ = """© 2004–2024 Nicotine+ Contributors
 © 2003–2004 Nicotine Contributors
@@ -29,7 +29,6 @@ __port_checker_url__ = "https://www.slsknet.org/porttest.php?port=%s"
 __issue_tracker_url__ = "https://github.com/nicotine-plus/nicotine-plus/issues"
 __translations_url__ = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
-import argparse
 import io
 import os
 import sys
@@ -43,6 +42,8 @@ from pynicotine.logfacility import log
 
 def check_arguments():
     """Parse command line arguments specified by the user."""
+
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog="nicotine", description=_("Graphical client for the Soulseek peer-to-peer network"),

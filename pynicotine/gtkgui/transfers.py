@@ -29,7 +29,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.core import core
-from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
@@ -76,11 +75,33 @@ class Transfers:
         TransferRejectReason.PENDING_SHUTDOWN: _("Pending shutdown"),
         TransferRejectReason.FILE_READ_ERROR: _("File read error")
     }
-    TRANSFER_ITERATOR_PENDING = 0
+    STATUS_PRIORITIES = {
+        TransferStatus.FILTERED: 0,
+        TransferStatus.FINISHED: 1,
+        TransferStatus.PAUSED: 2,
+        TransferStatus.CANCELLED: 3,
+        TransferStatus.QUEUED: 4,
+        f"{TransferStatus.QUEUED} (prioritized)": 4,
+        f"{TransferStatus.QUEUED} (privileged)": 4,
+        TransferStatus.USER_LOGGED_OFF: 5,
+        TransferStatus.CONNECTION_CLOSED: 6,
+        TransferStatus.CONNECTION_TIMEOUT: 7,
+        TransferRejectReason.FILE_NOT_SHARED: 8,
+        TransferRejectReason.PENDING_SHUTDOWN: 9,
+        TransferRejectReason.FILE_READ_ERROR: 10,
+        TransferStatus.LOCAL_FILE_ERROR: 11,
+        TransferStatus.DOWNLOAD_FOLDER_ERROR: 12,
+        TransferRejectReason.BANNED: 13,
+        TransferStatus.GETTING_STATUS: 9998,
+        TransferStatus.TRANSFERRING: 9999
+    }
+    PENDING_ITERATOR_REBUILD = 0
+    PENDING_ITERATOR_ADD = 1
+    PENDING_ITERATORS = {PENDING_ITERATOR_REBUILD, PENDING_ITERATOR_ADD}
+    UNKNOWN_STATUS_PRIORITY = 1000
 
     path_separator = path_label = retry_label = abort_label = None
-    deprioritized_statuses = ()
-    transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+    transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = status_label = None
 
     def __init__(self, window, transfer_type):
 
@@ -107,7 +128,7 @@ class Transfers:
         self.grouping_mode = None
         self.row_id = 0
         self.file_properties = None
-        self.pending_parent_rows_timer_id = None
+        self.initialized = False
 
         # Use dict instead of list for faster membership checks
         self.selected_users = {}
@@ -116,7 +137,7 @@ class Transfers:
         self.tree_view = TreeView(
             window, parent=self.tree_container, name=transfer_type,
             multi_select=True, persistent_sort=True, activate_row_callback=self.on_row_activated,
-            delete_accelerator_callback=self.on_clear_transfers_accelerator,
+            delete_accelerator_callback=self.on_remove_transfers_accelerator,
             columns={
                 # Visible columns
                 "user": {
@@ -237,7 +258,7 @@ class Transfers:
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
-            ("#" + _("_Clear"), self.on_clear_transfer),
+            ("#" + _("Remove"), self.on_remove_transfer),
             ("", None),
             ("#" + _("View User _Profile"), self.on_user_profile),
             ("#" + _("_Browse Folder"), self.on_browse_folder),
@@ -280,7 +301,7 @@ class Transfers:
             # spurious highlights when a previously added transfer changes, but
             # the tab wasn't activated yet (iterator is None), mark the iterator
             # as pending.
-            transfer.iterator = self.TRANSFER_ITERATOR_PENDING
+            transfer.iterator = self.PENDING_ITERATOR_REBUILD
 
         self.container.get_parent().set_visible(bool(transfer_list))
 
@@ -344,6 +365,16 @@ class Transfers:
 
         return status
 
+    def update_limits(self):
+        """Underline status bar bandwidth labels when alternative speed limits
+        are active."""
+
+        if config.sections["transfers"][f"use_{self.type}_speed_limit"] == "alternative":
+            add_css_class(self.status_label, "underline")
+            return
+
+        remove_css_class(self.status_label, "underline")
+
     def update_num_users_files(self):
         self.user_counter.set_text(humanize(len(self.users)))
         self.file_counter.set_text(humanize(len(self.transfer_list)))
@@ -353,36 +384,36 @@ class Transfers:
         if self.window.current_page_id != self.transfer_page.id:
             if transfer is not None and transfer.iterator is None:
                 self.window.notebook.request_tab_changed(self.transfer_page)
-                transfer.iterator = self.TRANSFER_ITERATOR_PENDING
+                transfer.iterator = self.PENDING_ITERATOR_ADD
 
             # No need to do unnecessary work if transfers are not visible
             return
 
+        has_disabled_sorting = False
         has_selected_parent = False
-        should_expand_all = False
         update_counters = False
         use_reverse_file_path = config.sections["ui"]["reverse_file_paths"]
-
-        if self.pending_parent_rows_timer_id is None:
-            # Limit individual parent row updates to once per second
-            self.pending_parent_rows_timer_id = events.schedule(
-                delay=1, callback=self._update_pending_parent_rows, repeat=True)
-
-            should_expand_all = self.expand_button.get_active()
 
         if transfer is not None:
             update_counters = self.update_specific(transfer, use_reverse_file_path=use_reverse_file_path)
 
         elif self.transfer_list:
             for transfer_i in self.transfer_list:
-                select_parent = (not has_selected_parent and transfer_i.iterator == self.TRANSFER_ITERATOR_PENDING)
+                select_parent = (not has_selected_parent and transfer_i.iterator == self.PENDING_ITERATOR_ADD)
                 row_added = self.update_specific(transfer_i, select_parent, use_reverse_file_path)
 
                 if select_parent:
                     has_selected_parent = True
 
-                if row_added:
-                    update_counters = True
+                if not row_added:
+                    continue
+
+                update_counters = True
+
+                if not has_disabled_sorting:
+                    # Optimization: disable sorting while adding rows
+                    self.tree_view.disable_sorting()
+                    has_disabled_sorting = True
 
         if update_parent:
             self.update_parent_rows(transfer)
@@ -390,8 +421,12 @@ class Transfers:
         if update_counters:
             self.update_num_users_files()
 
-        if should_expand_all:
-            self.tree_view.expand_all_rows()
+        if has_disabled_sorting:
+            self.tree_view.enable_sorting()
+
+        if not self.initialized:
+            self.on_expand_tree()
+            self.initialized = True
 
         self.tree_view.redraw()
 
@@ -443,6 +478,10 @@ class Transfers:
 
     @staticmethod
     def get_hsize(current_byte_offset, size):
+
+        if current_byte_offset >= size:
+            return human_size(size)
+
         return f"{human_size(current_byte_offset)} / {human_size(size)}"
 
     @staticmethod
@@ -500,9 +539,12 @@ class Transfers:
                 parent_status = status
                 speed += transfer.speed
 
-            elif parent_status in self.deprioritized_statuses and status != TransferStatus.FINISHED:
-                # "Finished" status always has the lowest priority
-                parent_status = status
+            elif parent_status in self.STATUS_PRIORITIES:
+                parent_status_priority = self.STATUS_PRIORITIES[parent_status]
+                status_priority = self.STATUS_PRIORITIES.get(status, self.UNKNOWN_STATUS_PRIORITY)
+
+                if status_priority > parent_status_priority:
+                    parent_status = status
 
             if status == TransferStatus.FILTERED and transfer.virtual_path:
                 # We don't want to count filtered files when calculating the progress
@@ -558,12 +600,12 @@ class Transfers:
         current_byte_offset = transfer.current_byte_offset or 0
         queue_position = transfer.queue_position
         status = transfer.status or ""
-        translated_status = self.translate_status(status)
 
         if transfer.modifier and status == TransferStatus.QUEUED:
             # Priority status
             status += f" ({transfer.modifier})"
 
+        translated_status = self.translate_status(status)
         size = transfer.size
         speed = transfer.speed
         elapsed = transfer.time_elapsed
@@ -571,7 +613,7 @@ class Transfers:
         iterator = transfer.iterator
 
         # Modify old transfer
-        if iterator and iterator != self.TRANSFER_ITERATOR_PENDING:
+        if iterator and iterator not in self.PENDING_ITERATORS:
             should_update_size = False
 
             if self.tree_view.get_row_value(iterator, "status") != translated_status:
@@ -605,11 +647,13 @@ class Transfers:
 
             return False
 
+        expand_allowed = self.initialized
         expand_user = False
         expand_folder = False
         user_iterator = None
         user_folder_path_iterator = None
         parent_iterator = None
+        select_iterator = None
 
         user = transfer.username
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
@@ -627,8 +671,6 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
-            expand_user = True
-            select_iterator = None
             empty_int = 0
             empty_str = ""
 
@@ -658,13 +700,17 @@ class Transfers:
                     ], select_row=False
                 )
 
-                if not self.expand_button.get_active():
-                    expand_user = (self.grouping_mode == "folder_grouping")
+                if expand_allowed:
+                    expand_user = self.expand_button.get_active() or self.grouping_mode == "folder_grouping"
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])
 
             user_iterator, user_child_transfers = self.users[user]
+            parent_iterator = user_iterator
+
+            if select_parent:
+                select_iterator = parent_iterator
 
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
@@ -700,7 +746,7 @@ class Transfers:
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_transfers.append(path_transfer)
-                    expand_folder = select_parent and self.expand_button.get_active()
+                    expand_folder = expand_allowed and self.expand_button.get_active()
                     self.row_id += 1
                     self.paths[user_folder_path] = (iterator, [])
 
@@ -708,28 +754,13 @@ class Transfers:
                 parent_iterator = user_folder_path_iterator
                 user_folder_path_child_transfers.append(transfer)
 
-                if select_parent:
-                    self.tree_view.expand_row(user_iterator)
-                    select_iterator = user_folder_path_iterator
-                    expand_user = False
+                if select_parent and (expand_user or self.tree_view.is_row_expanded(user_iterator)):
+                    select_iterator = parent_iterator
 
                 # Group by folder, path not visible in file rows
                 folder_path = ""
             else:
-                parent_iterator = user_iterator
                 user_child_transfers.append(transfer)
-
-                if select_parent:
-                    select_iterator = user_iterator
-
-            if select_iterator and (not self.tree_view.is_row_selected(select_iterator)
-                                    or self.tree_view.get_num_selected_rows() != 1):
-                # Select parent row of newly added transfer, and scroll to it.
-                # Unselect any other rows to prevent accidental actions on previously
-                # selected transfers.
-                self.tree_view.unselect_all_rows()
-                self.tree_view.select_row(select_iterator, expand_rows=False)
-
         else:
             # No grouping
             if user not in self.users:
@@ -768,23 +799,30 @@ class Transfers:
         if expand_folder and user_folder_path_iterator is not None:
             self.tree_view.expand_row(user_folder_path_iterator)
 
+        if select_iterator and (not self.tree_view.is_row_selected(select_iterator)
+                                or self.tree_view.get_num_selected_rows() != 1):
+            # Select parent row of newly added transfer, and scroll to it.
+            # Unselect any other rows to prevent accidental actions on previously
+            # selected transfers.
+            self.tree_view.unselect_all_rows()
+            self.tree_view.select_row(select_iterator, expand_rows=False)
+
         return True
 
     def clear_model(self):
 
-        if self.pending_parent_rows_timer_id is not None:
-            events.cancel_scheduled(self.pending_parent_rows_timer_id)
-            self.pending_parent_rows_timer_id = None
-
+        self.initialized = False
         self.users.clear()
         self.paths.clear()
+        self.pending_folder_rows.clear()
+        self.pending_user_rows.clear()
         self.selected_transfers.clear()
         self.selected_users.clear()
         self.tree_view.clear()
         self.row_id = 0
 
         for transfer in self.transfer_list:
-            transfer.iterator = self.TRANSFER_ITERATOR_PENDING
+            transfer.iterator = self.PENDING_ITERATOR_REBUILD
 
     def get_transfer_folder_path(self, _transfer):
         # Implemented in subclasses
@@ -798,7 +836,7 @@ class Transfers:
         # Implemented in subclasses
         raise NotImplementedError
 
-    def clear_selected_transfers(self):
+    def remove_selected_transfers(self):
         # Implemented in subclasses
         raise NotImplementedError
 
@@ -814,7 +852,7 @@ class Transfers:
         iterator = transfer.iterator
         transfer.iterator = None
 
-        if not iterator or iterator == self.TRANSFER_ITERATOR_PENDING:
+        if not iterator or iterator in self.PENDING_ITERATORS:
             return
 
         user = transfer.username
@@ -874,6 +912,9 @@ class Transfers:
         self.add_popup_menu_user(self.popup_menu_users, user)
 
     def on_expand_tree(self, *_args):
+
+        if not self.expand_button.get_visible():
+            return
 
         expanded = self.expand_button.get_active()
 
@@ -956,8 +997,8 @@ class Transfers:
         elif action == 4:  # Pause / Abort
             self.abort_selected_transfers()
 
-        elif action == 5:  # Clear
-            self.clear_selected_transfers()
+        elif action == 5:  # Remove
+            self.remove_selected_transfers()
 
         elif action == 6:  # Resume / Retry
             self.retry_selected_transfers()
@@ -1008,11 +1049,11 @@ class Transfers:
         self.retry_selected_transfers()
         return True
 
-    def on_clear_transfers_accelerator(self, *_args):
-        """Delete - clear transfers."""
+    def on_remove_transfers_accelerator(self, *_args):
+        """Delete - remove transfers."""
 
         self.select_transfers()
-        self.clear_selected_transfers()
+        self.remove_selected_transfers()
         return True
 
     def on_file_properties_accelerator(self, *_args):
@@ -1036,6 +1077,9 @@ class Transfers:
         selected_length = 0
 
         for transfer in self.selected_transfers:
+            username = transfer.username
+            watched_user = core.users.watched.get(username)
+            speed = 0
             file_path = transfer.virtual_path
             file_size = transfer.size
             file_attributes = transfer.file_attributes
@@ -1047,6 +1091,9 @@ class Transfers:
 
             folder_path, _separator, basename = file_path.rpartition("\\")
 
+            if watched_user is not None:
+                speed = watched_user.upload_speed or 0
+
             data.append({
                 "user": transfer.username,
                 "file_path": file_path,
@@ -1054,7 +1101,7 @@ class Transfers:
                 "virtual_folder_path": folder_path,
                 "real_folder_path": transfer.folder_path,
                 "queue_position": transfer.queue_position,
-                "speed": transfer.speed,
+                "speed": speed,
                 "size": file_size,
                 "file_attributes": file_attributes
             })
@@ -1101,6 +1148,6 @@ class Transfers:
         self.select_transfers()
         self.abort_selected_transfers()
 
-    def on_clear_transfer(self, *_args):
+    def on_remove_transfer(self, *_args):
         self.select_transfers()
-        self.clear_selected_transfers()
+        self.remove_selected_transfers()

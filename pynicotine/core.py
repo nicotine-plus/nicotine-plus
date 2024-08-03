@@ -16,15 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
 import os
-import signal
 import sys
 import threading
 
 import pynicotine
-from pynicotine import slskmessages
-from pynicotine.cli import cli
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -34,6 +30,12 @@ class Core:
     """Core handles initialization, quitting, as well as the various components
     used by the application.
     """
+
+    __slots__ = ("shares", "users", "network_filter", "statistics", "search", "downloads",
+                 "uploads", "interests", "userbrowse", "userinfo", "buddies", "privatechat",
+                 "chatrooms", "pluginhandler", "now_playing", "portmapper", "notifications",
+                 "update_checker", "_network_thread", "cli_interface_address",
+                 "cli_listen_port", "enabled_components")
 
     def __init__(self):
 
@@ -82,6 +84,7 @@ class Core:
             self._init_signal_handler()
 
         if "cli" in enabled_components:
+            from pynicotine.cli import cli
             cli.enable_logging()
 
         config.load_config()
@@ -95,12 +98,16 @@ class Core:
 
         script_folder_path = os.path.dirname(__file__)
 
-        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": sys.version.split()[0]})
-        log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
-        log.add_debug("Using %(program)s executable: %(exe)s", {
-            "program": pynicotine.__application_name__, "exe": script_folder_path})
         log.add(_("Loading %(program)s %(version)s"), {
-            "program": pynicotine.__application_name__, "version": pynicotine.__version__})
+            "program": "Python",
+            "version": sys.version.split()[0]
+        })
+        log.add_debug("Using %s executable: %s", ("Python", sys.executable))
+        log.add(_("Loading %(program)s %(version)s"), {
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__
+        })
+        log.add_debug("Using %s executable: %s", (pynicotine.__application_name__, script_folder_path))
 
         if "portmapper" in enabled_components:
             from pynicotine.portmapper import PortMapper
@@ -184,6 +191,8 @@ class Core:
     def _init_signal_handler(self):
         """Handle Ctrl+C and "kill" exit gracefully."""
 
+        import signal
+
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
 
@@ -217,6 +226,7 @@ class Core:
     def start(self):
 
         if "cli" in self.enabled_components:
+            from pynicotine.cli import cli
             cli.enable_prompt()
 
         events.emit("start")
@@ -224,22 +234,22 @@ class Core:
     def setup(self):
         events.emit("setup")
 
-    def confirm_quit(self, only_on_active_uploads=False):
-        events.emit("confirm-quit", only_on_active_uploads)
+    def confirm_quit(self):
+        events.emit("confirm-quit")
 
-    def quit(self, signal_type=None, _frame=None, should_finish_uploads=False):
+    def quit(self, signal_type=None, _frame=None):
 
-        if not should_finish_uploads:
-            log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
-                "program": pynicotine.__application_name__,
-                "version": pynicotine.__version__,
-                "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
-            })
+        import signal
+        log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
+            "program": pynicotine.__application_name__,
+            "version": pynicotine.__version__,
+            "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
+        })
 
         # Allow the networking thread to finish up before quitting
-        events.emit("schedule-quit", should_finish_uploads)
+        events.emit("schedule-quit")
 
-    def _schedule_quit(self, _should_finish_uploads):
+    def _schedule_quit(self):
         events.emit("quit")
 
     def _quit(self):
@@ -279,9 +289,11 @@ class Core:
             self.setup()
             return
 
+        from pynicotine.slskmessages import ServerConnect
+
         events.emit("enable-message-queue")
 
-        self.send_message_to_network_thread(slskmessages.ServerConnect(
+        self.send_message_to_network_thread(ServerConnect(
             addr=config.sections["server"]["server"],
             login=(config.sections["server"]["login"], config.sections["server"]["passw"]),
             interface_name=config.sections["server"]["interface"],
@@ -291,7 +303,8 @@ class Core:
         ))
 
     def disconnect(self):
-        self.send_message_to_network_thread(slskmessages.ServerDisconnect())
+        from pynicotine.slskmessages import ServerDisconnect
+        self.send_message_to_network_thread(ServerDisconnect())
 
     def send_message_to_network_thread(self, message):
         """Sends message to the networking thread to inform about something."""
@@ -309,6 +322,7 @@ class Core:
 
 
 class UpdateChecker:
+    __slots__ = ("_thread",)
 
     def __init__(self):
         self._thread = None
@@ -352,9 +366,11 @@ class UpdateChecker:
     @classmethod
     def retrieve_latest_version(cls):
 
+        import json
         from urllib.request import urlopen
+
         with urlopen("https://pypi.org/pypi/nicotine-plus/json", timeout=5) as response:
-            response_body = response.read().decode("utf-8")
+            response_body = response.read().decode("utf-8", "replace")
 
         data = json.loads(response_body)
         h_latest_version = data["info"]["version"]

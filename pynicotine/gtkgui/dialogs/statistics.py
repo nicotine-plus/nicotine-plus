@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -73,8 +73,7 @@ class Statistics(Dialog):
             content_box=self.container,
             show_callback=self.on_show,
             title=_("Transfer Statistics"),
-            width=425,
-            resizable=False
+            width=425
         )
 
         events.connect("update-stat", self.update_stat)

@@ -5,8 +5,7 @@
   <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <translation type="gettext">nicotine</translation>
-  <name translatable="no">Nicotine+</name>
+  <name translate="no">Nicotine+</name>
   <summary>Browse the Soulseek network</summary>
   <description>
     <p>
@@ -20,8 +19,8 @@
     </p>
   </description>
   <branding>
-    <color type="primary" scheme_preference="light">#ffdfc7</color>
-    <color type="primary" scheme_preference="dark">#733000</color>
+    <color type="primary" scheme_preference="light">#D4E0EE</color>
+    <color type="primary" scheme_preference="dark">#203651</color>
   </branding>
   <screenshots>
     <screenshot type="default">
@@ -73,6 +72,7 @@
   <url type="homepage">https://nicotine-plus.org/</url>
   <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <url type="translate">https://nicotine-plus.org/doc/TRANSLATIONS</url>
+  <url type="vcs-browser">https://github.com/nicotine-plus/nicotine-plus</url>
   <developer_name>Nicotine+ Team</developer_name>  <!-- deprecated in AppStream 1.0 (2023) -->
   <developer id="org.nicotine-plus">
     <name>Nicotine+ Team</name>
@@ -82,7 +82,11 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
-    <release version="3.3.3.dev1" type="development" date="2024-02-28"/>
+    <release version="3.3.5.dev3" type="development" date="2024-08-02"/>
+    <release version="3.3.4" date="2024-05-06">
+      <url>https://nicotine-plus.org/NEWS</url>
+    </release>
+    <release version="3.3.3" date="2024-05-05"/>
     <release version="3.3.2" date="2024-02-25"/>
     <release version="3.3.1" date="2024-02-24"/>
     <release version="3.3.0" date="2024-02-01"/>

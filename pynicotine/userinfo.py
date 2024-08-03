@@ -19,17 +19,21 @@
 import os
 import time
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
 from pynicotine.shares import PermissionLevel
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import UserInfoRequest
+from pynicotine.slskmessages import UserInfoResponse
+from pynicotine.slskmessages import UserInterests
 from pynicotine.utils import encode_path
 from pynicotine.utils import unescape
 
 
 class UserInfo:
+    __slots__ = ("users", "requested_info_times")
 
     def __init__(self):
 
@@ -54,7 +58,7 @@ class UserInfo:
             return
 
         for username in self.users:
-            core.users.watch_user(username)  # Get notified of user status
+            core.users.watch_user(username, context="userinfo")  # Get notified of user status
 
     def _server_disconnect(self, _msg):
         self.requested_info_times.clear()
@@ -96,7 +100,7 @@ class UserInfo:
             else:
                 uploadallowed = 0
 
-        msg = slskmessages.UserInfoResponse(
+        msg = UserInfoResponse(
             descr=descr, pic=pic, totalupl=totalupl, queuesize=queuesize, slotsavail=slotsavail,
             uploadallowed=uploadallowed
         )
@@ -126,23 +130,20 @@ class UserInfo:
         if username == local_username:
             msg = self._get_user_info_response()
             events.emit("user-info-response", msg)
-
-        elif core.users.login_status == slskmessages.UserStatus.OFFLINE:
-            events.emit("peer-connection-error", username, is_offline=True)
-            return
-
         else:
             # Request user status, speed and number of shared files
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="userinfo")
 
             # Request user description, picture and queue information
-            core.send_message_to_peer(username, slskmessages.UserInfoRequest())
+            core.send_message_to_peer(username, UserInfoRequest())
 
         # Request user interests
-        core.send_message_to_server(slskmessages.UserInterests(username))
+        core.send_message_to_server(UserInterests(username))
 
     def remove_user(self, username):
+
         self.users.remove(username)
+        core.users.unwatch_user(username, context="userinfo")
         events.emit("user-info-remove-user", username)
 
     def remove_all_users(self):
@@ -169,7 +170,7 @@ class UserInfo:
         if username not in self.users:
             # We've removed the user. Close the connection to stop the user from
             # sending their response and wasting bandwidth.
-            core.send_message_to_network_thread(slskmessages.CloseConnection(sock))
+            core.send_message_to_network_thread(CloseConnection(sock))
 
     def _user_info_request(self, msg):
         """Peer code 15."""

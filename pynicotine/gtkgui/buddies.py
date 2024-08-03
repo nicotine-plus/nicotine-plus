@@ -155,6 +155,7 @@ class Buddies:
             ("buddy-trusted", self.buddy_trusted),
             ("remove-buddy", self.remove_buddy),
             ("server-disconnect", self.server_disconnect),
+            ("start", self.start),
             ("user-country", self.user_country),
             ("user-stats", self.user_stats),
             ("user-status", self.user_status)
@@ -162,6 +163,15 @@ class Buddies:
             events.connect(event_name, callback)
 
         self.set_buddy_list_position()
+
+    def start(self):
+
+        self.list_view.disable_sorting()
+
+        for username, user_data in core.buddies.users.items():
+            self.add_buddy(username, user_data)
+
+        self.list_view.enable_sorting()
 
     def destroy(self):
 
@@ -279,29 +289,30 @@ class Buddies:
         status = msg.status
         status_icon_name = USER_STATUS_ICON_NAMES.get(status)
 
-        if not status_icon_name or status_icon_name == self.list_view.get_row_value(iterator, "status"):
-            return
-
-        self.list_view.set_row_value(iterator, "status", status_icon_name)
+        if status_icon_name and status_icon_name != self.list_view.get_row_value(iterator, "status"):
+            self.list_view.set_row_value(iterator, "status", status_icon_name)
 
     def user_stats(self, msg):
 
-        user = msg.user
-        iterator = self.list_view.iterators.get(user)
+        iterator = self.list_view.iterators.get(msg.user)
 
         if iterator is None:
             return
 
-        speed = msg.avgspeed
-        files = msg.files
+        speed = msg.avgspeed or 0
+        num_files = msg.files or 0
 
-        h_speed = human_speed(speed) if speed > 0 else ""
-        h_files = humanize(files)
+        if speed != self.list_view.get_row_value(iterator, "speed_data"):
+            h_speed = human_speed(speed) if speed > 0 else ""
 
-        self.list_view.set_row_value(iterator, "speed", h_speed)
-        self.list_view.set_row_value(iterator, "files", h_files)
-        self.list_view.set_row_value(iterator, "speed_data", speed)
-        self.list_view.set_row_value(iterator, "files_data", files)
+            self.list_view.set_row_value(iterator, "speed", h_speed)
+            self.list_view.set_row_value(iterator, "speed_data", speed)
+
+        if num_files != self.list_view.get_row_value(iterator, "files_data"):
+            h_num_files = humanize(num_files)
+
+            self.list_view.set_row_value(iterator, "files", h_num_files)
+            self.list_view.set_row_value(iterator, "files_data", num_files)
 
     def add_buddy(self, user, user_data):
 
@@ -431,10 +442,8 @@ class Buddies:
 
         flag_icon_name = get_flag_icon_name(country_code)
 
-        if not flag_icon_name:
-            return
-
-        self.list_view.set_row_value(iterator, "country", flag_icon_name)
+        if flag_icon_name and flag_icon_name != self.list_view.get_row_value(iterator, "country"):
+            self.list_view.set_row_value(iterator, "country", flag_icon_name)
 
     def on_add_buddy(self, *_args):
 
@@ -506,10 +515,5 @@ class Buddies:
         ).present()
 
     def server_disconnect(self, *_args):
-
         for iterator in self.list_view.iterators.values():
             self.list_view.set_row_value(iterator, "status", USER_STATUS_ICON_NAMES[UserStatus.OFFLINE])
-            self.list_view.set_row_value(iterator, "speed", "")
-            self.list_view.set_row_value(iterator, "files", "")
-            self.list_view.set_row_value(iterator, "speed_data", 0)
-            self.list_view.set_row_value(iterator, "files_data", 0)

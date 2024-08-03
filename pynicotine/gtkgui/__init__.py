@@ -104,18 +104,13 @@ def run(hidden, ci_mode, multi_instance):
     if getattr(sys, "frozen", False):
         # Set up paths for frozen binaries (Windows and macOS)
         executable_folder = os.path.dirname(sys.executable)
-        resources_folder = executable_folder
 
-        if sys.platform == "win32":
-            import ctypes
-            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
-
-        elif sys.platform == "darwin":
-            resources_folder = os.path.abspath(os.path.join(executable_folder, "..", "Resources"))
-
-        os.environ["XDG_DATA_DIRS"] = os.path.join(resources_folder, "share")
-        os.environ["FONTCONFIG_FILE"] = os.path.join(resources_folder, "share", "fonts", "fonts.conf")
-        os.environ["FONTCONFIG_PATH"] = os.path.join(resources_folder, "share", "fonts")
+        os.environ["GTK_EXE_PREFIX"] = executable_folder
+        os.environ["GTK_DATA_PREFIX"] = executable_folder
+        os.environ["GTK_PATH"] = executable_folder
+        os.environ["XDG_DATA_DIRS"] = os.path.join(executable_folder, "share")
+        os.environ["FONTCONFIG_FILE"] = os.path.join(executable_folder, "share", "fonts", "fonts.conf")
+        os.environ["FONTCONFIG_PATH"] = os.path.join(executable_folder, "share", "fonts")
         os.environ["GDK_PIXBUF_MODULE_FILE"] = os.path.join(executable_folder, "lib", "pixbuf-loaders.cache")
         os.environ["GI_TYPELIB_PATH"] = os.path.join(executable_folder, "lib", "typelibs")
         os.environ["GSETTINGS_SCHEMA_DIR"] = os.path.join(executable_folder, "lib", "schemas")
@@ -131,6 +126,18 @@ def run(hidden, ci_mode, multi_instance):
         # Reevaluate when the new GPU renderers are stable:
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
         os.environ["GSK_RENDERER"] = "cairo"
+
+    elif sys.platform == "darwin":
+        # Always enable CSD on macOS for a more uniform look
+        os.environ["GTK_CSD"] = "1"
+
+    if "GSK_RENDERER" not in os.environ:
+        # Old GL renderer is faster for now. Make it the default.
+        os.environ["GSK_RENDERER"] = "gl"
+
+    if os.environ.get("GSK_RENDERER") == "gl" and os.environ.get("GDK_BACKEND") != "broadway":
+        # Old GL renderer doesn't support fractional scaling. Disable it.
+        os.environ["GDK_DEBUG"] = ",".join(("gl-no-fractional", os.environ.get("GDK_DEBUG", "")))
 
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 

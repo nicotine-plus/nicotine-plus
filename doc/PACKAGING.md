@@ -53,7 +53,7 @@ GitHub Actions currently builds Nicotine+ installers for Windows. However, the f
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
+Follow the instructions on [installing MSYS2](https://pygobject.gnome.org/getting_started.html#windows-logo-windows).
 
 Clone the `nicotine-plus` Git repository:
 
@@ -90,7 +90,7 @@ GitHub Actions currently builds Nicotine+ packages for macOS. However, the follo
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on installing Homebrew: [https://brew.sh/](https://brew.sh/)
+Follow the instructions on [installing Homebrew](https://brew.sh/).
 
 Clone the `nicotine-plus` Git repository:
 
@@ -104,14 +104,15 @@ Install dependencies:
 ```sh
 export NICOTINE_GTK_VERSION=4
 export NICOTINE_USE_LIBADWAITA=1
-brew install python
-python3 packaging/macos/dependencies.py
+brew install python@3.11
+python3.11 -m venv venv
+venv/bin/python3 packaging/macos/dependencies.py
 ```
 
 Build the application:
 
 ```sh
-python3 packaging/macos/setup.py bdist_dmg
+venv/bin/python3 packaging/macos/setup.py bdist_dmg
 ```
 
 When the application has finished building, it is located in the `packaging/macos/build/` subfolder as a .dmg file.

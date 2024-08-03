@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
@@ -129,6 +128,7 @@ class Application:
 
         for action_name, callback, parameter_type, is_enabled in (
             # General
+            ("disabled", None, None, False),
             ("connect", self.on_connect, None, True),
             ("disconnect", self.on_disconnect, None, False),
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
@@ -138,7 +138,7 @@ class Application:
             ("message-buddies", self.on_message_buddies, None, False),
             ("wishlist", self.on_wishlist, None, True),
             ("confirm-quit", self.on_confirm_quit_request, None, True),
-            ("confirm-quit-uploads", self.on_confirm_quit_uploads_request, None, True),
+            ("force-quit", self.on_force_quit_request, None, True),
             ("quit", self.on_quit_request, None, True),
 
             # Shares
@@ -179,7 +179,10 @@ class Application:
                 parameter_type = GLib.VariantType(parameter_type)
 
             action = Gio.SimpleAction(name=action_name, parameter_type=parameter_type, enabled=is_enabled)
-            action.connect("activate", callback)
+
+            if callback:
+                action.connect("activate", callback)
+
             self.add_action(action)
 
         self.lookup_action("away-accel").cooldown_time = 0  # needed to prevent server ban
@@ -218,10 +221,11 @@ class Application:
             # Global accelerators
             ("app.connect", ["<Shift><Primary>c"]),
             ("app.disconnect", ["<Shift><Primary>d"]),
-            ("app.away-accel", ["<Primary>h"]),
+            ("app.away-accel", ["<Shift><Primary>a"]),
             ("app.wishlist", ["<Shift><Primary>w"]),
             ("app.confirm-quit", ["<Primary>q"]),
-            ("app.quit", ["<Primary><Alt>q"]),
+            ("app.force-quit", ["<Primary><Alt>q"]),
+            ("app.quit", ["<Primary>q"]),  # Only used to show accelerator in menus
             ("app.rescan-shares", ["<Shift><Primary>r"]),
             ("app.keyboard-shortcuts", ["<Primary>question", "F1"]),
             ("app.preferences", ["<Primary>comma", "<Primary>p"]),
@@ -257,13 +261,25 @@ class Application:
         ):
             self._set_accels_for_action(action_name, accelerators)
 
+        numpad_accels = []
+
         for num in range(1, 10):
+            numpad_accels.append(f"<Alt>KP_{num}")
             self._set_accels_for_action(f"win.primary-tab-{num}", [f"<Primary>{num}", f"<Alt>{num}"])
+
+        # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
+        self._set_accels_for_action("app.disabled", numpad_accels)
 
         if GTK_API_VERSION == 3 or sys.platform != "darwin":
             return
 
         # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
+        for action_name, accelerators in (
+            ("gtkinternal.hide", ["<Primary>h"]),
+            ("gtkinternal.hide-others", ["<Primary><Alt>h"])
+        ):
+            self._set_accels_for_action(action_name, accelerators)
+
         for widget in (Gtk.Text, Gtk.TextView):
             for action_name, accelerator in (
                 ("clipboard.cut", "<Meta>x"),
@@ -318,7 +334,7 @@ class Application:
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
-        self.tray_icon.update_user_status()
+        self.tray_icon.update()
 
     # Primary Menus #
 
@@ -334,13 +350,13 @@ class Application:
 
     @staticmethod
     def _add_preferences_item(menu):
-        menu.add_items(("#" + _("_Preferences"), "app.preferences"))
+        menu.add_items(("^" + _("_Preferences"), "app.preferences"))
 
     def _add_quit_item(self, menu):
 
         menu.add_items(
             ("", None),
-            ("#" + _("_Quit"), "app.confirm-quit-uploads")
+            ("^" + _("_Quit"), "app.quit")
         )
 
     def _create_file_menu(self):
@@ -398,7 +414,7 @@ class Application:
             ("#" + _("Report a _Bug"), "app.report-bug"),
             ("#" + _("Improve T_ranslations"), "app.improve-translations"),
             ("", None),
-            ("#" + _("_About Nicotine+"), "app.about")
+            ("^" + _("_About Nicotine+"), "app.about")
         )
 
         return menu
@@ -477,7 +493,7 @@ class Application:
                 Gdk.Display.get_default().beep()
 
         except Exception as error:
-            log.add(_("Unable to show notification: %s"), str(error))
+            log.add(_("Unable to show notification: %s"), error)
 
     def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
         self._show_notification(
@@ -503,16 +519,19 @@ class Application:
         should_finish_uploads = dialog.get_option_value()
 
         if response_id == "quit":
-            core.quit(should_finish_uploads=should_finish_uploads)
+            if should_finish_uploads:
+                core.uploads.request_shutdown()
+            else:
+                core.quit()
 
         elif response_id == "run_background":
             self.window.hide()
 
-    def on_confirm_quit(self, only_on_active_uploads=False):
+    def on_confirm_quit(self):
 
         has_active_uploads = core.uploads.has_active_uploads()
 
-        if not self.window.is_visible() or only_on_active_uploads and not has_active_uploads:
+        if not self.window.is_visible():
             # Never show confirmation dialog when main window is hidden
             core.quit()
             return
@@ -528,11 +547,9 @@ class Application:
 
         buttons = [
             ("cancel", _("_No")),
-            ("quit", _("_Quit"))
+            ("quit", _("_Quit")),
+            ("run_background", _("_Run in Background"))
         ]
-
-        if not only_on_active_uploads:
-            buttons.append(("run_background", _("_Run in Background")))
 
         OptionDialog(
             parent=self.window,
@@ -840,7 +857,7 @@ class Application:
 
     def on_connect_disconnect(self, *_args):
 
-        if core.users.login_status != slskmessages.UserStatus.OFFLINE:
+        if core.users.login_status != UserStatus.OFFLINE:
             self.on_disconnect()
             return
 
@@ -862,13 +879,6 @@ class Application:
         core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 
     # Running #
-
-    def _force_quit(self):
-        """Used when the thread event processor fails due to an unhandled
-        exception, to force a shutdown."""
-
-        core.quit()
-        events.emit("quit")
 
     def _raise_exception(self, exc_value):
         raise exc_value
@@ -909,7 +919,7 @@ class Application:
     def _on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         if self.ci_mode:
-            self._force_quit()
+            core.quit()
             self._raise_exception(exc_value)
             return
 
@@ -945,7 +955,12 @@ class Application:
 
         # Dialog was closed, quit
         sys.excepthook = None
-        self._force_quit()
+        core.quit()
+
+        # Process 'quit' event after slight delay in case thread event loop is stuck
+        GLib.idle_add(lambda: events.process_thread_events() == -1)
+
+        # Log exception in terminal
         self._raise_exception(exc_value)
 
     def on_critical_error(self, _exc_type, exc_value, _exc_traceback):
@@ -1000,11 +1015,16 @@ class Application:
     def on_confirm_quit_request(self, *_args):
         core.confirm_quit()
 
-    def on_confirm_quit_uploads_request(self, *_args):
-        core.confirm_quit(only_on_active_uploads=True)
+    def on_force_quit_request(self, *_args):
+        core.quit()
 
     def on_quit_request(self, *_args):
-        core.quit()
+
+        if not core.uploads.has_active_uploads():
+            core.quit()
+            return
+
+        core.confirm_quit()
 
     def on_shutdown(self, *_args):
 
@@ -1029,13 +1049,13 @@ class Application:
         if self.wishlist is not None:
             self.wishlist.destroy()
 
-        if self.tray_icon is not None:
-            self.tray_icon.destroy()
-
         if self.spell_checker is not None:
             self.spell_checker.destroy()
 
         if self.window is not None:
             self.window.destroy()
+
+        if self.tray_icon is not None:
+            self.tray_icon.destroy()
 
         self.__dict__.clear()

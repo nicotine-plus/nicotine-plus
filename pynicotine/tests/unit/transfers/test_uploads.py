@@ -17,13 +17,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shutil
 
 from unittest import TestCase
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
+from pynicotine.slskmessages import FileAttribute
 from pynicotine.transfers import TransferStatus
+
+CURRENT_FOLDER_PATH = os.path.dirname(os.path.realpath(__file__))
+DATA_FOLDER_PATH = os.path.join(CURRENT_FOLDER_PATH, "temp_data")
+TRANSFERS_BASENAME = "uploads.json"
+TRANSFERS_FILE_PATH = os.path.join(CURRENT_FOLDER_PATH, TRANSFERS_BASENAME)
+SAVED_TRANSFERS_FILE_PATH = os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME)
 
 
 class UploadsTest(TestCase):
@@ -32,13 +39,16 @@ class UploadsTest(TestCase):
 
     def setUp(self):
 
-        config.data_folder_path = os.path.dirname(os.path.realpath(__file__))
-        config.config_file_path = os.path.join(config.data_folder_path, "temp_config")
+        config.set_data_folder(DATA_FOLDER_PATH)
+        config.set_config_file(os.path.join(DATA_FOLDER_PATH, "temp_config"))
 
-        core.init_components(enabled_components={"users", "shares", "uploads", "userbrowse", "buddies"})
+        if not os.path.exists(DATA_FOLDER_PATH):
+            os.makedirs(DATA_FOLDER_PATH)
 
+        shutil.copy(TRANSFERS_FILE_PATH, os.path.join(DATA_FOLDER_PATH, TRANSFERS_BASENAME))
+
+        core.init_components(enabled_components={"users", "shares", "uploads", "buddies"})
         core.start()
-        core.uploads._allow_saving_transfers = False
 
     def tearDown(self):
 
@@ -49,6 +59,10 @@ class UploadsTest(TestCase):
         self.assertIsNone(core.uploads)
         self.assertIsNone(core.userbrowse)
         self.assertIsNone(core.buddies)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(DATA_FOLDER_PATH)
 
     def test_load_uploads(self):
         """Test loading a uploads.json file."""
@@ -75,8 +89,8 @@ class UploadsTest(TestCase):
         self.assertEqual(transfer.size, 27231044)
         self.assertEqual(transfer.current_byte_offset, 27231044)
         self.assertEqual(transfer.file_attributes, {
-            slskmessages.FileAttribute.BITRATE: 792,
-            slskmessages.FileAttribute.DURATION: 268
+            FileAttribute.BITRATE: 792,
+            FileAttribute.DURATION: 268
         })
 
     def test_save_uploads(self):
@@ -87,9 +101,10 @@ class UploadsTest(TestCase):
         saved to file.
         """
 
-        old_transfers = core.uploads._load_transfers_file(core.uploads.transfers_file_path)[2:]
+        old_transfers = core.uploads._load_transfers_file(TRANSFERS_FILE_PATH)[2:]
+        core.uploads._save_transfers()
+        saved_transfers = core.uploads._load_transfers_file(SAVED_TRANSFERS_FILE_PATH)
 
-        saved_transfers = core.uploads._get_transfer_rows()
         self.assertEqual(old_transfers, saved_transfers)
 
     def test_push_upload(self):

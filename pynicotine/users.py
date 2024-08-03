@@ -17,18 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import ChangePassword
+from pynicotine.slskmessages import CheckPrivileges
+from pynicotine.slskmessages import GetPeerAddress
+from pynicotine.slskmessages import GetUserStats
+from pynicotine.slskmessages import GetUserStatus
+from pynicotine.slskmessages import GivePrivileges
+from pynicotine.slskmessages import LoginFailure
+from pynicotine.slskmessages import SetStatus
+from pynicotine.slskmessages import UnwatchUser
+from pynicotine.slskmessages import UserStatus
+from pynicotine.slskmessages import WatchUser
 from pynicotine.utils import UINT32_LIMIT
 from pynicotine.utils import open_uri
 
 
 class WatchedUser:
 
-    __slots__ = ("username", "upload_speed", "files", "folders")
+    __slots__ = ("username", "upload_speed", "files", "folders", "contexts", "is_implicit")
 
     def __init__(self, username):
 
@@ -36,13 +46,18 @@ class WatchedUser:
         self.upload_speed = None
         self.files = None
         self.folders = None
+        self.contexts = set()
+        self.is_implicit = True
 
 
 class Users:
+    __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
+                 "privileges_left", "_should_open_privileges_url", "addresses", "countries",
+                 "statuses", "watched", "privileged", "_ip_requested", "_pending_watch_removals")
 
     def __init__(self):
 
-        self.login_status = slskmessages.UserStatus.OFFLINE
+        self.login_status = UserStatus.OFFLINE
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
         self.public_port = None
@@ -55,6 +70,7 @@ class Users:
         self.watched = {}
         self.privileged = set()
         self._ip_requested = {}
+        self._pending_watch_removals = set()
 
         for event_name, callback in (
             ("admin-message", self._admin_message),
@@ -76,12 +92,12 @@ class Users:
         if save_state:
             config.sections["server"]["away"] = is_away
 
-        self.login_status = slskmessages.UserStatus.AWAY if is_away else slskmessages.UserStatus.ONLINE
+        self.login_status = UserStatus.AWAY if is_away else UserStatus.ONLINE
         self.request_set_status(self.login_status)
 
         # Fake a user status message, since server doesn't send updates when we
         # disable away mode
-        events.emit("user-status", slskmessages.GetUserStatus(self.login_username, self.login_status))
+        events.emit("user-status", GetUserStatus(self.login_username, self.login_status))
 
     def open_privileges_url(self):
 
@@ -91,15 +107,15 @@ class Users:
         open_uri(pynicotine.__privileges_url__ % login)
 
     def request_change_password(self, password):
-        core.send_message_to_server(slskmessages.ChangePassword(password))
+        core.send_message_to_server(ChangePassword(password))
 
     def request_check_privileges(self, should_open_url=False):
         self._should_open_privileges_url = should_open_url
-        core.send_message_to_server(slskmessages.CheckPrivileges())
+        core.send_message_to_server(CheckPrivileges())
 
     def request_give_privileges(self, username, days):
         if UINT32_LIMIT >= days > 0:
-            core.send_message_to_server(slskmessages.GivePrivileges(username, days))
+            core.send_message_to_server(GivePrivileges(username, days))
 
     def request_ip_address(self, username, notify=False):
 
@@ -107,32 +123,91 @@ class Users:
             return
 
         self._ip_requested[username] = notify
-        core.send_message_to_server(slskmessages.GetPeerAddress(username))
+        core.send_message_to_server(GetPeerAddress(username))
 
     def request_set_status(self, status):
-        core.send_message_to_server(slskmessages.SetStatus(status))
+        core.send_message_to_server(SetStatus(status))
 
     def request_user_stats(self, username):
-        core.send_message_to_server(slskmessages.GetUserStats(username))
+        core.send_message_to_server(GetUserStats(username))
 
-    def watch_user(self, username):
-        """Tell the server we want to be notified of status/stat updates for a
-        user."""
+    def watch_user(self, username, context=None, is_implicit=False):
+        """Tells the server we want to be notified of status updates for a
+        user.
 
-        if self.login_status == slskmessages.UserStatus.OFFLINE:
+        context is a string specifying where the user is being watched.
+        The same context must be provided when calling unwatch_user(), when
+        we no longer wish to receive updates for the user in said context.
+
+        is_implicit is set when receiving status updates from the server
+        without sending a message first. At present, this only happens for
+        users in a joined chat room.
+        """
+
+        if self.login_status == UserStatus.OFFLINE:
             return
 
-        if username in self.watched:
+        watched_user = self.watched.get(username)
+
+        if watched_user is None:
+            self.watched[username] = watched_user = WatchedUser(username)
+
+        if not context:
+            log.add("Calling watch_user() without providing a 'context' argument is deprecated.")
+            context = "unknown"
+
+        if context in watched_user.contexts:
             return
 
-        core.send_message_to_server(slskmessages.WatchUser(username))
-        core.send_message_to_server(slskmessages.GetUserStatus(username))  # Get privilege status
+        if not is_implicit and watched_user.is_implicit:
+            core.send_message_to_server(WatchUser(username))
+            core.send_message_to_server(GetUserStatus(username))  # Get privilege status
+            watched_user.is_implicit = False
 
-        self.watched[username] = WatchedUser(username)
+        watched_user.contexts.add(context)
+        log.add_conn("Watching user %s in context '%s'. Active contexts: %s",
+                     (username, context, watched_user.contexts))
+
+    def unwatch_user(self, username, context):
+        """Tells the server we no longer wish to receive status updates for a
+        user.
+
+        context must be the same as previously provided in watch_user().
+        """
+
+        if username == self.login_username:
+            # We can't unwatch ourselves
+            return
+
+        watched_user = self.watched.get(username)
+
+        if watched_user is None:
+            return
+
+        watched_user.contexts.discard(context)
+        log.add_conn("Unwatching user %s in context '%s'. Remaining contexts: %s",
+                     (username, context, watched_user.contexts))
+
+        if watched_user.contexts:
+            return
+
+        if not watched_user.is_implicit:
+            core.send_message_to_server(UnwatchUser(username))
+
+        if username in self.addresses:
+            del self.addresses[username]
+
+        if username in self.countries:
+            del self.countries[username]
+
+        if username in self.statuses:
+            del self.statuses[username]
+
+        del self.watched[username]
 
     def _server_disconnect(self, manual_disconnect=False):
 
-        self.login_status = slskmessages.UserStatus.OFFLINE
+        self.login_status = UserStatus.OFFLINE
 
         if core.pluginhandler:
             core.pluginhandler.server_disconnect_notification(manual_disconnect)
@@ -144,6 +219,7 @@ class Users:
         self.watched.clear()
         self.privileged.clear()
         self._ip_requested.clear()
+        self._pending_watch_removals.clear()
 
         self.login_username = None
         self.public_ip_address = None
@@ -155,14 +231,14 @@ class Users:
         """Server code 1."""
 
         if msg.success:
-            self.login_status = slskmessages.UserStatus.ONLINE
+            self.login_status = UserStatus.ONLINE
             self.login_username = username = msg.username
             _local_ip_address, self.public_port = msg.local_address
             self.addresses[username] = msg.local_address
 
-            core.send_message_to_server(slskmessages.CheckPrivileges())
+            core.send_message_to_server(CheckPrivileges())
             self.set_away_mode(config.sections["server"]["away"])
-            self.watch_user(username)
+            self.watch_user(username, context="login")
 
             if msg.ip_address is not None:
                 self.public_ip_address = msg.ip_address
@@ -175,7 +251,7 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
-        if msg.reason == slskmessages.LoginFailure.PASSWORD:
+        if msg.reason == LoginFailure.PASSWORD:
             events.emit("invalid-password")
             return
 
@@ -194,7 +270,7 @@ class Users:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
 
-        elif username in self.watched or username in self.statuses:
+        elif username in self.watched:
             # Only cache IP address of watched users, otherwise we won't know if
             # a user reconnects and changes their IP address.
             # Don't update our own IP address, since we already store a local IP
@@ -237,8 +313,12 @@ class Users:
                 events.emit("user-stats", msg)
             return
 
-        # User does not exist, server will not keep us informed if the user is created later
-        self.watched.pop(msg.user, None)
+        # User does not exist. The server will not keep us informed if the user is created
+        # later, so we need to remove the user from our list.
+        # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
+        # the user is actually online. Remove the user when we receive a UserStatus message
+        # telling us the user is offline.
+        self._pending_watch_removals.add(msg.user)
 
     def _user_status(self, msg):
         """Server code 7."""
@@ -254,12 +334,9 @@ class Users:
             elif username in self.privileged:
                 self.privileged.remove(username)
 
-        if status not in {slskmessages.UserStatus.OFFLINE, slskmessages.UserStatus.ONLINE,
-                          slskmessages.UserStatus.AWAY}:
-            log.add_debug("Received an unknown status %(status)s for user %(user)s from the server", {
-                "status": status,
-                "user": username
-            })
+        if status not in {UserStatus.OFFLINE, UserStatus.ONLINE, UserStatus.AWAY}:
+            log.add_debug("Received an unknown status %s for user %s from the server",
+                          (status, username))
 
         # Ignore invalid status updates for our own username in case we've already
         # changed our status again by the time they arrive from the server
@@ -270,9 +347,14 @@ class Users:
         is_watched = (username in self.watched)
 
         # User went offline, reset stored IP address and country
-        if status == slskmessages.UserStatus.OFFLINE:
+        if status == UserStatus.OFFLINE:
             self.addresses.pop(username, None)
             self.countries.pop(username, None)
+
+            if username in self._pending_watch_removals:
+                # User does not exist, remove it from list
+                log.add_conn("Unwatching non-existent user %s", username)
+                self.watched.pop(username, None)
 
         elif is_watched:
             user_status = self.statuses.get(username)
@@ -282,14 +364,14 @@ class Users:
                 self.request_ip_address(username)
 
             # Previously watched user logged in again. Server will not send user stats, so request them.
-            elif user_status == slskmessages.UserStatus.OFFLINE:
+            elif user_status == UserStatus.OFFLINE:
                 self.request_user_stats(username)
                 self.request_ip_address(username)
 
-        # Store statuses for watched users, update statuses of room members
-        if is_watched or username in self.statuses:
+        if is_watched:
             self.statuses[username] = status
 
+        self._pending_watch_removals.discard(username)
         core.pluginhandler.user_status_notification(username, status, msg.privileged)
 
     def _connect_to_peer(self, msg):
@@ -326,6 +408,7 @@ class Users:
             "avgspeed": upload_speed,
             "files": files,
             "dirs": folders,
+            "shared_size": None,
             "source": "server"
         })
 

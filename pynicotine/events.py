@@ -18,6 +18,7 @@
 
 import time
 
+from collections import defaultdict
 from collections import deque
 from threading import Thread
 
@@ -81,7 +82,7 @@ EVENT_NAMES = {
     "private-room-added",
     "private-room-operator-added",
     "private-room-operator-removed",
-    "private-room-owned",
+    "private-room-operators",
     "private-room-remove-operator",
     "private-room-remove-user",
     "private-room-removed",
@@ -182,6 +183,8 @@ EVENT_NAMES = {
     "upload-denied",
     "upload-failed",
     "upload-file-error",
+    "uploads-shutdown-request",
+    "uploads-shutdown-cancel",
 
     # User info
     "user-info-progress",
@@ -194,12 +197,14 @@ EVENT_NAMES = {
 
 
 class Events:
+    __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
+                 "_scheduler_event_id", "_is_active")
 
     SCHEDULER_MAX_IDLE = 1
 
     def __init__(self):
 
-        self._callbacks = {}
+        self._callbacks = defaultdict(list)
         self._thread_events = deque()
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
@@ -226,9 +231,6 @@ class Events:
         if event_name not in EVENT_NAMES:
             raise ValueError(f"Unknown event {event_name}")
 
-        if event_name not in self._callbacks:
-            self._callbacks[event_name] = []
-
         self._callbacks[event_name].append(function)
 
     def disconnect(self, event_name, function):
@@ -236,7 +238,7 @@ class Events:
 
     def emit(self, event_name, *args, **kwargs):
 
-        callbacks = self._callbacks.get(event_name, [])
+        callbacks = self._callbacks[event_name]
 
         if event_name == "quit":
             # Event and log modules register callbacks first, but need to quit last

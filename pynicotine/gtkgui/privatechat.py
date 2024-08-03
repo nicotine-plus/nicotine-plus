@@ -74,11 +74,21 @@ class PrivateChats(IconNotebook):
             ("private-chat-completions", self.update_completions),
             ("private-chat-show-user", self.show_user),
             ("private-chat-remove-user", self.remove_user),
+            ("quit", self.quit),
             ("server-disconnect", self.server_disconnect),
             ("server-login", self.server_login),
+            ("start", self.start),
             ("user-status", self.user_status)
         ):
             events.connect(event_name, callback)
+
+        self.freeze()
+
+    def start(self):
+        self.unfreeze()
+
+    def quit(self):
+        self.freeze()
 
     def destroy(self):
 
@@ -232,7 +242,7 @@ class PrivateChats(IconNotebook):
 
         self.highlighted_users.append(user)
         self.window.update_title()
-        self.window.application.tray_icon.update_icon()
+        self.window.application.tray_icon.update()
 
     def unhighlight_user(self, user):
 
@@ -241,7 +251,7 @@ class PrivateChats(IconNotebook):
 
         self.highlighted_users.remove(user)
         self.window.update_title()
-        self.window.application.tray_icon.update_icon()
+        self.window.application.tray_icon.update()
 
     def echo_private_message(self, user, text, message_type):
 
@@ -369,7 +379,7 @@ class PrivateChat:
 
         self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
 
-        self.read_private_log()
+        self.prepend_old_messages()
 
     def load(self):
         GLib.idle_add(self.read_private_log_finished)
@@ -384,14 +394,15 @@ class PrivateChat:
         self.chat_view.scroll_bottom()
         self.chat_view.auto_scroll = True
 
-    def read_private_log(self):
+    def prepend_old_messages(self):
 
-        self.chat_view.append_log_lines(
+        log_lines = log.read_log(
             folder_path=log.private_chat_folder_path,
             basename=self.user,
-            num_lines=config.sections["logging"]["readprivatelines"],
-            timestamp_format=config.sections["logging"]["private_timestamp"]
+            num_lines=config.sections["logging"]["readprivatelines"]
         )
+
+        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def server_login(self):
         self.chat_entry.set_sensitive(True)

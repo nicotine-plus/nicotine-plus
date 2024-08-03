@@ -52,7 +52,7 @@ class RoomList(Popover):
         super().__init__(
             window=window,
             content_box=self.container,
-            width=350,
+            width=450,
             height=500
         )
 
@@ -89,11 +89,11 @@ class RoomList(Popover):
         self.popup_room = None
         self.popup_menu = PopupMenu(window.application, self.list_view.widget, self.on_popup_menu)
         self.popup_menu.add_items(
-            ("#" + _("Join Room"), self.on_popup_join),
-            ("#" + _("Leave Room"), self.on_popup_leave),
+            ("=" + _("Join Room"), self.on_popup_join),
+            ("=" + _("Leave Room"), self.on_popup_leave),
             ("", None),
-            ("#" + _("Disown Private Room"), self.on_popup_private_room_disown),
-            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
+            ("=" + _("Disown Private Room"), self.on_popup_private_room_disown),
+            ("=" + _("Cancel Room Membership"), self.on_popup_private_room_cancel_membership)
         )
 
         for toggle in (self.public_feed_toggle, self.private_room_toggle):
@@ -153,12 +153,15 @@ class RoomList(Popover):
         self.public_feed_toggle.set_active(active)
         self.initializing_feed = False
 
+    def toggle_accept_private_room(self, active):
+        self.private_room_toggle.set_active(active)
+
     def add_room(self, room, user_count=0, is_private=False, is_owned=False):
 
         h_user_count = humanize(user_count)
 
         if is_private:
-            # Show private rooms first
+            # Large internal value to sort private rooms first
             user_count += self.PRIVATE_USERS_OFFSET
 
         text_weight = Pango.Weight.BOLD if is_private else Pango.Weight.NORMAL
@@ -173,25 +176,29 @@ class RoomList(Popover):
             text_underline
         ], select_row=False)
 
-    def update_room_user_count(self, room, decrement=False):
+    def update_room_user_count(self, room, user_count=None, decrement=False):
 
         iterator = self.list_view.iterators.get(room)
 
         if iterator is None:
             return
 
-        user_count = self.list_view.get_row_value(iterator, "users_data")
+        is_private = self.list_view.get_row_value(iterator, "is_private_data")
 
-        if decrement:
-            if user_count > 0:
-                user_count -= 1
-        else:
-            user_count += 1
+        if user_count is None:
+            user_count = self.list_view.get_row_value(iterator, "users_data")
 
-        if self.list_view.get_row_value(iterator, "is_private_data"):
-            h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
-        else:
-            h_user_count = humanize(user_count)
+            if decrement:
+                if user_count > 0:
+                    user_count -= 1
+            else:
+                user_count += 1
+
+        elif is_private:
+            # Large internal value to sort private rooms first
+            user_count += self.PRIVATE_USERS_OFFSET
+
+        h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET) if is_private else humanize(user_count)
 
         self.list_view.set_row_value(iterator, "users", h_user_count)
         self.list_view.set_row_value(iterator, "users_data", user_count)
@@ -203,7 +210,7 @@ class RoomList(Popover):
         self.add_room(msg.room, is_private=True)
 
     def join_room(self, msg):
-        self.update_room_user_count(msg.room)
+        self.update_room_user_count(msg.room, user_count=len(msg.users))
 
     def show_room(self, room, *_args):
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
@@ -282,8 +289,8 @@ class RoomList(Popover):
     def on_popup_private_room_disown(self, *_args):
         core.chatrooms.request_private_room_disown(self.popup_room)
 
-    def on_popup_private_room_dismember(self, *_args):
-        core.chatrooms.request_private_room_dismember(self.popup_room)
+    def on_popup_private_room_cancel_membership(self, *_args):
+        core.chatrooms.request_private_room_cancel_membership(self.popup_room)
 
     def on_popup_leave(self, *_args):
         core.chatrooms.remove_room(self.popup_room)
@@ -292,7 +299,8 @@ class RoomList(Popover):
         core.chatrooms.request_room_list()
 
     def on_toggle_accept_private_room(self, *_args):
-        core.chatrooms.request_private_room_toggle(self.private_room_toggle.get_active())
+        active = config.sections["server"]["private_chatrooms"] = self.private_room_toggle.get_active()
+        core.chatrooms.request_private_room_toggle(active)
 
     def on_search_accelerator(self, *_args):
         """Ctrl+F - Search rooms."""

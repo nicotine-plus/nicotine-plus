@@ -92,7 +92,7 @@ class ChatEntry:
         if core.users.login_status == UserStatus.OFFLINE:
             return
 
-        text = self.widget.get_text()
+        text = self.widget.get_text().strip()
 
         if not text:
             return
@@ -113,6 +113,7 @@ class ChatEntry:
             return
 
         cmd, _separator, args = text.partition(" ")
+        args = args.strip()
 
         if self.is_chatroom:
             if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
@@ -428,6 +429,7 @@ class ComboBox:
         self._positions = {}
         self._model = None
         self._button = None
+        self._popover = None
         self._entry_completion = None
         self._is_modifying = False
         self._is_select_callback_enabled = False
@@ -468,8 +470,8 @@ class ComboBox:
 
         self.dropdown.connect("notify::selected", self._on_item_selected)
 
-        popover = list(self.dropdown)[-1]
-        popover.connect("notify::visible", self._on_dropdown_visible)
+        self._popover = list(self.dropdown)[-1]
+        self._popover.connect("notify::visible", self._on_dropdown_visible)
 
         if not has_entry:
             self.widget = self.dropdown
@@ -481,6 +483,7 @@ class ComboBox:
             return
 
         self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
+        self._popover.connect("map", self._on_dropdown_map)
 
         if self.entry is None:
             self.entry = Gtk.Entry(hexpand=True, width_chars=8, visible=True)
@@ -488,23 +491,13 @@ class ComboBox:
         if label:
             label.set_mnemonic_widget(self.entry)
 
-        try:
-            # Hide Gtk.DropDown label
-            inner_button = next(iter(self.dropdown))
-            button_container = next(iter(inner_button))
-            button_stack = next(iter(button_container))
-
-            button_stack.set_visible(False)
-
-        except AttributeError:
-            pass
-
         self._button.set_sensitive(False)
 
         self.widget.append(self.entry)
         self.widget.append(self.dropdown)
 
         add_css_class(self.widget, "linked")
+        add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
     def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
@@ -799,12 +792,28 @@ class ComboBox:
         self.set_selected_pos(new_position)
         return True
 
-    def _on_button_scroll_event(self, *_args):
-        # Prevent scrolling when up/down arrow keys are disabled
-        return not self.enable_arrow_keys
+    def _on_button_scroll_event(self, widget, event, *_args):
+        """Prevent scrolling and pass scroll event to parent scrollable (GTK 3)"""
+
+        scrollable = widget.get_ancestor(Gtk.ScrolledWindow)
+
+        if scrollable is not None:
+            scrollable.event(event)
+
+        return True
 
     def _on_select_callback_status(self, enabled):
         self._is_select_callback_enabled = enabled
+
+    def _on_dropdown_map(self, *_args):
+
+        # Align dropdown with entry and button
+        popover_content = next(iter(self._popover))
+        container_width = self.entry.get_parent().get_width()
+        button_width = self._button.get_width()
+
+        self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
+        popover_content.set_size_request(container_width, height=-1)
 
     def _on_dropdown_visible(self, widget, param):
 
@@ -821,18 +830,6 @@ class ComboBox:
             return
 
         self.set_selected_id(self.get_text())
-
-        if GTK_API_VERSION == 3:
-            return
-
-        # Align dropdown with entry and button
-        popover = list(self.dropdown)[-1]
-        scrolled_window = popover.get_child()
-        container_width = self.entry.get_parent().get_width()
-        button_width = self._button.get_width()
-
-        popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
-        scrolled_window.set_size_request(container_width, height=-1)
 
     def _on_item_selected(self, *_args):
 

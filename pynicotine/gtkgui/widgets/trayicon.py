@@ -22,9 +22,9 @@ import sys
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Gtk
 
 import pynicotine
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -32,6 +32,7 @@ from pynicotine.gtkgui.application import GTK_GUI_FOLDER_PATH
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UserStatus
 from pynicotine.utils import encode_path
 from pynicotine.utils import truncate_string_byte
 
@@ -50,9 +51,9 @@ class BaseImplementation:
         self.activate_callback = application.on_window_hide_unhide
         self.is_visible = True
 
-        self.create_menu()
+        self._create_menu()
 
-    def create_item(self, text=None, callback=None, check=False):
+    def _create_item(self, text=None, callback=None, check=False):
 
         item = {"id": self.menu_item_id, "sensitive": True}
 
@@ -70,70 +71,75 @@ class BaseImplementation:
 
         return item
 
-    @staticmethod
-    def set_item_text(item, text):
+    def _set_item_text(self, item, text):
         item["text"] = text
 
-    @staticmethod
-    def set_item_sensitive(item, sensitive):
+    def _set_item_sensitive(self, item, sensitive):
         item["sensitive"] = sensitive
 
-    @staticmethod
-    def set_item_toggled(item, toggled):
+    def _set_item_toggled(self, item, toggled):
         item["toggled"] = toggled
 
-    def create_menu(self):
+    def _create_menu(self):
 
-        self.show_hide_item = self.create_item("default", self.application.on_window_hide_unhide)
+        self.show_hide_item = self._create_item("default", self.application.on_window_hide_unhide)
 
-        self.create_item()
+        self._create_item()
 
-        self.downloads_item = self.create_item(_("Downloads"), self.application.on_downloads)
-        self.uploads_item = self.create_item(_("Uploads"), self.application.on_uploads)
+        self.downloads_item = self._create_item(_("Downloads"), self.application.on_downloads)
+        self.uploads_item = self._create_item(_("Uploads"), self.application.on_uploads)
 
-        self.create_item()
+        self._create_item()
 
-        self.create_item(_("Private Chat"), self.application.on_private_chat)
-        self.create_item(_("Chat Rooms"), self.application.on_chat_rooms)
-        self.create_item(_("Searches"), self.application.on_searches)
+        self._create_item(_("Private Chat"), self.application.on_private_chat)
+        self._create_item(_("Chat Rooms"), self.application.on_chat_rooms)
+        self._create_item(_("Searches"), self.application.on_searches)
 
-        self.create_item()
+        self._create_item()
 
-        self.connect_disconnect_item = self.create_item("default", self.application.on_connect_disconnect)
-        self.away_item = self.create_item(_("Away"), self.application.on_away, check=True)
+        self.connect_disconnect_item = self._create_item("default", self.application.on_connect_disconnect)
+        self.away_item = self._create_item(_("Away"), self.application.on_away, check=True)
 
-        self.create_item()
+        self._create_item()
 
-        self.create_item(_("Preferences"), self.application.on_preferences)
-        self.create_item(_("_Quit"), self.application.on_quit_request)
+        self._create_item(_("Preferences"), self.application.on_preferences)
+        self._create_item(_("_Quit"), self.application.on_quit_request)
 
-    def update_window_visibility(self):
+    def _update_window_visibility(self):
 
         if self.application.window is None:
             return
 
-        if self.application.window.is_visible():
-            label = _("Hide Nicotine+")
-        else:
-            label = _("Show Nicotine+")
+        label = _("Hide Nicotine+") if self.application.window.is_visible() else _("Show Nicotine+")
 
-        self.set_item_text(self.show_hide_item, label)
-        self.update_menu()
+        if self.show_hide_item.get("text") != label:
+            self._set_item_text(self.show_hide_item, label)
+            self._update_menu()
 
-    def update_user_status(self):
+    def _update_user_status(self):
 
-        sensitive = core.users.login_status != slskmessages.UserStatus.OFFLINE
-        label = _("_Disconnect") if sensitive else _("_Connect")
+        should_update = False
+        away_sensitive = core.users.login_status != UserStatus.OFFLINE
+        away_toggled = core.users.login_status == UserStatus.AWAY
+        connect_label = _("_Disconnect") if away_sensitive else _("_Connect")
 
-        self.set_item_sensitive(self.away_item, sensitive)
+        if self.connect_disconnect_item.get("text") != connect_label:
+            self._set_item_text(self.connect_disconnect_item, connect_label)
+            should_update = True
 
-        self.set_item_text(self.connect_disconnect_item, label)
-        self.set_item_toggled(self.away_item, core.users.login_status == slskmessages.UserStatus.AWAY)
+        if self.away_item.get("sensitive") != away_sensitive:
+            self._set_item_sensitive(self.away_item, away_sensitive)
+            should_update = True
 
-        self.update_icon()
-        self.update_menu()
+        if self.away_item.get("toggled") != away_toggled:
+            self._set_item_toggled(self.away_item, away_toggled)
+            should_update = True
 
-    def update_icon(self):
+        if should_update:
+            self._update_icon()
+            self._update_menu()
+
+    def _update_icon(self):
 
         # Check for highlights, and display highlight icon if there is a highlighted room or private chat
         if (self.application.window
@@ -141,37 +147,46 @@ class BaseImplementation:
                      or self.application.window.privatechat.highlighted_users)):
             icon_name = "msg"
 
-        elif core.users.login_status == slskmessages.UserStatus.ONLINE:
+        elif core.users.login_status == UserStatus.ONLINE:
             icon_name = "connect"
 
-        elif core.users.login_status == slskmessages.UserStatus.AWAY:
+        elif core.users.login_status == UserStatus.AWAY:
             icon_name = "away"
 
         else:
             icon_name = "disconnect"
 
         icon_name = f"{pynicotine.__application_id__}-{icon_name}"
-        self.set_icon_name(icon_name)
+        self._set_icon_name(icon_name)
 
-    def set_icon_name(self, icon_name):
+    def _set_icon_name(self, icon_name):
         # Implemented in subclasses
         pass
 
-    def update_icon_theme(self):
+    def _update_icon_theme(self):
         # Implemented in subclasses
         pass
 
-    def update_menu(self):
+    def _update_menu(self):
         # Implemented in subclasses
         pass
+
+    def update(self):
+
+        self.is_visible = config.sections["ui"]["trayicon"]
+
+        self._update_icon_theme()
+        self._update_icon()
+        self._update_window_visibility()
+        self._update_user_status()
 
     def set_download_status(self, status):
-        self.set_item_text(self.downloads_item, status)
-        self.update_menu()
+        self._set_item_text(self.downloads_item, status)
+        self._update_menu()
 
     def set_upload_status(self, status):
-        self.set_item_text(self.uploads_item, status)
-        self.update_menu()
+        self._set_item_text(self.uploads_item, status)
+        self._update_menu()
 
     def show_notification(self, title, message):
         # Implemented in subclasses
@@ -251,7 +266,8 @@ class StatusNotifierImplementation(BaseImplementation):
                 object_path=self._object_path,
                 interface_info=Gio.DBusNodeInfo.new_for_xml(xml_output).interfaces[0],
                 method_call_closure=self.on_method_call,
-                get_property_closure=self.on_get_property
+                get_property_closure=self.on_get_property,
+                set_property_closure=None
             )
 
             if not registration_id:
@@ -446,37 +462,35 @@ class StatusNotifierImplementation(BaseImplementation):
                 parameters=GLib.Variant("(s)", (self.bus.get_unique_name(),)),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
-                timeout_msec=-1
+                timeout_msec=-1,
+                cancellable=None
             )
 
         except GLib.Error as error:
             self.unload()
             raise ImplementationUnavailable(f"StatusNotifier implementation not available: {error}") from error
 
-        self.update_menu()
-
     @staticmethod
-    def check_icon_path(icon_name, icon_path):
+    def _check_icon_path(icon_name, icon_path):
         """Check if tray icons exist in the specified icon path."""
 
         if not icon_path:
             return False
 
-        icon_scheme = f"{pynicotine.__application_id__}-{icon_name}."
+        icon_scheme = f"{pynicotine.__application_id__}-{icon_name}.".encode()
 
         try:
             with os.scandir(encode_path(icon_path)) as entries:
                 for entry in entries:
-                    if entry.is_file() and entry.name.decode("utf-8", "replace").startswith(icon_scheme):
+                    if entry.is_file() and entry.name.startswith(icon_scheme):
                         return True
 
         except OSError as error:
-            log.add_debug("Error accessing tray icon path %(path)s: %(error)s" %
-                          {"path": icon_path, "error": error})
+            log.add_debug("Error accessing tray icon path %s: %s", (icon_path, error))
 
         return False
 
-    def get_icon_path(self):
+    def _get_icon_path(self):
         """Returns an icon path to use for tray icons, or None to fall back to
         system-wide icons."""
 
@@ -492,45 +506,54 @@ class StatusNotifierImplementation(BaseImplementation):
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
             # Check if custom icons exist
-            if self.check_icon_path(icon_name, custom_icon_path):
+            if config.sections["ui"]["icontheme"] and self._check_icon_path(icon_name, custom_icon_path):
                 self.custom_icons = True
                 return custom_icon_path
 
             # Check if local icons exist
-            if self.check_icon_path(icon_name, local_icon_path):
+            if self._check_icon_path(icon_name, local_icon_path):
                 return local_icon_path
 
         return ""
 
-    def set_icon_name(self, icon_name):
+    def _set_icon_name(self, icon_name):
+
+        icon_name_property = self.tray_icon.properties["IconName"]
 
         if self.custom_icons:
             # Use alternative icon names to enforce custom icons, since system-wide icons take precedence
             icon_name = icon_name.replace(pynicotine.__application_id__, "nplus-tray")
 
-        self.tray_icon.properties["IconName"].value = icon_name
-        self.tray_icon.emit_signal("NewIcon")
+        if icon_name_property.value != icon_name:
+            icon_name_property.value = icon_name
+            self.tray_icon.emit_signal("NewIcon")
 
         if not self.is_visible:
             return
 
+        status_property = self.tray_icon.properties["Status"]
         status = "Active"
 
-        if self.tray_icon.properties["Status"].value != status:
-            self.tray_icon.properties["Status"].value = status
+        if status_property.value != status:
+            status_property.value = status
             self.tray_icon.emit_signal("NewStatus", status)
 
-    def update_icon_theme(self):
+    def _update_icon_theme(self):
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
-        icon_path = self.get_icon_path()
-        self.tray_icon.properties["IconThemePath"].value = icon_path
+        icon_path = self._get_icon_path()
+        icon_path_property = self.tray_icon.properties["IconThemePath"]
+
+        if icon_path_property.value == icon_path:
+            return
+
+        icon_path_property.value = icon_path
         self.tray_icon.emit_signal("NewIconThemePath", icon_path)
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
 
-    def update_menu(self):
+    def _update_menu(self):
         self.tray_icon.menu.set_items(self.menu_items)
 
     def unload(self, is_shutdown=True):
@@ -538,13 +561,16 @@ class StatusNotifierImplementation(BaseImplementation):
         if self.tray_icon is None:
             return
 
+        status_property = self.tray_icon.properties["Status"]
         status = "Passive"
 
-        self.tray_icon.properties["Status"].value = status
-        self.tray_icon.emit_signal("NewStatus", status)
+        if status_property.value != status:
+            status_property.value = status
+            self.tray_icon.emit_signal("NewStatus", status)
 
         if is_shutdown:
             self.tray_icon.unregister()
+            self.tray_icon = None
 
 
 class Win32Implementation(BaseImplementation):
@@ -682,7 +708,6 @@ class Win32Implementation(BaseImplementation):
 
         self._register_class()
         self._create_window()
-        self.update_icon()
 
     def _register_class(self):
 
@@ -890,7 +915,7 @@ class Win32Implementation(BaseImplementation):
         from ctypes import byref, windll, wintypes
 
         if self._menu is None:
-            self.update_menu()
+            self._update_menu()
 
         pos = wintypes.POINT()
         windll.user32.GetCursorPos(byref(pos))
@@ -910,7 +935,7 @@ class Win32Implementation(BaseImplementation):
         )
         windll.user32.PostMessageW(self._h_wnd, self.WM_NULL, 0, 0)
 
-    def update_menu(self):
+    def _update_menu(self):
 
         from ctypes import byref, windll
 
@@ -924,11 +949,8 @@ class Win32Implementation(BaseImplementation):
             if not windll.user32.SetMenuItemInfoW(self._menu, item_id, False, byref(item_info)):
                 windll.user32.InsertMenuItemW(self._menu, item_id, False, byref(item_info))
 
-    def set_icon_name(self, icon_name):
+    def _set_icon_name(self, icon_name):
         self._update_notify_icon(icon_name=icon_name)
-
-    def show_notification(self, title, message):
-        self._update_notify_icon(title=title, message=message)
 
     def on_process_window_message(self, h_wnd, msg, w_param, l_param):
 
@@ -966,6 +988,9 @@ class Win32Implementation(BaseImplementation):
             wintypes.LPARAM(l_param)
         )
 
+    def show_notification(self, title, message):
+        self._update_notify_icon(title=title, message=message)
+
     def unload(self, is_shutdown=True):
 
         self._remove_notify_icon()
@@ -979,6 +1004,78 @@ class Win32Implementation(BaseImplementation):
         self._unregister_class()
 
 
+class StatusIconImplementation(BaseImplementation):
+
+    def __init__(self, application):
+
+        super().__init__(application)
+
+        if not hasattr(Gtk, "StatusIcon") or os.environ.get("WAYLAND_DISPLAY"):
+            # GtkStatusIcon does not work on Wayland
+            raise ImplementationUnavailable("StatusIcon implementation not available")
+
+        self.tray_icon = Gtk.StatusIcon(tooltip_text=pynicotine.__application_name__)
+        self.tray_icon.connect("activate", self.activate_callback)
+        self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
+
+        self.gtk_menu = self._build_gtk_menu()
+        GLib.idle_add(self._update_icon)
+
+    def on_status_icon_popup(self, _status_icon, button, _activate_time):
+
+        if button == 3:
+            time = Gtk.get_current_event_time()
+            self.gtk_menu.popup(None, None, None, None, button, time)
+
+    def _set_item_text(self, item, text):
+        super()._set_item_text(item, text)
+        item["gtk_menu_item"].set_label(text)
+
+    def _set_item_sensitive(self, item, sensitive):
+        super()._set_item_sensitive(item, sensitive)
+        item["gtk_menu_item"].set_sensitive(sensitive)
+
+    def _set_item_toggled(self, item, toggled):
+
+        super()._set_item_toggled(item, toggled)
+        gtk_menu_item = item["gtk_menu_item"]
+
+        with gtk_menu_item.handler_block(item["gtk_handler"]):
+            gtk_menu_item.set_active(toggled)
+
+    def _build_gtk_menu(self):
+
+        gtk_menu = Gtk.Menu()
+
+        for item in self.menu_items.values():
+            text = item.get("text")
+
+            if text is None:
+                item["gtk_menu_item"] = gtk_menu_item = Gtk.SeparatorMenuItem(visible=True)
+            else:
+                gtk_menu_item_class = Gtk.CheckMenuItem if "toggled" in item else Gtk.MenuItem
+                item["gtk_menu_item"] = gtk_menu_item = gtk_menu_item_class(
+                    label=text, use_underline=True, visible=True
+                )
+                item["gtk_handler"] = gtk_menu_item.connect("activate", item["callback"])
+
+            gtk_menu.append(gtk_menu_item)
+
+        return gtk_menu
+
+    def _set_icon_name(self, icon_name):
+
+        if not self.tray_icon.get_visible():
+            self.tray_icon.set_visible(True)
+
+        if self.tray_icon.is_embedded() and self.tray_icon.get_icon_name() != icon_name:
+            self.tray_icon.set_from_icon_name(icon_name)
+
+    def unload(self, is_shutdown=True):
+        if self.tray_icon.get_visible():
+            self.tray_icon.set_visible(False)
+
+
 class TrayIcon:
 
     def __init__(self, application):
@@ -986,22 +1083,32 @@ class TrayIcon:
         self.application = application
         self.available = True
         self.implementation = None
+        self.watch_id = None
 
-        self.watch_availability()
+        self._watch_availability()
         self.load()
 
-    def watch_availability(self):
+    def _watch_availability(self):
 
         if sys.platform in {"win32", "darwin"}:
             return
 
-        Gio.bus_watch_name(
+        if self.watch_id is not None:
+            return
+
+        self.watch_id = Gio.bus_watch_name(
             bus_type=Gio.BusType.SESSION,
             name="org.kde.StatusNotifierWatcher",
             flags=Gio.BusNameWatcherFlags.NONE,
             name_appeared_closure=self.load,
             name_vanished_closure=self.unload
         )
+
+    def _unwatch_availability(self):
+
+        if self.watch_id is not None:
+            Gio.bus_unwatch_name(self.watch_id)
+            self.watch_id = None
 
     def load(self, *_args):
 
@@ -1018,31 +1125,24 @@ class TrayIcon:
         if self.implementation is None:
             if sys.platform == "win32":
                 self.implementation = Win32Implementation(self.application)
+
+            elif sys.platform == "darwin":
+                self.available = False
+
             else:
                 try:
                     self.implementation = StatusNotifierImplementation(self.application)
 
                 except ImplementationUnavailable:
-                    self.available = False
-                    return
+                    try:
+                        self.implementation = StatusIconImplementation(self.application)
+                        self._unwatch_availability()
 
-        self.refresh_state()
+                    except ImplementationUnavailable:
+                        self.available = False
+                        return
 
-    def update_window_visibility(self):
-        if self.implementation:
-            self.implementation.update_window_visibility()
-
-    def update_user_status(self):
-        if self.implementation:
-            self.implementation.update_user_status()
-
-    def update_icon(self):
-        if self.implementation:
-            self.implementation.update_icon()
-
-    def update_icon_theme(self):
-        if self.implementation:
-            self.implementation.update_icon_theme()
+        self.update()
 
     def set_download_status(self, status):
         if self.implementation:
@@ -1056,17 +1156,9 @@ class TrayIcon:
         if self.implementation:
             self.implementation.show_notification(title=title, message=message)
 
-    def refresh_state(self):
-
-        if not self.implementation:
-            return
-
-        self.implementation.is_visible = True
-
-        self.update_icon_theme()
-        self.update_icon()
-        self.update_window_visibility()
-        self.update_user_status()
+    def update(self):
+        if self.implementation:
+            self.implementation.update()
 
     def unload(self, *_args, is_shutdown=True):
 

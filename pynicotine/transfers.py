@@ -32,11 +32,13 @@ from ast import literal_eval
 from collections import defaultdict
 from os.path import normpath
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import CloseConnection
+from pynicotine.slskmessages import FileAttribute
+from pynicotine.slskmessages import UploadDenied
 from pynicotine.utils import encode_path
 from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
@@ -61,10 +63,11 @@ class Transfer:
     """This class holds information about a single transfer."""
 
     __slots__ = ("sock", "username", "virtual_path",
-                 "folder_path", "token", "size", "file_handle", "start_time", "last_update",
-                 "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
-                 "time_left", "modifier", "queue_position", "file_attributes",
-                 "iterator", "status", "legacy_attempt", "size_changed", "request_timer_id")
+                 "folder_path", "token", "size", "file_handle", "start_time",
+                 "current_byte_offset", "last_byte_offset", "transferred_bytes_total",
+                 "speed", "avg_speed", "time_elapsed", "time_left", "modifier",
+                 "queue_position", "file_attributes", "iterator", "status",
+                 "legacy_attempt", "retry_attempt", "size_changed", "request_timer_id")
 
     def __init__(self, username, virtual_path=None, folder_path=None, size=0, file_attributes=None,
                  status=None, current_byte_offset=None):
@@ -83,13 +86,15 @@ class Transfer:
         self.modifier = None
         self.request_timer_id = None
         self.start_time = None
-        self.last_update = None
         self.last_byte_offset = None
+        self.transferred_bytes_total = 0
         self.speed = 0
+        self.avg_speed = 0
         self.time_elapsed = 0
         self.time_left = 0
         self.iterator = None
         self.legacy_attempt = False
+        self.retry_attempt = False
         self.size_changed = False
 
         if file_attributes is None:
@@ -97,17 +102,22 @@ class Transfer:
 
 
 class Transfers:
+    __slots__ = ("transfers", "queued_transfers", "queued_users", "active_users",
+                 "failed_users", "transfers_file_path", "total_bandwidth", "_name",
+                 "_allow_saving_transfers", "_online_users", "_user_queue_limits",
+                 "_user_queue_sizes")
 
-    def __init__(self, transfers_file_path):
+    def __init__(self, name):
 
         self.transfers = {}
         self.queued_transfers = {}
         self.queued_users = defaultdict(dict)
         self.active_users = defaultdict(dict)
         self.failed_users = defaultdict(dict)
-        self.transfers_file_path = transfers_file_path
+        self.transfers_file_path = os.path.join(config.data_folder_path, f"{name}.json")
         self.total_bandwidth = 0
 
+        self._name = name
         self._allow_saving_transfers = False
         self._online_users = set()
         self._user_queue_limits = defaultdict(int)
@@ -146,7 +156,7 @@ class Transfers:
 
         # Watch transfers for user status updates
         for username in self.failed_users:
-            core.users.watch_user(username)
+            core.users.watch_user(username, context=self._name)
 
         self.update_transfer_limits()
 
@@ -224,10 +234,10 @@ class Transfers:
         is_vbr = (" (vbr)" in bitrate)
 
         try:
-            file_attributes[slskmessages.FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
+            file_attributes[FileAttribute.BITRATE] = int(bitrate.replace(" (vbr)", ""))
 
             if is_vbr:
-                file_attributes[slskmessages.FileAttribute.VBR] = int(is_vbr)
+                file_attributes[FileAttribute.VBR] = int(is_vbr)
 
         except ValueError:
             # No valid bitrate value found
@@ -247,7 +257,7 @@ class Transfers:
         for part in loaded_length.split(":"):
             seconds = seconds * 60 + int(part, 10)
 
-        file_attributes[slskmessages.FileAttribute.DURATION] = seconds
+        file_attributes[FileAttribute.DURATION] = seconds
 
         return file_attributes
 
@@ -286,9 +296,9 @@ class Transfers:
             if folder_path:
                 # Normalize and cache path
                 if folder_path not in normalized_paths:
-                    normalized_paths[folder_path] = normpath(folder_path)
-
-                folder_path = normalized_paths[folder_path]
+                    folder_path = normalized_paths[folder_path] = normpath(folder_path)
+                else:
+                    folder_path = normalized_paths[folder_path]
 
             # Status
             if num_attributes >= 4:
@@ -310,14 +320,22 @@ class Transfers:
             if num_attributes >= 5:
                 loaded_size = transfer_row[4]
 
-                if loaded_size and isinstance(loaded_size, (int, float)):
-                    size = loaded_size // 1
+                if loaded_size:
+                    try:
+                        size = loaded_size // 1
+
+                    except TypeError:
+                        pass
 
             if num_attributes >= 6:
                 loaded_byte_offset = transfer_row[5]
 
-                if loaded_byte_offset and isinstance(loaded_byte_offset, (int, float)):
-                    current_byte_offset = loaded_byte_offset // 1
+                if loaded_byte_offset:
+                    try:
+                        current_byte_offset = loaded_byte_offset // 1
+
+                    except TypeError:
+                        pass
 
             # File attributes
             file_attributes = self._load_file_attributes(num_attributes, transfer_row)
@@ -344,10 +362,22 @@ class Transfers:
             file_handle.close()
 
         except Exception as error:
-            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file_handle.name.decode("utf-8", "replace"),
-                "error": error
-            })
+            file_path = file_handle.name.decode("utf-8", "replace")
+            log.add_transfer("Failed to close file %s: %s", (file_path, error))
+
+    # User Actions #
+
+    def _unwatch_stale_user(self, username):
+        """Unwatches a user when status updates are no longer required, i.e.
+        no transfers remain, or all remaining transfers are
+        finished/filtered/paused.
+        """
+
+        for users in (self.active_users, self.queued_users, self.failed_users):
+            if username in users:
+                return
+
+        core.users.unwatch_user(username, context=self._name)
 
     # Limits #
 
@@ -357,31 +387,101 @@ class Transfers:
     # Events #
 
     def _transfer_timeout(self, transfer):
-        raise NotImplementedError
+        self._abort_transfer(transfer, status=TransferStatus.CONNECTION_TIMEOUT)
 
     # Transfer Actions #
 
     def _append_transfer(self, transfer):
-        raise NotImplementedError
+        self.transfers[transfer.username + transfer.virtual_path] = transfer
 
-    def _abort_transfer(self, transfer, denied_message=None, status=None, update_parent=True):
-        raise NotImplementedError
+    def _abort_transfer(self, transfer, status=None, denied_message=None):
+
+        username = transfer.username
+        virtual_path = transfer.virtual_path
+
+        transfer.legacy_attempt = False
+        transfer.size_changed = False
+
+        if transfer.sock is not None:
+            core.send_message_to_network_thread(CloseConnection(transfer.sock))
+
+        if transfer.file_handle is not None:
+            self._close_file(transfer)
+
+        elif denied_message and virtual_path in self.queued_users.get(username, {}):
+            core.send_message_to_peer(
+                username, UploadDenied(virtual_path, denied_message))
+
+        self._deactivate_transfer(transfer)
+        self._dequeue_transfer(transfer)
+        self._unfail_transfer(transfer)
+
+        if status:
+            transfer.status = status
+
+            if status not in {TransferStatus.FINISHED, TransferStatus.FILTERED, TransferStatus.PAUSED}:
+                self._fail_transfer(transfer)
+
+        # Only attempt to unwatch user after the transfer status is fully set
+        self._unwatch_stale_user(username)
 
     def _update_transfer(self, transfer):
         raise NotImplementedError
 
+    def _update_transfer_progress(self, transfer, stat_id, current_byte_offset=None, speed=None):
+
+        size = transfer.size
+
+        transfer.status = TransferStatus.TRANSFERRING
+        transfer.time_elapsed = time_elapsed = (time.monotonic() - transfer.start_time)
+        transfer.time_left = 0
+
+        if current_byte_offset is None:
+            return
+
+        transfer.current_byte_offset = current_byte_offset
+        transferred_fragment_size = current_byte_offset - transfer.last_byte_offset
+        transfer.last_byte_offset = current_byte_offset
+
+        if transferred_fragment_size > 0:
+            transfer.transferred_bytes_total += transferred_fragment_size
+            core.statistics.append_stat_value(stat_id, transferred_fragment_size)
+
+        transfer.avg_speed = max(0, int(transfer.transferred_bytes_total // max(1, time_elapsed)))
+
+        if speed is not None:
+            if speed <= 0:
+                transfer.speed = transfer.avg_speed
+            else:
+                transfer.speed = speed
+
+        if transfer.speed > 0 and size > current_byte_offset:
+            transfer.time_left = (size - current_byte_offset) // transfer.speed
+
     def _finish_transfer(self, transfer):
-        raise NotImplementedError
+
+        self._deactivate_transfer(transfer)
+        self._close_file(transfer)
+        self._unwatch_stale_user(transfer.username)
+
+        transfer.status = TransferStatus.FINISHED
+        transfer.current_byte_offset = transfer.size
 
     def _auto_clear_transfer(self, transfer):
-        raise NotImplementedError
 
-    def _clear_transfer(self, transfer):
-        raise NotImplementedError
+        if config.sections["transfers"][f"autoclear_{self._name}"]:
+            self._clear_transfer(transfer)
+            return True
+
+        return False
+
+    def _clear_transfer(self, transfer, denied_message=None):
+        self._abort_transfer(transfer, denied_message=denied_message)
+        del self.transfers[transfer.username + transfer.virtual_path]
 
     def _enqueue_transfer(self, transfer):
 
-        core.users.watch_user(transfer.username)
+        core.users.watch_user(transfer.username, context=self._name)
 
         transfer.status = TransferStatus.QUEUED
 
@@ -390,7 +490,8 @@ class Transfers:
         self._user_queue_sizes[transfer.username] += transfer.size
 
     def _enqueue_limited_transfers(self, username):
-        raise NotImplementedError
+        # Optional method
+        pass
 
     def _dequeue_transfer(self, transfer):
 
@@ -417,11 +518,11 @@ class Transfers:
 
     def _activate_transfer(self, transfer, token):
 
-        core.users.watch_user(transfer.username)
+        core.users.watch_user(transfer.username, context=self._name)
 
         transfer.status = TransferStatus.GETTING_STATUS
         transfer.token = token
-        transfer.speed = 0
+        transfer.speed = transfer.avg_speed = 0
         transfer.queue_position = 0
 
         # When our port is closed, certain clients can take up to ~30 seconds before they
@@ -449,13 +550,14 @@ class Transfers:
         if not self.active_users[username]:
             del self.active_users[username]
 
-        if transfer.speed:
+        if transfer.speed > 0:
             self.total_bandwidth = max(0, self.total_bandwidth - transfer.speed)
 
         if transfer.request_timer_id is not None:
             events.cancel_scheduled(transfer.request_timer_id)
             transfer.request_timer_id = None
 
+        transfer.speed = transfer.avg_speed
         transfer.sock = None
         transfer.token = None
 
@@ -477,20 +579,31 @@ class Transfers:
 
     # Saving #
 
-    def _get_transfer_rows(self):
+    def _iter_transfer_rows(self):
         """Get a list of transfers to dump to file."""
-        return [
-            [transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
-             transfer.current_byte_offset, transfer.file_attributes]
-            for transfer in self.transfers.values()
-        ]
+        for transfer in self.transfers.values():
+            yield [
+                transfer.username, transfer.virtual_path, transfer.folder_path, transfer.status, transfer.size,
+                transfer.current_byte_offset, transfer.file_attributes
+            ]
 
     def _save_transfers_callback(self, file_handle):
 
-        # We can't use indent=0 to add line breaks, since Python's C-based json encoder doesn't
-        # support this. Add them using replace() instead.
-        file_handle.write(
-            json.dumps(self._get_transfer_rows(), check_circular=False, ensure_ascii=False).replace('], ["', '],\n["'))
+        # Dump every transfer to the file individually to avoid large memory usage
+        json_encoder = json.JSONEncoder(check_circular=False, ensure_ascii=False)
+        is_first_item = True
+
+        file_handle.write("[")
+
+        for row in self._iter_transfer_rows():
+            if is_first_item:
+                is_first_item = False
+            else:
+                file_handle.write(",\n")
+
+            file_handle.write(json_encoder.encode(row))
+
+        file_handle.write("]")
 
     def _save_transfers(self):
         """Save list of transfers."""
@@ -504,6 +617,7 @@ class Transfers:
 
 
 class Statistics:
+    __slots__ = ("session_stats",)
 
     def __init__(self):
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2023 Nicotine+ Contributors
+# COPYRIGHT (C) 2020-2024 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 quinox <quinox@users.sf.net>
@@ -24,11 +24,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import configparser
 import os
 import sys
 
-from ast import literal_eval
 from collections import defaultdict
 
 from pynicotine.events import events
@@ -51,6 +49,9 @@ class Config:
     parameters.
     """
 
+    __slots__ = ("config_file_path", "data_folder_path", "config_loaded", "sections",
+                 "defaults", "removed_options", "_parser")
+
     def __init__(self):
 
         config_folder_path, data_folder_path = self.get_user_folders()
@@ -58,10 +59,10 @@ class Config:
         self.set_data_folder(data_folder_path)
 
         self.config_loaded = False
-        self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
         self.removed_options = {}
+        self._parser = None
 
     @staticmethod
     def get_user_folders():
@@ -83,7 +84,7 @@ class Config:
         home = os.path.expanduser("~")
         legacy_folder_path = os.path.join(home, ".nicotine")
 
-        if os.path.isdir(legacy_folder_path.encode("utf-8")):
+        if os.path.isdir(encode_path(legacy_folder_path)):
             return legacy_folder_path, legacy_folder_path
 
         def xdg_path(xdg, default):
@@ -146,7 +147,15 @@ class Config:
 
     def load_config(self):
 
-        log_folder_path = os.path.join("${NICOTINE_DATA_HOME}", "logs")
+        if self.config_loaded:
+            return
+
+        from configparser import ConfigParser
+
+        data_home_env = "${NICOTINE_DATA_HOME}"
+        log_folder_path = os.path.join(data_home_env, "logs")
+
+        self._parser = ConfigParser(strict=False, interpolation=None)
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
@@ -165,16 +174,16 @@ class Config:
                 "ignorelist": [],
                 "ipignorelist": {},
                 "ipblocklist": {},
-                "autojoin": ["nicotine"],
+                "autojoin": [],
                 "autoaway": 15,
                 "away": False,
                 "private_chatrooms": False,
                 "command_aliases": {}
             },
             "transfers": {
-                "incompletedir": os.path.join("${NICOTINE_DATA_HOME}", "incomplete"),
-                "downloaddir": os.path.join("${NICOTINE_DATA_HOME}", "downloads"),
-                "uploaddir": os.path.join("${NICOTINE_DATA_HOME}", "received"),
+                "incompletedir": os.path.join(data_home_env, "incomplete"),
+                "downloaddir": os.path.join(data_home_env, "downloads"),
+                "uploaddir": os.path.join(data_home_env, "received"),
                 "usernamesubfolders": False,
                 "shared": [],
                 "buddyshared": [],
@@ -267,7 +276,6 @@ class Config:
                 "debug_file_output": False,
                 "roomlogsdir": os.path.join(log_folder_path, "rooms"),
                 "privatelogsdir": os.path.join(log_folder_path, "private"),
-                "readroomlogs": True,
                 "readroomlines": 200,
                 "readprivatelines": 200,
                 "private_chats": [],
@@ -288,7 +296,7 @@ class Config:
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
-                "maxresults": 150,
+                "maxresults": 300,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -304,7 +312,7 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "private_search_results": True
+                "private_search_results": False
             },
             "ui": {
                 "language": "",
@@ -385,7 +393,7 @@ class Config:
                 "file_size_unit": ""
             },
             "private_rooms": {
-                "rooms": {}
+                "rooms": {}  # TODO: remove in 3.3.5
             },
             "urls": {
                 "protocols": {}
@@ -395,7 +403,6 @@ class Config:
                 "dislikes": []
             },
             "players": {
-                "default": "",
                 "npothercommand": "",
                 "npplayer": "mpris",
                 "npformatlist": [],
@@ -519,14 +526,15 @@ class Config:
                 "remove_special_chars"
             ),
             "userinfo": (
-                "descrutf8"
+                "descrutf8",
             ),
             "private_rooms": (
-                "enabled"
+                "enabled",
             ),
             "logging": (
                 "logsdir",
-                "timestamps"
+                "timestamps",
+                "readroomlogs"
             ),
             "ticker": (
                 "default",
@@ -542,7 +550,7 @@ class Config:
                 "humanizeurls"
             ),
             "notifications": (
-                "notification_tab_icons"
+                "notification_tab_icons",
             ),
             "words": (
                 "cycle",
@@ -551,17 +559,17 @@ class Config:
                 "censorfill"
             ),
             "players": (
-                "default"
+                "default",
             )
         }
 
         self.create_config_folder()
         self.create_data_folder()
 
-        load_file(self.config_file_path, self.parse_config)
+        load_file(self.config_file_path, self._parse_config)
 
         # Update config values from file
-        self.set_config()
+        self._set_config()
 
         language = self.sections["ui"]["language"]
 
@@ -571,32 +579,93 @@ class Config:
         from pynicotine.logfacility import log
         log.init_log_levels()
         log.update_folder_paths()
-        log.add_debug("Using configuration: %(file)s", {"file": self.config_file_path})
+        log.add_debug("Using configuration: %s", self.config_file_path)
 
         events.connect("quit", self._quit)
 
-    def parse_config(self, file_path):
+    def need_config(self):
+        # Check if we have specified a username or password
+        return not self.sections["server"]["login"] or not self.sections["server"]["passw"]
+
+    def _parse_config(self, file_path):
         """Parses the config file."""
 
         with open(encode_path(file_path), "a+", encoding="utf-8") as file_handle:
             file_handle.seek(0)
-            self.parser.read_file(file_handle)
+            self._parser.read_file(file_handle)
 
-    def need_config(self):
+    def _migrate_config(self):
 
-        # Check if we have specified a username or password
-        if not self.sections["server"]["login"] or not self.sections["server"]["passw"]:
-            return True
+        # Map legacy folder/user grouping modes (3.1.0)
+        for section, option in (
+            ("searches", "group_searches"),
+            ("transfers", "groupdownloads"),
+            ("transfers", "groupuploads")
+        ):
+            mode = self.sections[section].get(option, "folder_grouping")
 
-        return False
+            if mode == "0":
+                mode = "ungrouped"
 
-    def set_config(self):
+            elif mode == "1":
+                mode = "folder_grouping"
+
+            elif mode == "2":
+                mode = "user_grouping"
+
+            self.sections[section][option] = mode
+
+        # Convert special download folder share to regular share
+        if self.sections["transfers"].get("sharedownloaddir", False):
+            shares = self.sections["transfers"]["shared"]
+            virtual_name = "Downloaded"
+            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
+
+            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
+                shares.append(shared_folder)
+
+        # Migrate download/upload speed limit preference (3.3.0)
+        if "uselimit" in self.sections["transfers"] or "usealtlimits" in self.sections["transfers"]:
+            for option, use_primary_speed_limit in (
+                ("use_download_speed_limit", self.sections["transfers"].get("downloadlimit", 0) > 0),
+                ("use_upload_speed_limit", self.sections["transfers"].get("uselimit", False))
+            ):
+                if self.sections["transfers"].get("usealtlimits", False):
+                    use_speed_limit = "alternative"
+
+                elif use_primary_speed_limit:
+                    use_speed_limit = "primary"
+
+                else:
+                    use_speed_limit = "unlimited"
+
+                self.sections["transfers"][option] = use_speed_limit
+
+        # Migrate old trusted buddy shares to new format (3.3.0)
+        if self.sections["transfers"].get("buddysharestrustedonly", False):
+            buddy_shares = self.sections["transfers"]["buddyshared"]
+
+            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
+            buddy_shares.clear()
+
+        # Migrate old media player command to new format (3.3.0)
+        old_default_player = self.sections["players"].get("default", None)
+
+        if old_default_player:
+            self.sections["urls"]["protocols"]["audio"] = old_default_player
+
+        # Enable previously disabled header bar on macOS (3.3.0)
+        if sys.platform == "darwin" and old_default_player is not None:
+            self.sections["ui"]["header_bar"] = True
+
+    def _set_config(self):
         """Set config values parsed from file earlier."""
 
+        from ast import literal_eval
         from pynicotine.logfacility import log
 
-        for i in self.parser.sections():
-            for j, val in self.parser.items(i, raw=True):
+        for i in self._parser.sections():
+            for j, val in self._parser.items(i, raw=True):
 
                 # Check if config section exists in defaults
                 if i not in self.defaults and i not in self.removed_options:
@@ -605,8 +674,7 @@ class Config:
                 # Check if config option exists in defaults
                 elif (j not in self.defaults.get(i, {}) and j not in self.removed_options.get(i, {})
                         and i != "plugins" and j != "filter"):
-                    log.add_debug("Unknown config option '%(option)s' in section '%(section)s'",
-                                  {"option": j, "section": i})
+                    log.add_debug("Unknown config option '%s' in section '%s'", (j, i))
 
                 else:
                     # Attempt to get the default value for a config option. If there's no default
@@ -664,65 +732,11 @@ class Config:
                 self.sections[section] = {}
 
             for option, value in options.items():
-                if option in self.sections[section]:
-                    continue
+                if option not in self.sections[section]:
+                    self.sections[section][option] = value
 
-                # Migrate download speed limit preference (3.3.0)
-                if option == "use_download_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("downloadlimit", 0) > 0:
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Migrate upload speed limit preference (3.3.0)
-                if option == "use_upload_speed_limit" and section == "transfers":
-                    if self.sections[section].get("usealtlimits", False):
-                        use_speed_limit = "alternative"
-
-                    elif self.sections[section].get("uselimit", False):
-                        use_speed_limit = "primary"
-
-                    else:
-                        use_speed_limit = "unlimited"
-
-                    self.sections[section][option] = use_speed_limit
-                    continue
-
-                # Set default value
-                self.sections[section][option] = value
-
-        # Convert special download folder share to regular share
-        if self.sections["transfers"].get("sharedownloaddir", False):
-            shares = self.sections["transfers"]["shared"]
-            virtual_name = "Downloaded"
-            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
-
-            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
-                shares.append(shared_folder)
-
-        # Migrate old trusted buddy shares to new format (3.3.0)
-        if self.sections["transfers"].get("buddysharestrustedonly", False):
-            buddy_shares = self.sections["transfers"]["buddyshared"]
-
-            self.sections["transfers"]["trustedshared"] = buddy_shares[:]
-            buddy_shares.clear()
-
-        # Migrate old media player command to new format (3.3.0)
-        old_default_player = self.sections["players"].get("default", None)
-
-        if old_default_player:
-            self.sections["urls"]["protocols"]["audio"] = old_default_player
-
-        # Enable previously disabled header bar on macOS (3.3.0)
-        if sys.platform == "darwin" and old_default_player is not None:
-            self.sections["ui"]["header_bar"] = True
+        # Migrate old config values
+        self._migrate_config()
 
         # Check if server value is valid
         server_addr = self.sections["server"]["server"]
@@ -738,8 +752,8 @@ class Config:
 
         self.config_loaded = True
 
-    def write_config_callback(self, file_path):
-        self.parser.write(file_path)
+    def _write_config_callback(self, file_path):
+        self._parser.write(file_path)
 
     def write_configuration(self):
 
@@ -748,30 +762,33 @@ class Config:
 
         # Write new config options to file
         for section, options in self.sections.items():
-            if not self.parser.has_section(section):
-                self.parser.add_section(section)
+            if not self._parser.has_section(section):
+                self._parser.add_section(section)
 
             for option, value in options.items():
                 if value is None:
                     value = ""
 
-                self.parser.set(section, option, str(value))
+                self._parser.set(section, option, str(value))
 
         # Remove legacy config options
         for section, options in self.removed_options.items():
-            if not self.parser.has_section(section):
+            if not self._parser.has_section(section):
                 continue
 
             for option in options:
-                self.parser.remove_option(section, option)
+                self._parser.remove_option(section, option)
+
+            if not self._parser.options(section):
+                self._parser.remove_section(section)
 
         if not self.create_config_folder():
             return
 
         from pynicotine.logfacility import log
 
-        write_file_and_backup(self.config_file_path, self.write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %(file)s", {"file": self.config_file_path})
+        write_file_and_backup(self.config_file_path, self._write_config_callback, protect=True)
+        log.add_debug("Saved configuration: %s", self.config_file_path)
 
     def write_config_backup(self, file_path):
 
@@ -801,10 +818,8 @@ class Config:
 
     def _quit(self):
 
-        self.parser.clear()
-        self.sections.clear()
-        self.defaults.clear()
-        self.removed_options.clear()
+        if self._parser is not None:
+            self._parser.clear()
 
         self.config_loaded = False
 

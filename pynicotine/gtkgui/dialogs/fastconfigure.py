@@ -71,7 +71,6 @@ class FastConfigure(Dialog):
             title=_("Setup Assistant"),
             width=720,
             height=450,
-            resizable=False,
             show_title=False
         )
 
@@ -95,7 +94,8 @@ class FastConfigure(Dialog):
                     "column_type": "text",
                     "title": _("Virtual Folder"),
                     "width": 1,
-                    "expand_column": True
+                    "expand_column": True,
+                    "default_sort_type": "ascending"
                 },
                 "folder": {
                     "column_type": "text",
@@ -208,7 +208,7 @@ class FastConfigure(Dialog):
 
     def on_remove_shared_folder(self, *_args):
 
-        for iterator in reversed(self.shares_list_view.get_selected_rows()):
+        for iterator in reversed(list(self.shares_list_view.get_selected_rows())):
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
 
             core.shares.remove_share(virtual_name)
@@ -296,6 +296,9 @@ class FastConfigure(Dialog):
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
+        self.shares_list_view.disable_sorting()
 
         for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
             self.shares_list_view.add_row([virtual_name, folder_path], select_row=False)
+
+        self.shares_list_view.enable_sorting()

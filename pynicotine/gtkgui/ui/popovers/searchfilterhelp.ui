@@ -2,6 +2,8 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkScrolledWindow" id="container">
+    <property name="propagate-natural-height">True</property>
+    <property name="propagate-natural-width">True</property>
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">

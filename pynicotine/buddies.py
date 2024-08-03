@@ -43,6 +43,7 @@ class Buddy:
 
 
 class Buddies:
+    __slots__ = ("users", "allow_saving_buddies")
 
     def __init__(self):
 
@@ -101,7 +102,7 @@ class Buddies:
 
             _username, note, notify_status, is_prioritized, is_trusted, last_seen, country = row
 
-            self.users[username] = user_data = Buddy(
+            self.users[username] = Buddy(
                 username=username,
                 note=note,
                 notify_status=notify_status,
@@ -111,7 +112,6 @@ class Buddies:
                 country=country,
                 status=UserStatus.OFFLINE
             )
-            events.emit("add-buddy", username, user_data)
 
         self.allow_saving_buddies = True
 
@@ -125,7 +125,7 @@ class Buddies:
             return
 
         for username in self.users:
-            core.users.watch_user(username)
+            core.users.watch_user(username, context="buddies")
 
     def _server_disconnect(self, _msg):
 
@@ -166,7 +166,7 @@ class Buddies:
         events.emit("add-buddy", username, user_data)
 
         # Request user status, speed and number of shared files
-        core.users.watch_user(username)
+        core.users.watch_user(username, context="buddies")
 
     def remove_buddy(self, username):
 
@@ -177,6 +177,7 @@ class Buddies:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
 
+        core.users.unwatch_user(username, context="buddies")
         self.save_buddy_list()
         events.emit("remove-buddy", username)
 
