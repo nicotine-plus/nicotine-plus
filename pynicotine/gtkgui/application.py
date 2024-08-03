@@ -958,7 +958,7 @@ class Application:
         core.quit()
 
         # Process 'quit' event after slight delay in case thread event loop is stuck
-        GLib.idle_add(events.process_thread_events)
+        GLib.idle_add(lambda: events.process_thread_events() == -1)
 
         # Log exception in terminal
         self._raise_exception(exc_value)
