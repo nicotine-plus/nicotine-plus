@@ -138,7 +138,7 @@ class ComboBox:
             container.add(self.widget)
             return
 
-        if has_entry_completion:
+        if has_entry_completion or not self.enable_arrow_keys:
             add_css_class(self.dropdown, "dropdown-scrollbar")
 
         if self.entry is None:
@@ -306,7 +306,8 @@ class ComboBox:
             self.dropdown.set_active(position)
 
     def set_selected_id(self, item_id):
-        self.set_selected_pos(self._positions.get(item_id))
+        if item_id:
+            self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
 
@@ -371,10 +372,6 @@ class ComboBox:
 
     def grab_focus(self):
         self.entry.grab_focus()
-
-    def set_row_separator_func(self, func):
-        if GTK_API_VERSION == 3:
-            self.dropdown.set_row_separator_func(func)
 
     def set_visible(self, visible):
         self.widget.set_visible(visible)

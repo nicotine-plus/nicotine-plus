@@ -694,10 +694,6 @@ class Search:
     def set_label(self, label):
         self.tab_menu.set_parent(label)
 
-    def on_combobox_check_separator(self, model, iterator):
-        # Render empty value as separator
-        return not model.get_value(iterator, 0)
-
     def update_filter_widgets(self):
 
         self.update_filter_counter(self.active_filter_count)
@@ -720,8 +716,6 @@ class Search:
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.freeze()
-
-            widget.set_row_separator_func(lambda *_args: 0)
             widget.clear()
 
             presets = self.FILTER_PRESETS.get(filter_id)
@@ -736,9 +730,6 @@ class Search:
 
             for value in islice(filter_history, core.search.RESULT_FILTER_HISTORY_LIMIT):
                 widget.append(value)
-
-            if presets:
-                widget.set_row_separator_func(self.on_combobox_check_separator)
 
             widget.unfreeze()
 
