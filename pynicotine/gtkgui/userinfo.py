@@ -70,7 +70,7 @@ class UserInfos(IconNotebook):
         self.toolbar_default_widget = window.userinfo_entry
 
         self.userinfo_combobox = ComboBox(
-            container=self.window.userinfo_title, has_entry=True, has_entry_completion=True,
+            container=self.window.userinfo_title, has_entry=True,
             entry=self.window.userinfo_entry, item_selected_callback=self.on_show_user_profile
         )
 

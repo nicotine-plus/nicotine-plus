@@ -35,6 +35,7 @@ from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -77,7 +78,11 @@ class ChatRooms(IconNotebook):
         self.highlighted_rooms = {}
         self.completion = ChatCompletion()
         self.spell_checker = SpellChecker()
-        self.room_list = RoomList(window)
+        self.join_room_combobox = ComboBox(
+            container=window.chatrooms_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.chatrooms_entry, visible=True
+        )
+        self.room_list = RoomList(window, self.join_room_combobox)
         self.command_help = None
         self.room_wall = None
 
@@ -124,6 +129,7 @@ class ChatRooms(IconNotebook):
 
         self.completion.destroy()
         self.spell_checker.destroy()
+        self.join_room_combobox.destroy()
         self.room_list.destroy()
 
         if self.command_help is not None:

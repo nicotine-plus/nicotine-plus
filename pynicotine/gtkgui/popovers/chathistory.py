@@ -30,7 +30,6 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
@@ -41,7 +40,7 @@ from pynicotine.utils import encode_path
 
 class ChatHistory(Popover):
 
-    def __init__(self, window):
+    def __init__(self, window, combobox):
 
         (
             self.container,
@@ -56,6 +55,7 @@ class ChatHistory(Popover):
             height=700
         )
 
+        self.combobox = combobox
         self.list_view = TreeView(
             window, parent=self.list_container, activate_row_callback=self.on_show_user,
             search_entry=self.search_entry,
@@ -86,7 +86,6 @@ class ChatHistory(Popover):
         )
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.private_entry, self.list_view.model, column=1)
 
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(window.private_history_button))
@@ -103,10 +102,7 @@ class ChatHistory(Popover):
             events.connect(event_name, callback)
 
     def destroy(self):
-
         self.list_view.destroy()
-        self.completion_entry.destroy()
-
         super().destroy()
 
     def server_login(self, msg):
@@ -185,6 +181,7 @@ class ChatHistory(Popover):
 
     def load_users(self):
 
+        self.combobox.freeze()
         self.list_view.disable_sorting()
 
         try:
@@ -205,14 +202,18 @@ class ChatHistory(Popover):
         except OSError:
             pass
 
+        self.combobox.unfreeze()
         self.list_view.enable_sorting()
 
     def remove_user(self, username):
 
         iterator = self.list_view.iterators.get(username)
 
-        if iterator is not None:
-            self.list_view.remove_row(iterator)
+        if iterator is None:
+            return
+
+        self.combobox.remove_id(username)
+        self.list_view.remove_row(iterator)
 
     def update_user(self, username, message, timestamp=None):
 
@@ -227,6 +228,7 @@ class ChatHistory(Popover):
 
         status = core.users.statuses.get(username, UserStatus.OFFLINE)
 
+        self.combobox.append(username)
         self.list_view.add_row([
             USER_STATUS_ICON_NAMES[status],
             username,

@@ -28,7 +28,6 @@ from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popover import Popover
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.utils import humanize
@@ -38,7 +37,7 @@ class RoomList(Popover):
 
     PRIVATE_USERS_OFFSET = 10000000
 
-    def __init__(self, window):
+    def __init__(self, window, combobox):
 
         (
             self.container,
@@ -56,6 +55,7 @@ class RoomList(Popover):
             height=500
         )
 
+        self.combobox = combobox
         self.list_view = TreeView(
             window, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
@@ -110,7 +110,6 @@ class RoomList(Popover):
         self.private_room_toggle.connect("notify::active", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.widget, self.on_search_accelerator)
-        self.completion_entry = CompletionEntry(window.chatrooms_entry, self.list_view.model, column=0)
 
         if GTK_API_VERSION >= 4:
             inner_button = next(iter(window.room_list_button))
@@ -134,7 +133,6 @@ class RoomList(Popover):
 
         self.list_view.destroy()
         self.popup_menu.destroy()
-        self.completion_entry.destroy()
 
         super().destroy()
 
@@ -159,6 +157,7 @@ class RoomList(Popover):
         text_weight = Pango.Weight.BOLD if is_private else Pango.Weight.NORMAL
         text_underline = Pango.Underline.SINGLE if is_owned else Pango.Underline.NONE
 
+        self.combobox.append(room)
         self.list_view.add_row([
             room,
             h_user_count,
@@ -196,6 +195,7 @@ class RoomList(Popover):
         self.list_view.set_row_value(iterator, "users_data", user_count)
 
     def clear(self, *_args):
+        self.combobox.clear()
         self.list_view.clear()
 
     def private_room_added(self, msg):
@@ -223,6 +223,7 @@ class RoomList(Popover):
 
     def room_list(self, msg):
 
+        self.combobox.freeze()
         self.list_view.disable_sorting()
         self.clear()
 
@@ -235,6 +236,7 @@ class RoomList(Popover):
         for room, user_count in msg.rooms:
             self.add_room(room, user_count)
 
+        self.combobox.unfreeze()
         self.list_view.enable_sorting()
 
     def on_row_activated(self, *_args):

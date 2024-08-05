@@ -29,10 +29,11 @@ from pynicotine.events import events
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import SpellChecker
@@ -64,7 +65,11 @@ class PrivateChats(IconNotebook):
         self.highlighted_users = []
         self.completion = ChatCompletion()
         self.spell_checker = SpellChecker()
-        self.history = ChatHistory(window)
+        self.username_combobox = ComboBox(
+            container=window.private_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.private_entry, visible=True
+        )
+        self.history = ChatHistory(window, self.username_combobox)
         self.command_help = None
 
         for event_name, callback in (
@@ -94,6 +99,7 @@ class PrivateChats(IconNotebook):
 
         self.completion.destroy()
         self.spell_checker.destroy()
+        self.username_combobox.destroy()
         self.history.destroy()
 
         if self.command_help is not None:

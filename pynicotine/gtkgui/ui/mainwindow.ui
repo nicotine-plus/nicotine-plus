@@ -63,6 +63,24 @@
     <signal name="activate" handler="on_search"/>
     <signal name="icon-press" handler="on_search"/>
   </object>
+  <object class="GtkEntry" id="private_entry">
+    <property name="max-width-chars">40</property>
+    <property name="placeholder-text" translatable="yes">Username…</property>
+    <property name="primary-icon-name">avatar-default-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_get_private_chat"/>
+    <signal name="icon-press" handler="on_get_private_chat"/>
+  </object>
+  <object class="GtkEntry" id="chatrooms_entry">
+    <property name="max-width-chars">40</property>
+    <property name="placeholder-text" translatable="yes">Join or create room…</property>
+    <property name="primary-icon-name">user-available-symbolic</property>
+    <property name="visible">True</property>
+    <property name="width-chars">5</property>
+    <signal name="activate" handler="on_create_room"/>
+    <signal name="icon-press" handler="on_create_room"/>
+  </object>
   <object class="GtkBox" id="search_page">
     <property name="visible">False</property>
     <property name="width-request">580</property>
@@ -1088,14 +1106,8 @@
                     <property name="valign">center</property>
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkEntry" id="private_entry">
-                        <property name="max-width-chars">40</property>
-                        <property name="placeholder-text" translatable="yes">Username…</property>
-                        <property name="primary-icon-name">avatar-default-symbolic</property>
+                      <object class="GtkBox" id="private_entry_container">
                         <property name="visible">True</property>
-                        <property name="width-chars">5</property>
-                        <signal name="activate" handler="on_get_private_chat"/>
-                        <signal name="icon-press" handler="on_get_private_chat"/>
                       </object>
                     </child>
                     <child>
@@ -1421,14 +1433,8 @@
                         <property name="valign">center</property>
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkEntry" id="chatrooms_entry">
-                            <property name="max-width-chars">40</property>
-                            <property name="placeholder-text" translatable="yes">Join or create room…</property>
-                            <property name="primary-icon-name">user-available-symbolic</property>
+                          <object class="GtkBox" id="chatrooms_entry_container">
                             <property name="visible">True</property>
-                            <property name="width-chars">5</property>
-                            <signal name="activate" handler="on_create_room"/>
-                            <signal name="icon-press" handler="on_create_room"/>
                           </object>
                         </child>
                         <child>

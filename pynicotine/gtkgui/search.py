@@ -100,17 +100,17 @@ class Searches(IconNotebook):
             add_css_class(inner_button, "arrow-button")
 
         self.room_search_combobox = ComboBox(
-            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            container=self.window.search_title, has_entry=True,
             entry=self.window.room_search_entry, visible=False
         )
 
         self.user_search_combobox = ComboBox(
-            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            container=self.window.search_title, has_entry=True,
             entry=self.window.user_search_entry, visible=False
         )
 
         self.search_combobox = ComboBox(
-            container=self.window.search_title, has_entry=True, has_entry_completion=True,
+            container=self.window.search_title, has_entry=True,
             entry=self.window.search_entry
         )
 
