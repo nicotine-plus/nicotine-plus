@@ -56,8 +56,6 @@ class RoomList(Popover):
             height=500
         )
 
-        self.initializing_feed = False
-
         self.list_view = TreeView(
             window, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
@@ -147,12 +145,6 @@ class RoomList(Popover):
 
         return None
 
-    def toggle_public_feed(self, active):
-
-        self.initializing_feed = True
-        self.public_feed_toggle.set_active(active)
-        self.initializing_feed = False
-
     def toggle_accept_private_room(self, active):
         self.private_room_toggle.set_active(active)
 
@@ -214,12 +206,12 @@ class RoomList(Popover):
 
     def show_room(self, room, *_args):
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(True)
+            self.public_feed_toggle.set_active(True)
 
     def remove_room(self, room):
 
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(False)
+            self.public_feed_toggle.set_active(False)
 
         self.update_room_user_count(room, decrement=True)
 
@@ -275,9 +267,6 @@ class RoomList(Popover):
         toggle.emit("activate")
 
     def on_toggle_public_feed(self, *_args):
-
-        if self.initializing_feed:
-            return
 
         if self.public_feed_toggle.get_active():
             core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
