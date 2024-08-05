@@ -150,7 +150,7 @@ class PluginSettings(Dialog):
 
         label = self._generate_widget_container(description, homogeneous=True)
         self.option_widgets[option_name] = combobox = ComboBox(
-            container=label.get_parent(), label=label, items=((item, item) for item in items)
+            container=label.get_parent(), label=label, items=items
         )
         self.application.preferences.set_widget(combobox, option_value)
 

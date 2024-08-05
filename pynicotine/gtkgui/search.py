@@ -220,15 +220,11 @@ class Searches(IconNotebook):
         if not config.sections["searches"]["enable_history"]:
             return
 
-        self.search_combobox.freeze()
-
         self.search_combobox.remove_id(term)
         self.search_combobox.prepend(term)
 
         while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
             self.search_combobox.remove_pos(-1)
-
-        self.search_combobox.unfreeze()
 
     def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
                     show_page=True):

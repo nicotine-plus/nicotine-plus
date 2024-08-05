@@ -258,10 +258,7 @@ class ChatRooms(IconNotebook):
 
             if not is_global:
                 combobox = self.window.search.room_search_combobox
-
-                combobox.freeze()
                 combobox.append(room)
-                combobox.unfreeze()
 
         if switch_page:
             self.set_current_page(self.pages[room].container)
@@ -292,10 +289,7 @@ class ChatRooms(IconNotebook):
 
         if room != core.chatrooms.GLOBAL_ROOM_NAME:
             combobox = self.window.search.room_search_combobox
-
-            combobox.freeze()
             combobox.remove_id(room)
-            combobox.unfreeze()
 
     def highlight_room(self, room, user):
 

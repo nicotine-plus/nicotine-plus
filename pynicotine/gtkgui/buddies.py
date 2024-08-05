@@ -166,10 +166,22 @@ class Buddies:
 
     def start(self):
 
+        comboboxes = (
+            self.window.search.user_search_combobox,
+            self.window.userbrowse.userbrowse_combobox,
+            self.window.userinfo.userinfo_combobox
+        )
+
+        for combobox in comboboxes:
+            combobox.freeze()
+
         self.list_view.disable_sorting()
 
         for username, user_data in core.buddies.users.items():
             self.add_buddy(username, user_data, select_row=False)
+
+        for combobox in comboboxes:
+            combobox.unfreeze()
 
         self.list_view.enable_sorting()
 
@@ -363,9 +375,7 @@ class Buddies:
             self.window.userbrowse.userbrowse_combobox,
             self.window.userinfo.userinfo_combobox
         ):
-            combobox.freeze()
             combobox.append(str(user))
-            combobox.unfreeze()
 
         self.update_visible()
 
@@ -384,9 +394,7 @@ class Buddies:
             self.window.userbrowse.userbrowse_combobox,
             self.window.userinfo.userinfo_combobox
         ):
-            combobox.freeze()
             combobox.remove_id(user)
-            combobox.unfreeze()
 
     def buddy_note(self, user, note):
 

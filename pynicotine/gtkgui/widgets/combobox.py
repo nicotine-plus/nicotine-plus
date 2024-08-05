@@ -44,7 +44,7 @@ class ComboBox:
         self._button = None
         self._popover = None
         self._entry_completion = None
-        self._is_modifying = False
+        self._is_updating_items = False
         self._is_select_callback_enabled = False
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
@@ -52,7 +52,13 @@ class ComboBox:
         if items:
             self.freeze()
 
-            for item, item_id in items:
+            for provided_item in items:
+                if isinstance(provided_item, str):
+                    item = provided_item
+                    item_id = None
+                else:
+                    item, item_id = provided_item
+
                 self.append(item, item_id)
 
             self.unfreeze()
@@ -212,12 +218,12 @@ class ComboBox:
         if GTK_API_VERSION == 3:
             return
 
-        self._is_modifying = True
+        self._is_updating_items = True
 
         self.dropdown.set_model(self._model)
         self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
 
-        self._is_modifying = False
+        self._is_updating_items = False
 
     def insert(self, position, item, item_id=None):
 
@@ -227,22 +233,20 @@ class ComboBox:
         if item_id in self._positions:
             return
 
+        self._is_updating_items = True
+
         last_position = self.get_num_items()
 
         if position == -1:
             position = last_position
 
         if GTK_API_VERSION >= 4:
-            self._is_modifying = True
-
             if last_position == position:
                 self._model.append(item)
             else:
                 num_removals = (last_position - position)
                 inserted_items = [item] + [self._model.get_string(i) for i in range(position, last_position)]
                 self._model.splice(position, num_removals, inserted_items)
-
-            self._is_modifying = False
         else:
             self.dropdown.insert_text(position, item)
 
@@ -254,8 +258,13 @@ class ComboBox:
 
         self._update_item_positions(start_position=(position + 1), added=True)
 
+        if GTK_API_VERSION >= 4:
+            self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+
         self._ids[position] = item_id
         self._positions[item_id] = position
+
+        self._is_updating_items = False
 
     def append(self, item, item_id=None):
         self.insert(position=-1, item=item, item_id=item_id)
@@ -317,10 +326,10 @@ class ComboBox:
         if item_id is None:
             return
 
+        self._is_updating_items = True
+
         if GTK_API_VERSION >= 4:
-            self._is_modifying = True
             self._model.remove(position)
-            self._is_modifying = False
         else:
             self.dropdown.remove(position)
 
@@ -334,19 +343,21 @@ class ComboBox:
         self._positions.pop(item_id, None)
         self._update_item_positions(start_position=position)
 
+        self._is_updating_items = False
+
     def remove_id(self, item_id):
         position = self._positions.get(item_id)
         self.remove_pos(position)
 
     def clear(self):
 
+        self._is_updating_items = True
+
         self._ids.clear()
         self._positions.clear()
 
         if GTK_API_VERSION >= 4:
-            self._is_modifying = True
             self._model.splice(position=0, n_removals=self._model.get_n_items())
-            self._is_modifying = False
         else:
             self.dropdown.remove_all()
 
@@ -355,6 +366,8 @@ class ComboBox:
 
         if self._entry_completion:
             self._entry_completion.clear()
+
+        self._is_updating_items = False
 
     def grab_focus(self):
         self.entry.grab_focus()
@@ -446,7 +459,7 @@ class ComboBox:
 
     def _on_item_selected(self, *_args):
 
-        if self._is_modifying:
+        if self._is_updating_items:
             return
 
         selected_id = self.get_selected_id()
