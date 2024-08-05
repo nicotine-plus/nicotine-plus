@@ -546,20 +546,16 @@ class UserPopupMenu(PopupMenu):
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.username)
 
-    def on_private_room_add_user(self, *args):
-        room = args[-1]
+    def on_private_room_add_user(self, _action, _parameter, room):
         core.chatrooms.add_user_to_private_room(room, self.username)
 
-    def on_private_room_remove_user(self, *args):
-        room = args[-1]
+    def on_private_room_remove_user(self, _action, _parameter, room):
         core.chatrooms.remove_user_from_private_room(room, self.username)
 
-    def on_private_room_add_operator(self, *args):
-        room = args[-1]
+    def on_private_room_add_operator(self, _action, _parameter, room):
         core.chatrooms.add_operator_to_private_room(room, self.username)
 
-    def on_private_room_remove_operator(self, *args):
-        room = args[-1]
+    def on_private_room_remove_operator(self, _action, _parameter, room):
         core.chatrooms.remove_operator_from_private_room(room, self.username)
 
     def on_add_to_list(self, action, state):

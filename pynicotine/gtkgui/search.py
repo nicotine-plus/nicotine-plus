@@ -1387,12 +1387,11 @@ class Search:
         self.on_file_properties()
         return True
 
-    def on_select_user_results(self, *args):
+    def on_select_user_results(self, _action, _parameter, selected_user):
 
         if not self.selected_users:
             return
 
-        selected_user = args[-1]
         _user_iterator, user_child_iterators = self.users[selected_user]
 
         self.tree_view.unselect_all_rows()
