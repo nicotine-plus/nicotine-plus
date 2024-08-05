@@ -22,34 +22,63 @@ import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.slskmessages import UserStatus
 
 
 class ChatEntry:
     """Custom text entry with support for chat commands and completions."""
 
-    def __init__(self, application, widget, chat_view, completion, entity, send_message, is_chatroom=False):
+    def __init__(self, application, send_message_callback, command_callback, enable_spell_check=False):
 
         self.application = application
-        self.widget = widget
-        self.chat_view = chat_view
-        self.completion = completion
-        self.entity = entity
-        self.send_message = send_message
-        self.is_chatroom = is_chatroom
+        self.widget = Gtk.Entry(
+            hexpand=True, placeholder_text=_("Send message…"), sensitive=False, show_emoji_icon=True,
+            width_chars=8, visible=True
+        )
+        self.send_message_callback = send_message_callback
+        self.command_callback = command_callback
+        self.spell_checker = None
+        self.entity = None
+        self.chat_view = None
+        self.unsent_messages = {}
+        self.completions = {}
+        self.current_completions = []
+        self.completion_index = 0
+        self.midway_completion = False  # True if the user just used tab completion
+        self.selecting_completion = False  # True if the list box is open with suggestions
+        self.is_inserting_completion = False
 
-        widget.connect("activate", self.on_enter)
-        Accelerator("<Shift>Tab", widget, self.on_tab_complete_accelerator, True)
-        Accelerator("Tab", widget, self.on_tab_complete_accelerator)
-        Accelerator("Down", widget, self.on_page_down_accelerator)
-        Accelerator("Page_Down", widget, self.on_page_down_accelerator)
-        Accelerator("Page_Up", widget, self.on_page_up_accelerator)
+        self.model = Gtk.ListStore(str)
+        self.column_numbers = list(range(self.model.get_n_columns()))
+
+        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
+        self.entry_completion.set_text_column(0)
+        self.entry_completion.set_match_func(self.entry_completion_find_match)
+        self.entry_completion.connect("match-selected", self.entry_completion_found_match)
+
+        self.widget.set_completion(self.entry_completion)
+
+        self.widget.connect("activate", self.on_enter)
+        self.widget.connect("changed", self.on_changed)
+
+        Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
+        Accelerator("Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
+
+        self.set_spell_check_enabled(enable_spell_check)
 
     def destroy(self):
+
+        if self.spell_checker is not None:
+            self.spell_checker.destroy()
+
         self.__dict__.clear()
+
+    def clear_unsent_message(self, entity):
+        self.unsent_messages.pop(entity, None)
 
     def grab_focus(self):
         self.widget.grab_focus()
@@ -66,133 +95,14 @@ class ChatEntry:
     def get_text(self):
         return self.widget.get_text()
 
+    def is_completion_enabled(self):
+        return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
+
     def insert_text(self, new_text, position):
         self.widget.insert_text(new_text, position)
 
     def delete_text(self, start_pos, end_pos):
         self.widget.delete_text(start_pos, end_pos)
-
-    def set_position(self, position):
-        self.widget.set_position(position)
-
-    def set_sensitive(self, sensitive):
-        self.widget.set_sensitive(sensitive)
-
-    def set_text(self, text):
-        self.widget.set_text(text)
-
-    def set_visible(self, visible):
-        self.widget.set_visible(visible)
-
-    def on_enter(self, *_args):
-
-        if core.users.login_status == UserStatus.OFFLINE:
-            return
-
-        text = self.widget.get_text().strip()
-
-        if not text:
-            return
-
-        is_double_slash_cmd = text.startswith("//")
-        is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
-
-        if not is_single_slash_cmd:
-            # Regular chat message
-
-            self.widget.set_text("")
-
-            if is_double_slash_cmd:
-                # Remove first slash and send the rest of the command as plain text
-                text = text[1:]
-
-            self.send_message(self.entity, text)
-            return
-
-        cmd, _separator, args = text.partition(" ")
-        args = args.strip()
-
-        if self.is_chatroom:
-            if not core.pluginhandler.trigger_chatroom_command_event(self.entity, cmd[1:], args):
-                return
-
-        elif not core.pluginhandler.trigger_private_chat_command_event(self.entity, cmd[1:], args):
-            return
-
-        # Clear chat entry
-        self.widget.set_text("")
-
-    def on_tab_complete_accelerator(self, widget, state, backwards=False):
-        """Tab and Shift+Tab - tab complete chat."""
-        return self.completion.on_tab_complete_accelerator(widget, state, backwards)
-
-    def on_page_down_accelerator(self, *_args):
-        """Page_Down, Down - Scroll chat view to bottom, and keep input focus in
-        entry widget."""
-
-        if self.completion and self.completion.selecting_completion:
-            return False
-
-        self.chat_view.scroll_bottom()
-        return True
-
-    def on_page_up_accelerator(self, *_args):
-        """Page_Up - Move up into view to begin scrolling message history."""
-
-        if self.completion and self.completion.selecting_completion:
-            return False
-
-        self.chat_view.grab_focus()
-        return True
-
-
-class ChatCompletion:
-
-    def __init__(self):
-
-        self.completions = {}
-        self.current_completions = []
-        self.completion_index = 0
-        self.midway_completion = False  # True if the user just used tab completion
-        self.selecting_completion = False  # True if the list box is open with suggestions
-        self.is_inserting_completion = False
-
-        self.entry = None
-        self.entry_changed_handler = None
-        self.entry_completion = None
-        self.model = Gtk.ListStore(str)
-
-        self.column_numbers = list(range(self.model.get_n_columns()))
-
-    def destroy(self):
-        self.__dict__.clear()
-
-    def create_entry_completion(self):
-
-        self.entry_completion = Gtk.EntryCompletion(model=self.model, popup_single_match=False)
-        self.entry_completion.set_text_column(0)
-        self.entry_completion.set_match_func(self.entry_completion_find_match)
-        self.entry_completion.connect("match-selected", self.entry_completion_found_match)
-
-    def set_entry(self, entry):
-
-        if self.entry is not None:
-            self.entry.widget.set_completion(None)
-            self.entry.widget.disconnect(self.entry_changed_handler)
-
-        self.entry = entry
-
-        if entry is None:
-            return
-
-        # Reusing an existing GtkEntryCompletion object after unsetting it doesn't work well
-        self.create_entry_completion()
-        entry.widget.set_completion(self.entry_completion)
-
-        self.entry_changed_handler = entry.widget.connect("changed", self.on_entry_changed)
-
-    def is_completion_enabled(self):
-        return config.sections["words"]["tab"] or config.sections["words"]["dropdown"]
 
     def add_completion(self, item):
 
@@ -218,6 +128,28 @@ class ChatCompletion:
 
         if iterator is not None:
             self.model.remove(iterator)
+
+    def set_parent(self, entity, container, chat_view):
+
+        if self.entity:
+            self.unsent_messages[self.entity] = self.widget.get_text()
+
+        self.entity = entity
+        self.chat_view = chat_view
+
+        parent = self.widget.get_parent()
+        unsent_message = self.unsent_messages.get(entity, "")
+
+        if parent is not None:
+            parent.remove(self.widget)
+
+        if GTK_API_VERSION >= 4:
+            container.append(self.widget)  # pylint: disable=no-member
+        else:
+            container.add(self.widget)     # pylint: disable=no-member
+
+        self.widget.set_text(unsent_message)
+        self.widget.set_position(-1)
 
     def set_completions(self, completions):
 
@@ -245,6 +177,60 @@ class ChatCompletion:
 
             self.completions[word] = iterator
 
+    def set_spell_check_enabled(self, enabled):
+
+        if not enabled:
+            if self.spell_checker is not None:
+                self.spell_checker.destroy()
+                self.spell_checker = None
+            return
+
+        if SpellChecker.is_available():
+            self.spell_checker = SpellChecker(self.widget)
+
+    def set_position(self, position):
+        self.widget.set_position(position)
+
+    def set_sensitive(self, sensitive):
+        self.widget.set_sensitive(sensitive)
+
+    def set_text(self, text):
+        self.widget.set_text(text)
+
+    def set_visible(self, visible):
+        self.widget.set_visible(visible)
+
+    def on_enter(self, *_args):
+
+        text = self.widget.get_text().strip()
+
+        if not text:
+            return
+
+        is_double_slash_cmd = text.startswith("//")
+        is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
+
+        if not is_single_slash_cmd:
+            # Regular chat message
+
+            self.widget.set_text("")
+
+            if is_double_slash_cmd:
+                # Remove first slash and send the rest of the command as plain text
+                text = text[1:]
+
+            self.send_message_callback(self.entity, text)
+            return
+
+        cmd, _separator, args = text.partition(" ")
+        args = args.strip()
+
+        if not self.command_callback(self.entity, cmd[1:], args):
+            return
+
+        # Clear chat entry
+        self.widget.set_text("")
+
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
         if not entry_text:
@@ -252,7 +238,7 @@ class ChatCompletion:
 
         # Get word to the left of current position
         if " " in entry_text:
-            i = self.entry.get_position()
+            i = self.widget.get_position()
             split_key = entry_text[:i].split(" ")[-1]
         else:
             split_key = entry_text
@@ -271,7 +257,7 @@ class ChatCompletion:
 
     def entry_completion_found_match(self, _completion, model, iterator):
 
-        current_text = self.entry.get_text()
+        current_text = self.widget.get_text()
         completion_value = model.get_value(iterator, 0)
 
         # if more than a word has been typed, we throw away the
@@ -279,24 +265,24 @@ class ChatCompletion:
         # to replace it with the matching word
 
         if " " in current_text:
-            i = self.entry.get_position()
+            i = self.widget.get_position()
             prefix = " ".join(current_text[:i].split(" ")[:-1])
             suffix = " ".join(current_text[i:].split(" "))
 
             # add the matching word
             new_text = f"{prefix} {completion_value}{suffix}"
             # set back the whole text
-            self.entry.set_text(new_text)
+            self.widget.set_text(new_text)
             # move the cursor at the end
-            self.entry.set_position(len(prefix) + len(completion_value) + 1)
+            self.widget.set_position(len(prefix) + len(completion_value) + 1)
         else:
-            self.entry.set_text(completion_value)
-            self.entry.set_position(-1)
+            self.widget.set_text(completion_value)
+            self.widget.set_position(-1)
 
         # stop the event propagation
         return True
 
-    def on_entry_changed(self, *_args):
+    def on_changed(self, *_args):
 
         # If the entry was modified, and we don't block entry_changed_handler, we're no longer completing
         if not self.is_inserting_completion:
@@ -308,7 +294,7 @@ class ChatCompletion:
         if not config.sections["words"]["tab"]:
             return False
 
-        text = self.entry.get_text()
+        text = self.widget.get_text()
 
         if not text:
             return False
@@ -322,7 +308,7 @@ class ChatCompletion:
         # last_word = Miss
         # preix = 12
 
-        i = self.entry.get_position()
+        i = self.widget.get_position()
         last_word = text[:i].split(" ")[-1]
         last_word_len = len(last_word)
         preix = i - last_word_len
@@ -346,16 +332,35 @@ class ChatCompletion:
         if self.midway_completion:
             # We're still completing, block entry_changed_handler to avoid modifying midway_completion value
             self.is_inserting_completion = True
-            self.entry.delete_text(i - len(current_word), i)
+            self.widget.delete_text(i - len(current_word), i)
 
             direction = -1 if backwards else 1
             self.completion_index = ((self.completion_index + direction) % len(self.current_completions))
 
             new_word = self.current_completions[self.completion_index]
-            self.entry.insert_text(new_word, preix)
-            self.entry.set_position(preix + len(new_word))
+            self.widget.insert_text(new_word, preix)
+            self.widget.set_position(preix + len(new_word))
             self.is_inserting_completion = False
 
+        return True
+
+    def on_page_down_accelerator(self, *_args):
+        """Page_Down, Down - Scroll chat view to bottom, and keep input focus in
+        entry widget."""
+
+        if self.selecting_completion:
+            return False
+
+        self.chat_view.scroll_bottom()
+        return True
+
+    def on_page_up_accelerator(self, *_args):
+        """Page_Up - Move up into view to begin scrolling message history."""
+
+        if self.selecting_completion:
+            return False
+
+        self.chat_view.grab_focus()
         return True
 
 
@@ -415,10 +420,12 @@ class SpellChecker:
     checker = None
     module = None
 
-    def __init__(self):
+    def __init__(self, entry):
 
         self.buffer = None
         self.entry = None
+
+        self._set_entry(entry)
 
     @classmethod
     def _load_module(cls):
@@ -438,33 +445,9 @@ class SpellChecker:
         except (ImportError, ValueError):
             pass
 
-    @classmethod
-    def is_available(cls):
-        cls._load_module()
-        return bool(SpellChecker.module)
+    def _set_entry(self, entry):
 
-    def destroy(self):
-        self.__dict__.clear()
-
-    def reset(self):
-
-        if self.buffer:
-            self.buffer.set_spell_checker(None)
-            self.buffer = None
-
-        if self.entry:
-            self.entry.set_inline_spell_checking(False)
-            self.entry = None
-
-        if not config.sections["ui"]["spellcheck"]:
-            SpellChecker.checker = SpellChecker.module = None
-
-    def set_entry(self, entry):
-
-        # Only one active entry at a time
-        self.reset()
-
-        if entry is None or not config.sections["ui"]["spellcheck"]:
+        if self.entry is not None:
             return
 
         # Attempt to load spell check module in case it was recently installed
@@ -479,8 +462,25 @@ class SpellChecker:
         self.buffer = SpellChecker.module.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
         self.buffer.set_spell_checker(SpellChecker.checker)
 
-        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry.widget)
+        self.entry = SpellChecker.module.Entry.get_from_gtk_entry(entry)
         self.entry.set_inline_spell_checking(True)
+
+    @classmethod
+    def is_available(cls):
+        cls._load_module()
+        return bool(SpellChecker.module)
+
+    def destroy(self):
+
+        if self.buffer:
+            self.buffer.set_spell_checker(None)
+            self.buffer = None
+
+        if self.entry:
+            self.entry.set_inline_spell_checking(False)
+            self.entry = None
+
+        self.__dict__.clear()
 
 
 class TextSearchBar:
