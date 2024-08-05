@@ -79,7 +79,7 @@ class UserBrowses(IconNotebook):
         self.file_properties = None
 
         self.userbrowse_combobox = ComboBox(
-            container=self.window.userbrowse_title, has_entry=True, has_entry_completion=True,
+            container=self.window.userbrowse_title, has_entry=True,
             entry=self.window.userbrowse_entry, item_selected_callback=self.on_get_shares
         )
 

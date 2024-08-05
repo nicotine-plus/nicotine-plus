@@ -30,10 +30,11 @@ from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
+from pynicotine.gtkgui.widgets.combobox import ComboBox
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
@@ -66,7 +67,11 @@ class PrivateChats(IconNotebook):
             command_callback=core.pluginhandler.trigger_private_chat_command_event,
             enable_spell_check=config.sections["ui"]["spellcheck"]
         )
-        self.history = ChatHistory(window)
+        self.username_combobox = ComboBox(
+            container=window.private_entry_container, has_entry=True, has_dropdown=False,
+            entry=window.private_entry, visible=True
+        )
+        self.history = ChatHistory(window, self.username_combobox)
         self.command_help = None
         self.highlighted_users = []
 
@@ -96,6 +101,7 @@ class PrivateChats(IconNotebook):
     def destroy(self):
 
         self.chat_entry.destroy()
+        self.username_combobox.destroy()
         self.history.destroy()
 
         if self.command_help is not None:

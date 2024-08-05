@@ -22,13 +22,12 @@ from gi.repository import Pango
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class ComboBox:
 
-    def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
+    def __init__(self, container, label=None, has_entry=False, has_dropdown=True,
                  entry=None, visible=True, items=None, item_selected_callback=None):
 
         self.widget = None
@@ -40,11 +39,19 @@ class ComboBox:
         self._positions = {}
         self._model = None
         self._button = None
+        self._entry_buffer = None
         self._popover = None
-        self._entry_completion = None
         self._is_popup_visible = False
+        self._focus_controller = None
+        self._search_entry = None
+        self._search_delay = 150
+        self._search_delay_timer = None
+        self._selection_bound = None
+        self._is_updating_entry = False
+        self._is_updating_items = False
+        self._is_select_callback_enabled = False
 
-        self._create_combobox(container, label, has_entry, has_entry_completion)
+        self._create_combobox(container, label, has_entry, has_dropdown)
 
         if items:
             self.freeze()
@@ -63,14 +70,34 @@ class ComboBox:
         self.set_visible(visible)
 
     def destroy(self):
+
+        if self._search_delay_timer is not None:
+            GLib.source_remove(self._search_delay_timer)
+            self._search_delay_timer = None
+
+        if self._focus_controller is not None:
+            self.widget.remove_controller(self._focus_controller)
+
+        self.freeze()
+        self.clear()
+        self.unfreeze()
+
         self.__dict__.clear()
 
-    def _create_combobox_gtk4(self, container, label, has_entry):
+    def _create_combobox_gtk4(self, container, label, has_entry, has_dropdown):
 
         self._model = Gtk.StringList()
-        self.dropdown = self._button = Gtk.DropDown(
-            model=self._model, valign=Gtk.Align.CENTER, visible=True
-        )
+
+        # Workaround for using GtkExpression in old PyGObject versions
+        builder = Gtk.Builder.new_from_string("""<interface>
+  <object class="GtkDropDown" id="dropdown">
+    <property name="expression">
+      <lookup type="GtkStringObject" name="string" />
+    </property>
+  </object>
+</interface>""", -1)
+        self.dropdown = self._button = builder.get_object("dropdown")
+        self.dropdown.set_model(self._model)
 
         list_factory = self.dropdown.get_factory()
         button_factory = None
@@ -97,6 +124,7 @@ class ComboBox:
 
         if not has_entry:
             self.widget = self.dropdown
+            self.dropdown.set_valign(Gtk.Align.CENTER)
 
             if label:
                 label.set_mnemonic_widget(self.widget)
@@ -120,16 +148,46 @@ class ComboBox:
         if label:
             label.set_mnemonic_widget(self.entry)
 
+        self._entry_buffer = self.entry.get_buffer()
+        self.entry.connect("notify::selection-bound", self._on_selection_bound_changed)
+        self._entry_buffer.connect("inserted-text", self._on_inserted_text)
+        self._entry_buffer.connect_after("deleted-text", self._on_deleted_text)
+
+        self._focus_controller = Gtk.EventControllerFocus()
+        self._focus_controller.connect("leave", self._on_focus_out)
+        self.widget.add_controller(self._focus_controller)
+
+        self.dropdown.set_enable_search(True)
+
+        popover_container = self._popover.get_child()
+        search_container = next(iter(popover_container))
+        self._search_entry = next(iter(search_container))
+
+        try:
+            self._search_delay = self._search_entry.get_search_delay()
+
+        except AttributeError:
+            pass
+
+        search_container.set_visible(False)
         self._button.set_sensitive(False)
 
         self.widget.append(self.entry)
         self.widget.append(self.dropdown)
 
-        add_css_class(self.widget, "linked")
+        if has_dropdown:
+            add_css_class(self.widget, "linked")
+        else:
+            toggle_button = next(iter(self.dropdown))
+            toggle_button.set_visible(False)
+            self.dropdown.set_size_request(width=1, height=-1)
+
+        Accelerator("Escape", self.entry, self._on_escape_accelerator)
+
         add_css_class(self.dropdown, "entry")
         container.append(self.widget)
 
-    def _create_combobox_gtk3(self, container, label, has_entry, has_entry_completion):
+    def _create_combobox_gtk3(self, container, label, has_entry, has_dropdown):
 
         self.dropdown = self.widget = Gtk.ComboBoxText(has_entry=has_entry, valign=Gtk.Align.CENTER, visible=True)
         self._model = self.dropdown.get_model()
@@ -148,9 +206,6 @@ class ComboBox:
             container.add(self.widget)
             return
 
-        if has_entry_completion:
-            add_css_class(self.dropdown, "dropdown-scrollbar")
-
         if self.entry is None:
             self.entry = self.dropdown.get_child()
             self.entry.set_width_chars(8)
@@ -158,22 +213,26 @@ class ComboBox:
             self.dropdown.get_child().destroy()
             self.dropdown.add(self.entry)  # pylint: disable=no-member
 
+        add_css_class(self.dropdown, "dropdown-scrollbar")
+        completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
+                                         popup_single_match=False, model=self._model)
+        completion.set_text_column(0)
+        self.entry.set_completion(completion)
+
         self._button = list(self.entry.get_parent())[-1]
+        self._button.set_visible(has_dropdown)
         container.add(self.widget)
 
-    def _create_combobox(self, container, label, has_entry, has_entry_completion):
+    def _create_combobox(self, container, label, has_entry, has_dropdown):
 
         if GTK_API_VERSION >= 4:
-            self._create_combobox_gtk4(container, label, has_entry)
+            self._create_combobox_gtk4(container, label, has_entry, has_dropdown)
         else:
-            self._create_combobox_gtk3(container, label, has_entry, has_entry_completion)
+            self._create_combobox_gtk3(container, label, has_entry, has_dropdown)
 
         if has_entry:
             Accelerator("Up", self.entry, self._on_arrow_key_accelerator, "up")
             Accelerator("Down", self.entry, self._on_arrow_key_accelerator, "down")
-
-        if has_entry_completion:
-            self._entry_completion = CompletionEntry(self.entry)
 
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
@@ -251,9 +310,6 @@ class ComboBox:
         if self.entry and not self._positions:
             self._button.set_sensitive(True)
 
-        if self._entry_completion:
-            self._entry_completion.add_completion(item)
-
         self._update_item_positions(start_position=(position + 1), added=True)
 
         self._ids[position] = item_id
@@ -304,6 +360,7 @@ class ComboBox:
     def set_text(self, text):
 
         if self.entry:
+            self._is_updating_entry = True
             self.entry.set_text(text)
             return
 
@@ -327,9 +384,6 @@ class ComboBox:
         if self.entry and not self._ids:
             self._button.set_sensitive(False)
 
-        if self._entry_completion:
-            self._entry_completion.remove_completion(item_id)
-
         # Update positions for items after the removed one
         self._positions.pop(item_id, None)
         self._update_item_positions(start_position=position)
@@ -351,8 +405,7 @@ class ComboBox:
         if self.entry and self._button:
             self._button.set_sensitive(False)
 
-        if self._entry_completion:
-            self._entry_completion.clear()
+        self._is_updating_items = False
 
     def grab_focus(self):
         self.entry.grab_focus()
@@ -378,21 +431,22 @@ class ComboBox:
         list_item.set_child(
             Gtk.Label(ellipsize=Pango.EllipsizeMode.END, xalign=0))
 
-    def _on_arrow_key_accelerator(self, _widget, _unused, direction):
+    def _on_escape_accelerator(self, *_args):
+        self._popover.set_visible(False)
+        self._popover.set_autohide(True)
+
+    def _on_arrow_key_accelerator(self, _entry, _unused, direction):
 
         if GTK_API_VERSION == 3:
             # Gtk.ComboBox already supports this functionality
             return False
 
+        if self._popover.get_visible():
+            self._popover.child_focus(Gtk.DirectionType.TAB_FORWARD)
+            return True
+
         if not self._positions:
             return False
-
-        if self._entry_completion:
-            completion_popover = list(self.entry)[-1]
-
-            if completion_popover.get_visible():
-                # Completion popup takes precedence
-                return False
 
         current_position = self._positions.get(self.get_text(), -1)
 
@@ -405,10 +459,82 @@ class ComboBox:
         self._update_item_entry_text()
         return True
 
-    def _on_button_scroll_event(self, widget, event, *_args):
+    def _on_changed_text(self, is_deletion=False):
+
+        if self._is_updating_entry:
+            self._is_updating_entry = False
+            return
+
+        text = self.get_text()
+        text_lower = text.lower()
+        match = None
+        show_popover = False
+
+        if text:
+            for item in self._ids.values():
+                if not item.lower().startswith(text_lower):
+                    continue
+
+                if match is not None:
+                    show_popover = True
+                    break
+
+                match = item
+
+        if not is_deletion and match is not None and match != text:
+            self._selection_bound = len(text)
+            self._is_updating_entry = True
+            self._entry_buffer.insert_text(self._selection_bound, match[self._selection_bound:], -1)
+
+        if self._search_delay_timer is not None:
+            GLib.source_remove(self._search_delay_timer)
+            self._search_delay_timer = None
+
+        if show_popover:
+            self._search_delay_timer = GLib.timeout_add(self._search_delay, self._on_search_changed, text)
+
+        elif self._popover.get_visible():
+            self._popover.set_visible(False)
+            self._popover.set_autohide(True)
+
+    def _on_inserted_text(self, _entry, *_args):
+        self._on_changed_text()
+
+    def _on_deleted_text(self, _entry, *_args):
+        self._on_changed_text(is_deletion=True)
+
+    def _on_search_changed(self, text):
+
+        self._search_delay_timer = None
+
+        self._search_entry.set_text(text)
+        self._search_entry.emit("search-changed")
+
+        if self._popover.get_visible():
+            return
+
+        selection_bounds = self.entry.get_selection_bounds()
+
+        if selection_bounds:
+            self._selection_bound, _end_pos = selection_bounds
+
+        self._popover.set_autohide(False)
+        self._popover.set_visible(True)
+
+    def _on_selection_bound_changed(self, *_args):
+
+        if self._selection_bound is not None:
+            self.entry.select_region(self._selection_bound, -1)
+
+        self._selection_bound = None
+
+    def _on_focus_out(self, *_args):
+        self._popover.set_visible(False)
+
+    def _on_button_scroll_event(self, dropdown, event, *_args):
         """Prevent scrolling and pass scroll event to parent scrollable (GTK 3)"""
 
-        scrollable = widget.get_ancestor(Gtk.ScrolledWindow)
+        scrollable = dropdown.get_ancestor(Gtk.ScrolledWindow)
 
         if scrollable is not None:
             scrollable.event(event)
