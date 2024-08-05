@@ -169,7 +169,7 @@ class Buddies:
         self.list_view.disable_sorting()
 
         for username, user_data in core.buddies.users.items():
-            self.add_buddy(username, user_data)
+            self.add_buddy(username, user_data, select_row=False)
 
         self.list_view.enable_sorting()
 
@@ -314,7 +314,7 @@ class Buddies:
             self.list_view.set_row_value(iterator, "files", h_num_files)
             self.list_view.set_row_value(iterator, "files_data", num_files)
 
-    def add_buddy(self, user, user_data):
+    def add_buddy(self, user, user_data, select_row=True):
 
         status = user_data.status
         country_code = user_data.country.replace("flag_", "")
@@ -356,7 +356,7 @@ class Buddies:
             speed,
             files or 0,
             last_seen
-        ], select_row=core.buddies.allow_saving_buddies)
+        ], select_row=select_row)
 
         for combobox in (
             self.window.search.user_search_combobox,

@@ -43,12 +43,12 @@ class Buddy:
 
 
 class Buddies:
-    __slots__ = ("users", "allow_saving_buddies")
+    __slots__ = ("users", "_allow_saving_buddies")
 
     def __init__(self):
 
         self.users = {}
-        self.allow_saving_buddies = False
+        self._allow_saving_buddies = False
 
         for event_name, callback in (
             ("quit", self._quit),
@@ -113,11 +113,11 @@ class Buddies:
                 status=UserStatus.OFFLINE
             )
 
-        self.allow_saving_buddies = True
+        self._allow_saving_buddies = True
 
     def _quit(self):
         self.users.clear()
-        self.allow_saving_buddies = False
+        self._allow_saving_buddies = False
 
     def _server_login(self, msg):
 
@@ -251,7 +251,7 @@ class Buddies:
 
     def save_buddy_list(self):
 
-        if not self.allow_saving_buddies:
+        if not self._allow_saving_buddies:
             return
 
         user_rows = []
