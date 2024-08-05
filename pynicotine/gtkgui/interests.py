@@ -170,11 +170,11 @@ class Interests:
 
         for item in config.sections["interests"]["likes"]:
             if isinstance(item, str):
-                self.add_thing_i_like(item)
+                self.add_thing_i_like(item, select_row=False)
 
         for item in config.sections["interests"]["dislikes"]:
             if isinstance(item, str):
-                self.add_thing_i_hate(item)
+                self.add_thing_i_hate(item, select_row=False)
 
         self.likes_list_view.enable_sorting()
         self.dislikes_list_view.enable_sorting()
@@ -283,7 +283,7 @@ class Interests:
 
         self.populated_recommends = True
 
-    def add_thing_i_like(self, item):
+    def add_thing_i_like(self, item, select_row=True):
 
         item = item.strip().lower()
 
@@ -293,9 +293,9 @@ class Interests:
         iterator = self.likes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.likes_list_view.add_row([item])
+            self.likes_list_view.add_row([item], select_row=select_row)
 
-    def add_thing_i_hate(self, item):
+    def add_thing_i_hate(self, item, select_row=True):
 
         item = item.strip().lower()
 
@@ -305,7 +305,7 @@ class Interests:
         iterator = self.dislikes_list_view.iterators.get(item)
 
         if iterator is None:
-            self.dislikes_list_view.add_row([item])
+            self.dislikes_list_view.add_row([item], select_row=select_row)
 
     def remove_thing_i_like(self, item):
 
