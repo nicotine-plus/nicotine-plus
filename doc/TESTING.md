@@ -71,7 +71,7 @@ Unstable packages are built after every commit to the master branch.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
-> [!NOTE]  
+> #### NOTE
 > Configuration files are stored in
 >> C:\Users\\<USERNAME\>\AppData\Roaming\nicotine
 
@@ -82,7 +82,7 @@ do not require installation.
 
 Unstable installers are built after every commit to the master branch.
 
-> [!IMPORTANT]  
+> #### IMPORTANT
 > You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you open Nicotine+ on macOS.
 

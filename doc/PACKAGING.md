@@ -1,6 +1,6 @@
 # Packaging
 
-> [!NOTE]  
+> #### NOTE
 > For distribution packagers: There is a standard feature of GitHub which
 > enables you to be notified of new package releases: In the top right bar
 > there is the **Watch** option, which has the suboption to be notified of

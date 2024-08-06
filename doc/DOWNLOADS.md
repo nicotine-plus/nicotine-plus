@@ -63,7 +63,7 @@ sudo apt update; sudo apt install nicotine
 If you prefer to install a .deb package manually, you can
 [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
 
-> [!NOTE]  
+> #### NOTE
 > When installing the .deb package manually, Nicotine+ will not update
 automatically. You need to download and install the latest version from the
 link above after every update.
@@ -94,7 +94,7 @@ pip3 install --upgrade nicotine-plus
 
 Stable installers are available for download.
 
-> [!IMPORTANT]  
+> #### IMPORTANT
 > The installer format has changed since Nicotine+ 3.2.0. If you are upgrading
 > from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will
 > not remove your existing settings).
@@ -105,7 +105,7 @@ Stable installers are available for download.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
-> [!NOTE]  
+> #### NOTE
 > Configuration files are stored in
 >> C:\Users\\<USERNAME\>\AppData\Roaming\nicotine
 
@@ -128,7 +128,7 @@ using them.
 
 ### Official Release
 
-> [!IMPORTANT]  
+> #### IMPORTANT
 > You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
 > the first time you open Nicotine+ on macOS.
 
