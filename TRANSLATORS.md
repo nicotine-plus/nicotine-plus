@@ -1,4 +1,4 @@
-# Nicotine+ Translators
+# Translators
 
 ## Albanian
  - W L (2023–2024)

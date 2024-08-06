@@ -61,7 +61,7 @@ class About(Dialog):
          "\n •  Accessibility improvements"),
 
 
-        "\nInactive",
+        "\n<b>Nicotine+ Team (Emeritus)</b>",
 
         ("<b>daelstorm</b>"
          "\n •  Maintainer (2004–2009)"
@@ -116,7 +116,7 @@ class About(Dialog):
          "\n •  Unit and DEP-8 continuous integration testing"),
 
 
-        "\n<b>Nicotine Team</b>",
+        "\n<b>Nicotine Team (Emeritus)</b>",
 
         ("<b>Ingmar K. Steen (Hyriand)</b>"
          "\n •  Maintainer (2003–2004)"),
@@ -154,7 +154,7 @@ class About(Dialog):
          "\n •  Packaged Nicotine on OSX PowerPC"),
 
 
-        "\n<b>PySoulSeek Team</b>",
+        "\n<b>PySoulSeek Team (Emeritus)</b>",
 
         ("<b>Alexander Kanavin</b>"
          "\n •  Maintainer (2001–2003)"),
@@ -191,8 +191,6 @@ class About(Dialog):
          "\n •  Ignore list and auto-join checkbox, wishlists")]
 
     TRANSLATORS = [
-        "<b>Nicotine+ Translators</b>",
-
         ("<b>Albanian</b>"
          "\n •  W L (2023–2024)"),
 

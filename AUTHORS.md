@@ -1,6 +1,6 @@
-# Nicotine+ Team
+# Authors
 
-## Active
+## Nicotine+ Team
 
 ### Mat (mathiascode)
  - Maintainer (2020–present)
@@ -26,7 +26,7 @@
  - Tester
  - Accessibility improvements
 
-## Inactive
+## Nicotine+ Team (Emeritus)
 
 ### daelstorm
  - Maintainer (2004–2009)
@@ -81,7 +81,7 @@
  - Unit and DEP-8 continuous integration testing
 
 
-# Nicotine Team
+## Nicotine Team (Emeritus)
 
 ### Ingmar K. Steen (Hyriand)
  - Maintainer (2003–2004)
@@ -119,7 +119,7 @@
  - Packaged Nicotine on OSX PowerPC
 
 
-# PySoulSeek Team
+## PySoulSeek Team (Emeritus)
 
 ### Alexander Kanavin
  - Maintainer (2001–2003)
@@ -157,17 +157,17 @@
  - Ignore list and auto-join checkbox, wishlists
 
 
-# Contributors
+## Contributors
 
 See [Contributors](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors) on GitHub
 
 
-# Translators
+## Translators
 
 See [TRANSLATORS.md](TRANSLATORS.md)
 
 
-# Third-Party Attributions
+## Third-Party Attributions
 
  - tinytag licensed under the MIT License.  
    Copyright (c) 2014–2023 Tom Wallroth  
