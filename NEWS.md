@@ -1797,7 +1797,7 @@ Issues closed on GitHub
 
 ### Translations
 
- * ><((((*> updated the French translation
+ * \>\<((((*\> updated the French translation
  * djbaloo updated the Hungarian translation
 
 
@@ -1867,7 +1867,7 @@ Issues closed on GitHub
  * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
  * Icons have been replaced, the alt-tab icon is increased.
  * Most external calls now support pipes
- * Improved German (bug #394) and French translation (thanks goes to ><((((*>)
+ * Improved German (bug #394) and French translation (thanks goes to \>\<((((*\>)
  * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
  * Notification popups will no longer stack but a single popup will be updated
 
@@ -2239,7 +2239,7 @@ Issues closed on GitHub
 ### Translations
 
  * Silvio Orta updated the Spanish translation
- * ><((((*> and ManWell updated the French translation
+ * \>\<((((*\> and ManWell updated the French translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian translation
  * Žygimantas updated the Lithuanian translation
@@ -2339,7 +2339,7 @@ Issues closed on GitHub
 
 ### Translations
 
- * ><((((*> updated the French translation
+ * \>\<((((*\> updated the French translation
  * (._.) and Meokater updated the German translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian Translation
@@ -2656,7 +2656,7 @@ the middle-click one
  * Moved encoding dropdown-list out of the scrolled area in userinfo tabs
  * Transfer logs (enable in settings->logging)
  * Last 7 lines of a private message log are shown
- * Config file now backed up (to <filename>.old)
+ * Config file now backed up (to \<filename\>.old)
  * Check privileges shows days, hours, minutes, seconds
  * Changed default server to server.slsknet.org
    (mail.slsknet.org will be automatically changed)
@@ -2900,7 +2900,7 @@ the middle-click one
 
  * New logo and icon (thanks (va)*10^3)
  * Generate profiler log when using nicotine --profile
-   (profiler log will be saved as <configfile>.profile)
+   (profiler log will be saved as \<configfile\>.profile)
 
 
 ## Version 0.4.6 (August 8, 2003)

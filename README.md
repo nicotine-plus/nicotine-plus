@@ -1,6 +1,7 @@
 # Nicotine+
 
-<img src="data/icons/icon.svg" align="right" width="128" height="128" style="margin: 0 10px">
+<img src="data/icons/icon.svg" alt="Nicotine+ Logo" width="128" height="128"
+ style="float: right; margin: 0 10px">
 
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/)
 peer-to-peer network.
@@ -13,7 +14,6 @@ Nicotine+ is written in Python and uses GTK for its graphical user interface.
 
 Check out the [screenshots](data/screenshots/SCREENSHOTS.md)
 and [source code](https://github.com/nicotine-plus/nicotine-plus).
-<br clear="right">
 
 
 ## Download
