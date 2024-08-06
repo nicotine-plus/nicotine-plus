@@ -3,6 +3,11 @@
 
 @import "{{ site.theme }}";
 
+a:not(h1 a) {
+    text-decoration: underline;
+    text-underline-offset: .2rem;
+}
+
 /* Dark mode for 'Primer' Jekyll theme */
 @media (prefers-color-scheme: dark) {
     body {
