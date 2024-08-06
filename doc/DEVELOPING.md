@@ -91,7 +91,7 @@ challenge. There is no straightforward way of solving every performance issue,
 but these points generally help:
 
  - Use different data structures and algorithms, e.g. dictionaries and sets for
-   faster membership checks (`O(1)`) compared to lists (`O(n)`).
+   faster membership checks (*O(1)*) compared to lists (*O(n)*).
  - Use existing functionality in the Python Standard Library when available.
    Parts of the standard library are written in C, and perform better than
    pure-Python counterparts, especially in hot code paths.

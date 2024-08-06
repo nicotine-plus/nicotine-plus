@@ -49,7 +49,7 @@ involved:
 
 ## Where did the name Nicotine come from?
 
-> I was in a geeky mood and was browsing `http://www.bash.org`'s QDB.  
+> I was in a geeky mood and was browsing bash.org's QDB.  
 I stumbled across this quote:  
 >> **\<etc>** so tempting to release a product called 'nicotine' and wait for
 >> the patches.  

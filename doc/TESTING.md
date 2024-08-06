@@ -34,8 +34,7 @@ sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/unst
 sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here]
-(https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
 Unlike the repository installation method, you need to download and install
 Nicotine+ from the link above every time you want to update to the latest
 unstable build.
@@ -70,8 +69,11 @@ Unstable packages are built after every commit to the master branch.
    for Windows 10 or later
 
 Standalone executables are also available. They can be run from any folder and
-do not require installation. Configuration files are stored in
-`C:\Users\USERNAME\AppData\Roaming\nicotine`.
+do not require installation.
+
+> [!NOTE]  
+> Configuration files are stored in
+>> C:\Users\\<USERNAME\>\AppData\Roaming\nicotine
 
  - [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]  
    for Windows 10 or later
