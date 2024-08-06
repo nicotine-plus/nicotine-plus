@@ -60,11 +60,13 @@ sudo add-apt-repository 'deb https://ppa.launchpadcontent.net/nicotine-team/stab
 sudo apt update; sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can [download one here]
-(https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
-Unlike the repository installation method, you need to download and install
-Nicotine+ from the link above every time you want to update to the latest
-version.
+If you prefer to install a `.deb` package manually, you can
+[download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
+
+> [!NOTE]  
+> When installing the `.deb` package manually, Nicotine+ will not update
+automatically. You need to download and install the latest version from the
+link above after every update.
 
 ### PyPi (GNU/Linux, *BSD, Solaris)
 
@@ -101,8 +103,10 @@ Stable installers are available for download.
    for Windows 10 or later
 
 Standalone executables are also available. They can be run from any folder and
-do not require installation. Configuration files are stored in
-`C:\Users\USERNAME\AppData\Roaming\nicotine`.
+do not require installation.
+
+> [!NOTE]  
+> Configuration files are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
  - [Download Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]  
    for Windows 10 or later
