@@ -94,11 +94,6 @@ pip3 install --upgrade nicotine-plus
 
 Stable installers are available for download.
 
-> #### IMPORTANT
-> The installer format has changed since Nicotine+ 3.2.0. If you are upgrading
-> from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will
-> not remove your existing settings).
-
  - [Download Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)  
    for Windows 10 or later
@@ -106,13 +101,18 @@ Stable installers are available for download.
 Standalone executables are also available. They can be run from any folder and
 do not require installation.
 
-> #### NOTE
-> Configuration files are stored in
->> C:\Users\\<USERNAME\>\AppData\Roaming\nicotine
-
  - [Download Windows Standalone Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)  
    for Windows 10 or later
+
+> #### IMPORTANT
+> The installer format has changed since Nicotine+ 3.2.0. If you are upgrading
+> from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will
+> not remove your existing settings).
+
+> #### NOTE
+> Configuration files are always stored in
+> *C:\Users\\<USERNAME\>\AppData\Roaming\nicotine*
 
 ### Package Managers
 
@@ -130,10 +130,6 @@ using them.
 
 ### Official Release
 
-> #### IMPORTANT
-> You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
-> the first time you open Nicotine+ on macOS.
-
  - [Download macOS Intel Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
    for macOS 12 Monterey or later
@@ -141,6 +137,10 @@ using them.
  - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
    for macOS 14 Sonoma or later
+
+> #### IMPORTANT
+> You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
+> the first time you start Nicotine+.
 
 ### Package Managers
 
