@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 27, 2024
+[Last updated on August 7, 2024](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -66,41 +66,41 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | Type | Connection          |
 |------|---------------------|
-| P    | Peer To Peer        |
-| F    | File Transfer       |
-| D    | Distributed Network |
+| `P`  | Peer To Peer        |
+| `F`  | File Transfer       |
+| `D`  | Distributed Network |
 
 ### Login Failure Reasons
 
-| Reason          | Description                                                                      |
-|-----------------|----------------------------------------------------------------------------------|
-| INVALIDUSERNAME | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
-| INVALIDPASS     | Password for existing user is incorrect                                          |
-| INVALIDVERSION  | Client version is outdated                                                       |
+| Reason            | Description                                                                      |
+|-------------------|----------------------------------------------------------------------------------|
+| `INVALIDUSERNAME` | Username is longer than 30 characters or contains invalid characters (non-ASCII) |
+| `INVALIDPASS`     | Password for existing user is incorrect                                          |
+| `INVALIDVERSION`  | Client version is outdated                                                       |
 
 ### User Status Codes
 
 | Code | Status  |
 |------|---------|
-| 0    | Offline |
-| 1    | Away    |
-| 2    | Online  |
+| `0`  | Offline |
+| `1`  | Away    |
+| `2`  | Online  |
 
 ### Upload Permissions
 
 | Code | Status          |
 |------|-----------------|
-| 0    | No One          |
-| 1    | Everyone        |
-| 2    | Users in List   |
-[ 3    | Permitted Users |
+| `0`  | No One          |
+| `1`  | Everyone        |
+| `2`  | Users in List   |
+| `3`  | Permitted Users |
 
 ### Transfer Directions
 
 | Code | Direction          |
 |------|--------------------|
-| 0    | Download from Peer |
-| 1    | Upload to Peer     |
+| `0`  | Download from Peer |
+| `1`  | Upload to Peer     |
 
 ### Transfer Rejection Reasons
 
@@ -108,58 +108,54 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | String                | Comments                                    |
 | --------------------- | ------------------------------------------- |
-| Banned                | SoulseekQt uses 'File not shared.' instead  |
-| Cancelled             |                                             |
-| Complete              |                                             |
-| File not shared.      | Note: Ends with a dot                       |
-| File read error.      | Note: Ends with a dot                       |
-| Pending shutdown.     | Note: Ends with a dot                       |
-| Queued                |                                             |
-| Too many files        |                                             |
-| Too many megabytes    |                                             |
+| `Banned`              | SoulseekQt uses 'File not shared.' instead  |
+| `Cancelled`           |                                             |
+| `Complete`            |                                             |
+| `File not shared.`    | Note: Ends with a dot                       |
+| `File read error.`    | Note: Ends with a dot                       |
+| `Pending shutdown.`   | Note: Ends with a dot                       |
+| `Queued`              |                                             |
+| `Too many files`      |                                             |
+| `Too many megabytes`  |                                             |
 
 #### Deprecated
 
-| String                             | Comments                                                    |
-| ---------------------------------- | ----------------------------------------------------------- |
-| Blocked country                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
-| Disallowed extension               | Sent by Soulseek NS for filtered extensions                 |
-| File not shared                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
-| Remote file error                  | Sent by Soulseek NS in response to legacy download requests |
-| User limit of x megabytes exceeded | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
-| User limit of x files exceeded     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| String                               | Comments                                                    |
+| ------------------------------------ | ----------------------------------------------------------- |
+| `Blocked country`                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.2.0 |
+| `Disallowed extension`               | Sent by Soulseek NS for filtered extensions                 |
+| `File not shared`                    | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| `Remote file error`                  | Sent by Soulseek NS in response to legacy download requests |
+| `User limit of x megabytes exceeded` | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
+| `User limit of x files exceeded`     | Exclusive to Nicotine+, no longer used in Nicotine+ >=3.1.1 |
 
 ### File Attribute Types
 
-| Code | Attribute (unit)   |
-|------|--------------------|
-| 0    | Bitrate (kbps)     |
-| 1    | Duration (seconds) |
-| 2    | VBR (0 or 1)       |
-| 3    | Encoder (unused)   |
-| 4    | Sample Rate (Hz)   |
-| 5    | Bit Depth (bits)   |
+| Code   | Attribute (unit)   |
+|--------|--------------------|
+| `0`    | Bitrate (kbps)     |
+| `1`    | Duration (seconds) |
+| `2`    | VBR (0 or 1)       |
+| `3`    | Encoder (unused)   |
+| `4`    | Sample Rate (Hz)   |
+| `5`    | Bit Depth (bits)   |
 
 #### File Attribute Combinations
 
 These combinations are actively used by clients. Certain attributes can be missing if a file does not provide them.
 
   - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+ (lossy formats), Museek+, SoulSeeX, slskd (lossy formats):
-      - {0: *bitrate*, 1: *duration*, 2: *VBR*}
+      - `{0: bitrate, 1: duration, 2: VBR}`
 
   - SoulseekQt (2015-6-12 and later):
-      - {0: *bitrate*, 1: *duration*} (MP3, OGG, WMA, M4A)
-      - {1: *duration*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
-      - {0: *bitrate*, 1: *duration*, 4: *sample rate*, 5: *bit depth*} (WV)
+      - `{0: bitrate, 1: duration}` (MP3, OGG, WMA, M4A)
+      - `{1: duration, 4: sample rate, 5: bit depth}` (FLAC, WAV, APE)
+      - `{0: bitrate, 1: duration, 4: sample rate, 5: bit depth}` (WV)
 
   - Nicotine+ (lossless formats), slskd (lossless formats):
-      - {1: *duration*, 4: *sample rate*, 5: *bit depth*}
+      - `{1: duration, 4: sample rate, 5: bit depth}`
 
 # Server Messages
-
-| Send           | Receive             |
-|----------------|---------------------|
-| Send to Server | Receive from Server |
 
 Server messages are used by clients to interface with the server over a connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
@@ -175,107 +171,107 @@ but it handles the protocol well enough (and can be modified).
 
 ### Server Message Codes
 
-| Code | Message                                           | Status     |
-|------|---------------------------------------------------|------------|
-| 1    | [Login](#server-code-1)                           |            |
-| 2    | [Set Listen Port](#server-code-2)                 |            |
-| 3    | [Get Peer Address](#server-code-3)                |            |
-| 5    | [Watch User](#server-code-5)                      |            |
-| 6    | [Unwatch User](#server-code-6)                    |            |
-| 7    | [Get User Status](#server-code-7)                 |            |
-| 11   | [Ignore User](#server-code-11)                    | Obsolete   |
-| 12   | [Unignore User](#server-code-12)                  | Obsolete   |
-| 13   | [Say in Chat Room](#server-code-13)               |            |
-| 14   | [Join Room](#server-code-14)                      |            |
-| 15   | [Leave Room](#server-code-15)                     |            |
-| 16   | [User Joined Room](#server-code-16)               |            |
-| 17   | [User Left Room](#server-code-17)                 |            |
-| 18   | [Connect To Peer](#server-code-18)                |            |
-| 22   | [Private Messages](#server-code-22)               |            |
-| 23   | [Acknowledge Private Message](#server-code-23)    |            |
-| 25   | [File Search Room](#server-code-25)               | Obsolete   |
-| 26   | [File Search](#server-code-26)                    |            |
-| 28   | [Set Online Status](#server-code-28)              |            |
-| 32   | [Ping](#server-code-32)                           |            |
-| 33   | [Send Connect Token](#server-code-33)             | Obsolete   |
-| 34   | [Send Download Speed](#server-code-34)            | Obsolete   |
-| 35   | [Shared Folders & Files](#server-code-35)         |            |
-| 36   | [Get User Stats](#server-code-36)                 |            |
-| 40   | [Queued Downloads](#server-code-40)               | Obsolete   |
-| 41   | [Kicked from Server](#server-code-41)             |            |
-| 42   | [User Search](#server-code-42)                    |            |
-| 51   | [Interest Add](#server-code-51)                   | Deprecated |
-| 52   | [Interest Remove](#server-code-52)                | Deprecated |
-| 54   | [Get Recommendations](#server-code-54)            | Deprecated |
-| 56   | [Get Global Recommendations](#server-code-56)     | Deprecated |
-| 57   | [Get User Interests](#server-code-57)             | Deprecated |
-| 58   | [Admin Command](#server-code-58)                  | Obsolete   |
-| 60   | [Place In Line Response](#server-code-60)         | Obsolete   |
-| 62   | [Room Added](#server-code-62)                     | Obsolete   |
-| 63   | [Room Removed](#server-code-63)                   | Obsolete   |
-| 64   | [Room List](#server-code-64)                      |            |
-| 65   | [Exact File Search](#server-code-65)              | Obsolete   |
-| 66   | [Global/Admin Message](#server-code-66)           |            |
-| 67   | [Global User List](#server-code-67)               | Obsolete   |
-| 68   | [Tunneled Message](#server-code-68)               | Obsolete   |
-| 69   | [Privileged Users](#server-code-69)               |            |
-| 71   | [Have No Parents](#server-code-71)                |            |
-| 73   | [Parent's IP](#server-code-73)                    | Deprecated |
-| 83   | [Parent Min Speed](#server-code-83)               |            |
-| 84   | [Parent Speed Ratio](#server-code-84)             |            |
-| 86   | [Parent Inactivity Timeout](#server-code-86)      | Obsolete   |
-| 87   | [Search Inactivity Timeout](#server-code-87)      | Obsolete   |
-| 88   | [Minimum Parents In Cache](#server-code-88)       | Obsolete   |
-| 90   | [Distributed Ping Interval](#server-code-90)      | Obsolete   |
-| 91   | [Add Privileged User](#server-code-91)            | Obsolete   |
-| 92   | [Check Privileges](#server-code-92)               |            |
-| 93   | [Embedded Message](#server-code-93)               |            |
-| 100  | [Accept Children](#server-code-100)               |            |
-| 102  | [Possible Parents](#server-code-102)              |            |
-| 103  | [Wishlist Search](#server-code-103)               |            |
-| 104  | [Wishlist Interval](#server-code-104)             |            |
-| 110  | [Get Similar Users](#server-code-110)             | Deprecated |
-| 111  | [Get Item Recommendations](#server-code-111)      | Deprecated |
-| 112  | [Get Item Similar Users](#server-code-112)        | Deprecated |
-| 113  | [Room Tickers](#server-code-113)                  |            |
-| 114  | [Room Ticker Add](#server-code-114)               |            |
-| 115  | [Room Ticker Remove](#server-code-115)            |            |
-| 116  | [Set Room Ticker](#server-code-116)               |            |
-| 117  | [Hated Interest Add](#server-code-117)            | Deprecated |
-| 118  | [Hated Interest Remove](#server-code-118)         | Deprecated |
-| 120  | [Room Search](#server-code-120)                   |            |
-| 121  | [Send Upload Speed](#server-code-121)             |            |
-| 122  | [User Privileges](#server-code-122)               | Deprecated |
-| 123  | [Give Privileges](#server-code-123)               |            |
-| 124  | [Notify Privileges](#server-code-124)             | Deprecated |
-| 125  | [Acknowledge Notify Privileges](#server-code-125) | Deprecated |
-| 126  | [Branch Level](#server-code-126)                  |            |
-| 127  | [Branch Root](#server-code-127)                   |            |
-| 129  | [Child Depth](#server-code-129)                   | Deprecated |
-| 130  | [Reset Distributed](#server-code-130)             |            |
-| 133  | [Private Room Users](#server-code-133)            |            |
-| 134  | [Private Room Add User](#server-code-134)         |            |
-| 135  | [Private Room Remove User](#server-code-135)      |            |
-| 136  | [Private Room Cancel Membership](#server-code-136)|            |
-| 137  | [Private Room Disown](#server-code-137)           |            |
-| 138  | [Private Room Unknown](#server-code-138)          | Obsolete   |
-| 139  | [Private Room Added](#server-code-139)            |            |
-| 140  | [Private Room Removed](#server-code-140)          |            |
-| 141  | [Private Room Toggle](#server-code-141)           |            |
-| 142  | [New Password](#server-code-142)                  |            |
-| 143  | [Private Room Add Operator](#server-code-143)     |            |
-| 144  | [Private Room Remove Operator](#server-code-144)  |            |
-| 145  | [Private Room Operator Added](#server-code-145)   |            |
-| 146  | [Private Room Operator Removed](#server-code-146) |            |
-| 148  | [Private Room Operators](#server-code-148)        |            |
-| 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Join Global Room](#server-code-150)              | Deprecated |
-| 151  | [Leave Global Room](#server-code-151)             | Deprecated |
-| 152  | [Global Room Message](#server-code-152)           | Deprecated |
-| 153  | [Related Searches](#server-code-153)              | Obsolete   |
-| 160  | [Excluded Search Phrases](#server-code-160)       |            |
-| 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
-| 1003 | [Can't Create Room](#server-code-1003)            |            |
+| Code | Message                                                        |
+|------|----------------------------------------------------------------|
+| 1    | [Login](#server-code-1)                                        |
+| 2    | [Set Listen Port](#server-code-2)                              |
+| 3    | [Get Peer Address](#server-code-3)                             |
+| 5    | [Watch User](#server-code-5)                                   |
+| 6    | [Unwatch User](#server-code-6)                                 |
+| 7    | [Get User Status](#server-code-7)                              |
+| 11   | [Ignore User](#server-code-11) `Obsolete`                      |
+| 12   | [Unignore User](#server-code-12) `Obsolete`                    |
+| 13   | [Say in Chat Room](#server-code-13)                            |
+| 14   | [Join Room](#server-code-14)                                   |
+| 15   | [Leave Room](#server-code-15)                                  |
+| 16   | [User Joined Room](#server-code-16)                            |
+| 17   | [User Left Room](#server-code-17)                              |
+| 18   | [Connect To Peer](#server-code-18)                             |
+| 22   | [Private Messages](#server-code-22)                            |
+| 23   | [Acknowledge Private Message](#server-code-23)                 |
+| 25   | [File Search Room](#server-code-25) `Obsolete`                 |
+| 26   | [File Search](#server-code-26)                                 |
+| 28   | [Set Online Status](#server-code-28)                           |
+| 32   | [Ping](#server-code-32)                                        |
+| 33   | [Send Connect Token](#server-code-33) `Obsolete`               |
+| 34   | [Send Download Speed](#server-code-34) `Obsolete`              |
+| 35   | [Shared Folders & Files](#server-code-35)                      |
+| 36   | [Get User Stats](#server-code-36)                              |
+| 40   | [Queued Downloads](#server-code-40) `Obsolete`                 |
+| 41   | [Kicked from Server](#server-code-41)                          |
+| 42   | [User Search](#server-code-42)                                 |
+| 51   | [Interest Add](#server-code-51) `Deprecated`                   |
+| 52   | [Interest Remove](#server-code-52) `Deprecated`                |
+| 54   | [Get Recommendations](#server-code-54) `Deprecated`            |
+| 56   | [Get Global Recommendations](#server-code-56) `Deprecated`     |
+| 57   | [Get User Interests](#server-code-57) `Deprecated`             |
+| 58   | [Admin Command](#server-code-58) `Obsolete`                    |
+| 60   | [Place In Line Response](#server-code-60) `Obsolete`           |
+| 62   | [Room Added](#server-code-62) `Obsolete`                       |
+| 63   | [Room Removed](#server-code-63) `Obsolete`                     |
+| 64   | [Room List](#server-code-64)                                   |
+| 65   | [Exact File Search](#server-code-65) `Obsolete`                |
+| 66   | [Global/Admin Message](#server-code-66)                        |
+| 67   | [Global User List](#server-code-67) `Obsolete`                 |
+| 68   | [Tunneled Message](#server-code-68) `Obsolete`                 |
+| 69   | [Privileged Users](#server-code-69)                            |
+| 71   | [Have No Parents](#server-code-71)                             |
+| 73   | [Parent's IP](#server-code-73) `Deprecated`                    |
+| 83   | [Parent Min Speed](#server-code-83)                            |
+| 84   | [Parent Speed Ratio](#server-code-84)                          |
+| 86   | [Parent Inactivity Timeout](#server-code-86) `Obsolete`        |
+| 87   | [Search Inactivity Timeout](#server-code-87) `Obsolete`        |
+| 88   | [Minimum Parents In Cache](#server-code-88) `Obsolete`         |
+| 90   | [Distributed Ping Interval](#server-code-90) `Obsolete`        |
+| 91   | [Add Privileged User](#server-code-91) `Obsolete`              |
+| 92   | [Check Privileges](#server-code-92)                            |
+| 93   | [Embedded Message](#server-code-93)                            |
+| 100  | [Accept Children](#server-code-100)                            |
+| 102  | [Possible Parents](#server-code-102)                           |
+| 103  | [Wishlist Search](#server-code-103)                            |
+| 104  | [Wishlist Interval](#server-code-104)                          |
+| 110  | [Get Similar Users](#server-code-110) `Deprecated`             |
+| 111  | [Get Item Recommendations](#server-code-111) `Deprecated`      |
+| 112  | [Get Item Similar Users](#server-code-112) `Deprecated`        |
+| 113  | [Room Tickers](#server-code-113)                               |
+| 114  | [Room Ticker Add](#server-code-114)                            |
+| 115  | [Room Ticker Remove](#server-code-115)                         |
+| 116  | [Set Room Ticker](#server-code-116)                            |
+| 117  | [Hated Interest Add](#server-code-117) `Deprecated`            |
+| 118  | [Hated Interest Remove](#server-code-118) `Deprecated`         |
+| 120  | [Room Search](#server-code-120)                                |
+| 121  | [Send Upload Speed](#server-code-121)                          |
+| 122  | [User Privileges](#server-code-122) `Deprecated`               |
+| 123  | [Give Privileges](#server-code-123)                            |
+| 124  | [Notify Privileges](#server-code-124) `Deprecated`             |
+| 125  | [Acknowledge Notify Privileges](#server-code-125) `Deprecated` |
+| 126  | [Branch Level](#server-code-126)                               |
+| 127  | [Branch Root](#server-code-127)                                |
+| 129  | [Child Depth](#server-code-129) `Deprecated`                   |
+| 130  | [Reset Distributed](#server-code-130)                          |
+| 133  | [Private Room Users](#server-code-133)                         |
+| 134  | [Private Room Add User](#server-code-134)                      |
+| 135  | [Private Room Remove User](#server-code-135)                   |
+| 136  | [Private Room Cancel Membership](#server-code-136)             |
+| 137  | [Private Room Disown](#server-code-137)                        |
+| 138  | [Private Room Unknown](#server-code-138) `Obsolete`            |
+| 139  | [Private Room Added](#server-code-139)                         |
+| 140  | [Private Room Removed](#server-code-140)                       |
+| 141  | [Private Room Toggle](#server-code-141)                        |
+| 142  | [New Password](#server-code-142)                               |
+| 143  | [Private Room Add Operator](#server-code-143)                  |
+| 144  | [Private Room Remove Operator](#server-code-144)               |
+| 145  | [Private Room Operator Added](#server-code-145)                |
+| 146  | [Private Room Operator Removed](#server-code-146)              |
+| 148  | [Private Room Operators](#server-code-148)                     |
+| 149  | [Message Users](#server-code-149)                              |
+| 150  | [Join Global Room](#server-code-150) `Deprecated`              |
+| 151  | [Leave Global Room](#server-code-151) `Deprecated`             |
+| 152  | [Global Room Message](#server-code-152) `Deprecated`           |
+| 153  | [Related Searches](#server-code-153) `Obsolete`                |
+| 160  | [Excluded Search Phrases](#server-code-160)                    |
+| 1001 | [Can't Connect To Peer](#server-code-1001)                     |
+| 1003 | [Can't Create Room](#server-code-1003)                         |
 
 ## Server Code 1
 
@@ -1973,10 +1969,6 @@ This message only seems to be sent if we try to create a room with the same name
 
 # Peer Init Messages
 
-| Send         | Receive           |
-|--------------|-------------------|
-| Send to Peer | Receive from Peer |
-
 Peer init messages are used to initiate a 'P', 'F' or 'D' connection (TCP) to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Init Message Format
@@ -1999,11 +1991,11 @@ Peer init messages are used to initiate a 'P', 'F' or 'D' connection (TCP) to a 
 1.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token (indirect connection request)
 2.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection request)
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token.  
-If User B receives the *PeerInit* message, a connection is established, and user A is free to send peer messages.  
-Otherwise, once User B receives the *ConnectToPeer* message from the Server, User B proceeds with step 4.
+    If User B receives the *PeerInit* message, a connection is established, and user A is free to send peer messages.  
+    Otherwise, once User B receives the *ConnectToPeer* message from the Server, User B proceeds with step 4.
 4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token included in the *ConnectToPeer* message.  
-If this succeeds, a connection is established, and User A is free to send peer messages.  
-If this fails, no connection is possible, and User B proceeds with step 5.
+    If this succeeds, a connection is established, and User A is free to send peer messages.  
+    If this fails, no connection is possible, and User B proceeds with step 5.
 5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
 6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
 
@@ -2012,13 +2004,13 @@ If this fails, no connection is possible, and User B proceeds with step 5.
 *Used by Soulseek NS, Nicotine+ 3.2.0 and earlier (excluding step 5-7), Museek+ (excluding step 7), soulseeX*
 
 1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
-If this succeeds, a connection is established, and User A is free to send peer messages.  
-If this fails (socket cannot connect), User A proceeds with an indirect connection request (step 2).
+    If this succeeds, a connection is established, and User A is free to send peer messages.  
+    If this fails (socket cannot connect), User A proceeds with an indirect connection request (step 2).
 2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
 4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same token.  
-If this succeeds, a connection is established, and User A is free to send peer messages.  
-If this fails, no connection is possible, and User B proceeds with step 5.
+    If this succeeds, a connection is established, and User A is free to send peer messages.  
+    If this fails, no connection is possible, and User B proceeds with step 5.
 5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
 6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
 7.  After 20 seconds, user A retries an indirect connection request (step 2) up to three times before giving up.
@@ -2059,10 +2051,6 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 # Peer Messages
 
-| Send         | Receive           |
-|--------------|-------------------|
-| Send to Peer | Receive from Peer |
-
 Peer messages are sent to peers over a 'P' connection (TCP). Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Peer Message Format
@@ -2073,34 +2061,34 @@ Peer messages are sent to peers over a 'P' connection (TCP). Only a single activ
 
 ### Peer Message Codes
 
-| Code | Message                                    | Status                     |
-|------|--------------------------------------------|----------------------------|
-| 1    | Private Message                            | Obsolete, contents unknown |
-| 4    | [Shared File List Request](#peer-code-4)   |                            |
-| 5    | [Shared File List Response](#peer-code-5)  |                            |
-| 8    | [File Search Request](#peer-code-8)        | Obsolete                   |
-| 9    | [File Search Response](#peer-code-9)       |                            |
-| 10   | Room Invitation                            | Obsolete, contents unknown |
-| 14   | Cancelled Queued Transfer                  | Obsolete, contents unknown |
-| 15   | [User Info Request](#peer-code-15)         |                            |
-| 16   | [User Info Response](#peer-code-16)        |                            |
-| 33   | Send Connect Token                         | Obsolete, contents unknown |
-| 34   | Move Download To Top                       | Obsolete, contents unknown |
-| 36   | [Folder Contents Request](#peer-code-36)   |                            |
-| 37   | [Folder Contents Response](#peer-code-37)  |                            |
-| 40   | [Transfer Request](#peer-code-40)          |                            |
-| 41   | [Download Response](#peer-code-41-a)       | Deprecated                 |
-| 41   | [Upload Response](#peer-code-41-b)         |                            |
-| 42   | [Upload Placehold](#peer-code-42)          | Obsolete                   |
-| 43   | [Queue Upload](#peer-code-43)              |                            |
-| 44   | [Place In Queue Response](#peer-code-44)   |                            |
-| 46   | [Upload Failed](#peer-code-46)             |                            |
-| 47   | Exact File Search Request                  | Obsolete, contents unknown |
-| 48   | Queued Downloads                           | Obsolete, contents unknown |
-| 49   | Indirect File Search Request               | Obsolete, contents unknown |
-| 50   | [Upload Denied](#peer-code-50)             |                            |
-| 51   | [Place In Queue Request](#peer-code-51)    |                            |
-| 52   | [Upload Queue Notification](#peer-code-52) | Deprecated                 |
+| Code | Message                                                 |
+|------|---------------------------------------------------------|
+| 1    | Private Message `Obsolete`                              |
+| 4    | [Shared File List Request](#peer-code-4)                |
+| 5    | [Shared File List Response](#peer-code-5)               |
+| 8    | [File Search Request](#peer-code-8) `Obsolete`          |
+| 9    | [File Search Response](#peer-code-9)                    |
+| 10   | Room Invitation `Obsolete`                              |
+| 14   | Cancelled Queued Transfer `Obsolete`                    |
+| 15   | [User Info Request](#peer-code-15)                      |
+| 16   | [User Info Response](#peer-code-16)                     |
+| 33   | Send Connect Token `Obsolete`                           |
+| 34   | Move Download To Top `Obsolete`                         |
+| 36   | [Folder Contents Request](#peer-code-36)                |
+| 37   | [Folder Contents Response](#peer-code-37)               |
+| 40   | [Transfer Request](#peer-code-40)                       |
+| 41   | [Download Response](#peer-code-41-a) `Deprecated`       |
+| 41   | [Upload Response](#peer-code-41-b)                      |
+| 42   | [Upload Placehold](#peer-code-42) `Obsolete`            |
+| 43   | [Queue Upload](#peer-code-43)                           |
+| 44   | [Place In Queue Response](#peer-code-44)                |
+| 46   | [Upload Failed](#peer-code-46)                          |
+| 47   | Exact File Search Request `Obsolete`                    |
+| 48   | Queued Downloads `Obsolete`                             |
+| 49   | Indirect File Search Request `Obsolete`                 |
+| 50   | [Upload Denied](#peer-code-50)                          |
+| 51   | [Place In Queue Request](#peer-code-51)                 |
+| 52   | [Upload Queue Notification](#peer-code-52) `Deprecated` |
 
 ## Peer Code 4
 
@@ -2510,10 +2498,6 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 
 # File Messages
 
-| Send         | Receive           |
-|--------------|-------------------|
-| Send to Peer | Receive from Peer |
-
 File messages are sent to peers over a 'F' connection (TCP), and do not have messages codes associated with them.
 
 ### File Connection Message Format
@@ -2561,10 +2545,6 @@ Note that Soulseek NS fails to read the size of an incomplete download if more t
 
 # Distributed Messages
 
-| Send         | Receive           |
-|--------------|-------------------|
-| Send to Node | Receive from Node |
-
 Distributed messages are sent to peers over a 'D' connection (TCP), and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ### Distributed Message Format
@@ -2575,14 +2555,14 @@ Distributed messages are sent to peers over a 'D' connection (TCP), and are used
 
 ### Distributed Message Codes
 
-| Code | Message                                  | Status     |
-|------|------------------------------------------|------------|
-| 0    | [Ping](#distributed-code-0)              | Deprecated |
-| 3    | [Search Request](#distributed-code-3)    |            |
-| 4    | [Branch Level](#distributed-code-4)      |            |
-| 5    | [Branch Root](#distributed-code-5)       |            |
-| 7    | [Child Depth](#distributed-code-7)       | Deprecated |
-| 93   | [Embedded Message](#distributed-code-93) |            |
+| Code | Message                                               |
+|------|-------------------------------------------------------|
+| 0    | [Ping](#distributed-code-0) `Deprecated`              |
+| 3    | [Search Request](#distributed-code-3)                 |
+| 4    | [Branch Level](#distributed-code-4)                   |
+| 5    | [Branch Root](#distributed-code-5)                    |
+| 7    | [Child Depth](#distributed-code-7) `Deprecated`       |
+| 93   | [Embedded Message](#distributed-code-93)              |
 
 ## Distributed Code 0
 
