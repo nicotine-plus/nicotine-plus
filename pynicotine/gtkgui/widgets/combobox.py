@@ -306,8 +306,7 @@ class ComboBox:
             self.dropdown.set_active(position)
 
     def set_selected_id(self, item_id):
-        if item_id:
-            self.set_selected_pos(self._positions.get(item_id))
+        self.set_selected_pos(self._positions.get(item_id))
 
     def set_text(self, text):
 
@@ -452,7 +451,10 @@ class ComboBox:
             self.entry.grab_focus_without_selecting()
             return
 
-        self.set_selected_id(self.get_text())
+        text = self.get_text()
+
+        if text:
+            self.set_selected_id(text)
 
     def _on_item_selected(self, *_args):
 
