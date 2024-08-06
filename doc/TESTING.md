@@ -70,8 +70,8 @@ Unstable packages are built after every commit to the master branch.
    for Windows 10 or later
 
 Standalone executables are also available. They can be run from any folder and
-do not require installation or administrator privileges. Configuration files
-are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
+do not require installation. Configuration files are stored in
+`C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
  - [Download Unstable Windows Standalone Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)]  
    for Windows 10 or later
@@ -80,9 +80,9 @@ are stored in `C:\Users\USERNAME\AppData\Roaming\nicotine`.
 
 Unstable installers are built after every commit to the master branch.
 
-*NOTE: You have to follow [these instructions]
-(https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
-the first time you open Nicotine+ on macOS.*
+> [!IMPORTANT]  
+> You have to follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
+> the first time you open Nicotine+ on macOS.
 
  - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip) [[Info](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)]  
    for macOS 12 Monterey or later
