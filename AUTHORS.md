@@ -169,15 +169,15 @@ See [TRANSLATORS.md](TRANSLATORS.md)
 
 ## Third-Party Attributions
 
- - tinytag licensed under the MIT License.  
-   Copyright (c) 2014–2023 Tom Wallroth  
-   Copyright (c) 2021–2023 Mat (mathiascode)  
-   [https://github.com/tinytag/tinytag](https://github.com/tinytag/tinytag)
+tinytag licensed under the MIT License.  
+Copyright (c) 2014–2023 Tom Wallroth  
+Copyright (c) 2021–2023 Mat (mathiascode)  
+[https://github.com/tinytag/tinytag](https://github.com/tinytag/tinytag)
 
- - Country flags licensed under the MIT License.  
-   Copyright (c) 2016–2021 Bowtie AB  
-   [https://github.com/madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit)
+Country flags licensed under the MIT License.  
+Copyright (c) 2016–2021 Bowtie AB  
+[https://github.com/madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit)
 
- - Country data licensed under the CC-BY-SA-4.0 License.  
-   Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
-   Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
+Country data licensed under the CC-BY-SA-4.0 License.  
+Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
+Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
