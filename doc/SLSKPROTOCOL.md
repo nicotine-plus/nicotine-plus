@@ -301,21 +301,30 @@ We send this to the server right after the connection has been established. Serv
       00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00**
 
 ### Data Order
-  - Send Login Attempt
-    1.  **string** <ins>username</ins>
-    2.  **string** <ins>password</ins> *A non-empty string is required*
-    3.  **uint32** <ins>version number</ins> **160** for Nicotine+
-    4.  **string** <ins>hash</ins> *MD5 hex digest of concatenated username & password*
-    5.  **uint32** <ins>minor version</ins> **0x13000000** for 157 ns 13e, **0x11000000** for 157 ns 13c
-  - Receive Login Success
-    1.  **bool** <ins>success</ins> **1**
-    2.  **string** <ins>greet</ins> *MOTD string*
-    3.  **uint32** <ins>Your IP Address</ins>
-    4.  **string** <ins>hash</ins> *MD5 hex digest of the password string*
-    5.  **bool** <ins>is supporter</ins>  *If we have donated to Soulseek at some point in the past*
-  - Receive Login Failure
-    1.  **bool** <ins>failure</ins> **0**
-    2.  **string** <ins>reason</ins> *see [Login Failure Reasons](#login-failure-reasons)*
+  - Send
+    1.  **string** *username*
+    2.  **string** *password*  
+        A non-empty string is required
+    3.  **uint32** *version number*  
+        `160` for Nicotine+
+    4.  **string** *hash*  
+        MD5 hex digest of concatenated username and password
+    5.  **uint32** *minor version*  
+        `0x13000000` for 157 ns 13e, `0x11000000` for 157 ns 13c
+  - Receive
+    1.  **bool** *success*
+    - If *success* is true
+      1.  **string** *greet*
+          MOTD string
+      2.  **uint32** *own IP address*
+      3.  **string** *hash*
+          MD5 hex digest of the password string
+      4.  **bool** *is supporter*  
+          If we have donated to Soulseek at some point in the past
+    - If *success* is false
+      1.  **bool** *failure*
+      2.  **string** *reason*
+          See [Login Failure Reasons](#login-failure-reasons)
 
 ## Server Code 2
 
@@ -327,9 +336,10 @@ If this value is set to zero, or the message is not sent upon login (which defau
 
 ### Data Order
   - Send
-    1.  **uint32** <ins>port</ins>
-    2.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
-    3.  **uint32** <ins>obfuscated port</ins>
+    1.  **uint32** *port*
+    2.  **uint32** *unknown*  
+        SoulseekQt uses a value of `1`
+    3.  **uint32** *obfuscated port*
   - Receive
       - *No Message*
 
@@ -342,13 +352,14 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **ip** <ins>ip</ins>
-    3.  **uint32** <ins>port</ins>
-    4.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
-    5.  **uint16** <ins>obfuscated port</ins>
+    1.  **string** *username*
+    2.  **ip** *ip*
+    3.  **uint32** *port*
+    4.  **uint32** *unknown*
+        SoulseekQt uses a value of `1`
+    5.  **uint16** *obfuscated port*
 
 ## Server Code 5
 
@@ -364,19 +375,22 @@ As a consequence, stats can be outdated.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **bool** <ins>exists</ins>
-    - If <ins>exists</ins> is true
-        1.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
-        2.  **uint32** <ins>avgspeed</ins>
-        3.  **uint32** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
-        4.  **uint32** <ins>unknown</ins>
-        5.  **uint32** <ins>files</ins>
-        6.  **uint32** <ins>dirs</ins>
-        - If <ins>status</ins> is away/online
-            1.  **string** <ins>countrycode</ins> *Uppercase country code*
+    1.  **string** *username*
+    2.  **bool** *exists*
+    - If *exists* is true
+        1.  **uint32** *status*  
+            See [User Status Codes](#user-status-codes)
+        2.  **uint32** *avgspeed*
+        3.  **uint32** *uploadnum*  
+            Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.
+        4.  **uint32** *unknown*
+        5.  **uint32** *files*
+        6.  **uint32** *dirs*
+        - If *status* is away/online
+            1.  **string** *countrycode*  
+                Uppercase country code
 
 ## Server Code 6
 
@@ -387,7 +401,7 @@ Used when we no longer want to be kept updated about a user's status.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
       - *No Message*
 
@@ -400,11 +414,12 @@ The server tells us if a user has gone away or has returned.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
-    3.  **bool** <ins>privileged</ins>
+    1.  **string** *username*
+    2.  **uint32** *status*  
+        See [User Status Codes](#user-status-codes)
+    3.  **bool** *privileged*
 
 ## Server Code 11
 
@@ -419,9 +434,9 @@ The server tells us a user has ignored us.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
 
 ## Server Code 12
 
@@ -436,9 +451,9 @@ The server tells us a user is no longer ignoring us.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
 
 ## Server Code 13
 
@@ -449,12 +464,12 @@ Either we want to say something in the chatroom, or someone else did.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>message</ins>
+    1.  **string** *room*
+    2.  **string** *message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
-    3.  **string** <ins>message</ins>
+    1.  **string** *room*
+    2.  **string** *username*
+    3.  **string** *message*
 
 ## Server Code 14
 
@@ -484,33 +499,37 @@ include:
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
+    1.  **string** *room*
+    2.  **uint32** *private*  
+        If the room doesn't exist, should the new room be private?
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of users in room</ins> *For private rooms, also contain owner and operators*
-    3.  Iterate the <ins>number of users</ins>
-        1.  **string** <ins>username</ins>
-    4.  **uint32** <ins>number of statuses</ins>
-    5.  Iterate the <ins>number of statuses</ins>
-        1.  **uint32** <ins>status</ins>
-    6.  **uint32** <ins>number of user stats</ins>
-    7.  Iterate the <ins>number of user stats</ins>
-        1.  **uint32** <ins>avgspeed</ins>
-        2.  **uint32** <ins>uploadnum</ins>
-        3.  **uint32** <ins>unknown</ins>
-        4.  **uint32** <ins>files</ins>
-        5.  **uint32** <ins>dirs</ins>
-    8.  **uint32** <ins>number of slotsfree</ins>
-    9.  Iterate the <ins>number of slotsfree</ins>
-        1.  **uint32** <ins>slotsfree</ins>
-    10. **uint32** <ins>number of user countries</ins>
-    11. Iterate the <ins>number of user countries</ins>
-        1.  **string** <ins>countrycode</ins> *Uppercase country code*
-    12. **string** <ins>owner</ins> *If private room*
-    13. **uint32** <ins>number of operators in room</ins> *If private room*
-    14. Iterate the <ins>number of operators</ins>
-        1.  **string** <ins>operator</ins>
+    1.  **string** *room*
+    2.  **uint32** *number of users in room*  
+        For private rooms, also contain owner and operators
+    3.  Iterate for *number of users*
+        1.  **string** *username*
+    4.  **uint32** *number of statuses*
+    5.  Iterate for *number of statuses*
+        1.  **uint32** *status*
+    6.  **uint32** *number of user stats*
+    7.  Iterate for *number of user stats*
+        1.  **uint32** *avgspeed*
+        2.  **uint32** *uploadnum*
+        3.  **uint32** *unknown*
+        4.  **uint32** *files*
+        5.  **uint32** *dirs*
+    8.  **uint32** *number of slotsfree*
+    9.  Iterate for *number of slotsfree*
+        1.  **uint32** *slotsfree*
+    10. **uint32** *number of user countries*
+    11. Iterate for *number of user countries*
+        1.  **string** *countrycode*  
+            Uppercase country code
+    12. If private room
+        1.  **string** *owner*
+        2.  **uint32** *number of operators in room*
+        3.  Iterate for *number of operators*
+            1.  **string** *operator*
 
 ## Server Code 15
 
@@ -521,9 +540,9 @@ We send this to the server when we want to leave a room.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 16
 
@@ -536,16 +555,17 @@ The server tells us someone has just joined a room we're in.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
-    3.  **uint32** <ins>status</ins>
-    4.  **uint32** <ins>avgspeed</ins>
-    5.  **uint32** <ins>uploadnum</ins>
-    6.  **uint32** <ins>unknown</ins>
-    7.  **uint32** <ins>files</ins>
-    8.  **uint32** <ins>dirs</ins>
-    9.  **uint32** <ins>slotsfree</ins>
-    10. **string** <ins>countrycode</ins> *Uppercase country code*
+    1.  **string** *room*
+    2.  **string** *username*
+    3.  **uint32** *status*
+    4.  **uint32** *avgspeed*
+    5.  **uint32** *uploadnum*
+    6.  **uint32** *unknown*
+    7.  **uint32** *files*
+    8.  **uint32** *dirs*
+    9.  **uint32** *slotsfree*
+    10. **string** *countrycode*  
+        Uppercase country code
 
 ## Server Code 17
 
@@ -558,8 +578,8 @@ The server tells us someone has just left a room we're in.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 18
 
@@ -574,18 +594,22 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>username</ins>
-    3.  **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
+    1.  **uint32** *token*
+    2.  **string** *username*
+    3.  **string** *type*  
+        See [Connection Types](#connection-types)
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-    3.  **ip** <ins>ip</ins>
-    4.  **uint32** <ins>port</ins>
-    5.  **uint32** <ins>token</ins> *Use this token for [PierceFireWall](#peer-init-code-0)*
-    6.  **bool** <ins>privileged</ins>
-    7.  **uint32** <ins>unknown</ins> *(SoulseekQt uses value 1)*
-    8.  **uint32** <ins>obfuscated port</ins>
+    1.  **string** *username*
+    2.  **string** *type*  
+        See [Connection Types](#connection-types)
+    3.  **ip** *ip*
+    4.  **uint32** *port*
+    5.  **uint32** *token*  
+        Use this token for [PierceFireWall](#peer-init-code-0)
+    6.  **bool** *privileged*
+    7.  **uint32** *unknown*  
+        SoulseekQt uses a value of `1`
+    8.  **uint32** *obfuscated port*
 
 ## Server Code 22
 
@@ -596,14 +620,15 @@ Chat phrase sent to someone or received by us in private.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **string** <ins>message</ins>
+    1.  **string** *username*
+    2.  **string** *message*
   - Receive
-    1.  **uint32** <ins>ID</ins>
-    2.  **uint32** <ins>timestamp</ins>
-    3.  **string** <ins>username</ins>
-    4.  **string** <ins>message</ins>
-    5.  **bool** <ins>new message</ins> **1** if message is new, **0** if message is re-sent (e.g. if recipient was offline)
+    1.  **uint32** *ID*
+    2.  **uint32** *timestamp*
+    3.  **string** *username*
+    4.  **string** *message*
+    5.  **bool** *new message*  
+        True if message is new, false if message is re-sent (e.g. if recipient was offline)
 
 ## Server Code 23
 
@@ -614,7 +639,7 @@ We send this to the server to confirm that we received a private message. If we 
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>message ID</ins>
+    1.  **uint32** *message ID*
   - Receive
       - *No Message*
 
@@ -629,9 +654,9 @@ We send this to the server when we search for something in a room.
 ### Data Order
 
   - Send
-    1. **uint32** <ins>token</ins>
-    2. **uint32** <ins>room id</ins>
-    3. **string** <ins>search query</ins>
+    1. **uint32** *token*
+    2. **uint32** *room id*
+    3. **string** *search query*
   - Receive
       - *No Message*
 
@@ -646,12 +671,12 @@ The token is a number generated by the client and is used to track the search re
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>search query</ins>
+    1.  **uint32** *token*
+    2.  **string** *search query*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>search query</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
+    3.  **string** *search query*
 
 ## Server Code 28
 
@@ -669,7 +694,8 @@ message when enabling away status, but not when disabling it.
 ### Data Order
 
   - Send
-    1.  **int32** <ins>status</ins> *see [User Status Codes](#user-status-codes)*
+    1.  **int32** *status*  
+        See [User Status Codes](#user-status-codes)
   - Receive
       - *No Message*
 
@@ -697,11 +723,11 @@ Nicotine+ uses TCP keepalive instead.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
 
 ## Server Code 34
 
@@ -714,8 +740,8 @@ We used to send this after a finished download to let the server update the spee
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>speed</ins>
+    1.  **string** *username*
+    2.  **uint32** *speed*
   - Receive
       - *No Message*
 
@@ -728,8 +754,8 @@ We send this to server to indicate the number of folder and files that we share.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>dirs</ins>
-    2.  **uint32** <ins>files</ins>
+    1.  **uint32** *dirs*
+    2.  **uint32** *files*
   - Receive
       - *No Message*
 
@@ -742,14 +768,14 @@ The server sends this to indicate a change in a user's statistics, if we've requ
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>avgspeed</ins>
-    3.  **uint32** <ins>uploadnum</ins>
-    4.  **uint32** <ins>unknown</ins>
-    5.  **uint32** <ins>files</ins>
-    6.  **uint32** <ins>dirs</ins>
+    1.  **string** *username*
+    2.  **uint32** *avgspeed*
+    3.  **uint32** *uploadnum*
+    4.  **uint32** *unknown*
+    5.  **uint32** *files*
+    6.  **uint32** *dirs*
 
 ## Server Code 40
 
@@ -764,8 +790,9 @@ The server sends this to indicate if someone has download slots available or not
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **bool** <ins>slotsfree</ins> *Can immediately download*
+    1.  **string** *username*
+    2.  **bool** *slotsfree*  
+        Can immediately download
 
 ## Server Code 41
 
@@ -789,9 +816,9 @@ We send this to the server when we search a specific user's shares. The token is
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>search query</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
+    3.  **string** *search query*
   - Receive
       - *No Message*
 
@@ -806,7 +833,7 @@ We send this to the server when we add an item to our likes list.
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
       - *No Message*
 
@@ -821,7 +848,7 @@ We send this to the server when we remove an item from our likes list.
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
       - *No Message*
 
@@ -838,14 +865,14 @@ The server sends us a list of personal recommendations and a number for each.
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>number of total recommendations</ins>
-    2.  Iterate for <ins>number of total recommendations</ins>
-        1.  **string** <ins>recommendation</ins>
-        2.  **int32** <ins>number of recommendations this recommendation has</ins>
-    3.  **uint32** <ins>number of total unrecommendations</ins>
-    4.  Iterate for <ins>number of total unrecommendations</ins>
-        1.  **string** <ins>unrecommendation</ins>
-        2.  **int32** <ins>number of unrecommendations this unrecommendation has</ins> *(negative)*
+    1.  **uint32** *number of total recommendations*
+    2.  Iterate for *number of total recommendations*
+        1.  **string** *recommendation*
+        2.  **int32** *number of recommendations this recommendation has*
+    3.  **uint32** *number of total unrecommendations*
+    4.  Iterate for *number of total unrecommendations*
+        1.  **string** *unrecommendation*
+        2.  **int32** *number of unrecommendations this unrecommendation has (negative)*
 
 ## Server Code 56
 
@@ -860,14 +887,14 @@ The server sends us a list of global recommendations and a number for each.
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>number of total recommendations</ins>
-    2.  Iterate for <ins>number of total recommendations</ins>
-        1.  **string** <ins>recommendation</ins>
-        2.  **int32** <ins>number of recommendations this recommendation has</ins>
-    3.  **uint32** <ins>number of total unrecommendations</ins>
-    4.  Iterate for <ins>number of total unrecommendations</ins>
-        1.  **string** <ins>unrecommendation</ins>
-        2.  **int32** <ins>number of unrecommendations this unrecommendation has</ins> *(negative)*
+    1.  **uint32** *number of total recommendations*
+    2.  Iterate for *number of total recommendations*
+        1.  **string** *recommendation*
+        2.  **int32** *number of recommendations this recommendation has*
+    3.  **uint32** *number of total unrecommendations*
+    4.  Iterate for *number of total unrecommendations*
+        1.  **string** *unrecommendation*
+        2.  **int32** *number of unrecommendations this unrecommendation has (negative)*
 
 ## Server Code 57
 
@@ -880,15 +907,15 @@ We ask the server for a user's liked and hated interests. The server responds wi
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>number of liked interests</ins>
-    3.  Iterate for <ins>number of liked interests</ins>
-        1.  **string** <ins>interest</ins>
-    4.  **uint32** <ins>number of hated interests</ins>
-    5.  Iterate for <ins>number of hated interests</ins>
-        1.  **string** <ins>interest</ins>
+    1.  **string** *username*
+    2.  **uint32** *number of liked interests*
+    3.  Iterate for *number of liked interests*
+        1.  **string** *interest*
+    4.  **uint32** *number of hated interests*
+    5.  Iterate for *number of hated interests*
+        1.  **string** *interest*
 
 ## Server Code 58
 
@@ -901,10 +928,10 @@ We send this to the server to run an admin command (e.g. to ban or silence a use
 ### Data Order
 
   - Send
-    1.  **string** <ins>command</ins>
-    2.  **uint32** <ins>number of command arguments</ins>
-    3.  Iterate for <ins>number of command arguments</ins>
-        1.  **string** <ins>command argument</ins>
+    1.  **string** *command*
+    2.  **uint32** *number of command arguments*
+    3.  Iterate for *number of command arguments*
+        1.  **string** *command argument*
   - Receive
       - *No Message*
 
@@ -919,13 +946,13 @@ The server sends this to indicate change in place in queue while we're waiting f
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>req</ins>
-    3.  **uint32** <ins>place</ins>
+    1.  **string** *username*
+    2.  **uint32** *req*
+    3.  **uint32** *place*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>req</ins>
-    3.  **uint32** <ins>place</ins>
+    1.  **string** *username*
+    2.  **uint32** *req*
+    3.  **uint32** *place*
 
 ## Server Code 62
 
@@ -940,7 +967,7 @@ The server tells us a new room has been added.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 63
 
@@ -955,7 +982,7 @@ The server tells us a room has been removed.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 64
 
@@ -968,27 +995,27 @@ The server tells us a list of rooms and the number of users in them. When connec
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>number of rooms</ins>
-    2.  Iterate for <ins>number of rooms</ins>
-        1.  **string** <ins>room</ins>
-    3.  **uint32** <ins>number of rooms</ins>
-    4.  Iterate for <ins>number of rooms</ins>
-        1.  **uint32** <ins>number of users in room</ins>
-    5.  **uint32** <ins>number of owned private rooms</ins>
-    6.  Iterate for <ins>number of owned private rooms</ins>
-        1.  **string** <ins>owned private room</ins>
-    7.  **uint32** <ins>number of owned private rooms</ins>
-    8.  Iterate for <ins>number of owned private rooms</ins>
-        1.  **uint32** <ins>number of users in owned private room</ins>
-    9.  **uint32** <ins>number of private rooms (except owned)</ins>
-    10. Iterate for <ins>number of private rooms (except owned)</ins>
-        1.  **string** <ins>private room</ins>
-    11. **uint32** <ins>number of private rooms (except owned)</ins>
-    12. Iterate for <ins>number of private rooms (except owned)</ins>
-        1.  **uint32** <ins>number of users in private rooms (except owned)</ins>
-    13. **uint32** <ins>number of operated private rooms</ins>
-    14. Iterate for <ins>number of operated private rooms</ins>
-        1.  **string** <ins>operated private room</ins>
+    1.  **uint32** *number of rooms*
+    2.  Iterate for *number of rooms*
+        1.  **string** *room*
+    3.  **uint32** *number of rooms*
+    4.  Iterate for *number of rooms*
+        1.  **uint32** *number of users in room*
+    5.  **uint32** *number of owned private rooms*
+    6.  Iterate for *number of owned private rooms*
+        1.  **string** *owned private room*
+    7.  **uint32** *number of owned private rooms*
+    8.  Iterate for *number of owned private rooms*
+        1.  **uint32** *number of users in owned private room*
+    9.  **uint32** *number of private rooms (except owned)*
+    10. Iterate for *number of private rooms (except owned)*
+        1.  **string** *private room*
+    11. **uint32** *number of private rooms (except owned)*
+    12. Iterate for *number of private rooms (except owned)*
+        1.  **uint32** *number of users in private rooms (except owned)*
+    13. **uint32** *number of operated private rooms*
+    14. Iterate for *number of operated private rooms*
+        1.  **string** *operated private room*
 
 ## Server Code 65
 
@@ -1001,19 +1028,19 @@ We send this to search for an exact file name and folder, to find other sources.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>filename</ins>
-    3.  **string** <ins>path</ins>
-    4.  **uint64** <ins>file size</ins>
-    5.  **uint32** <ins>checksum</ins>
-    6.  **uint8** <ins>unknown</ins>
+    1.  **uint32** *token*
+    2.  **string** *filename*
+    3.  **string** *path*
+    4.  **uint64** *file size*
+    5.  **uint32** *checksum*
+    6.  **uint8** *unknown*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>filename</ins>
-    4.  **string** <ins>path</ins>
-    5.  **uint64** <ins>file size</ins>
-    6.  **uint32** <ins>checksum</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
+    3.  **string** *filename*
+    4.  **string** *path*
+    5.  **uint64** *file size*
+    6.  **uint32** *checksum*
 
 ## Server Code 66
 
@@ -1026,7 +1053,7 @@ A global message from the server admin has arrived.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>message</ins>
+    1.  **string** *message*
 
 ## Server Code 67
 
@@ -1041,25 +1068,26 @@ We send this to get a global list of all users online.
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>number of users in room</ins>
-    2.  Iterate the <ins>number of users</ins>
-        1.  **string** <ins>username</ins>
-    3.  **uint32** <ins>number of userdata</ins>
-    4.  Iterate the <ins>number of users</ins>
-        1.  **uint32** <ins>status</ins>
-    5.  **uint32** <ins>number of userdata</ins>
-    6.  Iterate the <ins>userdata</ins>
-        1.  **uint32** <ins>avgspeed</ins>
-        2.  **uint32** <ins>uploadnum</ins>
-        3.  **uint32** <ins>unknown</ins>
-        4.  **uint32** <ins>files</ins>
-        5.  **uint32** <ins>dirs</ins>
-    7.  **uint32** <ins>number of slotsfree</ins>
-    8.  Iterate through number of slotsfree
-        1.  **uint32** <ins>slotsfree</ins>
-    9. **uint32** <ins>number of usercountries</ins>
-    10. Iterate through number of usercountries
-        1.  **string** <ins>countrycode</ins> *Uppercase country code*
+    1.  **uint32** *number of users in room*
+    2.  Iterate for *number of users*
+        1.  **string** *username*
+    3.  **uint32** *number of userdata*
+    4.  Iterate for *number of users*
+        1.  **uint32** *status*
+    5.  **uint32** *number of userdata*
+    6.  Iterate for *number of userdata*
+        1.  **uint32** *avgspeed*
+        2.  **uint32** *uploadnum*
+        3.  **uint32** *unknown*
+        4.  **uint32** *files*
+        5.  **uint32** *dirs*
+    7.  **uint32** *number of slotsfree*
+    8.  Iterate for *number of slotsfree*
+        1.  **uint32** *slotsfree*
+    9. **uint32** *number of usercountries*
+    10. Iterate for *number of usercountries*
+        1.  **string** *countrycode*  
+            Uppercase country code
 
 ## Server Code 68
 
@@ -1072,17 +1100,17 @@ Server message for tunneling a chat message.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **uint32** <ins>code</ins>
-    4.  **string** <ins>message</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
+    3.  **uint32** *code*
+    4.  **string** *message*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>code</ins>
-    3.  **uint32** <ins>token</ins>
-    4.  **ip** <ins>ip</ins>
-    5.  **uint32** <ins>port</ins>
-    6.  **string** <ins>message</ins>
+    1.  **string** *username*
+    2.  **uint32** *code*
+    3.  **uint32** *token*
+    4.  **ip** *ip*
+    5.  **uint32** *port*
+    6.  **string** *message*
 
 ## Server Code 69
 
@@ -1095,9 +1123,9 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number of users</ins>
-    2.  Iterate <ins>number of users</ins>
-        1.  **string** <ins>username</ins>
+    1.  **uint32** *number of users*
+    2.  Iterate *number of users*
+        1.  **string** *username*
 
 ## Server Code 71
 
@@ -1108,7 +1136,7 @@ We inform the server if we have a distributed parent or not. If not, the server 
 ### Data Order
 
   - Send
-    1.  **bool** <ins>have parents</ins>
+    1.  **bool** *have parents*
   - Receive
       - *No Message*
 
@@ -1123,7 +1151,7 @@ We send the IP address of our parent to the server.
 ### Data Order
 
   - Send
-    1.  **ip** <ins>ip</ins>
+    1.  **ip** *ip*
   - Receive
       - *No Message*
 
@@ -1138,7 +1166,7 @@ The server informs us about the minimum upload speed required to become a parent
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>speed</ins>
+    1.  **uint32** *speed*
 
 ## Server Code 84
 
@@ -1151,7 +1179,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>ratio</ins>
+    1.  **uint32** *ratio*
 
 ## Server Code 86
 
@@ -1164,7 +1192,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>seconds</ins>
+    1.  **uint32** *seconds*
 
 ## Server Code 87
 
@@ -1177,7 +1205,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>seconds</ins>
+    1.  **uint32** *seconds*
 
 ## Server Code 88
 
@@ -1190,7 +1218,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number</ins>
+    1.  **uint32** *number*
 
 ## Server Code 90
 
@@ -1203,7 +1231,7 @@ The server sends us a speed ratio determining the number of children we can have
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>seconds</ins>
+    1.  **uint32** *seconds*
 
 ## Server Code 91
 
@@ -1218,7 +1246,7 @@ The server sends us the username of a new privileged user, which we add to our l
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
 
 ## Server Code 92
 
@@ -1231,7 +1259,7 @@ We ask the server how much time we have left of our privileges. The server respo
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>time left</ins>
+    1.  **uint32** *time left*
 
 ## Server Code 93
 
@@ -1244,8 +1272,10 @@ The server sends us an embedded distributed message. The only type of distribute
   - Send
       - *No Message*
   - Receive
-    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
-    2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
+    1.  **uint8** *distributed code*  
+        See [Distributed Message Codes](#distributed-message-codes)
+    2.  **bytes** *distributed message*  
+        Raw message associated with distributed code
 
 ## Server Code 100
 
@@ -1256,7 +1286,7 @@ We tell the server if we want to accept child nodes.
 ### Data Order
 
   - Send
-    1.  **bool** <ins>accept</ins>
+    1.  **bool** *accept*
   - Receive
       - *No Message*
 
@@ -1273,11 +1303,11 @@ The received list always contains users whose upload speed is higher than our ow
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number of parents</ins>
-    2.  Iterate for <ins>number of parents</ins>
-        1.  **string** <ins>username</ins>
-        2.  **ip** <ins>ip</ins>
-        3.  **uint32** <ins>port</ins>
+    1.  **uint32** *number of parents*
+    2.  Iterate for *number of parents*
+        1.  **string** *username*
+        2.  **ip** *ip*
+        3.  **uint32** *port*
 
 ## Server Code 103
 
@@ -1288,8 +1318,8 @@ We send the server one of our wishlist search queries at each interval.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>search query</ins>
+    1.  **uint32** *token*
+    2.  **string** *search query*
   - Receive
       - *No Message*
 
@@ -1306,7 +1336,7 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>interval</ins>
+    1.  **uint32** *interval*
 
 ## Server Code 110
 
@@ -1321,10 +1351,10 @@ The server sends us a list of similar users related to our interests.
   - Send
       - Empty Message
   - Receive
-    1.  **uint32** <ins>number of users</ins>
-    2.  Iterate for <ins>number of user</ins>
-        1.  **string** <ins>username</ins>
-        2.  **uint32** <ins>rating</ins>
+    1.  **uint32** *number of users*
+    2.  Iterate for *number of user*
+        1.  **string** *username*
+        2.  **uint32** *rating*
 
 ## Server Code 111
 
@@ -1337,13 +1367,13 @@ The server sends us a list of recommendations related to a specific item, which 
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
-    1.  **string** <ins>item</ins>
-    2.  **uint32** <ins>number of recommendations</ins>
-    3.  Iterate for <ins>number of recommendations</ins>
-        1.  **string** <ins>recommendation</ins>
-        2.  **uint32** <ins>number of recommendations for this recommendation</ins> *(can be negative)*
+    1.  **string** *item*
+    2.  **uint32** *number of recommendations*
+    3.  Iterate for *number of recommendations*
+        1.  **string** *recommendation*
+        2.  **uint32** *number of recommendations for this recommendation (can be negative)*
 
 ## Server Code 112
 
@@ -1356,12 +1386,12 @@ The server sends us a list of similar users related to a specific item, which is
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
-    1.  **string** <ins>item</ins>
-    2.  **uint32** <ins>number of users</ins>
-    3.  Iterate for <ins>number of users</ins>
-        1.  **string** <ins>username</ins>
+    1.  **string** *item*
+    2.  **uint32** *number of users*
+    3.  Iterate for *number of users*
+        1.  **string** *username*
 
 ## Server Code 113
 
@@ -1376,11 +1406,11 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of users</ins>
-    3.  Iterate for <ins>number of user</ins>
-        1.  **string** <ins>username</ins>
-        2.  **string** <ins>tickers</ins>
+    1.  **string** *room*
+    2.  **uint32** *number of users*
+    3.  Iterate for *number of user*
+        1.  **string** *username*
+        2.  **string** *tickers*
 
 ## Server Code 114
 
@@ -1395,9 +1425,9 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
-    3.  **string** <ins>ticker</ins>
+    1.  **string** *room*
+    2.  **string** *username*
+    3.  **string** *ticker*
 
 ## Server Code 115
 
@@ -1412,8 +1442,8 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 116
 
@@ -1426,8 +1456,8 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>ticker</ins>
+    1.  **string** *room*
+    2.  **string** *ticker*
   - Receive
       - *No Message*
 
@@ -1442,7 +1472,7 @@ We send this to the server when we add an item to our hate list.
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
       - *No Message*
 
@@ -1457,7 +1487,7 @@ We send this to the server when we remove an item from our hate list.
 ### Data Order
 
   - Send
-    1.  **string** <ins>item</ins>
+    1.  **string** *item*
   - Receive
       - *No Message*
 
@@ -1472,9 +1502,9 @@ The token is a number generated by the client and is used to track the search re
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>search query</ins>
+    1.  **string** *room*
+    2.  **uint32** *token*
+    3.  **string** *search query*
   - Receive
       - *No Message*
 
@@ -1487,7 +1517,7 @@ We send this after a finished upload to let the server update the speed statisti
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>speed</ins>
+    1.  **uint32** *speed*
   - Receive
       - *No Message*
 
@@ -1502,10 +1532,10 @@ We ask the server whether a user is privileged or not.
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
+    1.  **string** *username*
   - Receive
-    1.  **string** <ins>username</ins>
-    2.  **bool** <ins>privileged</ins>
+    1.  **string** *username*
+    2.  **bool** *privileged*
 
 ## Server Code 123
 
@@ -1516,8 +1546,8 @@ We give (part of) our privileges, specified in days, to another user on the netw
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>days</ins>
+    1.  **string** *username*
+    2.  **uint32** *days*
   - Receive
       - *No Message*
 
@@ -1530,11 +1560,11 @@ We give (part of) our privileges, specified in days, to another user on the netw
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>username</ins>
+    1.  **uint32** *token*
+    2.  **string** *username*
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>username</ins>
+    1.  **uint32** *token*
+    2.  **string** *username*
 
 ## Server Code 125
 
@@ -1545,9 +1575,9 @@ We give (part of) our privileges, specified in days, to another user on the netw
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
+    1.  **uint32** *token*
   - Receive
-    1.  **uint32** <ins>token</ins>
+    1.  **uint32** *token*
 
 ## Server Code 126
 
@@ -1558,7 +1588,7 @@ We tell the server what our position is in our branch (xth generation) on the di
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>branch level</ins>
+    1.  **uint32** *branch level*
   - Receive
       - *No Message*
 
@@ -1571,7 +1601,7 @@ We tell the server the username of the root of the branch we're in on the distri
 ### Data Order
 
   - Send
-    1.  **string** <ins>branch root</ins>
+    1.  **string** *branch root*
   - Receive
       - *No Message*
 
@@ -1586,7 +1616,7 @@ We tell the server the maximum number of generation of children we have on the d
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>child depth</ins>
+    1.  **uint32** *child depth*
   - Receive
       - *No Message*
 
@@ -1615,10 +1645,10 @@ room we are in.
   - Send
     1.  *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of users</ins>
-    3.  Iterate for <ins>number of users</ins>
-        1.  **string** <ins>users</ins>
+    1.  **string** *room*
+    2.  **uint32** *number of users*
+    3.  Iterate for *number of users*
+        1.  **string** *users*
 
 ## Server Code 134
 
@@ -1632,11 +1662,11 @@ The server tells us a member has been added to a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 135
 
@@ -1651,11 +1681,11 @@ The server tells us a member has been removed from a private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 136
 
@@ -1666,7 +1696,7 @@ We send this to the server to cancel our own membership of a private room.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
   - Receive
       - *No Message*
 
@@ -1679,7 +1709,7 @@ We send this to the server to stop owning a private room.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
   - Receive
       - *No Message*
 
@@ -1694,9 +1724,9 @@ Unknown purpose
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 139
 
@@ -1709,7 +1739,7 @@ The server tells us we were added to a private room.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 140
 
@@ -1722,7 +1752,7 @@ The server tells us we were removed from a private room.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 141
 
@@ -1733,9 +1763,9 @@ We send this when we want to enable or disable invitations to private rooms.
 ### Data Order
 
   - Send
-    1.  **bool** <ins>enable</ins>
+    1.  **bool** *enable*
   - Receive
-    1.  **bool** <ins>enable</ins>
+    1.  **bool** *enable*
 
 ## Server Code 142
 
@@ -1746,9 +1776,9 @@ We send this to the server to change our password. We receive a response if our 
 ### Data Order
 
   - Send
-    1.  **string** <ins>pass</ins>
+    1.  **string** *pass*
   - Receive
-    1.  **string** <ins>pass</ins>
+    1.  **string** *pass*
 
 ## Server Code 143
 
@@ -1763,11 +1793,11 @@ room we are in.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 144
 
@@ -1782,11 +1812,11 @@ private room we are in.
 ### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
+    1.  **string** *room*
+    2.  **string** *username*
 
 ## Server Code 145
 
@@ -1800,7 +1830,7 @@ we are in.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 146
 
@@ -1814,7 +1844,7 @@ we are in.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 ## Server Code 148
 
@@ -1827,10 +1857,10 @@ The server sends us a list of operators in a private room we are in.
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of operators in room</ins>
-    3.  Iterate the <ins>number of operators</ins>
-        1.  **string** <ins>operator</ins>
+    1.  **string** *room*
+    2.  **uint32** *number of operators in room*
+    3.  Iterate for *number of operators*
+        1.  **string** *operator*
 
 ## Server Code 149
 
@@ -1841,10 +1871,10 @@ Sends a broadcast private message to the given list of online users.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>number of users</ins>
-    2.  Iterate the <ins>number of users</ins>
-        1.  **string** <ins>username</ins>
-    3.  **string** <ins>message</ins>
+    1.  **uint32** *number of users*
+    2.  Iterate for *number of users*
+        1.  **string** *username*
+    3.  **string** *message*
   - Receive
       - *No Message*
 
@@ -1891,9 +1921,9 @@ The server sends this when a new message has been written in the public room fee
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
-    2.  **string** <ins>username</ins>
-    3.  **string** <ins>message</ins>
+    1.  **string** *room*
+    2.  **string** *username*
+    3.  **string** *message*
 
 ## Server Code 153
 
@@ -1906,13 +1936,13 @@ The server returns a list of related search terms for a search query.
 ### Data Order
 
   - Send
-    1.  **string** <ins>query</ins>
+    1.  **string** *query*
   - Receive
-    1.  **string** <ins>query</ins>
-    2.  **uint32** <ins>number of terms</ins>
-    3.  Iterate for <ins>number of term</ins>
-        1.  **string** <ins>term</ins>
-        2.  **uint32** <ins>score</ins>
+    1.  **string** *query*
+    2.  **uint32** *number of terms*
+    3.  Iterate for *number of term*
+        1.  **string** *term*
+        2.  **uint32** *score*
 
 ## Server Code 160
 
@@ -1925,9 +1955,9 @@ The server sends a list of phrases not allowed on the search network. File paths
   - Send
       - *No Message*
   - Receive
-    1.  **uint32** <ins>number of phrases</ins>
-    2.  Iterate for <ins>number of phrases</ins>
-        1.  **string** <ins>phrase</ins>
+    1.  **uint32** *number of phrases*
+    2.  Iterate for *number of phrases*
+        1.  **string** *phrase*
 
 ## Server Code 1001
 
@@ -1946,11 +1976,11 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>username</ins>
+    1.  **uint32** *token*
+    2.  **string** *username*
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>username</ins>
+    1.  **uint32** *token*
+    2.  **string** *username*
 
 ## Server Code 1003
 
@@ -1965,7 +1995,7 @@ This message only seems to be sent if we try to create a room with the same name
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>room</ins>
+    1.  **string** *room*
 
 # Peer Init Messages
 
@@ -2026,9 +2056,9 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### Data Order
 
   - Send
-      - **uint32** <ins>token</ins>
+    1.  **uint32** *token*
   - Receive
-      - **uint32** <ins>token</ins>
+    1.  **uint32** *token*
 
 ## Peer Init Code 1
 
@@ -2041,13 +2071,17 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 ### Data Order
 
   - Send
-      - **string** <ins>username</ins> *local username*
-      - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *value is always* **0**
+    1.  **string** *own username*  
+    2.  **string** *type*  
+        See [Connection Types](#connection-types)
+    3.  **uint32** *token*  
+        Value is always `0`
   - Receive
-      - **string** <ins>username</ins> *remote username*
-      - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
-      - **uint32** <ins>token</ins> *value is always* **0**
+    1.  **string** *remote username*
+    2.  **string** *type*  
+        See [Connection Types](#connection-types)
+    3.  **uint32** *token*  
+        Value is always `0`
 
 # Peer Messages
 
@@ -2117,33 +2151,38 @@ A peer responds with a list of shared files after we've sent a [SharedFileListRe
     2. zlib compress
   - Receive
     1.  zlib decompress
-    2.  **uint32** <ins>number of directories</ins>
-    3.  Iterate <ins>number of directories</ins>
-        1.  **string** <ins>directory</ins>
-        2.  **uint32** <ins>number of files</ins>
-        3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always* **1**
-            2.  **string** <ins>filename</ins>
-            3.  **unit64** <ins>file size</ins>
-            4.  **string** <ins>file extension</ins>
-            5.  **uint32** <ins>number of attributes</ins>
-            6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-                2.  **uint32** <ins>attribute value</ins>
-    4.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
-    5.  **uint32** <ins>number of private directories</ins>
-    6.  Iterate <ins>number of private directories</ins>
-        1.  **string** <ins>directory</ins>
-        2.  **uint32** <ins>number of files</ins>
-        3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always* **1**
-            2.  **string** <ins>filename</ins>
-            3.  **uint64** <ins>file size</ins>
-            4.  **string** <ins>file extension</ins>
-            5.  **uint32** <ins>number of attributes</ins>
-            6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-                2.  **uint32** <ins>attribute value</ins>
+    2.  **uint32** *number of directories*
+    3.  Iterate *number of directories*
+        1.  **string** *directory*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *filename*
+            3.  **unit64** *file size*
+            4.  **string** *file extension*
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
+    4.  **uint32** *unknown*  
+        Official clients always send a value of `0`
+    5.  **uint32** *number of private directories*
+    6.  Iterate *number of private directories*
+        1.  **string** *directory*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *filename*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
 
 ## Peer Code 8
 
@@ -2156,11 +2195,11 @@ We send this to the peer when we search for a file. Alternatively, the peer send
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>query</ins>
+    1.  **uint32** *token*
+    2.  **string** *query*
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>query</ins>
+    1.  **uint32** *token*
+    2.  **string** *query*
 
 ## Peer Code 9
 
@@ -2171,61 +2210,75 @@ A peer sends this message when it has a file search match. The token is taken fr
 ### Data Order
 
   - Send
-    1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>token</ins>
-    3.  **uint32** <ins>number of results</ins>
-    4.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>code</ins> *value is always* **1**
-        2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>file size</ins>
-        4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
-        5.  **uint32** <ins>number of attributes</ins>
-        6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-            2.  **uint32** <ins>attribute value</ins>
-    5.  **bool** <ins>slotfree</ins>
-    6.  **uint32** <ins>avgspeed</ins>
-    7.  **uint32** <ins>queue length</ins>
-    8.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
-    9.  **uint32** <ins>number of privately shared results</ins>
-    10. Iterate for <ins>number of privately shared results</ins>
-        1.  **uint8** <ins>code</ins> *value is always 1*
-        2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>file size</ins>
-        4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
-        5.  **uint32** <ins>number of attributes</ins>
-        6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-            2.  **uint32** <ins>attribute value</ins>
+    1.  **string** *username*
+    2.  **uint32** *token*
+    3.  **uint32** *number of results*
+    4.  Iterate for *number of results*
+        1.  **uint8** *code*  
+            Value is always `1`
+        2.  **string** *filename*
+        3.  **uint64** *file size*
+        4.  **string** *file extension*  
+            SoulseekNS requires `mp3` to show attributes
+        5.  **uint32** *number of attributes*
+        6.  Iterate for *number of attributes*
+            1.  **uint32** *attribute code*
+                See [File Attribute Types](#file-attribute-types)
+            2.  **uint32** *attribute value*
+    5.  **bool** *slotfree*
+    6.  **uint32** *avgspeed*
+    7.  **uint32** *queue length*
+    8.  **uint32** *unknown*
+        Official clients always send a value of `0`
+    9.  **uint32** *number of privately shared results*
+    10. Iterate for *number of privately shared results*
+        1.  **uint8** *code*
+            Value is always `1`
+        2.  **string** *filename*
+        3.  **uint64** *file size*
+        4.  **string** *file extension*  
+            SoulseekNS requires `mp3` to show attributes
+        5.  **uint32** *number of attributes*
+        6.  Iterate for *number of attributes*
+            1.  **uint32** *attribute code*
+                See [File Attribute Types](#file-attribute-types)
+            2.  **uint32** *attribute value*
     11. zlib compress
   - Receive
     1.  zlib decompress
-    2.  **string** <ins>username</ins>
-    3.  **uint32** <ins>token</ins>
-    4.  **uint32** <ins>number of results</ins>
-    5.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>code</ins> *value is always* **1**
-        2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>file size</ins>
-        4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
-        5.  **uint32** <ins>number of attributes</ins>
-        6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-            2.  **uint32** <ins>attribute value</ins>
-    6.  **bool** <ins>slotfree</ins>
-    7.  **uint32** <ins>avgspeed</ins>
-    8.  **uint32** <ins>queue length</ins>
-    9.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
-    10.  **uint32** <ins>number of privately shared results</ins>
-    11.  Iterate for <ins>number of privately shared results</ins>
-         1.  **uint8** <ins>code</ins> *value is always 1*
-         2.  **string** <ins>filename</ins>
-         3.  **uint64** <ins>file size</ins>
-         4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
-         5.  **uint32** <ins>number of attributes</ins>
-         6.  Iterate for <ins>number of attributes</ins>
-             1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-             2.  **uint32** <ins>attribute value</ins>
+    2.  **string** *username*
+    3.  **uint32** *token*
+    4.  **uint32** *number of results*
+    5.  Iterate for *number of results*
+        1.  **uint8** *code*
+            Value is always `1`
+        2.  **string** *filename*
+        3.  **uint64** *file size*
+        4.  **string** *file extension*
+            Always blank from SoulseekQt clients
+        5.  **uint32** *number of attributes*
+        6.  Iterate for *number of attributes*
+            1.  **uint32** *attribute code*  
+                See [File Attribute Types](#file-attribute-types)
+            2.  **uint32** *attribute value*
+    6.  **bool** *slotfree*
+    7.  **uint32** *avgspeed*
+    8.  **uint32** *queue length*
+    9.  **uint32** *unknown*  
+        Official clients always send a value of `0`
+    10.  **uint32** *number of privately shared results*
+    11.  Iterate for *number of privately shared results*
+         1.  **uint8** *code*  
+             Value is always `1`
+         2.  **string** *filename*
+         3.  **uint64** *file size*
+         4.  **string** *file extension*
+             Always blank from SoulseekQt clients
+         5.  **uint32** *number of attributes*
+         6.  Iterate for *number of attributes*
+             1.  **uint32** *attribute code*
+                 See [File Attribute Types](#file-attribute-types)
+             2.  **uint32** *attribute value*
 
 ## Peer Code 15
 
@@ -2249,28 +2302,31 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 ### Data Order
 
   - Send
-    1.  **string** <ins>description</ins>
-    2.  Check contents of <ins>picture</ins>
-          - If <ins>picture</ins> is not empty
-            1.  **bool** <ins>has picture</ins> **1**
-            2.  **bytes** <ins>picture</ins>
-          - If <ins>picture</ins> is empty
-            1.  **bool** <ins>has picture</ins> **0**
-    3.  **uint32** <ins>totalupl</ins>
-    4.  **uint32** <ins>queuesize</ins>
-    5.  **bool** <ins>slotsfree</ins> *Can immediately upload*
+    1.  **string** *description*
+    - If *picture* is not empty
+        1.  **bool** *has picture* **True**
+        2.  **bytes** *picture*
+    - If *picture* is empty
+        1.  **bool** *has picture* **False**
+    3.  **uint32** *totalupl*
+    4.  **uint32** *queuesize*
+    5.  **bool** *slotsfree*  
+        Can immediately upload
     6.  Optional (not sent by SoulseekQt)
-        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to us? See [Upload Permissions](#upload-permissions).*
+        1.  **uint32** *uploadpermitted*  
+            Who can upload anything to us? See [Upload Permissions](#upload-permissions).
   - Receive
-    1.  **string** <ins>description</ins>
-    2.  **bool** <ins>has picture</ins>
-    3.  Check contents of <ins>has picture</ins>
-        1.  **bytes** <ins>picture</ins> *if has picture == 1*
-    4.  **uint32** <ins>totalupl</ins>
-    5.  **uint32** <ins>queuesize</ins>
-    6.  **bool** <ins>slotsfree</ins> *Can immediately download*
-    7.  Optional (not sent by SoulseekQt)
-        1.  **uint32** <ins>uploadpermitted</ins> *Who can upload anything to this user? See [Upload Permissions](#upload-permissions).*
+    1.  **string** *description*
+    2.  **bool** *has picture*
+    - If has picture
+        1.  **bytes** *picture*
+    3.  **uint32** *totalupl*
+    4.  **uint32** *queuesize*
+    5.  **bool** *slotsfree*  
+        Can immediately download
+    6.  Optional (not sent by SoulseekQt)
+        1.  **uint32** *uploadpermitted*  
+            Who can upload anything to this user? See [Upload Permissions](#upload-permissions).
 
 ## Peer Code 36
 
@@ -2281,11 +2337,11 @@ We ask the peer to send us the contents of a single folder.
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>folder</ins>
+    1.  **uint32** *token*
+    2.  **string** *folder*
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>folder</ins>
+    1.  **uint32** *token*
+    2.  **string** *folder*
 
 ## Peer Code 37
 
@@ -2296,39 +2352,45 @@ A peer responds with the contents of a particular folder (with all subfolders) a
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **string** <ins>folder</ins>
-    3.  **uint32** <ins>number of folders</ins>
-    4.  Iterate for <ins>number of folders</ins>
-        1.  **string** <ins>dir</ins>
-        2.  **uint32** <ins>number of files</ins>
-        3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always* **1**
-            2.  **string** <ins>file</ins>
-            3.  **uint64** <ins>file size</ins>
-            4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
-            5.  **uint32** <ins>number of attributes</ins>
-            6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-                2.  **uint32** <ins>attribute value</ins>
+    1.  **uint32** *token*
+    2.  **string** *folder*
+    3.  **uint32** *number of folders*
+    4.  Iterate for *number of folders*
+        1.  **string** *dir*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*
+                Value is always `1`
+            2.  **string** *file*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*  
+                Always blank from SoulseekQt clients
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
     5.  zlib compress
   - Receive
     1.  zlib decompress
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>folder</ins>
-    4.  **uint32** <ins>number of folders</ins>
-    5.  Iterate for <ins>number of folders</ins>
-        1.  **string** <ins>dir</ins>
-        2.  **uint32** <ins>number of files</ins>
-        3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always* **1**
-            2.  **string** <ins>file</ins>
-            3.  **uint64** <ins>file size</ins>
-            4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
-            5.  **uint32** <ins>number of attributes</ins>
-            6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
-                2.  **uint32** <ins>attribute value</ins>
+    2.  **uint32** *token*
+    3.  **string** *folder*
+    4.  **uint32** *number of folders*
+    5.  Iterate for *number of folders*
+        1.  **string** *dir*
+        2.  **uint32** *number of files*
+        3.  Iterate *number of files*
+            1.  **uint8** *code*  
+                Value is always `1`
+            2.  **string** *file*
+            3.  **uint64** *file size*
+            4.  **string** *file extension*  
+                Always blank from SoulseekQt clients
+            5.  **uint32** *number of attributes*
+            6.  Iterate for *number of attributes*
+                1.  **uint32** *attribute code*  
+                    See [File Attribute Types](#file-attribute-types)
+                2.  **uint32** *attribute value*
 
 ## Peer Code 40
 
@@ -2341,17 +2403,19 @@ This message was formerly used to send a download request (direction 0) as well,
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>filename</ins>
-    4.  Check contents of <ins>direction</ins>
-          - **uint64** <ins>file size</ins> *if direction == 1 (upload)*
+    1.  **uint32** *direction*  
+        See [Transfer Directions](#transfer-directions)
+    2.  **uint32** *token*
+    3.  **string** *filename*
+    - If direction == 1 (upload)
+        1.  **uint64** *file size*
   - Receive
-    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
-    2.  **uint32** <ins>token</ins>
-    3.  **string** <ins>filename</ins>
-    4.  Check contents of <ins>direction</ins>
-          - **uint64** <ins>file size</ins> *if direction == 1 (upload)*
+    1.  **uint32** *direction*  
+        See [Transfer Directions](#transfer-directions)
+    2.  **uint32** *token*
+    3.  **string** *filename*
+    - If direction == 1 (upload)
+        1.  **uint64** *file size*
 
 ## Peer Code 41 a
 
@@ -2366,17 +2430,21 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **bool** <ins>allowed</ins>
-    3.  Check contents of <ins>allowed</ins>
-          - **uint64** <ins>file size</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **uint32** *token*
+    2.  **bool** *allowed*
+    - If allowed is true
+        1.  **uint64** *file size*
+    - If allowed is false
+        1.  **string** *reason*
+            See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **bool** <ins>allowed</ins>
-    3.  Check contents of <ins>allowed</ins>
-          - **uint64** <ins>file size</ins> *if allowed == 1*
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **uint32** *token*
+    2.  **bool** *allowed*
+    - If allowed is true
+        1.  **uint64** *file size*
+    - If allowed is false
+        1.  **string** *reason*
+            See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 41 b
 
@@ -2389,15 +2457,17 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>token</ins>
-    2.  **bool** <ins>allowed</ins>
-    3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **uint32** *token*
+    2.  **bool** *allowed*
+    - If allowed is false
+        1.  **string** *reason*
+            See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
-    1.  **uint32** <ins>token</ins>
-    2.  **bool** <ins>allowed</ins>
-    3.  Check contents of <ins>allowed</ins>
-          - **string** <ins>reason</ins> *if allowed == 0* ; *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **uint32** *token*
+    2.  **bool** *allowed*
+    - If allowed is false
+        1.  **string** *reason*
+            See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 42
 
@@ -2408,9 +2478,9 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
   - Receive
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
 
 ## Peer Code 43
 
@@ -2421,9 +2491,9 @@ This message is used to tell a peer that an upload should be queued on their end
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
   - Receive
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
 
 ## Peer Code 44
 
@@ -2434,11 +2504,11 @@ The peer replies with the upload queue placement of the requested file.
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
-    2.  **uint32** <ins>place</ins>
+    1.  **string** *filename*
+    2.  **uint32** *place*
   - Receive
-    1.  **string** <ins>filename</ins>
-    2.  **uint32** <ins>place</ins>
+    1.  **string** *filename*
+    2.  **uint32** *place*
 
 ## Peer Code 46
 
@@ -2449,9 +2519,9 @@ This message is sent whenever a file connection of an active upload closes. Soul
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
   - Receive
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
 
 ## Peer Code 50
 
@@ -2462,11 +2532,13 @@ This message is sent to reject [QueueUpload](#peer-code-43) attempts and previou
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **string** *filename*
+    2.  **string** *reason*  
+        See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
-    1.  **string** <ins>filename</ins>
-    2.  **string** <ins>reason</ins> *see [Transfer Rejection Reasons](#transfer-rejection-reasons)*
+    1.  **string** *filename*
+    2.  **string** *reason*  
+        See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 51
 
@@ -2477,9 +2549,9 @@ This message is sent when asking for the upload queue placement of a file.
 ### Data Order
 
   - Send
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
   - Receive
-    1.  **string** <ins>filename</ins>
+    1.  **string** *filename*
 
 ## Peer Code 52
 
@@ -2524,9 +2596,9 @@ Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send th
 ### Data Order
 
   - Send
-      - **uint32** <ins>token</ins>
+      - **uint32** *token*
   - Receive
-      - **uint32** <ins>token</ins>
+      - **uint32** *token*
 
 ## File Offset
 
@@ -2539,9 +2611,9 @@ Note that Soulseek NS fails to read the size of an incomplete download if more t
 ### Data Order
 
   - Send
-      - **uint64** <ins>offset</ins>
+      - **uint64** *offset*
   - Receive
-      - **uint64** <ins>offset</ins>
+      - **uint64** *offset*
 
 # Distributed Messages
 
@@ -2588,15 +2660,15 @@ Search request that arrives through the distributed network. We transmit the sea
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>unknown</ins>
-    2.  **string** <ins>username</ins>
-    3.  **uint32** <ins>token</ins>
-    4.  **string** <ins>query</ins>
+    1.  **uint32** *unknown*
+    2.  **string** *username*
+    3.  **uint32** *token*
+    4.  **string** *query*
   - Receive
-    1.  **uint32** <ins>unknown</ins>
-    2.  **string** <ins>username</ins>
-    3.  **uint32** <ins>token</ins>
-    4.  **string** <ins>query</ins>
+    1.  **uint32** *unknown*
+    2.  **string** *username*
+    3.  **uint32** *token*
+    4.  **string** *query*
 
 ## Distributed Code 4
 
@@ -2609,9 +2681,9 @@ If we receive a branch level of 0 from a parent, we should mark the parent as ou
 ### Data Order
 
   - Send
-    1.  **int32** <ins>branch level</ins>
+    1.  **int32** *branch level*
   - Receive
-    1.  **int32** <ins>branch level</ins>
+    1.  **int32** *branch level*
 
 ## Distributed Code 5
 
@@ -2624,9 +2696,9 @@ This message should not be sent when we're the branch root.
 ### Data Order
 
   - Send
-    1.  **string** <ins>branch root</ins>
+    1.  **string** *branch root*
   - Receive
-    1.  **string** <ins>branch root</ins>
+    1.  **string** *branch root*
 
 ## Distributed Code 7
 
@@ -2639,9 +2711,9 @@ We tell our distributed parent the maximum number of generation of children we h
 ### Data Order
 
   - Send
-    1.  **uint32** <ins>child depth</ins>
+    1.  **uint32** *child depth*
   - Receive
-    1.  **uint32** <ins>child depth</ins>
+    1.  **uint32** *child depth*
 
 ## Distributed Code 93
 
@@ -2654,11 +2726,15 @@ The only type of distributed message sent at present is [DistribSearch](#distrib
 ### Data Order
 
   - Send
-    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
-    2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
+    1.  **uint8** *distributed code*  
+        See [Distributed Message Codes](#distributed-message-codes)
+    2.  **bytes** *distributed message*  
+        Raw message associated with distributed code
   - Receive
-    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
-    2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
+    1.  **uint8** *distributed code*  
+        See [Distributed Message Codes](#distributed-message-codes)
+    2.  **bytes** *distributed message*  
+        Raw message associated with distributed code
 
 # Credits
 
