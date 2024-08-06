@@ -1,7 +1,7 @@
 # Nicotine+
 
-<img src="data/icons/icon.svg" alt="Nicotine+ Logo" width="128" height="128"
- style="float: right; margin: 0 10px">
+<img src="data/icons/icon.svg" alt="Nicotine+ Logo" align="right"
+ width="128" height="128">
 
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/)
 peer-to-peer network.
