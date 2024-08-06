@@ -77,7 +77,7 @@ Soulseek is an unencrypted protocol not intended for secure communication.
 ## Authors
 
 Nicotine+ is free and open source software, released under the terms of the
-[GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
-or later. Nicotine+ exists thanks to its [authors](AUTHORS.md).
+[GNU General Public License v3.0 or later](https://www.gnu.org/licenses/gpl-3.0-standalone.html).
+Nicotine+ exists thanks to its [authors](AUTHORS.md).
 
 © 2001–2024 Nicotine+, Nicotine and PySoulSeek Contributors
