@@ -56,9 +56,9 @@ I stumbled across this quote:
 >> **\<etc>** then i would have a reason to only apply one patch a day.
 >> otherwise, i'm going against medical advise.  
 >
-> So I thought what the hell and bluntly stole etc's idea.  
+> So I thought what the hell and bluntly stole etc's idea.
 
-<p align="right">Hyriand, <i>former Nicotine maintainer</i>, 2003</p>
+— <cite>Hyriand, former Nicotine maintainer, 2003</cite>
 
 
 ## Legal and Privacy
