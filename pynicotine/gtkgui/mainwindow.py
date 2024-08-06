@@ -972,6 +972,17 @@ class MainWindow(Window):
     def on_search(self, *_args):
         self.search.on_search()
 
+    def on_search_entry_changed(self, entry, *_args):
+        entry.props.secondary_icon_name = "edit-clear-symbolic" if entry.get_text() else None
+
+    def on_search_entry_icon_press(self, entry, icon_pos, *_args):
+
+        if icon_pos == Gtk.EntryIconPosition.SECONDARY:
+            entry.set_text("")
+            return
+
+        self.on_search()
+
     # User Info #
 
     def on_show_user_profile(self, *_args):
