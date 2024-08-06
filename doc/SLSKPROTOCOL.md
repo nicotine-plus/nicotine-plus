@@ -179,8 +179,8 @@ but it handles the protocol well enough (and can be modified).
 | 5    | [Watch User](#server-code-5)                                   |
 | 6    | [Unwatch User](#server-code-6)                                 |
 | 7    | [Get User Status](#server-code-7)                              |
-| 11   | [Ignore User](#server-code-11) `Obsolete`                      |
-| 12   | [Unignore User](#server-code-12) `Obsolete`                    |
+| 11   | [Ignore User](#server-code-11) `OBSOLETE`                      |
+| 12   | [Unignore User](#server-code-12) `OBSOLETE`                    |
 | 13   | [Say in Chat Room](#server-code-13)                            |
 | 14   | [Join Room](#server-code-14)                                   |
 | 15   | [Leave Room](#server-code-15)                                  |
@@ -189,72 +189,72 @@ but it handles the protocol well enough (and can be modified).
 | 18   | [Connect To Peer](#server-code-18)                             |
 | 22   | [Private Messages](#server-code-22)                            |
 | 23   | [Acknowledge Private Message](#server-code-23)                 |
-| 25   | [File Search Room](#server-code-25) `Obsolete`                 |
+| 25   | [File Search Room](#server-code-25) `OBSOLETE`                 |
 | 26   | [File Search](#server-code-26)                                 |
 | 28   | [Set Online Status](#server-code-28)                           |
 | 32   | [Ping](#server-code-32)                                        |
-| 33   | [Send Connect Token](#server-code-33) `Obsolete`               |
-| 34   | [Send Download Speed](#server-code-34) `Obsolete`              |
+| 33   | [Send Connect Token](#server-code-33) `OBSOLETE`               |
+| 34   | [Send Download Speed](#server-code-34) `OBSOLETE`              |
 | 35   | [Shared Folders & Files](#server-code-35)                      |
 | 36   | [Get User Stats](#server-code-36)                              |
-| 40   | [Queued Downloads](#server-code-40) `Obsolete`                 |
+| 40   | [Queued Downloads](#server-code-40) `OBSOLETE`                 |
 | 41   | [Kicked from Server](#server-code-41)                          |
 | 42   | [User Search](#server-code-42)                                 |
-| 51   | [Interest Add](#server-code-51) `Deprecated`                   |
-| 52   | [Interest Remove](#server-code-52) `Deprecated`                |
-| 54   | [Get Recommendations](#server-code-54) `Deprecated`            |
-| 56   | [Get Global Recommendations](#server-code-56) `Deprecated`     |
-| 57   | [Get User Interests](#server-code-57) `Deprecated`             |
-| 58   | [Admin Command](#server-code-58) `Obsolete`                    |
-| 60   | [Place In Line Response](#server-code-60) `Obsolete`           |
-| 62   | [Room Added](#server-code-62) `Obsolete`                       |
-| 63   | [Room Removed](#server-code-63) `Obsolete`                     |
+| 51   | [Interest Add](#server-code-51) `DEPRECATED`                   |
+| 52   | [Interest Remove](#server-code-52) `DEPRECATED`                |
+| 54   | [Get Recommendations](#server-code-54) `DEPRECATED`            |
+| 56   | [Get Global Recommendations](#server-code-56) `DEPRECATED`     |
+| 57   | [Get User Interests](#server-code-57) `DEPRECATED`             |
+| 58   | [Admin Command](#server-code-58) `OBSOLETE`                    |
+| 60   | [Place In Line Response](#server-code-60) `OBSOLETE`           |
+| 62   | [Room Added](#server-code-62) `OBSOLETE`                       |
+| 63   | [Room Removed](#server-code-63) `OBSOLETE`                     |
 | 64   | [Room List](#server-code-64)                                   |
-| 65   | [Exact File Search](#server-code-65) `Obsolete`                |
+| 65   | [Exact File Search](#server-code-65) `OBSOLETE`                |
 | 66   | [Global/Admin Message](#server-code-66)                        |
-| 67   | [Global User List](#server-code-67) `Obsolete`                 |
-| 68   | [Tunneled Message](#server-code-68) `Obsolete`                 |
+| 67   | [Global User List](#server-code-67) `OBSOLETE`                 |
+| 68   | [Tunneled Message](#server-code-68) `OBSOLETE`                 |
 | 69   | [Privileged Users](#server-code-69)                            |
 | 71   | [Have No Parents](#server-code-71)                             |
-| 73   | [Parent's IP](#server-code-73) `Deprecated`                    |
+| 73   | [Parent's IP](#server-code-73) `DEPRECATED`                    |
 | 83   | [Parent Min Speed](#server-code-83)                            |
 | 84   | [Parent Speed Ratio](#server-code-84)                          |
-| 86   | [Parent Inactivity Timeout](#server-code-86) `Obsolete`        |
-| 87   | [Search Inactivity Timeout](#server-code-87) `Obsolete`        |
-| 88   | [Minimum Parents In Cache](#server-code-88) `Obsolete`         |
-| 90   | [Distributed Ping Interval](#server-code-90) `Obsolete`        |
-| 91   | [Add Privileged User](#server-code-91) `Obsolete`              |
+| 86   | [Parent Inactivity Timeout](#server-code-86) `OBSOLETE`        |
+| 87   | [Search Inactivity Timeout](#server-code-87) `OBSOLETE`        |
+| 88   | [Minimum Parents In Cache](#server-code-88) `OBSOLETE`         |
+| 90   | [Distributed Ping Interval](#server-code-90) `OBSOLETE`        |
+| 91   | [Add Privileged User](#server-code-91) `OBSOLETE`              |
 | 92   | [Check Privileges](#server-code-92)                            |
 | 93   | [Embedded Message](#server-code-93)                            |
 | 100  | [Accept Children](#server-code-100)                            |
 | 102  | [Possible Parents](#server-code-102)                           |
 | 103  | [Wishlist Search](#server-code-103)                            |
 | 104  | [Wishlist Interval](#server-code-104)                          |
-| 110  | [Get Similar Users](#server-code-110) `Deprecated`             |
-| 111  | [Get Item Recommendations](#server-code-111) `Deprecated`      |
-| 112  | [Get Item Similar Users](#server-code-112) `Deprecated`        |
+| 110  | [Get Similar Users](#server-code-110) `DEPRECATED`             |
+| 111  | [Get Item Recommendations](#server-code-111) `DEPRECATED`      |
+| 112  | [Get Item Similar Users](#server-code-112) `DEPRECATED`        |
 | 113  | [Room Tickers](#server-code-113)                               |
 | 114  | [Room Ticker Add](#server-code-114)                            |
 | 115  | [Room Ticker Remove](#server-code-115)                         |
 | 116  | [Set Room Ticker](#server-code-116)                            |
-| 117  | [Hated Interest Add](#server-code-117) `Deprecated`            |
-| 118  | [Hated Interest Remove](#server-code-118) `Deprecated`         |
+| 117  | [Hated Interest Add](#server-code-117) `DEPRECATED`            |
+| 118  | [Hated Interest Remove](#server-code-118) `DEPRECATED`         |
 | 120  | [Room Search](#server-code-120)                                |
 | 121  | [Send Upload Speed](#server-code-121)                          |
-| 122  | [User Privileges](#server-code-122) `Deprecated`               |
+| 122  | [User Privileges](#server-code-122) `DEPRECATED`               |
 | 123  | [Give Privileges](#server-code-123)                            |
-| 124  | [Notify Privileges](#server-code-124) `Deprecated`             |
-| 125  | [Acknowledge Notify Privileges](#server-code-125) `Deprecated` |
+| 124  | [Notify Privileges](#server-code-124) `DEPRECATED`             |
+| 125  | [Acknowledge Notify Privileges](#server-code-125) `DEPRECATED` |
 | 126  | [Branch Level](#server-code-126)                               |
 | 127  | [Branch Root](#server-code-127)                                |
-| 129  | [Child Depth](#server-code-129) `Deprecated`                   |
+| 129  | [Child Depth](#server-code-129) `DEPRECATED`                   |
 | 130  | [Reset Distributed](#server-code-130)                          |
 | 133  | [Private Room Users](#server-code-133)                         |
 | 134  | [Private Room Add User](#server-code-134)                      |
 | 135  | [Private Room Remove User](#server-code-135)                   |
 | 136  | [Private Room Cancel Membership](#server-code-136)             |
 | 137  | [Private Room Disown](#server-code-137)                        |
-| 138  | [Private Room Unknown](#server-code-138) `Obsolete`            |
+| 138  | [Private Room Unknown](#server-code-138) `OBSOLETE`            |
 | 139  | [Private Room Added](#server-code-139)                         |
 | 140  | [Private Room Removed](#server-code-140)                       |
 | 141  | [Private Room Toggle](#server-code-141)                        |
@@ -265,10 +265,10 @@ but it handles the protocol well enough (and can be modified).
 | 146  | [Private Room Operator Removed](#server-code-146)              |
 | 148  | [Private Room Operators](#server-code-148)                     |
 | 149  | [Message Users](#server-code-149)                              |
-| 150  | [Join Global Room](#server-code-150) `Deprecated`              |
-| 151  | [Leave Global Room](#server-code-151) `Deprecated`             |
-| 152  | [Global Room Message](#server-code-152) `Deprecated`           |
-| 153  | [Related Searches](#server-code-153) `Obsolete`                |
+| 150  | [Join Global Room](#server-code-150) `DEPRECATED`              |
+| 151  | [Leave Global Room](#server-code-151) `DEPRECATED`             |
+| 152  | [Global Room Message](#server-code-152) `DEPRECATED`           |
+| 153  | [Related Searches](#server-code-153) `OBSOLETE`                |
 | 160  | [Excluded Search Phrases](#server-code-160)                    |
 | 1001 | [Can't Connect To Peer](#server-code-1001)                     |
 | 1003 | [Can't Create Room](#server-code-1003)                         |
@@ -2097,32 +2097,32 @@ Peer messages are sent to peers over a 'P' connection (TCP). Only a single activ
 
 | Code | Message                                                 |
 |------|---------------------------------------------------------|
-| 1    | Private Message `Obsolete`                              |
+| 1    | Private Message `OBSOLETE`                              |
 | 4    | [Shared File List Request](#peer-code-4)                |
 | 5    | [Shared File List Response](#peer-code-5)               |
-| 8    | [File Search Request](#peer-code-8) `Obsolete`          |
+| 8    | [File Search Request](#peer-code-8) `OBSOLETE`          |
 | 9    | [File Search Response](#peer-code-9)                    |
-| 10   | Room Invitation `Obsolete`                              |
-| 14   | Cancelled Queued Transfer `Obsolete`                    |
+| 10   | Room Invitation `OBSOLETE`                              |
+| 14   | Cancelled Queued Transfer `OBSOLETE`                    |
 | 15   | [User Info Request](#peer-code-15)                      |
 | 16   | [User Info Response](#peer-code-16)                     |
-| 33   | Send Connect Token `Obsolete`                           |
-| 34   | Move Download To Top `Obsolete`                         |
+| 33   | Send Connect Token `OBSOLETE`                           |
+| 34   | Move Download To Top `OBSOLETE`                         |
 | 36   | [Folder Contents Request](#peer-code-36)                |
 | 37   | [Folder Contents Response](#peer-code-37)               |
 | 40   | [Transfer Request](#peer-code-40)                       |
-| 41   | [Download Response](#peer-code-41-a) `Deprecated`       |
+| 41   | [Download Response](#peer-code-41-a) `DEPRECATED`       |
 | 41   | [Upload Response](#peer-code-41-b)                      |
-| 42   | [Upload Placehold](#peer-code-42) `Obsolete`            |
+| 42   | [Upload Placehold](#peer-code-42) `OBSOLETE`            |
 | 43   | [Queue Upload](#peer-code-43)                           |
 | 44   | [Place In Queue Response](#peer-code-44)                |
 | 46   | [Upload Failed](#peer-code-46)                          |
-| 47   | Exact File Search Request `Obsolete`                    |
-| 48   | Queued Downloads `Obsolete`                             |
-| 49   | Indirect File Search Request `Obsolete`                 |
+| 47   | Exact File Search Request `OBSOLETE`                    |
+| 48   | Queued Downloads `OBSOLETE`                             |
+| 49   | Indirect File Search Request `OBSOLETE`                 |
 | 50   | [Upload Denied](#peer-code-50)                          |
 | 51   | [Place In Queue Request](#peer-code-51)                 |
-| 52   | [Upload Queue Notification](#peer-code-52) `Deprecated` |
+| 52   | [Upload Queue Notification](#peer-code-52) `DEPRECATED` |
 
 ## Peer Code 4
 
@@ -2629,11 +2629,11 @@ Distributed messages are sent to peers over a 'D' connection (TCP), and are used
 
 | Code | Message                                               |
 |------|-------------------------------------------------------|
-| 0    | [Ping](#distributed-code-0) `Deprecated`              |
+| 0    | [Ping](#distributed-code-0) `DEPRECATED`              |
 | 3    | [Search Request](#distributed-code-3)                 |
 | 4    | [Branch Level](#distributed-code-4)                   |
 | 5    | [Branch Root](#distributed-code-5)                    |
-| 7    | [Child Depth](#distributed-code-7) `Deprecated`       |
+| 7    | [Child Depth](#distributed-code-7) `DEPRECATED`       |
 | 93   | [Embedded Message](#distributed-code-93)              |
 
 ## Distributed Code 0
