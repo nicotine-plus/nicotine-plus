@@ -21,7 +21,7 @@ using the package manager.
 | [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`          |
 | [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
-| [Manjaro](https://software.manjaro.org/package/nicotine+)                               | `nicotine+`         |
+| [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                         | `nicotine+`         |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
 | [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
 | [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                    | `nicotine+`         |
