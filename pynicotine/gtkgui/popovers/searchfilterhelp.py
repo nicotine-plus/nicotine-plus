@@ -29,6 +29,6 @@ class SearchFilterHelp(Popover):
         super().__init__(
             window=window,
             content_box=self.container,
-            width=600,
-            height=500
+            width=500,
+            height=375
         )
