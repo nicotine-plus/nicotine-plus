@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-07-02 13:09+0000\n"
-"Last-Translator: Lucas Vieites <lucasvieites@gmail.com>\n"
+"PO-Revision-Date: 2024-08-07 19:33+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -4040,9 +4040,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "No se puede conectar al servidor %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1103
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %s seconds"
-msgstr "Reconexión al servidor en %i segundo(s)"
+msgstr "Reconexión al servidor en %s segundo(s)"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
