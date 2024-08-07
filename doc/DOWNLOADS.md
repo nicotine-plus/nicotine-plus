@@ -23,7 +23,6 @@ using the package manager.
 | [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
 | [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                         | `nicotine+`         |
 | [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
-| [OpenBSD](https://openports.pl/path/net/nicotine-plus)                                  | `net/nicotine-plus` |
 | [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                    | `nicotine+`         |
 | [Solus](https://github.com/getsolus/packages/tree/main/packages/n/nicotine-plus)        | `nicotine-plus`     |
 | [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
