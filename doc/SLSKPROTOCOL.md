@@ -145,15 +145,15 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 These combinations are actively used by clients. Certain attributes can be missing if a file does not provide them.
 
   - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+ (lossy formats), Museek+, SoulSeeX, slskd (lossy formats):
-      - `{0: bitrate, 1: duration, 2: VBR}`
+    -   `{0: bitrate, 1: duration, 2: VBR}`
 
   - SoulseekQt (2015-6-12 and later):
-      - `{0: bitrate, 1: duration}` (MP3, OGG, WMA, M4A)
-      - `{1: duration, 4: sample rate, 5: bit depth}` (FLAC, WAV, APE)
-      - `{0: bitrate, 1: duration, 4: sample rate, 5: bit depth}` (WV)
+    -   `{0: bitrate, 1: duration}` (MP3, OGG, WMA, M4A)
+    -   `{1: duration, 4: sample rate, 5: bit depth}` (FLAC, WAV, APE)
+    -   `{0: bitrate, 1: duration, 4: sample rate, 5: bit depth}` (WV)
 
   - Nicotine+ (lossless formats), slskd (lossless formats):
-      - `{1: duration, 4: sample rate, 5: bit depth}`
+    -   `{1: duration, 4: sample rate, 5: bit depth}`
 
 # Server Messages
 
@@ -315,17 +315,17 @@ We send this to the server right after the connection has been established. Serv
         `0x13000000` for 157 ns 13e, `0x11000000` for 157 ns 13c
   - Receive
     1.  **bool** *success*
-    -   If *success* is true
-        -   **string** *greet*  
+    2.  If *success* is true
+        1.  **string** *greet*  
             MOTD string
-        -   **uint32** *own IP address*
-        -   **string** *hash*  
+        2.  **uint32** *own IP address*
+        3.  **string** *hash*  
             MD5 hex digest of the password string
-        -   **bool** *is supporter*  
+        4.  **bool** *is supporter*  
             If we have donated to Soulseek at some point in the past
-    -   If *success* is false
-        -   **bool** *failure*
-        -   **string** *reason*
+    3.  If *success* is false
+        1.  **bool** *failure*
+        2.  **string** *reason*
             See [Login Failure Reasons](#login-failure-reasons)
 
 ## Server Code 2
@@ -343,7 +343,7 @@ If this value is set to zero, or the message is not sent upon login (which defau
         SoulseekQt uses a value of `1`
     3.  **uint32** *obfuscated port*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 3
 
@@ -381,17 +381,17 @@ As a consequence, stats can be outdated.
   - Receive
     1.  **string** *username*
     2.  **bool** *exists*
-    -   If *exists* is true
-        -   **uint32** *status*  
+    3.  If *exists* is true
+        1.  **uint32** *status*  
             See [User Status Codes](#user-status-codes)
-        -   **uint32** *avgspeed*
-        -   **uint32** *uploadnum*  
+        2.  **uint32** *avgspeed*
+        3.  **uint32** *uploadnum*  
             Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.
-        -   **uint32** *unknown*
-        -   **uint32** *files*
-        -   **uint32** *dirs*
-        -   If *status* is away/online
-            -   **string** *countrycode*  
+        4.  **uint32** *unknown*
+        5.  **uint32** *files*
+        6.  **uint32** *dirs*
+        7.  If *status* is away/online
+            1.  **string** *countrycode*  
                 Uppercase country code
 
 ## Server Code 6
@@ -405,7 +405,7 @@ Used when we no longer want to be kept updated about a user's status.
   - Send
     1.  **string** *username*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 7
 
@@ -555,7 +555,7 @@ The server tells us someone has just joined a room we're in.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **string** *username*
@@ -578,7 +578,7 @@ The server tells us someone has just left a room we're in.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **string** *username*
@@ -643,7 +643,7 @@ We send this to the server to confirm that we received a private message. If we 
   - Send
     1.  **uint32** *message ID*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 25
 
@@ -660,7 +660,7 @@ We send this to the server when we search for something in a room.
     2. **uint32** *room id*
     3. **string** *search query*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 26
 
@@ -699,7 +699,7 @@ message when enabling away status, but not when disabling it.
     1.  **int32** *status*  
         See [User Status Codes](#user-status-codes)
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 32
 
@@ -712,9 +712,9 @@ Nicotine+ uses TCP keepalive instead.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 33
 
@@ -745,7 +745,7 @@ We used to send this after a finished download to let the server update the spee
     1.  **string** *username*
     2.  **uint32** *speed*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 35
 
@@ -759,7 +759,7 @@ We send this to server to indicate the number of folder and files that we share.
     1.  **uint32** *dirs*
     2.  **uint32** *files*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 36
 
@@ -790,7 +790,7 @@ The server sends this to indicate if someone has download slots available or not
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *username*
     2.  **bool** *slotsfree*  
@@ -805,9 +805,9 @@ The server sends this if someone else logged in under our nickname, and then dis
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
-      - Empty Message
+    -   Empty Message
 
 ## Server Code 42
 
@@ -822,7 +822,7 @@ We send this to the server when we search a specific user's shares. The token is
     2.  **uint32** *token*
     3.  **string** *search query*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 51
 
@@ -837,7 +837,7 @@ We send this to the server when we add an item to our likes list.
   - Send
     1.  **string** *item*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 52
 
@@ -852,7 +852,7 @@ We send this to the server when we remove an item from our likes list.
   - Send
     1.  **string** *item*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 54
 
@@ -865,7 +865,7 @@ The server sends us a list of personal recommendations and a number for each.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *number of total recommendations*
     2.  Iterate for *number of total recommendations*
@@ -887,7 +887,7 @@ The server sends us a list of global recommendations and a number for each.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *number of total recommendations*
     2.  Iterate for *number of total recommendations*
@@ -935,7 +935,7 @@ We send this to the server to run an admin command (e.g. to ban or silence a use
     3.  Iterate for *number of command arguments*
         1.  **string** *command argument*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 60
 
@@ -967,7 +967,7 @@ The server tells us a new room has been added.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -982,7 +982,7 @@ The server tells us a room has been removed.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -995,7 +995,7 @@ The server tells us a list of rooms and the number of users in them. When connec
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *number of rooms*
     2.  Iterate for *number of rooms*
@@ -1053,7 +1053,7 @@ A global message from the server admin has arrived.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *message*
 
@@ -1068,7 +1068,7 @@ We send this to get a global list of all users online.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *number of users in room*
     2.  Iterate for *number of users*
@@ -1123,7 +1123,7 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *number of users*
     2.  Iterate *number of users*
@@ -1140,7 +1140,7 @@ We inform the server if we have a distributed parent or not. If not, the server 
   - Send
     1.  **bool** *have parents*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 73
 
@@ -1155,7 +1155,7 @@ We send the IP address of our parent to the server.
   - Send
     1.  **ip** *ip*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 83
 
@@ -1166,7 +1166,7 @@ The server informs us about the minimum upload speed required to become a parent
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *speed*
 
@@ -1179,7 +1179,7 @@ The server sends us a speed ratio determining the number of children we can have
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *ratio*
 
@@ -1192,7 +1192,7 @@ The server sends us a speed ratio determining the number of children we can have
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *seconds*
 
@@ -1205,7 +1205,7 @@ The server sends us a speed ratio determining the number of children we can have
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *seconds*
 
@@ -1218,7 +1218,7 @@ The server sends us a speed ratio determining the number of children we can have
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *number*
 
@@ -1231,7 +1231,7 @@ The server sends us a speed ratio determining the number of children we can have
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *seconds*
 
@@ -1246,7 +1246,7 @@ The server sends us the username of a new privileged user, which we add to our l
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *username*
 
@@ -1259,7 +1259,7 @@ We ask the server how much time we have left of our privileges. The server respo
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *time left*
 
@@ -1272,7 +1272,7 @@ The server sends us an embedded distributed message. The only type of distribute
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint8** *distributed code*  
         See [Distributed Message Codes](#distributed-message-codes)
@@ -1290,7 +1290,7 @@ We tell the server if we want to accept child nodes.
   - Send
     1.  **bool** *accept*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 102
 
@@ -1303,7 +1303,7 @@ The received list always contains users whose upload speed is higher than our ow
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *number of parents*
     2.  Iterate for *number of parents*
@@ -1323,7 +1323,7 @@ We send the server one of our wishlist search queries at each interval.
     1.  **uint32** *token*
     2.  **string** *search query*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 104
 
@@ -1336,7 +1336,7 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *interval*
 
@@ -1351,7 +1351,7 @@ The server sends us a list of similar users related to our interests.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
     1.  **uint32** *number of users*
     2.  Iterate for *number of user*
@@ -1406,7 +1406,7 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of users*
@@ -1425,7 +1425,7 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **string** *username*
@@ -1442,7 +1442,7 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **string** *username*
@@ -1461,7 +1461,7 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
     1.  **string** *room*
     2.  **string** *ticker*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 117
 
@@ -1476,7 +1476,7 @@ We send this to the server when we add an item to our hate list.
   - Send
     1.  **string** *item*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 118
 
@@ -1491,7 +1491,7 @@ We send this to the server when we remove an item from our hate list.
   - Send
     1.  **string** *item*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 120
 
@@ -1508,7 +1508,7 @@ The token is a number generated by the client and is used to track the search re
     2.  **uint32** *token*
     3.  **string** *search query*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 121
 
@@ -1521,7 +1521,7 @@ We send this after a finished upload to let the server update the speed statisti
   - Send
     1.  **uint32** *speed*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 122
 
@@ -1551,7 +1551,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
     1.  **string** *username*
     2.  **uint32** *days*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 124
 
@@ -1592,7 +1592,7 @@ We tell the server what our position is in our branch (xth generation) on the di
   - Send
     1.  **uint32** *branch level*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 127
 
@@ -1605,7 +1605,7 @@ We tell the server the username of the root of the branch we're in on the distri
   - Send
     1.  **string** *branch root*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 129
 
@@ -1620,7 +1620,7 @@ We tell the server the maximum number of generation of children we have on the d
   - Send
     1.  **uint32** *child depth*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 130
 
@@ -1631,9 +1631,9 @@ The server asks us to reset our distributed parent and children.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
-      - Empty Message
+    -   Empty Message
 
 ## Server Code 133
 
@@ -1700,7 +1700,7 @@ We send this to the server to cancel our own membership of a private room.
   - Send
     1.  **string** *room*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 137
 
@@ -1713,7 +1713,7 @@ We send this to the server to stop owning a private room.
   - Send
     1.  **string** *room*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 138
 
@@ -1739,7 +1739,7 @@ The server tells us we were added to a private room.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -1752,7 +1752,7 @@ The server tells us we were removed from a private room.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -1830,7 +1830,7 @@ we are in.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -1844,7 +1844,7 @@ we are in.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -1857,7 +1857,7 @@ The server sends us a list of operators in a private room we are in.
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **uint32** *number of operators in room*
@@ -1878,7 +1878,7 @@ Sends a broadcast private message to the given list of online users.
         1.  **string** *username*
     3.  **string** *message*
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 150
 
@@ -1891,9 +1891,9 @@ We ask the server to send us messages from all public rooms, also known as publi
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 151
 
@@ -1906,9 +1906,9 @@ We ask the server to stop sending us messages from all public rooms, also known 
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - *No Message*
+    -   *No Message*
 
 ## Server Code 152
 
@@ -1921,7 +1921,7 @@ The server sends this when a new message has been written in the public room fee
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
     2.  **string** *username*
@@ -1955,7 +1955,7 @@ The server sends a list of phrases not allowed on the search network. File paths
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **uint32** *number of phrases*
     2.  Iterate for *number of phrases*
@@ -1995,7 +1995,7 @@ This message only seems to be sent if we try to create a room with the same name
 ### Data Order
 
   - Send
-      - *No Message*
+    -   *No Message*
   - Receive
     1.  **string** *room*
 
@@ -2135,9 +2135,9 @@ We send this to a peer to ask for a list of shared files.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - Empty Message
+    -   Empty Message
 
 ## Peer Code 5
 
@@ -2291,9 +2291,9 @@ We ask the other peer to send us their user information, picture and all.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - Empty Message
+    -   Empty Message
 
 ## Peer Code 16
 
@@ -2305,28 +2305,28 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 
   - Send
     1.  **string** *description*
-    -   If *picture* is not empty
-        -   **bool** *has picture* **True**
-        -   **bytes** *picture*
-    -   If *picture* is empty
-        -   **bool** *has picture* **False**
-    3.  **uint32** *totalupl*
-    4.  **uint32** *queuesize*
-    5.  **bool** *slotsfree*  
+    2.  If *picture* is not empty
+        1.  **bool** *has picture* **True**
+        2.  **bytes** *picture*
+    3.  If *picture* is empty
+        1.  **bool** *has picture* **False**
+    4.  **uint32** *totalupl*
+    5.  **uint32** *queuesize*
+    6.  **bool** *slotsfree*  
         Can immediately upload
-    6.  Optional (not sent by SoulseekQt)
+    7.  Optional (not sent by SoulseekQt)
         1.  **uint32** *uploadpermitted*  
             Who can upload anything to us? See [Upload Permissions](#upload-permissions).
   - Receive
     1.  **string** *description*
     2.  **bool** *has picture*
-    -   If has picture
-        -   **bytes** *picture*
-    3.  **uint32** *totalupl*
-    4.  **uint32** *queuesize*
-    5.  **bool** *slotsfree*  
+    3.  If has picture
+        1.  **bytes** *picture*
+    4.  **uint32** *totalupl*
+    5.  **uint32** *queuesize*
+    6.  **bool** *slotsfree*  
         Can immediately download
-    6.  Optional (not sent by SoulseekQt)
+    7.  Optional (not sent by SoulseekQt)
         1.  **uint32** *uploadpermitted*  
             Who can upload anything to this user? See [Upload Permissions](#upload-permissions).
 
@@ -2409,15 +2409,15 @@ This message was formerly used to send a download request (direction 0) as well,
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
     3.  **string** *filename*
-    -   If direction == 1 (upload)
-        -   **uint64** *file size*
+    4.  If direction == 1 (upload)
+        1.  **uint64** *file size*
   - Receive
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
     3.  **string** *filename*
-    -   If direction == 1 (upload)
-        -   **uint64** *file size*
+    4.  If direction == 1 (upload)
+        1.  **uint64** *file size*
 
 ## Peer Code 41 a
 
@@ -2434,18 +2434,18 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
   - Send
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    -   If allowed is true
-        -   **uint64** *file size*
-    -   If allowed is false
-        -   **string** *reason*  
+    3.  If allowed is true
+        1.  **uint64** *file size*
+    4.  If allowed is false
+        1.  **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    -   If allowed is true
-        -   **uint64** *file size*
-    -   If allowed is false
-        -   **string** *reason*  
+    3.  If allowed is true
+        1.  **uint64** *file size*
+    4.  If allowed is false
+        1.  **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 41 b
@@ -2461,14 +2461,14 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
   - Send
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    -   If allowed is false
-        -   **string** *reason*  
+    3.  If allowed is false
+        1.  **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    -   If allowed is false
-        -   **string** *reason*  
+    3.  If allowed is false
+        1.  **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 42
@@ -2566,9 +2566,9 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - Empty Message
+    -   Empty Message
 
 # File Messages
 
@@ -2598,9 +2598,9 @@ Note that slskd and Nicotine+ <= 3.0.2 use legacy download requests, and send th
 ### Data Order
 
   - Send
-      - **uint32** *token*
+    -   **uint32** *token*
   - Receive
-      - **uint32** *token*
+    -   **uint32** *token*
 
 ## File Offset
 
@@ -2613,9 +2613,9 @@ Note that Soulseek NS fails to read the size of an incomplete download if more t
 ### Data Order
 
   - Send
-      - **uint64** *offset*
+    -   **uint64** *offset*
   - Receive
-      - **uint64** *offset*
+    -   **uint64** *offset*
 
 # Distributed Messages
 
@@ -2649,9 +2649,9 @@ We ping distributed children every 60 seconds.
 ### Data Order
 
   - Send
-      - Empty Message
+    -   Empty Message
   - Receive
-      - Empty Message
+    -   Empty Message
 
 ## Distributed Code 3
 
