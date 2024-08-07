@@ -77,12 +77,15 @@ do not require installation.
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package)  
    for Windows 10 or later
 
-> **NOTE**: Configuration files are always stored in
+> **NOTE**: Configuration files are always stored in  
 > *C:\Users\\<USERNAME\>\AppData\Roaming\nicotine*
 
 ## macOS
 
 Unstable installers are built after every commit to the master branch.
+
+> **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
+> the first time you start Nicotine+.
 
  - [Download Unstable macOS Intel Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-x86_64-installer)  
@@ -91,9 +94,6 @@ Unstable installers are built after every commit to the master branch.
  - [Download Unstable macOS Apple Silicon Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer.zip)
     — [`INFO`](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-arm64-installer)  
    for macOS 14 Sonoma or later
-
-> **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
-> the first time you start Nicotine+.
 
 
 ## All Platforms

@@ -63,10 +63,9 @@ sudo apt update; sudo apt install nicotine
 If you prefer to install a .deb package manually, you can
 [download one here](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip).
 
-> #### NOTE
-> When installing the .deb package manually, Nicotine+ will not update
-automatically. You need to download and install the latest version from the
-link above after every update.
+> **NOTE**: When installing the .deb package manually, Nicotine+ will not
+> update automatically. You need to download and install the latest version
+> from the link above after every update.
 
 ### PyPi (GNU/Linux, *BSD, Solaris)
 
@@ -109,7 +108,7 @@ do not require installation.
 > are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+
 > first (this will not remove your existing settings).
 
-> **NOTE**: Configuration files are always stored in
+> **NOTE**: Configuration files are always stored in  
 > *C:\Users\\<USERNAME\>\AppData\Roaming\nicotine*
 
 ### Package Managers
@@ -128,6 +127,9 @@ using them.
 
 ### Official Release
 
+> **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
+> the first time you start Nicotine+.
+
  - [Download macOS Intel Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-x86_64-installer.zip.sha256)  
    for macOS 12 Monterey or later
@@ -135,9 +137,6 @@ using them.
  - [Download macOS Apple Silicon Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip)
     — [`SHA256`](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-arm64-installer.zip.sha256)  
    for macOS 14 Sonoma or later
-
-> **IMPORTANT**: You must follow [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)
-> the first time you start Nicotine+.
 
 ### Package Managers
 
