@@ -315,18 +315,18 @@ We send this to the server right after the connection has been established. Serv
         `0x13000000` for 157 ns 13e, `0x11000000` for 157 ns 13c
   - Receive
     1.  **bool** *success*
-    - If *success* is true
-      1.  **string** *greet*
-          MOTD string
-      2.  **uint32** *own IP address*
-      3.  **string** *hash*
-          MD5 hex digest of the password string
-      4.  **bool** *is supporter*  
-          If we have donated to Soulseek at some point in the past
-    - If *success* is false
-      1.  **bool** *failure*
-      2.  **string** *reason*
-          See [Login Failure Reasons](#login-failure-reasons)
+    -   If *success* is true
+        -   **string** *greet*  
+            MOTD string
+        -   **uint32** *own IP address*
+        -   **string** *hash*  
+            MD5 hex digest of the password string
+        -   **bool** *is supporter*  
+            If we have donated to Soulseek at some point in the past
+    -   If *success* is false
+        -   **bool** *failure*
+        -   **string** *reason*
+            See [Login Failure Reasons](#login-failure-reasons)
 
 ## Server Code 2
 
@@ -381,17 +381,17 @@ As a consequence, stats can be outdated.
   - Receive
     1.  **string** *username*
     2.  **bool** *exists*
-    - If *exists* is true
-        1.  **uint32** *status*  
+    -   If *exists* is true
+        -   **uint32** *status*  
             See [User Status Codes](#user-status-codes)
-        2.  **uint32** *avgspeed*
-        3.  **uint32** *uploadnum*  
+        -   **uint32** *avgspeed*
+        -   **uint32** *uploadnum*  
             Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.
-        4.  **uint32** *unknown*
-        5.  **uint32** *files*
-        6.  **uint32** *dirs*
-        - If *status* is away/online
-            1.  **string** *countrycode*  
+        -   **uint32** *unknown*
+        -   **uint32** *files*
+        -   **uint32** *dirs*
+        -   If *status* is away/online
+            -   **string** *countrycode*  
                 Uppercase country code
 
 ## Server Code 6
@@ -2001,7 +2001,7 @@ This message only seems to be sent if we try to create a room with the same name
 
 # Peer Init Messages
 
-Peer init messages are used to initiate a 'P', 'F' or 'D' connection (TCP) to a peer. In Nicotine+, these messages are defined in slskmessages.py.
+Peer init messages are used to initiate a `P`, `F` or `D` connection (TCP) to a peer. In Nicotine+, these messages are defined in slskmessages.py.
 
 ## Peer Init Message Format
 
@@ -2087,7 +2087,7 @@ See also: [Peer Connection Message Order](#modern-peer-connection-message-order)
 
 # Peer Messages
 
-Peer messages are sent to peers over a 'P' connection (TCP). Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
+Peer messages are sent to peers over a `P` connection (TCP). Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ## Peer Message Format
 
@@ -2224,7 +2224,7 @@ A peer sends this message when it has a file search match. The token is taken fr
             SoulseekNS requires `mp3` to show attributes
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
-            1.  **uint32** *attribute code*
+            1.  **uint32** *attribute code*  
                 See [File Attribute Types](#file-attribute-types)
             2.  **uint32** *attribute value*
     5.  **bool** *slotfree*
@@ -2242,7 +2242,7 @@ A peer sends this message when it has a file search match. The token is taken fr
             SoulseekNS requires `mp3` to show attributes
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
-            1.  **uint32** *attribute code*
+            1.  **uint32** *attribute code*  
                 See [File Attribute Types](#file-attribute-types)
             2.  **uint32** *attribute value*
     11. zlib compress
@@ -2256,7 +2256,7 @@ A peer sends this message when it has a file search match. The token is taken fr
             Value is always `1`
         2.  **string** *filename*
         3.  **uint64** *file size*
-        4.  **string** *file extension*
+        4.  **string** *file extension*  
             Always blank from SoulseekQt clients
         5.  **uint32** *number of attributes*
         6.  Iterate for *number of attributes*
@@ -2274,11 +2274,11 @@ A peer sends this message when it has a file search match. The token is taken fr
              Value is always `1`
          2.  **string** *filename*
          3.  **uint64** *file size*
-         4.  **string** *file extension*
+         4.  **string** *file extension*  
              Always blank from SoulseekQt clients
          5.  **uint32** *number of attributes*
          6.  Iterate for *number of attributes*
-             1.  **uint32** *attribute code*
+             1.  **uint32** *attribute code*  
                  See [File Attribute Types](#file-attribute-types)
              2.  **uint32** *attribute value*
 
@@ -2305,11 +2305,11 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 
   - Send
     1.  **string** *description*
-    - If *picture* is not empty
-        1.  **bool** *has picture* **True**
-        2.  **bytes** *picture*
-    - If *picture* is empty
-        1.  **bool** *has picture* **False**
+    -   If *picture* is not empty
+        -   **bool** *has picture* **True**
+        -   **bytes** *picture*
+    -   If *picture* is empty
+        -   **bool** *has picture* **False**
     3.  **uint32** *totalupl*
     4.  **uint32** *queuesize*
     5.  **bool** *slotsfree*  
@@ -2320,8 +2320,8 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
   - Receive
     1.  **string** *description*
     2.  **bool** *has picture*
-    - If has picture
-        1.  **bytes** *picture*
+    -   If has picture
+        -   **bytes** *picture*
     3.  **uint32** *totalupl*
     4.  **uint32** *queuesize*
     5.  **bool** *slotsfree*  
@@ -2369,7 +2369,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
                 Always blank from SoulseekQt clients
             5.  **uint32** *number of attributes*
             6.  Iterate for *number of attributes*
-                1.  **uint32** *attribute code*
+                1.  **uint32** *attribute code*  
                     See [File Attribute Types](#file-attribute-types)
                 2.  **uint32** *attribute value*
     5.  zlib compress
@@ -2409,15 +2409,15 @@ This message was formerly used to send a download request (direction 0) as well,
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
     3.  **string** *filename*
-    - If direction == 1 (upload)
-        1.  **uint64** *file size*
+    -   If direction == 1 (upload)
+        -   **uint64** *file size*
   - Receive
     1.  **uint32** *direction*  
         See [Transfer Directions](#transfer-directions)
     2.  **uint32** *token*
     3.  **string** *filename*
-    - If direction == 1 (upload)
-        1.  **uint64** *file size*
+    -   If direction == 1 (upload)
+        -   **uint64** *file size*
 
 ## Peer Code 41 a
 
@@ -2434,18 +2434,18 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
   - Send
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    - If allowed is true
-        1.  **uint64** *file size*
-    - If allowed is false
-        1.  **string** *reason*
+    -   If allowed is true
+        -   **uint64** *file size*
+    -   If allowed is false
+        -   **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    - If allowed is true
-        1.  **uint64** *file size*
-    - If allowed is false
-        1.  **string** *reason*
+    -   If allowed is true
+        -   **uint64** *file size*
+    -   If allowed is false
+        -   **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 41 b
@@ -2461,14 +2461,14 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
   - Send
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    - If allowed is false
-        1.  **string** *reason*
+    -   If allowed is false
+        -   **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
   - Receive
     1.  **uint32** *token*
     2.  **bool** *allowed*
-    - If allowed is false
-        1.  **string** *reason*
+    -   If allowed is false
+        -   **string** *reason*  
             See [Transfer Rejection Reasons](#transfer-rejection-reasons)
 
 ## Peer Code 42
@@ -2572,7 +2572,7 @@ This message is sent to inform a peer about an upload attempt initiated by us.
 
 # File Messages
 
-File messages are sent to peers over a 'F' connection (TCP), and do not have messages codes associated with them.
+File messages are sent to peers over a `F` connection (TCP), and do not have messages codes associated with them.
 
 ## File Connection Message Format
 
@@ -2619,7 +2619,7 @@ Note that Soulseek NS fails to read the size of an incomplete download if more t
 
 # Distributed Messages
 
-Distributed messages are sent to peers over a 'D' connection (TCP), and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
+Distributed messages are sent to peers over a `D` connection (TCP), and are used for the distributed search network. Only a single active connection to a peer is allowed. In Nicotine+, these messages are defined in slskmessages.py.
 
 ## Distributed Message Format
 
