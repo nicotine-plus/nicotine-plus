@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-05-05 11:12+0000\n"
+"PO-Revision-Date: 2024-08-07 19:33+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5.3\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -4027,9 +4027,9 @@ msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nie można połączyć się z serwerem %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:1103
-#, fuzzy, python-format
+#, python-format
 msgid "Reconnecting to server in %s seconds"
-msgstr "Ponowne połączenie z serwerem za %i sekund"
+msgstr "Ponowne połączenie z serwerem za %s sekund"
 
 #: pynicotine/slskproto.py:1177
 #, python-format
