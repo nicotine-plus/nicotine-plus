@@ -423,9 +423,10 @@ response. As a consequence, stats can be outdated.
             See [User Status Codes](#user-status-codes)
         2.  **uint32** *avgspeed*
         3.  **uint32** *uploadnum*  
-            Number of uploaded files. The value changes when sending a
-            [SendUploadSpeed](#server-code-121) server message, and is likely
-            used by the server to calculate the average speed.
+            Number of uploaded files, previously used for number of downloaded
+            files in old versions of Soulseek. Used to grow indefinitely, but
+            now rolls over after a certain point. The value increments when
+            sending a [SendUploadSpeed](#server-code-121) server message.
         4.  **uint32** *unknown*
         5.  **uint32** *files*
         6.  **uint32** *dirs*
