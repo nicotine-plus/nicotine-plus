@@ -220,7 +220,7 @@ class RoomList(Popover):
             self.update_room_user_count(msg.room)
 
     def user_left_room(self, msg):
-        if msg.userdata.username != core.users.login_username:
+        if msg.username != core.users.login_username:
             self.update_room_user_count(msg.room, decrement=True)
 
     def room_list(self, msg):
