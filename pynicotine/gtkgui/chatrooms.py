@@ -865,7 +865,8 @@ class ChatRoom:
         if self.chatrooms.get_current_page() == self.container:
             self.chatrooms.chat_entry.add_completion(username)
 
-        if (not core.network_filter.is_user_ignored(username)
+        if (username != core.users.login_username
+                and not core.network_filter.is_user_ignored(username)
                 and not core.network_filter.is_user_ip_ignored(username)):
             self.activity_view.append_line(
                 _("%s joined the room") % username,
@@ -1055,8 +1056,14 @@ class ChatRoom:
         self.leave_room()
 
     def join_room(self, msg):
+
         self.is_private = msg.private
         self.populate_room_users(msg.users)
+
+        self.activity_view.append_line(
+            _("%s joined the room") % core.users.login_username,
+            timestamp_format=config.sections["logging"]["rooms_timestamp"]
+        )
 
     def leave_room(self):
 

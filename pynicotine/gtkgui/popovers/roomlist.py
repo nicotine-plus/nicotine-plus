@@ -216,10 +216,12 @@ class RoomList(Popover):
         self.update_room_user_count(room, decrement=True)
 
     def user_joined_room(self, msg):
-        self.update_room_user_count(msg.room)
+        if msg.userdata.username != core.users.login_username:
+            self.update_room_user_count(msg.room)
 
     def user_left_room(self, msg):
-        self.update_room_user_count(msg.room, decrement=True)
+        if msg.userdata.username != core.users.login_username:
+            self.update_room_user_count(msg.room, decrement=True)
 
     def room_list(self, msg):
 
