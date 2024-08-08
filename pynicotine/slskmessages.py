@@ -1604,10 +1604,6 @@ class RoomList(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.rooms = self.parse_rooms(message)
-
-        if not message[pos:]:
-            return
-
         pos, self.ownedprivaterooms = self.parse_rooms(message, pos)
         pos, self.otherprivaterooms = self.parse_rooms(message, pos)
         pos, self.operatedprivaterooms = self.parse_rooms(message, pos, has_count=False)
