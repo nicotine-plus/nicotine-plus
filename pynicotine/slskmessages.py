@@ -629,10 +629,9 @@ class UsersMessage(SlskMessage):
         for i in range(slotslen):
             pos, users[i].slotsfull = cls.unpack_uint32(message, pos)
 
-        if message[pos:]:
-            pos, countrylen = cls.unpack_uint32(message, pos)
-            for i in range(countrylen):
-                pos, users[i].country = cls.unpack_string(message, pos)
+        pos, countrylen = cls.unpack_uint32(message, pos)
+        for i in range(countrylen):
+            pos, users[i].country = cls.unpack_string(message, pos)
 
         return pos, users
 
@@ -692,16 +691,8 @@ class Login(ServerMessage):
 
         pos, self.banner = self.unpack_string(message, pos)
         pos, self.ip_address = self.unpack_ip(message, pos)
-
-        if not message[pos:]:
-            # Soulfind server support
-            return
-
         pos, _checksum = self.unpack_string(message, pos)  # MD5 hexdigest of the password you sent
-
-        if message[pos:]:
-            # Soulfind server support
-            pos, self.is_supporter = self.unpack_bool(message, pos)
+        pos, self.is_supporter = self.unpack_bool(message, pos)
 
 
 class SetWaitPort(ServerMessage):
@@ -743,11 +734,6 @@ class GetPeerAddress(ServerMessage):
         pos, self.user = self.unpack_string(message)
         pos, self.ip_address = self.unpack_ip(message, pos)
         pos, self.port = self.unpack_uint32(message, pos)
-
-        if not message[pos:]:
-            # Soulfind server support
-            return
-
         pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint16(message, pos)
 
@@ -838,10 +824,7 @@ class GetUserStatus(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.unpack_string(message)
         pos, self.status = self.unpack_uint32(message, pos)
-
-        # Soulfind server support
-        if message[pos:]:
-            pos, self.privileged = self.unpack_bool(message, pos)
+        pos, self.privileged = self.unpack_bool(message, pos)
 
 
 class IgnoreUser(ServerMessage):
@@ -1016,10 +999,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.files = self.unpack_uint32(message, pos)
         pos, self.userdata.dirs = self.unpack_uint32(message, pos)
         pos, self.userdata.slotsfull = self.unpack_uint32(message, pos)
-
-        # Soulfind server support
-        if message[pos:]:
-            pos, self.userdata.country = self.unpack_string(message, pos)
+        pos, self.userdata.country = self.unpack_string(message, pos)
 
 
 class UserLeftRoom(ServerMessage):
@@ -1073,11 +1053,6 @@ class ConnectToPeer(ServerMessage):
         pos, self.ip_address = self.unpack_ip(message, pos)
         pos, self.port = self.unpack_uint32(message, pos)
         pos, self.token = self.unpack_uint32(message, pos)
-
-        if not message[pos:]:
-            # Soulfind server support
-            return
-
         pos, self.privileged = self.unpack_bool(message, pos)
         pos, self.unknown = self.unpack_uint32(message, pos)
         pos, self.obfuscated_port = self.unpack_uint32(message, pos)
@@ -1113,9 +1088,7 @@ class MessageUser(ServerMessage):
         pos, self.timestamp = self.unpack_uint32(message, pos)
         pos, self.user = self.unpack_string(message, pos)
         pos, self.message = self.unpack_string(message, pos)
-
-        if message[pos:]:
-            pos, self.is_new_message = self.unpack_bool(message, pos)
+        pos, self.is_new_message = self.unpack_bool(message, pos)
 
 
 class MessageAcked(ServerMessage):
@@ -1233,7 +1206,7 @@ class ServerPing(ServerMessage):
         return b""
 
     def parse_network_message(self, message):
-        """Obsolete in the official server, but still used in Soulfind."""
+        """Obsolete."""
 
 
 class SendConnectToken(ServerMessage):
@@ -1396,7 +1369,7 @@ class UserSearch(ServerMessage):
         return msg
 
     def parse_network_message(self, message):
-        """Obsolete in the official server, but still used in Soulfind."""
+        """Obsolete."""
         pos, self.search_username = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)
         pos, self.searchterm = self.unpack_string(message, pos)
@@ -2291,7 +2264,7 @@ class RoomSearch(ServerMessage):
         return msg
 
     def parse_network_message(self, message):
-        """Obsolete in the official server, but still used in Soulfind."""
+        """Obsolete."""
         pos, self.search_username = self.unpack_string(message)
         pos, self.token = self.unpack_uint32(message, pos)
         pos, self.searchterm = self.unpack_string(message, pos)
