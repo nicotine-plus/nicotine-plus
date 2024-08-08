@@ -1712,7 +1712,7 @@ class NetworkThread(Thread):
             # Request indirect connection from our end in case the user's port is closed.
             request_token = self._connect_to_peer_indirect(init)
 
-        if port <= 0:
+        if port <= 0 or port > 65535:
             log.add_conn("Skipping direct connection attempt of type %s to user %s "
                          "due to invalid address %s", (init.conn_type, init.target_user, addr))
             return
