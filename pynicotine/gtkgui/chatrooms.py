@@ -175,7 +175,10 @@ class ChatRooms(IconNotebook):
             if tab.container != page:
                 continue
 
+            joined_room = core.chatrooms.joined_rooms.get(room)
+
             self.chat_entry.set_parent(room, tab.chat_entry_container, tab.chat_view)
+            self.chat_entry.set_sensitive(joined_room is not None and joined_room.users)
             tab.update_room_user_completions()
 
             if self.command_help is None:
@@ -315,9 +318,9 @@ class ChatRooms(IconNotebook):
             return
 
         page.join_room(msg)
-        self.chat_entry.set_sensitive(True)
 
         if page.container == self.get_current_page():
+            self.chat_entry.set_sensitive(True)
             page.on_focus()
 
     def leave_room(self, msg):
@@ -326,7 +329,6 @@ class ChatRooms(IconNotebook):
 
         if page is not None:
             page.leave_room()
-            self.chat_entry.set_sensitive(False)
 
     def user_stats(self, msg):
         for page in self.pages.values():
@@ -426,6 +428,7 @@ class ChatRooms(IconNotebook):
     def server_disconnect(self, *_args):
 
         self.window.chatrooms_title.set_sensitive(False)
+        self.chat_entry.set_sensitive(False)
 
         for page in self.pages.values():
             page.server_disconnect()
@@ -636,7 +639,6 @@ class ChatRoom:
             widget.set_visible(False)
 
         self.speech_toggle.set_active(False)  # Public feed is jibberish and too fast for TTS
-        self.chatrooms.chat_entry.set_sensitive(False)
         self.chat_entry_row.set_halign(Gtk.Align.END)
 
     def add_user_row(self, userdata):
