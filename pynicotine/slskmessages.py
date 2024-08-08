@@ -1221,13 +1221,19 @@ class ServerPing(ServerMessage):
     We send this to the server at most once per minute to ensure the
     connection stays alive.
 
-    Nicotine+ uses TCP keepalive instead.
+    The server used to send a response message in the past, but this is no
+    longer the case.
+
+    Nicotine+ uses TCP keepalive instead of sending this message.
     """
 
     __slots__ = ()
 
     def make_network_message(self):
         return b""
+
+    def parse_network_message(self, message):
+        """Obsolete in the official server, but still used in Soulfind."""
 
 
 class SendConnectToken(ServerMessage):
