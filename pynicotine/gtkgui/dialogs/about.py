@@ -424,6 +424,7 @@ class About(Dialog):
 
     def on_activate_link(self, _label, url):
         open_uri(url)
+        return True
 
     def on_check_latest_version(self, latest_version, is_outdated, error):
 

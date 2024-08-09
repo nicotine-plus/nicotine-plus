@@ -90,7 +90,7 @@ class NetworkPage:
         self.application = application
         self.portmap_required = None
 
-        self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.check_port_status_label.connect("activate-link", self.on_activate_link)
 
         self.network_interface_combobox = ComboBox(
             container=self.network_interface_label.get_parent(), has_entry=True,
@@ -187,6 +187,10 @@ class NetworkPage:
                 "auto_connect_startup": self.auto_connect_startup_toggle.get_active()
             }
         }
+
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
 
     def on_change_password_response(self, dialog, _response_id, user_status):
 
@@ -1301,7 +1305,7 @@ class ChatsPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
-        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.format_codes_label.connect("activate-link", self.on_activate_link)
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -1445,6 +1449,10 @@ class ChatsPage:
                 "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
+
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
 
     def on_private_room_changed(self, *_args):
         self.private_room_required = True
@@ -2157,7 +2165,7 @@ class LoggingPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
-        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.format_codes_label.connect("activate-link", self.on_activate_link)
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
@@ -2221,6 +2229,10 @@ class LoggingPage:
                 "log_timestamp": self.log_timestamp_format_entry.get_text()
             }
         }
+
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
 
     def on_default_timestamp(self, *_args):
         self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
