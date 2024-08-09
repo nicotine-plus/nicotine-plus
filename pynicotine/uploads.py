@@ -999,7 +999,13 @@ class Uploads(Transfers):
         if upload is None:
             return
 
-        self._abort_transfer(upload, status=TransferStatus.LOCAL_FILE_ERROR)
+        if isinstance(error, ValueError):
+            status = TransferStatus.CANCELLED
+            error = f"Remote client does not support large file transfers: {error}"
+        else:
+            status = TransferStatus.LOCAL_FILE_ERROR
+
+        self._abort_transfer(upload, status=status)
 
         log.add(_("Upload I/O error: %s"), error)
         self._check_upload_queue()
