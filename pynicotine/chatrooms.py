@@ -322,6 +322,8 @@ class ChatRooms:
         else:
             room_obj.is_private = msg.private
 
+        self.server_rooms.add(msg.room)
+
         if msg.private:
             self._update_private_room(msg.room, owner=msg.owner, operators=msg.operators)
 

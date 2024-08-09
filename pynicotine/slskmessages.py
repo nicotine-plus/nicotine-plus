@@ -926,7 +926,7 @@ class JoinRoom(ServerMessage):
 
     __slots__ = ("room", "private", "owner", "users", "operators")
 
-    def __init__(self, room=None, private=None):
+    def __init__(self, room=None, private=False):
         self.room = room
         self.private = private
         self.owner = None
