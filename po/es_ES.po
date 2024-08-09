@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-08-07 19:33+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-08-08 21:09+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -32,7 +32,7 @@ msgstr "Soulseek;Nicotine;compartir;chat;mensajería;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:9
 msgid "Browse the Soulseek network"
-msgstr "Cliente gráfico para la red de Soulseek"
+msgstr "Navega por la red de Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -45,8 +45,8 @@ msgid ""
 "comprehensive set of features."
 msgstr ""
 "Nicotine+ pretende ser una alternativa ligera, agradable, libre y de código "
-"abierto (FOSS) al cliente oficial de Soulseek, al tiempo que ofrece un "
-"amplio conjunto de funciones."
+"abierto (FOSS) al cliente oficial de Soulseek, ofreciendo además un amplio "
+"conjunto de funcionalidades."
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:27
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:43
@@ -57,7 +57,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
 #: pynicotine/gtkgui/ui/userbrowse.ui:144
 msgid "Search Files"
-msgstr "Buscar archivos"
+msgstr "Buscar ficheros"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:31
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:47
@@ -106,19 +106,19 @@ msgstr "mostrar este mensaje de ayuda y salir"
 
 #: pynicotine/__init__.py:59
 msgid "file"
-msgstr "archivo"
+msgstr "fichero"
 
 #: pynicotine/__init__.py:60
 msgid "use non-default configuration file"
-msgstr "usar un archivo de configuración no predeterminado"
+msgstr "usar un fichero de configuración no predeterminado"
 
 #: pynicotine/__init__.py:63
 msgid "dir"
-msgstr "directorio"
+msgstr "dir"
 
 #: pynicotine/__init__.py:64
 msgid "alternative directory for user data and plugins"
-msgstr "directorio alternativo para los datos de usuario y complementos"
+msgstr "directorio alternativo para los datos de usuario y los plugins"
 
 #: pynicotine/__init__.py:68
 msgid "start the program without showing window"
@@ -142,11 +142,11 @@ msgstr "escuchar en el puerto indicado"
 
 #: pynicotine/__init__.py:80
 msgid "rescan shared files"
-msgstr "reescanear los archivos compartidos"
+msgstr "reescanear los ficheros compartidos"
 
 #: pynicotine/__init__.py:84
 msgid "start the program in headless mode (no GUI)"
-msgstr "lanzar el programa en modo «headless» (sin interfaz gráfica)"
+msgstr "iniciar el programa en modo «headless» (sin interfaz gráfica)"
 
 #: pynicotine/__init__.py:88
 msgid "display version and exit"
@@ -171,17 +171,17 @@ msgstr ""
 #: pynicotine/buddies.py:294 pynicotine/plugins/core_commands/__init__.py:337
 #, python-format
 msgid "%(user)s is away"
-msgstr "El %(user)s está ausente"
+msgstr "%(user)s está ausente"
 
 #: pynicotine/buddies.py:297 pynicotine/plugins/core_commands/__init__.py:335
 #, python-format
 msgid "%(user)s is online"
-msgstr "El %(user)s está conectado"
+msgstr "%(user)s está conectado"
 
 #: pynicotine/buddies.py:300 pynicotine/plugins/core_commands/__init__.py:329
 #, python-format
 msgid "%(user)s is offline"
-msgstr "El %(user)s está desconectado"
+msgstr "%(user)s está desconectado"
 
 #: pynicotine/buddies.py:303
 msgid "Buddy Status"
@@ -206,7 +206,7 @@ msgstr "No se puede crear el directorio «%(path)s», error reportado: %(error)s
 #: pynicotine/config.py:814
 #, python-format
 msgid "Error backing up config: %s"
-msgstr "Error en la copia de seguridad de la configuración: %s"
+msgstr "Error al respaldar la configuración: %s"
 
 #: pynicotine/config.py:817
 #, python-format
