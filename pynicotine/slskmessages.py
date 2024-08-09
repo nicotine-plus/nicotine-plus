@@ -1375,6 +1375,39 @@ class UserSearch(ServerMessage):
         pos, self.searchterm = self.unpack_string(message, pos)
 
 
+class SimilarRecommendations(ServerMessage):
+    """Server code 50.
+
+    We send this to the server when we are adding a recommendation to our
+    "My recommendations" list, and want to receive a list of similar
+    recommendations.
+
+    The server sends a list of similar recommendations to the one we want to
+    add. Older versions of the official Soulseek client would display a dialog
+    containing such recommendations, asking us if we want to add our original
+    recommendation or one of the similar ones instead.
+
+    OBSOLETE
+    """
+
+    __slots__ = ("recommendation", "similar_recommendations")
+
+    def __init__(self, recommendation=None):
+        self.recommendation = recommendation
+        self.similar_recommendations = []
+
+    def make_network_message(self):
+        return self.pack_string(self.recommendation)
+
+    def parse_network_message(self, message):
+        pos, self.recommendation = self.unpack_string(message)
+        pos, num = self.unpack_uint32(message)
+
+        for _ in range(num):
+            pos, similar_recommendation = self.unpack_string(message, pos)
+            self.similar_recommendations.append(similar_recommendation)
+
+
 class AddThingILike(ServerMessage):
     """Server code 51.
 
@@ -1430,6 +1463,37 @@ class Recommendations(ServerMessage):
 
     def parse_network_message(self, message):
         _pos, self.recommendations, self.unrecommendations = RecommendationsMessage.parse_recommendations(message)
+
+
+class MyRecommendations(ServerMessage):
+    """Server code 55.
+
+    We send this to the server to ask for our own list of added
+    likes/recommendations (called "My recommendations" in older versions
+    of the official Soulseek client).
+
+    The server sends us the list of recommendations it knows we have added.
+    For any recommendations present locally, but not on the server, the
+    official Soulseek client would send a AddThingILike message for each
+    missing item.
+
+    OBSOLETE
+    """
+
+    __slots__ = ("my_recommendations",)
+
+    def __init__(self):
+        self.my_recommendations = []
+
+    def make_network_message(self):
+        return b""
+
+    def parse_network_message(self, message):
+        pos, num = self.unpack_uint32(message)
+
+        for _ in range(num):
+            pos, recommendation = self.unpack_string(message, pos)
+            self.my_recommendations.append(recommendation)
 
 
 class GlobalRecommendations(ServerMessage):
@@ -4023,9 +4087,11 @@ SERVER_MESSAGE_CODES = {
     QueuedDownloads: 40,          # Obsolete
     Relogged: 41,
     UserSearch: 42,
+    SimilarRecommendations: 50,   # Obsolete
     AddThingILike: 51,            # Deprecated
     RemoveThingILike: 52,         # Deprecated
     Recommendations: 54,          # Deprecated
+    MyRecommendations: 55,        # Obsolete
     GlobalRecommendations: 56,    # Deprecated
     UserInterests: 57,            # Deprecated
     AdminCommand: 58,             # Obsolete

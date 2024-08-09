@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-[Last updated on August 7, 2024](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
+[Last updated on August 9, 2024](https://github.com/nicotine-plus/nicotine-plus/commits/master/doc/SLSKPROTOCOL.md)
 
 Since the official Soulseek client and server is proprietary software, this
 documentation has been compiled thanks to years of reverse engineering efforts.
@@ -227,9 +227,11 @@ server, but it handles the protocol well enough (and can be modified).
 | `40`   | [Queued Downloads](#server-code-40) `OBSOLETE`                 |
 | `41`   | [Kicked from Server](#server-code-41)                          |
 | `42`   | [User Search](#server-code-42)                                 |
+| `50`   | [Similar Recommendations](#server-code-50) `OBSOLETE`          |
 | `51`   | [Interest Add](#server-code-51) `DEPRECATED`                   |
 | `52`   | [Interest Remove](#server-code-52) `DEPRECATED`                |
 | `54`   | [Get Recommendations](#server-code-54) `DEPRECATED`            |
+| `55`   | [My Recommendations](#server-code-55) `OBSOLETE`               |
 | `56`   | [Get Global Recommendations](#server-code-56) `DEPRECATED`     |
 | `57`   | [Get User Interests](#server-code-57) `DEPRECATED`             |
 | `58`   | [Admin Command](#server-code-58) `OBSOLETE`                    |
@@ -910,6 +912,32 @@ users. Today, the server sends a [FileSearch](#server-code-26) message instead.
     3.  **string** *search query*
 
 
+## Server Code 50
+
+### SimilarRecommendations
+
+**OBSOLETE**
+
+We send this to the server when we are adding a recommendation to our
+"My recommendations" list, and want to receive a list of similar
+recommendations.
+
+The server sends a list of similar recommendations to the one we want to
+add. Older versions of the official Soulseek client would display a dialog
+containing such recommendations, asking us if we want to add our original
+recommendation or one of the similar ones instead.
+
+### Data Order
+
+  - Send
+    1.  **string** *recommendation*
+  - Receive
+    1.  **string** *recommendation*
+    2.  **uint32** *number of similar recommendations*
+    3.  Iterate for *number of similar recommendations*
+        1.  **string** *similar recommendation*
+
+
 ## Server Code 51
 
 ### AddThingILike
@@ -963,6 +991,31 @@ The server sends us a list of personal recommendations and a number for each.
     4.  Iterate for *number of total unrecommendations*
         1.  **string** *unrecommendation*
         2.  **int32** *number of unrecommendations this unrecommendation has (negative)*
+
+
+## Server Code 55
+
+### MyRecommendations
+
+**OBSOLETE**
+
+We send this to the server to ask for our own list of added
+likes/recommendations (called "My recommendations" in older versions
+of the official Soulseek client).
+
+The server sends us the list of recommendations it knows we have added.
+For any recommendations present locally, but not on the server, the
+official Soulseek client would send a [AddThingILike](#server-code-51)
+message for each missing item.
+
+### Data Order
+
+  - Send
+    -   Empty Message
+  - Receive
+    1.  **uint32** *number of own recommendations*
+    2.  Iterate for *number of own recommendations*
+        1.  **string** *recommendation*
 
 
 ## Server Code 56
