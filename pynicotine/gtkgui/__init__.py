@@ -135,7 +135,7 @@ def run(hidden, ci_mode, multi_instance):
         # Old GL renderer is faster for now. Make it the default.
         os.environ["GSK_RENDERER"] = "gl"
 
-    if os.environ.get("GSK_RENDERER") == "gl":
+    if os.environ.get("GSK_RENDERER") == "gl" and os.environ.get("GDK_BACKEND") != "broadway":
         # Old GL renderer doesn't support fractional scaling. Disable it.
         os.environ["GDK_DEBUG"] = ",".join(("gl-no-fractional", os.environ.get("GDK_DEBUG", "")))
 

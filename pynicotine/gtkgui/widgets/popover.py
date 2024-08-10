@@ -38,7 +38,7 @@ class Popover:
         self.widget.connect("map", self._on_map)
         self.widget.connect("unmap", self._on_unmap)
 
-        add_css_class(self.widget, "generic-popover")
+        add_css_class(self.widget, "custom")
 
         if GTK_API_VERSION == 3:
             return

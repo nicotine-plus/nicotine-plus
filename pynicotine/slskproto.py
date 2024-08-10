@@ -91,7 +91,6 @@ from pynicotine.utils import human_speed
 
 
 class Connection:
-
     __slots__ = ("sock", "addr", "io_events", "is_established", "in_buffer", "out_buffer",
                  "last_active", "recv_size")
 
@@ -108,7 +107,6 @@ class Connection:
 
 
 class ServerConnection(Connection):
-
     __slots__ = ("login",)
 
     def __init__(self, *args, login=None, **kwargs):
@@ -117,7 +115,6 @@ class ServerConnection(Connection):
 
 
 class PeerConnection(Connection):
-
     __slots__ = ("init", "request_token", "response_token", "has_post_init_activity")
 
     def __init__(self, *args, init=None, request_token=None, response_token=None, **kwargs):
@@ -330,6 +327,10 @@ class NetworkThread(Thread):
     data.
     """
 
+    __slots__ = ("pending_shutdown", "upload_speed", "token", "_pending_network_msgs",
+                 "_user_update_counter", "_user_update_counters", "_upload_queue_timer_id",
+                 "_retry_failed_uploads_timer_id")
+
     IN_PROGRESS_STALE_AFTER = 2
     INDIRECT_REQUEST_TIMEOUT = 20
     CONNECTION_MAX_IDLE = 60
@@ -381,7 +382,7 @@ class NetworkThread(Thread):
 
         self._message_queue = deque()
         self._pending_peer_conns = {}
-        self._pending_init_msgs = {}
+        self._pending_init_msgs = defaultdict(list)
         self._token_init_msgs = {}
         self._username_init_msgs = {}
         self._user_addresses = {}
@@ -771,9 +772,6 @@ class NetworkThread(Thread):
             init.outgoing_msgs.append(msg)
 
         if user_address is None:
-            if username not in self._pending_init_msgs:
-                self._pending_init_msgs[username] = []
-
             self._pending_init_msgs[username].append(init)
             self._send_message_to_server(GetPeerAddress(username))
 
@@ -1714,7 +1712,7 @@ class NetworkThread(Thread):
             # Request indirect connection from our end in case the user's port is closed.
             request_token = self._connect_to_peer_indirect(init)
 
-        if port <= 0:
+        if port <= 0 or port > 65535:
             log.add_conn("Skipping direct connection attempt of type %s to user %s "
                          "due to invalid address %s", (init.conn_type, init.target_user, addr))
             return

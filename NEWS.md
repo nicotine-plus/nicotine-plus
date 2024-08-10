@@ -11,7 +11,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Added `/plugin reload` subcommand for reloading a plugin
  * Added arrow key shortcuts to collapse/expand tree rows
+ * Added a toggle for private room invitations to 'Chats' preferences
+ * List all room members not currently joined in a private room
  * Incomplete files are now deleted when removing the download from the UI
+ * Improvements to transfer speed accuracy in the UI
  * Quitting from the tray menu asks for confirmation while uploads are active
  * Various performance improvements
 
@@ -19,11 +22,15 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Fixed a rare crash related to peer connections
  * Fixed a rare crash when selecting a folder in the file chooser dialog
+ * Fixed a possible memory error when reading data from a peer connection
  * Fixed issues related to downloads getting stuck when failing
  * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where uploads would not start immediately in some cases
  * Fixed an issue where popovers could not be closed in some cases
  * Fixed an issue where some wishlist searches stopped working after closing their tabs
  * Fixed an issue where an auto-forwarded listening port would close when saving preferences
+ * Fixed an issue where toggling search history did not update the history dropdown
+ * Fixed scrolling to the bottom of lists with the End key
  * Various smaller UI-related fixes
  * Various smaller fixes related to the Soulseek protocol implementation
  * Windows: Fixed an issue where the tray icon was visible despite being disabled
@@ -44,6 +51,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
  * Crash on Mac OS Monterey 12.7.5 (Intel) - Nicotine+ Version: 3.3.5.dev1 ([#3016](https://github.com/nicotine-plus/nicotine-plus/issues/3016))
  * "Ok" on Network Closes Port ([#3020](https://github.com/nicotine-plus/nicotine-plus/issues/3020))
+ * Python Memory Error ([#3022](https://github.com/nicotine-plus/nicotine-plus/issues/3022))
  * nowplaying - other should decode bytes ([#3039](https://github.com/nicotine-plus/nicotine-plus/issues/3039))
  * Newly started downloads will open a collapsed thread? ([#3044](https://github.com/nicotine-plus/nicotine-plus/issues/3044))
  * Crash on MBP Ventura 13.6.7 ([#3045](https://github.com/nicotine-plus/nicotine-plus/issues/3045))
@@ -51,6 +59,8 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
  * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
  * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
+ * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
+ * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
 
 
 ## Version 3.3.4 (May 6, 2024)
@@ -1787,7 +1797,7 @@ Issues closed on GitHub
 
 ### Translations
 
- * ><((((*> updated the French translation
+ * \>\<((((*\> updated the French translation
  * djbaloo updated the Hungarian translation
 
 
@@ -1857,7 +1867,7 @@ Issues closed on GitHub
  * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
  * Icons have been replaced, the alt-tab icon is increased.
  * Most external calls now support pipes
- * Improved German (bug #394) and French translation (thanks goes to ><((((*>)
+ * Improved German (bug #394) and French translation (thanks goes to \>\<((((*\>)
  * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
  * Notification popups will no longer stack but a single popup will be updated
 
@@ -2229,7 +2239,7 @@ Issues closed on GitHub
 ### Translations
 
  * Silvio Orta updated the Spanish translation
- * ><((((*> and ManWell updated the French translation
+ * \>\<((((*\> and ManWell updated the French translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian translation
  * Žygimantas updated the Lithuanian translation
@@ -2329,7 +2339,7 @@ Issues closed on GitHub
 
 ### Translations
 
- * ><((((*> updated the French translation
+ * \>\<((((*\> updated the French translation
  * (._.) and Meokater updated the German translation
  * nince78 updated the Dutch translation
  * Nicola updated the Italian Translation
@@ -2646,7 +2656,7 @@ the middle-click one
  * Moved encoding dropdown-list out of the scrolled area in userinfo tabs
  * Transfer logs (enable in settings->logging)
  * Last 7 lines of a private message log are shown
- * Config file now backed up (to <filename>.old)
+ * Config file now backed up (to \<filename\>.old)
  * Check privileges shows days, hours, minutes, seconds
  * Changed default server to server.slsknet.org
    (mail.slsknet.org will be automatically changed)
@@ -2890,7 +2900,7 @@ the middle-click one
 
  * New logo and icon (thanks (va)*10^3)
  * Generate profiler log when using nicotine --profile
-   (profiler log will be saved as <configfile>.profile)
+   (profiler log will be saved as \<configfile\>.profile)
 
 
 ## Version 0.4.6 (August 8, 2003)

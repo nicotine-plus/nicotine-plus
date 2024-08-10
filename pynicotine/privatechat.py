@@ -31,6 +31,7 @@ from pynicotine.utils import find_whole_word
 
 
 class PrivateChat:
+    __slots__ = ("completions", "private_message_queue", "away_message_users", "users")
 
     CTCP_VERSION = "\x01VERSION\x01"
 

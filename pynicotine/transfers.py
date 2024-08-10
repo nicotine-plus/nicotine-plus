@@ -102,6 +102,10 @@ class Transfer:
 
 
 class Transfers:
+    __slots__ = ("transfers", "queued_transfers", "queued_users", "active_users",
+                 "failed_users", "transfers_file_path", "total_bandwidth", "_name",
+                 "_allow_saving_transfers", "_online_users", "_user_queue_limits",
+                 "_user_queue_sizes")
 
     def __init__(self, name):
 
@@ -613,6 +617,7 @@ class Transfers:
 
 
 class Statistics:
+    __slots__ = ("session_stats",)
 
     def __init__(self):
 

@@ -35,7 +35,6 @@ from pynicotine.utils import encode_path
 
 
 class BrowsedUser:
-
     __slots__ = ("username", "public_folders", "private_folders")
 
     def __init__(self, username):
@@ -50,6 +49,7 @@ class BrowsedUser:
 
 
 class UserBrowse:
+    __slots__ = ("users",)
 
     def __init__(self):
 

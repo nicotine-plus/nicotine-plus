@@ -18,6 +18,7 @@
 
 import time
 
+from collections import defaultdict
 from collections import deque
 from threading import Thread
 
@@ -196,12 +197,14 @@ EVENT_NAMES = {
 
 
 class Events:
+    __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
+                 "_scheduler_event_id", "_is_active")
 
     SCHEDULER_MAX_IDLE = 1
 
     def __init__(self):
 
-        self._callbacks = {}
+        self._callbacks = defaultdict(list)
         self._thread_events = deque()
         self._pending_scheduler_events = deque()
         self._scheduler_events = {}
@@ -228,18 +231,12 @@ class Events:
         if event_name not in EVENT_NAMES:
             raise ValueError(f"Unknown event {event_name}")
 
-        if event_name not in self._callbacks:
-            self._callbacks[event_name] = []
-
         self._callbacks[event_name].append(function)
 
     def disconnect(self, event_name, function):
         self._callbacks[event_name].remove(function)
 
     def emit(self, event_name, *args, **kwargs):
-
-        if event_name not in self._callbacks:
-            return
 
         callbacks = self._callbacks[event_name]
 

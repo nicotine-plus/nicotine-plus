@@ -1006,12 +1006,11 @@ class Transfers:
         elif action == 7:  # Browse Folder
             self.on_browse_folder()
 
-    def on_select_user_transfers(self, *args):
+    def on_select_user_transfers(self, _action, _parameter, selected_user):
 
         if not self.selected_users:
             return
 
-        selected_user = args[-1]
         _user_iterator, user_child_transfers = self.users[selected_user]
 
         self.tree_view.unselect_all_rows()

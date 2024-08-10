@@ -36,6 +36,7 @@ class PortmapError(Exception):
 
 
 class BaseImplementation:
+    __slots__ = ("port", "local_ip_address")
 
     def __init__(self):
         self.port = None
@@ -52,6 +53,8 @@ class NATPMP(BaseImplementation):
     https://www.rfc-editor.org/rfc/rfc6886.
     """
 
+    __slots__ = ("_gateway_address",)
+
     NAME = "NAT-PMP"
     REQUEST_PORT = 5351
     REQUEST_ATTEMPTS = 2  # spec says 9, but 2 should be enough
@@ -59,6 +62,7 @@ class NATPMP(BaseImplementation):
     SUCCESS_RESULT = 0
 
     class PortmapResponse:
+        __slots__ = ("message", "result")
 
         def __init__(self, message):
 
@@ -77,6 +81,7 @@ class NATPMP(BaseImplementation):
             return self.message
 
     class PortmapRequest:
+        __slots__ = ("_public_port", "_private_port", "_lease_duration")
 
         RESERVED_VALUE = 0
         TCP_OP_CODE = 2
@@ -190,6 +195,8 @@ class NATPMP(BaseImplementation):
 class UPnP(BaseImplementation):
     """Implementation of the UPnP protocol."""
 
+    __slots__ = ("_service",)
+
     NAME = "UPnP"
     MULTICAST_HOST = "239.255.255.250"
     MULTICAST_PORT = 1900
@@ -198,12 +205,16 @@ class UPnP(BaseImplementation):
     HTTP_REQUEST_TIMEOUT = 5
 
     class Service:
+        __slots__ = ("service_type", "control_url")
+
         def __init__(self, service_type, control_url):
             self.service_type = service_type
             self.control_url = control_url
 
     class SSDPResponse:
         """Simple Service Discovery Protocol (SSDP) response."""
+
+        __slots__ = ("message", "headers")
 
         def __init__(self, message):
 
@@ -217,6 +228,8 @@ class UPnP(BaseImplementation):
 
     class SSDPRequest:
         """Simple Service Discovery Protocol (SSDP) request."""
+
+        __slots__ = ("headers",)
 
         def __init__(self, search_target):
 
@@ -266,7 +279,7 @@ class UPnP(BaseImplementation):
 
                 log.add_debug("UPnP: Device description response from %s: %s", (location_url, response_body))
 
-                xml = ElementTree.fromstring(response_body.decode("utf-8"))
+                xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
@@ -364,7 +377,8 @@ class UPnP(BaseImplementation):
                 while True:
                     try:
                         message = sock.recv(65507)  # Maximum size of UDP message
-                        UPnP.SSDP.add_service(services, locations, UPnP.SSDPResponse(message.decode("utf-8")))
+                        UPnP.SSDP.add_service(
+                            services, locations, UPnP.SSDPResponse(message.decode("utf-8", "replace")))
 
                     except socket.timeout:
                         break
@@ -448,7 +462,7 @@ class UPnP(BaseImplementation):
             # E.g. MikroTik routers that send UPnP error 725 (OnlyPermanentLeasesSupported).
             response_body = error.read()
 
-        xml = ElementTree.fromstring(response_body.decode("utf-8"))
+        xml = ElementTree.fromstring(response_body.decode("utf-8", "replace"))
 
         if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
             raise PortmapError(f"Invalid response: {response_body}")
@@ -547,6 +561,9 @@ class UPnP(BaseImplementation):
 
 class PortMapper:
     """Class that handles Port Mapping."""
+
+    __slots__ = ("_active_implementation", "_has_port", "_is_mapping_port", "_timer",
+                 "_natpmp", "_upnp")
 
     RENEWAL_INTERVAL = 7200   # 2 hours
     LEASE_DURATION = 43200    # 12 hours

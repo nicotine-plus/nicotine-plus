@@ -107,6 +107,8 @@ class DatabaseError(Exception):
 class Database:
     """Custom key-value database format for Nicotine+ shares."""
 
+    __slots__ = ("_value_offsets", "_file_handle", "_file_offset", "_overwrite")
+
     FILE_SIGNATURE = b"DBN+"
     VERSION = 3
     LENGTH_DATA_SIZE = 8
@@ -152,7 +154,7 @@ class Database:
             key_offset = (current_offset + self.LENGTH_DATA_SIZE)
             key_length, value_length = self.UNPACK_LENGTHS(content[current_offset:key_offset])
             value_offset = (key_offset + key_length)
-            key = str(content[key_offset:value_offset], encoding="utf-8")
+            key = content[key_offset:value_offset].tobytes().decode("utf-8")
 
             value_offsets[key] = value_offset
             current_offset = (value_offset + value_length)
@@ -196,7 +198,7 @@ class Database:
 
     def __setitem__(self, key, value):
 
-        encoded_key = str(key).encode("utf-8")
+        encoded_key = key.encode("utf-8")
         pickled_value = dumps(value, protocol=HIGHEST_PROTOCOL)
 
         key_length = len(encoded_key)
@@ -233,6 +235,11 @@ class Scanner:
     It handles scanning of folders and files, as well as building
     databases and writing them to disk.
     """
+
+    __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
+                 "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
+                 "files", "streams", "mtimes", "word_index", "processed_share_names",
+                 "processed_share_paths", "current_file_index")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -631,6 +638,8 @@ class Scanner:
 
 
 class Shares:
+    __slots__ = ("share_dbs", "requested_share_times", "initialized", "rescanning", "compressed_shares",
+                 "share_db_paths", "file_path_index", "_scanner_process")
 
     def __init__(self):
 

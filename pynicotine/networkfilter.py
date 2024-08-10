@@ -34,6 +34,9 @@ UINT32_UNPACK = Struct(">I").unpack_from
 class NetworkFilter:
     """Functions related to banning and ignoring users."""
 
+    __slots__ = ("ip_ban_requested", "ip_ignore_requested", "_ip_range_values", "_ip_range_countries",
+                 "_loaded_ip_country_data")
+
     COUNTRIES = {
         "AD": _("Andorra"),
         "AE": _("United Arab Emirates"),

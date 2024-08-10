@@ -67,9 +67,12 @@ class ChatCommandHelp(Popover):
         row = Gtk.Box(homogeneous=True, spacing=12, visible=True)
         command_label = Gtk.Label(
             label=f"/{', /'.join([command] + aliases)} {' '.join(parameters)}".strip(),
-            selectable=True, wrap=True, xalign=0, visible=True
+            selectable=True, wrap=True, xalign=0, yalign=0, visible=True
         )
-        description_label = Gtk.Label(label=description, selectable=True, wrap=True, xalign=0, visible=True)
+        description_label = Gtk.Label(
+            label=description, selectable=True, wrap=True, xalign=0, yalign=0,
+            visible=True
+        )
 
         add_css_class(command_label, "italic")
 

@@ -42,7 +42,6 @@ from pynicotine.utils import TRANSLATE_PUNCTUATION
 
 
 class SearchRequest:
-
     __slots__ = ("token", "term", "term_sanitized", "term_transmitted", "included_words", "excluded_words",
                  "mode", "room", "users", "is_ignored")
 
@@ -62,6 +61,8 @@ class SearchRequest:
 
 
 class Search:
+    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_self_search_tokens",
+                 "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
     RESULT_FILTER_HISTORY_LIMIT = 50
@@ -78,6 +79,7 @@ class Search:
         self.excluded_phrases = []
         self.token = initial_token()
         self.wishlist_interval = 0
+        self._self_search_tokens = set()
         self._wishlist_timer_id = None
 
         for event_name, callback in (
@@ -103,6 +105,10 @@ class Search:
         self.remove_all_searches()
 
     def _server_disconnect(self, _msg):
+
+        self.excluded_phrases.clear()
+        self._self_search_tokens.clear()
+
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
 
@@ -335,7 +341,11 @@ class Search:
             core.send_message_to_server(UserSearch(username, self.token, text))
 
     def do_peer_search(self, text, users):
+
         for username in users:
+            if username == core.users.login_username:
+                self._self_search_tokens.add(self.token)
+
             core.send_message_to_server(UserSearch(username, self.token, text))
 
     def do_wishlist_search(self, token, text):
@@ -448,13 +458,13 @@ class Search:
     def _file_search_request_server(self, msg):
         """Server code 26, 42 and 120."""
 
-        self._process_search_request(msg.searchterm, msg.search_username, msg.token, direct=True)
+        self._process_search_request(msg.searchterm, msg.search_username, msg.token)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
 
     def _file_search_request_distributed(self, msg):
         """Distrib code 3."""
 
-        self._process_search_request(msg.searchterm, msg.search_username, msg.token, direct=False)
+        self._process_search_request(msg.searchterm, msg.search_username, msg.token)
         core.pluginhandler.distrib_search_notification(msg.searchterm, msg.search_username, msg.token)
 
     # Incoming Search Requests #
@@ -633,7 +643,7 @@ class Search:
 
         return results
 
-    def _process_search_request(self, search_term, username, token, direct=False):
+    def _process_search_request(self, search_term, username, token):
         """This section is accessed every time a search request arrives,
         several times per second.
 
@@ -653,7 +663,7 @@ class Search:
 
         local_username = core.users.login_username
 
-        if not direct and username == local_username:
+        if username == local_username and token not in self._self_search_tokens:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return

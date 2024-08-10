@@ -49,6 +49,9 @@ class Config:
     parameters.
     """
 
+    __slots__ = ("config_file_path", "data_folder_path", "config_loaded", "sections",
+                 "defaults", "removed_options", "_parser")
+
     def __init__(self):
 
         config_folder_path, data_folder_path = self.get_user_folders()
@@ -81,7 +84,7 @@ class Config:
         home = os.path.expanduser("~")
         legacy_folder_path = os.path.join(home, ".nicotine")
 
-        if os.path.isdir(legacy_folder_path.encode("utf-8")):
+        if os.path.isdir(encode_path(legacy_folder_path)):
             return legacy_folder_path, legacy_folder_path
 
         def xdg_path(xdg, default):

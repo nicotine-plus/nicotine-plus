@@ -38,6 +38,7 @@ from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import remove_css_class

@@ -250,10 +250,10 @@ class PopupMenu:
 
         event = None
 
-        if controller:
+        if controller is not None:
             sequence = controller.get_current_sequence()
 
-            if sequence:
+            if sequence is not None:
                 event = controller.get_last_event(sequence)
 
         menu.popup_at_pointer(event)
@@ -285,7 +285,7 @@ class PopupMenu:
                 # No rows selected, don't show menu
                 return False
 
-        if callback:
+        if callback is not None:
             callback(menu_model, self.parent)
 
         self.popup(pos_x, pos_y, controller, menu=menu)
@@ -305,9 +305,16 @@ class PopupMenu:
 
     def _callback_click_gtk3(self, controller, _num_p, pos_x, pos_y):
 
-        event = controller.get_last_event()
+        sequence = controller.get_current_sequence()
 
-        if event.triggers_context_menu():
+        if sequence is not None:
+            event = controller.get_last_event(sequence)
+            show_context_menu = event.triggers_context_menu()
+        else:
+            # Workaround for GTK 3.22.30
+            show_context_menu = (controller.get_current_button() == Gdk.BUTTON_SECONDARY)
+
+        if show_context_menu:
             return self._callback(controller, pos_x, pos_y)
 
         return False
@@ -539,20 +546,16 @@ class UserPopupMenu(PopupMenu):
     def on_browse_user(self, *_args):
         core.userbrowse.browse_user(self.username)
 
-    def on_private_room_add_user(self, *args):
-        room = args[-1]
+    def on_private_room_add_user(self, _action, _parameter, room):
         core.chatrooms.add_user_to_private_room(room, self.username)
 
-    def on_private_room_remove_user(self, *args):
-        room = args[-1]
+    def on_private_room_remove_user(self, _action, _parameter, room):
         core.chatrooms.remove_user_from_private_room(room, self.username)
 
-    def on_private_room_add_operator(self, *args):
-        room = args[-1]
+    def on_private_room_add_operator(self, _action, _parameter, room):
         core.chatrooms.add_operator_to_private_room(room, self.username)
 
-    def on_private_room_remove_operator(self, *args):
-        room = args[-1]
+    def on_private_room_remove_operator(self, _action, _parameter, room):
         core.chatrooms.remove_operator_from_private_room(room, self.username)
 
     def on_add_to_list(self, action, state):

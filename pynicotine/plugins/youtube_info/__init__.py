@@ -120,7 +120,7 @@ class Plugin(BasePlugin):
             from urllib.request import urlopen
             with urlopen((f"https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails"
                           f"&id={video_id}&key={api_key}"), timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             self.log("Failed to connect to www.googleapis.com: %s", error)

@@ -60,13 +60,13 @@ class Plugin(BasePlugin):
             "plugin": {
                 "callback": self.plugin_handler_command,
                 "description": _("Manage plugins"),
-                "parameters": ["<toggle|reload|info>", "<plugin_name>"]
+                "parameters": ["<toggle|reload|info>", "<plugin name>"]
             },
             "quit": {
                 "aliases": ["q", "exit"],
                 "callback": self.quit_command,
                 "description": _("Quit Nicotine+"),
-                "parameters": ["[-force]"]
+                "parameters": ["[force]"]
             },
             "clear": {
                 "aliases": ["cl"],
@@ -157,8 +157,8 @@ class Plugin(BasePlugin):
                 "callback": self.remove_buddy_command,
                 "description": _("Remove buddy from buddy list"),
                 "group": _CommandGroup.USERS,
-                "parameters": ["<buddy>"],
-                "parameters_private_chat": ["[buddy]"]
+                "parameters": ["<user>"],
+                "parameters_private_chat": ["[user]"]
             },
             "browse": {
                 "aliases": ["b"],
@@ -232,7 +232,7 @@ class Plugin(BasePlugin):
                 "callback": self.list_shares_command,
                 "description": _("List shares"),
                 "group": _CommandGroup.SHARES,
-                "parameters": ["[public]", "[buddy]"]
+                "parameters": ["[public|buddy|trusted]"]
             },
             "rescan": {
                 "callback": self.rescan_command,
@@ -338,7 +338,7 @@ class Plugin(BasePlugin):
 
     def quit_command(self, args, **_unused):
 
-        force = (args.lstrip("- ") in {"force", "f"})
+        force = (args.lstrip("-") in {"force", "f"})
 
         if force:
             self.core.quit()
@@ -520,8 +520,8 @@ class Plugin(BasePlugin):
 
     def rescan_command(self, args, **_unused):
 
-        rebuild = (args == "rebuild")
-        force = (args == "force") or rebuild
+        rebuild = ("rebuild" in args)
+        force = ("force" in args) or rebuild
 
         self.core.shares.rescan_shares(rebuild=rebuild, force=force)
 

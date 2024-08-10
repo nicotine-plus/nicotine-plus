@@ -75,7 +75,8 @@
 
 /* Tweaks */
 
-flowbox, flowboxchild {
+flowbox:not(.emoji-toolbar),
+flowbox:not(.emoji-toolbar) flowboxchild {
     /* GTK adds unwanted padding to flowbox children by default */
     border: 0;
     background: inherit;

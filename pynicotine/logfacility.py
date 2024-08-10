@@ -35,6 +35,7 @@ from pynicotine.utils import open_file_path
 
 
 class LogFile:
+    __slots__ = ("path", "handle", "is_open", "last_active", "oldest_read_line_number", "old_lines")
 
     def __init__(self, path):
         self.path = path
@@ -58,6 +59,9 @@ class LogLevel:
 
 
 class Logger:
+    __slots__ = ("debug_file_name", "downloads_file_name", "uploads_file_name", "debug_folder_path",
+                 "transfer_folder_path", "room_folder_path", "private_chat_folder_path",
+                 "_log_levels", "_log_files")
 
     NUM_BUFFER_INITIAL_PAGES = 2
     NUM_BUFFER_SCROLLING_PAGES = 10

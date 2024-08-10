@@ -26,6 +26,7 @@ from pynicotine.utils import execute_command
 
 
 class Notifications:
+    __slots__ = ("tts", "_tts_thread")
 
     def __init__(self):
 

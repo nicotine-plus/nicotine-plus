@@ -56,8 +56,6 @@ class RoomList(Popover):
             height=500
         )
 
-        self.initializing_feed = False
-
         self.list_view = TreeView(
             window, parent=self.list_container,
             activate_row_callback=self.on_row_activated, search_entry=self.search_entry,
@@ -147,12 +145,6 @@ class RoomList(Popover):
 
         return None
 
-    def toggle_public_feed(self, active):
-
-        self.initializing_feed = True
-        self.public_feed_toggle.set_active(active)
-        self.initializing_feed = False
-
     def toggle_accept_private_room(self, active):
         self.private_room_toggle.set_active(active)
 
@@ -161,7 +153,7 @@ class RoomList(Popover):
         h_user_count = humanize(user_count)
 
         if is_private:
-            # Show private rooms first
+            # Large internal value to sort private rooms first
             user_count += self.PRIVATE_USERS_OFFSET
 
         text_weight = Pango.Weight.BOLD if is_private else Pango.Weight.NORMAL
@@ -183,6 +175,8 @@ class RoomList(Popover):
         if iterator is None:
             return
 
+        is_private = self.list_view.get_row_value(iterator, "is_private_data")
+
         if user_count is None:
             user_count = self.list_view.get_row_value(iterator, "users_data")
 
@@ -192,10 +186,11 @@ class RoomList(Popover):
             else:
                 user_count += 1
 
-        if self.list_view.get_row_value(iterator, "is_private_data"):
-            h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET)
-        else:
-            h_user_count = humanize(user_count)
+        elif is_private:
+            # Large internal value to sort private rooms first
+            user_count += self.PRIVATE_USERS_OFFSET
+
+        h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET) if is_private else humanize(user_count)
 
         self.list_view.set_row_value(iterator, "users", h_user_count)
         self.list_view.set_row_value(iterator, "users_data", user_count)
@@ -207,24 +202,36 @@ class RoomList(Popover):
         self.add_room(msg.room, is_private=True)
 
     def join_room(self, msg):
-        self.update_room_user_count(msg.room, user_count=len(msg.users))
+
+        room = msg.room
+        user_count = len(msg.users)
+
+        if room not in self.list_view.iterators:
+            self.add_room(
+                room, user_count, is_private=msg.private,
+                is_owned=(msg.owner == core.users.login_username)
+            )
+
+        self.update_room_user_count(room, user_count=user_count)
 
     def show_room(self, room, *_args):
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(True)
+            self.public_feed_toggle.set_active(True)
 
     def remove_room(self, room):
 
         if room == core.chatrooms.GLOBAL_ROOM_NAME:
-            self.toggle_public_feed(False)
+            self.public_feed_toggle.set_active(False)
 
         self.update_room_user_count(room, decrement=True)
 
     def user_joined_room(self, msg):
-        self.update_room_user_count(msg.room)
+        if msg.userdata.username != core.users.login_username:
+            self.update_room_user_count(msg.room)
 
     def user_left_room(self, msg):
-        self.update_room_user_count(msg.room, decrement=True)
+        if msg.username != core.users.login_username:
+            self.update_room_user_count(msg.room, decrement=True)
 
     def room_list(self, msg):
 
@@ -272,9 +279,6 @@ class RoomList(Popover):
         toggle.emit("activate")
 
     def on_toggle_public_feed(self, *_args):
-
-        if self.initializing_feed:
-            return
 
         if self.public_feed_toggle.get_active():
             core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)

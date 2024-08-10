@@ -43,13 +43,13 @@ from pynicotine.gtkgui.dialogs.pluginsettings import PluginSettings
 from pynicotine.gtkgui.popovers.searchfilterhelp import SearchFilterHelp
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
-from pynicotine.gtkgui.widgets.filechooser import FolderChooser
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
-from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.textentry import SpellChecker
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
@@ -85,12 +85,12 @@ class NetworkPage:
             self.soulseek_server_entry,
             self.upnp_toggle,
             self.username_entry
-        ) = ui.load(scope=self, path="settings/network.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
         self.portmap_required = None
 
-        self.check_port_status_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.check_port_status_label.connect("activate-link", self.on_activate_link)
 
         self.network_interface_combobox = ComboBox(
             container=self.network_interface_label.get_parent(), has_entry=True,
@@ -188,6 +188,10 @@ class NetworkPage:
             }
         }
 
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
+
     def on_change_password_response(self, dialog, _response_id, user_status):
 
         password = dialog.get_entry_value()
@@ -266,7 +270,7 @@ class DownloadsPage:
             self.use_alt_speed_limit_radio,
             self.use_speed_limit_radio,
             self.use_unlimited_speed_radio
-        ) = ui.load(scope=self, path="settings/downloads.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/downloads.ui")
 
         self.application = application
 
@@ -586,7 +590,7 @@ class SharesPage:
             self.reveal_buddy_shares_toggle,
             self.reveal_trusted_shares_toggle,
             self.shares_list_container
-        ) = ui.load(scope=self, path="settings/shares.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/shares.ui")
 
         self.application = application
 
@@ -802,7 +806,7 @@ class UploadsPage:
             self.use_unlimited_speed_radio,
             self.use_upload_slots_bandwidth_radio,
             self.use_upload_slots_fixed_radio
-        ) = ui.load(scope=self, path="settings/uploads.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/uploads.ui")
 
         self.application = application
 
@@ -908,7 +912,7 @@ class UserProfilePage:
             self.description_view_container,
             self.reset_picture_button,
             self.select_picture_label
-        ) = ui.load(scope=self, path="settings/userinfo.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
         self.user_profile_required = False
@@ -968,7 +972,7 @@ class IgnoredUsersPage:
             self.container,
             self.ignored_ips_container,
             self.ignored_users_container
-        ) = ui.load(scope=self, path="settings/ignore.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
 
@@ -1110,7 +1114,7 @@ class BannedUsersPage:
             self.geo_block_message_entry,
             self.geo_block_message_toggle,
             self.geo_block_toggle
-        ) = ui.load(scope=self, path="settings/ban.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
         self.ip_ban_required = False
@@ -1288,7 +1292,7 @@ class ChatsPage:
             self.tts_command_label,
             self.tts_private_message_entry,
             self.tts_room_message_entry,
-        ) = ui.load(scope=self, path="settings/chats.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
         self.completion_required = False
@@ -1299,7 +1303,7 @@ class ChatsPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
-        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.format_codes_label.connect("activate-link", self.on_activate_link)
 
         self.tts_command_combobox = ComboBox(
             container=self.tts_command_label.get_parent(), label=self.tts_command_label, has_entry=True,
@@ -1439,6 +1443,10 @@ class ChatsPage:
                 "speechprivate": self.tts_private_message_entry.get_text()
             }
         }
+
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
 
     def on_private_room_changed(self, *_args):
         self.private_room_required = True
@@ -1672,7 +1680,7 @@ class UserInterfacePage:
             self.tab_visible_userlist_toggle,
             self.tray_icon_toggle,
             self.tray_options_container
-        ) = ui.load(scope=self, path="settings/userinterface.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/userinterface.ui")
 
         self.application = application
         self.editing_color = False
@@ -2142,7 +2150,7 @@ class LoggingPage:
             self.private_chat_log_folder_label,
             self.transfer_log_folder_default_button,
             self.transfer_log_folder_label
-        ) = ui.load(scope=self, path="settings/log.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/log.ui")
 
         self.application = application
 
@@ -2151,7 +2159,7 @@ class LoggingPage:
 
         self.format_codes_label.set_markup(
             f"<a href='{format_codes_url}' title='{format_codes_url}'>{format_codes_label}</a>")
-        self.format_codes_label.connect("activate-link", lambda x, url: open_uri(url))
+        self.format_codes_label.connect("activate-link", self.on_activate_link)
 
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
@@ -2216,6 +2224,10 @@ class LoggingPage:
             }
         }
 
+    def on_activate_link(self, _label, url):
+        open_uri(url)
+        return True
+
     def on_default_timestamp(self, *_args):
         self.log_timestamp_format_entry.set_text(config.defaults["logging"]["log_timestamp"])
 
@@ -2251,7 +2263,6 @@ class SearchesPage:
             self.filter_file_type_entry,
             self.filter_free_slot_toggle,
             self.filter_help_button,
-            self.filter_help_label,
             self.filter_include_entry,
             self.filter_length_entry,
             self.max_displayed_results_spinner,
@@ -2259,17 +2270,13 @@ class SearchesPage:
             self.min_search_term_length_spinner,
             self.repond_search_requests_toggle,
             self.show_private_results_toggle
-        ) = ui.load(scope=self, path="settings/search.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
         self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
         self.filter_help.set_menu_button(self.filter_help_button)
-
-        if GTK_API_VERSION >= 4:
-            inner_button = next(iter(self.filter_help_button))
-            self.filter_help_label.set_mnemonic_widget(inner_button)
 
         self.options = {
             "searches": {
@@ -2374,7 +2381,7 @@ class UrlHandlersPage:
             self.container,
             self.file_manager_label,
             self.protocol_list_container
-        ) = ui.load(scope=self, path="settings/urlhandlers.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/urlhandlers.ui")
 
         self.application = application
 
@@ -2582,7 +2589,7 @@ class NowPlayingPage:
             self.other_radio,
             self.output_label,
             self.test_configuration_button
-        ) = ui.load(scope=self, path="settings/nowplaying.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/nowplaying.ui")
 
         self.application = application
 
@@ -2781,7 +2788,7 @@ class PluginsPage:
             self.plugin_name_label,
             self.plugin_settings_button,
             self.plugin_version_label
-        ) = ui.load(scope=self, path="settings/plugin.ui")
+        ) = self.widgets = ui.load(scope=self, path="settings/plugin.ui")
 
         self.application = application
         self.selected_plugin = None
@@ -2965,7 +2972,7 @@ class Preferences(Dialog):
             self.ok_button,
             self.preferences_list,
             self.viewport
-        ) = ui.load(scope=self, path="dialogs/preferences.ui")
+        ) = self.widgets = ui.load(scope=self, path="dialogs/preferences.ui")
 
         super().__init__(
             parent=application.window,
@@ -3327,15 +3334,13 @@ class Preferences(Dialog):
         toggle.emit("activate")
 
     def on_widget_scroll_event(self, _widget, event):
-        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass
-        scroll event to container (GTK 3)"""
+        """Prevent scrolling in GtkSpinButton and pass scroll event to container (GTK 3)"""
 
         self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
-        """Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate
-        scrolling in the container (GTK 4)"""
+        """Prevent scrolling in GtkSpinButton and emulate scrolling in the container (GTK 4)"""
 
         adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
@@ -3366,7 +3371,7 @@ class Preferences(Dialog):
             self.pages[page_id] = page = page_class(self.application)
             page.set_settings()
 
-            for obj in page.__dict__.values():
+            for obj in page.widgets:
                 if isinstance(obj, Gtk.CheckButton):
                     if GTK_API_VERSION >= 4:
                         try:
@@ -3393,13 +3398,7 @@ class Preferences(Dialog):
                     obj.set_receives_default(True)
                     switch_label.gesture_click.connect("released", self.on_toggle_label_pressed, obj)
 
-                elif isinstance(obj, (ComboBox, Gtk.SpinButton)):
-                    if isinstance(obj, ComboBox):
-                        if GTK_API_VERSION >= 4:
-                            continue
-
-                        obj = obj.dropdown
-
+                elif isinstance(obj, Gtk.SpinButton):
                     if GTK_API_VERSION >= 4:
                         scroll_controller = Gtk.EventControllerScroll(
                             flags=int(Gtk.EventControllerScrollFlags.VERTICAL)

@@ -51,6 +51,9 @@ class WatchedUser:
 
 
 class Users:
+    __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
+                 "privileges_left", "_should_open_privileges_url", "addresses", "countries",
+                 "statuses", "watched", "privileged", "_ip_requested", "_pending_watch_removals")
 
     def __init__(self):
 
@@ -305,17 +308,17 @@ class Users:
     def _watch_user(self, msg):
         """Server code 5."""
 
-        if msg.userexists:
-            if msg.status is not None:  # Soulfind server support, sends userexists but no additional data
-                events.emit("user-stats", msg)
+        if not msg.userexists:
+            # User does not exist. The server will not keep us informed if the user is created
+            # later, so we need to remove the user from our list.
+            # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
+            # the user is actually online. Remove the user when we receive a UserStatus message
+            # telling us the user is offline.
+            self._pending_watch_removals.add(msg.user)
             return
 
-        # User does not exist. The server will not keep us informed if the user is created
-        # later, so we need to remove the user from our list.
-        # Due to a bug, the server will in rare cases tell us a user doesn't exist, while
-        # the user is actually online. Remove the user when we receive a UserStatus message
-        # telling us the user is offline.
-        self._pending_watch_removals.add(msg.user)
+        if msg.contains_stats:
+            events.emit("user-stats", msg)
 
     def _user_status(self, msg):
         """Server code 7."""

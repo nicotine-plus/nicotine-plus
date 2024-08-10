@@ -65,7 +65,6 @@ from pynicotine.utils import truncate_string_byte
 
 
 class RequestedFolder:
-
     __slots__ = ("username", "folder_path", "download_folder_path", "request_timer_id", "has_retried",
                  "legacy_attempt")
 
@@ -79,6 +78,9 @@ class RequestedFolder:
 
 
 class Downloads(Transfers):
+    __slots__ = ("_requested_folders", "_requested_folder_token", "_folder_basename_byte_limits",
+                 "_pending_queue_messages", "_download_queue_timer_id", "_retry_connection_downloads_timer_id",
+                 "_retry_io_downloads_timer_id")
 
     def __init__(self):
 
@@ -667,7 +669,7 @@ class Downloads(Transfers):
         basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, separator, extension = basename.rpartition(".")
         extension = separator + extension
-        basename_limit = max_bytes - len(extension.encode("utf-8"))
+        basename_limit = max_bytes - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:
@@ -716,7 +718,7 @@ class Downloads(Transfers):
         transferring."""
 
         md5sum = md5()
-        md5sum.update((virtual_path + username).encode("utf-8"))
+        md5sum.update((virtual_path + username).encode())
         prefix = f"INCOMPLETE{md5sum.hexdigest()}"
 
         # Ensure file name length doesn't exceed file system limit
@@ -726,7 +728,7 @@ class Downloads(Transfers):
         basename = clean_file(virtual_path.rpartition("\\")[-1])
         basename_no_extension, separator, extension = basename.rpartition(".")
         extension = separator + extension
-        basename_limit = max_bytes - len(prefix) - len(extension.encode("utf-8"))
+        basename_limit = max_bytes - len(prefix) - len(extension.encode())
         basename_no_extension = truncate_string_byte(basename_no_extension, max(0, basename_limit))
 
         if basename_limit < 0:

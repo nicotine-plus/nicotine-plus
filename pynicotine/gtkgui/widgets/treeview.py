@@ -477,9 +477,7 @@ class TreeView:
                 columns["sort"] = "descending" if self._sort_type == Gtk.SortType.DESCENDING else "ascending"
 
         if self._secondary_name is not None:
-            try:
-                column_config[self._widget_name]
-            except KeyError:
+            if self._widget_name not in column_config:
                 column_config[self._widget_name] = {}
 
             column_config[self._widget_name][self._secondary_name] = saved_columns
@@ -514,7 +512,7 @@ class TreeView:
                 values[i] = gvalue
 
         if self.has_tree:
-            self.iterators[key] = iterator = self.model.insert_with_values(  # pylint: disable=no-member
+            self.iterators[key] = iterator = self.model.insert_with_values(
                 parent_iterator, position, self._column_numbers, values
             )
         else:

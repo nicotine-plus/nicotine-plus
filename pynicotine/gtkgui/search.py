@@ -38,12 +38,12 @@ from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.widgets import clipboard
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
-from pynicotine.gtkgui.widgets.textentry import ComboBox
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_file_type_icon_name
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
@@ -123,7 +123,8 @@ class Searches(IconNotebook):
             ("quit", self.quit),
             ("remove-search", self.remove_search),
             ("remove-wish", self.update_wish_button),
-            ("server-login", self.on_focus),
+            ("server-disconnect", self.server_disconnect),
+            ("server-login", self.server_login),
             ("show-search", self.show_search)
         ):
             events.connect(event_name, callback)
@@ -219,15 +220,11 @@ class Searches(IconNotebook):
         if not config.sections["searches"]["enable_history"]:
             return
 
-        self.search_combobox.freeze()
-
         self.search_combobox.remove_id(term)
         self.search_combobox.prepend(term)
 
         while self.search_combobox.get_num_items() > core.search.SEARCH_HISTORY_LIMIT:
             self.search_combobox.remove_pos(-1)
-
-        self.search_combobox.unfreeze()
 
     def create_page(self, token, text, mode=None, mode_label=None, room=None, users=None,
                     show_page=True):
@@ -369,6 +366,13 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             if page.text == wish:
                 page.update_wish_button()
+
+    def server_login(self, *_args):
+        self.window.search_title.set_sensitive(True)
+        self.on_focus()
+
+    def server_disconnect(self, *_args):
+        self.window.search_title.set_sensitive(False)
 
 
 class Search:
@@ -690,10 +694,6 @@ class Search:
     def set_label(self, label):
         self.tab_menu.set_parent(label)
 
-    def on_combobox_check_separator(self, model, iterator):
-        # Render empty value as separator
-        return not model.get_value(iterator, 0)
-
     def update_filter_widgets(self):
 
         self.update_filter_counter(self.active_filter_count)
@@ -716,8 +716,6 @@ class Search:
 
         for filter_id, widget in self.filter_comboboxes.items():
             widget.freeze()
-
-            widget.set_row_separator_func(lambda *_args: 0)
             widget.clear()
 
             presets = self.FILTER_PRESETS.get(filter_id)
@@ -732,9 +730,6 @@ class Search:
 
             for value in islice(filter_history, core.search.RESULT_FILTER_HISTORY_LIMIT):
                 widget.append(value)
-
-            if presets:
-                widget.set_row_separator_func(self.on_combobox_check_separator)
 
             widget.unfreeze()
 
@@ -1379,12 +1374,11 @@ class Search:
         self.on_file_properties()
         return True
 
-    def on_select_user_results(self, *args):
+    def on_select_user_results(self, _action, _parameter, selected_user):
 
         if not self.selected_users:
             return
 
-        selected_user = args[-1]
         _user_iterator, user_child_iterators = self.users[selected_user]
 
         self.tree_view.unselect_all_rows()

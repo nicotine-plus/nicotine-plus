@@ -26,7 +26,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.textentry import ComboBox
+from pynicotine.gtkgui.widgets.combobox import ComboBox
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.window import Window
@@ -522,21 +522,13 @@ class EntryDialog(OptionDialog):
 
     def _add_combobox(self, items, has_entry=True, visibility=True, activates_default=True):
 
-        combobox = ComboBox(container=self.entry_container, has_entry=has_entry)
+        combobox = ComboBox(container=self.entry_container, has_entry=has_entry, items=items)
 
         if has_entry:
             entry = combobox.entry
             entry.set_activates_default(activates_default)
             entry.set_width_chars(45)
             entry.set_visibility(visibility)
-
-        if items is not None:
-            combobox.freeze()
-
-            for item in items:
-                combobox.append(item)
-
-            combobox.unfreeze()
 
         if self.entry_combobox is None:
             self.message_label.set_mnemonic_widget(entry if has_entry else combobox.widget)

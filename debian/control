@@ -8,12 +8,11 @@ Build-Depends: debhelper-compat (= 10),
                dh-python,
                gettext,
                gir1.2-gtk-4.0 (>= 4.6.9) | gir1.2-gtk-3.0 (>= 3.22.30),
-               libgtk-4-bin | libgtk-3-bin,
+               libgtk-4-bin (>= 4.8.0) | python3-pytest-xvfb (>= 2.0.0) | libgtk-3-bin (>= 3.22.30),
                lintian,
                python3-all,
                python3-gi,
                python3-pytest,
-               python3-pytest-xvfb,
                python3-setuptools
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
 Vcs-Browser: https://github.com/nicotine-plus/nicotine-plus

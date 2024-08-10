@@ -463,7 +463,6 @@ class MainWindow(Window):
         self.add_action(action)
 
         action = Gio.SimpleAction(name="toggle-status")
-        action.set_enabled(False)
         action.connect("activate", self.on_toggle_status)
         self.add_action(action)
 
@@ -924,12 +923,7 @@ class MainWindow(Window):
     def update_user_status(self, *_args):
 
         status = core.users.login_status
-        is_online = (status != UserStatus.OFFLINE)
         is_away = (status == UserStatus.AWAY)
-        toggle_status_action = self.lookup_action("toggle-status")
-
-        # Action status
-        toggle_status_action.set_enabled(is_online)
 
         # Away mode
         if not is_away:
@@ -938,9 +932,6 @@ class MainWindow(Window):
             self.remove_away_timer()
 
         # Status bar
-        if core.uploads.pending_shutdown:
-            return
-
         username = core.users.login_username
         icon_name = USER_STATUS_ICON_NAMES[status]
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
@@ -966,10 +957,11 @@ class MainWindow(Window):
             self.user_status_label.set_text(status_text)
 
         if self.user_status_button.get_active():
-            # Disable button toggled state without activating action
-            toggle_status_action.handler_block_by_func(self.on_toggle_status)
+            toggle_status_action = self.lookup_action("toggle-status")
+
+            toggle_status_action.set_enabled(False)
             self.user_status_button.set_active(False)
-            toggle_status_action.handler_unblock_by_func(self.on_toggle_status)
+            toggle_status_action.set_enabled(True)
 
     def user_status(self, msg):
         if msg.user == core.users.login_username:
@@ -979,6 +971,17 @@ class MainWindow(Window):
 
     def on_search(self, *_args):
         self.search.on_search()
+
+    def on_search_entry_changed(self, entry, *_args):
+        entry.props.secondary_icon_name = "edit-clear-symbolic" if entry.get_text() else None
+
+    def on_search_entry_icon_press(self, entry, icon_pos, *_args):
+
+        if icon_pos == Gtk.EntryIconPosition.SECONDARY:
+            entry.set_text("")
+            return
+
+        self.on_search()
 
     # User Info #
 
@@ -1160,8 +1163,17 @@ class MainWindow(Window):
         self.scan_progress_spinner.stop()
 
     def on_toggle_status(self, *_args):
-        core.uploads.cancel_shutdown()
-        self.application.lookup_action("away").activate()
+
+        if core.uploads.pending_shutdown:
+            core.uploads.cancel_shutdown()
+
+        elif core.users.login_status == UserStatus.OFFLINE:
+            self.application.lookup_action("connect").activate()
+
+        else:
+            self.application.lookup_action("away").activate()
+
+        self.user_status_button.set_active(False)
 
     # Exit #
 

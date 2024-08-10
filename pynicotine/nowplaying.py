@@ -34,6 +34,8 @@ class NowPlaying:
     """This class contains code for retrieving information about the song
     currently playing in a media player."""
 
+    __slots__ = ("title",)
+
     def __init__(self):
         self.title_clear()
 
@@ -132,7 +134,7 @@ class NowPlaying:
             from urllib.request import urlopen
             with urlopen((f"https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={username}"
                           f"&api_key={apikey}&limit=1&format=json"), timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error},
@@ -267,7 +269,7 @@ class NowPlaying:
         try:
             from urllib.request import urlopen
             with urlopen(f"https://api.listenbrainz.org/1/user/{username}/playing-now", timeout=10) as response:
-                response_body = response.read().decode("utf-8")
+                response_body = response.read().decode("utf-8", "replace")
 
         except Exception as error:
             log.add(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {"error": error},
@@ -303,7 +305,7 @@ class NowPlaying:
 
         try:
             output = execute_command(command, returnoutput=True, hidden=True)
-            self.title["nowplaying"] = output.decode()
+            self.title["nowplaying"] = output.decode("utf-8", "replace")
             return True
 
         except Exception as error:

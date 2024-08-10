@@ -1,0 +1,7 @@
+# This file is responsible for generating the main website from our GitHub repository
+title: Nicotine+
+tagline: Graphical client for Soulseek
+logo: /data/icons/icon.svg
+github:
+  # Disable footer
+  private: true
