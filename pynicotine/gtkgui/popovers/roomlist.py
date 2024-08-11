@@ -280,12 +280,16 @@ class RoomList(Popover):
 
     def on_toggle_public_feed(self, *_args):
 
+        global_room_name = core.chatrooms.GLOBAL_ROOM_NAME
+
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
+            if global_room_name not in core.chatrooms.joined_rooms:
+                core.chatrooms.show_room(global_room_name)
+
             self.close(use_transition=False)
             return
 
-        core.chatrooms.remove_room(core.chatrooms.GLOBAL_ROOM_NAME)
+        core.chatrooms.remove_room(global_room_name)
 
     def on_popup_private_room_disown(self, *_args):
         core.chatrooms.request_private_room_disown(self.popup_room)
