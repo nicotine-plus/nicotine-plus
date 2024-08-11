@@ -313,7 +313,7 @@ class NetworkFilter:
 
         data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "external", "data")
 
-        with open(os.path.join(data_path, "ip_country_data.csv"), "r", encoding="ascii") as file_handle:
+        with open(os.path.join(data_path, "ip_country_data.csv"), "r", encoding="utf-8") as file_handle:
             for line in file_handle:
                 line = line.strip()
 
