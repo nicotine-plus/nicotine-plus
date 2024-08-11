@@ -83,6 +83,9 @@ class ChatEntry:
     def grab_focus(self):
         self.widget.grab_focus()
 
+    def grab_focus_without_selecting(self):
+        self.widget.grab_focus_without_selecting()
+
     def get_buffer(self):
         return self.widget.get_buffer()
 
