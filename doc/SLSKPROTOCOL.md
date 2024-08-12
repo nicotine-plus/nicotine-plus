@@ -184,7 +184,7 @@ missing if a file does not provide them.
 Server messages are used by clients to interface with the server over a
 connection (TCP). In Nicotine+, these messages are defined in slskmessages.py.
 
-If you want a Soulseek server, check out [Soulfind](https://github.com/seeschloss/soulfind).
+If you want a Soulseek server, check out [Soulfind](https://github.com/soulfind-dev/soulfind).
 Soulfind is obviously not exactly the same as the official proprietary Soulseek
 server, but it handles the protocol well enough (and can be modified).
 

@@ -112,7 +112,7 @@
 ### SeeSchloss
  - Developer
  - Created 1.0.8 Win32 installer
- - Created [Soulfind](https://github.com/seeschloss/soulfind), open source Soulseek server written in D
+ - Created [Soulfind](https://github.com/soulfind-dev/soulfind), open source Soulseek server written in D
 
 ### vasi
  - Mac developer
