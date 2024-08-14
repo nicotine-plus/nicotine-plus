@@ -182,13 +182,11 @@ class ChatEntry:
 
     def set_spell_check_enabled(self, enabled):
 
-        if not enabled:
-            if self.spell_checker is not None:
-                self.spell_checker.destroy()
-                self.spell_checker = None
+        if self.spell_checker is not None:
+            self.spell_checker.set_enabled(enabled)
             return
 
-        if SpellChecker.is_available():
+        if enabled and SpellChecker.is_available():
             self.spell_checker = SpellChecker(self.widget)
 
     def set_position(self, position):
@@ -473,16 +471,10 @@ class SpellChecker:
         cls._load_module()
         return bool(SpellChecker.module)
 
+    def set_enabled(self, enabled):
+        self.entry.set_inline_spell_checking(enabled)
+
     def destroy(self):
-
-        if self.buffer:
-            self.buffer.set_spell_checker(None)
-            self.buffer = None
-
-        if self.entry:
-            self.entry.set_inline_spell_checking(False)
-            self.entry = None
-
         self.__dict__.clear()
 
 
