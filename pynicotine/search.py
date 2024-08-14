@@ -61,7 +61,7 @@ class SearchRequest:
 
 
 class Search:
-    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_self_search_tokens",
+    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_own_tokens",
                  "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
@@ -79,7 +79,7 @@ class Search:
         self.excluded_phrases = []
         self.token = initial_token()
         self.wishlist_interval = 0
-        self._self_search_tokens = set()
+        self._own_tokens = set()
         self._wishlist_timer_id = None
 
         for event_name, callback in (
@@ -107,7 +107,7 @@ class Search:
     def _server_disconnect(self, _msg):
 
         self.excluded_phrases.clear()
-        self._self_search_tokens.clear()
+        self._own_tokens.clear()
 
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
@@ -344,7 +344,7 @@ class Search:
 
         for username in users:
             if username == core.users.login_username:
-                self._self_search_tokens.add(self.token)
+                self._own_tokens.add(self.token)
 
             core.send_message_to_server(UserSearch(username, self.token, text))
 
@@ -663,10 +663,13 @@ class Search:
 
         local_username = core.users.login_username
 
-        if username == local_username and token not in self._self_search_tokens:
-            # We shouldn't send a search response if we initiated the search request,
-            # unless we're specifically searching our own username
-            return
+        if username == local_username:
+            if token not in self._own_tokens:
+                # We shouldn't send a search response if we initiated the search
+                # request, unless we're specifically searching our own username
+                return
+
+            self._own_tokens.discard(token)
 
         max_results = config.sections["searches"]["maxresults"]
 
