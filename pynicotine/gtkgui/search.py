@@ -242,15 +242,10 @@ class Searches(IconNotebook):
             return page
 
         if mode_label is not None:
-            full_text = f"({mode_label}) {text}"
-            length = 25
-        else:
-            full_text = text
-            length = 20
+            text = f"({mode_label}) {text}"
 
-        label = full_text[:length]
-        self.append_page(page.container, label, focus_callback=page.on_focus,
-                         close_callback=page.on_close, full_text=full_text)
+        self.append_page(page.container, text, focus_callback=page.on_focus,
+                         close_callback=page.on_close)
         page.set_label(self.get_tab_label_inner(page.container))
 
         return page

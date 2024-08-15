@@ -386,14 +386,14 @@ class IconNotebook:
             tab_label = self.get_tab_label(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
-    def append_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
-        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=-1)
+    def append_page(self, page, text, focus_callback=None, close_callback=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, user, position=-1)
 
-    def insert_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None,
+    def insert_page(self, page, text, focus_callback=None, close_callback=None, user=None,
                     position=None):
 
-        if full_text is None:
-            full_text = text
+        full_text = text
+        text = (text[:25] + "…") if len(text) > 25 else text
 
         self.tab_labels[page] = tab_label = TabLabel(
             text, full_text, close_button_visible=config.sections["ui"]["tabclosers"], close_callback=close_callback)
@@ -417,8 +417,8 @@ class IconNotebook:
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
             self.set_user_status(page, text, status)
 
-    def prepend_page(self, page, text, focus_callback=None, close_callback=None, full_text=None, user=None):
-        self.insert_page(page, text, focus_callback, close_callback, full_text, user, position=0)
+    def prepend_page(self, page, text, focus_callback=None, close_callback=None, user=None):
+        self.insert_page(page, text, focus_callback, close_callback, user, position=0)
 
     def restore_removed_page(self, *_args):
         if self.recently_removed_pages:
