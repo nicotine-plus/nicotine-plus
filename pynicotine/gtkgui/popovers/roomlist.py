@@ -204,6 +204,10 @@ class RoomList(Popover):
     def join_room(self, msg):
 
         room = msg.room
+
+        if room not in core.chatrooms.joined_rooms:
+            return
+
         user_count = len(msg.users)
 
         if room not in self.list_view.iterators:

@@ -317,11 +317,11 @@ class ChatRooms:
         room_obj = self.joined_rooms.get(msg.room)
 
         if room_obj is None:
-            self.show_room(msg.room, is_private=msg.private, switch_page=False)
-            room_obj = self.joined_rooms[msg.room]
-        else:
-            room_obj.is_private = msg.private
+            # Reject unsolicited room join messages from the server
+            core.send_message_to_server(LeaveRoom(msg.room))
+            return
 
+        room_obj.is_private = msg.private
         self.server_rooms.add(msg.room)
 
         if msg.private:
