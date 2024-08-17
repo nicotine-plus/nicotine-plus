@@ -112,9 +112,13 @@ EVENT_NAMES = {
 
     # Network filter
     "ban-user",
+    "ban-user-ip",
     "ignore-user",
+    "ignore-user-ip",
     "unban-user",
+    "unban-user-ip",
     "unignore-user",
+    "unignore-user-ip",
 
     # Private chat
     "clear-private-messages",

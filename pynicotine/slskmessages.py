@@ -150,15 +150,6 @@ class CloseConnection(InternalMessage):
         self.sock = sock
 
 
-class CloseConnectionIP(InternalMessage):
-    """Sent to the networking thread to close any connections using a certain IP address."""
-
-    __slots__ = ("addr",)
-
-    def __init__(self, addr=None):
-        self.addr = addr
-
-
 class ServerConnect(InternalMessage):
     """Sent to the networking thread to establish a server connection."""
 

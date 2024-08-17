@@ -48,7 +48,6 @@ from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
 from pynicotine.slskmessages import CantConnectToPeer
 from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import CloseConnectionIP
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribBranchLevel
@@ -1073,18 +1072,6 @@ class NetworkThread(Thread):
         if self._pending_peer_conns:
             for addr, init in self._pending_peer_conns.copy().items():
                 self._init_peer_connection(addr, init)
-
-    def _close_connection_by_ip(self, ip_address):
-
-        for conn in self._conns.copy().values():
-            if conn is None or conn is self._server_conn:
-                continue
-
-            peer_ip_address, _peer_port = conn.addr
-
-            if ip_address == peer_ip_address:
-                log.add_conn("Blocking peer connection to IP address %s", (conn.addr,))
-                self._close_connection(conn)
 
     # Server Connection #
 
@@ -2389,9 +2376,6 @@ class NetworkThread(Thread):
 
         if msg_class is CloseConnection:
             self._close_connection(self._conns.get(msg.sock))
-
-        elif msg_class is CloseConnectionIP:
-            self._close_connection_by_ip(msg.addr)
 
         elif msg_class is ServerConnect:
             self._server_connect(msg)

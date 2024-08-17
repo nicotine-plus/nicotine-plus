@@ -975,6 +975,10 @@ class IgnoredUsersPage:
         ) = self.widgets = ui.load(scope=self, path="settings/ignore.ui")
 
         self.application = application
+        self.added_users = set()
+        self.added_ips = set()
+        self.removed_users = set()
+        self.removed_ips = set()
 
         self.ignored_users = []
         self.ignored_users_list_view = TreeView(
@@ -1025,6 +1029,8 @@ class IgnoredUsersPage:
 
     def set_settings(self):
 
+        self.clear_changes()
+
         self.ignored_users_list_view.clear()
         self.ignored_ips_list_view.clear()
         self.ignored_users.clear()
@@ -1043,6 +1049,13 @@ class IgnoredUsersPage:
             }
         }
 
+    def clear_changes(self):
+
+        self.added_users.clear()
+        self.added_ips.clear()
+        self.removed_users.clear()
+        self.removed_ips.clear()
+
     def on_add_ignored_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value().strip()
@@ -1050,6 +1063,9 @@ class IgnoredUsersPage:
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
             self.ignored_users_list_view.add_row([str(user)])
+
+            self.added_users.add(user)
+            self.removed_users.discard(user)
 
     def on_add_ignored_user(self, *_args):
 
@@ -1069,6 +1085,11 @@ class IgnoredUsersPage:
             self.ignored_users_list_view.remove_row(iterator)
             self.ignored_users.remove(user)
 
+            if user not in self.added_users:
+                self.removed_users.add(user)
+
+            self.added_users.discard(user)
+
     def on_add_ignored_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value().strip()
@@ -1078,8 +1099,13 @@ class IgnoredUsersPage:
 
         if ip_address not in self.ignored_ips:
             user = core.network_filter.get_online_username(ip_address) or ""
+            user_ip_pair = (user, ip_address)
+
             self.ignored_ips[ip_address] = user
             self.ignored_ips_list_view.add_row([ip_address, user])
+
+            self.added_ips.add(user_ip_pair)
+            self.removed_ips.discard(user_ip_pair)
 
     def on_add_ignored_ip(self, *_args):
 
@@ -1095,9 +1121,16 @@ class IgnoredUsersPage:
 
         for iterator in reversed(list(self.ignored_ips_list_view.get_selected_rows())):
             ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
+            user = self.ignored_ips_list_view.get_row_value(iterator, "user")
+            user_ip_pair = (user, ip_address)
 
             self.ignored_ips_list_view.remove_row(iterator)
             del self.ignored_ips[ip_address]
+
+            if user_ip_pair not in self.added_ips:
+                self.removed_ips.add(user_ip_pair)
+
+            self.added_ips.discard(user_ip_pair)
 
 
 class BannedUsersPage:
@@ -1117,7 +1150,10 @@ class BannedUsersPage:
         ) = self.widgets = ui.load(scope=self, path="settings/ban.ui")
 
         self.application = application
-        self.ip_ban_required = False
+        self.added_users = set()
+        self.added_ips = set()
+        self.removed_users = set()
+        self.removed_ips = set()
 
         self.banned_users = []
         self.banned_users_list_view = TreeView(
@@ -1176,6 +1212,8 @@ class BannedUsersPage:
 
     def set_settings(self):
 
+        self.clear_changes()
+
         self.banned_users_list_view.clear()
         self.banned_ips_list_view.clear()
         self.banned_users.clear()
@@ -1186,8 +1224,6 @@ class BannedUsersPage:
         self.banned_users = config.sections["server"]["banlist"][:]
         self.banned_ips = config.sections["server"]["ipblocklist"].copy()
         self.geo_block_country_entry.set_text(config.sections["transfers"]["geoblockcc"][0])
-
-        self.ip_ban_required = False
 
     def get_settings(self):
 
@@ -1206,6 +1242,13 @@ class BannedUsersPage:
             }
         }
 
+    def clear_changes(self):
+
+        self.added_users.clear()
+        self.added_ips.clear()
+        self.removed_users.clear()
+        self.removed_ips.clear()
+
     def on_add_banned_user_response(self, dialog, _response_id, _data):
 
         user = dialog.get_entry_value().strip()
@@ -1213,6 +1256,9 @@ class BannedUsersPage:
         if user and user not in self.banned_users:
             self.banned_users.append(user)
             self.banned_users_list_view.add_row([user])
+
+            self.added_users.add(user)
+            self.removed_users.discard(user)
 
     def on_add_banned_user(self, *_args):
 
@@ -1232,6 +1278,11 @@ class BannedUsersPage:
             self.banned_users_list_view.remove_row(iterator)
             self.banned_users.remove(user)
 
+            if user not in self.added_users:
+                self.removed_users.add(user)
+
+            self.added_users.discard(user)
+
     def on_add_banned_ip_response(self, dialog, _response_id, _data):
 
         ip_address = dialog.get_entry_value().strip()
@@ -1241,9 +1292,13 @@ class BannedUsersPage:
 
         if ip_address not in self.banned_ips:
             user = core.network_filter.get_online_username(ip_address) or ""
+            user_ip_pair = (user, ip_address)
+
             self.banned_ips[ip_address] = user
             self.banned_ips_list_view.add_row([ip_address, user])
-            self.ip_ban_required = True
+
+            self.added_ips.add(user_ip_pair)
+            self.removed_ips.discard(user_ip_pair)
 
     def on_add_banned_ip(self, *_args):
 
@@ -1259,9 +1314,16 @@ class BannedUsersPage:
 
         for iterator in reversed(list(self.banned_ips_list_view.get_selected_rows())):
             ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
+            user = self.banned_ips_list_view.get_row_value(iterator, "user")
+            user_ip_pair = (user, ip_address)
 
             self.banned_ips_list_view.remove_row(iterator)
             del self.banned_ips[ip_address]
+
+            if user_ip_pair not in self.added_ips:
+                self.removed_ips.add(user_ip_pair)
+
+            self.added_ips.discard(user_ip_pair)
 
 
 class ChatsPage:
@@ -3185,12 +3247,6 @@ class Preferences(Dialog):
             completion_required = False
 
         try:
-            ip_ban_required = self.pages["banned-users"].ip_ban_required
-
-        except KeyError:
-            ip_ban_required = False
-
-        try:
             search_required = self.pages["searches"].search_required
 
         except KeyError:
@@ -3203,7 +3259,6 @@ class Preferences(Dialog):
             user_profile_required,
             private_room_required,
             completion_required,
-            ip_ban_required,
             search_required,
             options
         )
@@ -3217,13 +3272,45 @@ class Preferences(Dialog):
             user_profile_required,
             private_room_required,
             completion_required,
-            ip_ban_required,
             search_required,
             options
         ) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
+
+        banned_page = self.pages.get("banned-users")
+        ignored_page = self.pages.get("ignored-users")
+
+        if banned_page is not None:
+            for username in banned_page.added_users:
+                core.network_filter.ban_user(username)
+
+            for username, ip_address in banned_page.added_ips:
+                core.network_filter.ban_user_ip(username, ip_address)
+
+            for username in banned_page.removed_users:
+                core.network_filter.unban_user(username)
+
+            for username, ip_address in banned_page.removed_ips:
+                core.network_filter.unban_user_ip(username, ip_address)
+
+            banned_page.clear_changes()
+
+        if ignored_page is not None:
+            for username in ignored_page.added_users:
+                core.network_filter.ignore_user(username)
+
+            for username, ip_address in ignored_page.added_ips:
+                core.network_filter.ignore_user_ip(username, ip_address)
+
+            for username in ignored_page.removed_users:
+                core.network_filter.unignore_user(username)
+
+            for username, ip_address in ignored_page.removed_ips:
+                core.network_filter.unignore_user_ip(username, ip_address)
+
+            ignored_page.clear_changes()
 
         if portmap_required == "add":
             core.portmapper.add_port_mapping()
@@ -3241,9 +3328,6 @@ class Preferences(Dialog):
         if completion_required:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
-
-        if ip_ban_required:
-            core.network_filter.close_banned_ip_connections()
 
         if search_required:
             self.application.window.search.populate_search_history()
