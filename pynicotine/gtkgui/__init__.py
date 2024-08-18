@@ -56,7 +56,9 @@ def get_default_gtk_version():
 
 def check_gtk_version(gtk_api_version):
 
-    if sys.platform in {"darwin", "win32"}:
+    is_gtk3_supported = sys.platform not in {"darwin", "win32"}
+
+    if not is_gtk3_supported:
         # GTK 3 is no longer tested nor supported on macOS and Windows
         gtk_api_version = "4"
 
@@ -72,7 +74,7 @@ def check_gtk_version(gtk_api_version):
         gi.check_version(pygobject_version)
 
     except (ImportError, ValueError):
-        if gtk_api_version == "4":
+        if gtk_api_version == "4" and is_gtk3_supported:
             return check_gtk_version(gtk_api_version="3")
 
         return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
@@ -81,7 +83,7 @@ def check_gtk_version(gtk_api_version):
         gi.require_version("Gtk", f"{gtk_api_version}.0")
 
     except ValueError:
-        if gtk_api_version == "4":
+        if gtk_api_version == "4" and is_gtk3_supported:
             return check_gtk_version(gtk_api_version="3")
 
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
