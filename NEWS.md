@@ -26,6 +26,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a possible memory error when reading data from a peer connection
  * Fixed issues related to downloads getting stuck when failing
  * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where banning a user's IP did not remove their uploads
  * Fixed an issue where uploads would not start immediately in some cases
  * Fixed an issue where popovers could not be closed in some cases
  * Fixed an issue where some wishlist searches stopped working after closing their tabs
@@ -46,7 +47,9 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Issues closed on GitHub
 
  * Nicotine+ can't be launched from network drive on Windows ([#1843](https://github.com/nicotine-plus/nicotine-plus/issues/1843))
+ * Really varied upload speeds ([#2219](https://github.com/nicotine-plus/nicotine-plus/issues/2219))
  * Right click with control click doesn't work on mac with trackpad ([#2724](https://github.com/nicotine-plus/nicotine-plus/issues/2724))
+ * Bad user experience with Windows-like buttons on Nicotine 3.3.0 ([#2880](https://github.com/nicotine-plus/nicotine-plus/issues/2880))
  * Downloads stuck on 'Queued' ([#2926](https://github.com/nicotine-plus/nicotine-plus/issues/2926))
  * User rows expanding when collapse all enabled ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
  * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
@@ -62,6 +65,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
  * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
  * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
+ * Upload I/O error: cannot fit 'int' into an offset-sized integer ([#3077](https://github.com/nicotine-plus/nicotine-plus/issues/3077))
 
 
 ## Version 3.3.4 (May 6, 2024)
