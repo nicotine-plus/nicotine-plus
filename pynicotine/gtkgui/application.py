@@ -464,7 +464,9 @@ class Application:
 
         try:
             if sys.platform == "win32":
-                self.tray_icon.show_notification(title=title, message=message)
+                self.tray_icon.show_notification(
+                    title=title, message=message, action=action, action_target=action_target
+                )
                 return
 
             priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL

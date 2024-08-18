@@ -188,7 +188,7 @@ class BaseImplementation:
         self._set_item_text(self.uploads_item, status)
         self._update_menu()
 
-    def show_notification(self, title, message):
+    def show_notification(self, title, message, action=None, action_target=None):
         # Implemented in subclasses
         pass
 
@@ -705,6 +705,8 @@ class Win32Implementation(BaseImplementation):
         self._h_icon = None
         self._menu = None
         self._wm_taskbarcreated = windll.user32.RegisterWindowMessageW("TaskbarCreated")
+        self._click_action = None
+        self._click_action_target = None
 
         self._register_class()
         self._create_window()
@@ -828,7 +830,8 @@ class Win32Implementation(BaseImplementation):
             windll.user32.DestroyIcon(self._h_icon)
             self._h_icon = None
 
-    def _update_notify_icon(self, title="", message="", icon_name=None):
+    def _update_notify_icon(self, title="", message="", icon_name=None, click_action=None,
+                            click_action_target=None):
         # pylint: disable=attribute-defined-outside-init,no-member
 
         if self._h_wnd is None:
@@ -844,7 +847,7 @@ class Win32Implementation(BaseImplementation):
 
         from ctypes import byref, sizeof, windll
 
-        action = self.NIM_MODIFY
+        notify_action = self.NIM_MODIFY
 
         if self._notify_id is None:
             self._notify_id = self.NOTIFYICONDATAW(
@@ -855,7 +858,7 @@ class Win32Implementation(BaseImplementation):
                 u_callback_message=self.WM_TRAYICON,
                 sz_tip=truncate_string_byte(pynicotine.__application_name__, byte_limit=127)
             )
-            action = self.NIM_ADD
+            notify_action = self.NIM_ADD
 
         if config.sections["notifications"]["notification_popup_sound"]:
             self._notify_id.dw_info_flags &= ~self.NIIF_NOSOUND
@@ -866,7 +869,10 @@ class Win32Implementation(BaseImplementation):
         self._notify_id.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
         self._notify_id.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
 
-        windll.shell32.Shell_NotifyIconW(action, byref(self._notify_id))
+        self._click_action = click_action.replace("app.", "")
+        self._click_action_target = GLib.Variant("s", click_action_target) if click_action_target else None
+
+        windll.shell32.Shell_NotifyIconW(notify_action, byref(self._notify_id))
 
     def _remove_notify_icon(self):
 
@@ -965,7 +971,12 @@ class Win32Implementation(BaseImplementation):
                 # Icon pressed
                 self.activate_callback()
 
-            elif l_param in (self.NIN_BALLOONHIDE, self.NIN_BALLOONTIMEOUT, self.NIN_BALLOONUSERCLICK):
+            elif l_param in {self.NIN_BALLOONHIDE, self.NIN_BALLOONTIMEOUT, self.NIN_BALLOONUSERCLICK}:
+                if l_param == self.NIN_BALLOONUSERCLICK and self._click_action is not None:
+                    # Notification was clicked, perform action
+                    self.application.lookup_action(self._click_action).activate(self._click_action_target)
+                    self._click_action = self._click_action_target = None
+
                 if not config.sections["ui"]["trayicon"]:
                     # Notification dismissed, but user has disabled tray icon
                     self._remove_notify_icon()
@@ -988,8 +999,9 @@ class Win32Implementation(BaseImplementation):
             wintypes.LPARAM(l_param)
         )
 
-    def show_notification(self, title, message):
-        self._update_notify_icon(title=title, message=message)
+    def show_notification(self, title, message, action=None, action_target=None):
+        self._update_notify_icon(
+            title=title, message=message, click_action=action, click_action_target=action_target)
 
     def unload(self, is_shutdown=True):
 
@@ -1152,9 +1164,11 @@ class TrayIcon:
         if self.implementation:
             self.implementation.set_upload_status(status)
 
-    def show_notification(self, title, message):
+    def show_notification(self, title, message, action=None, action_target=None):
+
         if self.implementation:
-            self.implementation.show_notification(title=title, message=message)
+            self.implementation.show_notification(
+                title=title, message=message, action=action, action_target=action_target)
 
     def update(self):
         if self.implementation:
