@@ -93,6 +93,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("quit", self._instance.quit),
             ("server-login", self._update_user_status),
             ("server-disconnect", self._update_user_status),
@@ -588,27 +589,8 @@ class Application:
             callback=self.on_shares_unavailable_response
         ).present()
 
-    def on_invalid_password_response(self, *_args):
-        self.on_preferences(page_id="network")
-
     def on_invalid_password(self):
-
-        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
-        title = _("Invalid Password")
-        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                "if this is your first time logging in.") % config.sections["server"]["login"]
-
-        OptionDialog(
-            parent=self.window,
-            title=title,
-            message=msg,
-            buttons=[
-                ("cancel", _("_Cancel")),
-                ("ok", _("Change _Login Details"))
-            ],
-            callback=self.on_invalid_password_response
-        ).present()
+        self.on_fast_configure(invalid_password=True)
 
     def on_user_status(self, msg):
         if msg.user == core.users.login_username:
@@ -670,12 +652,16 @@ class Application:
     def on_debug_miscellaneous(self, action, state):
         self.on_set_debug_level(action, state, "miscellaneous")
 
-    def on_fast_configure(self, *_args):
+    def on_fast_configure(self, *_args, invalid_password=False):
 
         if self.fast_configure is None:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
+        if invalid_password and self.fast_configure.is_visible():
+            self.fast_configure.hide()
+
+        self.fast_configure.invalid_password = invalid_password
         self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):

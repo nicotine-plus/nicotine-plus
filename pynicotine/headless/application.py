@@ -38,6 +38,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("setup", self.on_setup),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
