@@ -163,7 +163,7 @@ def add_typelibs():
         "Gsk-",
         "HarfBuzz-",
         "Pango-",
-        "PangoCairo-"
+        "PangoCairo-",
         "GObject-",
         "GdkPixbuf-",
         "cairo-",
