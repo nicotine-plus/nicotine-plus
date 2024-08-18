@@ -869,7 +869,7 @@ class Win32Implementation(BaseImplementation):
         self._notify_id.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
         self._notify_id.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
 
-        self._click_action = click_action.replace("app.", "")
+        self._click_action = click_action.replace("app.", "") if click_action else None
         self._click_action_target = GLib.Variant("s", click_action_target) if click_action_target else None
 
         windll.shell32.Shell_NotifyIconW(notify_action, byref(self._notify_id))
