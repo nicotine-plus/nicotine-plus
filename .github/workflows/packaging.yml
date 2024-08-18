@@ -86,9 +86,6 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    env:
-      NICOTINE_GTK_VERSION: 4
-      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -102,7 +99,7 @@ jobs:
           install: >-
             mingw-w64-${{ matrix.arch }}-ca-certificates
             mingw-w64-${{ matrix.arch }}-gettext-tools
-            mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
+            mingw-w64-${{ matrix.arch }}-gtk4
             mingw-w64-${{ matrix.arch }}-libadwaita
             mingw-w64-${{ matrix.arch }}-python-build
             mingw-w64-${{ matrix.arch }}-python-cx-freeze
@@ -138,9 +135,6 @@ jobs:
             platform: macos-14
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 15
-    env:
-      NICOTINE_GTK_VERSION: 4
-      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

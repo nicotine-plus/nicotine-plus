@@ -64,8 +64,6 @@ import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-pos
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
 MANIFEST_NAME = os.path.join(CURRENT_PATH, f"{SCRIPT_NAME}.manifest") if sys.platform == "win32" else None
-GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
-USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 # Include (almost) all standard library modules for plugins
 EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
@@ -155,13 +153,17 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 def add_typelibs():
 
     required_typelibs = [
-        f"Gtk-{GTK_VERSION}",
+        "Adw-",
+        "Gtk-4",
         "Gio-",
-        f"Gdk-{GTK_VERSION}",
-        f"GdkWin32-{GTK_VERSION}",
+        "Gdk-4",
+        "GdkWin32-4",
         "GLib-",
+        "Graphene-",
+        "Gsk-",
         "HarfBuzz-",
         "Pango-",
+        "PangoCairo-"
         "GObject-",
         "GdkPixbuf-",
         "cairo-",
@@ -169,21 +171,6 @@ def add_typelibs():
         "freetype2-",
         "win32-"
     ]
-
-    if GTK_VERSION == "4":
-        required_typelibs += [
-            "Graphene-",
-            "Gsk-",
-            "PangoCairo-"
-        ]
-    else:
-        required_typelibs += [
-            "Atk-",
-            "Gspell-"
-        ]
-
-    if USE_LIBADWAITA:
-        required_typelibs.append("Adw-")
 
     required_typelibs = tuple(required_typelibs)
     folder_path = os.path.join(SYS_BASE_PATH, "lib/girepository-1.0")
@@ -211,14 +198,12 @@ def add_gtk():
     # This also includes all dlls required by GTK
     add_files(
         folder_path=LIB_PATH, output_path="lib",
-        starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
+        starts_with="libgtk-4", ends_with=LIB_EXTENSION
     )
-
-    if USE_LIBADWAITA:
-        add_files(
-            folder_path=LIB_PATH, output_path="lib",
-            starts_with="libadwaita-", ends_with=LIB_EXTENSION
-        )
+    add_files(
+        folder_path=LIB_PATH, output_path="lib",
+        starts_with="libadwaita-", ends_with=LIB_EXTENSION
+    )
 
     # Schemas
     add_file(
@@ -262,7 +247,7 @@ def add_translations():
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
+        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with="gtk40.mo", recursive=True
     )
 
 

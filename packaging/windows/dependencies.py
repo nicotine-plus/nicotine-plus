@@ -26,23 +26,16 @@ def install_pacman():
 
     arch = os.environ.get("ARCH", "x86_64")
     prefix = f"mingw-w64-{arch}-"
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION", "4")
-    use_libadwaita = (gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1")
 
     packages = [f"{prefix}ca-certificates",
                 f"{prefix}gettext-tools",
-                f"{prefix}gtk{gtk_version}",
+                f"{prefix}gtk4",
+                f"{prefix}libadwaita",
                 f"{prefix}python-build",
                 f"{prefix}python-cx-freeze",
                 f"{prefix}python-pycodestyle",
                 f"{prefix}python-pylint",
                 f"{prefix}python-gobject"]
-
-    if gtk_version == "3":
-        packages.append(f"{prefix}gspell")
-
-    if use_libadwaita:
-        packages.append(f"{prefix}libadwaita")
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

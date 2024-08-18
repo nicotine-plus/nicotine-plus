@@ -70,8 +70,6 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=4
-export NICOTINE_USE_LIBADWAITA=1
 export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
 python3 packaging/windows/dependencies.py
@@ -110,8 +108,6 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=4
-export NICOTINE_USE_LIBADWAITA=1
 brew install python@3.11
 python3.11 -m venv venv
 venv/bin/python3 packaging/macos/dependencies.py
