@@ -33,8 +33,8 @@ class ChatEntry:
 
         self.application = application
         self.widget = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Send message…"), sensitive=False, show_emoji_icon=True,
-            width_chars=8, visible=True
+            hexpand=True, placeholder_text=_("Send message…"), primary_icon_name="mail-send-symbolic",
+            sensitive=False, show_emoji_icon=True, width_chars=8, visible=True
         )
         self.send_message_callback = send_message_callback
         self.command_callback = command_callback
@@ -59,8 +59,9 @@ class ChatEntry:
 
         self.widget.set_completion(self.entry_completion)
 
-        self.widget.connect("activate", self.on_enter)
+        self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
+        self.widget.connect("icon-press", self.on_icon_pressed)
 
         Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
@@ -201,7 +202,7 @@ class ChatEntry:
     def set_visible(self, visible):
         self.widget.set_visible(visible)
 
-    def on_enter(self, *_args):
+    def on_send_message(self, *_args):
 
         text = self.widget.get_text().strip()
 
@@ -231,6 +232,10 @@ class ChatEntry:
 
         # Clear chat entry
         self.widget.set_text("")
+
+    def on_icon_pressed(self, _entry, icon_pos, *_args):
+        if icon_pos == Gtk.EntryIconPosition.PRIMARY:
+            self.on_send_message()
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
