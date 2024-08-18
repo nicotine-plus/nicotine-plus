@@ -157,7 +157,6 @@ def add_typelibs():
         "Gtk-4",
         "Gio-",
         "Gdk-4",
-        "GdkWin32-4",
         "GLib-",
         "Graphene-",
         "Gsk-",
@@ -168,9 +167,12 @@ def add_typelibs():
         "GdkPixbuf-",
         "cairo-",
         "GModule-",
-        "freetype2-",
-        "win32-"
+        "freetype2-"
     ]
+
+    if sys.platform == "win32":
+        required_typelibs.append("GdkWin32-4")
+        required_typelibs.append("win32-")
 
     required_typelibs = tuple(required_typelibs)
     folder_path = os.path.join(SYS_BASE_PATH, "lib/girepository-1.0")
