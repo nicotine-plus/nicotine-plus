@@ -24,6 +24,9 @@ from pynicotine.logfacility import log
 
 def get_default_gtk_version():
 
+    if sys.platform in {"darwin", "win32"}:
+        return "4"
+
     try:
         from gi.repository import GLib
         from gi.repository import Gio
@@ -58,9 +61,9 @@ def check_gtk_version(gtk_api_version):
 
     is_gtk3_supported = sys.platform not in {"darwin", "win32"}
 
-    if not is_gtk3_supported:
-        # GTK 3 is no longer tested nor supported on macOS and Windows
-        gtk_api_version = "4"
+    if gtk_api_version == "3" and not is_gtk3_supported:
+        log.add("WARNING: GTK 3 is no longer supported on Windows and macOS. "
+                "Please don't report any bugs related to GTK 3.")
 
     # Require minor version of GTK
     if gtk_api_version == "4":
