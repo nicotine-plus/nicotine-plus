@@ -1424,6 +1424,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkEntry" id="chatrooms_entry">
+                            <property name="max-length">24</property>
                             <property name="max-width-chars">40</property>
                             <property name="placeholder-text" translatable="yes">Join or create room…</property>
                             <property name="primary-icon-name">user-available-symbolic</property>
