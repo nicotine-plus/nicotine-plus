@@ -4023,7 +4023,6 @@ NETWORK_MESSAGE_EVENTS = {
     QueueUpload: "queue-upload",
     Recommendations: "recommendations",
     RoomList: "room-list",
-    RoomSearch: "file-search-request-server",
     RoomTickerAdd: "ticker-add",
     RoomTickerRemove: "ticker-remove",
     RoomTickerState: "ticker-state",
@@ -4041,7 +4040,6 @@ NETWORK_MESSAGE_EVENTS = {
     UserInterests: "user-interests",
     UserJoinedRoom: "user-joined-room",
     UserLeftRoom: "user-left-room",
-    UserSearch: "file-search-request-server",
     WatchUser: "watch-user",
     WishlistInterval: "set-wishlist-interval"
 }

@@ -456,7 +456,7 @@ class Search:
             msg.token = None
 
     def _file_search_request_server(self, msg):
-        """Server code 26, 42 and 120."""
+        """Server code 26."""
 
         self._process_search_request(msg.searchterm, msg.search_username, msg.token)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
