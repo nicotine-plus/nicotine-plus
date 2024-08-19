@@ -75,17 +75,17 @@ class ComboBox:
             model=self._model, valign=Gtk.Align.CENTER, visible=True
         )
 
-        default_factory = self.dropdown.get_factory()
+        list_factory = self.dropdown.get_factory()
         button_factory = None
 
         if not has_entry:
             button_factory = Gtk.SignalListItemFactory()
 
-            button_factory.connect("setup", self._on_factory_setup)
-            button_factory.connect("bind", self._on_factory_bind)
+            button_factory.connect("setup", self._on_button_factory_setup)
+            button_factory.connect("bind", self._on_button_factory_bind)
 
         self.dropdown.set_factory(button_factory)
-        self.dropdown.set_list_factory(default_factory)
+        self.dropdown.set_list_factory(list_factory)
 
         self.dropdown.connect("notify::selected", self._on_item_selected)
 
@@ -100,6 +100,13 @@ class ComboBox:
 
             container.append(self.widget)
             return
+
+        list_factory = Gtk.SignalListItemFactory()
+
+        list_factory.connect("setup", self._on_entry_list_factory_setup)
+        list_factory.connect("bind", self._on_entry_list_factory_bind)
+
+        self.dropdown.set_list_factory(list_factory)
 
         self.widget = Gtk.Box(valign=Gtk.Align.CENTER, visible=True)
         self._popover.connect("map", self._on_dropdown_map)
@@ -377,13 +384,21 @@ class ComboBox:
 
     # Callbacks #
 
-    def _on_factory_bind(self, _factory, list_item):
+    def _on_button_factory_bind(self, _factory, list_item):
         label = list_item.get_child()
         label.set_text(list_item.get_item().get_string())
 
-    def _on_factory_setup(self, _factory, list_item):
+    def _on_button_factory_setup(self, _factory, list_item):
         list_item.set_child(
             Gtk.Label(ellipsize=Pango.EllipsizeMode.END, mnemonic_widget=self.widget, xalign=0))
+
+    def _on_entry_list_factory_bind(self, _factory, list_item):
+        label = list_item.get_child()
+        label.set_text(list_item.get_item().get_string())
+
+    def _on_entry_list_factory_setup(self, _factory, list_item):
+        list_item.set_child(
+            Gtk.Label(ellipsize=Pango.EllipsizeMode.END, xalign=0))
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
@@ -431,22 +446,11 @@ class ComboBox:
 
         # Align dropdown with entry and button
         popover_content = next(iter(self._popover))
-        popover_child = self._popover.get_child()
-        scrollable = list(iter(popover_child))[-1]
-
         container_width = self.entry.get_parent().get_width()
         button_width = self._button.get_width()
 
         self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
         popover_content.set_size_request(container_width, height=-1)
-
-        try:
-            # Limit width of popover to text entry
-            scrollable.set_policy(
-                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC
-            )
-        except AttributeError:
-            pass
 
     def _on_dropdown_visible(self, widget, param):
 
