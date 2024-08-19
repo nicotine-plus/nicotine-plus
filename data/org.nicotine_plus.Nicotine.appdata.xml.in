@@ -82,7 +82,7 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
-    <release version="3.3.5.dev3" type="development" date="2024-08-02"/>
+    <release version="3.3.5rc1" type="development" date="2024-08-19"/>
     <release version="3.3.4" date="2024-05-06">
       <url>https://nicotine-plus.org/NEWS</url>
     </release>
