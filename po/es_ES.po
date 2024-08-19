@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-08-08 21:09+0000\n"
+"PO-Revision-Date: 2024-08-19 12:09+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.7\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -240,8 +240,7 @@ msgstr "¡Salir de %(program)s %(version)s!"
 #: pynicotine/core.py:288
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
-"Es necesario especificar un nombre de usuario y una contraseña antes de "
-"conectarse…"
+"Debes especificar un nombre de usuario y una contraseña antes de conectarte…"
 
 #: pynicotine/downloads.py:239
 #, python-format
@@ -260,7 +259,7 @@ msgstr "%(file)s descargado de %(user)s"
 
 #: pynicotine/downloads.py:367
 msgid "File Downloaded"
-msgstr "Archivo descargado"
+msgstr "Fichero descargado"
 
 #: pynicotine/downloads.py:375
 #, python-format
@@ -271,7 +270,7 @@ msgstr "Ejecutado: %s"
 #: pynicotine/nowplaying.py:312
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
-msgstr "Ejecutando «%(command)s» fallido: %(error)s"
+msgstr "La ejecución de «%(command)s» ha fallado: %(error)s"
 
 #: pynicotine/downloads.py:404
 #, python-format
@@ -285,7 +284,7 @@ msgstr "Carpeta descargada"
 #: pynicotine/downloads.py:416
 #, python-format
 msgid "Executed on folder: %s"
-msgstr "Ejecutado en este directorio: %s"
+msgstr "Ejecutado en la carpeta: %s"
 
 #: pynicotine/downloads.py:440
 #, python-format
@@ -299,12 +298,12 @@ msgstr "Error al descargar la carpeta"
 #: pynicotine/downloads.py:486
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
-msgstr "Descarga terminada: usuario %(user)s, archivo %(file)s"
+msgstr "Descarga finalizada: usuario %(user)s, fichero %(file)s"
 
 #: pynicotine/downloads.py:496
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
-msgstr "Descarga interrumpida: usuario %(user)s, archivo %(file)s"
+msgstr "Descarga interrumpida: usuario %(user)s, fichero %(file)s"
 
 #: pynicotine/downloads.py:1137
 #, python-format
@@ -315,28 +314,27 @@ msgstr "Error de E/S en la descarga: %s"
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
-"No se puede obtener un bloqueo exclusivo sobre el archivo - Error de E/S: %s"
+"No se puede obtener un bloqueo exclusivo sobre el fichero - Error de E/S: %s"
 
 #: pynicotine/downloads.py:1189
 #, python-format
 msgid "Cannot save file in %(folder_path)s: %(error)s"
-msgstr "No se puede guardar el archivo en la %(folder_path)s: %(error)s"
+msgstr "No se puede guardar el fichero en %(folder_path)s: %(error)s"
 
 #: pynicotine/downloads.py:1208
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr "Descarga iniciada: usuario %(user)s, archivo %(file)s"
+msgstr "Descarga iniciada: usuario %(user)s, fichero %(file)s"
 
 #: pynicotine/gtkgui/__init__.py:77 pynicotine/gtkgui/__init__.py:86
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "No se encuentra %s, por favor, instálalo."
+msgstr "%s no encontrado, por favor, instálalo."
 
 #: pynicotine/gtkgui/__init__.py:151
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
-"No hay entorno gráfico disponible, utilizando el modo sin interfaz gráfica "
-"de usuario"
+"No hay entorno gráfico disponible, utilizando el modo headless (sin GUI)"
 
 #: pynicotine/gtkgui/application.py:345
 #: pynicotine/gtkgui/widgets/trayicon.py:124
@@ -363,15 +361,15 @@ msgstr "_Salir"
 
 #: pynicotine/gtkgui/application.py:376
 msgid "Browse _Public Shares"
-msgstr "Examinar las _Acciones públicas"
+msgstr "Examinar los _compartidos públicos"
 
 #: pynicotine/gtkgui/application.py:377
 msgid "Browse _Buddy Shares"
-msgstr "Examinar lo _Compartido"
+msgstr "Examinar los _compartidos para amigos"
 
 #: pynicotine/gtkgui/application.py:378
 msgid "Browse _Trusted Shares"
-msgstr "Examinar _Acciones de confianza"
+msgstr "Examinar los _compartidos para amigos de confianza"
 
 #: pynicotine/gtkgui/application.py:387 pynicotine/gtkgui/application.py:443
 msgid "_Rescan Shares"
@@ -379,7 +377,7 @@ msgstr "_Reescanear compartidos"
 
 #: pynicotine/gtkgui/application.py:388 pynicotine/gtkgui/application.py:445
 msgid "Configure _Shares"
-msgstr "Configurar lo _Compartido"
+msgstr "Configurar _compartidos"
 
 #: pynicotine/gtkgui/application.py:410
 msgid "_Keyboard Shortcuts"
@@ -407,7 +405,7 @@ msgstr "_Acerca de Nicotine+"
 
 #: pynicotine/gtkgui/application.py:428
 msgid "_File"
-msgstr "_Archivo"
+msgstr "_Fichero"
 
 #: pynicotine/gtkgui/application.py:429
 msgid "_Shares"
@@ -419,7 +417,7 @@ msgstr "_Ayuda"
 
 #: pynicotine/gtkgui/application.py:444
 msgid "_Browse Shares"
-msgstr "_Buscar acciones"
+msgstr "_Examinar compartidos"
 
 #: pynicotine/gtkgui/application.py:496
 #, python-format
@@ -428,11 +426,11 @@ msgstr "No ha sido posible mostrar la notificación: %s"
 
 #: pynicotine/gtkgui/application.py:542
 msgid "You are still uploading files. Do you really want to exit?"
-msgstr "Sigues subiendo los archivos. ¿Realmente quieres salir?"
+msgstr "Todavía tienes ficheros subiendo. ¿De verdad quieres salir?"
 
 #: pynicotine/gtkgui/application.py:543
 msgid "Wait for uploads to finish"
-msgstr "Espera a que finalice la carga"
+msgstr "Esperar a que finalicen las subidas"
 
 #: pynicotine/gtkgui/application.py:545
 msgid "Do you really want to exit?"
@@ -461,7 +459,7 @@ msgstr "Compartidos no disponibles"
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr ""
-"Verifique que los discos externos estén montados y que los permisos de las "
+"Verifica que los discos externos estén montados y que los permisos de las "
 "carpetas sean correctos."
 
 #: pynicotine/gtkgui/application.py:581 pynicotine/gtkgui/application.py:605
