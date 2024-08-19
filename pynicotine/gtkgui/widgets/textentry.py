@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from locale import strxfrm
 
 import gi
@@ -162,7 +164,12 @@ class ChatEntry:
 
         config_words = config.sections["words"]
 
-        self.entry_completion.set_popup_completion(config_words["dropdown"])
+        if sys.platform == "darwin":
+            # Completion popup currently broken on macOS
+            self.entry_completion.set_popup_completion(False)
+        else:
+            self.entry_completion.set_popup_completion(config_words["dropdown"])
+
         self.entry_completion.set_minimum_key_length(config_words["characters"])
 
         self.model.clear()
@@ -386,6 +393,11 @@ class CompletionEntry:
                                          popup_single_match=False, model=model)
         completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
+
+        if sys.platform == "darwin":
+            # Completion popup currently broken on macOS
+            completion.set_popup_completion(False)
+
         widget.set_completion(completion)
 
     def destroy(self):

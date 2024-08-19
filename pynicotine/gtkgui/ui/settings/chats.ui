@@ -235,7 +235,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="completion_dropdown_container">
             <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <child>
