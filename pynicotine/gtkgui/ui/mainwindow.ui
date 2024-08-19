@@ -39,6 +39,7 @@
   </object>
   <object class="GtkEntry" id="room_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Room…</property>
     <property name="visible">True</property>
@@ -47,6 +48,7 @@
   </object>
   <object class="GtkEntry" id="user_search_entry">
     <property name="hexpand">False</property>
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">20</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="visible">True</property>
@@ -728,6 +730,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userbrowse_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -896,6 +899,7 @@
     </child>
   </object>
   <object class="GtkEntry" id="userinfo_entry">
+    <property name="input-hints">no-emoji</property>
     <property name="max-width-chars">45</property>
     <property name="placeholder-text" translatable="yes">Username…</property>
     <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -1091,6 +1095,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkEntry" id="private_entry">
+                        <property name="input-hints">no-emoji</property>
                         <property name="max-width-chars">40</property>
                         <property name="placeholder-text" translatable="yes">Username…</property>
                         <property name="primary-icon-name">avatar-default-symbolic</property>
@@ -1250,6 +1255,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkEntry" id="add_buddy_entry">
+                        <property name="input-hints">no-emoji</property>
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
                         <property name="primary-icon-name">contact-new-symbolic</property>
@@ -1424,6 +1430,7 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkEntry" id="chatrooms_entry">
+                            <property name="input-hints">no-emoji</property>
                             <property name="max-width-chars">40</property>
                             <property name="placeholder-text" translatable="yes">Join or create room…</property>
                             <property name="primary-icon-name">user-available-symbolic</property>

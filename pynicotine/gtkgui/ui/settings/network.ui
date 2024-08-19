@@ -67,7 +67,7 @@
                 <child>
                   <object class="GtkEntry" id="username_entry">
                     <property name="hexpand">True</property>
-                    <property name="max-length">30</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="max-width-chars">10</property>
                     <property name="truncate-multiline">True</property>
                     <property name="visible">True</property>
