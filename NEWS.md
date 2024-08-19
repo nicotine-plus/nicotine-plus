@@ -17,7 +17,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Improvements to transfer speed accuracy in the UI
  * Quitting from the tray menu asks for confirmation while uploads are active
  * Various performance improvements
- * macOS/Windows only: GTK 3 is no longer supported officially
+ * macOS/Windows only: Require GTK 4 unless `NICOTINE_GTK_VERSION=3` env variable is set
 
 ### Corrections
 

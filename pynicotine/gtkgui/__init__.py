@@ -62,8 +62,8 @@ def check_gtk_version(gtk_api_version):
     is_gtk3_supported = sys.platform not in {"darwin", "win32"}
 
     if gtk_api_version == "3" and not is_gtk3_supported:
-        log.add("WARNING: GTK 3 is no longer supported on Windows and macOS. "
-                "Please don't report any bugs related to GTK 3.")
+        log.add("WARNING: Using GTK 3, which might not work properly on Windows and macOS. "
+                "GTK 4 will be required in the future.")
 
     # Require minor version of GTK
     if gtk_api_version == "4":
