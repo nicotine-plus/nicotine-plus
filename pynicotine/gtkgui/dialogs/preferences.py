@@ -90,6 +90,7 @@ class NetworkPage:
         self.application = application
         self.portmap_required = None
 
+        self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
         self.check_port_status_label.connect("activate-link", self.on_activate_link)
 
         self.network_interface_combobox = ComboBox(

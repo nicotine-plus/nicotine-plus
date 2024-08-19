@@ -82,10 +82,12 @@ class ChatRooms(IconNotebook):
         self.room_wall = None
         self.highlighted_rooms = {}
 
+        window.chatrooms_entry.set_max_length(core.chatrooms.ROOM_NAME_MAX_LENGTH)
+
         if GTK_API_VERSION >= 4:
-            self.window.chatrooms_paned.set_resize_start_child(True)
+            window.chatrooms_paned.set_resize_start_child(True)
         else:
-            self.window.chatrooms_paned.child_set_property(self.window.chatrooms_container, "resize", True)
+            window.chatrooms_paned.child_set_property(window.chatrooms_container, "resize", True)
 
         for event_name, callback in (
             ("clear-room-messages", self.clear_room_messages),

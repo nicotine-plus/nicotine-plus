@@ -78,8 +78,8 @@ class FastConfigure(Dialog):
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
+        self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
 
-        # Page specific, share_page
         self.download_folder_button = FileChooserButton(
             self.download_folder_container, window=self, chooser_type="folder",
             selected_function=self.on_download_folder_selected

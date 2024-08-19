@@ -178,7 +178,6 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="username_entry">
-                        <property name="max-length">30</property>
                         <property name="truncate-multiline">True</property>
                         <property name="visible">True</property>
                         <property name="width-chars">20</property>
