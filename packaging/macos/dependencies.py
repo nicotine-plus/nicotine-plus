@@ -32,6 +32,15 @@ def install_brew():
 
     subprocess.check_call(["brew", "install"] + packages)
 
+    # Temporarily downgrade GTK 4 to 4.14.4 due to regressions in window sizing
+    subprocess.check_call(
+        ["curl", "-o", "gtk4.rb",
+         ("https://raw.githubusercontent.com/Homebrew/homebrew-core/"
+          "f1de83a3ca6bd6f44077f4e539ae5c8645917e47/Formula/g/gtk4.rb")]
+    )
+    subprocess.check_call(["brew", "unlink", "gtk4"])
+    subprocess.check_call(["brew", "install", "gtk4.rb"])
+
 
 def install_pypi():
     """Install dependencies from PyPi."""
