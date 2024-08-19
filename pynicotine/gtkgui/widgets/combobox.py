@@ -431,11 +431,22 @@ class ComboBox:
 
         # Align dropdown with entry and button
         popover_content = next(iter(self._popover))
+        popover_child = self._popover.get_child()
+        scrollable = list(iter(popover_child))[-1]
+
         container_width = self.entry.get_parent().get_width()
         button_width = self._button.get_width()
 
         self._popover.set_offset(x_offset=-container_width + button_width, y_offset=0)
         popover_content.set_size_request(container_width, height=-1)
+
+        try:
+            # Limit width of popover to text entry
+            scrollable.set_policy(
+                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC
+            )
+        except AttributeError:
+            pass
 
     def _on_dropdown_visible(self, widget, param):
 
