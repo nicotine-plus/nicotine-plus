@@ -45,6 +45,7 @@ EVENT_NAMES = {
     "check-privileges",
     "connect-to-peer",
     "invalid-password",
+    "invalid-username",
     "peer-address",
     "privileged-users",
     "server-disconnect",

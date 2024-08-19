@@ -252,6 +252,10 @@ class Users:
             core.pluginhandler.server_connect_notification()
             return
 
+        if msg.reason == LoginFailure.USERNAME:
+            events.emit("invalid-username")
+            return
+
         if msg.reason == LoginFailure.PASSWORD:
             events.emit("invalid-password")
             return
