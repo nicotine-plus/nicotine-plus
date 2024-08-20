@@ -398,9 +398,9 @@ class Search:
             config.sections["server"]["autosearch"].remove(wish)
             config.write_configuration()
 
-            for search in self.searches.values():
+            for token, search in self.searches.items():
                 if search.term == wish and search.mode == "wishlist":
-                    del search
+                    del self.searches[token]
                     break
 
         events.emit("remove-wish", wish)
