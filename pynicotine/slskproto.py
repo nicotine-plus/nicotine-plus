@@ -415,7 +415,7 @@ class NetworkThread(Thread):
         self._max_distrib_children = 0
         self._upload_speed = 0
 
-        self._num_sockets = 1
+        self._num_sockets = 0
         self._last_cycle_time = 0
 
         self._conns = {}
@@ -462,6 +462,7 @@ class NetworkThread(Thread):
         self._listen_socket.setblocking(False)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+        self._num_sockets += 1
 
         # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
         # to the same port immediately after reconnecting. This option behaves differently
@@ -492,6 +493,7 @@ class NetworkThread(Thread):
         self._close_socket(self._listen_socket)
         self._listen_socket = None
         self._listen_port = None
+        self._num_sockets -= 1
 
     def _bind_listen_port(self):
 
@@ -2673,14 +2675,6 @@ class NetworkThread(Thread):
     def _loop(self):
 
         while not self._want_abort:
-            if not self._should_process_queue:
-                if self._server_timeout_time and (self._server_timeout_time - time.monotonic()) <= 0:
-                    self._server_timeout_time = None
-                    events.emit_main_thread("server-reconnect")
-
-                time.sleep(self.SLEEP_MAX_IDLE)
-                continue
-
             current_time = time.monotonic()
 
             if (current_time - self._last_cycle_time) >= 1:
@@ -2701,6 +2695,14 @@ class NetworkThread(Thread):
                 self._total_upload_bandwidth = 0
 
                 self._last_cycle_time = current_time
+
+            if not self._should_process_queue:
+                if self._server_timeout_time and (self._server_timeout_time - current_time) <= 0:
+                    self._server_timeout_time = None
+                    events.emit_main_thread("server-reconnect")
+
+                time.sleep(self.SLEEP_MAX_IDLE)
+                continue
 
             # Process queue messages
             self._process_queue_messages()
