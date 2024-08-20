@@ -259,6 +259,7 @@ class UserBrowse:
                 "folder": {
                     "column_type": "text",
                     "title": _("Folder"),
+                    "default_sort_type": "ascending",
                     "hide_header": True,
                     "tooltip_callback": self.on_folder_path_tooltip
                 },
@@ -469,11 +470,16 @@ class UserBrowse:
         private_size = num_private_folders = 0
         browsed_user = core.userbrowse.users[self.user]
 
+        # Temporarily disable sorting for increased performance
+        self.folder_tree_view.disable_sorting()
+
         # Generate the folder tree and select first folder
         size, num_folders = self.create_folder_tree(browsed_user.public_folders)
 
         if browsed_user.private_folders:
             private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
+
+        self.folder_tree_view.enable_sorting()
 
         self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
         self.share_size_label.set_text(human_size(size + private_size))
