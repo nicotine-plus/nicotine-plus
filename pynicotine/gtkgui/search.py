@@ -854,7 +854,10 @@ class Search:
             return
 
         ip_address, _port = msg.addr
-        country_code = core.network_filter.get_country_code(ip_address)
+        country_code = (
+            core.network_filter.get_country_code(ip_address)
+            or core.users.countries.get(user)
+        )
         has_free_slots = msg.freeulslots
 
         if has_free_slots:
@@ -1517,8 +1520,6 @@ class Search:
             selected_size += file_size
             selected_length += self.tree_view.get_row_value(iterator, "length_data")
             country_code = self.tree_view.get_row_value(iterator, "country")[-2:].upper()
-            country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
-            country = f"{country_name} ({country_code})"
             folder_path, _separator, basename = file_path.rpartition("\\")
 
             data.append({
@@ -1530,7 +1531,7 @@ class Search:
                 "speed": self.tree_view.get_row_value(iterator, "speed_data"),
                 "queue_position": self.tree_view.get_row_value(iterator, "in_queue_data"),
                 "file_attributes": self.tree_view.get_row_value(iterator, "file_attributes_data"),
-                "country": country
+                "country_code": country_code
             })
 
         if data:

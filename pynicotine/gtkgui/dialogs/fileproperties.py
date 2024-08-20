@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine.core import core
 from pynicotine.gtkgui.widgets import ui
 from pynicotine.gtkgui.widgets.dialogs import Dialog
 from pynicotine.slskmessages import FileListMessage
@@ -102,7 +103,9 @@ class FileProperties(Dialog):
             size, properties.get("file_attributes"), always_show_bitrate=True)
         queue_position = properties.get("queue_position", 0)
         speed = properties.get("speed", 0)
-        country = properties.get("country", "")
+        country_code = properties.get("country_code")
+        country_name = core.network_filter.COUNTRIES.get(country_code)
+        country = f"{country_name} ({country_code})" if country_name else ""
 
         self.path_value_label.set_text(real_folder_path)
         self.path_row.set_visible(bool(real_folder_path))

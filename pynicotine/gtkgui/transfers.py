@@ -1131,7 +1131,8 @@ class Transfers:
                 "queue_position": transfer.queue_position,
                 "speed": speed,
                 "size": file_size,
-                "file_attributes": file_attributes
+                "file_attributes": file_attributes,
+                "country_code": core.users.countries.get(username)
             })
 
         if data:

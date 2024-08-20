@@ -1201,7 +1201,8 @@ class UserBrowse:
                     "virtual_folder_path": selected_folder_path,
                     "speed": speed,
                     "size": file_size,
-                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
+                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data"),
+                    "country_code": core.users.countries.get(self.user)
                 })
 
         if data:
