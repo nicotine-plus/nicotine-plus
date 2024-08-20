@@ -25,7 +25,7 @@ try:
 except ImportError:
     from hashlib import md5
 
-from locale import strxfrm
+from operator import itemgetter
 from random import randint
 from socket import inet_aton
 from socket import inet_ntoa
@@ -3174,12 +3174,12 @@ class SharedFileListResponse(PeerMessage):
                 files.append((code, name, size, ext, attrs))
 
             if nfiles > 1:
-                files.sort(key=lambda x: strxfrm(x[1]))
+                files.sort(key=itemgetter(1))
 
             shares.append((directory, files))
 
         if ndir > 1:
-            shares.sort(key=lambda x: strxfrm(x[0]))
+            shares.sort(key=itemgetter(0))
 
         return pos, shares
 
@@ -3312,7 +3312,7 @@ class FileSearchResponse(PeerMessage):
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
         if nfiles > 1:
-            results.sort(key=lambda x: strxfrm(x[1]))
+            results.sort(key=itemgetter(1))
 
         return pos, results
 
@@ -3491,7 +3491,7 @@ class FolderContentsResponse(PeerMessage):
                 folders[directory].append((code, name, size, ext, attrs))
 
             if nfiles > 1:
-                folders[directory].sort(key=lambda x: strxfrm(x[1]))
+                folders[directory].sort(key=itemgetter(1))
 
         self.list = folders
 

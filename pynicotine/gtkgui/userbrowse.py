@@ -23,8 +23,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -961,7 +959,7 @@ class UserBrowse:
             action_button_label=_("_Upload"),
             callback=self.on_upload_folder_to_response,
             callback_data=recurse,
-            droplist=sorted(core.buddies.users, key=strxfrm)
+            droplist=sorted(core.buddies.users)
         ).present()
 
     def on_upload_folder_recursive_to(self, *_args):
@@ -1118,7 +1116,7 @@ class UserBrowse:
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
             callback=self.on_upload_files_to_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
+            droplist=sorted(core.buddies.users)
         ).present()
 
     def on_open_file(self, *_args):

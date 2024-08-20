@@ -18,8 +18,6 @@
 
 import sys
 
-from locale import strxfrm
-
 import gi
 from gi.repository import Gtk
 
@@ -178,7 +176,7 @@ class ChatEntry:
         if not self.is_completion_enabled():
             return
 
-        for word in sorted(completions, key=strxfrm):
+        for word in sorted(completions):
             word = str(word)
 
             if config_words["dropdown"]:
