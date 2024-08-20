@@ -1016,46 +1016,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkBox">
-            <property name="homogeneous">True</property>
-            <property name="spacing">12</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">Queued search result text color:</property>
-                <property name="mnemonic-widget">color_queued_result_text_button</property>
-                <property name="visible">True</property>
-                <property name="wrap">True</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="spacing">12</property>
-                <property name="valign">center</property>
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkColorButton" id="color_queued_result_text_button">
-                    <property name="valign">center</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="color_queued_result_text_entry">
-                    <property name="hexpand">True</property>
-                    <property name="input-hints">no-emoji</property>
-                    <property name="secondary-icon-name">edit-undo-symbolic</property>
-                    <property name="secondary-icon-tooltip-text" translatable="yes">Default</property>
-                    <property name="visible">True</property>
-                    <property name="width-chars">4</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
     <child>

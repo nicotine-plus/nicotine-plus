@@ -332,7 +332,7 @@ class Config:
                 "usernamestyle": "bold",
                 "textbg": "",
                 "search": "",
-                "searchq": "GREY",
+                "searchq": "GREY",  # TODO: remove in 3.3.5
                 "inputcolor": "",
                 "spellcheck": True,
                 "exitdialog": 1,

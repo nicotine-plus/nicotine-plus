@@ -518,8 +518,7 @@ def _get_custom_color_css():
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
         (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
-        ("treeview", treeview_text_color),
-        (".search-view treeview:disabled", config.sections["ui"]["searchq"])
+        ("treeview .cell:not(:disabled):not(:selected):not(.progressbar)", treeview_text_color)
     ):
         if _is_color_valid(color):
             css += (

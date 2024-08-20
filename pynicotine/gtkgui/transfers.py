@@ -143,32 +143,37 @@ class Transfers:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 200
+                    "width": 200,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "path": {
                     "column_type": "text",
                     "title": self.path_label,
                     "width": 200,
                     "expand_column": True,
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_file_path_tooltip,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "file_type": {
                     "column_type": "icon",
                     "title": _("File Type"),
                     "width": 40,
-                    "hide_header": True
+                    "hide_header": True,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "filename": {
                     "column_type": "text",
                     "title": _("Filename"),
                     "width": 200,
                     "expand_column": True,
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_file_path_tooltip,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "status": {
                     "column_type": "text",
                     "title": _("Status"),
-                    "width": 140
+                    "width": 140,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "queue_position": {
                     "column_type": "number",
@@ -179,31 +184,36 @@ class Transfers:
                 "percent": {
                     "column_type": "progress",
                     "title": _("Percent"),
-                    "width": 90
+                    "width": 90,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
                     "width": 180,
-                    "sort_column": "size_data"
+                    "sort_column": "size_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
                     "width": 100,
-                    "sort_column": "speed_data"
+                    "sort_column": "speed_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "time_elapsed": {
                     "column_type": "number",
                     "title": _("Time Elapsed"),
                     "width": 140,
-                    "sort_column": "time_elapsed_data"
+                    "sort_column": "time_elapsed_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "time_left": {
                     "column_type": "number",
                     "title": _("Time Left"),
                     "width": 140,
-                    "sort_column": "time_left_data"
+                    "sort_column": "time_left_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
 
                 # Hidden data columns
@@ -213,6 +223,7 @@ class Transfers:
                 "queue_position_data": {"data_type": GObject.TYPE_UINT},
                 "time_elapsed_data": {"data_type": int},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
+                "is_sensitive_data": {"data_type": bool},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_UINT64,
@@ -566,6 +577,13 @@ class Transfers:
 
         if transfer.status != parent_status:
             self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
+
+            if parent_status == TransferStatus.USER_LOGGED_OFF:
+                self.tree_view.set_row_value(iterator, "is_sensitive_data", False)
+
+            elif transfer.status == TransferStatus.USER_LOGGED_OFF:
+                self.tree_view.set_row_value(iterator, "is_sensitive_data", True)
+
             transfer.status = parent_status
 
         if transfer.speed != speed:
@@ -615,9 +633,16 @@ class Transfers:
         # Modify old transfer
         if iterator and iterator not in self.PENDING_ITERATORS:
             should_update_size = False
+            old_translated_status = self.tree_view.get_row_value(iterator, "status")
 
-            if self.tree_view.get_row_value(iterator, "status") != translated_status:
+            if old_translated_status != translated_status:
                 self.tree_view.set_row_value(iterator, "status", translated_status)
+
+                if transfer.status == TransferStatus.USER_LOGGED_OFF:
+                    self.tree_view.set_row_value(iterator, "is_sensitive_data", False)
+
+                elif old_translated_status == _("User logged off"):
+                    self.tree_view.set_row_value(iterator, "is_sensitive_data", True)
 
             if self.tree_view.get_row_value(iterator, "speed_data") != speed:
                 self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
@@ -658,6 +683,7 @@ class Transfers:
         user = transfer.username
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
+        is_sensitive = (status != TransferStatus.USER_LOGGED_OFF)
 
         if use_reverse_file_path:
             parts = folder_path.split(self.path_separator)
@@ -695,6 +721,7 @@ class Transfers:
                         empty_int,
                         empty_int,
                         empty_int,
+                        is_sensitive,
                         Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
@@ -741,6 +768,7 @@ class Transfers:
                             empty_int,
                             empty_int,
                             empty_int,
+                            is_sensitive,
                             path_transfer,
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
@@ -788,6 +816,7 @@ class Transfers:
             queue_position,
             elapsed,
             left,
+            is_sensitive,
             transfer,
             self.row_id
         ], select_row=False, parent_iterator=parent_iterator)

@@ -15,6 +15,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * List all room members not currently joined in a private room
  * Incomplete files are now deleted when removing the download from the UI
  * Improvements to transfer speed accuracy in the UI
+ * Grey out transfer rows with 'User logged off' status
  * Quitting from the tray menu asks for confirmation while uploads are active
  * Various performance improvements
  * macOS/Windows only: Require GTK 4 unless `NICOTINE_GTK_VERSION=3` env variable is set
