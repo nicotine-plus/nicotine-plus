@@ -643,7 +643,7 @@ class Login(ServerMessage):
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "is_supporter")
+                 "banner", "ip_address", "local_address", "server_address", "is_supporter")
     __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
@@ -656,6 +656,7 @@ class Login(ServerMessage):
         self.banner = None
         self.ip_address = None
         self.local_address = None
+        self.server_address = None
         self.is_supporter = None
 
     def make_network_message(self):

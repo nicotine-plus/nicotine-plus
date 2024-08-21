@@ -52,8 +52,9 @@ class WatchedUser:
 
 class Users:
     __slots__ = ("login_status", "login_username", "public_ip_address", "public_port",
-                 "privileges_left", "_should_open_privileges_url", "addresses", "countries",
-                 "statuses", "watched", "privileged", "_ip_requested", "_pending_watch_removals")
+                 "server_hostname", "server_port", "privileges_left", "_should_open_privileges_url",
+                 "addresses", "countries", "statuses", "watched", "privileged", "_ip_requested",
+                 "_pending_watch_removals")
     USERNAME_MAX_LENGTH = 30
 
     def __init__(self):
@@ -62,6 +63,8 @@ class Users:
         self.login_username = None  # Only present while logged in
         self.public_ip_address = None
         self.public_port = None
+        self.server_hostname = None
+        self.server_port = None
         self.privileges_left = None
         self._should_open_privileges_url = False
 
@@ -225,6 +228,8 @@ class Users:
         self.login_username = None
         self.public_ip_address = None
         self.public_port = None
+        self.server_hostname = None
+        self.server_port = None
         self.privileges_left = None
         self._should_open_privileges_url = False
 
@@ -235,6 +240,7 @@ class Users:
             self.login_status = UserStatus.ONLINE
             self.login_username = username = msg.username
             _local_ip_address, self.public_port = msg.local_address
+            self.server_hostname, self.server_port = msg.server_address
             self.addresses[username] = msg.local_address
 
             core.send_message_to_server(CheckPrivileges())

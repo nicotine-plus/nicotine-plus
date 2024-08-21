@@ -1200,11 +1200,11 @@ class NetworkThread(Thread):
     def _establish_outgoing_server_connection(self, conn):
 
         conn.is_established = True
-        server_ip_address, server_port = conn.addr
+        server_hostname, server_port = conn.addr
 
         log.add(
             _("Connected to server %(host)s:%(port)s, logging in…"), {
-                "host": server_ip_address,
+                "host": server_hostname,
                 "port": server_port
             }
         )
@@ -1262,6 +1262,7 @@ class NetworkThread(Thread):
                 self._portmapper.add_port_mapping(blocking=True)
 
                 msg.username = self._server_username
+                msg.server_address = self._server_address
 
                 # Ask for a list of parents to connect to (distributed network)
                 self._send_have_no_parent()
