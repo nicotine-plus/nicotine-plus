@@ -279,9 +279,32 @@ class Interests:
         if self.populated_recommends or core.users.login_status == UserStatus.OFFLINE:
             return
 
-        self.on_recommendations_clicked()
-
+        self.show_recommendations()
         self.populated_recommends = True
+
+    def show_recommendations(self):
+
+        self.recommendations_label.set_label(_("Recommendations"))
+        self.similar_users_label.set_label(_("Similar Users"))
+
+        if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
+            core.interests.request_global_recommendations()
+        else:
+            core.interests.request_recommendations()
+
+        core.interests.request_similar_users()
+
+    def show_item_recommendations(self, list_view, column_id):
+
+        for iterator in list_view.get_selected_rows():
+            item = list_view.get_row_value(iterator, column_id)
+
+            core.interests.request_item_recommendations(item)
+            core.interests.request_item_similar_users(item)
+
+            if self.window.current_page_id != self.window.interests_page.id:
+                self.window.change_main_page(self.window.interests_page)
+            return
 
     def add_thing_i_like(self, item, select_row=True):
 
@@ -320,9 +343,6 @@ class Interests:
 
         if iterator is not None:
             self.dislikes_list_view.remove_row(iterator)
-
-    def recommend_search(self, item):
-        core.search.do_search(item, mode="global")
 
     def on_add_thing_i_like(self, *_args):
 
@@ -387,33 +407,18 @@ class Interests:
             return
 
     def on_recommend_item(self, _action, _state, list_view, column_id):
-
-        for iterator in list_view.get_selected_rows():
-            item = list_view.get_row_value(iterator, column_id)
-
-            core.interests.request_item_recommendations(item)
-            core.interests.request_item_similar_users(item)
-            return
+        self.show_item_recommendations(list_view, column_id)
 
     def on_recommend_search(self, _action, _state, list_view, column_id):
 
         for iterator in list_view.get_selected_rows():
             item = list_view.get_row_value(iterator, column_id)
 
-            self.recommend_search(item)
+            core.search.do_search(item, mode="global")
             return
 
-    def on_recommendations_clicked(self, *_args):
-
-        self.recommendations_label.set_label(_("Recommendations"))
-        self.similar_users_label.set_label(_("Similar Users"))
-
-        if not self.likes_list_view.iterators and not self.dislikes_list_view.iterators:
-            core.interests.request_global_recommendations()
-        else:
-            core.interests.request_recommendations()
-
-        core.interests.request_similar_users()
+    def on_refresh_recommendations(self, *_args):
+        self.show_recommendations()
 
     def set_recommendations(self, recommendations, item=None):
 
@@ -549,13 +554,7 @@ class Interests:
         self.toggle_menu_items(menu, self.recommendations_list_view, column_id="item")
 
     def on_r_row_activated(self, *_args):
-
-        for iterator in self.recommendations_list_view.get_selected_rows():
-            item = self.recommendations_list_view.get_row_value(iterator, "item")
-
-            core.interests.request_item_recommendations(item)
-            core.interests.request_item_similar_users(item)
-            return
+        self.show_item_recommendations(self.recommendations_list_view, column_id="item")
 
     def on_popup_ru_menu(self, menu, *_args):
 

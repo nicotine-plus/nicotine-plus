@@ -322,6 +322,7 @@ class UserInfo:
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
+            activate_row_callback=self.on_likes_row_activated,
             columns={
                 "likes": {
                     "column_type": "text",
@@ -334,6 +335,7 @@ class UserInfo:
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
             self.window, parent=self.dislikes_list_container,
+            activate_row_callback=self.on_dislikes_row_activated,
             columns={
                 "dislikes": {
                     "column_type": "text",
@@ -354,10 +356,13 @@ class UserInfo:
         )
 
         def get_interest_items(list_view, column_id):
-            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
-                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
-                    ("", None),
-                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id))
+            return (
+                ("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
+                ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
+                ("", None),
+                ("#" + _("_Recommendations for Item"), self.window.interests.on_recommend_item, list_view, column_id),
+                ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id)
+            )
 
         self.likes_popup_menu = PopupMenu(self.window.application, self.likes_list_view.widget,
                                           self.on_popup_likes_menu)
@@ -682,6 +687,12 @@ class UserInfo:
 
     def on_edit_interests(self, *_args):
         self.window.change_main_page(self.window.interests_page)
+
+    def on_likes_row_activated(self, *_args):
+        self.window.interests.show_item_recommendations(self.likes_list_view, column_id="likes")
+
+    def on_dislikes_row_activated(self, *_args):
+        self.window.interests.show_item_recommendations(self.dislikes_list_view, column_id="dislikes")
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
