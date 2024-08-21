@@ -280,7 +280,6 @@ class Interests:
             return
 
         self.show_recommendations()
-        self.populated_recommends = True
 
     def show_recommendations(self):
 
@@ -293,6 +292,7 @@ class Interests:
             core.interests.request_recommendations()
 
         core.interests.request_similar_users()
+        self.populated_recommends = True
 
     def show_item_recommendations(self, list_view, column_id):
 
@@ -301,6 +301,7 @@ class Interests:
 
             core.interests.request_item_recommendations(item)
             core.interests.request_item_similar_users(item)
+            self.populated_recommends = True
 
             if self.window.current_page_id != self.window.interests_page.id:
                 self.window.change_main_page(self.window.interests_page)
