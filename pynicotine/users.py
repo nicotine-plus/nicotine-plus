@@ -105,6 +105,10 @@ class Users:
 
     def open_privileges_url(self):
 
+        if not self.server_hostname or not self.server_hostname.endswith(".slsknet.org"):
+            # Only official server is supported for now
+            return
+
         import urllib.parse
 
         login = urllib.parse.quote(self.login_username)
