@@ -1369,6 +1369,7 @@ class Search:
     def on_file_properties_accelerator(self, *_args):
         """Alt+Return - show file properties dialog."""
 
+        self.select_results()
         self.on_file_properties()
         return True
 
