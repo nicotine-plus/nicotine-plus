@@ -133,7 +133,7 @@ class Application:
             ("connect", self.on_connect, None, True),
             ("disconnect", self.on_disconnect, None, False),
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
-            ("away", self.on_away, None, False),
+            ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
@@ -331,7 +331,7 @@ class Application:
 
         self.lookup_action("connect").set_enabled(not is_online)
 
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel",
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
@@ -843,14 +843,6 @@ class Application:
 
         self.window.present()
 
-    def on_connect_disconnect(self, *_args):
-
-        if core.users.login_status != UserStatus.OFFLINE:
-            self.on_disconnect()
-            return
-
-        self.on_connect()
-
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
 
@@ -863,6 +855,10 @@ class Application:
 
     def on_away(self, *_args):
         """Away/Online status button."""
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+            return
 
         core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 

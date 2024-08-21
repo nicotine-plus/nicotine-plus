@@ -1166,10 +1166,6 @@ class MainWindow(Window):
 
         if core.uploads.pending_shutdown:
             core.uploads.cancel_shutdown()
-
-        elif core.users.login_status == UserStatus.OFFLINE:
-            self.application.lookup_action("connect").activate()
-
         else:
             self.application.lookup_action("away").activate()
 

@@ -55,7 +55,7 @@ class BaseImplementation:
 
     def _create_item(self, text=None, callback=None, check=False):
 
-        item = {"id": self.menu_item_id, "sensitive": True}
+        item = {"id": self.menu_item_id, "visible": True}
 
         if text is not None:
             item["text"] = text
@@ -74,20 +74,20 @@ class BaseImplementation:
     def _set_item_text(self, item, text):
         item["text"] = text
 
-    def _set_item_sensitive(self, item, sensitive):
-        item["sensitive"] = sensitive
+    def _set_item_visible(self, item, visible):
+        item["visible"] = visible
 
     def _set_item_toggled(self, item, toggled):
         item["toggled"] = toggled
 
     def _create_menu(self):
 
-        self.show_hide_item = self._create_item("default", self.application.on_window_hide_unhide)
+        self.show_hide_item = self._create_item("placeholder", self.application.on_window_hide_unhide)
 
         self._create_item()
 
-        self.downloads_item = self._create_item(_("Downloads"), self.application.on_downloads)
-        self.uploads_item = self._create_item(_("Uploads"), self.application.on_uploads)
+        self.downloads_item = self._create_item("placeholder", self.application.on_downloads)
+        self.uploads_item = self._create_item("placeholder", self.application.on_uploads)
 
         self._create_item()
 
@@ -97,8 +97,9 @@ class BaseImplementation:
 
         self._create_item()
 
-        self.connect_disconnect_item = self._create_item("default", self.application.on_connect_disconnect)
         self.away_item = self._create_item(_("Away"), self.application.on_away, check=True)
+        self.connect_item = self._create_item(_("_Connect"), self.application.on_connect)
+        self.disconnect_item = self._create_item(_("_Disconnect"), self.application.on_disconnect)
 
         self._create_item()
 
@@ -119,16 +120,20 @@ class BaseImplementation:
     def _update_user_status(self):
 
         should_update = False
-        away_sensitive = core.users.login_status != UserStatus.OFFLINE
+        connect_visible = core.users.login_status == UserStatus.OFFLINE
+        away_visible = not connect_visible
         away_toggled = core.users.login_status == UserStatus.AWAY
-        connect_label = _("_Disconnect") if away_sensitive else _("_Connect")
 
-        if self.connect_disconnect_item.get("text") != connect_label:
-            self._set_item_text(self.connect_disconnect_item, connect_label)
+        if self.connect_item.get("visible") != connect_visible:
+            self._set_item_visible(self.connect_item, connect_visible)
             should_update = True
 
-        if self.away_item.get("sensitive") != away_sensitive:
-            self._set_item_sensitive(self.away_item, away_sensitive)
+        if self.disconnect_item.get("visible") == connect_visible:
+            self._set_item_visible(self.disconnect_item, not connect_visible)
+            should_update = True
+
+        if self.away_item.get("visible") != away_visible:
+            self._set_item_visible(self.away_item, away_visible)
             should_update = True
 
         if self.away_item.get("toggled") != away_toggled:
@@ -356,10 +361,7 @@ class StatusNotifierImplementation(BaseImplementation):
         def _serialize_item(item):
 
             if "text" in item:
-                props = {
-                    "label": GLib.Variant("s", item["text"]),
-                    "enabled": GLib.Variant("b", item["sensitive"])
-                }
+                props = {"label": GLib.Variant("s", item["text"])}
 
                 if item.get("toggled") is not None:
                     props["toggle-type"] = GLib.Variant("s", "checkmark")
@@ -373,8 +375,10 @@ class StatusNotifierImplementation(BaseImplementation):
 
             item_properties = []
 
-            for idx, item in self._items.items():
-                if idx in ids:
+            for idx in ids:
+                item = self._items.get(idx)
+
+                if item is not None:
                     item_properties.append((idx, self._serialize_item(item)))
 
             return (item_properties,)
@@ -384,8 +388,9 @@ class StatusNotifierImplementation(BaseImplementation):
             serialized_items = []
 
             for idx, item in self._items.items():
-                serialized_item = GLib.Variant("(ia{sv}av)", (idx, self._serialize_item(item), []))
-                serialized_items.append(serialized_item)
+                if item["visible"]:
+                    serialized_item = GLib.Variant("(ia{sv}av)", (idx, self._serialize_item(item), []))
+                    serialized_items.append(serialized_item)
 
             return self._revision, (0, {}, serialized_items)
 
@@ -895,7 +900,6 @@ class Win32Implementation(BaseImplementation):
         w_id = item["id"]
         text = item.get("text")
         is_checked = item.get("toggled")
-        is_sensitive = item.get("sensitive")
 
         item_info.f_mask |= self.MIIM_ID
         item_info.w_id = w_id
@@ -909,10 +913,6 @@ class Win32Implementation(BaseImplementation):
         if is_checked is not None:
             item_info.f_mask |= self.MIIM_STATE
             item_info.f_state |= self.MFS_CHECKED if is_checked else self.MFS_UNCHECKED
-
-        if is_sensitive is not None:
-            item_info.f_mask |= self.MIIM_STATE
-            item_info.f_state |= self.MFS_ENABLED if is_sensitive else self.MFS_DISABLED
 
         return item_info
 
@@ -949,6 +949,9 @@ class Win32Implementation(BaseImplementation):
             self._menu = windll.user32.CreatePopupMenu()
 
         for item in self.menu_items.values():
+            if not item["visible"]:
+                continue
+
             item_id = item["id"]
             item_info = self._serialize_menu_item(item)
 
@@ -1043,9 +1046,9 @@ class StatusIconImplementation(BaseImplementation):
         super()._set_item_text(item, text)
         item["gtk_menu_item"].set_label(text)
 
-    def _set_item_sensitive(self, item, sensitive):
-        super()._set_item_sensitive(item, sensitive)
-        item["gtk_menu_item"].set_sensitive(sensitive)
+    def _set_item_visible(self, item, visible):
+        super()._set_item_visible(item, visible)
+        item["gtk_menu_item"].set_visible(visible)
 
     def _set_item_toggled(self, item, toggled):
 
