@@ -331,7 +331,7 @@ class Application:
 
         self.lookup_action("connect").set_enabled(not is_online)
         self.lookup_action("soulseek-privileges").set_enabled(
-            is_online and core.users.server_hostname.endswith("slsknet.org"))
+            is_online and core.users.server_hostname.endswith(".slsknet.org"))
 
         for action_name in ("disconnect", "away-accel", "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
