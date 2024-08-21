@@ -449,7 +449,7 @@ class Interests:
         self.similar_users_list_view.clear()
         self.similar_users_list_view.disable_sorting()
 
-        for index, (user, rating) in enumerate(users.items()):
+        for index, (user, rating) in enumerate(reversed(users.items())):
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
             country_code = core.users.countries.get(user, "")
             stats = core.users.watched.get(user)
