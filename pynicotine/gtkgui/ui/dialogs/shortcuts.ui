@@ -253,6 +253,13 @@
                 <property name="visible">True</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="action-name">accel.file-properties</property>
+                <property name="title" translatable="yes">File Properties</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
