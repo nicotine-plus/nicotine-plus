@@ -105,7 +105,10 @@ class Users:
 
     def open_privileges_url(self):
 
-        if not self.server_hostname or not self.server_hostname.endswith(".slsknet.org"):
+        default_server_hostname, _port = config.defaults["server"]["server"]
+        default_server_domain = default_server_hostname.split(".", maxsplit=1)[-1]
+
+        if not self.server_hostname or not self.server_hostname.endswith(f".{default_server_domain}"):
             # Only official server is supported for now
             return
 
