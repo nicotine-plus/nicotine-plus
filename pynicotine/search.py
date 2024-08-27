@@ -382,20 +382,11 @@ class Search:
         if not wish:
             return
 
-        found_previous_search = False
-
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        for search in self.searches.values():
-            if search.term != wish or search.mode != "wishlist":
-                continue
-
-            found_previous_search = True
-            break
-
-        if not found_previous_search:
+        if not any(search.term == wish and search.mode == "wishlist" for search in self.searches.values()):
             # Get a new search token
             self.token = increment_token(self.token)
             self.add_search(wish, mode="wishlist", is_ignored=True)
