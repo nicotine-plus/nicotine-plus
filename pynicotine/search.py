@@ -394,14 +394,20 @@ class Search:
 
     def remove_wish(self, wish):
 
-        if wish in config.sections["server"]["autosearch"]:
-            config.sections["server"]["autosearch"].remove(wish)
-            config.write_configuration()
+        if wish not in config.sections["server"]["autosearch"]:
+            return
 
-            for token, search in self.searches.items():
-                if search.term == wish and search.mode == "wishlist":
-                    del self.searches[token]
-                    break
+        config.sections["server"]["autosearch"].remove(wish)
+        config.write_configuration()
+
+        for token, search in self.searches.items():
+            if search.term != wish or search.mode != "wishlist":
+                continue
+
+            if search.is_ignored:
+                del self.searches[token]
+
+            break
 
         events.emit("remove-wish", wish)
 
