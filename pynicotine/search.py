@@ -159,7 +159,7 @@ class Search:
         if search is None:
             return
 
-        if search.term in config.sections["server"]["autosearch"]:
+        if search.mode == "wishlist" and search.term in config.sections["server"]["autosearch"]:
             search.is_ignored = True
         else:
             del self.searches[token]
@@ -382,14 +382,24 @@ class Search:
         if not wish:
             return
 
-        # Get a new search token
-        self.token = increment_token(self.token)
+        found_previous_search = False
 
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish, mode="wishlist", is_ignored=True)
+        for search in self.searches.values():
+            if search.term != wish or search.mode != "wishlist":
+                continue
+
+            found_previous_search = True
+            break
+
+        if not found_previous_search:
+            # Get a new search token
+            self.token = increment_token(self.token)
+            self.add_search(wish, mode="wishlist", is_ignored=True)
+
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
