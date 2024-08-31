@@ -350,6 +350,9 @@ class ComboBox:
         self._positions.pop(item_id, None)
         self._update_item_positions(start_position=position)
 
+        if GTK_API_VERSION >= 4:
+            self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+
         self._is_updating_items = False
 
     def remove_id(self, item_id):
