@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-08-19 12:09+0000\n"
+"PO-Revision-Date: 2024-09-02 12:48+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -511,11 +511,11 @@ msgstr "_Enviar un mensaje"
 
 #: pynicotine/gtkgui/application.py:787
 msgid "Message Buddies"
-msgstr "Enviar mensaje a amigos"
+msgstr "Enviar un mensaje a mis amigos"
 
 #: pynicotine/gtkgui/application.py:788
 msgid "Send private message to all online buddies:"
-msgstr "Enviar mensaje privado a todos los amigos que estén conectados:"
+msgstr "Enviar un mensaje privado a todos los amigos que estén conectados:"
 
 #: pynicotine/gtkgui/application.py:817
 msgid "Select a Saved Shares List File"
