@@ -310,7 +310,7 @@ class Config:
                 "filtertype": [],
                 "filterlength": [],
                 "search_results": True,
-                "max_displayed_results": 1500,
+                "max_displayed_results": 2000,
                 "min_search_chars": 3,
                 "private_search_results": False
             },
