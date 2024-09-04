@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-07 21:39+0300\n"
-"PO-Revision-Date: 2024-09-02 12:48+0000\n"
+"PO-Revision-Date: 2024-09-04 07:09+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -365,11 +365,11 @@ msgstr "Examinar los _compartidos públicos"
 
 #: pynicotine/gtkgui/application.py:377
 msgid "Browse _Buddy Shares"
-msgstr "Examinar los _compartidos para amigos"
+msgstr "Examinar los _compartidos de amigos"
 
 #: pynicotine/gtkgui/application.py:378
 msgid "Browse _Trusted Shares"
-msgstr "Examinar los _compartidos para amigos de confianza"
+msgstr "Examinar los _compartidos de amigos de confianza"
 
 #: pynicotine/gtkgui/application.py:387 pynicotine/gtkgui/application.py:443
 msgid "_Rescan Shares"
@@ -519,7 +519,7 @@ msgstr "Enviar un mensaje privado a todos los amigos que estén conectados:"
 
 #: pynicotine/gtkgui/application.py:817
 msgid "Select a Saved Shares List File"
-msgstr "Seleccione una lista de archivos compartidos guardada"
+msgstr "Seleccione una lista guardada de archivos compartidos"
 
 #: pynicotine/gtkgui/application.py:907
 msgid "Critical Error"
@@ -1776,7 +1776,7 @@ msgstr "Limpiar la vista de registro"
 
 #: pynicotine/gtkgui/mainwindow.py:1149
 msgid "Preparing Shares"
-msgstr "Preparación de las acciones"
+msgstr "Preparando compartidos"
 
 #: pynicotine/gtkgui/mainwindow.py:1157
 msgid "Scanning Shares"
@@ -2522,7 +2522,7 @@ msgstr ""
 
 #: pynicotine/headless/application.py:116
 msgid "The following shares are unavailable:"
-msgstr "Las siguientes acciones no están disponibles:"
+msgstr "Los siguientes compartidos no están disponibles:"
 
 #: pynicotine/headless/application.py:122
 #, python-format
@@ -3724,7 +3724,7 @@ msgstr "Lista de compartidos"
 
 #: pynicotine/plugins/core_commands/__init__.py:239
 msgid "Rescan shares"
-msgstr "Volver a escanear los compartidos"
+msgstr "Reescanear los compartidos"
 
 #: pynicotine/plugins/core_commands/__init__.py:246
 msgid "Start global file search"
@@ -3802,7 +3802,7 @@ msgstr "Dejar de ignorar %s"
 #: pynicotine/plugins/core_commands/__init__.py:553
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr "%(num_listed)s acciones mostradas y (%(num_total)s configuradas)"
+msgstr "%(num_listed)s compartidos listados (%(num_total)s configuradas)"
 
 #: pynicotine/plugins/core_commands/__init__.py:565
 #, python-format
@@ -3957,7 +3957,7 @@ msgstr ""
 
 #: pynicotine/shares.py:284
 msgid "Rebuilding shares…"
-msgstr "Escaneando compartidos nuevamente…"
+msgstr "Reconstruyendo los compartidos…"
 
 #: pynicotine/shares.py:284
 msgid "Rescanning shares…"
@@ -3975,10 +3975,9 @@ msgid ""
 "delete %(dir)s/*.dbn and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
-"Se ha producido un error grave al volver a analizar los recursos "
-"compartidos. Si el problema persiste, borre %(dir)s/*.dbn e inténtelo de "
-"nuevo. Si eso no ayuda, por favor, envíe un informe de error con este stack "
-"trace incluido: %(trace)s"
+"Se ha producido un error grave al reescanear los compartidos. Si el problema "
+"persiste, borra %(dir)s/*.dbn e inténtalo de nuevo. Si eso no lo soluciona, "
+"por favor, envía un informe de error con este stack trace incluido: %(trace)s"
 
 #: pynicotine/shares.py:553
 #, python-format
@@ -3998,7 +3997,7 @@ msgstr "Error al escanear los metadatos del archivo %(path)s: %(error)s"
 #: pynicotine/shares.py:1007
 #, python-format
 msgid "Rescan aborted due to unavailable shares: %s"
-msgstr "Reescaneo abortado debido a las acciones no disponibles: %s"
+msgstr "Reescaneo interrumpido debido a compartidos no disponibles: %s"
 
 #: pynicotine/shares.py:1142
 #, python-format
@@ -4103,7 +4102,8 @@ msgstr ""
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr ""
-"No se puede guardar los compartidos. Error de «%(user)s» reportado: %(error)s"
+"No se pueden guardar los compartidos. Error de «%(user)s» reportado: "
+"%(error)s"
 
 #: pynicotine/userinfo.py:160
 #, python-format
@@ -4315,9 +4315,9 @@ msgid ""
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Los usuarios de Soulseek podrán descargar tus archivos compartidos. "
-"Contribuya a la red Soulseek compartiendo sus propios archivos y volviendo a "
-"compartir lo que haya descargado de otros usuarios."
+"Los usuarios de Soulseek podrán descargar tus compartidos. Contribuye a la "
+"red Soulseek compartiendo tus propios ficheros y los que hayas descargado de "
+"otros usuarios."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:515
 msgid "You are ready to use Nicotine+!"
@@ -4378,7 +4378,7 @@ msgstr "Desconectar"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
 msgid "Rescan Shares"
-msgstr "Volver a escanear los compartidos"
+msgstr "Reescanear compartidos"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
 #: pynicotine/gtkgui/ui/mainwindow.ui:1866
@@ -4704,7 +4704,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:811
 msgid "Configure Shares"
-msgstr "Configurar recursos compartidos"
+msgstr "Configurar compartidos"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:878
 msgid ""
@@ -5704,7 +5704,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:39
 msgid "Rescan shares on startup"
-msgstr "Reescanear compartidos al arranque"
+msgstr "Reescanear compartidos al inicio"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:68
 msgid "Visible to everyone:"
@@ -5712,11 +5712,11 @@ msgstr "Visible para todos:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
 msgid "Buddy shares"
-msgstr "Compartidos con los amigos"
+msgstr "Compartidos de amigos"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:90
 msgid "Trusted shares"
-msgstr "Acciones de confianza"
+msgstr "Compartidos de confianza"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:65
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5816,9 +5816,8 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
-"Añade las cosas que quieras que todo el mundo vea, como una breve "
-"descripción, consejos útiles o directrices para descargar tus "
-"participaciones."
+"Añade cosas que quieres que todo el mundo vea, como una breve descripción, "
+"consejos útiles o directrices para descargar tus compartidos."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 msgid "Picture:"
@@ -6064,7 +6063,7 @@ msgstr "Eliminar subidas específicas"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:161
 msgid "Save Shares List to Disk"
-msgstr "Guardar la lista de recursos compartidos en el disco"
+msgstr "Guardar la lista de compartidos en el disco"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:178
 msgid "Refresh Files"
