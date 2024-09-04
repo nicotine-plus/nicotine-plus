@@ -89,6 +89,7 @@ class Search:
             ("file-search-response", self._file_search_response),
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
             ("set-wishlist-interval", self._set_wishlist_interval),
             ("start", self._start)
         ):
@@ -103,6 +104,15 @@ class Search:
 
     def _quit(self):
         self.remove_all_searches()
+
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        if not config.sections["searches"]["search_results"]:
+            log.add_search(("Search responses disabled in preferences, ignoring search "
+                            "requests from other users"))
 
     def _server_disconnect(self, _msg):
 
