@@ -83,6 +83,7 @@ class Uploads(Transfers):
             ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
+            ("privileged-users", self._privileged_users),
             ("queue-upload", self._queue_upload),
             ("set-connection-stats", self._set_connection_stats),
             ("shares-ready", self._shares_ready),
@@ -737,6 +738,11 @@ class Uploads(Transfers):
 
         if msg.user == core.users.login_username:
             self.upload_speed = msg.avgspeed
+
+    def _privileged_users(self, _msg):
+        """Server code 69."""
+
+        log.add_transfer("%s privileged users", len(core.users.privileged))
 
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
         self.total_bandwidth = upload_bandwidth

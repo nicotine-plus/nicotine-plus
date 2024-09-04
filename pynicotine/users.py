@@ -442,8 +442,6 @@ class Users:
         for username in msg.users:
             self.privileged.add(username)
 
-        log.add(_("%i privileged users"), len(msg.users))
-
     def _check_privileges(self, msg):
         """Server code 92."""
 
