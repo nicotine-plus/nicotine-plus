@@ -177,8 +177,7 @@ class Config:
                 "autojoin": [],
                 "autoaway": 15,
                 "away": False,
-                "private_chatrooms": False,
-                "command_aliases": {}
+                "private_chatrooms": False
             },
             "transfers": {
                 "incompletedir": os.path.join(data_home_env, "incomplete"),
@@ -333,7 +332,6 @@ class Config:
                 "usernamestyle": "bold",
                 "textbg": "",
                 "search": "",
-                "searchq": "GREY",  # TODO: remove in 3.3.5
                 "inputcolor": "",
                 "spellcheck": True,
                 "exitdialog": 1,
@@ -392,9 +390,6 @@ class Config:
                 "maximized": True,
                 "reverse_file_paths": True,
                 "file_size_unit": ""
-            },
-            "private_rooms": {
-                "rooms": {}  # TODO: remove in 3.3.5
             },
             "urls": {
                 "protocols": {}
@@ -461,7 +456,8 @@ class Config:
                 "fallbackencodings",
                 "roomencoding",
                 "userencoding",
-                "firewalled"
+                "firewalled",
+                "command_aliases"
             ),
             "ui": (
                 "enabletrans",
@@ -493,7 +489,8 @@ class Config:
                 "decimalsep",
                 "urgencyhint",
                 "tab_status_icons",
-                "file_path_tooltips"
+                "file_path_tooltips",
+                "searchq"
             ),
             "columns": (
                 "downloads",
@@ -531,6 +528,7 @@ class Config:
             ),
             "private_rooms": (
                 "enabled",
+                "rooms"
             ),
             "logging": (
                 "logsdir",
