@@ -223,10 +223,11 @@ class Config:
                 "enablefilters": False,
                 "downloadregexp": "",
                 "downloadfilters": [
+                    ["*.DS_Store", 1],
+                    ["*.exe", 1],
+                    ["*.msi", 1],
                     ["desktop.ini", 1],
-                    ["*.url", 1],
-                    ["thumbs.db", 1],
-                    ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
+                    ["Thumbs.db", 1]
                 ],
                 "download_doubleclick": 2,
                 "upload_doubleclick": 2,
