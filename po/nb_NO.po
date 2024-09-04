@@ -6797,10 +6797,6 @@ msgstr "_Oppdater profil"
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+ kommandoer"
 
-#, fuzzy, python-format
-#~ msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
-#~ msgstr "Klarte ikke å hente den delte mappen %(folder)s: %(error)s"
-
 #~ msgid "_Clear"
 #~ msgstr "_Tøm"
 
@@ -6808,23 +6804,8 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Kan ikke lagre %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
-#, fuzzy
-#~ msgid "Trusted Buddies"
-#~ msgstr "Pålitelige venner"
-
-#, fuzzy
-#~ msgid "Quit program"
-#~ msgstr "Avslutt program"
-
 #~ msgid "Username:"
 #~ msgstr "Brukernavn:"
-
-#, fuzzy
-#~ msgid "Re_commendations for Item"
-#~ msgstr "Anbefalinger for Objekt"
 
 #~ msgid "_Remove Item"
 #~ msgstr "_Fjern element"
@@ -6838,111 +6819,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Send Message"
 #~ msgstr "Send melding"
 
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Vis brukerprofil"
-
-#, fuzzy
-#~ msgid "Start Messaging"
-#~ msgstr "Start Meldingsutveksling"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whom you want to send a message:"
-#~ msgstr "Skriv inn navnet på brukeren du vil sende en melding til:"
-
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "Melding"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr "Skriv inn navnet på brukeren hvis profil du vil se:"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "_Vis profil"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose shares you want to see:"
-#~ msgstr "Skriv inn navnet på brukeren du vil se delinger fra:"
-
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "_Bla gjennom"
-
-#, fuzzy
-#~ msgid "Password"
-#~ msgstr "Passord"
-
-#, fuzzy
-#~ msgid "Download File"
-#~ msgstr "Last ned fil"
-
-#, fuzzy
-#~ msgid "Refresh Similar Users"
-#~ msgstr "Oppdater lignende brukere"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose files you want to see"
-#~ msgstr "Skriv inn brukernavnet til personen du vil se filene til"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose information you want to see"
-#~ msgstr "Skriv inn brukernavnet til personen du vil se informasjonen til"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to send a message to"
-#~ msgstr "Skriv inn brukernavnet til personen du vil sende en melding til"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to add to your buddy list"
-#~ msgstr ""
-#~ "Skriv inn brukernavnet til personen du vil legge til i vennelisten din"
-
-#, fuzzy
-#~ msgid ""
-#~ "Enter the name of a room you want to join. If the room doesn't exist, it "
-#~ "will be created."
-#~ msgstr ""
-#~ "Skriv inn navnet på et rom du vil bli med i. Hvis rommet ikke eksisterer, "
-#~ "vil det bli opprettet."
-
-#, fuzzy
-#~ msgid "Show Log History Pane"
-#~ msgstr "Vis logghistorikk-panelet"
-
 #~ msgid "Save _Picture"
 #~ msgstr "Lagre _bilde"
 
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Filtered out incorrect search result %(filepath)s from user %(user)s for "
-#~ "search query \"%(query)s\""
-#~ msgstr ""
-#~ "Filtrerte ut feil søkeresultat %(filepath)s fra bruker %(user)s for søket "
-#~ "\"%(query)s\""
-
-#, fuzzy
-#~ msgid ""
-#~ "Certain clients don't send search results if special characters are "
-#~ "included."
-#~ msgstr ""
-#~ "Enkelte klienter sender ikke søkeresultater hvis spesialtegn er inkludert."
-
 #~ msgid "Remove special characters from search terms"
 #~ msgstr "Fjern spesialtegn fra søkeord"
-
-#, fuzzy, python-format
-#~ msgid "Trouble executing '%s'"
-#~ msgstr "Problemer med å utføre %s'"
-
-#, fuzzy, python-format
-#~ msgid "Trouble executing on folder: %s"
-#~ msgstr "Problemer med å kjøre på mappen: %s"
-
-#, fuzzy
-#~ msgid "Disallowed extension"
-#~ msgstr "Ikke tillatt utvidelse"
 
 #~ msgid "Too many files"
 #~ msgstr "For mange filer"
@@ -6950,27 +6831,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Too many megabytes"
 #~ msgstr "For mange megabyte"
 
-#, fuzzy
-#~ msgid "Server does not permit performing wishlist searches at this time"
-#~ msgstr "Serveren tillater for øyeblikket ikke å utføre ønskelistesøk"
-
-#, fuzzy
-#~ msgid ""
-#~ "File transfer speeds depend on users you are downloading from. Certain "
-#~ "users will be faster, while others will be slow."
-#~ msgstr ""
-#~ "Filoverføringshastighetene avhenger av brukerne du laster ned fra. Visse "
-#~ "brukere vil være raskere, mens andre vil være trege."
-
 #~ msgid "Started Downloads"
 #~ msgstr "Startede nedlastinger"
 
 #~ msgid "Started Uploads"
 #~ msgstr "Startede opplastinger"
-
-#, fuzzy
-#~ msgid "Replace censored letters with:"
-#~ msgstr "Erstatt sensurerte bokstaver med:"
 
 #~ msgid "Censored Patterns"
 #~ msgstr "Sensurerte mønstre"
@@ -6978,44 +6843,14 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Replacements"
 #~ msgstr "Erstatninger"
 
-#, fuzzy
-#~ msgid ""
-#~ "If a user on the Soulseek network searches for a file that exists in your "
-#~ "shares, search results will be sent to the user."
-#~ msgstr ""
-#~ "Hvis en bruker på Soulseek-nettverket søker etter en fil som finnes i de "
-#~ "delte ressursene dine, sendes søkeresultatene til brukeren."
-
-#, fuzzy
-#~ msgid "Send to Player"
-#~ msgstr "Send til _spiller"
-
 #~ msgid "Send to _Player"
 #~ msgstr "Send til _spiller"
 
 #~ msgid "_Open in File Manager"
 #~ msgstr "_Åpne i filbehandler"
 
-#, fuzzy
-#~ msgid "Media player command:"
-#~ msgstr "Media Player-kommando ($ for filbane):"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Unable to save download to username subfolder, falling back to default "
-#~ "download folder. Error: %s"
-#~ msgstr "Kan ikke lagre nedlasting til undermappe for brukernavn. Feil: %s"
-
 #~ msgid "Buddy-only"
 #~ msgstr "Kun kontakter"
-
-#, fuzzy
-#~ msgid "Share with buddies only"
-#~ msgstr "Kun del med kontakter"
-
-#, fuzzy
-#~ msgid "_Quit…"
-#~ msgstr "_Avslutt"
 
 #~ msgid "_Configure Shares"
 #~ msgstr "_Set opp delinger"
@@ -7027,68 +6862,12 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 #~ msgstr "Finner ikke %(option1)s eller %(option2)s. Installer én av delene."
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s-mapper funnet etter ny skanning"
-
-#, fuzzy, python-format
-#~ msgid "Failed to process the following databases: %(names)s"
-#~ msgstr "Kan ikke behandle følgende databaser: %(names)s"
-
 #, python-format
 #~ msgid "Failed to send number of shared files to the server: %s"
 #~ msgstr "Klarte ikke å sende antall delte filer til tjeneren: %s"
 
-#, fuzzy
-#~ msgid "Quit / Run in Background"
-#~ msgstr "Kjør i bakgrunnen"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Lytteport er ikke valgt"
-
-#, fuzzy
-#~ msgid "Network interface:"
-#~ msgstr "Nettverkssøk"
-
-#, fuzzy
-#~ msgid "Limit buddy-only shares to trusted buddies"
-#~ msgstr "Begrens delte venner til betrodde venner"
-
-#, fuzzy
-#~ msgid "Shared"
-#~ msgstr "Delte"
-
-#, fuzzy
-#~ msgid "Search Files and Folders"
-#~ msgstr "Søke i filer og mapper (nøyaktig samsvar)"
-
-#, fuzzy
-#~ msgid "Out of Date"
-#~ msgstr "Utdatert"
-
-#, fuzzy, python-format
-#~ msgid "Version %(version)s is available, released on %(date)s"
-#~ msgstr "Versjon %(version)s er tilgjengelig, utgitt på %(date)s"
-
-#, fuzzy, python-format
-#~ msgid "You are using a development version of %s"
-#~ msgstr "Det ser ut til at du bruker en utviklingsversjon av Nicotine+."
-
-#, fuzzy, python-format
-#~ msgid "You are using the latest version of %s"
-#~ msgstr "Du bruker nyeste versjon av Nicotine+."
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Se etter _nye versjoner"
-
 #~ msgid "Prefer Dark _Mode"
 #~ msgstr "Foretrekk _mørk drakt"
-
-#, fuzzy
-#~ msgid "Show _Log History Pane"
-#~ msgstr "Vis _loggfane"
 
 #~ msgid "Buddy List in Separate Tab"
 #~ msgstr "Kontaktliste i egen fane"
@@ -7099,112 +6878,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "_View"
 #~ msgstr "_Vis"
 
-#, fuzzy
-#~ msgid "_Open Log Folder"
-#~ msgstr "_Nedlastningsmappe"
-
-#, fuzzy
-#~ msgid "_Browse Folder(s)"
-#~ msgstr "_Browse mappe(r)"
-
-#, fuzzy
-#~ msgid "Kibibytes (2^10 bytes) per second."
-#~ msgstr "Kibibyte (2^10 byte) per sekund."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being geo blocked."
-#~ msgstr "Sendt til brukere som årsak til å være geo-blokkert."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being banned."
-#~ msgstr "Sendes til brukere som årsak til at de blir utestengt."
-
-#, fuzzy
-#~ msgid ""
-#~ "Once you interact with the application being away, status will be set to "
-#~ "online."
-#~ msgstr ""
-#~ "Når du samhandler med at applikasjonen er borte, settes statusen til "
-#~ "online."
-
-#, fuzzy
-#~ msgid "Each user may queue a maximum of either:"
-#~ msgstr "Hver bruker kan legge maksimalt ett av følgende i kø:"
-
-#, fuzzy
-#~ msgid "Mebibytes (2^20 bytes)."
-#~ msgstr "Mebibyte (2^20 byte)."
-
-#, fuzzy
-#~ msgid "MiB"
-#~ msgstr "MiB"
-
-#, fuzzy
-#~ msgid "files"
-#~ msgstr "Filer"
-
-#, fuzzy
-#~ msgid "Queue Behavior"
-#~ msgstr "Virkemåte for kø"
-
-#, fuzzy
-#~ msgid ""
-#~ "If disabled, slots will automatically be determined by available "
-#~ "bandwidth limitations."
-#~ msgstr ""
-#~ "Hvis den deaktiveres, bestemmes sporene automatisk av tilgjengelige "
-#~ "båndbreddebegrensninger."
-
-#, fuzzy
-#~ msgid "Note that the operating system's theme may take precedence."
-#~ msgstr "Vær oppmerksom på at operativsystemets tema kan ha forrang."
-
-#, fuzzy
-#~ msgid "By default the leftmost tab is activated at startup"
-#~ msgstr "Som standard er fanen for søkefiler aktivert ved oppstart."
-
-#, fuzzy, python-format
-#~ msgid "Quit %(program)s %(version)s, %(status)s!"
-#~ msgstr "Avslutt Nicotine+ %(version)s, %(status)s."
-
-#, fuzzy
-#~ msgid "terminated"
-#~ msgstr "Avsluttet"
-
-#, fuzzy
-#~ msgid "done"
-#~ msgstr "gjort"
-
 #~ msgid "Remember choice"
 #~ msgstr "Husk valg"
 
 #~ msgid "Kosovo"
 #~ msgstr "Kosovo"
-
-#, fuzzy
-#~ msgid "Unknown Network Interface"
-#~ msgstr "Brukergrensesnitt"
-
-#, fuzzy
-#~ msgid "Listening Port Unavailable"
-#~ msgstr "Lytter til port %i"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "The server seems to be down or not responding, retrying in %i seconds"
-#~ msgstr ""
-#~ "Serveren ser ut til å være nede eller ikke svare, og prøver på nytt om %i "
-#~ "sekunder"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ uses peer-to-peer networking to connect to other users. In "
-#~ "order to allow users to connect to you without trouble, an open listening "
-#~ "port is crucial."
-#~ msgstr ""
-#~ "Nicotine+ bruker node-til-node-nettverk for å koble til andre brukere. "
-#~ "For å tillate brukere å koble til deg uten problemer, er en åpen "
-#~ "lytteport avgjørende."
 
 #~ msgid "--- disconnected ---"
 #~ msgstr "--- frakoblet ---"
@@ -7215,84 +6893,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "ID"
 #~ msgstr "ID"
 
-#, fuzzy
-#~ msgid "Earth"
-#~ msgstr "Jord"
-
-#, fuzzy
-#~ msgid "Czech Republic"
-#~ msgstr "Tsjekkia"
-
 #~ msgid "Turkey"
 #~ msgstr "Tyrkia"
 
-#, fuzzy
-#~ msgid "Joined Rooms "
-#~ msgstr "Sammenføyde rom "
-
-#, fuzzy
-#~ msgid "_Auto-join Room"
-#~ msgstr "_Auto-join rom"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b> Syntaks:</b> Bokstaver skiller ikke mellom store og små bokstaver. "
-#~ "Alle vanlige Python-uttrykk støttes hvis rømming er deaktivert. For enkle "
-#~ "filtre anbefales det å holde rømming aktivert."
-
-#, fuzzy
-#~ msgid "Escaped"
-#~ msgstr "Rømte"
-
-#, fuzzy
-#~ msgid "Escape filter"
-#~ msgstr "Rømte"
-
-#, fuzzy
-#~ msgid "Enter a text pattern and what to replace it with"
-#~ msgstr "Skriv inn henholdsvis tekstmønsteret og erstatningen:"
-
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan, rebuilding…"
-#~ msgstr "%(num)s mapper funnet før ny skanning, gjenoppbygging…"
-
-#, fuzzy, python-format
-#~ msgid "No listening port is available in the specified port range %s–%s"
-#~ msgstr "Ingen lytteport er tilgjengelig i det angitte portområdet %s–%s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Choose a range to select a listening port from. The first available port "
-#~ "in the range will be used."
-#~ msgstr ""
-#~ "Velg en rekkevidde å velge en lytteport fra. Den første tilgjengelige "
-#~ "porten i serien vil bli brukt."
-
-#, fuzzy
-#~ msgid "First Port"
-#~ msgstr "Første port"
-
 #~ msgid "to"
 #~ msgstr "til"
-
-#, fuzzy
-#~ msgid "Last Port"
-#~ msgstr "Siste port"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %s or newer, please install it."
-#~ msgstr "Finner ikke %s. Installer det først."
-
-#, fuzzy
-#~ msgid ""
-#~ "Cannot import the Gtk module. Bad install of the python-gobject module?"
-#~ msgstr ""
-#~ "Kan ikke importere GTK-modulen. Har python-gobject-modulen blitt "
-#~ "installert på feil vis?"
 
 #, python-format
 #~ msgid ""
@@ -7305,52 +6910,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "User Info"
 #~ msgstr "Brukerinfo"
 
-#, fuzzy
-#~ msgid "Zoom 1:1"
-#~ msgstr "Zoom 1:1"
-
-#, fuzzy
-#~ msgid "Zoom In"
-#~ msgstr "Zoom inn"
-
-#, fuzzy
-#~ msgid "Zoom Out"
-#~ msgstr "Zoom ut"
-
 #~ msgid "Show User I_nfo"
 #~ msgstr "Vis brukeri_nfo"
 
-#, fuzzy
-#~ msgid "Request User's Info"
-#~ msgstr "Forespør brukerinfo"
-
-#, fuzzy
-#~ msgid "Request User's Shares"
-#~ msgstr "Forespør brukerinfo"
-
 #~ msgid "Request User Info"
 #~ msgstr "Forespør brukerinfo"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose info you want to see:"
-#~ msgstr "Skriv inn navnet på brukeren du ønsker å bannlyse:"
-
-#, fuzzy
-#~ msgid "Request Shares List"
-#~ msgstr "Liste over delte forespørselsressurser"
-
-#, fuzzy, python-format
-#~ msgid "Invalid Soulseek URL: %s"
-#~ msgstr "Ugyldig Soulseek URL: %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Users on the Soulseek network will be able to download files from folders "
-#~ "you share. Sharing files is crucial for the health of the Soulseek "
-#~ "network."
-#~ msgstr ""
-#~ "Brukere på Soulseek-nettverket vil kunne laste ned filer fra mapper du "
-#~ "deler. Deling av filer er avgjørende for helsen til Soulseek-nettverket."
 
 #~ msgid "Update I_nfo"
 #~ msgstr "Oppdater i_nfo"
@@ -7358,52 +6922,8 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Chat Room Commands"
 #~ msgstr "Ludreromskommandoer"
 
-#, fuzzy
-#~ msgid "/join /j 'room'"
-#~ msgstr "/join /j 'rom'"
-
-#, fuzzy
-#~ msgid "Join room 'room'"
-#~ msgstr "Bli med i rommet 'rom'"
-
 #~ msgid "/me 'message'"
 #~ msgstr "/me «melding»"
-
-#, fuzzy
-#~ msgid "Display the Now Playing script's output"
-#~ msgstr "Vise utdata fra skriptet som spilles av nå"
-
-#, fuzzy
-#~ msgid "/add /ad 'user'"
-#~ msgstr "/add /ad 'bruker'"
-
-#, fuzzy
-#~ msgid "Add user 'user' to your buddy list"
-#~ msgstr "Legge til brukerbruker i vennelisten"
-
-#, fuzzy
-#~ msgid "/rem /unbuddy 'user'"
-#~ msgstr "/rem /ubuddy 'bruker'"
-
-#, fuzzy
-#~ msgid "Remove user 'user' from your buddy list"
-#~ msgstr "Fjerne brukerbrukeren fra vennelisten"
-
-#, fuzzy
-#~ msgid "/ban 'user'"
-#~ msgstr "/ban 'bruker'"
-
-#, fuzzy
-#~ msgid "Add user 'user' to your ban list"
-#~ msgstr "Legge til brukerbruker i forbudslisten"
-
-#, fuzzy
-#~ msgid "/unban 'user'"
-#~ msgstr "/unban 'bruker'"
-
-#, fuzzy
-#~ msgid "Remove user 'user' from your ban list"
-#~ msgstr "Fjern brukerens bruker fra utestengingslisten"
 
 #~ msgid "/ignore 'user'"
 #~ msgstr "/ignore «bruker»"
@@ -7420,62 +6940,14 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "/browse /b 'user'"
 #~ msgstr "/browse /b «bruker»"
 
-#, fuzzy
-#~ msgid "/whois /w 'user'"
-#~ msgstr "/whois /w 'bruker'"
-
-#, fuzzy
-#~ msgid "Request info for 'user'"
-#~ msgstr "Be om informasjon for bruker"
-
 #~ msgid "/ip 'user'"
 #~ msgstr "/ip «bruker»"
 
 #~ msgid "Show IP for user 'user'"
 #~ msgstr "Vis IP for bruker «bruker»"
 
-#, fuzzy
-#~ msgid "/search /s 'query'"
-#~ msgstr "/search /s 'spørring'"
-
-#, fuzzy
-#~ msgid "Start a new search for 'query'"
-#~ msgstr "Start et nytt søk etter spørring"
-
-#, fuzzy
-#~ msgid "/rsearch /rs 'query'"
-#~ msgstr "/rsearch /rs 'spørring'"
-
-#, fuzzy
-#~ msgid "Search the joined rooms for 'query'"
-#~ msgstr "Søk i de sammenføyde rommene etter 'spørring'"
-
-#, fuzzy
-#~ msgid "/bsearch /bs 'query'"
-#~ msgstr "/bsearch /bs 'spørring'"
-
-#, fuzzy
-#~ msgid "Search the buddy list for 'query'"
-#~ msgstr "Søk etter spørring i vennelisten"
-
-#, fuzzy
-#~ msgid "/usearch /us 'user' 'query'"
-#~ msgstr "/usearch /us 'bruker' 'spørring'"
-
-#, fuzzy
-#~ msgid "/msg 'user' 'message'"
-#~ msgstr "/msg 'bruker' 'melding'"
-
-#, fuzzy
-#~ msgid "Send message 'message' to user 'user'"
-#~ msgstr "Send meldingen \"message\" til brukeren \"user\""
-
 #~ msgid "/pm 'user'"
 #~ msgstr "/pm «bruker»"
-
-#, fuzzy
-#~ msgid "Open private chat window for user 'user'"
-#~ msgstr "Åpne privat sludrevindu med brukeren «bruker»"
 
 #~ msgid "Private Chat Commands"
 #~ msgstr "Kommandoer for privat sludring"
@@ -7486,70 +6958,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Add user to your ignore list"
 #~ msgstr "Legg til bruker på ignoreringslisten"
 
-#, fuzzy
-#~ msgid "Browse shares of user"
-#~ msgstr "Bla gjennom delte ressurser for bruker"
-
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "For ordensfølsom filtrering, i tillegg til filtrering av flere eksakte "
-#~ "setninger, kan loddrette stolper brukes til å skille setninger og ord.\n"
-#~ "    Eksempel: Spyd| Bretagne| Mitt vakre album|hello"
-
-#, fuzzy
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr "For å ekskludere ikke-lydfiler, bruk !0 i varighetsfilteret."
-
-#, fuzzy
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Filtrerer filer basert på brukernes land."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "For å se de fullstendige resultatene igjen, slett alle aktive filtre."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr "Se innstillingene for flere filteralternativer."
-
 #~ msgid "File size"
 #~ msgstr "Filstørrelse"
 
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Fjern alle aktive filtre"
-
-#, fuzzy
-#~ msgid "Cycle through completions when pressing tab-key"
-#~ msgstr "Bla gjennom fullføringer når du trykker tab-taster"
-
-#, fuzzy
-#~ msgid "Hide drop-down when only one matches"
-#~ msgstr "Skjul rullegardinliste når bare ett treff"
-
-#, fuzzy
-#~ msgid "Download folders in reverse alphanumerical order"
-#~ msgstr "Last ned mapper i omvendt alfanumerisk rekkefølge"
-
-#, fuzzy
-#~ msgid "Incomplete file folder:"
-#~ msgstr "Ufullstendig filmappe:"
-
 #~ msgid "Download folder:"
 #~ msgstr "Nedlastningsmappe:"
-
-#, fuzzy
-#~ msgid "Save buddies' uploads to:"
-#~ msgstr "Lagre venners opplastinger i:"
-
-#, fuzzy
-#~ msgid "Use UPnP to forward listening port"
-#~ msgstr "Bruk UPnP til automatisk å tilordne lytteporten på ruteren"
 
 #~ msgid ""
 #~ "Share folders with every Soulseek user or buddies, allowing contents to "
@@ -7560,34 +6973,6 @@ msgstr "Nicotine+ kommandoer"
 
 #~ msgid "Secondary Tabs"
 #~ msgstr "Sekundærfaner"
-
-#, fuzzy
-#~ msgid "Chat room tab bar position:"
-#~ msgstr "Plassering av fanelinje for chatterom:"
-
-#, fuzzy
-#~ msgid "Private chat tab bar position:"
-#~ msgstr "Plassering av fanelinje for privat chat:"
-
-#, fuzzy
-#~ msgid "Search tab bar position:"
-#~ msgstr "Plassering av søkefanelinje:"
-
-#, fuzzy
-#~ msgid "User info tab bar position:"
-#~ msgstr "Plassering av kategorilinje for brukerinformasjon:"
-
-#, fuzzy
-#~ msgid "User browse tab bar position:"
-#~ msgstr "Plassering av fanelinje for bruker bla gjennom:"
-
-#, fuzzy
-#~ msgid "Tab Labels"
-#~ msgstr "Tabulatoretiketter"
-
-#, fuzzy
-#~ msgid "_Refresh Info"
-#~ msgstr "_Refresh informasjon"
 
 #~ msgid "Block IP Address"
 #~ msgstr "Blokker IP-adresse"
@@ -7604,105 +6989,17 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "User(s)"
 #~ msgstr "Bruker(e)"
 
-#, fuzzy, python-format
-#~ msgid "Alias \"%s\" returned nothing"
-#~ msgstr "Aliaset \"%s\" returnerte ingenting"
-
 #~ msgid "Alternative Speed Limits"
 #~ msgstr "Alternative hastighetsgrenser"
 
 #~ msgid "Last played"
 #~ msgstr "Sist spilt"
 
-#, fuzzy
-#~ msgid "Playing now"
-#~ msgstr "Spiller nå"
-
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Kan ikke lagre filen %(path)s: %(error)s"
-
-#, fuzzy, python-format
-#~ msgid "Error code %(code)s: %(description)s"
-#~ msgstr "Feilkode %(code)s: %(description)s"
-
-#, fuzzy, python-format
-#~ msgid "No such alias (%s)"
-#~ msgstr "Ikke noe slikt alias (%s)"
-
-#, fuzzy
-#~ msgid "Aliases:"
-#~ msgstr "Aliaser:"
-
-#, fuzzy, python-format
-#~ msgid "Removed alias %(alias)s: %(action)s\n"
-#~ msgstr "Fjernet alias %(alias)s: %(action)s\n"
-
-#, fuzzy, python-format
-#~ msgid "No such alias (%(alias)s)\n"
-#~ msgstr "Ikke noe slikt alias (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Alternative hastighetsgrenser"
-
-#, fuzzy
-#~ msgid "Aliases"
-#~ msgstr "Aliaser"
-
-#, fuzzy
-#~ msgid "/alias /al 'command' 'definition'"
-#~ msgstr "/alias /al 'kommando' 'definisjon'"
-
-#, fuzzy
-#~ msgid "Add a new alias"
-#~ msgstr "Legge til et nytt alias"
-
-#, fuzzy
-#~ msgid "/unalias /un 'command'"
-#~ msgstr "/unalias /un 'kommando'"
-
-#, fuzzy
-#~ msgid "Remove an alias"
-#~ msgstr "Fjerne et alias"
-
 #~ msgid "Chat History"
 #~ msgstr "Sludrehistorikk"
 
-#, fuzzy
-#~ msgid "Command aliases"
-#~ msgstr "Fullførte nedlastninger"
-
-#, fuzzy
-#~ msgid "Limit download speed to (KiB/s):"
-#~ msgstr "Begrens nedlastingshastigheten til (KiB/s):"
-
 #~ msgid "Author(s):"
 #~ msgstr "Forfatter(e):"
-
-#, fuzzy
-#~ msgid "Limit upload speed to (KiB/s):"
-#~ msgstr "Begrens opplastingshastigheten til (KiB/s):"
-
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Ønskelisteelement funnet"
-
-#, fuzzy
-#~ msgid "Tabs show user status icons instead of status text"
-#~ msgstr "Faner viser brukerstatusikoner i stedet for statustekst"
-
-#, fuzzy
-#~ msgid "Show file path tooltips in file list views"
-#~ msgstr "Aktivere verktøytips for filbaner i søke- og overføringsvisninger"
-
-#, fuzzy
-#~ msgid "Colored and clickable usernames"
-#~ msgstr "Fargede og klikkbare brukernavn"
-
-#, fuzzy
-#~ msgid "Notification changes the tab's text color"
-#~ msgstr "Varsling endrer tekstfargen i kategorien"
 
 #~ msgid "Cancel"
 #~ msgstr "Avbryt"
@@ -7712,14 +7009,6 @@ msgstr "Nicotine+ kommandoer"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Legg til på kontaktliste"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Fjern hver nedlasting som er merket med en bestemt status."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Fjern hver opplasting som er merket med en bestemt status."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7741,25 +7030,9 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "released on %s"
 #~ msgstr "utgitt %s"
 
-#, fuzzy
-#~ msgid "Nicotine+ is running in the background"
-#~ msgstr "Kjør i bakgrunnen"
-
 #, python-format
 #~ msgid "Private message from %s"
 #~ msgstr "Privat melding fra %s"
-
-#, fuzzy
-#~ msgid "Aborted"
-#~ msgstr "Avbrutt"
-
-#, fuzzy
-#~ msgid "Blocked country"
-#~ msgstr "Blokkert land"
-
-#, fuzzy
-#~ msgid "Finished / Aborted"
-#~ msgstr "Fullført/avbrutt"
 
 #~ msgid "Close tab"
 #~ msgstr "Lukk fane"
@@ -7768,77 +7041,15 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "You've been mentioned in the %(room)s room"
 #~ msgstr "Du har blitt nevnt i %(room)s-rommet"
 
-#, fuzzy, python-format
-#~ msgid "Command %s is not recognized"
-#~ msgstr "Kommandoen %s gjenkjennes ikke"
-
-#, fuzzy, python-format
-#~ msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
-#~ msgstr "(Advarsel: %(realuser)s prøver å forfalske %(fakeuser)s) "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "The network interface you specified, '%s', does not exist. Change or "
-#~ "remove the specified network interface and restart Nicotine+."
-#~ msgstr ""
-#~ "Nettverksgrensesnittet du angav, %s, finnes ikke. Endre eller fjern det "
-#~ "angitte nettverksgrensesnittet og start Nicotine+ på nytt."
-
-#, fuzzy
-#~ msgid ""
-#~ "The range you specified for client connection ports was {}-{}, but none "
-#~ "of these were usable. Increase and/or "
-#~ msgstr ""
-#~ "Området du angav for klienttilkoblingsporter, var {}-{}, men ingen av "
-#~ "disse kunne brukes. Øke og/eller "
-
-#, fuzzy
-#~ msgid ""
-#~ "Note that part of your range lies below 1024, this is usually not allowed "
-#~ "on most operating systems with the exception of Windows."
-#~ msgstr ""
-#~ "Vær oppmerksom på at en del av rekkevidden din ligger under 1024, dette "
-#~ "er vanligvis ikke tillatt på de fleste operativsystemer med unntak av "
-#~ "Windows."
-
-#, fuzzy, python-format
-#~ msgid "Rescan progress: %s"
-#~ msgstr "Framdrift: %s"
-
 #, python-format
 #~ msgid "OS error: %s"
 #~ msgstr "OS-feil: %s"
 
-#, fuzzy
-#~ msgid "UPnP is not available on this network"
-#~ msgstr "UPnP er ikke tilgjengelig på dette nettverket"
-
-#, fuzzy, python-format
-#~ msgid "Failed to map the external WAN port: %(error)s"
-#~ msgstr "Kan ikke tilordne den eksterne WAN-porten: %(error)s"
-
 #~ msgid "Room wall"
 #~ msgstr "Romvegg"
 
-#, fuzzy
-#~ msgid ""
-#~ "The default listening port '2234' works fine in most cases. If you need "
-#~ "to use a different port, you will be able to modify it in the preferences "
-#~ "later."
-#~ msgstr ""
-#~ "Standard lytteport '2234' fungerer fint i de fleste tilfeller. Hvis du må "
-#~ "bruke en annen port, kan du endre den i innstillingene senere."
-
-#, fuzzy
-#~ msgid "Show users with similar interests"
-#~ msgstr "Vis brukere med lignende interesser"
-
 #~ msgid "Menu"
 #~ msgstr "Meny"
-
-#, fuzzy
-#~ msgid "Expand / Collapse all"
-#~ msgstr "Vis/skjul alle"
 
 #~ msgid "Configure shares"
 #~ msgstr "Sett opp delinger"
@@ -7849,39 +7060,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "_Room List"
 #~ msgstr "_Romliste"
 
-#, fuzzy
-#~ msgid "Enable alternative download and upload speed limits"
-#~ msgstr "Aktiver alternative fartsgrenser for nedlasting og opplasting"
-
 #~ msgid "Show log history"
 #~ msgstr "Vis logghistorikk"
 
-#, fuzzy
-#~ msgid "Result grouping mode"
-#~ msgstr "Modus for resultatgruppering"
-
-#, fuzzy
-#~ msgid "Free slot"
-#~ msgstr "Gratis spor"
-
-#, fuzzy
-#~ msgid "Save shares list to disk"
-#~ msgstr "Lagre deleliste på disk"
-
 #~ msgid "_Away"
 #~ msgstr "_Borte"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load ui file %(file)s: %(error)s"
-#~ msgstr "Klarte ikke å laste inn grensesnittsfil %(file)s: %(error)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Attempting to reset index of shared files due to an error. Please rescan "
-#~ "your shares."
-#~ msgstr ""
-#~ "Prøver å tilbakestille indeksen over delte filer på grunn av en feil. "
-#~ "Vennligst skann aksjene dine på nytt."
 
 #~ msgid ""
 #~ "File index of shared files could not be accessed. This could occur due to "
@@ -7901,18 +7084,6 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "disable the tray icon"
 #~ msgstr "skru av systemkurvsikonet"
 
-#, fuzzy
-#~ msgid "Get Soulseek Privileges…"
-#~ msgstr "Skaff Soulseek-privilegier …"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Public IP address is <b>%(ip)s</b> and active listening port is "
-#~ "<b>%(port)s</b>"
-#~ msgstr ""
-#~ "Offentlig IP-adresse er <b>%(ip)s</b> og aktiv lytteport er <b>%(port)s</"
-#~ "b>"
-
 #~ msgid "unknown"
 #~ msgstr "ukjent"
 
@@ -7921,10 +7092,6 @@ msgstr "Nicotine+ kommandoer"
 
 #~ msgid "Length"
 #~ msgstr "Lengde"
-
-#, fuzzy, python-format
-#~ msgid "Picture not saved, %s already exists."
-#~ msgstr "Bildet er ikke lagret, %s finnes allerede."
 
 #~ msgid "_Open"
 #~ msgstr "_Åpne"
@@ -7940,81 +7107,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "I/O error: %s"
 #~ msgstr "I/O-feil: %s"
 
-#, fuzzy, python-format
-#~ msgid "Failed to open file path: %s"
-#~ msgstr "Kan ikke åpne filbane: %s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to open URL: %s"
-#~ msgstr "Kan ikke åpne URL-adresse: %s"
-
-#, fuzzy
-#~ msgid "_Log Conversation"
-#~ msgstr "_Log samtale"
-
-#, fuzzy
-#~ msgid "Result Filter List"
-#~ msgstr "Filterliste for resultat"
-
-#, fuzzy
-#~ msgid "Prepend < or > to find files less/greater than the given value."
-#~ msgstr ""
-#~ "Sett inn < eller > for å finne filer som er mindre/større enn den angitte "
-#~ "verdien."
-
-#, fuzzy
-#~ msgid ""
-#~ "VBR files display their average bitrate and are typically lower in "
-#~ "bitrate than a compressed 320 kbps CBR file of the same audio quality."
-#~ msgstr ""
-#~ "VBR-filer viser sin gjennomsnittlige bithastighet og er vanligvis lavere "
-#~ "i bithastighet enn en komprimert CBR-fil på 320 kbps av samme lydkvalitet."
-
-#, fuzzy
-#~ msgid "Like Size above, =, <, and > can be used."
-#~ msgstr "I likhet med Størrelse ovenfor kan =, < og > brukes."
-
-#, fuzzy
-#~ msgid ""
-#~ "Prevent write access by other programs for files being downloaded (turn "
-#~ "off for NFS)"
-#~ msgstr ""
-#~ "Forhindre skrivetilgang fra andre programmer for filer som lastes ned "
-#~ "(slå av for NFS)"
-
-#, fuzzy
-#~ msgid "Where incomplete downloads are temporarily stored."
-#~ msgstr "Der ufullstendige nedlastinger lagres midlertidig."
-
-#, fuzzy
-#~ msgid ""
-#~ "Where buddies' uploads will be stored (with a subfolder created for each "
-#~ "buddy)."
-#~ msgstr ""
-#~ "Hvor kameratenes opplastinger lagres (med en undermappe opprettet for "
-#~ "hver venn)."
-
-#, fuzzy
-#~ msgid "Toggle away status after minutes of inactivity:"
-#~ msgstr "Slå av status etter minutter med inaktivitet:"
-
-#, fuzzy
-#~ msgid "Protocol:"
-#~ msgstr "Protokoll:"
-
-#, fuzzy
-#~ msgid "Icon theme folder (requires restart):"
-#~ msgstr "Ikontemamappe (krever omstart):"
-
 #~ msgid "Establishing connection"
 #~ msgstr "Kobler til"
 
 #~ msgid "Clear Groups"
 #~ msgstr "Tøm grupper"
-
-#, fuzzy
-#~ msgid "User List"
-#~ msgstr "Brukerliste"
 
 #~ msgid "_Reset Statistics…"
 #~ msgstr "_Tilbakestill statistikk …"
@@ -8022,54 +7119,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Clear _Downloads…"
 #~ msgstr "Tøm _nedlastninger …"
 
-#, fuzzy
-#~ msgid "Clear Uploa_ds…"
-#~ msgstr "Fjern Uploa_ds…"
-
 #~ msgid "Block User's IP Address"
 #~ msgstr "Blokker brukerens IP-adresse"
 
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Ignorer brukerens IP-adresse"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Fjern hver nedlasting som er fullført eller blitt fanget opp av et filter."
-
-#, fuzzy
-#~ msgid "Usernames"
-#~ msgstr "Brukernavn"
-
-#, fuzzy
-#~ msgid "Display logged chat room messages when a room is rejoined"
-#~ msgstr "Vise meldinger i loggførte chatterom når et rom blir med igjen"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Fjern hver opplasting som enten er ferdig med overføringen, eller som er "
-#~ "kansellert av den eksterne brukeren."
-
-#, fuzzy
-#~ msgid "Queue Position"
-#~ msgstr "Plassering av kø"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-#~ "results"
-#~ msgstr ""
-#~ "Brukeren %(user)s søker direkte etter \"%(query)s\", og returnerer "
-#~ "%(num)i-resultater"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVAT]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Romvegg (personlig melding satt)"
@@ -8095,30 +7149,6 @@ msgstr "Nicotine+ kommandoer"
 #~ "Hvis du åpner denne filen med et tekstredigeringsprogram, kan det hende "
 #~ "du kan redde noen av innstillingene dine."
 
-#, fuzzy
-#~ msgid "User Description"
-#~ msgstr "Beskrivelse av bruker"
-
-#, fuzzy
-#~ msgid "User Interests"
-#~ msgstr "Brukerinteresser"
-
-#, fuzzy
-#~ msgid "User Picture"
-#~ msgstr "Bilde av bruker"
-
-#, fuzzy
-#~ msgid "Search Wishlist"
-#~ msgstr "Tøm ønskeliste?"
-
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Avslutter Nicotine+ %(version)s, %(status)s …"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Bruker Python %(py_version)s"
-
 #, python-format
 #~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
 #~ msgstr "Avslutter Nicotine+ %(version)s, %(status)s …"
@@ -8126,10 +7156,6 @@ msgstr "Nicotine+ kommandoer"
 #, python-format
 #~ msgid "Quit Nicotine+ %(version)s, %(status)s!"
 #~ msgstr "Avslutt Nicotine+ %(version)s, %(status)s."
-
-#, fuzzy
-#~ msgid "User:"
-#~ msgstr "Bruker:"
 
 #, python-format
 #~ msgid "All %(ext)s"
@@ -8139,74 +7165,20 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "%(number)2s files "
 #~ msgstr "%(number)2s filer "
 
-#, fuzzy
-#~ msgid "Allow regular expressions for the filter's include and exclude"
-#~ msgstr "Tillat vanlige uttrykk for filterets inkludering og utelate"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Avslutt"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Vis forrige primære fane ved oppstart"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Aktiver søkeresultatfiltre som forvalg"
-
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Lukk Nicotine+?"
-
-#, fuzzy
-#~ msgid "Do you really want to exit Nicotine+?"
-#~ msgstr "Avslutt Nicotine+ nå?"
 
 #~ msgid "Run in Background"
 #~ msgstr "Kjør i bakgrunnen"
 
-#, fuzzy
-#~ msgid "_Online Notify"
-#~ msgstr "_Online Varsle"
-
 #~ msgid "_Prioritize User"
 #~ msgstr "_Prioriter bruker"
-
-#, fuzzy
-#~ msgid "_Trust User"
-#~ msgstr "_Betrodd"
-
-#, fuzzy
-#~ msgid "Request User's IP Address"
-#~ msgstr "Forespør IP-adresse"
 
 #~ msgid "Request IP Address"
 #~ msgstr "Forespør IP-adresse"
 
-#, fuzzy
-#~ msgid "Enter the name of the user whose IP address you want to see:"
-#~ msgstr "Skriv inn navnet på brukeren du ønsker å bannlyse:"
-
 #~ msgid "Downloaded"
 #~ msgstr "Nedlastet"
-
-#, fuzzy, python-format
-#~ msgid "Failed to add download %(filename)s to shared files: %(error)s"
-#~ msgstr "Kan ikke legge til nedlasting %(filename)s i delte filer: %(error)s"
-
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Dele nedlastinger automatisk"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "Det samme gjelder å legge til nedlastingsmappen som en delt ressurs, men "
-#~ "filer som lastes ned til denne mappen, vil automatisk være tilgjengelige "
-#~ "for andre (ingen ny skanning kreves)."
 
 #~ msgid "Unable to Share Folder"
 #~ msgstr "Kunne ikke dele mappe"
@@ -8227,10 +7199,6 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Enter virtual name for '%(dir)s':"
 #~ msgstr "Skriv inn virtuelt navn for «%(dir)s»:"
 
-#, fuzzy
-#~ msgid "The chosen virtual name is either empty or already exists"
-#~ msgstr "Det valgte virtuelle navnet er enten tomt eller finnes allerede"
-
 #~ msgid "The chosen folder is already shared."
 #~ msgstr "Valgt mappe er allerede delt."
 
@@ -8238,27 +7206,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "%s Properties"
 #~ msgstr "%s-egenskaper"
 
-#, fuzzy
-#~ msgid "Finished rescanning shares"
-#~ msgstr "Ferdig med å skanne delte venner på nytt"
-
-#, fuzzy
-#~ msgid "Plugin List"
-#~ msgstr "Liste over plugin-moduler"
-
-#, fuzzy, python-format
-#~ msgid "Error while scanning %(path)s: %(error)s"
-#~ msgstr "Feil under skanning av %(path)s: %(error)s"
-
 #~ msgid "Show _Log Pane"
 #~ msgstr "Vis _loggfane"
 
 #~ msgid "Addresses"
 #~ msgstr "Adresser"
-
-#, fuzzy
-#~ msgid "Handler"
-#~ msgstr "Heler"
 
 #~ msgid "Could not enable plugin."
 #~ msgstr "Kunne ikke skru på programtillegg."
@@ -8275,14 +7227,6 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Ignore List"
 #~ msgstr "Ignoreringsliste"
 
-#, fuzzy
-#~ msgid "Censor & Replace"
-#~ msgstr "Sensurer og erstatt"
-
-#, fuzzy
-#~ msgid "Completion"
-#~ msgstr "Fullførelse"
-
 #~ msgid "Categories"
 #~ msgstr "Kategorier"
 
@@ -8292,42 +7236,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Upload Folder Recursive To…"
 #~ msgstr "Last opp mappe rekursivt til …"
 
-#, fuzzy
-#~ msgid "Download _Recursive"
-#~ msgstr "Last ned _rekursivt"
-
-#, fuzzy
-#~ msgid "Download R_ecursive To…"
-#~ msgstr "Last ned R_ekursivt til …"
-
 #~ msgid "Up_load File(s)"
 #~ msgstr "Last _opp fil(er)"
 
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Error while attempting to display folder '%(folder)s', reported error: "
-#~ "%(error)s"
-#~ msgstr ""
-#~ "Feil under forsøk på å vise mappen %(folder)s, rapportert feil: %(error)s"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr "Velg Destinasjon for nedlasting av mappe med undermapper fra bruker"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr "Velg Destinasjon for nedlasting av en mappe fra bruker"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr "Velg Destinasjon for nedlasting av fil(er) fra bruker"
-
 #~ msgid "Wishes"
 #~ msgstr "Ønsker"
-
-#, fuzzy
-#~ msgid "privileged"
-#~ msgstr "Privilegert"
 
 #~ msgid "prioritized"
 #~ msgstr "prioritert"
@@ -8344,18 +7257,6 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Complete room names"
 #~ msgstr "Fullstendige romnavn"
 
-#, fuzzy
-#~ msgid "Drop-down List"
-#~ msgstr "Rullegardinliste"
-
-#, fuzzy
-#~ msgid "File Manager command ($ for file path):"
-#~ msgstr "Kommandoen Filbehandling ($ for filbane):"
-
-#, fuzzy
-#~ msgid "Media Player command ($ for file path):"
-#~ msgstr "Media Player-kommando ($ for filbane):"
-
 #~ msgid "Ignored IP Addresses"
 #~ msgstr "Ignorerte IP-adresser"
 
@@ -8364,19 +7265,6 @@ msgstr "Nicotine+ kommandoer"
 
 #~ msgid "Notification Popups"
 #~ msgstr "Merknadsoppsprett"
-
-#, fuzzy
-#~ msgid "Show notification popup when a file has finished downloading"
-#~ msgstr "Vis hurtigmeny for varsling når nedlastingen av en fil er fullført"
-
-#, fuzzy
-#~ msgid "Show notification popup when a folder has finished downloading"
-#~ msgstr ""
-#~ "Vis hurtigmeny for varsling når nedlastingen av en mappe er fullført"
-
-#, fuzzy
-#~ msgid "Show notification popup when you receive a private message"
-#~ msgstr "Vis popup-vindu for varsling når du mottar en privat melding"
 
 #~ msgid "Show notification popup when someone sends a message in a chat room"
 #~ msgstr "Vis oppsprettsmerknad når noen sender en melding i et sludrerom"
@@ -8388,60 +7276,8 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Tray"
 #~ msgstr "Systemkurv"
 
-#, fuzzy
-#~ msgid ""
-#~ "Instances of $ will be replaced by the link. The default web browser of "
-#~ "the system will be used in cases where a protocol has not been configured."
-#~ msgstr ""
-#~ "Forekomster av $ vil bli erstattet av koblingen. Standard webleser for "
-#~ "systemet vil bli brukt i tilfeller der en protokoll ikke er konfigurert."
-
-#, fuzzy
-#~ msgid "Handler:"
-#~ msgstr "Heler:"
-
-#, fuzzy
-#~ msgid "Primary Tabs"
-#~ msgstr "Hovedfaner"
-
-#, fuzzy
-#~ msgid "Enable file path tooltips in search and transfer views"
-#~ msgstr "Aktivere verktøytips for filbaner i søke- og overføringsvisninger"
-
-#, fuzzy
-#~ msgid ""
-#~ "Displays the complete file path of a search result or file transfer when "
-#~ "you hover a folder path or file name with your cursor."
-#~ msgstr ""
-#~ "Viser den fullstendige filbanen til et søkeresultat eller filoverføring "
-#~ "når du holder en mappebane eller et mappenavn med markøren."
-
-#, fuzzy
-#~ msgid "Show privately shared files in user shares"
-#~ msgstr "Vis personlig delte filer i delte brukerressurser"
-
-#, fuzzy
-#~ msgid ""
-#~ "Other clients may offer an option to send privately shared files when you "
-#~ "browse their shares. Folders containing such files are prefixed with "
-#~ "'[PRIVATE FOLDER]', and are not downloadable unless the uploader gives "
-#~ "explicit permission."
-#~ msgstr ""
-#~ "Andre klienter kan tilby et alternativ for å sende private delte filer "
-#~ "når du blar gjennom de delte ressursene deres. Mapper som inneholder "
-#~ "slike filer, har prefikset [PRIVATE FOLDER], og kan ikke lastes ned med "
-#~ "mindre opplasteren gir eksplisitt tillatelse."
-
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Sensurer og erstatt"
-
 #~ msgid "Show _Debug Log Controls"
 #~ msgstr "Vis kontroller for _avlusingslogg"
-
-#, fuzzy
-#~ msgid "Debug Logging"
-#~ msgstr "Logging av feilsøking"
 
 #~ msgid "Virtual Name"
 #~ msgstr "Virtuelt navn"
@@ -8458,10 +7294,6 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Download"
 #~ msgstr "Last ned"
 
-#, fuzzy
-#~ msgid "Upload Folder's Contents"
-#~ msgstr "Last opp innholdet i mappen"
-
 #~ msgid "Rename"
 #~ msgstr "Gi nytt navn"
 
@@ -8471,72 +7303,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Copy File Path"
 #~ msgstr "Kopier filsti"
 
-#, fuzzy
-#~ msgid "R_emove Wish"
-#~ msgstr "R_emove ønske"
-
-#, fuzzy, python-format
-#~ msgid "It appears '%s' is not a directory, not loading plugins."
-#~ msgstr ""
-#~ "Det ser ut til at %s ikke er en katalog, ikke innlasting av plugins."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Skanner delte venner på nytt…"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Ferdig med å skanne delte venner på nytt"
-
-#, fuzzy, python-format
-#~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
-#~ msgstr "Vennen din, %s, prøver å laste opp fil(er) til deg."
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "%s is not allowed to send you file(s), but is attempting to, anyway. "
-#~ "Warning Sent."
-#~ msgstr ""
-#~ "%s har ikke tillatelse til å sende deg fil(er), men prøver likevel å "
-#~ "sende deg filer. Advarsel sendt."
-
 #~ msgid "Client Version"
 #~ msgstr "Klientversjon"
 
-#, fuzzy, python-format
-#~ msgid "How many days of privileges should user %s be gifted?"
-#~ msgstr "Hvor mange dager med rettigheter skal brukeren %s fås?"
-
-#, fuzzy
-#~ msgid ""
-#~ "Buddies will have higher priority in the queue, the same as globally "
-#~ "privileged users."
-#~ msgstr ""
-#~ "Venner vil ha høyere prioritet i køen, det samme som globalt privilegerte "
-#~ "brukere."
-
-#, fuzzy
-#~ msgid "Privileged"
-#~ msgstr "Privilegert"
-
-#, fuzzy
-#~ msgid "_Privileged"
-#~ msgstr "_Privilegiert"
-
 #~ msgid "Comments"
 #~ msgstr "Kommentarer"
-
-#, fuzzy
-#~ msgid "Edit _Comments…"
-#~ msgstr "Rediger _Comments…"
-
-#, fuzzy
-#~ msgid ""
-#~ "Creates subfolders based on the user you are downloading from, and stores "
-#~ "the downloaded file / folder there."
-#~ msgstr ""
-#~ "Oppretter undermapper basert på brukeren du laster ned fra, og lagrer den "
-#~ "nedlastede filen / mappen der."
 
 #~ msgid "Login Details"
 #~ msgstr "Innloggingsdetaljer"
@@ -8544,109 +7315,11 @@ msgstr "Nicotine+ kommandoer"
 #~ msgid "Advanced"
 #~ msgstr "Avansert"
 
-#, fuzzy
-#~ msgid "Port mapping renewal interval in hours:"
-#~ msgstr "Fornyelsesintervall for porttilordning i timer:"
-
-#, fuzzy
-#~ msgid "Enable buddy-only shares"
-#~ msgstr "Aktiver delte ressurser som bare er for venner"
-
-#, fuzzy
-#~ msgid "Files will be uploaded in the order they were queued."
-#~ msgstr "Filer lastes opp i den rekkefølgen de ble lagt i kø."
-
-#, fuzzy
-#~ msgid "Rescanning normal shares…"
-#~ msgstr "Skanner normale delte ressurser på nytt…"
-
-#, fuzzy
-#~ msgid "Finished rescanning public shares"
-#~ msgstr "Ferdig med å skanne delte ressurser på nytt"
-
-#, fuzzy
-#~ msgid "Scanning Buddy Shares"
-#~ msgstr "Skanner delte venner"
-
 #~ msgid "_Rescan Public Shares"
 #~ msgstr "Skann _offentlige delinger på ny"
 
 #~ msgid "Rescan B_uddy Shares"
 #~ msgstr "Skann _kontaktdelinger på ny"
-
-#, fuzzy
-#~ msgid "Rescan Public Shares"
-#~ msgstr "Skann offentlige aksjer på nytt"
-
-#, fuzzy
-#~ msgid "Rescan Buddy Shares"
-#~ msgstr "Skann buddy-ressurser på nytt"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Aktiverer delte venner som bare brukere på vennelisten har tilgang til."
-
-#, fuzzy
-#~ msgid "Mark each shared folder as buddy-only"
-#~ msgstr "Merke hver delte mappe som bare for venner"
-
-#, fuzzy
-#~ msgid ""
-#~ "Overrides the per-share option, useful if you temporarily need to prevent "
-#~ "public access to shares."
-#~ msgstr ""
-#~ "Overstyrer alternativet per aksje, nyttig hvis du midlertidig trenger å "
-#~ "hindre offentlig tilgang til delte ressurser."
-
-#, fuzzy
-#~ msgid ""
-#~ "Only users marked as trusted on your buddy list can access your buddy-"
-#~ "only shares."
-#~ msgstr ""
-#~ "Bare brukere som er merket som klarerte i vennelisten din, har tilgang "
-#~ "til de delte venneressursene dine."
-
-#, fuzzy
-#~ msgid "Filtered out excluded search result "
-#~ msgstr "Filtrert ut utelatt søkeresultat "
-
-#, fuzzy
-#~ msgid "Filtered out inexact or incorrect search result "
-#~ msgstr "Filtrert ut uaktsomt eller feil søkeresultat "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-#~ msgstr ""
-#~ "Den lagrede innstillingen %(key)s finnes ikke lenger i plugin-modulen "
-#~ "%(name)s"
-
-#, fuzzy, python-format
-#~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-#~ msgstr "Plugin %(module)s returnerte noe rart, '%(value)s', ignorerer"
-
-#, fuzzy, python-format
-#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-#~ msgstr "Inkonsekvent hurtigbuffer for %(vdir)s, gjenoppbygging av %(dir)s'"
-
-#, fuzzy, python-format
-#~ msgid "Dropping missing folder %(dir)s"
-#~ msgstr "Sletter manglende mappe %(dir)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ allows you to share folders directly from your computer. All "
-#~ "the contents of these folders (with the exception of dotfiles) can be "
-#~ "downloaded by other users on the Soulseek network. Public shares are "
-#~ "available for every user, while users in your buddy list can access buddy-"
-#~ "only shares in addition to public shares."
-#~ msgstr ""
-#~ "Nikotin+ lar deg dele mapper direkte fra datamaskinen din. Alt innholdet "
-#~ "i disse mappene (med unntak av dotfiles) kan lastes ned av andre brukere "
-#~ "på Soulseek-nettverket. Delte ressurser er tilgjengelige for alle "
-#~ "brukere, mens brukere i vennelisten har tilgang til delte venner i "
-#~ "tillegg til delte ressurser."
 
 #~ msgid ""
 #~ "Failed to scan shares. If Nicotine+ is currently running, please close "

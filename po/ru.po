@@ -6081,9 +6081,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Не могу сохранить %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Доверенные друзья"
 
@@ -6461,17 +6458,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "_Auto-join Room"
 #~ msgstr "_Автоматическое присоединение к комнате"
 
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Синтаксис:</b> Буквы не чувствительны к регистру. Если экранирование "
-#~ "отключено, поддерживаются все регулярные выражения языка программирования "
-#~ "Python. Для простых фильтров рекомендуется оставить экранирование "
-#~ "включенным."
-
 #~ msgid "Escaped"
 #~ msgstr "Сбежавший"
 
@@ -6707,10 +6693,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "File size"
 #~ msgstr "Размер файла"
 
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Очистить все активные фильтры"
-
 #~ msgid "Cycle through completions when pressing tab-key"
 #~ msgstr "Цикл выполнения автодополнений при нажатии клавиши табуляции"
 
@@ -6792,10 +6774,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Playing now"
 #~ msgstr "Играет сейчас"
 
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Не удается открыть путь к файлу %(path)s: %(error)s"
-
 #, python-format
 #~ msgid "Error code %(code)s: %(description)s"
 #~ msgstr "Код ошибки %(code)s: %(description)s"
@@ -6814,10 +6792,6 @@ msgstr "Команда Nicotine+"
 #, python-format
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Нет такого псевдонима (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Особые ограничения скорости"
 
 #~ msgid "Aliases"
 #~ msgstr "Псевдонимы"
@@ -6849,10 +6823,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Limit upload speed to (KiB/s):"
 #~ msgstr "Ограничить скорость отдачи до (КиБ/сек):"
 
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Товар в списке желаний найден"
-
 #~ msgid "Tabs show user status icons instead of status text"
 #~ msgstr ""
 #~ "На вкладках отображаются значки статуса пользователя вместо текста статуса"
@@ -6876,14 +6846,6 @@ msgstr "Команда Nicotine+"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Добавить в список друзей"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Очистить все загрузки, отмеченные определённым статусом."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Очистить все загрузки, отмеченные определенным статусом."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7173,28 +7135,12 @@ msgstr "Команда Nicotine+"
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Игнорировать IP-адрес пользователя"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Очистите каждую загрузку, которая завершила передачу или была поймана "
-#~ "фильтром."
-
 #~ msgid "Usernames"
 #~ msgstr "Имена"
 
 #~ msgid "Display logged chat room messages when a room is rejoined"
 #~ msgstr ""
 #~ "Отображать историю сообщений чата при повторном присоединении к комнате"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Очистите каждую загрузку, которая либо завершила передачу, либо была "
-#~ "отменена удаленным пользователем."
 
 #~ msgid "Queue Position"
 #~ msgstr "Позиция"
@@ -7205,10 +7151,6 @@ msgstr "Команда Nicotine+"
 #~ "results"
 #~ msgstr ""
 #~ "%(user)s напрямую ищет \"%(query)s\", возвращает %(num)i результатов"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[ЧАСТНЫЙ]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Стена комнаты"
@@ -7240,14 +7182,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "User Interests"
 #~ msgstr "Интересы"
 
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Выхожу из Nicotine+ %(version)s, %(status)s…"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Использование Python %(py_version)s"
-
 #, python-format
 #~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
 #~ msgstr "Выхожу из Nicotine+ %(version)s, %(status)s…"
@@ -7270,18 +7204,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Allow regular expressions for the filter's include and exclude"
 #~ msgstr ""
 #~ "Разрешить регулярные выражения для содержащих и исключающих фильтров"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Выход"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Запомните предыдущую основную вкладку при запуске"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Начните с поиска файлов по умолчанию."
 
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Закрыть Nicotine+?"
@@ -7318,20 +7240,6 @@ msgstr "Команда Nicotine+"
 #~ msgstr ""
 #~ "Не удалось добавить загрузку %(filename)s в cписок раздач: %(error)s"
 
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Автоматически делиться завершенными загрузками"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "Эквивалент добавления вашей папки загрузки в качестве общедоступного "
-#~ "ресурса, однако файлы, загруженные в эту папку, будут автоматически "
-#~ "доступны другим пользователям (повторное сканирование не требуется)."
-
 #~ msgid "Unable to Share Folder"
 #~ msgstr "Невозможно предоставить общий доступ к каталогу"
 
@@ -7350,10 +7258,6 @@ msgstr "Команда Nicotine+"
 #, python-format
 #~ msgid "Enter virtual name for '%(dir)s':"
 #~ msgstr "Введите имя для '%(dir)s':"
-
-#, fuzzy, python-format
-#~ msgid "Unable to show notification popup: %s"
-#~ msgstr "Невозможно показать всплывающее уведомление: %s"
 
 #~ msgid "The chosen virtual name is either empty or already exists"
 #~ msgstr "Выбранное виртуальное имя пусто или уже существует"
@@ -7377,7 +7281,3 @@ msgstr "Команда Nicotine+"
 
 #~ msgid "Enable sound for notification popups"
 #~ msgstr "Включить звук для уведомлений"
-
-#, fuzzy
-#~ msgid "Show notification popups for:"
-#~ msgstr "Показывать всплывающие окна с уведомлениями для:"

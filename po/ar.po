@@ -5851,7 +5851,3 @@ msgstr ""
 #: pynicotine/plugins/core_commands/PLUGININFO:3
 msgid "Nicotine+ Commands"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Nicotine+"
-#~ msgstr "فريق نيكوتين+Ekipi Nicotine +"

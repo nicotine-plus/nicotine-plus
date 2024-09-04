@@ -5624,8 +5624,8 @@ msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
-"Byla yra nejautri, tačiau žodžio tvarka yra svarbi: \"Spears Bretanė\" "
-"nerodys jokių \"Bretanės ieties\""
+"Byla yra nejautri, tačiau žodžio tvarka yra svarbi: 'Instrumental Remix' "
+"nerodys jokių 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 #, fuzzy
@@ -7030,145 +7030,14 @@ msgstr "Atnaujinti failus"
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+ komanda"
 
-#, fuzzy, python-format
-#~ msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
-#~ msgstr "Nepavyko iškviesti bendrai naudojamo aplanko %(folder)s: %(error)s"
-
 #~ msgid "_Clear"
 #~ msgstr "Iš_valyti"
-
-#, fuzzy, python-format
-#~ msgid "Can't save %(filename)s: %(error)s"
-#~ msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“: %(error)s"
-
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
-#, fuzzy
-#~ msgid "Trusted Buddies"
-#~ msgstr "Patikimi naudotojai"
-
-#, fuzzy
-#~ msgid "Quit program"
-#~ msgstr "Baigti programą"
-
-#, fuzzy
-#~ msgid "Username:"
-#~ msgstr "Vartotojo vardas:"
-
-#, fuzzy
-#~ msgid "Re_commendations for Item"
-#~ msgstr "%s rekomendacijos"
-
-#, fuzzy
-#~ msgid "_Remove Item"
-#~ msgstr "_Remove elementas"
 
 #~ msgid "_Remove"
 #~ msgstr "_Pašalinti"
 
-#, fuzzy
-#~ msgid "Send M_essage"
-#~ msgstr "Siųsti žinutę"
-
 #~ msgid "Send Message"
 #~ msgstr "Siųsti žinutę"
-
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Peržiūrėti vartotojo profilį"
-
-#, fuzzy
-#~ msgid "Start Messaging"
-#~ msgstr "Pradėti pranešimus"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whom you want to send a message:"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "Žinutės"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "Peržiūrėti vartotojo profilį"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose shares you want to see:"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "_Ieškoti failų"
-
-#, fuzzy
-#~ msgid "Password"
-#~ msgstr "Slaptažodis"
-
-#, fuzzy
-#~ msgid "Download File"
-#~ msgstr "Atsisiųsti failą"
-
-#, fuzzy
-#~ msgid "Refresh Similar Users"
-#~ msgstr "Panašūs vartotojai"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose files you want to see"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose information you want to see"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to send a message to"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to add to your buddy list"
-#~ msgstr "Nurodkite naudotoją, kuriam norite nusiųsti:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Enter the name of a room you want to join. If the room doesn't exist, it "
-#~ "will be created."
-#~ msgstr ""
-#~ "Įveskite kambario, prie kurio norite prisijungti, pavadinimą. Jei "
-#~ "kambario nėra, jis bus sukurtas."
-
-#, fuzzy
-#~ msgid "Show Log History Pane"
-#~ msgstr "Rodyti _Log sritį"
-
-#, fuzzy
-#~ msgid "Save _Picture"
-#~ msgstr "Įrašyti _Picture"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Filtered out incorrect search result %(filepath)s from user %(user)s for "
-#~ "search query \"%(query)s\""
-#~ msgstr ""
-#~ "Išfiltruotas neteisingas naudotojo %(user)s paieškos rezultatas "
-#~ "%(filepath)s pagal paieškos užklausą „%(query)s“"
-
-#, fuzzy
-#~ msgid ""
-#~ "Certain clients don't send search results if special characters are "
-#~ "included."
-#~ msgstr ""
-#~ "Kai kurie klientai nesiunčia ieškos rezultatų, jei įtraukti specialieji "
-#~ "simboliai."
-
-#, fuzzy
-#~ msgid "Remove special characters from search terms"
-#~ msgstr "Specialiųjų simbolių šalinimas iš ieškos terminų"
 
 #, python-format
 #~ msgid "Trouble executing '%s'"
@@ -7178,275 +7047,8 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Trouble executing on folder: %s"
 #~ msgstr "Klaida vykdant aplanke: %s"
 
-#, fuzzy
-#~ msgid "Disallowed extension"
-#~ msgstr "Neleidžiamas plėtinys"
-
-#, fuzzy
-#~ msgid "Too many files"
-#~ msgstr "Per daug failų"
-
-#, fuzzy
-#~ msgid "Too many megabytes"
-#~ msgstr "Per daug megabaitų"
-
-#, fuzzy
-#~ msgid "Server does not permit performing wishlist searches at this time"
-#~ msgstr "Serveris šiuo metu neleidžia atlikti pageidavimų sąrašo paieškų"
-
-#, fuzzy
-#~ msgid ""
-#~ "File transfer speeds depend on users you are downloading from. Certain "
-#~ "users will be faster, while others will be slow."
-#~ msgstr ""
-#~ "Failų perdavimo greitis priklauso nuo vartotojų, iš kurių atsisiunčiate. "
-#~ "Kai kurie vartotojai bus greitesni, o kiti bus lėti."
-
-#, fuzzy
-#~ msgid "Started Downloads"
-#~ msgstr "Pradėti atsisiuntimai"
-
-#, fuzzy
-#~ msgid "Started Uploads"
-#~ msgstr "Pradėti nusiuntimai"
-
 #~ msgid "Replace censored letters with:"
 #~ msgstr "Pakeisti cenzūruotas raides:"
-
-#, fuzzy
-#~ msgid "Censored Patterns"
-#~ msgstr "Cenzūruoti modeliai"
-
-#, fuzzy
-#~ msgid "Replacements"
-#~ msgstr "Pakeitimas"
-
-#, fuzzy
-#~ msgid ""
-#~ "If a user on the Soulseek network searches for a file that exists in your "
-#~ "shares, search results will be sent to the user."
-#~ msgstr ""
-#~ "Jei Soulseek tinklo vartotojas ieško failo, kuris yra jūsų bendrinimo, "
-#~ "ieškos rezultatai bus nusiųsti vartotojui."
-
-#, fuzzy
-#~ msgid "Send to Player"
-#~ msgstr "Siųsti į _Player"
-
-#, fuzzy
-#~ msgid "Send to _Player"
-#~ msgstr "Siųsti į _Player"
-
-#, fuzzy
-#~ msgid "_Open in File Manager"
-#~ msgstr "failų tvarkytuvo _Open"
-
-#, fuzzy
-#~ msgid "Media player command:"
-#~ msgstr "Komanda Media Player ($ už failo kelią):"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Unable to save download to username subfolder, falling back to default "
-#~ "download folder. Error: %s"
-#~ msgstr ""
-#~ "Neįmanoma įrašyti atsisiuntimo į vartotojo vardo poaplankį, grįžtant į "
-#~ "numatytąjį atsisiuntimo aplanką. Klaida: %s"
-
-#, fuzzy
-#~ msgid "Buddy-only"
-#~ msgstr "Tik bičiulis"
-
-#, fuzzy
-#~ msgid "Share with buddies only"
-#~ msgstr "Dalintis tik su bičiuliais"
-
-#, fuzzy
-#~ msgid "_Quit…"
-#~ msgstr "_Quit"
-
-#, fuzzy
-#~ msgid "_Configure Shares"
-#~ msgstr "_Configure Akcijos"
-
-#, fuzzy
-#~ msgid "Remote file error"
-#~ msgstr "Nuotolinio failo klaida"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-#~ msgstr "Nepavyksta rasti %(option1)s arba %(option2)s, įdiekite vieną."
-
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s aplankai rasti po rescan"
-
-#, fuzzy, python-format
-#~ msgid "Failed to process the following databases: %(names)s"
-#~ msgstr "Nepavyko apdoroti šių duomenų bazių: %(names)s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to send number of shared files to the server: %s"
-#~ msgstr "Nepavyko nusiųsti bendrai naudojamų failų skaičiaus į serverį: %s"
-
-#, fuzzy
-#~ msgid "Quit / Run in Background"
-#~ msgstr "Vykdyti fone"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Nenurodytas kliento prievadas"
-
-#, fuzzy
-#~ msgid "Network interface:"
-#~ msgstr "Tinklo ieškos"
-
-#, fuzzy
-#~ msgid "Limit buddy-only shares to trusted buddies"
-#~ msgstr "Apribokite tik bičiulių akcijas patikimiems bičiuliams"
-
-#, fuzzy
-#~ msgid "Shared"
-#~ msgstr "Bendra"
-
-#, fuzzy
-#~ msgid "Search Files and Folders"
-#~ msgstr "Ieškoti failų ir aplankų (tikslus atitikimas)"
-
-#, fuzzy
-#~ msgid "Out of Date"
-#~ msgstr "Pasenęs"
-
-#, fuzzy, python-format
-#~ msgid "Version %(version)s is available, released on %(date)s"
-#~ msgstr "Yra %(version)s versija, išleista %(date)s"
-
-#, fuzzy, python-format
-#~ msgid "You are using a development version of %s"
-#~ msgstr "Atrodo, kad naudojate Nicotine+ kūrimo versiją."
-
-#, fuzzy, python-format
-#~ msgid "You are using the latest version of %s"
-#~ msgstr "Jūs naudojate naujausią Nicotine+ versiją."
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Tikrinti _Latest versiją"
-
-#, fuzzy
-#~ msgid "Prefer Dark _Mode"
-#~ msgstr "Pirmenybė teikiama tamsioms _Mode"
-
-#, fuzzy
-#~ msgid "Show _Log History Pane"
-#~ msgstr "Rodyti _Log sritį"
-
-#, fuzzy
-#~ msgid "Buddy List in Separate Tab"
-#~ msgstr "Bičiulių sąrašas atskirame skirtuke"
-
-#, fuzzy
-#~ msgid "Buddy List Always Visible"
-#~ msgstr "Bičiulių sąrašas visada matomas"
-
-#, fuzzy
-#~ msgid "_View"
-#~ msgstr "_View"
-
-#, fuzzy
-#~ msgid "_Open Log Folder"
-#~ msgstr "_Download aplankas"
-
-#, fuzzy
-#~ msgid "_Browse Folder(s)"
-#~ msgstr "_Browse aplankas (-ai)"
-
-#, fuzzy
-#~ msgid "Kibibytes (2^10 bytes) per second."
-#~ msgstr "Kibibytes (2^10 baitų) per sekundę."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being geo blocked."
-#~ msgstr "Siunčiama vartotojams kaip geografo blokavimo priežastis."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being banned."
-#~ msgstr "Siunčiama vartotojams kaip priežastis, dėl kurios buvo uždrausta."
-
-#, fuzzy
-#~ msgid ""
-#~ "Once you interact with the application being away, status will be set to "
-#~ "online."
-#~ msgstr ""
-#~ "Kai sąveikausite su programa, kurios nėra, būsena bus nustatyta į "
-#~ "prisijungus."
-
-#, fuzzy
-#~ msgid "Each user may queue a maximum of either:"
-#~ msgstr "Kiekvienas vartotojas gali stovėti eilėje ne daugiau kaip:"
-
-#, fuzzy
-#~ msgid "Mebibytes (2^20 bytes)."
-#~ msgstr "Mebibytes (2^20 baitų)."
-
-#, fuzzy
-#~ msgid "MiB"
-#~ msgstr "MiBs"
-
-#, fuzzy
-#~ msgid "files"
-#~ msgstr "Failus"
-
-#, fuzzy
-#~ msgid "Queue Behavior"
-#~ msgstr "Eilės veikimas"
-
-#, fuzzy
-#~ msgid ""
-#~ "If disabled, slots will automatically be determined by available "
-#~ "bandwidth limitations."
-#~ msgstr ""
-#~ "Jei išjungta, laiko tarpsniai bus automatiškai nustatomi pagal galimus "
-#~ "pralaidumo apribojimus."
-
-#, fuzzy
-#~ msgid "Note that the operating system's theme may take precedence."
-#~ msgstr ""
-#~ "Atkreipkite dėmesį, kad operacinės sistemos tema gali būti viršesnė."
-
-#, fuzzy
-#~ msgid "By default the leftmost tab is activated at startup"
-#~ msgstr ""
-#~ "Pagal numatytuosius nustatymus failų paieškos skirtukas suaktyvinamas "
-#~ "paleidžiant."
-
-#, fuzzy, python-format
-#~ msgid "Quit %(program)s %(version)s, %(status)s!"
-#~ msgstr "Nicotine+ versija %s"
-
-#, fuzzy
-#~ msgid "terminated"
-#~ msgstr "Nutrauktas"
-
-#, fuzzy
-#~ msgid "done"
-#~ msgstr "Padaryta"
-
-#, fuzzy
-#~ msgid "Remember choice"
-#~ msgstr "Prisiminti pasirinkimą"
-
-#, fuzzy
-#~ msgid "Kosovo"
-#~ msgstr "Kosovas"
-
-#, fuzzy
-#~ msgid "Unknown Network Interface"
-#~ msgstr "Sąsaja"
-
-#, fuzzy
-#~ msgid "Listening Port Unavailable"
-#~ msgstr "Klausomasi prievado %i"
 
 #, python-format
 #~ msgid ""
@@ -7468,99 +7070,14 @@ msgstr "Nicotine+ komanda"
 #~ msgid "--- reconnected ---"
 #~ msgstr "--- prisijungta iš naujo ---"
 
-#, fuzzy
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#, fuzzy
-#~ msgid "Earth"
-#~ msgstr "Žemė"
-
-#, fuzzy
-#~ msgid "Czech Republic"
-#~ msgstr "Čekijos Respublika"
-
-#, fuzzy
-#~ msgid "Turkey"
-#~ msgstr "Turkija"
-
 #~ msgid "Joined Rooms "
 #~ msgstr "Kambariai, kuriuose esate "
-
-#, fuzzy
-#~ msgid "_Auto-join Room"
-#~ msgstr "_Auto prisijungti kambarys"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b> Sintaksė:</b> Raidės nejautrios didžiosiomis ir mažosiomis raidėmis. "
-#~ "Visi Python reguliarūs posakiai palaikomi, jei pabėgimas yra išjungtas. "
-#~ "Paprastiems filtrams rekomenduojama išlaikyti pabėgimą."
 
 #~ msgid "Escaped"
 #~ msgstr "Kaitos simbolis"
 
-#, fuzzy
-#~ msgid "Escape filter"
-#~ msgstr "Kaitos simbolis"
-
-#, fuzzy
-#~ msgid "Enter a text pattern and what to replace it with"
-#~ msgstr "Įveskite atitinkamai teksto šabloną ir pakeitimą:"
-
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan, rebuilding…"
-#~ msgstr "%(num)s aplankai rasti prieš rescan, atstatyti …"
-
-#, fuzzy, python-format
-#~ msgid "No listening port is available in the specified port range %s–%s"
-#~ msgstr "Nurodytame prievadų diapazone %s–%s nėra klausymosi prievado"
-
-#, fuzzy
-#~ msgid ""
-#~ "Choose a range to select a listening port from. The first available port "
-#~ "in the range will be used."
-#~ msgstr ""
-#~ "Pasirinkite diapazoną, iš kurio norite pasirinkti klausymosi prievadą. "
-#~ "Bus naudojamas pirmasis prieinamas diapazono prievadas."
-
-#, fuzzy
-#~ msgid "First Port"
-#~ msgstr "Pirmasis prievadas"
-
 #~ msgid "to"
 #~ msgstr "iki"
-
-#, fuzzy
-#~ msgid "Last Port"
-#~ msgstr "Vėliausiai grota"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %s or newer, please install it."
-#~ msgstr "Nepavyksta rasti %s, įdiekite jį."
-
-#, fuzzy
-#~ msgid ""
-#~ "Cannot import the Gtk module. Bad install of the python-gobject module?"
-#~ msgstr ""
-#~ "Negalima importuoti Gtk modulio. Netinkamas python-gobject modulio "
-#~ "diegimas?"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "You are using an unsupported version of GTK %(major_version)s. You should "
-#~ "install GTK %(complete_version)s or newer."
-#~ msgstr ""
-#~ "Naudojate nepalaikomą GTK %(major_version)s versiją. Turėtumėte įdiegti "
-#~ "GTK %(complete_version)s arba naujesnį."
-
-#, fuzzy
-#~ msgid "User Info"
-#~ msgstr "Vartotojo informacija"
 
 #~ msgid "Zoom 1:1"
 #~ msgstr "Mastelis 1:1"
@@ -7571,223 +7088,41 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Zoom Out"
 #~ msgstr "Atitraukti"
 
-#, fuzzy
-#~ msgid "Show User I_nfo"
-#~ msgstr "Rodyti vartotojo I_nfo"
-
-#, fuzzy
-#~ msgid "Request User's Info"
-#~ msgstr "Naudotojo i_nformacija"
-
-#, fuzzy
-#~ msgid "Request User's Shares"
-#~ msgstr "Gauti naudotojo viešinius"
-
-#, fuzzy
-#~ msgid "Request User Info"
-#~ msgstr "Naudotojo i_nformacija"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose info you want to see:"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "Request Shares List"
-#~ msgstr "Prašyti akcijų sąrašo"
-
-#, fuzzy, python-format
-#~ msgid "Invalid Soulseek URL: %s"
-#~ msgstr "Netinkamas SoulSeek meta-url: %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Users on the Soulseek network will be able to download files from folders "
-#~ "you share. Sharing files is crucial for the health of the Soulseek "
-#~ "network."
-#~ msgstr ""
-#~ "\"Soulseek\" tinklo vartotojai galės atsisiųsti failus iš jūsų bendrinamų "
-#~ "aplankų. Dalijimasis failais yra labai svarbus Soulseek tinklo sveikatai."
-
-#, fuzzy
-#~ msgid "Update I_nfo"
-#~ msgstr "Naudotojo i_nformacija"
-
-#, fuzzy
-#~ msgid "Chat Room Commands"
-#~ msgstr "Pokalbių kambario komandos"
-
-#, fuzzy
-#~ msgid "/join /j 'room'"
-#~ msgstr "/join /j 'kambarys'"
-
 #~ msgid "Join room 'room'"
 #~ msgstr "Įeiti į kambarį „kambarys“"
-
-#, fuzzy
-#~ msgid "/me 'message'"
-#~ msgstr "/me \"žinutė\""
 
 #~ msgid "Display the Now Playing script's output"
 #~ msgstr "Rodyti scenarijaus Dabar grojama išvestį"
 
-#, fuzzy
-#~ msgid "/add /ad 'user'"
-#~ msgstr "/add /ad 'naudotojas'"
-
-#, fuzzy
-#~ msgid "Add user 'user' to your buddy list"
-#~ msgstr "Įtraukti naudotoją „naudotojas“ į užblokuotų sąrašą"
-
-#, fuzzy
-#~ msgid "/rem /unbuddy 'user'"
-#~ msgstr "/rem /unbuddy \"vartotojas\""
-
-#, fuzzy
-#~ msgid "Remove user 'user' from your buddy list"
-#~ msgstr "Pašalinti naudotoją „naudotojas“ iš užblokuotų sąrašo"
-
-#, fuzzy
-#~ msgid "/ban 'user'"
-#~ msgstr "/uždrausti \"vartotojas\""
-
 #~ msgid "Add user 'user' to your ban list"
 #~ msgstr "Įtraukti naudotoją „naudotojas“ į užblokuotų sąrašą"
-
-#, fuzzy
-#~ msgid "/unban 'user'"
-#~ msgstr "/unban \"vartotojas\""
 
 #~ msgid "Remove user 'user' from your ban list"
 #~ msgstr "Pašalinti naudotoją „naudotojas“ iš užblokuotų sąrašo"
 
-#, fuzzy
-#~ msgid "/ignore 'user'"
-#~ msgstr "/nepaisyti \"vartotojo\""
-
 #~ msgid "Add user 'user' to your ignore list"
 #~ msgstr "Įtraukti naudotoją „naudotojas“ į nepaisomųjų sąrašą"
-
-#, fuzzy
-#~ msgid "/unignore 'user'"
-#~ msgstr "/unignore \"vartotojas\""
 
 #~ msgid "Remove user 'user' from your ignore list"
 #~ msgstr "Pašalinti naudotoją „naudotojas“ iš nepaisomųjų sąrašo"
 
-#, fuzzy
-#~ msgid "/browse /b 'user'"
-#~ msgstr "/browse /b \"vartotojas\""
-
-#, fuzzy
-#~ msgid "/whois /w 'user'"
-#~ msgstr "/whois /w \"vartotojas\""
-
-#, fuzzy
-#~ msgid "Request info for 'user'"
-#~ msgstr "Užklausti naudotojo „naudotojas“ informacijos"
-
-#, fuzzy
-#~ msgid "/ip 'user'"
-#~ msgstr "/ip \"vartotojas\""
-
 #~ msgid "Show IP for user 'user'"
 #~ msgstr "Parodyti naudotojo „naudotojas“ IP"
-
-#, fuzzy
-#~ msgid "/search /s 'query'"
-#~ msgstr "/search /s \"užklausa\""
 
 #~ msgid "Start a new search for 'query'"
 #~ msgstr "Pradėti naują „užklausa“ paiešką"
 
-#, fuzzy
-#~ msgid "/rsearch /rs 'query'"
-#~ msgstr "/rsearch /rs \"užklausa\""
-
 #~ msgid "Search the joined rooms for 'query'"
 #~ msgstr "Ieškoti „užklausa“ kambariuose, kuriuose esate"
-
-#, fuzzy
-#~ msgid "/bsearch /bs 'query'"
-#~ msgstr "Ieškoti „užklausa“ pas bičiulius"
 
 #~ msgid "Search the buddy list for 'query'"
 #~ msgstr "Ieškoti „užklausa“ pas bičiulius"
 
-#, fuzzy
-#~ msgid "/usearch /us 'user' 'query'"
-#~ msgstr "/usearch /us \"vartotojas\" \"užklausa\""
-
-#, fuzzy
-#~ msgid "/msg 'user' 'message'"
-#~ msgstr "/msg \"vartotojo\" \"pranešimas\""
-
 #~ msgid "Send message 'message' to user 'user'"
 #~ msgstr "Siųsti žinutę „žinutė“ naudotojui „naudotojas“"
 
-#, fuzzy
-#~ msgid "/pm 'user'"
-#~ msgstr "/pm \"vartotojas\""
-
 #~ msgid "Open private chat window for user 'user'"
 #~ msgstr "Atverti asmeninio pokalbio su naudotoju „naudotojas“ langą"
-
-#, fuzzy
-#~ msgid "Private Chat Commands"
-#~ msgstr "Privačios pokalbių komandos"
-
-#, fuzzy
-#~ msgid "Add user to your ban list"
-#~ msgstr "Įtraukti naudotoją „naudotojas“ į užblokuotų sąrašą"
-
-#, fuzzy
-#~ msgid "Add user to your ignore list"
-#~ msgstr "Įtraukti naudotoją „naudotojas“ į nepaisomųjų sąrašą"
-
-#, fuzzy
-#~ msgid "Browse shares of user"
-#~ msgstr "Naršyti naudotojo „naudotojas“ failus"
-
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "Užsakymų nejautrus filtravimas, taip pat kelių tikslių frazių "
-#~ "filtravimas, vertikalios juostos gali būti naudojamos frazėms ir žodžiams "
-#~ "atskirti.\n"
-#~ "    Pavyzdys: Spears| Bretanė| Mano gražus albumas|hello"
-
-#, fuzzy
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr "Norėdami išskirti ne garso failus, trukmės filtre naudokite !0."
-
-#, fuzzy
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Filtruoja failus pagal vartotojų šalis."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "Norėdami dar kartą peržiūrėti visus rezultatus, tiesiog išvalykite visus "
-#~ "aktyvius filtrus."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr "Daugiau filtro parinkčių rasite nuostatose."
-
-#, fuzzy
-#~ msgid "File size"
-#~ msgstr "Failo dydis"
-
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Valyti visus aktyvius filtrus"
-
-#, fuzzy
-#~ msgid "Cycle through completions when pressing tab-key"
-#~ msgstr "Dirbant tabuliavimo klavišu, pereiti per užbaigimus"
 
 #~ msgid "Hide drop-down when only one matches"
 #~ msgstr "Paslėpti išskleidžiamą sąrašą, kai yra tik vienas atitikmuo"
@@ -7795,105 +7130,11 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Download folders in reverse alphanumerical order"
 #~ msgstr "Atsiųsti aplankus atvirkštine tekstine tvarka"
 
-#, fuzzy
-#~ msgid "Incomplete file folder:"
-#~ msgstr "Nebaigtas failų aplankas:"
-
-#, fuzzy
-#~ msgid "Download folder:"
-#~ msgstr "Atsisiųsti aplanką:"
-
-#, fuzzy
-#~ msgid "Save buddies' uploads to:"
-#~ msgstr "Išsaugokite bičiulių įkėlimus į:"
-
-#, fuzzy
-#~ msgid "Use UPnP to forward listening port"
-#~ msgstr ""
-#~ "UPnP naudojimas norint automatiškai susieti kelvedžio klausymosi prievadą"
-
-#, fuzzy
-#~ msgid ""
-#~ "Share folders with every Soulseek user or buddies, allowing contents to "
-#~ "be downloaded directly from your device. Hidden files are never shared."
-#~ msgstr ""
-#~ "Bendrinkite aplankus su kiekvienu „Soulseek“ vartotoju ar bičiuliais, kad "
-#~ "turinį būtų galima atsisiųsti tiesiai iš jūsų įrenginio. Paslėpti failai "
-#~ "niekada nėra bendrinami."
-
-#, fuzzy
-#~ msgid "Secondary Tabs"
-#~ msgstr "Antriniai skirtukai"
-
-#, fuzzy
-#~ msgid "Chat room tab bar position:"
-#~ msgstr "Pokalbių kambario skirtuko juostos padėtis:"
-
-#, fuzzy
-#~ msgid "Private chat tab bar position:"
-#~ msgstr "Privataus pokalbio skirtuko juostos padėtis:"
-
-#, fuzzy
-#~ msgid "Search tab bar position:"
-#~ msgstr "Ieškos skirtuko juostos padėtis:"
-
-#, fuzzy
-#~ msgid "User info tab bar position:"
-#~ msgstr "Vartotojo informacijos skirtuko juostos padėtis:"
-
-#, fuzzy
-#~ msgid "User browse tab bar position:"
-#~ msgstr "Vartotojo naršymo skirtukų juostos padėtis:"
-
-#, fuzzy
-#~ msgid "Tab Labels"
-#~ msgstr "Skirtukų žymos"
-
-#, fuzzy
-#~ msgid "_Refresh Info"
-#~ msgstr "_Refresh informacija"
-
-#, fuzzy
-#~ msgid "Block IP Address"
-#~ msgstr "Blokuoti IP adresą..."
-
-#, fuzzy
-#~ msgid "Connected"
-#~ msgstr "Prisijungta:"
-
-#, fuzzy
-#~ msgid "Disconnected"
-#~ msgstr "Atsijungta:"
-
-#, fuzzy
-#~ msgid "Disconnected (Tray)"
-#~ msgstr "Atsijungta:"
-
 #~ msgid "User(s)"
 #~ msgstr "Naudotojas (-ai)"
 
-#, fuzzy, python-format
-#~ msgid "Alias \"%s\" returned nothing"
-#~ msgstr "Pseudonimas \"%s\" nieko negrąžino"
-
-#, fuzzy
-#~ msgid "Alternative Speed Limits"
-#~ msgstr "Alternatyvūs greičio apribojimai"
-
 #~ msgid "Last played"
 #~ msgstr "Vėliausiai grota"
-
-#, fuzzy
-#~ msgid "Playing now"
-#~ msgstr "Žaisti dabar"
-
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Neįmanoma įrašyti failo %(path)s: %(error)s"
-
-#, fuzzy, python-format
-#~ msgid "Error code %(code)s: %(description)s"
-#~ msgstr "Klaidos kodas %(code)s: %(description)s"
 
 #, python-format
 #~ msgid "No such alias (%s)"
@@ -7910,63 +7151,14 @@ msgstr "Nicotine+ komanda"
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Nėra tokio alternatyvaus vardo (%(alias)s)\n"
 
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Alternatyvūs greičio apribojimai"
-
 #~ msgid "Aliases"
 #~ msgstr "Alternatyvūs vardai"
-
-#, fuzzy
-#~ msgid "/alias /al 'command' 'definition'"
-#~ msgstr "/alias /al 'command' 'definition'"
 
 #~ msgid "Add a new alias"
 #~ msgstr "Pridėti naują alternatyvų vardą"
 
-#, fuzzy
-#~ msgid "/unalias /un 'command'"
-#~ msgstr "/unalias /un \"komanda\""
-
 #~ msgid "Remove an alias"
 #~ msgstr "Pašalinti alternatyvų vardą"
-
-#, fuzzy
-#~ msgid "Chat History"
-#~ msgstr "Pokalbių istorija"
-
-#, fuzzy
-#~ msgid "Command aliases"
-#~ msgstr "Užbaigti kambarių pavadinimus pokalbių kambariuose"
-
-#, fuzzy
-#~ msgid "Limit download speed to (KiB/s):"
-#~ msgstr "Apriboti atsisiuntimo greitį iki (KiB/s):"
-
-#, fuzzy
-#~ msgid "Author(s):"
-#~ msgstr "Autorius(-iai): "
-
-#, fuzzy
-#~ msgid "Limit upload speed to (KiB/s):"
-#~ msgstr "Apriboti įkėlimo greitį iki (KiB/s):"
-
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Rasta pageidavimų sąrašo elementas"
-
-#, fuzzy
-#~ msgid "Tabs show user status icons instead of status text"
-#~ msgstr ""
-#~ "Skirtukuose vietoj būsenos teksto rodomos vartotojo būsenos piktogramos"
-
-#, fuzzy
-#~ msgid "Show file path tooltips in file list views"
-#~ msgstr "Įgalinti failų maršruto patarimus ieškos ir perkėlimo rodiniuose"
-
-#, fuzzy
-#~ msgid "Colored and clickable usernames"
-#~ msgstr "Spalvoti ir spustelimi naudotojo vardai"
 
 #~ msgid "Notification changes the tab's text color"
 #~ msgstr "Pranešimas keičia kortelės teksto spalvą"
@@ -7977,63 +7169,8 @@ msgstr "Nicotine+ komanda"
 #~ msgid "OK"
 #~ msgstr "Gerai"
 
-#, fuzzy
-#~ msgid "_Add to Buddy List"
-#~ msgstr "Bičiulių sąrašas"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Išvalykite kiekvieną atsisiuntimą, pažymėtą tam tikra būsena."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Išvalykite kiekvieną įkėlimą, pažymėtą konkrečia būsena."
-
-#, fuzzy
-#~ msgid "use non-default user data directory for e.g. list of downloads"
-#~ msgstr ""
-#~ "naudoti nenumatytąjį vartotojo duomenų katalogą, pvz., atsisiuntimų "
-#~ "sąrašui"
-
-#, fuzzy, python-format
-#~ msgid "Unknown config section '%s'"
-#~ msgstr "Nežinoma konfigūravimo sekcija \"%s\""
-
-#, fuzzy, python-format
-#~ msgid "Unknown config option '%(option)s' in section '%(section)s'"
-#~ msgstr ""
-#~ "Nežinoma konfigūravimo parinktis \"%(option)s\" skyriuje \"%(section)s\""
-
-#, fuzzy, python-format
-#~ msgid "Version %s is available"
-#~ msgstr "Versija %s yra"
-
-#, fuzzy, python-format
-#~ msgid "released on %s"
-#~ msgstr "išleistas %s"
-
-#, fuzzy
-#~ msgid "Nicotine+ is running in the background"
-#~ msgstr "Vykdyti fone"
-
-#, fuzzy, python-format
-#~ msgid "Private message from %s"
-#~ msgstr "Privatus pranešimas iš %s"
-
 #~ msgid "Aborted"
 #~ msgstr "Nutraukta"
-
-#, fuzzy
-#~ msgid "Blocked country"
-#~ msgstr "Užblokuota šalis"
-
-#, fuzzy
-#~ msgid "Finished / Aborted"
-#~ msgstr "Išvalyti baigtus / nutrauktus"
-
-#, fuzzy
-#~ msgid "Close tab"
-#~ msgstr "Užvėrimo mygtukai kortelėse"
 
 #, python-format
 #~ msgid "You've been mentioned in the %(room)s room"
@@ -8055,14 +7192,6 @@ msgstr "Nicotine+ komanda"
 #~ "Nurodyta tinklo sąsaja '%s' neegzistuoja. Pakeiskite arba pašalinkite "
 #~ "nurodytą tinklo sąsają ir iš naujo paleiskite Nicotine+."
 
-#, fuzzy
-#~ msgid ""
-#~ "The range you specified for client connection ports was {}-{}, but none "
-#~ "of these were usable. Increase and/or "
-#~ msgstr ""
-#~ "Jūsų nurodytas kliento ryšio prievadų diapazonas buvo {}-{}, tačiau nė "
-#~ "vienas iš jų nebuvo naudotinas. Padidėjimas ir (arba) "
-
 #~ msgid ""
 #~ "Note that part of your range lies below 1024, this is usually not allowed "
 #~ "on most operating systems with the exception of Windows."
@@ -8070,94 +7199,12 @@ msgstr "Nicotine+ komanda"
 #~ "Pastaba: dalis nurodytojo rėžio yra žemiau 1024. Paprastai tai daugumoje "
 #~ "operacinių sistemų, išskyrus Windows, neleidžiama."
 
-#, fuzzy, python-format
-#~ msgid "Rescan progress: %s"
-#~ msgstr "Pažanga: %s"
-
 #, python-format
 #~ msgid "OS error: %s"
 #~ msgstr "OS klaida: %s"
 
-#, fuzzy
-#~ msgid "UPnP is not available on this network"
-#~ msgstr "UPnP šiame tinkle nepasiekiamas"
-
-#, fuzzy, python-format
-#~ msgid "Failed to map the external WAN port: %(error)s"
-#~ msgstr "Nepavyko susieti išorinio WAN prievado: %(error)s"
-
-#, fuzzy
-#~ msgid "Room wall"
-#~ msgstr "Kambario siena"
-
-#, fuzzy
-#~ msgid ""
-#~ "The default listening port '2234' works fine in most cases. If you need "
-#~ "to use a different port, you will be able to modify it in the preferences "
-#~ "later."
-#~ msgstr ""
-#~ "Numatytasis klausymosi prievadas \"2234\" daugeliu atvejų veikia gerai. "
-#~ "Jei jums reikia naudoti kitą prievadą, vėliau galėsite jį modifikuoti "
-#~ "nuostatose."
-
-#, fuzzy
-#~ msgid "Show users with similar interests"
-#~ msgstr "Rodyti panašius pomėgius turinčius vartotojus"
-
-#, fuzzy
-#~ msgid "Menu"
-#~ msgstr "Meniu"
-
 #~ msgid "Expand / Collapse all"
 #~ msgstr "Išplėsti / sutraukti visus"
-
-#, fuzzy
-#~ msgid "Configure shares"
-#~ msgstr "Konfigūruoti bendrai naudojamos akcijas"
-
-#, fuzzy
-#~ msgid "Create or join room…"
-#~ msgstr "Kurti arba prisijungti prie kambario…"
-
-#, fuzzy
-#~ msgid "_Room List"
-#~ msgstr "Kambariuose"
-
-#, fuzzy
-#~ msgid "Enable alternative download and upload speed limits"
-#~ msgstr "Įgalinti alternatyvius atsisiuntimo ir įkėlimo greičio apribojimus"
-
-#, fuzzy
-#~ msgid "Show log history"
-#~ msgstr "Rodyti žurnalo retrospektyvą"
-
-#, fuzzy
-#~ msgid "Result grouping mode"
-#~ msgstr "Rezultatų grupavimo režimas"
-
-#, fuzzy
-#~ msgid "Free slot"
-#~ msgstr "Nemokamas lizdas"
-
-#, fuzzy
-#~ msgid "Save shares list to disk"
-#~ msgstr "Įrašyti bendrai naudojamos akcijų sąrašą į diską"
-
-#, fuzzy
-#~ msgid "_Away"
-#~ msgstr "_Away"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load ui file %(file)s: %(error)s"
-#~ msgstr "Nepavyko įkelti ui failo %(file)s: %(error)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Attempting to reset index of shared files due to an error. Please rescan "
-#~ "your shares."
-#~ msgstr ""
-#~ "Bandoma iš naujo nustatyti bendrinamų failų rodyklę dėl klaidos. Prašome "
-#~ "perskirstyti savo akcijas."
 
 #~ msgid ""
 #~ "File index of shared files could not be accessed. This could occur due to "
@@ -8171,118 +7218,18 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Nicotine+ is a Soulseek client"
 #~ msgstr "Nicotine+ yra Soulseek klientas"
 
-#, fuzzy
-#~ msgid "enable the tray icon"
-#~ msgstr "įjungti dėklo piktogramą"
-
-#, fuzzy
-#~ msgid "disable the tray icon"
-#~ msgstr "išjungti dėklo piktogramą"
-
-#, fuzzy
-#~ msgid "Get Soulseek Privileges…"
-#~ msgstr "Gaukite Soulseek privilegijas…"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Public IP address is <b>%(ip)s</b> and active listening port is "
-#~ "<b>%(port)s</b>"
-#~ msgstr ""
-#~ "Viešasis IP adresas yra <b>%(ip)s</b>, o aktyvus klausymosi prievadas yra "
-#~ "<b>%(port)s</b>"
-
 #~ msgid "unknown"
 #~ msgstr "nežinoma"
 
-#, fuzzy
-#~ msgid "Notification"
-#~ msgstr "Pranešimo"
-
 #~ msgid "Length"
 #~ msgstr "Ilgis"
-
-#, fuzzy, python-format
-#~ msgid "Picture not saved, %s already exists."
-#~ msgstr "Paveikslėlis neįrašytas, %s jau yra."
-
-#, fuzzy
-#~ msgid "_Open"
-#~ msgstr "_Open"
-
-#, fuzzy
-#~ msgid "_Save"
-#~ msgstr "_Save"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load plugin '%s', could not find it."
-#~ msgstr "Nepavyko įkelti priedo %s\", nepavyko jo rasti."
 
 #, python-format
 #~ msgid "I/O error: %s"
 #~ msgstr "I/O klaida: %s"
 
-#, fuzzy, python-format
-#~ msgid "Failed to open file path: %s"
-#~ msgstr "Nepavyko atidaryti failo maršruto: %s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to open URL: %s"
-#~ msgstr "Nepavyko atidaryti URL: %s"
-
-#, fuzzy
-#~ msgid "_Log Conversation"
-#~ msgstr "_Log pokalbis"
-
-#, fuzzy
-#~ msgid "Result Filter List"
-#~ msgstr "Rezultatų filtrų sąrašas"
-
-#, fuzzy
-#~ msgid "Prepend < or > to find files less/greater than the given value."
-#~ msgstr ""
-#~ "Iš anksto < arba >, kad rastumėte failus, mažesnius / didesnius už "
-#~ "nurodytą reikšmę."
-
-#, fuzzy
-#~ msgid ""
-#~ "VBR files display their average bitrate and are typically lower in "
-#~ "bitrate than a compressed 320 kbps CBR file of the same audio quality."
-#~ msgstr ""
-#~ "VBR failai rodo jų vidutinį bitų dažnį ir paprastai yra mažesni bitų "
-#~ "dažniu nei suglaudintas 320 kbps CBR failas tos pačios garso kokybės."
-
-#, fuzzy
-#~ msgid "Like Size above, =, <, and > can be used."
-#~ msgstr "Kaip dydis aukščiau, =, galima naudoti < ir >."
-
-#, fuzzy
-#~ msgid ""
-#~ "Prevent write access by other programs for files being downloaded (turn "
-#~ "off for NFS)"
-#~ msgstr "Neleisti rašyti kitų programų failams atsisiųsti (išjungti NFS)"
-
-#, fuzzy
-#~ msgid "Where incomplete downloads are temporarily stored."
-#~ msgstr "Kur laikinai saugomi neišsamūs atsisiuntimai."
-
-#, fuzzy
-#~ msgid ""
-#~ "Where buddies' uploads will be stored (with a subfolder created for each "
-#~ "buddy)."
-#~ msgstr ""
-#~ "Kur bus saugomi bičiulių įkėlimai (kiekvienam bičiuliui sukurtas "
-#~ "poaplankis)."
-
-#, fuzzy
-#~ msgid "Toggle away status after minutes of inactivity:"
-#~ msgstr "Perjunkite būseną po kelių minučių neveiklumo:"
-
 #~ msgid "Protocol:"
 #~ msgstr "Protokolas:"
-
-#, fuzzy
-#~ msgid "Icon theme folder (requires restart):"
-#~ msgstr "Piktogramų temos aplankas (reikia paleisti iš naujo):"
 
 #~ msgid "Establishing connection"
 #~ msgstr "Įtvirtinamas ryšys"
@@ -8290,125 +7237,8 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Clear Groups"
 #~ msgstr "Išvalymo grupės"
 
-#, fuzzy
-#~ msgid "User List"
-#~ msgstr "Vartotojų sąrašas"
-
-#, fuzzy
-#~ msgid "_Reset Statistics…"
-#~ msgstr "Statistika"
-
-#, fuzzy
-#~ msgid "Clear _Downloads…"
-#~ msgstr "_Atsiuntimai"
-
-#, fuzzy
-#~ msgid "Clear Uploa_ds…"
-#~ msgstr "Valyti Uploa_ds…"
-
-#, fuzzy
-#~ msgid "Block User's IP Address"
-#~ msgstr "Blokuoti IP adresą..."
-
-#, fuzzy
-#~ msgid "Ignore User's IP Address"
-#~ msgstr "Nepaisyti vartotojo IP adreso"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Išvalykite kiekvieną atsisiuntimą, kurio perkėlimas baigtas arba kurį "
-#~ "užfiksavo filtras."
-
-#, fuzzy
-#~ msgid "Usernames"
-#~ msgstr "Naudotojo vardas"
-
-#~ msgid "Display logged chat room messages when a room is rejoined"
-#~ msgstr ""
-#~ "Įėjus į pokalbių kambarį iš naujo, rodyti išsaugotas kambario žinutes"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Išvalykite kiekvieną įkėlimą, kurio perkėlimas baigtas arba buvo "
-#~ "atšauktas nuotolinio naudotojo."
-
-#~ msgid "Queue Position"
-#~ msgstr "Eilės padėtis"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-#~ "results"
-#~ msgstr ""
-#~ "Vartotojas %(user)s tiesiogiai ieško \"%(query)s\", grąžina %(num)i "
-#~ "rezultatus"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVATUS]"
-
-#, fuzzy
-#~ msgid "Room wall (personal message set)"
-#~ msgstr "Kambario siena (asmeninių pranešimų rinkinys)"
-
 #~ msgid "Your config file is corrupt"
 #~ msgstr "Konfigūracijos failas sugadintas"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "We're sorry, but it seems your configuration file is corrupt. Please "
-#~ "reconfigure Nicotine+.\n"
-#~ "\n"
-#~ "We renamed your old configuration file to\n"
-#~ "%(corrupt)s\n"
-#~ "If you open this file with a text editor you might be able to rescue some "
-#~ "of your settings."
-#~ msgstr ""
-#~ "Atsiprašome, bet atrodo, kad konfigūracijos failas sugadintas. "
-#~ "Konfigūruokite Nikotiną+.\n"
-#~ "\n"
-#~ "Mes pervardijome seną konfigūracijos failą į\n"
-#~ "%(corrupt)s\n"
-#~ "Jei atidarysite šį failą naudodami teksto rengyklę, galbūt galėsite "
-#~ "išgelbėti kai kuriuos parametrus."
-
-#, fuzzy
-#~ msgid "User Description"
-#~ msgstr "Aprašymas: "
-
-#, fuzzy
-#~ msgid "User Interests"
-#~ msgstr "Pomėgiai"
-
-#, fuzzy
-#~ msgid "User Picture"
-#~ msgstr "Vartotojo paveikslėlis"
-
-#, fuzzy
-#~ msgid "Search Wishlist"
-#~ msgstr "Išvalyti pageidavimų sąrašą?"
-
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Nicotine+ versija %s"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Python %(py_version)s naudojimas"
-
-#, fuzzy, python-format
-#~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
-#~ msgstr "Nicotine+ versija %s"
-
-#, fuzzy, python-format
-#~ msgid "Quit Nicotine+ %(version)s, %(status)s!"
-#~ msgstr "Nicotine+ versija %s"
 
 #~ msgid "User:"
 #~ msgstr "Naudotojas:"
@@ -8420,134 +7250,6 @@ msgstr "Nicotine+ komanda"
 #, python-format
 #~ msgid "%(number)2s files "
 #~ msgstr "%(number)2s failų "
-
-#, fuzzy
-#~ msgid "Allow regular expressions for the filter's include and exclude"
-#~ msgstr "Leisti įprastas filtro įtraukties išraiškas ir neįtraukti"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Išeiti"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Peržiūrėti ankstesnį pagrindinį paleisties skirtuką"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Įjungti filtrus iš karto"
-
-#, fuzzy
-#~ msgid "Close Nicotine+?"
-#~ msgstr "Uždaryti Nikotiną+?"
-
-#, fuzzy
-#~ msgid "Do you really want to exit Nicotine+?"
-#~ msgstr "Ar tikrai norite išeiti iš Nikotino+?"
-
-#, fuzzy
-#~ msgid "Run in Background"
-#~ msgstr "Vykdyti fone"
-
-#, fuzzy
-#~ msgid "_Online Notify"
-#~ msgstr "_Online pranešti"
-
-#, fuzzy
-#~ msgid "_Prioritize User"
-#~ msgstr "_Prioritetas vartotojui"
-
-#, fuzzy
-#~ msgid "_Trust User"
-#~ msgstr "_Patikimas"
-
-#, fuzzy
-#~ msgid "Request User's IP Address"
-#~ msgstr "Nepaisyti IP adreso..."
-
-#, fuzzy
-#~ msgid "Request IP Address"
-#~ msgstr "Nepaisyti IP adreso..."
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose IP address you want to see:"
-#~ msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-#, fuzzy
-#~ msgid "Downloaded"
-#~ msgstr "Atsisiuntė"
-
-#, fuzzy, python-format
-#~ msgid "Failed to add download %(filename)s to shared files: %(error)s"
-#~ msgstr ""
-#~ "Nepavyko pridėti atsisiųsti %(filename)s į bendrai naudojamus failus: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Automatinis atsisiuntimų bendrinimas"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "Atsisiuntimo aplanko pridėjimo kaip bendro viešojo naudojimo failo "
-#~ "atitikmuo, tačiau į šį aplanką atsisiųsti failai bus automatiškai "
-#~ "pasiekiami kitiems (nereikia pakartotinio informacijos)."
-
-#, fuzzy
-#~ msgid "Unable to Share Folder"
-#~ msgstr "Neįmanoma bendrai naudoti aplanko"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is empty"
-#~ msgstr "Pasirinktas virtualus pavadinimas tuščias"
-
-#, fuzzy
-#~ msgid "The chosen virtual name already exists"
-#~ msgstr "Pasirinktas virtualus pavadinimas jau yra"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared"
-#~ msgstr "Pasirinktas aplankas jau bendrinamas"
-
-#, fuzzy
-#~ msgid "Set Virtual Name"
-#~ msgstr "Nustatyti virtualų pavadinimą"
-
-#, fuzzy, python-format
-#~ msgid "Enter virtual name for '%(dir)s':"
-#~ msgstr "Įveskite virtualų pavadinimą \"%(dir)s\":"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is either empty or already exists"
-#~ msgstr "Pasirinktas virtualusis pavadinimas yra tuščias arba jau yra"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared."
-#~ msgstr "Pasirinktas aplankas jau bendrai naudojamas."
-
-#, fuzzy, python-format
-#~ msgid "%s Properties"
-#~ msgstr "Savybės"
-
-#, fuzzy
-#~ msgid "Finished rescanning shares"
-#~ msgstr "Baigta perrašinėti bičiulių akcijas"
-
-#, fuzzy
-#~ msgid "Plugin List"
-#~ msgstr "Įskiepiai"
-
-#, fuzzy, python-format
-#~ msgid "Error while scanning %(path)s: %(error)s"
-#~ msgstr "Klaida nuskaitant %(path)s: %(error)s"
-
-#, fuzzy
-#~ msgid "Show _Log Pane"
-#~ msgstr "Rodyti _Log sritį"
 
 #~ msgid "Addresses"
 #~ msgstr "Adresai"
@@ -8570,248 +7272,23 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Ignore List"
 #~ msgstr "Nepaisymo sąrašas"
 
-#, fuzzy
-#~ msgid "Censor & Replace"
-#~ msgstr "Cenzūra & gt; Pakeisti"
-
 #~ msgid "Completion"
 #~ msgstr "Užbaigimas"
 
 #~ msgid "Categories"
 #~ msgstr "Kategorijos"
 
-#, fuzzy
-#~ msgid "Upload Folder To…"
-#~ msgstr "Nusiųsti aplanką į…"
-
-#, fuzzy
-#~ msgid "Upload Folder Recursive To…"
-#~ msgstr "Nusiųsti aplanką Rekursive To…"
-
-#, fuzzy
-#~ msgid "Download _Recursive"
-#~ msgstr "Atsisiųsti _Recursive"
-
-#, fuzzy
-#~ msgid "Download R_ecursive To…"
-#~ msgstr "Atsisiųsti R_ecursive į…"
-
-#, fuzzy
-#~ msgid "Up_load File(s)"
-#~ msgstr "Up_load Failas (-ai)"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Error while attempting to display folder '%(folder)s', reported error: "
-#~ "%(error)s"
-#~ msgstr ""
-#~ "Klaida bandant rodyti aplanką \"%(folder)s\", pranešta apie klaidą: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Pasirinkite aplanko su poaplankiais iš vartotojo atsisiuntimo paskirties "
-#~ "vietą"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr "Pasirinkite aplanko atsisiuntimo iš vartotojo paskirties vietą"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr "Pasirinkite failo (-ų) atsisiuntimo iš vartotojo paskirties vietą"
-
-#, fuzzy
-#~ msgid "Wishes"
-#~ msgstr "Pageidavimus"
-
-#, fuzzy
-#~ msgid "privileged"
-#~ msgstr "(privilegijuotas)"
-
-#, fuzzy
-#~ msgid "prioritized"
-#~ msgstr "teikiama pirmenybė"
-
-#, fuzzy
-#~ msgid "Blocked IP Addresses"
-#~ msgstr "Blokuoti IP adresą..."
-
-#, fuzzy
-#~ msgid "Complete buddy names"
-#~ msgstr "Užbaigti bičiulių vardus"
-
 #~ msgid "Complete usernames in chat rooms"
 #~ msgstr "Užbaigti naudotojų vardus pokalbių kambariuose"
 
-#, fuzzy
-#~ msgid "Complete room names"
-#~ msgstr "Užbaigti kambarių pavadinimus pokalbių kambariuose"
-
-#, fuzzy
-#~ msgid "Drop-down List"
-#~ msgstr "Išplečiamasis sąrašas"
-
-#, fuzzy
-#~ msgid "File Manager command ($ for file path):"
-#~ msgstr "Failų tvarkytuvo komanda ($ failo maršrutui):"
-
-#, fuzzy
-#~ msgid "Media Player command ($ for file path):"
-#~ msgstr "Komanda Media Player ($ už failo kelią):"
-
-#, fuzzy
-#~ msgid "Ignored IP Addresses"
-#~ msgstr "Nepaisyti IP adreso..."
-
 #~ msgid "Display timestamps"
 #~ msgstr "Rodyti laiko žymas"
-
-#, fuzzy
-#~ msgid "Notification Popups"
-#~ msgstr "Pranešimų laikinieji meniu"
-
-#, fuzzy
-#~ msgid "Show notification popup when a file has finished downloading"
-#~ msgstr "Rodyti pranešimų iššokantį langą, kai failas baigia atsisiuntimą"
-
-#, fuzzy
-#~ msgid "Show notification popup when a folder has finished downloading"
-#~ msgstr "Rodyti pranešimų iššokantį langą, kai aplankas baigia atsisiuntimą"
-
-#, fuzzy
-#~ msgid "Show notification popup when you receive a private message"
-#~ msgstr "Rodyti pranešimų iššokantį langą, kai gaunate privatų pranešimą"
-
-#, fuzzy
-#~ msgid "Show notification popup when someone sends a message in a chat room"
-#~ msgstr ""
-#~ "Rodyti pranešimų iššokantį langą, kai kas nors siunčia pranešimą pokalbių "
-#~ "kambaryje"
-
-#, fuzzy
-#~ msgid "Show notification popup when you are mentioned in a chat room"
-#~ msgstr ""
-#~ "Rodyti pranešimų iššokantį langą, kai esate paminėtas pokalbių kambaryje"
-
-#, fuzzy
-#~ msgid "Tray"
-#~ msgstr "Dėklas"
-
-#, fuzzy
-#~ msgid ""
-#~ "Instances of $ will be replaced by the link. The default web browser of "
-#~ "the system will be used in cases where a protocol has not been configured."
-#~ msgstr ""
-#~ "$ egzemplioriai bus pakeisti nuoroda. Pridėkite tuščias dorokles, jei "
-#~ "norite naudoti numatytąją sistemos žiniatinklio naršyklę.\n"
-#~ "Protokolų doroklės: "
-
-#~ msgid "Handler:"
-#~ msgstr "Valdiklis:"
-
-#, fuzzy
-#~ msgid "Primary Tabs"
-#~ msgstr "Pirminiai skirtukai"
-
-#, fuzzy
-#~ msgid "Enable file path tooltips in search and transfer views"
-#~ msgstr "Įgalinti failų maršruto patarimus ieškos ir perkėlimo rodiniuose"
-
-#, fuzzy
-#~ msgid ""
-#~ "Displays the complete file path of a search result or file transfer when "
-#~ "you hover a folder path or file name with your cursor."
-#~ msgstr ""
-#~ "Rodo visą ieškos rezultato arba failo perkėlimo failo kelią, kai žymekliu "
-#~ "laikote aplanko maršrutą arba failo vardą."
-
-#, fuzzy
-#~ msgid "Show privately shared files in user shares"
-#~ msgstr "Rodyti privačiai bendrinamus failus bendrai naudojamose vartotojų"
-
-#, fuzzy
-#~ msgid ""
-#~ "Other clients may offer an option to send privately shared files when you "
-#~ "browse their shares. Folders containing such files are prefixed with "
-#~ "'[PRIVATE FOLDER]', and are not downloadable unless the uploader gives "
-#~ "explicit permission."
-#~ msgstr ""
-#~ "Kiti klientai gali pasiūlyti galimybę siųsti privačiai bendrinamus "
-#~ "failus, kai naršote jų akcijas. Aplankai, kuriuose yra tokie failai, yra "
-#~ "prefiksuoti \"[PRIVATUS APLANKAS]\" ir jų negalima atsisiųsti, nebent "
-#~ "įkėlėjas suteikia aiškų leidimą."
-
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Cenzūra & gt; Pakeisti"
-
-#, fuzzy
-#~ msgid "Show _Debug Log Controls"
-#~ msgstr "Rodyti _Debug žurnalo valdiklius"
-
-#, fuzzy
-#~ msgid "Debug Logging"
-#~ msgstr "Derinti registravimą"
-
-#, fuzzy
-#~ msgid "Virtual Name"
-#~ msgstr "Virtualus pavadinimas"
-
-#, fuzzy
-#~ msgid "Edit Virtual Name"
-#~ msgstr "Redaguoti virtualų pavadinimą"
-
-#, fuzzy
-#~ msgid "Copy Folder URL"
-#~ msgstr "Kopijuoti aplanko URL"
-
-#, fuzzy
-#~ msgid "Download _To…"
-#~ msgstr "Atsiųsti"
 
 #~ msgid "Download"
 #~ msgstr "Atsiųsti"
 
 #~ msgid "Upload"
 #~ msgstr "Nusiųsti"
-
-#, fuzzy
-#~ msgid "Upload Folder's Contents"
-#~ msgstr "Nusiuntimo aplanko turinys"
-
-#, fuzzy
-#~ msgid "Rename"
-#~ msgstr "Pervardyti"
-
-#, fuzzy
-#~ msgid "File Lists"
-#~ msgstr "Failų sąrašai"
-
-#, fuzzy
-#~ msgid "Copy File Path"
-#~ msgstr "Kopijuoti failo maršrutą"
-
-#, fuzzy
-#~ msgid "R_emove Wish"
-#~ msgstr "Pašalinti alternatyvų vardą"
-
-#, fuzzy, python-format
-#~ msgid "It appears '%s' is not a directory, not loading plugins."
-#~ msgstr "Atrodo, kad \"%s\" nėra katalogas, o ne įkeliami papildiniai."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Skenuojami bičiulių viešiniai"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Baigta perrašinėti bičiulių akcijas"
-
-#, fuzzy
-#~ msgid "No description provided"
-#~ msgstr "Aprašymas: "
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -8828,18 +7305,6 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Client Version"
 #~ msgstr "Kliento versija"
 
-#, fuzzy, python-format
-#~ msgid "How many days of privileges should user %s be gifted?"
-#~ msgstr "Nurodykite kiek dienų privilegijų norite suteikti šiam naudotojui?"
-
-#, fuzzy
-#~ msgid ""
-#~ "Buddies will have higher priority in the queue, the same as globally "
-#~ "privileged users."
-#~ msgstr ""
-#~ "Bičiuliai turės didesnį prioritetą eilėje, kaip ir visame pasaulyje "
-#~ "privilegijuoti vartotojai."
-
 #~ msgid "Privileged"
 #~ msgstr "Privilegijuotas"
 
@@ -8849,137 +7314,15 @@ msgstr "Nicotine+ komanda"
 #~ msgid "Comments"
 #~ msgstr "Komentarai"
 
-#, fuzzy
-#~ msgid "Edit _Comments…"
-#~ msgstr "Taisyti komentarus"
-
-#, fuzzy
-#~ msgid ""
-#~ "Creates subfolders based on the user you are downloading from, and stores "
-#~ "the downloaded file / folder there."
-#~ msgstr ""
-#~ "Sukuria poaplankius pagal vartotoją, iš kurios atsisiunčiate, ir ten "
-#~ "saugo atsisiųstą failą / aplanką."
-
-#, fuzzy
-#~ msgid "Login Details"
-#~ msgstr "Prisijungimo duomenys"
-
-#, fuzzy
-#~ msgid "Advanced"
-#~ msgstr "Išplėstinė"
-
-#, fuzzy
-#~ msgid "Port mapping renewal interval in hours:"
-#~ msgstr "Uosto žemėlapių atnaujinimo intervalas valandomis:"
-
-#, fuzzy
-#~ msgid "Enable buddy-only shares"
-#~ msgstr "Įgalinti tik bičiulių akcijas"
-
-#, fuzzy
-#~ msgid "Files will be uploaded in the order they were queued."
-#~ msgstr "Failai bus nusiųsti tokia tvarka, kokia jie buvo eilėje."
-
-#, fuzzy
-#~ msgid "Rescanning normal shares…"
-#~ msgstr "Pradėtas pakartotinis skanavimas"
-
-#, fuzzy
-#~ msgid "Finished rescanning public shares"
-#~ msgstr "Baigtas viešųjų akcijų perrašymas"
-
 #~ msgid "Scanning Buddy Shares"
 #~ msgstr "Skenuojami bičiulių viešiniai"
-
-#, fuzzy
-#~ msgid "_Rescan Public Shares"
-#~ msgstr "_Rescan viešosios akcijos"
-
-#, fuzzy
-#~ msgid "Rescan B_uddy Shares"
-#~ msgstr "Rescan B_uddy Akcijos"
-
-#, fuzzy
-#~ msgid "Rescan Public Shares"
-#~ msgstr "\"Rescan\" viešosios akcijos"
-
-#, fuzzy
-#~ msgid "Rescan Buddy Shares"
-#~ msgstr "Rescan Buddy Akcijos"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Įgalina bičiulių akcijas, kurias gali pasiekti tik jūsų bičiulių sąrašo "
-#~ "vartotojai."
-
-#, fuzzy
-#~ msgid "Mark each shared folder as buddy-only"
-#~ msgstr ""
-#~ "Pažymėti kiekvieną bendrai naudojamą aplanką kaip skirtą tik bičiuliams"
-
-#, fuzzy
-#~ msgid ""
-#~ "Overrides the per-share option, useful if you temporarily need to prevent "
-#~ "public access to shares."
-#~ msgstr ""
-#~ "Nepaisoma pasirinkimo sandorio vienai akcijai, naudinga, jei laikinai "
-#~ "reikia neleisti visuomenei prieiti prie akcijų."
-
-#, fuzzy
-#~ msgid ""
-#~ "Only users marked as trusted on your buddy list can access your buddy-"
-#~ "only shares."
-#~ msgstr ""
-#~ "Tik vartotojai, pažymėti kaip patikimi jūsų bičiulių sąraše, gali "
-#~ "pasiekti tik jūsų bičiulių akcijas."
-
-#, fuzzy
-#~ msgid "Filtered out excluded search result "
-#~ msgstr "Filtruotas neįtrauktas ieškos rezultatas "
-
-#, fuzzy
-#~ msgid "Filtered out inexact or incorrect search result "
-#~ msgstr "Išfiltruotas netikslus arba neteisingas ieškos rezultatas "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-#~ msgstr "Įrašytojo parametro „%(name)s“ įskiepyje nebėra"
 
 #, python-format
 #~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
 #~ msgstr "Įskiepis %(module)s grąžino keistą reikšmę: „%(value)s“; nepaisoma"
 
-#, fuzzy, python-format
-#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-#~ msgstr "Nesuderinama talpykla, skirta \"%(vdir)s\", atkurianti \"%(dir)s\""
-
-#, fuzzy, python-format
-#~ msgid "Dropping missing folder %(dir)s"
-#~ msgstr "Trūkstamo aplanko numetimas %(dir)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ allows you to share folders directly from your computer. All "
-#~ "the contents of these folders (with the exception of dotfiles) can be "
-#~ "downloaded by other users on the Soulseek network. Public shares are "
-#~ "available for every user, while users in your buddy list can access buddy-"
-#~ "only shares in addition to public shares."
-#~ msgstr ""
-#~ "Nikotinas+ leidžia bendrinti aplankus tiesiai iš kompiuterio. Visą šių "
-#~ "aplankų turinį (išskyrus dotfiles) gali atsisiųsti kiti \"Soulseek\" "
-#~ "tinklo vartotojai. Viešos akcijos yra prieinamos kiekvienam vartotojui, o "
-#~ "jūsų bičiulių sąrašo vartotojai gali pasiekti tik bičiulių akcijas be "
-#~ "viešųjų akcijų."
-
 #~ msgid "Set your personal ticker"
 #~ msgstr "Nurodykite savo asmeninę bėgančią eilutę"
-
-#, fuzzy
-#~ msgid "Receive a User's Info"
-#~ msgstr "Gauti naudotojo informaciją"
 
 #~ msgid "Add user 'user' to your user list"
 #~ msgstr "Įtraukti naudotoją „naudotojas“ į Jūsų naudotojų sąrašą"
@@ -8989,14 +7332,6 @@ msgstr "Nicotine+ komanda"
 
 #~ msgid "Request user info for user 'user'"
 #~ msgstr "Užklausti naudotojo „naudotojas“ informacijos"
-
-#, fuzzy
-#~ msgid "Add user to your user list"
-#~ msgstr "Įtraukti naudotoją „naudotojas“ į Jūsų naudotojų sąrašą"
-
-#, fuzzy
-#~ msgid "Remove user from your user list"
-#~ msgstr "Pašalinti naudotoją „naudotojas“ iš naudotojų sąrašo"
 
 #~ msgid "Cannot find the pynicotine.utils module."
 #~ msgstr "Nepavyko rasti pynicotine.utils modulio."

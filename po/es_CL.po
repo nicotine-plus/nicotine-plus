@@ -5091,7 +5091,7 @@ msgid ""
 "not show any 'Remix Instrumental'"
 msgstr ""
 "Las mayúsculas o minúsculas son indiferentes, pero el orden de las palabras "
-"es importante: «Spears Brittany» no mostrará «Brittany Spears»"
+"es importante: 'Instrumental Remix' no mostrará 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 #, fuzzy
@@ -6386,9 +6386,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "No se puede guardar %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Amigos de Confianza"
 
@@ -6413,47 +6410,18 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Send Message"
 #~ msgstr "Enviar mensaje"
 
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Ver perfil de usuario"
-
 #~ msgid "Start Messaging"
 #~ msgstr "Iniciar Mensajes"
 
 #~ msgid "Enter the name of the user whom you want to send a message:"
 #~ msgstr "Introduzca el nombre del usuario al que desea enviar un mensaje:"
 
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "Mensajes"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr ""
-#~ "Introduzca el nombre del usuario cuya lista de compartidos desea recibir:"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "Ver perfil de usuario"
-
 #~ msgid "Enter the name of the user whose shares you want to see:"
 #~ msgstr ""
 #~ "Introduzca el nombre del usuario cuya lista de compartidos desea recibir:"
 
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "_Explorar Archivos"
-
 #~ msgid "Password"
 #~ msgstr "Contraseña"
-
-#, fuzzy
-#~ msgid "Download File"
-#~ msgstr "Descargar archivo"
-
-#, fuzzy
-#~ msgid "Refresh Similar Users"
-#~ msgstr "Usuarios Similares"
 
 #~ msgid "Enter the username of the person whose files you want to see"
 #~ msgstr ""
@@ -6479,10 +6447,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgstr ""
 #~ "Introduzca el nombre de la sala a la que desea unirse. Si la sala no "
 #~ "existe, se creará."
-
-#, fuzzy
-#~ msgid "Show Log History Pane"
-#~ msgstr "Mostrar el Panel de Historial de _Registro"
 
 #~ msgid "Save _Picture"
 #~ msgstr "Guardar _Imagen"
@@ -6580,10 +6544,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Buddy-only"
 #~ msgstr "Solo para amigos"
 
-#, fuzzy
-#~ msgid "Share with buddies only"
-#~ msgstr "Compartir sólo con los amigos"
-
 #~ msgid "_Quit…"
 #~ msgstr "_Salir…"
 
@@ -6599,10 +6559,6 @@ msgstr "Equipo de Nicotine+"
 #~ "No se encuentra %(option1)s o %(option2)s, por favor, instala cualquiera "
 #~ "de los dos."
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s carpetas encontradas después de un nuevo escaneo"
-
 #, python-format
 #~ msgid "Failed to process the following databases: %(names)s"
 #~ msgstr "No se han podido procesar las siguientes bases de datos: %(names)s"
@@ -6614,44 +6570,12 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Quit / Run in Background"
 #~ msgstr "Salir/Ejecutar en Segundo Plano"
 
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Puerto de escucha no está establecido"
-
-#, fuzzy
-#~ msgid "Network interface:"
-#~ msgstr "Búsquedas en la Red"
-
 #~ msgid "Limit buddy-only shares to trusted buddies"
 #~ msgstr ""
 #~ "Limitar los compartidos de solo-para-amigos a los amigos de confianza"
 
 #~ msgid "Shared"
 #~ msgstr "Compartido"
-
-#, fuzzy
-#~ msgid "Search Files and Folders"
-#~ msgstr "Buscar archivos y carpetas (coincidencia exacta)"
-
-#, fuzzy
-#~ msgid "Out of Date"
-#~ msgstr "Desactualizado"
-
-#, fuzzy, python-format
-#~ msgid "Version %(version)s is available, released on %(date)s"
-#~ msgstr "La versión %(version)s está disponible, lanzada el %(date)s"
-
-#, fuzzy, python-format
-#~ msgid "You are using a development version of %s"
-#~ msgstr "Pareces estar usando una versión de desarrollo de Nicotine+."
-
-#, fuzzy, python-format
-#~ msgid "You are using the latest version of %s"
-#~ msgstr "Estás usando la última versión de Nicotine+."
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Comprovar _Última Versión"
 
 #~ msgid "Prefer Dark _Mode"
 #~ msgstr "Preferir Modo _Oscuro"
@@ -6682,14 +6606,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "Sent to users as the reason for being banned."
 #~ msgstr "Se envía a los usuarios como razón por la cual se les ha vetado."
-
-#, fuzzy
-#~ msgid ""
-#~ "Once you interact with the application being away, status will be set to "
-#~ "online."
-#~ msgstr ""
-#~ "Una vez que interactúe con la aplicación ausente, el estado se "
-#~ "establecerá en línea."
 
 #~ msgid "Each user may queue a maximum of either:"
 #~ msgstr "Cada usuario puede poner en cola un máximo de:"
@@ -6736,14 +6652,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Kosovo"
 #~ msgstr "Kosovo"
 
-#, fuzzy
-#~ msgid "Unknown Network Interface"
-#~ msgstr "Interfaz de usuario"
-
-#, fuzzy
-#~ msgid "Listening Port Unavailable"
-#~ msgstr "Escuchando en el puerto %i"
-
 #, python-format
 #~ msgid ""
 #~ "The server seems to be down or not responding, retrying in %i seconds"
@@ -6784,60 +6692,15 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "_Auto-join Room"
 #~ msgstr "Unirse _Automáticamente a la Sala"
 
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Sintaxis:</b> Las letras no distinguen entre mayúsculas y minúsculas. "
-#~ "Todas las expresiones regulares de Python son compatibles si el escape "
-#~ "está desactivado. Para los filtros simples, se recomienda mantener el "
-#~ "escape activado."
-
 #~ msgid "Escaped"
 #~ msgstr "Carácter de escapado"
-
-#, fuzzy
-#~ msgid "Escape filter"
-#~ msgstr "Carácter de escapado"
-
-#, fuzzy
-#~ msgid "Enter a text pattern and what to replace it with"
-#~ msgstr "Ingrese el patrón de texto y el reemplazo, respectivamente:"
 
 #, python-format
 #~ msgid "%(num)s folders found before rescan, rebuilding…"
 #~ msgstr "%(num)s carpetas encontradas antes del reescaneo, reconstruyendo…"
 
-#, fuzzy, python-format
-#~ msgid "No listening port is available in the specified port range %s–%s"
-#~ msgstr ""
-#~ "No hay ningún puerto de escucha disponible en el intervalo de puertos "
-#~ "especificado %s–%s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Choose a range to select a listening port from. The first available port "
-#~ "in the range will be used."
-#~ msgstr ""
-#~ "Elija un rango para seleccionar un puerto de escucha. Se utilizará el "
-#~ "primer puerto disponible en el rango."
-
-#, fuzzy
-#~ msgid "First Port"
-#~ msgstr "Primer puerto"
-
 #~ msgid "to"
 #~ msgstr "a"
-
-#, fuzzy
-#~ msgid "Last Port"
-#~ msgstr "Último puerto"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %s or newer, please install it."
-#~ msgstr "No se encuentra %s, por favor instálalo."
 
 #~ msgid ""
 #~ "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -7010,43 +6873,8 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Browse shares of user"
 #~ msgstr "Explorar los compartidos del usuario"
 
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "Para un filtrado sensible al orden, así como para filtrar varias frases "
-#~ "exactas, se pueden utilizar barras verticales para separar frases y "
-#~ "palabras.\n"
-#~ "    Ejemplo: Spears|Brittany|Mi hermoso álbum|hola"
-
-#, fuzzy
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr ""
-#~ "Para excluir archivos que no sean de audio, use !0 en el filtro de "
-#~ "duración."
-
-#, fuzzy
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Filtra los archivos en función de los países de los usuarios."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "Para volver a ver los resultados completos, simplemente borre todos los "
-#~ "filtros activos."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr "Consulte las preferencias para conocer más opciones de filtrado."
-
 #~ msgid "File size"
 #~ msgstr "Tamaño del archivo"
-
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Limpiar todos los filtros activos"
 
 #~ msgid "Cycle through completions when pressing tab-key"
 #~ msgstr ""
@@ -7067,10 +6895,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "Save buddies' uploads to:"
 #~ msgstr "Guardar las subidas de los amigos en:"
-
-#, fuzzy
-#~ msgid "Use UPnP to forward listening port"
-#~ msgstr "Usar UPnP para redirigir el puerto de escucha (intervalo en horas):"
 
 #~ msgid ""
 #~ "Share folders with every Soulseek user or buddies, allowing contents to "
@@ -7132,10 +6956,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Playing now"
 #~ msgstr "Reproduciendo ahora"
 
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "No ha sido posible guardar el archivo %(path)s: %(error)s"
-
 #, python-format
 #~ msgid "Error code %(code)s: %(description)s"
 #~ msgstr "Código de error %(code)s: %(description)s"
@@ -7154,10 +6974,6 @@ msgstr "Equipo de Nicotine+"
 #, python-format
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "No existe el alias (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Límites de velocidad alternativos"
 
 #~ msgid "Aliases"
 #~ msgstr "Alias"
@@ -7189,10 +7005,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Limit upload speed to (KiB/s):"
 #~ msgstr "Limitar la velocidad de subida a (KiB/s):"
 
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Artículo de la lista de deseos encontrado"
-
 #~ msgid "Tabs show user status icons instead of status text"
 #~ msgstr ""
 #~ "Las pestañas muestran los iconos de estado del usuario en lugar del texto "
@@ -7216,14 +7028,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Añadir a la Lista de Amigos"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Limpiar todas las descargas marcadas con un estado específico."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Limpiar todas las subidas marcadas con un estado específico."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7512,14 +7316,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Ignorar dirección IP del usuario"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Borre todas las descargas que hayan terminado de transferirse o hayan "
-#~ "sido atrapadas por un filtro."
-
 #~ msgid "Usernames"
 #~ msgstr "Nombres de usuario"
 
@@ -7527,14 +7323,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgstr ""
 #~ "Mostrar el registro de mensajes de las salas de chat cuando se vuelva a "
 #~ "entrar a una sala"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Borre todas las cargas que hayan terminado de transferirse o que hayan "
-#~ "sido canceladas por el usuario remoto."
 
 #~ msgid "Queue Position"
 #~ msgstr "Posición en cola"
@@ -7546,10 +7334,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgstr ""
 #~ "El usuario %(user)s está buscando directamente «%(query)s», devolviéndose "
 #~ "%(num)i resultados"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVADO]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Muro de la sala (mensaje personal definido)"
@@ -7606,31 +7390,6 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "User:"
 #~ msgstr "Usuario:"
 
-#, fuzzy, python-format
-#~ msgid "All %(ext)s"
-#~ msgstr "Todos %(ext)s"
-
-#, fuzzy, python-format
-#~ msgid "%(number)2s files "
-#~ msgstr "Archivos %(number)2s "
-
-#, fuzzy
-#~ msgid "Allow regular expressions for the filter's include and exclude"
-#~ msgstr ""
-#~ "Permitir expresiones regulares para la inclusión y exclusión del filtro"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Salir"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Ver la pestaña principal anterior al inicio"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Activar los filtros de resultados de búsqueda por defecto"
-
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Cerrar Nicotine+?"
 
@@ -7639,10 +7398,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "Run in Background"
 #~ msgstr "Ejecutar en segundo plano"
-
-#, fuzzy
-#~ msgid "_Online Notify"
-#~ msgstr "Notificación en línea"
 
 #~ msgid "_Prioritize User"
 #~ msgstr "_Priorizar usuario"
@@ -7656,33 +7411,8 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Request IP Address"
 #~ msgstr "Solicitar dirección IP"
 
-#, fuzzy
-#~ msgid "Enter the name of the user whose IP address you want to see:"
-#~ msgstr "Introduzca el nombre de un usuario cuya dirección IP desea recibir:"
-
 #~ msgid "Downloaded"
 #~ msgstr "Descargado"
-
-#, fuzzy, python-format
-#~ msgid "Failed to add download %(filename)s to shared files: %(error)s"
-#~ msgstr ""
-#~ "No se ha podido añadir la descarga %(filename)s a los archivos "
-#~ "compartidos: %(error)s"
-
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Compartir automáticamente las descargas"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "El equivalente a añadir su carpeta de descargas como un recurso "
-#~ "compartido público, sin embargo, los archivos descargados en esta carpeta "
-#~ "serán automáticamente accesibles a otros (no se requiere volver a "
-#~ "escanear)."
 
 #~ msgid "Unable to Share Folder"
 #~ msgstr "No es posible compartir carpeta"
@@ -7696,55 +7426,15 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "The chosen folder is already shared"
 #~ msgstr "La carpeta elegida ya ha sido compartida"
 
-#, fuzzy
-#~ msgid "Set Virtual Name"
-#~ msgstr "Establecer nombre virtual"
-
 #, python-format
 #~ msgid "Enter virtual name for '%(dir)s':"
 #~ msgstr "Introduce nombre virtual para '%(dir)s':"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is either empty or already exists"
-#~ msgstr "El nombre virtual elegido está vacío o ya existe"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared."
-#~ msgstr "La carpeta elegida ya está compartida."
-
-#, fuzzy, python-format
-#~ msgid "%s Properties"
-#~ msgstr "Propiedades %s"
-
-#, fuzzy
-#~ msgid "Finished rescanning shares"
-#~ msgstr "Terminado el reescaneo de las acciones de los amigos"
-
-#, fuzzy
-#~ msgid "Plugin List"
-#~ msgstr "Lista de plugins"
-
-#, fuzzy, python-format
-#~ msgid "Error while scanning %(path)s: %(error)s"
-#~ msgstr "Error al escanear %(path)s: %(error)s"
-
-#, fuzzy
-#~ msgid "Show _Log Pane"
-#~ msgstr "Mostrar el panel _Log"
 
 #~ msgid "Addresses"
 #~ msgstr "Direcciones"
 
 #~ msgid "Handler"
 #~ msgstr "Manejador"
-
-#, fuzzy
-#~ msgid "Could not enable plugin."
-#~ msgstr "No se ha podido habilitar el plugin."
-
-#, fuzzy
-#~ msgid "Could not disable plugin."
-#~ msgstr "No se ha podido desactivar el plugin."
 
 #~ msgid "Transfers"
 #~ msgstr "Transferencias"
@@ -7758,54 +7448,8 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Censor & Replace"
 #~ msgstr "Censurar y reemplazar"
 
-#, fuzzy
-#~ msgid "Completion"
-#~ msgstr "Finalización"
-
 #~ msgid "Categories"
 #~ msgstr "Categorías"
-
-#, fuzzy
-#~ msgid "Upload Folder To…"
-#~ msgstr "Cargar carpeta a…"
-
-#, fuzzy
-#~ msgid "Upload Folder Recursive To…"
-#~ msgstr "Cargar carpeta recursiva a…"
-
-#, fuzzy
-#~ msgid "Download _Recursive"
-#~ msgstr "Descargar _Recursiva"
-
-#, fuzzy
-#~ msgid "Download R_ecursive To…"
-#~ msgstr "Descargar R_ecursive To…"
-
-#, fuzzy
-#~ msgid "Up_load File(s)"
-#~ msgstr "Subir_carga Archivo(s)"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Error while attempting to display folder '%(folder)s', reported error: "
-#~ "%(error)s"
-#~ msgstr ""
-#~ "Error al intentar mostrar la carpeta '%(folder)s', error reportado: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Seleccione el destino para descargar la carpeta con subcarpetas del "
-#~ "usuario"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr "Seleccione el destino para descargar una carpeta del usuario"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr "Seleccione el destino para descargar archivos del usuario"
 
 #~ msgid "Wishes"
 #~ msgstr "Deseos"
@@ -7816,170 +7460,17 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "prioritized"
 #~ msgstr "priorizado"
 
-#, fuzzy
-#~ msgid "Blocked IP Addresses"
-#~ msgstr "Direcciones IP bloqueadas"
-
-#, fuzzy
-#~ msgid "Complete buddy names"
-#~ msgstr "Completar los nombres de los compañeros"
-
-#, fuzzy
-#~ msgid "Complete usernames in chat rooms"
-#~ msgstr "Nombres de usuario completos en las salas de chat"
-
-#, fuzzy
-#~ msgid "Complete room names"
-#~ msgstr "Nombres completos de las habitaciones"
-
-#, fuzzy
-#~ msgid "Drop-down List"
-#~ msgstr "Lista desplegable"
-
-#, fuzzy
-#~ msgid "File Manager command ($ for file path):"
-#~ msgstr "Comando del administrador de archivos ($ para la ruta del archivo):"
-
-#, fuzzy
-#~ msgid "Media Player command ($ for file path):"
-#~ msgstr "Comando del reproductor multimedia ($ para la ruta del archivo):"
-
-#, fuzzy
-#~ msgid "Ignored IP Addresses"
-#~ msgstr "Direcciones IP ignoradas"
-
-#, fuzzy
-#~ msgid "Display timestamps"
-#~ msgstr "Mostrar marcas de tiempo"
-
-#, fuzzy
-#~ msgid "Notification Popups"
-#~ msgstr "Ventanas emergentes de notificación"
-
-#, fuzzy
-#~ msgid "Show notification popup when a file has finished downloading"
-#~ msgstr ""
-#~ "Mostrar una notificación emergente cuando un archivo ha terminado de "
-#~ "descargarse"
-
-#, fuzzy
-#~ msgid "Show notification popup when a folder has finished downloading"
-#~ msgstr ""
-#~ "Mostrar una notificación emergente cuando una carpeta ha terminado de "
-#~ "descargarse"
-
-#, fuzzy
-#~ msgid "Show notification popup when you receive a private message"
-#~ msgstr ""
-#~ "Mostrar ventana emergente de notificación cuando se recibe un mensaje "
-#~ "privado"
-
-#, fuzzy
-#~ msgid "Show notification popup when someone sends a message in a chat room"
-#~ msgstr ""
-#~ "Mostrar una notificación emergente cuando alguien envía un mensaje en una "
-#~ "sala de chat"
-
-#, fuzzy
-#~ msgid "Show notification popup when you are mentioned in a chat room"
-#~ msgstr ""
-#~ "Mostrar una notificación emergente cuando se le menciona en una sala de "
-#~ "chat"
-
-#, fuzzy
-#~ msgid "Tray"
-#~ msgstr "Bandeja"
-
-#, fuzzy
-#~ msgid ""
-#~ "Instances of $ will be replaced by the link. The default web browser of "
-#~ "the system will be used in cases where a protocol has not been configured."
-#~ msgstr ""
-#~ "Las instancias de $ serán sustituidas por el enlace. Se utilizará el "
-#~ "navegador web por defecto del sistema en los casos en que no se haya "
-#~ "configurado un protocolo."
-
 #~ msgid "Handler:"
 #~ msgstr "Manejador:"
 
-#, fuzzy
-#~ msgid "Primary Tabs"
-#~ msgstr "Pestañas primarias"
-
-#, fuzzy
-#~ msgid "Enable file path tooltips in search and transfer views"
-#~ msgstr ""
-#~ "Habilitar la información sobre la ruta de los archivos en las vistas de "
-#~ "búsqueda y transferencia"
-
-#, fuzzy
-#~ msgid ""
-#~ "Displays the complete file path of a search result or file transfer when "
-#~ "you hover a folder path or file name with your cursor."
-#~ msgstr ""
-#~ "Muestra la ruta completa de un resultado de búsqueda o de una "
-#~ "transferencia de archivos cuando se pasa el cursor por encima de una ruta "
-#~ "de carpeta o de un nombre de archivo."
-
-#, fuzzy
-#~ msgid "Show privately shared files in user shares"
-#~ msgstr ""
-#~ "Mostrar los archivos compartidos de forma privada en los recursos "
-#~ "compartidos de los usuarios"
-
-#, fuzzy
-#~ msgid ""
-#~ "Other clients may offer an option to send privately shared files when you "
-#~ "browse their shares. Folders containing such files are prefixed with "
-#~ "'[PRIVATE FOLDER]', and are not downloadable unless the uploader gives "
-#~ "explicit permission."
-#~ msgstr ""
-#~ "Otros clientes pueden ofrecer una opción para enviar archivos compartidos "
-#~ "de forma privada cuando se navega por sus recursos compartidos. Las "
-#~ "carpetas que contienen este tipo de archivos llevan el prefijo '[CARPETA "
-#~ "PRIVADA]', y no se pueden descargar a menos que el cargador dé su permiso "
-#~ "explícito."
-
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Censurar y reemplazar"
-
-#, fuzzy
-#~ msgid "Show _Debug Log Controls"
-#~ msgstr "Mostrar controles de registro de depuración"
-
-#, fuzzy
-#~ msgid "Debug Logging"
-#~ msgstr "Registro de depuración"
-
 #~ msgid "Virtual Name"
 #~ msgstr "Nombre virtual"
-
-#, fuzzy
-#~ msgid "Edit Virtual Name"
-#~ msgstr "Editar nombre virtual"
-
-#, fuzzy
-#~ msgid "Copy Folder URL"
-#~ msgstr "Copiar la URL de la carpeta"
-
-#, fuzzy
-#~ msgid "Download _To…"
-#~ msgstr "Bajar"
 
 #~ msgid "Download"
 #~ msgstr "Bajar"
 
 #~ msgid "Upload"
 #~ msgstr "Subir"
-
-#, fuzzy
-#~ msgid "Upload Folder's Contents"
-#~ msgstr "Cargar el contenido de la carpeta"
-
-#, fuzzy
-#~ msgid "Upload File(s)"
-#~ msgstr "Cargar archivo(s)"
 
 #~ msgid "Rename"
 #~ msgstr "Renombrar"
@@ -7992,18 +7483,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "R_emove Wish"
 #~ msgstr "R_emover deseo"
-
-#, fuzzy, python-format
-#~ msgid "It appears '%s' is not a directory, not loading plugins."
-#~ msgstr "Parece que '%s' no es un directorio, no carga los plugins."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Comenzando a leer los compartidos de amigos"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Terminado el reescaneo de las acciones de los amigos"
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -8020,214 +7499,20 @@ msgstr "Equipo de Nicotine+"
 #~ msgid "Client Version"
 #~ msgstr "Versión del cliente"
 
-#, fuzzy, python-format
-#~ msgid "How many days of privileges should user %s be gifted?"
-#~ msgstr "¿Cuántos días de privilegios debe tener el usuario %s?"
-
-#, fuzzy
-#~ msgid ""
-#~ "Buddies will have higher priority in the queue, the same as globally "
-#~ "privileged users."
-#~ msgstr ""
-#~ "Los amigos tendrán mayor prioridad en la cola, al igual que los usuarios "
-#~ "con privilegios globales."
-
-#, fuzzy
-#~ msgid "Privileged"
-#~ msgstr "Privilegiado"
-
 #~ msgid "_Privileged"
 #~ msgstr "_Privilegiado"
 
 #~ msgid "Comments"
 #~ msgstr "Comentarios"
 
-#, fuzzy
-#~ msgid "Edit _Comments…"
-#~ msgstr "Comentarios"
-
-#, fuzzy
-#~ msgid ""
-#~ "Creates subfolders based on the user you are downloading from, and stores "
-#~ "the downloaded file / folder there."
-#~ msgstr ""
-#~ "Crea subcarpetas basadas en el usuario que está descargando, y almacena "
-#~ "el archivo/carpeta descargado allí."
-
-#, fuzzy
-#~ msgid "Login Details"
-#~ msgstr "Datos de acceso"
-
-#, fuzzy
-#~ msgid "Advanced"
-#~ msgstr "Avanzado"
-
-#, fuzzy
-#~ msgid "Port mapping renewal interval in hours:"
-#~ msgstr "Intervalo de renovación de la asignación de puertos en horas:"
-
-#, fuzzy
-#~ msgid "Enable buddy-only shares"
-#~ msgstr "Activar las acciones de los amigos"
-
-#, fuzzy
-#~ msgid "Files will be uploaded in the order they were queued."
-#~ msgstr ""
-#~ "Los archivos se cargarán en el orden en que se hayan puesto en cola."
-
-#, fuzzy
-#~ msgid "Rescanning normal shares…"
-#~ msgstr "Releer compartidos"
-
-#, fuzzy
-#~ msgid "Finished rescanning public shares"
-#~ msgstr "Terminado el reescaneo de las acciones públicas"
-
 #~ msgid "Scanning Buddy Shares"
 #~ msgstr "Comenzando a leer los compartidos de amigos"
-
-#, fuzzy
-#~ msgid "_Rescan Public Shares"
-#~ msgstr "_Escanear las acciones públicas"
-
-#, fuzzy
-#~ msgid "Rescan B_uddy Shares"
-#~ msgstr "Reexaminar las acciones de B_uddy"
-
-#, fuzzy
-#~ msgid "Rescan Public Shares"
-#~ msgstr "Reexaminar las acciones públicas"
-
-#, fuzzy
-#~ msgid "Rescan Buddy Shares"
-#~ msgstr "Reexaminar las acciones de los amigos"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Activa las acciones privadas a las que sólo pueden acceder los usuarios "
-#~ "de tu lista de amigos. Si se desactiva, los usuarios solo podrán acceder "
-#~ "a tus recursos compartidos públicos."
-
-#, fuzzy
-#~ msgid "Mark each shared folder as buddy-only"
-#~ msgstr "Marcar cada carpeta compartida como de uso exclusivo de los amigos"
-
-#, fuzzy
-#~ msgid ""
-#~ "Overrides the per-share option, useful if you temporarily need to prevent "
-#~ "public access to shares."
-#~ msgstr ""
-#~ "Anula la opción por acción, útil si necesita impedir temporalmente el "
-#~ "acceso público a las acciones."
-
-#, fuzzy
-#~ msgid ""
-#~ "Only users marked as trusted on your buddy list can access your buddy-"
-#~ "only shares."
-#~ msgstr ""
-#~ "Sólo los usuarios marcados como de confianza en tu lista de amigos pueden "
-#~ "acceder a tus acciones sólo para amigos."
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ allows you to share folders directly from your computer. All "
-#~ "the contents of these folders (with the exception of dotfiles) can be "
-#~ "downloaded by other users on the Soulseek network. Public shares are "
-#~ "available for every user, while users in your buddy list can access buddy-"
-#~ "only shares in addition to public shares."
-#~ msgstr ""
-#~ "Nicotine+ le permite compartir carpetas directamente desde su ordenador. "
-#~ "Todo el contenido de estas carpetas (a excepción de los dotfiles) puede "
-#~ "ser descargado por otros usuarios de la red Soulseek. Los recursos "
-#~ "compartidos públicos están disponibles para todos los usuarios, mientras "
-#~ "que los usuarios de tu lista de amigos pueden acceder a los recursos "
-#~ "compartidos sólo para amigos, además de los recursos compartidos públicos."
-
-#, fuzzy
-#~ msgid "Filtered out excluded search result "
-#~ msgstr "Filtrado de los resultados de búsqueda excluidos "
-
-#, fuzzy
-#~ msgid "Filtered out inexact or incorrect search result "
-#~ msgstr "Filtrado de resultados de búsqueda inexactos o incorrectos "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-#~ msgstr ""
-#~ "El ajuste almacenado '%(key)s' ya no está presente en el plugin '%(name)s'"
-
-#, fuzzy, python-format
-#~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-#~ msgstr "El plugin %(module)s devuelve algo raro, '%(value)s', ignorando"
-
-#, fuzzy, python-format
-#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-#~ msgstr "Caché inconsistente para '%(vdir)s', reconstruyendo '%(dir)s'"
-
-#, fuzzy, python-format
-#~ msgid "Dropping missing folder %(dir)s"
-#~ msgstr "Soltando la carpeta que falta %(dir)s"
-
-#, fuzzy, python-format
-#~ msgid "All tickers / wall messages for %(room)s:"
-#~ msgstr "Todos los tickers / mensajes de muro para %(room)s:"
 
 #~ msgid "Set your personal ticker"
 #~ msgstr "Establecer su marcador personal"
 
-#, fuzzy
-#~ msgid "Show all the tickers"
-#~ msgstr "Mostrar todos los teletipos"
-
-#, fuzzy
-#~ msgid ""
-#~ "Failed to scan shares. If Nicotine+ is currently running, please close "
-#~ "the program before scanning."
-#~ msgstr ""
-#~ "No se han podido escanear las acciones. Si se está ejecutando Nicotine+, "
-#~ "cierre el programa antes de escanear."
-
 #~ msgid "Are you sure you wish to exit Nicotine+ at this time?"
 #~ msgstr "Está seguro de que quiere salir de Nicotine+ ahora?"
-
-#, fuzzy
-#~ msgid "Receive a User's IP Address"
-#~ msgstr "Recibir la dirección IP de un usuario"
-
-#, fuzzy
-#~ msgid "Receive a User's Info"
-#~ msgstr "Recibir información de un usuario"
-
-#, fuzzy
-#~ msgid "The server forbid us from doing wishlist searches."
-#~ msgstr "El servidor nos prohibió hacer búsquedas en la lista de deseos."
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Your shares database is corrupted. Please rescan your shares and report "
-#~ "any potential scanning issues to the developers. Error: %s"
-#~ msgstr ""
-#~ "Su base de datos de recursos compartidos está dañada. Por favor, vuelva a "
-#~ "escanear sus recursos compartidos e informe a los desarrolladores de "
-#~ "cualquier posible problema de escaneo. Error: %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Please keep in mind that certain usernames may be taken. If this is the "
-#~ "case, you will be prompted to change your username when connecting to the "
-#~ "network."
-#~ msgstr ""
-#~ "Por favor, tenga en cuenta que algunos nombres de usuario pueden estar "
-#~ "tomados. Si este es el caso, se le pedirá que cambie su nombre de usuario "
-#~ "cuando se conecte a la red."
-
-#, fuzzy
-#~ msgid "Enter the username of the person you to receive information about"
-#~ msgstr ""
-#~ "Introduzca el nombre de usuario de la persona de la que desea recibir "
-#~ "información"
 
 #~ msgid "Add user 'user' to your user list"
 #~ msgstr "Añadir usuario 'usuario' a la lista de amigos"
@@ -8237,26 +7522,6 @@ msgstr "Equipo de Nicotine+"
 
 #~ msgid "Request user info for user 'user'"
 #~ msgstr "Solicitar info de usuario para 'usuario'"
-
-#, fuzzy
-#~ msgid "Add user to your user list"
-#~ msgstr "Añadir un usuario a la lista de usuarios"
-
-#, fuzzy
-#~ msgid "Remove user from your user list"
-#~ msgstr "Eliminar un usuario de su lista de usuarios"
-
-#, fuzzy
-#~ msgid "Respond to search requests containing minimum character count:"
-#~ msgstr ""
-#~ "Responder a las solicitudes de búsqueda que contengan un número mínimo de "
-#~ "caracteres:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Queued users will be uploaded one file at a time in a cyclical fashion."
-#~ msgstr ""
-#~ "Los usuarios en cola se cargarán un archivo a la vez de forma cíclica."
 
 #~ msgid "Find..."
 #~ msgstr "Buscar..."

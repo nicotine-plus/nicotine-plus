@@ -4889,7 +4889,7 @@ msgid ""
 "not show any 'Remix Instrumental'"
 msgstr ""
 "Le Maiuscole/minuscole sono ignorate, ma l'ordine delle parole rimane "
-"importante: \"Spears Britney\" non mostrerà alcuna \"Britney Spears\""
+"importante: 'Instrumental Remix' non mostrerà alcuna 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 msgid ""
@@ -6092,9 +6092,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Impossibile salvare %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Utenti Fidati"
 
@@ -6465,17 +6462,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "_Auto-join Room"
 #~ msgstr "Auto-partecipa nel Canale"
 
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Sintassi:</b> Le lettere non fanno distinzione tra Maiusc/Minusc. Sono "
-#~ "supportate tutte le espressioni regolari di Python con caratteri di "
-#~ "escape disabilitati. Per filtri semplici, si consiglia di attivare i "
-#~ "caratteri di escape."
-
 #~ msgid "Escaped"
 #~ msgstr "Con Carattere di Escape"
 
@@ -6686,33 +6672,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Browse shares of user"
 #~ msgstr "Sfoglia condivisi dell'utente"
 
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "Per il filtraggio insensibile all'ordine, oltre a filtrare diverse frasi "
-#~ "esatte, è possibile utilizzare il carattere | (pipe) per separare frasi e "
-#~ "parole.\n"
-#~ "    Esempio: Spears|Britney|Il mio bellissimo album|ciao"
-
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr "Per escludere i file non audio, usa !0 nel filtro della durata."
-
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Filtra i file in base alla posizione geografica degli utenti."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "Per visualizzare nuovamente i risultati completi, è sufficiente "
-#~ "cancellare tutti i filtri attivi."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr "Consulta le preferenze per ulteriori opzioni di filtro."
-
 #~ msgid "File size"
 #~ msgstr "Dimensione file"
 
@@ -6800,10 +6759,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Playing now"
 #~ msgstr "Sta Ascoltando"
 
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Impossibile aprire il percorso file %(path)s: %(error)s"
-
 #, python-format
 #~ msgid "Error code %(code)s: %(description)s"
 #~ msgstr "Codice di errore %(code)s: %(description)s"
@@ -6822,10 +6777,6 @@ msgstr "Comandi di Nicotine+"
 #, python-format
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Nessun alias (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Limiti Alternativi Velocità"
 
 #~ msgid "Aliases"
 #~ msgstr "Alias"
@@ -6857,10 +6808,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Limit upload speed to (KiB/s):"
 #~ msgstr "Limita velocità upload a (KiB/s):"
 
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Elemento della lista dei desideri trovato"
-
 #~ msgid "Tabs show user status icons instead of status text"
 #~ msgstr ""
 #~ "Le schede mostrano le icone di stato dell'utente invece del testo di stato"
@@ -6882,14 +6829,6 @@ msgstr "Comandi di Nicotine+"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Aggiungi a Lista Amici"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Cancella ogni download contrassegnato con uno stato specifico."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Cancella ogni caricamento contrassegnato con uno stato specifico."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7179,27 +7118,11 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Ignora Indirizzo IP dell' Utente"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Cancella ogni download che ha terminato il trasferimento o è stato "
-#~ "catturato da un filtro."
-
 #~ msgid "Usernames"
 #~ msgstr "Nomi utente"
 
 #~ msgid "Display logged chat room messages when a room is rejoined"
 #~ msgstr "Mostra i messaggi registrati nelle chat quando si entra in una chat"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Cancella ogni caricamento che ha terminato il trasferimento o è stato "
-#~ "annullato dall'utente remoto."
 
 #~ msgid "Queue Position"
 #~ msgstr "Posizione in Coda"
@@ -7211,10 +7134,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgstr ""
 #~ "L'utente %(user)s sta cercando direttamente %(query)s\", ottenuti %(num)i "
 #~ "risultati"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVATO]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Bacheca canale (messaggio personale impostato)"
@@ -7252,14 +7171,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Search Wishlist"
 #~ msgstr "Ricerca Lista Desideri"
 
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "In uscita da Nicotine+ %(version)s, %(status)s…"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Usare Python %(py_version)s"
-
 #, python-format
 #~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
 #~ msgstr "In uscita da Nicotine+ %(version)s, %(status)s…"
@@ -7282,18 +7193,6 @@ msgstr "Comandi di Nicotine+"
 #~ msgid "Allow regular expressions for the filter's include and exclude"
 #~ msgstr ""
 #~ "Permetti espressioni regolari per i filtri di inclusione e esclusione"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Esci"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Seleziona scheda precedente all'avvio"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Abilita, come predefinito, i filtri su risultati di ricerca"
 
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Chiudere Nicotine+?"
@@ -7549,10 +7448,6 @@ msgstr "Comandi di Nicotine+"
 #~ "essere scaricate a meno che l'autore dell'upload non dia "
 #~ "un'autorizzazione esplicita."
 
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Censura & Sostituisci"
-
 #~ msgid "Show _Debug Log Controls"
 #~ msgstr "Mostra Controlli Registro Debug"
 
@@ -7595,14 +7490,6 @@ msgstr "Comandi di Nicotine+"
 #, python-format
 #~ msgid "It appears '%s' is not a directory, not loading plugins."
 #~ msgstr "'%s' non è una cartella, estensioni non caricate."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Indicizzazione condivisi con amici…"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Indicizzazione dei condivisi con amici completata"
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -7684,13 +7571,6 @@ msgstr "Comandi di Nicotine+"
 
 #~ msgid "Rescan Buddy Shares"
 #~ msgstr "Indicizza Condivisi con Amici"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Abilita condivisi privati a cui possono accedere solo gli utenti del tuo "
-#~ "elenco di amici. Se disabilitato, gli utenti potranno accedere solo ai "
-#~ "condivisi con tutti."
 
 #~ msgid "Mark each shared folder as buddy-only"
 #~ msgstr "Spunta ogni cartella condivisa come solo con amici"

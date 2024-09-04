@@ -6127,9 +6127,6 @@ msgstr "Nikotin+ Befehle"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Kann %(filename)s nicht speichern: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Vertrauenswürdige Freunde"
 
@@ -6936,17 +6933,6 @@ msgstr "Nikotin+ Befehle"
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Zur Freundesliste hinzufügen"
 
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr ""
-#~ "Alle Downloads, die mit einem bestimmten Status gekennzeichnet sind, "
-#~ "löschen."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr ""
-#~ "Jeden Upload, der mit einem bestimmten Status markiert ist, löschen."
-
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
 #~ "Verwendung eines nicht standardmäßigen Benutzerdatenverzeichnisses, z. B. "
@@ -7274,10 +7260,6 @@ msgstr "Nikotin+ Befehle"
 
 #~ msgid "Edit"
 #~ msgstr "Bearbeiten"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVATGELÄNDE]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Raumwand (persönliches Nachrichtenset)"

@@ -6146,9 +6146,6 @@ msgstr "Commandes Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Impossible de sauvegarder %(filename)s : %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Amis de confiance"
 
@@ -6355,10 +6352,6 @@ msgstr "Commandes Nicotine+"
 #~ "Impossible de trouver %(option1)s ou %(option2)s, veuillez installer l'un "
 #~ "ou l'autre."
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s répertoires trouvés après réexamen"
-
 #, python-format
 #~ msgid "Failed to process the following databases: %(names)s"
 #~ msgstr "Échec du traitement des bases de données suivantes : %(names)s"
@@ -6369,10 +6362,6 @@ msgstr "Commandes Nicotine+"
 
 #~ msgid "Quit / Run in Background"
 #~ msgstr "Quitter/exécuter en arrière-plan"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Plage de ports d'écoute :"
 
 #~ msgid "Network interface:"
 #~ msgstr "Interface réseau :"
@@ -6530,17 +6519,6 @@ msgstr "Commandes Nicotine+"
 
 #~ msgid "_Auto-join Room"
 #~ msgstr "Rejoindre automatiquement le salon"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Syntax  : </b> Les lettres sont insensibles à la casse. Toutes les "
-#~ "expressions régulières Python sont prises en charge si l'indentation est "
-#~ "désactivée. Pour les filtres simples, il est recommandé de laisser "
-#~ "l'indentation activée."
 
 #~ msgid "Escaped"
 #~ msgstr "Sélection des filtres (echap.)"
@@ -6952,14 +6930,6 @@ msgstr "Commandes Nicotine+"
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Ajouter à la liste d'amis"
 
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Effacer tous les téléchargements avec un statut spécifique."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Effacer tous les envois avec un statut spécifique."
-
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
 #~ "utiliser un répertoire de données utilisateur spécifique pour, par "
@@ -7249,14 +7219,6 @@ msgstr "Commandes Nicotine+"
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Ignorer l'adresse IP de l'utilisateur"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Effacez tous les téléchargements dont le transfert est terminé ou qui ont "
-#~ "été interceptés par un filtre."
-
 #~ msgid "Usernames"
 #~ msgstr "Utilisateurs"
 
@@ -7264,14 +7226,6 @@ msgstr "Commandes Nicotine+"
 #~ msgstr ""
 #~ "Afficher les messages enregistrés des salons des discussions lorsqu'on y "
 #~ "accède"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Effacez tous les téléchargements dont le transfert est terminé ou annulés "
-#~ "par l'utilisateur distant."
 
 #~ msgid "Queue Position"
 #~ msgstr "Position dans la file d'attente"
@@ -7283,10 +7237,6 @@ msgstr "Commandes Nicotine+"
 #~ msgstr ""
 #~ "L'utilisateur %(user)s effectue une recherche directe sur « %(query)s », "
 #~ "%(num)i résultats renvoyés"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[PRIVÉ]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Liste des salons (message personnel défini)"
@@ -7324,14 +7274,6 @@ msgstr "Commandes Nicotine+"
 #~ msgid "Search Wishlist"
 #~ msgstr "Recherche des listes de souhaits"
 
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Arrêter Nicotine+ %(version)s, %(status)s…"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Utiliser Python %(py_version)s"
-
 #, python-format
 #~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
 #~ msgstr "Arrêter Nicotine+ %(version)s, %(status)s…"
@@ -7355,18 +7297,6 @@ msgstr "Commandes Nicotine+"
 #~ msgstr ""
 #~ "Autoriser les expressions régulières pour l'inclusion et l'exclusion du "
 #~ "filtre"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Quitter"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Afficher le dernier onglet principal ouvert au démarrage"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Activer les filtres de résultats de recherche par défaut"
 
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Fermer Nicotine+  ?"
@@ -7512,24 +7442,6 @@ msgstr "Commandes Nicotine+"
 #~ msgstr ""
 #~ "Erreur à l'affichage du répertoire %(folder)s, erreur remontée : %(error)s"
 
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Sélectionnez la destination pour le téléchargement du dossier avec les "
-#~ "sous-dossiers de l'utilisateur"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr ""
-#~ "Sélectionnez la destination pour le téléchargement d'un dossier à partir "
-#~ "de l'utilisateur"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr ""
-#~ "Sélectionnez la destination pour télécharger le(s) fichier(s) de "
-#~ "l'utilisateur"
-
 #~ msgid "Wishes"
 #~ msgstr "Souhaits"
 
@@ -7640,10 +7552,6 @@ msgstr "Commandes Nicotine+"
 #~ "préfixe \"[DOSSIER PRIVÉ]\" et ne peuvent être téléchargés qu'avec "
 #~ "l'autorisation explicite de l'expéditeur."
 
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Censure et remplacement"
-
 #~ msgid "Show _Debug Log Controls"
 #~ msgstr "Afficher les contrôles du journal de débogage"
 
@@ -7688,14 +7596,6 @@ msgstr "Commandes Nicotine+"
 #~ msgstr ""
 #~ "« %s » ne semble pas être un répertoire, les extensions ne seront pas "
 #~ "chargées."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Réexamen des partages pour amis…"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Réexamen des partages pour amis terminé"
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -7780,13 +7680,6 @@ msgstr "Commandes Nicotine+"
 
 #~ msgid "Rescan Buddy Shares"
 #~ msgstr "Réexaminer les partages pour amis"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Active les partages privés auxquels seuls les utilisateurs de votre liste "
-#~ "d'amis peuvent accéder. S'il est désactivé, les utilisateurs pourront "
-#~ "uniquement accéder à vos partages publics."
 
 #~ msgid "Mark each shared folder as buddy-only"
 #~ msgstr "Marquer chaque dossier partagé comme étant réservé aux amis"

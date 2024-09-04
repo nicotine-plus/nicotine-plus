@@ -5949,9 +5949,6 @@ msgstr "Nicotine+ 指令"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "无法保存 %(filename)s：%(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "可信的朋友"
 
@@ -6133,10 +6130,6 @@ msgstr "Nicotine+ 指令"
 #~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 #~ msgstr "找不到 %(option1)s 或 %(option2)s，请安装其中一个。"
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s 在重新扫描、重建之前找到的文件夹…"
-
 #, python-format
 #~ msgid "Failed to process the following databases: %(names)s"
 #~ msgstr "无法处理以下数据库：%(names)s"
@@ -6147,10 +6140,6 @@ msgstr "Nicotine+ 指令"
 
 #~ msgid "Quit / Run in Background"
 #~ msgstr "退出/在后台运行"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "监听端口范围："
 
 #~ msgid "Network interface:"
 #~ msgstr "网络界面："
@@ -6178,10 +6167,6 @@ msgstr "Nicotine+ 指令"
 #, python-format
 #~ msgid "You are using the latest version of %s"
 #~ msgstr "您正在使用最新版本 %s"
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "检查_最新版本"
 
 #~ msgid "Prefer Dark _Mode"
 #~ msgstr "喜欢黑暗模式"
@@ -6302,15 +6287,6 @@ msgstr "Nicotine+ 指令"
 
 #~ msgid "_Auto-join Room"
 #~ msgstr "_自动加入房间"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b> 语法：</b> 字母不区分大小写。如果禁用转义，则支持所有 Python 正则表达"
-#~ "式。对于简单的过滤器，建议保持启用转义。"
 
 #~ msgid "Escaped"
 #~ msgstr "逃脱"
@@ -6605,126 +6581,14 @@ msgstr "Nicotine+ 指令"
 #~ msgid "User(s)"
 #~ msgstr "用户"
 
-#, fuzzy, python-format
-#~ msgid "Alias \"%s\" returned nothing"
-#~ msgstr "别名“%s”什么也没返回"
-
-#, fuzzy
-#~ msgid "Alternative Speed Limits"
-#~ msgstr "替代速度限制"
-
-#, fuzzy
-#~ msgid "Last played"
-#~ msgstr "最后播放"
-
-#, fuzzy
-#~ msgid "Playing now"
-#~ msgstr "现在播放"
-
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "无法保存文件 %(path)s：%(error)s"
-
-#, fuzzy, python-format
-#~ msgid "Error code %(code)s: %(description)s"
-#~ msgstr "错误代码 %(code)s：%(description)s"
-
-#, fuzzy, python-format
-#~ msgid "No such alias (%s)"
-#~ msgstr "没有这样的别名 (%s)"
-
-#, fuzzy
-#~ msgid "Aliases:"
-#~ msgstr "别名："
-
-#, fuzzy, python-format
-#~ msgid "Removed alias %(alias)s: %(action)s\n"
-#~ msgstr "移除别名 %(alias)s: %(action)s\n"
-
-#, fuzzy, python-format
-#~ msgid "No such alias (%(alias)s)\n"
-#~ msgstr "没有这样的别名 (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "替代速度限制"
-
-#, fuzzy
-#~ msgid "Aliases"
-#~ msgstr "别名"
-
-#, fuzzy
-#~ msgid "/alias /al 'command' 'definition'"
-#~ msgstr "/alias /al '命令' '定义'"
-
-#, fuzzy
-#~ msgid "Add a new alias"
-#~ msgstr "添加新别名"
-
-#, fuzzy
-#~ msgid "/unalias /un 'command'"
-#~ msgstr "/unalias /un '命令'"
-
-#, fuzzy
-#~ msgid "Remove an alias"
-#~ msgstr "删除别名"
-
-#, fuzzy
-#~ msgid "Chat History"
-#~ msgstr "聊天记录"
-
 #~ msgid "Command aliases"
 #~ msgstr "命令别名"
-
-#, fuzzy
-#~ msgid "Limit download speed to (KiB/s):"
-#~ msgstr "将下载速度限制为 (KiB/s)："
-
-#, fuzzy
-#~ msgid "Author(s):"
-#~ msgstr "作者："
-
-#, fuzzy
-#~ msgid "Limit upload speed to (KiB/s):"
-#~ msgstr "将上传速度限制为 (KiB/s)："
-
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "找到心愿单项目"
-
-#, fuzzy
-#~ msgid "Tabs show user status icons instead of status text"
-#~ msgstr "选项卡显示用户状态图标而不是状态文本"
-
-#, fuzzy
-#~ msgid "Show file path tooltips in file list views"
-#~ msgstr "在文件列表视图中显示文件路径工具提示"
-
-#, fuzzy
-#~ msgid "Colored and clickable usernames"
-#~ msgstr "彩色和可点击的用户名"
-
-#, fuzzy
-#~ msgid "Notification changes the tab's text color"
-#~ msgstr "通知更改选项卡的文本颜色"
 
 #~ msgid "Cancel"
 #~ msgstr "取消"
 
 #~ msgid "OK"
 #~ msgstr "确定"
-
-#, fuzzy
-#~ msgid "_Add to Buddy List"
-#~ msgstr "_添加到好友列表"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "清除所有标有特定状态的下载。"
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "清除所有标有特定状态的上传。"
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr "为如下载列表等使用非默认用户数据目录，"
@@ -6761,137 +6625,8 @@ msgstr "Nicotine+ 指令"
 #~ msgid "Finished / Aborted"
 #~ msgstr "完成/中止"
 
-#, fuzzy
-#~ msgid "Close tab"
-#~ msgstr "关闭标签"
-
-#, fuzzy, python-format
-#~ msgid "You've been mentioned in the %(room)s room"
-#~ msgstr "你在 %(room)s 房间被提及"
-
-#, fuzzy, python-format
-#~ msgid "Command %s is not recognized"
-#~ msgstr "命令 %s 无法识别"
-
-#, fuzzy, python-format
-#~ msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
-#~ msgstr "（警告：%(realuser)s 试图欺骗 %(fakeuser)s） "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "The network interface you specified, '%s', does not exist. Change or "
-#~ "remove the specified network interface and restart Nicotine+."
-#~ msgstr ""
-#~ "您指定的网络接口“%s”不存在。更改或删除指定的网络接口并重新启动 Nicotine+。"
-
-#, fuzzy
-#~ msgid ""
-#~ "The range you specified for client connection ports was {}-{}, but none "
-#~ "of these were usable. Increase and/or "
-#~ msgstr "您为客户端连接端口指定的范围是 {}-{}，但没有一个可用。增加和/或 "
-
-#, fuzzy
-#~ msgid ""
-#~ "Note that part of your range lies below 1024, this is usually not allowed "
-#~ "on most operating systems with the exception of Windows."
-#~ msgstr ""
-#~ "请注意，您的部分范围低于 1024，除 Windows 外，大多数操作系统通常不允许这样"
-#~ "做。"
-
-#, fuzzy, python-format
-#~ msgid "Rescan progress: %s"
-#~ msgstr "重新扫描进度：%s"
-
-#, fuzzy, python-format
-#~ msgid "OS error: %s"
-#~ msgstr "操作系统错误：%s"
-
-#, fuzzy
-#~ msgid "UPnP is not available on this network"
-#~ msgstr "UPnP 在此网络上不可用"
-
-#, fuzzy, python-format
-#~ msgid "Failed to map the external WAN port: %(error)s"
-#~ msgstr "外接WAN口映射失败：%(error)s"
-
-#, fuzzy
-#~ msgid "Room wall"
-#~ msgstr "房间墙壁"
-
-#, fuzzy
-#~ msgid ""
-#~ "The default listening port '2234' works fine in most cases. If you need "
-#~ "to use a different port, you will be able to modify it in the preferences "
-#~ "later."
-#~ msgstr ""
-#~ "在大多数情况下，默认侦听端口“2234”可以正常工作。如果您需要使用不同的端口，"
-#~ "您可以稍后在首选项中进行修改。"
-
-#, fuzzy
-#~ msgid "Show users with similar interests"
-#~ msgstr "显示具有相似兴趣的用户"
-
-#, fuzzy
-#~ msgid "Menu"
-#~ msgstr "菜单"
-
-#, fuzzy
-#~ msgid "Expand / Collapse all"
-#~ msgstr "展开/折叠所有"
-
-#, fuzzy
-#~ msgid "Configure shares"
-#~ msgstr "配置共享"
-
-#, fuzzy
-#~ msgid "Create or join room…"
-#~ msgstr "创建或加入房间…"
-
-#, fuzzy
-#~ msgid "_Room List"
-#~ msgstr "_房间列表"
-
-#, fuzzy
-#~ msgid "Enable alternative download and upload speed limits"
-#~ msgstr "启用替代下载和上传速度限制"
-
-#, fuzzy
-#~ msgid "Show log history"
-#~ msgstr "显示日志历史"
-
-#, fuzzy
-#~ msgid "Result grouping mode"
-#~ msgstr "结果分组方式"
-
-#, fuzzy
-#~ msgid "Free slot"
-#~ msgstr "免费插槽"
-
-#, fuzzy
-#~ msgid "Save shares list to disk"
-#~ msgstr "将共享列表保存到磁盘"
-
 #~ msgid "_Away"
 #~ msgstr "_离开"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load ui file %(file)s: %(error)s"
-#~ msgstr "加载ui文件失败%(file)s：%(error)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Attempting to reset index of shared files due to an error. Please rescan "
-#~ "your shares."
-#~ msgstr "由于错误而尝试重置共享文件的索引。请重新扫描您的股票。"
-
-#, fuzzy
-#~ msgid ""
-#~ "File index of shared files could not be accessed. This could occur due to "
-#~ "several instances of Nicotine+ being active simultaneously, file "
-#~ "permission issues, or another issue in Nicotine+."
-#~ msgstr ""
-#~ "无法访问共享文件的文件索引。这可能是由于多个 Nicotine+ 实例同时处于活动状"
-#~ "态、文件权限问题或 Nicotine+ 中的另一个问题。"
 
 #~ msgid "Nicotine+ is a Soulseek client"
 #~ msgstr "Nicotine+ 是 Soulseek 客户端"
@@ -6924,96 +6659,8 @@ msgstr "Nicotine+ 指令"
 #~ msgid "Picture not saved, %s already exists."
 #~ msgstr "图片未保存，%s 已存在。"
 
-#, fuzzy
-#~ msgid "_Open"
-#~ msgstr "_打开"
-
-#, fuzzy
-#~ msgid "_Save"
-#~ msgstr "_保存"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load plugin '%s', could not find it."
-#~ msgstr "无法加载插件“%s”，找不到它。"
-
-#, fuzzy, python-format
-#~ msgid "I/O error: %s"
-#~ msgstr "输入/输出错误：%s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to open file path: %s"
-#~ msgstr "打开文件路径失败：%s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to open URL: %s"
-#~ msgstr "打开网址失败：%s"
-
-#, fuzzy
-#~ msgid "_Log Conversation"
-#~ msgstr "_记录对话"
-
-#, fuzzy
-#~ msgid "Result Filter List"
-#~ msgstr "结果过滤器列表"
-
-#, fuzzy
-#~ msgid "Prepend < or > to find files less/greater than the given value."
-#~ msgstr "添加 < 或 > 以查找小于/大于给定值的文件。"
-
-#, fuzzy
-#~ msgid ""
-#~ "VBR files display their average bitrate and are typically lower in "
-#~ "bitrate than a compressed 320 kbps CBR file of the same audio quality."
-#~ msgstr ""
-#~ "VBR 文件显示其平均比特率，并且比特率通常低于相同音频质量的压缩 320 kbps "
-#~ "CBR 文件。"
-
-#, fuzzy
-#~ msgid "Like Size above, =, <, and > can be used."
-#~ msgstr "与上面的 Size 一样，可以使用 =、< 和 >。"
-
-#, fuzzy
-#~ msgid ""
-#~ "Prevent write access by other programs for files being downloaded (turn "
-#~ "off for NFS)"
-#~ msgstr "防止其他程序对正在下载的文件进行写访问（对 NFS 关闭）"
-
-#, fuzzy
-#~ msgid "Where incomplete downloads are temporarily stored."
-#~ msgstr "临时存储不完整下载的位置。"
-
-#, fuzzy
-#~ msgid ""
-#~ "Where buddies' uploads will be stored (with a subfolder created for each "
-#~ "buddy)."
-#~ msgstr "将存储好友上传的内容（为每个好友创建一个子文件夹）。"
-
-#, fuzzy
-#~ msgid "Toggle away status after minutes of inactivity:"
-#~ msgstr "几分钟不活动后切换状态："
-
-#, fuzzy
-#~ msgid "Protocol:"
-#~ msgstr "协议："
-
-#, fuzzy
-#~ msgid "Icon theme folder (requires restart):"
-#~ msgstr "图标主题文件夹（需要重启）："
-
 #~ msgid "Establishing connection"
 #~ msgstr "建立中的连接"
 
 #~ msgid "Clear Groups"
 #~ msgstr "清除组"
-
-#, fuzzy
-#~ msgid "_Reset Statistics…"
-#~ msgstr "_重置统计…"
-
-#, fuzzy
-#~ msgid "Clear _Downloads…"
-#~ msgstr "清除_下载…"
-
-#, fuzzy
-#~ msgid "Clear Uploa_ds…"
-#~ msgstr "清除Upload_ds…"

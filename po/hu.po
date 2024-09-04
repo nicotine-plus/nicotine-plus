@@ -6098,9 +6098,6 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "A(z) %(filename)s nem menthető: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Megbízható barátok"
 
@@ -7022,63 +7019,17 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Nincs ilyen álnév (%(alias)s)\n"
 
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Alternatív sebességkorlátozások"
-
 #~ msgid "Aliases"
 #~ msgstr "Álnevek"
-
-#, fuzzy
-#~ msgid "/alias /al 'command' 'definition'"
-#~ msgstr "/alias /al 'parancs' 'definíció'"
 
 #~ msgid "Add a new alias"
 #~ msgstr "Új álnév hozzáadása"
 
-#, fuzzy
-#~ msgid "/unalias /un 'command'"
-#~ msgstr "/unalias /un 'parancs'"
-
 #~ msgid "Remove an alias"
 #~ msgstr "Egy álnév eltávolítása"
 
-#, fuzzy
-#~ msgid "Chat History"
-#~ msgstr "Csevegés története"
-
-#, fuzzy
-#~ msgid "Command aliases"
-#~ msgstr "Álnév parancsok kiegészítése"
-
-#, fuzzy
-#~ msgid "Limit download speed to (KiB/s):"
-#~ msgstr "Teljes letöltési sebesség limitálása ennyi kB/s-re:"
-
 #~ msgid "Author(s):"
 #~ msgstr "Szerző(k):"
-
-#, fuzzy
-#~ msgid "Limit upload speed to (KiB/s):"
-#~ msgstr "Feltöltési sebesség korlátozása erre:"
-
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Kívánságlista elem található"
-
-#, fuzzy
-#~ msgid "Tabs show user status icons instead of status text"
-#~ msgstr "Megjeleníti a felhasználói állapotikonokat az állapotszöveg helyett"
-
-#, fuzzy
-#~ msgid "Show file path tooltips in file list views"
-#~ msgstr ""
-#~ "A fájl elérési útvonalára vonatkozó tooltipek engedélyezése a keresési és "
-#~ "átviteli nézetekben"
-
-#, fuzzy
-#~ msgid "Colored and clickable usernames"
-#~ msgstr "Színes és kattintható felhasználónevek"
 
 #~ msgid "Notification changes the tab's text color"
 #~ msgstr "Figyelmeztetés megváltoztatja a fül szövegszínét"
@@ -7091,17 +7042,6 @@ msgstr "Nicotine+ parancsok"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "(_A) Hozzáadás a barátlistához"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr ""
-#~ "Törölje az összes letöltést, amely meghatározott állapottal van "
-#~ "megjelölve."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr ""
-#~ "Töröljön minden feltöltést, amely meghatározott állapottal van megjelölve."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7221,28 +7161,12 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Create or join room…"
 #~ msgstr "Szoba létrehozása vagy csatlakozás…"
 
-#, fuzzy
-#~ msgid "_Room List"
-#~ msgstr "Szobák"
-
 #~ msgid "Enable alternative download and upload speed limits"
 #~ msgstr ""
 #~ "Alternatív letöltési és feltöltési sebességkorlátozások engedélyezése"
 
-#, fuzzy
-#~ msgid "Show log history"
-#~ msgstr "_Naplóablak mutatása"
-
-#, fuzzy
-#~ msgid "Result grouping mode"
-#~ msgstr "Eredmény csoportosítási mód"
-
 #~ msgid "Free slot"
 #~ msgstr "Szabad szál"
-
-#, fuzzy
-#~ msgid "Save shares list to disk"
-#~ msgstr "Megosztás csak barátoknak"
 
 #~ msgid "_Away"
 #~ msgstr "_Távol"
@@ -7325,57 +7249,14 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "_Log Conversation"
 #~ msgstr "Beszélgetés naplózása (_L)"
 
-#, fuzzy
-#~ msgid "Result Filter List"
-#~ msgstr "Eredményszűrő lista"
-
-#, fuzzy
-#~ msgid "Prepend < or > to find files less/greater than the given value."
-#~ msgstr ""
-#~ "A < vagy > előtaggal az értéknél kisebb/nagyobb vagy azzal egyenlő fájlok "
-#~ "kereséséhez."
-
-#, fuzzy
-#~ msgid ""
-#~ "VBR files display their average bitrate and are typically lower in "
-#~ "bitrate than a compressed 320 kbps CBR file of the same audio quality."
-#~ msgstr ""
-#~ "A VBR fájlok átlagos bitrátaértéket mutatnak, és jellemzően alacsonyabb "
-#~ "bitrátaértékkel rendelkeznek, mint az azonos hangminőségű, tömörített 320 "
-#~ "kbps CBR fájl."
-
-#, fuzzy
-#~ msgid "Like Size above, =, <, and > can be used."
-#~ msgstr "A fenti Size-hoz hasonlóan a =, < és > is használható."
-
-#, fuzzy
-#~ msgid ""
-#~ "Prevent write access by other programs for files being downloaded (turn "
-#~ "off for NFS)"
-#~ msgstr ""
-#~ "Más programok írási hozzáférésének megakadályozása a letöltött fájlokhoz "
-#~ "(kikapcsolása NFS esetén)"
-
 #~ msgid "Where incomplete downloads are temporarily stored."
 #~ msgstr "Ahol a befejezetlen letöltések ideiglenesen tárolva vannak."
-
-#, fuzzy
-#~ msgid ""
-#~ "Where buddies' uploads will be stored (with a subfolder created for each "
-#~ "buddy)."
-#~ msgstr ""
-#~ "Ahol a haverok feltöltései tárolódnak (minden egyes haver számára "
-#~ "létrehozott almappával)."
 
 #~ msgid "Toggle away status after minutes of inactivity:"
 #~ msgstr "Kikapcsolási állapot perc inaktivitás után:"
 
 #~ msgid "Protocol:"
 #~ msgstr "Protokoll:"
-
-#, fuzzy
-#~ msgid "Icon theme folder (requires restart):"
-#~ msgstr "Ikon téma mappa (újraindítást igényel):"
 
 #~ msgid "Establishing connection"
 #~ msgstr "Kapcsolat létesítése"
@@ -7395,56 +7276,12 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Clear Uploa_ds…"
 #~ msgstr "Feltöltések törlése…"
 
-#, fuzzy
-#~ msgid "Block User's IP Address"
-#~ msgstr "User IP-címének b_lokkolása"
-
-#, fuzzy
-#~ msgid "Ignore User's IP Address"
-#~ msgstr "User IP-címének mellőzése"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Töröljön minden olyan letöltést, amelynek átvitele befejeződött, vagy "
-#~ "amelyeket egy szűrő elkapott."
-
-#, fuzzy
-#~ msgid "Usernames"
-#~ msgstr "Felhasználónév"
-
 #~ msgid "Display logged chat room messages when a room is rejoined"
 #~ msgstr ""
 #~ "Naplózott chatszoba üzenetek megjelenítése, ha egy szoba újracsatlakozik"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Töröljön minden olyan feltöltést, amelynek az átvitele befejeződött, vagy "
-#~ "amelyeket a távoli felhasználó törölt."
-
 #~ msgid "Queue Position"
 #~ msgstr "Várakozási pozíció"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-#~ "results"
-#~ msgstr ""
-#~ "Az %(user)s felhasználó közvetlenül az \"%(query)s\"-re keres, és %(num)i "
-#~ "eredményt ad vissza."
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[MAGÁN]"
-
-#, fuzzy
-#~ msgid "Room wall (personal message set)"
-#~ msgstr "Szobafal (személyes üzenetkészlet)"
 
 #~ msgid "Your config file is corrupt"
 #~ msgstr "A beállítófájl sérült"
@@ -7467,42 +7304,6 @@ msgstr "Nicotine+ parancsok"
 #~ "Ha ezt a fájlt szövegszerkesztővel nyitja meg, talán megmentheti néhány "
 #~ "beállítását."
 
-#, fuzzy
-#~ msgid "User Description"
-#~ msgstr "Leírás: "
-
-#, fuzzy
-#~ msgid "User Information"
-#~ msgstr "Useri_nfó"
-
-#, fuzzy
-#~ msgid "User Interests"
-#~ msgstr "Érdeklődések"
-
-#, fuzzy
-#~ msgid "User Picture"
-#~ msgstr "Felhasználó tallózása"
-
-#, fuzzy
-#~ msgid "Search Wishlist"
-#~ msgstr "Kívánságlista keresése"
-
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Nicotine+ verzió %s"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Python %(py_version)s használata"
-
-#, fuzzy, python-format
-#~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
-#~ msgstr "Nicotine+ verzió %s"
-
-#, fuzzy, python-format
-#~ msgid "Quit Nicotine+ %(version)s, %(status)s!"
-#~ msgstr "Nicotine+ verzió %s"
-
 #~ msgid "User:"
 #~ msgstr "Felhasználó:"
 
@@ -7514,130 +7315,18 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "%(number)2s files "
 #~ msgstr "%(number)2s fájl "
 
-#, fuzzy
-#~ msgid "Allow regular expressions for the filter's include and exclude"
-#~ msgstr "Pontos kifejezést használjon a szűrőkhöz"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Kilépés"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Előző elsődleges lap megtekintése indításkor"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Szűrők engedélyezése alapértelmezettként"
-
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Kilép a Nicotine+-ból?"
-
-#, fuzzy
-#~ msgid "Do you really want to exit Nicotine+?"
-#~ msgstr "<b>Most már készen áll a Nicotine+ használatára!</b>"
-
-#, fuzzy
-#~ msgid "Run in Background"
-#~ msgstr "Fut a háttérben"
-
-#, fuzzy
-#~ msgid "_Online Notify"
-#~ msgstr "_Online-figyelmeztetés"
-
-#, fuzzy
-#~ msgid "_Prioritize User"
-#~ msgstr "_Prioritize User"
-
-#, fuzzy
-#~ msgid "_Trust User"
-#~ msgstr "_Megbízható"
-
-#, fuzzy
-#~ msgid "Request User's IP Address"
-#~ msgstr "User IP-címének mellőzése"
-
-#, fuzzy
-#~ msgid "Request IP Address"
-#~ msgstr "User IP-címének mellőzése"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose IP address you want to see:"
-#~ msgstr "Írja be a felhasználót, akinek az IP-címét le szeretné kérni:"
 
 #~ msgid "Downloaded"
 #~ msgstr "Letöltve"
 
-#, fuzzy, python-format
-#~ msgid "Failed to add download %(filename)s to shared files: %(error)s"
-#~ msgstr ""
-#~ "Nem sikerült hozzáadni a letöltést %(filename)s a megosztott fájlokhoz: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Letöltések automatikus megosztása"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "A letöltési mappa nyilvános megosztásként való hozzáadásának megfelelője, "
-#~ "azonban az ebbe a mappába letöltött fájlok automatikusan elérhetővé "
-#~ "válnak mások számára (nincs szükség újbóli szkennelésre)."
-
-#, fuzzy
-#~ msgid "Unable to Share Folder"
-#~ msgstr "Nem lehet megosztani a mappát"
-
 #~ msgid "The chosen virtual name is empty"
 #~ msgstr "A választott virtuális név üres"
-
-#, fuzzy
-#~ msgid "The chosen virtual name already exists"
-#~ msgstr "A kiválasztott virtuális név már létezik"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared"
-#~ msgstr "A választott virtuális mappa már meg van osztva"
-
-#, fuzzy
-#~ msgid "Set Virtual Name"
-#~ msgstr "Virtuális név"
 
 #, python-format
 #~ msgid "Enter virtual name for '%(dir)s':"
 #~ msgstr "Írja be a %(dir)s mappa virtuális nevét:"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is either empty or already exists"
-#~ msgstr "A kiválasztott virtuális név vagy üres, vagy már létezik."
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared."
-#~ msgstr "A választott virtuális mappa már meg van osztva"
-
-#, fuzzy, python-format
-#~ msgid "%s Properties"
-#~ msgstr "Tulajdonságok"
-
-#, fuzzy
-#~ msgid "Finished rescanning shares"
-#~ msgstr "Aktualizálás elindult"
-
-#, fuzzy
-#~ msgid "Plugin List"
-#~ msgstr "Beépülők"
-
-#, fuzzy, python-format
-#~ msgid "Error while scanning %(path)s: %(error)s"
-#~ msgstr "Hiba az %(path)s beolvasásakor: %(error)s"
-
-#, fuzzy
-#~ msgid "Show _Log Pane"
-#~ msgstr "_Naplóablak mutatása"
 
 #~ msgid "Addresses"
 #~ msgstr "Címek"
@@ -7660,212 +7349,23 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Ignore List"
 #~ msgstr "Mellőzöttek listája"
 
-#, fuzzy
-#~ msgid "Censor & Replace"
-#~ msgstr "Cenzúra és csere"
-
 #~ msgid "Completion"
 #~ msgstr "Kiegészítés"
 
 #~ msgid "Categories"
 #~ msgstr "Kategóriák"
 
-#, fuzzy
-#~ msgid "Upload Folder To…"
-#~ msgstr "Mappa feltöltése…"
-
-#, fuzzy
-#~ msgid "Upload Folder Recursive To…"
-#~ msgstr "Mappa rekurzív feltöltése ide..."
-
-#, fuzzy
-#~ msgid "Download _Recursive"
-#~ msgstr "_Rekurzív letöltés"
-
-#, fuzzy
-#~ msgid "Download R_ecursive To…"
-#~ msgstr "_Rekurzív letöltés"
-
-#, fuzzy
-#~ msgid "Up_load File(s)"
-#~ msgstr "Fájl(ok) _feltöltése"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Error while attempting to display folder '%(folder)s', reported error: "
-#~ "%(error)s"
-#~ msgstr ""
-#~ "Hiba a '%(folder)s' mappa megjelenítésének kísérlete közben, jelentett "
-#~ "hiba: %(error)s"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Válassza ki a felhasználói almappákat tartalmazó mappa letöltési célját"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr "Válassza ki a Mappa felhasználótól történő letöltésének célját"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr "Válassza ki a Fájl(ok) felhasználótól történő letöltésének célját"
-
 #~ msgid "Wishes"
 #~ msgstr "Kívánságok"
-
-#, fuzzy
-#~ msgid "privileged"
-#~ msgstr "(elsőbbségi)"
-
-#, fuzzy
-#~ msgid "prioritized"
-#~ msgstr "prioritást kapott"
-
-#, fuzzy
-#~ msgid "Blocked IP Addresses"
-#~ msgstr "Blokkolt IP-címek:"
-
-#, fuzzy
-#~ msgid "Complete buddy names"
-#~ msgstr "Barátok nevének kiegészítése"
 
 #~ msgid "Complete usernames in chat rooms"
 #~ msgstr "Felhasználónevek kiegészítése a chatszobákban"
 
-#, fuzzy
-#~ msgid "Complete room names"
-#~ msgstr "Szobanevek kiegészítése a chatszobákban"
-
-#, fuzzy
-#~ msgid "Drop-down List"
-#~ msgstr "Legördülő lista"
-
-#, fuzzy
-#~ msgid "File Manager command ($ for file path):"
-#~ msgstr "Fájlkezelő parancs ($ mappaútvonalhoz):"
-
-#, fuzzy
-#~ msgid "Media Player command ($ for file path):"
-#~ msgstr "Zenelejátszó Parancs ($ fájlnévhez):"
-
-#, fuzzy
-#~ msgid "Ignored IP Addresses"
-#~ msgstr "IP-cím mellőzése..."
-
 #~ msgid "Display timestamps"
 #~ msgstr "Időbélyegek megjelenítése"
 
-#, fuzzy
-#~ msgid "Notification Popups"
-#~ msgstr "Értesítési felugró ablakok"
-
-#, fuzzy
-#~ msgid "Show notification popup when a file has finished downloading"
-#~ msgstr ""
-#~ "Értesítési felugró ablak megjelenítése, ha egy fájl letöltése befejeződött"
-
-#, fuzzy
-#~ msgid "Show notification popup when a folder has finished downloading"
-#~ msgstr ""
-#~ "Értesítési felugró ablak megjelenítése, ha egy mappa letöltése "
-#~ "befejeződött"
-
-#, fuzzy
-#~ msgid "Show notification popup when you receive a private message"
-#~ msgstr "Értesítési felugró ablak megjelenítése, amikor privát üzenetet kap"
-
-#, fuzzy
-#~ msgid "Show notification popup when someone sends a message in a chat room"
-#~ msgstr ""
-#~ "Értesítési felugró ablak megjelenítése, amikor valaki üzenetet küld egy "
-#~ "chatszobában"
-
-#, fuzzy
-#~ msgid "Show notification popup when you are mentioned in a chat room"
-#~ msgstr ""
-#~ "Értesítési felugró ablak megjelenítése, amikor egy chatszobában "
-#~ "megemlítenek téged"
-
-#, fuzzy
-#~ msgid "Tray"
-#~ msgstr "Tálca"
-
-#, fuzzy
-#~ msgid ""
-#~ "Instances of $ will be replaced by the link. The default web browser of "
-#~ "the system will be used in cases where a protocol has not been configured."
-#~ msgstr ""
-#~ "A $ jelet felváltja egy hivatkozás, melyet a kezelők cserélnek ki az URL-"
-#~ "el, hogy azt felhasználja a rendszer alapértelmezett webböngészője.\n"
-#~ "Protokoll kezelők: "
-
 #~ msgid "Handler:"
 #~ msgstr "Kezelő:"
-
-#, fuzzy
-#~ msgid "Primary Tabs"
-#~ msgstr "Elsődleges lapok"
-
-#, fuzzy
-#~ msgid "Enable file path tooltips in search and transfer views"
-#~ msgstr ""
-#~ "A fájl elérési útvonalára vonatkozó tooltipek engedélyezése a keresési és "
-#~ "átviteli nézetekben"
-
-#, fuzzy
-#~ msgid ""
-#~ "Displays the complete file path of a search result or file transfer when "
-#~ "you hover a folder path or file name with your cursor."
-#~ msgstr ""
-#~ "Megjeleníti a keresési találat vagy a fájlátvitel teljes fájlútvonalát, "
-#~ "amikor a kurzorral a mappaútvonal vagy a fájlnév fölé mozgatja a kurzort."
-
-#, fuzzy
-#~ msgid "Show privately shared files in user shares"
-#~ msgstr ""
-#~ "Magánszemélyek által megosztott fájlok megjelenítése a felhasználói "
-#~ "megosztásokban"
-
-#, fuzzy
-#~ msgid ""
-#~ "Other clients may offer an option to send privately shared files when you "
-#~ "browse their shares. Folders containing such files are prefixed with "
-#~ "'[PRIVATE FOLDER]', and are not downloadable unless the uploader gives "
-#~ "explicit permission."
-#~ msgstr ""
-#~ "Más kliensek a megosztások böngészésekor lehetőséget kínálnak a privát "
-#~ "megosztott fájlok elküldésére. Az ilyen fájlokat tartalmazó mappák "
-#~ "előtagja \"[PRIVÁT MAPÍROK]\", és csak akkor tölthetők le, ha a feltöltő "
-#~ "erre kifejezett engedélyt ad."
-
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Cenzúra és csere"
-
-#, fuzzy
-#~ msgid "Show _Debug Log Controls"
-#~ msgstr "Show _Debug Log Controls (Hibajavító napló vezérlők)"
-
-#, fuzzy
-#~ msgid "Debug Logging"
-#~ msgstr "Naplózás"
-
-#, fuzzy
-#~ msgid "Virtual Name"
-#~ msgstr "Virtuális név"
-
-#, fuzzy
-#~ msgid "Edit Virtual Name"
-#~ msgstr "Virtuális név"
-
-#, fuzzy
-#~ msgid "Copy Folder URL"
-#~ msgstr "Könyvtár-URL másolása"
-
-#, fuzzy
-#~ msgid "Download _To…"
-#~ msgstr "Letöltés _ide..."
 
 #~ msgid "Download"
 #~ msgstr "Letöltés"
@@ -7873,24 +7373,8 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Upload"
 #~ msgstr "Feltöltés"
 
-#, fuzzy
-#~ msgid "Upload Folder's Contents"
-#~ msgstr "Mappa tartalmának feltöltése"
-
 #~ msgid "Rename"
 #~ msgstr "Átnevezés"
-
-#, fuzzy
-#~ msgid "File Lists"
-#~ msgstr "Fájltípusok"
-
-#, fuzzy
-#~ msgid "Copy File Path"
-#~ msgstr "Fájl elérési útvonalának másolása"
-
-#, fuzzy
-#~ msgid "R_emove Wish"
-#~ msgstr "Egy álnév eltávolítása"
 
 #~ msgid "About _Nicotine+"
 #~ msgstr "_Névjegy"
@@ -7898,22 +7382,6 @@ msgstr "Nicotine+ parancsok"
 #, python-format
 #~ msgid "It appears '%s' is not a directory, not loading plugins."
 #~ msgstr "Úgy tűnik, '%s' nem egy mappa, nincs betöltve beépülő."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Barát-_megosztás frissítése"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Aktualizálás elindult"
-
-#, fuzzy
-#~ msgid "User Browse"
-#~ msgstr "User _tallózása"
-
-#, fuzzy
-#~ msgid "No description provided"
-#~ msgstr "Leírás: "
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -7930,18 +7398,6 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Client Version"
 #~ msgstr "Kliens verzió"
 
-#, fuzzy, python-format
-#~ msgid "How many days of privileges should user %s be gifted?"
-#~ msgstr "Hány nap elsőbbséget ad ennek a felhasználónak?"
-
-#, fuzzy
-#~ msgid ""
-#~ "Buddies will have higher priority in the queue, the same as globally "
-#~ "privileged users."
-#~ msgstr ""
-#~ "Barátok nagyobb prioritást élveznek várakozásban, mint az összes "
-#~ "elsőbbségi user"
-
 #~ msgid "Privileged"
 #~ msgstr "Elsőbbségi"
 
@@ -7951,104 +7407,8 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Comments"
 #~ msgstr "Megjegyzések"
 
-#, fuzzy
-#~ msgid "Edit _Comments…"
-#~ msgstr "_Megjegyzések szerkesztése"
-
-#, fuzzy
-#~ msgid ""
-#~ "Creates subfolders based on the user you are downloading from, and stores "
-#~ "the downloaded file / folder there."
-#~ msgstr ""
-#~ "Az átviteli sebesség attól a felhasználótól függ, akitől a letöltés "
-#~ "folyik. Némelyek sebessége gyorsabb, másoké lassabb."
-
-#, fuzzy
-#~ msgid "Login Details"
-#~ msgstr "Bejelentkezés Részletek"
-
-#, fuzzy
-#~ msgid "Advanced"
-#~ msgstr "Haladó"
-
-#, fuzzy
-#~ msgid "Port mapping renewal interval in hours:"
-#~ msgstr "A port leképezés megújítási időintervallum órákban:"
-
-#, fuzzy
-#~ msgid "Enable buddy-only shares"
-#~ msgstr "„Csak Barátoknak“ megosztás engedélyezése"
-
-#, fuzzy
-#~ msgid "Files will be uploaded in the order they were queued."
-#~ msgstr "A fájlok abban a sorrendben lesznek elküldve, ahogy várakoztak"
-
-#, fuzzy
-#~ msgid "Rescanning normal shares…"
-#~ msgstr "Aktualizálás elindult"
-
-#, fuzzy
-#~ msgid "Finished rescanning public shares"
-#~ msgstr "Publikus megosztás _frissítése"
-
 #~ msgid "Scanning Buddy Shares"
 #~ msgstr "Aktualizálás elindult"
-
-#, fuzzy
-#~ msgid "_Rescan Public Shares"
-#~ msgstr "Publikus megosztás _frissítése"
-
-#, fuzzy
-#~ msgid "Rescan B_uddy Shares"
-#~ msgstr "Barát-_megosztás frissítése"
-
-#, fuzzy
-#~ msgid "Rescan Public Shares"
-#~ msgstr "Publikus megosztás _frissítése"
-
-#, fuzzy
-#~ msgid "Rescan Buddy Shares"
-#~ msgstr "Barát-_megosztás frissítése"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Engedélyezi a privát megosztásokat, amelyekhez csak a haverlistán "
-#~ "szereplő felhasználók férhetnek hozzá. Ha letiltja, a felhasználók csak a "
-#~ "nyilvános megosztásokhoz férhetnek hozzá."
-
-#, fuzzy
-#~ msgid "Mark each shared folder as buddy-only"
-#~ msgstr "Jelölje meg az egyes megosztott mappákat csak barátoknak"
-
-#, fuzzy
-#~ msgid ""
-#~ "Overrides the per-share option, useful if you temporarily need to prevent "
-#~ "public access to shares."
-#~ msgstr ""
-#~ "Felülírja a megosztásonkénti opciót, hasznos, ha ideiglenesen meg kell "
-#~ "akadályoznia a megosztások nyilvános elérését."
-
-#, fuzzy
-#~ msgid ""
-#~ "Only users marked as trusted on your buddy list can access your buddy-"
-#~ "only shares."
-#~ msgstr ""
-#~ "Csak a haverlistán megbízhatónak jelölt felhasználók férhetnek hozzá a "
-#~ "csak haveroknak fenntartott megosztásokhoz."
-
-#, fuzzy
-#~ msgid "Filtered out excluded search result "
-#~ msgstr "Kiszűrt kizárt keresési eredmény "
-
-#, fuzzy
-#~ msgid "Filtered out inexact or incorrect search result "
-#~ msgstr "Kiszűrte a pontatlan vagy helytelen keresési eredményt "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-#~ msgstr "A(z) '%(name)s' nevű tárolt beállítás már nincs a beépülőben"
 
 #, python-format
 #~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
@@ -8059,80 +7419,14 @@ msgstr "Nicotine+ parancsok"
 #~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 #~ msgstr "Inkonzisztens gyorsítótár '%(vdir)s' számára, '%(dir)s' újraépítése"
 
-#, fuzzy, python-format
-#~ msgid "Dropping missing folder %(dir)s"
-#~ msgstr "Hiányzó mappa elhagyása %(dir)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ allows you to share folders directly from your computer. All "
-#~ "the contents of these folders (with the exception of dotfiles) can be "
-#~ "downloaded by other users on the Soulseek network. Public shares are "
-#~ "available for every user, while users in your buddy list can access buddy-"
-#~ "only shares in addition to public shares."
-#~ msgstr ""
-#~ "A Nicotine+ lehetővé teszi a mappák megosztását közvetlenül a "
-#~ "számítógépéről. Ezeknek a mappáknak az összes tartalma (a dotfiles "
-#~ "kivételével) letölthető a Soulseek hálózat más felhasználói számára. A "
-#~ "nyilvános megosztások minden felhasználó számára elérhetők, míg a "
-#~ "haverlistán szereplő felhasználók a nyilvános megosztások mellett a csak "
-#~ "haveroknak szóló megosztásokhoz is hozzáférhetnek."
-
-#, fuzzy, python-format
-#~ msgid "All tickers / wall messages for %(room)s:"
-#~ msgstr "A %(room)s összes futó / fali üzenete:"
-
 #~ msgid "Set your personal ticker"
 #~ msgstr "Személyes futószöveg beállítása"
 
 #~ msgid "Show all the tickers"
 #~ msgstr "Összes futószöveg mutatása"
 
-#, fuzzy
-#~ msgid ""
-#~ "Failed to scan shares. If Nicotine+ is currently running, please close "
-#~ "the program before scanning."
-#~ msgstr ""
-#~ "Nem sikerült beolvasni a megosztásokat. Ha a Nicotine+ jelenleg is fut, "
-#~ "kérjük, zárja be a programot a beolvasás előtt."
-
 #~ msgid "Are you sure you wish to exit Nicotine+ at this time?"
 #~ msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
-
-#, fuzzy
-#~ msgid "Receive a User's IP Address"
-#~ msgstr "User IP-címének b_lokkolása"
-
-#, fuzzy
-#~ msgid "Receive a User's Info"
-#~ msgstr "Userinfó kikeresése"
-
-#, fuzzy
-#~ msgid "The server forbid us from doing wishlist searches."
-#~ msgstr "A szerver megtiltotta, hogy kívánságlistás kereséseket végezzünk."
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Your shares database is corrupted. Please rescan your shares and report "
-#~ "any potential scanning issues to the developers. Error: %s"
-#~ msgstr ""
-#~ "A megosztások adatbázisa sérült. Kérjük, vizsgálja át újra a "
-#~ "megosztásokat, és jelentse az esetleges beolvasási problémákat a "
-#~ "fejlesztőknek. Hiba: %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Please keep in mind that certain usernames may be taken. If this is the "
-#~ "case, you will be prompted to change your username when connecting to the "
-#~ "network."
-#~ msgstr ""
-#~ "Kérjük, ne feledje, hogy bizonyos felhasználónevek foglaltak lehetnek. Ha "
-#~ "ez a helyzet, a hálózathoz való csatlakozáskor a rendszer felszólítja "
-#~ "Önt, hogy változtassa meg a felhasználónevét."
-
-#, fuzzy
-#~ msgid "Enter the username of the person you to receive information about"
-#~ msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
 
 #~ msgid "Add user 'user' to your user list"
 #~ msgstr "'User' user hozzáadása a barátlistához"
@@ -8142,42 +7436,6 @@ msgstr "Nicotine+ parancsok"
 
 #~ msgid "Request user info for user 'user'"
 #~ msgstr "'User' userinfójának lekérése"
-
-#, fuzzy
-#~ msgid "Add user to your user list"
-#~ msgstr "'User' user hozzáadása a barátlistához"
-
-#, fuzzy
-#~ msgid "Remove user from your user list"
-#~ msgstr "'User' user eltávolítása a barátlistáról"
-
-#, fuzzy
-#~ msgid "Respond to search requests containing minimum character count:"
-#~ msgstr ""
-#~ "Válaszoljon a minimális karakterszámot tartalmazó keresési kérelmekre:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Queued users will be uploaded one file at a time in a cyclical fashion."
-#~ msgstr ""
-#~ "A sorban álló felhasználóknak ciklikusan, egyenként egy-egy fájlt kell "
-#~ "feltölteniük."
-
-#, fuzzy
-#~ msgid ""
-#~ "Could not execute now playing code. Are you sure you picked the right "
-#~ "player?"
-#~ msgstr ""
-#~ "HIBA: 'Épp hallgatva' kódja nem futtatható. Biztos, hogy a helyes "
-#~ "lejátszót választotta?"
-
-#, fuzzy
-#~ msgid "/ignore"
-#~ msgstr "Mellőz"
-
-#, fuzzy
-#~ msgid "/unignore"
-#~ msgstr "Mellőz"
 
 #~ msgid "Cannot find the pynicotine.utils module."
 #~ msgstr "A pynicotine.utils modul nem található."

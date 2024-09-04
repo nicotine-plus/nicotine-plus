@@ -6103,10 +6103,6 @@ msgstr "Comandos do Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Não é possível gravar %(filename)s: %(error)s"
 
-#, fuzzy
-#~ msgid "Nicotine+"
-#~ msgstr "Time Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Amigos de Confiança"
 

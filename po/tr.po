@@ -6083,9 +6083,6 @@ msgstr "Nicotine+ Komutları"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "%(filename)s kaydedilemiyor: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Güvenilir Arkadaşlar"
 
@@ -7186,10 +7183,6 @@ msgstr "Nicotine+ Komutları"
 #~ msgstr ""
 #~ "%(user)s kullanıcısı doğrudan \"%(query)s\" için arama yapıyor ve %(num)i "
 #~ "sonuç döndürüyor"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[ÖZEL]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Oda duvarı (kişisel mesaj ayarlandı)"

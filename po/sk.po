@@ -5636,8 +5636,8 @@ msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
-"Prípad je necitlivý, ale poradie slov je dôležité: \"Spears Brittany\" "
-"neukazuje žiadne \"Bretónske spears\""
+"Prípad je necitlivý, ale poradie slov je dôležité: 'Instrumental Remix' "
+"neukazuje žiadne 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
 #, fuzzy
@@ -7032,423 +7032,17 @@ msgstr "Obnoviť súbory"
 msgid "Nicotine+ Commands"
 msgstr "Nicotine+"
 
-#, fuzzy, python-format
-#~ msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
-#~ msgstr "Nepodarilo sa načítať zdieľaný priečinok %(folder)s: %(error)s"
-
 #~ msgid "_Clear"
 #~ msgstr "_Vyčistiť"
-
-#, fuzzy, python-format
-#~ msgid "Can't save %(filename)s: %(error)s"
-#~ msgstr ""
-#~ "Nepodarilo sa uložiť súbor s konfiguráciou, vstupno/výstupná chyba: %s"
-
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
-#, fuzzy
-#~ msgid "Trusted Buddies"
-#~ msgstr "Dôveryhodní používatelia"
-
-#, fuzzy
-#~ msgid "Quit program"
-#~ msgstr "Ukončiť program"
-
-#, fuzzy
-#~ msgid "Username:"
-#~ msgstr "Užívateľské meno:"
-
-#, fuzzy
-#~ msgid "Re_commendations for Item"
-#~ msgstr "_Doporučenia pre túto položku"
-
-#, fuzzy
-#~ msgid "_Remove Item"
-#~ msgstr "_Odstrániť túto položku"
 
 #~ msgid "_Remove"
 #~ msgstr "O_dstrániť"
 
-#, fuzzy
-#~ msgid "Send M_essage"
-#~ msgstr "Poslať správu"
-
 #~ msgid "Send Message"
 #~ msgstr "Poslať správu"
 
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Zobraziť profil používateľa"
-
-#, fuzzy
-#~ msgid "Start Messaging"
-#~ msgstr "Spustiť odosielanie správ"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whom you want to send a message:"
-#~ msgstr "Zadajte používateľa, ktorému chcete poslať súkromnú správu:"
-
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "Správy"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "Zobraziť profil používateľa"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose shares you want to see:"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "P_rehliadať súbory"
-
-#, fuzzy
-#~ msgid "Password"
-#~ msgstr "Heslo"
-
-#, fuzzy
-#~ msgid "Download File"
-#~ msgstr "Stiahnuť súbor"
-
-#, fuzzy
-#~ msgid "Refresh Similar Users"
-#~ msgstr "Podobní používatelia"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose files you want to see"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "Enter the username of the person whose information you want to see"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to send a message to"
-#~ msgstr "Zadajte používateľa, ktorému chcete poslať súkromnú správu:"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you want to add to your buddy list"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid ""
-#~ "Enter the name of a room you want to join. If the room doesn't exist, it "
-#~ "will be created."
-#~ msgstr ""
-#~ "Zadajte názov miestnosti, ku ktorú sa chcete pripojiť. Ak miestnosť "
-#~ "neexistuje, bude vytvorená."
-
-#, fuzzy
-#~ msgid "Show Log History Pane"
-#~ msgstr "Zobraziť tablu _Log"
-
-#, fuzzy
-#~ msgid "Save _Picture"
-#~ msgstr "Uložiť _Picture"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Filtered out incorrect search result %(filepath)s from user %(user)s for "
-#~ "search query \"%(query)s\""
-#~ msgstr ""
-#~ "Odfiltrovaný nesprávny výsledok vyhľadávania %(filepath)s od používateľa "
-#~ "%(user)s pre vyhľadávací dopyt „%(query)s“"
-
-#, fuzzy
-#~ msgid ""
-#~ "Certain clients don't send search results if special characters are "
-#~ "included."
-#~ msgstr ""
-#~ "Niektorí klienti neposielajú výsledky vyhľadávania, ak sú zahrnuté "
-#~ "špeciálne znaky."
-
-#, fuzzy
-#~ msgid "Remove special characters from search terms"
-#~ msgstr "Odstránenie špeciálnych znakov z hľadaných výrazov"
-
-#, fuzzy, python-format
-#~ msgid "Trouble executing '%s'"
-#~ msgstr "Problémy s vykonaním \"%s\""
-
-#, fuzzy, python-format
-#~ msgid "Trouble executing on folder: %s"
-#~ msgstr "Problémy s vykonávaním priečinka: %s"
-
-#, fuzzy
-#~ msgid "Disallowed extension"
-#~ msgstr "Zakázané predĺženie"
-
-#, fuzzy
-#~ msgid "Too many files"
-#~ msgstr "Príliš veľa súborov"
-
-#, fuzzy
-#~ msgid "Too many megabytes"
-#~ msgstr "Príliš veľa megabajtov"
-
-#, fuzzy
-#~ msgid "Server does not permit performing wishlist searches at this time"
-#~ msgstr ""
-#~ "Server v tejto chvíli nepovoľuje vykonávanie vyhľadávania zoznamu želaní"
-
-#, fuzzy
-#~ msgid ""
-#~ "File transfer speeds depend on users you are downloading from. Certain "
-#~ "users will be faster, while others will be slow."
-#~ msgstr ""
-#~ "Rýchlosť prenosu súborov závisí od používateľov, od ktorých sťahujete. "
-#~ "Niektorí používatelia budú rýchlejší, zatiaľ čo iní budú pomalí."
-
-#, fuzzy
-#~ msgid "Started Downloads"
-#~ msgstr "Downloady"
-
-#, fuzzy
-#~ msgid "Started Uploads"
-#~ msgstr "Uploady"
-
 #~ msgid "Replace censored letters with:"
 #~ msgstr "Nahradiť cenzúrované písmená:"
-
-#, fuzzy
-#~ msgid "Censored Patterns"
-#~ msgstr "Cenzurované vzory"
-
-#, fuzzy
-#~ msgid "Replacements"
-#~ msgstr "Nahradenie"
-
-#, fuzzy
-#~ msgid ""
-#~ "If a user on the Soulseek network searches for a file that exists in your "
-#~ "shares, search results will be sent to the user."
-#~ msgstr ""
-#~ "Ak používateľ v sieti Soulseek vyhľadá súbor, ktorý existuje vo vašich "
-#~ "akciách, výsledky vyhľadávania sa odošlú používateľovi."
-
-#, fuzzy
-#~ msgid "Send to Player"
-#~ msgstr "_Otvoriť v prehrávači"
-
-#, fuzzy
-#~ msgid "Send to _Player"
-#~ msgstr "_Otvoriť v prehrávači"
-
-#, fuzzy
-#~ msgid "_Open in File Manager"
-#~ msgstr "Otvoriť v Správcovi súborov"
-
-#, fuzzy
-#~ msgid "Media player command:"
-#~ msgstr "Príkaz na spustenie audio prehrávača ($ pre názov súboru):"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Unable to save download to username subfolder, falling back to default "
-#~ "download folder. Error: %s"
-#~ msgstr ""
-#~ "Nepodarilo sa uložiť preberanie do podpriečinka používateľského mena, "
-#~ "ktorý sa vrátil do predvoleného priečinka na prevzatie. Chyba: %s"
-
-#, fuzzy
-#~ msgid "Buddy-only"
-#~ msgstr "Iba buddy"
-
-#, fuzzy
-#~ msgid "Share with buddies only"
-#~ msgstr "Zdieľať len s kamarátmi"
-
-#, fuzzy
-#~ msgid "_Quit…"
-#~ msgstr "_Quit"
-
-#, fuzzy
-#~ msgid "_Configure Shares"
-#~ msgstr "Skenovanie zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Remote file error"
-#~ msgstr "Chyba vzdialeného súboru"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-#~ msgstr ""
-#~ "Nedá sa nájsť %(option1)s alebo %(option2)s, nainštalujte jednu z nich."
-
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "Priečinky %(num)s nájdené po opätovnom"
-
-#, fuzzy, python-format
-#~ msgid "Failed to process the following databases: %(names)s"
-#~ msgstr "Nepodarilo sa spracovať nasledujúce databázy: %(names)s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to send number of shared files to the server: %s"
-#~ msgstr "Nepodarilo sa odoslať počet zdieľaných súborov na server: %s"
-
-#, fuzzy
-#~ msgid "Quit / Run in Background"
-#~ msgstr "Spustiť na pozadí"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Port klienta nie je nastavený"
-
-#, fuzzy
-#~ msgid "Network interface:"
-#~ msgstr "Hľadania"
-
-#, fuzzy
-#~ msgid "Limit buddy-only shares to trusted buddies"
-#~ msgstr "Obmedzte akcie iba pre kamarátov na dôveryhodných priateľov"
-
-#, fuzzy
-#~ msgid "Shared"
-#~ msgstr "Zdieľané"
-
-#, fuzzy
-#~ msgid "Search Files and Folders"
-#~ msgstr "Vyhľadávanie súborov a priečinkov (presná zhoda)"
-
-#, fuzzy
-#~ msgid "Out of Date"
-#~ msgstr "Zastarané"
-
-#, fuzzy, python-format
-#~ msgid "Version %(version)s is available, released on %(date)s"
-#~ msgstr "Verzia %(version)s je k dispozícii, vydaná na %(date)s"
-
-#, fuzzy, python-format
-#~ msgid "You are using a development version of %s"
-#~ msgstr "Zdá sa, že používate vývojovú verziu Nicotine+."
-
-#, fuzzy, python-format
-#~ msgid "You are using the latest version of %s"
-#~ msgstr "Používate najnovšiu verziu Nicotine+."
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Verzia klienta"
-
-#, fuzzy
-#~ msgid "Prefer Dark _Mode"
-#~ msgstr "Preferujem tmavé _Mode"
-
-#, fuzzy
-#~ msgid "Show _Log History Pane"
-#~ msgstr "Zobraziť tablu _Log"
-
-#, fuzzy
-#~ msgid "Buddy List in Separate Tab"
-#~ msgstr "Zoznam kamarátov na samostatnej karte"
-
-#, fuzzy
-#~ msgid "Buddy List Always Visible"
-#~ msgstr "Zoznam kamarátov vždy viditeľný"
-
-#, fuzzy
-#~ msgid "_View"
-#~ msgstr "_View"
-
-#, fuzzy
-#~ msgid "_Open Log Folder"
-#~ msgstr "S_tiahnuť adresár"
-
-#, fuzzy
-#~ msgid "_Browse Folder(s)"
-#~ msgstr "P_rehliadať súbory"
-
-#, fuzzy
-#~ msgid "Kibibytes (2^10 bytes) per second."
-#~ msgstr "Kibibajty (2^10 bajtov) za sekundu."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being geo blocked."
-#~ msgstr "Odoslané používateľom ako dôvod na geografické zablokovanie."
-
-#, fuzzy
-#~ msgid "Sent to users as the reason for being banned."
-#~ msgstr "Odoslané používateľom ako dôvod zákazu."
-
-#, fuzzy
-#~ msgid ""
-#~ "Once you interact with the application being away, status will be set to "
-#~ "online."
-#~ msgstr ""
-#~ "Po interakcii s aplikáciou, ktorá je preč, stav sa nastaví na online."
-
-#, fuzzy
-#~ msgid "Each user may queue a maximum of either:"
-#~ msgstr "Každý používateľ môže umiestniť do frontu nanajvýš"
-
-#, fuzzy
-#~ msgid "Mebibytes (2^20 bytes)."
-#~ msgstr "Mebibajty (2^20 bajtov)."
-
-#, fuzzy
-#~ msgid "MiB"
-#~ msgstr "Mibs"
-
-#, fuzzy
-#~ msgid "files"
-#~ msgstr "Súbory"
-
-#, fuzzy
-#~ msgid "Queue Behavior"
-#~ msgstr "Správanie frontu"
-
-#, fuzzy
-#~ msgid ""
-#~ "If disabled, slots will automatically be determined by available "
-#~ "bandwidth limitations."
-#~ msgstr ""
-#~ "Ak vypnuté, slot bude automaticky stanovený obmedzeniami dostupnej šírky "
-#~ "pásma"
-
-#, fuzzy
-#~ msgid "Note that the operating system's theme may take precedence."
-#~ msgstr "Upozorňujeme, že motív operačného systému môže mať prednosť."
-
-#, fuzzy
-#~ msgid "By default the leftmost tab is activated at startup"
-#~ msgstr ""
-#~ "V predvolenom nastavení je karta Hľadať súbory aktivovaná pri spustení."
-
-#, fuzzy, python-format
-#~ msgid "Quit %(program)s %(version)s, %(status)s!"
-#~ msgstr "Prestaňte Nicotine+ %(version)s, %(status)s!"
-
-#, fuzzy
-#~ msgid "terminated"
-#~ msgstr "Ukončené"
-
-#, fuzzy
-#~ msgid "done"
-#~ msgstr "robené"
-
-#, fuzzy
-#~ msgid "Remember choice"
-#~ msgstr "Pamätajte na výber"
-
-#, fuzzy
-#~ msgid "Kosovo"
-#~ msgstr "Kosovo"
-
-#, fuzzy
-#~ msgid "Unknown Network Interface"
-#~ msgstr "Interface"
-
-#, fuzzy
-#~ msgid "Listening Port Unavailable"
-#~ msgstr "Načúvam na porte %i"
 
 #, python-format
 #~ msgid ""
@@ -7456,116 +7050,17 @@ msgstr "Nicotine+"
 #~ msgstr ""
 #~ "Server nie je online alebo neodpovedá, pokus o znovupripojenie o %i sekúnd"
 
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ uses peer-to-peer networking to connect to other users. In "
-#~ "order to allow users to connect to you without trouble, an open listening "
-#~ "port is crucial."
-#~ msgstr ""
-#~ "Nicotine+ používa peer-to-peer sieť na pripojenie k ostatným "
-#~ "používateľom. Aby sa používatelia mohli bez problémov pripojiť k vám, je "
-#~ "rozhodujúci otvorený port počúvania."
-
 #~ msgid "--- disconnected ---"
 #~ msgstr "--- odpojený ---"
 
 #~ msgid "--- reconnected ---"
 #~ msgstr "--- pripojenie obnovené ---"
 
-#, fuzzy
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#, fuzzy
-#~ msgid "Earth"
-#~ msgstr "Zem"
-
-#, fuzzy
-#~ msgid "Czech Republic"
-#~ msgstr "Česká republika"
-
-#, fuzzy
-#~ msgid "Turkey"
-#~ msgstr "Turecko"
-
 #~ msgid "Joined Rooms "
 #~ msgstr "Pripojený v miestnostiach "
 
-#, fuzzy
-#~ msgid "_Auto-join Room"
-#~ msgstr "_Auto-pripojiť izbu"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Syntax:</b> Písmená rozlišujú veľkosť, sú podporované všetky regulárne "
-#~ "výrazy Pythonu, ak je vypnuté escapeovanie. Pre jednoduché filtre "
-#~ "nechajte escapeovanie zapnuté."
-
 #~ msgid "Escaped"
 #~ msgstr "Escapeované"
-
-#, fuzzy
-#~ msgid "Escape filter"
-#~ msgstr "Escapeované"
-
-#, fuzzy
-#~ msgid "Enter a text pattern and what to replace it with"
-#~ msgstr "Zadajte vzor textu a nahradenie:"
-
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan, rebuilding…"
-#~ msgstr "Priečinky %(num)s nájdené pred opätovným prestavením, prestavbou…"
-
-#, fuzzy, python-format
-#~ msgid "No listening port is available in the specified port range %s–%s"
-#~ msgstr ""
-#~ "V špecifikovanom rozsahu portov %s–%s nie je dostupný žiadny port na "
-#~ "počúvanie"
-
-#, fuzzy
-#~ msgid ""
-#~ "Choose a range to select a listening port from. The first available port "
-#~ "in the range will be used."
-#~ msgstr ""
-#~ "Vyberte rozsah, z ktorého chcete vybrať port počúvania. Použije sa prvý "
-#~ "dostupný port v rozsahu."
-
-#, fuzzy
-#~ msgid "First Port"
-#~ msgstr "Prvý port"
-
-#, fuzzy
-#~ msgid "to"
-#~ msgstr "do"
-
-#, fuzzy
-#~ msgid "Last Port"
-#~ msgstr "Posledný port"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %s or newer, please install it."
-#~ msgstr "Nedá sa nájsť %s, nainštalujte ho."
-
-#, fuzzy
-#~ msgid ""
-#~ "Cannot import the Gtk module. Bad install of the python-gobject module?"
-#~ msgstr "Modul Gtk sa nedá importovať. Zlá inštalácia modulu Python-gobject?"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "You are using an unsupported version of GTK %(major_version)s. You should "
-#~ "install GTK %(complete_version)s or newer."
-#~ msgstr ""
-#~ "Používate nepodporenú verziu GTK %(major_version)s. Mali by ste "
-#~ "nainštalovať GTK %(complete_version)s alebo novšie."
-
-#, fuzzy
-#~ msgid "User Info"
-#~ msgstr "Informácie o používateľovi"
 
 #~ msgid "Zoom 1:1"
 #~ msgstr "Lupa 1:1"
@@ -7576,334 +7071,48 @@ msgstr "Nicotine+"
 #~ msgid "Zoom Out"
 #~ msgstr "Oddialiť"
 
-#, fuzzy
-#~ msgid "Show User I_nfo"
-#~ msgstr "Úda_je o používateľovi"
-
-#, fuzzy
-#~ msgid "Request User's Info"
-#~ msgstr "Úda_je o používateľovi"
-
-#, fuzzy
-#~ msgid "Request User's Shares"
-#~ msgstr "Vyhľadať zoznam používateľom zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Request User Info"
-#~ msgstr "Úda_je o používateľovi"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose info you want to see:"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "Request Shares List"
-#~ msgstr "Zoznam zdieľaní žiadostí"
-
-#, fuzzy, python-format
-#~ msgid "Invalid Soulseek URL: %s"
-#~ msgstr "Chybná SoulSeek meta-url: %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Users on the Soulseek network will be able to download files from folders "
-#~ "you share. Sharing files is crucial for the health of the Soulseek "
-#~ "network."
-#~ msgstr ""
-#~ "Používatelia siete Soulseek budú môcť sťahovať súbory z priečinkov, ktoré "
-#~ "zdieľate. Zdieľanie súborov je rozhodujúce pre zdravie siete Soulseek."
-
-#, fuzzy
-#~ msgid "Update I_nfo"
-#~ msgstr "Úda_je o používateľovi"
-
-#, fuzzy
-#~ msgid "Chat Room Commands"
-#~ msgstr "Pomoc s príkazmi pre chatovaciu miestnosť"
-
-#, fuzzy
-#~ msgid "/join /j 'room'"
-#~ msgstr "/pripojiť /j \"izba\""
-
 #~ msgid "Join room 'room'"
 #~ msgstr "Vstúpiť do miestnosti 'miestnosť'"
-
-#, fuzzy
-#~ msgid "/me 'message'"
-#~ msgstr "/meo \"správa\""
 
 #~ msgid "Display the Now Playing script's output"
 #~ msgstr "Zobraziť výstup skriptu Teraz prehrávané"
 
-#, fuzzy
-#~ msgid "/add /ad 'user'"
-#~ msgstr "/pridať /ad \"používateľ\""
-
-#, fuzzy
-#~ msgid "Add user 'user' to your buddy list"
-#~ msgstr "Pridať používateľa 'používateľ' do zoznamu zakázaných používateľov"
-
-#, fuzzy
-#~ msgid "/rem /unbuddy 'user'"
-#~ msgstr "/rem /unbuddy \"user\""
-
-#, fuzzy
-#~ msgid "Remove user 'user' from your buddy list"
-#~ msgstr ""
-#~ "Odstrániť používateľa 'používateľ' zo zoznamu zakázaných používateľov"
-
-#, fuzzy
-#~ msgid "/ban 'user'"
-#~ msgstr "/zakázať \"používateľ\""
-
 #~ msgid "Add user 'user' to your ban list"
 #~ msgstr "Pridať používateľa 'používateľ' do zoznamu zakázaných používateľov"
-
-#, fuzzy
-#~ msgid "/unban 'user'"
-#~ msgstr "/unban \"používateľ\""
 
 #~ msgid "Remove user 'user' from your ban list"
 #~ msgstr ""
 #~ "Odstrániť používateľa 'používateľ' zo zoznamu zakázaných používateľov"
 
-#, fuzzy
-#~ msgid "/ignore 'user'"
-#~ msgstr "/ignorovať \"používateľa\""
-
 #~ msgid "Add user 'user' to your ignore list"
 #~ msgstr "Pridať používateľa 'používateľ' do zoznamu ignorovaných"
-
-#, fuzzy
-#~ msgid "/unignore 'user'"
-#~ msgstr "/odviazaný \"používateľ\""
 
 #~ msgid "Remove user 'user' from your ignore list"
 #~ msgstr "Odstrániť používateľa 'používateľ' zo zoznamu ignorovaných"
 
-#, fuzzy
-#~ msgid "/browse /b 'user'"
-#~ msgstr "/browse /b \"používateľ\""
-
-#, fuzzy
-#~ msgid "/whois /w 'user'"
-#~ msgstr "/whois /w \"používateľ\""
-
-#, fuzzy
-#~ msgid "Request info for 'user'"
-#~ msgstr "Vyžiadať informácie o používateľovi 'používateľ'"
-
-#, fuzzy
-#~ msgid "/ip 'user'"
-#~ msgstr "/ip \"používateľ\""
-
 #~ msgid "Show IP for user 'user'"
 #~ msgstr "Zobraziť IP adresu používateľa 'používateľ'"
-
-#, fuzzy
-#~ msgid "/search /s 'query'"
-#~ msgstr "/vyhľadávanie /dotaz\""
 
 #~ msgid "Start a new search for 'query'"
 #~ msgstr "Začať nové vyhľadávanie na 'dotaz'"
 
-#, fuzzy
-#~ msgid "/rsearch /rs 'query'"
-#~ msgstr "/rsearch /rs \"query\""
-
 #~ msgid "Search the joined rooms for 'query'"
 #~ msgstr "Prehľadávať aktuálne miestnosti na výskyt dotazu"
-
-#, fuzzy
-#~ msgid "/bsearch /bs 'query'"
-#~ msgstr "Prehľadávať zoznam používateľov na výskyt dotazu"
 
 #~ msgid "Search the buddy list for 'query'"
 #~ msgstr "Prehľadávať zoznam používateľov na výskyt dotazu"
 
-#, fuzzy
-#~ msgid "/usearch /us 'user' 'query'"
-#~ msgstr "/usearch /us \"používateľ\" \"dotaz\""
-
-#, fuzzy
-#~ msgid "/msg 'user' 'message'"
-#~ msgstr "/msg \"používateľ\" \"správa\""
-
 #~ msgid "Send message 'message' to user 'user'"
 #~ msgstr "Poslať správu 'message' používateľovi 'používateľ'"
-
-#, fuzzy
-#~ msgid "/pm 'user'"
-#~ msgstr "/pm \"používateľ\""
 
 #~ msgid "Open private chat window for user 'user'"
 #~ msgstr "Otvoriť okno súkromného chatu s používateľom 'používateľ'"
 
-#, fuzzy
-#~ msgid "Private Chat Commands"
-#~ msgstr "O príkazoch súkromného chatu"
-
-#, fuzzy
-#~ msgid "Add user to your ban list"
-#~ msgstr "Pridať používateľa 'používateľ' do zoznamu zakázaných používateľov"
-
-#, fuzzy
-#~ msgid "Add user to your ignore list"
-#~ msgstr "Pridať používateľa 'používateľ' do zoznamu ignorovaných"
-
-#, fuzzy
-#~ msgid "Browse shares of user"
-#~ msgstr "Prehliadať súbory používateľa 'používateľ'"
-
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "Pre filtrovanie objednávok necitlivé, ako aj filtrovanie niekoľkých "
-#~ "presných fráz, môžu byť zvislé pruhy použité na oddelenie fráz a slov.\n"
-#~ "    Príklad: Kopije| Bretónsko| Môj krásny album|hello"
-
-#, fuzzy
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr ""
-#~ "Ak chcete vylúčiť iné ako zvukové súbory, použite !0 vo filtri trvania."
-
-#, fuzzy
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Filtruje súbory na základe krajín používateľov."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "Ak chcete znova zobraziť úplné výsledky, jednoducho vymažte všetky "
-#~ "aktívne filtre."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr ""
-#~ "Ďalšie možnosti filtrovania nájdete v nastaveniach pre viac možností "
-#~ "filtrovania."
-
-#, fuzzy
-#~ msgid "File size"
-#~ msgstr "Súbory"
-
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Vyčistiť všetky výsledky"
-
-#, fuzzy
-#~ msgid "Cycle through completions when pressing tab-key"
-#~ msgstr "Prechádzanie dokončením pri stlačení klávesu tab-key"
-
 #~ msgid "Hide drop-down when only one matches"
 #~ msgstr "Skryť rozbaľovací zoznam len pri jednom výskyte"
 
-#, fuzzy
-#~ msgid "Download folders in reverse alphanumerical order"
-#~ msgstr "Stiahnutie priečinkov v opačnom alfanumerickom poradí"
-
-#, fuzzy
-#~ msgid "Incomplete file folder:"
-#~ msgstr "Neúplný priečinok súborov:"
-
-#, fuzzy
-#~ msgid "Download folder:"
-#~ msgstr "Stiahnuť priečinok:"
-
-#, fuzzy
-#~ msgid "Save buddies' uploads to:"
-#~ msgstr "Uložte nahrané súbory kamarátov na:"
-
-#, fuzzy
-#~ msgid "Use UPnP to forward listening port"
-#~ msgstr "Automatické priradenie portu počúvania na smerovači pomocou UPnP"
-
-#, fuzzy
-#~ msgid ""
-#~ "Share folders with every Soulseek user or buddies, allowing contents to "
-#~ "be downloaded directly from your device. Hidden files are never shared."
-#~ msgstr ""
-#~ "Zdieľajte priečinky s každým používateľom Soulseek alebo kamarátmi, čo "
-#~ "umožňuje sťahovanie obsahu priamo z vášho zariadenia. Skryté súbory sa "
-#~ "nikdy nezdieľajú."
-
-#, fuzzy
-#~ msgid "Secondary Tabs"
-#~ msgstr "Sekundárne karty"
-
-#, fuzzy
-#~ msgid "Chat room tab bar position:"
-#~ msgstr "Pozícia panela s kartami chatovacej miestnosti:"
-
-#, fuzzy
-#~ msgid "Private chat tab bar position:"
-#~ msgstr "Formát súkromného chatu:"
-
-#, fuzzy
-#~ msgid "Search tab bar position:"
-#~ msgstr "Vyhľadajte pozíciu panela kariet:"
-
-#, fuzzy
-#~ msgid "User info tab bar position:"
-#~ msgstr "Pozícia panela s informáciami o používateľovi:"
-
-#, fuzzy
-#~ msgid "User browse tab bar position:"
-#~ msgstr "Pozícia panela s kartami prehľadávania používateľa:"
-
-#, fuzzy
-#~ msgid "Tab Labels"
-#~ msgstr "Menovky kariet"
-
-#, fuzzy
-#~ msgid "_Refresh Info"
-#~ msgstr "Obnoviť"
-
-#, fuzzy
-#~ msgid "Block IP Address"
-#~ msgstr "Blokovať IP _adresu..."
-
-#, fuzzy
-#~ msgid "Connected"
-#~ msgstr "Pripojený:"
-
-#, fuzzy
-#~ msgid "Disconnected"
-#~ msgstr "Odpojený:"
-
-#, fuzzy
-#~ msgid "Disconnected (Tray)"
-#~ msgstr "Odpojený:"
-
 #~ msgid "User(s)"
 #~ msgstr "Používateľ(ia)"
-
-#, fuzzy, python-format
-#~ msgid "Alias \"%s\" returned nothing"
-#~ msgstr "Alias \"%s\" nevrátil nič"
-
-#, fuzzy
-#~ msgid "Alternative Speed Limits"
-#~ msgstr "Alternatívne rýchlostné limity"
-
-#, fuzzy
-#~ msgid "Last played"
-#~ msgstr "Posledná hra"
-
-#, fuzzy
-#~ msgid "Playing now"
-#~ msgstr "Hrať teraz"
-
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Súbor %(path)ssa nedá uložiť: %(error)s"
-
-#, fuzzy, python-format
-#~ msgid "Error code %(code)s: %(description)s"
-#~ msgstr "Kód chyby %(code)s: %(description)s"
 
 #, python-format
 #~ msgid "No such alias (%s)"
@@ -7920,62 +7129,14 @@ msgstr "Nicotine+"
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Neznámy alias (%(alias)s)\n"
 
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Alternatívne rýchlostné limity"
-
 #~ msgid "Aliases"
 #~ msgstr "Aliasy"
-
-#, fuzzy
-#~ msgid "/alias /al 'command' 'definition'"
-#~ msgstr "/alias /al \"príkaz\" \"definícia\""
 
 #~ msgid "Add a new alias"
 #~ msgstr "Pridať nový alias"
 
-#, fuzzy
-#~ msgid "/unalias /un 'command'"
-#~ msgstr "/unalias /un 'command'"
-
 #~ msgid "Remove an alias"
 #~ msgstr "Odstrániť alias"
-
-#, fuzzy
-#~ msgid "Chat History"
-#~ msgstr "História chatu"
-
-#, fuzzy
-#~ msgid "Command aliases"
-#~ msgstr "Doplňovať alias /Príkazy"
-
-#, fuzzy
-#~ msgid "Limit download speed to (KiB/s):"
-#~ msgstr "Obmedzovať rýchlosť poskytovania na"
-
-#, fuzzy
-#~ msgid "Author(s):"
-#~ msgstr "Autor(-y): "
-
-#, fuzzy
-#~ msgid "Limit upload speed to (KiB/s):"
-#~ msgstr "Obmedzovať rýchlosť poskytovania na"
-
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Našla sa položka zoznamu želaní"
-
-#, fuzzy
-#~ msgid "Tabs show user status icons instead of status text"
-#~ msgstr "Karty zobrazujú ikony stavu používateľa namiesto textu stavu"
-
-#, fuzzy
-#~ msgid "Show file path tooltips in file list views"
-#~ msgstr "Povolenie popisov cesty k súboru vo vyhľadávaní a prenose zobrazení"
-
-#, fuzzy
-#~ msgid "Colored and clickable usernames"
-#~ msgstr "Farebné a klikateľné používateľské mená"
 
 #~ msgid "Notification changes the tab's text color"
 #~ msgstr "Notifikácia mení farbu textu panelu"
@@ -7986,62 +7147,8 @@ msgstr "Nicotine+"
 #~ msgid "OK"
 #~ msgstr "OK"
 
-#, fuzzy
-#~ msgid "_Add to Buddy List"
-#~ msgstr "Zoznam kamarátov"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Vymažte každé sťahovanie označené konkrétnym stavom."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Vymažte každé nahranie označené konkrétnym stavom."
-
-#, fuzzy
-#~ msgid "use non-default user data directory for e.g. list of downloads"
-#~ msgstr ""
-#~ "použiť predvolený adresár používateľských údajov pre napr. zoznam "
-#~ "stiahnutí"
-
-#, fuzzy, python-format
-#~ msgid "Unknown config section '%s'"
-#~ msgstr "Neznáma konfiguračné sekcie \"%s\""
-
-#, fuzzy, python-format
-#~ msgid "Unknown config option '%(option)s' in section '%(section)s'"
-#~ msgstr "Neznáma možnosť konfigurácie \"%(option)s\" v časti \"%(section)s\""
-
-#, fuzzy, python-format
-#~ msgid "Version %s is available"
-#~ msgstr "Verzia %s je k dispozícii"
-
-#, fuzzy, python-format
-#~ msgid "released on %s"
-#~ msgstr "vydané na %s"
-
-#, fuzzy
-#~ msgid "Nicotine+ is running in the background"
-#~ msgstr "Spustiť na pozadí"
-
-#, fuzzy, python-format
-#~ msgid "Private message from %s"
-#~ msgstr "Súkromná správa z %s"
-
 #~ msgid "Aborted"
 #~ msgstr "Zrušené"
-
-#, fuzzy
-#~ msgid "Blocked country"
-#~ msgstr "Zablokovaná krajina"
-
-#, fuzzy
-#~ msgid "Finished / Aborted"
-#~ msgstr "Vyčistiť hotové/zrušené"
-
-#, fuzzy
-#~ msgid "Close tab"
-#~ msgstr "Zavrieť tento panel"
 
 #, python-format
 #~ msgid "You've been mentioned in the %(room)s room"
@@ -8055,245 +7162,28 @@ msgstr "Nicotine+"
 #~ msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 #~ msgstr "(Varovanie: %(realuser)s sa pokúša vydávať sa za %(fakeuser)s) "
 
-#, fuzzy, python-format
-#~ msgid ""
-#~ "The network interface you specified, '%s', does not exist. Change or "
-#~ "remove the specified network interface and restart Nicotine+."
-#~ msgstr ""
-#~ "Zadané sieťové rozhranie \"%s\" neexistuje. Zmeňte alebo odstráňte zadané "
-#~ "sieťové rozhranie a reštartujte Nicotine+."
-
-#, fuzzy
-#~ msgid ""
-#~ "The range you specified for client connection ports was {}-{}, but none "
-#~ "of these were usable. Increase and/or "
-#~ msgstr ""
-#~ "Rozsah zadaný pre porty pripojenia klienta bol {}-{}, ale žiadny z nich "
-#~ "nebol použiteľný. Zvýšiť a/alebo "
-
-#, fuzzy
-#~ msgid ""
-#~ "Note that part of your range lies below 1024, this is usually not allowed "
-#~ "on most operating systems with the exception of Windows."
-#~ msgstr ""
-#~ "Všimnite si, že časť vášho sortimentu leží pod 1024, zvyčajne to nie je "
-#~ "povolené vo väčšine operačných systémov s výnimkou systému Windows."
-
-#, fuzzy, python-format
-#~ msgid "Rescan progress: %s"
-#~ msgstr "Adresáre: %s"
-
 #, python-format
 #~ msgid "OS error: %s"
 #~ msgstr "Chyba OS: %s"
 
-#, fuzzy
-#~ msgid "UPnP is not available on this network"
-#~ msgstr "UPnP nie je v tejto sieti k dispozícii"
-
-#, fuzzy, python-format
-#~ msgid "Failed to map the external WAN port: %(error)s"
-#~ msgstr "Nepodarilo sa priradiť externý port WAN: %(error)s"
-
-#, fuzzy
-#~ msgid "Room wall"
-#~ msgstr "Stena miestnosti"
-
-#, fuzzy
-#~ msgid ""
-#~ "The default listening port '2234' works fine in most cases. If you need "
-#~ "to use a different port, you will be able to modify it in the preferences "
-#~ "later."
-#~ msgstr ""
-#~ "Predvolený odpočúvací port \"2234\" funguje vo väčšine prípadov dobre. Ak "
-#~ "potrebujete použiť iný port, budete ho môcť neskôr upraviť v nastaveniach."
-
-#, fuzzy
-#~ msgid "Show users with similar interests"
-#~ msgstr "Zobraziť používateľov s podobnými záujmami"
-
-#, fuzzy
-#~ msgid "Menu"
-#~ msgstr "Menu"
-
 #~ msgid "Expand / Collapse all"
 #~ msgstr "Rozbaliť / Zabaliť všetko"
-
-#, fuzzy
-#~ msgid "Configure shares"
-#~ msgstr "Konfigurácia zdieľaní"
-
-#, fuzzy
-#~ msgid "Create or join room…"
-#~ msgstr "Vytvoriť súkromnú miestnosť"
-
-#, fuzzy
-#~ msgid "_Room List"
-#~ msgstr "Miestnosti"
-
-#, fuzzy
-#~ msgid "Enable alternative download and upload speed limits"
-#~ msgstr "Povoliť alternatívne limity rýchlosti sťahovania a nahrávania"
-
-#, fuzzy
-#~ msgid "Show log history"
-#~ msgstr "Zobraziť históriu denníkov"
-
-#, fuzzy
-#~ msgid "Result grouping mode"
-#~ msgstr "Režim zoskupenia výsledkov"
 
 #~ msgid "Free slot"
 #~ msgstr "Voľný slot"
 
-#, fuzzy
-#~ msgid "Save shares list to disk"
-#~ msgstr "Uloženie zoznamu zdieľaní na disk"
-
-#, fuzzy
-#~ msgid "_Away"
-#~ msgstr "_Away"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load ui file %(file)s: %(error)s"
-#~ msgstr "Nepodarilo sa načítať súbor ui %(file)s: %(error)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Attempting to reset index of shared files due to an error. Please rescan "
-#~ "your shares."
-#~ msgstr ""
-#~ "Pokúša sa obnoviť index zdieľaných súborov z dôvodu chyby. Prosím, "
-#~ "prezídu svoje akcie."
-
-#, fuzzy
-#~ msgid ""
-#~ "File index of shared files could not be accessed. This could occur due to "
-#~ "several instances of Nicotine+ being active simultaneously, file "
-#~ "permission issues, or another issue in Nicotine+."
-#~ msgstr ""
-#~ "Index súborov zdieľaných súborov sa nepodarilo získať prístup. To sa môže "
-#~ "vyskytnúť v dôsledku niekoľkých prípadov, keď Nicotine+ je aktívny "
-#~ "súčasne, problémy s povolením súborov alebo iný problém v Nicotine+."
-
-#, fuzzy
-#~ msgid "Nicotine+ is a Soulseek client"
-#~ msgstr "Nicotine+ je klientom Soulseek"
-
-#, fuzzy
-#~ msgid "enable the tray icon"
-#~ msgstr "povoliť ikonu zásobníka"
-
-#, fuzzy
-#~ msgid "disable the tray icon"
-#~ msgstr "zakázať ikonu zásobníka"
-
-#, fuzzy
-#~ msgid "Get Soulseek Privileges…"
-#~ msgstr "Získajte privilégiá Soulseek…"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Public IP address is <b>%(ip)s</b> and active listening port is "
-#~ "<b>%(port)s</b>"
-#~ msgstr ""
-#~ "Verejná IP adresa je <b>%(ip)s</b> a aktívny odpočúvací port je "
-#~ "<b>%(port)s</b>"
-
 #~ msgid "unknown"
 #~ msgstr "neznáma"
 
-#, fuzzy
-#~ msgid "Notification"
-#~ msgstr "Oznámenie"
-
 #~ msgid "Length"
 #~ msgstr "Dĺžka"
-
-#, fuzzy, python-format
-#~ msgid "Picture not saved, %s already exists."
-#~ msgstr "Obrázok nie je uložený, %s už existuje."
-
-#, fuzzy
-#~ msgid "_Open"
-#~ msgstr "_Open"
-
-#, fuzzy
-#~ msgid "_Save"
-#~ msgstr "_Save"
-
-#, fuzzy, python-format
-#~ msgid "Failed to load plugin '%s', could not find it."
-#~ msgstr "Nepodarilo sa načítať doplnok \"%s\", nemohol ho nájsť."
 
 #, python-format
 #~ msgid "I/O error: %s"
 #~ msgstr "Vstupno-výstupná chyba: %s"
 
-#, fuzzy, python-format
-#~ msgid "Failed to open file path: %s"
-#~ msgstr "Nepodarilo sa otvoriť cestu k súboru: %s"
-
-#, fuzzy, python-format
-#~ msgid "Failed to open URL: %s"
-#~ msgstr "Nepodarilo sa otvoriť adresu URL: %s"
-
-#, fuzzy
-#~ msgid "_Log Conversation"
-#~ msgstr "_Log konverzácia"
-
-#, fuzzy
-#~ msgid "Result Filter List"
-#~ msgstr "Zoznam filtrov výsledkov"
-
-#, fuzzy
-#~ msgid "Prepend < or > to find files less/greater than the given value."
-#~ msgstr ""
-#~ "Predend < alebo > nájsť súbory menšie alebo väčšie ako daná hodnota."
-
-#, fuzzy
-#~ msgid ""
-#~ "VBR files display their average bitrate and are typically lower in "
-#~ "bitrate than a compressed 320 kbps CBR file of the same audio quality."
-#~ msgstr ""
-#~ "VBR súbory zobrazujú svoju priemernú bitovú rýchlosť a sú zvyčajne nižšie "
-#~ "v bitovej kvalite ako komprimovaný súbor CBR s rýchlosťou 320 kbps "
-#~ "rovnakej kvality zvuku."
-
-#, fuzzy
-#~ msgid "Like Size above, =, <, and > can be used."
-#~ msgstr "Rovnako ako Veľkosť vyššie, =, < a > môžu byť použité."
-
-#, fuzzy
-#~ msgid ""
-#~ "Prevent write access by other programs for files being downloaded (turn "
-#~ "off for NFS)"
-#~ msgstr ""
-#~ "Zabránenie prístupu k zápisu inými programami pre sťahovanie súborov "
-#~ "(vypnutie pre NFS)"
-
-#, fuzzy
-#~ msgid "Where incomplete downloads are temporarily stored."
-#~ msgstr "Kde sú dočasne ukladané nekompletné sťahovania"
-
-#, fuzzy
-#~ msgid ""
-#~ "Where buddies' uploads will be stored (with a subfolder created for each "
-#~ "buddy)."
-#~ msgstr ""
-#~ "Kde budú uložené nahrávky kamarátov (s podpriečinkom vytvoreným pre "
-#~ "každého kamaráta)."
-
-#, fuzzy
-#~ msgid "Toggle away status after minutes of inactivity:"
-#~ msgstr " minútach neaktivity"
-
 #~ msgid "Protocol:"
 #~ msgstr "Protokol:"
-
-#, fuzzy
-#~ msgid "Icon theme folder (requires restart):"
-#~ msgstr "Priečinok motívu ikony (vyžaduje reštartovanie):"
 
 #~ msgid "Establishing connection"
 #~ msgstr "Vytvára sa spojenie"
@@ -8301,266 +7191,8 @@ msgstr "Nicotine+"
 #~ msgid "Clear Groups"
 #~ msgstr "Vyčistiť skupiny"
 
-#, fuzzy
-#~ msgid "User List"
-#~ msgstr "Zoznam používateľov"
-
-#, fuzzy
-#~ msgid "_Reset Statistics…"
-#~ msgstr "_Reset štatistiky…"
-
-#, fuzzy
-#~ msgid "Clear _Downloads…"
-#~ msgstr "_Downloady"
-
-#, fuzzy
-#~ msgid "Clear Uploa_ds…"
-#~ msgstr "Vyčistiť pozastavené"
-
-#, fuzzy
-#~ msgid "Block User's IP Address"
-#~ msgstr "Blokované IP adresy:"
-
-#, fuzzy
-#~ msgid "Ignore User's IP Address"
-#~ msgstr "Ignorovať IP adresu používateľa"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Vymažte každé sťahovanie, ktoré dokončilo prenos alebo ho zachytil filter."
-
-#, fuzzy
-#~ msgid "Usernames"
-#~ msgstr "Meno používateľa"
-
-#~ msgid "Display logged chat room messages when a room is rejoined"
-#~ msgstr ""
-#~ "Zobrazovať logované správy chatovacej miestnosti pri opätovnom vojdení do "
-#~ "miestnosti"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Vymažte každé nahrávanie, ktoré buď dokončilo prenos, alebo ho zrušil "
-#~ "vzdialený používateľ."
-
-#, fuzzy
-#~ msgid "Queue Position"
-#~ msgstr "Pozícia frontu"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-#~ "results"
-#~ msgstr ""
-#~ "Používateľ %(user)s priamo vyhľadáva \"%(query)s\", vracia výsledky "
-#~ "%(num)i"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[SÚKROMNÉ]"
-
-#, fuzzy
-#~ msgid "Room wall (personal message set)"
-#~ msgstr "Nástenka miestnosti (súprava osobných správ)"
-
-#, fuzzy
-#~ msgid "Your config file is corrupt"
-#~ msgstr "Konfiguračný súbor je poškodený"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "We're sorry, but it seems your configuration file is corrupt. Please "
-#~ "reconfigure Nicotine+.\n"
-#~ "\n"
-#~ "We renamed your old configuration file to\n"
-#~ "%(corrupt)s\n"
-#~ "If you open this file with a text editor you might be able to rescue some "
-#~ "of your settings."
-#~ msgstr ""
-#~ "Ľutujeme, ale zdá sa, že váš konfiguračný súbor je poškodený. Prosím, "
-#~ "rekonfigurujte nikotín+.\n"
-#~ "\n"
-#~ "Premenovali sme váš starý konfiguračný súbor na\n"
-#~ "%(corrupt)s\n"
-#~ "Ak otvoríte tento súbor pomocou textového editora, možno budete môcť "
-#~ "zachrániť niektoré nastavenia."
-
-#, fuzzy
-#~ msgid "User Description"
-#~ msgstr "Vlastný popis:"
-
-#, fuzzy
-#~ msgid "User Interests"
-#~ msgstr "Záujmy"
-
-#, fuzzy
-#~ msgid "User Picture"
-#~ msgstr "Prehliadanie súborov používateľa"
-
-#, fuzzy
-#~ msgid "Search Wishlist"
-#~ msgstr "Prehľadať zoznam prianí"
-
-#, fuzzy, python-format
-#~ msgid "Loading Nicotine+ %(nic_version)s"
-#~ msgstr "Ukončenie nikotínu+ [X19x], %(status)s…"
-
-#, fuzzy, python-format
-#~ msgid "Using Python %(py_version)s"
-#~ msgstr "Používanie Pythonu %(py_version)s"
-
-#, fuzzy, python-format
-#~ msgid "Quitting Nicotine+ %(version)s, %(status)s…"
-#~ msgstr "Ukončenie nikotínu+ [X19x], %(status)s…"
-
-#, fuzzy, python-format
-#~ msgid "Quit Nicotine+ %(version)s, %(status)s!"
-#~ msgstr "Prestaňte nikotín+ %(version)s, %(status)s!"
-
 #~ msgid "User:"
 #~ msgstr "Používateľ:"
-
-#, fuzzy, python-format
-#~ msgid "All %(ext)s"
-#~ msgstr "Všetky %(ext)s"
-
-#, fuzzy, python-format
-#~ msgid "%(number)2s files "
-#~ msgstr "Súbory %(number)2s "
-
-#, fuzzy
-#~ msgid "Allow regular expressions for the filter's include and exclude"
-#~ msgstr "Používať regulérne výrazy pre obsiahnutý/výlučený text"
-
-#, fuzzy
-#~ msgid "Quit…"
-#~ msgstr "Ukončiť"
-
-#, fuzzy
-#~ msgid "Remember previous primary tab on startup"
-#~ msgstr "Zobrazenie predchádzajúcej primárnej karty pri spustení"
-
-#, fuzzy
-#~ msgid "Start with Search Files by default."
-#~ msgstr "Štandardne povoliť filtre"
-
-#, fuzzy
-#~ msgid "Close Nicotine+?"
-#~ msgstr "Zavrieť nikotín +?"
-
-#, fuzzy
-#~ msgid "Do you really want to exit Nicotine+?"
-#~ msgstr "Naozaj chcete vystúpiť z nikotínu+?"
-
-#, fuzzy
-#~ msgid "Run in Background"
-#~ msgstr "Spustiť na pozadí"
-
-#, fuzzy
-#~ msgid "_Online Notify"
-#~ msgstr "Upo_zornenie pri prihlásení"
-
-#, fuzzy
-#~ msgid "_Prioritize User"
-#~ msgstr "_Uprednostnite používateľa"
-
-#, fuzzy
-#~ msgid "_Trust User"
-#~ msgstr "_Dôveryhodný"
-
-#, fuzzy
-#~ msgid "Request User's IP Address"
-#~ msgstr "Blokované IP adresy:"
-
-#, fuzzy
-#~ msgid "Request IP Address"
-#~ msgstr "Blokované IP adresy:"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose IP address you want to see:"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
-
-#, fuzzy
-#~ msgid "Downloaded"
-#~ msgstr "Stiahnuť"
-
-#, fuzzy, python-format
-#~ msgid "Failed to add download %(filename)s to shared files: %(error)s"
-#~ msgstr ""
-#~ "Nepodarilo sa pridať preberanie %(filename)s do zdieľaných súborov: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Automatically share completed downloads"
-#~ msgstr "Automatické zdieľanie stiahnutí"
-
-#, fuzzy
-#~ msgid ""
-#~ "The equivalent of adding your download folder as a public share, however "
-#~ "files downloaded to this folder will be automatically accessible to "
-#~ "others (no rescan required)."
-#~ msgstr ""
-#~ "Ekvivalent pridania priečinka na prevzatie ako verejného zdieľania, avšak "
-#~ "súbory stiahnuté do tohto priečinka budú automaticky prístupné ostatným "
-#~ "(nevyžaduje sa žiadny opätovný prenos)."
-
-#, fuzzy
-#~ msgid "Unable to Share Folder"
-#~ msgstr "Priečinok sa nedá zdieľať"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is empty"
-#~ msgstr "Zvolený virtuálny názov je prázdny"
-
-#, fuzzy
-#~ msgid "The chosen virtual name already exists"
-#~ msgstr "Zvolený virtuálny názov už existuje"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared"
-#~ msgstr "Zvolený priečinok je už zdieľaný"
-
-#, fuzzy
-#~ msgid "Set Virtual Name"
-#~ msgstr "Nastavenie virtuálneho názvu"
-
-#, fuzzy, python-format
-#~ msgid "Enter virtual name for '%(dir)s':"
-#~ msgstr "Zadajte virtuálny názov pre \"%(dir)s\":"
-
-#, fuzzy
-#~ msgid "The chosen virtual name is either empty or already exists"
-#~ msgstr "Zvolený virtuálny názov je prázdny alebo už existuje"
-
-#, fuzzy
-#~ msgid "The chosen folder is already shared."
-#~ msgstr "Zvolený priečinok je už zdieľaný."
-
-#, fuzzy, python-format
-#~ msgid "%s Properties"
-#~ msgstr "%s Vlastnosti"
-
-#, fuzzy
-#~ msgid "Finished rescanning shares"
-#~ msgstr "Skenovanie priateľmi zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Plugin List"
-#~ msgstr "Zoznam doplnkov"
-
-#, fuzzy, python-format
-#~ msgid "Error while scanning %(path)s: %(error)s"
-#~ msgstr "Chyba pri skenovaní %(path)s: %(error)s"
-
-#, fuzzy
-#~ msgid "Show _Log Pane"
-#~ msgstr "Zobraziť tablu _Log"
 
 #~ msgid "Addresses"
 #~ msgstr "Adresy"
@@ -8568,28 +7200,8 @@ msgstr "Nicotine+"
 #~ msgid "Handler"
 #~ msgstr "Obslužný program"
 
-#, fuzzy
-#~ msgid "Could not enable plugin."
-#~ msgstr "Doplnok sa nedá povoliť."
-
-#, fuzzy
-#~ msgid "Could not disable plugin."
-#~ msgstr "Doplnok sa nepodarilo vypnúť."
-
 #~ msgid "Transfers"
 #~ msgstr "Prenosy"
-
-#, fuzzy
-#~ msgid "Ban List"
-#~ msgstr "Zoznam zákazov"
-
-#, fuzzy
-#~ msgid "Ignore List"
-#~ msgstr "Ignorovať zoznam"
-
-#, fuzzy
-#~ msgid "Censor & Replace"
-#~ msgstr "Cenzúra & Nahradiť"
 
 #~ msgid "Completion"
 #~ msgstr "Doplňovanie"
@@ -8597,236 +7209,20 @@ msgstr "Nicotine+"
 #~ msgid "Categories"
 #~ msgstr "Kategórie"
 
-#, fuzzy
-#~ msgid "Upload Folder To…"
-#~ msgstr "Nahrať priečinok do…"
-
-#, fuzzy
-#~ msgid "Upload Folder Recursive To…"
-#~ msgstr "Nahrať adresár rekurzívne do…"
-
-#, fuzzy
-#~ msgid "Download _Recursive"
-#~ msgstr "Stiahnuť _rekurzívne"
-
-#, fuzzy
-#~ msgid "Download R_ecursive To…"
-#~ msgstr "Stiahnuť _rekurzívne"
-
-#, fuzzy
-#~ msgid "Up_load File(s)"
-#~ msgstr "Stiahn_uť súbor(y)"
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Error while attempting to display folder '%(folder)s', reported error: "
-#~ "%(error)s"
-#~ msgstr ""
-#~ "Chyba pri pokuse o zobrazenie priečinka \"%(folder)s\", hlásená chyba: "
-#~ "%(error)s"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Vyberte Cieľ pre sťahovanie priečinka s podpriečinkami od používateľa"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading a Folder from User"
-#~ msgstr "Vyberte Cieľ na stiahnutie priečinka od používateľa"
-
-#, fuzzy
-#~ msgid "Select Destination for Downloading File(s) from User"
-#~ msgstr "Vyberte Cieľ pre stiahnutie súboru(ov) od používateľa"
-
-#, fuzzy
-#~ msgid "Wishes"
-#~ msgstr "Želanie"
-
-#, fuzzy
-#~ msgid "privileged"
-#~ msgstr "(privilegovaný)"
-
-#, fuzzy
-#~ msgid "prioritized"
-#~ msgstr "prioritné"
-
-#, fuzzy
-#~ msgid "Blocked IP Addresses"
-#~ msgstr "Blokované IP adresy:"
-
-#, fuzzy
-#~ msgid "Complete buddy names"
-#~ msgstr "Doplňovať mená kamarátov"
-
 #~ msgid "Complete usernames in chat rooms"
 #~ msgstr "Doplňovať mená používateľov v chatovacích miestnostiach"
-
-#, fuzzy
-#~ msgid "Complete room names"
-#~ msgstr "Doplňovať názvy miestností v chatovacích miestnostiach"
-
-#, fuzzy
-#~ msgid "Drop-down List"
-#~ msgstr "Rozbaľovací zoznam"
-
-#, fuzzy
-#~ msgid "File Manager command ($ for file path):"
-#~ msgstr "Príkaz Súborového manažéra ($ pre cestu k adresáru):"
-
-#, fuzzy
-#~ msgid "Media Player command ($ for file path):"
-#~ msgstr "Príkaz na spustenie audio prehrávača ($ pre názov súboru):"
-
-#, fuzzy
-#~ msgid "Ignored IP Addresses"
-#~ msgstr "Blokované IP adresy:"
 
 #~ msgid "Display timestamps"
 #~ msgstr "Zobraziť časové značky"
 
-#, fuzzy
-#~ msgid "Notification Popups"
-#~ msgstr "Kontextové okno s upozorneniami"
-
-#, fuzzy
-#~ msgid "Show notification popup when a file has finished downloading"
-#~ msgstr ""
-#~ "Zobraziť kontextové okno s upozornením po dokončení preberania súboru"
-
-#, fuzzy
-#~ msgid "Show notification popup when a folder has finished downloading"
-#~ msgstr ""
-#~ "Zobraziť vyskakovacie okno s upozornením po dokončení sťahovania priečinka"
-
-#, fuzzy
-#~ msgid "Show notification popup when you receive a private message"
-#~ msgstr ""
-#~ "Zobrazenie kontextového kontextu oznámení, keď dostanete súkromnú správu"
-
-#, fuzzy
-#~ msgid "Show notification popup when someone sends a message in a chat room"
-#~ msgstr ""
-#~ "Zobraziť vyskakovacie okno s upozornením, keď niekto odošle správu v "
-#~ "chatovacej miestnosti"
-
-#, fuzzy
-#~ msgid "Show notification popup when you are mentioned in a chat room"
-#~ msgstr ""
-#~ "Zobraziť vyskakovacie okno s upozornením, keď ste spomenutí v chatovacej "
-#~ "miestnosti"
-
-#, fuzzy
-#~ msgid "Tray"
-#~ msgstr "Podnos"
-
-#, fuzzy
-#~ msgid ""
-#~ "Instances of $ will be replaced by the link. The default web browser of "
-#~ "the system will be used in cases where a protocol has not been configured."
-#~ msgstr ""
-#~ "Inštancie $ budú nahradené odkazom. Predvolený webový prehliadač systému "
-#~ "sa použije v prípadoch, keď protokol nebol nakonfigurovaný."
-
 #~ msgid "Handler:"
 #~ msgstr "Obslužný program:"
-
-#, fuzzy
-#~ msgid "Primary Tabs"
-#~ msgstr "Primárne karty"
-
-#, fuzzy
-#~ msgid "Enable file path tooltips in search and transfer views"
-#~ msgstr "Povolenie popisov cesty k súboru vo vyhľadávaní a prenose zobrazení"
-
-#, fuzzy
-#~ msgid ""
-#~ "Displays the complete file path of a search result or file transfer when "
-#~ "you hover a folder path or file name with your cursor."
-#~ msgstr ""
-#~ "Zobrazí úplnú cestu k súboru výsledku vyhľadávania alebo prenosu súborov, "
-#~ "keď umiestnite kurzor myši na cestu k priečinku alebo názov súboru."
-
-#, fuzzy
-#~ msgid "Show privately shared files in user shares"
-#~ msgstr "Zobrazenie súkromne zdieľaných súborov v zdieľaní používateľov"
-
-#, fuzzy
-#~ msgid ""
-#~ "Other clients may offer an option to send privately shared files when you "
-#~ "browse their shares. Folders containing such files are prefixed with "
-#~ "'[PRIVATE FOLDER]', and are not downloadable unless the uploader gives "
-#~ "explicit permission."
-#~ msgstr ""
-#~ "Iní klienti môžu ponúknuť možnosť odosielania súkromne zdieľaných súborov "
-#~ "pri prehliadaní ich akcií. Priečinky obsahujúce takéto súbory sú "
-#~ "predponou \"[PRIVATE FOLDER]\" a nie sú stiahnuté, pokiaľ nahrávač nedáva "
-#~ "výslovné povolenie."
-
-#, fuzzy
-#~ msgid "Chat Censor & Replace"
-#~ msgstr "Cenzúra & Nahradiť"
-
-#, fuzzy
-#~ msgid "Show _Debug Log Controls"
-#~ msgstr "Zobraziť ovládacie prvky denníka _Debug"
-
-#, fuzzy
-#~ msgid "Debug Logging"
-#~ msgstr "Logovanie"
-
-#, fuzzy
-#~ msgid "Virtual Name"
-#~ msgstr "Virtuálny názov"
-
-#, fuzzy
-#~ msgid "Edit Virtual Name"
-#~ msgstr "Upraviť virtuálny názov"
-
-#, fuzzy
-#~ msgid "Copy Folder URL"
-#~ msgstr "Kopírovať URL adresára"
-
-#, fuzzy
-#~ msgid "Download _To…"
-#~ msgstr "Stiah_nuť do…"
 
 #~ msgid "Download"
 #~ msgstr "Stiahnuť"
 
 #~ msgid "Upload"
 #~ msgstr "Upload"
-
-#, fuzzy
-#~ msgid "Upload Folder's Contents"
-#~ msgstr "Nahrať obsah priečinka"
-
-#, fuzzy
-#~ msgid "Rename"
-#~ msgstr "Premenovať"
-
-#, fuzzy
-#~ msgid "File Lists"
-#~ msgstr "Súbory"
-
-#, fuzzy
-#~ msgid "Copy File Path"
-#~ msgstr "Kopírovať cestu k súboru"
-
-#, fuzzy
-#~ msgid "R_emove Wish"
-#~ msgstr "Odstrániť alias"
-
-#, fuzzy, python-format
-#~ msgid "It appears '%s' is not a directory, not loading plugins."
-#~ msgstr "Zdá sa, že \"%s\" nie je adresár, nenačíta pluginy."
-
-#, fuzzy
-#~ msgid "Rescanning buddy shares…"
-#~ msgstr "Skenovanie priateľmi zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Finished rescanning buddy shares"
-#~ msgstr "Skenovanie priateľmi zdieľaných súborov"
 
 #, python-format
 #~ msgid "Your buddy, %s, is attempting to upload file(s) to you."
@@ -8843,18 +7239,6 @@ msgstr "Nicotine+"
 #~ msgid "Client Version"
 #~ msgstr "Verzia klienta"
 
-#, fuzzy, python-format
-#~ msgid "How many days of privileges should user %s be gifted?"
-#~ msgstr "Koľko dní globálnych oprávnení venovať tomuto používateľovi?"
-
-#, fuzzy
-#~ msgid ""
-#~ "Buddies will have higher priority in the queue, the same as globally "
-#~ "privileged users."
-#~ msgstr ""
-#~ "Priatelia budú mať vyššiu prioritu vo fronte, rovnako ako aj používatelia "
-#~ "s globálnymi oprávneniami"
-
 #~ msgid "Privileged"
 #~ msgstr "Privilegovaný"
 
@@ -8864,143 +7248,11 @@ msgstr "Nicotine+"
 #~ msgid "Comments"
 #~ msgstr "Komentáre"
 
-#, fuzzy
-#~ msgid "Edit _Comments…"
-#~ msgstr "_Upraviť komentáre"
-
-#, fuzzy
-#~ msgid ""
-#~ "Creates subfolders based on the user you are downloading from, and stores "
-#~ "the downloaded file / folder there."
-#~ msgstr ""
-#~ "Vytvorí podpriečinky na základe používateľa, z ktorého sťahujete, a "
-#~ "ukladá stiahnutý súbor / priečinok tam."
-
-#, fuzzy
-#~ msgid "Login Details"
-#~ msgstr "Prihlasovacie údaje"
-
-#, fuzzy
-#~ msgid "Advanced"
-#~ msgstr "Pokročilý"
-
-#, fuzzy
-#~ msgid "Port mapping renewal interval in hours:"
-#~ msgstr "Interval obnovenia mapovania portov v hodinách:"
-
-#, fuzzy
-#~ msgid "Enable buddy-only shares"
-#~ msgstr "Povoliť zdieľanie vybraných súborov iba pre kamarátov"
-
-#, fuzzy
-#~ msgid "Files will be uploaded in the order they were queued."
-#~ msgstr ""
-#~ "Súbory budú posielané v tom poradí, v akom boli umiestnené do frontu"
-
-#, fuzzy
-#~ msgid "Rescanning normal shares…"
-#~ msgstr "Reskenovanie začalo"
-
-#, fuzzy
-#~ msgid "Finished rescanning public shares"
-#~ msgstr "Dokončené preskenovanie verejných akcií"
-
 #~ msgid "Scanning Buddy Shares"
 #~ msgstr "Skenovanie priateľmi zdieľaných súborov"
 
-#, fuzzy
-#~ msgid "_Rescan Public Shares"
-#~ msgstr "Prehľadať zdieľané súbory"
-
-#, fuzzy
-#~ msgid "Rescan B_uddy Shares"
-#~ msgstr "Skenovanie priateľmi zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Rescan Public Shares"
-#~ msgstr "Prehľadať zdieľané súbory"
-
-#, fuzzy
-#~ msgid "Rescan Buddy Shares"
-#~ msgstr "Skenovanie priateľmi zdieľaných súborov"
-
-#, fuzzy
-#~ msgid "Enables buddy shares that only users on your buddy list can access."
-#~ msgstr ""
-#~ "Umožňuje zdieľanie kamarátov, ku ktorým majú prístup iba používatelia vo "
-#~ "vašom zozname kamarátov."
-
-#, fuzzy
-#~ msgid "Mark each shared folder as buddy-only"
-#~ msgstr "Označenie každého zdieľaného priečinka ako iba kamaráta"
-
-#, fuzzy
-#~ msgid ""
-#~ "Overrides the per-share option, useful if you temporarily need to prevent "
-#~ "public access to shares."
-#~ msgstr ""
-#~ "Prepíše možnosť na akciu, ktorá je užitočná, ak dočasne potrebujete "
-#~ "zabrániť prístupu verejnosti k zdieľaniu."
-
-#, fuzzy
-#~ msgid ""
-#~ "Only users marked as trusted on your buddy list can access your buddy-"
-#~ "only shares."
-#~ msgstr ""
-#~ "Iba používatelia označení ako dôveryhodní v zozname kamarátov majú "
-#~ "prístup k vašim zdieľaným akciám iba pre kamarátov."
-
-#, fuzzy
-#~ msgid "Filtered out excluded search result "
-#~ msgstr "Odfiltrovaný vylúčený výsledok vyhľadávania "
-
-#, fuzzy
-#~ msgid "Filtered out inexact or incorrect search result "
-#~ msgstr "Filtrovaný nepresný alebo nesprávny výsledok vyhľadávania "
-
-#, fuzzy, python-format
-#~ msgid ""
-#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-#~ msgstr ""
-#~ "Uložené nastavenie \"%(key)s\" už nie je prítomné v doplnku \"%(name)s\""
-
-#, fuzzy, python-format
-#~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-#~ msgstr "Plugin %(module)s vrátil niečo divné, \"%(value)s\", ignorujúc"
-
-#, fuzzy, python-format
-#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-#~ msgstr ""
-#~ "Nekonzistentná vyrovnávacia pamäť pre \"%(vdir)s\", prestavba \"%(dir)s\""
-
-#, fuzzy, python-format
-#~ msgid "Dropping missing folder %(dir)s"
-#~ msgstr "Vypustenie chýbajúceho priečinka %(dir)s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Nicotine+ allows you to share folders directly from your computer. All "
-#~ "the contents of these folders (with the exception of dotfiles) can be "
-#~ "downloaded by other users on the Soulseek network. Public shares are "
-#~ "available for every user, while users in your buddy list can access buddy-"
-#~ "only shares in addition to public shares."
-#~ msgstr ""
-#~ "Nikotín+ vám umožňuje zdieľať priečinky priamo z počítača. Všetok obsah "
-#~ "týchto priečinkov (s výnimkou bodkovaných súborov) si môžu stiahnuť iní "
-#~ "používatelia v sieti Soulseek. Verejné akcie sú k dispozícii pre každého "
-#~ "používateľa, zatiaľ čo používatelia vo vašom zozname kamarátov majú okrem "
-#~ "verejných akcií prístup aj k zdieľaným partnerom."
-
 #~ msgid "Set your personal ticker"
 #~ msgstr "Nastaviť váš osobný ticker"
-
-#, fuzzy
-#~ msgid "Receive a User's Info"
-#~ msgstr "Vyhľadať informácie o používateľovi"
-
-#, fuzzy
-#~ msgid "Enter the username of the person you to receive information about"
-#~ msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
 
 #~ msgid "Add user 'user' to your user list"
 #~ msgstr "Pridať používateľa 'používateľ' do zoznamu používateľov"
@@ -9010,22 +7262,6 @@ msgstr "Nicotine+"
 
 #~ msgid "Request user info for user 'user'"
 #~ msgstr "Vyžiadať informácie o používateľovi 'používateľ'"
-
-#, fuzzy
-#~ msgid "Add user to your user list"
-#~ msgstr "Pridať používateľa 'používateľ' do zoznamu používateľov"
-
-#, fuzzy
-#~ msgid "Remove user from your user list"
-#~ msgstr "Odstrániť používateľa 'používateľ' z vašeho zoznamu používateľov"
-
-#, fuzzy
-#~ msgid "/ignore"
-#~ msgstr "Ignorovať"
-
-#, fuzzy
-#~ msgid "/unignore"
-#~ msgstr "Ignorovať"
 
 #, python-format
 #~ msgid "Can't remove %s"

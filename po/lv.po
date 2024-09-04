@@ -6073,10 +6073,6 @@ msgstr "Nicotine+ Komandas"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Nevar saglabāt %(filename)s: %(error)s"
 
-#, fuzzy
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+ Komanda"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Uzticamie Draugi"
 
@@ -6769,10 +6765,6 @@ msgstr "Nicotine+ Komandas"
 #~ msgid "Playing now"
 #~ msgstr "Tagad atskaņo"
 
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Nevar atvērt faila ceļu %(path)s: %(error)s"
-
 #, python-format
 #~ msgid "Error code %(code)s: %(description)s"
 #~ msgstr "Kļūdas kods %(code)s: %(description)s"
@@ -6791,10 +6783,6 @@ msgstr "Nicotine+ Komandas"
 #, python-format
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Nav šāda aliasa (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Alternatīvie ātruma ierobežojumi"
 
 #~ msgid "Aliases"
 #~ msgstr "Aliasi"
@@ -6826,10 +6814,6 @@ msgstr "Nicotine+ Komandas"
 #~ msgid "Limit upload speed to (KiB/s):"
 #~ msgstr "Ierobežot augšupielādes ātrumu līdz (KiB/s):"
 
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Atrasta vēlmju saraksta vienums"
-
 #~ msgid "Tabs show user status icons instead of status text"
 #~ msgstr "Cilnēs statusa teksta vietā tiek rādītas lietotāja statusa ikonas"
 
@@ -6850,14 +6834,6 @@ msgstr "Nicotine+ Komandas"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Pievienot draugu sarakstam"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Notīrīt visas lejupielādes, kas atzīmētas ar noteiktu statusu."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Notīrīt visas augšupielādes ar noteiktu statusu."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""

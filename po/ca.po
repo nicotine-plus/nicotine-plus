@@ -6291,9 +6291,6 @@ msgstr "Comandes de Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "No es pot desar %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Amics de confiança"
 
@@ -6318,34 +6315,14 @@ msgstr "Comandes de Nicotine+"
 #~ msgid "Send Message"
 #~ msgstr "Enviar missatge"
 
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Veure perfil d'usuari"
-
 #~ msgid "Start Messaging"
 #~ msgstr "Començar a enviar missatges"
 
 #~ msgid "Enter the name of the user whom you want to send a message:"
 #~ msgstr "Introdueix el nom d'usuari a qui vols enviar un missatge:"
 
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "_Missatge"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr "Introdueix el nom de l'usuari del qual vols veure el perfil:"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "_Veure Perfil"
-
 #~ msgid "Enter the name of the user whose shares you want to see:"
 #~ msgstr "Introdueix el nom d'usuari del que vols veure els compartits:"
-
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "_Explora"
 
 #~ msgid "Password"
 #~ msgstr "Contrasenya"
@@ -6495,11 +6472,6 @@ msgstr "Comandes de Nicotine+"
 #~ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 #~ msgstr "No es pot trobar %(option1)s ni %(option2)s, instal·la'n alguna."
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr ""
-#~ "S'han trobat %(num)s carpetes abans de tornar a examinar, reconstruint…"
-
 #, python-format
 #~ msgid "Failed to process the following databases: %(names)s"
 #~ msgstr "No s'han pogut processar les bases de dades següents: %(names)s"
@@ -6511,10 +6483,6 @@ msgstr "Comandes de Nicotine+"
 
 #~ msgid "Quit / Run in Background"
 #~ msgstr "Sortir / Executar en segon pla"
-
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Interval de ports d'escolta:"
 
 #~ msgid "Network interface:"
 #~ msgstr "Interfície de xarxa:"
@@ -6543,10 +6511,6 @@ msgstr "Comandes de Nicotine+"
 #, python-format
 #~ msgid "You are using the latest version of %s"
 #~ msgstr "Estàs utilitzant la darrera versió de %s"
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Comprovar l' _última versió"
 
 #~ msgid "Prefer Dark _Mode"
 #~ msgstr "Preferir el mode _fosc"
@@ -6673,17 +6637,6 @@ msgstr "Comandes de Nicotine+"
 
 #~ msgid "_Auto-join Room"
 #~ msgstr "Unir-se _automáticamente a la sala"
-
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Sintaxi:</b> No es distingeixen entre majúscules i minúscules. Totes "
-#~ "les expressions regulars de Python són compatibles si l'escapament està "
-#~ "inhabilitat. Per als filtres senzills, es recomana habilitar l'escapament "
-#~ "actiu."
 
 #~ msgid "Escaped"
 #~ msgstr "Escapada"

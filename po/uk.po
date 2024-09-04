@@ -6348,9 +6348,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Can't save %(filename)s: %(error)s"
 #~ msgstr "Не вдається зберегти %(filename)s: %(error)s"
 
-#~ msgid "Nicotine+"
-#~ msgstr "Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Довірені друзі"
 

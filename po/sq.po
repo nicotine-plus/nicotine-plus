@@ -5864,10 +5864,6 @@ msgstr ""
 #~ msgid "_Clear"
 #~ msgstr "_Pastro"
 
-#, fuzzy
-#~ msgid "Nicotine+"
-#~ msgstr "Ekipi Nicotine+"
-
 #~ msgid "Trusted Buddies"
 #~ msgstr "Shoket e besuar"
 
