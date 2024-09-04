@@ -6372,45 +6372,17 @@ msgstr "Команда Nicotine+"
 #~ msgid "Send Message"
 #~ msgstr "Відправити повідомлення"
 
-#, fuzzy
-#~ msgid "View User Profile"
-#~ msgstr "Переглянути профіль користувача"
-
 #~ msgid "Start Messaging"
 #~ msgstr "Почати листування"
 
 #~ msgid "Enter the name of the user whom you want to send a message:"
 #~ msgstr "Введіть ім'я користувача, якому ви хочете надіслати повідомлення:"
 
-#, fuzzy
-#~ msgid "_Message"
-#~ msgstr "Повідомлення (лоток)"
-
-#, fuzzy
-#~ msgid "Enter the name of the user whose profile you want to see:"
-#~ msgstr "Введіть ім'я користувача, чиї спільні каталоги ви хочете побачити:"
-
-#, fuzzy
-#~ msgid "_View Profile"
-#~ msgstr "Переглянути профіль користувача"
-
 #~ msgid "Enter the name of the user whose shares you want to see:"
 #~ msgstr "Введіть ім'я користувача, чиї спільні каталоги ви хочете побачити:"
 
-#, fuzzy
-#~ msgid "_Browse"
-#~ msgstr "_Перегляд файлів"
-
 #~ msgid "Password"
 #~ msgstr "Пароль"
-
-#, fuzzy
-#~ msgid "Download File"
-#~ msgstr "Завантажити файл"
-
-#, fuzzy
-#~ msgid "Refresh Similar Users"
-#~ msgstr "Схожі користувачі"
 
 #~ msgid "Enter the username of the person whose files you want to see"
 #~ msgstr "Введіть ім’я користувача особи, чиї файли ви хочете побачити"
@@ -6432,10 +6404,6 @@ msgstr "Команда Nicotine+"
 #~ msgstr ""
 #~ "Введіть назву кімнати, до якої хочете приєднатися. Якщо кімната не існує, "
 #~ "вона буде створена."
-
-#, fuzzy
-#~ msgid "Show Log History Pane"
-#~ msgstr "Показувати панель журналу історії"
 
 #~ msgid "Save _Picture"
 #~ msgstr "Зберегти _Зображення"
@@ -6531,10 +6499,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Buddy-only"
 #~ msgstr "Лише для друзів"
 
-#, fuzzy
-#~ msgid "Share with buddies only"
-#~ msgstr "Поділитися лише з друзями"
-
 #~ msgid "_Quit…"
 #~ msgstr "_Вийти…"
 
@@ -6550,10 +6514,6 @@ msgstr "Команда Nicotine+"
 #~ "Не вдається знайти %(option1)s або %(option2)s, будь ласка, встановіть "
 #~ "будь-який з них."
 
-#, fuzzy, python-format
-#~ msgid "%(num)s folders found before rescan"
-#~ msgstr "%(num)s каталогів знайдені перед перескануванням, перебудова…"
-
 #, python-format
 #~ msgid "Failed to process the following databases: %(names)s"
 #~ msgstr "Не вдалося обробити такі бази даних: %(names)s"
@@ -6565,44 +6525,12 @@ msgstr "Команда Nicotine+"
 #~ msgid "Quit / Run in Background"
 #~ msgstr "Вийти/запустити у фоновому режимі"
 
-#, fuzzy
-#~ msgid "Listening port:"
-#~ msgstr "Порт прослуховування не встановлений"
-
-#, fuzzy
-#~ msgid "Network interface:"
-#~ msgstr "Пошуки в мережі"
-
 #~ msgid "Limit buddy-only shares to trusted buddies"
 #~ msgstr ""
 #~ "Обмежувати доступ до дружніх спільних ресурсів лише довіреним друзям"
 
 #~ msgid "Shared"
 #~ msgstr "Розмір спільного"
-
-#, fuzzy
-#~ msgid "Search Files and Folders"
-#~ msgstr "Пошук файлів і каталоргів (точна відповідність)"
-
-#, fuzzy
-#~ msgid "Out of Date"
-#~ msgstr "Застарілий"
-
-#, fuzzy, python-format
-#~ msgid "Version %(version)s is available, released on %(date)s"
-#~ msgstr "Доступна версія %(version)s, випущена %(date)s"
-
-#, fuzzy, python-format
-#~ msgid "You are using a development version of %s"
-#~ msgstr "Схоже, ви використовуєте версію Nicotine+ для розробки."
-
-#, fuzzy, python-format
-#~ msgid "You are using the latest version of %s"
-#~ msgstr "Ви використовуєте останню версію Nicotine+."
-
-#, fuzzy
-#~ msgid "Latest Version Unknown"
-#~ msgstr "Перевірити _останню версію"
 
 #~ msgid "Prefer Dark _Mode"
 #~ msgstr "Віддавати перевагу _темному режиму"
@@ -6633,14 +6561,6 @@ msgstr "Команда Nicotine+"
 
 #~ msgid "Sent to users as the reason for being banned."
 #~ msgstr "Надсилати користувачам як причину блокування."
-
-#, fuzzy
-#~ msgid ""
-#~ "Once you interact with the application being away, status will be set to "
-#~ "online."
-#~ msgstr ""
-#~ "Після того, як ви взаємодієте з програмою, яка перебуває на відстані, "
-#~ "статус буде встановлено на онлайн."
 
 #~ msgid "Each user may queue a maximum of either:"
 #~ msgstr "Кожен користувач може поставити в чергу не більше:"
@@ -6686,14 +6606,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Kosovo"
 #~ msgstr "Косово"
 
-#, fuzzy
-#~ msgid "Unknown Network Interface"
-#~ msgstr "Користувацький інтерфейс"
-
-#, fuzzy
-#~ msgid "Listening Port Unavailable"
-#~ msgstr "Прослуховування через порт: %i"
-
 #, python-format
 #~ msgid ""
 #~ "The server seems to be down or not responding, retrying in %i seconds"
@@ -6734,53 +6646,11 @@ msgstr "Команда Nicotine+"
 #~ msgid "_Auto-join Room"
 #~ msgstr "_Автоматичне приєднання до кімнати"
 
-#, fuzzy
-#~ msgid ""
-#~ "<b>Syntax</b>: Letters are case-insensitive. All Python regular "
-#~ "expressions are supported if escaping is disabled. For simple filters, "
-#~ "keeping escaping enabled is recommended."
-#~ msgstr ""
-#~ "<b>Синтаксис: </b> Літери не чутливі до регістру. Усі регулярні вирази "
-#~ "Python підтримуються, якщо екранування вимкнено. Для простих фільтрів "
-#~ "рекомендується залишати екранування увімкненим."
-
 #~ msgid "Escaped"
 #~ msgstr "Такий, що втік"
 
-#, fuzzy
-#~ msgid "Escape filter"
-#~ msgstr "Такий, що втік"
-
-#, fuzzy
-#~ msgid "Enter a text pattern and what to replace it with"
-#~ msgstr "Введіть шаблон тексту та чим замінити"
-
-#, fuzzy, python-format
-#~ msgid "No listening port is available in the specified port range %s–%s"
-#~ msgstr "У вказаному діапазоні портів %s–%s порт прослуховування недоступний"
-
-#, fuzzy
-#~ msgid ""
-#~ "Choose a range to select a listening port from. The first available port "
-#~ "in the range will be used."
-#~ msgstr ""
-#~ "Виберіть діапазон для вибору порту для прослуховування. Буде використано "
-#~ "перший доступний порт у діапазоні."
-
-#, fuzzy
-#~ msgid "First Port"
-#~ msgstr "Початковий порт"
-
 #~ msgid "to"
 #~ msgstr "до"
-
-#, fuzzy
-#~ msgid "Last Port"
-#~ msgstr "Кінцевий порт"
-
-#, fuzzy, python-format
-#~ msgid "Cannot find %s or newer, please install it."
-#~ msgstr "Не вдається знайти %s, будь ласка, встановіть його."
 
 #~ msgid ""
 #~ "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -6953,41 +6823,8 @@ msgstr "Команда Nicotine+"
 #~ msgid "Browse shares of user"
 #~ msgstr "Переглянути спільні ресурси користувача"
 
-#, fuzzy
-#~ msgid ""
-#~ "For order-insensitive filtering, as well as filtering several exact "
-#~ "phrases, vertical bars can be used to separate phrases and words.\n"
-#~ "    Example: Remix|Instrumental|Dub Mix"
-#~ msgstr ""
-#~ "Для фільтрації без урахування порядку, а також для фільтрації кількох "
-#~ "точних фраз, вертикальні смуги можна використовувати для розділення фраз "
-#~ "і слів.\n"
-#~ "    Приклад: Спірс|Брітні|Мій прекрасний альбом|привіт"
-
-#, fuzzy
-#~ msgid "To exclude non-audio files use !0 in the duration filter."
-#~ msgstr "Щоб виключити неаудіофайли, використовуйте !0 у фільтрі тривалості."
-
-#, fuzzy
-#~ msgid "Filters files based upon users' geographical location."
-#~ msgstr "Фільтрує файли за країнами користувачів."
-
-#, fuzzy
-#~ msgid "To view the full results again, simply clear all active filters."
-#~ msgstr ""
-#~ "Щоб знову переглянути повні результати, просто очистіть усі активні "
-#~ "фільтри."
-
-#, fuzzy
-#~ msgid "See the preferences to set default search result filter options."
-#~ msgstr "Перегляньте параметри, щоб отримати додаткові параметри фільтра."
-
 #~ msgid "File size"
 #~ msgstr "Розмір файлу"
-
-#, fuzzy
-#~ msgid "Clear Active Filters"
-#~ msgstr "Очистити всі активні фільтри"
 
 #~ msgid "Cycle through completions when pressing tab-key"
 #~ msgstr "Перебирати автодоповнення, натискаючи клавішу Tab"
@@ -7006,12 +6843,6 @@ msgstr "Команда Nicotine+"
 
 #~ msgid "Save buddies' uploads to:"
 #~ msgstr "Зберігайте завантаження друзів у:"
-
-#, fuzzy
-#~ msgid "Use UPnP to forward listening port"
-#~ msgstr ""
-#~ "Використовуйте UPnP для переадресації порту прослуховування (інтервал у "
-#~ "годинах):"
 
 #~ msgid ""
 #~ "Share folders with every Soulseek user or buddies, allowing contents to "
@@ -7073,10 +6904,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Playing now"
 #~ msgstr "Відтворюється зараз"
 
-#, fuzzy, python-format
-#~ msgid "Cannot download file to %(path)s: %(error)s"
-#~ msgstr "Не вдається зберегти файл %(path)s: %(error)s"
-
 #, python-format
 #~ msgid "Error code %(code)s: %(description)s"
 #~ msgstr "Код помилки %(code)s: %(description)s"
@@ -7095,10 +6922,6 @@ msgstr "Команда Nicotine+"
 #, python-format
 #~ msgid "No such alias (%(alias)s)\n"
 #~ msgstr "Немає псевдоніма (%(alias)s)\n"
-
-#, fuzzy
-#~ msgid "Use Alternative Transfer Speed Limits"
-#~ msgstr "Альтернативні обмеження швидкості"
 
 #~ msgid "Aliases"
 #~ msgstr "Псевдоніми"
@@ -7130,10 +6953,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Limit upload speed to (KiB/s):"
 #~ msgstr "Обмежити швидкість вивантаження до (КіБ/с):"
 
-#, fuzzy
-#~ msgid "Wishlist item found"
-#~ msgstr "Знайдено товар у списку бажань"
-
 #~ msgid "Tabs show user status icons instead of status text"
 #~ msgstr ""
 #~ "На вкладках замість тексту відображаються значки статусу користувача"
@@ -7155,14 +6974,6 @@ msgstr "Команда Nicotine+"
 
 #~ msgid "_Add to Buddy List"
 #~ msgstr "_Додати до списку друзів"
-
-#, fuzzy
-#~ msgid "Clear Downloads With Specific Status"
-#~ msgstr "Очистити всі завантаження, позначені певним статусом."
-
-#, fuzzy
-#~ msgid "Clear Uploads With Specific Status"
-#~ msgstr "Очистити всі вивантаження, позначені певним статусом."
 
 #~ msgid "use non-default user data directory for e.g. list of downloads"
 #~ msgstr ""
@@ -7445,14 +7256,6 @@ msgstr "Команда Nicotine+"
 #~ msgid "Ignore User's IP Address"
 #~ msgstr "Ігнорувати IP-адресу користувача"
 
-#, fuzzy
-#~ msgid ""
-#~ "Clear every download that has finished transferring or been caught by a "
-#~ "filter."
-#~ msgstr ""
-#~ "Очистіть кожне завантаження, яке завершилося передачу або було "
-#~ "перехоплено фільтром."
-
 #~ msgid "Usernames"
 #~ msgstr "Імена користувачів"
 
@@ -7460,14 +7263,6 @@ msgstr "Команда Nicotine+"
 #~ msgstr ""
 #~ "Відображати зареєстровані повідомлення кімнати чату, коли знову "
 #~ "приєднуєтеся до кімнати"
-
-#, fuzzy
-#~ msgid ""
-#~ "Clear every upload that has either finished transferring, or been "
-#~ "cancelled by the remote user."
-#~ msgstr ""
-#~ "Очистіть кожне завантаження, передачу якого було завершено або скасовано "
-#~ "віддаленим користувачем."
 
 #~ msgid "Queue Position"
 #~ msgstr "Позиція в черзі"
@@ -7479,7 +7274,3 @@ msgstr "Команда Nicotine+"
 #~ msgstr ""
 #~ "Користувач %(user)s безпосередньо шукає \"%(query)s\", повертаючи "
 #~ "результати %(num)i"
-
-#, fuzzy
-#~ msgid "[PRIVATE]"
-#~ msgstr "[ПРИВАТНО]"
