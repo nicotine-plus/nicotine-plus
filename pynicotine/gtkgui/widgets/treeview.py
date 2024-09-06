@@ -241,13 +241,13 @@ class TreeView:
                 column_type = column_data.get("column_type")
 
                 if column_type == "progress":
-                    data_type = int
+                    data_type = GObject.TYPE_INT
 
                 elif column_type == "toggle":
-                    data_type = bool
+                    data_type = GObject.TYPE_BOOLEAN
 
                 else:
-                    data_type = str
+                    data_type = GObject.TYPE_STRING
 
             self._column_ids[column_id] = column_index
             self._data_types.append(data_type)
@@ -506,15 +506,17 @@ class TreeView:
         included_values = []
 
         for index, value in enumerate(values):
+            if not value:
+                continue
+
             if index in self._column_gvalues and value > 2147483647:
                 # Need gvalue conversion for large integers
                 gvalue = self._column_gvalues[index]
                 gvalue.set_value(value)
                 value = gvalue
 
-            if value:
-                value_columns.append(index)
-                included_values.append(value)
+            value_columns.append(index)
+            included_values.append(value)
 
         if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(

@@ -113,7 +113,7 @@ class Interests:
                 },
 
                 # Hidden data columns
-                "rating_data": {"data_type": int}
+                "rating_data": {"data_type": GObject.TYPE_INT}
             }
         )
 

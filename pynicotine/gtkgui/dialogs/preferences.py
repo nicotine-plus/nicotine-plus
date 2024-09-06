@@ -30,6 +30,7 @@ import time
 from operator import itemgetter
 
 from gi.repository import Gdk
+from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -2889,7 +2890,7 @@ class PluginsPage:
                 },
 
                 # Hidden data columns
-                "plugin_id": {"data_type": str, "iterator_key": True}
+                "plugin_id": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
             }
         )
 

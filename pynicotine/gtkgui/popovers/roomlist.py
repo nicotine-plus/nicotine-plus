@@ -78,7 +78,7 @@ class RoomList(Popover):
 
                 # Hidden data columns
                 "users_data": {"data_type": GObject.TYPE_UINT},
-                "is_private_data": {"data_type": bool},
+                "is_private_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "room_weight_data": {"data_type": Pango.Weight},
                 "room_underline_data": {"data_type": Pango.Underline}
             }

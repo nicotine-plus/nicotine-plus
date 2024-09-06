@@ -575,8 +575,8 @@ class Search:
                 "size_data": {"data_type": GObject.TYPE_UINT64},
                 "bitrate_data": {"data_type": GObject.TYPE_UINT},
                 "length_data": {"data_type": GObject.TYPE_UINT},
-                "file_path_data": {"data_type": str},
-                "free_slot_data": {"data_type": bool},
+                "file_path_data": {"data_type": GObject.TYPE_STRING},
+                "free_slot_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "file_attributes_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_UINT64,

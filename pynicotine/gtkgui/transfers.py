@@ -221,9 +221,9 @@ class Transfers:
                 "current_bytes_data": {"data_type": GObject.TYPE_UINT64},
                 "speed_data": {"data_type": GObject.TYPE_UINT64},
                 "queue_position_data": {"data_type": GObject.TYPE_UINT},
-                "time_elapsed_data": {"data_type": int},
+                "time_elapsed_data": {"data_type": GObject.TYPE_INT},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
-                "is_sensitive_data": {"data_type": bool},
+                "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
                     "data_type": GObject.TYPE_UINT64,
