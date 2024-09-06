@@ -443,14 +443,12 @@ class ChatRoom:
         (
             self.activity_container,
             self.activity_search_bar,
-            self.activity_search_entry,
             self.activity_view_container,
             self.chat_container,
             self.chat_entry_container,
             self.chat_entry_row,
             self.chat_paned,
             self.chat_search_bar,
-            self.chat_search_entry,
             self.chat_view_container,
             self.container,
             self.help_button,
@@ -493,12 +491,15 @@ class ChatRoom:
 
         # Event Text Search
         self.activity_search_bar = TextSearchBar(
-            self.activity_view.widget, self.activity_search_bar, self.activity_search_entry)
+            self.activity_view.widget, self.activity_search_bar,
+            placeholder_text=_("Search activity log…")
+        )
 
         # Chat Text Search
         self.chat_search_bar = TextSearchBar(
-            self.chat_view.widget, self.chat_search_bar, self.chat_search_entry,
-            controller_widget=self.chat_container, focus_widget=self.chatrooms.chat_entry
+            self.chat_view.widget, self.chat_search_bar,
+            controller_widget=self.chat_container, focus_widget=self.chatrooms.chat_entry,
+            placeholder_text=_("Search chat log…")
         )
 
         self.log_toggle.set_active(room in config.sections["logging"]["rooms"])

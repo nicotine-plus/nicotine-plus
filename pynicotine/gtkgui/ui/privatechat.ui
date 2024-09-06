@@ -12,14 +12,6 @@
           <object class="GtkSearchBar" id="search_bar">
             <property name="show-close-button">True</property>
             <property name="visible">True</property>
-            <child>
-              <object class="GtkSearchEntry" id="search_entry">
-                <property name="max-width-chars">75</property>
-                <property name="placeholder-text" translatable="yes">Search chat log…</property>
-                <property name="visible">True</property>
-                <property name="width-chars">24</property>
-              </object>
-            </child>
           </object>
         </child>
         <child>

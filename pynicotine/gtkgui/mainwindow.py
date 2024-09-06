@@ -118,7 +118,6 @@ class MainWindow(Window):
             self.interests_toolbar,
             self.log_container,
             self.log_search_bar,
-            self.log_search_entry,
             self.log_view_container,
             self.private_content,
             self.private_end,
@@ -222,10 +221,14 @@ class MainWindow(Window):
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
         # Logging
-        self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
-                                 parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
-        self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
-                                            controller_widget=self.log_container)
+        self.log_view = TextView(
+            self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
+            parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2
+        )
+        self.log_search_bar = TextSearchBar(
+            self.log_view.widget, self.log_search_bar, controller_widget=self.log_container,
+            placeholder_text=_("Search log…")
+        )
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)

@@ -24,6 +24,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class ChatEntry:
@@ -495,12 +496,42 @@ class SpellChecker:
 
 class TextSearchBar:
 
-    def __init__(self, textview, search_bar, entry, controller_widget=None, focus_widget=None):
+    def __init__(self, textview, search_bar, controller_widget=None, focus_widget=None,
+                 placeholder_text=None):
 
         self.textview = textview
         self.search_bar = search_bar
-        self.entry = entry
-        self.focus_widget = focus_widget or textview
+        self.focus_widget = focus_widget
+
+        container = Gtk.Box(spacing=6, visible=True)
+        self.entry = Gtk.SearchEntry(
+            max_width_chars=75, placeholder_text=placeholder_text, width_chars=24, visible=True
+        )
+        self.previous_button = Gtk.Button(tooltip_text=_("Find Previous Match"), visible=True)
+        self.next_button = Gtk.Button(tooltip_text=_("Find Next Match"), visible=True)
+
+        if GTK_API_VERSION >= 4:
+            self.previous_button.set_icon_name("go-up-symbolic")                   # pylint: disable=no-member
+            self.next_button.set_icon_name("go-down-symbolic")                     # pylint: disable=no-member
+
+            container.append(self.entry)                                           # pylint: disable=no-member
+            container.append(self.previous_button)                                 # pylint: disable=no-member
+            container.append(self.next_button)                                     # pylint: disable=no-member
+            self.search_bar.set_child(container)                                   # pylint: disable=no-member
+        else:
+            self.previous_button.set_image(Gtk.Image(icon_name="go-up-symbolic"))  # pylint: disable=no-member
+            self.next_button.set_image(Gtk.Image(icon_name="go-down-symbolic"))    # pylint: disable=no-member
+
+            container.add(self.entry)                                              # pylint: disable=no-member
+            container.add(self.previous_button)                                    # pylint: disable=no-member
+            container.add(self.next_button)                                        # pylint: disable=no-member
+            self.search_bar.add(container)                                         # pylint: disable=no-member
+
+        if not controller_widget:
+            controller_widget = textview
+
+        for button in (self.previous_button, self.next_button):
+            add_css_class(button, "flat")
 
         self.search_bar.connect_entry(self.entry)
 
@@ -510,10 +541,11 @@ class TextSearchBar:
 
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
+        self.previous_button.connect("clicked", self.on_search_previous_match)
+        self.next_button.connect("clicked", self.on_search_next_match)
 
-        if not controller_widget:
-            controller_widget = textview
-
+        Accelerator("Up", self.entry, self.on_search_previous_match)
+        Accelerator("Down", self.entry, self.on_search_next_match)
         Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
         Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
         Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
@@ -573,9 +605,11 @@ class TextSearchBar:
 
     def on_search_previous_match(self, *_args):
         self.on_search_match(search_type="previous")
+        return True
 
     def on_search_next_match(self, *_args):
         self.on_search_match(search_type="next")
+        return True
 
     def on_hide_search_accelerator(self, *_args):
         """Escape - hide search bar."""
@@ -597,4 +631,9 @@ class TextSearchBar:
             return
 
         self.search_bar.set_search_mode(False)
-        self.focus_widget.grab_focus()
+
+        if self.focus_widget is not None and self.focus_widget.get_sensitive():
+            self.focus_widget.grab_focus()
+            return
+
+        self.textview.grab_focus()
