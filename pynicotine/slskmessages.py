@@ -455,6 +455,9 @@ class FileListMessage(SlskMessage):
     @staticmethod
     def parse_file_attributes(attributes):
 
+        if attributes is None:
+            attributes = {}
+
         try:
             bitrate = attributes.get(FileAttribute.BITRATE)
             length = attributes.get(FileAttribute.DURATION)
