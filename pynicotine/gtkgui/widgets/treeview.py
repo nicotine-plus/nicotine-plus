@@ -825,9 +825,9 @@ class TreeView:
             if column_data["column_type"] not in accepted_column_types:
                 continue
 
-            column_value = model.get_value(iterator, column_index).lower()
+            column_value = model.get_value(iterator, column_index)
 
-            if search_term.lower() in column_value:
+            if column_value and search_term.lower() in column_value.lower():
                 return False
 
         return True
