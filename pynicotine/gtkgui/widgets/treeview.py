@@ -496,27 +496,34 @@ class TreeView:
 
     def add_row(self, values, select_row=True, parent_iterator=None):
 
-        position = 0  # Insert at the beginning for large performance improvement
-        values = values[:]
         key = values[self._iterator_key_column]
 
         if key in self.iterators:
             return None
 
-        for i, gvalue in self._column_gvalues.items():
-            value = values[i]
+        position = 0  # Insert at the beginning for large performance improvement
+        value_columns = []
+        included_values = []
 
-            if value > 2147483647:
+        for index, value in enumerate(values):
+            if index in self._column_gvalues and value > 2147483647:
                 # Need gvalue conversion for large integers
+                gvalue = self._column_gvalues[index]
                 gvalue.set_value(value)
-                values[i] = gvalue
+                value = gvalue
+
+            if value:
+                value_columns.append(index)
+                included_values.append(value)
 
         if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(
-                parent_iterator, position, self._column_numbers, values
+                parent_iterator, position, value_columns, included_values
             )
         else:
-            self.iterators[key] = iterator = self.model.insert_with_values(position, self._column_numbers, values)
+            self.iterators[key] = iterator = self.model.insert_with_values(
+                position, value_columns, included_values
+            )
 
         self._iterator_keys[iterator.user_data] = key
 
