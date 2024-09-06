@@ -232,7 +232,7 @@ class ChatHistory(Popover):
             username,
             message,
             int(timestamp)
-        ], select_row=False, prepend=True)
+        ], select_row=False)
 
     def user_status(self, msg):
 

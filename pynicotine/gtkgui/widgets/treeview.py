@@ -494,9 +494,9 @@ class TreeView:
     def set_show_expanders(self, show):
         self.widget.set_show_expanders(show)
 
-    def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
+    def add_row(self, values, select_row=True, parent_iterator=None):
 
-        position = 0 if prepend else -1
+        position = 0  # Insert at the beginning for large performance improvement
         values = values[:]
         key = values[self._iterator_key_column]
 
