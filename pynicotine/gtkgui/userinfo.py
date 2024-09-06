@@ -484,16 +484,6 @@ class UserInfo:
         )
         self.set_finished()
 
-    def set_finished(self):
-
-        self.indeterminate_progress = False
-
-        self.userinfos.request_tab_changed(self.container)
-        self.progress_bar.set_fraction(1.0)
-        self.progress_bar.get_parent().set_reveal_child(False)
-
-        self.refresh_button.set_sensitive(True)
-
     def pulse_progress(self, repeat=True):
 
         if not self.indeterminate_progress:
@@ -502,7 +492,22 @@ class UserInfo:
         self.progress_bar.pulse()
         return repeat
 
-    def set_in_progress(self):
+    def user_info_progress(self, position, total):
+
+        self.indeterminate_progress = False
+
+        if total <= 0 or position <= 0:
+            fraction = 0.0
+
+        elif position < total:
+            fraction = float(position) / total
+
+        else:
+            fraction = 1.0
+
+        self.progress_bar.set_fraction(fraction)
+
+    def set_indeterminate_progress(self):
 
         self.indeterminate_progress = True
 
@@ -514,18 +519,15 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
-    def user_info_progress(self, position, total):
+    def set_finished(self):
 
         self.indeterminate_progress = False
 
-        if total <= 0 or position <= 0:
-            fraction = 0.0
-        elif position >= total:
-            fraction = 1.0
-        else:
-            fraction = float(position) / total
+        self.userinfos.request_tab_changed(self.container)
+        self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
 
-        self.progress_bar.set_fraction(fraction)
+        self.refresh_button.set_sensitive(True)
 
     # Button States #
 
@@ -644,7 +646,7 @@ class UserInfo:
         """Enables indeterminate progress bar mode when tab is active."""
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
-            self.set_in_progress()
+            self.set_indeterminate_progress()
 
         if core.users.login_status == UserStatus.OFFLINE:
             self.peer_connection_error()
@@ -803,7 +805,7 @@ class UserInfo:
         ).present()
 
     def on_refresh(self, *_args):
-        self.set_in_progress()
+        self.set_indeterminate_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

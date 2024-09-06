@@ -608,7 +608,23 @@ class UserBrowse:
         self.progress_bar.pulse()
         return repeat
 
-    def set_in_progress(self):
+    def shared_file_list_progress(self, position, total):
+
+        self.indeterminate_progress = False
+
+        if total <= 0 or position <= 0:
+            fraction = 0.0
+
+        elif position < total:
+            fraction = float(position) / total
+
+        else:
+            fraction = 1.0
+            GLib.timeout_add(1000, self.set_finishing)
+
+        self.progress_bar.set_fraction(fraction)
+
+    def set_indeterminate_progress(self):
 
         self.indeterminate_progress = True
 
@@ -622,18 +638,12 @@ class UserBrowse:
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
 
-    def shared_file_list_progress(self, position, total):
+    def set_finishing(self):
 
-        self.indeterminate_progress = False
+        if not self.refresh_button.get_sensitive():
+            self.set_indeterminate_progress()
 
-        if total <= 0 or position <= 0:
-            fraction = 0.0
-        elif position >= total:
-            fraction = 1.0
-        else:
-            fraction = float(position) / total
-
-        self.progress_bar.set_fraction(fraction)
+        return False
 
     def set_finished(self):
 
@@ -1336,7 +1346,7 @@ class UserBrowse:
         """Enables indeterminate progress bar mode when tab is active."""
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
-            self.set_in_progress()
+            self.set_indeterminate_progress()
 
         if core.users.login_status == UserStatus.OFFLINE:
             self.peer_connection_error()
@@ -1414,7 +1424,7 @@ class UserBrowse:
         file_path = self.get_selected_file_path()
 
         self.clear_model()
-        self.set_in_progress()
+        self.set_indeterminate_progress()
 
         if self.local_permission_level:
             core.userbrowse.browse_local_shares(
