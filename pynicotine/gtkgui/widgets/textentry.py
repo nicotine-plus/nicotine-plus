@@ -213,6 +213,7 @@ class ChatEntry:
         text = self.widget.get_text().strip()
 
         if not text:
+            self.chat_view.scroll_bottom()
             return
 
         is_double_slash_cmd = text.startswith("//")
