@@ -548,8 +548,12 @@ class TextSearchBar:
         Accelerator("Down", self.entry, self.on_search_next_match)
         Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
         Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
-        Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
-        Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
+
+        for accelerator in ("<Primary>g", "F3"):
+            Accelerator(accelerator, controller_widget, self.on_search_next_match)
+
+        for accelerator in ("<Shift><Primary>g", "<Shift>F3"):
+            Accelerator(accelerator, controller_widget, self.on_search_previous_match)
 
     def destroy(self):
         self.__dict__.clear()
