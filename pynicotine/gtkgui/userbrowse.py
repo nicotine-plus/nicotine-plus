@@ -419,6 +419,8 @@ class UserBrowse:
         Accelerator("<Shift>F3", self.container, self.on_search_previous_accelerator)
         Accelerator("<Primary>g", self.container, self.on_search_next_accelerator)  # Next search match
         Accelerator("<Shift><Primary>g", self.container, self.on_search_previous_accelerator)
+        Accelerator("Up", self.search_entry, self.on_search_previous_accelerator)
+        Accelerator("Down", self.search_entry, self.on_search_next_accelerator)
 
         Accelerator("<Primary>backslash", self.container, self.on_expand_accelerator)  # expand / collapse all (button)
         Accelerator("F5", self.container, self.on_refresh_accelerator)
