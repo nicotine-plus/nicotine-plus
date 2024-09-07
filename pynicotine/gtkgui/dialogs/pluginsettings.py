@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -195,14 +196,24 @@ class PluginSettings(Dialog):
             self.application.window, parent=scrolled_window, activate_row_callback=self.on_row_activated,
             delete_accelerator_callback=self.on_delete_accelerator,
             columns={
+                # Visible columns
                 "description": {
                     "column_type": "text",
                     "title": description
+                },
+
+                # Hidden data columns
+                "id_data": {
+                    "data_type": GObject.TYPE_INT,
+                    "default_sort_type": "ascending",
+                    "iterator_key": True
                 }
             }
         )
+        rows = [[item, index] for index, item in enumerate(option_value)]
         treeview.description = description
-        self.application.preferences.set_widget(treeview, option_value)
+        treeview.row_id = len(rows)
+        self.application.preferences.set_widget(treeview, rows)
 
         button_container = Gtk.Box(margin_end=6, margin_bottom=6, margin_start=6, margin_top=6,
                                    spacing=6, visible=True)
@@ -335,7 +346,10 @@ class PluginSettings(Dialog):
 
         from pynicotine.gtkgui.widgets.treeview import TreeView
         if isinstance(widget, TreeView):
-            return list(widget.iterators)
+            return [
+                widget.get_row_value(iterator, "description")
+                for row_id, iterator in sorted(widget.iterators.items())
+            ]
 
         if isinstance(widget, FileChooserButton):
             return widget.get_path()
@@ -358,7 +372,8 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        treeview.add_row([value])
+        treeview.row_id += 1
+        treeview.add_row([value, treeview.row_id])
 
     def on_add(self, _button, treeview):
 
@@ -378,16 +393,17 @@ class PluginSettings(Dialog):
         if not value:
             return
 
-        treeview, iterator = data
+        treeview, row_id = data
+        iterator = treeview.iterators[row_id]
 
         treeview.remove_row(iterator)
-        treeview.add_row([value])
+        treeview.add_row([value, row_id])
 
     def on_edit(self, _button=None, treeview=None):
 
         for iterator in treeview.get_selected_rows():
-            value = treeview.get_row_value(iterator, "description")
-            orig_iterator = treeview.iterators[value]
+            value = treeview.get_row_value(iterator, "description") or ""
+            row_id = treeview.get_row_value(iterator, "id_data")
 
             EntryDialog(
                 parent=self,
@@ -395,15 +411,15 @@ class PluginSettings(Dialog):
                 message=treeview.description,
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_response,
-                callback_data=(treeview, orig_iterator),
+                callback_data=(treeview, row_id),
                 default=value
             ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):
         for iterator in reversed(list(treeview.get_selected_rows())):
-            value = treeview.get_row_value(iterator, "description")
-            orig_iterator = treeview.iterators[value]
+            row_id = treeview.get_row_value(iterator, "id_data")
+            orig_iterator = treeview.iterators[row_id]
 
             treeview.remove_row(orig_iterator)
 
