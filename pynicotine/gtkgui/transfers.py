@@ -728,7 +728,7 @@ class Transfers:
                 )
 
                 if expand_allowed:
-                    expand_user = self.expand_button.get_active() or self.grouping_mode == "folder_grouping"
+                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])

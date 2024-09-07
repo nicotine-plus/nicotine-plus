@@ -445,6 +445,7 @@ class Search:
         self.room = room
         self.searched_users = users
         self.show_page = show_page
+        self.initialized = False
         self.users = {}
         self.folders = {}
         self.all_data = []
@@ -853,6 +854,8 @@ class Search:
         if user in self.users:
             return
 
+        self.initialized = True
+
         ip_address, _port = msg.addr
         country_code = (
             core.network_filter.get_country_code(ip_address)
@@ -918,10 +921,12 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
+
         (user, flag, h_speed, h_queue, folder_path, _unused, _unused, _unused, _unused,
             _unused, speed, queue, _unused, _unused, _unused, file_path, has_free_slots,
             _unused, _unused) = row
 
+        expand_allowed = self.initialized
         expand_user = False
         expand_folder = False
         parent_iterator = None
@@ -960,10 +965,8 @@ class Search:
                     ], select_row=False
                 )
 
-                if self.grouping_mode == "folder_grouping":
-                    expand_user = True
-                else:
-                    expand_user = self.expand_button.get_active()
+                if expand_allowed:
+                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])
@@ -1000,7 +1003,7 @@ class Search:
                         ], select_row=False, parent_iterator=user_iterator
                     )
                     user_child_iterators.append(iterator)
-                    expand_folder = self.expand_button.get_active()
+                    expand_folder = expand_allowed and self.expand_button.get_active()
                     self.row_id += 1
                     self.folders[user_folder_path] = (iterator, [])
 
@@ -1263,6 +1266,8 @@ class Search:
 
     def clear_model(self, stored_results=False):
 
+        self.initialized = False
+
         if stored_results:
             self.all_data.clear()
             self.num_results_found = 0
@@ -1298,6 +1303,8 @@ class Search:
 
                 if self.grouping_mode == "folder_grouping":
                     self.tree_view.expand_root_rows()
+
+        self.initialized = True
 
     def update_wish_button(self):
 
