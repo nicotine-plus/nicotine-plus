@@ -514,7 +514,7 @@ class TreeView:
                 # Skip empty values if not active sort column to avoid unnecessary work
                 continue
 
-            if index in self._column_gvalues and value > 2147483647:
+            if index in self._column_gvalues:
                 # Need gvalue conversion for large integers
                 gvalue = self._column_gvalues[index]
                 gvalue.set_value(value)
@@ -565,7 +565,7 @@ class TreeView:
 
         column_index = self._column_ids[column_id]
 
-        if column_index in self._column_gvalues and value > 2147483647:
+        if column_index in self._column_gvalues:
             # Need gvalue conversion for large integers
             gvalue = self._column_gvalues[column_index]
             gvalue.set_value(value)

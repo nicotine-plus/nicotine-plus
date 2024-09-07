@@ -226,7 +226,7 @@ class Transfers:
                 "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
-                    "data_type": GObject.TYPE_UINT64,
+                    "data_type": GObject.TYPE_INT,
                     "default_sort_type": "ascending",
                     "iterator_key": True
                 }
