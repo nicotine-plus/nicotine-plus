@@ -199,8 +199,7 @@ class UserBrowse:
                 # Try new format
 
                 with open(file_path_encoded, encoding="utf-8") as file_handle:
-                    # JSON stores file attribute types as strings, convert them back to integers with object_hook
-                    shares_list = json.load(file_handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
+                    shares_list = json.load(file_handle)
 
             code = 1
             ext = ""
@@ -208,7 +207,10 @@ class UserBrowse:
             for _folder_path, files in shares_list:
                 # Sanitization
                 for index, (_code, basename, size, _ext, attrs, *_unused) in enumerate(files):
-                    if not isinstance(attrs, dict):
+                    if isinstance(attrs, dict):
+                        # JSON stores file attribute types as strings, convert them back to integers
+                        attrs = {int(k): v for k, v in attrs.items()}
+                    else:
                         attrs = list(attrs)
 
                     files[index] = [code, str(basename), int(size), ext, attrs]
