@@ -630,12 +630,24 @@ class TextSearchBar:
 
     def set_visible(self, visible):
 
+        self.search_bar.set_search_mode(False)
+
         if visible:
+            text_buffer = self.textview.get_buffer()
+            text_buffer_selection_bounds = text_buffer.get_selection_bounds()
+
+            if not self.entry.get_text() and text_buffer_selection_bounds:
+                selection_start, selection_end = text_buffer_selection_bounds
+
+                selection_content = text_buffer.get_text(
+                    selection_start, selection_end, include_hidden_chars=True).strip(" \n")
+
+                if "\n" not in selection_content:
+                    self.entry.set_text(selection_content)
+
             self.search_bar.set_search_mode(True)
             self.entry.grab_focus()
             return
-
-        self.search_bar.set_search_mode(False)
 
         if self.focus_widget is not None and self.focus_widget.get_sensitive():
             self.focus_widget.grab_focus()
