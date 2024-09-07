@@ -212,9 +212,10 @@ class FastConfigure(Dialog):
 
         for iterator in reversed(list(self.shares_list_view.get_selected_rows())):
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            orig_iterator = self.shares_list_view.iterators[virtual_name]
 
             core.shares.remove_share(virtual_name)
-            self.shares_list_view.remove_row(iterator)
+            self.shares_list_view.remove_row(orig_iterator)
 
             self.rescan_required = True
 

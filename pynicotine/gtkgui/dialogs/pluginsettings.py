@@ -387,6 +387,7 @@ class PluginSettings(Dialog):
 
         for iterator in treeview.get_selected_rows():
             value = treeview.get_row_value(iterator, "description")
+            orig_iterator = treeview.iterators[value]
 
             EntryDialog(
                 parent=self,
@@ -394,14 +395,17 @@ class PluginSettings(Dialog):
                 message=treeview.description,
                 action_button_label=_("_Edit"),
                 callback=self.on_edit_response,
-                callback_data=(treeview, iterator),
+                callback_data=(treeview, orig_iterator),
                 default=value
             ).present()
             return
 
     def on_remove(self, _button=None, treeview=None):
         for iterator in reversed(list(treeview.get_selected_rows())):
-            treeview.remove_row(iterator)
+            value = treeview.get_row_value(iterator, "description")
+            orig_iterator = treeview.iterators[value]
+
+            treeview.remove_row(orig_iterator)
 
     def on_row_activated(self, treeview, *_args):
         self.on_edit(treeview=treeview)

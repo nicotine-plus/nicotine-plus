@@ -510,7 +510,10 @@ class DownloadsPage:
     def on_remove_filter(self, *_args):
 
         for iterator in reversed(list(self.filter_list_view.get_selected_rows())):
-            self.filter_list_view.remove_row(iterator)
+            dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+            orig_iterator = self.filter_list_view.iterators[dfilter]
+
+            self.filter_list_view.remove_row(orig_iterator)
 
         self.on_verify_filter()
 
@@ -775,11 +778,12 @@ class SharesPage:
 
         for iterator in iterators:
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            orig_iterator = self.shares_list_view.iterators[virtual_name]
 
             core.shares.remove_share(
                 virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
-            self.shares_list_view.remove_row(iterator)
+            self.shares_list_view.remove_row(orig_iterator)
 
         if iterators:
             self.rescan_required = True
@@ -1083,8 +1087,9 @@ class IgnoredUsersPage:
 
         for iterator in reversed(list(self.ignored_users_list_view.get_selected_rows())):
             user = self.ignored_users_list_view.get_row_value(iterator, "username")
+            orig_iterator = self.ignored_users_list_view.iterators[user]
 
-            self.ignored_users_list_view.remove_row(iterator)
+            self.ignored_users_list_view.remove_row(orig_iterator)
             self.ignored_users.remove(user)
 
             if user not in self.added_users:
@@ -1125,8 +1130,9 @@ class IgnoredUsersPage:
             ip_address = self.ignored_ips_list_view.get_row_value(iterator, "ip_address")
             user = self.ignored_ips_list_view.get_row_value(iterator, "user")
             user_ip_pair = (user, ip_address)
+            orig_iterator = self.ignored_ips_list_view.iterators[ip_address]
 
-            self.ignored_ips_list_view.remove_row(iterator)
+            self.ignored_ips_list_view.remove_row(orig_iterator)
             del self.ignored_ips[ip_address]
 
             if user_ip_pair not in self.added_ips:
@@ -1276,8 +1282,9 @@ class BannedUsersPage:
 
         for iterator in reversed(list(self.banned_users_list_view.get_selected_rows())):
             user = self.banned_users_list_view.get_row_value(iterator, "username")
+            orig_iterator = self.banned_users_list_view.iterators[user]
 
-            self.banned_users_list_view.remove_row(iterator)
+            self.banned_users_list_view.remove_row(orig_iterator)
             self.banned_users.remove(user)
 
             if user not in self.added_users:
@@ -1318,8 +1325,9 @@ class BannedUsersPage:
             ip_address = self.banned_ips_list_view.get_row_value(iterator, "ip_address")
             user = self.banned_ips_list_view.get_row_value(iterator, "user")
             user_ip_pair = (user, ip_address)
+            orig_iterator = self.banned_ips_list_view.iterators[ip_address]
 
-            self.banned_ips_list_view.remove_row(iterator)
+            self.banned_ips_list_view.remove_row(orig_iterator)
             del self.banned_ips[ip_address]
 
             if user_ip_pair not in self.added_ips:
@@ -1594,8 +1602,9 @@ class ChatsPage:
 
         for iterator in reversed(list(self.censor_list_view.get_selected_rows())):
             censor = self.censor_list_view.get_row_value(iterator, "pattern")
+            orig_iterator = self.censor_list_view.iterators[censor]
 
-            self.censor_list_view.remove_row(iterator)
+            self.censor_list_view.remove_row(orig_iterator)
             self.censored_patterns.remove(censor)
 
     def on_add_replacement_response(self, dialog, _response_id, _data):
@@ -1658,8 +1667,9 @@ class ChatsPage:
 
         for iterator in reversed(list(self.replacement_list_view.get_selected_rows())):
             replacement = self.replacement_list_view.get_row_value(iterator, "pattern")
+            orig_iterator = self.replacement_list_view.iterators[replacement]
 
-            self.replacement_list_view.remove_row(iterator)
+            self.replacement_list_view.remove_row(orig_iterator)
             del self.replacements[replacement]
 
 
@@ -2633,8 +2643,9 @@ class UrlHandlersPage:
 
         for iterator in reversed(list(self.protocol_list_view.get_selected_rows())):
             protocol = self.protocol_list_view.get_row_value(iterator, "protocol")
+            orig_iterator = self.protocol_list_view.iterators[protocol]
 
-            self.protocol_list_view.remove_row(iterator)
+            self.protocol_list_view.remove_row(orig_iterator)
             del self.protocols[protocol]
 
     def on_default_file_manager(self, *_args):

@@ -532,7 +532,7 @@ class TreeView:
                 position, value_columns, included_values
             )
 
-        self._iterator_keys[iterator.user_data] = key
+        self._iterator_keys[iterator] = key
 
         if select_row:
             self.select_row(iterator)
@@ -574,7 +574,7 @@ class TreeView:
         return self.model.set_value(iterator, column_index, value)
 
     def remove_row(self, iterator):
-        del self.iterators[self._iterator_keys[iterator.user_data]]
+        del self.iterators[self._iterator_keys[iterator]]
         self.model.remove(iterator)
 
     def select_row(self, iterator=None, expand_rows=True, should_scroll=True):
