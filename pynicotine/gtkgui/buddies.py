@@ -175,7 +175,7 @@ class Buddies:
         for combobox in comboboxes:
             combobox.freeze()
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
 
         for username, user_data in core.buddies.users.items():
             self.add_buddy(username, user_data, select_row=False)
@@ -183,7 +183,7 @@ class Buddies:
         for combobox in comboboxes:
             combobox.unfreeze()
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
     def destroy(self):
 

@@ -239,7 +239,7 @@ class RoomList(Popover):
 
     def room_list(self, msg):
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
         self.clear()
 
         for room, user_count in msg.ownedprivaterooms:
@@ -251,7 +251,7 @@ class RoomList(Popover):
         for room, user_count in msg.rooms:
             self.add_room(room, user_count)
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
     def on_row_activated(self, *_args):
 

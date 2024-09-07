@@ -307,9 +307,9 @@ class FastConfigure(Dialog):
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
-        self.shares_list_view.disable_sorting()
+        self.shares_list_view.freeze()
 
         for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
             self.shares_list_view.add_row([virtual_name, folder_path], select_row=False)
 
-        self.shares_list_view.enable_sorting()
+        self.shares_list_view.unfreeze()

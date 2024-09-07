@@ -755,7 +755,7 @@ class UserBrowse:
                 return
 
         # Temporarily disable sorting for increased performance
-        self.file_list_view.disable_sorting()
+        self.file_list_view.freeze()
 
         for _code, basename, size, _ext, file_attributes, *_unused in files:
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
@@ -773,7 +773,7 @@ class UserBrowse:
                 file_attributes
             ], select_row=False)
 
-        self.file_list_view.enable_sorting()
+        self.file_list_view.unfreeze()
         self.select_search_match_files()
 
     def select_files(self):

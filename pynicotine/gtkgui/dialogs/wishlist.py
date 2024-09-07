@@ -62,13 +62,13 @@ class WishList(Dialog):
             }
         )
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
 
         for search_item in core.search.searches.values():
             if search_item.mode == "wishlist":
                 self.add_wish(search_item.term, select=False)
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header

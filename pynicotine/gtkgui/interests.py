@@ -165,8 +165,8 @@ class Interests:
             }
         )
 
-        self.likes_list_view.disable_sorting()
-        self.dislikes_list_view.disable_sorting()
+        self.likes_list_view.freeze()
+        self.dislikes_list_view.freeze()
 
         for item in config.sections["interests"]["likes"]:
             if isinstance(item, str):
@@ -176,8 +176,8 @@ class Interests:
             if isinstance(item, str):
                 self.add_thing_i_hate(item, select_row=False)
 
-        self.likes_list_view.enable_sorting()
-        self.dislikes_list_view.enable_sorting()
+        self.likes_list_view.unfreeze()
+        self.dislikes_list_view.unfreeze()
 
         # Popup menus
         popup = PopupMenu(self.window.application, self.likes_list_view.widget)
@@ -429,12 +429,12 @@ class Interests:
             self.recommendations_label.set_label(_("Recommendations"))
 
         self.recommendations_list_view.clear()
-        self.recommendations_list_view.disable_sorting()
+        self.recommendations_list_view.freeze()
 
         for thing, rating in recommendations:
             self.recommendations_list_view.add_row([humanize(rating), thing, rating], select_row=False)
 
-        self.recommendations_list_view.enable_sorting()
+        self.recommendations_list_view.unfreeze()
 
     def global_recommendations(self, msg):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
@@ -453,7 +453,7 @@ class Interests:
             self.similar_users_label.set_label(_("Similar Users"))
 
         self.similar_users_list_view.clear()
-        self.similar_users_list_view.disable_sorting()
+        self.similar_users_list_view.freeze()
 
         for index, (user, rating) in enumerate(reversed(users.items())):
             status = core.users.statuses.get(user, UserStatus.OFFLINE)
@@ -482,7 +482,7 @@ class Interests:
                 rating
             ], select_row=False)
 
-        self.similar_users_list_view.enable_sorting()
+        self.similar_users_list_view.unfreeze()
 
     def similar_users(self, msg):
         self.set_similar_users(msg.users)

@@ -1277,7 +1277,7 @@ class Search:
 
     def update_model(self):
 
-        self.tree_view.disable_sorting()
+        self.tree_view.freeze()
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -1286,7 +1286,7 @@ class Search:
         # Update number of results
         self.update_result_counter()
 
-        self.tree_view.enable_sorting()
+        self.tree_view.unfreeze()
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user

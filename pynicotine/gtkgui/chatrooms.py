@@ -702,7 +702,7 @@ class ChatRoom:
     def populate_room_users(self, joined_users):
 
         # Temporarily disable sorting for increased performance
-        self.users_list_view.disable_sorting()
+        self.users_list_view.freeze()
 
         for userdata in joined_users:
             username = userdata.username
@@ -726,7 +726,7 @@ class ChatRoom:
             if owner and owner not in self.users_list_view.iterators:
                 self.add_user_row(UserData(owner, status=UserStatus.OFFLINE))
 
-        self.users_list_view.enable_sorting()
+        self.users_list_view.unfreeze()
 
         # Update user count
         self.update_user_count()

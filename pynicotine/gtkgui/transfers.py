@@ -423,7 +423,7 @@ class Transfers:
 
                 if not has_disabled_sorting:
                     # Optimization: disable sorting while adding rows
-                    self.tree_view.disable_sorting()
+                    self.tree_view.freeze()
                     has_disabled_sorting = True
 
         if update_parent:
@@ -433,7 +433,7 @@ class Transfers:
             self.update_num_users_files()
 
         if has_disabled_sorting:
-            self.tree_view.enable_sorting()
+            self.tree_view.unfreeze()
 
         if not self.initialized:
             self.on_expand_tree()
