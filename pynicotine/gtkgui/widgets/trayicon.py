@@ -872,9 +872,9 @@ class Win32Implementation(BaseImplementation):
             self._notify_id.dw_info_flags |= self.NIIF_NOSOUND
 
         if high_priority:
-            self._notify_id.u_flags |= self.NIF_REALTIME
-        else:
             self._notify_id.u_flags &= ~self.NIF_REALTIME
+        else:
+            self._notify_id.u_flags |= self.NIF_REALTIME
 
         self._notify_id.h_icon = self._h_icon
         self._notify_id.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
