@@ -1601,10 +1601,10 @@ class Search:
                     continue
 
                 (_unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused, _unused,
-                    _unused, _unused, _unused, size, _unused, _unused, file_path, _unused,
-                    file_attributes, _unused) = row
+                    _unused, _unused, _unused, size, _unused, _unused, _unused, file_data,
+                    _unused) = row
 
-                visible_files.append((file_path, size, file_attributes))
+                visible_files.append((file_data.path, size, file_data.attributes))
 
             core.search.request_folder_download(
                 user, folder_path, visible_files, download_folder_path=download_folder_path
