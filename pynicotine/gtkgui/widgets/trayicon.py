@@ -193,7 +193,7 @@ class BaseImplementation:
         self._set_item_text(self.uploads_item, status)
         self._update_menu()
 
-    def show_notification(self, title, message, action=None, action_target=None):
+    def show_notification(self, title, message, action=None, action_target=None, high_priority=False):
         # Implemented in subclasses
         pass
 
@@ -595,6 +595,7 @@ class Win32Implementation(BaseImplementation):
     NIF_ICON = 2
     NIF_TIP = 4
     NIF_INFO = 16
+    NIF_REALTIME = 64
     NIIF_NOSOUND = 16
 
     MIIM_STATE = 1
@@ -836,7 +837,7 @@ class Win32Implementation(BaseImplementation):
             self._h_icon = None
 
     def _update_notify_icon(self, title="", message="", icon_name=None, click_action=None,
-                            click_action_target=None):
+                            click_action_target=None, high_priority=False):
         # pylint: disable=attribute-defined-outside-init,no-member
 
         if self._h_wnd is None:
@@ -869,6 +870,11 @@ class Win32Implementation(BaseImplementation):
             self._notify_id.dw_info_flags &= ~self.NIIF_NOSOUND
         else:
             self._notify_id.dw_info_flags |= self.NIIF_NOSOUND
+
+        if high_priority:
+            self._notify_id.u_flags |= self.NIF_REALTIME
+        else:
+            self._notify_id.u_flags &= ~self.NIF_REALTIME
 
         self._notify_id.h_icon = self._h_icon
         self._notify_id.sz_info_title = truncate_string_byte(title, byte_limit=63, ellipsize=True)
@@ -1002,9 +1008,11 @@ class Win32Implementation(BaseImplementation):
             wintypes.LPARAM(l_param)
         )
 
-    def show_notification(self, title, message, action=None, action_target=None):
+    def show_notification(self, title, message, action=None, action_target=None, high_priority=False):
+
         self._update_notify_icon(
-            title=title, message=message, click_action=action, click_action_target=action_target)
+            title=title, message=message, click_action=action, click_action_target=action_target,
+            high_priority=high_priority)
 
     def unload(self, is_shutdown=True):
 
@@ -1167,11 +1175,12 @@ class TrayIcon:
         if self.implementation:
             self.implementation.set_upload_status(status)
 
-    def show_notification(self, title, message, action=None, action_target=None):
+    def show_notification(self, title, message, action=None, action_target=None, high_priority=False):
 
         if self.implementation:
             self.implementation.show_notification(
-                title=title, message=message, action=action, action_target=action_target)
+                title=title, message=message, action=action, action_target=action_target,
+                high_priority=high_priority)
 
     def update(self):
         if self.implementation:

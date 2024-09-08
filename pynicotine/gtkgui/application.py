@@ -466,7 +466,8 @@ class Application:
         try:
             if sys.platform == "win32":
                 self.tray_icon.show_notification(
-                    title=title, message=message, action=action, action_target=action_target
+                    title=title, message=message, action=action, action_target=action_target,
+                    high_priority=high_priority
                 )
                 return
 
