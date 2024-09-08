@@ -893,9 +893,7 @@ class Win32Implementation(BaseImplementation):
             windll.shell32.Shell_NotifyIconW(self.NIM_DELETE, byref(self._notify_id))
             self._notify_id = None
 
-        if self._menu:
-            windll.user32.DestroyMenu(self._menu)
-            self._menu = None
+        self._destroy_menu()
 
     def _serialize_menu_item(self, item):
         # pylint: disable=attribute-defined-outside-init,no-member
@@ -926,8 +924,7 @@ class Win32Implementation(BaseImplementation):
 
         from ctypes import byref, windll, wintypes
 
-        if self._menu is None:
-            self._update_menu()
+        self._populate_menu()
 
         pos = wintypes.POINT()
         windll.user32.GetCursorPos(byref(pos))
@@ -947,9 +944,11 @@ class Win32Implementation(BaseImplementation):
         )
         windll.user32.PostMessageW(self._h_wnd, self.WM_NULL, 0, 0)
 
-    def _update_menu(self):
+    def _populate_menu(self):
 
         from ctypes import byref, windll
+
+        self._destroy_menu()
 
         if self._menu is None:
             self._menu = windll.user32.CreatePopupMenu()
@@ -961,8 +960,17 @@ class Win32Implementation(BaseImplementation):
             item_id = item["id"]
             item_info = self._serialize_menu_item(item)
 
-            if not windll.user32.SetMenuItemInfoW(self._menu, item_id, False, byref(item_info)):
-                windll.user32.InsertMenuItemW(self._menu, item_id, False, byref(item_info))
+            windll.user32.InsertMenuItemW(self._menu, item_id, False, byref(item_info))
+
+    def _destroy_menu(self):
+
+        if self._menu is None:
+            return
+
+        from ctypes import windll
+
+        windll.user32.DestroyMenu(self._menu)
+        self._menu = None
 
     def _set_icon_name(self, icon_name):
         self._update_notify_icon(icon_name=icon_name)
