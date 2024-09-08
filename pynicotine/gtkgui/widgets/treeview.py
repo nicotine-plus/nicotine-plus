@@ -485,15 +485,11 @@ class TreeView:
             column_config[self._widget_name] = saved_columns
 
     def freeze(self):
-        self.widget.set_model(None)
         self.model.set_sort_column_id(Gtk.TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
     def unfreeze(self):
-
         if self._sort_column is not None and self._sort_type is not None:
             self.model.set_sort_column_id(self._sort_column, self._sort_type)
-
-        self.widget.set_model(self.model)
 
     def set_show_expanders(self, show):
         self.widget.set_show_expanders(show)
@@ -657,6 +653,7 @@ class TreeView:
 
     def clear(self):
 
+        self.widget.set_model(None)
         self.freeze()
 
         self.model.clear()
@@ -664,6 +661,7 @@ class TreeView:
         self._iterator_keys.clear()
 
         self.unfreeze()
+        self.widget.set_model(self.model)
 
     @staticmethod
     def get_icon_label(column, icon_name, is_short_country_label=False):
