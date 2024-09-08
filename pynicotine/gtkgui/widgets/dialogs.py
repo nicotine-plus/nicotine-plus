@@ -269,9 +269,9 @@ class MessageDialog(Window):
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
                  buttons=None, destructive_response_id=None):
 
-        # Prioritize modal non-message dialogs as parent
+        # Prioritize non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog) and active_dialog.modal:
+            if isinstance(active_dialog, Dialog):
                 parent = active_dialog
                 break
 
