@@ -2628,7 +2628,7 @@ class NetworkThread(Thread):
             self._conns_downloaded[conn] += data_len
 
         # Grow or shrink recv buffer depending on how much data we're receiving
-        if data_len >= current_recv_size // 2:
+        elif data_len >= current_recv_size // 2:
             conn.recv_size *= 2
 
         elif data_len <= current_recv_size // 6:
