@@ -35,17 +35,23 @@ from pynicotine.utils import encode_path
 
 
 class BrowsedUser:
-    __slots__ = ("username", "public_folders", "private_folders")
+    __slots__ = ("username", "public_folders", "private_folders", "num_folders", "num_files",
+                 "shared_size")
 
     def __init__(self, username):
 
         self.username = username
         self.public_folders = {}
         self.private_folders = {}
+        self.num_folders = None
+        self.num_files = None
+        self.shared_size = None
 
     def clear(self):
+
         self.public_folders.clear()
         self.private_folders.clear()
+        self.num_folders = self.num_files = self.shared_size = None
 
 
 class UserBrowse:
@@ -201,19 +207,26 @@ class UserBrowse:
                 with open(file_path_encoded, encoding="utf-8") as file_handle:
                     shares_list = json.load(file_handle)
 
-            code = 1
             ext = ""
 
             for _folder_path, files in shares_list:
                 # Sanitization
-                for index, (_code, basename, size, _ext, attrs, *_unused) in enumerate(files):
+                for file_info in files:
+                    if not isinstance(file_info[1], str):
+                        raise TypeError("Invalid file name")
+
+                    if not isinstance(file_info[2], int):
+                        raise TypeError("Invalid file size")
+
+                    attrs = file_info[4]
+
                     if isinstance(attrs, dict):
                         # JSON stores file attribute types as strings, convert them back to integers
                         attrs = {int(k): v for k, v in attrs.items()}
                     else:
                         attrs = list(attrs)
 
-                    files[index] = [code, str(basename), int(size), ext, attrs]
+                    file_info[3] = ext
 
         except Exception as error:
             log.add(_("Loading Shares from disk failed: %(error)s"), {"error": error})
@@ -368,14 +381,17 @@ class UserBrowse:
         shared_size = 0
 
         for _folder_path, files in chain(msg.list, msg.privatelist):
-            for _code, _basename, file_size, *_unused in files:
-                shared_size += file_size
+            for file_info in files:
+                shared_size += file_info[2]
 
             num_files += len(files)
 
         if browsed_user is not None:
             browsed_user.public_folders = dict(msg.list)
             browsed_user.private_folders = dict(msg.privatelist)
+            browsed_user.num_folders = num_folders
+            browsed_user.num_files = num_files
+            browsed_user.shared_size = shared_size
 
         core.pluginhandler.user_stats_notification(username, stats={
             "avgspeed": None,

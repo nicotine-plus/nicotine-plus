@@ -467,18 +467,16 @@ class UserBrowse:
     def rebuild_model(self):
 
         self.clear_model()
-
-        private_size = num_private_folders = 0
         browsed_user = core.userbrowse.users[self.user]
 
         # Generate the folder tree and select first folder
-        size, num_folders = self.create_folder_tree(browsed_user.public_folders)
+        self.create_folder_tree(browsed_user.public_folders)
 
         if browsed_user.private_folders:
-            private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
+            self.create_folder_tree(browsed_user.private_folders, private=True)
 
-        self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
-        self.share_size_label.set_text(human_size(size + private_size))
+        self.num_folders_label.set_text(humanize(browsed_user.num_folders))
+        self.share_size_label.set_text(human_size(browsed_user.shared_size))
 
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
@@ -489,37 +487,37 @@ class UserBrowse:
 
     def create_folder_tree(self, folders, private=False):
 
-        total_size = 0
-        num_folders = len(folders)
-
         if not folders:
-            return total_size, num_folders
+            return
+
+        iterators = self.folder_tree_view.iterators
+        add_row = self.folder_tree_view.add_row
+        query = self.query
+        private_template = _("[PRIVATE]  %s")
 
         for folder_path, files in reversed(folders.items()):
-            current_path = None
+            current_path = parent = None
             root_processed = False
-            skip_folder = (self.query and self.query not in folder_path.lower())
+            skip_folder = (query and query not in folder_path.lower())
 
-            for _code, basename, file_size, *_unused in files:
-                if skip_folder and self.query in basename.lower():
-                    skip_folder = False
-
-                total_size += file_size
+            if skip_folder:
+                for file_info in files:
+                    if query in file_info[1].lower():
+                        skip_folder = False
 
             if skip_folder:
                 continue
 
             for subfolder in folder_path.split("\\"):
-                parent = self.folder_tree_view.iterators.get(current_path)
-
                 if not root_processed:
                     current_path = subfolder
                     root_processed = True
                 else:
-                    current_path = "\\".join([current_path, subfolder])
+                    current_path += f"\\{subfolder}"
 
-                if current_path in self.folder_tree_view.iterators:
+                if current_path in iterators:
                     # Folder was already added to tree
+                    parent = iterators[current_path]
                     continue
 
                 if not subfolder:
@@ -527,17 +525,16 @@ class UserBrowse:
                     subfolder = "\\"
 
                 if private:
-                    subfolder = _("[PRIVATE]  %s") % subfolder
+                    subfolder = private_template % subfolder
 
-                self.folder_tree_view.add_row(
+                parent = add_row(
                     [subfolder, current_path], select_row=False, parent_iterator=parent
                 )
 
-            if self.query:
+            if query:
                 self.search_folder_paths.append(folder_path)
 
         self.search_folder_paths.reverse()
-        return total_size, num_folders
 
     def browse_queued_path(self):
 
