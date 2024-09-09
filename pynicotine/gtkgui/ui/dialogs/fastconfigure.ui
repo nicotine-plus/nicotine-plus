@@ -2,16 +2,58 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkButton" id="previous_button">
-    <property name="label" translatable="yes">_Previous</property>
-    <property name="use-underline">True</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_previous"/>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-end">3</property>
+        <property name="spacing">6</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">_Previous</property>
+            <property name="mnemonic-widget">previous_button</property>
+            <property name="use-underline">True</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <style>
+      <class name="image-text-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="next_button">
-    <property name="use-underline">True</property>
     <property name="visible">True</property>
     <signal name="clicked" handler="on_next"/>
+    <child>
+      <object class="GtkBox">
+        <property name="margin-start">3</property>
+        <property name="spacing">6</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel" id="next_label">
+            <property name="mnemonic-widget">next_button</property>
+            <property name="use-underline">True</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">go-next-symbolic</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
     <style>
+      <class name="image-text-button"/>
       <class name="suggested-action"/>
     </style>
   </object>
@@ -85,17 +127,30 @@
             <property name="visible">True</property>
             <signal name="clicked" handler="on_next"/>
             <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="yes">_Set Up…</property>
-                <property name="margin-end">24</property>
-                <property name="margin-start">24</property>
-                <property name="mnemonic-widget">set_up_button</property>
-                <property name="use-underline">True</property>
+              <object class="GtkBox">
+                <property name="margin-end">18</property>
+                <property name="margin-start">21</property>
+                <property name="spacing">6</property>
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">_Next</property>
+                    <property name="mnemonic-widget">set_up_button</property>
+                    <property name="use-underline">True</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">go-next-symbolic</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
               <class name="circular"/>
+              <class name="image-text-button"/>
               <class name="suggested-action"/>
             </style>
           </object>

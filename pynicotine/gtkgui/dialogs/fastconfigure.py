@@ -48,6 +48,7 @@ class FastConfigure(Dialog):
             self.listen_port_entry,
             self.main_icon,
             self.next_button,
+            self.next_label,
             self.password_entry,
             self.port_page,
             self.previous_button,
@@ -131,8 +132,8 @@ class FastConfigure(Dialog):
 
         self.previous_button.set_visible(page != self.welcome_page and not self.invalid_password)
 
-        if self.next_button.get_label() != next_label:
-            self.next_button.set_label(next_label)
+        if self.next_label.get_label() != next_label:
+            self.next_label.set_label(next_label)
 
         self.next_button.set_sensitive(page_complete)
         self.next_button.set_visible(page != self.welcome_page)
