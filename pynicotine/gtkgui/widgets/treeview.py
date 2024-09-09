@@ -513,7 +513,7 @@ class TreeView:
             if index in self._column_gvalues:
                 # Need gvalue conversion for large integers
                 gvalue = self._column_gvalues[index]
-                gvalue.set_value(value)
+                gvalue.set_value(value or 0)
                 value = gvalue
 
             value_columns.append(index)
