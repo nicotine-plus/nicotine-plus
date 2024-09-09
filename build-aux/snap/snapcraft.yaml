@@ -7,11 +7,14 @@ confinement: strict
 compression: lzo
 grade: stable
 
+plugs:
+  # Required for Python's multiprocessing module
+  shared-memory:
+    private: true
+
 apps:
   nicotine-plus:
-    environment:
-      SNAPCRAFT_PRELOAD_REDIRECT_ONLY_SHM: 1
-    command: bin/snapcraft-preload python3 -m pynicotine
+    command: bin/nicotine
     common-id: org.nicotine_plus.Nicotine
     desktop: share/applications/org.nicotine_plus.Nicotine.desktop
     extensions: [gnome]
@@ -24,15 +27,6 @@ apps:
       - unity7
 
 parts:
-  snapcraft-preload:
-    source: https://github.com/sergiusens/snapcraft-preload.git
-    plugin: cmake
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/
-    build-packages:
-      - on amd64:
-        - gcc-multilib
-        - g++-multilib
   nicotine-plus:
     plugin: python
     source: .
