@@ -52,6 +52,7 @@ class FastConfigure(Dialog):
             self.password_entry,
             self.port_page,
             self.previous_button,
+            self.previous_label,
             self.set_up_button,
             self.share_page,
             self.shares_list_container,
@@ -128,15 +129,21 @@ class FastConfigure(Dialog):
             or (page == self.share_page and self.download_folder_button.get_path())
         )
         self.finished = (page == self.account_page if self.invalid_password else page == self.summary_page)
+        previous_label = _("_Cancel") if self.invalid_password else _("_Previous")
         next_label = _("_Finish") if self.finished else _("_Next")
+        show_buttons = (page != self.welcome_page)
 
-        self.previous_button.set_visible(page != self.welcome_page and not self.invalid_password)
+        self.set_show_title_buttons(not show_buttons)
+
+        if self.previous_label.get_label() != previous_label:
+            self.previous_label.set_label(previous_label)
 
         if self.next_label.get_label() != next_label:
             self.next_label.set_label(next_label)
 
+        self.previous_button.set_visible(show_buttons)
+        self.next_button.set_visible(show_buttons)
         self.next_button.set_sensitive(page_complete)
-        self.next_button.set_visible(page != self.welcome_page)
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
@@ -247,6 +254,10 @@ class FastConfigure(Dialog):
                 return
 
     def on_previous(self, *_args):
+
+        if self.invalid_password:
+            self.close()
+            return
 
         start_page_index = self.pages.index(self.stack.get_visible_child())
 

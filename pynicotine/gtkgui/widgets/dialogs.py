@@ -243,6 +243,18 @@ class Dialog(Window):
         self.widget.set_modal(self.modal and self.parent.is_visible())
         present_callback()
 
+    def set_show_title_buttons(self, visible):
+
+        header_bar = self.widget.get_titlebar()
+
+        if header_bar is None:
+            return
+
+        if GTK_API_VERSION >= 4:
+            header_bar.set_show_title_buttons(visible)    # pylint: disable=no-member
+        else:
+            header_bar.set_show_close_button(visible)     # pylint: disable=no-member
+
     def present(self):
 
         if self not in Window.active_dialogs:

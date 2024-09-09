@@ -16,8 +16,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="label" translatable="yes">_Previous</property>
+          <object class="GtkLabel" id="previous_label">
             <property name="mnemonic-widget">previous_button</property>
             <property name="use-underline">True</property>
             <property name="visible">True</property>
