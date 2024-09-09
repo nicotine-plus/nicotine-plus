@@ -561,6 +561,10 @@ def _get_custom_color_css():
         treeview {{
             caret-color: #{random.randint(0, 0xFFFFFF):06x};
         }}
+
+        treeview popover {{
+            caret-color: initial;
+        }}
         """.encode()
     )
 
