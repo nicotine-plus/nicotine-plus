@@ -203,12 +203,12 @@ EVENT_NAMES = {
 
 class SchedulerEvent:
 
-    __slots__ = ("id", "next_time", "delay", "repeat", "callback", "callback_args")
+    __slots__ = ("event_id", "next_time", "delay", "repeat", "callback", "callback_args")
 
     def __init__(self, event_id, next_time=None, delay=None, repeat=None,
                  callback=None, callback_args=None):
 
-        self.id = event_id
+        self.event_id = event_id
         self.next_time = next_time
         self.delay = delay
         self.repeat = repeat
@@ -218,11 +218,11 @@ class SchedulerEvent:
 
 class ThreadEvent:
 
-    __slots__ = ("name", "args", "kwargs")
+    __slots__ = ("event_name", "args", "kwargs")
 
     def __init__(self, event_name, args, kwargs):
 
-        self.name = event_name
+        self.event_name = event_name
         self.args = args
         self.kwargs = kwargs
 
@@ -320,7 +320,7 @@ class Events:
             event_list.append(self._thread_events.popleft())
 
         for event in event_list:
-            self.emit(event.name, *event.args, **event.kwargs)
+            self.emit(event.event_name, *event.args, **event.kwargs)
 
         return True
 
@@ -332,10 +332,10 @@ class Events:
                 event = self._pending_scheduler_events.popleft()
 
                 if event.next_time is not None:
-                    self._scheduler_events[event.id] = event
+                    self._scheduler_events[event.event_id] = event
                     continue
 
-                self._scheduler_events.pop(event.id, None)
+                self._scheduler_events.pop(event.event_id, None)
 
             # No scheduled events
             if not self._scheduler_events:
@@ -358,7 +358,7 @@ class Events:
                 event.next_time = (event_time + event.delay)
                 continue
 
-            self._scheduler_events.pop(event.id, None)
+            self._scheduler_events.pop(event.event_id, None)
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
