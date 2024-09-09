@@ -942,6 +942,9 @@ class Search:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
+            empty_int = 0
+            empty_str = ""
+
             if user not in self.users:
                 iterator = self.tree_view.add_row(
                     [
@@ -949,17 +952,17 @@ class Search:
                         flag,
                         h_speed,
                         h_queue,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
                         speed,
                         queue,
-                        None,
-                        None,
-                        None,
+                        empty_int,
+                        empty_int,
+                        empty_int,
                         has_free_slots,
                         None,
                         self.row_id
@@ -987,16 +990,16 @@ class Search:
                             h_speed,
                             h_queue,
                             folder_path,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
                             speed,
                             queue,
-                            None,
-                            None,
-                            None,
+                            empty_int,
+                            empty_int,
+                            empty_int,
                             has_free_slots,
                             SearchResultFile(file_data.path.rpartition("\\")[0]),
                             self.row_id

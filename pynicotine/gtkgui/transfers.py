@@ -697,27 +697,30 @@ class Transfers:
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
+            empty_int = 0
+            empty_str = ""
+
             if user not in self.users:
                 # Create parent if it doesn't exist
                 iterator = self.tree_view.add_row(
                     [
                         user,
-                        None,
-                        None,
-                        None,
+                        empty_str,
+                        empty_str,
+                        empty_str,
                         translated_status,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
-                        None,
+                        empty_str,
+                        empty_int,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_int,
+                        empty_int,
+                        empty_int,
+                        empty_int,
+                        empty_int,
+                        empty_int,
                         is_sensitive,
                         Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
@@ -750,21 +753,21 @@ class Transfers:
                         [
                             user,
                             folder_path,
-                            None,
-                            None,
+                            empty_str,
+                            empty_str,
                             translated_status,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
-                            None,
+                            empty_str,
+                            empty_int,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_int,
+                            empty_int,
+                            empty_int,
+                            empty_int,
+                            empty_int,
+                            empty_int,
                             is_sensitive,
                             path_transfer,
                             self.row_id
