@@ -485,7 +485,7 @@ class Application:
 
             # Unity doesn't support default click actions, and replaces the notification with a dialog.
             # Disable actions to prevent this from happening.
-            if action and os.environ.get("XDG_SESSION_DESKTOP") != "unity":
+            if action and os.environ.get("XDG_CURRENT_DESKTOP", "").lower() != "unity":
                 if action_target:
                     notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
                 else:
