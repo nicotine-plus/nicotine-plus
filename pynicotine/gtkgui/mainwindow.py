@@ -389,16 +389,16 @@ class MainWindow(Window):
             # Private Chats have a higher priority
             user = self.privatechat.highlighted_users[-1]
             notification_text = _("Private Message from %(user)s") % {"user": user}
+            self.set_urgency_hint(True)
 
         elif self.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
             room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+            self.set_urgency_hint(True)
 
         elif any(is_important for is_important in self.search.unread_pages.values()):
             notification_text = _("Wishlist Results Found")
-
-        self.set_urgency_hint(bool(notification_text))
 
         if not notification_text:
             self.set_title(pynicotine.__application_name__)

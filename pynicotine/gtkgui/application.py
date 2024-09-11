@@ -500,21 +500,36 @@ class Application:
             log.add(_("Unable to show notification: %s"), error)
 
     def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+
         self._show_notification(
             message, title, action="app.chatroom-notification-activated", action_target=room,
-            high_priority=high_priority)
+            high_priority=high_priority
+        )
+
+        if high_priority:
+            self.window.set_urgency_hint(True)
 
     def _show_download_notification(self, message, title=None, high_priority=False):
+
         self._show_notification(
-            message, title, action="app.download-notification-activated", high_priority=high_priority)
+            message, title, action="app.download-notification-activated",
+            high_priority=high_priority
+        )
 
     def _show_private_chat_notification(self, user, message, title=None):
+
         self._show_notification(
-            message, title, action="app.private-chat-notification-activated", action_target=user, high_priority=True)
+            message, title, action="app.private-chat-notification-activated", action_target=user,
+            high_priority=True
+        )
+        self.window.set_urgency_hint(True)
 
     def _show_search_notification(self, search_token, message, title=None):
+
         self._show_notification(
-            message, title, action="app.search-notification-activated", action_target=search_token, high_priority=True)
+            message, title, action="app.search-notification-activated", action_target=search_token,
+            high_priority=True
+        )
 
     # Core Events #
 
