@@ -901,19 +901,17 @@ class Downloads(Transfers):
             return
 
         # No need to check transfers on away status change
-        if username not in self._online_users:
-            for download in self.failed_users.get(username, {}).copy().values():
-                if download.status != TransferStatus.USER_LOGGED_OFF:
-                    # Only a online/away status update, no transfers to resume
-                    break
+        if username in self._online_users:
+            return
 
-                # User logged in, resume "User logged off" transfers
-                self._unfail_transfer(download)
+        # User logged in, resume "User logged off" transfers
+        for download in self.failed_users.get(username, {}).copy().values():
+            self._unfail_transfer(download)
 
-                if self._enqueue_transfer(download):
-                    self._update_transfer(download)
+            if self._enqueue_transfer(download):
+                self._update_transfer(download)
 
-            self._online_users.add(username)
+        self._online_users.add(username)
 
     def _set_connection_stats(self, download_bandwidth=0, **_unused):
         self.total_bandwidth = download_bandwidth

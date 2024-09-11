@@ -712,6 +712,9 @@ class Uploads(Transfers):
             return
 
         if msg.status == UserStatus.OFFLINE:
+            for upload in self.failed_users.get(username, {}).copy().values():
+                self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
+
             for upload in self.active_users.get(username, {}).copy().values():
                 if upload.status == TransferStatus.TRANSFERRING:
                     continue
@@ -719,19 +722,18 @@ class Uploads(Transfers):
                 if not self._auto_clear_transfer(upload):
                     self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
 
-            for upload in self.failed_users.get(username, {}).copy().values():
-                self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
-
             self._online_users.discard(username)
             return
 
         # No need to check transfers on away status change
-        if username not in self._online_users:
-            for upload in self.failed_users.get(username, {}).copy().values():
-                if upload.status == TransferStatus.USER_LOGGED_OFF:
-                    self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+        if username in self._online_users:
+            return
 
-            self._online_users.add(username)
+        # User logged in, mark "User logged off" transfers as cancelled
+        for upload in self.failed_users.get(username, {}).copy().values():
+            self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+
+        self._online_users.add(username)
 
     def _user_stats(self, msg):
         """Server code 36."""
