@@ -40,7 +40,7 @@ class About(Dialog):
          "\n •  Maintainer (2020–present)"
          "\n •  Developer"),
 
-        ("<b>eLvErDe</b>"
+        ("<b>Adam Cécile (eLvErDe)</b>"
          "\n •  Maintainer (2013–2016)"
          "\n •  Domain name administrator"
          "\n •  Source code migration from SVN to GitHub"
@@ -244,8 +244,8 @@ class About(Dialog):
          "\n •  Saumon (2023)"
          "\n •  subu_versus (2023)"
          "\n •  zniavre (2007–2023)"
-         "\n •  Lisapple (2021–2022)"
-         "\n •  melmorabity (2021–2024)"
+         "\n •  Maxime Leroy (Lisapple) (2021–2022)"
+         "\n •  Mohamed El Morabity (melmorabity) (2021–2024)"
          "\n •  m-balthazar (2020)"
          "\n •  Michael Labouebe (gfarmerfr) (2016–2017)"
          "\n •  Monsieur Poisson (2009–2010)"
@@ -267,9 +267,9 @@ class About(Dialog):
          "\n •  David Balazs (djbaloo) (2006–2020)"),
 
         ("<b>Italian</b>"
-         "\n •  Gabboxl (2022–2023)"
+         "\n •  Gabriele (Gabboxl) (2022–2023)"
          "\n •  ms-afk (2023)"
-         "\n •  Gianluca Boiano (2020–2022)"
+         "\n •  Gianluca Boiano (2020–2023)"
          "\n •  nicola (2007)"
          "\n •  dbazza (2003–2004)"),
 
@@ -302,7 +302,7 @@ class About(Dialog):
          "\n •  Vinícius Soares (2023)"),
 
         ("<b>Romanian</b>"
-         "\n •  xslendix (2023)"),
+         "\n •  Slendi (xslendix) (2023)"),
 
         ("<b>Russian</b>"
          "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)"

@@ -6,7 +6,7 @@
  - Maintainer (2020–present)
  - Developer
 
-### eLvErDe
+### Adam Cécile (eLvErDe)
  - Maintainer (2013–2016)
  - Domain name administrator
  - Source code migration from SVN to GitHub
@@ -159,7 +159,172 @@
 
 ## Contributors
 
-See [Contributors](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors) on GitHub
+ - (._.)
+ - Adam Cécile
+ - AHOHNMYC
+ - alekksander
+ - Alexander Kanavin
+ - Alexey Vyskubov
+ - Allan Nordhøy
+ - Amun-Ra
+ - Artem
+ - AtticFinder65536
+ - Attila Fidan
+ - Avery
+ - b1llso
+ - baloo79
+ - bgo-eiu
+ - blueboy
+ - Bonislaw
+ - Brett W. Thompson
+ - burnmail123
+ - ButterflyOfFire
+ - Cata
+ - César Augusto do Nascimento
+ - Chris McKenzie
+ - Christian Swinehart
+ - chz
+ - Coda
+ - cwpute
+ - daelstorm
+ - David Balazs
+ - dbazza
+ - Dreslo
+ - dtalens
+ - Elias Groß
+ - Emily
+ - Eryk Michalak
+ - Everly
+ - Felipe Nogaroto Gonzalez
+ - Gabriele
+ - gahag
+ - gallegonovato
+ - gallows
+ - Geert Kloosterman
+ - gfarmerfr
+ - Gianluca Boiano
+ - Guilherme Santos
+ - Gustavo J. A. M. Carneiro
+ - hadwin
+ - Han Boetes
+ - Havokdan
+ - hednod
+ - homedirectory
+ - hylau
+ - ian andrew remsen
+ - Ingmar K. Steen
+ - INMCM
+ - Inso-m-niaC
+ - Jackson Baber
+ - Jason Green
+ - Jean-Baptiste ALLAIN
+ - Jimmy
+ - J. Lavoie
+ - Joe Halliwell
+ - Jordan Rodrigues
+ - Jörn Weigend
+ - jose alberto matos
+ - Josep Anguera
+ - Josselin Mouette
+ - Jozef Říha
+ - JP Dillingham
+ - Juan Benites
+ - Julen
+ - Julian
+ - Julien Wajsberg
+ - Kari Viittanen
+ - Kawasumi Ayako
+ - Kenny Verstraete
+ - Kian-Meng Ang
+ - Kip Warner
+ - Kirill Feoktistov
+ - lee8oi
+ - Lene Preuss
+ - Lev Gorodetskiy
+ - lippel
+ - Lucas Vieites
+ - m-balthazar
+ - Maite Guix
+ - mantas
+ - ManWell
+ - marciozomb13
+ - Mariusz
+ - Markus Magnuson
+ - Mat
+ - mathsped
+ - Maxime Leroy
+ - Mehavoid
+ - MELERIX
+ - MendelGusmao
+ - Meokater
+ - Michael Labouebe
+ - Micke Nilsson
+ - Miodrag Milić
+ - mitramai
+ - Mohamed El Morabity
+ - Monsieur Poisson
+ - ms-afk
+ - Mutnick
+ - mzf-guest
+ - Nachtalb
+ - nicola
+ - Nicolas Abril
+ - Nick Voronin
+ - Nils
+ - nince78
+ - Nir Arbel
+ - nyoooooooooooooooom
+ - Offhand
+ - Oğuz Ersen
+ - Oleg Gritsun
+ - Oliver Hattshire
+ - osiris
+ - Pagal3
+ - Patrik
+ - phelissimo_
+ - phlostically
+ - Piotr Strebski
+ - Poesty Li
+ - PriitUring
+ - quinox
+ - redactedscribe
+ - rimasx
+ - Saumon
+ - SeeSchloss
+ - sierracat
+ - Sigrid Davis
+ - Silvio Orta
+ - Slendi
+ - slook
+ - spongy
+ - ssantos
+ - Ștefan Talpalaru
+ - stillbirth
+ - Strange
+ - subu_versus
+ - suser-guru
+ - systr
+ - Szia Tomi
+ - tagomago
+ - thine
+ - Timo Vanwynsberghe
+ - Toine Rademacher
+ - tsointsoin
+ - (va)\*10^3
+ - vasi
+ - Vinícius Soares
+ - Vladimir Sedach
+ - Vladyslav Anisimov
+ - wanderer
+ - Wojciech Owczarek
+ - Wretched
+ - W L
+ - X Kowalsky
+ - Ys413
+ - yyyyyyyan
+ - zniavre
+ - ZTetriminos
+ - Žygimantas Beručka
 
 
 ## Translators
