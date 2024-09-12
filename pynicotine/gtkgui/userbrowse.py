@@ -833,11 +833,18 @@ class UserBrowse:
 
         if self.query != query:
             # New search query, rebuild result list
+            active_folder_path = self.active_folder_path
+
             self.clear_model()
             self.query = query
             self.rebuild_model()
 
             if not self.search_folder_paths:
+                iterator = self.folder_tree_view.iterators.get(active_folder_path)
+
+                if iterator:
+                    self.folder_tree_view.select_row(iterator)
+
                 return False
 
         elif query:
