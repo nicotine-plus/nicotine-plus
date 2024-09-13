@@ -53,8 +53,8 @@
  - Saumon (2023)
  - subu_versus (2023)
  - zniavre (2007–2023)
- - Lisapple (2021–2022)
- - melmorabity (2021–2024)
+ - Maxime Leroy (Lisapple) (2021–2022)
+ - Mohamed El Morabity (melmorabity) (2021–2024)
  - m-balthazar (2020)
  - Michael Labouebe (gfarmerfr) (2016–2017)
  - Monsieur Poisson (2009–2010)
@@ -76,9 +76,9 @@
  - David Balazs (djbaloo) (2006–2020)
 
 ## Italian
- - Gabboxl (2022–2023)
+ - Gabriele (Gabboxl) (2022–2023)
  - ms-afk (2023)
- - Gianluca Boiano (2020–2022)
+ - Gianluca Boiano (2020–2023)
  - nicola (2007)
  - dbazza (2003–2004)
 
@@ -111,7 +111,7 @@
  - Vinícius Soares (2023)
 
 ## Romanian
- - xslendix (2023)
+ - Slendi (xslendix) (2023)
 
 ## Russian
  - Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)
