@@ -47,7 +47,9 @@ class Application:
     def run(self):
 
         core.start()
-        core.connect()
+
+        if config.sections["server"]["auto_connect_startup"]:
+            core.connect()
 
         # Main loop, process events from threads 10 times per second
         while events.process_thread_events():
