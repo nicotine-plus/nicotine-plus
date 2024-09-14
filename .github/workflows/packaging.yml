@@ -134,7 +134,7 @@ jobs:
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
