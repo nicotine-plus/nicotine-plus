@@ -3,6 +3,7 @@ name: Website
 on:
   push:
     branches: ["master"]
+    paths: ["*.md"]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
