@@ -271,59 +271,6 @@ class Application:
         # Disable Alt+1-9 accelerators for numpad keys to avoid conflict with Alt codes
         self._set_accels_for_action("app.disabled", numpad_accels)
 
-        if GTK_API_VERSION == 3 or sys.platform != "darwin":
-            return
-
-        # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
-        for action_name, accelerators in (
-            ("gtkinternal.hide", ["<Primary>h"]),
-            ("gtkinternal.hide-others", ["<Primary><Alt>h"])
-        ):
-            self._set_accels_for_action(action_name, accelerators)
-
-        for widget in (Gtk.Text, Gtk.TextView):
-            for action_name, accelerator in (
-                ("clipboard.cut", "<Meta>x"),
-                ("clipboard.copy", "<Meta>c"),
-                ("clipboard.paste", "<Meta>v"),
-                ("selection.select-all", "<Meta>a"),
-                ("misc.insert-emoji", "<Meta>period"),
-                ("text.undo", "<Meta>z"),
-                ("text.redo", "<Shift><Meta>u")
-            ):
-                widget.add_shortcut(
-                    Gtk.Shortcut(
-                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.NamedAction(action_name=action_name),
-                    )
-                )
-
-            for accelerator, step, count, extend in (
-                ("<Meta>Up|<Meta>KP_Up", Gtk.MovementStep.BUFFER_ENDS, -1, False),
-                ("<Shift><Meta>Up|<Shift><Meta>KP_Up", Gtk.MovementStep.BUFFER_ENDS, -1, True),
-                ("<Meta>Down|<Meta>KP_Down", Gtk.MovementStep.BUFFER_ENDS, 1, False),
-                ("<Shift><Meta>Down|<Shift><Meta>KP_Down", Gtk.MovementStep.BUFFER_ENDS, 1, True),
-                ("<Meta>Left|<Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, False),
-                ("<Shift><Meta>Left|<Shift><Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, True),
-                ("<Meta>Right|<Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, False),
-                ("<Shift><Meta>Right|<Shift><Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, True),
-                ("<Alt>Left|<Alt>KP_Left", Gtk.MovementStep.WORDS, -1, False),
-                ("<Shift><Alt>Left|<Shift><Alt>KP_Left", Gtk.MovementStep.WORDS, -1, True),
-                ("<Alt>Right|<Alt>KP_Right", Gtk.MovementStep.WORDS, 1, False),
-                ("<Shift><Alt>Right|<Shift><Alt>KP_Right", Gtk.MovementStep.WORDS, 1, True)
-            ):
-                widget.add_shortcut(
-                    Gtk.Shortcut(
-                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.SignalAction(signal_name="move-cursor"),
-                        arguments=GLib.Variant.new_tuple(
-                            GLib.Variant.new_int32(step),
-                            GLib.Variant.new_int32(count),
-                            GLib.Variant.new_boolean(extend)
-                        )
-                    )
-                )
-
     def _update_user_status(self, *_args):
 
         status = core.users.login_status

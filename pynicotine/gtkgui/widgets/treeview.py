@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import time
 
 import gi.module
@@ -88,7 +87,6 @@ class TreeView:
         self._initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
 
         Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
@@ -130,13 +128,6 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
-
-        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
-            # Workaround to restore Cmd-click behavior on macOS
-            gesture_click = Gtk.GestureClick()
-            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect("pressed", self.on_treeview_click_gtk4_darwin)
-            self.widget.add_controller(gesture_click)  # pylint: disable=no-member
 
     def destroy(self):
 
@@ -864,36 +855,6 @@ class TreeView:
         tooltip.set_text(value)
         return True
 
-    def on_treeview_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y, *_args):
-
-        event = controller.get_last_event()
-        cmd_mask = 16
-
-        if not event.get_modifier_state() & cmd_mask:
-            return False
-
-        widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)  # pylint: disable=no-member
-
-        if not isinstance(widget, Gtk.TreeView):
-            return False
-
-        bin_x, bin_y = widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-        pathinfo = widget.get_path_at_pos(bin_x, bin_y)
-
-        if pathinfo is None:
-            return False
-
-        selection = widget.get_selection()
-        path, _column, _cell_x, _cell_y = pathinfo
-
-        if selection.path_is_selected(path):
-            selection.unselect_path(path)
-        else:
-            selection.select_path(path)
-
-        controller.set_state(Gtk.EventSequenceState.CLAIMED)
-        return True
-
     def on_copy_cell_data_accelerator(self, *_args):
         """Ctrl+C: copy cell data."""
 
@@ -912,12 +873,6 @@ class TreeView:
             value = self.get_icon_label(column, value, is_short_country_label=True)
 
         clipboard.copy_text(value)
-        return True
-
-    def on_select_all(self, *_args):
-        """Ctrl+A: select all rows."""
-
-        self.select_all_rows()
         return True
 
     def on_start_search(self, *_args):
