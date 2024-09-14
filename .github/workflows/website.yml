@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.repository == 'nicotine-plus/nicotine-plus'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
