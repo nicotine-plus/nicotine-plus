@@ -330,7 +330,7 @@ class MessageDialog(Window):
             add_css_class(widget, css_class)
 
         header_bar = Gtk.Box(height_request=16, visible=True)
-        box = Gtk.Box(margin_start=30, margin_end=30, spacing=30, visible=True)
+        box = Gtk.Box(margin_start=24, margin_end=24, visible=True)
         message_area = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, hexpand=True, visible=True)
         action_box = Gtk.Box(visible=True)
         action_area = Gtk.Box(hexpand=True, homogeneous=True, visible=True)
@@ -352,7 +352,7 @@ class MessageDialog(Window):
             widget.set_titlebar(header_bar_handle)
             widget.connect("close-request", self._on_close_request)
 
-            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, visible=True)
+            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
             vbox.append(internal_vbox)                                # pylint: disable=no-member
             vbox.append(action_box)                                   # pylint: disable=no-member
