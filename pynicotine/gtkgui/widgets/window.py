@@ -33,6 +33,7 @@ class Window:
     def __init__(self, widget):
 
         self.widget = widget
+        self._dark_mode_handler = None
 
         if GTK_API_VERSION == 3:
             return
@@ -43,7 +44,9 @@ class Window:
             # Use dark window controls on Windows when requested
             if LIBADWAITA_API_VERSION:
                 from gi.repository import Adw  # pylint: disable=no-name-in-module
-                Adw.StyleManager.get_default().connect("notify::dark", self._on_dark_mode_win32)
+                self._dark_mode_handler = Adw.StyleManager.get_default().connect(
+                    "notify::dark", self._on_dark_mode_win32
+                )
 
     def _menu_popup(self, controller, widget):
         if controller.is_active():
@@ -142,5 +145,10 @@ class Window:
         self.widget.close()
 
     def destroy(self):
+
+        if self._dark_mode_handler is not None:
+            from gi.repository import Adw  # pylint: disable=no-name-in-module
+            Adw.StyleManager.get_default().disconnect(self._dark_mode_handler)
+
         self.widget.destroy()
         self.__dict__.clear()
