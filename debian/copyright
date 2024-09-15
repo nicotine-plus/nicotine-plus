@@ -32,7 +32,7 @@ Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
 Comment: see TRANSLATORS.md for more information.
 
-Files: pynicotine/external/ip_country_data.csv
+Files: pynicotine/external/data/ip_country_data.csv
 Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
