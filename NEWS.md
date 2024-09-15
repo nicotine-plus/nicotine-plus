@@ -5,7 +5,7 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.5 (Release Candidate 1)
+## Version 3.3.5 (Release Candidate 2)
 
 ### Changes
 
@@ -17,8 +17,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Improvements to transfer speed accuracy in the UI
  * Grey out transfer rows with 'User logged off' status
  * Quitting from the tray menu asks for confirmation while uploads are active
- * Various performance improvements
- * macOS/Windows only: Require GTK 4 unless `NICOTINE_GTK_VERSION=3` env variable is set
+ * Handle invalid password in Setup Assistant instead of opening the Preferences dialog
+ * Large performance improvement when listing search results or adding transfers
+ * Reduced memory and storage space used by the IP2Location database
+ * macOS and Windows: Require GTK 4 unless `NICOTINE_GTK_VERSION=3` env variable is set
 
 ### Corrections
 
@@ -33,8 +35,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed an issue where some wishlist searches stopped working after closing their tabs
  * Fixed an issue where an auto-forwarded listening port would close when saving preferences
  * Fixed an issue where toggling search history did not update the history dropdown
- * Fixed scrolling to the bottom of lists with the End key
- * Various smaller UI-related fixes
+ * Various accessibility fixes related to scrolling, text views and entry widgets
  * Various smaller fixes related to the Soulseek protocol implementation
  * Windows: Fixed an issue where the tray icon was visible despite being disabled
  * Windows: Fixed an issue where window prevented auto-hidden taskbar from showing
@@ -64,9 +65,21 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
  * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
  * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
+ * Nicotine+ crashing when trying to browse public shares (on MacOS 15 Public Beta) ([#3063](https://github.com/nicotine-plus/nicotine-plus/issues/3063))
  * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
  * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
  * Upload I/O error: cannot fit 'int' into an offset-sized integer ([#3077](https://github.com/nicotine-plus/nicotine-plus/issues/3077))
+ * critic error on 3.3.4 ([#3080](https://github.com/nicotine-plus/nicotine-plus/issues/3080))
+ * Files are not shared ([#3083](https://github.com/nicotine-plus/nicotine-plus/issues/3083))
+ * Sudden Crash when loading text in the search bar ([#3087](https://github.com/nicotine-plus/nicotine-plus/issues/3087))
+ * Input history scroll ([#3106](https://github.com/nicotine-plus/nicotine-plus/issues/3106))
+ * Files get downloaded twice ([#3107](https://github.com/nicotine-plus/nicotine-plus/issues/3107))
+ * App window not showing up with Wayland/NVidia ([#3108](https://github.com/nicotine-plus/nicotine-plus/issues/3108))
+ * Nicotine+ crashes on Mac when browsing for buddy shares via Shares menu ([#3110](https://github.com/nicotine-plus/nicotine-plus/issues/3110))
+ * Leave "Wishlist" windows open/active after initiating a search & Easier method to initiate search ([#3114](https://github.com/nicotine-plus/nicotine-plus/issues/3114))
+ * crash after download try ([#3119](https://github.com/nicotine-plus/nicotine-plus/issues/3119))
+ * Wishlist result notification is emitted even when disabled ([#3123](https://github.com/nicotine-plus/nicotine-plus/issues/3123))
+ * Crash while running on background ([#3130](https://github.com/nicotine-plus/nicotine-plus/issues/3130))
 
 
 ## Version 3.3.4 (May 6, 2024)
