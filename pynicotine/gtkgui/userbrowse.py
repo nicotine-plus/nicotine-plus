@@ -469,6 +469,9 @@ class UserBrowse:
         self.clear_model()
         browsed_user = core.userbrowse.users[self.user]
 
+        if browsed_user.num_folders is None or browsed_user.shared_size is None:
+            return
+
         # Generate the folder tree and select first folder
         self.create_folder_tree(browsed_user.public_folders)
 
@@ -835,7 +838,6 @@ class UserBrowse:
             # New search query, rebuild result list
             active_folder_path = self.active_folder_path
 
-            self.clear_model()
             self.query = query
             self.rebuild_model()
 
