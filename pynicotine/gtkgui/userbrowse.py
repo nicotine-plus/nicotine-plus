@@ -1404,10 +1404,17 @@ class UserBrowse:
     def on_show_search(self, *_args):
 
         active = self.search_button.get_active()
-        self.search_entry_revealer.set_reveal_child(active)
 
         if active:
             self.search_entry.grab_focus()
+
+        elif not self.file_list_view.is_selection_empty():
+            self.file_list_view.grab_focus()
+
+        else:
+            self.folder_tree_view.grab_focus()
+
+        self.search_entry_revealer.set_reveal_child(active)
 
     def on_search(self, *_args):
         self.find_search_matches()
@@ -1505,10 +1512,4 @@ class UserBrowse:
         """Escape - navigate out of search_entry."""
 
         self.search_button.set_active(False)
-
-        if not self.file_list_view.is_selection_empty():
-            self.file_list_view.grab_focus()
-        else:
-            self.folder_tree_view.grab_focus()
-
         return True
