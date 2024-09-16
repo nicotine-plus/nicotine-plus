@@ -879,7 +879,6 @@ class TreeView:
         """Ctrl+F: start search."""
 
         self.widget.emit("start-interactive-search")
-        return True
 
     def on_collapse_row_accelerator(self, *_args):
         """Left: collapse row."""
