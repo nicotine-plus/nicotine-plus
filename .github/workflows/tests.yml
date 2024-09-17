@@ -211,7 +211,7 @@ jobs:
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -225,9 +225,12 @@ jobs:
           brew install --overwrite python@3.12
           python3.12 -m venv venv
 
+      - if: ${{ matrix.platform != 'macos-12' }}
+        name: Run brew update
+        run: brew update
+
       - name: Install dependencies
         run: |
-          brew update
           venv/bin/python3 packaging/macos/dependencies.py
 
       - name: PEP 8 style checks
