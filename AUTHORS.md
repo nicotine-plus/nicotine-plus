@@ -26,6 +26,9 @@
  - Tester
  - Accessibility improvements
 
+### ketacat
+ - Tester
+
 ## Nicotine+ Team (Emeritus)
 
 ### daelstorm
@@ -235,6 +238,7 @@
  - Kari Viittanen
  - Kawasumi Ayako
  - Kenny Verstraete
+ - ketacat
  - Kian-Meng Ang
  - Kip Warner
  - Kirill Feoktistov

@@ -60,6 +60,9 @@ class About(Dialog):
          "\n •  Tester"
          "\n •  Accessibility improvements"),
 
+        ("<b>ketacat</b>"
+         "\n •  Tester"),
+
 
         "\n<b>Nicotine+ Team (Emeritus)</b>",
 
