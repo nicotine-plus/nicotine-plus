@@ -1348,7 +1348,6 @@ class ChatsPage:
             self.complete_commands_toggle,
             self.complete_room_names_toggle,
             self.complete_room_usernames_toggle,
-            self.completion_dropdown_container,
             self.container,
             self.enable_completion_dropdown_toggle,
             self.enable_ctcp_toggle,
@@ -1372,10 +1371,6 @@ class ChatsPage:
         self.application = application
         self.completion_required = False
         self.private_room_required = False
-
-        if sys.platform == "darwin":
-            # Completion popup currently broken on macOS
-            self.completion_dropdown_container.set_visible(False)
 
         format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
         format_codes_label = _("Format codes")
