@@ -70,6 +70,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
  * Upload I/O error: cannot fit 'int' into an offset-sized integer ([#3077](https://github.com/nicotine-plus/nicotine-plus/issues/3077))
  * critic error on 3.3.4 ([#3080](https://github.com/nicotine-plus/nicotine-plus/issues/3080))
+ * Client closes after PC waking from sleep ([#3082](https://github.com/nicotine-plus/nicotine-plus/issues/3082))
  * Files are not shared ([#3083](https://github.com/nicotine-plus/nicotine-plus/issues/3083))
  * Sudden Crash when loading text in the search bar ([#3087](https://github.com/nicotine-plus/nicotine-plus/issues/3087))
  * Input history scroll ([#3106](https://github.com/nicotine-plus/nicotine-plus/issues/3106))
@@ -80,6 +81,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * crash after download try ([#3119](https://github.com/nicotine-plus/nicotine-plus/issues/3119))
  * Wishlist result notification is emitted even when disabled ([#3123](https://github.com/nicotine-plus/nicotine-plus/issues/3123))
  * Crash while running on background ([#3130](https://github.com/nicotine-plus/nicotine-plus/issues/3130))
+ * Wrong hotkeys on mac. Should be Cmd instead of Ctrl ([#3139](https://github.com/nicotine-plus/nicotine-plus/issues/3139))
 
 
 ## Version 3.3.4 (May 6, 2024)
