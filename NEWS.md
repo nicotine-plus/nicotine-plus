@@ -81,6 +81,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * crash after download try ([#3119](https://github.com/nicotine-plus/nicotine-plus/issues/3119))
  * Wishlist result notification is emitted even when disabled ([#3123](https://github.com/nicotine-plus/nicotine-plus/issues/3123))
  * Crash while running on background ([#3130](https://github.com/nicotine-plus/nicotine-plus/issues/3130))
+ * Cannot browse another user's files in MacOS 15.0 (24A335) ([#3134](https://github.com/nicotine-plus/nicotine-plus/issues/3134))
  * Wrong hotkeys on mac. Should be Cmd instead of Ctrl ([#3139](https://github.com/nicotine-plus/nicotine-plus/issues/3139))
 
 
