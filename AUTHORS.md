@@ -212,6 +212,7 @@
  - Han Boetes
  - Havokdan
  - hednod
+ - Héliaz
  - homedirectory
  - hylau
  - ian andrew remsen
