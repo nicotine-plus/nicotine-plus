@@ -1,7 +1,7 @@
 {
     "id" : "org.nicotine_plus.Nicotine",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "46",
+    "runtime-version" : "47",
     "sdk" : "org.gnome.Sdk",
     "command" : "nicotine",
     "separate-locales" : false,

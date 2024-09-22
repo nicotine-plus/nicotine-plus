@@ -41,7 +41,7 @@ jobs:
       matrix:
         arch: [x86_64]
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-46
+      image: bilelmoussaoui/flatpak-github-actions:gnome-47
       options: --privileged
     steps:
       - name: Checkout code
