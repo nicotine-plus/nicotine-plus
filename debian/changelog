@@ -1,8 +1,8 @@
-nicotine (3.3.5-rc2) noble; urgency=medium
+nicotine (3.3.5-1) noble; urgency=medium
 
-  * Release candidate 2.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Tue, 17 Sep 2024 12:35:53 +0300
+ -- Mat <mail@mathias.is>  Sun, 22 Sep 2024 14:02:12 +0300
 
 nicotine (3.3.4-1) noble; urgency=medium
 
