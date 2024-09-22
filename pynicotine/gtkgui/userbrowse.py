@@ -498,7 +498,7 @@ class UserBrowse:
         query = self.query
         private_template = _("[PRIVATE]  %s")
 
-        for folder_path, files in reversed(folders.items()):
+        for folder_path, files in reversed(list(folders.items())):
             current_path = parent = None
             root_processed = False
             skip_folder = (query and query not in folder_path.lower())
