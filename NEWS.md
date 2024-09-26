@@ -5,6 +5,19 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.6 (Unreleased)
+
+### Corrections
+
+ * macOS: Fixed an issue where opening files and links no longer worked
+ * macOS: Fixed a few keyboard shortcuts that no longer worked
+
+### Issues closed on GitHub
+
+ * 'Open in File Manager' does not work on 3.3.5 in macOS Monterey ([#3143](https://github.com/nicotine-plus/nicotine-plus/issues/3143))
+ * Issues with selecting text on 3.3.5 in macOS Monterey ([#3144](https://github.com/nicotine-plus/nicotine-plus/issues/3144))
+
+
 ## Version 3.3.5 (September 22, 2024)
 
 ### Changes
