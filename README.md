@@ -14,13 +14,15 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 ## Download
 
-The current stable version of Nicotine+ is 3.2.9, released on March 5, 2023. See the [release notes](NEWS.md).
+This is an old version of Nicotine+ 3.2.9, released on March 5, 2023. See the [release notes](NEWS.md).
 
-Downloads are available for:
+Legacy Downloads are available for:
 
  * [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
  * [Windows](doc/DOWNLOADS.md#windows)
  * [macOS](doc/DOWNLOADS.md#macos)
+
+If you want the latest version of Nicotine+, see the [Nicotine+ Website](https://nicotine-plus.org/).
 
 
 ## Get Involved
