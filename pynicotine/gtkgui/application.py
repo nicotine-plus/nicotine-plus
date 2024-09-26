@@ -238,14 +238,14 @@ class Application:
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"]),
+            ("win.cycle-tabs", ["<Control>Tab"]),
+            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
-            ("accel.insert-emoji", ["<Primary>period"]),
+            ("accel.insert-emoji", ["<Control>period"]),
             ("accel.select-all", ["<Primary>a"]),
             ("accel.find", ["<Primary>f"]),
             ("accel.find-next-match", ["<Primary>g"]),
