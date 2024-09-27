@@ -1208,10 +1208,11 @@ class MainWindow(Window):
             self.hide_window_button.emit("clicked")
             return
 
-        if GTK_API_VERSION >= 4:
-            self.widget.minimize()
-        else:
-            self.widget.iconify()
+        if sys.platform == "win32":
+            if GTK_API_VERSION >= 4:
+                self.widget.minimize()
+            else:
+                self.widget.iconify()
 
         super().hide()
 
