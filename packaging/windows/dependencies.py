@@ -25,24 +25,30 @@ def install_pacman():
     """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH", "x86_64")
-    prefix = f"mingw-w64-{arch}-"
-    mingw_type = "mingw32" if arch == "i686" else "mingw64"
+    prefix = "mingw-w64-clang-"
 
-    packages = [f"{prefix}ca-certificates",
-                f"{prefix}gettext-tools",
-                f"{prefix}gtk4",
-                f"{prefix}libadwaita",
-                f"{prefix}python-build",
-                f"{prefix}python-cx-freeze",
-                f"{prefix}python-pycodestyle",
-                f"{prefix}python-pylint",
-                f"{prefix}python-gobject"]
+    if arch == "arm64":
+        prefix += "aarch64"
+        mingw_type = "clangarm64"
+    else:
+        prefix += "x86_64"
+        mingw_type = "clang64"
+
+    packages = [f"{prefix}-ca-certificates",
+                f"{prefix}-gettext-tools",
+                f"{prefix}-gtk4",
+                f"{prefix}-libadwaita",
+                f"{prefix}-python-build",
+                f"{prefix}-python-cx-freeze",
+                f"{prefix}-python-pycodestyle",
+                f"{prefix}-python-pylint",
+                f"{prefix}-python-gobject"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
     # Downgrade libadwaita for now due to dark mode not being applied on startup
     # https://gitlab.gnome.org/GNOME/libadwaita/-/issues/932
-    downgrade_packages = [f"{prefix}libadwaita-1.5.3-1-any.pkg.tar.zst"]
+    downgrade_packages = [f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"]
 
     for package in downgrade_packages:
         subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])

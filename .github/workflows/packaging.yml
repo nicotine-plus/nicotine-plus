@@ -82,7 +82,9 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            prefix: mingw-w64-clang-x86_64
     defaults:
       run:
         shell: msys2 {0}
@@ -93,19 +95,19 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: clang64
           release: false
           update: true
           install: >-
-            mingw-w64-${{ matrix.arch }}-ca-certificates
-            mingw-w64-${{ matrix.arch }}-gettext-tools
-            mingw-w64-${{ matrix.arch }}-gtk4
-            mingw-w64-${{ matrix.arch }}-libadwaita
-            mingw-w64-${{ matrix.arch }}-python-build
-            mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-pycodestyle
-            mingw-w64-${{ matrix.arch }}-python-pylint
-            mingw-w64-${{ matrix.arch }}-python-gobject
+            ${{ matrix.prefix }}-ca-certificates
+            ${{ matrix.prefix }}-gettext-tools
+            ${{ matrix.prefix }}-gtk4
+            ${{ matrix.prefix }}-libadwaita
+            ${{ matrix.prefix }}-python-build
+            ${{ matrix.prefix }}-python-cx-freeze
+            ${{ matrix.prefix }}-python-pycodestyle
+            ${{ matrix.prefix }}-python-pylint
+            ${{ matrix.prefix }}-python-gobject
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
