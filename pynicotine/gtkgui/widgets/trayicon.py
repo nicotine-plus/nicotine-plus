@@ -381,17 +381,19 @@ class StatusNotifierImplementation(BaseImplementation):
         def on_get_group_properties(self, ids, _properties):
 
             item_properties = []
+            requested_ids = set(ids)
 
-            for idx in ids:
-                item = self._items.get(idx)
+            for idx, item in self._items.items():
+                # According to the spec, if no IDs are requested, we should send the entire menu
+                if requested_ids and idx not in requested_ids:
+                    continue
 
-                if item is not None:
-                    item_properties.append(
-                        GLib.Variant.new_tuple(
-                            GLib.Variant.new_int32(idx),
-                            GLib.Variant.new_array(children=self._serialize_item(item))
-                        )
+                item_properties.append(
+                    GLib.Variant.new_tuple(
+                        GLib.Variant.new_int32(idx),
+                        GLib.Variant.new_array(children=self._serialize_item(item))
                     )
+                )
 
             return GLib.Variant.new_tuple(
                 GLib.Variant.new_array(children=item_properties)
