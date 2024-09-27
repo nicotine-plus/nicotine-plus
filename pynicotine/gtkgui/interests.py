@@ -544,10 +544,10 @@ class Interests:
             item = list_view.get_row_value(iterator, column_id)
 
             menu.actions[_("I _Like This")].set_state(
-                GLib.Variant("b", item in config.sections["interests"]["likes"])
+                GLib.Variant.new_byte(item in config.sections["interests"]["likes"])
             )
             menu.actions[_("I _Dislike This")].set_state(
-                GLib.Variant("b", item in config.sections["interests"]["dislikes"])
+                GLib.Variant.new_byte(item in config.sections["interests"]["dislikes"])
             )
             return
 

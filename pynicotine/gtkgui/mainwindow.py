@@ -471,15 +471,15 @@ class MainWindow(Window):
 
         # View
 
-        state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
+        state = GLib.Variant.new_byte(not config.sections["logging"]["logcollapsed"])
         action = Gio.SimpleAction(name="show-log-pane", state=state)
         action.connect("change-state", self.on_show_log_pane)
         self.add_action(action)
 
         # Search
 
-        action = Gio.SimpleAction(
-            name="search-mode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
+        state = GLib.Variant.new_string("global")
+        action = Gio.SimpleAction(name="search-mode", parameter_type=state.get_type(), state=state)
         action.connect("change-state", self.search.on_search_mode)
         self.add_action(action)
 

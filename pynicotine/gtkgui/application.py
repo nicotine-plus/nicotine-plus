@@ -203,7 +203,7 @@ class Application:
             ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
             ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
         ):
-            action = Gio.SimpleAction(name=action_name, state=GLib.Variant("b", state))
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant.new_byte(state))
             action.connect("change-state", callback)
             self.add_action(action)
 
@@ -459,7 +459,7 @@ class Application:
             # Disable actions to prevent this from happening.
             if action and os.environ.get("XDG_CURRENT_DESKTOP", "").lower() != "unity":
                 if action_target:
-                    notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
+                    notification.set_default_action_and_target(action, GLib.Variant.new_string(action_target))
                 else:
                     notification.set_default_action(action)
 

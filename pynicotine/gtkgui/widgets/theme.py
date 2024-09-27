@@ -56,20 +56,25 @@ if USE_COLOR_SCHEME_PORTAL:
 
     def read_color_scheme():
 
+        color_scheme = None
+
         try:
             result = SETTINGS_PORTAL.call_sync(
                 method_name="Read",
-                parameters=GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string("org.freedesktop.appearance"),
+                    GLib.Variant.new_string("color-scheme")
+                ),
                 flags=Gio.DBusCallFlags.NONE,
                 timeout_msec=-1,
                 cancellable=None
             )
-
-            return result.unpack()[0]
+            color_scheme, = result.unpack()
 
         except Exception as error:
             log.add_debug("Cannot read color scheme, falling back to GTK theme preference: %s", error)
-            return None
+
+        return color_scheme
 
     def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
 

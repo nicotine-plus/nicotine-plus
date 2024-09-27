@@ -101,7 +101,7 @@ class PopupMenu:
 
     def _create_action(self, action_id, stateful=False):
 
-        state = GLib.Variant("b", False) if stateful else None
+        state = GLib.Variant.new_byte(False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
         self.application.add_action(action)
@@ -150,10 +150,10 @@ class PopupMenu:
         menuitem = Gio.MenuItem.new(label, action_id)
 
         if item_type == "=":
-            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
+            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
         elif item_type == "^":
-            menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "macos-menubar"))
+            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("macos-menubar"))
 
         if submenu:
             menuitem.set_submenu(item[1].model)
@@ -162,7 +162,7 @@ class PopupMenu:
             if GTK_API_VERSION == 3:
                 # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
                 # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
-                menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
+                menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
         elif action and item[1]:
             # Callback
@@ -465,7 +465,7 @@ class UserPopupMenu(PopupMenu):
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant("b", self.username in core.buddies.users))
+            self.actions[add_to_list].set_state(GLib.Variant.new_byte(self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -474,8 +474,8 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant("b", self.username != local_username or value))
-            self.actions[action_id].set_state(GLib.Variant("b", value))
+            self.actions[action_id].set_enabled(GLib.Variant.new_byte(self.username != local_username or value))
+            self.actions[action_id].set_state(GLib.Variant.new_byte(value))
 
         self.popup_menu_private_rooms.populate_private_rooms()
         self.popup_menu_private_rooms.update_model()
@@ -529,7 +529,7 @@ class UserPopupMenu(PopupMenu):
 
     def on_search_user(self, *_args):
 
-        self.application.window.lookup_action("search-mode").change_state(GLib.Variant("s", "user"))
+        self.application.window.lookup_action("search-mode").change_state(GLib.Variant.new_string("user"))
         self.application.window.user_search_entry.set_text(self.username)
         self.application.window.change_main_page(self.application.window.search_page)
         GLib.idle_add(lambda: self.application.window.search_entry.grab_focus() == -1, priority=GLib.PRIORITY_HIGH_IDLE)

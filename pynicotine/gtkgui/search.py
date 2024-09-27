@@ -1731,7 +1731,7 @@ class Search:
             self.window.application.lookup_action("wishlist").activate()
             return
 
-        self.window.lookup_action("search-mode").change_state(GLib.Variant("s", self.mode))
+        self.window.lookup_action("search-mode").change_state(GLib.Variant.new_string(self.mode))
 
         if self.mode == "room":
             self.window.room_search_entry.set_text(self.room)

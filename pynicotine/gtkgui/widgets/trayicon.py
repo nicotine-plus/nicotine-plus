@@ -297,29 +297,22 @@ class StatusNotifierImplementation(BaseImplementation):
         def add_method(self, name, in_args, out_args, callback):
             self.methods[name] = StatusNotifierImplementation.DBusMethod(name, in_args, out_args, callback)
 
-        def emit_signal(self, name, *args):
-
-            arg_types = "".join(self.signals[name].args)
+        def emit_signal(self, name, parameters=None):
 
             self._bus.emit_signal(
                 destination_bus_name=None,
                 object_path=self._object_path,
                 interface_name=self._interface_name,
                 signal_name=name,
-                parameters=GLib.Variant(f"({arg_types})", args)
+                parameters=parameters
             )
 
         def on_method_call(self, _connection, _sender, _path, _interface_name, method_name, parameters, invocation):
 
             method = self.methods[method_name]
-            result = method.callback(*parameters.unpack())
-            out_arg_types = "".join(method.out_args)
-            return_value = None
+            out_parameters = method.callback(*parameters.unpack())
 
-            if method.out_args:
-                return_value = GLib.Variant(f"({out_arg_types})", result)
-
-            invocation.return_value(return_value)
+            invocation.return_value(out_parameters)
 
         def on_get_property(self, _connection, _sender, _path, _interface_name, property_name):
             prop = self.properties[property_name]
@@ -355,21 +348,35 @@ class StatusNotifierImplementation(BaseImplementation):
             self._items = items
 
             self._revision += 1
-            self.emit_signal("LayoutUpdated", self._revision, 0)
+            self.emit_signal(
+                name="LayoutUpdated",
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_uint32(self._revision),
+                    GLib.Variant.new_int32(0)
+                )
+            )
 
         @staticmethod
         def _serialize_item(item):
 
+            def dict_entry(key, value):
+                return GLib.Variant.new_dict_entry(
+                    GLib.Variant.new_string(key),
+                    GLib.Variant.new_variant(value)
+                )
+
+            props = []
+
             if "text" in item:
-                props = {"label": GLib.Variant("s", item["text"])}
+                props.append(dict_entry("label", GLib.Variant.new_string(item["text"])))
 
                 if item.get("toggled") is not None:
-                    props["toggle-type"] = GLib.Variant("s", "checkmark")
-                    props["toggle-state"] = GLib.Variant("i", int(item["toggled"]))
+                    props.append(dict_entry("toggle-type", GLib.Variant.new_string("checkmark")))
+                    props.append(dict_entry("toggle-state", GLib.Variant.new_int32(int(item["toggled"]))))
+            else:
+                props.append(dict_entry("type", GLib.Variant.new_string("separator")))
 
-                return props
-
-            return {"type": GLib.Variant("s", "separator")}
+            return props
 
         def on_get_group_properties(self, ids, _properties):
 
@@ -379,9 +386,16 @@ class StatusNotifierImplementation(BaseImplementation):
                 item = self._items.get(idx)
 
                 if item is not None:
-                    item_properties.append((idx, self._serialize_item(item)))
+                    item_properties.append(
+                        GLib.Variant.new_tuple(
+                            GLib.Variant.new_int32(idx),
+                            GLib.Variant.new_array(children=self._serialize_item(item))
+                        )
+                    )
 
-            return (item_properties,)
+            return GLib.Variant.new_tuple(
+                GLib.Variant.new_array(children=item_properties)
+            )
 
         def on_get_layout(self, _parent_id, _recursion_depth, _property_names):
 
@@ -389,10 +403,23 @@ class StatusNotifierImplementation(BaseImplementation):
 
             for idx, item in self._items.items():
                 if item["visible"]:
-                    serialized_item = GLib.Variant("(ia{sv}av)", (idx, self._serialize_item(item), []))
+                    serialized_item = GLib.Variant.new_variant(
+                        GLib.Variant.new_tuple(
+                            GLib.Variant.new_int32(idx),
+                            GLib.Variant.new_array(children=self._serialize_item(item)),
+                            GLib.Variant.new_array(child_type=GLib.VariantType("v"))
+                        )
+                    )
                     serialized_items.append(serialized_item)
 
-            return self._revision, (0, {}, serialized_items)
+            return GLib.Variant.new_tuple(
+                GLib.Variant.new_uint32(self._revision),
+                GLib.Variant.new_tuple(
+                    GLib.Variant.new_int32(0),
+                    GLib.Variant.new_array(child_type=GLib.VariantType("{sv}")),
+                    GLib.Variant.new_array(children=serialized_items)
+                )
+            )
 
         def on_event(self, idx, event_id, _data, _timestamp):
             if event_id == "clicked":
@@ -464,7 +491,9 @@ class StatusNotifierImplementation(BaseImplementation):
                 object_path="/StatusNotifierWatcher",
                 interface_name="org.kde.StatusNotifierWatcher",
                 method_name="RegisterStatusNotifierItem",
-                parameters=GLib.Variant("(s)", (self.bus.get_unique_name(),)),
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string(self.bus.get_unique_name())
+                ),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
                 timeout_msec=-1,
@@ -541,7 +570,12 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if status_property.value != status:
             status_property.value = status
-            self.tray_icon.emit_signal("NewStatus", status)
+            self.tray_icon.emit_signal(
+                name="NewStatus",
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string(status)
+                )
+            )
 
     def _update_icon_theme(self):
 
@@ -553,7 +587,12 @@ class StatusNotifierImplementation(BaseImplementation):
             return
 
         icon_path_property.value = icon_path
-        self.tray_icon.emit_signal("NewIconThemePath", icon_path)
+        self.tray_icon.emit_signal(
+            name="NewIconThemePath",
+            parameters=GLib.Variant.new_tuple(
+                GLib.Variant.new_string(icon_path)
+            )
+        )
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
@@ -571,7 +610,12 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if status_property.value != status:
             status_property.value = status
-            self.tray_icon.emit_signal("NewStatus", status)
+            self.tray_icon.emit_signal(
+                name="NewStatus",
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string(status)
+                )
+            )
 
         if is_shutdown:
             self.tray_icon.unregister()
@@ -881,7 +925,7 @@ class Win32Implementation(BaseImplementation):
         self._notify_id.sz_info = truncate_string_byte(message, byte_limit=255, ellipsize=True)
 
         self._click_action = click_action.replace("app.", "") if click_action else None
-        self._click_action_target = GLib.Variant("s", click_action_target) if click_action_target else None
+        self._click_action_target = GLib.Variant.new_string(click_action_target) if click_action_target else None
 
         windll.shell32.Shell_NotifyIconW(notify_action, byref(self._notify_id))
 

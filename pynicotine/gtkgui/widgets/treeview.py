@@ -760,7 +760,7 @@ class TreeView:
                 ("$" + title, None)
             )
             menu.update_model()
-            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
+            menu.actions[title].set_state(GLib.Variant.new_byte(column in visible_columns))
 
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
@@ -942,8 +942,8 @@ def create_grouping_menu(window, active_mode, callback):
     menuitem = Gio.MenuItem.new(_("Group by User"), f"win.{action_id}::user_grouping")
     menu.append_item(menuitem)
 
-    state = GLib.Variant("s", active_mode)
-    action = Gio.SimpleAction(name=action_id, parameter_type=GLib.VariantType("s"), state=state)
+    state = GLib.Variant.new_string(active_mode)
+    action = Gio.SimpleAction(name=action_id, parameter_type=state.get_type(), state=state)
     action.connect("change-state", callback)
 
     window.add_action(action)
