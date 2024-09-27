@@ -760,7 +760,7 @@ class TreeView:
                 ("$" + title, None)
             )
             menu.update_model()
-            menu.actions[title].set_state(GLib.Variant.new_byte(column in visible_columns))
+            menu.actions[title].set_state(GLib.Variant.new_boolean(column in visible_columns))
 
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)

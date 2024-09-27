@@ -101,7 +101,7 @@ class PopupMenu:
 
     def _create_action(self, action_id, stateful=False):
 
-        state = GLib.Variant.new_byte(False) if stateful else None
+        state = GLib.Variant.new_boolean(False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
         self.application.add_action(action)
@@ -465,7 +465,7 @@ class UserPopupMenu(PopupMenu):
         add_to_list = _("_Add Buddy")
 
         if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(GLib.Variant.new_byte(self.username in core.buddies.users))
+            self.actions[add_to_list].set_state(GLib.Variant.new_boolean(self.username in core.buddies.users))
 
         for action_id, value in (
             (_("Ban User"), core.network_filter.is_user_banned(self.username)),
@@ -474,8 +474,8 @@ class UserPopupMenu(PopupMenu):
             (_("Ignore IP Address"), core.network_filter.is_user_ip_ignored(self.username))
         ):
             # Disable menu item if it's our own username and we haven't banned ourselves before
-            self.actions[action_id].set_enabled(GLib.Variant.new_byte(self.username != local_username or value))
-            self.actions[action_id].set_state(GLib.Variant.new_byte(value))
+            self.actions[action_id].set_enabled(GLib.Variant.new_boolean(self.username != local_username or value))
+            self.actions[action_id].set_state(GLib.Variant.new_boolean(value))
 
         self.popup_menu_private_rooms.populate_private_rooms()
         self.popup_menu_private_rooms.update_model()

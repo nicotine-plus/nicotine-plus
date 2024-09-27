@@ -203,7 +203,7 @@ class Application:
             ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
             ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
         ):
-            action = Gio.SimpleAction(name=action_name, state=GLib.Variant.new_byte(state))
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant.new_boolean(state))
             action.connect("change-state", callback)
             self.add_action(action)
 
