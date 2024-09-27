@@ -378,9 +378,7 @@ class StatusNotifierImplementation(BaseImplementation):
             else:
                 props.append(dict_entry("type", GLib.Variant.new_string("separator")))
 
-            if not item["visible"]:
-                props.append(dict_entry("visible", GLib.Variant.new_boolean(False)))
-
+            props.append(dict_entry("visible", GLib.Variant.new_boolean(item["visible"])))
             return props
 
         def on_get_group_properties(self, ids, _properties):
