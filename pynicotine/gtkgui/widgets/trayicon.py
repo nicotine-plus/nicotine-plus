@@ -289,7 +289,7 @@ class StatusNotifierImplementation(BaseImplementation):
         def add_method(self, name, in_args, out_args, callback):
             self.methods[name] = StatusNotifierImplementation.DBusMethod(name, in_args, out_args, callback)
 
-        def emit_signal(self, name, parameters=None):
+        def _emit_signal(self, name, parameters=None):
 
             self._bus.emit_signal(
                 destination_bus_name=None,
@@ -343,7 +343,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
             self._items[item_id] = item
 
-            self.emit_signal(
+            self._emit_signal(
                 name="ItemsPropertiesUpdated",
                 parameters=GLib.Variant.new_tuple(
                     GLib.Variant.new_array(
@@ -476,6 +476,27 @@ class StatusNotifierImplementation(BaseImplementation):
             super().unregister()
             self.menu.unregister()
 
+        def update_icon(self):
+            self._emit_signal("NewIcon")
+
+        def update_icon_theme(self, icon_path):
+
+            self._emit_signal(
+                name="NewIconThemePath",
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string(icon_path)
+                )
+            )
+
+        def update_status(self, status):
+
+            self._emit_signal(
+                name="NewStatus",
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string(status)
+                )
+            )
+
         def on_provide_activation_token(self, token):
             Window.activation_token = token
 
@@ -568,7 +589,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if icon_name_property.value != icon_name:
             icon_name_property.value = icon_name
-            self.tray_icon.emit_signal("NewIcon")
+            self.tray_icon.update_icon()
 
         if not self.is_visible:
             return
@@ -578,12 +599,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if status_property.value != status:
             status_property.value = status
-            self.tray_icon.emit_signal(
-                name="NewStatus",
-                parameters=GLib.Variant.new_tuple(
-                    GLib.Variant.new_string(status)
-                )
-            )
+            self.tray_icon.update_status(status)
 
     def _update_icon_theme(self):
 
@@ -595,12 +611,7 @@ class StatusNotifierImplementation(BaseImplementation):
             return
 
         icon_path_property.value = icon_path
-        self.tray_icon.emit_signal(
-            name="NewIconThemePath",
-            parameters=GLib.Variant.new_tuple(
-                GLib.Variant.new_string(icon_path)
-            )
-        )
+        self.tray_icon.update_icon_theme(icon_path)
 
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
@@ -627,12 +638,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
         if status_property.value != status:
             status_property.value = status
-            self.tray_icon.emit_signal(
-                name="NewStatus",
-                parameters=GLib.Variant.new_tuple(
-                    GLib.Variant.new_string(status)
-                )
-            )
+            self.tray_icon.update_status(status)
 
         if is_shutdown:
             self.tray_icon.unregister()
