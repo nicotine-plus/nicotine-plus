@@ -7,8 +7,13 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ## Version 3.3.6 (Unreleased)
 
+### Changes
+
+ * Windows: Reduced package size by switching to MSYS2's Clang environment
+
 ### Corrections
 
+ * Minor fixes related to the tray icon implementation
  * macOS: Fixed an issue where opening files and links no longer worked
  * macOS: Fixed a few keyboard shortcuts that no longer worked
 
