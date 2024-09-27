@@ -115,7 +115,6 @@ class BaseImplementation:
 
         if self.show_hide_item.get("text") != label:
             self._set_item_text(self.show_hide_item, label)
-            self._update_menu()
 
     def _update_user_status(self):
 
@@ -142,7 +141,6 @@ class BaseImplementation:
 
         if should_update:
             self._update_icon()
-            self._update_menu()
 
     def _update_icon(self):
 
@@ -172,10 +170,6 @@ class BaseImplementation:
         # Implemented in subclasses
         pass
 
-    def _update_menu(self):
-        # Implemented in subclasses
-        pass
-
     def update(self):
 
         self.is_visible = config.sections["ui"]["trayicon"]
@@ -187,11 +181,9 @@ class BaseImplementation:
 
     def set_download_status(self, status):
         self._set_item_text(self.downloads_item, status)
-        self._update_menu()
 
     def set_upload_status(self, status):
         self._set_item_text(self.uploads_item, status)
-        self._update_menu()
 
     def show_notification(self, title, message, action=None, action_target=None, high_priority=False):
         # Implemented in subclasses
@@ -320,7 +312,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
     class DBusMenuService(DBusService):
 
-        def __init__(self):
+        def __init__(self, menu_items):
 
             super().__init__(
                 interface_name="com.canonical.dbusmenu",
@@ -328,8 +320,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 bus_type=Gio.BusType.SESSION
             )
 
-            self._items = {}
-            self._revision = 0
+            self._items = menu_items
 
             for method_name, in_args, out_args, callback in (
                 ("GetGroupProperties", ("ai", "as"), ("a(ia{sv})",), self.on_get_group_properties),
@@ -343,16 +334,27 @@ class StatusNotifierImplementation(BaseImplementation):
             ):
                 self.add_signal(signal_name, value)
 
-        def set_items(self, items):
+        def update_item(self, item):
 
-            self._items = items
+            item_id = item["id"]
 
-            self._revision += 1
+            if item_id not in self._items:
+                return
+
+            self._items[item_id] = item
+
             self.emit_signal(
-                name="LayoutUpdated",
+                name="ItemsPropertiesUpdated",
                 parameters=GLib.Variant.new_tuple(
-                    GLib.Variant.new_uint32(self._revision),
-                    GLib.Variant.new_int32(0)
+                    GLib.Variant.new_array(
+                        children=[
+                            GLib.Variant.new_tuple(
+                                GLib.Variant.new_int32(item_id),
+                                GLib.Variant.new_array(children=self._serialize_item(item))
+                            )
+                        ],
+                    ),
+                    GLib.Variant.new_array(child_type=GLib.VariantType("(ias)"))
                 )
             )
 
@@ -375,6 +377,9 @@ class StatusNotifierImplementation(BaseImplementation):
                     props.append(dict_entry("toggle-state", GLib.Variant.new_int32(int(item["toggled"]))))
             else:
                 props.append(dict_entry("type", GLib.Variant.new_string("separator")))
+
+            if not item["visible"]:
+                props.append(dict_entry("visible", GLib.Variant.new_boolean(False)))
 
             return props
 
@@ -401,21 +406,21 @@ class StatusNotifierImplementation(BaseImplementation):
 
         def on_get_layout(self, _parent_id, _recursion_depth, _property_names):
 
+            revision = 0
             serialized_items = []
 
             for idx, item in self._items.items():
-                if item["visible"]:
-                    serialized_item = GLib.Variant.new_variant(
-                        GLib.Variant.new_tuple(
-                            GLib.Variant.new_int32(idx),
-                            GLib.Variant.new_array(children=self._serialize_item(item)),
-                            GLib.Variant.new_array(child_type=GLib.VariantType("v"))
-                        )
+                serialized_item = GLib.Variant.new_variant(
+                    GLib.Variant.new_tuple(
+                        GLib.Variant.new_int32(idx),
+                        GLib.Variant.new_array(children=self._serialize_item(item)),
+                        GLib.Variant.new_array(child_type=GLib.VariantType("v"))
                     )
-                    serialized_items.append(serialized_item)
+                )
+                serialized_items.append(serialized_item)
 
             return GLib.Variant.new_tuple(
-                GLib.Variant.new_uint32(self._revision),
+                GLib.Variant.new_uint32(revision),
                 GLib.Variant.new_tuple(
                     GLib.Variant.new_int32(0),
                     GLib.Variant.new_array(child_type=GLib.VariantType("{sv}")),
@@ -429,7 +434,7 @@ class StatusNotifierImplementation(BaseImplementation):
 
     class StatusNotifierItemService(DBusService):
 
-        def __init__(self, activate_callback):
+        def __init__(self, activate_callback, menu_items):
 
             super().__init__(
                 interface_name="org.kde.StatusNotifierItem",
@@ -437,7 +442,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 bus_type=Gio.BusType.SESSION
             )
 
-            self.menu = StatusNotifierImplementation.DBusMenuService()
+            self.menu = StatusNotifierImplementation.DBusMenuService(menu_items)
 
             for property_name, signature, value in (
                 ("Category", "s", "Communications"),
@@ -485,7 +490,10 @@ class StatusNotifierImplementation(BaseImplementation):
 
         try:
             self.bus = Gio.bus_get_sync(bus_type=Gio.BusType.SESSION)
-            self.tray_icon = self.StatusNotifierItemService(activate_callback=self.activate_callback)
+            self.tray_icon = self.StatusNotifierItemService(
+                activate_callback=self.activate_callback,
+                menu_items=self.menu_items
+            )
             self.tray_icon.register()
 
             self.bus.call_sync(
@@ -599,8 +607,17 @@ class StatusNotifierImplementation(BaseImplementation):
         if icon_path:
             log.add_debug("Using tray icon path %s", icon_path)
 
-    def _update_menu(self):
-        self.tray_icon.menu.set_items(self.menu_items)
+    def _set_item_text(self, item, text):
+        super()._set_item_text(item, text)
+        self.tray_icon.menu.update_item(item)
+
+    def _set_item_visible(self, item, visible):
+        super()._set_item_visible(item, visible)
+        self.tray_icon.menu.update_item(item)
+
+    def _set_item_toggled(self, item, toggled):
+        super()._set_item_toggled(item, toggled)
+        self.tray_icon.menu.update_item(item)
 
     def unload(self, is_shutdown=True):
 
