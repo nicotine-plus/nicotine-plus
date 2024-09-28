@@ -40,7 +40,6 @@ jobs:
           cp AUTHORS.md $WEBSITE_ROOT/
           cp README.md $WEBSITE_ROOT/
           cp NEWS.md $WEBSITE_ROOT/
-          cp TRANSLATORS.md $WEBSITE_ROOT/
           cp data/icons/icon.svg $WEBSITE_ROOT/data/icons/
 
       - name: Build with Jekyll

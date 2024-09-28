@@ -604,7 +604,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
  * Usability improvements to several main window components and dialogs
  * Reddit and Test Replier plugins are no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
- * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+ * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/AUTHORS#translators) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
 
@@ -706,7 +706,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added display of local folder paths for local items in the File Properties dialog
  * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
  * Added new Ukrainian translation (thank you @uniss2209)
- * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+ * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/AUTHORS#translators) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
 
