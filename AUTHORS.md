@@ -338,7 +338,10 @@
 See [TRANSLATORS.md](TRANSLATORS.md)
 
 
-## Third-Party Attributions
+## License
+
+Nicotine+ is licensed under the [GNU General Public License v3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html),
+with the following exceptions:
 
 [tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.  
 Copyright (c) 2014-2024 Tom Wallroth, Mat (mathiascode)
