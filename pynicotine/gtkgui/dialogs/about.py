@@ -345,16 +345,31 @@ class About(Dialog):
         ("Nicotine+ is licensed under the <a href='https://www.gnu.org/licenses/gpl-3.0.html'>"
          "GNU General Public License v3.0 or later</a>, with the following exceptions:"),
 
-        ("<b>tinytag licensed under the MIT License.</b>"
-         "\nCopyright (c) 2014–2023 Tom Wallroth"
-         "\nCopyright (c) 2021–2023 Mat (mathiascode)"
-         "\n<a href='https://github.com/tinytag/tinytag'>https://github.com/tinytag/tinytag</a>"),
+        ("<b><a href='https://github.com/tinytag/tinytag'>tinytag</a> licensed under the MIT License.</b>"
+         "\nCopyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)"
+         "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
+         'of this software and associated documentation files (the "Software"), to deal '
+         "in the Software without restriction, including without limitation the rights "
+         "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell "
+         "copies of the Software, and to permit persons to whom the Software is "
+         "furnished to do so, subject to the following conditions: "
+         "\n\nThe above copyright notice and this permission notice shall be included in all "
+         "copies or substantial portions of the Software."),
 
-        ("<b>Country flags licensed under the MIT License.</b>"
-         "\nCopyright (c) 2016–2021 Bowtie AB"
-         "\n<a href='https://github.com/madebybowtie/FlagKit'>https://github.com/madebybowtie/FlagKit</a>"),
+        ("<b><a href='https://github.com/madebybowtie/FlagKit'>FlagKit</a> icons licensed "
+         "under the MIT License.</b>"
+         "\nCopyright (c) 2016 Bowtie AB"
+         "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
+         'of this software and associated documentation files (the "Software"), to deal '
+         "in the Software without restriction, including without limitation the rights "
+         "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell "
+         "copies of the Software, and to permit persons to whom the Software is "
+         "furnished to do so, subject to the following conditions: "
+         "\n\nThe above copyright notice and this permission notice shall be included in all "
+         "copies or substantial portions of the Software."),
 
-        ("<b>Country data licensed under the CC-BY-SA-4.0 License.</b>"
+        ("<b>IP2Location country data licensed under the "
+         "<a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA-4.0 License</a>.</b>"
          "\nCopyright (c) 2001–2024 Hexasoft Development Sdn. Bhd."
          "\nNicotine+ uses the IP2Location LITE database for "
          "<a href='https://lite.ip2location.com'>IP geolocation</a>.")]

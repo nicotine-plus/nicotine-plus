@@ -340,15 +340,33 @@ See [TRANSLATORS.md](TRANSLATORS.md)
 
 ## Third-Party Attributions
 
-tinytag licensed under the MIT License.  
-Copyright (c) 2014–2023 Tom Wallroth  
-Copyright (c) 2021–2023 Mat (mathiascode)  
-[https://github.com/tinytag/tinytag](https://github.com/tinytag/tinytag)
+[tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.  
+Copyright (c) 2014-2024 Tom Wallroth, Mat (mathiascode)
 
-Country flags licensed under the MIT License.  
-Copyright (c) 2016–2021 Bowtie AB  
-[https://github.com/madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit)
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Country data licensed under the CC-BY-SA-4.0 License.  
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+[FlagKit](https://github.com/madebybowtie/FlagKit) icons licensed under the MIT
+License.  
+Copyright (c) 2016 Bowtie AB  
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+IP2Location country data licensed under the [CC-BY-SA-4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).  
 Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
 Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
