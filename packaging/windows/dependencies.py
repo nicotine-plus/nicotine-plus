@@ -42,7 +42,8 @@ def install_pacman():
                 f"{prefix}-python-cx-freeze",
                 f"{prefix}-python-pycodestyle",
                 f"{prefix}-python-pylint",
-                f"{prefix}-python-gobject"]
+                f"{prefix}-python-gobject",
+                f"{prefix}-webp-pixbuf-loader"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

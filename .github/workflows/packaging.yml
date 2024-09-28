@@ -108,6 +108,7 @@ jobs:
             ${{ matrix.prefix }}-python-pycodestyle
             ${{ matrix.prefix }}-python-pylint
             ${{ matrix.prefix }}-python-gobject
+            ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
