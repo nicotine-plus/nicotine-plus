@@ -343,7 +343,7 @@ See [TRANSLATORS.md](TRANSLATORS.md)
 Nicotine+ is licensed under the [GNU General Public License v3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html),
 with the following exceptions:
 
-[tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.  
+**[tinytag](https://github.com/tinytag/tinytag) licensed under the MIT License.**  
 Copyright (c) 2014-2024 Tom Wallroth, Mat (mathiascode)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -356,8 +356,8 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-[FlagKit](https://github.com/madebybowtie/FlagKit) icons licensed under the MIT
-License.  
+**[FlagKit](https://github.com/madebybowtie/FlagKit) icons licensed under the MIT
+License.**  
 Copyright (c) 2016 Bowtie AB  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -370,6 +370,6 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-IP2Location country data licensed under the [CC-BY-SA-4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).  
+**IP2Location country data licensed under the [CC-BY-SA-4.0 License](https://creativecommons.org/licenses/by-sa/4.0/).**  
 Copyright (c) 2001–2024 Hexasoft Development Sdn. Bhd.  
 Nicotine+ uses the IP2Location LITE database for [IP geolocation](https://lite.ip2location.com).
