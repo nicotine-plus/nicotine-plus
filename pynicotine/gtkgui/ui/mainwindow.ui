@@ -779,7 +779,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="icon-name">folder-open-symbolic</property>
+                                <property name="icon-name">document-open-symbolic</property>
                                 <property name="visible">True</property>
                               </object>
                             </child>
@@ -1252,7 +1252,7 @@
                       <object class="GtkEntry" id="add_buddy_entry">
                         <property name="max-width-chars">45</property>
                         <property name="placeholder-text" translatable="yes">Add buddy…</property>
-                        <property name="primary-icon-name">contact-new-symbolic</property>
+                        <property name="primary-icon-name">system-users-symbolic</property>
                         <property name="visible">True</property>
                         <property name="width-chars">5</property>
                         <signal name="activate" handler="on_add_buddy"/>
@@ -1344,7 +1344,7 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="icon-name">contact-new-symbolic</property>
+                    <property name="icon-name">system-users-symbolic</property>
                     <property name="pixel-size">128</property>
                     <property name="visible">True</property>
                     <style>

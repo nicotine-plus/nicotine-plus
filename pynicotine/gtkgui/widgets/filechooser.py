@@ -278,9 +278,9 @@ class FileChooserButton:
             label.set_mnemonic_widget(self.chooser_button)
 
         icon_names = {
-            "file": "image-x-generic-symbolic",
+            "file": "folder-documents-symbolic",
             "folder": "folder-symbolic",
-            "image": "image-x-generic-symbolic"
+            "image": "folder-pictures-symbolic"
         }
 
         label_container = Gtk.Box(spacing=6, visible=True)
@@ -299,7 +299,7 @@ class FileChooserButton:
             label_container.append(self.label)              # pylint: disable=no-member
             self.chooser_button.set_child(label_container)  # pylint: disable=no-member
 
-            self.open_folder_button.set_icon_name("folder-open-symbolic")  # pylint: disable=no-member
+            self.open_folder_button.set_icon_name("external-link-symbolic")  # pylint: disable=no-member
 
             if end_button:
                 widget.append(end_button)                   # pylint: disable=no-member
@@ -311,7 +311,8 @@ class FileChooserButton:
             label_container.add(self.label)                 # pylint: disable=no-member
             self.chooser_button.add(label_container)        # pylint: disable=no-member
 
-            self.open_folder_button.set_image(Gtk.Image(icon_name="folder-open-symbolic"))  # pylint: disable=no-member
+            self.open_folder_button.set_image(              # pylint: disable=no-member
+                Gtk.Image(icon_name="external-link-symbolic"))
 
             if end_button:
                 widget.add(end_button)                      # pylint: disable=no-member

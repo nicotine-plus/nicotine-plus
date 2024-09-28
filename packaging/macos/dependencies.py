@@ -24,8 +24,7 @@ import sys
 def install_brew():
     """Install dependencies from the main Homebrew repos."""
 
-    packages = ["adwaita-icon-theme",
-                "gettext",
+    packages = ["gettext",
                 "gobject-introspection",
                 "gtk4",
                 "libadwaita"]

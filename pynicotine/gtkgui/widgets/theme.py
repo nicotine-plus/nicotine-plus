@@ -220,11 +220,11 @@ else:
 CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
 FILE_TYPE_ICON_LABELS = {
     "application-x-executable-symbolic": _("Executable"),
-    "audio-x-generic-symbolic": _("Audio"),
-    "image-x-generic-symbolic": _("Image"),
+    "folder-music-symbolic": _("Audio"),
+    "folder-pictures-symbolic": _("Image"),
     "package-x-generic-symbolic": _("Archive"),
-    "text-x-generic-symbolic": _("Miscellaneous"),
-    "video-x-generic-symbolic": _("Video"),
+    "folder-documents-symbolic": _("Miscellaneous"),
+    "folder-videos-symbolic": _("Video"),
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
@@ -374,13 +374,13 @@ def get_file_type_icon_name(basename):
     extension = extension.lower()
 
     if extension in FileTypes.AUDIO:
-        return "audio-x-generic-symbolic"
+        return "folder-music-symbolic"
 
     if extension in FileTypes.IMAGE:
-        return "image-x-generic-symbolic"
+        return "folder-pictures-symbolic"
 
     if extension in FileTypes.VIDEO:
-        return "video-x-generic-symbolic"
+        return "folder-videos-symbolic"
 
     if extension in FileTypes.ARCHIVE:
         return "package-x-generic-symbolic"
@@ -394,7 +394,7 @@ def get_file_type_icon_name(basename):
     if extension in FileTypes.EXECUTABLE:
         return "application-x-executable-symbolic"
 
-    return "text-x-generic-symbolic"
+    return "folder-documents-symbolic"
 
 
 def on_icon_theme_changed(*_args):

@@ -707,14 +707,14 @@ class MainWindow(Window):
 
         for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
-            ("downloads", _("Downloads"), "document-save-symbolic"),
+            ("downloads", _("Downloads"), "folder-download-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("userbrowse", _("Browse Shares"), "folder-symbolic"),
             ("userinfo", _("User Profiles"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-unread-symbolic"),
-            ("userlist", _("Buddies"), "contact-new-symbolic"),
+            ("userlist", _("Buddies"), "system-users-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
-            ("interests", _("Interests"), "emblem-default-symbolic")
+            ("interests", _("Interests"), "face-smile-big-symbolic")
         ):
             tab = self.tabs[tab_id]
             self.notebook.append_page(tab.page, tab_text, focus_callback=tab.on_focus)

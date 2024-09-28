@@ -3021,7 +3021,7 @@ class Preferences(Dialog):
         ("network", NetworkPage, _("Network"), "network-wireless-symbolic"),
         ("user-interface", UserInterfacePage, _("User Interface"), "view-grid-symbolic"),
         ("shares", SharesPage, _("Shares"), "folder-symbolic"),
-        ("downloads", DownloadsPage, _("Downloads"), "document-save-symbolic"),
+        ("downloads", DownloadsPage, _("Downloads"), "folder-download-symbolic"),
         ("uploads", UploadsPage, _("Uploads"), "emblem-shared-symbolic"),
         ("searches", SearchesPage, _("Searches"), "system-search-symbolic"),
         ("user-profile", UserProfilePage, _("User Profile"), "avatar-default-symbolic"),
@@ -3030,8 +3030,8 @@ class Preferences(Dialog):
         ("logging", LoggingPage, _("Logging"), "folder-documents-symbolic"),
         ("banned-users", BannedUsersPage, _("Banned Users"), "action-unavailable-symbolic"),
         ("ignored-users", IgnoredUsersPage, _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-        ("plugins", PluginsPage, _("Plugins"), "list-add-symbolic"),
-        ("url-handlers", UrlHandlersPage, _("URL Handlers"), "insert-link-symbolic")
+        ("url-handlers", UrlHandlersPage, _("URL Handlers"), "insert-link-symbolic"),
+        ("plugins", PluginsPage, _("Plugins"), "application-x-addon-symbolic")
     ]
 
     def __init__(self, application):

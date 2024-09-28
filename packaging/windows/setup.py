@@ -226,17 +226,6 @@ def add_gtk():
     add_typelibs()
 
 
-def add_icon_packs():
-
-    required_icon_packs = (
-        "Adwaita",
-    )
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
-        starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True
-    )
-
-
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
     add_file(file_path=ssl_paths.openssl_cafile, output_path="lib/cert.pem")
@@ -255,7 +244,6 @@ def add_translations():
 
 # GTK
 add_gtk()
-add_icon_packs()
 
 # SSL
 add_ssl_certs()
