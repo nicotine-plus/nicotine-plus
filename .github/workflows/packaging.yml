@@ -137,7 +137,7 @@ jobs:
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -152,9 +152,7 @@ jobs:
           python3.12 -m venv venv
 
       - name: Install build dependencies
-        run: |
-          brew update
-          venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
         run: venv/bin/python3 packaging/macos/setup.py bdist_dmg

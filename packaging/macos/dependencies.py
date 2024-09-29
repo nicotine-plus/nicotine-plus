@@ -26,6 +26,7 @@ def install_brew():
 
     packages = ["gettext",
                 "gobject-introspection",
+                "glib",
                 "gtk4",
                 "libadwaita"]
 
