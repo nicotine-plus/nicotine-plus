@@ -132,7 +132,7 @@ class ChatEntry:
         if iterator is not None:
             self.model.remove(iterator)
 
-    def set_parent(self, entity, container, chat_view):
+    def set_parent(self, entity=None, container=None, chat_view=None):
 
         if self.entity:
             self.unsent_messages[self.entity] = self.widget.get_text()
@@ -141,10 +141,14 @@ class ChatEntry:
         self.chat_view = chat_view
 
         parent = self.widget.get_parent()
-        unsent_message = self.unsent_messages.get(entity, "")
 
         if parent is not None:
             parent.remove(self.widget)
+
+        if container is None:
+            return
+
+        unsent_message = self.unsent_messages.get(entity, "")
 
         if GTK_API_VERSION >= 4:
             container.append(self.widget)  # pylint: disable=no-member

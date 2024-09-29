@@ -276,6 +276,8 @@ class ChatRooms(IconNotebook):
             return
 
         if page.container == self.get_current_page():
+            self.chat_entry.set_parent(None)
+
             if self.command_help is not None:
                 self.command_help.set_menu_button(None)
 
