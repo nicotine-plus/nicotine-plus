@@ -6,16 +6,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-22 14:03+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2024-10-05 06:16+0000\n"
+"Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -27,14 +27,12 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafický klient pro Soulseek P2P síť"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;chat;messaging;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nicotine;sdílení;hudba;P2P;peer-to-peer;GTK;"
+msgstr "Soulseek;Nicotine;sdílení;chat;zprávy;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:9
-#, fuzzy
 msgid "Browse the Soulseek network"
-msgstr "Grafický klient pro Soulseek P2P síť"
+msgstr "Procházejte síť Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -377,9 +375,8 @@ msgid "Soulseek _Privileges"
 msgstr "Soulseek _Privileges"
 
 #: pynicotine/gtkgui/application.py:301
-#, fuzzy
 msgid "_Preferences"
-msgstr "_Preferences"
+msgstr "_Předvolby"
 
 #: pynicotine/gtkgui/application.py:307 pynicotine/gtkgui/application.py:516
 #: pynicotine/gtkgui/widgets/trayicon.py:107
@@ -1726,9 +1723,8 @@ msgstr "Obslužné rutiny adresy URL"
 #: pynicotine/gtkgui/dialogs/preferences.py:3060
 #: pynicotine/gtkgui/widgets/trayicon.py:106
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
-#, fuzzy
 msgid "Preferences"
-msgstr "Možnosti"
+msgstr "Předvolby"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:3427
 #, fuzzy
@@ -4328,17 +4324,14 @@ msgid "Announce the song currently playing"
 msgstr "Oznámit aktuálně přehrávanou skladbu"
 
 #: pynicotine/plugins/core_commands/__init__.py:94
-#, fuzzy
 msgid "Join chat room"
-msgstr "Připojte se nebo vytvořte místnost…"
+msgstr "Připojte se k chatovací místnosti"
 
 #: pynicotine/plugins/core_commands/__init__.py:102
-#, fuzzy
 msgid "Leave chat room"
-msgstr "Nechte aktuální místnost"
+msgstr "Opusťte chatovací místnost"
 
 #: pynicotine/plugins/core_commands/__init__.py:110
-#, fuzzy
 msgid "Say message in specified chat room"
 msgstr "Řekněte zprávu v určené chatovací místnosti"
 
@@ -4979,13 +4972,12 @@ msgstr ""
 "uživatelům, jejichž odposlouchávací porty jsou otevřené."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:341
-#, fuzzy
 msgid ""
 "If necessary, choose a different listening port below. This can also be done "
 "later in the preferences."
 msgstr ""
 "V případě potřeby níže vyberte jiný naslouchací port. To lze provést i "
-"později v preferencích."
+"později v předvolbách."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:382
 #, fuzzy
@@ -5096,9 +5088,8 @@ msgid "Quit"
 msgstr "Přestat"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
-#, fuzzy
 msgid "Menus"
-msgstr "Jídelní lístky"
+msgstr "Nabídky"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:88
 #, fuzzy
