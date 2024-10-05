@@ -137,15 +137,6 @@ def run(hidden, ci_mode, multi_instance):
         # Always enable CSD on macOS for a more uniform look
         os.environ["GTK_CSD"] = "1"
 
-    if os.environ.get("GDK_BACKEND") != "broadway":
-        if "GSK_RENDERER" not in os.environ:
-            # Old GL renderer is faster for now. Make it the default.
-            os.environ["GSK_RENDERER"] = "gl"
-
-        if os.environ.get("GSK_RENDERER") == "gl":
-            # Old GL renderer doesn't support fractional scaling. Disable it.
-            os.environ["GDK_DEBUG"] = ",".join(("gl-no-fractional", os.environ.get("GDK_DEBUG", "")))
-
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
     if error:
