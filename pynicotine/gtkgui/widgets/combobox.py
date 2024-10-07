@@ -29,13 +29,11 @@ from pynicotine.gtkgui.widgets.theme import add_css_class
 class ComboBox:
 
     def __init__(self, container, label=None, has_entry=False, has_entry_completion=False,
-                 enable_arrow_keys=True, entry=None, visible=True, items=None,
-                 item_selected_callback=None):
+                 entry=None, visible=True, items=None, item_selected_callback=None):
 
         self.widget = None
         self.dropdown = None
         self.entry = entry
-        self.enable_arrow_keys = enable_arrow_keys
         self.item_selected_callback = item_selected_callback
 
         self._ids = {}
@@ -44,7 +42,6 @@ class ComboBox:
         self._button = None
         self._popover = None
         self._entry_completion = None
-        self._is_updating_items = False
         self._is_select_callback_enabled = False
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
@@ -87,10 +84,16 @@ class ComboBox:
         self.dropdown.set_factory(button_factory)
         self.dropdown.set_list_factory(list_factory)
 
-        self.dropdown.connect("notify::selected", self._on_item_selected)
-
         self._popover = list(self.dropdown)[-1]
         self._popover.connect("notify::visible", self._on_dropdown_visible)
+
+        try:
+            scrollable = list(self._popover.get_child())[-1]
+            list_view = scrollable.get_child()
+            list_view.connect("activate", self._on_item_selected)
+
+        except AttributeError:
+            pass
 
         if not has_entry:
             self.widget = self.dropdown
@@ -145,7 +148,7 @@ class ComboBox:
             container.add(self.widget)
             return
 
-        if has_entry_completion or not self.enable_arrow_keys:
+        if has_entry_completion:
             add_css_class(self.dropdown, "dropdown-scrollbar")
 
         if self.entry is None:
@@ -175,21 +178,18 @@ class ComboBox:
     def _update_item_entry_text(self):
         """Set text entry text to the same value as selected item."""
 
-        if GTK_API_VERSION == 3:
-            # Already supported natively in GTK 3
-            return
+        if GTK_API_VERSION >= 4:
+            item = self.dropdown.get_selected_item()
 
-        item = self.dropdown.get_selected_item()
+            if item is None:
+                return
 
-        if item is None:
-            return
+            item_text = item.get_string()
 
-        item_text = item.get_string()
+            if self.get_text() != item_text:
+                self.set_text(item_text)
 
-        if self.get_text() != item_text:
-            self.set_text(item_text)
-
-        self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
+        self.entry.set_position(-1)
 
     def _update_item_positions(self, start_position, added=False):
 
@@ -225,12 +225,7 @@ class ComboBox:
         if GTK_API_VERSION == 3:
             return
 
-        self._is_updating_items = True
-
         self.dropdown.set_model(self._model)
-        self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
-
-        self._is_updating_items = False
 
     def insert(self, position, item, item_id=None):
 
@@ -239,8 +234,6 @@ class ComboBox:
 
         if item_id in self._positions:
             return
-
-        self._is_updating_items = True
 
         last_position = self.get_num_items()
 
@@ -265,13 +258,8 @@ class ComboBox:
 
         self._update_item_positions(start_position=(position + 1), added=True)
 
-        if GTK_API_VERSION >= 4:
-            self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
-
         self._ids[position] = item_id
         self._positions[item_id] = position
-
-        self._is_updating_items = False
 
     def append(self, item, item_id=None):
         self.insert(position=-1, item=item, item_id=item_id)
@@ -333,8 +321,6 @@ class ComboBox:
         if item_id is None:
             return
 
-        self._is_updating_items = True
-
         if GTK_API_VERSION >= 4:
             self._model.remove(position)
         else:
@@ -350,18 +336,11 @@ class ComboBox:
         self._positions.pop(item_id, None)
         self._update_item_positions(start_position=position)
 
-        if GTK_API_VERSION >= 4:
-            self.set_selected_pos(Gtk.INVALID_LIST_POSITION)
-
-        self._is_updating_items = False
-
     def remove_id(self, item_id):
         position = self._positions.get(item_id)
         self.remove_pos(position)
 
     def clear(self):
-
-        self._is_updating_items = True
 
         self._ids.clear()
         self._positions.clear()
@@ -376,8 +355,6 @@ class ComboBox:
 
         if self._entry_completion:
             self._entry_completion.clear()
-
-        self._is_updating_items = False
 
     def grab_focus(self):
         self.entry.grab_focus()
@@ -405,9 +382,6 @@ class ComboBox:
 
     def _on_arrow_key_accelerator(self, _widget, _unused, direction):
 
-        if not self.enable_arrow_keys:
-            return True
-
         if GTK_API_VERSION == 3:
             # Gtk.ComboBox already supports this functionality
             return False
@@ -430,6 +404,7 @@ class ComboBox:
             new_position = min(current_position + 1, len(self._positions) - 1)
 
         self.set_selected_pos(new_position)
+        self._update_item_entry_text()
         return True
 
     def _on_button_scroll_event(self, widget, event, *_args):
@@ -476,9 +451,6 @@ class ComboBox:
 
     def _on_item_selected(self, *_args):
 
-        if self._is_updating_items:
-            return
-
         selected_id = self.get_selected_id()
 
         if selected_id is None:
@@ -487,9 +459,6 @@ class ComboBox:
         if self.entry is not None:
             # Update text entry with text from the selected item
             self._update_item_entry_text()
-
-            # Cursor is normally placed at the beginning, move to the end
-            self.entry.set_position(-1)
 
         if self._is_select_callback_enabled and self.item_selected_callback is not None:
             self.item_selected_callback(self, selected_id)
