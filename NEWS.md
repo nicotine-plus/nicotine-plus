@@ -13,7 +13,9 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
 ### Corrections
 
+ * Fixed a regression where arrow keys no longer selected items in comboboxes
  * Minor fixes related to the tray icon implementation
+ * GTK 3: Fixed an issue where the chat text entry could disappear
  * macOS: Fixed an issue where opening files and links no longer worked
  * macOS: Fixed a few keyboard shortcuts that no longer worked
 
