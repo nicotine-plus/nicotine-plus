@@ -111,7 +111,7 @@ jobs:
       - name: Install dependencies
         run: |
           zypper refresh
-          zypper -n install gettext-tools python312-build python312-gobject \
+          zypper -n install dejavu-fonts gettext-tools python312-build python312-gobject \
             python312-gobject-Gdk python312-pycodestyle python312-pylint typelib-1_0-Gtk-4_0
 
       - name: PEP 8 style checks
@@ -141,7 +141,7 @@ jobs:
       - name: Install dependencies
         run: |
           apk update
-          apk add gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle py3-pylint
+          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle py3-pylint
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
