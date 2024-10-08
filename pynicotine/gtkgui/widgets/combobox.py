@@ -42,7 +42,7 @@ class ComboBox:
         self._button = None
         self._popover = None
         self._entry_completion = None
-        self._is_select_callback_enabled = False
+        self._is_popup_visible = False
 
         self._create_combobox(container, label, has_entry, has_entry_completion)
 
@@ -222,10 +222,8 @@ class ComboBox:
     def unfreeze(self):
         """Called after items have been inserted/deleted, to enable UI updates."""
 
-        if GTK_API_VERSION == 3:
-            return
-
-        self.dropdown.set_model(self._model)
+        if GTK_API_VERSION >= 4:
+            self.dropdown.set_model(self._model)
 
     def insert(self, position, item, item_id=None):
 
@@ -418,7 +416,7 @@ class ComboBox:
         return True
 
     def _on_select_callback_status(self, enabled):
-        self._is_select_callback_enabled = enabled
+        self._is_popup_visible = enabled
 
     def _on_dropdown_map(self, *_args):
 
@@ -441,7 +439,6 @@ class ComboBox:
             return
 
         if not visible:
-            self.entry.grab_focus_without_selecting()
             return
 
         text = self.get_text()
@@ -460,5 +457,11 @@ class ComboBox:
             # Update text entry with text from the selected item
             self._update_item_entry_text()
 
-        if self._is_select_callback_enabled and self.item_selected_callback is not None:
+        if not self._is_popup_visible:
+            return
+
+        if self.entry is not None:
+            self.entry.grab_focus_without_selecting()
+
+        if self.item_selected_callback is not None:
             self.item_selected_callback(self, selected_id)
