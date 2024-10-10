@@ -231,7 +231,7 @@ class ChatRooms(IconNotebook):
         page = self.pages.get(room)
 
         if page is not None:
-            page.chat_view.clear()
+            page.on_clear_messages()
             page.activity_view.clear()
 
     def clear_notifications(self):
@@ -487,7 +487,9 @@ class ChatRoom:
         self.chat_view = ChatView(
             self.chat_view_container, chat_entry=self.chatrooms.chat_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
+            log_reader=self.prepend_old_messages,
             status_users=core.chatrooms.joined_rooms[room].users,
+            roomname_event=(self.roomname_event if is_global else None),
             username_event=self.username_event
         )
 
@@ -579,7 +581,7 @@ class ChatRoom:
             ("#" + _("Copy"), self.activity_view.on_copy_text),
             ("#" + _("Copy All"), self.activity_view.on_copy_all_text),
             ("", None),
-            ("#" + _("Clear Activity View"), self.activity_view.on_clear_all_text),
+            ("#" + _("Clear Activity View"), self.activity_view.clear),
             ("", None),
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
@@ -595,7 +597,7 @@ class ChatRoom:
             ("#" + _("View Room Log"), self.on_view_room_log),
             ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
-            ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
@@ -610,10 +612,10 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        self.prepend_old_messages()
+        GLib.idle_add(self._read_old_messages)
 
     def load(self):
-        GLib.idle_add(self.read_room_logs_finished)
+        GLib.idle_add(self.on_loaded)
         self.loaded = True
 
     def clear(self):
@@ -628,6 +630,7 @@ class ChatRoom:
             menu.destroy()
 
         self.activity_view.destroy()
+        self.chat_view.clear()
         self.chat_view.destroy()
         self.users_list_view.destroy()
         self.__dict__.clear()
@@ -680,11 +683,14 @@ class ChatRoom:
             underline
         ], select_row=False)
 
-    def read_room_logs_finished(self):
+    def on_loaded(self):
 
         if not hasattr(self, "chat_view"):
             # Tab was closed
             return
+
+        # Tab is realized
+        self.prepend_old_messages()
 
         self.activity_view.scroll_bottom()
         self.chat_view.scroll_bottom()
@@ -693,13 +699,21 @@ class ChatRoom:
 
     def prepend_old_messages(self):
 
-        log_lines = log.read_log(
+        self.chat_view.prepend_log_lines(login_username=config.sections["server"]["login"])
+
+        GLib.idle_add(self._read_old_messages)
+
+    def _read_old_messages(self):
+
+        if self.loaded and not self.chat_view.num_prepended_lines:
+            # Message view was cleared, reset log datum
+            log.shut_log(folder_path=log.room_folder_path, basename=self.room)
+
+        self.chat_view.old_lines = log.read_log(
             folder_path=log.room_folder_path,
             basename=self.room,
-            num_lines=config.sections["logging"]["readroomlines"]
+            num_lines=self.chat_view.get_num_viewable_lines()
         )
-
-        self.chat_view.append_log_lines(log_lines, login_username=config.sections["server"]["login"])
 
     def populate_room_users(self, joined_users):
 
@@ -823,38 +837,36 @@ class ChatRoom:
 
     def say_chat_room(self, msg):
 
+        roomname = msg.room
         username = msg.user
-        room = msg.room
         message = msg.message
-        formatted_message = msg.formatted_message
         message_type = msg.message_type
-        usertag = self.chat_view.get_user_tag(username)
 
         if message_type != "local":
             if self.speech_toggle.get_active():
                 core.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": room, "user": username, "message": message}
+                    config.sections["ui"]["speechrooms"], {"room": roomname, "user": username, "message": message}
                 )
 
             self._show_notification(
-                room, username, message, is_mentioned=(message_type == "hilite"))
+                roomname, username, message, is_mentioned=(message_type == "hilite"))
 
-        self.chat_view.append_line(
-            formatted_message, message_type=message_type, username=username, usertag=usertag,
+        self.chat_view.add_line(
+            message, message_type=message_type, username=username, roomname=roomname,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
 
     def global_room_message(self, msg):
         self.say_chat_room(msg)
 
-    def echo_room_message(self, text, message_type):
+    def echo_room_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.append_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def user_joined_room(self, msg):
 
@@ -875,7 +887,7 @@ class ChatRoom:
         if (username != core.users.login_username
                 and not core.network_filter.is_user_ignored(username)
                 and not core.network_filter.is_user_ip_ignored(username)):
-            self.activity_view.append_line(
+            self.activity_view.add_line(
                 _("%s joined the room") % username,
                 timestamp_format=config.sections["logging"]["rooms_timestamp"]
             )
@@ -900,7 +912,7 @@ class ChatRoom:
         if not core.network_filter.is_user_ignored(username) and \
                 not core.network_filter.is_user_ip_ignored(username):
             timestamp_format = config.sections["logging"]["rooms_timestamp"]
-            self.activity_view.append_line(_("%s left the room") % username, timestamp_format=timestamp_format)
+            self.activity_view.add_line(_("%s left the room") % username, timestamp_format=timestamp_format)
 
         if self.is_private:
             status_icon_name = USER_STATUS_ICON_NAMES[UserStatus.OFFLINE]
@@ -1026,7 +1038,7 @@ class ChatRoom:
             return
 
         if not core.network_filter.is_user_ignored(user) and not core.network_filter.is_user_ip_ignored(user):
-            self.activity_view.append_line(
+            self.activity_view.add_line(
                 action % user, timestamp_format=config.sections["logging"]["rooms_timestamp"])
 
         self.users_list_view.set_row_value(iterator, "status", status_icon_name)
@@ -1049,6 +1061,9 @@ class ChatRoom:
         if flag_icon_name and flag_icon_name != self.users_list_view.get_row_value(iterator, "country"):
             self.users_list_view.set_row_value(iterator, "country", flag_icon_name)
 
+    def roomname_event(self, _pos_x, _pos_y, room):
+        core.chatrooms.show_room(room)
+
     def username_event(self, pos_x, pos_y, user):
 
         menu = self.popup_menu_user_chat
@@ -1067,7 +1082,7 @@ class ChatRoom:
         self.is_private = msg.private
         self.populate_room_users(msg.users)
 
-        self.activity_view.append_line(
+        self.activity_view.add_line(
             _("%s joined the room") % core.users.login_username,
             timestamp_format=config.sections["logging"]["rooms_timestamp"]
         )
@@ -1105,6 +1120,10 @@ class ChatRoom:
 
     def on_view_room_log(self, *_args):
         log.open_log(log.room_folder_path, self.room)
+
+    def on_clear_messages(self, *_args):
+        self.chat_view.clear()
+        GLib.idle_add(self._read_old_messages)
 
     def on_delete_room_log_response(self, *_args):
 

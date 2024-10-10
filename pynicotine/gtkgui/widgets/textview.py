@@ -69,7 +69,6 @@ class TextView:
             parent.add(self.widget)        # pylint: disable=no-member
 
         self.textbuffer = self.widget.get_buffer()
-        self.end_iter = self.textbuffer.get_end_iter()
         self.scrollable = self.widget.get_ancestor(Gtk.ScrolledWindow)
         scrollable_container = self.scrollable.get_ancestor(Gtk.Box)
 
@@ -80,7 +79,6 @@ class TextView:
         self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.default_tags = {}
         self.parse_urls = parse_urls
 
         if GTK_API_VERSION >= 4:
@@ -124,75 +122,86 @@ class TextView:
         self.adjustment_value = (self.adjustment.get_upper() - self.adjustment.get_page_size())
         self.adjustment.set_value(self.adjustment_value)
 
-    def _insert_text(self, text, tag=None):
+    def _generate_hypertext(self, text, tag=None):
 
-        if not text:
-            return
-
-        if tag is not None:
-            start_offset = self.end_iter.get_offset()
-
-        self.textbuffer.insert(self.end_iter, text)
-
-        if tag is not None:
-            start_iter = self.textbuffer.get_iter_at_offset(start_offset)
-            self.textbuffer.apply_tag(tag, start_iter, self.end_iter)
-
-    def _remove_old_lines(self, num_lines):
-
-        if num_lines < self.MAX_NUM_LINES:
-            return
-
-        # Optimization: remove lines in batches
-        start_iter = self.textbuffer.get_start_iter()
-        end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
-        end_iter = self.get_iter_at_line(end_line)
-
-        self.textbuffer.delete(start_iter, end_iter)
-        self.end_iter = self.textbuffer.get_end_iter()
-
-    def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
-                    username=None, usertag=None):
-
-        tag = self.default_tags.get(message_type)
-        num_lines = self.textbuffer.get_line_count()
-        line = str(line).strip("\n")
-
-        if timestamp_format:
-            line = time.strftime(timestamp_format, time.localtime(timestamp)) + " " + line
-
-        if self.textbuffer.get_char_count() > 0:
-            # No tag applied on line breaks to prevent visual glitch where text on the
-            # next line has the wrong color
-            self._insert_text("\n")
-
-        # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username and username in line:
-            start = line.find(username)
-
-            self._insert_text(line[:start], tag)
-            self._insert_text(username, usertag)
-
-            line = line[start + len(username):]
-
-        # Highlight urls, if found and tag them
-        if self.parse_urls and ("://" in line or "www." in line or "mailto:" in line):
+        if self.parse_urls and ("://" in text or "www." in text or "mailto:" in text):
             # Match first url
-            match = self.URL_REGEX.search(line)
+            match = self.URL_REGEX.search(text)
 
             while match:
-                self._insert_text(line[:match.start()], tag)
+                yield (text[:match.start()], tag)
 
                 url = match.group()
                 urltag = self.create_tag("urlcolor", url=url)
-                self._insert_text(url, urltag)
+                yield (url, urltag)
 
                 # Match remaining url
-                line = line[match.end():]
-                match = self.URL_REGEX.search(line)
+                text = text[match.end():]
+                match = self.URL_REGEX.search(text)
 
-        self._insert_text(line, tag)
-        self._remove_old_lines(num_lines)
+        yield (text, tag)
+
+    def _insert_line(self, text_line, prepend=False):
+
+        line_number = 0 if prepend else self.textbuffer.get_line_count()
+        iterator = self.get_iter_at_line(line_number)
+
+        if prepend:
+            # Break at end of line to avoid unwanted whitespace
+            text_line.append(("\n", None))
+
+        elif line_number > 1 or self.textbuffer.get_char_count() > 0:
+            # No tag applied on line breaks to prevent visual glitch where text on the
+            # next line has the wrong color
+            self._insert_text("\n", None, iterator)
+
+        for text, tag in text_line:
+            self._insert_text(text, tag, iterator)
+
+        if self._remove_old_lines(line_number):
+            self.add_line("--- overflow ---", prepend=True)
+
+    def _insert_text(self, text, tag, iterator):
+
+        if tag is not None:
+            start_offset = iterator.get_offset()
+
+        self.textbuffer.insert(iterator, text)
+
+        if tag is not None:
+            start_iter = self.textbuffer.get_iter_at_offset(start_offset)
+            self.textbuffer.apply_tag(tag, start_iter, iterator)
+
+    def _remove_old_lines(self, num_line_count):
+
+        if num_line_count < self.MAX_NUM_LINES:
+            # Optimization: Not counted while prepending each line
+            return 0
+
+        num_lines_removed = (num_line_count - (self.MAX_NUM_LINES - 1000))
+
+        # Optimization: remove lines in batches
+        start_iter = self.textbuffer.get_start_iter()
+        end_line = num_lines_removed
+        end_iter = self.get_iter_at_line(end_line)
+
+        self.textbuffer.delete(start_iter, end_iter)
+        return num_lines_removed
+
+    def add_line(self, message, prepend=False, timestamp_format=None):
+        """Append or prepend a new line of unformatted text."""
+
+        line = []
+
+        if timestamp_format:
+            # Create new timestamped string (use current localtime)
+            line.append((time.strftime(timestamp_format, time.localtime()), None))
+            line.append((" ", None))
+
+        # Highlight urls, if found and tag them
+        line.extend(list(self._generate_hypertext(message)))
+
+        self._insert_line(line, prepend=prepend)
 
     def get_iter_at_line(self, line_number):
 
@@ -209,9 +218,9 @@ class TextView:
     def get_text(self):
 
         start_iter = self.textbuffer.get_start_iter()
-        self.end_iter = self.textbuffer.get_end_iter()
+        end_iter = self.textbuffer.get_end_iter()
 
-        return self.textbuffer.get_text(start_iter, self.end_iter, include_hidden_chars=True)
+        return self.textbuffer.get_text(start_iter, end_iter, include_hidden_chars=True)
 
     def get_tags_for_pos(self, pos_x, pos_y):
 
@@ -243,7 +252,6 @@ class TextView:
         """Sets text without any additional processing, and clears the undo stack."""
 
         self.textbuffer.set_text(text)
-        self.end_iter = self.textbuffer.get_end_iter()
 
     def update_cursor(self, pos_x, pos_y):
 
@@ -253,7 +261,7 @@ class TextView:
             self.cursor_window = self.widget.get_window(Gtk.TextWindowType.TEXT)  # pylint: disable=no-member
 
         for tag in self.get_tags_for_pos(pos_x, pos_y):
-            if hasattr(tag, "username"):
+            if hasattr(tag, "name"):
                 cursor = self.DEFAULT_CURSOR
                 break
 
@@ -265,11 +273,16 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
+
+        start_iter = self.textbuffer.get_start_iter()
+        end_iter = self.textbuffer.get_end_iter()
+
+        self.textbuffer.remove_all_tags(start_iter, end_iter)
         self.set_text("")
 
-    # Text Tags (Usernames, URLs) #
+    # Text Tags (Roomnames, Usernames, URLs) #
 
-    def create_tag(self, color_id=None, callback=None, username=None, url=None):
+    def create_tag(self, color_id=None, callback=None, name=None, url=None):
 
         tag = self.textbuffer.create_tag()
 
@@ -283,9 +296,9 @@ class TextView:
 
             tag.url = url
 
-        if username:
+        elif name:
             tag.callback = callback
-            tag.username = username
+            tag.name = name
 
         return tag
 
@@ -314,8 +327,8 @@ class TextView:
                 open_uri(tag.url)
                 return True
 
-            if hasattr(tag, "username"):
-                tag.callback(pressed_x, pressed_y, tag.username)
+            if hasattr(tag, "name"):
+                tag.callback(pressed_x, pressed_y, tag.name)
                 return True
 
         return False
@@ -329,8 +342,8 @@ class TextView:
             return False
 
         for tag in self.get_tags_for_pos(pressed_x, pressed_y):
-            if hasattr(tag, "username"):
-                tag.callback(pressed_x, pressed_y, tag.username)
+            if hasattr(tag, "name"):
+                tag.callback(pressed_x, pressed_y, tag.name)
                 return True
 
         return False
@@ -349,9 +362,6 @@ class TextView:
 
     def on_copy_all_text(self, *_args):
         clipboard.copy_text(self.get_text())
-
-    def on_clear_all_text(self, *_args):
-        self.clear()
 
     def on_adjustment_upper_changed(self, *_args):
 
@@ -376,20 +386,29 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, chat_entry=None, status_users=None, username_event=None, **kwargs):
+    def __init__(self, *args, chat_entry=None, log_reader=None, status_users=None,
+                 roomname_event=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
+        self.log_reader = log_reader
+        self.num_prepended_lines = 0
+        self.old_lines = None
+        self.roomname_event = roomname_event
         self.username_event = username_event
+
+        if roomname_event is not None:
+            # Only used in global room feed
+            self._room_tags = {}
 
         if status_users is not None:
             # In chatrooms, we only want to set the online status for users that are
             # currently in the room, even though we might know their global status
             self.status_users = status_users
 
-        self.default_tags = {
+        self.type_tags = {
             "remote": self.create_tag("chatremote"),
             "local": self.create_tag("chatlocal"),
             "command": self.create_tag("chatcommand"),
@@ -399,11 +418,81 @@ class ChatView(TextView):
 
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
+        Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
 
-    def append_log_lines(self, log_lines, login_username=None):
+    def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
+                 timestamp=None, timestamp_string=None, roomname=None, username=None):
+        """Append or prepend a new chat message line with name tags and links."""
 
-        if not log_lines:
-            return
+        # Make a list of tuples [(text, tag),]
+        line = list(self._generate_chat_line(
+            message,
+            message_type=message_type,
+            timestamp_string=timestamp_string,
+            timestamp=timestamp,
+            timestamp_format=timestamp_format,
+            roomname=roomname,
+            username=username
+        ))
+        self._insert_line(line, prepend=prepend)
+
+    def _generate_chat_line(self, message, timestamp_format=None, message_type=None,
+                            timestamp=None, timestamp_string=None, roomname=None, username=None):
+
+        tag = self.type_tags.get(message_type)
+
+        if timestamp_format:
+            # Create timestamped string (use current localtime if timestamp is None)
+            yield (time.strftime(timestamp_format, time.localtime(timestamp)), tag)
+            yield (" ", tag)
+
+        elif timestamp_string:
+            # Use original timestamp string from log file (plus roomname for global feed)
+            yield (timestamp_string, tag)
+            yield (" ", tag)
+
+        # Tag roomname, only used in global room feed
+        roomtag = self._get_room_tag(roomname)
+
+        if roomtag:
+            yield (roomname, roomtag)
+            yield (" | ", tag)
+
+        # Tag username with popup menu creating tag, and away/online/offline colors
+        if username:
+            usertag = self._get_user_tag(username)
+            opener, closer = ("* ", " ") if message_type == "action" else ("[", "] ")
+
+            yield (opener, tag)
+            yield (username, usertag)
+            yield (closer, tag)
+
+        # Highlight urls, if found and tag them
+        for hypertext, tag in list(self._generate_hypertext(message, tag=tag)):
+            yield (hypertext, tag)
+
+    def prepend_log_lines(self, login_username=None):
+        """Insert batch of previously gathered log lines from file"""
+
+        if not self.num_prepended_lines and self.old_lines:
+            self.add_line(_("--- old messages above ---"), prepend=True, message_type="hilite")
+
+        elif self._remove_old_lines(self.textbuffer.get_line_count() + len(self.old_lines)):
+            self.add_line("--- overflow ---", prepend=True, message_type="hilite")
+
+        for decoded_line in self.decode_log_lines(self.old_lines, login_username=login_username):
+            timestamp_string, username, message, message_type = decoded_line
+
+            self.add_line(
+                message, prepend=True, message_type=message_type, timestamp_string=timestamp_string, username=username)
+
+        self.num_prepended_lines += len(self.old_lines)
+        self.old_lines.clear()
+
+    @staticmethod
+    def decode_log_lines(log_lines, login_username=None):
+        """Split encoded text strings into individual elements as
+        required when reading raw chat log lines from disk."""
 
         login_username_lower = login_username.lower() if login_username else None
 
@@ -414,42 +503,80 @@ class ChatView(TextView):
             except UnicodeDecodeError:
                 line = log_line.decode("latin-1")
 
-            user = message_type = usertag = None
+            timestamp_string = username = message = message_type = None
 
             if " [" in line and "] " in line:
                 start = line.find(" [") + 2
                 end = line.find("] ", start)
 
                 if end > start:
-                    user = line[start:end]
-                    usertag = self.get_user_tag(user)
+                    timestamp_string = line[:start - 2]
+                    username = line[start:end]
+                    message = line[end + 2:-1]
 
-                    text = line[end + 2:-1]
-
-                    if user == login_username:
+                    if username == login_username:
                         message_type = "local"
 
-                    elif login_username_lower and find_whole_word(login_username_lower, text.lower()) > -1:
+                    elif login_username_lower and find_whole_word(login_username_lower, message.lower()) > -1:
                         message_type = "hilite"
 
                     else:
                         message_type = "remote"
 
-            elif "* " in line:
+            elif " * " in line:
+                start = line.find(" * ")
+
+                timestamp_string = line[:start]
+                message = line[start + 1:-1]
                 message_type = "action"
 
-            self.append_line(line, message_type=message_type, username=user, usertag=usertag)
+            if message is None:
+                message = line[:-1]
 
-        self.append_line(_("--- old messages above ---"), message_type="hilite")
+            yield timestamp_string, username, message, message_type
 
     def clear(self):
+
         super().clear()
+        self.num_prepended_lines = 0
+        self.old_lines.clear()
         self.user_tags.clear()
 
-    def get_user_tag(self, username):
+        if self.roomname_event:
+            self._room_tags.clear()
+
+    def get_num_viewable_lines(self):
+        """Calculate the number of lines that can fit in the viewable area."""
+
+        if self.textbuffer.get_line_count() > 1:
+            # Measure the approximate page size, assume 1 message per line
+            start_iter = self.get_iter_at_line(0)
+            _y, line_height = self.widget.get_line_yrange(start_iter)
+
+            if line_height:
+                view_height = self.widget.get_allocated_height()
+                return int(view_height / line_height)
+
+        # Initially allow enough old lines to reveal the scrollbar
+        return 100
+
+    def _get_room_tag(self, roomname):
+
+        if not self.roomname_event or not roomname:
+            # Room tags only used in global room feed
+            return None
+
+        if roomname not in self._room_tags:
+            # Pick a color, any color?
+            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)
+            self._room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
+
+        return self._room_tags[roomname]
+
+    def _get_user_tag(self, username):
 
         if username not in self.user_tags:
-            self.user_tags[username] = self.create_tag(callback=self.username_event, username=username)
+            self.user_tags[username] = self.create_tag(callback=self.username_event, name=username)
             self.update_user_tag(username)
 
         return self.user_tags[username]
@@ -478,3 +605,25 @@ class ChatView(TextView):
         if self.textbuffer.props.cursor_position >= self.textbuffer.get_char_count():
             # Give focus to text entry upon scrolling down to the bottom
             self.chat_entry.grab_focus_without_selecting()
+
+    def on_page_up_accelerator(self, *_args):
+        """Page_Up: Load a page of old log lines and prepend them."""
+
+        if self.adjustment_value <= 0.0:
+            self.log_reader()
+
+    def on_adjustment_value_changed(self, *_args):
+
+        old_value = self.adjustment_value
+
+        super().on_adjustment_value_changed()
+
+        new_value = self.adjustment_value
+
+        if new_value >= old_value:
+            # Going down, noop
+            return
+
+        if new_value < self.adjustment.get_page_increment():
+            # Near top, infinite scrolling
+            self.log_reader()

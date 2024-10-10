@@ -54,9 +54,10 @@ class RoomWall(Popover):
 
         tickers = core.chatrooms.joined_rooms[self.room].tickers
         newline = "\n"
-        messages = [f"> [{user}] {msg.replace(newline, ' ')}" for user, msg in reversed(list(tickers.items()))]
 
-        self.message_view.append_line("\n".join(messages))
+        for user, message in list(tickers.items()):
+            self.message_view.add_line(f"> [{user}] {message.replace(newline, ' ')}", prepend=True)
+
         self.message_view.place_cursor_at_line(0)
 
     def _clear_room_wall_message(self, update_list=True):
@@ -79,8 +80,8 @@ class RoomWall(Popover):
         core.chatrooms.request_update_ticker(self.room, entry_text)
 
         if entry_text:
-            user = core.users.login_username
-            self.message_view.append_line(f"> [{user}] {entry_text}")
+            username = core.users.login_username
+            self.message_view.add_line(f"> [{username}] {entry_text}", prepend=True)
 
         self._update_message_list()
 
