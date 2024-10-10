@@ -524,18 +524,23 @@ class Interests:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        column_ids = []
+        column_values = []
 
         if speed != self.similar_users_list_view.get_row_value(iterator, "speed_data"):
             h_speed = human_speed(speed) if speed > 0 else ""
 
-            self.similar_users_list_view.set_row_value(iterator, "speed", h_speed)
-            self.similar_users_list_view.set_row_value(iterator, "speed_data", speed)
+            column_ids.extend(("speed", "speed_data"))
+            column_values.extend((h_speed, speed))
 
         if num_files != self.similar_users_list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
 
-            self.similar_users_list_view.set_row_value(iterator, "files", h_num_files)
-            self.similar_users_list_view.set_row_value(iterator, "files_data", num_files)
+            column_ids.extend(("files", "files_data"))
+            column_values.extend((h_num_files, num_files))
+
+        if column_ids:
+            self.similar_users_list_view.set_row_values(iterator, column_ids, column_values)
 
     @staticmethod
     def toggle_menu_items(menu, list_view, column_id):

@@ -560,6 +560,23 @@ class TreeView:
 
         return self.model.set_value(iterator, column_index, value)
 
+    def set_row_values(self, iterator, column_ids, values):
+
+        value_columns = []
+
+        for index, column_id in enumerate(column_ids):
+            column_index = self._column_ids[column_id]
+
+            if column_index in self._column_gvalues:
+                # Need gvalue conversion for large integers
+                gvalue = self._column_gvalues[column_index]
+                gvalue.set_value(values[index])
+                values[index] = gvalue
+
+            value_columns.append(column_index)
+
+        return self.model.set(iterator, value_columns, values)
+
     def remove_row(self, iterator):
         del self.iterators[self._iterator_keys[iterator]]
         self.model.remove(iterator)

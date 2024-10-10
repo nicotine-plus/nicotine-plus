@@ -907,12 +907,11 @@ class ChatRoom:
             empty_str = ""
             empty_int = 0
 
-            self.users_list_view.set_row_value(iterator, "status", status_icon_name)
-            self.users_list_view.set_row_value(iterator, "speed", empty_str)
-            self.users_list_view.set_row_value(iterator, "speed_data", empty_int)
-            self.users_list_view.set_row_value(iterator, "files", empty_str)
-            self.users_list_view.set_row_value(iterator, "files_data", empty_int)
-            self.users_list_view.set_row_value(iterator, "country", empty_str)
+            self.users_list_view.set_row_values(
+                iterator,
+                column_ids=["status", "speed", "speed_data", "files", "files_data", "country"],
+                values=[status_icon_name, empty_str, empty_int, empty_str, empty_int, empty_str]
+            )
         else:
             self.users_list_view.remove_row(iterator)
 
@@ -926,8 +925,11 @@ class ChatRoom:
         if iterator is None:
             return
 
-        self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.BOLD)
-        self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
+        self.users_list_view.set_row_values(
+            iterator,
+            column_ids=["username_weight_data", "username_underline_data"],
+            values=[Pango.Weight.BOLD, Pango.Underline.NONE]
+        )
 
     def private_room_add_user(self, msg):
 
@@ -949,8 +951,11 @@ class ChatRoom:
         if iterator is None:
             return
 
-        self.users_list_view.set_row_value(iterator, "username_weight_data", Pango.Weight.NORMAL)
-        self.users_list_view.set_row_value(iterator, "username_underline_data", Pango.Underline.NONE)
+        self.users_list_view.set_row_values(
+            iterator,
+            column_ids=["username_weight_data", "username_underline_data"],
+            values=[Pango.Weight.NORMAL, Pango.Underline.NONE]
+        )
 
     def private_room_remove_user(self, msg):
 
@@ -983,18 +988,23 @@ class ChatRoom:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        column_ids = []
+        column_values = []
 
         if speed != self.users_list_view.get_row_value(iterator, "speed_data"):
             h_speed = human_speed(speed) if speed > 0 else ""
 
-            self.users_list_view.set_row_value(iterator, "speed", h_speed)
-            self.users_list_view.set_row_value(iterator, "speed_data", speed)
+            column_ids.extend(("speed", "speed_data"))
+            column_values.extend((h_speed, speed))
 
         if num_files != self.users_list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
 
-            self.users_list_view.set_row_value(iterator, "files", h_num_files)
-            self.users_list_view.set_row_value(iterator, "files_data", num_files)
+            column_ids.extend(("files", "files_data"))
+            column_values.extend((h_num_files, num_files))
+
+        if column_ids:
+            self.users_list_view.set_row_values(iterator, column_ids, column_values)
 
     def user_status(self, msg):
 

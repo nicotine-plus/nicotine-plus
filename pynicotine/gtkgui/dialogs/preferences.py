@@ -454,8 +454,11 @@ class DownloadsPage:
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
-            self.filter_list_view.set_row_value(iterator, "filter", dfilter)
-            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
+            self.filter_list_view.set_row_values(
+                iterator,
+                column_ids=["filter", "regex"],
+                values=[dfilter, enable_regex]
+            )
         else:
             self.filter_list_view.add_row([dfilter, enable_regex])
 
@@ -480,8 +483,11 @@ class DownloadsPage:
         enable_regex = dialog.get_option_value()
 
         if new_dfilter in self.filter_list_view.iterators:
-            self.filter_list_view.set_row_value(iterator, "filter", new_dfilter)
-            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
+            self.filter_list_view.set_row_values(
+                iterator,
+                column_ids=["filter", "regex"],
+                values=[new_dfilter, enable_regex]
+            )
         else:
             self.filter_list_view.remove_row(iterator)
             self.filter_list_view.add_row([new_dfilter, enable_regex])
@@ -747,8 +753,11 @@ class SharesPage:
             validate_path=False
         )
 
-        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
-        self.shares_list_view.set_row_value(iterator, "accessible_to", new_accessible_to_short)
+        self.shares_list_view.set_row_values(
+            iterator,
+            column_ids=["virtual_name", "accessible_to"],
+            values=[new_virtual_name, new_accessible_to_short]
+        )
 
     def on_edit_shared_folder(self, *_args):
 
@@ -1636,8 +1645,11 @@ class ChatsPage:
         del self.replacements[old_pattern]
 
         self.replacements[pattern] = replacement
-        self.replacement_list_view.set_row_value(iterator, "pattern", pattern)
-        self.replacement_list_view.set_row_value(iterator, "replacement", replacement)
+        self.replacement_list_view.set_row_values(
+            iterator,
+            column_ids=["pattern", "replacement"],
+            values=[pattern, replacement]
+        )
 
     def on_edit_replacement(self, *_args):
 

@@ -574,44 +574,59 @@ class Transfers:
             current_byte_offset = UINT64_LIMIT
 
         should_update_size = False
+        column_ids = []
+        column_values = []
 
         if transfer.status != parent_status:
-            self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
+            column_ids.append("status")
+            column_values.append(self.translate_status(parent_status))
 
             if parent_status == TransferStatus.USER_LOGGED_OFF:
-                self.tree_view.set_row_value(iterator, "is_sensitive_data", False)
+                column_ids.append("is_sensitive_data")
+                column_values.append(False)
 
             elif transfer.status == TransferStatus.USER_LOGGED_OFF:
-                self.tree_view.set_row_value(iterator, "is_sensitive_data", True)
+                column_ids.append("is_sensitive_data")
+                column_values.append(True)
 
             transfer.status = parent_status
 
         if transfer.speed != speed:
-            self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
-            self.tree_view.set_row_value(iterator, "speed_data", speed)
+            column_ids.extend(("speed", "speed_data"))
+            column_values.extend((self.get_hspeed(speed), speed))
+
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
             left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
-            self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
-            self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
-            self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
-            self.tree_view.set_row_value(iterator, "time_left_data", left)
+            column_ids.extend(("time_elapsed", "time_left", "time_elapsed_data", "time_left_data"))
+            column_values.extend((self.get_helapsed(elapsed), self.get_hleft(left), elapsed, left))
+
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_byte_offset:
-            self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
+            column_ids.append("current_bytes_data")
+            column_values.append(current_byte_offset)
+
             transfer.current_byte_offset = current_byte_offset
             should_update_size = True
 
         if transfer.size != total_size:
-            self.tree_view.set_row_value(iterator, "size_data", total_size)
+            column_ids.append("size_data")
+            column_values.append(total_size)
+
             transfer.size = total_size
             should_update_size = True
 
         if should_update_size:
-            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
+            column_ids.extend(("percent", "size"))
+            column_values.extend((
+                self.get_percent(current_byte_offset, total_size),
+                self.get_hsize(current_byte_offset, total_size)
+            ))
+
+        if column_ids:
+            self.tree_view.set_row_values(iterator, column_ids, column_values)
 
     def update_specific(self, transfer, select_parent=False, use_reverse_file_path=True):
 
@@ -634,41 +649,52 @@ class Transfers:
         if iterator and iterator not in self.PENDING_ITERATORS:
             should_update_size = False
             old_translated_status = self.tree_view.get_row_value(iterator, "status")
+            column_ids = []
+            column_values = []
 
             if old_translated_status != translated_status:
-                self.tree_view.set_row_value(iterator, "status", translated_status)
+                column_ids.append("status")
+                column_values.append(translated_status)
 
                 if transfer.status == TransferStatus.USER_LOGGED_OFF:
-                    self.tree_view.set_row_value(iterator, "is_sensitive_data", False)
+                    column_ids.append("is_sensitive_data")
+                    column_values.append(False)
 
                 elif old_translated_status == _("User logged off"):
-                    self.tree_view.set_row_value(iterator, "is_sensitive_data", True)
+                    column_ids.append("is_sensitive_data")
+                    column_values.append(True)
 
             if self.tree_view.get_row_value(iterator, "speed_data") != speed:
-                self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
-                self.tree_view.set_row_value(iterator, "speed_data", speed)
+                column_ids.extend(("speed", "speed_data"))
+                column_values.extend((self.get_hspeed(speed), speed))
 
             if self.tree_view.get_row_value(iterator, "time_elapsed_data") != elapsed:
-                self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
-                self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
-                self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
-                self.tree_view.set_row_value(iterator, "time_left_data", left)
+                column_ids.extend(("time_elapsed", "time_left", "time_elapsed_data", "time_left_data"))
+                column_values.extend((self.get_helapsed(elapsed), self.get_hleft(left), elapsed, left))
 
             if self.tree_view.get_row_value(iterator, "current_bytes_data") != current_byte_offset:
-                self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
+                column_ids.append("current_bytes_data")
+                column_values.append(current_byte_offset)
                 should_update_size = True
 
             if self.tree_view.get_row_value(iterator, "size_data") != size:
-                self.tree_view.set_row_value(iterator, "size_data", size)
+                column_ids.append("size_data")
+                column_values.append(size)
                 should_update_size = True
 
             if self.tree_view.get_row_value(iterator, "queue_position_data") != queue_position:
-                self.tree_view.set_row_value(iterator, "queue_position", self.get_hqueue_position(queue_position))
-                self.tree_view.set_row_value(iterator, "queue_position_data", queue_position)
+                column_ids.extend(("queue_position", "queue_position_data"))
+                column_values.extend((self.get_hqueue_position(queue_position), queue_position))
 
             if should_update_size:
-                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
+                column_ids.extend(("percent", "size"))
+                column_values.extend((
+                    self.get_percent(current_byte_offset, size),
+                    self.get_hsize(current_byte_offset, size)
+                ))
+
+            if column_ids:
+                self.tree_view.set_row_values(iterator, column_ids, column_values)
 
             return False
 

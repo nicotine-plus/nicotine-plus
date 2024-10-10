@@ -192,8 +192,11 @@ class RoomList(Popover):
 
         h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET) if is_private else humanize(user_count)
 
-        self.list_view.set_row_value(iterator, "users", h_user_count)
-        self.list_view.set_row_value(iterator, "users_data", user_count)
+        self.list_view.set_row_values(
+            iterator,
+            column_ids=["users", "users_data"],
+            values=[h_user_count, user_count]
+        )
 
     def clear(self, *_args):
         self.list_view.clear()
