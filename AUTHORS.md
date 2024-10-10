@@ -178,6 +178,7 @@
  - hadwin (2022)
 
 ### Czech
+ - slrslr (2024)
  - burnmail123 (2021–2023)
 
 ### Danish

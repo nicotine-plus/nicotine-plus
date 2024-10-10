@@ -210,6 +210,7 @@ class About(Dialog):
          "\n •  hadwin (2022)"),
 
         ("<b>Czech</b>"
+         "\n •  slrslr (2024)"
          "\n •  burnmail123 (2021–2023)"),
 
         ("<b>Danish</b>"
