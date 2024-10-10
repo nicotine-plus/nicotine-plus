@@ -28,8 +28,8 @@
                 <property name="vexpand">True</property>
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="hexpand">False</property>
+                  <object class="GtkBox" id="user_info_container">
+                    <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="width-request">185</property>
@@ -328,8 +328,8 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
-                    <property name="hexpand">False</property>
+                  <object class="GtkBox" id="interests_container">
+                    <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="width-request">125</property>
@@ -414,39 +414,17 @@
                         </child>
                       </object>
                     </child>
-                    <style>
-                      <class name="border-end"/>
-                    </style>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStack" id="picture_container">
+                  <object class="GtkBox" id="picture_view">
+                    <property name="hexpand">False</property>
+                    <property name="margin-bottom">36</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-top">36</property>
                     <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImage" id="placeholder_picture">
-                        <property name="halign">center</property>
-                        <property name="icon-name">avatar-default-symbolic</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="margin-start">6</property>
-                        <property name="margin-top">6</property>
-                        <property name="pixel-size">128</property>
-                        <property name="valign">center</property>
-                        <property name="visible">True</property>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="picture_view">
-                        <property name="margin-bottom">36</property>
-                        <property name="margin-end">6</property>
-                        <property name="margin-start">24</property>
-                        <property name="margin-top">36</property>
-                        <property name="visible">True</property>
-                        <property name="width-request">104</property>
-                      </object>
-                    </child>
+                    <property name="width-request">104</property>
                   </object>
                 </child>
                 <child>

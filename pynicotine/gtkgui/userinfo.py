@@ -43,7 +43,9 @@ from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import ConnectionType
@@ -272,10 +274,9 @@ class UserInfo:
             self.ignore_unignore_user_button,
             self.ignore_unignore_user_label,
             self.info_bar_container,
+            self.interests_container,
             self.likes_list_container,
-            self.picture_container,
             self.picture_view,
-            self.placeholder_picture,
             self.progress_bar,
             self.queued_uploads_label,
             self.refresh_button,
@@ -285,6 +286,7 @@ class UserInfo:
             self.show_ip_address_button,
             self.upload_slots_label,
             self.upload_speed_label,
+            self.user_info_container,
             self.user_label
         ) = ui.load(scope=self, path="userinfo.ui")
 
@@ -375,7 +377,9 @@ class UserInfo:
         self.picture_popup_menu = PopupMenu(self.window.application, self.picture)
         self.picture_popup_menu.add_items(
             ("#" + _("Copy Picture"), self.on_copy_picture),
-            ("#" + _("Save Picture"), self.on_save_picture)
+            ("#" + _("Save Picture"), self.on_save_picture),
+            ("", None),
+            ("#" + _("Remove"), self.on_hide_picture)
         )
 
         self.popup_menus = (
@@ -446,7 +450,7 @@ class UserInfo:
         self.picture_data = None
         self.picture_surface = None
 
-        self.picture_container.set_visible_child(self.placeholder_picture)
+        self.hide_picture()
 
     def load_picture(self, data):
 
@@ -471,7 +475,29 @@ class UserInfo:
             self.remove_picture()
             return
 
-        self.picture_container.set_visible_child(self.picture_view)
+        self.show_picture()
+
+    def show_picture(self):
+
+        if GTK_API_VERSION == 3:
+            self.user_info_container.set_hexpand(False)
+            self.interests_container.set_hexpand(False)
+
+        self.picture_view.set_visible(True)
+        self.picture_view.set_hexpand(True)
+
+        add_css_class(self.interests_container, "border-end")
+
+    def hide_picture(self):
+
+        if GTK_API_VERSION == 3:
+            self.user_info_container.set_hexpand(True)
+            self.interests_container.set_hexpand(True)
+
+        self.picture_view.set_visible(False)
+        self.picture_view.set_hexpand(False)
+
+        remove_css_class(self.interests_container, "border-end")
 
     def peer_connection_error(self):
 
@@ -806,6 +832,9 @@ class UserInfo:
             initial_folder=core.downloads.get_default_download_folder(),
             initial_file=f"{self.user}_{current_date_time}.png"
         ).present()
+
+    def on_hide_picture(self, *_args):
+        self.hide_picture()
 
     def on_refresh(self, *_args):
         self.set_indeterminate_progress()
