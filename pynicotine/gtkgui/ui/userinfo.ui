@@ -179,8 +179,8 @@
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
                                 <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Upload Slots</property>
-                                <property name="mnemonic-widget">upload_slots_label</property>
+                                <property name="label" translatable="yes">Country</property>
+                                <property name="mnemonic-widget">country_label</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <style>
@@ -189,61 +189,8 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="upload_slots_label">
-                                <property name="label" translatable="yes">Unknown</property>
-                                <property name="selectable">True</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="spacing">24</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="country_label">
                                 <property name="ellipsize">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Queued Uploads</property>
-                                <property name="mnemonic-widget">queued_uploads_label</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="queued_uploads_label">
-                                <property name="label" translatable="yes">Unknown</property>
-                                <property name="selectable">True</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="spacing">24</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="ellipsize">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Free Upload Slots</property>
-                                <property name="mnemonic-widget">free_upload_slots_label</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="free_upload_slots_label">
                                 <property name="label" translatable="yes">Unknown</property>
                                 <property name="selectable">True</property>
                                 <property name="visible">True</property>
@@ -287,8 +234,8 @@
                               <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
                                 <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Country</property>
-                                <property name="mnemonic-widget">country_label</property>
+                                <property name="label" translatable="yes">Free Upload Slots</property>
+                                <property name="mnemonic-widget">free_upload_slots_label</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <style>
@@ -297,8 +244,61 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="country_label">
+                              <object class="GtkLabel" id="free_upload_slots_label">
+                                <property name="label" translatable="yes">Unknown</property>
+                                <property name="selectable">True</property>
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">24</property>
+                            <property name="visible">False</property>
+                            <child>
+                              <object class="GtkLabel">
                                 <property name="ellipsize">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Upload Slots</property>
+                                <property name="mnemonic-widget">upload_slots_label</property>
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="upload_slots_label">
+                                <property name="label" translatable="yes">Unknown</property>
+                                <property name="selectable">True</property>
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="spacing">24</property>
+                            <property name="visible">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="ellipsize">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Queued Uploads</property>
+                                <property name="mnemonic-widget">queued_uploads_label</property>
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="queued_uploads_label">
                                 <property name="label" translatable="yes">Unknown</property>
                                 <property name="selectable">True</property>
                                 <property name="visible">True</property>

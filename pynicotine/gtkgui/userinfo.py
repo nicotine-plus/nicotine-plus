@@ -579,9 +579,12 @@ class UserInfo:
             self.description_view.clear()
             self.description_view.append_line(msg.descr)
 
+        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
         self.upload_slots_label.set_text(humanize(msg.totalupl))
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
-        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
+
+        self.upload_slots_label.get_parent().set_visible(not msg.slotsavail)
+        self.queued_uploads_label.get_parent().set_visible(not msg.slotsavail)
 
         self.picture_data = None
         self.load_picture(msg.pic)
