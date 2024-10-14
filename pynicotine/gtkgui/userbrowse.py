@@ -640,7 +640,7 @@ class UserBrowse:
 
     def set_finishing(self):
 
-        if not self.refresh_button.get_sensitive():
+        if hasattr(self, "refresh_button") and not self.refresh_button.get_sensitive():
             self.set_indeterminate_progress()
 
         return False
