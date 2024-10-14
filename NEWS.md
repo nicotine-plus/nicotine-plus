@@ -16,10 +16,10 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Corrections
 
  * Important: Don't delete other unrelated files from incomplete download folder
+ * Fixed a crash when editing and removing list rows in some cases
  * Fixed a regression where arrow keys no longer selected items in comboboxes
  * Minor fixes related to the tray icon implementation
  * GTK 3: Fixed an issue where the chat text entry could disappear
- * macOS: Fixed broken librsvg dependency which caused missing icons
  * macOS: Fixed an issue where opening files and links no longer worked
  * macOS: Fixed a few keyboard shortcuts that no longer worked
 
