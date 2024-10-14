@@ -454,11 +454,7 @@ class DownloadsPage:
         iterator = self.filter_list_view.iterators.get(dfilter)
 
         if iterator is not None:
-            self.filter_list_view.set_row_values(
-                iterator,
-                column_ids=["filter", "regex"],
-                values=[dfilter, enable_regex]
-            )
+            self.filter_list_view.set_row_value(iterator, "regex", enable_regex)
         else:
             self.filter_list_view.add_row([dfilter, enable_regex])
 
@@ -482,15 +478,11 @@ class DownloadsPage:
         new_dfilter = dialog.get_entry_value()
         enable_regex = dialog.get_option_value()
 
-        if new_dfilter in self.filter_list_view.iterators:
-            self.filter_list_view.set_row_values(
-                iterator,
-                column_ids=["filter", "regex"],
-                values=[new_dfilter, enable_regex]
-            )
-        else:
-            self.filter_list_view.remove_row(iterator)
-            self.filter_list_view.add_row([new_dfilter, enable_regex])
+        dfilter = self.filter_list_view.get_row_value(iterator, "filter")
+        orig_iterator = self.filter_list_view.iterators[dfilter]
+
+        self.filter_list_view.remove_row(orig_iterator)
+        self.filter_list_view.add_row([new_dfilter, enable_regex])
 
         self.on_verify_filter()
 
@@ -743,7 +735,9 @@ class SharesPage:
 
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
         permission_level = self.PERMISSION_LEVELS.get(new_accessible_to)
+        orig_iterator = self.shares_list_view.iterators[virtual_name]
 
+        self.shares_list_view.remove_row(orig_iterator)
         core.shares.remove_share(
             virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
         )
@@ -753,11 +747,7 @@ class SharesPage:
             validate_path=False
         )
 
-        self.shares_list_view.set_row_values(
-            iterator,
-            column_ids=["virtual_name", "accessible_to"],
-            values=[new_virtual_name, new_accessible_to_short]
-        )
+        self.shares_list_view.add_row([new_virtual_name, folder_path, new_accessible_to_short])
 
     def on_edit_shared_folder(self, *_args):
 
@@ -1580,9 +1570,12 @@ class ChatsPage:
             return
 
         old_pattern = self.censor_list_view.get_row_value(iterator, "pattern")
+        orig_iterator = self.censor_list_view.iterators[old_pattern]
+
+        self.censor_list_view.remove_row(orig_iterator)
         self.censored_patterns.remove(old_pattern)
 
-        self.censor_list_view.set_row_value(iterator, "pattern", pattern)
+        self.censor_list_view.add_row([pattern])
         self.censored_patterns.append(pattern)
 
     def on_edit_censored(self, *_args):
@@ -1642,14 +1635,13 @@ class ChatsPage:
             return
 
         old_pattern = self.replacement_list_view.get_row_value(iterator, "pattern")
+        orig_iterator = self.replacement_list_view.iterators[old_pattern]
+
+        self.replacement_list_view.remove_row(orig_iterator)
         del self.replacements[old_pattern]
 
         self.replacements[pattern] = replacement
-        self.replacement_list_view.set_row_values(
-            iterator,
-            column_ids=["pattern", "replacement"],
-            values=[pattern, replacement]
-        )
+        self.replacement_list_view.add_row([pattern, replacement])
 
     def on_edit_replacement(self, *_args):
 

@@ -191,13 +191,15 @@ class FastConfigure(Dialog):
 
         self.rescan_required = True
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        orig_iterator = self.shares_list_view.iterators[old_virtual_name]
 
+        self.shares_list_view.remove_row(orig_iterator)
         core.shares.remove_share(old_virtual_name)
         new_virtual_name = core.shares.add_share(
             folder_path, virtual_name=new_virtual_name, validate_path=False
         )
 
-        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.add_row([new_virtual_name, folder_path])
 
     def on_edit_shared_folder(self, *_args):
 
