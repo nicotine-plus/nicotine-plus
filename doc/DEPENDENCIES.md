@@ -44,8 +44,7 @@
  - On Debian/Ubuntu-based distributions:
 
    ```sh
-   sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1
-   python3-gi python3-gi-cairo
+   sudo apt install gir1.2-gspell-1 gir1.2-gtk-4.0 gir1.2-adw-1 python3-gi python3-gi-cairo
    ```
 
  - On Redhat/Fedora-based distributions:
@@ -57,9 +56,13 @@
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0
-   typelib-1_0-Adw-1 python312-gobject python312-gobject-cairo
-   python312-gobject-Gdk
+   sudo zypper install typelib-1_0-Gspell-1 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 python312-gobject python312-gobject-cairo python312-gobject-Gdk
+   ```
+
+ - On Alpine-based distributions:
+
+   ```sh
+   sudo apk add gspell gtk4.0 libadwaita py3-gobject3
    ```
 
 #### Installing Build Dependencies
@@ -82,6 +85,12 @@
    sudo zypper install gettext-tools python312-build python312-setuptools
    ```
 
+ - On Alpine-based distributions:
+
+   ```sh
+   sudo apk add gettext py3-build py3-setuptools
+   ```
+
 #### Installing Test Dependencies
 
  - On Debian/Ubuntu-based distributions:
@@ -100,6 +109,12 @@
 
    ```sh
    sudo zypper install python312-pylint python312-pycodestyle
+   ```
+
+ - On Alpine-based distributions:
+
+   ```sh
+   sudo apk add py3-pylint py3-pycodestyle
    ```
 
 ### Windows and macOS
