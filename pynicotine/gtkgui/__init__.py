@@ -133,10 +133,6 @@ def run(hidden, ci_mode, multi_instance):
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
         os.environ["GSK_RENDERER"] = "cairo"
 
-    elif sys.platform == "darwin":
-        # Always enable CSD on macOS for a more uniform look
-        os.environ["GTK_CSD"] = "1"
-
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 
     if error:
