@@ -144,6 +144,9 @@ def set_default_font_size():
     font_size = str(int(font_size) + 1)
     GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
 
+    if GTK_API_VERSION == 3:
+        return
+
     # Enable OS-specific font tweaks
     GTK_SETTINGS.props.gtk_font_rendering = Gtk.FontRendering.MANUAL  # pylint: disable=no-member
 
