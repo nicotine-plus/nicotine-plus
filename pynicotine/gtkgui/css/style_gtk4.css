@@ -1,20 +1,8 @@
 /* Tweaks (GTK 4+) */
 
-@keyframes popover-slide {
-    from {
-        margin: -12px 0;
-        opacity: 0;
-    }
-}
-
 * {
     /* Unset line height due to it resulting in blurry text */
     line-height: unset;
-}
-
-button.toggle:checked + popover {
-    /* Popover reveal animation when clicking toggle button */
-    animation: popover-slide 150ms ease;
 }
 
 treeview.normal-icons {

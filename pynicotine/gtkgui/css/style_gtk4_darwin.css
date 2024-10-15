@@ -7,11 +7,6 @@ window {
   box-shadow: none;
 }
 
-button.toggle:checked + popover {
-  /* Disable popover reveal animation due to glitches */
-  animation: unset;
-}
-
 /* macOS-style window controls */
 
 windowcontrols {
