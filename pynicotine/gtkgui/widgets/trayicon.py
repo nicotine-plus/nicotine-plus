@@ -525,7 +525,7 @@ class StatusNotifierImplementation(BaseImplementation):
                 ),
                 reply_type=None,
                 flags=Gio.DBusCallFlags.NONE,
-                timeout_msec=-1,
+                timeout_msec=1000,
                 cancellable=None
             )
 
