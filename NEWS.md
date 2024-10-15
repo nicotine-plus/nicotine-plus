@@ -5,7 +5,7 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.6 (October 14, 2024)
+## Version 3.3.6 (Release Candidate 1)
 
 ### Changes
 
@@ -29,6 +29,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Issues with selecting text on 3.3.5 in macOS Monterey ([#3144](https://github.com/nicotine-plus/nicotine-plus/issues/3144))
  * Horizontal adjustment of user profile ([#2865](https://github.com/nicotine-plus/nicotine-plus/issues/2865))
  * Files deleted on quit ([#3152](https://github.com/nicotine-plus/nicotine-plus/issues/3152))
+ * the window does not close automatically and gets in the way ([#3157](https://github.com/nicotine-plus/nicotine-plus/issues/3157))
 
 
 ## Version 3.3.5 (September 22, 2024)
