@@ -20,11 +20,11 @@
 
 ## Building
 
- - [build](https://build.pypa.io/)
+ - [python3-build](https://build.pypa.io/)
       for building;
  - [gettext](https://www.gnu.org/software/gettext/)
       for generating translations;
- - [setuptools](https://setuptools.pypa.io/)
+ - [python3-setuptools](https://setuptools.pypa.io/)
       for packaging.
 
 ## Testing
