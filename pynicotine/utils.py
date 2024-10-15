@@ -687,7 +687,7 @@ def write_file_and_backup(path, callback, protect=False):
             # Force write to file immediately in case of hard shutdown
             file_handle.flush()
             os.fsync(file_handle.fileno())
-        
+
         log.add_debug("Backed up and saved file %s", path)
 
     except Exception as error:
