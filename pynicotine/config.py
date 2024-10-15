@@ -784,10 +784,7 @@ class Config:
         if not self.create_config_folder():
             return
 
-        from pynicotine.logfacility import log
-
         write_file_and_backup(self.config_file_path, self._write_config_callback, protect=True)
-        log.add_debug("Saved configuration: %s", self.config_file_path)
 
     def write_config_backup(self, file_path):
 

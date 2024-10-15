@@ -656,6 +656,8 @@ def load_file(file_path, load_func, use_old_file=False):
 
 def write_file_and_backup(path, callback, protect=False):
 
+    from pynicotine.logfacility import log
+
     path_encoded = encode_path(path)
     path_old_encoded = encode_path(f"{path}.old")
 
@@ -668,7 +670,6 @@ def write_file_and_backup(path, callback, protect=False):
                 os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
-        from pynicotine.logfacility import log
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -686,9 +687,10 @@ def write_file_and_backup(path, callback, protect=False):
             # Force write to file immediately in case of hard shutdown
             file_handle.flush()
             os.fsync(file_handle.fileno())
+        
+        log.add_debug("Backed up and saved file %s", path)
 
     except Exception as error:
-        from pynicotine.logfacility import log
         log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
             "error": error
