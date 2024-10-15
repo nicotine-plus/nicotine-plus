@@ -31,7 +31,7 @@ def install_brew():
                 "libadwaita",
                 "librsvg"]
 
-    subprocess.check_call(["brew", "reinstall"] + packages)
+    subprocess.check_call(["brew", "install"] + packages)
 
 
 def install_pypi():
