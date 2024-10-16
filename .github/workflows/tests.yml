@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev libgtk-3-bin
-          python -m pip install build .[tests]
+          python -m pip install build setuptools wheel .[tests]
 
       - name: PEP 8 style checks
         run: python -m pycodestyle
@@ -40,6 +40,9 @@ jobs:
 
       - name: Build
         run: python -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
 
   ubuntu-debian:
     runs-on: ubuntu-latest
@@ -82,7 +85,7 @@ jobs:
       - name: Install dependencies
         run: |
           dnf -y install gettext gtk${{ matrix.gtk }} pylint python3 python3-build \
-            python3-gobject python3-pycodestyle
+            python3-gobject python3-pycodestyle python3-setuptools python3-wheel
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -95,6 +98,9 @@ jobs:
 
       - name: Build
         run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
 
   opensuse:
     runs-on: ubuntu-latest
@@ -112,7 +118,8 @@ jobs:
         run: |
           zypper refresh
           zypper -n install dejavu-fonts gettext-tools python312-build python312-gobject \
-            python312-gobject-Gdk python312-pycodestyle python312-pylint typelib-1_0-Gtk-4_0
+            python312-gobject-Gdk python312-pycodestyle python312-pylint \
+            python312-setuptools python312-wheel typelib-1_0-Gtk-4_0
 
       - name: PEP 8 style checks
         run: python3.12 -m pycodestyle
@@ -125,6 +132,9 @@ jobs:
 
       - name: Build
         run: python3.12 -m build
+
+      - name: Build without isolation
+        run: python3.12 -m build --no-isolation
 
   alpine:
     runs-on: ubuntu-latest
@@ -141,7 +151,8 @@ jobs:
       - name: Install dependencies
         run: |
           apk update
-          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle py3-pylint
+          apk add font-dejavu gettext gtk4.0 py3-build py3-gobject3 py3-pycodestyle \
+            py3-pylint py3-setuptools py3-wheel
 
       - name: PEP 8 style checks
         run: python3 -m pycodestyle
@@ -154,6 +165,9 @@ jobs:
 
       - name: Build
         run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
 
   windows:
     runs-on: windows-latest
@@ -184,9 +198,11 @@ jobs:
             ${{ matrix.prefix }}-libadwaita
             ${{ matrix.prefix }}-python-build
             ${{ matrix.prefix }}-python-cx-freeze
+            ${{ matrix.prefix }}-python-gobject
             ${{ matrix.prefix }}-python-pycodestyle
             ${{ matrix.prefix }}-python-pylint
-            ${{ matrix.prefix }}-python-gobject
+            ${{ matrix.prefix }}-python-setuptools
+            ${{ matrix.prefix }}-python-wheel
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
@@ -203,6 +219,9 @@ jobs:
 
       - name: Build
         run: python3 -m build
+
+      - name: Build without isolation
+        run: python3 -m build --no-isolation
 
   macos:
     strategy:
@@ -242,3 +261,6 @@ jobs:
 
       - name: Build
         run: venv/bin/python3 -m build
+
+      - name: Build without isolation
+        run: venv/bin/python3 -m build --no-isolation

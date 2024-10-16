@@ -105,9 +105,11 @@ jobs:
             ${{ matrix.prefix }}-libadwaita
             ${{ matrix.prefix }}-python-build
             ${{ matrix.prefix }}-python-cx-freeze
+            ${{ matrix.prefix }}-python-gobject
             ${{ matrix.prefix }}-python-pycodestyle
             ${{ matrix.prefix }}-python-pylint
-            ${{ matrix.prefix }}-python-gobject
+            ${{ matrix.prefix }}-python-setuptools
+            ${{ matrix.prefix }}-python-wheel
             ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
