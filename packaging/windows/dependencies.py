@@ -40,9 +40,11 @@ def install_pacman():
                 f"{prefix}-libadwaita",
                 f"{prefix}-python-build",
                 f"{prefix}-python-cx-freeze",
+                f"{prefix}-python-gobject",
                 f"{prefix}-python-pycodestyle",
                 f"{prefix}-python-pylint",
-                f"{prefix}-python-gobject",
+                f"{prefix}-python-setuptools",
+                f"{prefix}-python-wheel",
                 f"{prefix}-webp-pixbuf-loader"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)

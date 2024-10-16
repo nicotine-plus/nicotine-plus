@@ -9,23 +9,25 @@
  - [gtk4](https://gtk.org/) >= 4.6.9 or [gtk3](https://gtk.org/) >= 3.22.30
       for graphical interface;
  - [pygobject](https://pygobject.gnome.org/)
-      for Python bindings for GTK;
+      for Python bindings for GTK.
 
 ### Recommended
 
  - [libadwaita](https://gitlab.gnome.org/GNOME/libadwaita)
-      for Adwaita theme on GNOME (GTK 4).
+      for Adwaita theme on GNOME (GTK 4);
  - [gspell](https://gitlab.gnome.org/GNOME/gspell)
       for spell checking in chat (GTK 3).
 
 ## Building
 
+ - [python3-setuptools](https://setuptools.pypa.io/)
+      for build backend;
  - [python3-build](https://build.pypa.io/)
       for building;
+ - [python3-wheel](https://wheel.readthedocs.io/)
+      for packaging;
  - [gettext](https://www.gnu.org/software/gettext/)
-      for generating translations;
- - [python3-setuptools](https://setuptools.pypa.io/)
-      for packaging.
+      for generating translations.
 
 ## Testing
 
@@ -70,25 +72,25 @@
  - On Debian/Ubuntu-based distributions:
 
    ```sh
-   sudo apt install gettext python3-build python3-setuptools
+   sudo apt install gettext python3-build python3-setuptools python3-wheel
    ```
 
  - On Redhat/Fedora-based distributions:
 
    ```sh
-   sudo dnf install gettext python3-build python3-setuptools
+   sudo dnf install gettext python3-build python3-setuptools python3-wheel
    ```
 
  - On SUSE-based distributions:
 
    ```sh
-   sudo zypper install gettext-tools python312-build python312-setuptools
+   sudo zypper install gettext-tools python312-build python312-setuptools python312-wheel
    ```
 
  - On Alpine-based distributions:
 
    ```sh
-   sudo apk add gettext py3-build py3-setuptools
+   sudo apk add gettext py3-build py3-setuptools py3-wheel
    ```
 
 #### Installing Test Dependencies
