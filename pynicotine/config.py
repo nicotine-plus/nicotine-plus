@@ -276,8 +276,6 @@ class Config:
                 "debug_file_output": False,
                 "roomlogsdir": os.path.join(log_folder_path, "rooms"),
                 "privatelogsdir": os.path.join(log_folder_path, "private"),
-                "readroomlines": 200,
-                "readprivatelines": 200,
                 "private_chats": [],
                 "rooms": []
             },
@@ -533,7 +531,9 @@ class Config:
             "logging": (
                 "logsdir",
                 "timestamps",
-                "readroomlogs"
+                "readroomlogs",
+                "readroomlines",
+                "readprivatelines"
             ),
             "ticker": (
                 "default",
