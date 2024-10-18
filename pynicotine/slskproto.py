@@ -1883,7 +1883,9 @@ class NetworkThread(Thread):
         file_upload = self._file_upload_msgs[conn]
 
         if file_upload.offset is not None:
-            return None
+            # No more incoming messages on this connection after receiving the
+            # file offset. If peer sends something anyway, clear it.
+            return len(in_buffer)
 
         msg_size = idx = 8
         msg = self._unpack_network_message(
