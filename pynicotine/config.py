@@ -155,7 +155,10 @@ class Config:
         data_home_env = "${NICOTINE_DATA_HOME}"
         log_folder_path = os.path.join(data_home_env, "logs")
 
-        self._parser = ConfigParser(strict=False, interpolation=None)
+        self._parser = ConfigParser(
+            strict=False, interpolation=None, delimiters=("=",),
+            comment_prefixes=None
+        )
         self.defaults = {
             "server": {
                 "server": ("server.slsknet.org", 2242),
