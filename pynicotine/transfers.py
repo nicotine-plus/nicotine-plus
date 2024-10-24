@@ -402,6 +402,10 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.size_changed = False
 
+        # Reset last byte offset to avoid incorrect offset subtractions between
+        # previous and new transfer sessions when updating statistics
+        transfer.last_byte_offset = None
+
         if transfer.sock is not None:
             core.send_message_to_network_thread(CloseConnection(transfer.sock))
 
@@ -466,6 +470,7 @@ class Transfers:
 
         transfer.status = TransferStatus.FINISHED
         transfer.current_byte_offset = transfer.size
+        transfer.last_byte_offset = None
 
     def _auto_clear_transfer(self, transfer):
 
