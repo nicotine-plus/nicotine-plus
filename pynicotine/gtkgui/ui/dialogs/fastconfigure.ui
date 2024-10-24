@@ -276,6 +276,7 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="password_entry">
+                        <property name="truncate-multiline">True</property>
                         <property name="visibility">False</property>
                         <property name="visible">True</property>
                         <property name="width-chars">20</property>

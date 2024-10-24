@@ -552,11 +552,12 @@ class EntryDialog(OptionDialog):
 
         if GTK_API_VERSION >= 4 and not visibility:
             entry = Gtk.PasswordEntry(
-                activates_default=activates_default, show_peek_icon=True, width_chars=50, visible=True)
+                activates_default=activates_default, show_peek_icon=True,
+                truncate_multiline=True, width_chars=50, visible=True)
         else:
             entry = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
-                width_chars=50, visible=True)
+                truncate_multiline=(not visibility), width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(entry)  # pylint: disable=no-member
