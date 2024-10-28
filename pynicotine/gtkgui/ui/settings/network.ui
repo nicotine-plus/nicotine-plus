@@ -254,7 +254,7 @@
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Miscellaneous</property>
+            <property name="label" translatable="yes">Connections</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
             <property name="wrap">True</property>
