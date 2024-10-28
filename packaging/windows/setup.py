@@ -132,7 +132,7 @@ def add_pixbuf_loaders():
     add_file(file_path=temp_loaders_file, output_path="lib/pixbuf-loaders.cache")
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), output_path="lib",
-        starts_with="libpixbufloader-", ends_with=LIB_EXTENSION
+        ends_with=LIB_EXTENSION
     )
 
 
