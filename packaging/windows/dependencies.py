@@ -25,14 +25,13 @@ def install_pacman():
     """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH", "x86_64")
-    prefix = "mingw-w64-clang-"
 
     if arch == "arm64":
-        prefix += "aarch64"
+        prefix = "mingw-w64-clang-aarch64"
         mingw_type = "clangarm64"
     else:
-        prefix += "x86_64"
-        mingw_type = "clang64"
+        prefix = "mingw-w64-ucrt-x86_64"
+        mingw_type = "ucrt64"
 
     packages = [f"{prefix}-ca-certificates",
                 f"{prefix}-gettext-tools",
