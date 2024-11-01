@@ -148,7 +148,11 @@ def set_default_font_size():
         return
 
     # Enable OS-specific font tweaks
-    GTK_SETTINGS.props.gtk_font_rendering = Gtk.FontRendering.MANUAL  # pylint: disable=no-member
+    try:
+        GTK_SETTINGS.props.gtk_font_rendering = Gtk.FontRendering.MANUAL  # pylint: disable=no-member
+    except AttributeError:
+        # GTK <4.16
+        pass
 
 
 def set_visual_settings():
