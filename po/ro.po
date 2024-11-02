@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-15 18:57+0300\n"
-"PO-Revision-Date: 2023-07-25 18:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2024-10-31 19:00+0000\n"
+"Last-Translator: Bugmenot <weblate@spam.care>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ro/>\n"
 "Language: ro\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.8.2-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -462,7 +462,7 @@ msgstr "Ești sigur că vrei să ieși?"
 
 #: pynicotine/gtkgui/application.py:534
 msgid "Wait for uploads to finish"
-msgstr ""
+msgstr "Așteaptă finalizarea încărcărilor"
 
 #: pynicotine/gtkgui/application.py:536
 msgid "Do you really want to exit?"
@@ -824,7 +824,7 @@ msgstr "Nu s-a putut retrage cea mai recentă versiune: %s"
 #: pynicotine/gtkgui/dialogs/about.py:458
 #, python-format
 msgid "New release available: %s"
-msgstr ""
+msgstr "Versiune nouă disponibilă: %s"
 
 #: pynicotine/gtkgui/dialogs/about.py:463
 #, fuzzy
@@ -1176,11 +1176,11 @@ msgstr "Filtre de succes"
 #: pynicotine/gtkgui/dialogs/preferences.py:658
 #: pynicotine/gtkgui/dialogs/preferences.py:699
 msgid "Public"
-msgstr ""
+msgstr "Public"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:627
 msgid "Accessible To"
-msgstr ""
+msgstr "Accesibil pentru"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:825
 #: pynicotine/gtkgui/ui/uploads.ui:56
@@ -1371,7 +1371,7 @@ msgstr "Lista de prieteni în camerele de chat"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1806
 msgid "Always visible sidebar"
-msgstr ""
+msgstr "Bară laterală mereu vizibilă"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1811
 #, fuzzy
@@ -2418,7 +2418,7 @@ msgstr "Încărcări: %(speed)s"
 
 #: pynicotine/gtkgui/uploads.py:155
 msgid "Quitting..."
-msgstr ""
+msgstr "În curse de ieșire..."
 
 #: pynicotine/gtkgui/uploads.py:164
 #, fuzzy
@@ -2814,7 +2814,7 @@ msgstr "Document/Text"
 
 #: pynicotine/gtkgui/widgets/theme.py:235
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: pynicotine/gtkgui/widgets/theme.py:342
 #, fuzzy, python-format
@@ -2868,6 +2868,8 @@ msgstr ""
 #, python-format
 msgid "Type %s to log in with another username or password."
 msgstr ""
+"Tastează %s pentru a te autentifica folosind un alt nume de utilizator sau o "
+"altă parolă."
 
 #: pynicotine/headless/application.py:99
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:268
@@ -2889,12 +2891,12 @@ msgstr ""
 
 #: pynicotine/headless/application.py:119
 msgid "The following shares are unavailable:"
-msgstr ""
+msgstr "Următoarele partajări sunt disponibile:"
 
 #: pynicotine/headless/application.py:125
 #, python-format
 msgid "Retry rescan? %s"
-msgstr ""
+msgstr "Reîncearcă scanarea? %s"
 
 #: pynicotine/logfacility.py:179
 #, fuzzy, python-format
@@ -4371,9 +4373,8 @@ msgid "List shares"
 msgstr "Listează cotele"
 
 #: pynicotine/plugins/core_commands/__init__.py:239
-#, fuzzy
 msgid "Rescan shares"
-msgstr "Rescanați acțiunile"
+msgstr "Rescanează partajările"
 
 #: pynicotine/plugins/core_commands/__init__.py:246
 #, fuzzy
@@ -4455,12 +4456,12 @@ msgstr "Neignorat %s"
 #: pynicotine/plugins/core_commands/__init__.py:553
 #, python-format
 msgid "%(num_listed)s shares listed (%(num_total)s configured)"
-msgstr ""
+msgstr "%(num_listed)s partajări listate %(num_total)s configurate)"
 
 #: pynicotine/plugins/core_commands/__init__.py:565
 #, python-format
 msgid "Cannot share inaccessible folder \"%s\""
-msgstr ""
+msgstr "Nu se poate partaja dosarul inaccesibil: \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:568
 #, python-format
@@ -4470,12 +4471,12 @@ msgstr ""
 #: pynicotine/plugins/core_commands/__init__.py:579
 #, python-format
 msgid "No share with name \"%s\""
-msgstr ""
+msgstr "Nicio partajare cu numele \"%s\""
 
 #: pynicotine/plugins/core_commands/__init__.py:582
 #, python-format
 msgid "Removed share \"%s\" (rescan required)"
-msgstr ""
+msgstr "Partajarea \"%s\" a fost eliminată (necesită rescanare)"
 
 #: pynicotine/pluginsystem.py:408
 #, fuzzy
@@ -4967,7 +4968,7 @@ msgstr "Ești gata să folosești Nicotine+!"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:598
 msgid ""
 "Soulseek is an unencrypted protocol not intended for secure communication."
-msgstr ""
+msgstr "Soulseek este un protocol necriptat și nu oferă comunicație sigură."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:608
 #, fuzzy
@@ -6600,7 +6601,7 @@ msgstr "Rescanați acțiunile la pornire"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:68
 msgid "Visible to everyone:"
-msgstr ""
+msgstr "Vizibil tuturor:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:82
 #, fuzzy
@@ -6688,7 +6689,7 @@ msgstr "Limitați numărul de rezultate pe căutare:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
 msgid "Maximum total size of queued files per user (MiB):"
-msgstr ""
+msgstr "Mărimea totală maximă a fișierelor alocate per utilizator (MiB):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:371
 #, fuzzy
@@ -6726,6 +6727,9 @@ msgid ""
 "Add things you want everyone to see, such as a short description, helpful "
 "tips, or guidelines for downloading your shares."
 msgstr ""
+"Adaugă lucruri pe care vrei să le vadă toată lumea, precum o descriere "
+"scurtă, sfaturi ajutătoare, sau reguli de respectat pentru a descărca "
+"partajările tale."
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:89
 #, fuzzy
@@ -6841,7 +6845,7 @@ msgstr "Culoarea etichetei filei evidențiate:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:564
 msgid "Buddy list position:"
-msgstr ""
+msgstr "Poziție în lista de prieteni:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:590
 #, fuzzy
