@@ -296,7 +296,11 @@ class PopupMenu:
 
     def _callback_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y):
 
-        event = controller.get_last_event()
+        try:
+            event = controller.get_last_event()
+        except TypeError:
+            # PyGObject <3.48.0
+            return False
 
         if event.triggers_context_menu():
             return self._callback(controller, pos_x, pos_y)
