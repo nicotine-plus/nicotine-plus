@@ -334,7 +334,11 @@ class Buddies:
     def add_buddy(self, user, user_data, select_row=True):
 
         status = user_data.status
-        country_code = user_data.country.replace("flag_", "")
+        country_code = user_data.country
+
+        if country_code:
+            country_code = country_code.replace("flag_", "")
+
         stats = core.users.watched.get(user)
 
         if stats is not None:

@@ -63,44 +63,57 @@ class Buddies:
     def _start(self):
 
         for row in config.sections["server"]["userlist"]:
-            if not row:
+            if not row or not isinstance(row, list):
                 continue
 
             username = row[0]
 
-            if not isinstance(username, str) or not isinstance(row, list):
+            if not isinstance(username, str):
                 continue
 
             if username in self.users:
                 continue
 
+            note = country = ""
+            notify_status = is_prioritized = is_trusted = False
+            last_seen = "Never seen"
             num_items = len(row)
 
-            if num_items <= 1:
-                note = ""
-                row.append(note)
+            if num_items >= 2:
+                loaded_note = row[1]
 
-            if num_items <= 2:
-                notify = False
-                row.append(notify)
+                if isinstance(loaded_note, str):
+                    note = loaded_note
 
-            if num_items <= 3:
-                prioritized = False
-                row.append(prioritized)
+            if num_items >= 3:
+                loaded_notify_status = row[2]
 
-            if num_items <= 4:
-                trusted = False
-                row.append(trusted)
+                if isinstance(loaded_notify_status, bool):
+                    notify_status = loaded_notify_status
 
-            if num_items <= 5:
-                last_seen = "Never seen"
-                row.append(last_seen)
+            if num_items >= 4:
+                loaded_is_prioritized = row[3]
 
-            if num_items <= 6:
-                country = ""
-                row.append(country)
+                if isinstance(loaded_is_prioritized, bool):
+                    is_prioritized = loaded_is_prioritized
 
-            _username, note, notify_status, is_prioritized, is_trusted, last_seen, country = row
+            if num_items >= 5:
+                loaded_is_trusted = row[4]
+
+                if isinstance(loaded_is_trusted, bool):
+                    is_trusted = loaded_is_trusted
+
+            if num_items >= 6:
+                loaded_last_seen = row[5]
+
+                if isinstance(loaded_last_seen, str):
+                    last_seen = loaded_last_seen
+
+            if num_items >= 7:
+                loaded_country = row[6]
+
+                if isinstance(loaded_country, str):
+                    country = loaded_country
 
             self.users[username] = Buddy(
                 username=username,
