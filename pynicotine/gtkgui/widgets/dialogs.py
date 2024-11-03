@@ -553,7 +553,10 @@ class EntryDialog(OptionDialog):
         if GTK_API_VERSION >= 4 and not visibility:
             entry = Gtk.PasswordEntry(
                 activates_default=activates_default, show_peek_icon=True,
-                truncate_multiline=True, width_chars=50, visible=True)
+                width_chars=50, visible=True
+            )
+            text_widget = next(iter(entry))
+            text_widget.set_truncate_multiline(True)
         else:
             entry = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
