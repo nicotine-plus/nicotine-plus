@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-15 18:57+0300\n"
-"PO-Revision-Date: 2024-10-25 20:15+0000\n"
+"PO-Revision-Date: 2024-11-02 08:23+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.8.2-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -4956,12 +4956,10 @@ msgstr ""
 "spravovány"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:788
-#, fuzzy
 msgid "_Open List"
-msgstr "seznam _Open"
+msgstr "_Otevřít seznam"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:790
-#, fuzzy
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
 "Otevře místní seznam sdílených souborů, které byly dříve uloženy na disk"
@@ -4971,61 +4969,52 @@ msgid "Configure Shares"
 msgstr "Nastavení sdílení"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:878
-#, fuzzy
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
 "also save the list to disk, and inspect it later on."
 msgstr ""
 "Zadejte jméno uživatele, jehož sdílené soubory chcete procházet. Seznam "
-"můžete také uložit na disk a později jej zkontrolovat."
+"můžete také uložit na disk a později jej prozkoumat."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:956
-#, fuzzy
 msgid "_Personal Profile"
-msgstr "Osobní nelibost"
+msgstr "O_sobní profil"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:978
 msgid "Configure Account"
 msgstr "Nastavení účtu"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1045
-#, fuzzy
 msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
 "Zadejte jméno uživatele a zobrazte jeho uživatelský popis, informace a "
-"osobní obrázek."
+"osobní obrázek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1112
-#, fuzzy
 msgid "Chat _History"
-msgstr "Historie chatu"
+msgstr "_Historie chatu"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1138
 #: pynicotine/gtkgui/ui/mainwindow.ui:1472
-#, fuzzy
 msgid "Configure Chats"
-msgstr "Konfigurace sdílených složek"
+msgstr "Nastavení chatů"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1205
-#, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
-msgstr ""
-"Zadejte jméno uživatele a začněte s ním textovou konverzaci v soukromí."
+msgstr "Zadejte jméno uživatele a začněte s ním soukromou textovou konverzaci"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1285
-#, fuzzy
 msgid "_Message All"
-msgstr "Zprávy"
+msgstr "_Zpráva všem"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1307
 msgid "Configure Ignored Users"
 msgstr "Nastavení ignorovaných uživatelů"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1374
-#, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
@@ -5050,36 +5039,30 @@ msgid "Configure User Profile"
 msgstr "Nastavení uživatelského profilu"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1728
-#, fuzzy
 msgid "Connections"
-msgstr "Konexe"
+msgstr "Připojení"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1760
-#, fuzzy
 msgid "Downloading (Speed / Active Users)"
 msgstr "Stahování (rychlost / aktivní uživatelé)"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1791
-#, fuzzy
 msgid "Uploading (Speed / Active Users)"
 msgstr "Nahrávání (rychlost / aktivní uživatelé)"
 
 #: pynicotine/gtkgui/ui/popovers/chathistory.ui:20
-#, fuzzy
 msgid "Search chat history…"
-msgstr "Hledaný výraz…"
+msgstr "Prohledat historii chatu…"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:30
 #: pynicotine/gtkgui/ui/settings/downloads.ui:167
-#, fuzzy
 msgid "Download Speed Limits"
-msgstr "Omezení rychlosti stahování"
+msgstr "Limity rychlosti stahování"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:43
 #: pynicotine/gtkgui/ui/settings/downloads.ui:181
-#, fuzzy
 msgid "Unlimited download speed"
-msgstr "Omezit rychlost nahrávání:"
+msgstr "Stahování bez limitu rychlosti"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:56
 #: pynicotine/gtkgui/ui/settings/downloads.ui:193
@@ -5418,15 +5401,13 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:30
 #: pynicotine/gtkgui/ui/settings/uploads.ui:106
-#, fuzzy
 msgid "Upload Speed Limits"
-msgstr "Omezení rychlosti nahrávání"
+msgstr "Limity rychlosti nahrávání"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:43
 #: pynicotine/gtkgui/ui/settings/uploads.ui:158
-#, fuzzy
 msgid "Unlimited upload speed"
-msgstr "Omezit rychlost nahrávání:"
+msgstr "Nahrávání bez limitu rychlosti"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:56
 #: pynicotine/gtkgui/ui/settings/uploads.ui:170
@@ -6022,9 +6003,8 @@ msgid "Show privately shared files in search results"
 msgstr "Zobrazení soukromě sdílených souborů ve výsledcích vyhledávání"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:107
-#, fuzzy
 msgid "Limit number of results per search:"
-msgstr "Omezit počet výsledků na vyhledávání:"
+msgstr "Omezit počet výsledků vyhledávání:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:150
 #, fuzzy
@@ -6142,9 +6122,8 @@ msgid "Double-click action for uploads:"
 msgstr "Akce poklepat na nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:122
-#, fuzzy
 msgid "Limit upload speed:"
-msgstr "Omezit rychlost nahrávání:"
+msgstr "Limit rychlosti nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:137
 #, fuzzy
@@ -6176,14 +6155,12 @@ msgid "Upload queue type:"
 msgstr "Typ fronty nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:253
-#, fuzzy
 msgid "Allocate upload slots until total speed reaches (KiB/s):"
-msgstr "Nahrávání fronty, pokud dosáhne celková přenosová rychlost (KiB/s):"
+msgstr "Přidělovat nahrávací sloty dokud celková rychlost nedosáhne (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:276
-#, fuzzy
 msgid "Fixed number of upload slots:"
-msgstr "Omezte počet slotů pro nahrávání na:"
+msgstr "Pevný počet slotů pro nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:294
 msgid "Prioritize all buddies"
@@ -6195,9 +6172,8 @@ msgid "Queue Limits"
 msgstr "Limity fronty"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:325
-#, fuzzy
 msgid "Maximum number of queued files per user:"
-msgstr "Omezit počet výsledků na vyhledávání:"
+msgstr "Maximální počet souborů ve frontě na jednoho uživatele:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:350
 msgid "Maximum total size of queued files per user (MiB):"
