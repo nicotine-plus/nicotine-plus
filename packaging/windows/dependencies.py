@@ -50,10 +50,7 @@ def install_pacman():
 
     # Downgrade libadwaita for now due to dark mode not being applied on startup
     # https://gitlab.gnome.org/GNOME/libadwaita/-/issues/932
-    downgrade_packages = [
-        f"{prefix}-python-cx-freeze-7.2.3-1-any.pkg.tar.zst",
-        f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"
-    ]
+    downgrade_packages = [f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"]
 
     for package in downgrade_packages:
         subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])
