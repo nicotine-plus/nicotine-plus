@@ -609,8 +609,7 @@ class UserInfo:
         self.upload_slots_label.set_text(humanize(msg.totalupl))
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
 
-        self.upload_slots_label.get_parent().set_visible(not msg.slotsavail)
-        self.queued_uploads_label.get_parent().set_visible(not msg.slotsavail)
+        self.queued_uploads_label.get_parent().set_visible(bool(msg.queuesize))
 
         self.picture_data = None
         self.load_picture(msg.pic)
