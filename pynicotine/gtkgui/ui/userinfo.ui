@@ -78,8 +78,8 @@
                                     <child>
                                       <object class="GtkLabel" id="country_label">
                                         <property name="ellipsize">end</property>
+                                        <property name="mnemonic-widget">country_button</property>
                                         <property name="visible">True</property>
-                                        <property name="xalign">0</property>
                                       </object>
                                     </child>
                                   </object>
