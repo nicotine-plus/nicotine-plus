@@ -352,7 +352,7 @@ class PluginSettings(Dialog):
             ]
 
         if isinstance(widget, FileChooserButton):
-            return widget.get_path()
+            return widget.get_path(dynamic=False)
 
         return None
 

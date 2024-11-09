@@ -337,10 +337,6 @@ class FileChooserButton:
         if not selected_path:
             return
 
-        if selected_path.startswith(config.data_folder_path):
-            # Use a dynamic path that can be expanded with os.path.expandvars()
-            selected_path = selected_path.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
-
         self.set_path(selected_path)
 
         try:
@@ -383,7 +379,12 @@ class FileChooserButton:
 
         open_folder_path(folder_path, create_folder=True)
 
-    def get_path(self):
+    def get_path(self, dynamic=True):
+
+        if dynamic and self.path.startswith(config.data_folder_path):
+            # Use a dynamic path that can be expanded with os.path.expandvars()
+            return self.path.replace(config.data_folder_path, "${NICOTINE_DATA_HOME}", 1)
+
         return self.path
 
     def set_path(self, path):
