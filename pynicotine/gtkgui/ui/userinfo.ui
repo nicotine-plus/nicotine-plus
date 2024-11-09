@@ -43,7 +43,7 @@
                             <property name="margin-end">6</property>
                             <property name="margin-start">12</property>
                             <property name="margin-top">6</property>
-                            <property name="spacing">12</property>
+                            <property name="spacing">9</property>
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkLabel" id="user_label">
@@ -61,10 +61,33 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkImage" id="country_icon">
-                                <property name="can-focus">True</property>
-                                <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                              <object class="GtkButton" id="country_button">
                                 <property name="visible">False</property>
+                                <signal name="clicked" handler="on_show_ip_address"/>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="spacing">8</property>
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <object class="GtkImage" id="country_icon">
+                                        <property name="can-focus">True</property>
+                                        <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                                        <property name="visible">True</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="country_label">
+                                        <property name="ellipsize">end</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="circular"/>
+                                  <class name="count"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -163,34 +186,6 @@
                             </child>
                             <child>
                               <object class="GtkLabel" id="shared_folders_label">
-                                <property name="label" translatable="yes">Unknown</property>
-                                <property name="selectable">True</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="spacing">24</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="ellipsize">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Country</property>
-                                <property name="mnemonic-widget">country_label</property>
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="country_label">
-                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Unknown</property>
                                 <property name="selectable">True</property>
                                 <property name="visible">True</property>
@@ -584,39 +579,6 @@
                               <object class="GtkLabel" id="ignore_unignore_user_label">
                                 <property name="ellipsize">end</property>
                                 <property name="mnemonic-widget">ignore_unignore_user_button</property>
-                                <property name="visible">True</property>
-                                <style>
-                                  <class name="normal"/>
-                                </style>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="flat"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="show_ip_address_button">
-                        <property name="visible">True</property>
-                        <signal name="clicked" handler="on_show_ip_address"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="spacing">6</property>
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="icon-name">network-server-symbolic</property>
-                                <property name="visible">True</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="ellipsize">end</property>
-                                <property name="label" translatable="yes">Show IP A_ddress</property>
-                                <property name="mnemonic-widget">show_ip_address_button</property>
-                                <property name="use-underline">True</property>
                                 <property name="visible">True</property>
                                 <style>
                                   <class name="normal"/>

@@ -87,7 +87,6 @@ class UserInfos(IconNotebook):
             ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.server_login),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
@@ -243,15 +242,9 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
-    def server_login(self, *_args):
-        for page in self.pages.values():
-            page.update_ip_address_button_state()
-
     def server_disconnect(self, *_args):
-
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
-            page.update_ip_address_button_state()
 
 
 class UserInfo:
@@ -263,6 +256,7 @@ class UserInfo:
             self.ban_unban_user_button,
             self.ban_unban_user_label,
             self.container,
+            self.country_button,
             self.country_icon,
             self.country_label,
             self.description_view_container,
@@ -283,7 +277,6 @@ class UserInfo:
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
-            self.show_ip_address_button,
             self.upload_slots_label,
             self.upload_speed_label,
             self.user_info_container,
@@ -582,9 +575,6 @@ class UserInfo:
     def update_privileges_button_state(self):
         self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
 
-    def update_ip_address_button_state(self):
-        self.show_ip_address_button.set_sensitive(core.users.login_status != UserStatus.OFFLINE)
-
     def update_button_states(self):
 
         self.update_local_buttons_state()
@@ -592,7 +582,6 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
         self.update_privileges_button_state()
-        self.update_ip_address_button_state()
 
     # Network Messages #
 
@@ -642,15 +631,15 @@ class UserInfo:
             return
 
         country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
-        country_text = f"{country_name} ({country_code})"
 
-        self.country_label.set_text(country_text)
+        self.country_label.set_text(country_name)
+        self.country_label.set_tooltip_text(country_name)
 
         icon_name = get_flag_icon_name(country_code)
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.country_icon.set_from_icon_name(icon_name, *icon_args)
-        self.country_icon.set_visible(bool(icon_name))
+        self.country_button.set_visible(bool(icon_name))
 
     def user_interests(self, msg):
 
