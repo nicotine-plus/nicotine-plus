@@ -93,8 +93,11 @@ class ChatRooms(IconNotebook):
             ("clear-room-messages", self.clear_room_messages),
             ("echo-room-message", self.echo_room_message),
             ("global-room-message", self.global_room_message),
+            ("ignore-user", self.ignore_user),
+            ("ignore-user-ip", self.ignore_user),
             ("join-room", self.join_room),
             ("leave-room", self.leave_room),
+            ("peer-address", self.peer_address),
             ("private-room-add-operator", self.private_room_add_operator),
             ("private-room-add-user", self.private_room_add_user),
             ("private-room-remove-operator", self.private_room_remove_operator),
@@ -107,6 +110,8 @@ class ChatRooms(IconNotebook):
             ("server-login", self.server_login),
             ("show-room", self.show_room),
             ("start", self.start),
+            ("unignore-user", self.unignore_user),
+            ("unignore-user-ip", self.unignore_user),
             ("user-country", self.user_country),
             ("user-joined-room", self.user_joined_room),
             ("user-left-room", self.user_left_room),
@@ -334,6 +339,18 @@ class ChatRooms(IconNotebook):
         if page is not None:
             page.leave_room()
 
+    def ignore_user(self, username, *_args):
+        for page in self.pages.values():
+            page.ignore_user(username)
+
+    def unignore_user(self, username, *_args):
+        for page in self.pages.values():
+            page.unignore_user(username)
+
+    def peer_address(self, msg):
+        for page in self.pages.values():
+            page.peer_address(msg)
+
     def user_stats(self, msg):
         for page in self.pages.values():
             page.user_stats(msg)
@@ -532,27 +549,31 @@ class ChatRoom:
                     "iterator_key": True,
                     "default_sort_type": "ascending",
                     "text_underline_column": "username_underline_data",
-                    "text_weight_column": "username_weight_data"
+                    "text_weight_column": "username_weight_data",
+                    "sensitive_column": "is_unignored_data"
                 },
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
                     "width": 80,
                     "sort_column": "speed_data",
-                    "expand_column": True
+                    "expand_column": True,
+                    "sensitive_column": "is_unignored_data"
                 },
                 "files": {
                     "column_type": "number",
                     "title": _("Files"),
                     "sort_column": "files_data",
-                    "expand_column": True
+                    "expand_column": True,
+                    "sensitive_column": "is_unignored_data"
                 },
 
                 # Hidden data columns
                 "speed_data": {"data_type": GObject.TYPE_UINT},
                 "files_data": {"data_type": GObject.TYPE_UINT},
                 "username_weight_data": {"data_type": Pango.Weight},
-                "username_underline_data": {"data_type": Pango.Underline}
+                "username_underline_data": {"data_type": Pango.Underline},
+                "is_unignored_data": {"data_type": GObject.TYPE_BOOLEAN}
             }
         )
 
@@ -658,6 +679,8 @@ class ChatRoom:
         h_files = humanize(files) if files is not None else ""
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
+        is_unignored = not (core.network_filter.is_user_ignored(username)
+                            or core.network_filter.is_user_ip_ignored(username))
 
         if self.room in core.chatrooms.private_rooms:
             if username == core.chatrooms.private_rooms[self.room].owner:
@@ -677,7 +700,8 @@ class ChatRoom:
             speed,
             files or 0,
             weight,
-            underline
+            underline,
+            is_unignored
         ], select_row=False)
 
     def read_room_logs_finished(self):
@@ -973,6 +997,36 @@ class ChatRoom:
     def update_user_count(self):
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
+
+    def ignore_user(self, username, check_ip_ignored=False):
+
+        iterator = self.users_list_view.iterators.get(username)
+
+        if iterator is None:
+            return
+
+        if check_ip_ignored and not core.network_filter.is_user_ip_ignored(username):
+            return
+
+        if self.users_list_view.get_row_value(iterator, "is_unignored_data"):
+            self.users_list_view.set_row_value(iterator, "is_unignored_data", False)
+
+    def unignore_user(self, username):
+
+        iterator = self.users_list_view.iterators.get(username)
+
+        if iterator is None:
+            return
+
+        if (core.network_filter.is_user_ignored(username)
+                or core.network_filter.is_user_ip_ignored(username)):
+            return
+
+        if not self.users_list_view.get_row_value(iterator, "is_unignored_data"):
+            self.users_list_view.set_row_value(iterator, "is_unignored_data", True)
+
+    def peer_address(self, msg):
+        self.ignore_user(msg.user, check_ip_ignored=True)
 
     def user_stats(self, msg):
 

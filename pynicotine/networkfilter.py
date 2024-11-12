@@ -33,8 +33,8 @@ UINT32_UNPACK = Struct(">I").unpack_from
 class NetworkFilter:
     """Functions related to banning and ignoring users."""
 
-    __slots__ = ("ip_ban_requested", "ip_ignore_requested", "_ip_range_values", "_ip_range_countries",
-                 "_loaded_ip_country_data")
+    __slots__ = ("ip_ban_requested", "ip_ignore_requested", "_banned_users", "_ignored_users",
+                 "_ip_range_values", "_ip_range_countries", "_loaded_ip_country_data")
 
     COUNTRIES = {
         "AD": _("Andorra"),
@@ -294,6 +294,8 @@ class NetworkFilter:
         self.ip_ban_requested = {}
         self.ip_ignore_requested = {}
 
+        self._banned_users = set()
+        self._ignored_users = set()
         self._ip_range_values = ()
         self._ip_range_countries = ()
         self._loaded_ip_country_data = False
@@ -304,6 +306,16 @@ class NetworkFilter:
             ("server-disconnect", self._server_disconnect)
         ):
             events.connect(event_name, callback)
+
+    def _start(self):
+
+        for source, target_set in (
+            ("banlist", self._banned_users),
+            ("ignorelist", self._ignored_users)
+        ):
+            for username in config.sections["server"][source]:
+                if isinstance(username, str):
+                    target_set.add(username)
 
     def _populate_ip_country_data(self):
 
@@ -334,6 +346,8 @@ class NetworkFilter:
 
     def _quit(self):
 
+        self._banned_users.clear()
+        self._ignored_users.clear()
         self._ip_range_values = ()
         self._ip_range_countries = ()
         self._loaded_ip_country_data = False
@@ -576,6 +590,7 @@ class NetworkFilter:
     def ban_user(self, username):
 
         if not self.is_user_banned(username):
+            self._banned_users.add(username)
             config.sections["server"]["banlist"].append(username)
             config.write_configuration()
 
@@ -584,6 +599,7 @@ class NetworkFilter:
     def unban_user(self, username):
 
         if self.is_user_banned(username):
+            self._banned_users.remove(username)
             config.sections["server"]["banlist"].remove(username)
             config.write_configuration()
 
@@ -617,7 +633,7 @@ class NetworkFilter:
             self.unban_user_ip(username, ip_address)
 
     def is_user_banned(self, username):
-        return username in config.sections["server"]["banlist"]
+        return username in self._banned_users
 
     def is_user_ip_banned(self, username=None, ip_address=None):
         return self._check_user_ip_filtered(
@@ -628,6 +644,7 @@ class NetworkFilter:
     def ignore_user(self, username):
 
         if not self.is_user_ignored(username):
+            self._ignored_users.add(username)
             config.sections["server"]["ignorelist"].append(username)
             config.write_configuration()
 
@@ -636,6 +653,7 @@ class NetworkFilter:
     def unignore_user(self, username):
 
         if self.is_user_ignored(username):
+            self._ignored_users.remove(username)
             config.sections["server"]["ignorelist"].remove(username)
             config.write_configuration()
 
@@ -669,7 +687,7 @@ class NetworkFilter:
             self.unignore_user_ip(username, ip_address)
 
     def is_user_ignored(self, username):
-        return username in config.sections["server"]["ignorelist"]
+        return username in self._ignored_users
 
     def is_user_ip_ignored(self, username=None, ip_address=None):
         return self._check_user_ip_filtered(
