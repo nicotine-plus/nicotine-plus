@@ -156,7 +156,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Listening port (requires a restart):</property>
+                <property name="label" translatable="yes">Listening port:</property>
                 <property name="mnemonic-widget">listen_port_spinner</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
@@ -349,7 +349,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkLabel" id="network_interface_label">
-                <property name="label" translatable="yes">Network interface (requires a restart):</property>
+                <property name="label" translatable="yes">Network interface:</property>
                 <property name="visible">True</property>
                 <property name="wrap">True</property>
                 <property name="wrap-mode">word-char</property>

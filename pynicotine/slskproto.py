@@ -75,6 +75,7 @@ from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import ResetDistributed
 from pynicotine.slskmessages import ServerConnect
 from pynicotine.slskmessages import ServerDisconnect
+from pynicotine.slskmessages import ServerReconnect
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
@@ -402,6 +403,7 @@ class NetworkThread(Thread):
         self._server_timeout_time = None
         self._server_timeout_value = -1
         self._manual_server_disconnect = False
+        self._manual_server_reconnect = False
         self._server_relogged = False
 
         self._parent_conn = None
@@ -498,7 +500,7 @@ class NetworkThread(Thread):
     def _bind_listen_port(self):
 
         if not self._bind_socket_interface(self._listen_socket):
-            self._set_server_timer()
+            self._set_server_timer(use_fixed_timeout=True)
             log.add(_("Specified network interface '%s' is not available"), self._interface_name)
             return False
 
@@ -509,7 +511,7 @@ class NetworkThread(Thread):
             self._listen_socket.listen(self.CONNECTION_BACKLOG_LENGTH)
 
         except OSError as error:
-            self._set_server_timer()
+            self._set_server_timer(use_fixed_timeout=True)
             log.add(_("Cannot listen on port %(port)s. Ensure no other application uses it, or choose a "
                       "different port. Error: %(error)s"), {"port": self._listen_port, "error": error})
             self._listen_port = None
@@ -1077,9 +1079,12 @@ class NetworkThread(Thread):
 
     # Server Connection #
 
-    def _set_server_timer(self):
+    def _set_server_timer(self, use_fixed_timeout=False):
 
-        if self._server_timeout_value == -1:
+        if use_fixed_timeout:
+            self._server_timeout_value = 5
+
+        elif self._server_timeout_value == -1:
             # Add jitter to spread out connection attempts from Nicotine+ clients
             # in case server goes down
             self._server_timeout_value = random.randint(5, 15)
@@ -1160,6 +1165,7 @@ class NetworkThread(Thread):
         self._portmapper = msg.portmapper
 
         self._manual_server_disconnect = False
+        self._manual_server_reconnect = False
         self._server_timeout_time = None
 
         ip_address, port = msg.addr
@@ -1497,11 +1503,15 @@ class NetworkThread(Thread):
             self._server_relogged = False
 
         if not self._manual_server_disconnect:
-            self._set_server_timer()
+            self._set_server_timer(use_fixed_timeout=self._manual_server_reconnect)
 
         self._server_address = None
         self._server_username = None
-        events.emit_main_thread("server-disconnect", self._manual_server_disconnect)
+
+        events.emit_main_thread(
+            "server-disconnect",
+            ServerDisconnect(manual_disconnect=self._manual_server_disconnect)
+        )
 
     def _send_message_to_server(self, msg):
         self._process_outgoing_messages([msg])
@@ -2389,6 +2399,10 @@ class NetworkThread(Thread):
             self._manual_server_disconnect = True
             self._close_connection(self._server_conn)
 
+        elif msg_class is ServerReconnect:
+            self._manual_server_reconnect = True
+            self._close_connection(self._server_conn)
+
         elif msg_class is DownloadFile:
             conn = self._conns.get(msg.sock)
 
@@ -2702,7 +2716,10 @@ class NetworkThread(Thread):
             if not self._should_process_queue:
                 if self._server_timeout_time and (self._server_timeout_time - current_time) <= 0:
                     self._server_timeout_time = None
-                    events.emit_main_thread("server-reconnect")
+                    events.emit_main_thread(
+                        "server-reconnect",
+                        ServerReconnect(manual_reconnect=self._manual_server_reconnect)
+                    )
 
                 time.sleep(self.SLEEP_MAX_IDLE)
                 continue
