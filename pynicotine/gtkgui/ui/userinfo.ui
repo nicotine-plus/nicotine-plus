@@ -76,7 +76,6 @@
                                         <child>
                                           <object class="GtkImage" id="country_icon">
                                             <property name="can-focus">True</property>
-                                            <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                             <property name="visible">True</property>
                                           </object>
                                         </child>
