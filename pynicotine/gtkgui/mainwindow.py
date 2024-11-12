@@ -1091,7 +1091,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).present()
+            MessageDialog(parent=self, title=title, message=msg, selectable=True).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:

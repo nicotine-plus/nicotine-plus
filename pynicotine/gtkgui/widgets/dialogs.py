@@ -279,7 +279,7 @@ class MessageDialog(Window):
                 super().__init__(*args, **kwargs)
 
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
-                 buttons=None, destructive_response_id=None):
+                 buttons=None, destructive_response_id=None, selectable=False):
 
         # Prioritize non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
@@ -298,12 +298,12 @@ class MessageDialog(Window):
         if not buttons:
             buttons = [("cancel", _("Close"))]
 
-        widget = self._create_dialog(title, message, buttons)
+        widget = self._create_dialog(title, message, buttons, selectable)
         super().__init__(widget=widget)
 
         self._add_long_message(long_message)
 
-    def _create_dialog(self, title, message, buttons):
+    def _create_dialog(self, title, message, buttons, selectable):
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
         add_css_class(vbox, "dialog-vbox")
@@ -340,7 +340,7 @@ class MessageDialog(Window):
         )
         self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, visible=True
+            max_width_chars=60, selectable=selectable, visible=True
         )
 
         add_css_class(title_label, "title-2")
