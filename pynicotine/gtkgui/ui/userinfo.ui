@@ -43,76 +43,75 @@
                             <property name="margin-end">6</property>
                             <property name="margin-start">12</property>
                             <property name="margin-top">6</property>
-                            <property name="spacing">9</property>
+                            <property name="spacing">6</property>
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkLabel" id="user_label">
-                                <property name="ellipsize">end</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="selectable">True</property>
-                                <property name="single-line-mode">True</property>
-                                <property name="tooltip-text" bind-source="user_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                              <object class="GtkBox">
+                                <property name="hexpand">True</property>
+                                <property name="spacing">9</property>
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <style>
-                                  <class name="title-2"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="country_button">
-                                <property name="visible">False</property>
-                                <signal name="clicked" handler="on_show_ip_address"/>
                                 <child>
-                                  <object class="GtkBox">
-                                    <property name="spacing">8</property>
+                                  <object class="GtkLabel" id="user_label">
+                                    <property name="ellipsize">end</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="selectable">True</property>
+                                    <property name="single-line-mode">True</property>
+                                    <property name="tooltip-text" bind-source="user_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
                                     <property name="visible">True</property>
-                                    <child>
-                                      <object class="GtkImage" id="country_icon">
-                                        <property name="can-focus">True</property>
-                                        <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
-                                        <property name="visible">True</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="country_label">
-                                        <property name="ellipsize">end</property>
-                                        <property name="mnemonic-widget">country_button</property>
-                                        <property name="visible">True</property>
-                                      </object>
-                                    </child>
+                                    <property name="xalign">0</property>
+                                    <style>
+                                      <class name="title-2"/>
+                                    </style>
                                   </object>
                                 </child>
-                                <style>
-                                  <class name="circular"/>
-                                  <class name="count"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="halign">end</property>
-                                <property name="hexpand">True</property>
-                                <property name="valign">start</property>
-                                <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkButton" id="edit_profile_button">
-                                    <property name="tooltip-text" translatable="yes">Edit Profile</property>
-                                    <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_edit_profile"/>
+                                  <object class="GtkButton" id="country_button">
+                                    <property name="visible">False</property>
+                                    <signal name="clicked" handler="on_show_ip_address"/>
                                     <child>
-                                      <object class="GtkImage">
-                                        <property name="icon-name">document-edit-symbolic</property>
+                                      <object class="GtkBox">
+                                        <property name="spacing">8</property>
                                         <property name="visible">True</property>
+                                        <child>
+                                          <object class="GtkImage" id="country_icon">
+                                            <property name="can-focus">True</property>
+                                            <property name="tooltip-text" bind-source="country_label" bind-property="label" bind-flags="bidirectional|sync-create"/>
+                                            <property name="visible">True</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="country_label">
+                                            <property name="ellipsize">end</property>
+                                            <property name="mnemonic-widget">country_button</property>
+                                            <property name="visible">True</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                     <style>
                                       <class name="circular"/>
-                                      <class name="image-button"/>
+                                      <class name="count"/>
                                     </style>
                                   </object>
                                 </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="edit_profile_button">
+                                <property name="tooltip-text" translatable="yes">Edit Profile</property>
+                                <property name="visible">True</property>
+                                <signal name="clicked" handler="on_edit_profile"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="icon-name">document-edit-symbolic</property>
+                                    <property name="visible">True</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="circular"/>
+                                  <class name="image-button"/>
+                                </style>
                               </object>
                             </child>
                           </object>
