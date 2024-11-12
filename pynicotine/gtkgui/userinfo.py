@@ -633,7 +633,7 @@ class UserInfo:
         country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
 
         self.country_label.set_text(country_name)
-        self.country_label.set_tooltip_text(country_name)
+        self.country_label.set_tooltip_text(f"{country_name} ({country_code})")
 
         icon_name = get_flag_icon_name(country_code)
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
