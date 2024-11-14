@@ -25,30 +25,32 @@ def install_pacman():
     """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH", "x86_64")
-    prefix = f"mingw-w64-{arch}-"
-    mingw_type = "mingw32" if arch == "i686" else "mingw64"
-    gtk_version = os.environ.get("NICOTINE_GTK_VERSION", "4")
-    use_libadwaita = (gtk_version == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1")
 
-    packages = [f"{prefix}ca-certificates",
-                f"{prefix}gettext-tools",
-                f"{prefix}gtk{gtk_version}",
-                f"{prefix}python-build",
-                f"{prefix}python-cx-freeze",
-                f"{prefix}python-pycodestyle",
-                f"{prefix}python-pylint",
-                f"{prefix}python-gobject"]
+    if arch == "arm64":
+        prefix = "mingw-w64-clang-aarch64"
+        mingw_type = "clangarm64"
+    else:
+        prefix = "mingw-w64-x86_64"
+        mingw_type = "mingw64"
 
-    if gtk_version == "3":
-        packages.append(f"{prefix}gspell")
-
-    if use_libadwaita:
-        packages.append(f"{prefix}libadwaita")
+    packages = [f"{prefix}-ca-certificates",
+                f"{prefix}-gettext-tools",
+                f"{prefix}-gtk4",
+                f"{prefix}-libadwaita",
+                f"{prefix}-python-build",
+                f"{prefix}-python-cx-freeze",
+                f"{prefix}-python-gobject",
+                f"{prefix}-python-pycodestyle",
+                f"{prefix}-python-pylint",
+                f"{prefix}-python-setuptools",
+                f"{prefix}-python-wheel",
+                f"{prefix}-webp-pixbuf-loader"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
-    # Downgrade GTK for now due to regression in scrolling performance
-    downgrade_packages = [f"{prefix}gtk4-4.14.3-1-any.pkg.tar.zst"]
+    # Downgrade libadwaita for now due to dark mode not being applied on startup
+    # https://gitlab.gnome.org/GNOME/libadwaita/-/issues/932
+    downgrade_packages = [f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"]
 
     for package in downgrade_packages:
         subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])

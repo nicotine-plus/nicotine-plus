@@ -143,32 +143,37 @@ class Transfers:
                 "user": {
                     "column_type": "text",
                     "title": _("User"),
-                    "width": 200
+                    "width": 200,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "path": {
                     "column_type": "text",
                     "title": self.path_label,
                     "width": 200,
                     "expand_column": True,
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_file_path_tooltip,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "file_type": {
                     "column_type": "icon",
                     "title": _("File Type"),
                     "width": 40,
-                    "hide_header": True
+                    "hide_header": True,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "filename": {
                     "column_type": "text",
                     "title": _("Filename"),
                     "width": 200,
                     "expand_column": True,
-                    "tooltip_callback": self.on_file_path_tooltip
+                    "tooltip_callback": self.on_file_path_tooltip,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "status": {
                     "column_type": "text",
                     "title": _("Status"),
-                    "width": 140
+                    "width": 140,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "queue_position": {
                     "column_type": "number",
@@ -179,31 +184,36 @@ class Transfers:
                 "percent": {
                     "column_type": "progress",
                     "title": _("Percent"),
-                    "width": 90
+                    "width": 90,
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "size": {
                     "column_type": "number",
                     "title": _("Size"),
                     "width": 180,
-                    "sort_column": "size_data"
+                    "sort_column": "size_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "speed": {
                     "column_type": "number",
                     "title": _("Speed"),
                     "width": 100,
-                    "sort_column": "speed_data"
+                    "sort_column": "speed_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "time_elapsed": {
                     "column_type": "number",
                     "title": _("Time Elapsed"),
                     "width": 140,
-                    "sort_column": "time_elapsed_data"
+                    "sort_column": "time_elapsed_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
                 "time_left": {
                     "column_type": "number",
                     "title": _("Time Left"),
                     "width": 140,
-                    "sort_column": "time_left_data"
+                    "sort_column": "time_left_data",
+                    "sensitive_column": "is_sensitive_data"
                 },
 
                 # Hidden data columns
@@ -211,11 +221,12 @@ class Transfers:
                 "current_bytes_data": {"data_type": GObject.TYPE_UINT64},
                 "speed_data": {"data_type": GObject.TYPE_UINT64},
                 "queue_position_data": {"data_type": GObject.TYPE_UINT},
-                "time_elapsed_data": {"data_type": int},
+                "time_elapsed_data": {"data_type": GObject.TYPE_INT},
                 "time_left_data": {"data_type": GObject.TYPE_UINT64},
+                "is_sensitive_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "transfer_data": {"data_type": GObject.TYPE_PYOBJECT},
                 "id_data": {
-                    "data_type": GObject.TYPE_UINT64,
+                    "data_type": GObject.TYPE_INT,
                     "default_sort_type": "ascending",
                     "iterator_key": True
                 }
@@ -412,7 +423,7 @@ class Transfers:
 
                 if not has_disabled_sorting:
                     # Optimization: disable sorting while adding rows
-                    self.tree_view.disable_sorting()
+                    self.tree_view.freeze()
                     has_disabled_sorting = True
 
         if update_parent:
@@ -422,7 +433,7 @@ class Transfers:
             self.update_num_users_files()
 
         if has_disabled_sorting:
-            self.tree_view.enable_sorting()
+            self.tree_view.unfreeze()
 
         if not self.initialized:
             self.on_expand_tree()
@@ -563,37 +574,59 @@ class Transfers:
             current_byte_offset = UINT64_LIMIT
 
         should_update_size = False
+        column_ids = []
+        column_values = []
 
         if transfer.status != parent_status:
-            self.tree_view.set_row_value(iterator, "status", self.translate_status(parent_status))
+            column_ids.append("status")
+            column_values.append(self.translate_status(parent_status))
+
+            if parent_status == TransferStatus.USER_LOGGED_OFF:
+                column_ids.append("is_sensitive_data")
+                column_values.append(False)
+
+            elif transfer.status == TransferStatus.USER_LOGGED_OFF:
+                column_ids.append("is_sensitive_data")
+                column_values.append(True)
+
             transfer.status = parent_status
 
         if transfer.speed != speed:
-            self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
-            self.tree_view.set_row_value(iterator, "speed_data", speed)
+            column_ids.extend(("speed", "speed_data"))
+            column_values.extend((self.get_hspeed(speed), speed))
+
             transfer.speed = speed
 
         if transfer.time_elapsed != elapsed:
             left = (total_size - current_byte_offset) / speed if speed and total_size > current_byte_offset else 0
-            self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
-            self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
-            self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
-            self.tree_view.set_row_value(iterator, "time_left_data", left)
+            column_ids.extend(("time_elapsed", "time_left", "time_elapsed_data", "time_left_data"))
+            column_values.extend((self.get_helapsed(elapsed), self.get_hleft(left), elapsed, left))
+
             transfer.time_elapsed = elapsed
 
         if transfer.current_byte_offset != current_byte_offset:
-            self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
+            column_ids.append("current_bytes_data")
+            column_values.append(current_byte_offset)
+
             transfer.current_byte_offset = current_byte_offset
             should_update_size = True
 
         if transfer.size != total_size:
-            self.tree_view.set_row_value(iterator, "size_data", total_size)
+            column_ids.append("size_data")
+            column_values.append(total_size)
+
             transfer.size = total_size
             should_update_size = True
 
         if should_update_size:
-            self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, total_size))
-            self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, total_size))
+            column_ids.extend(("percent", "size"))
+            column_values.extend((
+                self.get_percent(current_byte_offset, total_size),
+                self.get_hsize(current_byte_offset, total_size)
+            ))
+
+        if column_ids:
+            self.tree_view.set_row_values(iterator, column_ids, column_values)
 
     def update_specific(self, transfer, select_parent=False, use_reverse_file_path=True):
 
@@ -615,35 +648,53 @@ class Transfers:
         # Modify old transfer
         if iterator and iterator not in self.PENDING_ITERATORS:
             should_update_size = False
+            old_translated_status = self.tree_view.get_row_value(iterator, "status")
+            column_ids = []
+            column_values = []
 
-            if self.tree_view.get_row_value(iterator, "status") != translated_status:
-                self.tree_view.set_row_value(iterator, "status", translated_status)
+            if old_translated_status != translated_status:
+                column_ids.append("status")
+                column_values.append(translated_status)
+
+                if transfer.status == TransferStatus.USER_LOGGED_OFF:
+                    column_ids.append("is_sensitive_data")
+                    column_values.append(False)
+
+                elif old_translated_status == _("User logged off"):
+                    column_ids.append("is_sensitive_data")
+                    column_values.append(True)
 
             if self.tree_view.get_row_value(iterator, "speed_data") != speed:
-                self.tree_view.set_row_value(iterator, "speed", self.get_hspeed(speed))
-                self.tree_view.set_row_value(iterator, "speed_data", speed)
+                column_ids.extend(("speed", "speed_data"))
+                column_values.extend((self.get_hspeed(speed), speed))
 
             if self.tree_view.get_row_value(iterator, "time_elapsed_data") != elapsed:
-                self.tree_view.set_row_value(iterator, "time_elapsed", self.get_helapsed(elapsed))
-                self.tree_view.set_row_value(iterator, "time_left", self.get_hleft(left))
-                self.tree_view.set_row_value(iterator, "time_elapsed_data", elapsed)
-                self.tree_view.set_row_value(iterator, "time_left_data", left)
+                column_ids.extend(("time_elapsed", "time_left", "time_elapsed_data", "time_left_data"))
+                column_values.extend((self.get_helapsed(elapsed), self.get_hleft(left), elapsed, left))
 
             if self.tree_view.get_row_value(iterator, "current_bytes_data") != current_byte_offset:
-                self.tree_view.set_row_value(iterator, "current_bytes_data", current_byte_offset)
+                column_ids.append("current_bytes_data")
+                column_values.append(current_byte_offset)
                 should_update_size = True
 
             if self.tree_view.get_row_value(iterator, "size_data") != size:
-                self.tree_view.set_row_value(iterator, "size_data", size)
+                column_ids.append("size_data")
+                column_values.append(size)
                 should_update_size = True
 
             if self.tree_view.get_row_value(iterator, "queue_position_data") != queue_position:
-                self.tree_view.set_row_value(iterator, "queue_position", self.get_hqueue_position(queue_position))
-                self.tree_view.set_row_value(iterator, "queue_position_data", queue_position)
+                column_ids.extend(("queue_position", "queue_position_data"))
+                column_values.extend((self.get_hqueue_position(queue_position), queue_position))
 
             if should_update_size:
-                self.tree_view.set_row_value(iterator, "percent", self.get_percent(current_byte_offset, size))
-                self.tree_view.set_row_value(iterator, "size", self.get_hsize(current_byte_offset, size))
+                column_ids.extend(("percent", "size"))
+                column_values.extend((
+                    self.get_percent(current_byte_offset, size),
+                    self.get_hsize(current_byte_offset, size)
+                ))
+
+            if column_ids:
+                self.tree_view.set_row_values(iterator, column_ids, column_values)
 
             return False
 
@@ -658,6 +709,7 @@ class Transfers:
         user = transfer.username
         folder_path, _separator, basename = transfer.virtual_path.rpartition("\\")
         original_folder_path = folder_path = self.get_transfer_folder_path(transfer)
+        is_sensitive = (status != TransferStatus.USER_LOGGED_OFF)
 
         if use_reverse_file_path:
             parts = folder_path.split(self.path_separator)
@@ -695,13 +747,14 @@ class Transfers:
                         empty_int,
                         empty_int,
                         empty_int,
+                        is_sensitive,
                         Transfer(user, status=status),  # Dummy Transfer object
                         self.row_id
                     ], select_row=False
                 )
 
                 if expand_allowed:
-                    expand_user = self.expand_button.get_active() or self.grouping_mode == "folder_grouping"
+                    expand_user = self.grouping_mode == "folder_grouping" or self.expand_button.get_active()
 
                 self.row_id += 1
                 self.users[user] = (iterator, [])
@@ -741,6 +794,7 @@ class Transfers:
                             empty_int,
                             empty_int,
                             empty_int,
+                            is_sensitive,
                             path_transfer,
                             self.row_id
                         ], select_row=False, parent_iterator=user_iterator
@@ -788,6 +842,7 @@ class Transfers:
             queue_position,
             elapsed,
             left,
+            is_sensitive,
             transfer,
             self.row_id
         ], select_row=False, parent_iterator=parent_iterator)
@@ -1102,7 +1157,8 @@ class Transfers:
                 "queue_position": transfer.queue_position,
                 "speed": speed,
                 "size": file_size,
-                "file_attributes": file_attributes
+                "file_attributes": file_attributes,
+                "country_code": core.users.countries.get(username)
             })
 
         if data:

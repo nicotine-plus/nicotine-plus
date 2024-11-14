@@ -587,7 +587,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="icon-name">tools-check-spelling-symbolic</property>
+                        <property name="icon-name">object-select-symbolic</property>
                         <property name="visible">True</property>
                       </object>
                     </child>

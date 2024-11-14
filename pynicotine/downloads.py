@@ -525,12 +525,21 @@ class Downloads(Transfers):
         if not self._allow_saving_transfers:
             return
 
+        incomplete_download_folder_path = self.get_incomplete_download_folder()
+
+        if not incomplete_download_folder_path.startswith(config.data_folder_path):
+            # Only delete incomplete downloads inside Nicotine+'s data folder
+            return
+
         allowed_incomplete_file_paths = {
             encode_path(self.get_incomplete_download_file_path(transfer.username, transfer.virtual_path))
             for transfer in self.transfers.values()
             if transfer.current_byte_offset and transfer.status != TransferStatus.FINISHED
         }
-        incomplete_download_folder_path = self.get_incomplete_download_folder()
+        prefix = b"INCOMPLETE"
+        prefix_len = len(prefix)
+        md5_len = 32
+        md5_regex = re.compile(b"[0-9a-f]{32}", re.IGNORECASE)
 
         try:
             with os.scandir(encode_path(incomplete_download_folder_path)) as entries:
@@ -539,6 +548,14 @@ class Downloads(Transfers):
                         continue
 
                     if entry.path in allowed_incomplete_file_paths:
+                        continue
+
+                    basename = entry.name
+
+                    # Skip files that are not incomplete downloads
+                    if (not basename.startswith(prefix)
+                            or len(basename) <= (prefix_len + md5_len)
+                            or not md5_regex.match(basename[prefix_len:prefix_len + md5_len])):
                         continue
 
                     # Incomplete file no longer has a download associated with it. Delete it.
@@ -901,19 +918,17 @@ class Downloads(Transfers):
             return
 
         # No need to check transfers on away status change
-        if username not in self._online_users:
-            for download in self.failed_users.get(username, {}).copy().values():
-                if download.status != TransferStatus.USER_LOGGED_OFF:
-                    # Only a online/away status update, no transfers to resume
-                    break
+        if username in self._online_users:
+            return
 
-                # User logged in, resume "User logged off" transfers
-                self._unfail_transfer(download)
+        # User logged in, resume "User logged off" transfers
+        for download in self.failed_users.get(username, {}).copy().values():
+            self._unfail_transfer(download)
 
-                if self._enqueue_transfer(download):
-                    self._update_transfer(download)
+            if self._enqueue_transfer(download):
+                self._update_transfer(download)
 
-            self._online_users.add(username)
+        self._online_users.add(username)
 
     def _set_connection_stats(self, download_bandwidth=0, **_unused):
         self.total_bandwidth = download_bandwidth

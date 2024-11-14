@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import time
 
 import gi.module
@@ -88,7 +87,6 @@ class TreeView:
         self._initialise_columns(columns)
 
         Accelerator("<Primary>c", self.widget, self.on_copy_cell_data_accelerator)
-        Accelerator("<Primary>a", self.widget, self.on_select_all)
         Accelerator("<Primary>f", self.widget, self.on_start_search)
 
         Accelerator("Left", self.widget, self.on_collapse_row_accelerator)
@@ -130,13 +128,6 @@ class TreeView:
         self.widget.set_search_equal_func(self.on_search_match)
 
         add_css_class(self.widget, "treeview-spacing")
-
-        if GTK_API_VERSION >= 4 and sys.platform == "darwin":
-            # Workaround to restore Cmd-click behavior on macOS
-            gesture_click = Gtk.GestureClick()
-            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect("pressed", self.on_treeview_click_gtk4_darwin)
-            self.widget.add_controller(gesture_click)  # pylint: disable=no-member
 
     def destroy(self):
 
@@ -241,13 +232,13 @@ class TreeView:
                 column_type = column_data.get("column_type")
 
                 if column_type == "progress":
-                    data_type = int
+                    data_type = GObject.TYPE_INT
 
                 elif column_type == "toggle":
-                    data_type = bool
+                    data_type = GObject.TYPE_BOOLEAN
 
                 else:
-                    data_type = str
+                    data_type = GObject.TYPE_STRING
 
             self._column_ids[column_id] = column_index
             self._data_types.append(data_type)
@@ -484,41 +475,51 @@ class TreeView:
         else:
             column_config[self._widget_name] = saved_columns
 
-    def disable_sorting(self):
+    def freeze(self):
         self.model.set_sort_column_id(Gtk.TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, Gtk.SortType.ASCENDING)
 
-    def enable_sorting(self):
+    def unfreeze(self):
         if self._sort_column is not None and self._sort_type is not None:
             self.model.set_sort_column_id(self._sort_column, self._sort_type)
 
     def set_show_expanders(self, show):
         self.widget.set_show_expanders(show)
 
-    def add_row(self, values, select_row=True, prepend=False, parent_iterator=None):
+    def add_row(self, values, select_row=True, parent_iterator=None):
 
-        position = 0 if prepend else -1
-        values = values[:]
         key = values[self._iterator_key_column]
 
         if key in self.iterators:
             return None
 
-        for i, gvalue in self._column_gvalues.items():
-            value = values[i]
+        position = 0  # Insert at the beginning for large performance improvement
+        value_columns = []
+        included_values = []
 
-            if value > 2147483647:
+        for index, value in enumerate(values):
+            if not value and index is not self._sort_column:
+                # Skip empty values if not active sort column to avoid unnecessary work
+                continue
+
+            if index in self._column_gvalues:
                 # Need gvalue conversion for large integers
-                gvalue.set_value(value)
-                values[i] = gvalue
+                gvalue = self._column_gvalues[index]
+                gvalue.set_value(value or 0)
+                value = gvalue
+
+            value_columns.append(index)
+            included_values.append(value)
 
         if self.has_tree:
             self.iterators[key] = iterator = self.model.insert_with_values(
-                parent_iterator, position, self._column_numbers, values
+                parent_iterator, position, value_columns, included_values
             )
         else:
-            self.iterators[key] = iterator = self.model.insert_with_values(position, self._column_numbers, values)
+            self.iterators[key] = iterator = self.model.insert_with_values(
+                position, value_columns, included_values
+            )
 
-        self._iterator_keys[iterator.user_data] = key
+        self._iterator_keys[iterator] = key
 
         if select_row:
             self.select_row(iterator)
@@ -551,7 +552,7 @@ class TreeView:
 
         column_index = self._column_ids[column_id]
 
-        if column_index in self._column_gvalues and value > 2147483647:
+        if column_index in self._column_gvalues:
             # Need gvalue conversion for large integers
             gvalue = self._column_gvalues[column_index]
             gvalue.set_value(value)
@@ -559,8 +560,25 @@ class TreeView:
 
         return self.model.set_value(iterator, column_index, value)
 
+    def set_row_values(self, iterator, column_ids, values):
+
+        value_columns = []
+
+        for index, column_id in enumerate(column_ids):
+            column_index = self._column_ids[column_id]
+
+            if column_index in self._column_gvalues:
+                # Need gvalue conversion for large integers
+                gvalue = self._column_gvalues[column_index]
+                gvalue.set_value(values[index])
+                values[index] = gvalue
+
+            value_columns.append(column_index)
+
+        return self.model.set(iterator, value_columns, values)
+
     def remove_row(self, iterator):
-        del self.iterators[self._iterator_keys[iterator.user_data]]
+        del self.iterators[self._iterator_keys[iterator]]
         self.model.remove(iterator)
 
     def select_row(self, iterator=None, expand_rows=True, should_scroll=True):
@@ -644,11 +662,13 @@ class TreeView:
     def clear(self):
 
         self.widget.set_model(None)
+        self.freeze()
 
         self.model.clear()
         self.iterators.clear()
         self._iterator_keys.clear()
 
+        self.unfreeze()
         self.widget.set_model(self.model)
 
     @staticmethod
@@ -757,7 +777,7 @@ class TreeView:
                 ("$" + title, None)
             )
             menu.update_model()
-            menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
+            menu.actions[title].set_state(GLib.Variant.new_boolean(column in visible_columns))
 
             if column in visible_columns:
                 menu.actions[title].set_enabled(len(visible_columns) > 1)
@@ -815,9 +835,9 @@ class TreeView:
             if column_data["column_type"] not in accepted_column_types:
                 continue
 
-            column_value = model.get_value(iterator, column_index).lower()
+            column_value = model.get_value(iterator, column_index)
 
-            if search_term.lower() in column_value:
+            if column_value and search_term.lower() in column_value.lower():
                 return False
 
         return True
@@ -852,36 +872,6 @@ class TreeView:
         tooltip.set_text(value)
         return True
 
-    def on_treeview_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y, *_args):
-
-        event = controller.get_last_event()
-        cmd_mask = 16
-
-        if not event.get_modifier_state() & cmd_mask:
-            return False
-
-        widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)  # pylint: disable=no-member
-
-        if not isinstance(widget, Gtk.TreeView):
-            return False
-
-        bin_x, bin_y = widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-        pathinfo = widget.get_path_at_pos(bin_x, bin_y)
-
-        if pathinfo is None:
-            return False
-
-        selection = widget.get_selection()
-        path, _column, _cell_x, _cell_y = pathinfo
-
-        if selection.path_is_selected(path):
-            selection.unselect_path(path)
-        else:
-            selection.select_path(path)
-
-        controller.set_state(Gtk.EventSequenceState.CLAIMED)
-        return True
-
     def on_copy_cell_data_accelerator(self, *_args):
         """Ctrl+C: copy cell data."""
 
@@ -902,17 +892,10 @@ class TreeView:
         clipboard.copy_text(value)
         return True
 
-    def on_select_all(self, *_args):
-        """Ctrl+A: select all rows."""
-
-        self.select_all_rows()
-        return True
-
     def on_start_search(self, *_args):
         """Ctrl+F: start search."""
 
         self.widget.emit("start-interactive-search")
-        return True
 
     def on_collapse_row_accelerator(self, *_args):
         """Left: collapse row."""
@@ -976,8 +959,8 @@ def create_grouping_menu(window, active_mode, callback):
     menuitem = Gio.MenuItem.new(_("Group by User"), f"win.{action_id}::user_grouping")
     menu.append_item(menuitem)
 
-    state = GLib.Variant("s", active_mode)
-    action = Gio.SimpleAction(name=action_id, parameter_type=GLib.VariantType("s"), state=state)
+    state = GLib.Variant.new_string(active_mode)
+    action = Gio.SimpleAction(name=action_id, parameter_type=state.get_type(), state=state)
     action.connect("change-state", callback)
 
     window.add_action(action)

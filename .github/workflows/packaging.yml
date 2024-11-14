@@ -41,7 +41,7 @@ jobs:
       matrix:
         arch: [x86_64]
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-46
+      image: bilelmoussaoui/flatpak-github-actions:gnome-47
       options: --privileged
     steps:
       - name: Checkout code
@@ -82,13 +82,12 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            prefix: mingw-w64-x86_64
     defaults:
       run:
         shell: msys2 {0}
-    env:
-      NICOTINE_GTK_VERSION: 4
-      NICOTINE_LIBADWAITA: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -96,19 +95,22 @@ jobs:
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: mingw64
           release: false
           update: true
           install: >-
-            mingw-w64-${{ matrix.arch }}-ca-certificates
-            mingw-w64-${{ matrix.arch }}-gettext-tools
-            mingw-w64-${{ matrix.arch }}-gtk${{ env.NICOTINE_GTK_VERSION }}
-            mingw-w64-${{ matrix.arch }}-libadwaita
-            mingw-w64-${{ matrix.arch }}-python-build
-            mingw-w64-${{ matrix.arch }}-python-cx-freeze
-            mingw-w64-${{ matrix.arch }}-python-pycodestyle
-            mingw-w64-${{ matrix.arch }}-python-pylint
-            mingw-w64-${{ matrix.arch }}-python-gobject
+            ${{ matrix.prefix }}-ca-certificates
+            ${{ matrix.prefix }}-gettext-tools
+            ${{ matrix.prefix }}-gtk4
+            ${{ matrix.prefix }}-libadwaita
+            ${{ matrix.prefix }}-python-build
+            ${{ matrix.prefix }}-python-cx-freeze
+            ${{ matrix.prefix }}-python-gobject
+            ${{ matrix.prefix }}-python-pycodestyle
+            ${{ matrix.prefix }}-python-pylint
+            ${{ matrix.prefix }}-python-setuptools
+            ${{ matrix.prefix }}-python-wheel
+            ${{ matrix.prefix }}-webp-pixbuf-loader
 
       - name: Install additional dependencies
         run: python3 packaging/windows/dependencies.py
@@ -137,10 +139,7 @@ jobs:
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
-    timeout-minutes: 15
-    env:
-      NICOTINE_GTK_VERSION: 4
-      NICOTINE_LIBADWAITA: 1
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -155,9 +154,7 @@ jobs:
           python3.12 -m venv venv
 
       - name: Install build dependencies
-        run: |
-          brew update
-          venv/bin/python3 packaging/macos/dependencies.py
+        run: venv/bin/python3 packaging/macos/dependencies.py
 
       - name: Freeze application
         run: venv/bin/python3 packaging/macos/setup.py bdist_dmg

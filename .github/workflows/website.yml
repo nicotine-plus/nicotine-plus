@@ -3,6 +3,7 @@ name: Website
 on:
   push:
     branches: ["master"]
+    paths: ["*.md"]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -19,6 +20,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.repository == 'nicotine-plus/nicotine-plus'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -38,7 +40,6 @@ jobs:
           cp AUTHORS.md $WEBSITE_ROOT/
           cp README.md $WEBSITE_ROOT/
           cp NEWS.md $WEBSITE_ROOT/
-          cp TRANSLATORS.md $WEBSITE_ROOT/
           cp data/icons/icon.svg $WEBSITE_ROOT/data/icons/
 
       - name: Build with Jekyll

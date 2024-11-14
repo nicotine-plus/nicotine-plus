@@ -25,7 +25,7 @@ try:
 except ImportError:
     from hashlib import md5
 
-from locale import strxfrm
+from operator import itemgetter
 from random import randint
 from socket import inet_aton
 from socket import inet_ntoa
@@ -148,15 +148,6 @@ class CloseConnection(InternalMessage):
 
     def __init__(self, sock=None):
         self.sock = sock
-
-
-class CloseConnectionIP(InternalMessage):
-    """Sent to the networking thread to close any connections using a certain IP address."""
-
-    __slots__ = ("addr",)
-
-    def __init__(self, addr=None):
-        self.addr = addr
 
 
 class ServerConnect(InternalMessage):
@@ -464,6 +455,9 @@ class FileListMessage(SlskMessage):
     @staticmethod
     def parse_file_attributes(attributes):
 
+        if attributes is None:
+            attributes = {}
+
         try:
             bitrate = attributes.get(FileAttribute.BITRATE)
             length = attributes.get(FileAttribute.DURATION)
@@ -652,7 +646,7 @@ class Login(ServerMessage):
     """
 
     __slots__ = ("username", "passwd", "version", "minorversion", "success", "reason",
-                 "banner", "ip_address", "local_address", "is_supporter")
+                 "banner", "ip_address", "local_address", "server_address", "is_supporter")
     __excluded_attrs__ = {"passwd"}
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
@@ -665,6 +659,7 @@ class Login(ServerMessage):
         self.banner = None
         self.ip_address = None
         self.local_address = None
+        self.server_address = None
         self.is_supporter = None
 
     def make_network_message(self):
@@ -3180,12 +3175,12 @@ class SharedFileListResponse(PeerMessage):
                 files.append((code, name, size, ext, attrs))
 
             if nfiles > 1:
-                files.sort(key=lambda x: strxfrm(x[1]))
+                files.sort(key=itemgetter(1))
 
             shares.append((directory, files))
 
         if ndir > 1:
-            shares.sort(key=lambda x: strxfrm(x[0]))
+            shares.sort(key=itemgetter(0))
 
         return pos, shares
 
@@ -3318,7 +3313,7 @@ class FileSearchResponse(PeerMessage):
             results.append((code, name.replace("/", "\\"), size, ext, attrs))
 
         if nfiles > 1:
-            results.sort(key=lambda x: strxfrm(x[1]))
+            results.sort(key=itemgetter(1))
 
         return pos, results
 
@@ -3497,7 +3492,7 @@ class FolderContentsResponse(PeerMessage):
                 folders[directory].append((code, name, size, ext, attrs))
 
             if nfiles > 1:
-                folders[directory].sort(key=lambda x: strxfrm(x[1]))
+                folders[directory].sort(key=itemgetter(1))
 
         self.list = folders
 
@@ -4029,7 +4024,6 @@ NETWORK_MESSAGE_EVENTS = {
     QueueUpload: "queue-upload",
     Recommendations: "recommendations",
     RoomList: "room-list",
-    RoomSearch: "file-search-request-server",
     RoomTickerAdd: "ticker-add",
     RoomTickerRemove: "ticker-remove",
     RoomTickerState: "ticker-state",
@@ -4047,7 +4041,6 @@ NETWORK_MESSAGE_EVENTS = {
     UserInterests: "user-interests",
     UserJoinedRoom: "user-joined-room",
     UserLeftRoom: "user-left-room",
-    UserSearch: "file-search-request-server",
     WatchUser: "watch-user",
     WishlistInterval: "set-wishlist-interval"
 }

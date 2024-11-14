@@ -237,8 +237,11 @@ class Uploads(Transfers):
         self.abort_selected_transfers()
 
     def on_ban_users(self, *_args):
+
         self.select_transfers()
-        core.uploads.ban_users(self.selected_users)
+
+        for username in self.selected_users:
+            core.network_filter.ban_user(username)
 
     def on_clear_queued(self, *_args):
         core.uploads.clear_uploads(statuses={TransferStatus.QUEUED})

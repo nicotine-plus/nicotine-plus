@@ -65,6 +65,7 @@ class ChatRooms:
 
     # Trailing spaces to avoid conflict with regular rooms
     GLOBAL_ROOM_NAME = "Public "
+    ROOM_NAME_MAX_LENGTH = 24
 
     def __init__(self):
 
@@ -187,7 +188,8 @@ class ChatRooms:
         for room in self.joined_rooms.copy():
             self.remove_room(room, is_permanent)
 
-    def sanitize_room_name(self, room):
+    @classmethod
+    def sanitize_room_name(cls, room):
         """Sanitize room name according to server requirements."""
 
         # Replace non-ASCII characters
@@ -197,7 +199,7 @@ class ChatRooms:
         room = " ".join(room.split())
 
         # Limit to 24 characters
-        room = room[:24]
+        room = room[:cls.ROOM_NAME_MAX_LENGTH]
         return room
 
     def clear_room_messages(self, room):
@@ -317,11 +319,11 @@ class ChatRooms:
         room_obj = self.joined_rooms.get(msg.room)
 
         if room_obj is None:
-            self.show_room(msg.room, is_private=msg.private, switch_page=False)
-            room_obj = self.joined_rooms[msg.room]
-        else:
-            room_obj.is_private = msg.private
+            # Reject unsolicited room join messages from the server
+            core.send_message_to_server(LeaveRoom(msg.room))
+            return
 
+        room_obj.is_private = msg.private
         self.server_rooms.add(msg.room)
 
         if msg.private:

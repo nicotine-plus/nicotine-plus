@@ -64,8 +64,6 @@ import pynicotine  # noqa: E402  # pylint: disable=import-error,wrong-import-pos
 SCRIPT_NAME = "nicotine"
 MODULE_NAME = "pynicotine"
 MANIFEST_NAME = os.path.join(CURRENT_PATH, f"{SCRIPT_NAME}.manifest") if sys.platform == "win32" else None
-GTK_VERSION = os.environ.get("NICOTINE_GTK_VERSION", "4")
-USE_LIBADWAITA = GTK_VERSION == "4" and os.environ.get("NICOTINE_LIBADWAITA") == "1"
 
 # Include (almost) all standard library modules for plugins
 EXCLUDED_MODULES = UNAVAILABLE_MODULES + [
@@ -134,7 +132,7 @@ def add_pixbuf_loaders():
     add_file(file_path=temp_loaders_file, output_path="lib/pixbuf-loaders.cache")
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "lib/gdk-pixbuf-2.0/2.10.0/loaders"), output_path="lib",
-        starts_with="libpixbufloader-", ends_with=LIB_EXTENSION
+        ends_with=LIB_EXTENSION
     )
 
 
@@ -155,35 +153,26 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 def add_typelibs():
 
     required_typelibs = [
-        f"Gtk-{GTK_VERSION}",
+        "Adw-",
+        "Gtk-4",
         "Gio-",
-        f"Gdk-{GTK_VERSION}",
-        f"GdkWin32-{GTK_VERSION}",
+        "Gdk-4",
         "GLib-",
+        "Graphene-",
+        "Gsk-",
         "HarfBuzz-",
         "Pango-",
+        "PangoCairo-",
         "GObject-",
         "GdkPixbuf-",
         "cairo-",
         "GModule-",
-        "freetype2-",
-        "win32-"
+        "freetype2-"
     ]
 
-    if GTK_VERSION == "4":
-        required_typelibs += [
-            "Graphene-",
-            "Gsk-",
-            "PangoCairo-"
-        ]
-    else:
-        required_typelibs += [
-            "Atk-",
-            "Gspell-"
-        ]
-
-    if USE_LIBADWAITA:
-        required_typelibs.append("Adw-")
+    if sys.platform == "win32":
+        required_typelibs.append("GdkWin32-4")
+        required_typelibs.append("win32-")
 
     required_typelibs = tuple(required_typelibs)
     folder_path = os.path.join(SYS_BASE_PATH, "lib/girepository-1.0")
@@ -211,14 +200,12 @@ def add_gtk():
     # This also includes all dlls required by GTK
     add_files(
         folder_path=LIB_PATH, output_path="lib",
-        starts_with=f"libgtk-{GTK_VERSION}", ends_with=LIB_EXTENSION
+        starts_with="libgtk-4", ends_with=LIB_EXTENSION
     )
-
-    if USE_LIBADWAITA:
-        add_files(
-            folder_path=LIB_PATH, output_path="lib",
-            starts_with="libadwaita-", ends_with=LIB_EXTENSION
-        )
+    add_files(
+        folder_path=LIB_PATH, output_path="lib",
+        starts_with="libadwaita-", ends_with=LIB_EXTENSION
+    )
 
     # Schemas
     add_file(
@@ -239,17 +226,6 @@ def add_gtk():
     add_typelibs()
 
 
-def add_icon_packs():
-
-    required_icon_packs = (
-        "Adwaita",
-    )
-    add_files(
-        folder_path=os.path.join(SYS_BASE_PATH, "share/icons"), output_path="share/icons",
-        starts_with=required_icon_packs, ends_with=(".theme", ".svg"), recursive=True
-    )
-
-
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
     add_file(file_path=ssl_paths.openssl_cafile, output_path="lib/cert.pem")
@@ -262,13 +238,12 @@ def add_translations():
 
     add_files(
         folder_path=os.path.join(SYS_BASE_PATH, "share/locale"), output_path="share/locale",
-        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with=f"gtk{GTK_VERSION}0.mo", recursive=True
+        starts_with=tuple(i[0] for i in pynicotine.i18n.LANGUAGES), ends_with="gtk40.mo", recursive=True
     )
 
 
 # GTK
 add_gtk()
-add_icon_packs()
 
 # SSL
 add_ssl_certs()

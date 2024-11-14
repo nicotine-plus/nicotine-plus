@@ -51,6 +51,7 @@ class DownloadsTest(TestCase):
 
         core.init_components(enabled_components={"users", "downloads", "userbrowse"})
         config.sections["transfers"]["downloaddir"] = DATA_FOLDER_PATH
+        config.sections["transfers"]["incompletedir"] = DATA_FOLDER_PATH
 
         core.start()
 
@@ -309,3 +310,27 @@ class DownloadsTest(TestCase):
         self.assertEqual(transfers[2].folder_path, os.path.join("test2", "Soulseek", "folder1"))
         self.assertEqual(transfers[1].folder_path, os.path.join("test2", "Soulseek"))
         self.assertEqual(transfers[0].folder_path, os.path.join("test2", "Soulseek"))
+
+    def test_delete_stale_incomplete_downloads(self):
+        """Verify that only files matching the pattern for incomplete downloads are deleted."""
+
+        file_names = (
+            ("test_file.txt", True),
+            ("test_file.mp3", True),
+            ("INCOMPLETEsomefilename.mp3", True),
+            ("INCOMPLETE435ed7e9f07f740abf511a62c00eef6e", True),
+            ("INCOMPLETE435ed7e9f07f740abf511a62c00eef6efile.mp3", False)
+        )
+
+        for basename, _exists in file_names:
+            file_path = os.path.join(DATA_FOLDER_PATH, basename)
+
+            with open(file_path, "wb"):
+                pass
+
+            self.assertTrue(os.path.isfile(file_path))
+
+        core.downloads._delete_stale_incomplete_downloads()
+
+        for basename, exists in file_names:
+            self.assertEqual(os.path.isfile(os.path.join(DATA_FOLDER_PATH, basename)), exists)

@@ -118,7 +118,6 @@ class MainWindow(Window):
             self.interests_toolbar,
             self.log_container,
             self.log_search_bar,
-            self.log_search_entry,
             self.log_view_container,
             self.private_content,
             self.private_end,
@@ -222,10 +221,14 @@ class MainWindow(Window):
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
         # Logging
-        self.log_view = TextView(self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
-                                 parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2)
-        self.log_search_bar = TextSearchBar(self.log_view.widget, self.log_search_bar, self.log_search_entry,
-                                            controller_widget=self.log_container)
+        self.log_view = TextView(
+            self.log_view_container, auto_scroll=not config.sections["logging"]["logcollapsed"],
+            parse_urls=False, editable=False, vertical_margin=5, pixels_below_lines=2
+        )
+        self.log_search_bar = TextSearchBar(
+            self.log_view.widget, self.log_search_bar, controller_widget=self.log_container,
+            placeholder_text=_("Search log…")
+        )
 
         self.create_log_context_menu()
         events.connect("log-message", self.log_callback)
@@ -386,16 +389,16 @@ class MainWindow(Window):
             # Private Chats have a higher priority
             user = self.privatechat.highlighted_users[-1]
             notification_text = _("Private Message from %(user)s") % {"user": user}
+            self.set_urgency_hint(True)
 
         elif self.chatrooms.highlighted_rooms:
             # Allow for the possibility the username is not available
             room, user = list(self.chatrooms.highlighted_rooms.items())[-1]
             notification_text = _("Mentioned by %(user)s in Room %(room)s") % {"user": user, "room": room}
+            self.set_urgency_hint(True)
 
         elif any(is_important for is_important in self.search.unread_pages.values()):
             notification_text = _("Wishlist Results Found")
-
-        self.set_urgency_hint(bool(notification_text))
 
         if not notification_text:
             self.set_title(pynicotine.__application_name__)
@@ -468,15 +471,15 @@ class MainWindow(Window):
 
         # View
 
-        state = GLib.Variant("b", not config.sections["logging"]["logcollapsed"])
+        state = GLib.Variant.new_boolean(not config.sections["logging"]["logcollapsed"])
         action = Gio.SimpleAction(name="show-log-pane", state=state)
         action.connect("change-state", self.on_show_log_pane)
         self.add_action(action)
 
         # Search
 
-        action = Gio.SimpleAction(
-            name="search-mode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
+        state = GLib.Variant.new_string("global")
+        action = Gio.SimpleAction(name="search-mode", parameter_type=state.get_type(), state=state)
         action.connect("change-state", self.search.on_search_mode)
         self.add_action(action)
 
@@ -704,14 +707,14 @@ class MainWindow(Window):
 
         for tab_id, tab_text, tab_icon_name in (
             ("search", _("Search Files"), "system-search-symbolic"),
-            ("downloads", _("Downloads"), "document-save-symbolic"),
+            ("downloads", _("Downloads"), "folder-download-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("userbrowse", _("Browse Shares"), "folder-symbolic"),
             ("userinfo", _("User Profiles"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-unread-symbolic"),
-            ("userlist", _("Buddies"), "contact-new-symbolic"),
+            ("userlist", _("Buddies"), "system-users-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
-            ("interests", _("Interests"), "emblem-default-symbolic")
+            ("interests", _("Interests"), "face-smile-big-symbolic")
         ):
             tab = self.tabs[tab_id]
             self.notebook.append_page(tab.page, tab_text, focus_callback=tab.on_focus)
@@ -1088,7 +1091,7 @@ class MainWindow(Window):
     def update_log(self, timestamp_format, msg, title, level):
 
         if title:
-            MessageDialog(parent=self, title=title, message=msg).present()
+            MessageDialog(parent=self, title=title, message=msg, selectable=True).present()
 
         # Keep verbose debug messages out of statusbar to make it more useful
         if level not in {"transfer", "connection", "message", "miscellaneous"}:
@@ -1166,10 +1169,6 @@ class MainWindow(Window):
 
         if core.uploads.pending_shutdown:
             core.uploads.cancel_shutdown()
-
-        elif core.users.login_status == UserStatus.OFFLINE:
-            self.application.lookup_action("connect").activate()
-
         else:
             self.application.lookup_action("away").activate()
 
@@ -1209,10 +1208,11 @@ class MainWindow(Window):
             self.hide_window_button.emit("clicked")
             return
 
-        if GTK_API_VERSION >= 4:
-            self.widget.minimize()
-        else:
-            self.widget.iconify()
+        if sys.platform == "win32":
+            if GTK_API_VERSION >= 4:
+                self.widget.minimize()
+            else:
+                self.widget.iconify()
 
         super().hide()
 

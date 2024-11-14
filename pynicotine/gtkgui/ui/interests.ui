@@ -38,7 +38,7 @@
             <property name="margin-start">6</property>
             <property name="max-width-chars">30</property>
             <property name="placeholder-text" translatable="yes">Add something you like…</property>
-            <property name="primary-icon-name">non-starred-symbolic</property>
+            <property name="primary-icon-name">face-smile-big-symbolic</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_add_thing_i_like"/>
@@ -78,7 +78,7 @@
             <property name="margin-end">6</property>
             <property name="margin-start">6</property>
             <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
-            <property name="primary-icon-name">action-unavailable-symbolic</property>
+            <property name="primary-icon-name">user-trash-symbolic</property>
             <property name="visible">True</property>
             <property name="width-chars">15</property>
             <signal name="activate" handler="on_add_thing_i_dislike"/>
@@ -143,7 +143,7 @@
                         <property name="tooltip-text" translatable="yes">Refresh Recommendations</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_recommendations_clicked"/>
+                        <signal name="clicked" handler="on_refresh_recommendations"/>
                         <child>
                           <object class="GtkImage">
                             <property name="icon-name">view-refresh-symbolic</property>

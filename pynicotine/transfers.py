@@ -188,8 +188,7 @@ class Transfers:
             return None
 
         with open(transfers_file, encoding="utf-8") as handle:
-            # JSON stores file attribute types as strings, convert them back to integers with object_hook
-            return json.load(handle, object_hook=lambda d: {int(k): v for k, v in d.items()})
+            return json.load(handle)
 
     @staticmethod
     def _load_legacy_transfers_file(transfers_file):
@@ -218,8 +217,9 @@ class Transfers:
             return None
 
         if isinstance(loaded_file_attributes, dict):
-            # Found dictionary with file attributes (Nicotine+ >=3.3.0), nothing more to do
-            return loaded_file_attributes
+            # Found dictionary with file attributes (Nicotine+ >=3.3.0).
+            # JSON stores file attribute types as strings, convert them back to integers.
+            return {int(k): v for k, v in loaded_file_attributes.items()}
 
         try:
             # Check if a dictionary is represented in string format
@@ -402,6 +402,10 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.size_changed = False
 
+        # Reset last byte offset to avoid incorrect offset subtractions between
+        # previous and new transfer sessions when updating statistics
+        transfer.last_byte_offset = None
+
         if transfer.sock is not None:
             core.send_message_to_network_thread(CloseConnection(transfer.sock))
 
@@ -466,6 +470,7 @@ class Transfers:
 
         transfer.status = TransferStatus.FINISHED
         transfer.current_byte_offset = transfer.size
+        transfer.last_byte_offset = None
 
     def _auto_clear_transfer(self, transfer):
 

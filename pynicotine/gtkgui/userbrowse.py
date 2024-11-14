@@ -23,8 +23,6 @@
 
 import os
 
-from locale import strxfrm
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -420,6 +418,8 @@ class UserBrowse:
         Accelerator("<Shift>F3", self.container, self.on_search_previous_accelerator)
         Accelerator("<Primary>g", self.container, self.on_search_next_accelerator)  # Next search match
         Accelerator("<Shift><Primary>g", self.container, self.on_search_previous_accelerator)
+        Accelerator("Up", self.search_entry, self.on_search_previous_accelerator)
+        Accelerator("Down", self.search_entry, self.on_search_next_accelerator)
 
         Accelerator("<Primary>backslash", self.container, self.on_expand_accelerator)  # expand / collapse all (button)
         Accelerator("F5", self.container, self.on_refresh_accelerator)
@@ -467,18 +467,19 @@ class UserBrowse:
     def rebuild_model(self):
 
         self.clear_model()
-
-        private_size = num_private_folders = 0
         browsed_user = core.userbrowse.users[self.user]
 
+        if browsed_user.num_folders is None or browsed_user.shared_size is None:
+            return
+
         # Generate the folder tree and select first folder
-        size, num_folders = self.create_folder_tree(browsed_user.public_folders)
+        self.create_folder_tree(browsed_user.public_folders)
 
         if browsed_user.private_folders:
-            private_size, num_private_folders = self.create_folder_tree(browsed_user.private_folders, private=True)
+            self.create_folder_tree(browsed_user.private_folders, private=True)
 
-        self.num_folders_label.set_text(humanize(num_folders + num_private_folders))
-        self.share_size_label.set_text(human_size(size + private_size))
+        self.num_folders_label.set_text(humanize(browsed_user.num_folders))
+        self.share_size_label.set_text(human_size(browsed_user.shared_size))
 
         if self.expand_button.get_active():
             self.folder_tree_view.expand_all_rows()
@@ -489,37 +490,37 @@ class UserBrowse:
 
     def create_folder_tree(self, folders, private=False):
 
-        total_size = 0
-        num_folders = len(folders)
-
         if not folders:
-            return total_size, num_folders
+            return
 
-        for folder_path, files in folders.items():
-            current_path = None
+        iterators = self.folder_tree_view.iterators
+        add_row = self.folder_tree_view.add_row
+        query = self.query
+        private_template = _("[PRIVATE]  %s")
+
+        for folder_path, files in reversed(list(folders.items())):
+            current_path = parent = None
             root_processed = False
-            skip_folder = (self.query and self.query not in folder_path.lower())
+            skip_folder = (query and query not in folder_path.lower())
 
-            for _code, basename, file_size, *_unused in files:
-                if skip_folder and self.query in basename.lower():
-                    skip_folder = False
-
-                total_size += file_size
+            if skip_folder:
+                for file_info in files:
+                    if query in file_info[1].lower():
+                        skip_folder = False
 
             if skip_folder:
                 continue
 
             for subfolder in folder_path.split("\\"):
-                parent = self.folder_tree_view.iterators.get(current_path)
-
                 if not root_processed:
                     current_path = subfolder
                     root_processed = True
                 else:
-                    current_path = "\\".join([current_path, subfolder])
+                    current_path += f"\\{subfolder}"
 
-                if current_path in self.folder_tree_view.iterators:
+                if current_path in iterators:
                     # Folder was already added to tree
+                    parent = iterators[current_path]
                     continue
 
                 if not subfolder:
@@ -527,16 +528,16 @@ class UserBrowse:
                     subfolder = "\\"
 
                 if private:
-                    subfolder = _("[PRIVATE]  %s") % subfolder
+                    subfolder = private_template % subfolder
 
-                self.folder_tree_view.add_row(
+                parent = add_row(
                     [subfolder, current_path], select_row=False, parent_iterator=parent
                 )
 
-            if self.query:
+            if query:
                 self.search_folder_paths.append(folder_path)
 
-        return total_size, num_folders
+        self.search_folder_paths.reverse()
 
     def browse_queued_path(self):
 
@@ -607,7 +608,23 @@ class UserBrowse:
         self.progress_bar.pulse()
         return repeat
 
-    def set_in_progress(self):
+    def shared_file_list_progress(self, position, total):
+
+        self.indeterminate_progress = False
+
+        if total <= 0 or position <= 0:
+            fraction = 0.0
+
+        elif position < total:
+            fraction = float(position) / total
+
+        else:
+            fraction = 1.0
+            GLib.timeout_add(1000, self.set_finishing)
+
+        self.progress_bar.set_fraction(fraction)
+
+    def set_indeterminate_progress(self):
 
         self.indeterminate_progress = True
 
@@ -621,18 +638,12 @@ class UserBrowse:
         self.refresh_button.set_sensitive(False)
         self.save_button.set_sensitive(False)
 
-    def shared_file_list_progress(self, position, total):
+    def set_finishing(self):
 
-        self.indeterminate_progress = False
+        if hasattr(self, "refresh_button") and not self.refresh_button.get_sensitive():
+            self.set_indeterminate_progress()
 
-        if total <= 0 or position <= 0:
-            fraction = 0.0
-        elif position >= total:
-            fraction = 1.0
-        else:
-            fraction = float(position) / total
-
-        self.progress_bar.set_fraction(fraction)
+        return False
 
     def set_finished(self):
 
@@ -744,7 +755,7 @@ class UserBrowse:
                 return
 
         # Temporarily disable sorting for increased performance
-        self.file_list_view.disable_sorting()
+        self.file_list_view.freeze()
 
         for _code, basename, size, _ext, file_attributes, *_unused in files:
             h_size = human_size(size, config.sections["ui"]["file_size_unit"])
@@ -762,7 +773,7 @@ class UserBrowse:
                 file_attributes
             ], select_row=False)
 
-        self.file_list_view.enable_sorting()
+        self.file_list_view.unfreeze()
         self.select_search_match_files()
 
     def select_files(self):
@@ -825,11 +836,17 @@ class UserBrowse:
 
         if self.query != query:
             # New search query, rebuild result list
-            self.clear_model()
+            active_folder_path = self.active_folder_path
+
             self.query = query
             self.rebuild_model()
 
             if not self.search_folder_paths:
+                iterator = self.folder_tree_view.iterators.get(active_folder_path)
+
+                if iterator:
+                    self.folder_tree_view.select_row(iterator)
+
                 return False
 
         elif query:
@@ -961,7 +978,7 @@ class UserBrowse:
             action_button_label=_("_Upload"),
             callback=self.on_upload_folder_to_response,
             callback_data=recurse,
-            droplist=sorted(core.buddies.users, key=strxfrm)
+            droplist=sorted(core.buddies.users)
         ).present()
 
     def on_upload_folder_recursive_to(self, *_args):
@@ -1118,7 +1135,7 @@ class UserBrowse:
             message=_("Enter the name of the user you want to upload to:"),
             action_button_label=_("_Upload"),
             callback=self.on_upload_files_to_response,
-            droplist=sorted(core.buddies.users, key=strxfrm)
+            droplist=sorted(core.buddies.users)
         ).present()
 
     def on_open_file(self, *_args):
@@ -1197,7 +1214,8 @@ class UserBrowse:
                     "virtual_folder_path": selected_folder_path,
                     "speed": speed,
                     "size": file_size,
-                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data")
+                    "file_attributes": self.file_list_view.get_row_value(iterator, "file_attributes_data"),
+                    "country_code": core.users.countries.get(self.user)
                 })
 
         if data:
@@ -1334,7 +1352,7 @@ class UserBrowse:
         """Enables indeterminate progress bar mode when tab is active."""
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
-            self.set_in_progress()
+            self.set_indeterminate_progress()
 
         if core.users.login_status == UserStatus.OFFLINE:
             self.peer_connection_error()
@@ -1386,10 +1404,17 @@ class UserBrowse:
     def on_show_search(self, *_args):
 
         active = self.search_button.get_active()
-        self.search_entry_revealer.set_reveal_child(active)
 
         if active:
             self.search_entry.grab_focus()
+
+        elif not self.file_list_view.is_selection_empty():
+            self.file_list_view.grab_focus()
+
+        else:
+            self.folder_tree_view.grab_focus()
+
+        self.search_entry_revealer.set_reveal_child(active)
 
     def on_search(self, *_args):
         self.find_search_matches()
@@ -1412,7 +1437,7 @@ class UserBrowse:
         file_path = self.get_selected_file_path()
 
         self.clear_model()
-        self.set_in_progress()
+        self.set_indeterminate_progress()
 
         if self.local_permission_level:
             core.userbrowse.browse_local_shares(
@@ -1487,10 +1512,4 @@ class UserBrowse:
         """Escape - navigate out of search_entry."""
 
         self.search_button.set_active(False)
-
-        if not self.file_list_view.is_selection_empty():
-            self.file_list_view.grab_focus()
-        else:
-            self.folder_tree_view.grab_focus()
-
         return True

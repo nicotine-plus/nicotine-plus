@@ -478,7 +478,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
 def _try_open_uri(uri):
 
-    if sys.platform != "win32":
+    if sys.platform not in {"darwin", "win32"}:
         try:
             from gi.repository import Gio  # pylint: disable=import-error
             Gio.AppInfo.launch_default_for_uri(uri)
@@ -562,6 +562,9 @@ def _open_path(path, is_folder=False, create_folder=False, create_file=False):
 
         elif sys.platform == "win32":
             os.startfile(path_encoded)  # pylint: disable=no-member
+
+        elif sys.platform == "darwin":
+            execute_command("open $", path)
 
         else:
             _try_open_uri("file:///" + path)
@@ -653,6 +656,8 @@ def load_file(file_path, load_func, use_old_file=False):
 
 def write_file_and_backup(path, callback, protect=False):
 
+    from pynicotine.logfacility import log
+
     path_encoded = encode_path(path)
     path_old_encoded = encode_path(f"{path}.old")
 
@@ -665,7 +670,6 @@ def write_file_and_backup(path, callback, protect=False):
                 os.chmod(path_old_encoded, 0o600)
 
     except Exception as error:
-        from pynicotine.logfacility import log
         log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
@@ -684,8 +688,9 @@ def write_file_and_backup(path, callback, protect=False):
             file_handle.flush()
             os.fsync(file_handle.fileno())
 
+        log.add_debug("Backed up and saved file %s", path)
+
     except Exception as error:
-        from pynicotine.logfacility import log
         log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
             "error": error

@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from locale import strxfrm
-
 import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
+from pynicotine.gtkgui.widgets.theme import add_css_class
 
 
 class ChatEntry:
@@ -33,8 +32,8 @@ class ChatEntry:
 
         self.application = application
         self.widget = Gtk.Entry(
-            hexpand=True, placeholder_text=_("Send message…"), sensitive=False, show_emoji_icon=True,
-            width_chars=8, visible=True
+            hexpand=True, placeholder_text=_("Send message…"), primary_icon_name="mail-send-symbolic",
+            sensitive=False, show_emoji_icon=True, width_chars=8, visible=True
         )
         self.send_message_callback = send_message_callback
         self.command_callback = command_callback
@@ -59,8 +58,9 @@ class ChatEntry:
 
         self.widget.set_completion(self.entry_completion)
 
-        self.widget.connect("activate", self.on_enter)
+        self.widget.connect("activate", self.on_send_message)
         self.widget.connect("changed", self.on_changed)
+        self.widget.connect("icon-press", self.on_icon_pressed)
 
         Accelerator("<Shift>Tab", self.widget, self.on_tab_complete_accelerator, True)
         Accelerator("Tab", self.widget, self.on_tab_complete_accelerator)
@@ -132,7 +132,7 @@ class ChatEntry:
         if iterator is not None:
             self.model.remove(iterator)
 
-    def set_parent(self, entity, container, chat_view):
+    def set_parent(self, entity=None, container=None, chat_view=None):
 
         if self.entity:
             self.unsent_messages[self.entity] = self.widget.get_text()
@@ -141,10 +141,14 @@ class ChatEntry:
         self.chat_view = chat_view
 
         parent = self.widget.get_parent()
-        unsent_message = self.unsent_messages.get(entity, "")
 
         if parent is not None:
             parent.remove(self.widget)
+
+        if container is None:
+            return
+
+        unsent_message = self.unsent_messages.get(entity, "")
 
         if GTK_API_VERSION >= 4:
             container.append(self.widget)  # pylint: disable=no-member
@@ -170,7 +174,7 @@ class ChatEntry:
         if not self.is_completion_enabled():
             return
 
-        for word in sorted(completions, key=strxfrm):
+        for word in sorted(completions):
             word = str(word)
 
             if config_words["dropdown"]:
@@ -182,13 +186,11 @@ class ChatEntry:
 
     def set_spell_check_enabled(self, enabled):
 
-        if not enabled:
-            if self.spell_checker is not None:
-                self.spell_checker.destroy()
-                self.spell_checker = None
+        if self.spell_checker is not None:
+            self.spell_checker.set_enabled(enabled)
             return
 
-        if SpellChecker.is_available():
+        if enabled and SpellChecker.is_available():
             self.spell_checker = SpellChecker(self.widget)
 
     def set_position(self, position):
@@ -203,11 +205,12 @@ class ChatEntry:
     def set_visible(self, visible):
         self.widget.set_visible(visible)
 
-    def on_enter(self, *_args):
+    def on_send_message(self, *_args):
 
         text = self.widget.get_text().strip()
 
         if not text:
+            self.chat_view.scroll_bottom()
             return
 
         is_double_slash_cmd = text.startswith("//")
@@ -233,6 +236,10 @@ class ChatEntry:
 
         # Clear chat entry
         self.widget.set_text("")
+
+    def on_icon_pressed(self, _entry, icon_pos, *_args):
+        if icon_pos == Gtk.EntryIconPosition.PRIMARY:
+            self.on_send_message()
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -473,27 +480,51 @@ class SpellChecker:
         cls._load_module()
         return bool(SpellChecker.module)
 
+    def set_enabled(self, enabled):
+        self.entry.set_inline_spell_checking(enabled)
+
     def destroy(self):
-
-        if self.buffer:
-            self.buffer.set_spell_checker(None)
-            self.buffer = None
-
-        if self.entry:
-            self.entry.set_inline_spell_checking(False)
-            self.entry = None
-
         self.__dict__.clear()
 
 
 class TextSearchBar:
 
-    def __init__(self, textview, search_bar, entry, controller_widget=None, focus_widget=None):
+    def __init__(self, textview, search_bar, controller_widget=None, focus_widget=None,
+                 placeholder_text=None):
 
         self.textview = textview
         self.search_bar = search_bar
-        self.entry = entry
-        self.focus_widget = focus_widget or textview
+        self.focus_widget = focus_widget
+
+        container = Gtk.Box(spacing=6, visible=True)
+        self.entry = Gtk.SearchEntry(
+            max_width_chars=75, placeholder_text=placeholder_text, width_chars=24, visible=True
+        )
+        self.previous_button = Gtk.Button(tooltip_text=_("Find Previous Match"), visible=True)
+        self.next_button = Gtk.Button(tooltip_text=_("Find Next Match"), visible=True)
+
+        if GTK_API_VERSION >= 4:
+            self.previous_button.set_icon_name("go-up-symbolic")                   # pylint: disable=no-member
+            self.next_button.set_icon_name("go-down-symbolic")                     # pylint: disable=no-member
+
+            container.append(self.entry)                                           # pylint: disable=no-member
+            container.append(self.previous_button)                                 # pylint: disable=no-member
+            container.append(self.next_button)                                     # pylint: disable=no-member
+            self.search_bar.set_child(container)                                   # pylint: disable=no-member
+        else:
+            self.previous_button.set_image(Gtk.Image(icon_name="go-up-symbolic"))  # pylint: disable=no-member
+            self.next_button.set_image(Gtk.Image(icon_name="go-down-symbolic"))    # pylint: disable=no-member
+
+            container.add(self.entry)                                              # pylint: disable=no-member
+            container.add(self.previous_button)                                    # pylint: disable=no-member
+            container.add(self.next_button)                                        # pylint: disable=no-member
+            self.search_bar.add(container)                                         # pylint: disable=no-member
+
+        if not controller_widget:
+            controller_widget = textview
+
+        for button in (self.previous_button, self.next_button):
+            add_css_class(button, "flat")
 
         self.search_bar.connect_entry(self.entry)
 
@@ -503,14 +534,19 @@ class TextSearchBar:
 
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
+        self.previous_button.connect("clicked", self.on_search_previous_match)
+        self.next_button.connect("clicked", self.on_search_next_match)
 
-        if not controller_widget:
-            controller_widget = textview
-
+        Accelerator("Up", self.entry, self.on_search_previous_match)
+        Accelerator("Down", self.entry, self.on_search_next_match)
         Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
         Accelerator("Escape", controller_widget, self.on_hide_search_accelerator)
-        Accelerator("<Primary>g", controller_widget, self.on_search_next_match)
-        Accelerator("<Shift><Primary>g", controller_widget, self.on_search_previous_match)
+
+        for accelerator in ("<Primary>g", "F3"):
+            Accelerator(accelerator, controller_widget, self.on_search_next_match)
+
+        for accelerator in ("<Shift><Primary>g", "<Shift>F3"):
+            Accelerator(accelerator, controller_widget, self.on_search_previous_match)
 
     def destroy(self):
         self.__dict__.clear()
@@ -566,9 +602,11 @@ class TextSearchBar:
 
     def on_search_previous_match(self, *_args):
         self.on_search_match(search_type="previous")
+        return True
 
     def on_search_next_match(self, *_args):
         self.on_search_match(search_type="next")
+        return True
 
     def on_hide_search_accelerator(self, *_args):
         """Escape - hide search bar."""
@@ -584,10 +622,26 @@ class TextSearchBar:
 
     def set_visible(self, visible):
 
+        self.search_bar.set_search_mode(visible)
+
         if visible:
-            self.search_bar.set_search_mode(True)
+            text_buffer = self.textview.get_buffer()
+            selection_bounds = text_buffer.get_selection_bounds()
+
+            if selection_bounds:
+                selection_start, selection_end = selection_bounds
+                selection_content = text_buffer.get_text(
+                    selection_start, selection_end, include_hidden_chars=True)
+
+                if self.entry.get_text().lower() != selection_content.lower():
+                    self.entry.set_text(selection_content)
+
             self.entry.grab_focus()
+            self.entry.set_position(-1)
             return
 
-        self.search_bar.set_search_mode(False)
-        self.focus_widget.grab_focus()
+        if self.focus_widget is not None and self.focus_widget.get_sensitive():
+            self.focus_widget.grab_focus()
+            return
+
+        self.textview.grab_focus()

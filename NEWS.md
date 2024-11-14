@@ -5,7 +5,34 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.5 (Unreleased)
+## Version 3.3.6 (October 15, 2024)
+
+### Changes
+
+ * Hide picture view when no user profile picture is present
+ * GTK 4: Stop using old GL renderer
+ * Windows: Reduced package size by switching to MSYS2's Clang environment
+
+### Corrections
+
+ * Important: Don't delete other unrelated files from incomplete download folder
+ * Fixed a crash when editing and removing list rows in some cases
+ * Fixed a regression where arrow keys no longer selected items in comboboxes
+ * Minor fixes related to the tray icon implementation
+ * GTK 3: Fixed an issue where the chat text entry could disappear
+ * macOS: Fixed an issue where opening files and links no longer worked
+ * macOS: Fixed a few keyboard shortcuts that no longer worked
+
+### Issues closed on GitHub
+
+ * 'Open in File Manager' does not work on 3.3.5 in macOS Monterey ([#3143](https://github.com/nicotine-plus/nicotine-plus/issues/3143))
+ * Issues with selecting text on 3.3.5 in macOS Monterey ([#3144](https://github.com/nicotine-plus/nicotine-plus/issues/3144))
+ * Horizontal adjustment of user profile ([#2865](https://github.com/nicotine-plus/nicotine-plus/issues/2865))
+ * Files deleted on quit ([#3152](https://github.com/nicotine-plus/nicotine-plus/issues/3152))
+ * the window does not close automatically and gets in the way ([#3157](https://github.com/nicotine-plus/nicotine-plus/issues/3157))
+
+
+## Version 3.3.5 (September 22, 2024)
 
 ### Changes
 
@@ -15,8 +42,12 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * List all room members not currently joined in a private room
  * Incomplete files are now deleted when removing the download from the UI
  * Improvements to transfer speed accuracy in the UI
+ * Grey out transfer rows with 'User logged off' status
  * Quitting from the tray menu asks for confirmation while uploads are active
- * Various performance improvements
+ * Handle invalid password in Setup Assistant instead of opening the Preferences dialog
+ * Large performance improvement when listing search results or adding transfers
+ * Reduced memory and storage space used by the IP2Location database
+ * macOS and Windows: Require GTK 4 unless `NICOTINE_GTK_VERSION=3` env variable is set
 
 ### Corrections
 
@@ -25,13 +56,13 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a possible memory error when reading data from a peer connection
  * Fixed issues related to downloads getting stuck when failing
  * Fixed issues related to transfer rows expanding when not supposed to
+ * Fixed an issue where banning a user's IP did not remove their uploads
  * Fixed an issue where uploads would not start immediately in some cases
  * Fixed an issue where popovers could not be closed in some cases
  * Fixed an issue where some wishlist searches stopped working after closing their tabs
  * Fixed an issue where an auto-forwarded listening port would close when saving preferences
  * Fixed an issue where toggling search history did not update the history dropdown
- * Fixed scrolling to the bottom of lists with the End key
- * Various smaller UI-related fixes
+ * Various accessibility fixes related to scrolling, text views and entry widgets
  * Various smaller fixes related to the Soulseek protocol implementation
  * Windows: Fixed an issue where the tray icon was visible despite being disabled
  * Windows: Fixed an issue where window prevented auto-hidden taskbar from showing
@@ -45,7 +76,9 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 ### Issues closed on GitHub
 
  * Nicotine+ can't be launched from network drive on Windows ([#1843](https://github.com/nicotine-plus/nicotine-plus/issues/1843))
+ * Really varied upload speeds ([#2219](https://github.com/nicotine-plus/nicotine-plus/issues/2219))
  * Right click with control click doesn't work on mac with trackpad ([#2724](https://github.com/nicotine-plus/nicotine-plus/issues/2724))
+ * Bad user experience with Windows-like buttons on Nicotine 3.3.0 ([#2880](https://github.com/nicotine-plus/nicotine-plus/issues/2880))
  * Downloads stuck on 'Queued' ([#2926](https://github.com/nicotine-plus/nicotine-plus/issues/2926))
  * User rows expanding when collapse all enabled ([#2969](https://github.com/nicotine-plus/nicotine-plus/issues/2969))
  * Connection closed and other connectivity problems ([#2978](https://github.com/nicotine-plus/nicotine-plus/issues/2978))
@@ -59,8 +92,24 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Adding SMB share on linux results in critical error ([#3056](https://github.com/nicotine-plus/nicotine-plus/issues/3056))
  * Crash, build 8 July ([#3057](https://github.com/nicotine-plus/nicotine-plus/issues/3057))
  * Arrow key shortcuts to expand/collapse groups ([#3060](https://github.com/nicotine-plus/nicotine-plus/issues/3060))
+ * Nicotine+ crashing when trying to browse public shares (on MacOS 15 Public Beta) ([#3063](https://github.com/nicotine-plus/nicotine-plus/issues/3063))
  * Bug at the last update Version: 3.3.5.dev2 ([#3067](https://github.com/nicotine-plus/nicotine-plus/issues/3067))
  * "end" key works incorrectly at the "uploads" tab. ([#3068](https://github.com/nicotine-plus/nicotine-plus/issues/3068))
+ * Upload I/O error: cannot fit 'int' into an offset-sized integer ([#3077](https://github.com/nicotine-plus/nicotine-plus/issues/3077))
+ * critic error on 3.3.4 ([#3080](https://github.com/nicotine-plus/nicotine-plus/issues/3080))
+ * Client closes after PC waking from sleep ([#3082](https://github.com/nicotine-plus/nicotine-plus/issues/3082))
+ * Files are not shared ([#3083](https://github.com/nicotine-plus/nicotine-plus/issues/3083))
+ * Sudden Crash when loading text in the search bar ([#3087](https://github.com/nicotine-plus/nicotine-plus/issues/3087))
+ * Input history scroll ([#3106](https://github.com/nicotine-plus/nicotine-plus/issues/3106))
+ * Files get downloaded twice ([#3107](https://github.com/nicotine-plus/nicotine-plus/issues/3107))
+ * App window not showing up with Wayland/NVidia ([#3108](https://github.com/nicotine-plus/nicotine-plus/issues/3108))
+ * Nicotine+ crashes on Mac when browsing for buddy shares via Shares menu ([#3110](https://github.com/nicotine-plus/nicotine-plus/issues/3110))
+ * Leave "Wishlist" windows open/active after initiating a search & Easier method to initiate search ([#3114](https://github.com/nicotine-plus/nicotine-plus/issues/3114))
+ * crash after download try ([#3119](https://github.com/nicotine-plus/nicotine-plus/issues/3119))
+ * Wishlist result notification is emitted even when disabled ([#3123](https://github.com/nicotine-plus/nicotine-plus/issues/3123))
+ * Crash while running on background ([#3130](https://github.com/nicotine-plus/nicotine-plus/issues/3130))
+ * Cannot browse another user's files in MacOS 15.0 (24A335) ([#3134](https://github.com/nicotine-plus/nicotine-plus/issues/3134))
+ * Wrong hotkeys on mac. Should be Cmd instead of Ctrl ([#3139](https://github.com/nicotine-plus/nicotine-plus/issues/3139))
 
 
 ## Version 3.3.4 (May 6, 2024)
@@ -564,7 +613,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added text-to-speech toggle buttons for individual private chats when TTS is enabled
  * Usability improvements to several main window components and dialogs
  * Reddit and Test Replier plugins are no longer included by default, moved to examplars on [GitHub](https://github.com/nicotine-plus/nicotine-plus/tree/HEAD/pynicotine/plugins/examplars)
- * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+ * Various translation updates (thanks to our [many contributors](https://nicotine-plus.org/AUTHORS#translators) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
 
@@ -666,7 +715,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Added display of local folder paths for local items in the File Properties dialog
  * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
  * Added new Ukrainian translation (thank you @uniss2209)
- * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+ * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/AUTHORS#translators) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 ### Corrections
 

@@ -175,7 +175,7 @@ class Buddies:
         for combobox in comboboxes:
             combobox.freeze()
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
 
         for username, user_data in core.buddies.users.items():
             self.add_buddy(username, user_data, select_row=False)
@@ -183,7 +183,7 @@ class Buddies:
         for combobox in comboboxes:
             combobox.unfreeze()
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
     def destroy(self):
 
@@ -313,23 +313,32 @@ class Buddies:
 
         speed = msg.avgspeed or 0
         num_files = msg.files or 0
+        column_ids = []
+        column_values = []
 
         if speed != self.list_view.get_row_value(iterator, "speed_data"):
             h_speed = human_speed(speed) if speed > 0 else ""
 
-            self.list_view.set_row_value(iterator, "speed", h_speed)
-            self.list_view.set_row_value(iterator, "speed_data", speed)
+            column_ids.extend(("speed", "speed_data"))
+            column_values.extend((h_speed, speed))
 
         if num_files != self.list_view.get_row_value(iterator, "files_data"):
             h_num_files = humanize(num_files)
 
-            self.list_view.set_row_value(iterator, "files", h_num_files)
-            self.list_view.set_row_value(iterator, "files_data", num_files)
+            column_ids.extend(("files", "files_data"))
+            column_values.extend((h_num_files, num_files))
+
+        if column_ids:
+            self.list_view.set_row_values(iterator, column_ids, column_values)
 
     def add_buddy(self, user, user_data, select_row=True):
 
         status = user_data.status
-        country_code = user_data.country.replace("flag_", "")
+        country_code = user_data.country
+
+        if country_code:
+            country_code = country_code.replace("flag_", "")
+
         stats = core.users.watched.get(user)
 
         if stats is not None:
@@ -438,8 +447,11 @@ class Buddies:
             last_seen = time.time()
             h_last_seen = time.strftime("%x %X", time.localtime(last_seen))
 
-        self.list_view.set_row_value(iterator, "last_seen", h_last_seen)
-        self.list_view.set_row_value(iterator, "last_seen_data", last_seen)
+        self.list_view.set_row_values(
+            iterator,
+            column_ids=["last_seen", "last_seen_data"],
+            values=[h_last_seen, last_seen]
+        )
 
     def user_country(self, user, country_code):
 

@@ -243,6 +243,18 @@ class Dialog(Window):
         self.widget.set_modal(self.modal and self.parent.is_visible())
         present_callback()
 
+    def set_show_title_buttons(self, visible):
+
+        header_bar = self.widget.get_titlebar()
+
+        if header_bar is None:
+            return
+
+        if GTK_API_VERSION >= 4:
+            header_bar.set_show_title_buttons(visible)    # pylint: disable=no-member
+        else:
+            header_bar.set_show_close_button(visible)     # pylint: disable=no-member
+
     def present(self):
 
         if self not in Window.active_dialogs:
@@ -267,11 +279,11 @@ class MessageDialog(Window):
                 super().__init__(*args, **kwargs)
 
     def __init__(self, parent, title, message, callback=None, callback_data=None, long_message=None,
-                 buttons=None, destructive_response_id=None):
+                 buttons=None, destructive_response_id=None, selectable=False):
 
-        # Prioritize modal non-message dialogs as parent
+        # Prioritize non-message dialogs as parent
         for active_dialog in reversed(Window.active_dialogs):
-            if isinstance(active_dialog, Dialog) and active_dialog.modal:
+            if isinstance(active_dialog, Dialog):
                 parent = active_dialog
                 break
 
@@ -286,12 +298,12 @@ class MessageDialog(Window):
         if not buttons:
             buttons = [("cancel", _("Close"))]
 
-        widget = self._create_dialog(title, message, buttons)
+        widget = self._create_dialog(title, message, buttons, selectable)
         super().__init__(widget=widget)
 
         self._add_long_message(long_message)
 
-    def _create_dialog(self, title, message, buttons):
+    def _create_dialog(self, title, message, buttons, selectable):
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
         add_css_class(vbox, "dialog-vbox")
@@ -318,7 +330,7 @@ class MessageDialog(Window):
             add_css_class(widget, css_class)
 
         header_bar = Gtk.Box(height_request=16, visible=True)
-        box = Gtk.Box(margin_start=30, margin_end=30, spacing=30, visible=True)
+        box = Gtk.Box(margin_start=24, margin_end=24, visible=True)
         message_area = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, hexpand=True, visible=True)
         action_box = Gtk.Box(visible=True)
         action_area = Gtk.Box(hexpand=True, homogeneous=True, visible=True)
@@ -328,7 +340,7 @@ class MessageDialog(Window):
         )
         self.message_label = Gtk.Label(
             margin_bottom=2, halign=Gtk.Align.CENTER, label=message, valign=Gtk.Align.START, vexpand=True, wrap=True,
-            max_width_chars=60, visible=True
+            max_width_chars=60, selectable=selectable, visible=True
         )
 
         add_css_class(title_label, "title-2")
@@ -340,7 +352,7 @@ class MessageDialog(Window):
             widget.set_titlebar(header_bar_handle)
             widget.connect("close-request", self._on_close_request)
 
-            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, visible=True)
+            internal_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, visible=True)
 
             vbox.append(internal_vbox)                                # pylint: disable=no-member
             vbox.append(action_box)                                   # pylint: disable=no-member
@@ -540,11 +552,15 @@ class EntryDialog(OptionDialog):
 
         if GTK_API_VERSION >= 4 and not visibility:
             entry = Gtk.PasswordEntry(
-                activates_default=activates_default, show_peek_icon=True, width_chars=50, visible=True)
+                activates_default=activates_default, show_peek_icon=True,
+                width_chars=50, visible=True
+            )
+            text_widget = next(iter(entry))
+            text_widget.set_truncate_multiline(True)
         else:
             entry = Gtk.Entry(
                 activates_default=activates_default, visibility=visibility, show_emoji_icon=show_emoji_icon,
-                width_chars=50, visible=True)
+                truncate_multiline=(not visibility), width_chars=50, visible=True)
 
         if GTK_API_VERSION >= 4:
             self.entry_container.append(entry)  # pylint: disable=no-member

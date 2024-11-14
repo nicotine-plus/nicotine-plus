@@ -223,6 +223,8 @@ class PrivateChats(IconNotebook):
             return
 
         if page.container == self.get_current_page():
+            self.chat_entry.set_parent(None)
+
             if self.command_help is not None:
                 self.command_help.set_menu_button(None)
 
@@ -315,7 +317,6 @@ class PrivateChat:
             self.help_button,
             self.log_toggle,
             self.search_bar,
-            self.search_entry,
             self.speech_toggle
         ) = ui.load(scope=self, path="privatechat.ui")
 
@@ -334,8 +335,9 @@ class PrivateChat:
 
         # Text Search
         self.search_bar = TextSearchBar(
-            self.chat_view.widget, self.search_bar, self.search_entry,
-            controller_widget=self.container, focus_widget=self.chats.chat_entry
+            self.chat_view.widget, self.search_bar,
+            controller_widget=self.container, focus_widget=self.chats.chat_entry,
+            placeholder_text=_("Search chat log…")
         )
 
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])

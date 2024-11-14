@@ -93,6 +93,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("quit", self._instance.quit),
             ("server-login", self._update_user_status),
             ("server-disconnect", self._update_user_status),
@@ -132,7 +133,7 @@ class Application:
             ("connect", self.on_connect, None, True),
             ("disconnect", self.on_disconnect, None, False),
             ("soulseek-privileges", self.on_soulseek_privileges, None, False),
-            ("away", self.on_away, None, False),
+            ("away", self.on_away, None, True),
             ("away-accel", self.on_away_accelerator, None, False),
             ("message-downloading-users", self.on_message_downloading_users, None, False),
             ("message-buddies", self.on_message_buddies, None, False),
@@ -202,7 +203,7 @@ class Application:
             ("log-transfers", self.on_debug_transfers, ("transfer" in enabled_logs)),
             ("log-miscellaneous", self.on_debug_miscellaneous, ("miscellaneous" in enabled_logs))
         ):
-            action = Gio.SimpleAction(name=action_name, state=GLib.Variant("b", state))
+            action = Gio.SimpleAction(name=action_name, state=GLib.Variant.new_boolean(state))
             action.connect("change-state", callback)
             self.add_action(action)
 
@@ -237,14 +238,14 @@ class Application:
             ("win.show-log-pane", ["<Primary>l"]),
             ("win.reopen-closed-tab", ["<Primary><Shift>t"]),
             ("win.close-tab", ["<Primary>F4", "<Primary>w"]),
-            ("win.cycle-tabs", ["<Primary>Tab"]),
-            ("win.cycle-tabs-reverse", ["<Primary><Shift>Tab"]),
+            ("win.cycle-tabs", ["<Control>Tab"]),
+            ("win.cycle-tabs-reverse", ["<Control><Shift>Tab"]),
 
             # Other accelerators (logic defined elsewhere, actions only used for shortcuts dialog)
             ("accel.cut-clipboard", ["<Primary>x"]),
             ("accel.copy-clipboard", ["<Primary>c"]),
             ("accel.paste-clipboard", ["<Primary>v"]),
-            ("accel.insert-emoji", ["<Primary>period"]),
+            ("accel.insert-emoji", ["<Control>period"]),
             ("accel.select-all", ["<Primary>a"]),
             ("accel.find", ["<Primary>f"]),
             ("accel.find-next-match", ["<Primary>g"]),
@@ -273,43 +274,15 @@ class Application:
         if GTK_API_VERSION == 3 or sys.platform != "darwin":
             return
 
-        # Built-in GTK shortcuts use Ctrl key on macOS, add shortcuts that use Command key
-        for action_name, accelerators in (
-            ("gtkinternal.hide", ["<Primary>h"]),
-            ("gtkinternal.hide-others", ["<Primary><Alt>h"])
-        ):
-            self._set_accels_for_action(action_name, accelerators)
-
+        # Add some missing macOS shortcuts here until they are fixed upstream
         for widget in (Gtk.Text, Gtk.TextView):
-            for action_name, accelerator in (
-                ("clipboard.cut", "<Meta>x"),
-                ("clipboard.copy", "<Meta>c"),
-                ("clipboard.paste", "<Meta>v"),
-                ("selection.select-all", "<Meta>a"),
-                ("misc.insert-emoji", "<Meta>period"),
-                ("text.undo", "<Meta>z"),
-                ("text.redo", "<Shift><Meta>u")
-            ):
-                widget.add_shortcut(
-                    Gtk.Shortcut(
-                        trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
-                        action=Gtk.NamedAction(action_name=action_name),
-                    )
-                )
-
             for accelerator, step, count, extend in (
-                ("<Meta>Up|<Meta>KP_Up", Gtk.MovementStep.BUFFER_ENDS, -1, False),
-                ("<Shift><Meta>Up|<Shift><Meta>KP_Up", Gtk.MovementStep.BUFFER_ENDS, -1, True),
-                ("<Meta>Down|<Meta>KP_Down", Gtk.MovementStep.BUFFER_ENDS, 1, False),
-                ("<Shift><Meta>Down|<Shift><Meta>KP_Down", Gtk.MovementStep.BUFFER_ENDS, 1, True),
                 ("<Meta>Left|<Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, False),
                 ("<Shift><Meta>Left|<Shift><Meta>KP_Left", Gtk.MovementStep.DISPLAY_LINE_ENDS, -1, True),
                 ("<Meta>Right|<Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, False),
                 ("<Shift><Meta>Right|<Shift><Meta>KP_Right", Gtk.MovementStep.DISPLAY_LINE_ENDS, 1, True),
                 ("<Alt>Left|<Alt>KP_Left", Gtk.MovementStep.WORDS, -1, False),
-                ("<Shift><Alt>Left|<Shift><Alt>KP_Left", Gtk.MovementStep.WORDS, -1, True),
-                ("<Alt>Right|<Alt>KP_Right", Gtk.MovementStep.WORDS, 1, False),
-                ("<Shift><Alt>Right|<Shift><Alt>KP_Right", Gtk.MovementStep.WORDS, 1, True)
+                ("<Alt>Right|<Alt>KP_Right", Gtk.MovementStep.WORDS, 1, False)
             ):
                 widget.add_shortcut(
                     Gtk.Shortcut(
@@ -330,7 +303,7 @@ class Application:
 
         self.lookup_action("connect").set_enabled(not is_online)
 
-        for action_name in ("disconnect", "soulseek-privileges", "away-accel", "away",
+        for action_name in ("disconnect", "soulseek-privileges", "away-accel",
                             "message-downloading-users", "message-buddies"):
             self.lookup_action(action_name).set_enabled(is_online)
 
@@ -464,7 +437,10 @@ class Application:
 
         try:
             if sys.platform == "win32":
-                self.tray_icon.show_notification(title=title, message=message)
+                self.tray_icon.show_notification(
+                    title=title, message=message, action=action, action_target=action_target,
+                    high_priority=high_priority
+                )
                 return
 
             priority = Gio.NotificationPriority.HIGH if high_priority else Gio.NotificationPriority.NORMAL
@@ -481,9 +457,9 @@ class Application:
 
             # Unity doesn't support default click actions, and replaces the notification with a dialog.
             # Disable actions to prevent this from happening.
-            if action and os.environ.get("XDG_SESSION_DESKTOP") != "unity":
+            if action and os.environ.get("XDG_CURRENT_DESKTOP", "").lower() != "unity":
                 if action_target:
-                    notification.set_default_action_and_target(action, GLib.Variant("s", action_target))
+                    notification.set_default_action_and_target(action, GLib.Variant.new_string(action_target))
                 else:
                     notification.set_default_action(action)
 
@@ -496,21 +472,36 @@ class Application:
             log.add(_("Unable to show notification: %s"), error)
 
     def _show_chatroom_notification(self, room, message, title=None, high_priority=False):
+
         self._show_notification(
             message, title, action="app.chatroom-notification-activated", action_target=room,
-            high_priority=high_priority)
+            high_priority=high_priority
+        )
+
+        if high_priority:
+            self.window.set_urgency_hint(True)
 
     def _show_download_notification(self, message, title=None, high_priority=False):
+
         self._show_notification(
-            message, title, action="app.download-notification-activated", high_priority=high_priority)
+            message, title, action="app.download-notification-activated",
+            high_priority=high_priority
+        )
 
     def _show_private_chat_notification(self, user, message, title=None):
+
         self._show_notification(
-            message, title, action="app.private-chat-notification-activated", action_target=user, high_priority=True)
+            message, title, action="app.private-chat-notification-activated", action_target=user,
+            high_priority=True
+        )
+        self.window.set_urgency_hint(True)
 
     def _show_search_notification(self, search_token, message, title=None):
+
         self._show_notification(
-            message, title, action="app.search-notification-activated", action_target=search_token, high_priority=True)
+            message, title, action="app.search-notification-activated", action_target=search_token,
+            high_priority=True
+        )
 
     # Core Events #
 
@@ -586,27 +577,8 @@ class Application:
             callback=self.on_shares_unavailable_response
         ).present()
 
-    def on_invalid_password_response(self, *_args):
-        self.on_preferences(page_id="network")
-
     def on_invalid_password(self):
-
-        from pynicotine.gtkgui.widgets.dialogs import OptionDialog
-
-        title = _("Invalid Password")
-        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
-                "if this is your first time logging in.") % config.sections["server"]["login"]
-
-        OptionDialog(
-            parent=self.window,
-            title=title,
-            message=msg,
-            buttons=[
-                ("cancel", _("_Cancel")),
-                ("ok", _("Change _Login Details"))
-            ],
-            callback=self.on_invalid_password_response
-        ).present()
+        self.on_fast_configure(invalid_password=True)
 
     def on_user_status(self, msg):
         if msg.user == core.users.login_username:
@@ -668,12 +640,16 @@ class Application:
     def on_debug_miscellaneous(self, action, state):
         self.on_set_debug_level(action, state, "miscellaneous")
 
-    def on_fast_configure(self, *_args):
+    def on_fast_configure(self, *_args, invalid_password=False):
 
         if self.fast_configure is None:
             from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
             self.fast_configure = FastConfigure(self)
 
+        if invalid_password and self.fast_configure.is_visible():
+            self.fast_configure.hide()
+
+        self.fast_configure.invalid_password = invalid_password
         self.fast_configure.present()
 
     def on_keyboard_shortcuts(self, *_args):
@@ -855,14 +831,6 @@ class Application:
 
         self.window.present()
 
-    def on_connect_disconnect(self, *_args):
-
-        if core.users.login_status != UserStatus.OFFLINE:
-            self.on_disconnect()
-            return
-
-        self.on_connect()
-
     def on_away_accelerator(self, action, *_args):
         """Ctrl+H: Away/Online toggle."""
 
@@ -875,6 +843,10 @@ class Application:
 
     def on_away(self, *_args):
         """Away/Online status button."""
+
+        if core.users.login_status == UserStatus.OFFLINE:
+            core.connect()
+            return
 
         core.users.set_away_mode(core.users.login_status != UserStatus.AWAY, save_state=True)
 

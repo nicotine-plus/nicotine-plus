@@ -115,7 +115,7 @@ Language` (requires a restart).
 ## Adding Yourself to Translators
 
 If you want you can add yourself to
-[TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/TRANSLATORS.md)
+[AUTHORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/AUTHORS.md)
 and the credits list in `Help -> About`:
 [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/HEAD/pynicotine/gtkgui/dialogs/about.py).
 Add yourself to the top of matching section and then create a PR (pull

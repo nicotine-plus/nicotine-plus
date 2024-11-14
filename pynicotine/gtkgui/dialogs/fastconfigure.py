@@ -37,18 +37,22 @@ class FastConfigure(Dialog):
 
     def __init__(self, application):
 
+        self.invalid_password = False
         self.rescan_required = False
         self.finished = False
 
         (
             self.account_page,
             self.download_folder_container,
+            self.invalid_password_label,
             self.listen_port_entry,
             self.main_icon,
             self.next_button,
+            self.next_label,
             self.password_entry,
             self.port_page,
             self.previous_button,
+            self.previous_label,
             self.set_up_button,
             self.share_page,
             self.shares_list_container,
@@ -78,8 +82,8 @@ class FastConfigure(Dialog):
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.main_icon.set_from_icon_name(icon_name, *icon_args)
+        self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
 
-        # Page specific, share_page
         self.download_folder_button = FileChooserButton(
             self.download_folder_container, window=self, chooser_type="folder",
             selected_function=self.on_download_folder_selected
@@ -124,16 +128,22 @@ class FastConfigure(Dialog):
             or (page == self.account_page and self.username_entry.get_text() and self.password_entry.get_text())
             or (page == self.share_page and self.download_folder_button.get_path())
         )
-        self.finished = (page == self.summary_page)
-        next_label = _("_Finish") if page == self.summary_page else _("_Next")
+        self.finished = (page == self.account_page if self.invalid_password else page == self.summary_page)
+        previous_label = _("_Cancel") if self.invalid_password else _("_Previous")
+        next_label = _("_Finish") if self.finished else _("_Next")
+        show_buttons = (page != self.welcome_page)
 
-        if self.next_button.get_label() != next_label:
-            self.next_button.set_label(next_label)
+        self.set_show_title_buttons(not show_buttons)
 
+        if self.previous_label.get_label() != previous_label:
+            self.previous_label.set_label(previous_label)
+
+        if self.next_label.get_label() != next_label:
+            self.next_label.set_label(next_label)
+
+        self.previous_button.set_visible(show_buttons)
+        self.next_button.set_visible(show_buttons)
         self.next_button.set_sensitive(page_complete)
-
-        for button in (self.previous_button, self.next_button):
-            button.set_visible(page != self.welcome_page)
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
@@ -181,13 +191,15 @@ class FastConfigure(Dialog):
 
         self.rescan_required = True
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
+        orig_iterator = self.shares_list_view.iterators[old_virtual_name]
 
+        self.shares_list_view.remove_row(orig_iterator)
         core.shares.remove_share(old_virtual_name)
         new_virtual_name = core.shares.add_share(
             folder_path, virtual_name=new_virtual_name, validate_path=False
         )
 
-        self.shares_list_view.set_row_value(iterator, "virtual_name", new_virtual_name)
+        self.shares_list_view.add_row([new_virtual_name, folder_path])
 
     def on_edit_shared_folder(self, *_args):
 
@@ -210,9 +222,10 @@ class FastConfigure(Dialog):
 
         for iterator in reversed(list(self.shares_list_view.get_selected_rows())):
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
+            orig_iterator = self.shares_list_view.iterators[virtual_name]
 
             core.shares.remove_share(virtual_name)
-            self.shares_list_view.remove_row(iterator)
+            self.shares_list_view.remove_row(orig_iterator)
 
             self.rescan_required = True
 
@@ -224,14 +237,14 @@ class FastConfigure(Dialog):
             self.set_up_button.grab_focus()
 
         elif page == self.account_page:
-            self.username_entry.grab_focus()
+            self.username_entry.grab_focus_without_selecting()
 
         self.reset_completeness()
 
     def on_next(self, *_args):
 
         if self.finished:
-            self.close()
+            self.on_finished()
             return
 
         start_page_index = self.pages.index(self.stack.get_visible_child()) + 1
@@ -244,6 +257,10 @@ class FastConfigure(Dialog):
 
     def on_previous(self, *_args):
 
+        if self.invalid_password:
+            self.close()
+            return
+
         start_page_index = self.pages.index(self.stack.get_visible_child())
 
         for page in reversed(self.pages[:start_page_index]):
@@ -252,38 +269,47 @@ class FastConfigure(Dialog):
                 self.stack.set_visible_child(page)
                 return
 
-    def on_close(self, *_args):
+    def on_finished(self, *_args):
 
         if self.rescan_required:
             core.shares.rescan_shares()
-
-        if not self.finished:
-            return True
 
         # port_page
         listen_port = self.listen_port_entry.get_value_as_int()
         config.sections["server"]["portrange"] = (listen_port, listen_port)
 
         # account_page
-        if config.need_config():
+        if self.invalid_password or config.need_config():
             config.sections["server"]["login"] = self.username_entry.get_text()
             config.sections["server"]["passw"] = self.password_entry.get_text()
 
         if core.users.login_status == UserStatus.OFFLINE:
             core.connect()
 
-        return True
+        self.close()
+
+    def on_close(self, *_args):
+        self.invalid_password = False
+        self.rescan_required = False
 
     def on_show(self, *_args):
 
-        self.rescan_required = False
-        self.stack.set_visible_child(self.welcome_page)
+        transition_type = self.stack.get_transition_type()
+        self.stack.set_transition_type(Gtk.StackTransitionType.NONE)
 
-        # welcome_page
-        self.set_up_button.grab_focus()
+        self.account_page.set_visible(self.invalid_password or config.need_config())
+        self.stack.set_visible_child(self.account_page if self.invalid_password else self.welcome_page)
+
+        self.stack.set_transition_type(transition_type)
+        self.on_page_change()
 
         # account_page
-        self.account_page.set_visible(config.need_config())
+        if self.invalid_password:
+            self.invalid_password_label.set_label(
+                _("User %s already exists, and the password you entered is invalid. Please choose another username "
+                  "if this is your first time logging in.") % config.sections["server"]["login"])
+
+        self.invalid_password_label.set_visible(self.invalid_password)
 
         self.username_entry.set_text(config.sections["server"]["login"])
         self.password_entry.set_text(config.sections["server"]["passw"])
@@ -296,9 +322,9 @@ class FastConfigure(Dialog):
         self.download_folder_button.set_path(core.downloads.get_default_download_folder())
 
         self.shares_list_view.clear()
-        self.shares_list_view.disable_sorting()
+        self.shares_list_view.freeze()
 
         for virtual_name, folder_path, *_unused in config.sections["transfers"]["shared"]:
             self.shares_list_view.add_row([virtual_name, folder_path], select_row=False)
 
-        self.shares_list_view.enable_sorting()
+        self.shares_list_view.unfreeze()

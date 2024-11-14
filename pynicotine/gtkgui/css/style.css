@@ -88,9 +88,20 @@ scrollbar {
     margin: 0;
 }
 
-.search-view treeview:disabled {
-    /* Search results with no free slots have no style by default */
-    color: unset;
+treeview .cell:disabled {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .6);
+}
+
+treeview .cell:disabled:selected {
+    /* Grey out disabled rows */
+    color: alpha(alpha(currentColor, 1.12), .7);
+}
+
+treeview .progressbar:disabled {
+    /* Grey out disabled progress bars */
+    background: alpha(@theme_selected_bg_color, .5);
+    color: alpha(alpha(currentColor, 1.12), .8);
 }
 
 treeview button > box {

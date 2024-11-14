@@ -30,10 +30,9 @@ License: CC0-1.0
 Files: po/*.po
 Copyright: 2003-2024 Nicotine+ Translators
 License: GPL-3+
-Comment: see TRANSLATORS.md for more information.
+Comment: see AUTHORS.md for more information.
 
-Files: pynicotine/external/country_codes.py
-       pynicotine/external/ip_ranges.py
+Files: pynicotine/external/data/ip_country_data.csv
 Copyright: 2001-2024 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
@@ -42,7 +41,7 @@ Copyright: 2016-2021 Bowtie AB
 License: Expat
 
 Files: pynicotine/external/tinytag.py
-Copyright: 2014-2022 Tom Wallroth
+Copyright: 2014-2023 Tom Wallroth
            2021-2023 Mat (mathiascode)
 License: Expat
 

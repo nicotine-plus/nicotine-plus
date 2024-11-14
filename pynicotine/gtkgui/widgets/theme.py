@@ -56,20 +56,25 @@ if USE_COLOR_SCHEME_PORTAL:
 
     def read_color_scheme():
 
+        color_scheme = None
+
         try:
             result = SETTINGS_PORTAL.call_sync(
                 method_name="Read",
-                parameters=GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+                parameters=GLib.Variant.new_tuple(
+                    GLib.Variant.new_string("org.freedesktop.appearance"),
+                    GLib.Variant.new_string("color-scheme")
+                ),
                 flags=Gio.DBusCallFlags.NONE,
-                timeout_msec=-1,
+                timeout_msec=1000,
                 cancellable=None
             )
-
-            return result.unpack()[0]
+            color_scheme, = result.unpack()
 
         except Exception as error:
             log.add_debug("Cannot read color scheme, falling back to GTK theme preference: %s", error)
-            return None
+
+        return color_scheme
 
     def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
 
@@ -138,6 +143,16 @@ def set_default_font_size():
     font_name, _separator, font_size = font.rpartition(" ")
     font_size = str(int(font_size) + 1)
     GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
+
+    if GTK_API_VERSION == 3:
+        return
+
+    # Enable OS-specific font tweaks
+    try:
+        GTK_SETTINGS.props.gtk_font_rendering = Gtk.FontRendering.MANUAL  # pylint: disable=no-member
+    except AttributeError:
+        # GTK <4.16
+        pass
 
 
 def set_visual_settings():
@@ -215,11 +230,11 @@ else:
 CUSTOM_ICON_THEME_NAME = ".nicotine-icon-theme"
 FILE_TYPE_ICON_LABELS = {
     "application-x-executable-symbolic": _("Executable"),
-    "audio-x-generic-symbolic": _("Audio"),
-    "image-x-generic-symbolic": _("Image"),
+    "folder-music-symbolic": _("Audio"),
+    "folder-pictures-symbolic": _("Image"),
     "package-x-generic-symbolic": _("Archive"),
-    "text-x-generic-symbolic": _("Miscellaneous"),
-    "video-x-generic-symbolic": _("Video"),
+    "folder-documents-symbolic": _("Miscellaneous"),
+    "folder-videos-symbolic": _("Video"),
     "x-office-document-symbolic": _("Document"),
     "emblem-documents-symbolic": _("Text")
 }
@@ -369,13 +384,13 @@ def get_file_type_icon_name(basename):
     extension = extension.lower()
 
     if extension in FileTypes.AUDIO:
-        return "audio-x-generic-symbolic"
+        return "folder-music-symbolic"
 
     if extension in FileTypes.IMAGE:
-        return "image-x-generic-symbolic"
+        return "folder-pictures-symbolic"
 
     if extension in FileTypes.VIDEO:
-        return "video-x-generic-symbolic"
+        return "folder-videos-symbolic"
 
     if extension in FileTypes.ARCHIVE:
         return "package-x-generic-symbolic"
@@ -389,7 +404,7 @@ def get_file_type_icon_name(basename):
     if extension in FileTypes.EXECUTABLE:
         return "application-x-executable-symbolic"
 
-    return "text-x-generic-symbolic"
+    return "folder-documents-symbolic"
 
 
 def on_icon_theme_changed(*_args):
@@ -518,8 +533,7 @@ def _get_custom_color_css():
         (".notebook-tab-changed", config.sections["ui"]["tab_changed"]),
         (".notebook-tab-highlight", config.sections["ui"]["tab_hilite"]),
         ("entry", config.sections["ui"]["inputcolor"]),
-        ("treeview", treeview_text_color),
-        (".search-view treeview:disabled", config.sections["ui"]["searchq"])
+        ("treeview .cell:not(:disabled):not(:selected):not(.progressbar)", treeview_text_color)
     ):
         if _is_color_valid(color):
             css += (
@@ -561,6 +575,10 @@ def _get_custom_color_css():
         f"""
         treeview {{
             caret-color: #{random.randint(0, 0xFFFFFF):06x};
+        }}
+
+        treeview popover {{
+            caret-color: initial;
         }}
         """.encode()
     )

@@ -75,12 +75,15 @@ class Uploads(Transfers):
         self._retry_failed_uploads_timer_id = None
 
         for event_name, callback in (
+            ("ban-user", self._ban_user),
+            ("ban-user-ip", self._ban_user),
             ("file-connection-closed", self._file_connection_closed),
             ("file-transfer-init", self._file_transfer_init),
             ("file-upload-progress", self._file_upload_progress),
             ("peer-connection-closed", self._peer_connection_error),
             ("peer-connection-error", self._peer_connection_error),
             ("place-in-queue-request", self._place_in_queue_request),
+            ("privileged-users", self._privileged_users),
             ("queue-upload", self._queue_upload),
             ("set-connection-stats", self._set_connection_stats),
             ("shares-ready", self._shares_ready),
@@ -584,28 +587,6 @@ class Uploads(Transfers):
 
         self._update_transfer(final_upload_candidate)
 
-    def ban_users(self, users, ban_message=None):
-        """Ban a user, cancel all the user's uploads, send a 'Banned' message
-        via the transfers, and clear the transfers from the uploads list."""
-
-        if not ban_message and config.sections["transfers"]["usecustomban"]:
-            ban_message = config.sections["transfers"]["customban"]
-
-        if ban_message:
-            status = f"{TransferRejectReason.BANNED} ({ban_message})"
-        else:
-            status = TransferRejectReason.BANNED
-
-        self.clear_uploads(
-            uploads=[upload for upload in self.transfers.copy().values() if upload.username in users],
-            denied_message=status
-        )
-
-        for username in users:
-            core.network_filter.ban_user(username)
-
-        self._check_upload_queue()
-
     def enqueue_upload(self, username, virtual_path):
 
         transfer = self.transfers.get(username + virtual_path)
@@ -731,6 +712,9 @@ class Uploads(Transfers):
             return
 
         if msg.status == UserStatus.OFFLINE:
+            for upload in self.failed_users.get(username, {}).copy().values():
+                self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
+
             for upload in self.active_users.get(username, {}).copy().values():
                 if upload.status == TransferStatus.TRANSFERRING:
                     continue
@@ -738,19 +722,18 @@ class Uploads(Transfers):
                 if not self._auto_clear_transfer(upload):
                     self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
 
-            for upload in self.failed_users.get(username, {}).copy().values():
-                self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
-
             self._online_users.discard(username)
             return
 
         # No need to check transfers on away status change
-        if username not in self._online_users:
-            for upload in self.failed_users.get(username, {}).copy().values():
-                if upload.status == TransferStatus.USER_LOGGED_OFF:
-                    self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+        if username in self._online_users:
+            return
 
-            self._online_users.add(username)
+        # User logged in, mark "User logged off" transfers as cancelled
+        for upload in self.failed_users.get(username, {}).copy().values():
+            self._abort_transfer(upload, status=TransferStatus.CANCELLED)
+
+        self._online_users.add(username)
 
     def _user_stats(self, msg):
         """Server code 36."""
@@ -758,8 +741,49 @@ class Uploads(Transfers):
         if msg.user == core.users.login_username:
             self.upload_speed = msg.avgspeed
 
+    def _privileged_users(self, _msg):
+        """Server code 69."""
+
+        log.add_transfer("%s privileged users", len(core.users.privileged))
+
     def _set_connection_stats(self, upload_bandwidth=0, **_unused):
         self.total_bandwidth = upload_bandwidth
+
+    def _ban_user(self, username=None, ip_address=None):
+        """Ban a user, cancel all the user's uploads, send a 'Banned' message
+        via the transfers, and clear the transfers from the uploads list."""
+
+        ban_message = None
+
+        if config.sections["transfers"]["usecustomban"]:
+            ban_message = config.sections["transfers"]["customban"]
+
+        if ban_message:
+            status = f"{TransferRejectReason.BANNED} ({ban_message})"
+        else:
+            status = TransferRejectReason.BANNED
+
+        removed_uploads = []
+
+        if not username and ip_address:
+            for active_uploads in self.active_users.values():
+                for upload in active_uploads.values():
+                    active_ip_address, _port = upload.sock.getsockname()
+
+                    if active_ip_address == ip_address:
+                        username = upload.username
+                        break
+
+        for uploads in (
+            self.active_users.get(username, {}),
+            self.queued_users.get(username, {}),
+            self.failed_users.get(username, {})
+        ):
+            for upload in uploads.values():
+                removed_uploads.append(upload)
+
+        self.clear_uploads(uploads=removed_uploads, denied_message=status)
+        self._check_upload_queue()
 
     def _peer_connection_error(self, username, conn_type, msgs, is_offline=False, is_timeout=True):
 
@@ -839,7 +863,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.current_byte_offset = None
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)
@@ -908,7 +932,7 @@ class Uploads(Transfers):
             transfer.size = size
 
             if transfer.status == TransferStatus.FINISHED:
-                transfer.current_byte_offset = transfer.last_byte_offset = None
+                transfer.current_byte_offset = None
                 transfer.speed = transfer.avg_speed = transfer.time_elapsed = transfer.time_left = 0
         else:
             transfer = Transfer(username, virtual_path, folder_path, size)

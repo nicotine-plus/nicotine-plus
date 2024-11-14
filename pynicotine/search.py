@@ -61,7 +61,7 @@ class SearchRequest:
 
 
 class Search:
-    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_self_search_tokens",
+    __slots__ = ("searches", "excluded_phrases", "token", "wishlist_interval", "_own_tokens",
                  "_wishlist_timer_id")
 
     SEARCH_HISTORY_LIMIT = 200
@@ -79,7 +79,7 @@ class Search:
         self.excluded_phrases = []
         self.token = initial_token()
         self.wishlist_interval = 0
-        self._self_search_tokens = set()
+        self._own_tokens = set()
         self._wishlist_timer_id = None
 
         for event_name, callback in (
@@ -89,6 +89,7 @@ class Search:
             ("file-search-response", self._file_search_response),
             ("quit", self._quit),
             ("server-disconnect", self._server_disconnect),
+            ("server-login", self._server_login),
             ("set-wishlist-interval", self._set_wishlist_interval),
             ("start", self._start)
         ):
@@ -104,10 +105,19 @@ class Search:
     def _quit(self):
         self.remove_all_searches()
 
+    def _server_login(self, msg):
+
+        if not msg.success:
+            return
+
+        if not config.sections["searches"]["search_results"]:
+            log.add_search(("Search responses disabled in preferences, ignoring search "
+                            "requests from other users"))
+
     def _server_disconnect(self, _msg):
 
         self.excluded_phrases.clear()
-        self._self_search_tokens.clear()
+        self._own_tokens.clear()
 
         events.cancel_scheduled(self._wishlist_timer_id)
         self.wishlist_interval = 0
@@ -159,7 +169,7 @@ class Search:
         if search is None:
             return
 
-        if search.term in config.sections["server"]["autosearch"]:
+        if search.mode == "wishlist" and search.term in config.sections["server"]["autosearch"]:
             search.is_ignored = True
         else:
             del self.searches[token]
@@ -344,7 +354,7 @@ class Search:
 
         for username in users:
             if username == core.users.login_username:
-                self._self_search_tokens.add(self.token)
+                self._own_tokens.add(self.token)
 
             core.send_message_to_server(UserSearch(username, self.token, text))
 
@@ -382,26 +392,33 @@ class Search:
         if not wish:
             return
 
-        # Get a new search token
-        self.token = increment_token(self.token)
-
         if wish not in config.sections["server"]["autosearch"]:
             config.sections["server"]["autosearch"].append(wish)
             config.write_configuration()
 
-        self.add_search(wish, mode="wishlist", is_ignored=True)
+        if not any(search.term == wish and search.mode == "wishlist" for search in self.searches.values()):
+            # Get a new search token
+            self.token = increment_token(self.token)
+            self.add_search(wish, mode="wishlist", is_ignored=True)
+
         events.emit("add-wish", wish)
 
     def remove_wish(self, wish):
 
-        if wish in config.sections["server"]["autosearch"]:
-            config.sections["server"]["autosearch"].remove(wish)
-            config.write_configuration()
+        if wish not in config.sections["server"]["autosearch"]:
+            return
 
-            for search in self.searches.values():
-                if search.term == wish and search.mode == "wishlist":
-                    del search
-                    break
+        config.sections["server"]["autosearch"].remove(wish)
+        config.write_configuration()
+
+        for token, search in self.searches.items():
+            if search.term != wish or search.mode != "wishlist":
+                continue
+
+            if search.is_ignored:
+                del self.searches[token]
+
+            break
 
         events.emit("remove-wish", wish)
 
@@ -456,7 +473,7 @@ class Search:
             msg.token = None
 
     def _file_search_request_server(self, msg):
-        """Server code 26, 42 and 120."""
+        """Server code 26."""
 
         self._process_search_request(msg.searchterm, msg.search_username, msg.token)
         core.pluginhandler.search_request_notification(msg.searchterm, msg.search_username, msg.token)
@@ -663,10 +680,13 @@ class Search:
 
         local_username = core.users.login_username
 
-        if username == local_username and token not in self._self_search_tokens:
-            # We shouldn't send a search response if we initiated the search request,
-            # unless we're specifically searching our own username
-            return
+        if username == local_username:
+            if token not in self._own_tokens:
+                # We shouldn't send a search response if we initiated the search
+                # request, unless we're specifically searching our own username
+                return
+
+            self._own_tokens.discard(token)
 
         max_results = config.sections["searches"]["maxresults"]
 

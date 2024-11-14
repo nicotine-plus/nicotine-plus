@@ -10,7 +10,7 @@
   <object class="GtkAdjustment" id="_min_search_term_length_adjustment">
     <property name="page-increment">5</property>
     <property name="step-increment">1</property>
-    <property name="upper">1000</property>
+    <property name="upper">50</property>
   </object>
   <object class="GtkAdjustment" id="_max_sent_results_adjustment">
     <property name="lower">50</property>

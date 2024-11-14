@@ -48,7 +48,6 @@ from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
 from pynicotine.slskmessages import CantConnectToPeer
 from pynicotine.slskmessages import CloseConnection
-from pynicotine.slskmessages import CloseConnectionIP
 from pynicotine.slskmessages import ConnectionType
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribBranchLevel
@@ -416,7 +415,7 @@ class NetworkThread(Thread):
         self._max_distrib_children = 0
         self._upload_speed = 0
 
-        self._num_sockets = 1
+        self._num_sockets = 0
         self._last_cycle_time = 0
 
         self._conns = {}
@@ -463,6 +462,7 @@ class NetworkThread(Thread):
         self._listen_socket.setblocking(False)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
         self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
+        self._num_sockets += 1
 
         # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
         # to the same port immediately after reconnecting. This option behaves differently
@@ -493,6 +493,7 @@ class NetworkThread(Thread):
         self._close_socket(self._listen_socket)
         self._listen_socket = None
         self._listen_port = None
+        self._num_sockets -= 1
 
     def _bind_listen_port(self):
 
@@ -1074,18 +1075,6 @@ class NetworkThread(Thread):
             for addr, init in self._pending_peer_conns.copy().items():
                 self._init_peer_connection(addr, init)
 
-    def _close_connection_by_ip(self, ip_address):
-
-        for conn in self._conns.copy().values():
-            if conn is None or conn is self._server_conn:
-                continue
-
-            peer_ip_address, _peer_port = conn.addr
-
-            if ip_address == peer_ip_address:
-                log.add_conn("Blocking peer connection to IP address %s", (conn.addr,))
-                self._close_connection(conn)
-
     # Server Connection #
 
     def _set_server_timer(self):
@@ -1211,11 +1200,11 @@ class NetworkThread(Thread):
     def _establish_outgoing_server_connection(self, conn):
 
         conn.is_established = True
-        server_ip_address, server_port = conn.addr
+        server_hostname, server_port = conn.addr
 
         log.add(
             _("Connected to server %(host)s:%(port)s, logging in…"), {
-                "host": server_ip_address,
+                "host": server_hostname,
                 "port": server_port
             }
         )
@@ -1273,6 +1262,7 @@ class NetworkThread(Thread):
                 self._portmapper.add_port_mapping(blocking=True)
 
                 msg.username = self._server_username
+                msg.server_address = self._server_address
 
                 # Ask for a list of parents to connect to (distributed network)
                 self._send_have_no_parent()
@@ -1893,7 +1883,9 @@ class NetworkThread(Thread):
         file_upload = self._file_upload_msgs[conn]
 
         if file_upload.offset is not None:
-            return None
+            # No more incoming messages on this connection after receiving the
+            # file offset. If peer sends something anyway, clear it.
+            return len(in_buffer)
 
         msg_size = idx = 8
         msg = self._unpack_network_message(
@@ -2390,9 +2382,6 @@ class NetworkThread(Thread):
         if msg_class is CloseConnection:
             self._close_connection(self._conns.get(msg.sock))
 
-        elif msg_class is CloseConnectionIP:
-            self._close_connection_by_ip(msg.addr)
-
         elif msg_class is ServerConnect:
             self._server_connect(msg)
 
@@ -2641,7 +2630,7 @@ class NetworkThread(Thread):
             self._conns_downloaded[conn] += data_len
 
         # Grow or shrink recv buffer depending on how much data we're receiving
-        if data_len >= current_recv_size // 2:
+        elif data_len >= current_recv_size // 2:
             conn.recv_size *= 2
 
         elif data_len <= current_recv_size // 6:
@@ -2689,14 +2678,6 @@ class NetworkThread(Thread):
     def _loop(self):
 
         while not self._want_abort:
-            if not self._should_process_queue:
-                if self._server_timeout_time and (self._server_timeout_time - time.monotonic()) <= 0:
-                    self._server_timeout_time = None
-                    events.emit_main_thread("server-reconnect")
-
-                time.sleep(self.SLEEP_MAX_IDLE)
-                continue
-
             current_time = time.monotonic()
 
             if (current_time - self._last_cycle_time) >= 1:
@@ -2717,6 +2698,14 @@ class NetworkThread(Thread):
                 self._total_upload_bandwidth = 0
 
                 self._last_cycle_time = current_time
+
+            if not self._should_process_queue:
+                if self._server_timeout_time and (self._server_timeout_time - current_time) <= 0:
+                    self._server_timeout_time = None
+                    events.emit_main_thread("server-reconnect")
+
+                time.sleep(self.SLEEP_MAX_IDLE)
+                continue
 
             # Process queue messages
             self._process_queue_messages()

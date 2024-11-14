@@ -67,7 +67,9 @@
                 <child>
                   <object class="GtkEntry" id="username_entry">
                     <property name="hexpand">True</property>
+                    <property name="input-hints">no-emoji</property>
                     <property name="max-width-chars">10</property>
+                    <property name="truncate-multiline">True</property>
                     <property name="visible">True</property>
                     <property name="width-chars">10</property>
                   </object>
@@ -252,7 +254,7 @@
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Miscellaneous</property>
+            <property name="label" translatable="yes">Connections</property>
             <property name="selectable">True</property>
             <property name="visible">True</property>
             <property name="wrap">True</property>

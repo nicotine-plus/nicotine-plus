@@ -57,7 +57,8 @@ your own machine.
 
 ### Building a Frozen Application with cx_Freeze
 
-Follow the instructions on [installing MSYS2](https://pygobject.gnome.org/getting_started.html#windows-logo-windows).
+Follow the instructions on [installing MSYS2](https://www.msys2.org/#installation).
+Once MSYS2 is installed, launch the MINGW64 environment.
 
 Clone the `nicotine-plus` Git repository:
 
@@ -70,8 +71,6 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=4
-export NICOTINE_USE_LIBADWAITA=1
 export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
 python3 packaging/windows/dependencies.py
@@ -110,8 +109,6 @@ cd nicotine-plus
 Install dependencies:
 
 ```sh
-export NICOTINE_GTK_VERSION=4
-export NICOTINE_USE_LIBADWAITA=1
 brew install python@3.11
 python3.11 -m venv venv
 venv/bin/python3 packaging/macos/dependencies.py

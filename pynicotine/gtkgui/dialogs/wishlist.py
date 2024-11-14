@@ -62,13 +62,13 @@ class WishList(Dialog):
             }
         )
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
 
         for search_item in core.search.searches.values():
             if search_item.mode == "wishlist":
                 self.add_wish(search_item.term, select=False)
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
         self.completion_entry = CompletionEntry(self.wish_entry, self.list_view.model)
         Accelerator("<Shift>Tab", self.list_view.widget, self.on_list_focus_entry_accelerator)  # skip column header
@@ -148,10 +148,6 @@ class WishList(Dialog):
         for iterator in self.list_view.get_selected_rows():
             wish = self.list_view.get_row_value(iterator, "wish")
             core.search.do_search(wish, mode="global")
-
-            # Close dialog to discourage manually searching many items in a row
-            # (can result in a temporary ban from the server in extreme cases)
-            self.close()
             return
 
     def on_remove_wish(self, *_args):

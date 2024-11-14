@@ -18,10 +18,6 @@
 
 import sys
 
-from gi.repository import Gdk
-from gi.repository import GLib
-from gi.repository import Gtk
-
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 
@@ -37,6 +33,7 @@ class Window:
     def __init__(self, widget):
 
         self.widget = widget
+        self._dark_mode_handler = None
 
         if GTK_API_VERSION == 3:
             return
@@ -47,14 +44,9 @@ class Window:
             # Use dark window controls on Windows when requested
             if LIBADWAITA_API_VERSION:
                 from gi.repository import Adw  # pylint: disable=no-name-in-module
-                Adw.StyleManager.get_default().connect("notify::dark", self._on_dark_mode_win32)
-
-        elif sys.platform == "darwin":
-            # Workaround to restore Ctrl-click to show context menu on macOS
-            gesture_click = Gtk.GestureClick()
-            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect("pressed", self._on_click_gtk4_darwin)
-            widget.add_controller(gesture_click)  # pylint: disable=no-member
+                self._dark_mode_handler = Adw.StyleManager.get_default().connect(
+                    "notify::dark", self._on_dark_mode_win32
+                )
 
     def _menu_popup(self, controller, widget):
         if controller.is_active():
@@ -95,27 +87,6 @@ class Window:
             windll.dwmapi.DwmSetWindowAttribute(
                 h_wnd, self.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, byref(value), sizeof(value)
             )
-
-    def _on_click_gtk4_darwin(self, controller, _num_p, pos_x, pos_y, *_args):
-
-        event = controller.get_last_event()
-
-        if not event.get_modifier_state() & Gdk.ModifierType.CONTROL_MASK:
-            return False
-
-        cursor_widget = self.widget.pick(pos_x, pos_y, Gtk.PickFlags.DEFAULT)
-        widget = cursor_widget.get_ancestor(Gtk.Text)
-
-        if widget is None:
-            widget = cursor_widget.get_ancestor(Gtk.TextView)
-
-        if widget is None:
-            widget = cursor_widget.get_ancestor(Gtk.Label)
-
-        if widget is not None:
-            GLib.idle_add(self._menu_popup, controller, widget)
-
-        return False
 
     def get_surface(self):
 
@@ -174,5 +145,10 @@ class Window:
         self.widget.close()
 
     def destroy(self):
+
+        if self._dark_mode_handler is not None:
+            from gi.repository import Adw  # pylint: disable=no-name-in-module
+            Adw.StyleManager.get_default().disconnect(self._dark_mode_handler)
+
         self.widget.destroy()
         self.__dict__.clear()

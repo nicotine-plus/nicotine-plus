@@ -78,7 +78,7 @@ class RoomList(Popover):
 
                 # Hidden data columns
                 "users_data": {"data_type": GObject.TYPE_UINT},
-                "is_private_data": {"data_type": bool},
+                "is_private_data": {"data_type": GObject.TYPE_BOOLEAN},
                 "room_weight_data": {"data_type": Pango.Weight},
                 "room_underline_data": {"data_type": Pango.Underline}
             }
@@ -192,8 +192,11 @@ class RoomList(Popover):
 
         h_user_count = humanize(user_count - self.PRIVATE_USERS_OFFSET) if is_private else humanize(user_count)
 
-        self.list_view.set_row_value(iterator, "users", h_user_count)
-        self.list_view.set_row_value(iterator, "users_data", user_count)
+        self.list_view.set_row_values(
+            iterator,
+            column_ids=["users", "users_data"],
+            values=[h_user_count, user_count]
+        )
 
     def clear(self, *_args):
         self.list_view.clear()
@@ -204,6 +207,10 @@ class RoomList(Popover):
     def join_room(self, msg):
 
         room = msg.room
+
+        if room not in core.chatrooms.joined_rooms:
+            return
+
         user_count = len(msg.users)
 
         if room not in self.list_view.iterators:
@@ -235,7 +242,7 @@ class RoomList(Popover):
 
     def room_list(self, msg):
 
-        self.list_view.disable_sorting()
+        self.list_view.freeze()
         self.clear()
 
         for room, user_count in msg.ownedprivaterooms:
@@ -247,7 +254,7 @@ class RoomList(Popover):
         for room, user_count in msg.rooms:
             self.add_room(room, user_count)
 
-        self.list_view.enable_sorting()
+        self.list_view.unfreeze()
 
     def on_row_activated(self, *_args):
 
@@ -280,12 +287,16 @@ class RoomList(Popover):
 
     def on_toggle_public_feed(self, *_args):
 
+        global_room_name = core.chatrooms.GLOBAL_ROOM_NAME
+
         if self.public_feed_toggle.get_active():
-            core.chatrooms.show_room(core.chatrooms.GLOBAL_ROOM_NAME)
+            if global_room_name not in core.chatrooms.joined_rooms:
+                core.chatrooms.show_room(global_room_name)
+
             self.close(use_transition=False)
             return
 
-        core.chatrooms.remove_room(core.chatrooms.GLOBAL_ROOM_NAME)
+        core.chatrooms.remove_room(global_room_name)
 
     def on_popup_private_room_disown(self, *_args):
         core.chatrooms.request_private_room_disown(self.popup_room)

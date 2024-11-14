@@ -24,7 +24,7 @@ from pynicotine.logfacility import log
 
 def get_default_gtk_version():
 
-    if sys.platform in {"win32", "darwin"}:
+    if sys.platform in {"darwin", "win32"}:
         return "4"
 
     try:
@@ -59,6 +59,12 @@ def get_default_gtk_version():
 
 def check_gtk_version(gtk_api_version):
 
+    is_gtk3_supported = sys.platform not in {"darwin", "win32"}
+
+    if gtk_api_version == "3" and not is_gtk3_supported:
+        log.add("WARNING: Using GTK 3, which might not work properly on Windows and macOS. "
+                "GTK 4 will be required in the future.")
+
     # Require minor version of GTK
     if gtk_api_version == "4":
         pygobject_version = (3, 42, 1)
@@ -71,7 +77,7 @@ def check_gtk_version(gtk_api_version):
         gi.check_version(pygobject_version)
 
     except (ImportError, ValueError):
-        if gtk_api_version == "4":
+        if gtk_api_version == "4" and is_gtk3_supported:
             return check_gtk_version(gtk_api_version="3")
 
         return _("Cannot find %s, please install it.") % ("PyGObject >=" + ".".join(str(x) for x in pygobject_version))
@@ -80,7 +86,7 @@ def check_gtk_version(gtk_api_version):
         gi.require_version("Gtk", f"{gtk_api_version}.0")
 
     except ValueError:
-        if gtk_api_version == "4":
+        if gtk_api_version == "4" and is_gtk3_supported:
             return check_gtk_version(gtk_api_version="3")
 
         return _("Cannot find %s, please install it.") % f"GTK >={gtk_api_version}"
@@ -128,16 +134,8 @@ def run(hidden, ci_mode, multi_instance):
         os.environ["GSK_RENDERER"] = "cairo"
 
     elif sys.platform == "darwin":
-        # Always enable CSD on macOS for a more uniform look
-        os.environ["GTK_CSD"] = "1"
-
-    if "GSK_RENDERER" not in os.environ:
-        # Old GL renderer is faster for now. Make it the default.
+        # Older GL renderer is still faster on macOS for now
         os.environ["GSK_RENDERER"] = "gl"
-
-    if os.environ.get("GSK_RENDERER") == "gl" and os.environ.get("GDK_BACKEND") != "broadway":
-        # Old GL renderer doesn't support fractional scaling. Disable it.
-        os.environ["GDK_DEBUG"] = ",".join(("gl-no-fractional", os.environ.get("GDK_DEBUG", "")))
 
     error = check_gtk_version(gtk_api_version=os.environ.get("NICOTINE_GTK_VERSION", get_default_gtk_version()))
 

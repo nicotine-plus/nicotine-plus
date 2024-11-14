@@ -40,7 +40,7 @@ class About(Dialog):
          "\n •  Maintainer (2020–present)"
          "\n •  Developer"),
 
-        ("<b>eLvErDe</b>"
+        ("<b>Adam Cécile (eLvErDe)</b>"
          "\n •  Maintainer (2013–2016)"
          "\n •  Domain name administrator"
          "\n •  Source code migration from SVN to GitHub"
@@ -59,6 +59,9 @@ class About(Dialog):
         ("<b>slook</b>"
          "\n •  Tester"
          "\n •  Accessibility improvements"),
+
+        ("<b>ketacat</b>"
+         "\n •  Tester"),
 
 
         "\n<b>Nicotine+ Team (Emeritus)</b>",
@@ -207,6 +210,7 @@ class About(Dialog):
          "\n •  hadwin (2022)"),
 
         ("<b>Czech</b>"
+         "\n •  slrslr (2024)"
          "\n •  burnmail123 (2021–2023)"),
 
         ("<b>Danish</b>"
@@ -244,8 +248,8 @@ class About(Dialog):
          "\n •  Saumon (2023)"
          "\n •  subu_versus (2023)"
          "\n •  zniavre (2007–2023)"
-         "\n •  Lisapple (2021–2022)"
-         "\n •  melmorabity (2021–2024)"
+         "\n •  Maxime Leroy (Lisapple) (2021–2022)"
+         "\n •  Mohamed El Morabity (melmorabity) (2021–2024)"
          "\n •  m-balthazar (2020)"
          "\n •  Michael Labouebe (gfarmerfr) (2016–2017)"
          "\n •  Monsieur Poisson (2009–2010)"
@@ -267,9 +271,9 @@ class About(Dialog):
          "\n •  David Balazs (djbaloo) (2006–2020)"),
 
         ("<b>Italian</b>"
-         "\n •  Gabboxl (2022–2023)"
+         "\n •  Gabriele (Gabboxl) (2022–2023)"
          "\n •  ms-afk (2023)"
-         "\n •  Gianluca Boiano (2020–2022)"
+         "\n •  Gianluca Boiano (2020–2023)"
          "\n •  nicola (2007)"
          "\n •  dbazza (2003–2004)"),
 
@@ -302,7 +306,7 @@ class About(Dialog):
          "\n •  Vinícius Soares (2023)"),
 
         ("<b>Romanian</b>"
-         "\n •  xslendix (2023)"),
+         "\n •  Slendi (xslendix) (2023)"),
 
         ("<b>Russian</b>"
          "\n •  Kirill Feoktistov (SnIPeRSnIPeR) (2022–2024)"
@@ -342,16 +346,31 @@ class About(Dialog):
         ("Nicotine+ is licensed under the <a href='https://www.gnu.org/licenses/gpl-3.0.html'>"
          "GNU General Public License v3.0 or later</a>, with the following exceptions:"),
 
-        ("<b>tinytag licensed under the MIT License.</b>"
-         "\nCopyright (c) 2014–2023 Tom Wallroth"
-         "\nCopyright (c) 2021–2023 Mat (mathiascode)"
-         "\n<a href='https://github.com/tinytag/tinytag'>https://github.com/tinytag/tinytag</a>"),
+        ("<b><a href='https://github.com/tinytag/tinytag'>tinytag</a> licensed under the MIT License.</b>"
+         "\nCopyright (c) 2014-2023 Tom Wallroth, Mat (mathiascode)"
+         "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
+         'of this software and associated documentation files (the "Software"), to deal '
+         "in the Software without restriction, including without limitation the rights "
+         "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell "
+         "copies of the Software, and to permit persons to whom the Software is "
+         "furnished to do so, subject to the following conditions: "
+         "\n\nThe above copyright notice and this permission notice shall be included in all "
+         "copies or substantial portions of the Software."),
 
-        ("<b>Country flags licensed under the MIT License.</b>"
-         "\nCopyright (c) 2016–2021 Bowtie AB"
-         "\n<a href='https://github.com/madebybowtie/FlagKit'>https://github.com/madebybowtie/FlagKit</a>"),
+        ("<b><a href='https://github.com/madebybowtie/FlagKit'>FlagKit</a> icons licensed "
+         "under the MIT License.</b>"
+         "\nCopyright (c) 2016 Bowtie AB"
+         "\n\nPermission is hereby granted, free of charge, to any person obtaining a copy "
+         'of this software and associated documentation files (the "Software"), to deal '
+         "in the Software without restriction, including without limitation the rights "
+         "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell "
+         "copies of the Software, and to permit persons to whom the Software is "
+         "furnished to do so, subject to the following conditions: "
+         "\n\nThe above copyright notice and this permission notice shall be included in all "
+         "copies or substantial portions of the Software."),
 
-        ("<b>Country data licensed under the CC-BY-SA-4.0 License.</b>"
+        ("<b>IP2Location country data licensed under the "
+         "<a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA-4.0 License</a>.</b>"
          "\nCopyright (c) 2001–2024 Hexasoft Development Sdn. Bhd."
          "\nNicotine+ uses the IP2Location LITE database for "
          "<a href='https://lite.ip2location.com'>IP geolocation</a>.")]

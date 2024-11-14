@@ -38,6 +38,7 @@ class Application:
         for event_name, callback in (
             ("confirm-quit", self.on_confirm_quit),
             ("invalid-password", self.on_invalid_password),
+            ("invalid-username", self.on_invalid_password),
             ("setup", self.on_setup),
             ("shares-unavailable", self.on_shares_unavailable)
         ):
@@ -46,7 +47,9 @@ class Application:
     def run(self):
 
         core.start()
-        core.connect()
+
+        if config.sections["server"]["auto_connect_startup"]:
+            core.connect()
 
         # Main loop, process events from threads 10 times per second
         while events.process_thread_events():

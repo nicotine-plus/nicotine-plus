@@ -43,7 +43,9 @@ from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
+from pynicotine.gtkgui.widgets.theme import remove_css_class
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import ConnectionType
@@ -85,7 +87,6 @@ class UserInfos(IconNotebook):
             ("quit", self.quit),
             ("remove-buddy", self.add_remove_buddy),
             ("server-disconnect", self.server_disconnect),
-            ("server-login", self.server_login),
             ("unban-user", self.ban_unban_user),
             ("unignore-user", self.ignore_unignore_user),
             ("user-country", self.user_country),
@@ -241,15 +242,9 @@ class UserInfos(IconNotebook):
         if page is not None:
             page.user_info_response(msg)
 
-    def server_login(self, *_args):
-        for page in self.pages.values():
-            page.update_ip_address_button_state()
-
     def server_disconnect(self, *_args):
-
         for user, page in self.pages.items():
             self.set_user_status(page.container, user, UserStatus.OFFLINE)
-            page.update_ip_address_button_state()
 
 
 class UserInfo:
@@ -261,6 +256,7 @@ class UserInfo:
             self.ban_unban_user_button,
             self.ban_unban_user_label,
             self.container,
+            self.country_button,
             self.country_icon,
             self.country_label,
             self.description_view_container,
@@ -272,19 +268,18 @@ class UserInfo:
             self.ignore_unignore_user_button,
             self.ignore_unignore_user_label,
             self.info_bar_container,
+            self.interests_container,
             self.likes_list_container,
-            self.picture_container,
             self.picture_view,
-            self.placeholder_picture,
             self.progress_bar,
             self.queued_uploads_label,
             self.refresh_button,
             self.retry_button,
             self.shared_files_label,
             self.shared_folders_label,
-            self.show_ip_address_button,
             self.upload_slots_label,
             self.upload_speed_label,
+            self.user_info_container,
             self.user_label
         ) = ui.load(scope=self, path="userinfo.ui")
 
@@ -322,6 +317,7 @@ class UserInfo:
         # Set up likes list
         self.likes_list_view = TreeView(
             self.window, parent=self.likes_list_container,
+            activate_row_callback=self.on_likes_row_activated,
             columns={
                 "likes": {
                     "column_type": "text",
@@ -334,6 +330,7 @@ class UserInfo:
         # Set up dislikes list
         self.dislikes_list_view = TreeView(
             self.window, parent=self.dislikes_list_container,
+            activate_row_callback=self.on_dislikes_row_activated,
             columns={
                 "dislikes": {
                     "column_type": "text",
@@ -354,10 +351,13 @@ class UserInfo:
         )
 
         def get_interest_items(list_view, column_id):
-            return (("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
-                    ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
-                    ("", None),
-                    ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id))
+            return (
+                ("$" + _("I _Like This"), self.window.interests.on_like_recommendation, list_view, column_id),
+                ("$" + _("I _Dislike This"), self.window.interests.on_dislike_recommendation, list_view, column_id),
+                ("", None),
+                ("#" + _("_Recommendations for Item"), self.window.interests.on_recommend_item, list_view, column_id),
+                ("#" + _("_Search for Item"), self.window.interests.on_recommend_search, list_view, column_id)
+            )
 
         self.likes_popup_menu = PopupMenu(self.window.application, self.likes_list_view.widget,
                                           self.on_popup_likes_menu)
@@ -370,7 +370,9 @@ class UserInfo:
         self.picture_popup_menu = PopupMenu(self.window.application, self.picture)
         self.picture_popup_menu.add_items(
             ("#" + _("Copy Picture"), self.on_copy_picture),
-            ("#" + _("Save Picture"), self.on_save_picture)
+            ("#" + _("Save Picture"), self.on_save_picture),
+            ("", None),
+            ("#" + _("Remove"), self.on_hide_picture)
         )
 
         self.popup_menus = (
@@ -441,7 +443,7 @@ class UserInfo:
         self.picture_data = None
         self.picture_surface = None
 
-        self.picture_container.set_visible_child(self.placeholder_picture)
+        self.hide_picture()
 
     def load_picture(self, data):
 
@@ -466,7 +468,29 @@ class UserInfo:
             self.remove_picture()
             return
 
-        self.picture_container.set_visible_child(self.picture_view)
+        self.show_picture()
+
+    def show_picture(self):
+
+        if GTK_API_VERSION == 3:
+            self.user_info_container.set_hexpand(False)
+            self.interests_container.set_hexpand(False)
+
+        self.picture_view.set_visible(True)
+        self.picture_view.set_hexpand(True)
+
+        add_css_class(self.interests_container, "border-end")
+
+    def hide_picture(self):
+
+        if GTK_API_VERSION == 3:
+            self.user_info_container.set_hexpand(True)
+            self.interests_container.set_hexpand(True)
+
+        self.picture_view.set_visible(False)
+        self.picture_view.set_hexpand(False)
+
+        remove_css_class(self.interests_container, "border-end")
 
     def peer_connection_error(self):
 
@@ -479,16 +503,6 @@ class UserInfo:
         )
         self.set_finished()
 
-    def set_finished(self):
-
-        self.indeterminate_progress = False
-
-        self.userinfos.request_tab_changed(self.container)
-        self.progress_bar.set_fraction(1.0)
-        self.progress_bar.get_parent().set_reveal_child(False)
-
-        self.refresh_button.set_sensitive(True)
-
     def pulse_progress(self, repeat=True):
 
         if not self.indeterminate_progress:
@@ -497,7 +511,22 @@ class UserInfo:
         self.progress_bar.pulse()
         return repeat
 
-    def set_in_progress(self):
+    def user_info_progress(self, position, total):
+
+        self.indeterminate_progress = False
+
+        if total <= 0 or position <= 0:
+            fraction = 0.0
+
+        elif position < total:
+            fraction = float(position) / total
+
+        else:
+            fraction = 1.0
+
+        self.progress_bar.set_fraction(fraction)
+
+    def set_indeterminate_progress(self):
 
         self.indeterminate_progress = True
 
@@ -509,18 +538,15 @@ class UserInfo:
         self.info_bar.set_visible(False)
         self.refresh_button.set_sensitive(False)
 
-    def user_info_progress(self, position, total):
+    def set_finished(self):
 
         self.indeterminate_progress = False
 
-        if total <= 0 or position <= 0:
-            fraction = 0.0
-        elif position >= total:
-            fraction = 1.0
-        else:
-            fraction = float(position) / total
+        self.userinfos.request_tab_changed(self.container)
+        self.progress_bar.set_fraction(1.0)
+        self.progress_bar.get_parent().set_reveal_child(False)
 
-        self.progress_bar.set_fraction(fraction)
+        self.refresh_button.set_sensitive(True)
 
     # Button States #
 
@@ -549,9 +575,6 @@ class UserInfo:
     def update_privileges_button_state(self):
         self.gift_privileges_button.set_sensitive(bool(core.users.privileges_left))
 
-    def update_ip_address_button_state(self):
-        self.show_ip_address_button.set_sensitive(core.users.login_status != UserStatus.OFFLINE)
-
     def update_button_states(self):
 
         self.update_local_buttons_state()
@@ -559,7 +582,6 @@ class UserInfo:
         self.update_ban_button_state()
         self.update_ignore_button_state()
         self.update_privileges_button_state()
-        self.update_ip_address_button_state()
 
     # Network Messages #
 
@@ -572,9 +594,11 @@ class UserInfo:
             self.description_view.clear()
             self.description_view.add_line(msg.descr)
 
+        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
         self.upload_slots_label.set_text(humanize(msg.totalupl))
         self.queued_uploads_label.set_text(humanize(msg.queuesize))
-        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
+
+        self.queued_uploads_label.get_parent().set_visible(bool(msg.queuesize))
 
         self.picture_data = None
         self.load_picture(msg.pic)
@@ -607,22 +631,22 @@ class UserInfo:
             return
 
         country_name = core.network_filter.COUNTRIES.get(country_code, _("Unknown"))
-        country_text = f"{country_name} ({country_code})"
 
-        self.country_label.set_text(country_text)
+        self.country_label.set_text(country_name)
+        self.country_button.set_tooltip_text(f"{country_name} ({country_code})")
 
         icon_name = get_flag_icon_name(country_code)
         icon_args = (Gtk.IconSize.BUTTON,) if GTK_API_VERSION == 3 else ()  # pylint: disable=no-member
 
         self.country_icon.set_from_icon_name(icon_name, *icon_args)
-        self.country_icon.set_visible(bool(icon_name))
+        self.country_button.set_visible(bool(icon_name))
 
     def user_interests(self, msg):
 
         self.likes_list_view.clear()
-        self.likes_list_view.disable_sorting()
+        self.likes_list_view.freeze()
         self.dislikes_list_view.clear()
-        self.dislikes_list_view.disable_sorting()
+        self.dislikes_list_view.freeze()
 
         for like in msg.likes:
             self.likes_list_view.add_row([like], select_row=False)
@@ -630,8 +654,8 @@ class UserInfo:
         for hate in msg.hates:
             self.dislikes_list_view.add_row([hate], select_row=False)
 
-        self.likes_list_view.enable_sorting()
-        self.dislikes_list_view.enable_sorting()
+        self.likes_list_view.unfreeze()
+        self.dislikes_list_view.unfreeze()
 
     # Callbacks #
 
@@ -639,7 +663,7 @@ class UserInfo:
         """Enables indeterminate progress bar mode when tab is active."""
 
         if not self.indeterminate_progress and progress_bar.get_fraction() <= 0.0:
-            self.set_in_progress()
+            self.set_indeterminate_progress()
 
         if core.users.login_status == UserStatus.OFFLINE:
             self.peer_connection_error()
@@ -682,6 +706,12 @@ class UserInfo:
 
     def on_edit_interests(self, *_args):
         self.window.change_main_page(self.window.interests_page)
+
+    def on_likes_row_activated(self, *_args):
+        self.window.interests.show_item_recommendations(self.likes_list_view, column_id="likes")
+
+    def on_dislikes_row_activated(self, *_args):
+        self.window.interests.show_item_recommendations(self.dislikes_list_view, column_id="dislikes")
 
     def on_send_message(self, *_args):
         core.privatechat.show_user(self.user)
@@ -791,8 +821,11 @@ class UserInfo:
             initial_file=f"{self.user}_{current_date_time}.png"
         ).present()
 
+    def on_hide_picture(self, *_args):
+        self.hide_picture()
+
     def on_refresh(self, *_args):
-        self.set_in_progress()
+        self.set_indeterminate_progress()
         core.userinfo.show_user(self.user, refresh=True)
 
     def on_focus(self, *_args):

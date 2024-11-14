@@ -45,6 +45,7 @@ EVENT_NAMES = {
     "check-privileges",
     "connect-to-peer",
     "invalid-password",
+    "invalid-username",
     "peer-address",
     "privileged-users",
     "server-disconnect",
@@ -112,9 +113,13 @@ EVENT_NAMES = {
 
     # Network filter
     "ban-user",
+    "ban-user-ip",
     "ignore-user",
+    "ignore-user-ip",
     "unban-user",
+    "unban-user-ip",
     "unignore-user",
+    "unignore-user-ip",
 
     # Private chat
     "clear-private-messages",
@@ -196,6 +201,32 @@ EVENT_NAMES = {
 }
 
 
+class SchedulerEvent:
+
+    __slots__ = ("event_id", "next_time", "delay", "repeat", "callback", "callback_args")
+
+    def __init__(self, event_id, next_time=None, delay=None, repeat=None,
+                 callback=None, callback_args=None):
+
+        self.event_id = event_id
+        self.next_time = next_time
+        self.delay = delay
+        self.repeat = repeat
+        self.callback = callback
+        self.callback_args = callback_args
+
+
+class ThreadEvent:
+
+    __slots__ = ("event_name", "args", "kwargs")
+
+    def __init__(self, event_name, args, kwargs):
+
+        self.event_name = event_name
+        self.args = args
+        self.kwargs = kwargs
+
+
 class Events:
     __slots__ = ("_callbacks", "_thread_events", "_pending_scheduler_events", "_scheduler_events",
                  "_scheduler_event_id", "_is_active")
@@ -248,7 +279,7 @@ class Events:
             function(*args, **kwargs)
 
     def emit_main_thread(self, event_name, *args, **kwargs):
-        self._thread_events.append((event_name, args, kwargs))
+        self._thread_events.append(ThreadEvent(event_name, args, kwargs))
 
     def invoke_main_thread(self, callback, *args, **kwargs):
         self.emit_main_thread("thread-callback", callback, *args, **kwargs)
@@ -262,12 +293,12 @@ class Events:
             callback_args = ()
 
         self._pending_scheduler_events.append(
-            (self._scheduler_event_id, (next_time, delay, repeat, callback, callback_args)))
-
+            SchedulerEvent(self._scheduler_event_id, next_time, delay, repeat, callback, callback_args)
+        )
         return self._scheduler_event_id
 
     def cancel_scheduled(self, event_id):
-        self._pending_scheduler_events.append((event_id, None))
+        self._pending_scheduler_events.append(SchedulerEvent(event_id, next_time=None))
 
     def process_thread_events(self):
         """Called by the main loop 10 times per second to emit thread events in
@@ -288,8 +319,8 @@ class Events:
         while self._thread_events:
             event_list.append(self._thread_events.popleft())
 
-        for event_name, args, kwargs in event_list:
-            self.emit(event_name, *args, **kwargs)
+        for event in event_list:
+            self.emit(event.event_name, *event.args, **event.kwargs)
 
         return True
 
@@ -298,12 +329,13 @@ class Events:
         while self._is_active:
             # Scheduled events additions/removals from other threads
             while self._pending_scheduler_events:
-                event_id, event = self._pending_scheduler_events.popleft()
+                event = self._pending_scheduler_events.popleft()
 
-                if event is not None:
-                    self._scheduler_events[event_id] = event
-                else:
-                    self._scheduler_events.pop(event_id, None)
+                if event.next_time is not None:
+                    self._scheduler_events[event.event_id] = event
+                    continue
+
+                self._scheduler_events.pop(event.event_id, None)
 
             # No scheduled events
             if not self._scheduler_events:
@@ -311,22 +343,22 @@ class Events:
                 continue
 
             # Retrieve upcoming event
-            event_id, event_data = min(self._scheduler_events.items(), key=lambda x: x[1][0])  # Compare timestamps
-            event_time, delay, repeat, callback, callback_args = event_data
+            event = min(self._scheduler_events.values(), key=lambda event: event.next_time)
+            event_time = event.next_time
             current_time = time.monotonic()
             sleep_time = (event_time - current_time)
 
-            if sleep_time <= 0:
-                self.invoke_main_thread(callback, *callback_args)
-
-                if repeat:
-                    self._scheduler_events[event_id] = ((event_time + delay), delay, repeat, callback, callback_args)
-                else:
-                    self._scheduler_events.pop(event_id, None)
-
+            if sleep_time > 0:
+                time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
                 continue
 
-            time.sleep(min(sleep_time, self.SCHEDULER_MAX_IDLE))
+            self.invoke_main_thread(event.callback, *event.callback_args)
+
+            if event.repeat:
+                event.next_time = (event_time + event.delay)
+                continue
+
+            self._scheduler_events.pop(event.event_id, None)
 
     def _thread_callback(self, callback, *args, **kwargs):
         callback(*args, **kwargs)
