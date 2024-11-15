@@ -1024,10 +1024,12 @@ class ChatRoom:
 
     def peer_address(self, msg):
 
+        username = msg.user
+
         if not core.network_filter.is_user_ip_ignored(username):
             return
 
-        self.ignore_user(msg.user)
+        self.ignore_user(username)
 
     def user_stats(self, msg):
 
