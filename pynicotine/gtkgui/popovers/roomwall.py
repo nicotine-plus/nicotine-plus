@@ -52,11 +52,8 @@ class RoomWall(Popover):
 
     def _update_message_list(self):
 
-        tickers = core.chatrooms.joined_rooms[self.room].tickers
-        newline = "\n"
-
-        for user, message in list(tickers.items()):
-            self.message_view.add_line(f"> [{user}] {message.replace(newline, ' ')}", prepend=True)
+        for username, message in list(core.chatrooms.joined_rooms[self.room].tickers.items()):
+            self.message_view.add_line(f"> [{username}] {message}", prepend=True)
 
         self.message_view.place_cursor_at_line(0)
 
