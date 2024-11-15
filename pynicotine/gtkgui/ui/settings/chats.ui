@@ -60,7 +60,6 @@
               <object class="GtkSwitch" id="private_room_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <signal name="notify::active" handler="on_private_room_changed"/>
               </object>
             </child>
           </object>

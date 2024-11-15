@@ -216,12 +216,12 @@ class Users:
 
         del self.watched[username]
 
-    def _server_disconnect(self, manual_disconnect=False):
+    def _server_disconnect(self, msg):
 
         self.login_status = UserStatus.OFFLINE
 
         if core.pluginhandler:
-            core.pluginhandler.server_disconnect_notification(manual_disconnect)
+            core.pluginhandler.server_disconnect_notification(msg.manual_disconnect)
 
         # Clean up connections
         self.addresses.clear()
