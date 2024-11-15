@@ -504,8 +504,8 @@ class ChatRoom:
         self.chat_view = ChatView(
             self.chat_view_container, chat_entry=self.chatrooms.chat_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-            log_reader=self.prepend_old_messages,
             status_users=core.chatrooms.joined_rooms[room].users,
+            read_log_event=self.prepend_old_messages,
             roomname_event=(self.roomname_event if is_global else None),
             username_event=self.username_event
         )
@@ -633,7 +633,7 @@ class ChatRoom:
         )
 
         self.setup_public_feed()
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
     def load(self):
         GLib.idle_add(self.on_loaded)
@@ -650,8 +650,8 @@ class ChatRoom:
         for menu in self.popup_menus:
             menu.destroy()
 
+        self.clear()
         self.activity_view.destroy()
-        self.chat_view.clear()
         self.chat_view.destroy()
         self.users_list_view.destroy()
         self.__dict__.clear()
@@ -725,15 +725,15 @@ class ChatRoom:
 
         self.chat_view.prepend_log_lines(login_username=config.sections["server"]["login"])
 
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
-    def _read_old_messages(self):
+    def _read_log_file(self):
 
         if self.loaded and not self.chat_view.num_prepended_lines:
             # Message view was cleared, reset log datum
             log.shut_log(folder_path=log.room_folder_path, basename=self.room)
 
-        self.chat_view.old_lines = log.read_log(
+        self.chat_view.read_log_lines = log.read_log(
             folder_path=log.room_folder_path,
             basename=self.room,
             num_lines=self.chat_view.get_num_viewable_lines()
@@ -1187,7 +1187,7 @@ class ChatRoom:
 
     def on_clear_messages(self, *_args):
         self.chat_view.clear()
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
     def on_delete_room_log_response(self, *_args):
 

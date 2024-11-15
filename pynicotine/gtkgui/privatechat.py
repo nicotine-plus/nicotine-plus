@@ -330,7 +330,7 @@ class PrivateChat:
         self.chat_view = ChatView(
             self.chat_view_container, chat_entry=self.chats.chat_entry, editable=False,
             horizontal_margin=10, vertical_margin=5, pixels_below_lines=2,
-            log_reader=self.prepend_old_messages, username_event=self.username_event
+            read_log_event=self.prepend_old_messages, username_event=self.username_event
         )
 
         # Text Search
@@ -377,7 +377,7 @@ class PrivateChat:
 
         self.popup_menus = (self.popup_menu, self.popup_menu_user_chat, self.popup_menu_user_tab)
 
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
     def load(self):
         GLib.idle_add(self.on_loaded)
@@ -398,15 +398,15 @@ class PrivateChat:
 
         self.chat_view.prepend_log_lines(login_username=config.sections["server"]["login"])
 
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
-    def _read_old_messages(self):
+    def _read_log_file(self):
 
         if self.loaded and not self.chat_view.num_prepended_lines:
             # Messages have been cleared, reset read line datum
             log.shut_log(folder_path=log.private_chat_folder_path, basename=self.user)
 
-        self.chat_view.old_lines = log.read_log(
+        self.chat_view.read_log_lines = log.read_log(
             folder_path=log.private_chat_folder_path,
             basename=self.user,
             num_lines=self.chat_view.get_num_viewable_lines()
@@ -425,7 +425,7 @@ class PrivateChat:
         for menu in self.popup_menus:
             menu.destroy()
 
-        self.chat_view.clear()
+        self.clear()
         self.chat_view.destroy()
         self.search_bar.destroy()
         self.__dict__.clear()
@@ -465,7 +465,7 @@ class PrivateChat:
 
     def on_clear_messages(self, *_args):
         self.chat_view.clear()
-        GLib.idle_add(self._read_old_messages)
+        GLib.idle_add(self._read_log_file)
 
     def on_delete_chat_log_response(self, *_args):
 
@@ -541,14 +541,14 @@ class PrivateChat:
         )
         self.chats.history.update_user(username, message)
 
-    def echo_private_message(self, text, message_type):
+    def echo_private_message(self, message, message_type):
 
         if message_type != "command":
             timestamp_format = config.sections["logging"]["private_timestamp"]
         else:
             timestamp_format = None
 
-        self.chat_view.add_line(text, message_type=message_type, timestamp_format=timestamp_format)
+        self.chat_view.add_line(message, message_type=message_type, timestamp_format=timestamp_format)
 
     def username_event(self, pos_x, pos_y, user):
 

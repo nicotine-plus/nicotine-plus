@@ -589,7 +589,7 @@ class ChatRooms:
             # User ignored, ignore Ticker messages
             return
 
-        room_obj.tickers[username] = msg.msg
+        room_obj.tickers[username] = msg.msg.replace("\n", " ")
 
     def _ticker_remove(self, msg):
         """Server code 115."""

@@ -132,8 +132,7 @@ class TextView:
                 yield (text[:match.start()], tag)
 
                 url = match.group()
-                urltag = self.create_tag("urlcolor", url=url)
-                yield (url, urltag)
+                yield (url, self.create_tag("urlcolor", url=url))
 
                 # Match remaining url
                 text = text[match.end():]
@@ -146,20 +145,17 @@ class TextView:
         line_number = 0 if prepend else self.textbuffer.get_line_count()
         iterator = self.get_iter_at_line(line_number)
 
-        if prepend:
-            # Break at end of line to avoid unwanted whitespace
+        # None tag on line breaks to prevent wrong color glitch on next line
+        if prepend and self.textbuffer.get_char_count() > 0:
             text_line.append(("\n", None))
 
         elif line_number > 1 or self.textbuffer.get_char_count() > 0:
-            # No tag applied on line breaks to prevent visual glitch where text on the
-            # next line has the wrong color
-            self._insert_text("\n", None, iterator)
+            text_line.insert(0, ("\n", None))
 
         for text, tag in text_line:
             self._insert_text(text, tag, iterator)
 
-        if self._remove_old_lines(line_number):
-            self.add_line("--- overflow ---", prepend=True)
+        self._remove_old_lines(line_number)
 
     def _insert_text(self, text, tag, iterator):
 
@@ -172,21 +168,18 @@ class TextView:
             start_iter = self.textbuffer.get_iter_at_offset(start_offset)
             self.textbuffer.apply_tag(tag, start_iter, iterator)
 
-    def _remove_old_lines(self, num_line_count):
+    def _remove_old_lines(self, num_lines):
 
-        if num_line_count < self.MAX_NUM_LINES:
-            # Optimization: Not counted while prepending each line
-            return 0
-
-        num_lines_removed = (num_line_count - (self.MAX_NUM_LINES - 1000))
+        if num_lines < self.MAX_NUM_LINES:
+            return
 
         # Optimization: remove lines in batches
         start_iter = self.textbuffer.get_start_iter()
-        end_line = num_lines_removed
+        end_line = (num_lines - (self.MAX_NUM_LINES - 1000))
         end_iter = self.get_iter_at_line(end_line)
 
         self.textbuffer.delete(start_iter, end_iter)
-        return num_lines_removed
+        self.add_line("--- overflow ---", prepend=True)
 
     def add_line(self, message, prepend=False, timestamp_format=None):
         """Append or prepend a new line of unformatted text."""
@@ -273,11 +266,6 @@ class TextView:
             self.cursor_window.set_cursor(cursor)
 
     def clear(self):
-
-        start_iter = self.textbuffer.get_start_iter()
-        end_iter = self.textbuffer.get_end_iter()
-
-        self.textbuffer.remove_all_tags(start_iter, end_iter)
         self.set_text("")
 
     # Text Tags (Roomnames, Usernames, URLs) #
@@ -386,16 +374,16 @@ class TextView:
 
 class ChatView(TextView):
 
-    def __init__(self, *args, chat_entry=None, log_reader=None, status_users=None,
+    def __init__(self, *args, chat_entry=None, status_users=None, read_log_event=None,
                  roomname_event=None, username_event=None, **kwargs):
 
         super().__init__(*args, **kwargs)
 
         self.user_tags = self.status_users = {}
         self.chat_entry = chat_entry
-        self.log_reader = log_reader
         self.num_prepended_lines = 0
-        self.old_lines = None
+        self.read_log_lines = None
+        self.read_log_event = read_log_event
         self.roomname_event = roomname_event
         self.username_event = username_event
 
@@ -419,12 +407,12 @@ class ChatView(TextView):
         Accelerator("Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Down", self.widget, self.on_page_down_accelerator)
         Accelerator("Page_Up", self.widget, self.on_page_up_accelerator)
+        self.scrollable.connect("edge-overshot", self.on_edge_overshot)  # or "edge-reached"
 
     def add_line(self, message, prepend=False, timestamp_format=None, message_type=None,
                  timestamp=None, timestamp_string=None, roomname=None, username=None):
         """Append or prepend a new chat message line with name tags and links."""
 
-        # Make a list of tuples [(text, tag),]
         line = list(self._generate_chat_line(
             message,
             message_type=message_type,
@@ -438,6 +426,7 @@ class ChatView(TextView):
 
     def _generate_chat_line(self, message, timestamp_format=None, message_type=None,
                             timestamp=None, timestamp_string=None, roomname=None, username=None):
+        """Make a list of tuples [(text, tag),] for each element in line."""
 
         tag = self.type_tags.get(message_type)
 
@@ -452,19 +441,16 @@ class ChatView(TextView):
             yield (" ", tag)
 
         # Tag roomname, only used in global room feed
-        roomtag = self._get_room_tag(roomname)
-
-        if roomtag:
-            yield (roomname, roomtag)
+        if roomname and self.roomname_event:
+            yield (roomname, self._get_room_tag(roomname))
             yield (" | ", tag)
 
-        # Tag username with popup menu creating tag, and away/online/offline colors
+        # Tag username with popup menu and away/online/offline colors
         if username:
-            usertag = self._get_user_tag(username)
             opener, closer = ("* ", " ") if message_type == "action" else ("[", "] ")
 
             yield (opener, tag)
-            yield (username, usertag)
+            yield (username, self._get_user_tag(username))
             yield (closer, tag)
 
         # Highlight urls, if found and tag them
@@ -474,20 +460,19 @@ class ChatView(TextView):
     def prepend_log_lines(self, login_username=None):
         """Insert batch of previously gathered log lines from file"""
 
-        if not self.num_prepended_lines and self.old_lines:
+        if not self.num_prepended_lines and self.read_log_lines:
             self.add_line(_("--- old messages above ---"), prepend=True, message_type="hilite")
 
-        elif self._remove_old_lines(self.textbuffer.get_line_count() + len(self.old_lines)):
-            self.add_line("--- overflow ---", prepend=True, message_type="hilite")
+        self._remove_old_lines(self.textbuffer.get_line_count() + len(self.read_log_lines))
 
-        for decoded_line in self.decode_log_lines(self.old_lines, login_username=login_username):
+        for decoded_line in self.decode_log_lines(self.read_log_lines, login_username=login_username):
             timestamp_string, username, message, message_type = decoded_line
 
             self.add_line(
                 message, prepend=True, message_type=message_type, timestamp_string=timestamp_string, username=username)
 
-        self.num_prepended_lines += len(self.old_lines)
-        self.old_lines.clear()
+        self.num_prepended_lines += len(self.read_log_lines)
+        self.read_log_lines.clear()
 
     @staticmethod
     def decode_log_lines(log_lines, login_username=None):
@@ -539,7 +524,7 @@ class ChatView(TextView):
 
         super().clear()
         self.num_prepended_lines = 0
-        self.old_lines.clear()
+        self.read_log_lines.clear()
         self.user_tags.clear()
 
         if self.roomname_event:
@@ -548,27 +533,21 @@ class ChatView(TextView):
     def get_num_viewable_lines(self):
         """Calculate the number of lines that can fit in the viewable area."""
 
-        if self.textbuffer.get_line_count() > 1:
-            # Measure the approximate page size, assume 1 message per line
-            start_iter = self.get_iter_at_line(0)
+        allocated_height = self.widget.get_allocated_height()
+
+        if allocated_height:
+            start_iter = self.get_iter_at_line(1)
             _y, line_height = self.widget.get_line_yrange(start_iter)
 
-            if line_height:
-                view_height = self.widget.get_allocated_height()
-                return int(view_height / line_height)
+            if allocated_height > line_height:
+                return int(allocated_height / line_height)
 
-        # Initially allow enough old lines to reveal the scrollbar
-        return 100
+        return 50  # Default initial value when no lines to measure yet
 
     def _get_room_tag(self, roomname):
 
-        if not self.roomname_event or not roomname:
-            # Room tags only used in global room feed
-            return None
-
         if roomname not in self._room_tags:
-            # Pick a color, any color?
-            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)
+            color = USER_STATUS_COLORS.get(UserStatus.ONLINE)  # Pick a color, any color?
             self._room_tags[roomname] = self.create_tag(color_id=color, callback=self.roomname_event, name=roomname)
 
         return self._room_tags[roomname]
@@ -609,8 +588,8 @@ class ChatView(TextView):
     def on_page_up_accelerator(self, *_args):
         """Page_Up: Load a page of old log lines and prepend them."""
 
-        if self.adjustment_value <= 0.0:
-            self.log_reader()
+        if self.adjustment_value < self.adjustment.get_page_increment():
+            self.read_log_event()
 
     def on_adjustment_value_changed(self, *_args):
 
@@ -618,12 +597,12 @@ class ChatView(TextView):
 
         super().on_adjustment_value_changed()
 
-        new_value = self.adjustment_value
+        if self.adjustment_value < old_value < self.adjustment.get_page_increment():
+            # Near top, pre-emptive smooth infinite scrolling
+            self.read_log_event()
 
-        if new_value >= old_value:
-            # Going down, noop
-            return
+    def on_edge_overshot(self, _widget, pos):
 
-        if new_value < self.adjustment.get_page_increment():
-            # Near top, infinite scrolling
-            self.log_reader()
+        if pos == Gtk.PositionType.TOP:
+            # Edge reached, readback a page
+            self.read_log_event()
