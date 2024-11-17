@@ -5,6 +5,36 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
+## Version 3.3.7 (Unreleased)
+
+### Changes
+
+ * Grey out ignored usernames in room user lists
+ * Automatically reconnect to the server when changing listening port
+ * Always show number of upload slots on user profiles
+
+### Corrections
+
+ * Fixed a crash when using file choosers in plugin settings
+ * Fixed a crash when upgrading from Nicotine+ 1.4.1 and earlier
+ * Fixed broken upload stats caused by Soulseek NS clients resuming >2 GB downloads
+ * Windows: Reverted switch to Clang environment due to rare crashes
+
+### Issues closed on GitHub
+
+ * Banned and ignored users indicators ([#2100](https://github.com/nicotine-plus/nicotine-plus/issues/2100))
+ * Allow N+ to update Port without restarting ([#2704](https://github.com/nicotine-plus/nicotine-plus/issues/2704))
+ * Incorrect processing of passwords with special characters ([#3156](https://github.com/nicotine-plus/nicotine-plus/issues/3156))
+ * 3.3.5 has same bug latest Test clients have about upload showing wrong upload ([#3162](https://github.com/nicotine-plus/nicotine-plus/issues/3162))
+ * Cannot update nicotine+ ([#3167](https://github.com/nicotine-plus/nicotine-plus/issues/3167))
+ * 3.3.6 crashes on launch on macOS due to broken rendering ([#3172](https://github.com/nicotine-plus/nicotine-plus/issues/3172))
+ * GTK4-based app crashes with: TypeError: No means to translate argument or return value for 'GdkButtonEvent' ([#3176](https://github.com/nicotine-plus/nicotine-plus/issues/3176))
+ * I get this error when i try to run Nicotine+ ([#3175](https://github.com/nicotine-plus/nicotine-plus/issues/3175))
+ * Filechooser.py Window' object has no attribute 'widget' ([#3182](https://github.com/nicotine-plus/nicotine-plus/issues/3182))
+ * \[3.3.7.dev1\] Windows Nightly builds libgcc_s_seh-1.dll is missing ([#3183](https://github.com/nicotine-plus/nicotine-plus/issues/3183))
+ * \[Bug\]: Transfer Statistics Total Uploaded Size jumps to 32 EiB ([#3185](https://github.com/nicotine-plus/nicotine-plus/issues/3185))
+
+
 ## Version 3.3.6 (October 15, 2024)
 
 ### Changes
