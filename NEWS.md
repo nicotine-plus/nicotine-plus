@@ -42,6 +42,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Hide picture view when no user profile picture is present
  * GTK 4: Stop using old GL renderer
  * Windows: Reduced package size by switching to MSYS2's Clang environment
+ * Windows: Update Python from 3.11 to 3.12
 
 ### Corrections
 
