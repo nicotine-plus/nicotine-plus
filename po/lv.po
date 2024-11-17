@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-17 14:13+0200\n"
-"PO-Revision-Date: 2024-08-07 19:33+0000\n"
+"PO-Revision-Date: 2024-11-17 12:58+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Latvian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lv/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -5487,7 +5487,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:352
 msgid "Network interface:"
-msgstr "Tīkla interfeiss:"
+msgstr "Tīkla saskarne:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""

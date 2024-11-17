@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-17 14:13+0200\n"
-"PO-Revision-Date: 2024-10-15 16:00+0000\n"
-"Last-Translator: cwpute <collan+weblate@free.fr>\n"
+"PO-Revision-Date: 2024-11-17 12:58+0000\n"
+"Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.8-rc\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -5514,9 +5514,8 @@ msgid "Public IP address:"
 msgstr "Adresse IP publique :"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:159
-#, fuzzy
 msgid "Listening port:"
-msgstr "Écoute du port : %i"
+msgstr "Port d'écoute :"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:185
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"

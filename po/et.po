@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-17 14:13+0200\n"
-"PO-Revision-Date: 2024-08-07 19:33+0000\n"
+"PO-Revision-Date: 2024-11-17 12:58+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/et/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -5423,9 +5423,8 @@ msgid "Public IP address:"
 msgstr "Avalik IP aadress:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:159
-#, fuzzy
 msgid "Listening port:"
-msgstr "Kuulatakse pordist: %i"
+msgstr "Kuulamisport:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:185
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
@@ -5462,9 +5461,8 @@ msgstr ""
 "Muuda seda väärtust ainult siis, kui tead, mida teed."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:352
-#, fuzzy
 msgid "Network interface:"
-msgstr "Võrgu filtrid"
+msgstr "Võrguliides:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
