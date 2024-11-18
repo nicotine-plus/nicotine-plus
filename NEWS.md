@@ -31,6 +31,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * 3.3.6 crashes on launch on macOS due to broken rendering ([#3172](https://github.com/nicotine-plus/nicotine-plus/issues/3172))
  * GTK4-based app crashes with: TypeError: No means to translate argument or return value for 'GdkButtonEvent' ([#3176](https://github.com/nicotine-plus/nicotine-plus/issues/3176))
  * I get this error when i try to run Nicotine+ ([#3175](https://github.com/nicotine-plus/nicotine-plus/issues/3175))
+ * A lot of dump files (gdbus) ([#3181](https://github.com/nicotine-plus/nicotine-plus/issues/3181))
  * Filechooser.py Window' object has no attribute 'widget' ([#3182](https://github.com/nicotine-plus/nicotine-plus/issues/3182))
  * \[3.3.7.dev1\] Windows Nightly builds libgcc_s_seh-1.dll is missing ([#3183](https://github.com/nicotine-plus/nicotine-plus/issues/3183))
  * \[Bug\]: Transfer Statistics Total Uploaded Size jumps to 32 EiB ([#3185](https://github.com/nicotine-plus/nicotine-plus/issues/3185))
