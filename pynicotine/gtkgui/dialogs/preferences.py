@@ -1036,12 +1036,7 @@ class IgnoredUsersPage:
         self.ignored_ips = config.sections["server"]["ipignorelist"].copy()
 
     def get_settings(self):
-        return {
-            "server": {
-                "ignorelist": self.ignored_users[:],
-                "ipignorelist": self.ignored_ips.copy()
-            }
-        }
+        return {}
 
     def clear_changes(self):
 
@@ -1224,10 +1219,6 @@ class BannedUsersPage:
     def get_settings(self):
 
         return {
-            "server": {
-                "banlist": self.banned_users[:],
-                "ipblocklist": self.banned_ips.copy()
-            },
             "transfers": {
                 "usecustomban": self.ban_message_toggle.get_active(),
                 "customban": self.ban_message_entry.get_text(),
