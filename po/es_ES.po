@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-17 14:13+0200\n"
-"PO-Revision-Date: 2024-09-04 07:09+0000\n"
+"PO-Revision-Date: 2024-11-19 09:03+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -5529,7 +5529,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:352
 msgid "Network interface:"
-msgstr "Interfaz de la red:"
+msgstr "Interfaz de red:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:28
 msgid ""
