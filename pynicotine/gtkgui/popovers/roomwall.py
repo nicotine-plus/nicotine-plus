@@ -98,8 +98,7 @@ class RoomWall(Popover):
         self._update_message_list()
 
         login_username = core.users.login_username
-        message = core.chatrooms.joined_rooms[self.room].tickers.get(login_username)
+        message = core.chatrooms.joined_rooms[self.room].tickers.get(login_username, "")
 
-        if message:
-            self.message_entry.set_text(message)
-            self.message_entry.select_region(0, -1)
+        self.message_entry.set_text(message)
+        self.message_entry.select_region(0, -1)
