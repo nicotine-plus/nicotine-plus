@@ -303,7 +303,8 @@ class NetworkFilter:
         for event_name, callback in (
             ("peer-address", self._get_peer_address),
             ("quit", self._quit),
-            ("server-disconnect", self._server_disconnect)
+            ("server-disconnect", self._server_disconnect),
+            ("start", self._start)
         ):
             events.connect(event_name, callback)
 
