@@ -18,7 +18,10 @@
 
 import sys
 
+from gi.repository import Gtk
+
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 
 
@@ -34,9 +37,14 @@ class Window:
 
         self.widget = widget
         self._dark_mode_handler = None
+        self._text_widget = None
 
         if GTK_API_VERSION == 3:
             return
+
+        # Workaround for GTK 4.16 bug where text is replaced when inserting emoji
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) == (4, 16):
+            self.widget.connect("notify::focus-widget", self._on_focus_widget_changed)
 
         if sys.platform == "win32":
             widget.connect("realize", self._on_realize_win32)
@@ -48,9 +56,46 @@ class Window:
                     "notify::dark", self._on_dark_mode_win32
                 )
 
-    def _menu_popup(self, controller, widget):
-        if controller.is_active():
-            widget.activate_action("menu.popup")
+    def _on_focus_widget_changed(self, *_args):
+
+        focus_widget = self.widget.get_focus()
+
+        if focus_widget is None:
+            return
+
+        emoji_chooser = focus_widget.get_ancestor(Gtk.EmojiChooser)
+
+        if emoji_chooser is None:
+            self._text_widget = focus_widget if isinstance(focus_widget, Gtk.Text) else None
+            return
+
+        if self._text_widget is None:
+            return
+
+        emoji_chooser.old_text = self._text_widget.get_text()
+        emoji_chooser.old_pos = self._text_widget.get_position()
+
+        emoji_chooser.picked_handler = emoji_chooser.connect("emoji-picked", self._on_emoji_chooser_picked)
+        emoji_chooser.hide_handler = emoji_chooser.connect("hide", self._on_emoji_chooser_hide)
+
+    def _on_emoji_chooser_picked(self, chooser, emoji):
+
+        old_text = chooser.old_text
+        old_pos = chooser.old_pos
+        new_text = old_text[:old_pos] + emoji + old_text[old_pos:]
+
+        self._text_widget.set_text(new_text)
+        self._text_widget.set_position(old_pos + len(emoji))
+
+    def _on_emoji_chooser_hide(self, chooser):
+
+        if chooser.picked_handler is not None:
+            chooser.disconnect(chooser.picked_handler)
+            chooser.picked_handler = None
+
+        if chooser.hide_handler is not None:
+            chooser.disconnect(chooser.hide_handler)
+            chooser.hide_handler = None
 
     def _on_realize_win32(self, *_args):
 
