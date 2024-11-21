@@ -80,7 +80,7 @@ class TextView:
         self.notify_value_handler = self.adjustment.connect("notify::value", self.on_adjustment_value_changed)
 
         self.pressed_x = self.pressed_y = 0
-        self.default_tags = {}
+        self.type_tags = {}
         self.parse_urls = parse_urls
 
         if GTK_API_VERSION >= 4:
@@ -154,7 +154,7 @@ class TextView:
     def append_line(self, line, message_type=None, timestamp=None, timestamp_format=None,
                     username=None, usertag=None):
 
-        tag = self.default_tags.get(message_type)
+        tag = self.type_tags.get(message_type)
         num_lines = self.textbuffer.get_line_count()
         line = str(line).strip("\n")
 
@@ -389,7 +389,7 @@ class ChatView(TextView):
             # currently in the room, even though we might know their global status
             self.status_users = status_users
 
-        self.default_tags = {
+        self.type_tags = {
             "remote": self.create_tag("chatremote"),
             "local": self.create_tag("chatlocal"),
             "command": self.create_tag("chatcommand"),
