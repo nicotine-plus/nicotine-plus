@@ -138,11 +138,12 @@ class Logger:
         if log_file is not None:
             return log_file
 
-        folder_path_encoded = encode_path(folder_path)
         file_path_encoded = encode_path(file_path)
 
         if not should_create_file and not os.path.isfile(file_path_encoded):
             return log_file
+
+        folder_path_encoded = encode_path(folder_path)
 
         if not os.path.exists(folder_path_encoded):
             os.makedirs(folder_path_encoded)
@@ -217,7 +218,7 @@ class Logger:
         self.private_chat_folder_path = self._normalize_folder_path(config.sections["logging"]["privatelogsdir"])
 
     def open_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.open_log_callback)
+        self._log_file_operation(folder_path, basename, self.open_log_callback)
 
     def read_log(self, folder_path, basename, num_lines):
 
@@ -246,9 +247,9 @@ class Logger:
         return lines
 
     def delete_log(self, folder_path, basename):
-        self._handle_log(folder_path, basename, self.delete_log_callback)
+        self._log_file_operation(folder_path, basename, self.delete_log_callback)
 
-    def _handle_log(self, folder_path, basename, callback):
+    def _log_file_operation(self, folder_path, basename, callback):
 
         folder_path_encoded = encode_path(folder_path)
         file_path = os.path.join(folder_path, clean_file(f"{basename}.log"))
