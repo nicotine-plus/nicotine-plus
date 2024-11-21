@@ -19,6 +19,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when using file choosers in plugin settings
  * Fixed a crash when upgrading from Nicotine+ 1.4.1 and earlier
  * Fixed broken upload stats caused by Soulseek NS clients resuming >2 GB downloads
+ * Fixed an issue where picking an emoji would clear existing text
  * Windows: Reverted switch to Clang environment due to rare crashes
 
 ### Issues closed on GitHub
@@ -35,6 +36,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Filechooser.py Window' object has no attribute 'widget' ([#3182](https://github.com/nicotine-plus/nicotine-plus/issues/3182))
  * \[3.3.7.dev1\] Windows Nightly builds libgcc_s_seh-1.dll is missing ([#3183](https://github.com/nicotine-plus/nicotine-plus/issues/3183))
  * \[Bug\]: Transfer Statistics Total Uploaded Size jumps to 32 EiB ([#3185](https://github.com/nicotine-plus/nicotine-plus/issues/3185))
+ * Picking an emoji clears text in chat entry, rather than being appended to it ([#3197](https://github.com/nicotine-plus/nicotine-plus/issues/3197))
 
 
 ## Version 3.3.6 (October 15, 2024)
