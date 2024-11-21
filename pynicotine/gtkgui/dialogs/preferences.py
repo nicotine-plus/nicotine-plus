@@ -920,7 +920,6 @@ class UserProfilePage:
         ) = self.widgets = ui.load(scope=self, path="settings/userinfo.ui")
 
         self.application = application
-        self.user_profile_required = False
 
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
@@ -943,25 +942,15 @@ class UserProfilePage:
         self.__dict__.clear()
 
     def set_settings(self):
-
         self.description_view.clear()
         self.application.preferences.set_widgets_data(self.options)
 
-        self.user_profile_required = False
-
     def get_settings(self):
-
-        description = repr(self.description_view.get_text())
-        picture_path = self.select_picture_button.get_path()
-
-        if (description != config.sections["userinfo"]["descr"]
-                or picture_path != config.sections["userinfo"]["pic"]):
-            self.user_profile_required = True
 
         return {
             "userinfo": {
-                "descr": description,
-                "pic": picture_path
+                "descr": repr(self.description_view.get_text()),
+                "pic": self.select_picture_button.get_path()
             }
         }
 
@@ -1047,12 +1036,7 @@ class IgnoredUsersPage:
         self.ignored_ips = config.sections["server"]["ipignorelist"].copy()
 
     def get_settings(self):
-        return {
-            "server": {
-                "ignorelist": self.ignored_users[:],
-                "ipignorelist": self.ignored_ips.copy()
-            }
-        }
+        return {}
 
     def clear_changes(self):
 
@@ -1235,10 +1219,6 @@ class BannedUsersPage:
     def get_settings(self):
 
         return {
-            "server": {
-                "banlist": self.banned_users[:],
-                "ipblocklist": self.banned_ips.copy()
-            },
             "transfers": {
                 "usecustomban": self.ban_message_toggle.get_active(),
                 "customban": self.ban_message_entry.get_text(),
@@ -1367,7 +1347,6 @@ class ChatsPage:
 
         self.application = application
         self.completion_required = False
-        self.private_room_required = False
 
         format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
         format_codes_label = _("Format codes")
@@ -1477,7 +1456,6 @@ class ChatsPage:
         self.replacements = config.sections["words"]["autoreplaced"].copy()
 
         self.completion_required = False
-        self.private_room_required = False
 
     def get_settings(self):
 
@@ -1518,9 +1496,6 @@ class ChatsPage:
     def on_activate_link(self, _label, url):
         open_uri(url)
         return True
-
-    def on_private_room_changed(self, *_args):
-        self.private_room_required = True
 
     def on_completion_changed(self, *_args):
         self.completion_required = True
@@ -2345,7 +2320,6 @@ class SearchesPage:
         ) = self.widgets = ui.load(scope=self, path="settings/search.ui")
 
         self.application = application
-        self.search_required = False
 
         self.filter_help = SearchFilterHelp(application.preferences)
         self.filter_help.set_menu_button(self.filter_help_button)
@@ -2371,7 +2345,6 @@ class SearchesPage:
 
         searches = config.sections["searches"]
         self.application.preferences.set_widgets_data(self.options)
-        self.search_required = False
 
         if searches["defilter"] is not None:
             num_filters = len(searches["defilter"])
@@ -2426,9 +2399,6 @@ class SearchesPage:
                 "private_search_results": self.show_private_results_toggle.get_active()
             }
         }
-
-    def on_toggle_search_history(self, *_args):
-        self.search_required = True
 
     def on_clear_search_history(self, *_args):
 
@@ -3234,39 +3204,25 @@ class Preferences(Dialog):
             recompress_shares_required = False
 
         try:
-            user_profile_required = self.pages["user-profile"].user_profile_required
-
-        except KeyError:
-            user_profile_required = False
-
-        try:
-            private_room_required = self.pages["chats"].private_room_required
-
-        except KeyError:
-            private_room_required = False
-
-        try:
             completion_required = self.pages["chats"].completion_required
 
         except KeyError:
             completion_required = False
 
-        try:
-            search_required = self.pages["searches"].search_required
-
-        except KeyError:
-            search_required = False
-
         return (
             portmap_required,
             rescan_required,
             recompress_shares_required,
-            user_profile_required,
-            private_room_required,
             completion_required,
-            search_required,
             options
         )
+
+    def has_option_changed(self, options, section, key):
+
+        if key not in options[section]:
+            return False
+
+        return options[section][key] != config.sections[section][key]
 
     def update_settings(self, settings_closed=False):
 
@@ -3274,12 +3230,34 @@ class Preferences(Dialog):
             portmap_required,
             rescan_required,
             recompress_shares_required,
-            user_profile_required,
-            private_room_required,
             completion_required,
-            search_required,
             options
         ) = self.get_settings()
+
+        for section, key in (
+            ("server", "login"),
+            ("server", "portrange"),
+            ("server", "interface"),
+            ("server", "server")
+        ):
+            if self.has_option_changed(options, section, key):
+                core.reconnect()
+                break
+
+        for section, key in (
+            ("userinfo", "descr"),
+            ("userinfo", "pic")
+        ):
+            if self.has_option_changed(options, section, key):
+                core.userinfo.show_user(refresh=True, switch_page=False)
+                break
+
+        if self.has_option_changed(options, "server", "private_chatrooms"):
+            active = options["server"]["private_chatrooms"]
+            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
+
+        if self.has_option_changed(options, "searches", "enable_history"):
+            self.application.window.search.populate_search_history()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -3323,19 +3301,9 @@ class Preferences(Dialog):
         elif portmap_required == "remove":
             core.portmapper.remove_port_mapping()
 
-        if user_profile_required:
-            core.userinfo.show_user(refresh=True, switch_page=False)
-
-        if private_room_required:
-            active = config.sections["server"]["private_chatrooms"]
-            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
-
         if completion_required:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
-
-        if search_required:
-            self.application.window.search.populate_search_history()
 
         if recompress_shares_required and not rescan_required:
             core.shares.rescan_shares(init=True, rescan=False)

@@ -174,6 +174,13 @@ class ServerDisconnect(InternalMessage):
         self.manual_disconnect = manual_disconnect
 
 
+class ServerReconnect(InternalMessage):
+    __slots__ = ("manual_reconnect",)
+
+    def __init__(self, manual_reconnect=False):
+        self.manual_reconnect = manual_reconnect
+
+
 class EmitNetworkMessageEvents(InternalMessage):
     """Sent to the networking thread to tell it to emit events for list of
     network messages.

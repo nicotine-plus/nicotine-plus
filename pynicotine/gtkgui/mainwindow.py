@@ -35,6 +35,7 @@ from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
 from pynicotine.gtkgui.application import GTK_API_VERSION
+from pynicotine.gtkgui.application import GTK_MINOR_VERSION
 from pynicotine.gtkgui.buddies import Buddies
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
@@ -519,9 +520,10 @@ class MainWindow(Window):
         # F10 shortcut to open menu
         self.header_menu.set_primary(True)
 
-        # Ensure menu button always gets focus after closing menu
-        popover = self.header_menu.get_popover()
-        popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
+        # Ensure menu button always gets focus after closing menu (fixed in GTK 4.16)
+        if (GTK_API_VERSION, GTK_MINOR_VERSION) < (4, 16):
+            popover = self.header_menu.get_popover()
+            popover.connect("closed", lambda *_args: self.header_menu.grab_focus())
 
     def on_menu(self, *_args):
         self.header_menu.set_active(not self.header_menu.get_active())

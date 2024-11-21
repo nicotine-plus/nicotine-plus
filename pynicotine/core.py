@@ -92,7 +92,7 @@ class Core:
 
         for event_name, callback in (
             ("quit", self._quit),
-            ("server-reconnect", self.connect)
+            ("server-reconnect", self._server_reconnect)
         ):
             events.connect(event_name, callback)
 
@@ -305,6 +305,13 @@ class Core:
     def disconnect(self):
         from pynicotine.slskmessages import ServerDisconnect
         self.send_message_to_network_thread(ServerDisconnect())
+
+    def reconnect(self):
+        from pynicotine.slskmessages import ServerReconnect
+        self.send_message_to_network_thread(ServerReconnect())
+
+    def _server_reconnect(self, _msg):
+        self.connect()
 
     def send_message_to_network_thread(self, message):
         """Sends message to the networking thread to inform about something."""

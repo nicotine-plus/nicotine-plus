@@ -1010,14 +1010,11 @@ class ChatRoom:
         user_count = len(self.users_list_view.iterators)
         self.users_label.set_text(humanize(user_count))
 
-    def ignore_user(self, username, check_ip_ignored=False):
+    def ignore_user(self, username):
 
         iterator = self.users_list_view.iterators.get(username)
 
         if iterator is None:
-            return
-
-        if check_ip_ignored and not core.network_filter.is_user_ip_ignored(username):
             return
 
         if self.users_list_view.get_row_value(iterator, "is_unignored_data"):
@@ -1038,7 +1035,13 @@ class ChatRoom:
             self.users_list_view.set_row_value(iterator, "is_unignored_data", True)
 
     def peer_address(self, msg):
-        self.ignore_user(msg.user, check_ip_ignored=True)
+
+        username = msg.user
+
+        if not core.network_filter.is_user_ip_ignored(username):
+            return
+
+        self.ignore_user(username)
 
     def user_stats(self, msg):
 
