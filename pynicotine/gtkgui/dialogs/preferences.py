@@ -3215,11 +3215,38 @@ class Preferences(Dialog):
         except KeyError:
             completion_required = False
 
+        for section, key in (
+            ("server", "login"),
+            ("server", "portrange"),
+            ("server", "interface"),
+            ("server", "server")
+        ):
+            reconnect_required = self.has_option_changed(options, section, key)
+
+            if reconnect_required:
+                break
+
+        for section, key in (
+            ("userinfo", "descr"),
+            ("userinfo", "pic")
+        ):
+            user_profile_required = self.has_option_changed(options, section, key)
+
+            if user_profile_required:
+                break
+
+        private_room_required = self.has_option_changed(options, "server", "private_chatrooms")
+        search_history_required = self.has_option_changed(options, "searches", "enable_history")
+
         return (
+            reconnect_required,
             portmap_required,
             rescan_required,
             recompress_shares_required,
+            user_profile_required,
+            private_room_required,
             completion_required,
+            search_history_required,
             options
         )
 
@@ -3233,37 +3260,16 @@ class Preferences(Dialog):
     def update_settings(self, settings_closed=False):
 
         (
+            reconnect_required,
             portmap_required,
             rescan_required,
             recompress_shares_required,
+            user_profile_required,
+            private_room_required,
             completion_required,
+            search_history_required,
             options
         ) = self.get_settings()
-
-        for section, key in (
-            ("server", "login"),
-            ("server", "portrange"),
-            ("server", "interface"),
-            ("server", "server")
-        ):
-            if self.has_option_changed(options, section, key):
-                core.reconnect()
-                break
-
-        for section, key in (
-            ("userinfo", "descr"),
-            ("userinfo", "pic")
-        ):
-            if self.has_option_changed(options, section, key):
-                core.userinfo.show_user(refresh=True, switch_page=False)
-                break
-
-        if self.has_option_changed(options, "server", "private_chatrooms"):
-            active = options["server"]["private_chatrooms"]
-            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
-
-        if self.has_option_changed(options, "searches", "enable_history"):
-            self.application.window.search.populate_search_history()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -3301,15 +3307,28 @@ class Preferences(Dialog):
 
             ignored_page.clear_changes()
 
+        if reconnect_required:
+            core.reconnect()
+
         if portmap_required == "add":
             core.portmapper.add_port_mapping()
 
         elif portmap_required == "remove":
             core.portmapper.remove_port_mapping()
 
+        if user_profile_required:
+            core.userinfo.show_user(refresh=True, switch_page=False)
+
+        if private_room_required:
+            active = config.sections["server"]["private_chatrooms"]
+            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
+
         if completion_required:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
+
+        if search_history_required:
+            self.application.window.search.populate_search_history()
 
         if recompress_shares_required and not rescan_required:
             core.shares.rescan_shares(init=True, rescan=False)
