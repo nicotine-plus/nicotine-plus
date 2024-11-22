@@ -22,6 +22,7 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.application import GTK_MINOR_VERSION
+from pynicotine.gtkgui.application import GTK_MICRO_VERSION
 from pynicotine.gtkgui.application import LIBADWAITA_API_VERSION
 
 
@@ -43,7 +44,7 @@ class Window:
             return
 
         # Workaround for GTK 4.16 bug where text is replaced when inserting emoji
-        if (GTK_API_VERSION, GTK_MINOR_VERSION) == (4, 16):
+        if (4, 16, 0) <= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) <= (4, 16, 5):
             self.widget.connect("notify::focus-widget", self._on_focus_widget_changed)
 
         if sys.platform == "win32":
