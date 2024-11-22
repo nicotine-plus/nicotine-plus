@@ -82,7 +82,6 @@
                 <property name="label" translatable="yes">Buddy shares</property>
                 <property name="use-underline">True</property>
                 <property name="visible">True</property>
-                <signal name="toggled" handler="on_reveal_share_changed"/>
               </object>
             </child>
             <child>
@@ -90,7 +89,6 @@
                 <property name="label" translatable="yes">Trusted shares</property>
                 <property name="use-underline">True</property>
                 <property name="visible">True</property>
-                <signal name="toggled" handler="on_reveal_share_changed"/>
               </object>
             </child>
           </object>
