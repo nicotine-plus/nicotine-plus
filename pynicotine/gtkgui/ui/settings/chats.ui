@@ -50,7 +50,6 @@
               <object class="GtkSwitch" id="private_room_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <signal name="notify::active" handler="on_private_room_changed"/>
               </object>
             </child>
           </object>
@@ -168,7 +167,6 @@
               <object class="GtkSwitch" id="enable_tab_completion_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <signal name="notify::active" handler="on_completion_changed"/>
               </object>
             </child>
           </object>
@@ -197,7 +195,6 @@
                   <object class="GtkSwitch" id="enable_completion_dropdown_toggle">
                     <property name="valign">center</property>
                     <property name="visible">True</property>
-                    <signal name="notify::active" handler="on_completion_changed"/>
                   </object>
                 </child>
               </object>
@@ -229,7 +226,6 @@
                         <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <signal name="changed" handler="on_completion_changed"/>
                       </object>
                     </child>
                   </object>
@@ -284,7 +280,6 @@
                           <object class="GtkCheckButton" id="complete_buddy_names_toggle">
                             <property name="label" translatable="yes">Buddy names</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -297,7 +292,6 @@
                           <object class="GtkCheckButton" id="complete_room_usernames_toggle">
                             <property name="label" translatable="yes">Chat room usernames</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -310,7 +304,6 @@
                           <object class="GtkCheckButton" id="complete_room_names_toggle">
                             <property name="label" translatable="yes">Room names</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
@@ -323,7 +316,6 @@
                           <object class="GtkCheckButton" id="complete_commands_toggle">
                             <property name="label" translatable="yes">Commands</property>
                             <property name="visible">True</property>
-                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>
