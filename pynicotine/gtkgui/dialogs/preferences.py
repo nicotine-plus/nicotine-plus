@@ -89,7 +89,6 @@ class NetworkPage:
         ) = self.widgets = ui.load(scope=self, path="settings/network.ui")
 
         self.application = application
-        self.portmap_required = None
 
         self.username_entry.set_max_length(core.users.USERNAME_MAX_LENGTH)
         self.check_port_status_label.connect("activate-link", self.on_activate_link)
@@ -164,8 +163,6 @@ class NetworkPage:
         listen_port, _unused_port = config.sections["server"]["portrange"]
         self.listen_port_spinner.set_value(listen_port)
 
-        self.portmap_required = None
-
     def get_settings(self):
 
         try:
@@ -236,9 +233,6 @@ class NetworkPage:
             callback=self.on_change_password_response,
             callback_data=core.users.login_status
         ).present()
-
-    def on_toggle_upnp(self, *_args):
-        self.portmap_required = "add" if self.upnp_toggle.get_active() else "remove"
 
     def on_default_server(self, *_args):
         server_address, server_port = config.defaults["server"]["server"]
@@ -597,8 +591,6 @@ class SharesPage:
 
         self.application = application
 
-        self.rescan_required = False
-        self.recompress_shares_required = False
         self.last_parent_folder = None
         self.shared_folders = []
         self.buddy_shared_folders = []
@@ -666,7 +658,6 @@ class SharesPage:
                 [virtual_name, folder_path, _("Trusted")], select_row=False)
 
         self.shares_list_view.unfreeze()
-        self.rescan_required = self.recompress_shares_required = False
 
     def get_settings(self):
 
@@ -681,9 +672,6 @@ class SharesPage:
             }
         }
 
-    def on_reveal_share_changed(self, *_args):
-        self.recompress_shares_required = True
-
     def on_add_shared_folder_selected(self, selected, _data):
 
         for folder_path in selected:
@@ -695,7 +683,6 @@ class SharesPage:
                 continue
 
             self.last_parent_folder = os.path.dirname(folder_path)
-            self.rescan_required = True
             self.shares_list_view.add_row([virtual_name, folder_path, _("Public")])
 
     def on_add_shared_folder(self, *_args):
@@ -730,8 +717,6 @@ class SharesPage:
 
         if new_virtual_name == virtual_name and new_accessible_to_short == accessible_to:
             return
-
-        self.rescan_required = True
 
         folder_path = self.shares_list_view.get_row_value(iterator, "folder")
         permission_level = self.PERMISSION_LEVELS.get(new_accessible_to)
@@ -773,9 +758,7 @@ class SharesPage:
 
     def on_remove_shared_folder(self, *_args):
 
-        iterators = reversed(list(self.shares_list_view.get_selected_rows()))
-
-        for iterator in iterators:
+        for iterator in reversed(list(self.shares_list_view.get_selected_rows())):
             virtual_name = self.shares_list_view.get_row_value(iterator, "virtual_name")
             orig_iterator = self.shares_list_view.iterators[virtual_name]
 
@@ -783,9 +766,6 @@ class SharesPage:
                 virtual_name, share_groups=(self.shared_folders, self.buddy_shared_folders, self.trusted_shared_folders)
             )
             self.shares_list_view.remove_row(orig_iterator)
-
-        if iterators:
-            self.rescan_required = True
 
 
 class UploadsPage:
@@ -1346,7 +1326,6 @@ class ChatsPage:
         ) = self.widgets = ui.load(scope=self, path="settings/chats.ui")
 
         self.application = application
-        self.completion_required = False
 
         format_codes_url = "https://docs.python.org/3/library/datetime.html#format-codes"
         format_codes_label = _("Format codes")
@@ -1455,8 +1434,6 @@ class ChatsPage:
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
 
-        self.completion_required = False
-
     def get_settings(self):
 
         return {
@@ -1496,9 +1473,6 @@ class ChatsPage:
     def on_activate_link(self, _label, url):
         open_uri(url)
         return True
-
-    def on_completion_changed(self, *_args):
-        self.completion_required = True
 
     def on_default_tts_private_message(self, *_args):
         self.tts_private_message_entry.set_text(config.defaults["ui"]["speechprivate"])
@@ -3185,35 +3159,77 @@ class Preferences(Dialog):
             for key, data in page.get_settings().items():
                 options[key].update(data)
 
-        try:
-            portmap_required = self.pages["network"].portmap_required
+        for section, key in (
+            ("server", "login"),
+            ("server", "portrange"),
+            ("server", "interface"),
+            ("server", "server")
+        ):
+            reconnect_required = self.has_option_changed(options, section, key)
 
-        except KeyError:
-            portmap_required = False
+            if reconnect_required:
+                break
 
-        try:
-            rescan_required = self.pages["shares"].rescan_required
+        portmap_changed = self.has_option_changed(options, "server", "upnp")
+        portmap_required = None
 
-        except KeyError:
-            rescan_required = False
+        if portmap_changed:
+            portmap_required = "add" if options["server"]["upnp"] else "remove"
 
-        try:
-            recompress_shares_required = self.pages["shares"].recompress_shares_required
+        for section, key in (
+            ("transfers", "shared"),
+            ("transfers", "buddyshared"),
+            ("transfers", "trustedshared")
+        ):
+            rescan_required = self.has_option_changed(options, section, key)
 
-        except KeyError:
-            recompress_shares_required = False
+            if rescan_required:
+                break
 
-        try:
-            completion_required = self.pages["chats"].completion_required
+        for section, key in (
+            ("transfers", "reveal_buddy_shares"),
+            ("transfers", "reveal_trusted_shares")
+        ):
+            recompress_shares_required = self.has_option_changed(options, section, key)
 
-        except KeyError:
-            completion_required = False
+            if recompress_shares_required:
+                break
+
+        for section, key in (
+            ("userinfo", "descr"),
+            ("userinfo", "pic")
+        ):
+            user_profile_required = self.has_option_changed(options, section, key)
+
+            if user_profile_required:
+                break
+
+        for section, key in (
+            ("words", "tab"),
+            ("words", "dropdown"),
+            ("words", "characters"),
+            ("words", "roomnames"),
+            ("words", "buddies"),
+            ("words", "roomusers"),
+            ("words", "commands")
+        ):
+            completion_required = self.has_option_changed(options, section, key)
+
+            if completion_required:
+                break
+
+        private_room_required = self.has_option_changed(options, "server", "private_chatrooms")
+        search_history_required = self.has_option_changed(options, "searches", "enable_history")
 
         return (
+            reconnect_required,
             portmap_required,
             rescan_required,
             recompress_shares_required,
+            user_profile_required,
+            private_room_required,
             completion_required,
+            search_history_required,
             options
         )
 
@@ -3227,37 +3243,16 @@ class Preferences(Dialog):
     def update_settings(self, settings_closed=False):
 
         (
+            reconnect_required,
             portmap_required,
             rescan_required,
             recompress_shares_required,
+            user_profile_required,
+            private_room_required,
             completion_required,
+            search_history_required,
             options
         ) = self.get_settings()
-
-        for section, key in (
-            ("server", "login"),
-            ("server", "portrange"),
-            ("server", "interface"),
-            ("server", "server")
-        ):
-            if self.has_option_changed(options, section, key):
-                core.reconnect()
-                break
-
-        for section, key in (
-            ("userinfo", "descr"),
-            ("userinfo", "pic")
-        ):
-            if self.has_option_changed(options, section, key):
-                core.userinfo.show_user(refresh=True, switch_page=False)
-                break
-
-        if self.has_option_changed(options, "server", "private_chatrooms"):
-            active = options["server"]["private_chatrooms"]
-            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
-
-        if self.has_option_changed(options, "searches", "enable_history"):
-            self.application.window.search.populate_search_history()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -3295,15 +3290,28 @@ class Preferences(Dialog):
 
             ignored_page.clear_changes()
 
+        if reconnect_required:
+            core.reconnect()
+
         if portmap_required == "add":
             core.portmapper.add_port_mapping()
 
         elif portmap_required == "remove":
             core.portmapper.remove_port_mapping()
 
+        if user_profile_required:
+            core.userinfo.show_user(refresh=True, switch_page=False)
+
+        if private_room_required:
+            active = config.sections["server"]["private_chatrooms"]
+            self.application.window.chatrooms.room_list.toggle_accept_private_room(active)
+
         if completion_required:
             core.chatrooms.update_completions()
             core.privatechat.update_completions()
+
+        if search_history_required:
+            self.application.window.search.populate_search_history()
 
         if recompress_shares_required and not rescan_required:
             core.shares.rescan_shares(init=True, rescan=False)

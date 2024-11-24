@@ -194,7 +194,6 @@
               <object class="GtkSwitch" id="upnp_toggle">
                 <property name="valign">center</property>
                 <property name="visible">True</property>
-                <signal name="notify::active" handler="on_toggle_upnp"/>
               </object>
             </child>
           </object>

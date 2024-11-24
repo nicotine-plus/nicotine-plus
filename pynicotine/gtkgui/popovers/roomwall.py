@@ -57,38 +57,26 @@ class RoomWall(Popover):
 
         self.message_view.place_cursor_at_line(0)
 
-    def _clear_room_wall_message(self, update_list=True):
-
-        entry_text = self.message_entry.get_text()
-        self.message_entry.set_text("")
-
-        core.chatrooms.joined_rooms[self.room].tickers.pop(core.users.login_username, None)
-        self.message_view.clear()
-
-        if update_list:
-            core.chatrooms.request_update_ticker(self.room, "")
-            self._update_message_list()
-
-        return entry_text
-
     def on_set_room_wall_message(self, *_args):
 
-        entry_text = self._clear_room_wall_message(update_list=False)
+        entry_text = self.message_entry.get_text()
+        core.chatrooms.joined_rooms[self.room].tickers.pop(core.users.login_username, None)
+
+        if not entry_text:
+            return
+
+        self.message_view.add_line(f"> [{core.users.login_username}] {entry_text}", prepend=True)
+        self.message_entry.select_region(0, -1)
+
         core.chatrooms.request_update_ticker(self.room, entry_text)
-
-        if entry_text:
-            username = core.users.login_username
-            self.message_view.add_line(f"> [{username}] {entry_text}", prepend=True)
-
-        self._update_message_list()
 
     def on_icon_pressed(self, _entry, icon_pos, *_args):
 
-        if icon_pos == Gtk.EntryIconPosition.PRIMARY:
-            self.on_set_room_wall_message()
-            return
+        if icon_pos == Gtk.EntryIconPosition.SECONDARY:
+            # Clear message
+            self.message_entry.set_text("")
 
-        self._clear_room_wall_message()
+        self.on_set_room_wall_message()
 
     def _on_show(self, *_args):
 

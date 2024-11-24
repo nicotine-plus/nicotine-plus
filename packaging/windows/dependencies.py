@@ -25,13 +25,7 @@ def install_pacman():
     """Install dependencies from the main MinGW repos."""
 
     arch = os.environ.get("ARCH", "x86_64")
-
-    if arch == "arm64":
-        prefix = "mingw-w64-clang-aarch64"
-        mingw_type = "clangarm64"
-    else:
-        prefix = "mingw-w64-x86_64"
-        mingw_type = "mingw64"
+    prefix = "mingw-w64-clang-aarch64" if arch == "arm64" else "mingw-w64-x86_64"
 
     packages = [f"{prefix}-ca-certificates",
                 f"{prefix}-gettext-tools",
@@ -47,15 +41,6 @@ def install_pacman():
                 f"{prefix}-webp-pixbuf-loader"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
-
-    # Downgrade libadwaita for now due to dark mode not being applied on startup
-    # https://gitlab.gnome.org/GNOME/libadwaita/-/issues/932
-    downgrade_packages = [f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"]
-
-    for package in downgrade_packages:
-        subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])
-
-    subprocess.check_call(["pacman", "--noconfirm", "-U"] + downgrade_packages)
 
 
 if __name__ == "__main__":
