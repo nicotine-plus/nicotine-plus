@@ -402,10 +402,6 @@ class PrivateChat:
 
     def _read_log_file(self):
 
-        if self.loaded and not self.chat_view.num_prepended_lines:
-            # Messages have been cleared, reset read line datum
-            log.shut_log(folder_path=log.private_chat_folder_path, basename=self.user)
-
         self.chat_view.read_log_lines = log.read_log(
             folder_path=log.private_chat_folder_path,
             basename=self.user,
@@ -464,7 +460,9 @@ class PrivateChat:
         log.open_log(log.private_chat_folder_path, self.user)
 
     def on_clear_messages(self, *_args):
+
         self.chat_view.clear()
+        log.shut_log(folder_path=log.private_chat_folder_path, basename=self.user)
         GLib.idle_add(self._read_log_file)
 
     def on_delete_chat_log_response(self, *_args):

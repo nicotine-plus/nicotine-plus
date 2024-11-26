@@ -729,10 +729,6 @@ class ChatRoom:
 
     def _read_log_file(self):
 
-        if self.loaded and not self.chat_view.num_prepended_lines:
-            # Message view was cleared, reset log datum
-            log.shut_log(folder_path=log.room_folder_path, basename=self.room)
-
         self.chat_view.read_log_lines = log.read_log(
             folder_path=log.room_folder_path,
             basename=self.room,
@@ -1189,7 +1185,9 @@ class ChatRoom:
         log.open_log(log.room_folder_path, self.room)
 
     def on_clear_messages(self, *_args):
+
         self.chat_view.clear()
+        log.shut_log(folder_path=log.room_folder_path, basename=self.room)
         GLib.idle_add(self._read_log_file)
 
     def on_delete_room_log_response(self, *_args):
