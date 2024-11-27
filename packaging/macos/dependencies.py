@@ -26,12 +26,11 @@ def install_brew():
 
     packages = ["gettext",
                 "gobject-introspection",
-                "glib",
                 "gtk4",
                 "libadwaita",
                 "librsvg"]
 
-    subprocess.check_call(["brew", "install"] + packages)
+    subprocess.check_call(["brew", "install", "--quiet"] + packages)
 
 
 def install_pypi():
