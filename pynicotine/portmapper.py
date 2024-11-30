@@ -96,9 +96,13 @@ class NATPMP(BaseImplementation):
         def sendto(self, sock, addr, num_attempt):
 
             msg = bytes(self)
+            ip_address, port = addr
             sock.sendto(msg, addr)
 
-            log.add_debug(f"NAT-PMP: Portmap request attempt {num_attempt} of {NATPMP.REQUEST_ATTEMPTS}: {msg}")
+            log.add_debug(
+                "NAT-PMP: Portmap request attempt %s of %s to gateway %s, port %s: %s",
+                (num_attempt, NATPMP.REQUEST_ATTEMPTS, ip_address, port, msg)
+            )
 
         def __bytes__(self):
 
@@ -148,6 +152,8 @@ class NATPMP(BaseImplementation):
     def _request_port_mapping(self, public_port, private_port, lease_duration):
 
         with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            log.add_debug("NAT-PMP: Binding socket to local IP address %s", self.local_ip_address)
+
             sock.bind((self.local_ip_address, 0))
             request = self.PortmapRequest(public_port, private_port, lease_duration)
             timeout = self.REQUEST_INIT_TIMEOUT
@@ -163,7 +169,7 @@ class NATPMP(BaseImplementation):
                 except socket.timeout:
                     timeout *= 2
 
-        log.add_debug(f"NAT-PMP: Giving up, all {self.REQUEST_ATTEMPTS} portmap requests timed out")
+        log.add_debug("NAT-PMP: Giving up, all %s portmap requests timed out", self.REQUEST_ATTEMPTS)
 
         return None
 
@@ -341,6 +347,8 @@ class UPnP(BaseImplementation):
 
             # Create a UDP socket and set its timeout
             with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+                log.add_debug("UPnP: Binding socket to local IP address %s", private_ip)
+
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(private_ip))
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, struct.pack("B", UPnP.MULTICAST_TTL))
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
