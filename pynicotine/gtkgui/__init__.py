@@ -131,6 +131,7 @@ def run(hidden, ci_mode, multi_instance):
         # Use Cairo software rendering due to flickering issues in the GPU renderer (#2859).
         # Reevaluate when the new GPU renderers are stable:
         # https://blog.gtk.org/2024/01/28/new-renderers-for-gtk/
+        os.environ["GDK_DISABLE"] = "gl,vulkan"
         os.environ["GSK_RENDERER"] = "cairo"
 
     elif sys.platform == "darwin":
