@@ -135,7 +135,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            platform: macos-12
+            platform: macos-13
           - arch: arm64
             platform: macos-14
     runs-on: ${{ matrix.platform }}
