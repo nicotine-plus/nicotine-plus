@@ -13,6 +13,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Automatically reconnect to the server when changing listening port
  * Always show number of upload slots on user profiles
  * Windows: Update Python from 3.11 to 3.12
+ * macOS: Drop support for macOS Monterey due to reaching EOL
 
 ### Corrections
 
