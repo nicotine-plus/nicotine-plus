@@ -1316,8 +1316,6 @@ class ChatsPage:
             self.format_codes_label,
             self.min_chars_dropdown_spinner,
             self.private_room_toggle,
-            self.recent_private_messages_spinner,
-            self.recent_room_messages_spinner,
             self.reopen_private_chats_toggle,
             self.replacement_list_container,
             self.timestamp_private_chat_entry,
@@ -1385,8 +1383,6 @@ class ChatsPage:
                 "private_chatrooms": self.private_room_toggle
             },
             "logging": {
-                "readroomlines": self.recent_room_messages_spinner,
-                "readprivatelines": self.recent_private_messages_spinner,
                 "rooms_timestamp": self.timestamp_room_entry,
                 "private_timestamp": self.timestamp_private_chat_entry
             },
@@ -1446,8 +1442,6 @@ class ChatsPage:
                 "private_chatrooms": self.private_room_toggle.get_active()
             },
             "logging": {
-                "readroomlines": self.recent_room_messages_spinner.get_value_as_int(),
-                "readprivatelines": self.recent_private_messages_spinner.get_value_as_int(),
                 "private_timestamp": self.timestamp_private_chat_entry.get_text(),
                 "rooms_timestamp": self.timestamp_room_entry.get_text()
             },
@@ -2907,7 +2901,7 @@ class PluginsPage:
         self.plugin_authors_label.set_text(plugin_authors)
 
         self.plugin_description_view.clear()
-        self.plugin_description_view.append_line(plugin_description)
+        self.plugin_description_view.add_line(plugin_description)
         self.plugin_description_view.place_cursor_at_line(0)
 
         self.check_plugin_settings_button(self.selected_plugin)
