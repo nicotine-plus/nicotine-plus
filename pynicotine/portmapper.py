@@ -25,6 +25,8 @@ import time
 from threading import Thread
 from urllib.parse import urlsplit
 
+import pynicotine
+
 from pynicotine.config import config
 from pynicotine.events import events
 from pynicotine.logfacility import log
@@ -204,6 +206,11 @@ class UPnP(BaseImplementation):
     __slots__ = ("_service",)
 
     NAME = "UPnP"
+    USER_AGENT = (
+        f"Python/{sys.version.split()[0]} "
+        "UPnP/2.0 "
+        f"{pynicotine.__application_name__}/{pynicotine.__version__}"
+    )
     MULTICAST_HOST = "239.255.255.250"
     MULTICAST_PORT = 1900
     MULTICAST_TTL = 2         # Should default to 2 according to UPnP specification
@@ -243,7 +250,8 @@ class UPnP(BaseImplementation):
                 "HOST": f"{UPnP.MULTICAST_HOST}:{UPnP.MULTICAST_PORT}",
                 "ST": search_target,
                 "MAN": '"ssdp:discover"',
-                "MX": str(UPnP.MX_RESPONSE_DELAY)
+                "MX": str(UPnP.MX_RESPONSE_DELAY),
+                "USER-AGENT": UPnP.USER_AGENT
             }
 
         def sendto(self, sock, addr):
@@ -434,6 +442,7 @@ class UPnP(BaseImplementation):
         headers = {
             "Host": urlsplit(control_url).netloc,
             "Content-Type": "text/xml; charset=utf-8",
+            "USER-AGENT": self.USER_AGENT,
             "SOAPACTION": f'"{service_type}#AddPortMapping"'
         }
 
