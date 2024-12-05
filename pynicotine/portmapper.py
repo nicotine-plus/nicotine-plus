@@ -302,8 +302,24 @@ class UPnP(BaseImplementation):
                                               "urn:schemas-upnp-org:service:WANPPPConnection:1",
                                               "urn:schemas-upnp-org:service:WANIPConnection:2"}:
                         # We found a router with UPnP enabled
-                        service_type = found_service_type
+                        location_url_parts = urlsplit(location_url)
+                        location_url_base = f"{location_url_parts.scheme}://{location_url_parts.netloc}/"
                         control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+
+                        # Relative URL
+                        if control_url.startswith("/"):
+                            control_url = location_url_base + control_url.lstrip("/")
+
+                        # Absolute URL (allowed in UPnP 1.0)
+                        elif not control_url.startswith(location_url_base):
+                            log.add_debug(
+                                "UPnP: Invalid control URL %s for service %s, ignoring",
+                                (control_url, found_service_type)
+                            )
+                            control_url = None
+                            continue
+
+                        service_type = found_service_type
                         break
 
             except Exception as error:
@@ -330,9 +346,7 @@ class UPnP(BaseImplementation):
 
             locations.add(location)
 
-            url_parts = urlsplit(location)
             service_type, control_url = UPnP.SSDP.get_service_control_url(location)
-            control_url = f"{url_parts.scheme}://{url_parts.netloc}{control_url}"
 
             if service_type is None or control_url is None:
                 log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
