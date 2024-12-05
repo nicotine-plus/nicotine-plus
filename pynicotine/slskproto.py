@@ -345,10 +345,10 @@ class NetworkThread(Thread):
     ERROR_NOT_CONNECTED = OSError(errno.ENOTCONN, strerror(errno.ENOTCONN))
     ERROR_TIMED_OUT = OSError(errno.ETIMEDOUT, strerror(errno.ETIMEDOUT))
 
-    # Looping max ~60 times per second (SLEEP_MIN_IDLE) on high activity
+    # Looping max ~240 times per second (SLEEP_MIN_IDLE) on high activity
     # ~20 (SLEEP_MAX_IDLE + SLEEP_MIN_IDLE) by default
-    SLEEP_MAX_IDLE = 0.0333
-    SLEEP_MIN_IDLE = 0.0166
+    SLEEP_MAX_IDLE = 0.04584
+    SLEEP_MIN_IDLE = 0.00416
 
     try:
         import resource
@@ -2711,7 +2711,7 @@ class NetworkThread(Thread):
                         ServerReconnect(manual_reconnect=self._manual_server_reconnect)
                     )
 
-                time.sleep(self.SLEEP_MAX_IDLE)
+                time.sleep(self.SLEEP_MAX_IDLE + self.SLEEP_MIN_IDLE)
                 continue
 
             # Process queue messages
