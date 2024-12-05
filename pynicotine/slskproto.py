@@ -337,8 +337,6 @@ class NetworkThread(Thread):
     CONNECTION_MAX_IDLE_GHOST = 10
     CONNECTION_BACKLOG_LENGTH = 65535      # OS limit can be lower
     MAX_INCOMING_MESSAGE_SIZE = 469762048  # 448 MiB, to leave headroom for large shares
-    SOCKET_READ_BUFFER_SIZE = 1048576      # OS limit can be lower
-    SOCKET_WRITE_BUFFER_SIZE = 1048576     # OS limit can be lower
     ALLOWED_PEER_CONN_TYPES = {
         ConnectionType.PEER,
         ConnectionType.FILE,
@@ -462,8 +460,6 @@ class NetworkThread(Thread):
 
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._listen_socket.setblocking(False)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         self._num_sockets += 1
 
         # On platforms other than Windows, SO_REUSEADDR is necessary to allow binding
@@ -1182,8 +1178,6 @@ class NetworkThread(Thread):
         )
 
         sock.setblocking(False)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         # Detect if our connection to the server is still alive
@@ -1666,8 +1660,6 @@ class NetworkThread(Thread):
             try:
                 incoming_sock, incoming_addr = self._listen_socket.accept()
                 incoming_sock.setblocking(False)
-                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-                incoming_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
                 incoming_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
             except OSError as error:
@@ -1725,8 +1717,6 @@ class NetworkThread(Thread):
         )
 
         sock.setblocking(False)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, self.SOCKET_READ_BUFFER_SIZE)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, self.SOCKET_WRITE_BUFFER_SIZE)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         try:
