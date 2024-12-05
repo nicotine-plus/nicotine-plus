@@ -298,9 +298,11 @@ class UPnP(BaseImplementation):
                 for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                     found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                    if found_service_type in {"urn:schemas-upnp-org:service:WANIPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                              "urn:schemas-upnp-org:service:WANIPConnection:2"}:
+                    if found_service_type in {
+                        "urn:schemas-upnp-org:service:WANIPConnection:2",
+                        "urn:schemas-upnp-org:service:WANIPConnection:1",
+                        "urn:schemas-upnp-org:service:WANPPPConnection:1"
+                    }:
                         # We found a router with UPnP enabled
                         location_url_parts = urlsplit(location_url)
                         location_url_base = f"{location_url_parts.scheme}://{location_url_parts.netloc}/"
@@ -377,29 +379,29 @@ class UPnP(BaseImplementation):
                 sock.settimeout(UPnP.MX_RESPONSE_DELAY + 0.1)  # Larger timeout in case data arrives at the last moment
                 sock.bind((private_ip, 0))
 
+                # Protocol 2
+                wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
+                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
+
+                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
+
+                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                log.add_debug("UPnP: Sent M-SEARCH IP request 2")
+
                 # Protocol 1
+                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
                 wan_ip1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
-                wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
+
+                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
+                log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
                 wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
                 log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
                 wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
                 log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
-
-                wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
-
-                # Protocol 2
-                wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
-                wan_igd2 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
-
-                wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 2")
-
-                wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
                 locations = set()
                 services = {}
