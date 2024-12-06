@@ -259,7 +259,7 @@ class UPnP(BaseImplementation):
             msg = bytes(self)
             sock.sendto(msg, addr)
 
-            log.add_debug("UPnP: SSDP request: %s", msg)
+            log.add_debug("UPnP: SSDP request sent: %s", msg)
 
         def __bytes__(self):
 
@@ -384,10 +384,7 @@ class UPnP(BaseImplementation):
                 wan_ip2 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
 
                 wan_igd2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
-
                 wan_ip2.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
                 # Protocol 1
                 wan_igd1 = UPnP.SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
@@ -395,13 +392,8 @@ class UPnP(BaseImplementation):
                 wan_ppp1 = UPnP.SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
 
                 wan_igd1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
-
                 wan_ip1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH IP request 1")
-
                 wan_ppp1.sendto(sock, (UPnP.MULTICAST_HOST, UPnP.MULTICAST_PORT))
-                log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
                 locations = set()
                 services = {}
