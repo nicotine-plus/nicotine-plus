@@ -21,6 +21,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
  * Fixed a crash when upgrading from Nicotine+ 1.4.1 and earlier
  * Fixed broken upload stats caused by Soulseek NS clients resuming >2 GB downloads
  * Fixed an issue where picking an emoji would clear existing text
+ * Improved file transfer speeds in some cases
  * Windows: Reverted switch to Clang environment due to rare crashes
 
 ### Issues closed on GitHub
