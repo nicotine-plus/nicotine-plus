@@ -1922,41 +1922,39 @@ class NetworkThread(Thread):
 
         return idx
 
-    def _write_download_file(self, file_download, in_buffer):
+    def _write_download_file(self, file_download, data, data_len):
 
         try:
-            if not in_buffer:
+            if not data:
                 return
 
-            added_bytes_len = len(in_buffer)
-            file_download.speed += added_bytes_len
-            self._total_download_bandwidth += added_bytes_len
+            file_download.speed += data_len
+            self._total_download_bandwidth += data_len
 
-            file_download.file.write(in_buffer)
-            file_download.leftbytes -= added_bytes_len
+            file_download.file.write(data)
+            file_download.leftbytes -= data_len
 
         finally:
             # Release memoryview in case of critical error
-            in_buffer = None
+            data = None
 
-    def _process_download(self, conn, in_buffer):
+    def _process_download(self, conn, data, data_len):
 
         file_download = self._file_download_msgs[conn]
         idx = file_download.leftbytes
 
         try:
-            if len(in_buffer) > idx:
-                self._write_download_file(file_download, memoryview(in_buffer)[:idx])
+            if data_len > idx:
+                self._write_download_file(file_download, memoryview(data)[:idx], idx)
             else:
-                self._write_download_file(file_download, in_buffer)
+                self._write_download_file(file_download, data, data_len)
 
         except (OSError, ValueError) as error:
             events.emit_main_thread(
                 "download-file-error",
                 username=conn.init.target_user, token=file_download.token, error=error
             )
-            self._close_connection(conn)
-            return None
+            return False  # Close the connection
 
         # Download finished
         if file_download.leftbytes <= 0:
@@ -1965,10 +1963,9 @@ class NetworkThread(Thread):
                 username=conn.init.target_user, token=file_download.token,
                 bytes_left=file_download.leftbytes
             )
-            self._close_connection(conn)
-            return None
+            return False  # Close the connection
 
-        return idx
+        return True
 
     def _process_upload(self, conn, num_sent_bytes, current_time):
 
@@ -1998,8 +1995,7 @@ class NetworkThread(Thread):
                 "upload-file-error",
                 username=conn.init.target_user, token=file_upload.token, error=error
             )
-            self._close_connection(conn)
-            return False
+            return False  # Close the connection
 
         file_upload.speed += num_sent_bytes
         self._total_upload_bandwidth += num_sent_bytes
@@ -2014,16 +2010,13 @@ class NetworkThread(Thread):
         return True
 
     def _process_file_input(self, conn):
-        """Reads file data/messages from the input buffer of a 'F' connection."""
+        """Reads file messages from the input buffer of a 'F' connection."""
 
         in_buffer = conn.in_buffer
         idx = 0
 
         if conn not in self._file_init_msgs:
             idx = self._process_file_init_message(conn, in_buffer)
-
-        elif conn in self._file_download_msgs:
-            idx = self._process_download(conn, in_buffer)
 
         elif conn in self._file_upload_msgs:
             idx = self._process_file_offset_message(conn, in_buffer)
@@ -2494,12 +2487,14 @@ class NetworkThread(Thread):
             return
 
         try:
-            self._write_data(conn, current_time)
+            if self._write_data(conn, current_time):
+                return
 
         except (OSError, ValueError) as error:
             log.add_conn("Cannot write data to connection %s, closing connection. Error: %s",
                          (conn.addr, error))
-            self._close_connection(conn)
+
+        self._close_connection(conn)
 
     def _process_ready_sockets(self, current_time):
 
@@ -2617,8 +2612,9 @@ class NetworkThread(Thread):
     def _read_data(self, conn, current_time):
 
         sock = conn.sock
-        use_download_limit = (self._download_limit_split and conn in self._file_download_msgs)
         current_recv_size = conn.recv_size
+        is_file_download = (conn in self._file_download_msgs)
+        use_download_limit = (self._download_limit_split and is_file_download)
 
         if use_download_limit:
             download_limit = (self._download_limit_split - self._conns_downloaded[conn])
@@ -2628,7 +2624,17 @@ class NetworkThread(Thread):
 
         data = sock.recv(current_recv_size)
         data_len = len(data)
-        conn.in_buffer += data
+
+        if not data:
+            return False  # Close the connection
+
+        # An intermediate buffer is useless when downloading a file. Write to the
+        # file immediately, and let the OS handle buffering when necessary.
+        if not is_file_download:
+            conn.in_buffer += data
+
+        elif not self._process_download(conn, data, data_len):
+            return False  # Close the connection
 
         if use_download_limit:
             self._conns_downloaded[conn] += data_len
@@ -2641,17 +2647,13 @@ class NetworkThread(Thread):
             conn.recv_size //= 2
 
         conn.last_active = current_time
-
-        if not data:
-            return False
-
         return True
 
     def _write_data(self, conn, current_time):
 
         sock = conn.sock
         out_buffer = conn.out_buffer
-        is_file_upload = conn in self._file_upload_msgs
+        is_file_upload = (conn in self._file_upload_msgs)
 
         if is_file_upload and self._upload_limit_split:
             limit = (self._upload_limit_split - self._conns_uploaded[conn])
@@ -2668,14 +2670,14 @@ class NetworkThread(Thread):
         del out_buffer[:num_bytes_sent]
 
         if is_file_upload and not self._process_upload(conn, num_bytes_sent, current_time):
-            # Connection was closed, stop here
-            return
+            return False  # Close the connection
 
         if not out_buffer:
             # Nothing else to send, stop watching connection for writes
             self._modify_connection_events(conn, selectors.EVENT_READ)
 
         conn.last_active = current_time
+        return True
 
     # Networking Loop #
 
