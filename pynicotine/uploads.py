@@ -543,10 +543,10 @@ class Uploads(Transfers):
 
             if UserStatus.OFFLINE in (core.users.login_status, core.users.statuses.get(username)):
                 # Either we are offline or the user we want to upload to is
-                if self._auto_clear_transfer(upload_candidate):
-                    continue
+                if not self._auto_clear_transfer(upload_candidate):
+                    self._abort_transfer(upload_candidate, status=TransferStatus.USER_LOGGED_OFF)
 
-                self._abort_transfer(upload_candidate, status=TransferStatus.USER_LOGGED_OFF)
+                upload_candidate = None
                 continue
 
             virtual_path = upload_candidate.virtual_path
@@ -555,6 +555,7 @@ class Uploads(Transfers):
 
             if not is_file_shared:
                 self._clear_transfer(upload_candidate, denied_message=TransferRejectReason.FILE_NOT_SHARED)
+                upload_candidate = None
                 continue
 
             if not self.is_file_readable(virtual_path, real_path):
@@ -562,6 +563,7 @@ class Uploads(Transfers):
                     upload_candidate, status=TransferStatus.LOCAL_FILE_ERROR,
                     denied_message=TransferRejectReason.FILE_READ_ERROR
                 )
+                upload_candidate = None
                 continue
 
             current_size = self._get_current_file_size(real_path)
@@ -721,6 +723,8 @@ class Uploads(Transfers):
 
                 if not self._auto_clear_transfer(upload):
                     self._abort_transfer(upload, status=TransferStatus.USER_LOGGED_OFF)
+
+                self._check_upload_queue()
 
             self._online_users.discard(username)
             return
