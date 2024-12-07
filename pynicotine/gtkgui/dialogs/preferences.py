@@ -1823,7 +1823,7 @@ class UserInterfacePage:
             "tab_changed": self.color_tab_changed_entry
         }
 
-        self.excluded_fonts = {}
+        self.excluded_fonts = set()
 
         if sys.platform == "darwin":
             # Exclude broken fonts causing crashes on macOS
