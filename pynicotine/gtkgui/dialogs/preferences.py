@@ -1891,7 +1891,7 @@ class UserInterfacePage:
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
-            font_dialog.set_filter(Gtk.CustomFilter(self.on_filter_font))
+            font_dialog.set_filter(Gtk.CustomFilter.new(self.on_filter_font))
 
             for button in self.color_buttons.values():
                 button.set_dialog(color_dialog)
