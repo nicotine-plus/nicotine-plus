@@ -730,7 +730,7 @@ class TreeView:
             self.save_columns()
             return False
 
-        if self._data_types[sort_column_id] == str or column_id in {"in_queue", "queue_position"}:
+        if self._data_types[sort_column_id] == GObject.TYPE_STRING or column_id in {"in_queue", "queue_position"}:
             # String value (or queue position column): ascending sort by default
             first_sort_type = Gtk.SortType.ASCENDING
             second_sort_type = Gtk.SortType.DESCENDING
