@@ -129,20 +129,19 @@ def set_use_header_bar(enabled):
     GTK_SETTINGS.props.gtk_dialogs_use_header = enabled
 
 
-def set_default_font_size():
+def set_default_font():
 
-    if sys.platform not in {"darwin", "win32"}:
+    if sys.platform == "win32":
+        # Using larger font size than the default to match modern Windows apps
+        GTK_SETTINGS.props.gtk_font_name = "Segoe UI 10"
+
+    elif sys.platform == "darwin":
+        # Using Helvetica Neue instead of the default font due to rendering
+        # issues with the latter
+        GTK_SETTINGS.props.gtk_font_name = "Helvetica Neue 13"
+
+    else:
         return
-
-    font = GTK_SETTINGS.props.gtk_font_name
-
-    if not font:
-        return
-
-    # Increase default font size to match newer apps on Windows and macOS
-    font_name, _separator, font_size = font.rpartition(" ")
-    font_size = str(int(font_size) + 1)
-    GTK_SETTINGS.props.gtk_font_name = " ".join((font_name, font_size))
 
     if GTK_API_VERSION == 3:
         return
@@ -165,7 +164,7 @@ def set_visual_settings():
         # Hide minimize/maximize buttons in Broadway backend
         GTK_SETTINGS.props.gtk_decoration_layout = ":close"
 
-    set_default_font_size()
+    set_default_font()
     set_dark_mode(config.sections["ui"]["dark_mode"])
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
