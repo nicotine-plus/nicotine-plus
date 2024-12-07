@@ -1823,6 +1823,16 @@ class UserInterfacePage:
             "tab_changed": self.color_tab_changed_entry
         }
 
+        self.excluded_fonts = {}
+
+        if sys.platform == "darwin":
+            # Exclude broken fonts causing crashes on macOS
+            for font in (
+                ".AppleSystemUIFont",
+                "system-ui"
+            ):
+                self.excluded_fonts.add(font)
+
         self.font_buttons = {
             "globalfont": self.font_global_button,
             "listfont": self.font_list_button,
@@ -1881,6 +1891,7 @@ class UserInterfacePage:
         if (GTK_API_VERSION, GTK_MINOR_VERSION) >= (4, 10):
             color_dialog = Gtk.ColorDialog()
             font_dialog = Gtk.FontDialog()
+            font_dialog.set_filter(Gtk.CustomFilter(self.on_filter_font))
 
             for button in self.color_buttons.values():
                 button.set_dialog(color_dialog)
@@ -1891,6 +1902,9 @@ class UserInterfacePage:
         else:
             for button in self.color_buttons.values():
                 button.set_use_alpha(True)
+
+            for button in self.font_buttons.values():
+                button.set_filter_func(self.on_filter_font_legacy)
 
         icon_list = [
             (USER_STATUS_ICON_NAMES[UserStatus.ONLINE], _("Online"), 16, ("colored-icon", "user-status")),
@@ -2084,6 +2098,12 @@ class UserInterfacePage:
             return font_desc.to_string() if font_desc.get_family() else ""
 
         return button.get_font()
+
+    def on_filter_font(self, font_face):
+        return font_face.get_family().get_name() not in self.excluded_fonts
+
+    def on_filter_font_legacy(self, _font_family, font_face):
+        return self.on_filter_font(font_face)
 
     def on_clear_font(self, _button, font_id):
 
