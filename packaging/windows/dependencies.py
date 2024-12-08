@@ -50,8 +50,7 @@ def install_pacman():
 
     # Downgrade GTK due to crash on certain systems
     # https://github.com/nicotine-plus/nicotine-plus/issues/3210
-    downgrade_packages = [f"{prefix}-gtk4-4.14.5-1-any.pkg.tar.zst",
-                          f"{prefix}-libadwaita-1.5.3-1-any.pkg.tar.zst"]
+    downgrade_packages = [f"{prefix}-gtk4-4.16.2-1-any.pkg.tar.zst"]
 
     for package in downgrade_packages:
         subprocess.check_call(["curl", "-O", f"https://repo.msys2.org/mingw/{mingw_type}/{package}"])
