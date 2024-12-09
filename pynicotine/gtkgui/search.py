@@ -1681,6 +1681,13 @@ class Search:
         if popover is not None:
             popover.set_visible(False)
 
+        if GTK_API_VERSION >= 4:
+            self.grouping_button.set_has_frame(active)
+        else:
+            self.grouping_button.set_relief(
+                Gtk.ReliefStyle.NORMAL if active else Gtk.ReliefStyle.NONE
+            )
+
         config.sections["searches"]["group_searches"] = mode
         self.tree_view.set_show_expanders(active)
         self.expand_button.set_visible(active)

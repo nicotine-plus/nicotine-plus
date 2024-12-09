@@ -219,6 +219,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
