@@ -127,18 +127,18 @@ class UserInfo:
         if not refresh:
             return
 
+        # Request user status, speed and number of shared files
+        core.users.watch_user(username, context="userinfo")
+
+        # Request user interests
+        core.send_message_to_server(UserInterests(username))
+
         if username == local_username:
             msg = self._get_user_info_response()
             events.emit("user-info-response", msg)
         else:
-            # Request user status, speed and number of shared files
-            core.users.watch_user(username, context="userinfo")
-
             # Request user description, picture and queue information
             core.send_message_to_peer(username, UserInfoRequest())
-
-        # Request user interests
-        core.send_message_to_server(UserInterests(username))
 
     def remove_user(self, username):
 

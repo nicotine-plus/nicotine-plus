@@ -186,10 +186,6 @@ class Users:
         context must be the same as previously provided in watch_user().
         """
 
-        if username == self.login_username:
-            # We can't unwatch ourselves
-            return
-
         watched_user = self.watched.get(username)
 
         if watched_user is None:
