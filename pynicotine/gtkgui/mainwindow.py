@@ -59,6 +59,7 @@ from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.window import Window
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
+from pynicotine.utils import humanize
 from pynicotine.utils import open_folder_path
 
 
@@ -132,6 +133,7 @@ class MainWindow(Window):
             self.room_list_label,
             self.room_search_entry,
             self.scan_progress_container,
+            self.scan_progress_label,
             self.scan_progress_spinner,
             self.search_content,
             self.search_end,
@@ -220,6 +222,9 @@ class MainWindow(Window):
             self.vertical_paned.child_set_property(self.content, "shrink", False)
             self.vertical_paned.child_set_property(self.log_container, "resize", False)
             self.vertical_paned.child_set_property(self.log_container, "shrink", False)
+
+        # Avoid unnecessary 'notify' signals when updating number of currently scanned folders
+        self.scan_progress_label.freeze_notify()
 
         # Logging
         self.log_view = TextView(
@@ -1149,19 +1154,36 @@ class MainWindow(Window):
 
     def shares_preparing(self):
 
-        # Hide widget to keep tooltips for other widgets visible
-        self.scan_progress_container.set_visible(False)
-        self.scan_progress_container.set_tooltip_text(_("Preparing Shares"))
-        self.scan_progress_container.set_visible(True)
-        self.scan_progress_spinner.start()
-
-    def shares_scanning(self):
+        label = _("Preparing Shares")
 
         # Hide widget to keep tooltips for other widgets visible
         self.scan_progress_container.set_visible(False)
-        self.scan_progress_container.set_tooltip_text(_("Scanning Shares"))
+        self.scan_progress_container.set_tooltip_text(label)
+        self.scan_progress_label.set_label(label)
         self.scan_progress_container.set_visible(True)
         self.scan_progress_spinner.start()
+
+    def shares_scanning(self, folder_count=None):
+
+        label = _("Scanning Shares")
+
+        if folder_count is not None:
+            self.scan_progress_label.set_label(
+                f"{_('Scanning Shares')} ({humanize(folder_count)})")
+            return
+
+        tooltip_text = f"{label} ({_('Folders')})"
+
+        # Hide widget to keep tooltips for other widgets visible
+        self.scan_progress_container.set_visible(False)
+        self.scan_progress_container.set_tooltip_text(tooltip_text)
+        self.scan_progress_label.set_label(label)
+        self.scan_progress_container.set_visible(True)
+        self.scan_progress_spinner.start()
+
+    def shares_scanning_progress(self, folder_count):
+        self.scan_progress_label.set_label(
+            f"{_('Scanning Shares')} ({humanize(folder_count)})")
 
     def shares_ready(self, _successful):
         self.scan_progress_container.set_visible(False)
