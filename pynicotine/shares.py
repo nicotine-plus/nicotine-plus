@@ -239,7 +239,7 @@ class Scanner:
     __slots__ = ("queue", "share_groups", "share_dbs", "share_db_paths", "init",
                  "rescan", "rebuild", "reveal_buddy_shares", "reveal_trusted_shares",
                  "files", "streams", "mtimes", "word_index", "processed_share_names",
-                 "processed_share_paths", "current_file_index")
+                 "processed_share_paths", "current_file_index", "current_folder_count")
 
     HIDDEN_FOLDER_NAMES = {"@eaDir", "#recycle", "#snapshot"}
 
@@ -262,6 +262,7 @@ class Scanner:
         self.processed_share_names = set()
         self.processed_share_paths = set()
         self.current_file_index = 0
+        self.current_folder_count = 0
 
     def run(self):
 
@@ -521,7 +522,11 @@ class Scanner:
                             if self.is_hidden(path, entry=entry):
                                 continue
 
+                            self.current_folder_count += 1
                             folder_paths.append(path)
+
+                            if not self.current_folder_count % 100:
+                                self.queue.put(self.current_folder_count)
                             continue
 
                         try:
@@ -1087,6 +1092,10 @@ class Shares:
 
                 elif isinstance(item, list):
                     self.file_path_index = tuple(item)
+
+                elif isinstance(item, int):
+                    if emit_event is not None:
+                        emit_event("shares-scanning", item)
 
                 elif item == "rescanning":
                     if emit_event is not None:
