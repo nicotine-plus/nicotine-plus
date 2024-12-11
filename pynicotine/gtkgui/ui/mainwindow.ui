@@ -1692,14 +1692,16 @@
         </child>
         <child>
           <object class="GtkBox" id="scan_progress_container">
-            <property name="spacing">6</property>
+            <property name="spacing">8</property>
             <property name="visible">False</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="scan_progress_label">
                 <property name="ellipsize">end</property>
-                <property name="label" bind-source="scan_progress_container" bind-property="tooltip-text" bind-flags="bidirectional|sync-create"/>"
                 <property name="selectable">True</property>
                 <property name="visible">True</property>
+                <attributes>
+                  <attribute name="font-features" value="tnum=1"/>
+                </attributes>
                 <style>
                   <class name="caption"/>
                   <class name="dim-label"/>
