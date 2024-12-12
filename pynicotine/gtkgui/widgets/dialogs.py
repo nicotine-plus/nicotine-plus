@@ -265,7 +265,7 @@ class Dialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_present, super().present)
+        GLib.idle_add(self._finish_present, super().present, priority=GLib.PRIORITY_HIGH_IDLE)
 
 
 class MessageDialog(Window):
@@ -465,7 +465,7 @@ class MessageDialog(Window):
 
         # Show dialog after slight delay to work around issue where dialogs don't
         # close if another one is shown right after
-        GLib.idle_add(self._finish_present, super().present)
+        GLib.idle_add(self._finish_present, super().present, priority=GLib.PRIORITY_HIGH_IDLE)
 
 
 class OptionDialog(MessageDialog):

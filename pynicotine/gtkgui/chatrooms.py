@@ -634,7 +634,7 @@ class ChatRoom:
         self.prepend_old_messages()
 
     def load(self):
-        GLib.idle_add(self.read_room_logs_finished)
+        GLib.idle_add(self.read_room_logs_finished, priority=GLib.PRIORITY_HIGH_IDLE)
         self.loaded = True
 
     def clear(self):

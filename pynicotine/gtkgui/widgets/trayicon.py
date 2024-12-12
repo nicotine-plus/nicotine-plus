@@ -1117,7 +1117,7 @@ class StatusIconImplementation(BaseImplementation):
         self.tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
         self.gtk_menu = self._build_gtk_menu()
-        GLib.idle_add(self._update_icon)
+        GLib.idle_add(self._update_icon, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_status_icon_popup(self, _status_icon, button, _activate_time):
 

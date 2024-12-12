@@ -433,7 +433,7 @@ class ComboBox:
         visible = widget.get_property(param.name)
 
         # Only enable item selection callback when an item is selected from the UI
-        GLib.idle_add(self._on_select_callback_status, visible)
+        GLib.idle_add(self._on_select_callback_status, visible, priority=GLib.PRIORITY_HIGH_IDLE)
 
         if self.entry is None:
             return

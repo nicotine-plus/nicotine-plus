@@ -905,7 +905,7 @@ class Application:
         core.quit()
 
         # Process 'quit' event after slight delay in case thread event loop is stuck
-        GLib.idle_add(lambda: events.process_thread_events() == -1)
+        GLib.idle_add(lambda: events.process_thread_events() == -1, priority=GLib.PRIORITY_HIGH_IDLE)
 
         # Log exception in terminal
         self._raise_exception(exc_value)
@@ -917,7 +917,7 @@ class Application:
             return
 
         # Raise exception in the main thread
-        GLib.idle_add(self._raise_exception, exc_value)
+        GLib.idle_add(self._raise_exception, exc_value, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_process_thread_events(self):
         return events.process_thread_events()

@@ -671,7 +671,7 @@ class MainWindow(Window):
 
         # Show active dialogs again after a slight delay
         if active_dialogs:
-            GLib.idle_add(self._show_dialogs, active_dialogs)
+            GLib.idle_add(self._show_dialogs, active_dialogs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def on_change_focus_view(self, *_args):
         """F6 - move focus between header bar/toolbar and main content."""
