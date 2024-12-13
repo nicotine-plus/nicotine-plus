@@ -380,7 +380,7 @@ class PrivateChat:
         self.prepend_old_messages()
 
     def load(self):
-        GLib.idle_add(self.read_private_log_finished, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self.read_private_log_finished)
         self.loaded = True
 
     def read_private_log_finished(self):
