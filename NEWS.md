@@ -5,7 +5,7 @@ The current stable version of Nicotine+ is available at [DOWNLOADS.md](doc/DOWNL
 You can run the latest unstable build of Nicotine+ to test recent changes and bug fixes, see [TESTING.md](doc/TESTING.md).
 
 
-## Version 3.3.7 (Release Candidate 2)
+## Version 3.3.7 (December 15, 2024)
 
 ### Changes
 
