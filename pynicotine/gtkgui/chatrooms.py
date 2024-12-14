@@ -612,8 +612,13 @@ class ChatRoom:
             ("#" + _("Copy"), self.chat_view.on_copy_text),
             ("#" + _("Copy Link"), self.chat_view.on_copy_link),
             ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View Room Log"), self.on_view_room_log),
+            ("", None)
+        )
+        if not core.isolated_mode:
+            self.popup_menu_chat_view.add_items(
+                ("#" + _("View Room Log"), self.on_view_room_log)
+            )
+        self.popup_menu_chat_view.add_items(
             ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),

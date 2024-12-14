@@ -262,9 +262,12 @@ class Transfers:
         self.popup_menu = FilePopupMenu(
             window.application, parent=self.tree_view.widget, callback=self.on_popup_menu
         )
+        if not core.isolated_mode:
+            self.popup_menu.add_items(
+                ("#" + _("_Open File"), self.on_open_file),
+                ("#" + _("Open in File _Manager"), self.on_open_file_manager)
+            )
         self.popup_menu.add_items(
-            ("#" + _("_Open File"), self.on_open_file),
-            ("#" + _("Open in File _Manager"), self.on_open_file_manager),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
@@ -1039,6 +1042,10 @@ class Transfers:
 
         self.select_transfers()
         action = config.sections["transfers"][f"{self.type}_doubleclick"]
+
+        if core.isolated_mode and action in {1, 2}:
+            # External applications not available in isolated_mode mode
+            return
 
         if action == 1:    # Open File
             self.on_open_file()
