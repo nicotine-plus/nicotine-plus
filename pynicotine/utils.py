@@ -478,7 +478,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
 def _try_open_uri(uri):
 
-    if sys.platform != "win32":
+    if sys.platform not in {"darwin", "win32"}:
         try:
             from gi.repository import Gio  # pylint: disable=import-error
             Gio.AppInfo.launch_default_for_uri(uri)
@@ -562,6 +562,9 @@ def _open_path(path, is_folder=False, create_folder=False, create_file=False):
 
         elif sys.platform == "win32":
             os.startfile(path_encoded)  # pylint: disable=no-member
+
+        elif sys.platform == "darwin":
+            execute_command("open $", path)
 
         else:
             _try_open_uri("file:///" + path)
