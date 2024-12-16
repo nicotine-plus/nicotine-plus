@@ -18,7 +18,7 @@
 
 __application_name__ = "Nicotine+"
 __application_id__ = "org.nicotine_plus.Nicotine"
-__version__ = "3.3.7rc2"
+__version__ = "3.3.7"
 __author__ = "Nicotine+ Team"
 __copyright__ = """© 2004–2024 Nicotine+ Contributors
 © 2003–2004 Nicotine Contributors
