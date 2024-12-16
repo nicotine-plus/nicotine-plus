@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 14:13+0200\n"
+"POT-Creation-Date: 2024-12-16 06:46+0200\n"
 "PO-Revision-Date: 2024-11-17 12:58+0000\n"
 "Last-Translator: Mat <mail@mathias.is>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -50,7 +50,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:27
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:43
-#: pynicotine/gtkgui/mainwindow.py:709
+#: pynicotine/gtkgui/mainwindow.py:711
 #: pynicotine/plugins/core_commands/__init__.py:29
 #: pynicotine/gtkgui/ui/mainwindow.ui:221
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:617
@@ -61,8 +61,8 @@ msgstr "Otsi faile"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:31
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:47
-#: pynicotine/gtkgui/dialogs/preferences.py:3007
-#: pynicotine/gtkgui/mainwindow.py:710 pynicotine/gtkgui/mainwindow.py:1062
+#: pynicotine/gtkgui/dialogs/preferences.py:2992
+#: pynicotine/gtkgui/mainwindow.py:712 pynicotine/gtkgui/mainwindow.py:1064
 #: pynicotine/gtkgui/ui/mainwindow.ui:460
 #: pynicotine/gtkgui/ui/settings/downloads.ui:62
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:629
@@ -71,7 +71,7 @@ msgstr "Allalaadimised"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:35
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:51
-#: pynicotine/gtkgui/mainwindow.py:712
+#: pynicotine/gtkgui/mainwindow.py:714
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:267
 #: pynicotine/gtkgui/ui/mainwindow.ui:867
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:653
@@ -81,7 +81,7 @@ msgstr "Sirvi jagatud katalooge"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:39
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:55
-#: pynicotine/gtkgui/mainwindow.py:714 pynicotine/gtkgui/widgets/trayicon.py:94
+#: pynicotine/gtkgui/mainwindow.py:716 pynicotine/gtkgui/widgets/trayicon.py:94
 #: pynicotine/plugins/core_commands/__init__.py:27
 #: pynicotine/gtkgui/ui/mainwindow.ui:1194
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:677
@@ -90,6 +90,7 @@ msgid "Private Chat"
 msgstr "Privaatvestlus"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:76
+#: data/org.nicotine_plus.Nicotine.appdata.xml.in:78
 msgid "Nicotine+ Team"
 msgstr "Nicotine+ meeskond"
 
@@ -327,136 +328,136 @@ msgstr "Allalaadimine algas: kasutaja %(user)s, fail %(file)s"
 msgid "Cannot find %s, please install it."
 msgstr "%s ei leita, paigalda see."
 
-#: pynicotine/gtkgui/__init__.py:149
+#: pynicotine/gtkgui/__init__.py:150
 msgid "No graphical environment available, using headless (no GUI) mode"
 msgstr ""
 "Graafilist keskkonda pole saadaval, kasutatakse päiseta (GUI puudub) režiimi"
 
-#: pynicotine/gtkgui/application.py:318
+#: pynicotine/gtkgui/application.py:293
 #: pynicotine/gtkgui/widgets/trayicon.py:101
 msgid "_Connect"
 msgstr "_Ühenda"
 
-#: pynicotine/gtkgui/application.py:319
+#: pynicotine/gtkgui/application.py:294
 #: pynicotine/gtkgui/widgets/trayicon.py:102
 msgid "_Disconnect"
 msgstr "_Katkesta ühendus"
 
-#: pynicotine/gtkgui/application.py:320
+#: pynicotine/gtkgui/application.py:295
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _privileegid"
 
-#: pynicotine/gtkgui/application.py:326
+#: pynicotine/gtkgui/application.py:301
 msgid "_Preferences"
 msgstr "_Eelistused"
 
-#: pynicotine/gtkgui/application.py:332 pynicotine/gtkgui/application.py:541
+#: pynicotine/gtkgui/application.py:307 pynicotine/gtkgui/application.py:516
 #: pynicotine/gtkgui/widgets/trayicon.py:107
 msgid "_Quit"
 msgstr "_Välju"
 
-#: pynicotine/gtkgui/application.py:349
+#: pynicotine/gtkgui/application.py:324
 msgid "Browse _Public Shares"
 msgstr "Sirvi _avalikke jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:350
+#: pynicotine/gtkgui/application.py:325
 msgid "Browse _Buddy Shares"
 msgstr "Sirvi _sõbra jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:351
+#: pynicotine/gtkgui/application.py:326
 msgid "Browse _Trusted Shares"
 msgstr "Sirvi _usaldusväärseid jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:360 pynicotine/gtkgui/application.py:416
+#: pynicotine/gtkgui/application.py:335 pynicotine/gtkgui/application.py:391
 msgid "_Rescan Shares"
 msgstr "_Skaneeri jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:361 pynicotine/gtkgui/application.py:418
+#: pynicotine/gtkgui/application.py:336 pynicotine/gtkgui/application.py:393
 msgid "Configure _Shares"
 msgstr "Seadista _jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:383
+#: pynicotine/gtkgui/application.py:358
 msgid "_Keyboard Shortcuts"
 msgstr "_Klaviatuuri otseteed"
 
-#: pynicotine/gtkgui/application.py:384
+#: pynicotine/gtkgui/application.py:359
 msgid "_Setup Assistant"
 msgstr "_Seadistusabiline"
 
-#: pynicotine/gtkgui/application.py:385
+#: pynicotine/gtkgui/application.py:360
 msgid "_Transfer Statistics"
 msgstr "_Ülekande statistika"
 
-#: pynicotine/gtkgui/application.py:387
+#: pynicotine/gtkgui/application.py:362
 msgid "Report a _Bug"
 msgstr "Teata _veast"
 
-#: pynicotine/gtkgui/application.py:388
+#: pynicotine/gtkgui/application.py:363
 msgid "Improve T_ranslations"
 msgstr "Paranda t_õlkeid"
 
-#: pynicotine/gtkgui/application.py:390
+#: pynicotine/gtkgui/application.py:365
 msgid "_About Nicotine+"
 msgstr "_Nicotine+ teave"
 
-#: pynicotine/gtkgui/application.py:401
+#: pynicotine/gtkgui/application.py:376
 msgid "_File"
 msgstr "_Fail"
 
-#: pynicotine/gtkgui/application.py:402
+#: pynicotine/gtkgui/application.py:377
 msgid "_Shares"
 msgstr "_Jagatud kataloogid"
 
-#: pynicotine/gtkgui/application.py:403 pynicotine/gtkgui/application.py:420
+#: pynicotine/gtkgui/application.py:378 pynicotine/gtkgui/application.py:395
 msgid "_Help"
 msgstr "_Abi"
 
-#: pynicotine/gtkgui/application.py:417
+#: pynicotine/gtkgui/application.py:392
 msgid "_Browse Shares"
 msgstr "_Sirvi jagatud katalooge"
 
-#: pynicotine/gtkgui/application.py:472
+#: pynicotine/gtkgui/application.py:447
 #, python-format
 msgid "Unable to show notification: %s"
 msgstr "Märguannet ei saa kuvada: %s"
 
-#: pynicotine/gtkgui/application.py:533
+#: pynicotine/gtkgui/application.py:508
 msgid "You are still uploading files. Do you really want to exit?"
 msgstr "Laadid endiselt faile üles. Kas soovid tõesti väljuda?"
 
-#: pynicotine/gtkgui/application.py:534
+#: pynicotine/gtkgui/application.py:509
 msgid "Wait for uploads to finish"
 msgstr "Oota, kuni üleslaadimine lõpeb"
 
-#: pynicotine/gtkgui/application.py:536
+#: pynicotine/gtkgui/application.py:511
 msgid "Do you really want to exit?"
 msgstr "Kas soovid tõesti väljuda?"
 
-#: pynicotine/gtkgui/application.py:540
+#: pynicotine/gtkgui/application.py:515
 #: pynicotine/gtkgui/widgets/dialogs.py:477
 msgid "_No"
 msgstr "_Ei"
 
-#: pynicotine/gtkgui/application.py:542
+#: pynicotine/gtkgui/application.py:517
 msgid "_Run in Background"
 msgstr "_Tööta taustal"
 
-#: pynicotine/gtkgui/application.py:547
-#: pynicotine/gtkgui/dialogs/preferences.py:1767
+#: pynicotine/gtkgui/application.py:522
+#: pynicotine/gtkgui/dialogs/preferences.py:1732
 #: pynicotine/plugins/core_commands/__init__.py:68
 msgid "Quit Nicotine+"
 msgstr "Sulge Nicotine+"
 
-#: pynicotine/gtkgui/application.py:568
+#: pynicotine/gtkgui/application.py:543
 msgid "Shares Not Available"
 msgstr "Jagatud katalooge pole saadaval"
 
-#: pynicotine/gtkgui/application.py:569 pynicotine/headless/application.py:124
+#: pynicotine/gtkgui/application.py:544 pynicotine/headless/application.py:124
 msgid ""
 "Verify that external disks are mounted and folder permissions are correct."
 msgstr "Veendu, et välised kettad on ühendatud ja kausta load on õiged."
 
-#: pynicotine/gtkgui/application.py:572
+#: pynicotine/gtkgui/application.py:547
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:132
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:42
 #: pynicotine/gtkgui/downloads.py:173 pynicotine/gtkgui/widgets/dialogs.py:516
@@ -464,45 +465,45 @@ msgstr "Veendu, et välised kettad on ühendatud ja kausta load on õiged."
 msgid "_Cancel"
 msgstr "_Tühista"
 
-#: pynicotine/gtkgui/application.py:573 pynicotine/gtkgui/uploads.py:49
+#: pynicotine/gtkgui/application.py:548 pynicotine/gtkgui/uploads.py:49
 msgid "_Retry"
 msgstr "_Proovi uuesti"
 
-#: pynicotine/gtkgui/application.py:574
+#: pynicotine/gtkgui/application.py:549
 msgid "_Force Rescan"
 msgstr "_Sunni uus skaneering"
 
-#: pynicotine/gtkgui/application.py:749
+#: pynicotine/gtkgui/application.py:724
 msgid "Message Downloading Users"
 msgstr "Sõnum allalaadivatele kasutajatele"
 
-#: pynicotine/gtkgui/application.py:750
+#: pynicotine/gtkgui/application.py:725
 msgid "Send private message to all users who are downloading from you:"
 msgstr "Saada privaatsõnum kõigile kasutajatele, kes sinult alla laadivad:"
 
-#: pynicotine/gtkgui/application.py:751 pynicotine/gtkgui/application.py:765
+#: pynicotine/gtkgui/application.py:726 pynicotine/gtkgui/application.py:740
 #: pynicotine/gtkgui/widgets/popupmenu.py:419
 #: pynicotine/gtkgui/ui/userinfo.ui:449
 msgid "_Send Message"
 msgstr "_Saada sõnum"
 
-#: pynicotine/gtkgui/application.py:763
+#: pynicotine/gtkgui/application.py:738
 msgid "Message Buddies"
 msgstr "Sõnum sõpradele"
 
-#: pynicotine/gtkgui/application.py:764
+#: pynicotine/gtkgui/application.py:739
 msgid "Send private message to all online buddies:"
 msgstr "Saada kõigile võrgus olevaile sõpradele privaatsõnum:"
 
-#: pynicotine/gtkgui/application.py:793
+#: pynicotine/gtkgui/application.py:768
 msgid "Select a Saved Shares List File"
 msgstr "Vali salvestatud jagatud kataloogide loendi fail"
 
-#: pynicotine/gtkgui/application.py:879
+#: pynicotine/gtkgui/application.py:854
 msgid "Critical Error"
 msgstr "Kriitiline viga"
 
-#: pynicotine/gtkgui/application.py:880
+#: pynicotine/gtkgui/application.py:855
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -510,11 +511,11 @@ msgstr ""
 "Nicotine+ tabas kriitiline viga ja see tuleb sulgeda. Kopeeri järgmine teade "
 "ja lisa see veaaruandesse:"
 
-#: pynicotine/gtkgui/application.py:884
+#: pynicotine/gtkgui/application.py:859
 msgid "_Quit Nicotine+"
 msgstr "_Sulge Nicotine+"
 
-#: pynicotine/gtkgui/application.py:885
+#: pynicotine/gtkgui/application.py:860
 msgid "_Copy & Report Bug"
 msgstr "_Kopeeri ja teavita veast"
 
@@ -533,8 +534,8 @@ msgid "Country"
 msgstr "Riik"
 
 #: pynicotine/gtkgui/buddies.py:83 pynicotine/gtkgui/chatrooms.py:546
-#: pynicotine/gtkgui/dialogs/preferences.py:1003
-#: pynicotine/gtkgui/dialogs/preferences.py:1180
+#: pynicotine/gtkgui/dialogs/preferences.py:983
+#: pynicotine/gtkgui/dialogs/preferences.py:1155
 #: pynicotine/gtkgui/interests.py:139
 #: pynicotine/gtkgui/popovers/chathistory.py:71 pynicotine/gtkgui/search.py:512
 #: pynicotine/gtkgui/transfers.py:145
@@ -554,9 +555,9 @@ msgid "Files"
 msgstr "Failid"
 
 #: pynicotine/gtkgui/buddies.py:102
-#: pynicotine/gtkgui/dialogs/preferences.py:666
-#: pynicotine/gtkgui/dialogs/preferences.py:726
-#: pynicotine/gtkgui/dialogs/preferences.py:764
+#: pynicotine/gtkgui/dialogs/preferences.py:658
+#: pynicotine/gtkgui/dialogs/preferences.py:713
+#: pynicotine/gtkgui/dialogs/preferences.py:749
 msgid "Trusted"
 msgstr "Usaldusväärne"
 
@@ -582,8 +583,8 @@ msgstr "Lisa kasutaja _Märkus…"
 
 #: pynicotine/gtkgui/buddies.py:145
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:224
-#: pynicotine/gtkgui/dialogs/preferences.py:297
-#: pynicotine/gtkgui/dialogs/preferences.py:826
+#: pynicotine/gtkgui/dialogs/preferences.py:291
+#: pynicotine/gtkgui/dialogs/preferences.py:806
 #: pynicotine/gtkgui/dialogs/wishlist.py:81 pynicotine/gtkgui/interests.py:188
 #: pynicotine/gtkgui/interests.py:197 pynicotine/gtkgui/transfers.py:272
 #: pynicotine/gtkgui/userinfo.py:375
@@ -596,18 +597,18 @@ msgstr "Lisa kasutaja _Märkus…"
 #: pynicotine/gtkgui/ui/settings/ban.ui:210
 #: pynicotine/gtkgui/ui/settings/ban.ui:316
 #: pynicotine/gtkgui/ui/settings/ban.ui:332
-#: pynicotine/gtkgui/ui/settings/chats.ui:772
-#: pynicotine/gtkgui/ui/settings/chats.ui:788
-#: pynicotine/gtkgui/ui/settings/chats.ui:956
-#: pynicotine/gtkgui/ui/settings/chats.ui:972
+#: pynicotine/gtkgui/ui/settings/chats.ui:765
+#: pynicotine/gtkgui/ui/settings/chats.ui:781
+#: pynicotine/gtkgui/ui/settings/chats.ui:949
+#: pynicotine/gtkgui/ui/settings/chats.ui:965
 #: pynicotine/gtkgui/ui/settings/downloads.ui:501
 #: pynicotine/gtkgui/ui/settings/downloads.ui:517
 #: pynicotine/gtkgui/ui/settings/ignore.ui:128
 #: pynicotine/gtkgui/ui/settings/ignore.ui:144
 #: pynicotine/gtkgui/ui/settings/ignore.ui:249
 #: pynicotine/gtkgui/ui/settings/ignore.ui:265
-#: pynicotine/gtkgui/ui/settings/shares.ui:191
-#: pynicotine/gtkgui/ui/settings/shares.ui:207
+#: pynicotine/gtkgui/ui/settings/shares.ui:189
+#: pynicotine/gtkgui/ui/settings/shares.ui:205
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:138
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:154
 msgid "Remove"
@@ -628,14 +629,14 @@ msgstr "Lisa märkus kasutaja %s kohta:"
 
 #: pynicotine/gtkgui/buddies.py:531
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:384
-#: pynicotine/gtkgui/dialogs/preferences.py:469
-#: pynicotine/gtkgui/dialogs/preferences.py:1070
-#: pynicotine/gtkgui/dialogs/preferences.py:1111
-#: pynicotine/gtkgui/dialogs/preferences.py:1265
-#: pynicotine/gtkgui/dialogs/preferences.py:1306
-#: pynicotine/gtkgui/dialogs/preferences.py:1545
-#: pynicotine/gtkgui/dialogs/preferences.py:1608
-#: pynicotine/gtkgui/dialogs/preferences.py:2583
+#: pynicotine/gtkgui/dialogs/preferences.py:463
+#: pynicotine/gtkgui/dialogs/preferences.py:1045
+#: pynicotine/gtkgui/dialogs/preferences.py:1086
+#: pynicotine/gtkgui/dialogs/preferences.py:1236
+#: pynicotine/gtkgui/dialogs/preferences.py:1277
+#: pynicotine/gtkgui/dialogs/preferences.py:1510
+#: pynicotine/gtkgui/dialogs/preferences.py:1573
+#: pynicotine/gtkgui/dialogs/preferences.py:2568
 msgid "_Add"
 msgstr "_Lisa"
 
@@ -713,7 +714,7 @@ msgstr "Tühjenda sõnumivaade"
 msgid "%(user)s mentioned you in room %(room)s"
 msgstr "%(user)s mainis sind ruumis %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:827 pynicotine/gtkgui/mainwindow.py:397
+#: pynicotine/gtkgui/chatrooms.py:827 pynicotine/gtkgui/mainwindow.py:398
 #, python-format
 msgid "Mentioned by %(user)s in Room %(room)s"
 msgstr "Mainis %(user)s ruumis %(room)s"
@@ -784,12 +785,12 @@ msgid "Setup Assistant"
 msgstr "Seadistusabiline"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:99
-#: pynicotine/gtkgui/dialogs/preferences.py:614
+#: pynicotine/gtkgui/dialogs/preferences.py:606
 msgid "Virtual Folder"
 msgstr "Virtuaalne kaust"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:106
-#: pynicotine/gtkgui/dialogs/preferences.py:621 pynicotine/gtkgui/search.py:538
+#: pynicotine/gtkgui/dialogs/preferences.py:613 pynicotine/gtkgui/search.py:538
 #: pynicotine/gtkgui/uploads.py:48 pynicotine/gtkgui/userbrowse.py:261
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:113
 msgid "Folder"
@@ -809,28 +810,28 @@ msgid "_Next"
 msgstr "_Järgmine"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:179
-#: pynicotine/gtkgui/dialogs/preferences.py:717
+#: pynicotine/gtkgui/dialogs/preferences.py:704
 msgid "Add a Shared Folder"
 msgstr "Lisa jagatud kaust"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:212
-#: pynicotine/gtkgui/dialogs/preferences.py:761
+#: pynicotine/gtkgui/dialogs/preferences.py:746
 msgid "Edit Shared Folder"
 msgstr "Muuda jagatud kausta"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:213
-#: pynicotine/gtkgui/dialogs/preferences.py:762
+#: pynicotine/gtkgui/dialogs/preferences.py:747
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Sisesta '%(dir)s jaoks uus virtuaalne nimi:"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:215
 #: pynicotine/gtkgui/dialogs/pluginsettings.py:412
-#: pynicotine/gtkgui/dialogs/preferences.py:499
-#: pynicotine/gtkgui/dialogs/preferences.py:768
-#: pynicotine/gtkgui/dialogs/preferences.py:1575
-#: pynicotine/gtkgui/dialogs/preferences.py:1640
-#: pynicotine/gtkgui/dialogs/preferences.py:2612
+#: pynicotine/gtkgui/dialogs/preferences.py:493
+#: pynicotine/gtkgui/dialogs/preferences.py:753
+#: pynicotine/gtkgui/dialogs/preferences.py:1540
+#: pynicotine/gtkgui/dialogs/preferences.py:1605
+#: pynicotine/gtkgui/dialogs/preferences.py:2597
 #: pynicotine/gtkgui/dialogs/wishlist.py:140
 msgid "_Edit"
 msgstr "_Muuda"
@@ -873,17 +874,17 @@ msgstr "_Rakenda"
 #: pynicotine/gtkgui/ui/settings/ban.ui:179
 #: pynicotine/gtkgui/ui/settings/ban.ui:285
 #: pynicotine/gtkgui/ui/settings/ban.ui:301
-#: pynicotine/gtkgui/ui/settings/chats.ui:710
-#: pynicotine/gtkgui/ui/settings/chats.ui:726
-#: pynicotine/gtkgui/ui/settings/chats.ui:894
-#: pynicotine/gtkgui/ui/settings/chats.ui:910
+#: pynicotine/gtkgui/ui/settings/chats.ui:703
+#: pynicotine/gtkgui/ui/settings/chats.ui:719
+#: pynicotine/gtkgui/ui/settings/chats.ui:887
+#: pynicotine/gtkgui/ui/settings/chats.ui:903
 #: pynicotine/gtkgui/ui/settings/downloads.ui:455
 #: pynicotine/gtkgui/ui/settings/ignore.ui:97
 #: pynicotine/gtkgui/ui/settings/ignore.ui:113
 #: pynicotine/gtkgui/ui/settings/ignore.ui:218
 #: pynicotine/gtkgui/ui/settings/ignore.ui:234
-#: pynicotine/gtkgui/ui/settings/shares.ui:129
-#: pynicotine/gtkgui/ui/settings/shares.ui:145
+#: pynicotine/gtkgui/ui/settings/shares.ui:127
+#: pynicotine/gtkgui/ui/settings/shares.ui:143
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:76
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:92
 msgid "Add…"
@@ -895,14 +896,14 @@ msgstr "Lisa…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:498
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:60
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:76
-#: pynicotine/gtkgui/ui/settings/chats.ui:741
-#: pynicotine/gtkgui/ui/settings/chats.ui:757
-#: pynicotine/gtkgui/ui/settings/chats.ui:925
-#: pynicotine/gtkgui/ui/settings/chats.ui:941
+#: pynicotine/gtkgui/ui/settings/chats.ui:734
+#: pynicotine/gtkgui/ui/settings/chats.ui:750
+#: pynicotine/gtkgui/ui/settings/chats.ui:918
+#: pynicotine/gtkgui/ui/settings/chats.ui:934
 #: pynicotine/gtkgui/ui/settings/downloads.ui:470
 #: pynicotine/gtkgui/ui/settings/downloads.ui:486
-#: pynicotine/gtkgui/ui/settings/shares.ui:160
-#: pynicotine/gtkgui/ui/settings/shares.ui:176
+#: pynicotine/gtkgui/ui/settings/shares.ui:158
+#: pynicotine/gtkgui/ui/settings/shares.ui:174
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:107
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:123
 msgid "Edit…"
@@ -921,35 +922,35 @@ msgstr "Lisa üksus"
 msgid "Edit Item"
 msgstr "Muuda üksust"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:127
+#: pynicotine/gtkgui/dialogs/preferences.py:126
 #: pynicotine/gtkgui/userinfo.py:615 pynicotine/gtkgui/userinfo.py:633
 #: pynicotine/gtkgui/userinfo.py:770 pynicotine/gtkgui/widgets/treeview.py:683
-#: pynicotine/users.py:314 pynicotine/gtkgui/ui/settings/network.ui:132
+#: pynicotine/users.py:310 pynicotine/gtkgui/ui/settings/network.ui:132
 #: pynicotine/gtkgui/ui/userinfo.ui:160 pynicotine/gtkgui/ui/userinfo.ui:187
 #: pynicotine/gtkgui/ui/userinfo.ui:214 pynicotine/gtkgui/ui/userinfo.ui:241
 #: pynicotine/gtkgui/ui/userinfo.ui:268 pynicotine/gtkgui/ui/userinfo.ui:295
 msgid "Unknown"
 msgstr "Tundmatu"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:131
+#: pynicotine/gtkgui/dialogs/preferences.py:130
 #: pynicotine/gtkgui/ui/settings/network.ui:142
 msgid "Check Port Status"
 msgstr "Kontrolli pordi olekut"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:133
+#: pynicotine/gtkgui/dialogs/preferences.py:132
 #, python-format
 msgid "<b>%(ip)s</b>, port %(port)s"
 msgstr "<b>%(ip)s</b>, port %(port)s"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:204
+#: pynicotine/gtkgui/dialogs/preferences.py:201
 msgid "Password Change Rejected"
 msgstr "Parooli vahetus tagasi lükatud"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:223
+#: pynicotine/gtkgui/dialogs/preferences.py:220
 msgid "Enter a new password for your Soulseek account:"
 msgstr "Sisesta oma Soulseeki kontole uus parool:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:225
+#: pynicotine/gtkgui/dialogs/preferences.py:222
 msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
 "the password of an existing Soulseek account, you need to be logged into "
@@ -958,82 +959,82 @@ msgstr ""
 "Oled praegu Soulseeki võrgust välja logitud. Kui soovid olemasoleva "
 "Soulseeki konto parooli muuta, pead olema sellele kontole sisse logitud."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:228
+#: pynicotine/gtkgui/dialogs/preferences.py:225
 msgid "Enter password to use when logging in:"
 msgstr "Sisesta sisselogimisel kasutatav parool:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:232
+#: pynicotine/gtkgui/dialogs/preferences.py:229
 #: pynicotine/gtkgui/ui/settings/network.ui:80
 #: pynicotine/gtkgui/ui/settings/network.ui:96
 msgid "Change Password"
 msgstr "Muuda parooli"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:235
+#: pynicotine/gtkgui/dialogs/preferences.py:232
 msgid "_Change"
 msgstr "_Muuda"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:282
+#: pynicotine/gtkgui/dialogs/preferences.py:276
 msgid "No one"
 msgstr "Mitte keegi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:283
+#: pynicotine/gtkgui/dialogs/preferences.py:277
 msgid "Everyone"
 msgstr "Kõik"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:284
-#: pynicotine/gtkgui/dialogs/preferences.py:584
-#: pynicotine/gtkgui/dialogs/preferences.py:662
-#: pynicotine/gtkgui/mainwindow.py:715 pynicotine/gtkgui/search.py:275
+#: pynicotine/gtkgui/dialogs/preferences.py:278
+#: pynicotine/gtkgui/dialogs/preferences.py:578
+#: pynicotine/gtkgui/dialogs/preferences.py:654
+#: pynicotine/gtkgui/mainwindow.py:717 pynicotine/gtkgui/search.py:275
 #: pynicotine/gtkgui/ui/buddies.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:1363
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:689
 msgid "Buddies"
 msgstr "Sõbrad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:285
-#: pynicotine/gtkgui/dialogs/preferences.py:585
-#: pynicotine/gtkgui/dialogs/preferences.py:726
-#: pynicotine/gtkgui/dialogs/preferences.py:764
+#: pynicotine/gtkgui/dialogs/preferences.py:279
+#: pynicotine/gtkgui/dialogs/preferences.py:579
+#: pynicotine/gtkgui/dialogs/preferences.py:713
+#: pynicotine/gtkgui/dialogs/preferences.py:749
 msgid "Trusted buddies"
 msgstr "Usaldusväärsed sõbrad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:292
-#: pynicotine/gtkgui/dialogs/preferences.py:821
+#: pynicotine/gtkgui/dialogs/preferences.py:286
+#: pynicotine/gtkgui/dialogs/preferences.py:801
 msgid "Nothing"
 msgstr "Mitte midagi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:293
-#: pynicotine/gtkgui/dialogs/preferences.py:822
+#: pynicotine/gtkgui/dialogs/preferences.py:287
+#: pynicotine/gtkgui/dialogs/preferences.py:802
 msgid "Open File"
 msgstr "Ava fail"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:294
-#: pynicotine/gtkgui/dialogs/preferences.py:823
+#: pynicotine/gtkgui/dialogs/preferences.py:288
+#: pynicotine/gtkgui/dialogs/preferences.py:803
 #: pynicotine/gtkgui/widgets/filechooser.py:292
 msgid "Open in File Manager"
 msgstr "Ava failihalduris"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:295
-#: pynicotine/gtkgui/dialogs/preferences.py:824
-#: pynicotine/gtkgui/mainwindow.py:1064
+#: pynicotine/gtkgui/dialogs/preferences.py:289
+#: pynicotine/gtkgui/dialogs/preferences.py:804
+#: pynicotine/gtkgui/mainwindow.py:1066
 msgid "Search"
 msgstr "Otsing"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:296
+#: pynicotine/gtkgui/dialogs/preferences.py:290
 #: pynicotine/gtkgui/ui/downloads.ui:86
 msgid "Pause"
 msgstr "Paus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:298
+#: pynicotine/gtkgui/dialogs/preferences.py:292
 #: pynicotine/gtkgui/ui/downloads.ui:56
 msgid "Resume"
 msgstr "Jätka"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:299
-#: pynicotine/gtkgui/dialogs/preferences.py:828
+#: pynicotine/gtkgui/dialogs/preferences.py:293
+#: pynicotine/gtkgui/dialogs/preferences.py:808
 msgid "Browse Folder"
 msgstr "Sirvi kausta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:316
+#: pynicotine/gtkgui/dialogs/preferences.py:310
 msgid ""
 "<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions can "
 "be used, otherwise only wildcard * matches are supported."
@@ -1041,148 +1042,148 @@ msgstr ""
 "<b>Süntaks</b>: tõstutundlik. Kui see on lubatud, saab kasutada Pythoni "
 "regulaaravaldisi, vastasel juhul toetatakse ainult metamärgi * vasteid."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:326
+#: pynicotine/gtkgui/dialogs/preferences.py:320
 msgid "Filter"
 msgstr "Filter"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:333
+#: pynicotine/gtkgui/dialogs/preferences.py:327
 msgid "Regex"
 msgstr "Regex"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:467
+#: pynicotine/gtkgui/dialogs/preferences.py:461
 msgid "Add Download Filter"
 msgstr "Lisa allalaadimisfilter"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:468
+#: pynicotine/gtkgui/dialogs/preferences.py:462
 msgid "Enter a new download filter:"
 msgstr "Sisesta uus allalaadimisfilter:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:472
-#: pynicotine/gtkgui/dialogs/preferences.py:504
+#: pynicotine/gtkgui/dialogs/preferences.py:466
+#: pynicotine/gtkgui/dialogs/preferences.py:498
 msgid "Enable regular expressions"
 msgstr "Luba regulaaravaldised"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:497
+#: pynicotine/gtkgui/dialogs/preferences.py:491
 msgid "Edit Download Filter"
 msgstr "Muuda allalaadimisfiltrit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:498
+#: pynicotine/gtkgui/dialogs/preferences.py:492
 msgid "Modify the following download filter:"
 msgstr "Muuda järgmist allalaadimisfiltrit:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:570
+#: pynicotine/gtkgui/dialogs/preferences.py:564
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d nurjus! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:577
+#: pynicotine/gtkgui/dialogs/preferences.py:571
 msgid "Filters Successful"
 msgstr "Filtrite kasutus edukas"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:583
-#: pynicotine/gtkgui/dialogs/preferences.py:658
-#: pynicotine/gtkgui/dialogs/preferences.py:699
+#: pynicotine/gtkgui/dialogs/preferences.py:577
+#: pynicotine/gtkgui/dialogs/preferences.py:650
+#: pynicotine/gtkgui/dialogs/preferences.py:686
 msgid "Public"
 msgstr "Avalik"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:627
+#: pynicotine/gtkgui/dialogs/preferences.py:619
 msgid "Accessible To"
 msgstr "Ligipääsetav"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:825
+#: pynicotine/gtkgui/dialogs/preferences.py:805
 #: pynicotine/gtkgui/ui/uploads.ui:56
 msgid "Abort"
 msgstr "Katkesta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:827
+#: pynicotine/gtkgui/dialogs/preferences.py:807
 #: pynicotine/gtkgui/ui/userbrowse.ui:5 pynicotine/gtkgui/ui/userinfo.ui:5
 msgid "Retry"
 msgstr "Proovi uuesti"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:835
+#: pynicotine/gtkgui/dialogs/preferences.py:815
 msgid "Round Robin"
 msgstr "Tsükliline"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:836
+#: pynicotine/gtkgui/dialogs/preferences.py:816
 msgid "First In, First Out"
 msgstr "Esimene sisse, esimene välja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:984
-#: pynicotine/gtkgui/dialogs/preferences.py:1161
+#: pynicotine/gtkgui/dialogs/preferences.py:964
+#: pynicotine/gtkgui/dialogs/preferences.py:1136
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:215
 msgid "Username"
 msgstr "Kasutajanimi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:997
-#: pynicotine/gtkgui/dialogs/preferences.py:1174 pynicotine/users.py:324
+#: pynicotine/gtkgui/dialogs/preferences.py:977
+#: pynicotine/gtkgui/dialogs/preferences.py:1149 pynicotine/users.py:320
 msgid "IP Address"
 msgstr "IP aadress"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1068
+#: pynicotine/gtkgui/dialogs/preferences.py:1043
 #: pynicotine/gtkgui/userinfo.py:572 pynicotine/gtkgui/widgets/popupmenu.py:430
 #: pynicotine/gtkgui/widgets/popupmenu.py:476
 msgid "Ignore User"
 msgstr "Eira kasutajat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1069
+#: pynicotine/gtkgui/dialogs/preferences.py:1044
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Sisesta kasutaja nimi, keda soovid ignoreerida:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1109
+#: pynicotine/gtkgui/dialogs/preferences.py:1084
 #: pynicotine/gtkgui/widgets/popupmenu.py:433
 #: pynicotine/gtkgui/widgets/popupmenu.py:478
 msgid "Ignore IP Address"
 msgstr "Eira IP aadressi"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1110
+#: pynicotine/gtkgui/dialogs/preferences.py:1085
 msgid "Enter an IP address you want to ignore:"
 msgstr "Sisesta IP aadress, mida soovid eirata:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1110
-#: pynicotine/gtkgui/dialogs/preferences.py:1305
+#: pynicotine/gtkgui/dialogs/preferences.py:1085
+#: pynicotine/gtkgui/dialogs/preferences.py:1276
 msgid "* is a wildcard"
 msgstr "* on metamärk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1263
+#: pynicotine/gtkgui/dialogs/preferences.py:1234
 #: pynicotine/gtkgui/userinfo.py:568 pynicotine/gtkgui/widgets/popupmenu.py:429
 #: pynicotine/gtkgui/widgets/popupmenu.py:475
 msgid "Ban User"
 msgstr "Blokeeri kasutaja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1264
+#: pynicotine/gtkgui/dialogs/preferences.py:1235
 msgid "Enter the name of the user you want to ban:"
 msgstr "Sisesta selle kasutaja nimi, kelle soovid blokeerida:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1304
+#: pynicotine/gtkgui/dialogs/preferences.py:1275
 #: pynicotine/gtkgui/widgets/popupmenu.py:432
 #: pynicotine/gtkgui/widgets/popupmenu.py:477
 msgid "Ban IP Address"
 msgstr "Keela IP aadress"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1305
+#: pynicotine/gtkgui/dialogs/preferences.py:1276
 msgid "Enter an IP address you want to ban:"
 msgstr "Sisesta IP aadress, mille soovid keelata:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1363
-#: pynicotine/gtkgui/dialogs/preferences.py:2220
+#: pynicotine/gtkgui/dialogs/preferences.py:1333
+#: pynicotine/gtkgui/dialogs/preferences.py:2205
 msgid "Format codes"
 msgstr "Vormingu koodid"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1385
-#: pynicotine/gtkgui/dialogs/preferences.py:1399
+#: pynicotine/gtkgui/dialogs/preferences.py:1355
+#: pynicotine/gtkgui/dialogs/preferences.py:1369
 msgid "Pattern"
 msgstr "Muster"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1406
+#: pynicotine/gtkgui/dialogs/preferences.py:1376
 msgid "Replacement"
 msgstr "Asendus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1542
+#: pynicotine/gtkgui/dialogs/preferences.py:1507
 msgid "Censor Pattern"
 msgstr "Tsensuuri muster"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1543
-#: pynicotine/gtkgui/dialogs/preferences.py:1573
+#: pynicotine/gtkgui/dialogs/preferences.py:1508
+#: pynicotine/gtkgui/dialogs/preferences.py:1538
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
 "don't want to match strings inside words (may fail at the beginning and end "
@@ -1192,318 +1193,318 @@ msgstr ""
 "sõnadele vastet, lisa mustri ümber tühikud (ridade alguses ja lõpus võib see "
 "ebaõnnestuda)."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1572
+#: pynicotine/gtkgui/dialogs/preferences.py:1537
 msgid "Edit Censored Pattern"
 msgstr "Muuda tsenseeritud mustrit"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1606
+#: pynicotine/gtkgui/dialogs/preferences.py:1571
 msgid "Add Replacement"
 msgstr "Lisa asendus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1607
-#: pynicotine/gtkgui/dialogs/preferences.py:1639
+#: pynicotine/gtkgui/dialogs/preferences.py:1572
+#: pynicotine/gtkgui/dialogs/preferences.py:1604
 msgid "Enter a text pattern and what to replace it with:"
 msgstr "Sisesta tekstimuster ja millega see asendada:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1638
+#: pynicotine/gtkgui/dialogs/preferences.py:1603
 msgid "Edit Replacement"
 msgstr "Muuda asendust"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1754
+#: pynicotine/gtkgui/dialogs/preferences.py:1719
 msgid "System default"
 msgstr "Süsteemi vaikeväärtus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1768
+#: pynicotine/gtkgui/dialogs/preferences.py:1733
 msgid "Show confirmation dialog"
 msgstr "Kuva kinnitusdialoog"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1769
+#: pynicotine/gtkgui/dialogs/preferences.py:1734
 msgid "Run in the background"
 msgstr "Tööta taustal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1777
+#: pynicotine/gtkgui/dialogs/preferences.py:1742
 msgid "bold"
 msgstr "rasvane"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1778
+#: pynicotine/gtkgui/dialogs/preferences.py:1743
 msgid "italic"
 msgstr "kaldkiri"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1779
+#: pynicotine/gtkgui/dialogs/preferences.py:1744
 msgid "underline"
 msgstr "allajoonitud"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1780
+#: pynicotine/gtkgui/dialogs/preferences.py:1745
 msgid "normal"
 msgstr "tavaline"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1788
+#: pynicotine/gtkgui/dialogs/preferences.py:1753
 msgid "Separate Buddies tab"
 msgstr "Eraldi sõprade vahekaart"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1789
+#: pynicotine/gtkgui/dialogs/preferences.py:1754
 msgid "Sidebar in Chat Rooms tab"
 msgstr "Külgriba jututubade vahekaardil"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1790
+#: pynicotine/gtkgui/dialogs/preferences.py:1755
 msgid "Always visible sidebar"
 msgstr "Alati nähtav külgriba"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1795
+#: pynicotine/gtkgui/dialogs/preferences.py:1760
 msgid "Top"
 msgstr "Ülal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1796
+#: pynicotine/gtkgui/dialogs/preferences.py:1761
 msgid "Bottom"
 msgstr "All"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1797
+#: pynicotine/gtkgui/dialogs/preferences.py:1762
 msgid "Left"
 msgstr "Vasakul"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1798
+#: pynicotine/gtkgui/dialogs/preferences.py:1763
 msgid "Right"
 msgstr "Paremal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1931
-#: pynicotine/gtkgui/mainwindow.py:946
+#: pynicotine/gtkgui/dialogs/preferences.py:1910
+#: pynicotine/gtkgui/mainwindow.py:948
 #: pynicotine/gtkgui/widgets/iconnotebook.py:611
-#: pynicotine/gtkgui/widgets/theme.py:242
+#: pynicotine/gtkgui/widgets/theme.py:241
 msgid "Online"
 msgstr "Võrgus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1932
-#: pynicotine/gtkgui/mainwindow.py:943
+#: pynicotine/gtkgui/dialogs/preferences.py:1911
+#: pynicotine/gtkgui/mainwindow.py:945
 #: pynicotine/gtkgui/widgets/iconnotebook.py:608
-#: pynicotine/gtkgui/widgets/theme.py:243
+#: pynicotine/gtkgui/widgets/theme.py:242
 #: pynicotine/gtkgui/widgets/trayicon.py:100
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:33
 msgid "Away"
 msgstr "Eemal"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1933
-#: pynicotine/gtkgui/mainwindow.py:950
+#: pynicotine/gtkgui/dialogs/preferences.py:1912
+#: pynicotine/gtkgui/mainwindow.py:952
 #: pynicotine/gtkgui/widgets/iconnotebook.py:614
-#: pynicotine/gtkgui/widgets/theme.py:244
+#: pynicotine/gtkgui/widgets/theme.py:243
 #: pynicotine/gtkgui/ui/mainwindow.ui:1841
 msgid "Offline"
 msgstr "Võrgust väljas"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1935
+#: pynicotine/gtkgui/dialogs/preferences.py:1914
 msgid "Tab Changed"
 msgstr "Muutunud vahekaart"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1936
+#: pynicotine/gtkgui/dialogs/preferences.py:1915
 msgid "Tab Highlight"
 msgstr "Vahekaardi esiletõstmine"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1937
+#: pynicotine/gtkgui/dialogs/preferences.py:1916
 msgid "Window"
 msgstr "Aken"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1941
+#: pynicotine/gtkgui/dialogs/preferences.py:1920
 msgid "Online (Tray)"
 msgstr "Võrgus (salv)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1942
+#: pynicotine/gtkgui/dialogs/preferences.py:1921
 msgid "Away (Tray)"
 msgstr "Eemal (salv)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1943
+#: pynicotine/gtkgui/dialogs/preferences.py:1922
 msgid "Offline (Tray)"
 msgstr "Võrgust väljas (salv)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1944
+#: pynicotine/gtkgui/dialogs/preferences.py:1923
 msgid "Message (Tray)"
 msgstr "Sõnum (salv)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2506
+#: pynicotine/gtkgui/dialogs/preferences.py:2491
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2514
+#: pynicotine/gtkgui/dialogs/preferences.py:2499
 msgid "Command"
 msgstr "Käsk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2581
+#: pynicotine/gtkgui/dialogs/preferences.py:2566
 msgid "Add URL Handler"
 msgstr "Lisa URL-i töötleja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2582
+#: pynicotine/gtkgui/dialogs/preferences.py:2567
 msgid "Enter the protocol and the command for the URL handler:"
 msgstr "Sisesta URL-i töötleja protokoll ja käsk:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2610
+#: pynicotine/gtkgui/dialogs/preferences.py:2595
 msgid "Edit Command"
 msgstr "Muuda käsku"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2611
+#: pynicotine/gtkgui/dialogs/preferences.py:2596
 #, python-format
 msgid "Enter a new command for protocol %s:"
 msgstr "Sisesta protokollile %s uus käsk:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2767
+#: pynicotine/gtkgui/dialogs/preferences.py:2752
 msgid "Username;APIKEY"
 msgstr "Kasutajanimi;APIKEY"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2771
+#: pynicotine/gtkgui/dialogs/preferences.py:2756
 msgid ""
 "Music player (e.g. amarok, audacious, exaile); leave empty to autodetect:"
 msgstr ""
 "Pleier (nt amarok, audacious, exaile); jäta automaatseks tuvastamiseks "
 "tühjaks:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2775
+#: pynicotine/gtkgui/dialogs/preferences.py:2760
 #: pynicotine/headless/application.py:104
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:233
 #: pynicotine/gtkgui/ui/settings/network.ui:54
 msgid "Username: "
 msgstr "Kasutajanimi: "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2779
+#: pynicotine/gtkgui/dialogs/preferences.py:2764
 msgid "Command:"
 msgstr "Käsk:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2787
-#: pynicotine/gtkgui/dialogs/preferences.py:2790
+#: pynicotine/gtkgui/dialogs/preferences.py:2772
+#: pynicotine/gtkgui/dialogs/preferences.py:2775
 msgid "Title"
 msgstr "Pealkiri"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2789
+#: pynicotine/gtkgui/dialogs/preferences.py:2774
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Esitamisel (tavaliselt \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2790
-#: pynicotine/gtkgui/dialogs/preferences.py:2798
+#: pynicotine/gtkgui/dialogs/preferences.py:2775
+#: pynicotine/gtkgui/dialogs/preferences.py:2783
 msgid "Artist"
 msgstr "Esitaja"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2792
+#: pynicotine/gtkgui/dialogs/preferences.py:2777
 #: pynicotine/gtkgui/search.py:575 pynicotine/gtkgui/userbrowse.py:344
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:163
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:323
 msgid "Duration"
 msgstr "Kestus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2794
+#: pynicotine/gtkgui/dialogs/preferences.py:2779
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:274
 msgid "Bitrate"
 msgstr "Bitikiirus"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2796
+#: pynicotine/gtkgui/dialogs/preferences.py:2781
 msgid "Comment"
 msgstr "Kommentaar"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2800
+#: pynicotine/gtkgui/dialogs/preferences.py:2785
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2802
+#: pynicotine/gtkgui/dialogs/preferences.py:2787
 msgid "Track Number"
 msgstr "Raja number"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2804
+#: pynicotine/gtkgui/dialogs/preferences.py:2789
 msgid "Year"
 msgstr "Aasta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2806
+#: pynicotine/gtkgui/dialogs/preferences.py:2791
 msgid "Filename (URI)"
 msgstr "Failinimi (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2808
+#: pynicotine/gtkgui/dialogs/preferences.py:2793
 msgid "Program"
 msgstr "Programm"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2870
+#: pynicotine/gtkgui/dialogs/preferences.py:2855
 msgid "Enabled"
 msgstr "Lubatud"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2877
+#: pynicotine/gtkgui/dialogs/preferences.py:2862
 msgid "Plugin"
 msgstr "Plugin"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2929
+#: pynicotine/gtkgui/dialogs/preferences.py:2914
 msgid "No Plugin Selected"
 msgstr "Pluginat pole valitud"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3004
+#: pynicotine/gtkgui/dialogs/preferences.py:2989
 #: pynicotine/gtkgui/ui/settings/network.ui:27
 msgid "Network"
 msgstr "Võrk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3005
+#: pynicotine/gtkgui/dialogs/preferences.py:2990
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:28
 msgid "User Interface"
 msgstr "Kasutajaliides"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3006
+#: pynicotine/gtkgui/dialogs/preferences.py:2991
 #: pynicotine/plugins/core_commands/__init__.py:30
 #: pynicotine/gtkgui/ui/settings/shares.ui:11
 msgid "Shares"
 msgstr "Jagatud kataloogid"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3008
-#: pynicotine/gtkgui/mainwindow.py:711 pynicotine/gtkgui/mainwindow.py:1063
+#: pynicotine/gtkgui/dialogs/preferences.py:2993
+#: pynicotine/gtkgui/mainwindow.py:713 pynicotine/gtkgui/mainwindow.py:1065
 #: pynicotine/gtkgui/ui/mainwindow.ui:699
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:641
 msgid "Uploads"
 msgstr "Üleslaadimised"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3009
+#: pynicotine/gtkgui/dialogs/preferences.py:2994
 #: pynicotine/gtkgui/widgets/trayicon.py:96
 #: pynicotine/gtkgui/ui/settings/search.ui:33
 msgid "Searches"
 msgstr "Otsingud"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3010
+#: pynicotine/gtkgui/dialogs/preferences.py:2995
 msgid "User Profile"
 msgstr "Kasutajaprofiil"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3011
+#: pynicotine/gtkgui/dialogs/preferences.py:2996
 #: pynicotine/gtkgui/ui/settings/chats.ui:32
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1029
 msgid "Chats"
 msgstr "Vestlused"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3012
+#: pynicotine/gtkgui/dialogs/preferences.py:2997
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:16
 msgid "Now Playing"
 msgstr "Esitamisel"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3013
+#: pynicotine/gtkgui/dialogs/preferences.py:2998
 #: pynicotine/gtkgui/ui/settings/log.ui:64
 msgid "Logging"
 msgstr "Logimine"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3014
+#: pynicotine/gtkgui/dialogs/preferences.py:2999
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 msgid "Banned Users"
 msgstr "Blokeeritud kasutajad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3015
+#: pynicotine/gtkgui/dialogs/preferences.py:3000
 #: pynicotine/gtkgui/ui/settings/ignore.ui:16
 msgid "Ignored Users"
 msgstr "Eiratud kasutajad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3016
+#: pynicotine/gtkgui/dialogs/preferences.py:3001
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:11
 msgid "URL Handlers"
 msgstr "URL-i töötlejad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3017
+#: pynicotine/gtkgui/dialogs/preferences.py:3002
 #: pynicotine/gtkgui/ui/settings/plugin.ui:29
 msgid "Plugins"
 msgstr "Pluginad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3043
+#: pynicotine/gtkgui/dialogs/preferences.py:3028
 #: pynicotine/gtkgui/widgets/trayicon.py:106
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
 msgid "Preferences"
 msgstr "Eelistused"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3408
+#: pynicotine/gtkgui/dialogs/preferences.py:3427
 msgid "Pick a File Name for Config Backup"
 msgstr "Vali seadistuse varundamiseks failinimi"
 
@@ -1688,26 +1689,26 @@ msgstr "Soovitused (%s)"
 msgid "Similar Users (%s)"
 msgstr "Sarnased kasutajad (%s)"
 
-#: pynicotine/gtkgui/mainwindow.py:230
+#: pynicotine/gtkgui/mainwindow.py:231
 msgid "Search log…"
 msgstr "Otsingu logi…"
 
-#: pynicotine/gtkgui/mainwindow.py:391 pynicotine/gtkgui/privatechat.py:488
+#: pynicotine/gtkgui/mainwindow.py:392 pynicotine/gtkgui/privatechat.py:488
 #, python-format
 msgid "Private Message from %(user)s"
 msgstr "Privaatsõnum kasutajalt %(user)s"
 
-#: pynicotine/gtkgui/mainwindow.py:401 pynicotine/gtkgui/search.py:916
+#: pynicotine/gtkgui/mainwindow.py:402 pynicotine/gtkgui/search.py:916
 msgid "Wishlist Results Found"
 msgstr "Leiti sooviloendi tulemusi"
 
-#: pynicotine/gtkgui/mainwindow.py:713 pynicotine/gtkgui/ui/mainwindow.ui:1034
+#: pynicotine/gtkgui/mainwindow.py:715 pynicotine/gtkgui/ui/mainwindow.ui:1034
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:665
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:846
 msgid "User Profiles"
 msgstr "Kasutajaprofiilid"
 
-#: pynicotine/gtkgui/mainwindow.py:716 pynicotine/gtkgui/widgets/trayicon.py:95
+#: pynicotine/gtkgui/mainwindow.py:718 pynicotine/gtkgui/widgets/trayicon.py:95
 #: pynicotine/plugins/core_commands/__init__.py:26
 #: pynicotine/gtkgui/ui/mainwindow.ui:1528
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:701
@@ -1715,66 +1716,66 @@ msgstr "Kasutajaprofiilid"
 msgid "Chat Rooms"
 msgstr "Jututoad"
 
-#: pynicotine/gtkgui/mainwindow.py:717 pynicotine/gtkgui/ui/mainwindow.ui:1584
+#: pynicotine/gtkgui/mainwindow.py:719 pynicotine/gtkgui/ui/mainwindow.ui:1584
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:713
 #: pynicotine/gtkgui/ui/userinfo.ui:341
 msgid "Interests"
 msgstr "Huvid"
 
-#: pynicotine/gtkgui/mainwindow.py:1065
+#: pynicotine/gtkgui/mainwindow.py:1067
 #: pynicotine/plugins/core_commands/__init__.py:25
 msgid "Chat"
 msgstr "Vestlus"
 
-#: pynicotine/gtkgui/mainwindow.py:1067
+#: pynicotine/gtkgui/mainwindow.py:1069
 msgid "[Debug] Connections"
 msgstr "[Silumine] Ühendused"
 
-#: pynicotine/gtkgui/mainwindow.py:1068
+#: pynicotine/gtkgui/mainwindow.py:1070
 msgid "[Debug] Messages"
 msgstr "[Silumine] Sõnumid"
 
-#: pynicotine/gtkgui/mainwindow.py:1069
+#: pynicotine/gtkgui/mainwindow.py:1071
 msgid "[Debug] Transfers"
 msgstr "[Silumine] Ülekanded"
 
-#: pynicotine/gtkgui/mainwindow.py:1070
+#: pynicotine/gtkgui/mainwindow.py:1072
 msgid "[Debug] Miscellaneous"
 msgstr "[Silumine] Mitmesugust"
 
-#: pynicotine/gtkgui/mainwindow.py:1075
+#: pynicotine/gtkgui/mainwindow.py:1077
 msgid "_Find…"
 msgstr "_Leia…"
 
-#: pynicotine/gtkgui/mainwindow.py:1077 pynicotine/gtkgui/mainwindow.py:1103
+#: pynicotine/gtkgui/mainwindow.py:1079 pynicotine/gtkgui/mainwindow.py:1105
 msgid "_Copy"
 msgstr "_Kopeeri"
 
-#: pynicotine/gtkgui/mainwindow.py:1078
+#: pynicotine/gtkgui/mainwindow.py:1080
 msgid "Copy _All"
 msgstr "Kopeeri _kõik"
 
-#: pynicotine/gtkgui/mainwindow.py:1080
+#: pynicotine/gtkgui/mainwindow.py:1082
 msgid "View _Debug Logs"
 msgstr "Kuva _silumislogid"
 
-#: pynicotine/gtkgui/mainwindow.py:1081
+#: pynicotine/gtkgui/mainwindow.py:1083
 msgid "View _Transfer Logs"
 msgstr "Kuva _ülekandelogid"
 
-#: pynicotine/gtkgui/mainwindow.py:1083
+#: pynicotine/gtkgui/mainwindow.py:1085
 msgid "_Log Categories"
 msgstr "_Logi kategooriad"
 
-#: pynicotine/gtkgui/mainwindow.py:1085
+#: pynicotine/gtkgui/mainwindow.py:1087
 msgid "Clear Log View"
 msgstr "Tühjenda logivaade"
 
-#: pynicotine/gtkgui/mainwindow.py:1152
+#: pynicotine/gtkgui/mainwindow.py:1154
 msgid "Preparing Shares"
 msgstr "Jagatud kataloogide ettevalmistamine"
 
-#: pynicotine/gtkgui/mainwindow.py:1160
+#: pynicotine/gtkgui/mainwindow.py:1162
 msgid "Scanning Shares"
 msgstr "Jagatud kataloogide skaneerimine"
 
@@ -1960,46 +1961,46 @@ msgstr "Taasta filtrid"
 msgid "[PRIVATE]  %s"
 msgstr "[PRIVAATNE] %s"
 
-#: pynicotine/gtkgui/search.py:1267
+#: pynicotine/gtkgui/search.py:1263
 #, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Tulemuste filtrid [%d]"
 
-#: pynicotine/gtkgui/search.py:1269 pynicotine/gtkgui/ui/search.ui:181
+#: pynicotine/gtkgui/search.py:1265 pynicotine/gtkgui/ui/search.ui:181
 msgid "_Result Filters"
 msgstr "_Tulemuste filtrid"
 
-#: pynicotine/gtkgui/search.py:1271
+#: pynicotine/gtkgui/search.py:1267
 #, python-format
 msgid "%d active filter(s)"
 msgstr "%d aktiivset filtrit"
 
-#: pynicotine/gtkgui/search.py:1323
+#: pynicotine/gtkgui/search.py:1319
 msgid "Add Wi_sh"
 msgstr "Lisa _soov"
 
-#: pynicotine/gtkgui/search.py:1326
+#: pynicotine/gtkgui/search.py:1322
 msgid "Remove Wi_sh"
 msgstr "Eemalda _soov"
 
-#: pynicotine/gtkgui/search.py:1343
+#: pynicotine/gtkgui/search.py:1339
 msgid "Select User's Results"
 msgstr "Vali kasutaja tulemused"
 
-#: pynicotine/gtkgui/search.py:1466
+#: pynicotine/gtkgui/search.py:1462
 #, python-format
 msgid "Total: %s"
 msgstr "Kokku: %s"
 
-#: pynicotine/gtkgui/search.py:1469 pynicotine/gtkgui/ui/search.ui:105
+#: pynicotine/gtkgui/search.py:1465 pynicotine/gtkgui/ui/search.ui:105
 msgid "Results"
 msgstr "Tulemused"
 
-#: pynicotine/gtkgui/search.py:1584
+#: pynicotine/gtkgui/search.py:1580
 msgid "Select Destination Folder for File(s)"
 msgstr "Vali faili(de) jaoks sihtkaust"
 
-#: pynicotine/gtkgui/search.py:1627 pynicotine/gtkgui/userbrowse.py:928
+#: pynicotine/gtkgui/search.py:1623 pynicotine/gtkgui/userbrowse.py:928
 msgid "Select Destination Folder"
 msgstr "Vali sihtkaust"
 
@@ -2426,39 +2427,39 @@ msgstr "Leia järgmine vaste"
 msgid "--- old messages above ---"
 msgstr "--- vanad sõnumid ülal ---"
 
-#: pynicotine/gtkgui/widgets/theme.py:232
+#: pynicotine/gtkgui/widgets/theme.py:231
 msgid "Executable"
 msgstr "Käivitatav"
 
-#: pynicotine/gtkgui/widgets/theme.py:233
+#: pynicotine/gtkgui/widgets/theme.py:232
 msgid "Audio"
 msgstr "Heli"
 
-#: pynicotine/gtkgui/widgets/theme.py:234
+#: pynicotine/gtkgui/widgets/theme.py:233
 msgid "Image"
 msgstr "Pilt"
 
-#: pynicotine/gtkgui/widgets/theme.py:235
+#: pynicotine/gtkgui/widgets/theme.py:234
 msgid "Archive"
 msgstr "Arhiiv"
 
-#: pynicotine/gtkgui/widgets/theme.py:236 pynicotine/pluginsystem.py:792
+#: pynicotine/gtkgui/widgets/theme.py:235 pynicotine/pluginsystem.py:792
 msgid "Miscellaneous"
 msgstr "Mitmesugust"
 
-#: pynicotine/gtkgui/widgets/theme.py:237
+#: pynicotine/gtkgui/widgets/theme.py:236
 msgid "Video"
 msgstr "Video"
 
-#: pynicotine/gtkgui/widgets/theme.py:238
+#: pynicotine/gtkgui/widgets/theme.py:237
 msgid "Document"
 msgstr "Dokument"
 
-#: pynicotine/gtkgui/widgets/theme.py:239
+#: pynicotine/gtkgui/widgets/theme.py:238
 msgid "Text"
 msgstr "Tekst"
 
-#: pynicotine/gtkgui/widgets/theme.py:346
+#: pynicotine/gtkgui/widgets/theme.py:345
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Viga kohandatud ikooni %(path)s laadimisel: %(error)s"
@@ -2527,12 +2528,12 @@ msgstr "Järgmised jagatud kataloogid pole saadaval:"
 msgid "Retry rescan? %s"
 msgstr "Kas proovida uuesti skaneerida? %s"
 
-#: pynicotine/logfacility.py:179
+#: pynicotine/logfacility.py:180
 #, python-format
 msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr "Logifaili \"%(filename)s\" ei saanud kirjutada: %(error)s"
 
-#: pynicotine/logfacility.py:238 pynicotine/logfacility.py:263
+#: pynicotine/logfacility.py:239 pynicotine/logfacility.py:264
 #, python-format
 msgid "Cannot access log file %(path)s: %(error)s"
 msgstr "Logifailile %(path)s puudub juurdepääs: %(error)s"
@@ -3899,17 +3900,17 @@ msgstr ""
 "Tundmatu käsk: %(command)s. Saadaolevate käskude loendi kuvamiseks kirjuta "
 "%(help_command)s."
 
-#: pynicotine/portmapper.py:491 pynicotine/portmapper.py:614
+#: pynicotine/portmapper.py:516 pynicotine/portmapper.py:639
 msgid "No UPnP devices found"
 msgstr "Ühtegi UPnP-seadet ei leitud"
 
-#: pynicotine/portmapper.py:608
+#: pynicotine/portmapper.py:633
 #, python-format
 msgid ""
 "%(protocol)s: Failed to forward external port %(external_port)s: %(error)s"
 msgstr "%(protocol)s: Välise pordi %(external_port)s siire nurjus: %(error)s"
 
-#: pynicotine/portmapper.py:622
+#: pynicotine/portmapper.py:647
 #, python-format
 msgid ""
 "%(protocol)s: External port %(external_port)s successfully forwarded to "
@@ -3987,19 +3988,19 @@ msgstr "Skaneerimine katkestati kättesaamatu jagatud kataloogi tõttu: %s"
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Kasutaja %(user)s sirvib sinu jagatud failide loendit"
 
-#: pynicotine/slskmessages.py:3122
+#: pynicotine/slskmessages.py:3120
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "Jagatud kataloogide andmebaasi ei saa lugeda. Palun skaneeri oma jaod "
 "uuesti. Viga: %s"
 
-#: pynicotine/slskproto.py:504
+#: pynicotine/slskproto.py:500
 #, python-format
 msgid "Specified network interface '%s' is not available"
 msgstr "Määratud võrguliides '%s' pole saadaval"
 
-#: pynicotine/slskproto.py:515
+#: pynicotine/slskproto.py:511
 #, python-format
 msgid ""
 "Cannot listen on port %(port)s. Ensure no other application uses it, or "
@@ -4008,37 +4009,37 @@ msgstr ""
 "Pordi %(port)s kuulamine ei õnnestu. Veendu, et ükski teine rakendus seda ei "
 "kasutaks või vali mõni muu port. Viga: %(error)s"
 
-#: pynicotine/slskproto.py:527
+#: pynicotine/slskproto.py:523
 #, python-format
 msgid "Listening on port: %i"
 msgstr "Kuulatakse pordist: %i"
 
-#: pynicotine/slskproto.py:809
+#: pynicotine/slskproto.py:805
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Serveriga %(host)s:%(port)s ei saa ühendust luua: %(error)s"
 
-#: pynicotine/slskproto.py:1097
+#: pynicotine/slskproto.py:1093
 #, python-format
 msgid "Reconnecting to server in %s seconds"
 msgstr "Taasühendumine serveriga %s sekundi pärast"
 
-#: pynicotine/slskproto.py:1172
+#: pynicotine/slskproto.py:1168
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Ühendumine võrguga %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:1212
+#: pynicotine/slskproto.py:1206
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Ühendatud serveriga %(host)s:%(port)s, sisselogimine…"
 
-#: pynicotine/slskproto.py:1496
+#: pynicotine/slskproto.py:1490
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Ühendus serveriga %(host)s:%(port)s katkestatud"
 
-#: pynicotine/slskproto.py:1502
+#: pynicotine/slskproto.py:1496
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Keegi logis mujal sinu Soulseeki kontole sisse"
 
@@ -4053,34 +4054,34 @@ msgstr ""
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Üleslaadimine katkestati, kasutaja %(user)s fail %(file)s"
 
-#: pynicotine/uploads.py:1034 pynicotine/uploads.py:1062
+#: pynicotine/uploads.py:1038 pynicotine/uploads.py:1066
 #, python-format
 msgid "Upload I/O error: %s"
 msgstr "Üleslaadimise I/O viga: %s"
 
-#: pynicotine/uploads.py:1074
+#: pynicotine/uploads.py:1078
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Üleslaadimine algas: kasutaja %(user)s, IP aadress %(ip)s, fail %(file)s"
 
-#: pynicotine/userbrowse.py:172
+#: pynicotine/userbrowse.py:173
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kataloogi '%(folder)s' ei saa luua, veateade: %(error)s"
 
-#: pynicotine/userbrowse.py:232
+#: pynicotine/userbrowse.py:233
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Jagatud kataloogide laadimine kettalt nurjus: %(error)s"
 
-#: pynicotine/userbrowse.py:278
+#: pynicotine/userbrowse.py:279
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
 msgstr ""
 "Kasutajale '%(user)s' jagatud failide loend salvestati asukohta %(dir)s"
 
-#: pynicotine/userbrowse.py:282
+#: pynicotine/userbrowse.py:283
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Jagatud katalooge ei saa salvestada, '%(user)s', veateade: %(error)s"
@@ -4100,30 +4101,30 @@ msgstr "Pilti ei saa salvestada asukohta %(filename)s: %(error)s"
 msgid "User %(user)s is viewing your profile"
 msgstr "Kasutaja %(user)s vaatab sinu profiili"
 
-#: pynicotine/users.py:276
+#: pynicotine/users.py:272
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Serveriga ei saa ühendust. Põhjus: %s"
 
-#: pynicotine/users.py:276
+#: pynicotine/users.py:272
 msgid "Cannot Connect"
 msgstr "Ei saa ühendust"
 
-#: pynicotine/users.py:310
+#: pynicotine/users.py:306
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr "Kasutaja %s IP aadressi ei saa tuua, kuna see kasutaja pole võrgus"
 
-#: pynicotine/users.py:319
+#: pynicotine/users.py:315
 #, python-format
 msgid "IP address of user %(user)s: %(ip)s, port %(port)i%(country)s"
 msgstr "Kasutaja %(user)s IP aadress: %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/users.py:437
+#: pynicotine/users.py:433
 msgid "Soulseek Announcement"
 msgstr "Soulseeki teadaanne"
 
-#: pynicotine/users.py:453
+#: pynicotine/users.py:449
 msgid ""
 "You have no Soulseek privileges. While privileges are active, your downloads "
 "will be queued ahead of those of non-privileged users."
@@ -4131,7 +4132,7 @@ msgstr ""
 "Sul pole Soulseeki privileege. Kui privileegid on aktiivsed, asetatakse sinu "
 "allalaadimised privileegideta kasutajate omadest järjekorras ette."
 
-#: pynicotine/users.py:459
+#: pynicotine/users.py:455
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4140,11 +4141,11 @@ msgstr ""
 "%(days)i päeva, %(hours)i tundi, %(minutes)i minutit, %(seconds)i sekundit "
 "Soulseeki privileege on jäänud"
 
-#: pynicotine/users.py:477
+#: pynicotine/users.py:473
 msgid "Your password has been changed"
 msgstr "Sinu parool on muudetud"
 
-#: pynicotine/users.py:477
+#: pynicotine/users.py:473
 msgid "Password Changed"
 msgstr "Parool muudetud"
 
@@ -4714,7 +4715,7 @@ msgid "Configure User Profile"
 msgstr "Seadista kasutajaprofiili"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1728
-#: pynicotine/gtkgui/ui/settings/network.ui:282
+#: pynicotine/gtkgui/ui/settings/network.ui:281
 msgid "Connections"
 msgstr "Ühendused"
 
@@ -5018,7 +5019,7 @@ msgid "Multiple countries can be specified with commas or spaces."
 msgstr "Koma või tühikuga saab määrata mitu riiki."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:420
-#: pynicotine/gtkgui/ui/search.ui:330
+#: pynicotine/gtkgui/ui/search.ui:333
 #: pynicotine/gtkgui/ui/settings/search.ui:397
 msgid "Free Slot"
 msgstr "Vaba pesa"
@@ -5184,46 +5185,46 @@ msgstr "Vestluse automaatne täiendamine"
 msgid "Enable tab-key completion"
 msgstr "Luba tabeldusklahviga täiendamine"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:248
+#: pynicotine/gtkgui/ui/settings/chats.ui:247
 msgid "Enable completion drop-down list"
 msgstr "Luba täiendamise rippmenüü"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:278
+#: pynicotine/gtkgui/ui/settings/chats.ui:276
 msgid "Minimum characters required to display drop-down:"
 msgstr "Rippmenüü kuvamiseks nõutav väikseim tähemärkide arv:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:318
+#: pynicotine/gtkgui/ui/settings/chats.ui:315
 msgid "Allowed chat completions:"
 msgstr "Lubatud vestluse täiendamised:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:345
+#: pynicotine/gtkgui/ui/settings/chats.ui:342
 msgid "Buddy names"
 msgstr "Sõprade nimed"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:358
+#: pynicotine/gtkgui/ui/settings/chats.ui:354
 msgid "Chat room usernames"
 msgstr "Jututoa kasutajanimed"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:371
+#: pynicotine/gtkgui/ui/settings/chats.ui:366
 msgid "Room names"
 msgstr "Ruumide nimed"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:384
+#: pynicotine/gtkgui/ui/settings/chats.ui:378
 msgid "Commands"
 msgstr "Käsud"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:411
+#: pynicotine/gtkgui/ui/settings/chats.ui:404
 msgid "Timestamps"
 msgstr "Ajatemplid"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:428
+#: pynicotine/gtkgui/ui/settings/chats.ui:421
 msgid "Private chat format:"
 msgstr "Privaatvestluse vorming:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:439
-#: pynicotine/gtkgui/ui/settings/chats.ui:466
-#: pynicotine/gtkgui/ui/settings/chats.ui:574
-#: pynicotine/gtkgui/ui/settings/chats.ui:601
+#: pynicotine/gtkgui/ui/settings/chats.ui:432
+#: pynicotine/gtkgui/ui/settings/chats.ui:459
+#: pynicotine/gtkgui/ui/settings/chats.ui:567
+#: pynicotine/gtkgui/ui/settings/chats.ui:594
 #: pynicotine/gtkgui/ui/settings/downloads.ui:15
 #: pynicotine/gtkgui/ui/settings/downloads.ui:27
 #: pynicotine/gtkgui/ui/settings/downloads.ui:39
@@ -5232,7 +5233,7 @@ msgstr "Privaatvestluse vorming:"
 #: pynicotine/gtkgui/ui/settings/log.ui:29
 #: pynicotine/gtkgui/ui/settings/log.ui:41
 #: pynicotine/gtkgui/ui/settings/log.ui:189
-#: pynicotine/gtkgui/ui/settings/network.ui:335
+#: pynicotine/gtkgui/ui/settings/network.ui:334
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:467
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:507
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:547
@@ -5251,43 +5252,43 @@ msgstr "Privaatvestluse vorming:"
 msgid "Default"
 msgstr "Vaikimisi"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:455
+#: pynicotine/gtkgui/ui/settings/chats.ui:448
 msgid "Chat room format:"
 msgstr "Jututoa vorming:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:492
+#: pynicotine/gtkgui/ui/settings/chats.ui:485
 msgid "Text-to-Speech"
 msgstr "Tekst-kõneks"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:513
+#: pynicotine/gtkgui/ui/settings/chats.ui:506
 msgid "Enable Text-to-Speech"
 msgstr "Luba tekst-kõneks"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:547
+#: pynicotine/gtkgui/ui/settings/chats.ui:540
 msgid "Text-to-Speech command:"
 msgstr "Tekst-kõneks käsk:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:563
+#: pynicotine/gtkgui/ui/settings/chats.ui:556
 msgid "Private chat message:"
 msgstr "Privaatvestluse sõnum:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:590
+#: pynicotine/gtkgui/ui/settings/chats.ui:583
 msgid "Chat room message:"
 msgstr "Jututoa sõnum:"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:645
+#: pynicotine/gtkgui/ui/settings/chats.ui:638
 msgid "Censor"
 msgstr "Tsenseeri"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:663
+#: pynicotine/gtkgui/ui/settings/chats.ui:656
 msgid "Enable censoring of text patterns"
 msgstr "Luba tekstimustrite tsenseerimine"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:828
+#: pynicotine/gtkgui/ui/settings/chats.ui:821
 msgid "Auto-Replace"
 msgstr "Automaatne asendamine"
 
-#: pynicotine/gtkgui/ui/settings/chats.ui:846
+#: pynicotine/gtkgui/ui/settings/chats.ui:839
 msgid "Enable automatic replacement of words"
 msgstr "Luba sõnade automaatne asendamine"
 
@@ -5430,27 +5431,27 @@ msgstr "Kuulamisport:"
 msgid "Automatically forward listening port (UPnP/NAT-PMP)"
 msgstr "Kuulamispordi automaatne siire (UPnP/NAT-PMP)"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:212
+#: pynicotine/gtkgui/ui/settings/network.ui:211
 msgid "Away Status"
 msgstr "Eemalolek"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:229
+#: pynicotine/gtkgui/ui/settings/network.ui:228
 msgid "Minutes of inactivity before going away (0 to disable):"
 msgstr "Mitteaktiivsuse minutid enne lahkumist (0 keelamiseks):"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:254
+#: pynicotine/gtkgui/ui/settings/network.ui:253
 msgid "Auto-reply message when away:"
 msgstr "Automaatvastuse sõnum eemal olles:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:300
+#: pynicotine/gtkgui/ui/settings/network.ui:299
 msgid "Auto-connect to server on startup"
 msgstr "Käivitamisel ühenda automaatselt serveriga"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:324
+#: pynicotine/gtkgui/ui/settings/network.ui:323
 msgid "Soulseek server:"
 msgstr "Soulseek-server:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:348
+#: pynicotine/gtkgui/ui/settings/network.ui:347
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
 "a VPN is used at all times. Leave empty to use any available interface. Only "
@@ -5460,7 +5461,7 @@ msgstr ""
 "kasutatakse VPN-i. Mis tahes saadaoleva liidese kasutamiseks jäta tühjaks. "
 "Muuda seda väärtust ainult siis, kui tead, mida teed."
 
-#: pynicotine/gtkgui/ui/settings/network.ui:352
+#: pynicotine/gtkgui/ui/settings/network.ui:351
 msgid "Network interface:"
 msgstr "Võrguliides:"
 
@@ -5624,7 +5625,7 @@ msgstr "Kõigile nähtav:"
 msgid "Buddy shares"
 msgstr "Sõbra jagatud kataloogid"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:90
+#: pynicotine/gtkgui/ui/settings/shares.ui:89
 msgid "Trusted shares"
 msgstr "Usaldusväärsed jagatud kataloogid"
 
