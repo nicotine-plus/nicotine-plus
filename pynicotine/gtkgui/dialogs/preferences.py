@@ -2102,8 +2102,8 @@ class UserInterfacePage:
     def on_filter_font(self, font_face):
         return font_face.get_family().get_name() not in self.excluded_fonts
 
-    def on_filter_font_legacy(self, _font_family, font_face):
-        return self.on_filter_font(font_face)
+    def on_filter_font_legacy(self, font_family, _font_face):
+        return font_family.get_name() not in self.excluded_fonts
 
     def on_clear_font(self, _button, font_id):
 
