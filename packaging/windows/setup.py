@@ -140,6 +140,10 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
     from xml.etree import ElementTree
 
+    ElementTree.register_namespace("", "http://www.gtk.org/introspection/core/1.0")
+    ElementTree.register_namespace("c", "http://www.gtk.org/introspection/c/1.0")
+    ElementTree.register_namespace("glib", "http://www.gtk.org/introspection/glib/1.0")
+
     temp_file_gir = os.path.join(TEMP_PATH, short_path)
     temp_file_typelib = os.path.join(TEMP_PATH, short_path.replace(".gir", ".typelib"))
 
@@ -147,7 +151,7 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
          open(full_path, "r", encoding="utf-8") as real_file_handle:
         xml = ElementTree.fromstring(real_file_handle.read())
 
-        for namespace in xml.findall(".//namespace[@shared-library]"):
+        for namespace in xml.findall(".//{*}namespace[@shared-library]"):
             paths = []
 
             for path in namespace.attrib["shared-library"].split(","):
@@ -156,7 +160,7 @@ def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
             namespace.attrib["shared-library"] = ",".join(paths)
 
-        data = ElementTree.tostring(xml, encoding="utf-8")
+        data = ElementTree.tostring(xml, encoding="unicode")
         temp_file_handle.write(data)
 
     subprocess.check_call(["g-ir-compiler", f"--output={temp_file_typelib}", temp_file_gir])
