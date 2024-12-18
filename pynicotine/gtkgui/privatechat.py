@@ -366,8 +366,13 @@ class PrivateChat:
             ("#" + _("Copy"), self.chat_view.on_copy_text),
             ("#" + _("Copy Link"), self.chat_view.on_copy_link),
             ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View Chat Log"), self.on_view_chat_log),
+            ("", None)
+        )
+        if not core.isolated_mode:
+            self.popup_menu.add_items(
+                ("#" + _("View Chat Log"), self.on_view_chat_log)
+            )
+        self.popup_menu.add_items(
             ("#" + _("Delete Chat Log…"), self.on_delete_chat_log),
             ("", None),
             ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),

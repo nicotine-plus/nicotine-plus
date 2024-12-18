@@ -22,7 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
 import time
 
@@ -299,8 +298,6 @@ class MainWindow(Window):
 
     def init_window(self):
 
-        is_broadway_backend = (os.environ.get("GDK_BACKEND") == "broadway")
-
         # Set main window title and icon
         self.set_title(pynicotine.__application_name__)
         self.widget.set_default_icon_name(pynicotine.__application_id__)
@@ -319,12 +316,12 @@ class MainWindow(Window):
             else:
                 self.widget.move(x_pos, y_pos)
 
-        # Hide close button in Broadway backend
-        if is_broadway_backend:
+        # Hide close button in isolated_mode mode (e.g. Broadway backend)
+        if core.isolated_mode:
             self.widget.set_deletable(False)
 
         # Maximize main window if necessary
-        if config.sections["ui"]["maximized"] or is_broadway_backend:
+        if config.sections["ui"]["maximized"] or core.isolated_mode:
             self.widget.maximize()
 
         # Auto-away mode
@@ -1078,10 +1075,15 @@ class MainWindow(Window):
             ("", None),
             ("#" + _("_Copy"), self.log_view.on_copy_text),
             ("#" + _("Copy _All"), self.log_view.on_copy_all_text),
-            ("", None),
-            ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
-            ("", None),
+            ("", None)
+        )
+        if not core.isolated_mode:
+            self.popup_menu_log_view.add_items(
+                ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
+                ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),
+                ("", None)
+            )
+        self.popup_menu_log_view.add_items(
             (">" + _("_Log Categories"), self.popup_menu_log_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_view)

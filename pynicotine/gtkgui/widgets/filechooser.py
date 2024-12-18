@@ -26,6 +26,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.core import core
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.utils import encode_path
@@ -396,7 +397,7 @@ class FileChooserButton:
 
         self.chooser_button.set_tooltip_text(os.path.expandvars(path))  # Show path without env variables
         self.label.set_label(os.path.basename(path))
-        self.open_folder_button.set_visible(True)
+        self.open_folder_button.set_visible(not core.isolated_mode)
 
     def clear(self):
 

@@ -358,10 +358,15 @@ class Application:
             ("#" + _("_Keyboard Shortcuts"), "app.keyboard-shortcuts"),
             ("#" + _("_Setup Assistant"), "app.setup-assistant"),
             ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
-            ("", None),
-            ("#" + _("Report a _Bug"), "app.report-bug"),
-            ("#" + _("Improve T_ranslations"), "app.improve-translations"),
-            ("", None),
+            ("", None)
+        )
+        if not core.isolated_mode:
+            menu.add_items(
+                ("#" + _("Report a _Bug"), "app.report-bug"),
+                ("#" + _("Improve T_ranslations"), "app.improve-translations"),
+                ("", None)
+            )
+        menu.add_items(
             ("^" + _("_About Nicotine+"), "app.about")
         )
 

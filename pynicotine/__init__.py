@@ -91,6 +91,9 @@ def check_arguments():
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
 
+    # Disables features that require external applications, useful for e.g. Docker containers
+    parser.add_argument("--isolated", action="store_true", help=argparse.SUPPRESS)
+
     args = parser.parse_args()
     multi_instance = False
 
@@ -105,6 +108,7 @@ def check_arguments():
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
+    core.isolated_mode = args.isolated
 
     return args.headless, args.hidden, args.ci_mode, args.rescan, multi_instance
 

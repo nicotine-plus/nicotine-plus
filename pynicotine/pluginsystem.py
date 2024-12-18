@@ -453,7 +453,8 @@ class PluginHandler:
     def _import_plugin_instance(self, plugin_name):
 
         if (plugin_name == "now_playing_sender" and
-                (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ)):
+                (core.isolated_mode or sys.platform in {"win32", "darwin"}
+                 or "SNAP_NAME" in os.environ)):
             # MPRIS is not available on Windows and macOS
             return None
 
@@ -591,7 +592,9 @@ class PluginHandler:
                         continue
 
                     if (file_path == "now_playing_sender" and
-                            (sys.platform in {"win32", "darwin"} or "SNAP_NAME" in os.environ)):
+                            (core.isolated_mode
+                             or sys.platform in {"win32", "darwin"}
+                             or "SNAP_NAME" in os.environ)):
                         # MPRIS is not available on Windows and macOS
                         continue
 

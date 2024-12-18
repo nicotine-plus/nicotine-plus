@@ -35,7 +35,7 @@ class Core:
                  "uploads", "interests", "userbrowse", "userinfo", "buddies", "privatechat",
                  "chatrooms", "pluginhandler", "now_playing", "portmapper", "notifications",
                  "update_checker", "_network_thread", "cli_interface_address",
-                 "cli_listen_port", "enabled_components")
+                 "cli_listen_port", "isolated_mode", "enabled_components")
 
     def __init__(self):
 
@@ -61,6 +61,7 @@ class Core:
 
         self.cli_interface_address = None
         self.cli_listen_port = None
+        self.isolated_mode = False
 
         self.enabled_components = set()
 
@@ -87,7 +88,7 @@ class Core:
             from pynicotine.cli import cli
             cli.enable_logging()
 
-        config.load_config()
+        config.load_config(self.isolated_mode)
         events.enable()
 
         for event_name, callback in (

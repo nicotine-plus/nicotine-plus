@@ -145,7 +145,7 @@ class Config:
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
                     {"path": self.data_folder_path, "error": error})
 
-    def load_config(self):
+    def load_config(self, isolated_mode=False):
 
         if self.config_loaded:
             return
@@ -154,6 +154,9 @@ class Config:
 
         data_home_env = "${NICOTINE_DATA_HOME}"
         log_folder_path = os.path.join(data_home_env, "logs")
+
+        # Resume/retry (6) action in isolated_mode mode, open in file manager (2) action otherwise
+        transfer_double_click_action = 6 if isolated_mode else 2
 
         self._parser = ConfigParser(
             strict=False, interpolation=None, delimiters=("=",),
@@ -231,8 +234,8 @@ class Config:
                     ["desktop.ini", 1],
                     ["Thumbs.db", 1]
                 ],
-                "download_doubleclick": 2,
-                "upload_doubleclick": 2,
+                "download_doubleclick": transfer_double_click_action,
+                "upload_doubleclick": transfer_double_click_action,
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
             },

@@ -476,7 +476,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="tts_container">
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <property name="visible">True</property>
