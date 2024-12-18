@@ -138,13 +138,25 @@ def add_pixbuf_loaders():
 
 def _add_typelibs_callback(full_path, short_path, _callback_data=None):
 
+    from xml.etree import ElementTree
+
     temp_file_gir = os.path.join(TEMP_PATH, short_path)
     temp_file_typelib = os.path.join(TEMP_PATH, short_path.replace(".gir", ".typelib"))
 
     with open(temp_file_gir, "w", encoding="utf-8") as temp_file_handle, \
          open(full_path, "r", encoding="utf-8") as real_file_handle:
-        data = real_file_handle.read()
-        data = data.replace('shared-library="lib', 'shared-library="@loader_path/lib')
+        xml = ElementTree.fromstring(real_file_handle.read())
+
+        for namespace in xml.findall(".//namespace[@shared-library]"):
+            paths = []
+
+            for path in namespace.attrib["shared-library"].split(","):
+                updated_path = os.path.join("@loader_path", os.path.basename(path))
+                paths.append(updated_path)
+
+            namespace.attrib["shared-library"] = ",".join(paths)
+
+        data = ElementTree.tostring(xml, encoding="utf-8")
         temp_file_handle.write(data)
 
     subprocess.check_call(["g-ir-compiler", f"--output={temp_file_typelib}", temp_file_gir])
