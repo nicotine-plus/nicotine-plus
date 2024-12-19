@@ -259,7 +259,8 @@ class PluginSettings(Dialog):
         label = self._generate_widget_container(description, container, homogeneous=True)
 
         self.option_widgets[option_name] = FileChooserButton(
-            container, window=self, label=label, chooser_type=file_chooser_type
+            container, window=self, label=label, chooser_type=file_chooser_type,
+            show_open_external_button=not self.application.isolated_mode
         )
         self.application.preferences.set_widget(self.option_widgets[option_name], option_value)
 

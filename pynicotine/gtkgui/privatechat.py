@@ -368,7 +368,7 @@ class PrivateChat:
             ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
             ("", None)
         )
-        if not core.isolated_mode:
+        if not self.window.application.isolated_mode:
             self.popup_menu.add_items(
                 ("#" + _("View Chat Log"), self.on_view_chat_log)
             )

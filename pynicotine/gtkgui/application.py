@@ -61,7 +61,7 @@ if GTK_API_VERSION >= 4:
 
 class Application:
 
-    def __init__(self, start_hidden, ci_mode, multi_instance):
+    def __init__(self, start_hidden, ci_mode, isolated_mode, multi_instance):
 
         self._instance = Gtk.Application(application_id=pynicotine.__application_id__)
         GLib.set_application_name(pynicotine.__application_name__)
@@ -72,6 +72,7 @@ class Application:
 
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
+        self.isolated_mode = isolated_mode
 
         self.window = None
         self.about = None
@@ -360,7 +361,7 @@ class Application:
             ("#" + _("_Transfer Statistics"), "app.transfer-statistics"),
             ("", None)
         )
-        if not core.isolated_mode:
+        if not self.isolated_mode:
             menu.add_items(
                 ("#" + _("Report a _Bug"), "app.report-bug"),
                 ("#" + _("Improve T_ranslations"), "app.improve-translations"),

@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import time
 
@@ -294,7 +295,7 @@ class MainWindow(Window):
         self.connect_tab_signals()
 
         # Apply UI customizations
-        set_global_style(core.isolated_mode)
+        set_global_style(self.application.isolated_mode)
 
         # Show window
         self.init_window()
@@ -303,20 +304,24 @@ class MainWindow(Window):
 
     def init_window(self):
 
+        isolated_mode = self.application.isolated_mode
+
         # Set main window title and icon
         self.set_title(pynicotine.__application_name__)
         self.widget.set_default_icon_name(pynicotine.__application_id__)
 
         # Set main window size
         self.widget.set_default_size(
-            width=0 if core.isolated_mode else config.sections["ui"]["width"],
-            height=0 if core.isolated_mode else config.sections["ui"]["height"]
+            width=0 if isolated_mode else config.sections["ui"]["width"],
+            height=0 if isolated_mode else config.sections["ui"]["height"]
         )
 
         # Hide close button in isolated_mode mode (e.g. Broadway backend)
-        if core.isolated_mode:
+        if isolated_mode:
             self.widget.set_deletable(False)
-            self.widget.set_resizable(False)
+
+            if os.environ.get("GDK_BACKEND") == "broadway":
+                self.widget.set_resizable(False)
 
         # Set main window position
         elif GTK_API_VERSION == 3:
@@ -329,7 +334,7 @@ class MainWindow(Window):
                 self.widget.move(x_pos, y_pos)
 
         # Maximize main window if necessary
-        if config.sections["ui"]["maximized"] or core.isolated_mode:
+        if config.sections["ui"]["maximized"] or isolated_mode:
             self.widget.maximize()
 
         # Auto-away mode
@@ -1085,7 +1090,7 @@ class MainWindow(Window):
             ("#" + _("Copy _All"), self.log_view.on_copy_all_text),
             ("", None)
         )
-        if not core.isolated_mode:
+        if not self.application.isolated_mode:
             self.popup_menu_log_view.add_items(
                 ("#" + _("View _Debug Logs"), self.on_view_debug_logs),
                 ("#" + _("View _Transfer Logs"), self.on_view_transfer_logs),

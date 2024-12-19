@@ -108,9 +108,8 @@ def check_arguments():
 
     core.cli_interface_address = args.bindip
     core.cli_listen_port = args.port
-    core.isolated_mode = args.isolated
 
-    return args.headless, args.hidden, args.ci_mode, args.rescan, multi_instance
+    return args.headless, args.hidden, args.ci_mode, args.isolated, args.rescan, multi_instance
 
 
 def check_python_version():
@@ -199,14 +198,17 @@ def run():
     set_up_python()
     rename_process(b"nicotine")
 
-    headless, hidden, ci_mode, rescan, multi_instance = check_arguments()
+    headless, hidden, ci_mode, isolated_mode, rescan, multi_instance = check_arguments()
     error = check_python_version()
 
     if error:
         print(error)
         return 1
 
-    core.init_components(enabled_components={"cli", "shares"} if rescan else None)
+    core.init_components(
+        enabled_components={"cli", "shares"} if rescan else None,
+        isolated_mode=isolated_mode
+    )
 
     # Dump tracebacks for C modules (in addition to pure Python code)
     try:
@@ -225,7 +227,7 @@ def run():
     # Initialize GTK-based GUI
     if not headless:
         from pynicotine import gtkgui as application
-        exit_code = application.run(hidden, ci_mode, multi_instance)
+        exit_code = application.run(hidden, ci_mode, isolated_mode, multi_instance)
 
         if exit_code is not None:
             return exit_code

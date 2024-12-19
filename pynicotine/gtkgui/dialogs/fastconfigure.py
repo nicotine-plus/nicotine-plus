@@ -86,7 +86,8 @@ class FastConfigure(Dialog):
 
         self.download_folder_button = FileChooserButton(
             self.download_folder_container, window=self, chooser_type="folder",
-            selected_function=self.on_download_folder_selected
+            selected_function=self.on_download_folder_selected,
+            show_open_external_button=not application.isolated_mode
         )
 
         self.shares_list_view = TreeView(

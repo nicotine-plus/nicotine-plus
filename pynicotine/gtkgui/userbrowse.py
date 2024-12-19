@@ -287,7 +287,7 @@ class UserBrowse:
                 ("#" + _("Upload Folder & Subfolders…"), self.on_upload_folder_recursive_to),
                 ("", None)
             )
-            if not core.isolated_mode:
+            if not self.window.application.isolated_mode:
                 self.folder_popup_menu.add_items(
                     ("#" + _("Open in File _Manager"), self.on_file_manager)
                 )
@@ -369,7 +369,7 @@ class UserBrowse:
                 ("#" + _("Upload Folder…"), self.on_upload_folder_to),
                 ("", None)
             )
-            if not core.isolated_mode:
+            if not self.window.application.isolated_mode:
                 self.file_popup_menu.add_items(
                     ("#" + _("_Open File"), self.on_open_file),
                     ("#" + _("Open in File _Manager"), self.on_file_manager)

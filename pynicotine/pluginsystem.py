@@ -371,9 +371,9 @@ class ResponseThrottle:
 
 class PluginHandler:
     __slots__ = ("plugin_folders", "enabled_plugins", "command_source", "commands",
-                 "user_plugin_folder")
+                 "user_plugin_folder", "_load_now_playing_sender")
 
-    def __init__(self):
+    def __init__(self, isolated_mode=False):
 
         self.plugin_folders = []
         self.enabled_plugins = {}
@@ -383,6 +383,11 @@ class PluginHandler:
             "private_chat": {},
             "cli": {}
         }
+        self._load_now_playing_sender = (
+            not isolated_mode
+            and sys.platform not in {"win32", "darwin"}
+            and "SNAP_NAME" not in os.environ
+        )
 
         # Load system-wide plugins
         prefix = os.path.dirname(os.path.realpath(__file__))
@@ -452,9 +457,7 @@ class PluginHandler:
 
     def _import_plugin_instance(self, plugin_name):
 
-        if (plugin_name == "now_playing_sender" and
-                (core.isolated_mode or sys.platform in {"win32", "darwin"}
-                 or "SNAP_NAME" in os.environ)):
+        if plugin_name == "now_playing_sender" and not self._load_now_playing_sender:
             # MPRIS is not available on Windows and macOS
             return None
 
@@ -591,10 +594,7 @@ class PluginHandler:
                     if file_path == "core_commands":
                         continue
 
-                    if (file_path == "now_playing_sender" and
-                            (core.isolated_mode
-                             or sys.platform in {"win32", "darwin"}
-                             or "SNAP_NAME" in os.environ)):
+                    if file_path == "now_playing_sender" and not self._load_now_playing_sender:
                         # MPRIS is not available on Windows and macOS
                         continue
 

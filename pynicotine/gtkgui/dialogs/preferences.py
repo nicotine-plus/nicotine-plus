@@ -134,7 +134,7 @@ class NetworkPage:
                 "port": core.users.public_port or unknown_label
             })
             self.check_port_status_label.set_markup(f"<a href='{url}' title='{url}'>{port_status_text}</a>")
-            self.check_port_status_label.set_visible(not core.isolated_mode)
+            self.check_port_status_label.set_visible(not self.application.isolated_mode)
         else:
             self.current_port_label.set_text(unknown_label)
             self.check_port_status_label.set_visible(False)
@@ -283,7 +283,7 @@ class DownloadsPage:
         items = [
             (_("Nothing"), 0)
         ]
-        if not core.isolated_mode:
+        if not self.application.isolated_mode:
             items += [
                 (_("Open File"), 1),
                 (_("Open in File Manager"), 2)
@@ -302,15 +302,18 @@ class DownloadsPage:
 
         self.download_folder_button = FileChooserButton(
             self.download_folder_label.get_parent(), window=application.preferences,
-            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder"
+            label=self.download_folder_label, end_button=self.download_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
         self.incomplete_folder_button = FileChooserButton(
             self.incomplete_folder_label.get_parent(), window=application.preferences,
-            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder"
+            label=self.incomplete_folder_label, end_button=self.incomplete_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
         self.received_folder_button = FileChooserButton(
             self.received_folder_label.get_parent(), window=application.preferences,
-            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder"
+            label=self.received_folder_label, end_button=self.received_folder_default_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.filter_syntax_description = _("<b>Syntax</b>: Case-insensitive. If enabled, Python regular expressions "
@@ -804,7 +807,7 @@ class UploadsPage:
         items = [
             (_("Nothing"), 0)
         ]
-        if not core.isolated_mode:
+        if not self.application.isolated_mode:
             items += [
                 (_("Open File"), 1),
                 (_("Open in File Manager"), 2)
@@ -916,7 +919,8 @@ class UserProfilePage:
         self.description_view = TextView(self.description_view_container, parse_urls=False)
         self.select_picture_button = FileChooserButton(
             self.select_picture_label.get_parent(), window=application.preferences, label=self.select_picture_label,
-            end_button=self.reset_picture_button, chooser_type="image", is_flat=True
+            end_button=self.reset_picture_button, chooser_type="image", is_flat=True,
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -1447,8 +1451,8 @@ class ChatsPage:
 
         self.enable_spell_checker_toggle.get_parent().set_visible(SpellChecker.is_available())
         self.enable_ctcp_toggle.set_active(not config.sections["server"]["ctcpmsgs"])
-        self.format_codes_label.set_visible(not core.isolated_mode)
-        self.tts_container.set_margin_top(24 if core.isolated_mode else 0)
+        self.format_codes_label.set_visible(not self.application.isolated_mode)
+        self.tts_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
         self.censored_patterns = config.sections["words"]["censored"][:]
         self.replacements = config.sections["words"]["autoreplaced"].copy()
@@ -1956,7 +1960,8 @@ class UserInterfacePage:
 
         self.icon_theme_button = FileChooserButton(
             self.icon_theme_label.get_parent(), window=application.preferences,
-            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder"
+            label=self.icon_theme_label, end_button=self.icon_theme_clear_button, chooser_type="folder",
+            show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -2026,7 +2031,7 @@ class UserInterfacePage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        self.close_action_label.get_parent().set_visible(not core.isolated_mode)
+        self.close_action_label.get_parent().set_visible(not self.application.isolated_mode)
         self.tray_options_container.set_visible(self.application.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
@@ -2228,22 +2233,22 @@ class LoggingPage:
         self.private_chat_log_folder_button = FileChooserButton(
             self.private_chat_log_folder_label.get_parent(), window=application.preferences,
             label=self.private_chat_log_folder_label, end_button=self.private_chat_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.chatroom_log_folder_button = FileChooserButton(
             self.chatroom_log_folder_label.get_parent(), window=application.preferences,
             label=self.chatroom_log_folder_label, end_button=self.chatroom_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.transfer_log_folder_button = FileChooserButton(
             self.transfer_log_folder_label.get_parent(), window=application.preferences,
             label=self.transfer_log_folder_label, end_button=self.transfer_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
         self.debug_log_folder_button = FileChooserButton(
             self.debug_log_folder_label.get_parent(), window=application.preferences,
             label=self.debug_log_folder_label, end_button=self.debug_log_folder_default_button,
-            chooser_type="folder"
+            chooser_type="folder", show_open_external_button=not self.application.isolated_mode
         )
 
         self.options = {
@@ -2273,8 +2278,8 @@ class LoggingPage:
 
         self.application.preferences.set_widgets_data(self.options)
 
-        self.format_codes_label.set_visible(not core.isolated_mode)
-        self.folder_locations_container.set_margin_top(24 if core.isolated_mode else 0)
+        self.format_codes_label.set_visible(not self.application.isolated_mode)
+        self.folder_locations_container.set_margin_top(24 if self.application.isolated_mode else 0)
 
     def get_settings(self):
 
@@ -2657,11 +2662,11 @@ class NowPlayingPage:
 
         self.application = application
         self.enable_mpris = (
-            not core.isolated_mode
+            not self.application.isolated_mode
             and sys.platform not in {"win32", "darwin"}
             and "SNAP_NAME" not in os.environ
         )
-        self.enable_other = not core.isolated_mode
+        self.enable_other = not self.application.isolated_mode
 
         self.format_message_combobox = ComboBox(
             container=self.format_message_label.get_parent(), label=self.format_message_label,
@@ -2888,7 +2893,7 @@ class PluginsPage:
                 "plugin_id": {"data_type": GObject.TYPE_STRING, "iterator_key": True}
             }
         )
-        self.add_plugins_button.set_visible(not core.isolated_mode)
+        self.add_plugins_button.set_visible(not self.application.isolated_mode)
 
     def destroy(self):
 
@@ -3063,7 +3068,7 @@ class Preferences(Dialog):
         for item in self.page_ids[:]:
             page_id, _page_class, label, icon_name = item
 
-            if core.isolated_mode and page_id == "url-handlers":
+            if self.application.isolated_mode and page_id == "url-handlers":
                 self.page_ids.remove(item)
                 continue
 
