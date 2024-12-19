@@ -154,15 +154,16 @@ def set_default_font():
         pass
 
 
-def set_visual_settings():
+def set_visual_settings(isolated_mode=False):
 
     if sys.platform == "darwin":
         # Left align window controls on macOS
         GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
 
-    elif os.environ.get("GDK_BACKEND") == "broadway":
-        # Hide minimize/maximize buttons in Broadway backend
+    elif isolated_mode:
+        # Hide minimize/maximize buttons in isolated mode (e.g. Broadway backend)
         GTK_SETTINGS.props.gtk_decoration_layout = ":close"
+        GTK_SETTINGS.props.gtk_titlebar_right_click = "none"
 
     set_default_font()
     set_dark_mode(config.sections["ui"]["dark_mode"])
@@ -212,8 +213,8 @@ def set_global_css():
     add_provider_func(display, CUSTOM_CSS_PROVIDER, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
-def set_global_style():
-    set_visual_settings()
+def set_global_style(isolated_mode=False):
+    set_visual_settings(isolated_mode)
     set_global_css()
     update_custom_css()
 

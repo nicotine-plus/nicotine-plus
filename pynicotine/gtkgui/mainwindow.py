@@ -294,7 +294,7 @@ class MainWindow(Window):
         self.connect_tab_signals()
 
         # Apply UI customizations
-        set_global_style()
+        set_global_style(core.isolated_mode)
 
         # Show window
         self.init_window()
@@ -308,11 +308,18 @@ class MainWindow(Window):
         self.widget.set_default_icon_name(pynicotine.__application_id__)
 
         # Set main window size
-        self.widget.set_default_size(width=config.sections["ui"]["width"],
-                                     height=config.sections["ui"]["height"])
+        self.widget.set_default_size(
+            width=0 if core.isolated_mode else config.sections["ui"]["width"],
+            height=0 if core.isolated_mode else config.sections["ui"]["height"]
+        )
+
+        # Hide close button in isolated_mode mode (e.g. Broadway backend)
+        if core.isolated_mode:
+            self.widget.set_deletable(False)
+            self.widget.set_resizable(False)
 
         # Set main window position
-        if GTK_API_VERSION == 3:
+        elif GTK_API_VERSION == 3:
             x_pos = config.sections["ui"]["xposition"]
             y_pos = config.sections["ui"]["yposition"]
 
@@ -320,10 +327,6 @@ class MainWindow(Window):
                 self.widget.set_position(Gtk.WindowPosition.CENTER)
             else:
                 self.widget.move(x_pos, y_pos)
-
-        # Hide close button in isolated_mode mode (e.g. Broadway backend)
-        if core.isolated_mode:
-            self.widget.set_deletable(False)
 
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"] or core.isolated_mode:
