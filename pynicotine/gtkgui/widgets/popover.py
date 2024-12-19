@@ -47,7 +47,7 @@ class Popover:
 
         # Workaround for GTK bug where clicks stop working after clicking inside popover once
         if os.environ.get("GDK_BACKEND") == "broadway":
-            self.widget.set_has_arrow(False)
+            self.widget.set_has_arrow(False)  # pylint: disable=no-member
 
         # Workaround for popover not closing in GTK 4
         # https://gitlab.gnome.org/GNOME/gtk/-/issues/4529
