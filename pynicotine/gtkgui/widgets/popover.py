@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.application import GTK_API_VERSION
@@ -42,6 +44,10 @@ class Popover:
 
         if GTK_API_VERSION == 3:
             return
+
+        # Workaround for GTK bug where clicks stop working after clicking inside popover once
+        if os.environ.get("GDK_BACKEND") == "broadway":
+            self.widget.set_has_arrow(False)
 
         # Workaround for popover not closing in GTK 4
         # https://gitlab.gnome.org/GNOME/gtk/-/issues/4529

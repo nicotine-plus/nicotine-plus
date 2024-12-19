@@ -701,7 +701,7 @@ class UserBrowse:
 
             if index == len(folder_path_split) - 1:
                 button = Gtk.MenuButton(visible=True)
-                button.set_menu_model(self.folder_popup_menu.model)
+                self.folder_popup_menu.set_menu_button(button)
                 add_css_class(button_label, "heading")
 
                 if GTK_API_VERSION >= 4:

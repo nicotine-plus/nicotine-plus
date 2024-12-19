@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 
 from gi.repository import Gdk
@@ -47,6 +48,7 @@ class PopupMenu:
         self.callback = callback
 
         self.popup_menu = None
+        self.menu_button = None
         self.gesture_click = None
         self.gesture_press = None
         self.valid_parent_widgets = Gtk.Box if GTK_API_VERSION >= 4 else (Gtk.Box, Gtk.EventBox)
@@ -74,6 +76,23 @@ class PopupMenu:
         if parent:
             self.connect_events(parent)
             self.parent = parent
+
+    def set_menu_button(self, button):
+
+        if self.menu_button is not None:
+            self.menu_button.set_menu_model(None)
+
+        self.menu_button = button
+
+        if button is None:
+            return
+
+        button.set_menu_model(self.model)
+
+        # Workaround for GTK bug where clicks stop working after clicking inside popover once
+        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
+            popover = list(button)[-1]
+            popover.set_has_arrow(False)
 
     def create_context_menu(self, parent):
 

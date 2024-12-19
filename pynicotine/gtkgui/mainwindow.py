@@ -522,7 +522,7 @@ class MainWindow(Window):
     def set_up_menu(self):
 
         menu = self.application.create_hamburger_menu()
-        self.header_menu.set_menu_model(menu.model)
+        menu.set_menu_button(self.header_menu)
 
         if GTK_API_VERSION == 3:
             return

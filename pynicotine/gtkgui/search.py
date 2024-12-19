@@ -22,6 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import operator
+import os
 import re
 
 from itertools import islice
@@ -100,7 +101,7 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.search-mode", "user")
         )
         mode_menu.update_model()
-        window.search_mode_button.set_menu_model(mode_menu.model)
+        mode_menu.set_menu_button(window.search_mode_button)
         window.search_mode_label.set_label(self.modes["global"])
 
         if GTK_API_VERSION >= 4:
@@ -646,6 +647,11 @@ class Search:
         # Grouping
         menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
         self.grouping_button.set_menu_model(menu)
+
+        # Workaround for GTK bug where clicks stop working after clicking inside popover once
+        if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
+            popover = list(self.grouping_button)[-1]
+            popover.set_has_arrow(False)
 
         self.expand_button.set_active(config.sections["searches"]["expand_searches"])
 

@@ -194,6 +194,10 @@ def set_global_css():
             with open(encode_path(os.path.join(css_folder_path, "style_gtk4_darwin.css")), "rb") as file_handle:
                 css += file_handle.read()
 
+        elif os.environ.get("GDK_BACKEND") == "broadway":
+            with open(encode_path(os.path.join(css_folder_path, "style_gtk4_broadway.css")), "rb") as file_handle:
+                css += file_handle.read()
+
         if LIBADWAITA_API_VERSION:
             with open(encode_path(os.path.join(css_folder_path, "style_libadwaita.css")), "rb") as file_handle:
                 css += file_handle.read()
