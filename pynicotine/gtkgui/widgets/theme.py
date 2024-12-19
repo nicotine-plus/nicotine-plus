@@ -156,14 +156,21 @@ def set_default_font():
 
 def set_visual_settings(isolated_mode=False):
 
-    if sys.platform == "darwin":
-        # Left align window controls on macOS
-        GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
-
-    elif isolated_mode:
+    if isolated_mode:
         # Hide minimize/maximize buttons in isolated mode (e.g. Broadway backend)
         GTK_SETTINGS.props.gtk_decoration_layout = ":close"
         GTK_SETTINGS.props.gtk_titlebar_right_click = "none"
+
+    elif sys.platform == "darwin":
+        # Left align window controls on macOS
+        GTK_SETTINGS.props.gtk_decoration_layout = "close,minimize,maximize:"
+
+    if os.environ.get("GDK_BACKEND") == "broadway":
+        # Animations use a lot of CPU in Broadway, disable them
+        GTK_SETTINGS.props.gtk_enable_animations = False
+
+        if GTK_API_VERSION >= 4:
+            GTK_SETTINGS.props.gtk_cursor_blink = False
 
     set_default_font()
     set_dark_mode(config.sections["ui"]["dark_mode"])

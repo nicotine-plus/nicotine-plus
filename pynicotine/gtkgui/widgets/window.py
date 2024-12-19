@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 
 from gi.repository import Gtk
@@ -43,9 +44,7 @@ class Window:
         if GTK_API_VERSION == 3:
             return
 
-        # Workaround for GTK 4.16 bug where text is replaced when inserting emoji
-        if (4, 16, 0) <= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) <= (4, 16, 5):
-            self.widget.connect("notify::focus-widget", self._on_focus_widget_changed)
+        self.widget.connect("notify::focus-widget", self._on_focus_widget_changed)
 
         if sys.platform == "win32":
             widget.connect("realize", self._on_realize_win32)
@@ -57,6 +56,10 @@ class Window:
                     "notify::dark", self._on_dark_mode_win32
                 )
 
+        elif os.environ.get("GDK_BACKEND") == "broadway":
+            # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding window
+            self.widget.connect("hide", self._on_hide_broadway)
+
     def _on_focus_widget_changed(self, *_args):
 
         focus_widget = self.widget.get_focus()
@@ -64,20 +67,28 @@ class Window:
         if focus_widget is None:
             return
 
-        emoji_chooser = focus_widget.get_ancestor(Gtk.EmojiChooser)
+        popover = focus_widget.get_ancestor(Gtk.Popover)
 
-        if emoji_chooser is None:
+        # Workaround for GTK 4 bug where broadwayd uses a lot of CPU after hiding popover
+        if popover is not None and os.environ.get("GDK_BACKEND") == "broadway":
+            popover.hide_handler_broadway = popover.connect_after("hide", self._on_popover_hide_broadway)
+
+        if not (4, 16, 0) <= (GTK_API_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION) <= (4, 16, 5):
+            return
+
+        # Workaround for GTK 4.16 bug where text is replaced when inserting emoji
+        if not isinstance(popover, Gtk.EmojiChooser):
             self._text_widget = focus_widget if isinstance(focus_widget, Gtk.Text) else None
             return
 
         if self._text_widget is None:
             return
 
-        emoji_chooser.old_text = self._text_widget.get_text()
-        emoji_chooser.old_pos = self._text_widget.get_position()
+        popover.old_text = self._text_widget.get_text()
+        popover.old_pos = self._text_widget.get_position()
 
-        emoji_chooser.picked_handler = emoji_chooser.connect("emoji-picked", self._on_emoji_chooser_picked)
-        emoji_chooser.hide_handler = emoji_chooser.connect("hide", self._on_emoji_chooser_hide)
+        popover.picked_handler = popover.connect("emoji-picked", self._on_emoji_chooser_picked)
+        popover.hide_handler = popover.connect("hide", self._on_emoji_chooser_hide)
 
     def _on_emoji_chooser_picked(self, chooser, emoji):
 
@@ -97,6 +108,14 @@ class Window:
         if chooser.hide_handler is not None:
             chooser.disconnect(chooser.hide_handler)
             chooser.hide_handler = None
+
+    def _on_popover_hide_broadway(self, popover):
+
+        if popover.hide_handler_broadway is not None:
+            popover.disconnect(popover.hide_handler_broadway)
+            popover.hide_handler_broadway = None
+
+        popover.unrealize()
 
     def _on_realize_win32(self, *_args):
 
@@ -133,6 +152,9 @@ class Window:
             windll.dwmapi.DwmSetWindowAttribute(
                 h_wnd, self.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, byref(value), sizeof(value)
             )
+
+    def _on_hide_broadway(self, *_args):
+        self.widget.unrealize()
 
     def get_surface(self):
 
