@@ -905,6 +905,10 @@ class NetworkThread(Thread):
         sock = conn.sock
         del self._conns[sock]
 
+        if conn is self._server_conn:
+            # Disconnecting from server, clean up connections and queue
+            self._server_disconnect()
+
         self._selector.unregister(sock)
         self._close_socket(sock)
         self._num_sockets -= 1
@@ -913,9 +917,7 @@ class NetworkThread(Thread):
         conn.in_buffer.clear()
         conn.out_buffer.clear()
 
-        if conn.__class__ is ServerConnection:
-            # Disconnected from server, clean up connections and queue
-            self._server_disconnect()
+        if conn.__class__ is not PeerConnection:
             return
 
         init = conn.init
@@ -1445,8 +1447,9 @@ class NetworkThread(Thread):
     def _server_disconnect(self):
         """We're disconnecting from the server, clean up."""
 
+        self._server_conn = None
         self._should_process_queue = False
-        self._interface_name = self._interface_address = self._server_conn = None
+        self._interface_name = self._interface_address = None
         self._local_ip_address = ""
 
         self._close_listen_socket()
