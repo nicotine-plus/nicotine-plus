@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 06:46+0200\n"
-"PO-Revision-Date: 2024-11-17 12:58+0000\n"
-"Last-Translator: Mat <mail@mathias.is>\n"
+"PO-Revision-Date: 2024-12-21 21:05+0000\n"
+"Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
@@ -4239,7 +4239,7 @@ msgstr ""
 "Opětovné skenování zrušených z důvodu nedostupnosti sdílených položek: %s"
 
 #: pynicotine/shares.py:1142
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Uživatel %(user)s prochází váš seznam sdílených souborů"
 
@@ -4518,13 +4518,12 @@ msgstr "Sdílet složky"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:416
 #: pynicotine/gtkgui/ui/settings/shares.ui:23
-#, fuzzy
 msgid ""
 "Soulseek users will be able to download from your shares. Contribute to the "
 "Soulseek network by sharing your own files and by resharing what you "
 "downloaded from other users."
 msgstr ""
-"Uživatelé Soulseek budou moci stahovat z vašich sdílení. Přispějte do sítě "
+"Uživatelé Soulseek budou moci stahovat z vašich sdílení. Přispějte síti "
 "Soulseek sdílením své vlastní sbírky a sdílením toho, co jste si stáhli od "
 "ostatních uživatelů."
 
@@ -4549,48 +4548,39 @@ msgstr ""
 "uživateli."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:20
-#, fuzzy
 msgid "Previous File"
 msgstr "Předchozí soubor"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:34
-#, fuzzy
 msgid "Next File"
 msgstr "Další soubor"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:63
-#, fuzzy
 msgid "Name"
-msgstr "Název souboru"
+msgstr "Název"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:267
-#, fuzzy
 msgid "Last Speed"
 msgstr "Poslední rychlost"
 
 #: pynicotine/gtkgui/ui/dialogs/preferences.ui:11
-#, fuzzy
 msgid "_Export…"
-msgstr "Vývoz"
+msgstr "_Export…"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:6
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:54
-#, fuzzy
 msgid "Keyboard Shortcuts"
 msgstr "Klávesové zkratky"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:14
-#, fuzzy
 msgid "General"
 msgstr "Obecné"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:19
-#, fuzzy
 msgid "Connect"
-msgstr "Spojit"
+msgstr "Připojit"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:26
-#, fuzzy
 msgid "Disconnect"
 msgstr "Odpojit"
 
