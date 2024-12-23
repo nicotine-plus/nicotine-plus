@@ -213,6 +213,13 @@ def add_gtk():
         # gdbus required for single-instance application (Windows)
         add_file(file_path=os.path.join(LIB_PATH, "gdbus.exe"), output_path="gdbus.exe")
 
+        # vulkan-1.dll in the same folder as executable to take precedence over potentially
+        # outdated system dll
+        add_files(
+            folder_path=LIB_PATH, output_path="",
+            starts_with="vulkan-1", ends_with=LIB_EXTENSION
+        )
+
     # This also includes all dlls required by GTK
     add_files(
         folder_path=LIB_PATH, output_path="lib",
