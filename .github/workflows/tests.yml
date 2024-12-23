@@ -2,6 +2,9 @@ name: Tests
 
 on: [push, pull_request]
 
+env:
+  NICOTINE_NETWORK_TESTS: 1
+
 jobs:
 
   python:

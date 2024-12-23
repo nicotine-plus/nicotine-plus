@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+from unittest import skipUnless
 from unittest import TestCase
 
 import pynicotine
@@ -31,6 +34,7 @@ class VersionTest(TestCase):
         sample_dev_version = UpdateChecker.create_integer_version("2.1.0.dev1")
         self.assertGreater(sample_stable_version, sample_dev_version)
 
+    @skipUnless(os.environ.get("NICOTINE_NETWORK_TESTS"), reason="Requires network connection")
     def test_update_check(self):
 
         # Validate local version
