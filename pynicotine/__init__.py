@@ -145,6 +145,11 @@ def set_up_python():
         # Support file scanning process in frozen binaries
         multiprocessing.freeze_support()
 
+        # Prioritize dlls in the 'lib' subfolder over system dlls, to avoid issues with conflicting dlls
+        if sys.platform == "win32":
+            import ctypes
+            ctypes.windll.kernel32.SetDllDirectoryW(os.path.join(executable_folder, "lib"))
+
 
 def rename_process(new_name, debug_info=False):
 
