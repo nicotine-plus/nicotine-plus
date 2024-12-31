@@ -11,6 +11,7 @@ You can run the latest unstable build of Nicotine+ to test recent changes and bu
 
  * Added isolated mode (`nicotine --isolated`) for standalone environments (e.g. Docker containers)
  * Show number of scanned folders while rescanning shares
+ * Skip unit tests requiring network connection by default
 
 ### Corrections
 
