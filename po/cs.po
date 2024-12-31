@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 06:46+0200\n"
-"PO-Revision-Date: 2024-12-21 21:05+0000\n"
+"PO-Revision-Date: 2024-12-31 17:00+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -3755,7 +3755,6 @@ msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #: pynicotine/networkfilter.py:283
-#, fuzzy
 msgid "Wallis & Futuna"
 msgstr "Wallis & Futuna"
 
@@ -4456,11 +4455,11 @@ msgstr "_Protokol"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:187
 msgid "Room Wall"
-msgstr "Stěna místnosti"
+msgstr "Nástěnka místnosti"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:202
 msgid "R_oom Wall"
-msgstr "S_těna místnosti"
+msgstr "N_ástěnka místnosti"
 
 #: pynicotine/gtkgui/ui/dialogs/about.ui:124
 msgid "Created by"
@@ -4590,120 +4589,98 @@ msgstr "Opětovné skenování sdílení"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
 #: pynicotine/gtkgui/ui/mainwindow.ui:1859
-#, fuzzy
 msgid "Show Log Pane"
-msgstr "Zobrazit podokno protokolu"
+msgstr "Zobrazit panel protokolu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Confirm Quit"
-msgstr "Konfigurace protokolování"
+msgstr "Potvrdit ukončení"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:75
-#, fuzzy
 msgid "Quit"
-msgstr "Přestat"
+msgstr "Ukončit"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:83
 msgid "Menus"
 msgstr "Nabídky"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:88
-#, fuzzy
 msgid "Open Main Menu"
 msgstr "Otevřít hlavní nabídku"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:95
-#, fuzzy
 msgid "Open Context Menu"
 msgstr "Otevřít kontextovou nabídku"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:103
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:377
-#, fuzzy
 msgid "Tabs"
-msgstr "Tabulátory"
+msgstr "Karty"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:108
-#, fuzzy
 msgid "Change Main Tab"
-msgstr "Změnit primární kartu"
+msgstr "Změnit hlavní kartu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:115
-#, fuzzy
 msgid "Go to Previous Secondary Tab"
-msgstr "Přejít na kartu Předchozí sekundární"
+msgstr "Jít na předchozí sekundární kartu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:122
-#, fuzzy
 msgid "Go to Next Secondary Tab"
 msgstr "Přejít na další sekundární kartu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:129
-#, fuzzy
 msgid "Reopen Closed Secondary Tab"
-msgstr "Zavřít sekundární kartu"
+msgstr "Znovu otevřít zavřenou sekundární kartu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:136
-#, fuzzy
 msgid "Close Secondary Tab"
 msgstr "Zavřít sekundární kartu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:144
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:920
-#, fuzzy
 msgid "Lists"
-msgstr "Listy"
+msgstr "Seznamy"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:149
-#, fuzzy
 msgid "Copy Selected Cell"
-msgstr "Vyberte Vše"
+msgstr "Kopírovat vybranou buňku"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:156
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:211
-#, fuzzy
 msgid "Select All"
-msgstr "Vyberte Vše"
+msgstr "Vybrat vše"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:163
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:218
-#, fuzzy
 msgid "Find"
 msgstr "Najít"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:170
-#, fuzzy
 msgid "Remove Selected Row"
 msgstr "Odebrat vybraný řádek"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:178
-#, fuzzy
 msgid "Editing"
-msgstr "Editace"
+msgstr "Upravování"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:183
-#, fuzzy
 msgid "Cut"
-msgstr "Řezat"
+msgstr "Vyjmout"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:197
-#, fuzzy
 msgid "Paste"
-msgstr "Pasta"
+msgstr "Vložit"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:204
-#, fuzzy
 msgid "Insert Emoji"
-msgstr "Vložit emodži"
+msgstr "Vložit emotikonu"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:240
-#, fuzzy
 msgid "File Transfers"
-msgstr "Převody"
+msgstr "Přenosy souborů"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:245
-#, fuzzy
 msgid "Resume / Retry Transfer"
 msgstr "Pokračovat / Opakovat přenos"
 
@@ -4712,76 +4689,63 @@ msgid "Pause / Abort Transfer"
 msgstr "Pozastavit / zrušit přenos"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:272
-#, fuzzy
 msgid "Download / Upload To"
-msgstr "Stáhnout složku _To…"
+msgstr "Stáhnout / Nahrát do"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:286
-#, fuzzy
 msgid "Save List to Disk"
-msgstr "_Save Seznam sdílených složek na disk"
+msgstr "Uložit seznam na disk"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:300
-#, fuzzy
 msgid "Refresh"
-msgstr "Aktualizovat soubory"
+msgstr "Obnovit"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:307
 #: pynicotine/gtkgui/ui/mainwindow.ui:371
 #: pynicotine/gtkgui/ui/mainwindow.ui:610 pynicotine/gtkgui/ui/search.ui:199
 #: pynicotine/gtkgui/ui/userbrowse.ui:103
-#, fuzzy
 msgid "Expand / Collapse All"
 msgstr "Rozbalit / sbalit vše"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:314
-#, fuzzy
 msgid "Back to Parent Folder"
-msgstr "Nelze sdílet složku"
+msgstr "Zpět na nadřazenou složku"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:322
-#, fuzzy
 msgid "File Search"
-msgstr "Hledání"
+msgstr "Hledání souboru"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:327
-#, fuzzy
 msgid "Result Filters"
-msgstr "_Result filtry"
+msgstr "Filtry výsledků"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:21
-#, fuzzy
 msgid "Current Session"
 msgstr "Aktuální relace"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:38
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:156
-#, fuzzy
 msgid "Completed Downloads"
-msgstr "Dokončené stahování"
+msgstr "Dokončená stahování"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:64
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:182
-#, fuzzy
 msgid "Downloaded Size"
 msgstr "Stažená velikost"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:91
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:209
-#, fuzzy
 msgid "Completed Uploads"
 msgstr "Dokončená nahrávání"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:117
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:235
-#, fuzzy
 msgid "Uploaded Size"
 msgstr "Nahraná velikost"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:138
-#, fuzzy
 msgid "Total"
-msgstr "Totální"
+msgstr "Celkem"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:278
 msgid "_Reset…"
@@ -4821,49 +4785,40 @@ msgid "Clear _All…"
 msgstr "Vyčistit _vše…"
 
 #: pynicotine/gtkgui/ui/interests.ui:21
-#, fuzzy
 msgid "Personal Interests"
 msgstr "Osobní zájmy"
 
 #: pynicotine/gtkgui/ui/interests.ui:40
-#, fuzzy
 msgid "Add something you like…"
 msgstr "Přidejte něco, co se vám líbí…"
 
 #: pynicotine/gtkgui/ui/interests.ui:62
-#, fuzzy
 msgid "Personal Dislikes"
-msgstr "Osobní nelibost"
+msgstr "Osobní nezájmy"
 
 #: pynicotine/gtkgui/ui/interests.ui:80
-#, fuzzy
 msgid "Add something you dislike…"
 msgstr "Přidejte něco, co se vám nelíbí…"
 
 #: pynicotine/gtkgui/ui/interests.ui:143
-#, fuzzy
 msgid "Refresh Recommendations"
-msgstr "Doporučení"
+msgstr "Obnovit doporučení"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:26
-#, fuzzy
 msgid "Main Menu"
-msgstr "Otevřít hlavní nabídku"
+msgstr "Hlavní nabídka"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:43
-#, fuzzy
 msgid "Room…"
 msgstr "Místnost…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:51 pynicotine/gtkgui/ui/mainwindow.ui:732
 #: pynicotine/gtkgui/ui/mainwindow.ui:900
 #: pynicotine/gtkgui/ui/mainwindow.ui:1095
-#, fuzzy
 msgid "Username…"
 msgstr "Uživatelské jméno…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:58
-#, fuzzy
 msgid "Search term…"
 msgstr "Hledaný výraz…"
 
@@ -4880,16 +4835,14 @@ msgid "Clear"
 msgstr "Vyčistit"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:61
-#, fuzzy
 msgid ""
 "Search patterns: with a word = term, without a word = -term, partial word = "
 "*erm"
 msgstr ""
-"Vyhledávací vzory: se slovem = termín, beze slova = -term, částečné slovo = "
-"*erm"
+"Vzor vyhledávání: se slovem = slovo, beze slova = -slovo, částečné slovo = "
+"*lovo"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:97
-#, fuzzy
 msgid "Search Scope"
 msgstr "Rozsah hledání"
 
@@ -4902,17 +4855,15 @@ msgid "Configure Searches"
 msgstr "Nastavení vyhledávání"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:232
-#, fuzzy
 msgid ""
 "Enter a search term to search for files shared by other users on the "
 "Soulseek network"
 msgstr ""
-"Zadání hledacího výrazu pro vyhledávání souborů sdílených ostatními "
-"uživateli v síti Soulseek"
+"Zadejte hledané slovo nebo frázi (výraz) pro vyhledávání souborů sdílených "
+"ostatními uživateli v síti Soulseek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:386
 #: pynicotine/gtkgui/ui/mainwindow.ui:625 pynicotine/gtkgui/ui/search.ui:214
-#, fuzzy
 msgid "File Grouping Mode"
 msgstr "Režim seskupení souborů"
 
@@ -4921,25 +4872,23 @@ msgid "Configure Downloads"
 msgstr "Nastavení stahování"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:471
-#, fuzzy
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
 "Soubory, které stáhnete od ostatních uživatelů, jsou zde zařazeny do fronty "
-"a lze je na požádání pozastavit a obnovit"
+"a lze je pozastavit nebo pokračovat"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:643
 msgid "Configure Uploads"
 msgstr "Nastavení nahrávání"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:710
-#, fuzzy
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
-"Pokusy uživatelů o stažení sdílených souborů jsou zde zařazeny do fronty a "
-"spravovány"
+"Pokusy uživatelů o stažení vašich sdílených souborů je možné vidět a "
+"spravovat zde"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:788
 msgid "_Open List"
@@ -5053,67 +5002,55 @@ msgstr "Stahování bez limitu rychlosti"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:56
 #: pynicotine/gtkgui/ui/settings/downloads.ui:193
-#, fuzzy
 msgid "Use download speed limit (KiB/s):"
-msgstr "Alternativní rychlostní limit stahování (KiB/s):"
+msgstr "Použít limit rychlosti stahování (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/downloadspeeds.ui:80
 #: pynicotine/gtkgui/ui/settings/downloads.ui:215
-#, fuzzy
 msgid "Use alternative download speed limit (KiB/s):"
-msgstr "Alternativní rychlostní limit stahování (KiB/s):"
+msgstr "Použít alternativní limit rychlosti stahování (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:24
-#, fuzzy
 msgid "Search rooms…"
-msgstr "Hledaný výraz…"
+msgstr "Hledat v místnostech…"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:32
-#, fuzzy
 msgid "Refresh Rooms"
-msgstr "Seznam obnovovacích místností"
+msgstr "Obnovit místnosti"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:77
-#, fuzzy
 msgid "_Show feed of public chat room messages"
-msgstr "_Show zdroj zpráv z veřejné chatovací místnosti"
+msgstr "_Ukázat přehled zpráv místnosti veřejného chatu"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:104
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
-#, fuzzy
 msgid "_Accept private room invitations"
-msgstr "pozvánky _Accept soukromé pokoje"
+msgstr "_Přijmout pozvánky do soukromé místnosti"
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:19
-#, fuzzy
 msgid ""
 "Write a single message that other room users can read later. Recent messages "
 "are shown at the top."
 msgstr ""
-"Funkce stěny místnosti umožňuje uživatelům v místnosti zadat jedinečnou "
-"zprávu, která se má zobrazit ostatním. Poslední zprávy se zobrazují nahoře."
+"Napište zprávu, kterou budou moci ostatní uživatelé místnosti později číst. "
+"Poslední zprávy se zobrazují nahoře."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:49
-#, fuzzy
 msgid "Set wall message…"
-msgstr "Nastavit nástěnnou zprávu…"
+msgstr "Nastavit zprávu na nástěnku…"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:19
 #: pynicotine/gtkgui/ui/settings/search.ui:138
-#, fuzzy
 msgid "Search Result Filters"
 msgstr "Filtry výsledků hledání"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:30
-#, fuzzy
 msgid ""
 "Search result filters are used to refine which search results are displayed."
 msgstr ""
-"Filtry výsledků hledání se používají k upřesnění, které výsledky vyhledávání "
-"se zobrazují."
+"Filtry výsledků hledání určují, které výsledky vyhledávání se mají zobrazit."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:39
-#, fuzzy
 msgid ""
 "Each list of search results has its own filter which can be revealed by "
 "toggling the Result Filters button. A filter is made up of multiple fields, "
@@ -5124,14 +5061,10 @@ msgstr ""
 "Každý seznam výsledků vyhledávání má svůj vlastní filtr, který lze odhalit "
 "přepínáním tlačítka Filtry výsledků. Filtr se skládá z více polí, z nichž "
 "všechna se použijí při stisknutí klávesy Enter v některém z jeho polí. "
-"Filtrování se aplikuje okamžitě na již přijaté výsledky a také na ty, které "
-"ještě nedorazily. Chcete-li znovu zobrazit úplné výsledky, jednoduše vymažte "
-"filtr všech termínů a znovu jej použijte. Jak název napovídá, filtr výsledků "
-"hledání nemůže rozšířit původní vyhledávání, může jej pouze zúžit. Chcete-li "
-"hledané výrazy rozšířit nebo změnit, proveďte nové vyhledávání."
+"Filtrování se provede okamžitě na již přijaté výsledky a také na ty, které "
+"ještě nedorazí."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:48
-#, fuzzy
 msgid ""
 "As the name suggests, a search result filter cannot expand your original "
 "search, it can only narrow it down. To broaden or change your search terms, "
@@ -5142,191 +5075,167 @@ msgstr ""
 "nebo změnit, proveďte nové vyhledávání."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:57
-#, fuzzy
 msgid "Result Filter Usage"
-msgstr "_Result filtry"
+msgstr "Použití filtru výsledků"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:69
-#, fuzzy
 msgid "Include Text"
 msgstr "Zahrnout text"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:85
-#, fuzzy
 msgid "Files, folders and usernames containing this text will be shown."
-msgstr "Zobrazí se soubory a složky obsahující tento text."
+msgstr "Zobrazí se soubory, složky a uživatelská jména obsahující tento text."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:95
-#, fuzzy
 msgid ""
 "Case is insensitive, but word order is important: 'Instrumental Remix' will "
 "not show any 'Remix Instrumental'"
 msgstr ""
-"Případ je necitlivý, ale pořadí slov je důležité: 'Instrumental Remix' "
-"nezobrazí žádné 'Remix Instrumental'"
+"Malá nebo velká písmena nehrají roli, je ale důležité pořadí slov: "
+"'Instrumental Remix' nezobrazí 'Remix Instrumental'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:105
-#, fuzzy
 msgid ""
 "Use | (or pipes) to seperate several exact phrases. Example:\n"
 "    Remix|Dub Mix|Instrumental"
 msgstr ""
-"Použijte | (nebo roury) k oddělení několika přesných frází. Příklad:\n"
-"    Remix|Dub Mix|Instrumentální"
+"Použijte | (roury/pipe) k oddělení několika přesných frází. Příklad:\n"
+"    Remix|Dub Mix|Instrumental"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:118
-#, fuzzy
 msgid "Exclude Text"
 msgstr "Vyloučit text"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:129
-#, fuzzy
 msgid ""
 "As above, but files, folders and usernames are filtered out if the text "
 "matches."
 msgstr ""
-"Jak je uvedeno výše, ale soubory a složky jsou odfiltrovány, pokud se text "
-"shoduje."
+"Stejně jak je uvedeno výše, ale soubory, složky a uživatelská jména jsou "
+"odfiltrovány, pokud text odpovídá zadání."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:150
-#, fuzzy
 msgid "Filters files based upon their file extension."
-msgstr "Filtruje soubory na základě jejich přípony souboru."
+msgstr "Filtruje soubory na základě jejich přípony."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:160
-#, fuzzy
 msgid ""
 "Multiple file extensions can be specified, which in turn will reveal more "
 "from the list of results. Example:\n"
 "    flac wav ape"
 msgstr ""
-"Lze zadat více přípon souborů, což zase rozšíří seznam výsledků.\n"
-"    Příklad: flac|wav|ape"
+"Lze zadat více přípon souborů, což rozšíří seznam výsledků. Příklad:\n"
+"    flac wav ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:171
-#, fuzzy
 msgid ""
 "It is also possible to invert the filter, specifying file extensions you "
 "don't want in your results with an exclamation mark! Example:\n"
 "    !mp3 !jpg"
 msgstr ""
-"Je také možné invertovat filtr a zadat přípony souborů, které nechcete ve "
-"výsledcích.\n"
-"    Příklad: !mp3|! jpg"
+"Je také možné obrátit filtr a pomocí vykřičníku zadat přípony souborů, které "
+"NEchcete ve výsledcích. Příklad:\n"
+"    !mp3 !jpg"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:182
-#, fuzzy
 msgid "File Size"
 msgstr "Velikost souboru"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:198
-#, fuzzy
 msgid "Filters files based upon their file size."
-msgstr "Filtruje soubory na základě jejich velikosti souboru."
+msgstr "Filtruje soubory na základě jejich velikosti."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:208
-#, fuzzy
 msgid ""
 "By default, the unit used is bytes (B) and files greater than or equal to "
 "(>=) the value will be matched."
 msgstr ""
-"Ve výchozím nastavení je použitá jednotka bajty a soubory větší nebo rovny "
-"hodnotě budou spárovány."
+"Ve výchozím stavu je použita jednotka bajty (B) a soubory větší nebo rovny "
+"(>=) dané hodnotě, budou nalezeny."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:218
-#, fuzzy
 msgid ""
 "Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, "
 "kibibyte, mebibyte, or gibibyte units:\n"
 "    20m to show files larger than 20 MiB (mebibytes)."
 msgstr ""
-"Připojte b, k, m nebo g (alternativně kib, mib nebo gib) pro určení jednotek "
-"bajtů, kibibajtů, mebibajtů nebo gibibajtů:\n"
-"    <1024k najde soubory 1024 kibibajtů (tj. 1 mebibajt) nebo menší."
+"Na konec připojte b, k, m nebo g (případně kib, mib nebo gib) pro určení "
+"jednotek bajtů, kibibajtů, mebibajtů nebo gibibajtů:\n"
+"    20m pro zobrazení souborů větších než 20 MiB (mebibajtů)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:229
-#, fuzzy
 msgid ""
 "Prepend = to a value to specify an exact match:\n"
 "    =1024 matches files that are exactly 1 KiB (kibibyte)."
 msgstr ""
-"Prepend = na hodnotu pro určení přesné shody:\n"
-"    =1024 odpovídá pouze souborům o velikosti 1024 bajtů (tj. 1 kibibajt)."
+"Pro stanovení přesné shody, přidejte před hodnotu znak \"=\":\n"
+"    =1024 odpovídá souborům o velikosti 1 KiB (kibibajt)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:240
-#, fuzzy
 msgid ""
 "Prepend ! to a value to exclude files of a specific size:\n"
 "    !30.5m to hide files that are 30.5 MiB (mebibytes)."
 msgstr ""
-"Prepend = na hodnotu pro určení přesné shody:\n"
-"    =1024 odpovídá pouze souborům o velikosti 1024 bajtů (tj. 1 kibibajt)."
+"Pro vyloučení souborů určité velikosti, přidejte před hodnotu znak \"!\":\n"
+"    !30.5m pro skrytí souborů o velikosti 30.5 MiB (mebibajtů)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:251
-#, fuzzy
 msgid ""
 "Prepend < or > to find files smaller/larger than the given value. Use a "
 "space between each condition to include a range:\n"
 "    >10.5m <1g to show files larger than 10.5 MiB, but smaller than 1 GiB."
 msgstr ""
-"Chcete-li vyhledat soubory menší/větší, než je zadaná hodnota, přidejte < "
-"nebo >:\n"
-"    >10,5m|<1g pro zobrazení souborů větších než 10,5 MiB (mebibajtů),\n"
-"    ale menší než 1 GiB (gibibajty), použijte | mezi podmínkami."
+"Pro nalezení souborů, které jsou větší/menší než zadaná hodnota, přidejte < "
+"nebo > před hodnotu. Použijte mezeru mezi každou podmínkou pro zahrnutí "
+"rozsahu:\n"
+"    >10.5m <1g pro zobrazení souborů větších než 10.5 MiB a menších než 1 "
+"GiB."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:262
-#, fuzzy
 msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"Pro větší pohodlí lze také použít varianty kb, mb a gb pro známější jednotky "
-"kilo, mega a gigabyte."
+"Známější varianty kb, mb a gb mohou být také použity pro jednotky kilobajtů, "
+"megabajtů a gigabajtů."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:290
-#, fuzzy
 msgid "Filters files based upon their bitrate."
 msgstr "Filtruje soubory na základě jejich datového toku."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:300
-#, fuzzy
 msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Hodnoty musí být zadány pouze jako číslice. Jednotkou je vždy Kb/s (kilobity "
+"Hodnoty musí být zadány pouze jako číslice. Jednotkou je vždy Kb/s (kilobit "
 "za sekundu)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:310
-#, fuzzy
 msgid ""
 "Like File Size (above), operators =, !, <, >, <= or >= can be used, and "
 "multiple conditions can be specified, for example to show files with a "
 "bitrate of at least 256 Kb/s with a maximum bitrate of 1411 Kb/s:\n"
 "    256 <=1411"
 msgstr ""
-"Stejně jako velikost souboru (výše) lze použít operátory =, !, < a > a "
-"pomocí | trubky:\n"
-"    >256|<1411 pro zobrazení souborů s přenosovou rychlostí alespoň 256 kb/"
-"s\n"
-"    s maximální přenosovou rychlostí 1411 Kb/s."
+"Stejně jako velikost souboru (výše) lze použít operátory =, !, <, >, <= nebo "
+">= a lze stanovit několik podmínek, například pro zobrazení souborů s "
+"datovým tokem nejméně 256 Kb/s a nejvíce 1411 Kb/s:\n"
+"    256 <=1411"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:339
-#, fuzzy
 msgid "Filters files based upon their duration."
-msgstr "Filtruje soubory na základě jejich datového toku."
+msgstr "Filtruje soubory na základě jejich délky."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:349
-#, fuzzy
 msgid ""
 "By default, files longer than or equal to (>=) the entered duration will be "
 "matched, unless an operator (=, !, <=, < or >) is used."
 msgstr ""
-"Ve výchozím nastavení budou porovnávány soubory delší nebo rovné zadané "
-"délce, pokud není použit operátor (=, !, < nebo >)."
+"Ve výchozím stavu jsou zobrazeny soubory delší nebo odpovídající zadané "
+"délce (>=), pokud není použit operátor (=, !, <=, < nebo >)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:359
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
@@ -5335,24 +5244,24 @@ msgid ""
 msgstr ""
 "Zadejte nezpracovanou hodnotu v sekundách nebo použijte časové formáty MM:SS "
 "a HH:MM:SS:\n"
-"    >5:30 pro zobrazení souborů o délce alespoň 5 a půl minuty.\n"
-"    <5:30:00 zobrazuje soubory kratší než 5 a půl hodiny."
+"    =53 zobrazí soubory o přibližné délce 53 sekund.\n"
+"    >5:30  zobrazí soubory delší než 5 a půl minuty.\n"
+"    <5:30:00  zobrazí soubory kratší než 5 a půl hodiny."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:372
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54 !8:43 !7:32 to hide some specific files from the results.\n"
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
-"Více podmínek lze zadat pomocí | separátory potrubí:\n"
-"    >6:00|<12:00 pro zobrazení souborů o délce 6 až 12 minut.\n"
-"    !9:54|!8:43|!7:32 skrýt některé konkrétní soubory z výsledků.\n"
-"    =5:34|=4:23|=3:05 pro zahrnutí souborů s konkrétní dobou trvání."
+"Je možné stanovit více podmínek:\n"
+"    >6:00 <12:00 pro zobrazení souborů delších než 6 minut a kratších než 12 "
+"minut.\n"
+"    !9:54 !8:43 !7:32 pro skrytí určitých souborů ve výsledcích.\n"
+"    =5:34 =4:23 =3:05 pro zahrnutí souborů o určitých délkách."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:398
-#, fuzzy
 msgid ""
 "Filters files based upon users' geographical location according to country "
 "codes defined by ISO 3166-2:\n"
@@ -5360,31 +5269,29 @@ msgid ""
 "States.\n"
 "    !GB will hide results that come from users in Great Britain."
 msgstr ""
-"Používá kódy zemí definované normou ISO 3166-2 (viz Wikipedie):\n"
-"    \"USA\" budou vracet pouze soubory od uživatelů připojených přes Spojené "
-"státy. Podobně \"GB\" vrací soubory od uživatelů s IP adresami ve Spojeném "
-"království."
+"Filtruje soubory na základě zeměpisného umístění uživatelů, podle kódů zemí "
+"stanovených v ISO 3166-2:\n"
+"    US zobrazí jen výsledky od uživatelů s IP addresami ze Spojených států "
+"amerických.\n"
+"    !GB skryje výsledky od uživatelů s IP addresami z Velké Británie."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:410
-#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr "Více zemí lze zadat čárkami nebo mezerami."
+msgstr "Více zemí lze zadat a oddělit čárkami nebo mezerami."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:420
 #: pynicotine/gtkgui/ui/search.ui:333
 #: pynicotine/gtkgui/ui/settings/search.ui:397
-#, fuzzy
 msgid "Free Slot"
 msgstr "Volný slot"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:431
-#, fuzzy
 msgid ""
 "Show only those results from users which have at least one upload slot free, "
 "i.e. files that are available immediately."
 msgstr ""
-"Zorazte pouze ty výsledky od uživatelů, kteří mají alespoň jeden slot pro "
-"nahrávání zdarma. Tento filtr se aplikuje okamžitě."
+"Zobrazit výsledky pouze od uživatelů, kteří mají volný alespoň jeden slot "
+"pro nahrávání, tedy zobrazí se soubory dostupné ihned ke stažení."
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:30
 #: pynicotine/gtkgui/ui/settings/uploads.ui:106
@@ -5398,23 +5305,19 @@ msgstr "Nahrávání bez limitu rychlosti"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:56
 #: pynicotine/gtkgui/ui/settings/uploads.ui:170
-#, fuzzy
 msgid "Use upload speed limit (KiB/s):"
-msgstr "Alternativní rychlostní limit nahrávání (KiB/s):"
+msgstr "Použít limit rychlosti nahrávání (KiB/s):"
 
 #: pynicotine/gtkgui/ui/popovers/uploadspeeds.ui:80
 #: pynicotine/gtkgui/ui/settings/uploads.ui:193
-#, fuzzy
 msgid "Use alternative upload speed limit (KiB/s):"
-msgstr "Alternativní rychlostní limit nahrávání (KiB/s):"
+msgstr "Použít alternativní limit rychlosti nahrávání (KiB/s):"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:63
-#, fuzzy
 msgid "Private Chat Command Help"
-msgstr "Nápověda k příkazu k privátnímu chatu"
+msgstr "Nápověda k příkazům soukromého chatu"
 
 #: pynicotine/gtkgui/ui/search.ui:7
-#, fuzzy
 msgid "Include text…"
 msgstr "Zahrnout text…"
 
@@ -6113,14 +6016,12 @@ msgid "Limit upload speed:"
 msgstr "Limit rychlosti nahrávání:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:137
-#, fuzzy
 msgid "Per transfer"
-msgstr "Na převod"
+msgstr "Na přenos"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:145
-#, fuzzy
 msgid "Total transfers"
-msgstr "Celkové převody"
+msgstr "Přenosy celkem"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:217
 #: pynicotine/gtkgui/ui/userinfo.ui:257
@@ -6285,9 +6186,8 @@ msgid "Wishlist results found"
 msgstr "Nalezeny výsledky ze seznamu přání"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:395
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "Obnovení dříve otevřených soukromých chatů při spuštění"
+msgstr "Obnovení naposledy aktivní hlavní karty při spuštění"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:419
 #, fuzzy
@@ -6314,9 +6214,8 @@ msgid "Buddy list position:"
 msgstr "Pozice seznamu kamarádů:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:590
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Viditelné primární karty:"
+msgstr "Viditelné hlavní karty:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:745
 #, fuzzy
@@ -6324,7 +6223,6 @@ msgid "Tab bar positions:"
 msgstr "Pozice panelu tabulátoru:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:780
-#, fuzzy
 msgid "Main tabs"
 msgstr "Hlavní karty"
 
@@ -6497,9 +6395,8 @@ msgid "Save Shares List to Disk"
 msgstr "_Save Seznam sdílených složek na disk"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:178
-#, fuzzy
 msgid "Refresh Files"
-msgstr "Aktualizovat soubory"
+msgstr "Obnovit soubory"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:101
 #, fuzzy
@@ -6541,9 +6438,8 @@ msgid "_Gift Privileges…"
 msgstr "_Darovat privilegia…"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:649
-#, fuzzy
 msgid "_Refresh Profile"
-msgstr "Aktualizovat soubory"
+msgstr "_Obnovit profil"
 
 #: pynicotine/plugins/core_commands/PLUGININFO:3
 #, fuzzy
