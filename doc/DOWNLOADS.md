@@ -14,19 +14,21 @@ see [TESTING.md](TESTING.md).
 If you are using any of the operating systems listed, you can install Nicotine+
 using the package manager.
 
-| Operating System                                                                        | Package Name        |
-|-----------------------------------------------------------------------------------------|---------------------|
-| [Alpine Linux Edge](https://pkgs.alpinelinux.org/packages?name=nicotine-plus)           | `nicotine-plus`     |
-| [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`         |
-| [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`          |
-| [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`         |
-| [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+` |
-| [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                         | `nicotine+`         |
-| [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`     |
-| [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                    | `nicotine+`         |
-| [Solus](https://github.com/getsolus/packages/tree/main/packages/n/nicotine-plus)        | `nicotine-plus`     |
-| [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`     |
-| [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`         |
+| Operating System                                                                        | Package Name               |
+|-----------------------------------------------------------------------------------------|----------------------------|
+| [Alpine Linux Edge](https://pkgs.alpinelinux.org/packages?name=nicotine-plus)           | `nicotine-plus`            |
+| [Arch Linux](https://archlinux.org/packages/extra/any/nicotine+/)                       | `nicotine+`                |
+| [Debian Unstable/Testing](https://tracker.debian.org/pkg/nicotine)                      | `nicotine`                 |
+| [Fedora](https://packages.fedoraproject.org/pkgs/nicotine+/nicotine+/)                  | `nicotine+`                |
+| [FreeBSD Ports](https://www.freshports.org/net-p2p/py-nicotine-plus)                    | `net-p2p/py-nicotine-plus` |
+| [Gentoo](https://packages.gentoo.org/packages/net-p2p/nicotine+)                        | `net-p2p/nicotine+`        |
+| [Manjaro](https://manjaristas.org/branch_compare?q=nicotine%2B)                         | `nicotine+`                |
+| [NixOS](https://search.nixos.org/packages?show=nicotine-plus)                           | `nicotine-plus`            |
+| [OpenBSD Ports](https://openports.pl/path/net/nicotine-plus)                            | `net/nicotine-plus`        |
+| [Parabola](https://www.parabola.nu/packages/extra/x86_64/nicotine+/)                    | `nicotine+`                |
+| [Solus](https://github.com/getsolus/packages/tree/main/packages/n/nicotine-plus)        | `nicotine-plus`            |
+| [T2 SDE](https://t2sde.org/packages/nicotine-plus)                                      | `nicotine-plus`            |
+| [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/nicotine+) | `nicotine+`                |
 
 ### Universal Packages (GNU/Linux)
 
