@@ -12,6 +12,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="private_chat_log_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
@@ -24,6 +27,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="transfer_log_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
@@ -36,6 +42,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkButton" id="debug_log_folder_default_button">
     <property name="tooltip-text" translatable="yes">Default</property>
@@ -48,6 +57,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>

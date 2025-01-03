@@ -648,6 +648,10 @@ class Search:
         menu = create_grouping_menu(self.window, config.sections["searches"]["group_searches"], self.on_group)
         self.grouping_button.set_menu_model(menu)
 
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.grouping_button))
+            add_css_class(widget=inner_button, css_class="image-button")
+
         # Workaround for GTK bug where clicks stop working after clicking inside popover once
         if GTK_API_VERSION >= 4 and os.environ.get("GDK_BACKEND") == "broadway":
             popover = list(self.grouping_button)[-1]

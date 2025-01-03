@@ -12,6 +12,9 @@
         <property name="visible">True</property>
       </object>
     </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkBox" id="container">
     <property name="orientation">vertical</property>
@@ -1614,6 +1617,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1659,6 +1665,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1704,6 +1713,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1749,6 +1761,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1794,6 +1809,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1839,6 +1857,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>
@@ -1884,6 +1905,9 @@
                         <property name="visible">True</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="image-button"/>
+                    </style>
                   </object>
                 </child>
                 <style>

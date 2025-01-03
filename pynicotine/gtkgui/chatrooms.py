@@ -44,6 +44,7 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import USER_STATUS_ICON_NAMES
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.treeview import TreeView
 from pynicotine.logfacility import log
@@ -523,6 +524,10 @@ class ChatRoom:
 
         self.log_toggle.set_active(room in config.sections["logging"]["rooms"])
         self.toggle_chat_buttons()
+
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.help_button))
+            add_css_class(widget=inner_button, css_class="image-button")
 
         self.users_list_view = TreeView(
             self.window, parent=self.users_list_container, name="chat_room", secondary_name=room,

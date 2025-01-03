@@ -26,6 +26,7 @@ from gi.repository import GLib
 from pynicotine.config import config
 from pynicotine.core import core
 from pynicotine.events import events
+from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.popovers.chatcommandhelp import ChatCommandHelp
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets import ui
@@ -36,6 +37,7 @@ from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import ChatView
+from pynicotine.gtkgui.widgets.theme import add_css_class
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import UserStatus
 
@@ -342,6 +344,10 @@ class PrivateChat:
 
         self.log_toggle.set_active(user in config.sections["logging"]["private_chats"])
         self.toggle_chat_buttons()
+
+        if GTK_API_VERSION >= 4:
+            inner_button = next(iter(self.help_button))
+            add_css_class(widget=inner_button, css_class="image-button")
 
         self.popup_menu_user_chat = UserPopupMenu(
             self.window.application, parent=self.chat_view.widget, connect_events=False,
