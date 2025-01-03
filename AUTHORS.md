@@ -169,6 +169,7 @@
  - ButterflyOfFire (2024)
 
 ### Catalan
+ - Aniol (2024–2025)
  - Maite Guix (2022)
 
 ### Chinese (Simplified)
@@ -178,7 +179,7 @@
  - hadwin (2022)
 
 ### Czech
- - slrslr (2024)
+ - slrslr (2024–2025)
  - burnmail123 (2021–2023)
 
 ### Danish
@@ -321,6 +322,7 @@
  - Alexey Vyskubov
  - Allan Nordhøy
  - Amun-Ra
+ - Aniol
  - Artem
  - AtticFinder65536
  - Attila Fidan
@@ -351,6 +353,7 @@
  - Eryk Michalak
  - Everly
  - Felipe Nogaroto Gonzalez
+ - fkobi
  - Gabriele
  - gahag
  - gallegonovato
