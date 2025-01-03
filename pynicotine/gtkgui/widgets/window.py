@@ -206,6 +206,11 @@ class Window:
 
         self.widget.present()
 
+        # Workaround for broken window size when restoring maximized window from tray icon
+        if sys.platform == "win32" and self.widget.is_maximized():
+            self.widget.unmaximize()
+            self.widget.maximize()
+
     def hide(self):
         self.widget.set_visible(False)
 
