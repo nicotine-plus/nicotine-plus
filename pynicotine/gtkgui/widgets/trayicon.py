@@ -86,8 +86,8 @@ class BaseImplementation:
 
         self._create_item()
 
-        self.downloads_item = self._create_item("placeholder", self.application.on_downloads)
-        self.uploads_item = self._create_item("placeholder", self.application.on_uploads)
+        self.downloads_item = self._create_item(_("Downloads"), self.application.on_downloads)
+        self.uploads_item = self._create_item(_("Uploads"), self.application.on_uploads)
 
         self._create_item()
 
