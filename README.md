@@ -80,4 +80,4 @@ Nicotine+ is free and open source software, released under the terms of the
 [GNU General Public License v3.0 or later](https://www.gnu.org/licenses/gpl-3.0-standalone.html).
 Nicotine+ exists thanks to its [authors](AUTHORS.md).
 
-© 2001–2024 Nicotine+, Nicotine and PySoulSeek Contributors
+© 2001–2025 Nicotine+, Nicotine and PySoulSeek Contributors
