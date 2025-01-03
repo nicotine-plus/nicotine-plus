@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 06:46+0200\n"
-"PO-Revision-Date: 2024-12-30 15:00+0000\n"
+"PO-Revision-Date: 2025-01-02 14:00+0000\n"
 "Last-Translator: Aniol <aneolus@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ca/>\n"
@@ -113,7 +113,7 @@ msgstr "utilitzar un fitxer de configuració no predeterminat"
 
 #: pynicotine/__init__.py:63
 msgid "dir"
-msgstr "dir"
+msgstr "directori"
 
 #: pynicotine/__init__.py:64
 msgid "alternative directory for user data and plugins"
@@ -1113,7 +1113,7 @@ msgstr "Torna-ho a provar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:815
 msgid "Round Robin"
-msgstr "Round Robin"
+msgstr "Per torns"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:816
 msgid "First In, First Out"

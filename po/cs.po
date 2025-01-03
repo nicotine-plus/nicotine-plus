@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 06:46+0200\n"
-"PO-Revision-Date: 2024-12-31 17:00+0000\n"
+"PO-Revision-Date: 2025-01-02 14:00+0000\n"
 "Last-Translator: slrslr <adm@prnet.info>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -5271,9 +5271,9 @@ msgid ""
 msgstr ""
 "Filtruje soubory na základě zeměpisného umístění uživatelů, podle kódů zemí "
 "stanovených v ISO 3166-2:\n"
-"    US zobrazí jen výsledky od uživatelů s IP addresami ze Spojených států "
-"amerických.\n"
-"    !GB skryje výsledky od uživatelů s IP addresami z Velké Británie."
+"    CZ zobrazí jen výsledky od uživatelů s IP addresami z České republiky.\n"
+"    !US skryje výsledky od uživatelů s IP addresami ze Spojených států "
+"amerických."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:410
 msgid "Multiple countries can be specified with commas or spaces."
@@ -5322,109 +5322,92 @@ msgid "Include text…"
 msgstr "Zahrnout text…"
 
 #: pynicotine/gtkgui/ui/search.ui:9 pynicotine/gtkgui/ui/settings/search.ui:221
-#, fuzzy
 msgid ""
 "Filter in results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
 "Filtrujte výsledky, jejichž cesty k souborům obsahují zadaný text. Lze zadat "
-"více frází a slov, např. přesná fráze|music|term|předchodá fráze dvě"
+"více frází a slov, např.: přesná fráze|hudba|slovo|přesná fráze dvě"
 
 #: pynicotine/gtkgui/ui/search.ui:18
-#, fuzzy
 msgid "Exclude text…"
 msgstr "Vyloučit text…"
 
 #: pynicotine/gtkgui/ui/search.ui:20
 #: pynicotine/gtkgui/ui/settings/search.ui:246
-#, fuzzy
 msgid ""
 "Filter out results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
 "phrase two"
 msgstr ""
 "Odfiltrujte výsledky, jejichž cesty k souborům obsahují zadaný text. Lze "
-"zadat více frází a slov, např. přesná fráze|music|term|předchodá fráze dvě"
+"zadat více frází a slov, např.: přesná fráze|hudba|slovo|přesná fráze dvě"
 
 #: pynicotine/gtkgui/ui/search.ui:29
-#, fuzzy
 msgid "File type…"
 msgstr "Typ souboru…"
 
 #: pynicotine/gtkgui/ui/search.ui:31
 #: pynicotine/gtkgui/ui/settings/search.ui:273
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Typ souboru, např. flac|wav|ape nebo !mp3|! m4a"
+msgstr "Typ souboru, např. flac wav nebo !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:40
-#, fuzzy
 msgid "File size…"
 msgstr "Velikost souboru…"
 
 #: pynicotine/gtkgui/ui/search.ui:42
 #: pynicotine/gtkgui/ui/settings/search.ui:300
-#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr "Velikost souboru, např. >10,5m <1g"
+msgstr "Velikost souboru, např. >10.5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:51
-#, fuzzy
 msgid "Bitrate…"
 msgstr "Datový tok…"
 
 #: pynicotine/gtkgui/ui/search.ui:53
 #: pynicotine/gtkgui/ui/settings/search.ui:327
-#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
-msgstr "Bitrate, např. 256 <1412"
+msgstr "Datový tok, např. 256 <1412"
 
 #: pynicotine/gtkgui/ui/search.ui:62
-#, fuzzy
 msgid "Duration…"
 msgstr "Doba trvání…"
 
 #: pynicotine/gtkgui/ui/search.ui:64
 #: pynicotine/gtkgui/ui/settings/search.ui:354
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Doba trvání, např. 2:20|!3:30|=4:40"
+msgstr "Doba trvání, např. >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:73
-#, fuzzy
 msgid "Country code…"
 msgstr "Kód země…"
 
 #: pynicotine/gtkgui/ui/search.ui:75
 #: pynicotine/gtkgui/ui/settings/search.ui:381
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Kód země, např. US| GB|ES nebo !DE|! GB"
+msgstr "Kód země, např. US CZ nebo !DE !GB"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:28
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
-"Zakázat uživatelům přístup ke sdíleným souborům na základě uživatelského "
-"jména, IP adresy nebo země."
+"Zakažte uživatelům přístup k vašim sdíleným souborům na základě "
+"uživatelského jména, IP adresy nebo země."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:43
-#, fuzzy
 msgid "Country codes to block (comma separated):"
-msgstr "Kódy zemí, které se mají blokovat (čárka oddělena):"
+msgstr "Kódy zemí, které se mají blokovat (oddělené čárkou):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:51
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format."
 msgstr "Kódy musí být ve formátu ISO 3166-2."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:66
-#, fuzzy
 msgid "Use custom geo block message:"
-msgstr "Použijte vlastní zprávu o zeměpisném blokování:"
+msgstr "Použít vlastní zprávu zeměpisného blokování:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:87
 msgid "Use custom ban message:"
@@ -5432,91 +5415,72 @@ msgstr "Použijte vlastní zprávu o zákazu:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:245
 #: pynicotine/gtkgui/ui/settings/ignore.ui:179
-#, fuzzy
 msgid "IP Addresses"
-msgstr "Adresy"
+msgstr "IP adresy"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:75
-#, fuzzy
 msgid "Restore previously open private chats on startup"
 msgstr "Obnovení dříve otevřených soukromých chatů při spuštění"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:99
-#, fuzzy
 msgid "Enable spell checker"
-msgstr "Povolit kontrolu pravopisu (vyžaduje restartování)"
+msgstr "Povolit kontrolu pravopisu"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:123
-#, fuzzy
 msgid "Enable CTCP-like private message responses (client version)"
 msgstr "Povolit odpovědi na soukromé zprávy podobné CTCP (verze klienta)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:147
-#, fuzzy
 msgid "Number of recent private chat messages to show:"
-msgstr "Počet posledních řádků chatu, které se mají zobrazit:"
+msgstr "Počet posledních zpráv soukromého chatu k zobrazení:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:172
-#, fuzzy
 msgid "Number of recent chat room messages to show:"
-msgstr "Počet posledních řádků chatu, které se mají zobrazit:"
+msgstr "Počet posledních zpráv chatovací místnosti k zobrazení:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:201
-#, fuzzy
 msgid "Chat Completion"
-msgstr "Dokončení"
+msgstr "Dokončení chatu"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:219
-#, fuzzy
 msgid "Enable tab-key completion"
-msgstr "Povolit dokončení klíče karty"
+msgstr "Povolit dokončení pomocí klávesy Tab"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:247
-#, fuzzy
 msgid "Enable completion drop-down list"
 msgstr "Povolit rozevírací seznam dokončení"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:276
-#, fuzzy
 msgid "Minimum characters required to display drop-down:"
-msgstr ""
-"Minimální počet znaků potřebných k zobrazení rozevíracího rozbalovacího "
-"rozevíracího ždímí:"
+msgstr "Minimální počet znaků potřebných k zobrazení rozevírací nabídky:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:315
-#, fuzzy
 msgid "Allowed chat completions:"
-msgstr "Povolené dokončení"
+msgstr "Povolená dokončení chatu:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:342
-#, fuzzy
 msgid "Buddy names"
-msgstr "Seznam kamarádů"
+msgstr "Jména kamarádů"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:354
-#, fuzzy
 msgid "Chat room usernames"
-msgstr "Zpráva chatovací místnosti:"
+msgstr "Uživatelská jména chatovací místnosti"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:366
-#, fuzzy
 msgid "Room names"
-msgstr "Místnosti"
+msgstr "Názvy místností"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:378
-#, fuzzy
 msgid "Commands"
 msgstr "Příkazy"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:404
-#, fuzzy
 msgid "Timestamps"
-msgstr "Časová razítka"
+msgstr "Časové značky"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:421
-#, fuzzy
 msgid "Private chat format:"
-msgstr "Formát soukromé místnosti:"
+msgstr "Formát soukromého chatu:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:432
 #: pynicotine/gtkgui/ui/settings/chats.ui:459
@@ -5546,159 +5510,130 @@ msgstr "Formát soukromé místnosti:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1452
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1512
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1552
-#, fuzzy
 msgid "Default"
 msgstr "Výchozí"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:448
-#, fuzzy
 msgid "Chat room format:"
 msgstr "Formát chatovací místnosti:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:485
-#, fuzzy
 msgid "Text-to-Speech"
 msgstr "Převod textu na řeč"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:506
-#, fuzzy
 msgid "Enable Text-to-Speech"
 msgstr "Povolit převod textu na řeč"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:540
-#, fuzzy
 msgid "Text-to-Speech command:"
-msgstr "Příkaz Převod textu na řeč:"
+msgstr "Příkaz Převodu textu na řeč:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:556
-#, fuzzy
 msgid "Private chat message:"
 msgstr "Zpráva soukromého chatu:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:583
-#, fuzzy
 msgid "Chat room message:"
 msgstr "Zpráva chatovací místnosti:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:638
-#, fuzzy
 msgid "Censor"
-msgstr "Cenzor"
+msgstr "Cenzurovat"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:656
-#, fuzzy
 msgid "Enable censoring of text patterns"
 msgstr "Povolit cenzuru textových vzorů"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:821
-#, fuzzy
 msgid "Auto-Replace"
 msgstr "Automatické nahrazování"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:839
-#, fuzzy
 msgid "Enable automatic replacement of words"
-msgstr "Povolit automatickou výměnu slov"
+msgstr "Povolit automatické nahrazování slov"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:80
 msgid "Autoclear finished/filtered downloads from transfer list"
 msgstr "Automaticky vyčistit dokončené/filtrované stahování ze seznamu přenosů"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:104
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "Ukládání souborů ke stažení v podsložkách uživatelského jména"
+msgstr "Ukládat dokončená stahování v podsložkách uživatelského jména"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:127
-#, fuzzy
 msgid "Double-click action for downloads:"
-msgstr "Akce poklepátení na stahování:"
+msgstr "Akce dvojitého kliknutí pro stahování:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:143
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Umožněte těmto uživatelům posílat vám soubory:"
+msgstr "Umožněte uživatelům poslat vám jakékoli soubory:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:239
 #: pynicotine/gtkgui/ui/userbrowse.ui:45
-#, fuzzy
 msgid "Folders"
-msgstr "Šanony"
+msgstr "Složky"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:256
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Stažený soubor"
+msgstr "Dokončená stahování:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:272
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Dokončené stahování"
+msgstr "Nedokončená stahování:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:288
-#, fuzzy
 msgid "Received files:"
 msgstr "Přijaté soubory:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:307
-#, fuzzy
 msgid "Events"
-msgstr "Dění"
+msgstr "Události"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:324
-#, fuzzy
 msgid "Run command after file download finishes ($ for file path):"
-msgstr "Spustit příkaz po dokončení stahování souborů ($ pro cestu k souboru):"
+msgstr "Spustit příkaz po dokončení stahování souboru ($ pro cestu k souboru):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:348
-#, fuzzy
 msgid "Run command after folder download finishes ($ for folder path):"
-msgstr "Spustit příkaz po dokončení stahování složek ($ pro cestu ke složce):"
+msgstr "Spustit příkaz po dokončení stahování složky ($ pro cestu ke složce):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:375
-#, fuzzy
 msgid "Download Filters"
-msgstr "Stáhnout filtry"
+msgstr "Filtry stahování"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:393
-#, fuzzy
 msgid "Enable download filters"
 msgstr "Povolit filtry stahování"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:439
-#, fuzzy
 msgid "Add"
 msgstr "Přidat"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:537
 #: pynicotine/gtkgui/ui/settings/downloads.ui:553
-#, fuzzy
 msgid "Load Defaults"
-msgstr "Výchozí hodnoty načtení"
+msgstr "Načíst výchozí hodnoty"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:596
-#, fuzzy
 msgid "Verify Filters"
 msgstr "Ověřit filtry"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:608
-#, fuzzy
 msgid "Unverified"
-msgstr "Neověřený"
+msgstr "Neověřené"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
 msgstr ""
-"Ignorujte chatové zprávy a výsledky vyhledávání od uživatelů na základě "
+"Ignorovat zprávy chatu a výsledky vyhledávání od uživatelů na základě "
 "uživatelského jména nebo IP adresy."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:82
-#, fuzzy
 msgid "Log chatrooms by default"
-msgstr "Protokol chatovacích místností ve výchozím nastavení"
+msgstr "Protokolovat chatovací místnosti ve výchozím nastavení"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:106
 #, fuzzy
@@ -5716,9 +5651,8 @@ msgid "Log debug messages to file"
 msgstr "Protokol ladicích zpráv do souboru"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:178
-#, fuzzy
 msgid "Log timestamp format:"
-msgstr "Formát souboru protokolu:"
+msgstr "Formát časových značek protokolu:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:216
 #, fuzzy
