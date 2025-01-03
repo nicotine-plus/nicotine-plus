@@ -198,6 +198,12 @@ class Window:
     def set_title(self, title):
         self.widget.set_title(title)
 
+    def maximize(self):
+        self.widget.maximize()
+
+    def unmaximize(self):
+        self.widget.unmaximize()
+
     def present(self):
 
         if self.activation_token is not None:
@@ -205,11 +211,6 @@ class Window:
             self.widget.set_startup_id(self.activation_token)
 
         self.widget.present()
-
-        # Workaround for broken window size when restoring maximized window from tray icon
-        if sys.platform == "win32" and self.widget.is_maximized():
-            self.widget.unmaximize()
-            self.widget.maximize()
 
     def hide(self):
         self.widget.set_visible(False)
