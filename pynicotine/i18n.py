@@ -27,6 +27,7 @@ LOCALE_PATH = os.path.join(CURRENT_PATH, "locale")
 TRANSLATION_DOMAIN = "nicotine"
 LANGUAGES = (
     ("ca", "Català"),
+    ("cs", "Čeština"),
     ("de", "Deutsch"),
     ("en", "English"),
     ("es_CL", "Español (Chile)"),
