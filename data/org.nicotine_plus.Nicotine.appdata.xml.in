@@ -58,6 +58,7 @@
   </screenshots>
   <requires>
     <display_length compare="ge">600</display_length>
+    <internet>always</internet>
   </requires>
   <supports>
     <control>keyboard</control>
