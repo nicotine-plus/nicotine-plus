@@ -241,6 +241,7 @@ class MainWindow(Window):
 
         # Events
         for event_name, callback in (
+            ("quit", self.on_quit),
             ("server-login", self.update_user_status),
             ("server-disconnect", self.update_user_status),
             ("set-connection-stats", self.set_connection_stats),
@@ -1217,6 +1218,9 @@ class MainWindow(Window):
             self.hide()
 
         return True
+
+    def on_quit(self, *_args):
+        self.save_window_state()
 
     def hide(self):
 
